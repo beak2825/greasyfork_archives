@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BLESS BLUE KF
 // @namespace    https://forum.blessrussia.online/index.php*
-// @version      1.0.1
+// @version      1.0.3
 // @description  Версия для сервера BLUE
 // @author       Mark_Belf | VK - https://vk.com/mark17babanin
 // @match        https://forum.blessrussia.online/index.php*
@@ -39,7 +39,7 @@
                 "[B][CENTER][FONT=Arial][size=14px]Ваш текст[/FONT][/size][/CENTER][/B]<br>" +
                 "[B][CENTER][FONT=Arial][size=14px]Выношу вердикт - [COLOR=#00FF00]Одобрено.[/COLOR][/FONT][/size][/CENTER]<br><br>" +
                 "[B][CENTER][size=14px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
-                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
+                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,91,0)]Bless Russia[/color].[/FONT][/size][/CENTER][/B]",
         },
         {
             title: 'На рассмотрении',
@@ -48,7 +48,7 @@
                 "[B][CENTER][FONT=Arial][size=14px]Ваш текст[/FONT][/size][/CENTER][/B]<br>" +
                 "[B][CENTER][FONT=Arial][size=14px]Выношу вердикт - [COLOR=#FFA500]На рассмотрении...[/COLOR][/FONT][/size][/CENTER]<br><br>" +
                 "[B][CENTER][size=14px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
-                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
+                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,91,0)]Bless Russia[/color].[/FONT][/size][/CENTER][/B]",
         },
         {
             title: 'Отказ',
@@ -57,7 +57,7 @@
                 "[B][CENTER][FONT=Arial][size=14px]Ваш текст[/FONT][/size][/CENTER]<br>" +
                 "[B][CENTER][FONT=Arial][size=14px]Выношу вердикт - [COLOR=#ff0026]Отказано.[/COLOR][/FONT][/size][/CENTER]<br><br>" +
                 "[B][CENTER][size=14px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
-                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
+                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,91,0)]Bless Russia[/color].[/FONT][/size][/CENTER][/B]",
         },
         {
             title: 'Жалоба от 3-го лица',
@@ -66,7 +66,7 @@
                 "[B][CENTER][FONT=Arial][size=14px]Ваш текст[/FONT][/size][/CENTER]<br>" +
                 "[B][CENTER][FONT=Arial][size=14px]Выношу вердикт - [COLOR=#ff0026]Закрыто.[/COLOR][/FONT][/size][/CENTER]<br><br>" +
                 "[B][CENTER][size=14px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
-                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
+                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,91,0)]Bless Russia[/color].[/FONT][/size][/CENTER][/B]",
         },
         {         
 title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Передано✅️╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴',
@@ -538,7 +538,7 @@ title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Ответы Рп 
             content: "[B][CENTER][FONT=Arial][size=14px][CENTER]Приветствую, уважаемый игрок [COLOR=orange] {{ user.name }}[/color].[/FONT][/size][/CENTER]<br>" +
                 "[B][CENTER][FONT=Arial][size=14px]Ваша рп биография находится - [COLOR=#FFA500]На рассмотрении...[/COLOR][/FONT][/size][/CENTER]<br><br>" +
                 "[B][CENTER][size=14px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
-                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
+                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,91,0)]Bless Russia[/color].[/FONT][/size][/CENTER][/B]",
         },
         {
             title: 'Отказаная рп биография',
@@ -547,7 +547,7 @@ title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Ответы Рп 
                 "[B][CENTER][FONT=Arial][size=14px]Ваша рп биография была рассмотрена.[/FONT][/size][/CENTER][/B]<br>" +
                 "[B][CENTER][FONT=Arial][size=14px]Выношу вердикт - [COLOR=#00FF00]Отказано..[/COLOR][/FONT][/size][/CENTER]<br><br>" +
                 "[B][CENTER][size=14px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
-                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
+                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,91,0)]Bless Russia[/color].[/FONT][/size][/CENTER][/B]",
         },
         {
             title: 'Одобреная рп биография',
@@ -556,7 +556,7 @@ title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Ответы Рп 
                 "[B][CENTER][FONT=Arial][size=14px]Ваша рп биография была рассмотрена.[/FONT][/size][/CENTER][/B]<br>" +
                 "[B][CENTER][FONT=Arial][size=14px]Выношу вердикт - [COLOR=#00FF00]Одобрено[/COLOR][/FONT][/size][/CENTER]<br><br>" +
                 "[B][CENTER][size=14px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
-                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
+                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,91,0)]Bless Russia[/color].[/FONT][/size][/CENTER][/B]",
         },
         {
 title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Ответы Рп ситуаций✅️╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴',
@@ -568,7 +568,7 @@ title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Ответы Рп 
             content: "[B][CENTER][FONT=Arial][size=14px][CENTER]Приветствую, уважаемый игрок [COLOR=orange] {{ user.name }}[/color].[/FONT][/size][/CENTER]<br>" +
                 "[B][CENTER][FONT=Arial][size=14px]Ваша рп ситуация находится - [COLOR=#FFA500]На рассмотрении...[/COLOR][/FONT][/size][/CENTER]<br><br>" +
                 "[B][CENTER][size=14px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
-                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
+                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,91,0)]Bless Russia[/color].[/FONT][/size][/CENTER][/B]",
         },
         {
             title: 'Отказаная рп ситуация',
@@ -577,7 +577,7 @@ title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Ответы Рп 
                 "[B][CENTER][FONT=Arial][size=14px]Ваша рп ситуация была рассмотрена.[/FONT][/size][/CENTER][/B]<br>" +
                 "[B][CENTER][FONT=Arial][size=14px]Выношу вердикт - [COLOR=#00FF00]Отказано[/COLOR][/FONT][/size][/CENTER]<br><br>" +
                 "[B][CENTER][size=14px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
-                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
+                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,91,0)]Bless Russia[/color].[/FONT][/size][/CENTER][/B]",
         },
         {
             title: 'Одобреная рп ситуация',
@@ -586,7 +586,7 @@ title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Ответы Рп 
                 "[B][CENTER][FONT=Arial][size=14px]Ваша рп ситуация была рассмотрена.[/FONT][/size][/CENTER][/B]<br>" +
                 "[B][CENTER][FONT=Arial][size=14px]Выношу вердикт - [COLOR=#00FF00]Одобрено[/COLOR][/FONT][/size][/CENTER]<br><br>" +
                 "[B][CENTER][size=14px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
-                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
+                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,91,0)]Bless Russia[/color].[/FONT][/size][/CENTER][/B]",
         },
     ];
  

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         QwenPersona
 // @namespace    https://www.kev1nweng.space
-// @version      1768116004
+// @version      1769138683
 // @description  一个便于用户自定义、保存并同步 Qwen Chat 自定义角色的 Tampermonkey 脚本。A Tampermonkey script for customizing user-defined personas in Qwen Chat.
 // @author       小翁同学 (kev1nweng)
 // @license      AGPL-3.0
@@ -278,6 +278,16 @@
       const div = document.createElement("div");
       div.textContent = str;
       return div.innerHTML;
+    },
+
+    generateFid() {
+      // lightweight unique id for messages injected by the persona manager
+      return (
+        "fid-" +
+        Math.random().toString(36).slice(2, 9) +
+        "-" +
+        Date.now().toString(36)
+      );
     },
 
     sleep(ms) {
@@ -1706,42 +1716,12 @@
     },
 
     startMessageObserver() {
-      if (this.messageObserver) return;
-
-      console.log(
-        "[QwenPersona] Starting Message Observer to hide instructions"
-      );
-      this.messageObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          mutation.addedNodes.forEach((node) => {
-            if (node.nodeType === Node.ELEMENT_NODE) {
-              const walk = document.createTreeWalker(
-                node,
-                NodeFilter.SHOW_TEXT,
-                null,
-                false
-              );
-              let textNode;
-              while ((textNode = walk.nextNode())) {
-                if (
-                  textNode.textContent.includes("[System Instruction]") &&
-                  textNode.textContent.includes("[User Message]")
-                ) {
-                  textNode.textContent = textNode.textContent.replace(
-                    /\[System Instruction\]\n[\s\S]*?\n\n\[User Message\]\n/,
-                    ""
-                  );
-                }
-              }
-            }
-          });
-        });
-      });
-
-      this.messageObserver.observe(document.body, {
-        childList: true,
-        subtree: true,
-      });
+        // Deprecated: previous releases used a MutationObserver to remove
+        // plaintext markers like "[System Instruction]" from rendered messages.
+        // With explicit system-message injection we no longer need this DOM
+        // rewriting. Keep a no-op here to avoid changing the public API.
+        if (this.messageObserver) return;
+        this.messageObserver = null;
     },
   };
 
@@ -2791,39 +2771,11 @@
       window.fetch = async function (url, options = {}) {
         const urlStr = typeof url === "string" ? url : (url.url || "");
 
-        // 1. Intercept History Fetch to hide system instructions (Invisible part)
-        if (urlStr.includes("/api/v2/chats/")) {
-          // Check if this is a GET request for a specific chat
-          const chatIdMatch = urlStr.match(/\/api\/v2\/chats\/([a-zA-Z0-9-]+)/);
-          if (chatIdMatch && (!options.method || options.method === "GET")) {
-            const response = await originalFetch.call(this, url, options);
-            const clone = response.clone();
-            try {
-              const result = await clone.json();
-              if (result.data && Array.isArray(result.data.messages)) {
-                let cleaned = false;
-                result.data.messages.forEach((msg) => {
-                  if (msg.role === "user" && typeof msg.content === "string") {
-                    const original = msg.content;
-                    msg.content = msg.content.replace(
-                        /\[System Instruction\]\n[\s\S]*?\n\n\[User Message\]\n/,
-                        ""
-                    );
-                    if (original !== msg.content) cleaned = true;
-                  }
-                });
-                if (cleaned) {
-                  return new Response(JSON.stringify(result), {
-                    status: response.status,
-                    statusText: response.statusText,
-                    headers: response.headers,
-                  });
-                }
-              }
-            } catch (e) {}
-            return response;
-          }
-        }
+        // Legacy: previous versions attempted to hide plaintext "[System Instruction]"
+        // markers in chat history by rewriting GET /api/v2/chats responses. That
+        // approach is no longer necessary because we now inject an explicit
+        // role:"system" message. Keeping a historical response-rewrite here
+        // increases complexity and may cause subtle bugs, so it's been removed.
 
         // 2. Intercept Completions (Injection logic)
         if (urlStr.includes("/api/v2/chat/completions")) {
@@ -2888,55 +2840,43 @@
                 }
               }
 
-              if (persona.prompt && Array.isArray(body.messages)) {
-                const systemMsgIndex = body.messages.findIndex(
-                  (m) => m.role === "system"
-                );
+              // Only inject system prompt if it's a new chat or if a system message is already present in the request.
+              // Re-injecting system prompts on follow-up turns in an existing chat causes "no more than one system message" error.
+              if (persona.prompt && Array.isArray(body.messages) && (isNewChat || hasSystemMessage)) {
+                // Always upsert a system message at messages[0] with persona prompt and metadata.
+                // This is more explicit and increases the chance the backend will honor the persona.
+                const systemMsgIndex = body.messages.findIndex((m) => m.role === "system");
 
-                if (isEditAction && urlHasChatId) {
-                  if (systemMsgIndex !== -1) {
-                    body.messages.splice(systemMsgIndex, 1);
-                  }
-                  const userMsgIndex = body.messages.findIndex(
-                    (m) => m.role === "user"
-                  );
-                  if (userMsgIndex !== -1) {
-                    const userMsg = body.messages[userMsgIndex];
-                    if (!userMsg.content.includes("[System Instruction]")) {
-                      userMsg.content = `[System Instruction]\n${persona.prompt}\n\n[User Message]\n${userMsg.content}`;
-                      modified = true;
-                    }
-                  }
-                } else if (systemMsgIndex !== -1) {
-                  body.messages[systemMsgIndex].content = persona.prompt;
+                const systemMessage = {
+                  role: "system",
+                  content: persona.prompt,
+                  extra: {
+                    injected_by: "qwen_persona",
+                    personaId: persona.id,
+                    injected_at: Date.now(),
+                  },
+                  fid: Utils.generateFid(),
+                  timestamp: Date.now(),
+                  models: body.model ? [body.model] : persona.model ? [persona.model] : [],
+                };
+
+                if (systemMsgIndex !== -1) {
+                  // Replace existing system message content and metadata
+                  const sys = body.messages[systemMsgIndex];
+                  sys.content = systemMessage.content;
+                  sys.extra = Object.assign({}, sys.extra || {}, systemMessage.extra);
+                  sys.fid = sys.fid || systemMessage.fid;
+                  sys.timestamp = sys.timestamp || systemMessage.timestamp;
                   if (systemMsgIndex !== 0) {
                     const [msg] = body.messages.splice(systemMsgIndex, 1);
                     body.messages.unshift(msg);
                   }
-                  modified = true;
                 } else {
-                  const isStartOfConversation = !body.parent_id && !body.parentId && !isEditAction;
-                  const alreadyInjected = chatId && State.chatInjectedMap[chatId] === persona.id;
-
-                  if (isStartOfConversation && !urlHasChatId) {
-                    body.messages.unshift({
-                      role: "system",
-                      content: persona.prompt,
-                    });
-                    modified = true;
-                  } else if (!alreadyInjected) {
-                    // Prepend ONLY if not already injected for this persona in this chat
-                    const lastMsg = body.messages[body.messages.length - 1];
-                    if (
-                      lastMsg &&
-                      lastMsg.role === "user" &&
-                      !lastMsg.content.includes("[System Instruction]")
-                    ) {
-                      lastMsg.content = `[System Instruction]\n${persona.prompt}\n\n[User Message]\n${lastMsg.content}`;
-                      modified = true;
-                    }
-                  }
+                  // Insert as the first message
+                  body.messages.unshift(systemMessage);
                 }
+
+                modified = true;
               }
 
               if (persona.model) {
@@ -2947,11 +2887,19 @@
               if (modified) {
                 options.body = JSON.stringify(body);
                 console.log("[QwenPersona] Request modified with persona:", persona.name);
-                
-                // Track injection
-                if (chatId && persona.id) {
-                    State.chatInjectedMap[chatId] = persona.id;
+
+                // Track injection with metadata
+                try {
+                  if (chatId && persona.id) {
+                    State.chatInjectedMap[chatId] = {
+                      personaId: persona.id,
+                      ts: Date.now(),
+                      method: body.messages && body.messages[0] && body.messages[0].role === 'system' ? 'system_message' : 'body_extra',
+                    };
                     Storage.saveChatInjectedMap();
+                  }
+                } catch (e) {
+                  Debug.warn('Failed to record chatInjectedMap metadata', e);
                 }
               }
             } catch (e) {
@@ -2991,7 +2939,6 @@
     NetworkManager.interceptFetch();
 
     UI.waitForNavbar();
-    UI.startMessageObserver();
 
     ChatManager.startUrlMonitor();
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Intake FR
 // @namespace    http://tampermonkey.net/
-// @version      1.1.24
+// @version      1.1.25
 // @description  Intkae inladen voor FR
 // @match        *://*/*
 // @grant        GM_xmlhttpRequest
@@ -87,7 +87,7 @@
                     const stoornissen = data.response.anamnese_stoornissen;
                     const historie = data.response.anamnese_historie;
                     const beperkingen = data.response.anamnese_beperkingen
-                    const functioneringsproblemenSinds = data.response.anamnese_duur_functioneringsproblemen_sinds
+                    const functioneringsproblemenSinds = data.response.anamnese_duur_functioneringsproblemen_aantal
                     const functioneringsproblemenEenheid = data.response.anamnese_duur_functioneringsproblemen_eenheid
                     const beloopTotNuToe = data.response.anamnese_beloop_tot_nu_toe;
                     const aangedaneZijde = data.response.anamnese_aangedane_zijde;

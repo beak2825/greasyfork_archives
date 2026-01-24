@@ -2,12 +2,13 @@
 // @license MIT
 // @name         Youtube Save/Resume Progress
 // @namespace    http://tampermonkey.net/
-// @version      1.7.1
+// @version      1.8.0
 // @description  Have you ever closed a YouTube video by accident, or have you gone to another one and when you come back the video starts from 0? With this extension it won't happen anymore
 // @author       Costin Alexandru Sandu
 // @match        https://www.youtube.com/watch*
 // @icon         https://raw.githubusercontent.com/SaurusLex/YoutubeSaveResumeProgress/refs/heads/master/youtube_save_resume_progress_icon.jpg
-// @grant        none
+// @grant        GM_registerMenuCommand
+// @grant        GM_unregisterMenuCommand
 // @require      https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.0/dist/floating-ui.core.umd.min.js
 // @require      https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.3/dist/floating-ui.dom.umd.min.js
 // @downloadURL https://update.greasyfork.org/scripts/487305/Youtube%20SaveResume%20Progress.user.js
@@ -30,10 +31,12 @@
       enableMinDuration: false,
       blacklistedVideos: [],
       savingInterval: 2,
+      uiVisible: true,
     },
   };
 
   var saveTimerId = null;
+  var menuCommandId = null;
 
   const CONFIG_KEY = "Youtube_SaveResume_Progress_Config";
   const moviePlayerSelector = "#movie_player";
@@ -104,7 +107,7 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 1rem;
+      padding: 1.5rem;
       min-width: 0;
     }
     .ysrp-menu-item:hover {
@@ -262,6 +265,9 @@
       background: #9e9e9e;
       color: white;
       border-color: #757575;
+    }
+    .ysrp-hidden {
+      display: none !important;
     }
   `;
 
@@ -869,8 +875,55 @@
       intervalInputContainer.append(intervalInput, intervalSuffix);
       intervalSection.append(intervalLabel, intervalInputContainer);
 
+      // Visibility Section
+      const visibilitySection = document.createElement("div");
+      visibilitySection.style.display = "flex";
+      visibilitySection.style.flexDirection = "column";
+      visibilitySection.style.gap = "0.8rem";
+
+      const visibilityLabel = document.createElement("label");
+      visibilityLabel.textContent = "Visibility";
+      visibilityLabel.style.fontWeight = "normal";
+      visibilityLabel.style.fontSize = "14px";
+      visibilityLabel.style.color = "#555";
+
+      const hideButton = document.createElement("button");
+      hideButton.textContent = "Hide extension";
+      hideButton.classList.add("ysrp-toggle-button", "enabled");
+      hideButton.style.width = "fit-content";
+      hideButton.style.padding = "0.5rem 1rem";
+      hideButton.style.fontSize = "12px";
+
+      hideButton.addEventListener("click", () => {
+        toggleUiVisibility();
+        // Since we are hiding it, we should also close the dashboard
+        closeFloatingDashboardUi();
+      });
+
+      const visibilityInfo = document.createElement("p");
+      visibilityInfo.textContent = "You can always show it again from the Userscript manager menu (e.g. Tampermonkey icon).";
+      visibilityInfo.style.fontSize = "11px";
+      visibilityInfo.style.color = "#888";
+      visibilityInfo.style.margin = "0";
+      visibilityInfo.style.lineHeight = "1.4";
+
+      visibilitySection.append(visibilityLabel, hideButton, visibilityInfo);
+
+      const createDivider = () => {
+        const hr = document.createElement("hr");
+        hr.style.border = "none";
+        hr.style.borderTop = "1px solid #eee";
+        hr.style.margin = "0.5rem 0";
+        return hr;
+      };
+
+      configContainer.style.gap = "1rem";
+
       configContainer.appendChild(minDurationSection);
+      configContainer.appendChild(createDivider());
       configContainer.appendChild(intervalSection);
+      configContainer.appendChild(createDivider());
+      configContainer.appendChild(visibilitySection);
       body.appendChild(configContainer);
 
       return body;
@@ -956,6 +1009,39 @@
 
     renderContent("currentVideo");
   }
+  function applyUiVisibility() {
+    const infoElContainers = document.querySelectorAll(".last-save-info-container");
+    infoElContainers.forEach((container) => {
+      if (configData.userSettings.uiVisible) {
+        container.classList.remove("ysrp-hidden");
+      } else {
+        container.classList.add("ysrp-hidden");
+      }
+    });
+  }
+
+  function toggleUiVisibility() {
+    const newValue = !configData.userSettings.uiVisible;
+    setUserConfig({ uiVisible: newValue });
+    applyUiVisibility();
+    registerMenuCommands();
+  }
+
+  function registerMenuCommands() {
+    if (typeof GM_registerMenuCommand !== "undefined") {
+      if (menuCommandId !== null && typeof GM_unregisterMenuCommand !== "undefined") {
+        GM_unregisterMenuCommand(menuCommandId);
+      }
+
+      const isVisible = configData.userSettings.uiVisible;
+      const label = isVisible ? "🚫 Hide Extension UI" : "👁️ Show Extension UI";
+
+      menuCommandId = GM_registerMenuCommand(label, () => {
+        toggleUiVisibility();
+      });
+    }
+  }
+
 
   function createInfoUI() {
     const infoElContainer = document.createElement("div");
@@ -1012,10 +1098,12 @@
     createDashboard();
 
     initializeDependencies();
+    applyUiVisibility();
 
     onChaptersReadyToMount(() => {
       insertInfoElementInChaptersContainer(infoEl);
       createDashboard();
+      applyUiVisibility();
     });
   }
 
@@ -1041,6 +1129,7 @@
       }
     });
 
+    registerMenuCommands();
     startSavingTimer();
   }
 

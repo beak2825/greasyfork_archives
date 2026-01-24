@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         全网通用返回顶部按钮
 // @namespace    http://tampermonkey.net/
-// @version      1.03
+// @version      1.04
 // @description  美化界面：在所有页面增加一个返回顶部按钮，位于右下角，支持平滑滚动。智能逻辑：如果检测到页面自带返回顶部按钮，则自动隐藏。
 // @author       Rcccccccc
 // @match        *://*/*
@@ -112,13 +112,23 @@
             '[class*="go-top"]', '[id*="go-top"]',
             '[class*="gotop"]', '[id*="gotop"]',
             '[class*="back_to_top"]',
+            // CamelCase 和 snake_case
+            '[class*="goTop"]', '[id*="goTop"]',
+            '[class*="go_top"]', '[id*="go_top"]',
+            // 短横线命名和全大写后缀
+            '[class*="scroll-to-top"]', '[id*="scroll-to-top"]',
+            '[class*="scrollToTOP"]', '[id*="scrollToTOP"]',
 
             // 针对特定网站补充的规则：
             '[class*="ontop"]',             // 匹配 class="float-btn ontop..."
+            '[class*="top-btn"]',           // 匹配 class="top-btn-wrap" / "top-btn"
             '[class*="fbar_top"]',          // 匹配 贴吧
             '[class*="el-backtop"]',        // 匹配 Element UI 组件
             '[class*="toolkit-item-back"]', // 匹配 淘宝/天猫 toolkit
             '[class*="elevator_totop"]',    // 匹配 B站等电梯导航
+            '[class*="src_back_top"]',      // 匹配 优酷/视频站
+            '[class*="src_top_icon"]',      // 匹配 优酷/视频站 icon
+            '[class*="shortcut-item"]',     // 匹配 CSDN/通用侧边栏 shortcut
             '[data-name="backTop"]',        // 匹配 淘宝/天猫 toolkit data-name
             '[data-label="回顶部"]',        // 匹配 淘宝/天猫 toolkit data-label
             '[data-original-title="返回顶部"]', // 匹配 Bootstrap 提示工具

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Juxtaposition Pretendo Enhancer
 // @namespace    https://github.com/ItsFuntum/Juxtaposition-Enhancer
-// @version      2026-01-16-rev1
+// @version      2026-01-23
 // @description  Userscript that improves Pretendo's Juxtaposition on the web.
 // @author       Funtum
 // @match        *://juxt.pretendo.network/*
@@ -37,6 +37,121 @@
     observer.observe(document.body, { childList: true, subtree: true });
   }
 
+  function loadScriptOnce(src) {
+    return new Promise((resolve, reject) => {
+      if ([...document.scripts].some((s) => s.src === src)) {
+        resolve();
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = src;
+      script.async = false; // important: preserves global execution order
+      script.onload = resolve;
+      script.onerror = () => reject(new Error(`Failed to load ${src}`));
+      document.head.appendChild(script);
+    });
+  }
+
+  function override_closePainting() {
+    const wrapper = document.getElementById("painting-wrapper");
+    if (!wrapper) return;
+
+    const okBtn = wrapper.querySelector("button.primary");
+
+    if (!okBtn) {
+      console.warn("Painting button (okBtn) not found");
+      return;
+    }
+
+    okBtn.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      savePainting(wrapper);
+    };
+  }
+
+  function savePainting(wrapper) {
+    const postPage = wrapper.previousElementSibling;
+    if (!postPage) return;
+
+    const canvas = wrapper.querySelector("#painting");
+    const memoPreview = postPage.querySelector("#memo");
+
+    if (!canvas) {
+      console.warn("Painting canvas not found");
+      return;
+    }
+
+    // Step 1: Get raw canvas data
+    const ctx = canvas.getContext("2d");
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const { width, height, data } = imageData;
+
+    // Step 2: Convert to black-and-white (bilevel)
+    const bwData = new Uint8Array(width * height);
+    for (let i = 0; i < width * height; i++) {
+      const r = data[i * 4 + 0];
+      const g = data[i * 4 + 1];
+      const b = data[i * 4 + 2];
+      // Average + threshold
+      const avg = (r + g + b) / 3;
+      bwData[i] = avg > 127 ? 255 : 0;
+    }
+
+    // Step 3: Encode TGA (uncompressed, 32-bit)
+    function encodeTGA(width, height, bwData) {
+      const header = new Uint8Array(18);
+      header[2] = 2; // Uncompressed true-color image
+      header[12] = width & 0xff;
+      header[13] = (width >> 8) & 0xff;
+      header[14] = height & 0xff;
+      header[15] = (height >> 8) & 0xff;
+      header[16] = 32; // bits per pixel
+      header[17] = 0x20; // top-left origin
+
+      const pixels = new Uint8Array(width * height * 4);
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const i = y * width + x;
+          const val = bwData[i];
+          const idx = (y * width + x) * 4;
+          pixels[idx + 0] = val; // B
+          pixels[idx + 1] = val; // G
+          pixels[idx + 2] = val; // R
+          pixels[idx + 3] = 255; // A
+        }
+      }
+
+      const tga = new Uint8Array(header.length + pixels.length);
+      tga.set(header, 0);
+      tga.set(pixels, header.length);
+      return tga;
+    }
+
+    const tgaData = encodeTGA(width, height, bwData);
+
+    // Step 4: Compress TGA → TGAZ
+    const tgaz = pako.deflate(tgaData, { level: 6 });
+
+    // Step 5: Base64 encode
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(tgaz)));
+
+    // Step 6: Update DOM
+    if (memoPreview) {
+      // Show canvas preview in UI
+      memoPreview.src = canvas.toDataURL("image/png");
+      memoPreview.style.display = "block";
+    }
+
+    const memoValue = postPage.querySelector("#memo-value");
+    if (memoValue) memoValue.value = base64;
+
+    wrapper.style.display = "none";
+    document.body.style.overflow = "";
+    console.log("Painting ready, TGAZ bytes:", tgaz.length);
+  }
+
   function scaleToJuxtResolution(img) {
     const TARGETS = [
       { w: 800, h: 450 },
@@ -53,7 +168,7 @@
         const diff = Math.abs(srcAspect - t.w / t.h);
         return diff < best.diff ? { t, diff } : best;
       },
-      { t: TARGETS[0], diff: Infinity }
+      { t: TARGETS[0], diff: Infinity },
     ).t;
 
     const canvas = document.createElement("canvas");
@@ -69,7 +184,7 @@
     // Scale image to fit
     const scale = Math.min(
       canvas.width / img.width,
-      canvas.height / img.height
+      canvas.height / img.height,
     );
 
     const drawW = img.width * scale;
@@ -130,18 +245,18 @@
 
   if (communityPage) {
     const communityId = communityPage[1];
-    waitForCommunityInfo(() => {
+    waitForCommunityInfo(async () => {
       const popupBackdrop = document.createElement("div");
       popupBackdrop.className = "modal-backdrop";
       popupBackdrop.style.display = "flex";
       document.body.appendChild(popupBackdrop);
 
-      const popup = document.createElement("div");
-      popup.id = "add-post-page";
-      popup.className = "add-post-page official-user-post";
-      popup.style.display = "flex";
+      const postPage = document.createElement("div");
+      postPage.id = "add-post-page";
+      postPage.className = "add-post-page official-user-post";
+      postPage.style.display = "flex";
 
-      popup.innerHTML = `
+      postPage.innerHTML = `
 <form id="posts-form" data-is-own-title="1" data-is-identified="1" action="/posts/new" method="post">
   <input type="hidden" name="community_id" value="${communityId}">
 
@@ -162,16 +277,16 @@
     <div class="textarea-container textarea-with-menu active-text">
       <menu class="textarea-menu">
         <li class="textarea-menu-text">
-          <input type="radio" name="_post_type" checked value="body">
+          <input type="radio" data-sound="" onclick="openText()" name="_post_type" checked="" value="body">
         </li>
         <li class="textarea-menu-memo">
-          <input type="radio" name="_post_type" value="painting">
+          <input type="radio" data-sound="" onclick="newPainting(false)" name="_post_type" value="painting">
         </li>
       </menu>
 
       <textarea id="new-post-text" name="body" class="textarea-text" maxlength="280" placeholder="Enter text here..."></textarea>
 
-      <div id="new-post-memo" class="textarea-memo" style="display:none">
+      <div id="new-post-memo" class="textarea-memo trigger" data-sound="" onclick="newPainting(false)" style="display: none;">
         <img id="memo" class="textarea-memo-preview">
         <input id="memo-value" type="hidden" name="painting">
       </div>
@@ -196,12 +311,59 @@
 </form>
 `;
 
-      document.querySelector(".community-top").appendChild(popup);
-      processScreenshot(popup);
+      const paintingWrapper = document.createElement("div");
+      paintingWrapper.className = "painting-wrapper";
+      paintingWrapper.style.display = "none";
+      paintingWrapper.id = "painting-wrapper";
+      Object.assign(paintingWrapper.style, {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        zIndex: "100000",
+      });
+
+      paintingWrapper.innerHTML = `
+<div id="painting-content">
+  <div class="tools">
+    <div>
+      <button class="clear" onclick="clearCanvas()"></button>
+      <button class="undo"></button>
+    </div>
+    <div>
+      <ul class="buttons pencil">
+        <li><input onclick="setPen(0)" type="radio" class="pencil small" name="tool" checked="" value="0"></li>
+        <li><input onclick="setPen(1)" type="radio" class="pencil medium" name="tool" value="1"></li>
+        <li><input onclick="setPen(2)" type="radio" class="pencil large" name="tool" value="2"></li>
+      </ul>
+      <ul class="buttons eraser">
+        <li><input onclick="setEraser(0)" type="radio" class="eraser small" name="tool" value="0"></li>
+        <li><input onclick="setEraser(1)" type="radio" class="eraser medium" name="tool" value="1"></li>
+        <li><input onclick="setEraser(2)" type="radio" class="eraser large" name="tool" value="2"></li>
+      </ul>
+    </div>
+  </div><canvas width="320" height="120" id="painting">Your browser does not support the HTML canvas tag.</canvas>
+  <div id="button-wrapper"><button onclick="closePainting(false)">Cancel</button><button class="primary">OK</button></div>
+</div>`;
+
+      document.querySelector(".community-top").appendChild(postPage);
+      document.querySelector(".community-top").appendChild(paintingWrapper);
+
+      await loadScriptOnce(
+        "https://juxt.pretendo.network/js/painting.global.js",
+      );
+      await loadScriptOnce(
+        "https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js",
+      );
+
+      override_closePainting();
+      processScreenshot(postPage);
 
       // --- Feeling selector: change Mii expression when clicking buttons ---
-      const miiFace = popup.querySelector("#mii-face");
-      const feelingButtons = popup.querySelectorAll("input[name='feeling_id']");
+      const miiFace = postPage.querySelector("#mii-face");
+      const feelingButtons = postPage.querySelectorAll(
+        "input[name='feeling_id']",
+      );
 
       feelingButtons.forEach((btn) => {
         btn.addEventListener("change", () => {
@@ -213,9 +375,9 @@
   }
 
   // --- Instead of starting with just the observer ---
-  async function addReplyBox(wrapper) {
+  async function addReplyBox() {
     const communityLink = document.querySelector(
-      '.post-meta-wrapper h4 a[href^="/titles/"]'
+      '.post-meta-wrapper h4 a[href^="/titles/"]',
     );
     if (!communityLink) return alert("Cannot find community link");
     const communityId = communityLink
@@ -230,12 +392,12 @@
     if (!postsWrapper) return alert("Cannot find parent post ID");
     const postId = postsWrapper.id;
 
-    const popup = document.createElement("div");
-    popup.id = "add-post-page";
-    popup.className = "add-post-page official-user-post";
-    popup.style.display = "flex";
+    const postPage = document.createElement("div");
+    postPage.id = "add-post-page";
+    postPage.className = "add-post-page official-user-post";
+    postPage.style.display = "flex";
 
-    popup.innerHTML = `
+    postPage.innerHTML = `
 <form id="posts-form" data-is-own-title="1" data-is-identified="1" action="/posts/${postId}/new" method="post">
   <input type="hidden" name="community_id" value="${communityId}">
 
@@ -256,16 +418,16 @@
     <div class="textarea-container textarea-with-menu active-text">
       <menu class="textarea-menu">
         <li class="textarea-menu-text">
-          <input type="radio" name="_post_type" checked value="body">
+          <input type="radio" data-sound="" onclick="openText()" name="_post_type" checked="" value="body">
         </li>
         <li class="textarea-menu-memo">
-          <input type="radio" name="_post_type" value="painting">
+          <input type="radio" data-sound="" onclick="newPainting(false)" name="_post_type" value="painting">
         </li>
       </menu>
 
       <textarea id="new-post-text" name="body" class="textarea-text" maxlength="280" placeholder="Enter text here..."></textarea>
 
-      <div id="new-post-memo" class="textarea-memo" style="display:none">
+      <div id="new-post-memo" class="textarea-memo trigger" data-sound="" onclick="newPainting(false)" style="display: none;">
         <img id="memo" class="textarea-memo-preview">
         <input id="memo-value" type="hidden" name="painting">
       </div>
@@ -285,17 +447,62 @@
   </div>
 
   <div id="button-wrapper">
-    <input type="submit" class="post-button fixed-bottom-button" value="Reply">
+    <input type="submit" class="post-button fixed-bottom-button" value="Post">
   </div>
 </form>
 `;
 
-    postsWrapper.appendChild(popup);
-    processScreenshot(popup);
+    const paintingWrapper = document.createElement("div");
+    paintingWrapper.className = "painting-wrapper";
+    paintingWrapper.style.display = "none";
+    paintingWrapper.id = "painting-wrapper";
+    Object.assign(paintingWrapper.style, {
+      position: "fixed",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      zIndex: "100000",
+    });
+
+    paintingWrapper.innerHTML = `
+<div id="painting-content">
+  <div class="tools">
+    <div>
+      <button class="clear" onclick="clearCanvas()"></button>
+      <button class="undo"></button>
+    </div>
+    <div>
+      <ul class="buttons pencil">
+        <li><input onclick="setPen(0)" type="radio" class="pencil small" name="tool" checked="" value="0"></li>
+        <li><input onclick="setPen(1)" type="radio" class="pencil medium" name="tool" value="1"></li>
+        <li><input onclick="setPen(2)" type="radio" class="pencil large" name="tool" value="2"></li>
+      </ul>
+      <ul class="buttons eraser">
+        <li><input onclick="setEraser(0)" type="radio" class="eraser small" name="tool" value="0"></li>
+        <li><input onclick="setEraser(1)" type="radio" class="eraser medium" name="tool" value="1"></li>
+        <li><input onclick="setEraser(2)" type="radio" class="eraser large" name="tool" value="2"></li>
+      </ul>
+    </div>
+  </div><canvas width="320" height="120" id="painting">Your browser does not support the HTML canvas tag.</canvas>
+  <div id="button-wrapper"><button onclick="closePainting(false)">Cancel</button><button class="primary">OK</button></div>
+</div>`;
+
+    postsWrapper.appendChild(postPage);
+    postsWrapper.appendChild(paintingWrapper);
+
+    await loadScriptOnce("https://juxt.pretendo.network/js/painting.global.js");
+    await loadScriptOnce(
+      "https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js",
+    );
+
+    override_closePainting();
+    processScreenshot(postPage);
 
     // --- Feeling selector: change Mii expression when clicking buttons ---
-    const miiFace = popup.querySelector("#mii-face");
-    const feelingButtons = popup.querySelectorAll("input[name='feeling_id']");
+    const miiFace = postPage.querySelector("#mii-face");
+    const feelingButtons = postPage.querySelectorAll(
+      "input[name='feeling_id']",
+    );
 
     feelingButtons.forEach((btn) => {
       btn.addEventListener("change", () => {
@@ -313,7 +520,7 @@
     const userMiiIcon_raw = userMiiIconEl.src;
     const userMiiIcon_base = userMiiIcon_raw.substring(
       0,
-      userMiiIcon_raw.lastIndexOf("/") + 1
+      userMiiIcon_raw.lastIndexOf("/") + 1,
     );
 
     wrappers.forEach((wrapper) => {
@@ -324,7 +531,7 @@
 
       const postMiiIcon_base = postMiiIcon_raw.substring(
         0,
-        postMiiIcon_raw.lastIndexOf("/") + 1
+        postMiiIcon_raw.lastIndexOf("/") + 1,
       );
 
       // Check if the post was made by the current user
@@ -369,7 +576,7 @@
 
       // Find the post by postId
       const postData = localData.posts.find(
-        (post) => post.id.toString() === postId
+        (post) => post.id.toString() === postId,
       );
       if (!postData) return [];
 

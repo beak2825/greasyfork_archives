@@ -1,129 +1,110 @@
 // ==UserScript==
-// @name         Gemini 目录插件 (v1.1)
+// @name         Gemini 目录插件 (v2.0)
 // @namespace    http://tampermonkey.net/
-// @version      1.1
-// @description  修复最新条目定位问题，以及Top按钮无法一键返回对话开始位置。
+// @version      2.0
+// @description  生成高效的Gemini对话目录索引窗口。
 // @author       ArcherEmiya
 // @match        https://gemini.google.com/*
 // @grant        none
-// @run-at       document-end
+// @run-at       document-idle
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/563498/Gemini%20%E7%9B%AE%E5%BD%95%E6%8F%92%E4%BB%B6%20%28v11%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563498/Gemini%20%E7%9B%AE%E5%BD%95%E6%8F%92%E4%BB%B6%20%28v11%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563498/Gemini%20%E7%9B%AE%E5%BD%95%E6%8F%92%E4%BB%B6%20%28v20%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563498/Gemini%20%E7%9B%AE%E5%BD%95%E6%8F%92%E4%BB%B6%20%28v20%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
+    console.log("Gemini Plugin v2.0: 启动...");
+
     const CONFIG = {
-        userMessageSelector: '.query-text-line',
-        displayCount: 5
+        selector: '.query-text-line',
+        displayCount: 8
     };
 
+    // --- 0. 图标数据 ---
+    const ICON_DEFS = {
+        search: { viewBox: "0 0 24 24", content: [{ tag: 'circle', attrs: { cx: '11', cy: '11', r: '7', stroke: 'currentColor', 'stroke-width': '2', fill: 'none' } }, { tag: 'line', attrs: { x1: '16', y1: '16', x2: '21', y2: '21', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round' } }] },
+        top: { viewBox: "0 0 24 24", content: [{ tag: 'path', attrs: { d: 'M12 19V5M5 12l7-7 7 7', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none' } }] },
+        bottom: { viewBox: "0 0 24 24", content: [{ tag: 'path', attrs: { d: 'M12 5v14M5 12l7 7 7-7', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none' } }] },
+        spin: { viewBox: "0 0 24 24", content: [{ tag: 'path', attrs: { d: 'M21 12a9 9 0 1 1-6.219-8.56', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round', fill: 'none' } }] },
+        bullet: { viewBox: "0 0 24 24", content: [{ tag: 'circle', attrs: { cx: '12', cy: '12', r: '4', fill: 'currentColor' } }] }
+    };
+
+    function createSvgIcon(name, className = '') {
+        const def = ICON_DEFS[name]; if (!def) return null;
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("width", "20"); svg.setAttribute("height", "20");
+        svg.setAttribute("viewBox", def.viewBox); svg.setAttribute("fill", "none");
+        if (className) svg.setAttribute("class", className);
+        def.content.forEach(el => {
+            const node = document.createElementNS("http://www.w3.org/2000/svg", el.tag);
+            for (const [key, value] of Object.entries(el.attrs)) node.setAttribute(key, value);
+            svg.appendChild(node);
+        });
+        return svg;
+    }
+
     // --- 1. 样式 (CSS) ---
-    const STYLE_ID = 'gemini-toc-style-v14';
-    if (!document.getElementById(STYLE_ID)) {
+    const STYLE_ID = 'gemini-toc-style';
+    function injectStyles() {
+        if (document.getElementById(STYLE_ID)) return;
+        const listMaxHeight = CONFIG.displayCount * 36;
         const styles = `
-            #gemini-toc-v14 {
-                position: fixed;
-                top: 80px;
-                right: 20px;
-                width: 260px;
-                background: #1e1f20;
-                color: #e3e3e3;
-                border: 1px solid #444;
-                border-radius: 12px;
-                z-index: 99999;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            #gemini-toc {
+                position: fixed; top: 80px; right: 24px; width: 280px;
+                background: #1e1f20; color: #e3e3e3; border-radius: 24px;
+                z-index: 2147483647; overflow: hidden;
+                box-shadow: 0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.3);
                 font-family: 'Google Sans', Roboto, sans-serif;
-                display: flex;
-                flex-direction: column;
-                font-size: 13px;
-                user-select: none;
-                height: auto;
+                display: flex; flex-direction: column; height: auto; max-height: 85vh;
+                border: 1px solid #444746; transition: opacity 0.3s;
             }
-            .toc-header {
-                padding: 10px 14px;
-                border-bottom: 1px solid #444;
-                background: #2b2c2e;
-                border-radius: 12px 12px 0 0;
-                flex-shrink: 0;
-                cursor: move;
-            }
-            .toc-top-row {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 8px;
-            }
-            .toc-title { font-weight: bold; font-size: 13px; pointer-events: none; color: #ccc;}
-
-            .toc-btn-group { display: flex; gap: 8px; }
+            .toc-header { padding: 16px 16px 8px 16px; background: #1e1f20; flex-shrink: 0; cursor: move; }
+            .toc-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+            .toc-title { font-weight: 500; font-size: 14px; color: #e3e3e3; pointer-events: none; padding-left: 4px; }
+            .toc-btn-group { display: flex; gap: 4px; }
             .toc-btn {
-                background: transparent;
-                border: 1px solid #555;
-                color: #aaa;
-                cursor: pointer;
-                padding: 2px 8px;
-                border-radius: 4px;
-                font-size: 14px;
-                transition: all 0.2s;
-                line-height: 1;
-                min-width: 24px;
-                text-align: center;
+                background: transparent; border: none; color: #c4c7c5; cursor: pointer; padding: 0;
+                width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                transition: background-color 0.2s, color 0.2s;
             }
-            .toc-btn:hover { background: #8ab4f8; color: #1f1f1f; border-color: #8ab4f8; }
-            .toc-btn:disabled { cursor: wait; color: #8ab4f8; border-color: #8ab4f8; }
+            .toc-btn:hover { background-color: rgba(255, 255, 255, 0.08); color: #e3e3e3; }
+            .toc-btn:disabled { cursor: wait; opacity: 0.7; color: #8ab4f8; }
+            .toc-btn svg { display: block; width: 20px; height: 20px; }
+            .toc-spin-svg { animation: spin 1s linear infinite; transform-origin: center; }
+            @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+            .toc-search-wrapper { position: relative; margin-bottom: 4px; }
             #toc-search-input {
-                width: 100%;
-                background: #131314;
-                border: 1px solid #555;
-                color: #fff;
-                padding: 5px 8px;
-                border-radius: 6px;
-                box-sizing: border-box;
-                outline: none;
-                font-size: 12px;
-                cursor: text;
+                width: 100%; background: #2b2c2e; border: 1px solid transparent; color: #e3e3e3;
+                padding: 10px 16px 10px 40px; border-radius: 24px; box-sizing: border-box; outline: none;
+                font-size: 13px; font-family: 'Google Sans', sans-serif; transition: background 0.2s, border-color 0.2s;
             }
-            #toc-search-input:focus { border-color: #8ab4f8; }
+            #toc-search-input:focus { background: #1e1f20; border-color: #a8c7fa; }
+            .toc-search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #c4c7c5; pointer-events: none; display: flex; }
+            .toc-search-icon svg { width: 20px; height: 20px; }
 
             #toc-list {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-                flex-grow: 1;
-                cursor: default;
-                overflow-y: auto;
-                max-height: 175px;
-                scroll-behavior: auto;
+                list-style: none; padding: 0; margin: 0; flex-grow: 1;
+                overflow-y: auto; cursor: default; max-height: ${listMaxHeight}px; padding-bottom: 8px;
             }
-            #toc-list::-webkit-scrollbar { width: 4px; }
-            #toc-list::-webkit-scrollbar-thumb { background: #555; border-radius: 2px; }
+            #toc-list::-webkit-scrollbar { width: 8px; }
+            #toc-list::-webkit-scrollbar-track { background: transparent; }
+            #toc-list::-webkit-scrollbar-thumb { background-color: #444746; border-radius: 4px; border: 2px solid #1e1f20; }
+            #toc-list::-webkit-scrollbar-thumb:hover { background-color: #5e5e5e; }
 
             .toc-item {
-                padding: 8px 14px;
-                border-bottom: 1px solid #2d2e30;
-                cursor: pointer;
-                font-size: 12px;
-                color: #c4c7c5;
-                line-height: 1.4;
-                display: flex;
-                align-items: flex-start;
+                padding: 8px 16px; margin: 0 4px; border-radius: 16px; cursor: pointer;
+                font-size: 13px; color: #c4c7c5; line-height: 20px; display: flex; align-items: center;
+                transition: background-color 0.1s; overflow: hidden;
             }
-            .toc-item:last-child { border-bottom: none; border-radius: 0 0 12px 12px; }
-            .toc-item:hover { background-color: #333537; color: #fff; }
+            .toc-item:hover { background-color: rgba(232, 234, 237, 0.08); color: #e3e3e3; }
+            .toc-bullet { margin-right: 12px; color: #a8c7fa; flex-shrink: 0; display: flex; align-items: center; height: 20px; }
+            .toc-bullet svg { width: 8px; height: 8px; }
+            .toc-text { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
             .toc-item-hidden { display: none !important; }
-
-            .toc-bullet {
-                margin-right: 8px;
-                color: #8ab4f8;
-                font-weight: bold;
-                flex-shrink: 0;
-            }
-
-            .toc-status { padding: 10px; text-align: center; color: #666; font-size: 12px; }
+            .toc-status { padding: 20px; text-align: center; color: #8e918f; font-size: 12px; }
         `;
         const styleSheet = document.createElement("style");
         styleSheet.id = STYLE_ID;
@@ -131,86 +112,48 @@
         document.head.appendChild(styleSheet);
     }
 
-    // --- 2. 拖拽逻辑 ---
+    // --- 2. 交互逻辑 (拖拽 & 滚动) ---
     function makeDraggable(el) {
         const header = el.querySelector('.toc-header');
-        let isDragging = false;
-        let startX, startY, initialLeft, initialTop;
+        let isDragging = false, startX, startY, initialLeft, initialTop;
         header.addEventListener('mousedown', (e) => {
-            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
-            isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            const rect = el.getBoundingClientRect();
-            initialLeft = rect.left;
-            initialTop = rect.top;
-            el.style.right = 'auto';
-            el.style.left = `${initialLeft}px`;
-            el.style.top = `${initialTop}px`;
-            el.style.opacity = '0.9';
+            if (e.target.closest('button') || e.target.closest('input')) return;
+            isDragging = true; startX = e.clientX; startY = e.clientY;
+            const rect = el.getBoundingClientRect(); initialLeft = rect.left; initialTop = rect.top;
         });
         document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            e.preventDefault();
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-            el.style.left = `${initialLeft + dx}px`;
-            el.style.top = `${initialTop + dy}px`;
+            if (!isDragging) return; e.preventDefault();
+            el.style.left = `${initialLeft + (e.clientX - startX)}px`;
+            el.style.top = `${initialTop + (e.clientY - startY)}px`;
         });
-        document.addEventListener('mouseup', () => {
-            if (isDragging) { isDragging = false; el.style.opacity = '1'; }
-        });
+        document.addEventListener('mouseup', () => { isDragging = false; });
     }
 
-    // --- 3. 强力滚动逻辑 ---
     function getScrollContainer() {
-        const anchor = document.querySelector(CONFIG.userMessageSelector);
+        const anchor = document.querySelector(CONFIG.selector);
         if (!anchor) return document.documentElement;
-        let currentElement = anchor.parentElement;
-        while (currentElement && currentElement !== document.body) {
-            const style = window.getComputedStyle(currentElement);
-            const isScrollable = (style.overflowY === 'auto' || style.overflowY === 'scroll') &&
-                                 (currentElement.scrollHeight > currentElement.clientHeight);
-            if (isScrollable) return currentElement;
-            currentElement = currentElement.parentElement;
+        let el = anchor.parentElement;
+        while (el && el !== document.body) {
+            const style = window.getComputedStyle(el);
+            if ((style.overflowY === 'auto' || style.overflowY === 'scroll') && (el.scrollHeight > el.clientHeight)) return el;
+            el = el.parentElement;
         }
         return document.documentElement;
     }
 
-    // 涡轮回溯置顶
     function handleTurboTop() {
         const btn = document.getElementById('toc-btn-top');
-        if (btn) {
-            btn.textContent = '⏳';
-            btn.disabled = true;
-        }
-
+        if (btn) { btn.textContent = ''; btn.appendChild(createSvgIcon('spin', 'toc-spin-svg')); btn.disabled = true; }
         const container = getScrollContainer();
-        let stableCount = 0;
-        let lastHeight = container.scrollHeight;
-
+        let stableCount = 0, lastHeight = container.scrollHeight;
         const timer = setInterval(() => {
-            window.scrollTo(0, 0);
-            document.body.scrollTo(0, 0);
-            document.documentElement.scrollTo(0, 0);
-            if (container && container !== document.documentElement) {
-                container.scrollTop = 0;
-            }
-
+            window.scrollTo(0, 0); document.body.scrollTo(0, 0); document.documentElement.scrollTo(0, 0);
+            if (container && container !== document.documentElement) container.scrollTop = 0;
             const currentHeight = container.scrollHeight;
-            if (currentHeight > lastHeight) {
-                lastHeight = currentHeight;
-                stableCount = 0;
-            } else {
-                stableCount++;
-            }
-
+            if (currentHeight > lastHeight) { lastHeight = currentHeight; stableCount = 0; } else { stableCount++; }
             if (stableCount > 10) {
                 clearInterval(timer);
-                if (btn) {
-                    btn.textContent = '⬆';
-                    btn.disabled = false;
-                }
+                if (btn) { btn.textContent = ''; btn.appendChild(createSvgIcon('top')); btn.disabled = false; }
                 if (container && container !== document.documentElement) container.scrollTop = 0;
                 scanContent(true);
             }
@@ -219,70 +162,43 @@
 
     function handleScrollBottom() {
         const container = getScrollContainer();
-        let targetTop = 0;
-        let targetEl = container;
-        if (container === document.documentElement) {
-             targetTop = document.body.scrollHeight;
-             targetEl = window;
-        } else {
-             targetTop = container.scrollHeight;
-        }
+        const targetEl = container === document.documentElement ? window : container;
+        const targetTop = container === document.documentElement ? document.body.scrollHeight : container.scrollHeight;
         targetEl.scrollTo({ top: targetTop, behavior: 'smooth' });
     }
 
-    // --- 4. UI 逻辑 ---
+    // --- 3. UI 创建 ---
     function createUI() {
-        if (document.getElementById('gemini-toc-v14')) return;
+        if (document.getElementById('gemini-toc')) return;
         if (!document.body) return;
+        injectStyles();
 
-        const panel = document.createElement('div');
-        panel.id = 'gemini-toc-v14';
+        const panel = document.createElement('div'); panel.id = 'gemini-toc';
+        const header = document.createElement('div'); header.className = 'toc-header';
 
-        const header = document.createElement('div');
-        header.className = 'toc-header';
+        const topRow = document.createElement('div'); topRow.className = 'toc-top-row';
+        const title = document.createElement('span'); title.className = 'toc-title'; title.textContent = '对话索引';
+        const btnGroup = document.createElement('div'); btnGroup.className = 'toc-btn-group';
 
-        const topRow = document.createElement('div');
-        topRow.className = 'toc-top-row';
+        const topBtn = document.createElement('button'); topBtn.id = 'toc-btn-top'; topBtn.className = 'toc-btn';
+        topBtn.appendChild(createSvgIcon('top')); topBtn.onclick = handleTurboTop; topBtn.title = "回溯顶部";
 
-        const title = document.createElement('span');
-        title.className = 'toc-title';
-        title.textContent = `对话索引`;
+        const botBtn = document.createElement('button'); botBtn.className = 'toc-btn';
+        botBtn.appendChild(createSvgIcon('bottom')); botBtn.onclick = handleScrollBottom; botBtn.title = "直达底部";
 
-        const btnGroup = document.createElement('div');
-        btnGroup.className = 'toc-btn-group';
+        btnGroup.appendChild(topBtn); btnGroup.appendChild(botBtn);
+        topRow.appendChild(title); topRow.appendChild(btnGroup);
 
-        const topBtn = document.createElement('button');
-        topBtn.id = 'toc-btn-top';
-        topBtn.className = 'toc-btn';
-        topBtn.textContent = '⬆';
-        topBtn.title = "强制回溯至对话起点";
-        topBtn.onclick = handleTurboTop;
-
-        const botBtn = document.createElement('button');
-        botBtn.className = 'toc-btn';
-        botBtn.textContent = '⬇';
-        botBtn.title = "滚到底部";
-        botBtn.onclick = handleScrollBottom;
-
-        btnGroup.appendChild(topBtn);
-        btnGroup.appendChild(botBtn);
-        topRow.appendChild(title);
-        topRow.appendChild(btnGroup);
-
-        const searchInput = document.createElement('input');
-        searchInput.id = 'toc-search-input';
-        searchInput.type = 'text';
-        searchInput.placeholder = '搜索...';
+        const searchWrapper = document.createElement('div'); searchWrapper.className = 'toc-search-wrapper';
+        const searchIcon = document.createElement('span'); searchIcon.className = 'toc-search-icon';
+        searchIcon.appendChild(createSvgIcon('search'));
+        const searchInput = document.createElement('input'); searchInput.id = 'toc-search-input'; searchInput.type = 'text'; searchInput.placeholder = '搜索...';
         searchInput.addEventListener('input', (e) => filterList(e.target.value));
+        searchWrapper.appendChild(searchIcon); searchWrapper.appendChild(searchInput);
 
-        header.appendChild(topRow);
-        header.appendChild(searchInput);
-
-        const ul = document.createElement('ul');
-        ul.id = 'toc-list';
-
-        panel.appendChild(header);
-        panel.appendChild(ul);
+        header.appendChild(topRow); header.appendChild(searchWrapper);
+        const ul = document.createElement('ul'); ul.id = 'toc-list';
+        panel.appendChild(header); panel.appendChild(ul);
         document.body.appendChild(panel);
 
         makeDraggable(panel);
@@ -292,110 +208,110 @@
     function filterList(keyword) {
         const list = document.getElementById('toc-list');
         if (!list) return;
-        const items = list.querySelectorAll('.toc-item');
         const lowerKeyword = keyword.toLowerCase();
-        items.forEach(item => {
-            const fullText = item.getAttribute('data-fulltext') || '';
-            if (fullText.includes(lowerKeyword)) {
-                item.classList.remove('toc-item-hidden');
-            } else {
-                item.classList.add('toc-item-hidden');
-            }
+        list.querySelectorAll('.toc-item').forEach(item => {
+            const text = item.getAttribute('data-fulltext') || '';
+            item.classList.toggle('toc-item-hidden', !text.includes(lowerKeyword));
         });
     }
 
-    // --- 5. 扫描逻辑 ---
+    // --- 4. 扫描逻辑 (★增量更新算法★) ---
     function scanContent(forceUpdate = false) {
         const list = document.getElementById('toc-list');
         if (!list) return;
-
-        const allItems = document.querySelectorAll(CONFIG.userMessageSelector);
+        const allItems = document.querySelectorAll(CONFIG.selector);
         const totalCount = allItems.length;
-        const currentTocItems = list.querySelectorAll('.toc-item');
 
-        if (!forceUpdate && currentTocItems.length === totalCount && totalCount > 0) {
-            const lastDomText = allItems[totalCount - 1].innerText.trim();
-            const lastTocText = currentTocItems[totalCount - 1].title;
-            if (lastDomText === lastTocText) return;
-        }
+        // 获取当前搜索词
+        const currentKeyword = document.getElementById('toc-search-input')?.value || '';
 
-        const searchInput = document.getElementById('toc-search-input');
-        const currentKeyword = searchInput ? searchInput.value : '';
-        const wasAtBottom = (list.scrollHeight - list.scrollTop) <= (list.clientHeight + 5);
-        const isFirstLoad = list.children.length === 0;
-        const previousScrollTop = list.scrollTop;
-
-        list.textContent = '';
-
+        // 如果没有内容，显示空状态
         if (totalCount === 0) {
-            const emptyItem = document.createElement('li');
-            emptyItem.className = 'toc-status';
-            emptyItem.textContent = 'waiting...';
+            list.innerHTML = ''; // 这里可以暴力清空，因为是空状态
+            const emptyItem = document.createElement('li'); emptyItem.className = 'toc-status'; emptyItem.textContent = 'waiting...';
             list.appendChild(emptyItem);
             return;
+        } else {
+            // 如果之前是 emptyItem，先清空
+            if (list.firstChild && list.firstChild.classList.contains('toc-status')) {
+                list.innerHTML = '';
+            }
         }
 
+        // --- 核心 Diff 逻辑 ---
+        // 遍历 DOM 中的所有消息条目
         for (let i = 0; i < totalCount; i++) {
             const el = allItems[i];
             const text = el.innerText.trim();
             if (!text) continue;
 
-            const li = document.createElement('li');
-            li.className = 'toc-item';
-            li.setAttribute('data-fulltext', text.toLowerCase());
+            // 检查当前索引对应的目录项是否存在
+            let li = list.children[i];
 
-            const shortText = text.length > 20 ? text.substring(0, 20) + '...' : text;
+            // 1. 如果该位置没有目录项 (说明有新消息)，则创建
+            if (!li) {
+                li = document.createElement('li');
+                li.className = 'toc-item';
 
-            const bulletSpan = document.createElement('span');
-            bulletSpan.className = 'toc-bullet';
-            bulletSpan.textContent = '•';
+                const bulletSpan = document.createElement('span');
+                bulletSpan.className = 'toc-bullet';
+                bulletSpan.appendChild(createSvgIcon('bullet'));
 
-            const textNode = document.createTextNode(' ' + shortText);
+                const textSpan = document.createElement('span');
+                textSpan.className = 'toc-text';
 
-            li.appendChild(bulletSpan);
-            li.appendChild(textNode);
-            li.title = text;
+                li.appendChild(bulletSpan);
+                li.appendChild(textSpan);
+                list.appendChild(li); // 追加到末尾
+            }
 
-            // ▼▼▼ 核心修正点 ▼▼▼
-            // 不再判断 if (i === totalCount - 1)
-            // 所有条目统一使用 scrollIntoView，且 block: 'center' 确保居中
-            li.onclick = () => {
-                if (el && el.isConnected) {
-                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                } else {
-                    // 只有在元素真的找不到时，才回到底部
-                    handleScrollBottom();
-                }
+            // 2. 更新内容 (仅在内容变化时操作 DOM，避免重排)
+            // 使用 data 属性存储旧文本进行对比
+            const oldText = li.getAttribute('data-fulltext');
+            const newTextLower = text.toLowerCase();
 
-                el.style.transition = 'background 0.3s';
-                const originalBg = el.style.backgroundColor;
-                el.style.backgroundColor = '#3c4043';
-                setTimeout(() => { el.style.backgroundColor = originalBg || ''; }, 800);
-            };
-            list.appendChild(li);
+            if (oldText !== newTextLower) {
+                li.setAttribute('data-fulltext', newTextLower);
+                li.title = text;
+                // 更新文字内容
+                const textSpan = li.querySelector('.toc-text');
+                if (textSpan) textSpan.textContent = text;
+
+                // 重新绑定点击事件 (因为 el 引用可能变了)
+                li.onclick = () => {
+                    if (el && el.isConnected) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    else handleScrollBottom();
+
+                    const originalBg = el.style.backgroundColor;
+                    el.style.backgroundColor = '#444a50';
+                    setTimeout(() => { el.style.backgroundColor = originalBg || ''; }, 500);
+                };
+            }
         }
 
+        // 3. 删除多余的目录项 (如果切换到了一个更短的对话)
+        while (list.children.length > totalCount) {
+            list.removeChild(list.lastChild);
+        }
+
+        // 4. 重新应用搜索过滤 (因为可能新增了条目)
         if (currentKeyword) {
             filterList(currentKeyword);
         }
 
-        if (wasAtBottom || isFirstLoad) {
-             list.scrollTop = list.scrollHeight;
-        } else {
-             list.scrollTop = previousScrollTop;
+        // 5. 自动沉底逻辑
+        const wasAtBottom = (list.scrollHeight - list.scrollTop) <= (list.clientHeight + 50);
+        const isTurboRunning = document.getElementById('toc-btn-top')?.disabled;
+        // 如果不在回溯顶部，且之前在底部(或初次加载)，则保持沉底
+        if (!isTurboRunning && wasAtBottom) {
+             // 使用 requestAnimationFrame 确保在渲染后执行
+             requestAnimationFrame(() => { list.scrollTop = list.scrollHeight; });
         }
     }
 
-    // --- 6. 永动心跳 ---
+    // 心跳
     setInterval(() => {
-        const panel = document.getElementById('gemini-toc-v14');
-        if (!panel) {
-            createUI();
-        } else {
-            scanContent(false);
-        }
+        const panel = document.getElementById('gemini-toc');
+        if (!panel) createUI(); else scanContent(false);
     }, 1000);
-
-    console.log("Gemini 插件 v14.0 (Accurate Positioning) Loaded");
-
 })();

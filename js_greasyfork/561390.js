@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         Torn Stock Vault (API) v3
+// @name         Torn Stock Vault (API) v4.1
 // @namespace    TheALFA.torn.stocks
-// @version      3.1
+// @version      4.1
 // @description  Secure stock vault using the Torn API. Mobile optimized.
 // @author       TheALFA [2869953]
 // @match        https://www.torn.com/page.php?sid=stocks*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/561390/Torn%20Stock%20Vault%20%28API%29%20v3.user.js
-// @updateURL https://update.greasyfork.org/scripts/561390/Torn%20Stock%20Vault%20%28API%29%20v3.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561390/Torn%20Stock%20Vault%20%28API%29%20v41.user.js
+// @updateURL https://update.greasyfork.org/scripts/561390/Torn%20Stock%20Vault%20%28API%29%20v41.meta.js
 // ==/UserScript==
 
 // --- CONFIGURATION ---
@@ -85,6 +85,8 @@ const ADVISOR_DATA = {
     "GRN": { type: "cash", val: 4_000_000, freq: 31 },
     "TCT": { type: "cash", val: 1_000_000, freq: 31 }
 };
+
+let lastSync = 0; // Tracks the last time we auto-synced
 
 // Storage for prices
 let itemPrices = {};
@@ -208,18 +210,64 @@ async function getMoneyFromAPI() {
     } catch (e) { console.error(e); $("#responseStock").html("API Failed Check Log").css("color", "red"); return 0; }
 }
 
+// 1. Force API Sync (Updates DOM & Returns Money)
+async function syncWallet(silent = false) {
+    let key = localStorage.getItem("alfa_vault_apikey");
+    if (!key) return 0;
+
+    // Throttle: Don't sync more than once every 2 seconds to prevent spam
+    if (Date.now() - lastSync < 2000) return 0;
+    lastSync = Date.now();
+
+    if (!silent) $("#responseStock").html("Syncing...").css("color", "orange");
+
+    try {
+        // Timestamp (&ts) prevents caching so you get fresh RR winnings
+        const response = await fetch(`https://api.torn.com/user/?selections=money&key=${key}&ts=${Date.now()}`);
+        const data = await response.json();
+
+        if (data.money_onhand !== undefined) {
+            let money = data.money_onhand;
+            let formatted = "$" + money.toLocaleString();
+
+            // Update UI (Sidebar & Mobile)
+            if ($("#user-money").length > 0) $("#user-money").attr("data-money", money).text(formatted);
+            let mobileMoney = $("[class^='money-value_']");
+            if (mobileMoney.length > 0) mobileMoney.text(formatted);
+
+            if (!silent) $("#responseStock").html(`Synced: ${formatted}`).css("color", "green");
+            return money;
+        }
+    } catch (e) {
+        if (!silent) $("#responseStock").html("Sync Failed").css("color", "red");
+    }
+    return 0;
+}
+
+// 2. Read Money from Screen (Instant)
+function getMoneyFast() {
+    let dataMoney = $("#user-money").attr("data-money");
+    if (dataMoney) return parseFloat(dataMoney);
+    let textMoney = $("#user-money").text();
+    if (textMoney) return parseTornNumber(textMoney);
+    return 0;
+}
+
 // --- INITIALIZATION ---
 function insert() {
+    // 1. Load Settings
     let current = localStorage.alfa_vault_target;
     let savedKeep = localStorage.getItem("alfa_vault_keepVal") || "";
     let savedSell = localStorage.getItem("alfa_vault_sellVal") || "";
     let savedKey = localStorage.getItem("alfa_vault_apikey") || "";
     let instantOn = localStorage.getItem("alfa_vault_instant") === "true";
     let lockOn = localStorage.getItem("alfa_vault_lock") === "true";
+    let useApiOn = localStorage.getItem("alfa_vault_use_api") === "true";
 
-    let symbols = [];
+    // 2. Wait for Stock List
     if ($("ul[class^='stock_']").length == 0) { setTimeout(insert, 500); return; }
 
+    let symbols = [];
     $("ul[class^='stock_']").each(function() {
         let sym = $("img", $(this)).attr("src").split("logos/")[1].split(".svg")[0];
         symbols.push(sym);
@@ -229,11 +277,14 @@ function insert() {
     });
     symbols.sort();
 
-   let container = `
+    // 3. Build New Layout
+    let container = `
     <div class="alfa-container">
-        <div class="alfa-row" style="margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">
-            <input type="password" id="alfa-apikey" class="alfa-input" style="width:100%; text-align:center; letter-spacing:2px;" placeholder="Paste API Key Here" value="${savedKey}">
+        <div class="alfa-header">
+            <input type="password" id="alfa-apikey" class="alfa-input" style="flex-grow:1; text-align:center; letter-spacing:2px;" placeholder="Paste API Key Here" value="${savedKey}">
+            <span id="alfa-advisor-btn" class="alfa-advisor-btn">★ Advisor</span>
         </div>
+
         <div class="alfa-row">
             <label class="alfa-label">Target:</label>
             <select id="stockid" class="alfa-select"><option value="">Select Stock...</option>`;
@@ -247,15 +298,22 @@ function insert() {
             <span id="alfa-owned-display" style="margin-left:10px; font-size:11px; color:#888;">Owned: -</span>
         </div>
 
-        <div class="alfa-row alfa-divider">
+        <div class="alfa-divider"></div>
+
+        <div class="alfa-row">
             <button id="vaultall" class="alfa-main-btn">Vault Max</button>
-            <div class="alfa-group">
-                <input type="text" placeholder="Keep Amt" id="keepval" class="alfa-input" value="${savedKeep}">
+
+            <label class="alfa-small-label" title="Fetch fresh data from API before vaulting (Slower but safer)">
+                <input type="checkbox" id="alfa-use-api" ${useApiOn ? "checked" : ""}> API Mode
+            </label>
+
+            <div class="alfa-group" style="margin-left: auto;">
+                <input type="text" placeholder="Keep Amt" id="keepval" class="alfa-input" style="width:100px;" value="${savedKeep}">
                 <button id="vaultexcept" class="alfa-main-btn">Vault (Keep)</button>
             </div>
         </div>
 
-        <div class="alfa-row alfa-divider">
+        <div class="alfa-row">
             <div class="alfa-group">
                 <input type="text" placeholder="Withdraw Amt" id="sellval" class="alfa-input" value="${savedSell}">
                 <button id="sellamt" class="alfa-main-btn">Withdraw</button>
@@ -271,51 +329,46 @@ function insert() {
             </div>
         </div>
 
-        <div class="alfa-row" style="margin-top:10px; flex-direction:column; align-items:flex-start;">
-            <div class="alfa-controls">
-                <label class="alfa-checkbox-label"><input type="checkbox" id="alfa-instant-toggle" ${instantOn ? "checked" : ""}> Instant</label>
-                <label class="alfa-checkbox-label"><input type="checkbox" id="alfa-lock-toggle" ${lockOn ? "checked" : ""}> Lock Benefits</label>
-                <span id="alfa-advisor-btn" class="alfa-link" style="margin-right:15px;">Advisor</span>
-                <span id="alfa-edit-trigger" class="alfa-link">Edit Buttons</span>
+        <div class="alfa-toolbar">
+            <div style="display:flex; gap:15px;">
+                <label class="alfa-small-label" title="Skip API check for withdrawals (Fastest)">
+                    <input type="checkbox" id="alfa-instant-toggle" ${instantOn ? "checked" : ""}> Instant Withdraw
+                </label>
+                <label class="alfa-small-label" title="Prevent selling shares required for passive bonuses">
+                    <input type="checkbox" id="alfa-lock-toggle" ${lockOn ? "checked" : ""}> Lock Benefits
+                </label>
             </div>
-            <div id="alfa-preset-row" class="alfa-preset-row"></div>
+            <span id="alfa-edit-trigger" class="alfa-link" style="font-size:11px;">Edit Buttons</span>
         </div>
-        <div class="alfa-row"><span id="responseStock"></span></div>
+
+        <div id="alfa-preset-row" class="alfa-preset-row"></div>
+
+        <div class="alfa-row" style="margin-top:10px;"><span id="responseStock"></span></div>
     </div>`;
-    // 1. Prepend the HTML to the page FIRST
+
+    // 4. Inject & Attach Listeners
     $("#stockmarketroot").prepend(container);
 
-    // 2. NOW attach the event listeners (The element exists now)
-    $("#alfa-advisor-btn").on("click", openAdvisorMain); // <--- This was the fix
+    $("#alfa-advisor-btn").on("click", openAdvisorMain);
     $("#stockid").change(updateStock);
     $("#vaultall").on("click", vault);
     $("#vaultexcept").on("click", vaultExcept);
     $("#sellamt").on("click", () => withdraw());
-    // Withdraw All Interaction
-    $("#sellall-init").on("click", function() {
-        // Hide "Withdraw All", Show "Yes/No"
-        $(this).hide();
-        $("#sellall-confirm").css("display", "flex");
-    });
 
-    $("#sellall-no").on("click", function() {
-        // Revert back
-        $("#sellall-confirm").hide();
-        $("#sellall-init").show();
-    });
-
-    $("#sellall-yes").on("click", function() {
-        // Execute and Revert
-        withdrawAll();
-        $("#sellall-confirm").hide();
-        $("#sellall-init").show();
-    });
-    $("#sellval").on("keyup", function() { handleInputUpdate(this, "alfa_vault_sellVal"); });
-    $("#keepval").on("keyup", function() { handleInputUpdate(this, "alfa_vault_keepVal"); });
+    // Checkbox Listeners
     $("#alfa-apikey").on("keyup change", function() { localStorage.setItem("alfa_vault_apikey", $(this).val().trim()); });
     $("#alfa-instant-toggle").on("change", function() { localStorage.setItem("alfa_vault_instant", $(this).is(":checked")); });
     $("#alfa-lock-toggle").on("change", function() { localStorage.setItem("alfa_vault_lock", $(this).is(":checked")); });
+    $("#alfa-use-api").on("change", function() { localStorage.setItem("alfa_vault_use_api", $(this).is(":checked")); });
+
+    $("#sellval").on("keyup", function() { handleInputUpdate(this, "alfa_vault_sellVal"); });
+    $("#keepval").on("keyup", function() { handleInputUpdate(this, "alfa_vault_keepVal"); });
     $("#alfa-edit-trigger").on("click", renderEditMode);
+
+    // Withdraw All Logic
+    $("#sellall-init").on("click", function() { $(this).hide(); $("#sellall-confirm").css("display", "flex"); });
+    $("#sellall-no").on("click", function() { $("#sellall-confirm").hide(); $("#sellall-init").show(); });
+    $("#sellall-yes").on("click", function() { withdrawAll(); $("#sellall-confirm").hide(); $("#sellall-init").show(); });
 
     renderPresets();
     updateStock();
@@ -755,21 +808,22 @@ function saveNetworthSettings() {
 }
 
 async function runAdvisorLogic() {
-    $("#adv-debug-log").text("Syncing Data...");
+    $("#adv-debug-log").text("Syncing Portfolio...");
     $("#adv-daily-income").text("...");
 
     try {
-        await fetchUserPortfolio();
+        await fetchUserPortfolio(); // Now fetches fresh data
         let nwData = await getLiquidNetworth();
-        let liquidAssets = nwData.liquid;
+        let liquidCash = nwData.liquid; // Pure cash/points (not stocks)
         let dailyBank = nwData.dailyBank;
         let isBankActive = nwData.bankActive;
 
         let currentDailyIncome = 0;
-        let candidates = [];
+        let ownedBlocks = []; // Stocks we HAVE (Candidates to sell)
+        let candidates = [];  // Stocks we WANT (Candidates to buy)
         let symbols = Object.keys(STOCK_DATA);
 
-        // 1. CALCULATE CANDIDATES
+        // --- 1. ANALYZE ALL STOCKS ---
         for (let sym of symbols) {
             let stockData = STOCK_DATA[sym];
             let benefitData = ADVISOR_DATA[sym];
@@ -781,139 +835,222 @@ async function runAdvisorLogic() {
 
             if (sharePrice === 0) continue;
 
-            // Current Income
+            // --- CORRECTED INCREMENT LOGIC (Wiki Standard) ---
             let owned = getOwnedShares(sym);
-            if (owned >= increment) {
-                let blocksOwned = Math.floor(owned / increment);
-                currentDailyIncome += (blocksOwned * dailyYield);
+            
+            // 1. Calculate Current Level using Log2
+            // Formula: Total = Base * (2^L - 1)  =>  L = log2((Total/Base) + 1)
+            let currentLevel = 0;
+            if (owned > 0) {
+                currentLevel = Math.floor(Math.log2((owned / increment) + 1));
             }
 
-            // Future ROI
-            let blockCost = increment * sharePrice;
-            let annualReturn = dailyYield * 365;
+            // 2. Calculate Cost of the NEXT Increment
+            // Next increment requires: Base * 2^(CurrentLevel) shares
+            // Example FHG (Base 2m):
+            // Lvl 0->1: 2m * 2^0 = 2m shares.
+            // Lvl 1->2: 2m * 2^1 = 4m shares.
+            // Lvl 2->3: 2m * 2^2 = 8m shares.
+            let sharesForNextBlock = increment * Math.pow(2, currentLevel);
+            
+            // 3. Calculate ROI for that specific next block
+            let blockCost = sharesForNextBlock * sharePrice;
+            let annualReturn = dailyYield * 365; // Yield is always 1 unit per block
             let roi = (annualReturn / blockCost) * 100;
 
-            candidates.push({
-                name: sym,
-                roi: roi,
-                cost: blockCost,
-                dailyYield: dailyYield,
-                type: 'stock'
-            });
-        }
+            // 4. Calculate Actual "Missing" Cost
+            // Target Total = Base * (2^(L+1) - 1)
+            let targetTotalShares = increment * (Math.pow(2, currentLevel + 1) - 1);
+            let missingShares = targetTotalShares - owned;
+            let costToUpgrade = missingShares * sharePrice;
 
-        // 2. BANK LOGIC
-        if (!isBankActive) {
-            let periods = [
-                { id: '1w', days: 7, rate: bankSettings.roi_1w },
-                { id: '2w', days: 14, rate: bankSettings.roi_2w },
-                { id: '1m', days: 30, rate: bankSettings.roi_1m },
-                { id: '3m', days: 90, rate: bankSettings.roi_3m }
-            ];
-
-            let bestBankOption = null;
-            let maxBankAnnual = 0;
-
-            for(let p of periods) {
-                if(p.rate > 0) {
-                    let annual = (p.rate / p.days) * 365;
-                    if(annual > maxBankAnnual) {
-                        maxBankAnnual = annual;
-                        bestBankOption = p;
-                    }
-                }
-            }
-
-            if (bestBankOption) {
-                let investmentAmount = Math.min(2000000000, liquidAssets > 0 ? liquidAssets : 2000000000);
-                let dailyYield = (investmentAmount * (bestBankOption.rate/100)) / bestBankOption.days;
+            if (owned >= increment) {
+                // WE OWN AT LEAST 1 BLOCK
+                let blocksOwned = currentLevel; // We strictly count full completed blocks
+                currentDailyIncome += (blocksOwned * dailyYield);
+                
+                // Add to "Owned" list to calculate liquidity potential
+                // We value it at the "Sell Value" of the current holdings
+                ownedBlocks.push({
+                    name: sym,
+                    roi: roi, // Marginal ROI of the NEXT step (for upgrade decisions)
+                    val: owned * sharePrice, // Total value locked
+                    yield: dailyYield
+                });
+                
+                // Add as a candidate for the NEXT level
                 candidates.push({
-                    name: `City Bank (${bestBankOption.id})`,
-                    roi: maxBankAnnual,
-                    cost: 1,
+                    name: sym + ` (Tier ${currentLevel+1})`,
+                    roi: roi,
+                    cost: costToUpgrade, // Cost to reach next tier
                     dailyYield: dailyYield,
-                    type: 'bank'
+                    type: 'stock'
+                });
+            } else {
+                // WE DONT OWN THIS
+                candidates.push({
+                    name: sym,
+                    roi: roi,
+                    cost: blockCost,
+                    dailyYield: dailyYield,
+                    type: 'stock'
                 });
             }
         }
 
-        // --- UI UPDATE ---
+        // --- 2. CALCULATE "ROI FLOOR" ---
+        // Rule: Don't suggest stocks worse than what we currently hold.
+        // Example: If I have a 35% stock, don't tell me to buy a 25% stock.
+        let floorROI = 0;
+        if (ownedBlocks.length > 0) {
+            // Find the lowest ROI we are currently tolerating in our portfolio
+            floorROI = Math.min(...ownedBlocks.map(b => b.roi));
+        }
+
+        // Filter candidates: Only show upgrades (ROI > Floor) or absolute bests
+        // If we have NO stocks, floor is 0, so all are valid.
+        let validCandidates = candidates.filter(c => c.roi > floorROI);
+
+        // Fallback: If we have run out of "Better" stocks, show whatever is left
+        if (validCandidates.length === 0) validCandidates = candidates;
+
+        // Sort by ROI (Best first)
+        validCandidates.sort((a, b) => b.roi - a.roi);
+
+        // --- 3. UI UPDATES ---
         let totalDaily = currentDailyIncome + dailyBank;
         $("#adv-daily-income").text(formatMoney(Math.floor(totalDaily)) + " / day");
         $("#adv-daily-detail").text(`Stocks: ${formatMoney(Math.floor(currentDailyIncome))} | Bank: ${formatMoney(Math.floor(dailyBank))}`);
 
-        if (candidates.length === 0) {
-            $("#adv-next-name").text("No Data found");
+        if (validCandidates.length === 0) {
+            $("#adv-next-name").text("All Stocks Owned!");
+            $("#adv-next-cost").text("-");
+            $("#adv-next-gain").text("-");
+            $("#adv-afford-name").text("-");
             return;
         }
 
-        candidates.sort((a, b) => b.roi - a.roi);
+        let nextBest = validCandidates[0]; // The Dream Target (Highest ROI)
 
-        let nextBest = candidates[0]; // The Target (Highest ROI)
+        // Find "Best Affordable" in the filtered list
+        // We look for the best ROI that we can buy with just CASH
         let bestAffordable = null;
-
-        for (let c of candidates) {
-            if (c.cost <= liquidAssets) {
+        for (let c of validCandidates) {
+            if (c.cost <= liquidCash) {
                 bestAffordable = c;
-                break;
+                break; // Since list is sorted by ROI, first affordable is best affordable
             }
         }
 
-        // BOX 1: TARGET (BEST ROI)
-        if (nextBest) {
-            $("#adv-next-roi").text(nextBest.roi.toFixed(2) + "%");
-            $("#adv-next-name").text(nextBest.name);
+        // --- HELPER: LIQUIDITY CALCULATOR ---
+        // Calculates if we can afford 'target' by selling worse stocks
+        function calculateLiquidity(target) {
+            let available = liquidCash;
+            let sources = [];
 
-            if (liquidAssets < nextBest.cost && nextBest.type !== 'bank') {
-                let shortage = nextBest.cost - liquidAssets;
-                $("#adv-next-cost").html(`<span class="alfa-shortage">Missing ${formatMoney(shortage)}</span>`);
-                $("#adv-next-gain").text(`Cost: ${formatMoney(nextBest.cost)}`);
+            // We can sell any stock that has LOWER ROI than the target
+            // (Because we are upgrading efficiency)
+            for (let block of ownedBlocks) {
+                if (block.roi < target.roi) {
+                    available += block.val;
+                    sources.push(block.name);
+                }
+            }
+
+            let missing = target.cost - available;
+            return { available, missing, sources };
+        }
+
+        // --- BOX 1: TARGET (Highest ROI) ---
+        $("#adv-next-roi").text(nextBest.roi.toFixed(2) + "%");
+        $("#adv-next-name").text(nextBest.name);
+
+        let targetLiq = calculateLiquidity(nextBest);
+
+        if (targetLiq.missing <= 0) {
+            // We can afford it (maybe by selling stuff)
+            if (liquidCash >= nextBest.cost) {
+                $("#adv-next-cost").text(formatMoney(nextBest.cost));
+                $("#adv-next-gain").text("Buy with Cash");
             } else {
-                $("#adv-next-cost").text(nextBest.type === 'bank' ? "Flexible" : formatMoney(nextBest.cost));
-                $("#adv-next-gain").text(nextBest.type === 'bank' ? "Varies" : `+ ${formatMoney(Math.floor(nextBest.dailyYield))} / day`);
+                $("#adv-next-cost").text("Sell " + targetLiq.sources.join("+"));
+                $("#adv-next-gain").text("to buy this");
             }
+        } else {
+            $("#adv-next-cost").html(`<span class="alfa-shortage">Missing ${formatMoney(targetLiq.missing)}</span>`);
+            $("#adv-next-gain").text(`Cost: ${formatMoney(nextBest.cost)}`);
         }
 
-        // BOX 2: AFFORDABLE (OR CHEAPEST)
+        // --- BOX 2: NEXT CHEAPEST UPGRADE ---
+        // If we can't afford anything with cash, show the cheapest VALID upgrade
+        // and tell us what to sell to get it.
+
         if (bestAffordable) {
-            // Case A: You have money for something
+            // We have cash for this
             $("#adv-afford-roi").text(bestAffordable.roi.toFixed(2) + "%");
             $("#adv-afford-roi").css("color", "#609b9b");
             $("#adv-afford-name").text(bestAffordable.name);
-            $("#adv-afford-cost").text(bestAffordable.type === 'bank' ? "Flexible" : formatMoney(bestAffordable.cost));
-            $("#adv-afford-gain").text(bestAffordable.type === 'bank' ? "Varies" : `+ ${formatMoney(Math.floor(bestAffordable.dailyYield))} / day`);
+            $("#adv-afford-cost").text(formatMoney(bestAffordable.cost));
+            $("#adv-afford-gain").text(`+ ${formatMoney(Math.floor(bestAffordable.dailyYield))} / day`);
         } else {
-            // Case B: You are broke -> Show CHEAPEST option logic
-            let cheapest = [...candidates].sort((a,b) => a.cost - b.cost)[0];
+            // We are broke. Find CHEAPEST valid upgrade.
+            // Sort by Cost (Low to High)
+            let cheapestOption = [...validCandidates].sort((a,b) => a.cost - b.cost)[0];
 
-            if (cheapest) {
-                // SHOW CHEAPEST ROI instead of "---"
-                $("#adv-afford-roi").text(cheapest.roi.toFixed(2) + "%");
-                $("#adv-afford-roi").css("color", "#aaa"); // Greyish color to indicate "future"
-                $("#adv-afford-name").text("Target: " + cheapest.name);
+            if (cheapestOption) {
+                $("#adv-afford-roi").text(cheapestOption.roi.toFixed(2) + "%");
+                $("#adv-afford-roi").css("color", "#aaa");
+                $("#adv-afford-name").text("Target: " + cheapestOption.name);
 
-                let shortage = cheapest.cost - liquidAssets;
-                $("#adv-afford-cost").html(`<span class="alfa-shortage">Missing ${formatMoney(shortage)}</span>`);
-                $("#adv-afford-gain").html(`for <span style='color:#fff'>${cheapest.name}</span>`);
+                let cheapLiq = calculateLiquidity(cheapestOption);
+
+                if (cheapLiq.missing <= 0) {
+                    // accessible by selling
+                    $("#adv-afford-cost").text("Sell " + cheapLiq.sources[0] + (cheapLiq.sources.length>1 ? "..." : ""));
+                    $("#adv-afford-gain").text("to buy this");
+                } else {
+                    // Detailed missing breakdown
+                    // Example: "32m(Stock2) + 3m missing"
+                    let msg = "";
+                    if (cheapLiq.sources.length > 0) {
+                        let firstSource = ownedBlocks.find(b => b.name === cheapLiq.sources[0]);
+                        msg = `${formatMoney(firstSource.val)} in ${firstSource.name}`;
+                        if (cheapLiq.sources.length > 1) msg += " + ...";
+                    }
+
+                    $("#adv-afford-cost").html(`<span class="alfa-shortage">Missing ${formatMoney(cheapLiq.missing)}</span>`);
+                    if(msg) $("#adv-afford-gain").html(`<span style="font-size:9px; color:#888">(${msg})</span>`);
+                    else $("#adv-afford-gain").text("Save more cash");
+                }
             } else {
-                 $("#adv-afford-roi").text("---");
-                 $("#adv-afford-name").text("No Data");
+                $("#adv-afford-name").text("No Upgrades");
             }
         }
 
-        $("#adv-debug-log").text(`Free Liquid Assets:`);
-        $("#adv-debug-num").text(`${formatMoney(liquidAssets)}`);
+        $("#adv-debug-log").text(`Liquid Cash: ${formatMoney(liquidCash)}`);
 
     } catch (e) {
         console.error("Advisor Crash:", e);
     }
 }
 
+
 async function vault() {
     let symb = localStorage.alfa_vault_target;
     if(!symb) { alert("Select a stock first!"); return; }
-    let money = await getMoneyFromAPI();
+
+    let money = 0;
+    // Check if "Use API" checkbox is ON
+    if ($("#alfa-use-api").is(":checked")) {
+        money = await syncWallet(false); // Force API
+    } else {
+        money = getMoneyFast(); // Instant DOM read
+        // Fallback if DOM is empty
+        if (money === 0) money = await syncWallet(false);
+    }
+
     if (money === 0) return;
+
     let price = getPrice(symb);
     let amt = Math.floor(money / price);
     let totalCost = amt * price;
@@ -923,19 +1060,32 @@ async function vault() {
 async function vaultExcept() {
     let symb = localStorage.alfa_vault_target;
     if(!symb) { alert("Select a stock first!"); return; }
-    let money = await getMoneyFromAPI();
+
+    let money = 0;
+    if ($("#alfa-use-api").is(":checked")) {
+        money = await syncWallet(false);
+    } else {
+        money = getMoneyFast();
+        if (money === 0) money = await syncWallet(false);
+    }
+
     if (money === 0) return;
+
     let keepRaw = $("#keepval").val();
     let keepAmt = parseTornNumber(keepRaw);
     if (isNaN(keepAmt)) keepAmt = 0;
+
     let availableToVault = money - keepAmt;
     if (availableToVault <= 0) { $("#responseStock").html("Not enough money!").css("color", "red"); return; }
+
     let price = getPrice(symb);
     let amt = Math.floor(availableToVault / price);
     if (amt <= 0) { $("#responseStock").html("Amount too low.").css("color", "red"); return; }
+
     let totalCost = amt * price;
     postTrade(symb, amt, "buyShares", `Vaulted ${formatMoney(totalCost)} (Kept ${keepRaw})`);
 }
+
 
 function withdraw() {
     let symb = localStorage.alfa_vault_target;
@@ -1012,20 +1162,34 @@ function withdrawAll() {
 
 
 function postTrade(symb, amt, step, successMsg) {
+    // 1. SEND REQUEST FIRST (0ms delay)
+    // We fire the network request immediately.
+    let request = $.post(`https://www.torn.com/page.php?sid=StockMarket&step=${step}&rfcv=${getRFC()}`, {
+        stockId: stockId[symb],
+        amount: amt
+    });
+
+    // 2. UPDATE UI (Non-blocking)
+    // While the request is flying to the server, we update the text.
     $("#responseStock").html("Processing Trade...").css("color", "orange");
-    $.post(`https://www.torn.com/page.php?sid=StockMarket&step=${step}&rfcv=${getRFC()}`, { stockId: stockId[symb], amount: amt },
-           function(response) {
+
+    // 3. HANDLE RESPONSE (When server replies)
+    request.done(function(response) {
         try {
             if(typeof response === "string") response = JSON.parse(response);
+
             if(response.success) {
                 $("#responseStock").html(successMsg + " (" + amt + " shares)").css("color", "green");
 
-                // NEW: Update Local Cache immediately
+                // Update Local Cache
                 if (step === "buyShares") updateLocalCache(symb, amt);
                 if (step === "sellShares") updateLocalCache(symb, -amt);
-
-            } else { $("#responseStock").html(response.text || "Failed").css("color", "red"); }
-        } catch(e) { $("#responseStock").html("Request Sent (Check Trade)").css("color", "blue"); }
+            } else {
+                $("#responseStock").html(response.text || "Failed").css("color", "red");
+            }
+        } catch(e) {
+            $("#responseStock").html("Request Sent (Check Trade)").css("color", "blue");
+        }
     });
 }
 
@@ -1136,7 +1300,7 @@ async function fetchUserPortfolio() {
     $("#adv-debug-log").text("Syncing Portfolio...");
 
     try {
-        const res = await fetch(`https://api.torn.com/user/?selections=stocks&key=${key}`);
+        const res = await fetch(`https://api.torn.com/user/?selections=stocks&key=${key}&ts=${Date.now()}`);
         const data = await res.json();
 
         if (data.stocks) {
@@ -1167,6 +1331,26 @@ async function fetchUserPortfolio() {
 insert();
 //CSS
 const style = `
+
+/* --- LAYOUT UTILS --- */
+.alfa-header { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 10px; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+.alfa-toolbar { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 5px; font-size: 11px; color: #888; }
+.alfa-small-label { display: flex; align-items: center; gap: 4px; cursor: pointer; user-select: none; }
+.alfa-small-label:hover { color: #fff; }
+
+/* ADVISOR BUTTON (Distinct Style) */
+.alfa-advisor-btn {
+    background: #2a4040;
+    border: 1px solid #609b9b;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+}
+.alfa-advisor-btn:hover { background: #609b9b; }
 /* --- MAIN VAULT UI (Restored to Original Clean Look) --- */
 .alfa-container { background: #111; padding: 12px; border: 1px solid #333; border-radius: 8px; margin-bottom: 15px; color: #ccc; font-family: Arial, sans-serif; font-size: 12px; }
 .alfa-row { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }

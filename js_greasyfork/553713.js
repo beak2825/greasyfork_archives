@@ -3,7 +3,7 @@
 // @name:en          HWHNewCharacterExt
 // @name:ru          HWHNewCharacterExt
 // @namespace        HWHNewCharacterExt
-// @version          2.21
+// @version          2.23
 // @description      Extension for HeroWarsHelper script
 // @description:en   Extension for HeroWarsHelper script
 // @description:ru   Расширение для скрипта HeroWarsHelper
@@ -108,7 +108,7 @@
         NHR_COMPLETE_CHAPTER_N1: 'Raid for Chapter <span style="font-family: Times New Roman;">I</span>',
         NHR_COMPLETE_CHAPTER_N1_TITLE: 'Complete chapter I one time',
         NHR_COMPLETE_CHAPTER_N1_COMPLETED: 'Chapter <span style="color: green; font-family: Times New Roman;">I</span> raid completed',
-        NHR_CHAPTER_N1_RAID: 'Starting <span style="color: LimeGreen;">{raidNumber}</span> raid of first chapter',
+        NHR_CHAPTER_N1_RAID: 'Starting <span style="color: LimeGreen;">{raidNumber}</span>/3 raid chapter I',
         NHR_MAKE_OTHER_TASKS: '<br>Moving on to other quests',
         NHR_GET_HERO_IDS: 'Hero IDs',
         NHR_GET_HERO_IDS_TITLE: 'Get a list of hero IDs',
@@ -123,6 +123,7 @@
         NHR_SPEND_VALOR_COINS_MESSAGE: 'Exchange all available Coins of Valor?',
         NHR_APPLY: 'Exchange',
         NHR_NOT_APPLY: 'Thanks, but no thanks. Real Heroes don\'t need help!',
+        NHR_COMPLETE_CHAPTER_N2: 'Let\'s begin to complete <span style="color: LimeGreen;"> II </span> chapter',
     };
 
     i18nLangData['en'] = Object.assign(i18nLangData['en'], i18nLangDataEn);
@@ -208,7 +209,7 @@
         NHR_COMPLETE_CHAPTER_N1: 'Рейд <span style="font-family: Times New Roman;">I</span> главы',
         NHR_COMPLETE_CHAPTER_N1_TITLE: 'Пройти I главу 1 раз',
         NHR_COMPLETE_CHAPTER_N1_COMPLETED: 'Рейд <span style="color: green; font-family: Times New Roman;">I</span> главы выполнен',
-        NHR_CHAPTER_N1_RAID: 'Выполняем <span style="color: LimeGreen;">{raidNumber}</span> рейд первой главы',
+        NHR_CHAPTER_N1_RAID: 'Выполняем <span style="color: LimeGreen;">{raidNumber}</span>/3 рейд I главы',
         NHR_MAKE_OTHER_TASKS: '<br> Приступаем к выполнению других заданий',
         NHR_GET_HERO_IDS: 'Id героев',
         NHR_GET_HERO_IDS_TITLE: 'Получить список Id героев',
@@ -224,6 +225,7 @@
         NHR_SPEND_VALOR_COINS_MESSAGE: 'Потратить все имеющиеся монеты доблести?',
         NHR_APPLY: 'Потратить',
         NHR_NOT_APPLY: 'Спасибо, не надо. Настоящим Героям помощь не нужна!',
+        NHR_COMPLETE_CHAPTER_N2: 'Проходим <span style="color: LimeGreen;"> II </span> главу',
     };
 
     i18nLangData['ru'] = Object.assign(i18nLangData['ru'], i18nLangDataRu);
@@ -293,23 +295,7 @@
                     return I18N('NHR_COMPLETE_TASKS_TITLE');
                 },
                 result: async function () {
-                    //confShow(I18N('NHR_NOTHING_HERE'));
-                    //Получить список героев, которых нужно собрать
-                    let heroIdsToBuy = await getHeroIdsToBuy();
-                    //let heroIdsToBuy = [60]
-                    if (heroIdsToBuy.length != 0) {
-                        let spendCoins = true;
-                        await collectHeroes(spendCoins);
-                        setProgress(`${I18N('NT_HEROES_COLLECTED')} ${I18N('NHR_MAKE_OTHER_TASKS')}`, false);
-                        await new Promise((e) => setTimeout(e, 2000));
-                        for (let i = 1; i <= 4; i++) {
-                            setProgress(I18N('NHR_CHAPTER_N1_RAID', {raidNumber:i}), false);
-                            await new Promise((e) => setTimeout(e, 2000));
-                            await firstHeroicChapterRaid();
-                        }
-                    }
-                    setProgress('', true);
-                    confShow(I18N('NHR_TASKS_COMPLETED'));
+                    await completeHerosTasks();
                 },
                 color: 'green',
             },
@@ -321,7 +307,6 @@
                     return I18N('NT_COMPLETE_CHAPTER_TITLE');
                 },
                 result: async function () {
-                    //confShow(I18N('NHR_NOTHING_HERE'));
                     await completeChapter();
                 },
                 color: 'blue',
@@ -382,26 +367,7 @@
                     return I18N('NT_COMPLETE_TITAN_TASKS_TITLE');
                 },
                 result: async function () {
-                    //confShow(I18N('NHR_NOTHING_HERE_3'));
-                    let farmedChapters = await Caller.send('invasion_getInfo').then((e) => e.farmedChapters);
-                    if (farmedChapters.length == 0) {
-                        await firstTitanChapterRaid();
-                        setProgress(I18N('NT_LETS_CONTINUE'), false);
-                        await new Promise((e) => setTimeout(e, 3000));
-                    }
-                    await collectTitansAndTotemFragments();
-                    setProgress(I18N('NT_LETS_CONTINUE'), false);
-                    await new Promise((e) => setTimeout(e, 3000));
-
-                    farmedChapters = await Caller.send('invasion_getInfo').then((e) => e.farmedChapters);
-                    if (farmedChapters.length == 1) {
-                        await firstHeroicChapterRaid();
-                        setProgress(I18N('NT_LETS_CONTINUE'), false);
-                        await new Promise((e) => setTimeout(e, 3000));
-                    }
-                    await collectHeroes();
-                    setProgress('', true);
-                    confShow(I18N('NHR_TASKS_COMPLETED'));
+                    await completeTitansTasks();
                 },
                 color: 'green',
             },
@@ -413,7 +379,6 @@
                     return I18N('NT_COMPLETE_CHAPTER_TITLE');
                 },
                 result: async function () {
-                    //confShow(I18N('NHR_NOTHING_HERE_4'));
                     await completeChapter();
                 },
                 color: 'blue',
@@ -465,12 +430,120 @@
     //****************************************************************************************************
     //****************************************************************************************************
     //****************************************************************************************************
+    async function completeHerosTasks() {
+        //Получить список героев, которых нужно собрать
+        let heroIdsToBuy = await getHeroIdsToBuy();
+        if (heroIdsToBuy.length != 0) {
+            let spendCoins = true;
+            //Собрать героев
+            await collectHeroes(spendCoins);
+            setProgress(`${I18N('NT_HEROES_COLLECTED')} ${I18N('NHR_MAKE_OTHER_TASKS')}`, false);
+            await new Promise((e) => setTimeout(e, 2000));
+
+            //Убрать сообщения обучения
+            let tasks = Object.values(lib.data.tutorial.task).filter((e) => e.params && e.params.includes('invasion') && e.saveState != null);
+            let calls = [];
+            for (let task of tasks){
+                calls.push({name: 'tutorialSaveProgress', args: {taskId: task.id }});
+            }
+            tasks = Object.values(lib.data.tutorial.task).filter((e) => e.name && e.name.includes('invasion') && e.saveState != null);
+            for (let task of tasks){
+                calls.push({name: 'tutorialSaveProgress', args: {taskId: task.id }});
+            }
+            if (calls.length >= 1) {
+                calls.sort((a, b) => a.args.taskId - b.args.taskId);
+                try{
+                    await Caller.send(calls);
+                } catch (e) {}
+            }
+
+            //Пройти II главу
+            setProgress(I18N('NHR_COMPLETE_CHAPTER_N2'), false);
+            await new Promise((e) => setTimeout(e, 2000));
+            await secondHeroicChapterRaid();
+            await new Promise((e) => setTimeout(e, 3000));
+
+            //Выполнить рейды I главы
+            for (let i = 1; i <= 3; i++) {
+                setProgress(I18N('NHR_CHAPTER_N1_RAID', {raidNumber:i}), false);
+                await new Promise((e) => setTimeout(e, 2000));
+                await firstHeroicChapterRaid();
+            }
+
+            //Сбросить главу
+            await Caller.send('invasion_resetChapter');
+        }
+        setProgress('', true);
+        confShow(I18N('NHR_TASKS_COMPLETED'));
+    }
+
+    async function completeTitansTasks() {
+        //Пройти I главу
+        let farmedChapters = await Caller.send('invasion_getInfo').then((e) => e.farmedChapters);
+        if (farmedChapters.length == 0) {
+            await firstTitanChapterRaid();
+            setProgress(I18N('NT_LETS_CONTINUE'), false);
+            await new Promise((e) => setTimeout(e, 3000));
+        }
+
+        //Собрать титанов и тотемы
+        await collectTitansAndTotemFragments();
+        setProgress(I18N('NT_LETS_CONTINUE'), false);
+        await new Promise((e) => setTimeout(e, 3000));
+
+        //Пройти II главу
+        farmedChapters = await Caller.send('invasion_getInfo').then((e) => e.farmedChapters);
+        if (farmedChapters.length == 1) {
+            await firstHeroicChapterRaid();
+            setProgress(I18N('NT_LETS_CONTINUE'), false);
+            await new Promise((e) => setTimeout(e, 3000));
+        }
+
+        //Собрать героев и питомцев
+        await collectHeroes();
+        setProgress(I18N('NT_LETS_CONTINUE'), false);
+        await new Promise((e) => setTimeout(e, 3000));
+
+        //Убрать сообщения обучения
+        farmedChapters = await Caller.send('invasion_getInfo').then((e) => e.farmedChapters);
+        if (farmedChapters.length == 2) {
+            let tasks = Object.values(lib.data.tutorial.task).filter((e) => e.params && e.params.includes('invasion') && e.saveState != null);
+            let calls = [];
+            for (let task of tasks){
+                calls.push({name: 'tutorialSaveProgress', args: {taskId: task.id }});
+            }
+            tasks = Object.values(lib.data.tutorial.task).filter((e) => e.name && e.name.includes('invasion') && e.saveState != null);
+            for (let task of tasks){
+                calls.push({name: 'tutorialSaveProgress', args: {taskId: task.id }});
+            }
+            if (calls.length >= 1) {
+                calls.sort((a, b) => a.args.taskId - b.args.taskId);
+                try{
+                    await Caller.send(calls);
+                } catch (e) {}
+            }
+        }
+
+        //Сбросить главу
+        await Caller.send('invasion_resetChapter');
+
+        setProgress('', true);
+        confShow(I18N('NHR_TASKS_COMPLETED'));
+    }
 
     async function firstHeroicChapterRaid() {
         let titanOrHero = 'hero';
         let spendCoins = true;
         let missionRaid = true;
         await completeChapter(spendCoins, missionRaid, titanOrHero);
+    }
+
+    async function secondHeroicChapterRaid() {
+        let titanOrHero = 'hero';
+        let spendCoins = true;
+        let missionRaid = true;
+        let secondHeroicChapter = true;
+        await completeChapter(spendCoins, missionRaid, titanOrHero, secondHeroicChapter);
     }
 
     async function firstTitanChapterRaid() {
@@ -480,7 +553,7 @@
         await completeChapter(spendCoins, missionRaid, titanOrHero);
     }
 
-    async function completeChapter(spendCoins = false, missionRaid = false, titanOrHero = '') {
+    async function completeChapter(spendCoins = false, missionRaid = false, titanOrHero = '', secondHeroicChapter = false) {
         //Получить состояние на карте
         let invasionInfo = await Caller.send('invasion_getInfo');
         let invasionInfoId = invasionInfo.id;
@@ -517,12 +590,16 @@
         }
         //Рейд мисси
         if (missionRaid == true) {
-            for (let chapter of chapters) {
-                if (chapter.settings.unitType === titanOrHero) {
-                    chapterId = chapter.id;
-                    //titanOrHero = chapter.settings.unitType;
-                    chapterNumber = chapters.indexOf(chapter)+1;
-                    break;
+            if (secondHeroicChapter == true){
+                chapterId = chapters[1].id;
+                chapterNumber = 2;
+            } else {
+                for (let chapter of chapters) {
+                    if (chapter.settings.unitType === titanOrHero) {
+                        chapterId = chapter.id;
+                        chapterNumber = chapters.indexOf(chapter)+1;
+                        break;
+                    }
                 }
             }
         }
@@ -693,6 +770,9 @@
 
             //Результат атаки босса
             if (boss) {
+                if (missionRaid) {
+                    return;
+                }
                 if (invasionInfo.farmedChapters.includes(chapterId)) {
                     confShow(I18N('NT_BOSS_WAS_KILLED', { chapterNumber: romanNumerals[chapterNumber]}));
                     //Сбросить главу
@@ -1329,6 +1409,9 @@
         let haveFragments = Object.entries(await Caller.send('invasion_getInfo').then((e) => e.fragments)).map(e => ({id:e[0],count:e[1]})).sort((a, b) => b.count - a.count);
         console.log(haveFragments);
         for (let m of haveFragments) {
+            if(m.count == 0){
+                continue;
+            }
             //Отделяем питомцев и фрагменты тотемов
             if (Number(m.id) < 4400) {
                 allHeroes.push(Number(m.id));

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DG-充提差统计
 // @namespace    http://tampermonkey.net/
-// @version      0.5.7
+// @version      0.5.8
 // @description  DG-充提差和拒绝比例统计（SPA兼容版）
 // @author       Cisco
 // @match        https://666d.dggamecms.com/*
@@ -324,9 +324,18 @@
                 continue; 
             }
             
-            const targetIndex = Array.from(sel.options).findIndex(opt => opt.value === val);
-            if (targetIndex === -1) {
-                logStep(`选项值 ${val} 不存在于 #${id}`);
+            // 处理空值（重置为"全部"）：如果 val 为空字符串，选择第一个选项（通常是"全部"）
+            let targetIndex = -1;
+            if(val === '' || val === null || val === undefined){
+                // 空值表示选择"全部"，通常第一个选项是"全部"
+                targetIndex = 0;
+                logStep(`#${id} 设置为空值，将选择第一个选项（全部）`);
+            } else {
+                targetIndex = Array.from(sel.options).findIndex(opt => opt.value === val);
+            }
+            
+            if (targetIndex === -1 || targetIndex >= sel.options.length) {
+                logStep(`选项值 ${val} 不存在于 #${id}，可用选项: ${Array.from(sel.options).map(o => o.value).join(', ')}`);
                 return false;
             }
             
@@ -341,12 +350,14 @@
                     const $sel = $(sel);
                     if ($sel.length && $sel.data('selectpicker')) {
                         // 使用 bootstrap-select API
-                        $sel.selectpicker('val', val);
+                        // 空值需要设置为 null 或空数组来重置选择
+                        const selectVal = (val === '' || val === null || val === undefined) ? null : val;
+                        $sel.selectpicker('val', selectVal);
                         $sel.selectpicker('refresh');
-                        logStep(`使用 bootstrap-select API 设置 #${id} = ${val}`);
+                        logStep(`使用 bootstrap-select API 设置 #${id} = ${selectVal || '全部'}`);
                     } else if ($sel.length) {
                         // 使用 jQuery 方法
-                        $sel.val(val);
+                        $sel.val(val || '');
                         $sel.trigger('change');
                     }
                 } catch (e) {
@@ -370,11 +381,20 @@
             }
             
             const currentValue = verifySel.value;
-            if(currentValue === val){
-                logStep(`#${id} 已成功选中 ${val}`);
+            // 对于空值（全部），验证时检查是否是第一个选项或 value 为空
+            let isSuccess = false;
+            if(val === '' || val === null || val === undefined){
+                // 空值表示"全部"，检查是否是第一个选项或 value 为空
+                isSuccess = (verifySel.selectedIndex === 0 || currentValue === '' || currentValue === null);
+            } else {
+                isSuccess = (currentValue === val);
+            }
+            
+            if(isSuccess){
+                logStep(`#${id} 已成功选中 ${val || '全部'}`);
                 return true;
             } else {
-                logStep(`#${id} 验证失败: 期望=${val}, 实际=${currentValue}, 重试 ${attempt + 1}/${retries}`);
+                logStep(`#${id} 验证失败: 期望=${val || '全部'}, 实际=${currentValue}, selectedIndex=${verifySel.selectedIndex}, 重试 ${attempt + 1}/${retries}`);
             }
         }
         logStep(`#${id} 选中 ${val} 失败`);
@@ -558,6 +578,13 @@
         await waitSelector('form#w0',15000, iframeDoc);
         await setTodayDate(iframeDoc);
         await delay(500);
+        
+        // 重置第三方平台选择为"全部"（空值），确保每次计算都从头开始
+        logStep('重置第三方平台选择为"全部"...');
+        await setSelectValue('searchmodel-payment_channel','', iframeDoc);
+        await delay(500);
+        
+        // 设置状态为"2"（成功）
         await setSelectValue('searchmodel-status','2', iframeDoc);
         await clickSearchBtn(iframeDoc);
     

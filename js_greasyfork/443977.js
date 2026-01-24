@@ -1,81 +1,113 @@
 // ==UserScript==
-// @name         WordPress.org Plugins
-// @namespace    https://wpdevdesign.com/
-// @version      0.1
-// @description  Adds Copy URL and Copy Name buttons
-// @author       Sridhar Katakam
+// @name         WordPress.org Plugins - Copy Helpers
+// @namespace    https://brickslabs.com/
+// @version      0.2
+// @description  Adds Copy buttons to WP.org plugin pages.
+// @author       Sridhar Katakam & Gemini
 // @match        https://wordpress.org/plugins/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=wordpress.org
 // @grant        none
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/443977/WordPressorg%20Plugins.user.js
-// @updateURL https://update.greasyfork.org/scripts/443977/WordPressorg%20Plugins.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/443977/WordPressorg%20Plugins%20-%20Copy%20Helpers.user.js
+// @updateURL https://update.greasyfork.org/scripts/443977/WordPressorg%20Plugins%20-%20Copy%20Helpers.meta.js
 // ==/UserScript==
 
 (function() {
+    'use strict';
 
-	'use strict';
+    // 1. Inject Styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .wp-copy-btns-wrapper {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            position: relative;
+            z-index: 10; /* Ensure buttons stay above the link wrapper */
+        }
+        .wp-copy-btn {
+            cursor: pointer;
+            border-radius: 6px;
+            padding: 4px 12px;
+            border: 1px solid #3e58e1;
+            font-size: 12px;
+            font-weight: 600;
+            background-color: #3e58e1;
+            color: #fff;
+            transition: all 0.2s ease;
+            line-height: 1.4;
+        }
+        .wp-copy-btn:hover {
+            background-color: #213fd4;
+            border-color: #213fd4;
+        }
+        .wp-copy-btn.copied {
+            background-color: #00a32a;
+            border-color: #00a32a;
+        }
+    `;
+    document.head.appendChild(style);
 
-	function copyToClipboard(event) {
-		const buttonText = event.target.textContent;
-		let helper = document.createElement('input');
+    // 2. Modern Copy Function with Propagation Stop
+    async function handleCopy(text, button, event) {
+        // CRITICAL: Stop the click from bubbling up to the link wrapper
+        event.preventDefault();
+        event.stopPropagation();
 
-		document.body.appendChild(helper);
-		helper.value = this.value;
-		helper.select();
-		document.execCommand('copy');
-		this.textContent = "Copied ✓";
-		setTimeout(() => {
-			this.textContent = buttonText;
-		}, 1000)
-		helper.remove();
+        try {
+            await navigator.clipboard.writeText(text);
+            const originalText = button.textContent;
+            button.textContent = "Copied ✓";
+            button.classList.add('copied');
 
-		event.preventDefault();
-		event.stopPropagation();
-	}
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.classList.remove('copied');
+            }, 1200);
+        } catch (err) {
+            console.error('Failed to copy!', err);
+        }
+    }
 
-	const entryHeaders = document.getElementsByClassName('entry-header');
+    // 3. Updated Logic for the Grid Layout
+    function init() {
+        // Target the headers specifically within the post blocks
+        const headers = document.querySelectorAll('.wp-block-post .entry-header:not([data-copy-added])');
 
-	document.querySelectorAll('.entry-header').forEach(el => {
-		el.querySelector('.entry-title').style.cssText = "margin-bottom: 0;";
-		let href = el.querySelector('.entry-title a').href;
-		let name = el.querySelector('.entry-title a').textContent;
+        headers.forEach(header => {
+            const titleLink = header.querySelector('.entry-title a');
+            if (!titleLink) return;
 
-		let buttonStyles = "cursor: pointer; border-radius: 4px; padding: 5px 10px; border: 1px solid #fff; font-size: 11px; background-color: #3e58e1; color: #fff; min-width: 82px;";
-		let buttonHoverStyles = "cursor: pointer; border-radius: 4px; padding: 5px 10px; border: 1px solid #fff; font-size: 11px; background-color: #213fd4; color: #fff; min-width: 82px;";
+            // Prevent duplicate injection
+            header.setAttribute('data-copy-added', 'true');
+            header.querySelector('.entry-title').style.marginBottom = "0";
 
-		let copyUrlButton = document.createElement("button");
-		copyUrlButton.textContent = "Copy Link";
-		copyUrlButton.value = href;
-		copyUrlButton.style.cssText = buttonStyles;
-		copyUrlButton.addEventListener('mouseover',function(){
-			this.style.cssText = buttonHoverStyles;
-		})
-		copyUrlButton.addEventListener('mouseleave',function(){
-			this.style.cssText = buttonStyles;
-		})
-		copyUrlButton.addEventListener("click", copyToClipboard);
+            const url = titleLink.href;
+            const name = titleLink.textContent.trim();
 
-		let copyNameButton = document.createElement("button");
-		copyNameButton.textContent = "Copy Name";
-		copyNameButton.value = name;
-		copyNameButton.style.cssText = buttonStyles;
-		copyNameButton.addEventListener('mouseover',function(){
-			this.style.cssText = buttonHoverStyles;
-		})
-		copyNameButton.addEventListener('mouseleave',function(){
-			this.style.cssText = buttonStyles;
-		})
-		copyNameButton.addEventListener("click", copyToClipboard);
+            const wrapper = document.createElement('div');
+            wrapper.className = 'wp-copy-btns-wrapper';
 
-		let buttonsDiv = document.createElement("div");
-		buttonsDiv.className = 'entry-buttons';
-        buttonsDiv.style.cssText = "display: flex; gap: 6px; align-items: center; margin-top: 8px; margin-bottom: 8px;";
+            // Create Link Button
+            const btnLink = document.createElement('button');
+            btnLink.className = 'wp-copy-btn';
+            btnLink.textContent = 'Copy Link';
+            btnLink.onclick = (e) => handleCopy(url, btnLink, e);
 
-        el.append(buttonsDiv);
+            // Create Name Button
+            const btnName = document.createElement('button');
+            btnName.className = 'wp-copy-btn';
+            btnName.textContent = 'Copy Name';
+            btnName.onclick = (e) => handleCopy(name, btnName, e);
 
-		buttonsDiv.append(copyUrlButton);
-		buttonsDiv.append(copyNameButton);
-	});
+            wrapper.appendChild(btnLink);
+            wrapper.appendChild(btnName);
+            header.appendChild(wrapper);
+        });
+    }
+
+    // Run on load and watch for infinite scroll results
+    init();
+    const observer = new MutationObserver(() => init());
+    observer.observe(document.body, { childList: true, subtree: true });
 
 })();

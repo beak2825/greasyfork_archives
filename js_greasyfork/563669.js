@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         X リプ欄 即ブロック支援
+// @name         X リプ欄 即ブロック補助
 // @namespace    https://x.com/
 // @description  個別ツイートページのリプ欄にワンタップ即ブロックボタンを追加し、ページ右下のサイドバーから表示／非表示を切り替えられる補助スクリプト
 // @version      1.0
 // @match        https://x.com/*
 // @license      MIT
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/563669/X%20%E3%83%AA%E3%83%97%E6%AC%84%20%E5%8D%B3%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF%E6%94%AF%E6%8F%B4.user.js
-// @updateURL https://update.greasyfork.org/scripts/563669/X%20%E3%83%AA%E3%83%97%E6%AC%84%20%E5%8D%B3%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF%E6%94%AF%E6%8F%B4.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563669/X%20%E3%83%AA%E3%83%97%E6%AC%84%20%E5%8D%B3%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF%E8%A3%9C%E5%8A%A9.user.js
+// @updateURL https://update.greasyfork.org/scripts/563669/X%20%E3%83%AA%E3%83%97%E6%AC%84%20%E5%8D%B3%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF%E8%A3%9C%E5%8A%A9.meta.js
 // ==/UserScript==
 
 (function () {

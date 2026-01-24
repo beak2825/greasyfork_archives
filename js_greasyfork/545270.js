@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name              （改）（改）B站成分检测器
-// @version           3.0.0
+// @version           3.0.0-1
 // @author            GuihongWang,hmjz100,xulaupuz,trychen
 // @namespace         github.com/GuihongWang
 // @license           GPLv3
@@ -2139,7 +2139,7 @@
 		{
 			displayName: "MyGO/AveMujica",
 			displayIcon: "https://i0.hdslb.com/bfs/face/5f70adc443b0739c237847ef29acaea07a13db71.jpg@100w_100h.webp",
-			keywords: ["MyGo!!!!!", "MyGo", "mygo", "AveMujica", "Mujica", "avemujica", "mujica", "母鸡卡", "阿瓦母鸡卡", "高松灯", "千早爱音", "要乐奈", "长崎爽世", "长崎素世", "椎名立希", "丰川祥子", "若叶睦", "偷摸零", "阿侬酱", "长期素食", "三角初华", "八幡海铃", "祐天寺若麦"],
+			keywords: ["MyGo!!!!!", "MyGo", "mygo", "迷途之子", "AveMujica", "Mujica", "avemujica", "mujica", "母鸡卡", "颂乐人偶", "阿瓦母鸡卡", "高松灯", "千早爱音", "要乐奈", "长崎爽世", "长崎素世", "椎名立希", "丰川祥子", "若叶睦", "偷摸零", "阿侬酱", "长期素食", "三角初华", "八幡海铃", "祐天寺若麦"],
 			followings: [
 				1459104794, // MyGO_AveMujica
 				304107221 // BanGDream_MyGO

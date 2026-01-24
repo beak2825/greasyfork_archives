@@ -3,7 +3,7 @@
 // @name:zh-CN   Google AI Studio | 优化工具 - Dae
 // @name:en      Google AI Studio | Enhancement tool - Dae
 // @namespace    https://space.bilibili.com/261168982
-// @version      1.0.4
+// @version      1.0.5
 // @description  Google AI Studio 增强插件。集成一键清空聊天、自动选择提示词、长文本转文件、滚动导航及引用文本等人性化功能。
 // @description:en  Enhancement tool for Google AI Studio. Features one-click chat clearing, auto-applying system instructions, long text-to-file conversion, scroll navigation, and selection quotes. Fully customizable via a gear-icon settings panel.
 // @author       Dae & Gemini
@@ -15,6 +15,9 @@
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
 // @grant        GM_unregisterMenuCommand
+// @grant        GM_xmlhttpRequest
+// @connect      vertexaisearch.cloud.google.com
+// @connect      *
 // @run-at       document-idle
 // @downloadURL https://update.greasyfork.org/scripts/563440/Google%20AI%20Studio%20%7C%20%E4%BC%98%E5%8C%96%E5%B7%A5%E5%85%B7%20-%20Dae.user.js
 // @updateURL https://update.greasyfork.org/scripts/563440/Google%20AI%20Studio%20%7C%20%E4%BC%98%E5%8C%96%E5%B7%A5%E5%85%B7%20-%20Dae.meta.js
@@ -70,6 +73,7 @@
         enableAutoFilePaste: GM_getValue('enableAutoFilePaste', true), // 超长文本粘贴自动转 .txt 文件
         enableCodePaste: GM_getValue('enableCodePaste', true), // Alt+V 智能代码块包裹粘贴
         enableDeleteAssociated: GM_getValue('enableDeleteAssociated', true), // 红色“删除关联回合”按钮功能
+        enableDirectLinks: GM_getValue('enableDirectLinks', false), // 直链打开功能开关
         enableSearchSuffix: GM_getValue('enableSearchSuffix', false), // 发送时自动追加联网搜索声明后缀
         showSearchSuffixBtn: GM_getValue('showSearchSuffixBtn', true), // 在 Google 搜索工具旁显示切换按钮
 
@@ -152,8 +156,9 @@
         lbl_code_paste:             ['启用智能代码粘贴', 'Smart Code Paste'],
         tip_code_paste:             ['快捷键 Alt+V：无选中时粘贴剪贴板并包裹代码块；有选中时直接包裹选区。', 'Alt+V: Paste as code block or wrap current selection.'],
 
-        lbl_show_suffix_btn:        ['显示“搜索后缀”切换按钮', 'Show Search Suffix Toggle'],
-        tip_search_suffix:          ['在 Google 搜索工具旁添加按钮，发送时自动追加“结合联网搜索”声明。', 'Adds a button next to Google Search to append a "(Combined with web search)" suffix.'],
+        lbl_show_suffix_btn:        ['启用“联网搜索声明”按钮', 'Show Search Suffix Toggle'],
+        tip_search_suffix:          ['当 Google 搜索工具开启时，在其旁侧添加此按钮，用于控制是否自动追加联网搜索声明。', 'When Google Search is enabled, adds this button to toggle the automatic web search disclaimer.'],
+        tip_suffix_button:          ['发送时自动追加“结合联网搜索”声明', 'Automatically append search suffix when sending'],
 
         lbl_delete_associated:      ['启用“进阶删除”功能', 'Enable Advanced Delete'],
         tip_delete_associated:      ['在消息菜单中增加红色高级删除按钮：\n 删除本组：删除当前问答对。\n 删除及下方：删除当前位置及之后的所有对话。', 'Add advanced delete buttons in menu:\n Delete Group: Delete current pair.\n Delete & Below: Delete current and all following turns.'],
@@ -161,6 +166,9 @@
         // 按钮文本
         btn_delete_group:           ['删除本组对话', 'Delete This Group'],
         btn_delete_below:           ['删除及下方所有', 'Delete & Below'],
+        
+        lbl_direct_links:           ['启用“直链打开”功能', 'Enable Direct Link Opener'],
+        tip_direct_links:           ['绕过 Google/Vertex 重定向，打开&复制即目标原始网址。', 'Bypass Google/Vertex redirects and open&copy original URLs directly.'],
 
         // === 3. 导航选项 (Navigation) ===
         lbl_clear_btn:              ['启用“清空聊天”按钮', 'Enable Clear Chat Button'],
@@ -194,6 +202,7 @@
         palette_main_color:         ['主背景色', 'Main Background'],
         palette_user_bg:            ['用户底色', 'User Background'],
         palette_model_bg:           ['模型底色', 'Model Background'],
+        tip_palette:                ['调色板', 'Color Palette'],
 
         // === 5. 脚本菜单 (Tampermonkey Menu) ===
         menu_lang:                  ['🌐 语言/Language: 中文 (点击切换)', '🌐 Language/语言: English (Switch)'],
@@ -245,6 +254,88 @@
         }
         
         console.log(`[Gemini 优化] 界面语言已切换为: ${CURRENT_LANG}`);
+    }
+
+    // --- 同步模型搜索框清除按钮的显隐 ---
+    function syncModelSearchClearBtn() {
+        const searchInput = document.querySelector('mat-dialog-content input[placeholder*="搜索模型"], mat-dialog-content input[placeholder*="Search model"]');
+        if (!searchInput) return;
+
+        // 定位清除按钮 (叉号)
+        const container = searchInput.closest('.mat-mdc-form-field-flex') || searchInput.parentElement;
+        const clearBtn = container ? container.querySelector('.search-bar-close-button') : null;
+        
+        if (clearBtn) {
+            // 初始判定。如果输入框为空，立即强制隐藏，防止初次弹出时可见
+            const isEmpty = !searchInput.value || searchInput.value.trim().length === 0;
+            clearBtn.style.setProperty('display', isEmpty ? 'none' : 'inline-flex', 'important');
+
+            // 绑定实时输入监听
+            if (!searchInput._daeBound) {
+                searchInput.addEventListener('input', () => {
+                    const nowEmpty = !searchInput.value || searchInput.value.trim().length === 0;
+                    clearBtn.style.setProperty('display', nowEmpty ? 'none' : 'inline-flex', 'important');
+                });
+                // 监听按钮点击：点击后输入框清空，按钮应立即消失
+                clearBtn.addEventListener('click', () => {
+                    setTimeout(() => {
+                        clearBtn.style.setProperty('display', 'none', 'important');
+                    }, 50);
+                });
+                searchInput._daeBound = true;
+            }
+        }
+    }
+
+    // --- Google 搜索状态持久化 ---
+    // 用于在移动端侧边栏关闭（DOM元素不可见）时，依然记住上次检测到的搜索开启状态
+    let cachedGoogleSearchState = GM_getValue('cachedGoogleSearchState', false);
+
+    // 核心同步函数：尝试从当前 DOM 中更新搜索状态
+    // 策略：只在能明确找到 UI 元素时才更新状态，找不到时保持“上次已知状态”
+    function updateGoogleSearchState() {
+        let newState = null;
+
+        // 1. 检查输入框中的工具标签 (.enabled-tool) - 优先级最高
+        const chips = document.querySelectorAll('.enabled-tool .tool-name');
+        if (chips.length > 0) {
+            // 只要存在芯片，先假设是某种工具开启
+            // 遍历检查是否是 Google 搜索
+            let hasSearch = false;
+            for (const chip of chips) {
+                const text = chip.textContent.trim();
+                if (text === 'Google 搜索' || text === 'Google Search' || text.includes('Grounding with')) {
+                    hasSearch = true;
+                    break;
+                }
+            }
+            // 如果找到了芯片列表，我们要么确认开启，要么确认关闭（即芯片里没有搜索）
+            newState = hasSearch;
+        }
+
+        // 2. 如果没看芯片，检查侧边栏开关 (mat-slide-toggle)
+        if (newState === null) {
+            const toggleBtn = document.querySelector('[data-test-id="searchAsAToolTooltip"] button[role="switch"]');
+            if (toggleBtn) {
+                // 检查 aria-checked
+                const isChecked = toggleBtn.getAttribute('aria-checked') === 'true' || 
+                                  toggleBtn.classList.contains('mdc-switch--checked');
+                newState = isChecked;
+            }
+        }
+
+        // 3. 只有当确实检测到了状态变化时，才更新缓存
+        if (newState !== null && newState !== cachedGoogleSearchState) {
+            cachedGoogleSearchState = newState;
+            GM_setValue('cachedGoogleSearchState', newState);
+            // console.log('[Gemini 优化] Google 搜索状态已更新为:', newState);
+            
+            // 状态改变时，刷新一下我们的自定义开关按钮的显示状态
+            const myBtn = document.getElementById('dae-suffix-toggle-btn');
+            if (myBtn) {
+                myBtn.style.display = newState ? 'inline-flex' : 'none';
+            }
+        }
     }
 
     // 动态更新根节点变量 (用于自定义背景色)
@@ -623,17 +714,16 @@
         styleEl.textContent = cssContent;
     }
 
-    // 移植自汉化脚本的通知组件
+    // 通知组件
     function showNotification(message, duration = 1500) {
         const STYLE_ID = 'dae-opt-notification-style';
         
-        // 1. 注入自适应样式 (如果尚未注入)
+        // 1. 注入自适应样式
         if (!document.getElementById(STYLE_ID)) {
             const style = document.createElement('style');
             style.id = STYLE_ID;
             style.textContent = `
                 :root {
-                    /* 定义自适应颜色变量 */
                     --dae-notif-bg: light-dark(rgb(252, 252, 252), rgb(31, 31, 31));
                     --dae-notif-text: light-dark(#333333, #F2F2F2);
                     --dae-notif-border: light-dark(#e0e0e0, rgb(39, 39, 39));
@@ -642,49 +732,54 @@
                     position: fixed;
                     top: 20px;
                     right: 20px;
-                    
                     background-color: var(--dae-notif-bg) !important;
                     color: var(--dae-notif-text) !important;
                     border: 1px solid var(--dae-notif-border) !important;
-                    
                     padding: 12px 20px;
                     border-radius: 8px;
                     font-size: 14px;
                     font-weight: 500;
                     font-family: "Google Sans", Roboto, sans-serif;
                     z-index: 999999;
-                    
                     box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-                    
-                    animation: slideIn 0.3s ease-out;
                     pointer-events: none;
                     white-space: nowrap;
+                    
+                    /* 初始进入动画：从右侧滑入 */
+                    animation: dae-notif-slideIn 0.3s cubic-bezier(0.2, 0, 0, 1);
                 }
-                @keyframes slideIn {
+
+                @keyframes dae-notif-slideIn {
                     from { transform: translateX(100%); opacity: 0; }
                     to { transform: translateX(0); opacity: 1; }
+                }
+
+                /* 原地消失动画：缩小并变透明 */
+                @keyframes dae-notif-fadeOutInPlace {
+                    from { transform: scale(1); opacity: 1; }
+                    to { transform: scale(0.9); opacity: 0; }
                 }
             `;
             document.head.appendChild(style);
         }
 
-        // 2. 确定前缀 (根据当前语言变量)
-        // 假设 CURRENT_LANG 是全局定义的 'zh' 或 'en'
         const prefix = (typeof CURRENT_LANG !== 'undefined' && CURRENT_LANG === 'en') 
             ? '[Enhancement tool] ' 
             : '[优化工具] ';
 
-        // 3. 创建通知元素
         const notification = document.createElement('div');
-        notification.className = 'dae-opt-notification';
-        // 将前缀拼接到消息前面
+        notification.className = 'dae-opt-notification notranslate';
         notification.textContent = prefix + message;
 
-        // 4. 挂载与销毁
         document.body.appendChild(notification);
+
+        // 2. 销毁流程
         setTimeout(() => {
-            notification.style.animation = 'slideIn 0.3s ease-out reverse';
-            setTimeout(() => notification.remove(), 300);
+            // 应用原地消失动画
+            notification.style.animation = 'dae-notif-fadeOutInPlace 0.15s cubic-bezier(0.4, 0, 1, 1) forwards';
+            
+            // 动画结束后移除元素
+            setTimeout(() => notification.remove(), 150);
         }, duration);
     }
 
@@ -1098,7 +1193,7 @@
             font-family: "Google Sans", Roboto, sans-serif;
             animation: popIn 0.2s cubic-bezier(0,0,0.2,1);
             
-            /* 关键：使用 Flex 列布局，确保只有列表区域滚动，标题和按钮固定 */
+            /* 使用 Flex 列布局，确保只有列表区域滚动，标题和按钮固定 */
             display: flex;
             flex-direction: column;
         }
@@ -1384,13 +1479,6 @@
             opacity: 0.8;
         }
 
-        /* 移动端强制隐藏该按钮 (CSS 级屏蔽) */
-        @media (max-width: 768px) {
-            .dae-suffix-toggle-btn {
-                display: none !important;
-            }
-        }
-
         /* --- 设置面板滑块样式 (已重构) --- */
         .dae-slider-container {
             display: flex;
@@ -1445,7 +1533,7 @@
             height: 14px;
             border-radius: 50%;
             cursor: pointer;
-            /* 关键：统一动画过渡时间 */
+            /* 统一动画过渡时间 */
             transition: transform 0.1s cubic-bezier(0.2, 0, 0, 1), background-color 0.1s ease;
             background: light-dark(#747775, #a8a8a8); /* 统一默认颜色 */
         }
@@ -1538,7 +1626,7 @@
             
             border-radius: 50%;
             transition: background 0.2s, color 0.2s, transform 0.1s;
-            vertical-align: middle; /* 关键：确保与文字同行对齐 */
+            vertical-align: middle; /* 确保与文字同行对齐 */
         }
         
         .dae-color-menu-btn:hover {
@@ -1810,6 +1898,11 @@
             opacity: 0.5;        /* 半透明 */
             font-style: italic;  /* 斜体提示 */
             pointer-events: none; /* [核心] 禁止一切鼠标交互(包括hover和click) */
+        }
+
+        /* 默认隐藏模型搜索框的清除按钮 */
+        mat-dialog-content .search-bar-close-button {
+            display: none !important;
         }
     `);
 
@@ -2273,15 +2366,32 @@
             document.body.appendChild(tooltipEl);
             const rect = btn.getBoundingClientRect();
             const tooltipRect = tooltipEl.getBoundingClientRect();
-            const top = rect.bottom + 8;
-            const left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+            
+            const top = rect.bottom + 8; // 在下方
+            const left = rect.left + (rect.width / 2) - (tooltipRect.width / 2) - 5;
+            
             tooltipEl.style.top = `${top}px`;
             tooltipEl.style.left = `${left}px`;
+            
+            // 气泡在下方，设置原点为顶部中心
+            tooltipEl.style.transformOrigin = 'top center';
+            
             requestAnimationFrame(() => { if(tooltipEl) tooltipEl.classList.add('visible'); });
         };
         const hideTooltip = () => {
             clearTimeout(showTimeout);
-            if (tooltipEl) { tooltipEl.remove(); tooltipEl = null; }
+            if (tooltipEl) {
+                const el = tooltipEl;
+                tooltipEl = null; // 立即断开引用
+                
+                // 1. 触发逆向动画
+                el.classList.remove('visible');
+                
+                // 2. 延迟销毁
+                setTimeout(() => {
+                    if (el) el.remove();
+                }, 150);
+            }
         };
         btn.addEventListener('mouseenter', () => { showTimeout = setTimeout(showTooltip, 100); });
         btn.addEventListener('mouseleave', hideTooltip);
@@ -2292,8 +2402,6 @@
         });
 
         // 4. 寻找正确的插入点
-        // 我们想插在 "获取代码" 之前。如果没获取代码，就插在 "重置" 之前。
-        // 关键是：我们要找到 container 的直接子元素。
         let targetNode = null;
         if (getCodeBtnInner) {
             targetNode = findDirectChild(container, getCodeBtnInner);
@@ -2319,8 +2427,8 @@
 
         // --- 1:1 复刻原生属性 ---
         button.setAttribute('ms-button', '');
-        button.setAttribute('variant', 'icon-borderless'); // 关键：决定了无边框样式
-        // 关键类名：ms-button-borderless 和 ms-button-icon 决定了尺寸和交互行为
+        button.setAttribute('variant', 'icon-borderless'); // 决定了无边框样式
+        // ms-button-borderless 和 ms-button-icon 决定了尺寸和交互行为
         button.className = 'mat-mdc-tooltip-trigger ms-button-borderless ms-button-icon ng-star-inserted';
         button.setAttribute('aria-label', 'Clear chat');
         button.setAttribute('aria-disabled', 'false');
@@ -2357,15 +2465,14 @@
             const rect = button.getBoundingClientRect();
             const tooltipRect = tooltipEl.getBoundingClientRect();
 
-            // 4. 位置调整 (Vertical Gap)
-            // rect.bottom 是按钮底部位置
-            // + 4 表示向下偏移 8px。想离得远一点就改大，近一点就改小
-            const top = rect.bottom + 8;
-
-            const left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+            const top = rect.bottom + 8; // 在下方
+            const left = rect.left + (rect.width / 2) - (tooltipRect.width / 2) - 4;
 
             tooltipEl.style.top = `${top}px`;
             tooltipEl.style.left = `${left}px`;
+
+            // 气泡在下方，设置原点为顶部中心
+            tooltipEl.style.transformOrigin = 'top center';
 
             requestAnimationFrame(() => {
                 if(tooltipEl) tooltipEl.classList.add('visible');
@@ -2375,8 +2482,16 @@
         const hideTooltip = () => {
             clearTimeout(showTimeout);
             if (tooltipEl) {
-                tooltipEl.remove();
-                tooltipEl = null;
+                const el = tooltipEl;
+                tooltipEl = null; // 立即断开引用
+                
+                // 1. 触发逆向动画
+                el.classList.remove('visible');
+                
+                // 2. 延迟销毁
+                setTimeout(() => {
+                    if (el) el.remove();
+                }, 150);
             }
         };
 
@@ -2895,15 +3010,19 @@
             document.body.appendChild(tooltip);
 
             const rect = targetEl.getBoundingClientRect();
-            const tooltipRect = tooltip.getBoundingClientRect();
             
-            // 优先显示在上方
+            // 默认显示在上方
             let top = rect.top - tooltip.offsetHeight - 8;
-            // 居中对齐图标
             let left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2);
             
-            // 边界检测
-            if (top < 10) top = rect.bottom + 10;
+            // 默认原点：底部中心
+            let origin = 'bottom center';
+            
+            // 边界检测与翻转
+            if (top < 10) {
+                top = rect.bottom + 10; // 翻转到下方
+                origin = 'top center';  // 翻转原点：顶部中心
+            }
             if (left < 10) left = 10;
             if (left + tooltip.offsetWidth > window.innerWidth - 10) {
                 left = window.innerWidth - tooltip.offsetWidth - 10;
@@ -2911,6 +3030,9 @@
 
             tooltip.style.top = `${top}px`;
             tooltip.style.left = `${left}px`;
+            
+            // 应用动态计算的原点
+            tooltip.style.transformOrigin = origin;
 
             requestAnimationFrame(() => tooltip.classList.add('visible'));
             currentTooltip = tooltip;
@@ -3069,7 +3191,7 @@
             
             // [搜索后缀] 保留 tip_search_suffix
             { key: 'showSearchSuffixBtn', label: 'lbl_show_suffix_btn', tooltip: 'tip_search_suffix',
-              isHidden: isMobile, 
+              // 删除了 isHidden: isMobile, 让它在移动端也显示
               action: () => {
                   if (activeSettings.showSearchSuffixBtn) {
                       injectSuffixToggle();
@@ -3082,20 +3204,48 @@
               }
             },
             
-            // [关联删除] 保留 tip_delete_associated
+            // [关联删除] 
             { key: 'enableDeleteAssociated', label: 'lbl_delete_associated', tooltip: 'tip_delete_associated' },
+            
+            // 直链打开功能
+            { key: 'enableDirectLinks', label: 'lbl_direct_links', tooltip: 'tip_direct_links',
+              action: () => {
+                  if (activeSettings.enableDirectLinks) {
+                      // 开启时：立即触发一次全页扫描
+                      LinkSanitizer.run();
+                  } else {
+                      // 关闭时：立即还原已被修改的链接
+                      LinkSanitizer.revert();
+                  }
+              }
+            },
 
             { type: 'header', label: 'settings_group_nav' },
             
-            // [清空按钮] 移除了 tooltip
+            // [清空按钮]
             { key: 'enableClearBtn', label: 'lbl_clear_btn', 
               action: () => activeSettings.enableClearBtn ? ensureCorrectButtonPlacement() : removeAllClearButtons() },
             
-            // [滚动导航] 保留 tip_scroll_nav
+            // [滚动导航]
             { key: 'enableScrollNav', label: 'lbl_scroll_nav', tooltip: 'tip_scroll_nav',
               action: () => { 
+                  const isEnabled = activeSettings.enableScrollNav;
                   applyScrollNavState();
-                  toggleSubOption('enableScrollNav', 'scrollNavCentered', activeSettings.enableScrollNav);
+                  toggleSubOption('enableScrollNav', 'scrollNavCentered', isEnabled);
+                  
+                  // PC端：开启时若有滚动空间，自动沉底显示子选项
+                  if (isEnabled && window.innerWidth >= 768) {
+                      const listEl = document.querySelector('.dae-settings-list');
+                      if (listEl) {
+                          // 给予微小延迟等待 DOM 展开动画
+                          setTimeout(() => {
+                              listEl.scrollTo({
+                                  top: listEl.scrollHeight,
+                                  behavior: 'smooth'
+                              });
+                          }, 50);
+                      }
+                  }
               } },
             
             // [居中] 子选项，无 tooltip
@@ -3134,7 +3284,7 @@
             const leftWrapper = document.createElement('div');
             leftWrapper.style.display = 'flex';
             leftWrapper.style.alignItems = 'center';
-            leftWrapper.style.flexGrow = '1'; // 关键：撑开剩余空间
+            leftWrapper.style.flexGrow = '1'; // 撑开剩余空间
             leftWrapper.style.marginRight = '10px';
 
             // 1. 文本
@@ -3178,20 +3328,28 @@
                 const menuBtn = document.createElement('button');
                 menuBtn.className = 'dae-color-menu-btn';
                 menuBtn.innerHTML = '<span class="material-symbols-outlined notranslate ms-button-icon-symbol" aria-hidden="true" data-no-translate="1">menu</span>';
-                menuBtn.title = protect(t('palette_color')); 
-                        menuBtn.addEventListener('click', (e) => {
-                            e.stopPropagation(); 
-                            const titleKey = cfg.colorKey === 'userBgColor' ? 'palette_user_bg' : 'palette_model_bg';
-                            toggleColorPicker(cfg.colorKey, cfg.defaultColor, menuBtn, titleKey, true, null);
-                        });
+                
+                // 自定义气泡
+                if (!isMobile) {
+                    const tipPalette = protect(t('tip_palette'));
+                    menuBtn.addEventListener('mouseenter', () => showTooltip(menuBtn, tipPalette));
+                    menuBtn.addEventListener('mouseleave', () => hideTooltip());
+                }
+
+                menuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); 
+                    if (!isMobile) hideTooltip();
+                    
+                    const titleKey = cfg.colorKey === 'userBgColor' ? 'palette_user_bg' : 'palette_model_bg';
+                    toggleColorPicker(cfg.colorKey, cfg.defaultColor, menuBtn, titleKey, true, null);
+                });
                 leftWrapper.appendChild(menuBtn);
             }
 
-            // [关键步骤 1] 先将左侧容器加入行内
+            // 先将左侧容器加入行内
             // leftWrapper 具有 flex-grow: 1，它会自动占据中间所有空白，将后续元素推向最右侧
             row.appendChild(leftWrapper); 
 
-            // ================= 插入开始 =================
             // 编辑指令名称按钮 (移至此处，位于左侧文字容器和右侧开关之间)
             if (cfg.hasEditBtn) {
                 const editBtn = document.createElement('button');
@@ -3223,22 +3381,28 @@
                 // 直接添加到 row 中，它会紧贴在右侧控件的左边
                 row.appendChild(editBtn);
             }
-            // ================= 插入结束 =================
 
-            // [关键步骤 2] 主题背景色自定义按钮 (保持在 editBtn 之后)
+            // 主题背景色自定义按钮 (保持在 editBtn 之后)
             if (cfg.hasRootBgPicker) {
                 const isDefaultTheme = activeSettings[cfg.key] === 'default';
                 const rootBtn = document.createElement('button');
                 rootBtn.className = 'dae-color-menu-btn dae-root-bg-btn'; 
                 rootBtn.innerHTML = '<span class="material-symbols-outlined notranslate ms-button-icon-symbol" aria-hidden="true" data-no-translate="1">menu</span>';
-                rootBtn.title = protect(t('palette_main_color'));
-                rootBtn.style.display = isDefaultTheme ? 'inline-flex' : 'none';
                 
-                // 样式微调：为了不让它紧贴着下拉框，加一点右边距
+                // 自定义气泡
+                if (!isMobile) {
+                    const tipPalette = protect(t('tip_palette'));
+                    rootBtn.addEventListener('mouseenter', () => showTooltip(rootBtn, tipPalette));
+                    rootBtn.addEventListener('mouseleave', () => hideTooltip());
+                }
+
+                rootBtn.style.display = isDefaultTheme ? 'inline-flex' : 'none';
                 rootBtn.style.marginRight = '8px';
 
                 rootBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    if (!isMobile) hideTooltip();
+                    
                     const isDark = isCurrentDarkMode();
                     const targetKey = isDark ? 'customDarkBg' : 'customLightBg';
                     // 使用修正后的默认值 (Hex 格式)
@@ -3567,6 +3731,13 @@
             // 回滚字体大小
             updateFontSize();
             if(!activeSettings.enableQuote) hideQuoteBtn();
+            
+            // 根据回滚后的状态，决定是运行还是还原
+            if (activeSettings.enableDirectLinks) {
+                LinkSanitizer.run();
+            } else {
+                LinkSanitizer.revert();
+            }
             
             // 恢复后缀按钮状态
             if (activeSettings.showSearchSuffixBtn) {
@@ -3940,7 +4111,7 @@
                 // 使用现代标准 API 删除选中文本，性能更佳
                 target.setRangeText('', start, end, 'end');
 
-                // 关键步骤：手动触发 input 事件，通知 Angular 等框架更新
+                // 手动触发 input 事件，通知 Angular 等框架更新
                 target.dispatchEvent(new Event('input', { bubbles: true }));
 
                 console.log(`[Dae优化工具] Ctrl+B: 正在将选中内容 (${selectedText.length} 字符) 转换为文件...`);
@@ -4940,119 +5111,134 @@
         container.insertBefore(cardContainer, container.firstChild);
     }
 
-    // --- 注入搜索后缀开关按钮 (Run Settings 面板) ---
+    // --- 注入搜索后缀开关按钮 ---
     function injectSuffixToggle() {
-        if (window.innerWidth < 768) return;
-        if (!activeSettings.showSearchSuffixBtn) return;
-        if (document.getElementById('dae-suffix-toggle-btn')) return;
+        // 每次尝试注入前，先尝试更新一次状态
+        updateGoogleSearchState();
 
-        // 使用 data-test-id 精准定位 "Google 搜索" 行
+        if (!activeSettings.showSearchSuffixBtn) {
+            const existing = document.getElementById('dae-suffix-toggle-btn');
+            if (existing) existing.remove();
+            return;
+        }
+
         const searchRow = document.querySelector('[data-test-id="searchAsAToolTooltip"]');
         if (!searchRow) return;
 
-        // 寻找开关容器
         const toggleContainer = searchRow.querySelector('.item-input-toggle');
         if (!toggleContainer) return;
 
-        // 创建按钮
-        const btn = document.createElement('div');
-        btn.id = 'dae-suffix-toggle-btn';
-        btn.className = 'dae-suffix-toggle-btn';
-        // 添加标记
-        btn.setAttribute('data-i18n-key', 'btn_suffix');
-        btn.textContent = protect(t('btn_suffix'));
-        
-        // Tooltip
-        const tipText = protect(t('tip_search_suffix'));
-        let tooltipEl = null;
-        btn.addEventListener('mouseenter', () => {
-            if (tooltipEl) return;
-            tooltipEl = document.createElement('div');
-            tooltipEl.className = 'gemini-custom-tooltip';
-            tooltipEl.textContent = tipText;
-            document.body.appendChild(tooltipEl);
-            requestAnimationFrame(() => {
-                if (!tooltipEl) return;
-                const btnRect = btn.getBoundingClientRect();
-                const tipRect = tooltipEl.getBoundingClientRect();
-                
-                // 将 8 改为 14，增加垂直距离，防止视觉遮挡
-                // 如果上方空间不够，代码通常没有自动翻转逻辑，但在 Run Settings 区域上方通常有空间
-                const top = btnRect.top - tipRect.height - 24; 
-                
-                let left = btnRect.left + (btnRect.width / 2) - (tipRect.width / 2);
-                if (left < 10) left = 10;
-                tooltipEl.style.top = `${top}px`;
-                tooltipEl.style.left = `${left}px`;
-                tooltipEl.classList.add('visible');
+        let btn = document.getElementById('dae-suffix-toggle-btn');
+        if (!btn) {
+            btn = document.createElement('div');
+            btn.id = 'dae-suffix-toggle-btn';
+            btn.className = 'dae-suffix-toggle-btn';
+            btn.setAttribute('data-i18n-key', 'btn_suffix');
+            btn.textContent = protect(t('btn_suffix'));
+            
+            // Tooltip
+            const tipText = protect(t('tip_suffix_button'));
+            let tooltipEl = null;
+            btn.addEventListener('mouseenter', () => {
+                if (tooltipEl) return;
+                tooltipEl = document.createElement('div');
+                tooltipEl.className = 'gemini-custom-tooltip';
+                tooltipEl.textContent = tipText;
+                document.body.appendChild(tooltipEl);
+                requestAnimationFrame(() => {
+                    if (!tooltipEl) return;
+                    const btnRect = btn.getBoundingClientRect();
+                    const tipRect = tooltipEl.getBoundingClientRect();
+                    const top = btnRect.top - tipRect.height - 24; 
+                    let left = btnRect.left + (btnRect.width / 2) - (tipRect.width / 2);
+                    if (left < 10) left = 10;
+
+                    tooltipEl.style.top = `${top}px`;
+                    tooltipEl.style.left = `${left}px`;
+                    
+                    tooltipEl.style.transformOrigin = 'bottom center';
+                    
+                    tooltipEl.classList.add('visible');
+                });
             });
-        });
-        btn.addEventListener('mouseleave', () => {
-            if (tooltipEl) { tooltipEl.remove(); tooltipEl = null; }
-        });
+            btn.addEventListener('mouseleave', () => {
+                if (tooltipEl) {
+                    const el = tooltipEl; // 锁定当前元素引用
+                    tooltipEl = null;     // 立即清空全局引用，防止逻辑冲突
+                    
+                    // 1. 移除 visible 类，触发 CSS 逆向动画 (变透明 + 缩回原点)
+                    el.classList.remove('visible');
+                    
+                    // 2. 等待动画结束后 (150ms) 再物理销毁
+                    setTimeout(() => {
+                        if (el && el.parentNode) el.remove();
+                    }, 150); 
+                }
+            });
 
-        // 辅助函数：根据当前配置更新按钮样式
-        const updateState = () => {
-            if (activeSettings.enableSearchSuffix) btn.classList.add('active');
-            else btn.classList.remove('active');
-        };
-        updateState();
+            // Click
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                activeSettings.enableSearchSuffix = !activeSettings.enableSearchSuffix;
+                GM_setValue('enableSearchSuffix', activeSettings.enableSearchSuffix);
+                
+                if (activeSettings.enableSearchSuffix) btn.classList.add('active');
+                else btn.classList.remove('active');
+                
+                if (tooltipEl) { tooltipEl.remove(); tooltipEl = null; }
+            });
 
-        // --- Click 事件：正确的切换逻辑 ---
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation(); 
-            
-            // 1. 切换布尔值状态
-            activeSettings.enableSearchSuffix = !activeSettings.enableSearchSuffix;
-            
-            // 2. 保存设置到 GM 存储
-            GM_setValue('enableSearchSuffix', activeSettings.enableSearchSuffix);
-            
-            // 3. 更新按钮视觉状态
-            updateState();
-            
-            // 4. (可选) 点击后立即移除 Tooltip，优化体验
-            if (tooltipEl) { tooltipEl.remove(); tooltipEl = null; }
-        });
+            // 监听原生的 toggle 点击，以便在用户点击 Google 开关时立即同步状态
+            const nativeToggle = searchRow.querySelector('button[role="switch"]');
+            if (nativeToggle) {
+                nativeToggle.addEventListener('click', () => {
+                    // 延迟一点点，等原生状态切换完成
+                    setTimeout(updateGoogleSearchState, 50);
+                });
+            }
 
-        toggleContainer.prepend(btn);
+            toggleContainer.prepend(btn);
+        }
+
+        // 样式同步
+        if (activeSettings.enableSearchSuffix) btn.classList.add('active');
+        else btn.classList.remove('active');
+
+        // 使用缓存的状态来决定显示/隐藏
+        // 这样即使在移动端看不到侧边栏，只要 cachedGoogleSearchState 为 true，按钮逻辑依然生效
+        // 注意：这里我们只控制是否显示该按钮。而在发送时的逻辑，是完全依赖 cachedGoogleSearchState 的。
+        if (cachedGoogleSearchState) {
+            btn.style.display = 'inline-flex';
+        } else {
+            btn.style.display = 'none';
+        }
     }
 
     // --- 发送拦截器：在发送瞬间注入引用 ---
     function setupSendInterceptor() {
-        // [辅助函数] 检测 Google 搜索工具并返回对应的后缀文本 (粗体)
-        const getSearchToolSuffix = () => {
-            const toolNames = document.querySelectorAll('.enabled-tool .tool-name');
-            for (const el of toolNames) {
-                const text = el.textContent.trim();
-                
-                // 1. 中文界面
-                if (text === 'Google 搜索') {
-                    return '\n\n---\n**（结合联网搜索）**';
-                }
-                
-                // 2. 英文界面
-                if (text === 'Grounding with Google Search' || text === 'Google Search') {
-                    return '\n\n---\n**(Combined with web search)**';
-                }
+        // 获取后缀文本 (根据当前语言环境盲猜，不再依赖 DOM 查找)
+        const getSuffixText = () => {
+            // 简单判断当前界面语言环境，或者直接追加多语言版本
+            // 这里我们用一个比较通用的逻辑：如果缓存状态是开的，就追加
+            if (CURRENT_LANG === 'zh') {
+                return '\n\n---\n**（结合联网搜索）**';
+            } else {
+                return '\n\n---\n**(Combined with web search)**';
             }
-            return null;
         };
 
-        // 核心注入逻辑
         const handleInjection = () => {
             const textarea = document.querySelector('textarea[formcontrolname="promptText"]');
-            if (!textarea) return;
+            if (!textarea || !textarea.value.trim()) return;
 
-            // 只有当输入框有内容时才触发
-            // 防止发送空白消息时意外注入后缀
-            if (!textarea.value.trim()) return;
+            // 发送前，再次尝试同步一次状态 (万一 DOM 刚好可见呢)
+            updateGoogleSearchState();
 
             let prefix = '';
             let suffix = '';
             let hasChange = false;
 
-            // 1. 处理引用 (Quote)
+            // 1. 处理引用
             if (activeSettings.enableQuote && pendingQuoteState) {
                 prefix = `${t('quote_inject_header')}\n\n> ${pendingQuoteState.author}: ${pendingQuoteState.text}\n\n---\n`;
                 pendingQuoteState = null;
@@ -5061,29 +5247,27 @@
                 hasChange = true;
             }
 
-            // 2. 处理搜索后缀 (Search Suffix)
-            if (activeSettings.enableSearchSuffix) {
-                const suffixText = getSearchToolSuffix();
-                if (suffixText) {
-                    // 防止重复添加
-                    if (!textarea.value.endsWith(suffixText)) {
-                        suffix = suffixText;
-                        hasChange = true;
-                    }
+            // 2. 处理搜索后缀
+            // 必须同时满足三个条件：
+            // 1. 设置面板里的“显示按钮”总开关是开的 (showSearchSuffixBtn)
+            // 2. 那个“尾部追加”按钮本身是激活的 (enableSearchSuffix)
+            // 3. Google 搜索本身是开启的 (cachedGoogleSearchState)
+            if (activeSettings.showSearchSuffixBtn && activeSettings.enableSearchSuffix && cachedGoogleSearchState) {
+                const suffixText = getSuffixText();
+                if (!textarea.value.endsWith(suffixText)) {
+                    suffix = suffixText;
+                    hasChange = true;
                 }
             }
 
-            // 3. 应用更改
             if (hasChange) {
                 textarea.value = prefix + textarea.value + suffix;
                 textarea.dispatchEvent(new Event('input', { bubbles: true }));
-                
                 if (prefix) console.log('[Gemini 优化] 已注入引用内容');
                 if (suffix) console.log('[Gemini 优化] 已注入搜索后缀');
             }
         };
 
-        // 监听回车键
         document.addEventListener('keydown', (e) => {
             const target = e.target;
             if (!target || !target.matches || !target.matches('textarea[formcontrolname="promptText"]')) return;
@@ -5092,12 +5276,267 @@
             }
         }, true);
 
-        // 监听发送按钮点击
         document.addEventListener('click', (e) => {
             const btn = e.target.closest('button[aria-label="发送"]') || e.target.closest('ms-run-button');
             if (btn) handleInjection();
         }, true); 
     }
+
+    // --- 链接重定向净化模块 ---
+    const LinkSanitizer = (function() {
+        const CONFIG = {
+            TIMEOUT: 8000,
+            RETRY_MAX: 2,
+            RETRY_DELAY: 300,
+            DEBOUNCE: 200 // 增加防抖时间，避免流式输出时频繁触发
+        };
+
+        const LinkState = { QUEUED: 1, RESOLVING: 2, RESOLVED: 3, FAILED: 4 };
+        const nodeStatus = new WeakMap(); // 记录节点状态，防止重复处理
+        const urlCache = new Map();       // URL 缓存，防止重复请求
+
+        const PATTERNS = {
+            G_WRAPPER: /google\.com\/url\?/,
+            V_SEARCH: /vertexaisearch\.cloud\.google\.com/
+        };
+
+        const debounce = (fn, delay) => {
+            let timer;
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => fn(...args), delay);
+            };
+        };
+
+        const isTarget = (url) => {
+            if (!url || typeof url !== 'string') return false;
+            return PATTERNS.G_WRAPPER.test(url) || PATTERNS.V_SEARCH.test(url);
+        };
+
+        const extractFromGoogleWrapper = (urlString) => {
+            try {
+                const url = new URL(urlString);
+                const destination = url.searchParams.get('q') || url.searchParams.get('url') || url.searchParams.get('u');
+                if (destination) return decodeURIComponent(destination);
+            } catch (e) { /* ignore */ }
+            return null;
+        };
+
+        const resolveVertexRedirect = (url, retries = CONFIG.RETRY_MAX) => {
+            return new Promise((resolve) => {
+                const attempt = (remaining) => {
+                    GM_xmlhttpRequest({
+                        method: 'HEAD',
+                        url: url,
+                        redirect: 'manual',
+                        timeout: CONFIG.TIMEOUT,
+                        anonymous: true,
+                        onload(res) {
+                            if (res.status >= 300 && res.status < 400) {
+                                const loc = (res.responseHeaders.match(/Location:\s*(.+)/i) || [])[1];
+                                if (loc) { resolve(loc.trim()); return; }
+                            }
+                            const final = res.finalUrl?.trim();
+                            resolve((final && final !== url) ? final : url);
+                        },
+                        onerror(err) {
+                            if (err?.error?.includes('whitelist')) { resolve(url); return; }
+                            if (remaining > 0) setTimeout(() => attempt(remaining - 1), CONFIG.RETRY_DELAY);
+                            else resolve(url);
+                        },
+                        ontimeout() {
+                            if (remaining > 0) setTimeout(() => attempt(remaining - 1), CONFIG.RETRY_DELAY);
+                            else resolve(url);
+                        }
+                    });
+                };
+                attempt(retries);
+            });
+        };
+
+        async function resolveRedirectChain(originalUrl) {
+            if (urlCache.has(originalUrl)) return urlCache.get(originalUrl);
+
+            let currentUrl = originalUrl;
+            if (PATTERNS.G_WRAPPER.test(currentUrl)) {
+                const extracted = extractFromGoogleWrapper(currentUrl);
+                if (extracted) currentUrl = extracted;
+            }
+            if (PATTERNS.V_SEARCH.test(currentUrl)) {
+                try { currentUrl = await resolveVertexRedirect(currentUrl); } catch (e) { /* ignore */ }
+            }
+
+            if (currentUrl !== originalUrl) urlCache.set(originalUrl, currentUrl);
+            return currentUrl;
+        }
+
+        // 处理单个链接 (后台静默执行)
+        async function processLink(anchor) {
+            // 如果功能关闭，不执行任何解析，也不修改状态
+            if (!activeSettings.enableDirectLinks) return;
+
+            const originalHref = anchor.href;
+            if (!originalHref || !isTarget(originalHref)) return;
+
+            // 避免重复处理
+            if (nodeStatus.has(anchor) && nodeStatus.get(anchor) !== LinkState.QUEUED) return;
+            nodeStatus.set(anchor, LinkState.RESOLVING);
+
+            // 备份原始链接 (用于 reversion)
+            if (!anchor.dataset.originalHref) anchor.dataset.originalHref = originalHref;
+
+            try {
+                const finalUrl = await resolveRedirectChain(originalHref);
+
+                // 再次检查功能是否开启 (防止解析过程中用户关闭了功能)
+                if (!activeSettings.enableDirectLinks) {
+                    nodeStatus.delete(anchor); // 重置状态，下次开启时重新处理
+                    return; 
+                }
+
+                if (finalUrl && finalUrl !== originalHref) {
+                    anchor.href = finalUrl; // 直接修改 href
+                    anchor.target = '_blank';
+                    anchor.dataset.resolved = 'true';
+                    nodeStatus.set(anchor, LinkState.RESOLVED);
+                } else {
+                    anchor.target = '_blank';
+                    nodeStatus.set(anchor, LinkState.RESOLVED);
+                }
+            } catch (e) {
+                nodeStatus.set(anchor, LinkState.FAILED);
+            }
+        }
+
+        // 全局扫描 (用于页面加载、切换、滚动加载时)
+        const scanDocument = () => {
+            if (!activeSettings.enableDirectLinks) return;
+            const selector = 'a[href*="google.com/url?"], a[href*="vertexaisearch.cloud.google.com"]';
+            const nodes = document.querySelectorAll(selector);
+            nodes.forEach(node => {
+                // 如果还没处理过，且是目标链接
+                if (!nodeStatus.has(node) && node.dataset.resolved !== 'true') {
+                    // 强制新标签页打开
+                    if (node.target !== '_blank') node.target = '_blank';
+                    nodeStatus.set(node, LinkState.QUEUED);
+                    processLink(node);
+                }
+            });
+        };
+        const debouncedScan = debounce(scanDocument, CONFIG.DEBOUNCE);
+
+        // --- 事件处理器 ---
+
+        // 右键菜单处理 (最后一道防线)
+        const handleContextMenu = (e) => {
+            // 如果功能关闭，绝对不干涉，保留原始重定向链接
+            if (!activeSettings.enableDirectLinks) return;
+
+            const anchor = e.target.closest('a');
+            if (!anchor) return;
+            const href = anchor.href;
+
+            if (!isTarget(href) || anchor.dataset.resolved === 'true') return;
+
+            // 同步修复 Google 链接 (Vertex 链接必须依赖 scanDocument 的预处理)
+            if (PATTERNS.G_WRAPPER.test(href)) {
+                const cleanUrl = extractFromGoogleWrapper(href);
+                if (cleanUrl && cleanUrl !== href) {
+                    if (!anchor.dataset.originalHref) anchor.dataset.originalHref = href;
+                    anchor.href = cleanUrl;
+                    anchor.target = '_blank';
+                    anchor.dataset.resolved = 'true';
+                    nodeStatus.set(anchor, LinkState.RESOLVED);
+                }
+            }
+        };
+
+        // 点击拦截 (左键/中键)
+        const interceptClickAction = async (e) => {
+            // 严防右键 (button 2)
+            if (e.button === 2) return;
+
+            const anchor = e.target.closest('a');
+            if (!anchor) return;
+            const href = anchor.href;
+            if (!isTarget(href)) return;
+
+            if (anchor.dataset.resolved === 'true') return;
+
+            // 如果功能关闭，拦截并强制用新标签页打开【原始链接】
+            if (!activeSettings.enableDirectLinks) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open(href, '_blank', 'noopener,noreferrer');
+                return;
+            }
+
+            // 功能开启时：
+            e.preventDefault();
+            e.stopPropagation();
+            const oldCursor = anchor.style.cursor;
+            anchor.style.cursor = 'progress';
+
+            try {
+                const finalUrl = await resolveRedirectChain(href);
+                anchor.style.cursor = oldCursor;
+                if (finalUrl !== href) {
+                    anchor.href = finalUrl;
+                    anchor.dataset.resolved = 'true';
+                }
+                window.open(finalUrl, '_blank', 'noopener,noreferrer');
+            } catch (err) {
+                anchor.style.cursor = oldCursor;
+                const fallback = extractFromGoogleWrapper(href) || href;
+                window.open(fallback, '_blank', 'noopener,noreferrer');
+            }
+        };
+
+        // 还原函数 (当开关关闭时调用)
+        function revert() {
+            const processedNodes = document.querySelectorAll('a[data-resolved="true"]');
+            processedNodes.forEach(node => {
+                if (node.dataset.originalHref) {
+                    node.href = node.dataset.originalHref;
+                }
+                delete node.dataset.resolved;
+                nodeStatus.delete(node); // 清除状态，允许再次处理
+            });
+        }
+
+        // 初始化
+        function activate() {
+            document.addEventListener('click', interceptClickAction, { capture: true, passive: false });
+            document.addEventListener('auxclick', interceptClickAction, { capture: true, passive: false });
+            document.addEventListener('contextmenu', handleContextMenu, { capture: true, passive: false });
+
+            // 监听 DOM 变化 (流式输出时自动净化)
+            const observer = new MutationObserver((mutations) => {
+                if (!activeSettings.enableDirectLinks) return;
+                let shouldScan = false;
+                for (const m of mutations) {
+                    if (m.type === 'childList' && m.addedNodes.length > 0) shouldScan = true;
+                }
+                if (shouldScan) debouncedScan();
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+
+            // 监听页面跳转/聊天切换，确保新加载的内容也能被处理
+            window.addEventListener('locationchange', () => {
+                setTimeout(scanDocument, 500);
+                setTimeout(scanDocument, 2000); // 二次检查，应对慢速加载
+            });
+            
+            // 初始运行
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', scanDocument, { once: true });
+            } else {
+                scanDocument();
+            }
+        }
+
+        return { activate, run: scanDocument, revert };
+    })();
 
     // --- 系统指令列表抓取器 ---
     const instructionScraper = (function() {
@@ -5159,7 +5598,7 @@
         return { init, saveList };
     })();
 
-    // --- 自动系统指令配置逻辑 (移植自 Auto-Config) ---
+    // --- 自动系统指令配置逻辑 ---
     const autoConfigLogic = (function() {
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         
@@ -5190,7 +5629,6 @@
                     const isMobile = window.innerWidth < 768;
                     
                     // 移动端额外隐藏规则：侧边栏本栏 + 侧边栏遮罩层
-                    // 加上 .sidebar-overlay 即可隐藏那个变暗的背景
                     const mobileSidebarCSS = isMobile ? `
                         ms-right-side-panel,
                         .sidebar-overlay { 
@@ -5223,74 +5661,54 @@
 
         function reset() {
             hasConfiguredSession = false;
-            // console.log('[Gemini 优化] 🔄 状态锁已重置');
         }
 
         // --- 专门的后台扫描函数 ---
         async function performBackgroundScan() {
             if (isRunning) return;
 
-            // ================= [Step 0: 智能打开面板逻辑] =================
             // 尝试获取系统指令入口
             let openBtn = document.querySelector('ms-system-instructions-panel > button');
 
             // 如果当前找不到入口（面板未打开），尝试通过工具栏 Tune 按钮打开
             if (!openBtn) {
-                // 匹配用户提供的 HTML 结构
                 const tuneBtn = document.querySelector('.runsettings-toggle-button') || 
                                 document.querySelector('button[iconname="tune"]');
                 
                 if (tuneBtn) {
                     const isMobile = window.innerWidth < 768;
-                    
-                    // 【移动端】立即开启隐身，实现“后台隐藏打开”
                     if (isMobile) toggleStealth(true);
-                    
-                    // 【PC端】不开启隐身，符合“打开后不隐藏运行设置面板”的需求
-                    // (toggleStealth 主要隐藏的是弹窗层，不会影响 PC 端嵌入式的侧边栏显示)
+                    // PC端不开启隐身，以免影响侧边栏视觉
 
                     console.log('[Gemini 优化] 未找到指令入口，尝试打开运行设置面板...');
                     tuneBtn.click();
-
-                    // 等待指令按钮渲染出来 (最多等 2 秒)
                     openBtn = await wait('ms-system-instructions-panel > button', 2000);
                 }
             }
-            // ============================================================
 
-            if (!openBtn) return; // 如果经过尝试后还是找不到，放弃执行
+            if (!openBtn) return; 
 
             isRunning = true;
             console.log('[Gemini 优化] 🕵️‍♂️ 触发系统指令后台同步...');
 
             try {
-                // 1. 开启隐身 (隐藏接下来的下拉菜单操作)
-                // 注意：这会隐藏 Overlay 层（弹窗/下拉框），但不会隐藏 PC 端的侧边栏
                 toggleStealth(true);
-
-                // 2. 点击展开系统指令详情
                 openBtn.click();
 
-                // 3. 打开下拉菜单
                 const dropdown = await wait('mat-dialog-content mat-select', 2000);
                 if (dropdown) {
                     dropdown.click();
-                    
-                    // 4. 等待选项并抓取
                     await wait('.cdk-overlay-pane mat-option', 2000);
                     const allOptions = document.querySelectorAll('.cdk-overlay-pane mat-option');
                     if (allOptions.length > 0) {
                         instructionScraper.saveList(allOptions);
                     }
                     
-                    // 5. 关闭下拉菜单 (点击遮罩)
                     await sleep(100);
                     const backdrop = document.querySelector('.cdk-overlay-backdrop');
                     if (backdrop) backdrop.click();
                 }
 
-                // 6. 关闭指令详情面板 (点击关闭按钮或遮罩)
-                // 注意：这里关的是“指令详情”这个小弹窗，而不是“运行设置”侧边栏
                 await sleep(100);
                 const closePanelBtn = document.querySelector('mat-dialog-container button[iconname="close"]');
                 if (closePanelBtn) {
@@ -5316,7 +5734,6 @@
                     }
                 });
 
-                // 恢复显示
                 setTimeout(() => toggleStealth(false), 750);
                 isRunning = false;
             }
@@ -5326,9 +5743,6 @@
         async function execute() {
             if (activeSettings.autoSystemInstructionName === '__DISABLED__') return;
             
-            // 缓冲等待：页面跳转/DOM销毁需要时间，稍作等待以获取准确的 DOM 状态
-            // await sleep(500);
-
             if (!location.href.includes('prompts/new_chat')) {
                 hasConfiguredSession = false;
                 return;
@@ -5356,7 +5770,6 @@
             console.log(`[Gemini 优化] 🆕 开始自动配置: "${targetName}"`);
 
             try {
-                // ================= [Step 0: 智能打开面板逻辑] =================
                 let openBtn = document.querySelector('ms-system-instructions-panel > button');
 
                 if (!openBtn) {
@@ -5365,16 +5778,11 @@
                     
                     if (tuneBtn) {
                         console.log('[Gemini 优化] 运行设置面板未打开，尝试自动展开...');
-                        
-                        // [关键] 移动端必须先开启隐身 (此时隐身函数已包含隐藏侧边栏的逻辑)
-                        // PC 端则不开启，让侧边栏正常滑出
                         if (window.innerWidth < 768) toggleStealth(true);
-
                         tuneBtn.click();
                         openBtn = await wait('ms-system-instructions-panel > button', 2000);
                     }
                 }
-                // ============================================================
 
                 if (!openBtn) {
                     console.log('[Gemini 优化] ❌ 无法找到指令入口，终止配置');
@@ -5387,9 +5795,7 @@
                     return;
                 }
 
-                // 确保隐身开启 (覆盖上面只针对移动端的逻辑，这里所有端都要隐身弹窗)
                 toggleStealth(true);
-                
                 openBtn.click();
 
                 const dropdown = await wait('mat-dialog-content mat-select');
@@ -5427,6 +5833,7 @@
             }
         }
 
+        // --- 监听器逻辑 ---
         function initListener() {
             document.addEventListener('click', (e) => {
                 const target = e.target;
@@ -5442,14 +5849,32 @@
                 const closeBtn = target.closest('button[iconname="close"]') || target.closest('button[aria-label="关闭面板"]');
                 
                 if (closeBtn) {
-                    // 排除“关闭运行设置面板”按钮
-                    // 如果点击的是侧边栏的关闭按钮，绝对不要触发扫描，否则会陷入“关闭->扫描->重开”的死循环
                     const label = closeBtn.getAttribute('aria-label') || '';
+                    
+                    // [排除 A] “关闭运行设置面板”按钮 (侧边栏)
                     if (label.includes('关闭运行设置') || label.includes('Close run settings')) {
                         return; 
                     }
 
-                    // 只有非侧边栏的关闭操作（即 dialog 弹窗关闭）才触发扫描
+                    // [排除 B] “清除搜索”按钮 (搜索框右侧的叉)
+                    // 特征：aria-label包含'清除搜索'，或包含特定类名 search-bar-close-button
+                    if (closeBtn.classList.contains('search-bar-close-button') || 
+                        label.includes('清除搜索') || 
+                        label.includes('Clear search') || 
+                        label.includes('query')) {
+                        return;
+                    }
+
+                    // [排除 C] “模型设置面板”的关闭按钮
+                    // 策略：检查按钮所在的 Dialog 容器内是否包含“搜索模型”的输入框
+                    const dialog = closeBtn.closest('mat-dialog-container');
+                    if (dialog) {
+                        const hasModelSearch = dialog.querySelector('input[placeholder*="搜索模型"]') || dialog.querySelector('input[placeholder*="Search model"]');
+                        // 如果弹窗里有搜模型的框，说明这是模型选择弹窗，忽略之
+                        if (hasModelSearch) return;
+                    }
+
+                    // 只有非上述情况的 dialog 弹窗关闭（主要是系统指令弹窗）才触发扫描
                     if (!isRunning) {
                         setTimeout(() => performBackgroundScan(), 300);
                     }
@@ -5462,6 +5887,7 @@
                     const isDropdownOpen = !!document.querySelector('.mat-mdc-select-panel');
                     if (isDropdownOpen) return;
 
+                    // 只有当存在系统指令组件时，点击遮罩才刷新，否则可能是关掉其他什么弹窗
                     if (document.querySelector('ms-system-instructions')) {
                         setTimeout(performBackgroundScan, 400);
                     }
@@ -5472,7 +5898,6 @@
         return { 
             execute, 
             initListener,
-            // [新增] 暴露后台扫描函数，用于强制更新列表
             forceUpdateList: performBackgroundScan 
         };
     })();
@@ -5503,7 +5928,7 @@
                     // 1. 再次确认开关
                     if (!activeSettings.enableBoldSpacingFix) return;
 
-                    // 2. [关键步骤] 强制撕掉所有“已优化”的标签
+                    // 2. 强制撕掉所有“已优化”的标签
                     // 这会迫使 optimizeMarkdownText 重新扫描所有文本块
                     // 从而解决组件复用导致的“视而不见”问题
                     const allChunks = document.querySelectorAll('ms-text-chunk[data-dae-optimized]');
@@ -5918,6 +6343,9 @@
         
         // 启动指令抓取器
         instructionScraper.init();
+        
+        // 启动链接净化器
+        LinkSanitizer.activate();
 
         // 7. 初始化自动配置监听器
         autoConfigLogic.initListener();
@@ -5943,16 +6371,19 @@
     function startToolbarObserver() {
         if (toolbarObserver) return;
         
-        // 核心逻辑：只要 DOM 变了，就尝试去修补 UI
         const checkAndInject = () => {
+            syncModelSearchClearBtn();
+            // 每次 DOM 变动，都尝试同步搜索状态
+            updateGoogleSearchState();
+
             // 1. 尝试插入清空按钮
             ensureCorrectButtonPlacement();
             
             // 2. 尝试插入设置按钮 (如果面板打开)
             insertSettingsButton();
             
-            // 3. 尝试插入后缀开关 (如果面板打开)
-            injectSuffixToggle();
+            // 3. 尝试插入/更新后缀开关状态
+            injectSuffixToggle(); 
 
             // 检查独立开关
             if (activeSettings.enableBoldSpacingFix) {

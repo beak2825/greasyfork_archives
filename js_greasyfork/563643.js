@@ -1,15 +1,14 @@
 // ==UserScript==
-// @name         Kourigga Client
+// @name         Kour +
 // @match        *://kour.io/*
-// @version      1.5
+// @version      1.0.0
 // @author       some jew
-// @license      we love palantir
-// @description  Kourigga Client - Kour.io cheats 
+// @description  debug tool
 // @run-at       document-start
 // @grant        unsafeWindow
 // @namespace https://greasyfork.org/users/1369586
-// @downloadURL https://update.greasyfork.org/scripts/563643/Kourigga%20Client.user.js
-// @updateURL https://update.greasyfork.org/scripts/563643/Kourigga%20Client.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563643/Kour%20%2B.user.js
+// @updateURL https://update.greasyfork.org/scripts/563643/Kour%20%2B.meta.js
 // ==/UserScript==
 
 (function () {
@@ -99,7 +98,7 @@
         const cleanName = name.trim();
         localStorage.setItem("playerNickname", cleanName);
         console.log(`[Name Changer] Saved name: ${cleanName}`);
-        
+
         if (typeof unityInstance !== 'undefined') {
             unityInstance.SendMessage("MapScripts", "SetNickname", cleanName);
             console.log(`[Name Changer] Sent name to Unity: ${cleanName}`);
@@ -413,21 +412,21 @@
         const c = window.espColor;
 
         // Skip pixels for performance and focus on ESP highlights
-        for (let i = 0; i < pixels.length; i += 16) { 
+        for (let i = 0; i < pixels.length; i += 16) {
             const r = pixels[i], g = pixels[i+1], b = pixels[i+2], a = pixels[i+3];
-            
+
             if (isTargetPixel(r, g, b, a, t, c)) {
                 const idx = i / 4;
                 const x = idx % scanW;
                 const y = Math.floor(idx / scanW);
-                
+
                 // Convert to screen relative coordinates
                 const dx = startX + x - centerX;
                 const dy = -(startY + y - centerY); // WebGL Y is inverted
-                
+
                 const dist = Math.hypot(dx, dy);
                 if (dist > settings.fovRadius) continue;
-                
+
                 if (dist < closestDist) {
                     closestDist = dist;
                     bestDX = dx;
@@ -469,19 +468,15 @@
             display: "none",
         });
 
-        const title = document.createElement("div");
-        title.textContent = "KOURIGGA CLIENT";
-        Object.assign(title.style, {
-            padding: "12px",
-            fontSize: "14px",
-            fontWeight: "bold",
-            textAlign: "center",
-            background: "#1a1a1a",
-            color: "#3645B5",
-            letterSpacing: "2px",
+        const tabBar = document.createElement("div");
+        Object.assign(tabBar.style, {
+            display: "flex",
             borderBottom: "1px solid #3a3a3a",
+            background: "#232323",
+            cursor: "move",
         });
-        menu.prepend(title);
+
+        let currentTab = "Main";
         const tabs = ["Main", "Profile", "Loadout", "Settings"];
         const tabElements = {};
 

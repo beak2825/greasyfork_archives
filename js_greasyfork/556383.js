@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         AI 聊天侧边导航 (Gemini & ChatGPT)
 // @namespace    http://tampermonkey.net/
-// @version      2.0
-// @description  A unified side navigation for both Gemini and ChatGPT. Auto-detects platform, tracks questions, and prevents lag.
+// @version      2.1
+// @description  A unified side navigation for both Gemini and ChatGPT. Auto-detects platform, tracks questions, and prevents lag. (Fixed CSP + Restored Style)
 // @author       YunAsimov
 // @homepageURL  https://github.com/YunAsimov/AI-Chat-Navigator
 // @supportURL   https://github.com/YunAsimov/AI-Chat-Navigator/issues
@@ -18,85 +18,63 @@
 (function() {
     'use strict';
 
-    // === 1. Configuration & Strategy Definitions (配置与策略定义) ===
+    // === 0. Security Fix: Trusted Types Policy (关键修复) ===
+    // 即使改回旧样式，这个 Policy 依然必须保留，否则在 Gemini 上操作 innerHTML 会报错
+    const ttPolicy = typeof trustedTypes !== 'undefined' ?
+        trustedTypes.createPolicy('ai-chat-navigator-policy', {
+            createHTML: (string) => string,
+        }) :
+        { createHTML: (string) => string };
+
+    // === 1. Configuration & Strategy Definitions ===
     
     const CONFIG = {
         sidebarWidth: '60px',
-        hoverWidth: '300px',
-        maxItems: 10,         // Keep last 10 items
-        labelLen: 30,         // Visual truncation length
-        tooltipLen: 100,      // Tooltip truncation length (Performance)
-        zIndex: 9999,
-        debug: false
+        hoverWidth: '300px',    // 悬停展开宽度
+        maxItems: 10,           // 保留最近 10 条
+        labelLen: 50,           // 文本截断长度
+        updateDebounce: 500,    // 防抖
+        scanDelay: 1500,        // 初始扫描延迟
+        zIndex: 9999
     };
 
-    // Define platform-specific logic (Strategy Pattern)
     const STRATEGIES = {
         gemini: {
-            name: 'Gemini',
+            host: 'gemini.google.com',
             color: '#a8c7fa', // Google Blue
-            // Logic to find message elements
-            getElements: () => {
-                const els = document.querySelectorAll('user-query');
-                // Filter invisible elements (virtualization check)
-                return Array.from(els).filter(el => el.getBoundingClientRect().height > 0);
-            },
-            // Logic to extract text from a specific element
-            extractText: (el) => {
-                const textContainer = el.querySelector('.query-text');
-                if (textContainer) return textContainer.innerText;
-                
-                // Fallback cleanup
-                const clone = el.cloneNode(true);
-                clone.querySelectorAll('.file-preview-container, button, mat-icon').forEach(n => n.remove());
-                return clone.innerText;
-            }
+            userMsgSelector: '.user-query-container .query-text', 
+            userMsgSelectorBackup: 'user-query .query-text-line',
+            scrollTarget: (el) => el.closest('.user-query-container') || el,
+            getText: (el) => el.innerText || el.textContent || "",
+            ignore: '#ai-nav-sidebar'
         },
         chatgpt: {
-            name: 'ChatGPT',
+            host: 'chatgpt.com',
             color: '#10a37f', // OpenAI Green
-            getElements: () => {
-                const els = document.querySelectorAll('[data-message-author-role="user"]');
-                return Array.from(els).filter(el => el.getBoundingClientRect().height > 0);
-            },
-            extractText: (el) => {
-                const textContainer = el.querySelector('.whitespace-pre-wrap');
-                return textContainer ? textContainer.innerText : el.innerText;
-            }
+            userMsgSelector: 'div[data-message-author-role="user"] > div',
+            scrollTarget: (el) => el,
+            getText: (el) => el.innerText || el.textContent || "",
+            ignore: '#ai-nav-sidebar'
         }
     };
 
-    // === 2. Runtime Detection (运行时检测) ===
-    
-    let currentStrategy = null;
-    const host = window.location.hostname;
-
-    if (host.includes('gemini.google.com')) {
-        currentStrategy = STRATEGIES.gemini;
-    } else if (host.includes('chatgpt.com')) {
-        currentStrategy = STRATEGIES.chatgpt;
-    } else {
-        console.log('[AI Nav] Unknown platform, script disabled.');
-        return; // Exit if not on supported site
+    // Detect Platform
+    const currentStrategy = Object.values(STRATEGIES).find(s => location.host === s.host);
+    if (!currentStrategy) {
+        console.log('[AI Nav] Site not supported, script disabled.');
+        return;
     }
+    console.log(`[AI Nav] Activated for: ${currentStrategy.host}`);
 
-    console.log(`[AI Nav] Activated for: ${currentStrategy.name}`);
-
-    // === 3. Core Logic (核心逻辑) ===
-
-    let lastFingerprint = "";
+    // Global State
     let observer = null;
-    let navigationContainer = null;
     let updateTimeout = null;
+    let lastFingerprint = "";
 
-    // Inject CSS with dynamic color variable
+    // === 2. Style Injection (恢复 2.0 版本的样式) ===
     function injectStyles() {
-        const styleId = 'ai-nav-styles';
-        if (document.getElementById(styleId)) return;
-        
-        const style = document.createElement('style');
-        style.id = styleId;
-        style.textContent = `
+        // 使用 Trusted Types 兼容的方式创建样式
+        const styleContent = `
             :root {
                 --ai-nav-active-color: ${currentStrategy.color};
             }
@@ -109,8 +87,8 @@
                 flex-direction: column; 
                 gap: 6px; 
                 z-index: ${CONFIG.zIndex};
-                align-items: flex-end; 
-                pointer-events: none; 
+                align-items: flex-end; /* 让条目从右向左生长 */
+                pointer-events: none; /* 让点击穿透空白区域 */
                 transition: opacity 0.2s;
             }
             
@@ -120,7 +98,7 @@
                 backdrop-filter: blur(4px);
                 color: #e3e3e3; 
                 padding: 0; 
-                border-radius: 8px 0 0 8px; 
+                border-radius: 8px 0 0 8px; /* 左侧圆角，右侧直角 */
                 cursor: pointer;
                 transition: width 0.2s cubic-bezier(0.2, 0, 0, 1); 
                 width: 40px; 
@@ -133,15 +111,17 @@
                 box-shadow: 0 2px 5px rgba(0,0,0,0.3);
                 overflow: hidden; 
                 white-space: nowrap;
+                user-select: none;
             }
 
             .ai-nav-item:hover { 
-                width: ${CONFIG.hoverWidth}; 
+                width: ${CONFIG.hoverWidth}; /* 悬停时展开宽度 */
                 background-color: #444; 
                 border-color: var(--ai-nav-active-color); 
                 z-index: 10000; 
             }
 
+            /* 左侧的序号图标 Q1, Q2... */
             .ai-nav-item .nav-icon { 
                 min-width: 40px; 
                 height: 40px; 
@@ -153,6 +133,7 @@
                 color: var(--ai-nav-active-color); 
             }
 
+            /* 右侧的文本内容 */
             .ai-nav-item .nav-text { 
                 opacity: 0; 
                 margin-left: 8px; 
@@ -165,129 +146,165 @@
             }
 
             .ai-nav-item:hover .nav-text { 
-                opacity: 1; 
+                opacity: 1; /* 展开时显示文本 */
+            }
+
+            /* 高亮动画 */
+            @keyframes ai-nav-flash {
+                0% { background-color: rgba(var(--ai-nav-active-color), 0.3); }
+                100% { background-color: transparent; }
+            }
+            .ai-nav-highlight {
+                animation: ai-nav-flash 1.5s ease-out;
             }
         `;
+        const style = document.createElement('style');
+        style.textContent = styleContent;
         document.head.appendChild(style);
     }
 
-    function cleanText(text) {
-        if (!text) return "";
-        // Performance optimization: truncate early in memory
-        if (text.length > 500) text = text.substring(0, 500);
-        return text.replace(/\s+/g, ' ').trim();
+    // === 3. Core Logic ===
+    
+    function getQuestions() {
+        let elements = Array.from(document.querySelectorAll(currentStrategy.userMsgSelector));
+        
+        if (elements.length === 0 && currentStrategy.userMsgSelectorBackup) {
+            elements = Array.from(document.querySelectorAll(currentStrategy.userMsgSelectorBackup));
+        }
+
+        const items = elements.map((el, index) => {
+            let text = currentStrategy.getText(el).trim();
+            if (!text) text = "[File/Image Upload]"; 
+            
+            // Cleanup extra newlines
+            text = text.replace(/\s+/g, ' ');
+
+            const id = `nav-${index}-${text.substring(0, 5)}`;
+            
+            return {
+                element: el,
+                text: text,
+                id: id,
+                index: index
+            };
+        });
+
+        return items.slice(-CONFIG.maxItems); 
+    }
+
+    function createSidebar() {
+        let sidebar = document.getElementById('ai-nav-sidebar');
+        if (!sidebar) {
+            sidebar = document.createElement('div');
+            sidebar.id = 'ai-nav-sidebar';
+            document.body.appendChild(sidebar);
+        }
+        return sidebar;
     }
 
     function updateNavigation() {
-        // Pause observer to prevent recursive loops
         if (observer) observer.disconnect();
 
         try {
-            if (!navigationContainer) {
-                navigationContainer = document.createElement('div');
-                navigationContainer.id = 'ai-nav-sidebar';
-                document.body.appendChild(navigationContainer);
+            const questions = getQuestions();
+            
+            // Fingerprinting
+            const currentFingerprint = questions.map(q => q.text).join('|');
+            if (currentFingerprint === lastFingerprint) {
+                if (observer) observer.observe(document.body, { childList: true, subtree: true });
+                return; 
             }
+            lastFingerprint = currentFingerprint;
+
+            const sidebar = createSidebar();
             
-            // 1. Get Raw Elements via Strategy
-            const rawElements = currentStrategy.getElements();
-            
-            // 2. Process Data
-            const messageData = [];
-            rawElements.forEach(el => {
-                const rawTxt = currentStrategy.extractText(el);
-                const text = cleanText(rawTxt);
-                const display = text.length > 0 ? text : "[File/Image]";
+            // Safe Clear using Trusted Types
+            sidebar.innerHTML = ttPolicy.createHTML(''); 
+
+            questions.forEach((q, i) => {
+                const realIndex = (questions.length - i); // 倒序或者正序，这里用倒序展示逻辑可能更好，或者保持Q1, Q2..
+                // 为了保持和 v2.0 一致的 Q1, Q2 逻辑 (通常是最上面是 Q1)
+                // 但因为我们 slice 了最后 10 条，所以序号应该是全局的还是相对的？
+                // 这里为了简单直观，显示相对序号 Q1..Q10
+                const displayIndex = i + 1;
+
+                const navItem = document.createElement('div');
+                navItem.className = 'ai-nav-item';
                 
-                messageData.push({
-                    el: el,
-                    text: display,
-                    top: el.getBoundingClientRect().top // For sorting check
-                });
+                // Text Truncation
+                let displayText = q.text;
+                if (displayText.length > CONFIG.labelLen) {
+                    displayText = displayText.substring(0, CONFIG.labelLen) + '...';
+                }
+
+                // === 构建内部 DOM 结构 (Safe DOM Creation) ===
+                // 不使用 innerHTML 拼接，完全符合 CSP 安全规范
+                
+                // 1. Icon 部分 (Q1, Q2...)
+                const iconDiv = document.createElement('div');
+                iconDiv.className = 'nav-icon';
+                iconDiv.innerText = `Q${displayIndex}`;
+                
+                // 2. Text 部分
+                const textDiv = document.createElement('div');
+                textDiv.className = 'nav-text';
+                textDiv.innerText = displayText;
+
+                // 3. 组装
+                navItem.appendChild(iconDiv);
+                navItem.appendChild(textDiv);
+                
+                // Tooltip
+                navItem.title = q.text.substring(0, 200);
+
+                // Click Event
+                navItem.onclick = (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    
+                    const target = currentStrategy.scrollTarget(q.element);
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Highlight
+                    target.style.transition = 'background-color 0.5s ease';
+                    target.style.backgroundColor = 'rgba(128, 128, 128, 0.2)';
+                    setTimeout(() => { 
+                        target.style.backgroundColor = ''; 
+                    }, 1000);
+                };
+
+                sidebar.appendChild(navItem);
             });
 
-            // Ensure sorted (mostly for safety)
-            messageData.sort((a, b) => a.top - b.top);
-
-            const totalCount = messageData.length;
-            const startIndex = Math.max(0, totalCount - CONFIG.maxItems);
-            const displayItems = messageData.slice(startIndex);
-
-            // 3. Fingerprinting (Diffing)
-            const newFingerprint = totalCount + "|" + displayItems.map(m => m.text.substring(0, 10)).join('');
-
-            if (newFingerprint !== lastFingerprint) {
-                lastFingerprint = newFingerprint;
-                navigationContainer.replaceChildren();
-
-                displayItems.forEach((item, i) => {
-                    const realIndex = startIndex + i + 1;
-                    const tag = document.createElement('div');
-                    tag.className = 'ai-nav-item';
-                    
-                    // Label Truncation
-                    let label = item.text;
-                    if (label.length > CONFIG.labelLen) label = label.substring(0, CONFIG.labelLen) + '...';
-                    
-                    // Tooltip Truncation
-                    let tooltip = item.text;
-                    if (tooltip.length > CONFIG.tooltipLen) tooltip = tooltip.substring(0, CONFIG.tooltipLen) + '...';
-                    tag.title = tooltip;
-
-                    tag.innerHTML = `
-                        <div class="nav-icon">Q${realIndex}</div>
-                        <div class="nav-text">${label}</div>
-                    `;
-
-                    tag.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        item.el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        
-                        // Generic Highlight Effect
-                        const target = item.el; // Strategy could provide inner target, but container is usually fine
-                        const oldTrans = target.style.transition;
-                        target.style.transition = 'background-color 0.5s ease';
-                        target.style.backgroundColor = 'rgba(128, 128, 128, 0.2)'; // Neutral highlight
-                        setTimeout(() => { 
-                            target.style.backgroundColor = ''; 
-                            target.style.transition = oldTrans;
-                        }, 1000);
-                    });
-
-                    navigationContainer.appendChild(tag);
-                });
-            }
+            console.log(`[AI Nav] Updated: ${questions.length} items.`);
 
         } catch (e) {
             console.error("[AI Nav] Error:", e);
         }
 
-        // Resume observer
         if (observer) observer.observe(document.body, { childList: true, subtree: true });
     }
 
-    // 4. Init & Observer
+    // === 4. Init & Observer ===
     function init() {
         injectStyles();
         
-        // Debounce
         const runUpdate = () => {
             clearTimeout(updateTimeout);
-            updateTimeout = setTimeout(updateNavigation, 500);
+            updateTimeout = setTimeout(updateNavigation, CONFIG.updateDebounce);
         };
 
         observer = new MutationObserver((mutations) => {
-            if (mutations[0].target.closest('#ai-nav-sidebar')) return;
-            runUpdate();
+            const relevantMutation = mutations.some(m => !m.target.closest('#ai-nav-sidebar'));
+            if (relevantMutation) {
+                runUpdate();
+            }
         });
         
         observer.observe(document.body, { childList: true, subtree: true });
         
-        // Initial Scan
-        setTimeout(updateNavigation, 1500);
+        setTimeout(updateNavigation, CONFIG.scanDelay);
         
-        // URL Watcher (SPA support)
         let lastUrl = location.href;
         setInterval(() => {
             if (location.href !== lastUrl) {
@@ -298,10 +315,10 @@
         }, 1000);
     }
 
-    if (document.readyState === 'complete') {
-        init();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
     } else {
-        window.addEventListener('load', init);
+        init();
     }
 
 })();

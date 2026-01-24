@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Disable YouTube Hotkeys with Modern Settings Page
 // @namespace    https://github.com/VKrishna04
-// @version      4.2
+// @version      4.3
 // @description  Disable various YouTube hotkeys with fine-grained control (Excludes Search/Comments)
 // @author       VKrishna04
 // @match        *://www.youtube.com/*
@@ -10,6 +10,10 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addStyle
+// @compatible   firefox >= 60
+// @compatible   chrome >= 70
+// @compatible   opera >= 57
+// @compatible   edge >= 79
 // @license      Apache-2.0
 // @homepageURL  https://yt-hotkeys.vkrishna04.me/
 // @supportURL   https://github.com/Life-Experimentalist/Youtube-Keystrokes-Blocker/issues
@@ -33,10 +37,23 @@
     disableFrameSkip: false,
   });
 
+  // Ensure disableSpacebar is properly loaded
+  if (typeof settings.disableSpacebar === "undefined") {
+    settings.disableSpacebar = true;
+    GM_setValue("hotkeySettings", settings);
+  }
+
+  // Helper function to get fresh settings
+  function getSettings() {
+    return GM_getValue("hotkeySettings", settings);
+  }
+
   // --- 1. HOTKEY BLOCKING LOGIC ---
   window.addEventListener(
     "keydown",
     function (e) {
+      // Get fresh settings on every keystroke
+      const currentSettings = getSettings();
       const target = e.target;
       const isTyping =
         target.tagName === "INPUT" ||
@@ -45,28 +62,28 @@
 
       if (isTyping) return;
 
-      if (settings.disableCtrlLeft && e.ctrlKey && e.code === "ArrowLeft") {
+      if (currentSettings.disableCtrlLeft && e.ctrlKey && e.code === "ArrowLeft") {
         e.preventDefault();
         e.stopPropagation();
         return;
       }
-      if (settings.disableCtrlRight && e.ctrlKey && e.code === "ArrowRight") {
+      if (currentSettings.disableCtrlRight && e.ctrlKey && e.code === "ArrowRight") {
         e.preventDefault();
         e.stopPropagation();
         return;
       }
-      if (settings.disableNumericKeys && e.key >= "0" && e.key <= "9") {
+      if (currentSettings.disableNumericKeys && e.key >= "0" && e.key <= "9") {
         e.preventDefault();
         e.stopPropagation();
         return;
       }
-      if (settings.disableSpacebar && e.code === "Space") {
+      if (currentSettings.disableSpacebar && (e.code === "Space" || e.key === " ")) {
         e.preventDefault();
         e.stopPropagation();
         return;
       }
       if (
-        settings.disableArrowKeys &&
+        currentSettings.disableArrowKeys &&
         !e.ctrlKey &&
         ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.code)
       ) {
@@ -74,12 +91,18 @@
         e.stopPropagation();
         return;
       }
-      if (settings.disableFKey && e.key.toLowerCase() === "f") {
+      if (
+        (currentSettings.disableFKey && e.key.toLowerCase() === "f") ||
+        e.key === "F"
+      ) {
         e.preventDefault();
         e.stopPropagation();
         return;
       }
-      if (settings.disableMKey && e.key.toLowerCase() === "m") {
+      if (
+        (currentSettings.disableMKey && e.key.toLowerCase() === "m") ||
+        e.key === "M"
+      ) {
         e.preventDefault();
         e.stopPropagation();
         return;
@@ -232,11 +255,27 @@
     };
     closeIcon.onclick = overlay.onclick = close;
     saveBtn.onclick = () => {
+      // Update all settings from checkboxes
+      const newSettings = {};
       options.forEach((opt) => {
-        settings[opt.id] = document.getElementById(opt.id).checked;
+        newSettings[opt.id] = document.getElementById(opt.id).checked;
       });
-      GM_setValue("hotkeySettings", settings);
-      close();
+
+      // Save to persistent storage
+      GM_setValue("hotkeySettings", newSettings);
+
+      // Visual feedback
+      saveBtn.textContent = "Saved!";
+      saveBtn.style.backgroundColor = "#00cc00";
+
+      // Revert button text after 1 second
+      setTimeout(() => {
+        saveBtn.textContent = "Save";
+        saveBtn.style.backgroundColor = "";
+      }, 1000);
+
+      // Close modal after 500ms
+      setTimeout(close, 500);
     };
 
     requestAnimationFrame(() => {
@@ -247,14 +286,24 @@
 
   // --- 3. INJECTION: ACTIONS BAR BUTTON (BELOW VIDEO) ---
   function injectActionButton() {
-    // 1. Find the Actions Bar Container
-    // Based on your code snippet, this is 'top-level-buttons-computed' inside 'ytd-menu-renderer'
-    const actionsContainer = document.querySelector(
-      "ytd-menu-renderer #top-level-buttons-computed",
-    );
+    // Check if button already exists
+    if (document.getElementById("yt-hk-action-btn")) return;
 
-    if (!actionsContainer) return;
-    if (document.getElementById("yt-hk-action-btn")) return; // Already exists
+    // Multiple selectors to try - YouTube changes DOM structure frequently
+    const possibleContainers = [
+      document.querySelector("ytd-menu-renderer #top-level-buttons-computed"),
+      document.querySelector("ytd-menu-renderer #menu-top-level-buttons"),
+      document.querySelector("ytd-menu-renderer #flexible-item-buttons"),
+      document.querySelector("ytd-menu-renderer") ? document.querySelector("ytd-menu-renderer").querySelector("div[id*='buttons']") : null,
+      document.querySelector("div[role='region'] [data-content-region]") ? document.querySelector("div[role='region'] [data-content-region]").querySelector("div[id*='buttons']") : null,
+    ].filter(Boolean)[0];
+
+    const actionsContainer = possibleContainers;
+
+    if (!actionsContainer) {
+      // Container not found yet, will retry with observer
+      return;
+    }
 
     // 2. Create Wrapper (to match YouTube's flex layout)
     const wrapper = document.createElement("div");
@@ -312,6 +361,24 @@
   });
 
   observer.observe(document.body, { childList: true, subtree: true });
+
+  // Aggressive fallback: Try to inject button periodically
+  let injectionAttempts = 0;
+  const injectionInterval = setInterval(() => {
+    if (document.getElementById("yt-hk-action-btn")) {
+      clearInterval(injectionInterval);
+      return;
+    }
+    injectActionButton();
+    injectionAttempts++;
+    if (injectionAttempts > 30) {
+      // Stop trying after 30 attempts (15 seconds)
+      clearInterval(injectionInterval);
+    }
+  }, 500);
+
+  // Try once when page loads
+  setTimeout(() => injectActionButton(), 1000);
 
   // Fallback Tampermonkey Menu
   GM_registerMenuCommand("YouTube Hotkey Settings", openSettings);

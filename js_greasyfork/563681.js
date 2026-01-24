@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GeoGuessr Playtime Tracker
 // @namespace    Noahtrix
-// @version      3.0
+// @version      4.5
 // @description  Tracks active GeoGuessr playtime and shows it on the profile page.
 // @author       Noahtrix
 // @match        https://www.geoguessr.com/*
@@ -17,135 +17,308 @@
 
     const STORAGE_KEY = "gg_total_playtime_ms";
     const DAILY_KEY = "gg_daily_playtime_ms";
-    const LAST_ACTIVE_KEY = "gg_last_active_timestamp";
-    const LAST_RESET_DAY = "gg_last_reset_day";
+    const LAST_RESET_KEY = "gg_last_daily_reset";
     const INSTALL_DATE_KEY = "gg_install_date";
+    const POS_KEY = "gg_playtime_pos";
+    const DEFAULT_POS = { bottom: "20px", left: "20px" };
+    const EDGE_SIZE = 12;
 
     if (!localStorage.getItem(INSTALL_DATE_KEY)) {
         localStorage.setItem(INSTALL_DATE_KEY, new Date().toLocaleDateString());
     }
 
     const getVal = (key) => Number(localStorage.getItem(key)) || 0;
+    const getPos = () => JSON.parse(localStorage.getItem(POS_KEY)) || DEFAULT_POS;
 
-    let lastTick = Date.now();
+    function checkDailyReset() {
+        const today = new Date().toLocaleDateString();
+        const lastReset = localStorage.getItem(LAST_RESET_KEY);
 
-    const runTick = () => {
-        const now = Date.now();
-        const todayStr = new Date().toDateString();
-
-        if (localStorage.getItem(LAST_RESET_DAY) !== todayStr) {
+        if (lastReset !== today) {
             localStorage.setItem(DAILY_KEY, "0");
-            localStorage.setItem(LAST_RESET_DAY, todayStr);
-            lastTick = now;
-            return;
+            localStorage.setItem(LAST_RESET_KEY, today);
+            console.log("GeoGuessr Tracker: Daily timer has been reset for the new day.");
         }
+    }
 
-        if (document.hasFocus() && !document.hidden) {
-            const diff = now - lastTick;
-
-            if (diff > 0 && diff < 2000) {
-                const currentTotal = getVal(STORAGE_KEY);
-                const currentDaily = getVal(DAILY_KEY);
-                localStorage.setItem(STORAGE_KEY, String(currentTotal + diff));
-                localStorage.setItem(DAILY_KEY, String(currentDaily + diff));
-            }
-        }
-
-        lastTick = now;
-        localStorage.setItem(LAST_ACTIVE_KEY, String(now));
-    };
+    let isExpanded = false;
+    let isMouseOnEdge = false;
+    let isDragging = false;
+    let tooltipRaf;
 
     const styleSheet = document.createElement("style");
     styleSheet.innerText = `
         @keyframes ggFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        #gg-playtime-final { font-family: var(--font-family-neo-sans), "Neo Sans", sans-serif !important; }
+
+        #gg-playtime-final {
+            font-family: var(--font-family-neo-sans), "Neo Sans", sans-serif !important;
+            user-select: none !important;
+            transition: border-color 0.4s ease, outline-color 0.4s ease, box-shadow 0.4s ease !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            outline: 2px solid transparent !important;
+            outline-offset: -2px !important;
+            box-sizing: border-box !important;
+            touch-action: none;
+        }
+
         .gg-playtime-active { animation: ggFadeIn 0.3s ease-out forwards !important; }
-        .gg-detail-container {
-            max-height: 0; opacity: 0; margin-bottom: 0; position: relative; overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, margin 0.4s ease;
+
+        #gg-playtime-final.edge-hover, #gg-playtime-final.dragging {
+            border-color: #ff4b4b !important;
+            outline-color: #ff4b4b !important;
+            cursor: move !important;
+            box-shadow: 0 0 20px rgba(255, 75, 75, 0.4) !important;
         }
-        .gg-detail-container.expanded { max-height: 40px; opacity: 1; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); overflow: visible; }
-        #gg-expand-btn { background: none !important; border: none !important; color: #ffc800 !important; cursor: pointer !important; padding: 4px !important; font-size: 14px !important; transition: transform 0.4s ease !important; outline: none !important; }
-        .gg-info-parent { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .gg-info-wrapper { cursor: help; position: relative; }
-        .gg-tooltip {
-            position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
-            background: white; color: black; padding: 6px 12px; border-radius: 8px; font-size: 11px;
-            white-space: nowrap; box-shadow: 0 4px 15px rgba(0,0,0,0.5); opacity: 0; visibility: hidden;
-            transition: opacity 0.2s ease; pointer-events: none; z-index: 99999; font-weight: 800;
+
+        .gg-detail-wrapper {
+            display: grid; grid-template-rows: 0fr;
+            transition: grid-template-rows 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease, transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-origin: bottom; transform: scaleY(0.9); opacity: 0; will-change: transform, grid-template-rows;
         }
-        .gg-tooltip::after { content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border-width: 5px; border-style: solid; border-color: white transparent transparent transparent; }
-        .gg-info-wrapper:hover .gg-tooltip { opacity: 1 !important; visibility: visible !important; }
+
+        .gg-detail-wrapper.expanded { grid-template-rows: 1fr; opacity: 1; transform: scaleY(1); }
+        .gg-detail-container { overflow: hidden; display: flex; flex-direction: column; }
+        .gg-inner-content { padding-bottom: 12px; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+        #gg-expand-btn {
+            background: none !important; border: none !important; color: #ffc800 !important;
+            cursor: pointer !important; padding: 4px !important; font-size: 14px !important;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important; outline: none !important;
+        }
+
+        .gg-info-icon {
+            background: transparent !important; color: #0095ff !important; border: 1.8px solid #0095ff !important;
+            border-radius: 50% !important; width: 16px !important; height: 16px !important; font-size: 11px !important;
+            display: flex !important; align-items: center !important; justify-content: center !important;
+            font-family: "Consolas", "Monaco", "Courier New", monospace !important; font-weight: 900 !important;
+        }
+
+        #gg-portal-tooltip {
+            position: fixed; background: white; color: black; padding: 6px 12px; border-radius: 8px;
+            font-size: 11px; white-space: nowrap; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            opacity: 0; visibility: hidden; transition: opacity 0.15s ease; pointer-events: none;
+            z-index: 10000015; font-weight: 800; transform: translate(-50%, -100%); margin-top: -8px;
+        }
+
+        #gg-portal-tooltip::after {
+            content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+            border-width: 6px; border-style: solid; border-color: white transparent transparent transparent;
+        }
+
+        #gg-drag-hint {
+            position: absolute; bottom: calc(100% + 15px); left: 50%; transform: translateX(-50%);
+            background: rgba(34, 139, 34, 0.95); color: white; padding: 5px 12px; border-radius: 6px;
+            font-size: 11px; font-weight: 800; white-space: nowrap; pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: none; opacity: 0;
+            transition: opacity 0.3s ease; z-index: 10000010;
+        }
     `;
     document.head.appendChild(styleSheet);
 
-    let isExpanded = false;
+    let tooltip = document.getElementById("gg-portal-tooltip") || document.createElement("div");
+    if (!tooltip.id) { tooltip.id = "gg-portal-tooltip"; document.body.appendChild(tooltip); }
+
+    const moveLabel = document.createElement("div");
+    moveLabel.id = "gg-cursor-move-label";
+    moveLabel.style.cssText = "position: fixed; z-index: 10000009; background: #ff4b4b; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 800; pointer-events: none; display: none; opacity: 0; transform: translate(15px, 15px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: opacity 0.2s ease;";
+    moveLabel.innerText = "Move";
+    document.body.appendChild(moveLabel);
+
     const formatTime = (ms) => {
         const s = Math.floor(ms / 1000);
-        const h = Math.floor(s / 3600);
-        const m = Math.floor((s % 3600) / 60);
-        return `${h}h ${m}m`;
+        return `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m`;
     };
+
+    function resetMoveUI(el) {
+        if (isDragging) return;
+        isMouseOnEdge = false;
+        el.classList.remove("edge-hover");
+        moveLabel.style.opacity = "0";
+        setTimeout(() => { if (!isMouseOnEdge && !isDragging) moveLabel.style.display = "none"; }, 200);
+    }
+
+    function updateTooltipPosition(target) {
+        if (tooltip.style.opacity === "1") {
+            const rect = target.getBoundingClientRect();
+            tooltip.style.left = (rect.left + rect.width / 2) + "px";
+            tooltip.style.top = rect.top + "px";
+            tooltipRaf = requestAnimationFrame(() => updateTooltipPosition(target));
+        }
+    }
+
+    function makeDraggable(el) {
+        let startX, startY, startBottom, startLeft;
+        const hint = document.createElement("div");
+        hint.id = "gg-drag-hint";
+        hint.innerText = "Double Click = Position Reset";
+        el.appendChild(hint);
+
+        const infoIcon = el.querySelector(".gg-info-wrapper");
+        infoIcon.onmouseenter = () => {
+            tooltip.innerText = `Since ${localStorage.getItem(INSTALL_DATE_KEY)}`;
+            tooltip.style.visibility = "visible";
+            tooltip.style.opacity = "1";
+            updateTooltipPosition(infoIcon);
+        };
+        infoIcon.onmouseleave = () => {
+            tooltip.style.opacity = "0";
+            tooltip.style.visibility = "hidden";
+            cancelAnimationFrame(tooltipRaf);
+        };
+
+        el.addEventListener('mousemove', (e) => {
+            if (isDragging) return;
+            const rect = el.getBoundingClientRect();
+            const isInside = (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom);
+            if (!isInside || !isExpanded) { resetMoveUI(el); return; }
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const onEdge = (x <= EDGE_SIZE || x >= rect.width - EDGE_SIZE || y <= EDGE_SIZE || y >= rect.height - EDGE_SIZE);
+            if (onEdge) {
+                isMouseOnEdge = true;
+                el.classList.add("edge-hover");
+                moveLabel.style.display = "block";
+                moveLabel.style.opacity = "1";
+                moveLabel.style.left = e.clientX + "px";
+                moveLabel.style.top = e.clientY + "px";
+            } else { resetMoveUI(el); }
+        });
+
+        el.addEventListener('mouseleave', () => { if (!isDragging) resetMoveUI(el); });
+
+        el.addEventListener('dblclick', (e) => {
+            if (!isExpanded) return;
+            const rect = el.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            if (x <= EDGE_SIZE || x >= rect.width - EDGE_SIZE || y <= EDGE_SIZE || y >= rect.height - EDGE_SIZE) {
+                el.style.setProperty("transition", "bottom 0.5s cubic-bezier(0.19, 1, 0.22, 1), left 0.5s cubic-bezier(0.19, 1, 0.22, 1), border-color 0.4s ease", "important");
+                el.style.bottom = DEFAULT_POS.bottom; el.style.left = DEFAULT_POS.left;
+                localStorage.setItem(POS_KEY, JSON.stringify(DEFAULT_POS));
+                resetMoveUI(el);
+                hint.style.opacity = "0";
+                setTimeout(() => {
+                    el.style.setProperty("transition", "border-color 0.4s ease, outline-color 0.4s ease, box-shadow 0.4s ease", "important");
+                    hint.style.display = "none";
+                }, 550);
+            }
+        });
+
+        el.addEventListener('mousedown', (e) => {
+            if (!isExpanded || !isMouseOnEdge) return;
+            if (e.target.closest('button') || e.target.closest('.gg-info-wrapper')) return;
+            isDragging = true;
+            let hasMoved = false;
+            startX = e.clientX; startY = e.clientY;
+            const rect = el.getBoundingClientRect();
+            startBottom = window.innerHeight - rect.bottom; startLeft = rect.left;
+
+            const onMouseMove = (me) => {
+                if (!hasMoved) {
+                    hasMoved = true;
+                    el.style.setProperty("transition", "none", "important");
+                    el.classList.add("dragging");
+                    hint.style.display = "block";
+                    requestAnimationFrame(() => { hint.style.opacity = "1"; });
+                }
+
+                const navHeight = 48;
+                const friendListWidth = 60;
+                const elWidth = el.offsetWidth;
+                const elHeight = el.offsetHeight;
+
+                let newLeft = startLeft + (me.clientX - startX);
+                let newBottom = startBottom - (me.clientY - startY);
+
+                newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - elWidth - friendListWidth));
+                newBottom = Math.max(0, Math.min(newBottom, window.innerHeight - elHeight - navHeight));
+
+                el.style.left = newLeft + "px";
+                el.style.bottom = newBottom + "px";
+
+                moveLabel.style.left = me.clientX + "px";
+                moveLabel.style.top = me.clientY + "px";
+            };
+
+            const onMouseUp = () => {
+                isDragging = false;
+                el.classList.remove("dragging");
+                hint.style.opacity = "0";
+                setTimeout(() => { if (!isDragging) hint.style.display = "none"; }, 300);
+                el.style.setProperty("transition", "border-color 0.4s ease, outline-color 0.4s ease, box-shadow 0.4s ease", "important");
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+                localStorage.setItem(POS_KEY, JSON.stringify({ bottom: el.style.bottom, left: el.style.left }));
+                const finalRect = el.getBoundingClientRect();
+                const stillInside = (e.clientX >= finalRect.left && e.clientX <= finalRect.right && e.clientY >= finalRect.top && e.clientY <= finalRect.bottom);
+                if (!stillInside) resetMoveUI(el);
+            };
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+    }
 
     function checkUI() {
         const isProfile = window.location.pathname.includes("/profile") && !document.querySelector('div[class*="home-layout"]');
         let el = document.getElementById("gg-playtime-final");
-
-        if (!isProfile) {
-            if (el) el.remove();
-            return;
-        }
-
+        if (!isProfile) { if (el) { el.remove(); tooltip.style.opacity = "0"; } return; }
         if (!el) {
+            isExpanded = false;
+            const savedPos = getPos();
             el = document.createElement("div");
             el.id = "gg-playtime-final";
             el.className = "gg-playtime-active";
             document.body.appendChild(el);
             el.style.cssText = `
-                position: fixed !important; bottom: 20px !important; left: 20px !important;
+                position: fixed !important; bottom: ${savedPos.bottom} !important; left: ${savedPos.left} !important;
                 background: rgba(15, 15, 15, 0.95) !important; backdrop-filter: blur(12px) !important;
                 color: white !important; padding: 12px 16px !important; border-radius: 12px !important;
                 font-weight: 700 !important; z-index: 9999999 !important;
-                border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                display: flex !important; flex-direction: column !important;
-                box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important; min-width: 175px !important; width: fit-content !important;
+                display: flex !important; flex-direction: column-reverse !important;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important; min-width: 175px !important;
             `;
-
             el.innerHTML = `
-                <div id="gg-detail" class="gg-detail-container ${isExpanded ? 'expanded' : ''}">
-                    <div class="gg-info-parent">
-                        <div id="gg-daily-content"></div>
-                        <div class="gg-info-wrapper">
-                            <div style='background: transparent; color: #0095ff; border: 1.8px solid #0095ff; border-radius: 50%; width: 15px; height: 15px; font-size: 11px; display: flex; align-items: center; justify-content: center; font-family: "Courier New", Courier, monospace !important; font-weight: 900 !important; padding-top: 1px; text-shadow: 0.2px 0 0 #0095ff;'>i</div>
-                            <div class="gg-tooltip">Since ${localStorage.getItem(INSTALL_DATE_KEY)}</div>
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; pointer-events: none;">
+                    <div style="display: flex; align-items: center; gap: 8px; white-space: nowrap;">
+                        <span style="color:#ffc800; text-shadow:0 0 8px rgba(255,200,0,0.6);">⏱</span>
+                        <span id="gg-total-display" style="font-size: 13px;"></span>
+                    </div>
+                    <button id="gg-expand-btn" style="pointer-events: auto !important;">▼</button>
+                </div>
+                <div id="gg-grid-wrapper" class="gg-detail-wrapper">
+                    <div class="gg-detail-container">
+                        <div class="gg-inner-content">
+                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                <div id="gg-daily-content"></div>
+                                <div class="gg-info-wrapper" style="pointer-events: auto !important;">
+                                    <div class="gg-info-icon">i</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; pointer-events: none;">
-                    <div style="display: flex; align-items: center; gap: 8px; white-space: nowrap;">
-                        <span style="color: #ffc800; font-size: 1.2em;">⏱</span>
-                        <span id="gg-total-display" style="font-size: 13px;"></span>
-                    </div>
-                    <button id="gg-expand-btn" style="pointer-events: auto !important; transform: ${isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'}">▼</button>
-                </div>
             `;
-
+            makeDraggable(el);
             el.querySelector("#gg-expand-btn").onclick = (e) => {
                 isExpanded = !isExpanded;
-                const detail = document.getElementById("gg-detail");
-                if (detail) detail.classList.toggle("expanded", isExpanded);
+                document.getElementById("gg-grid-wrapper").classList.toggle("expanded", isExpanded);
                 e.target.style.transform = isExpanded ? "rotate(180deg)" : "rotate(0deg)";
+                if (!isExpanded) resetMoveUI(el);
             };
         }
-
         const totalDisp = document.getElementById("gg-total-display");
         const dailyContent = document.getElementById("gg-daily-content");
         if (totalDisp) totalDisp.innerText = "Playtime: " + formatTime(getVal(STORAGE_KEY));
-        if (dailyContent) {
-            dailyContent.innerHTML = `<span style="font-size: 10px; color: #888;">TODAY:</span> <span style="font-size: 13px; margin-left: 4px; white-space: nowrap;">${formatTime(getVal(DAILY_KEY))}</span>`;
-        }
+        if (dailyContent) dailyContent.innerHTML = `<span style="font-size: 10px; color: #888;">TODAY:</span> <span style="font-size: 13px; margin-left: 4px;">${formatTime(getVal(DAILY_KEY))}</span>`;
     }
 
-    setInterval(runTick, 100);
+    setInterval(() => {
+        if (document.hasFocus() && !document.hidden) {
+            checkDailyReset();
+            localStorage.setItem(STORAGE_KEY, String(getVal(STORAGE_KEY) + 1000));
+            localStorage.setItem(DAILY_KEY, String(getVal(DAILY_KEY) + 1000));
+        }
+    }, 1000);
+
     setInterval(checkUI, 100);
 })();

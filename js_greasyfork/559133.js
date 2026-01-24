@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         豆瓣条目 NeoDB 评分增强
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.2
 // @description  在豆瓣条目页（书籍、电影、音乐、游戏）上添加 NeoDB.social 的评分展示（含条目链接）
 // @match        https://book.douban.com/subject/*
 // @match        https://movie.douban.com/subject/*
@@ -642,7 +642,7 @@
     try {
       // 排除非条目页面（如豆列、图片等子页面）
       const pathname = location.pathname || '';
-      const excludedPaths = ['/doulists', '/photos', '/discussion', '/reviews', '/comments'];
+      const excludedPaths = ['/doulists', '/photos', '/discussion', '/reviews', '/comments', '/questions'];
       if (excludedPaths.some((path) => pathname.includes(path))) {
         log('Excluded path, abort:', pathname);
         return;

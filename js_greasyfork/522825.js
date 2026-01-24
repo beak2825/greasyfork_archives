@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         标题批量导出DBLP的BibTeX
 // @namespace    http://tampermonkey.net/
-// @version      1.6.1
-// @description  在网页左下角生成一个按钮，从dblp中获取选定文本的BibTeX并复制到剪贴板。支持批量获取，支持从剪贴板读取，支持随时下载，支持导出URL和CSV。
+// @version      2.0
+// @description  在网页左下角生成一个按钮，从dblp中获取选定文本的BibTeX并复制到剪贴板。支持批量获取，支持从剪贴板读取，支持随时下载，支持导出URL和CSV。白名单模式。
 // @author       shandianchengzi
 // @match        *://*/*
 // @grant        GM_xmlhttpRequest
@@ -126,83 +126,20 @@ const css = `
     font-size: 12px;
 }
 
-/* Close Modal */
-#dblp-close-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    color: #333;
-    padding: 25px;
-    border-radius: 10px;
-    z-index: 100002;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    text-align: center;
-    min-width: 320px;
-    display: none;
+/* Whitelist Modal */
+#dblp-whitelist-modal {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9); color: white; padding: 25px;
+    border-radius: 10px; z-index: 100002; display: none;
+    width: 400px; max-width: 90%; text-align: center;
+    backdrop-filter: blur(5px); box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
-.dblp-close-option {
-    background: #f5f5f5;
-    border: none;
-    border-radius: 6px;
-    padding: 12px 20px;
-    margin: 8px 0;
-    cursor: pointer;
-    font-size: 14px;
-    width: 100%;
-    text-align: center;
-    transition: all 0.2s;
+#dblp-whitelist-textarea {
+    width: 100%; height: 150px; background: rgba(255,255,255,0.1); color: #fff;
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 10px;
+    margin: 15px 0; font-family: monospace; resize: vertical; box-sizing: border-box; outline: none;
 }
-.dblp-close-option:hover {
-    background: #e0e0e0;
-    transform: translateY(-2px);
-}
-
-/* Config Modal */
-#dblp-config-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    color: #333;
-    padding: 25px;
-    border-radius: 10px;
-    z-index: 100003;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    text-align: center;
-    min-width: 500px;
-    max-width: 80%;
-    max-height: 80%;
-    overflow-y: auto;
-    display: none;
-}
-.dblp-config-section {
-    text-align: left;
-    margin: 20px 0;
-}
-.dblp-config-label {
-    font-weight: bold;
-    margin-bottom: 8px;
-    display: block;
-}
-.dblp-config-textarea {
-    width: 100%;
-    height: 120px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-family: monospace;
-    font-size: 13px;
-    resize: vertical;
-}
-.dblp-config-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 20px;
-}
+#dblp-whitelist-textarea:focus { border-color: #007BFF; }
 `;
 
 if (typeof GM_addStyle !== 'undefined') {
@@ -256,20 +193,17 @@ var headers = {
     current_prefix: "正在搜索: ",
     default_btn: "获取 BibTeX",
     urls_copied: "URLs 已复制到剪贴板！",
-    // 新增的关闭相关提示
-    close_temporarily: "暂时关闭",
-    close_current_url: "当前网址关闭",
-    close_current_domain: "当前域名关闭",
-    close_config_menu: "配置屏蔽的网址或域名",
-    config_modal_title: "屏蔽配置",
-    config_url_label: "屏蔽的网址（每行一个）:",
-    config_domain_label: "屏蔽的域名（每行一个）:",
-    config_save: "保存",
-    config_cancel: "取消",
-    config_refresh_prompt: "配置已保存。是否刷新页面以应用更改？",
-    url_blocked_toast: "按钮已在当前网址关闭，可从插件菜单中调整该配置。",
-    domain_blocked_toast: "按钮已在当前域名关闭，可从插件菜单中调整该配置。",
-    config_blocked_info: "按钮已被屏蔽。请通过插件菜单调整屏蔽配置。"
+    // 白名单相关提示
+    menu_whitelist_config: "设置站点白名单",
+    menu_add_current: "将本域名添加到白名单",
+    menu_disable: "全局禁用",
+    menu_enable: "启用功能",
+    whitelist_prompt: "请输入白名单域名（每行一个）：",
+    whitelist_saved: "白名单已保存",
+    domain_added: "域名已添加到白名单",
+    domain_already_exists: "该域名已在白名单中",
+    feature_disabled: "功能已全局禁用",
+    feature_enabled: "功能已启用"
   };
 
   if (!lang.startsWith('zh')) {
@@ -288,96 +222,62 @@ var headers = {
           current_prefix: "Searching: ",
           default_btn: "Get BibTeX",
           urls_copied: "URLs copied to clipboard!",
-          // 新增的关闭相关提示
-          close_temporarily: "Temporarily Close",
-          close_current_url: "Close for Current URL",
-          close_current_domain: "Close for Current Domain",
-          close_config_menu: "Configure Blocked URLs or Domains",
-          config_modal_title: "Block Configuration",
-          config_url_label: "Blocked URLs (one per line):",
-          config_domain_label: "Blocked Domains (one per line):",
-          config_save: "Save",
-          config_cancel: "Cancel",
-          config_refresh_prompt: "Configuration saved. Refresh page to apply changes?",
-          url_blocked_toast: "Button disabled for current URL. You can adjust this in the plugin menu.",
-          domain_blocked_toast: "Button disabled for current domain. You can adjust this in the plugin menu.",
-          config_blocked_info: "Button is blocked. Please adjust blocking configuration via plugin menu."
+          // 白名单相关提示
+          menu_whitelist_config: "Configure Site Whitelist",
+          menu_add_current: "Add Current Domain to Whitelist",
+          menu_disable: "Disable Globally",
+          menu_enable: "Enable Feature",
+          whitelist_prompt: "Enter whitelist domains (one per line):",
+          whitelist_saved: "Whitelist saved",
+          domain_added: "Domain added to whitelist",
+          domain_already_exists: "Domain already in whitelist",
+          feature_disabled: "Feature disabled globally",
+          feature_enabled: "Feature enabled"
       };
   }
 
-  // --- 屏蔽配置管理函数 ---
-  function getBlockedUrls() {
-    const urls = GM_getValue('dblp_blocked_urls', '');
-    return urls.split('\n').filter(url => url.trim() !== '');
+  // --- 白名单配置管理函数 ---
+  const DEFAULT_WHITELIST = ['dblp.org', 'scholar.google.com'];
+
+  function getWhitelist() {
+    const saved = GM_getValue('dblp_whitelist', '');
+    if (!saved) {
+      return DEFAULT_WHITELIST;
+    }
+    return saved.split('\n').filter(domain => domain.trim() !== '');
   }
 
-  function getBlockedDomains() {
-    const domains = GM_getValue('dblp_blocked_domains', '');
-    return domains.split('\n').filter(domain => domain.trim() !== '');
+  function saveWhitelist(domains) {
+    GM_setValue('dblp_whitelist', domains.join('\n'));
   }
 
-  function isBlocked() {
-    const currentUrl = window.location.href;
+  function isInWhitelist() {
     const currentDomain = window.location.hostname;
+    const whitelist = getWhitelist();
 
-    const blockedUrls = getBlockedUrls();
-    const blockedDomains = getBlockedDomains();
+    return whitelist.some(domain => {
+      // 支持完整匹配或子域名匹配
+      return currentDomain === domain || currentDomain.endsWith('.' + domain);
+    });
+  }
 
-    return blockedUrls.includes(currentUrl) || blockedDomains.includes(currentDomain);
+  function isGloballyEnabled() {
+    return GM_getValue('dblp_enabled', true);
+  }
+
+  function setGlobalEnabled(enabled) {
+    GM_setValue('dblp_enabled', enabled);
   }
 
   // --- UI Elements Creation ---
 
-  // 1. Trigger Button (现在包装在容器中以便添加关闭按钮)
-  const buttonContainer = document.createElement('div');
-  buttonContainer.style.cssText = "position: fixed; bottom: 10px; left: 10px; z-index: 9999; background: transparent; display: flex; flex-direction: column; align-items: flex-start;";
-
+  // 1. Trigger Button (不再需要关闭按钮)
   const button = document.createElement('button');
   button.innerText = lang_hint.default_btn;
-  button.style.cssText = "padding: 10px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer; white-space: pre; text-align: center; margin: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.2);";
+  button.style.cssText = "position: fixed; bottom: 10px; left: 10px; z-index: 9999; padding: 10px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer; white-space: pre; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);";
+  document.body.appendChild(button);
 
-  // 添加右上角关闭按钮
-  const closeBtnTop = document.createElement('button');
-  closeBtnTop.innerHTML = '×';
-  closeBtnTop.style.cssText = "position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; background: #ff4444; color: white; border: none; border-radius: 50%; font-size: 14px; font-weight: bold; cursor: pointer; padding: 0; line-height: 1; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.3); z-index: 10000;";
-  closeBtnTop.title = lang_hint.close_temporarily;
-
-  buttonContainer.appendChild(button);
-  buttonContainer.appendChild(closeBtnTop);
-  document.body.appendChild(buttonContainer);
-
-  // 2. 关闭选项模态框
-  const closeModal = document.createElement('div');
-  closeModal.id = 'dblp-close-modal';
-  closeModal.innerHTML = `
-      <div style="font-weight:bold; margin-bottom:15px; font-size:16px;">${lang_hint.close_temporarily}</div>
-      <button class="dblp-close-option" id="dblp-close-temp">${lang_hint.close_temporarily}</button>
-      <button class="dblp-close-option" id="dblp-close-url">${lang_hint.close_current_url}</button>
-      <button class="dblp-close-option" id="dblp-close-domain">${lang_hint.close_current_domain}</button>
-  `;
-  document.body.appendChild(closeModal);
-
-  // 3. 配置编辑模态框
-  const configModal = document.createElement('div');
-  configModal.id = 'dblp-config-modal';
-  configModal.innerHTML = `
-      <div style="font-weight:bold; margin-bottom:20px; font-size:16px;">${lang_hint.config_modal_title}</div>
-      <div class="dblp-config-section">
-          <label class="dblp-config-label">${lang_hint.config_url_label}</label>
-          <textarea class="dblp-config-textarea" id="dblp-config-urls"></textarea>
-      </div>
-      <div class="dblp-config-section">
-          <label class="dblp-config-label">${lang_hint.config_domain_label}</label>
-          <textarea class="dblp-config-textarea" id="dblp-config-domains"></textarea>
-      </div>
-      <div class="dblp-config-buttons">
-          <button id="dblp-config-save" class="dblp-btn" style="background:#28a745; color:white;">${lang_hint.config_save}</button>
-          <button id="dblp-config-cancel" class="dblp-btn" style="background:#dc3545; color:white;">${lang_hint.config_cancel}</button>
-      </div>
-  `;
-  document.body.appendChild(configModal);
-
-  // 4. Batch Overlay
+  // 2. Batch Overlay
   const overlay = document.createElement('div');
   overlay.id = 'dblp-batch-overlay';
   overlay.innerHTML = `
@@ -394,7 +294,7 @@ var headers = {
   `;
   document.body.appendChild(overlay);
 
-  // 5. Confirm Modal
+  // 3. Confirm Modal
   const confirmModal = document.createElement('div');
   confirmModal.id = 'dblp-confirm-modal';
   confirmModal.innerHTML = `
@@ -406,6 +306,36 @@ var headers = {
       </div>
   `;
   document.body.appendChild(confirmModal);
+
+  // 4. Whitelist Modal (新增面板)
+  const whitelistModal = document.createElement('div');
+  whitelistModal.id = 'dblp-whitelist-modal';
+  whitelistModal.innerHTML = `
+      <div style="font-size:18px; font-weight:bold; margin-bottom:10px;">${lang_hint.menu_whitelist_config}</div>
+      <div style="font-size:12px; color:#aaa; margin-bottom:5px; text-align:left;">${lang_hint.whitelist_prompt}</div>
+      <textarea id="dblp-whitelist-textarea"></textarea>
+      <div style="display:flex; justify-content:center; gap:10px;">
+          <button id="dblp-whitelist-save" class="dblp-btn" style="background:#28a745; color:white;">Save</button>
+          <button id="dblp-whitelist-cancel" class="dblp-btn" style="background:#6c757d; color:white;">Cancel</button>
+      </div>
+  `;
+  document.body.appendChild(whitelistModal);
+
+  // 面板按钮事件
+  const whitelistTextarea = document.getElementById('dblp-whitelist-textarea');
+
+  document.getElementById('dblp-whitelist-save').onclick = () => {
+      const text = whitelistTextarea.value;
+      const domains = text.split('\n').map(d => d.trim()).filter(d => d !== '');
+      saveWhitelist(domains);
+      Toast(lang_hint.whitelist_saved);
+      updateButtonVisibility();
+      whitelistModal.style.display = 'none';
+  };
+
+  document.getElementById('dblp-whitelist-cancel').onclick = () => {
+      whitelistModal.style.display = 'none';
+  };
 
   // --- Logic Variables ---
   let batchResults = []; // Stores BibTeX strings
@@ -492,30 +422,6 @@ var headers = {
     });
   }
 
-  // --- 关闭相关函数 ---
-  function showCloseOptions() {
-    closeModal.style.display = 'block';
-  }
-
-  function hideCloseOptions() {
-    closeModal.style.display = 'none';
-  }
-
-  function showConfigModal() {
-    // 加载当前配置
-    const blockedUrls = getBlockedUrls().join('\n');
-    const blockedDomains = getBlockedDomains().join('\n');
-
-    document.getElementById('dblp-config-urls').value = blockedUrls;
-    document.getElementById('dblp-config-domains').value = blockedDomains;
-
-    configModal.style.display = 'block';
-  }
-
-  function hideConfigModal() {
-    configModal.style.display = 'none';
-  }
-
   // --- Event Handlers ---
 
   const titleEl = document.getElementById('dblp-batch-title');
@@ -525,79 +431,8 @@ var headers = {
   const copyUrlsBtn = document.getElementById('dblp-btn-copy-urls');
   const closeBtn = document.getElementById('dblp-btn-close');
 
-  // 关闭选项按钮事件
-  closeBtnTop.addEventListener('click', function(e) {
-    e.stopPropagation();
-    showCloseOptions();
-  });
-
-  // 关闭选项事件
-  document.getElementById('dblp-close-temp').addEventListener('click', function() {
-    buttonContainer.style.display = 'none';
-    hideCloseOptions();
-  });
-
-  document.getElementById('dblp-close-url').addEventListener('click', function() {
-    const currentUrl = window.location.href;
-    const blockedUrls = getBlockedUrls();
-
-    if (!blockedUrls.includes(currentUrl)) {
-      blockedUrls.push(currentUrl);
-      GM_setValue('dblp_blocked_urls', blockedUrls.join('\n'));
-    }
-
-    buttonContainer.style.display = 'none';
-    hideCloseOptions();
-    Toast(lang_hint.url_blocked_toast);
-  });
-
-  document.getElementById('dblp-close-domain').addEventListener('click', function() {
-    const currentDomain = window.location.hostname;
-    const blockedDomains = getBlockedDomains();
-
-    if (!blockedDomains.includes(currentDomain)) {
-      blockedDomains.push(currentDomain);
-      GM_setValue('dblp_blocked_domains', blockedDomains.join('\n'));
-    }
-
-    buttonContainer.style.display = 'none';
-    hideCloseOptions();
-    Toast(lang_hint.domain_blocked_toast);
-  });
-
-  // 配置模态框事件
-  document.getElementById('dblp-config-save').addEventListener('click', function() {
-    const urlsText = document.getElementById('dblp-config-urls').value;
-    const domainsText = document.getElementById('dblp-config-domains').value;
-
-    GM_setValue('dblp_blocked_urls', urlsText);
-    GM_setValue('dblp_blocked_domains', domainsText);
-
-    hideConfigModal();
-
-    // 询问是否刷新
-    if (confirm(lang_hint.config_refresh_prompt)) {
-      window.location.reload();
-    }
-  });
-
-  document.getElementById('dblp-config-cancel').addEventListener('click', function() {
-    hideConfigModal();
-  });
-
-  // 点击模态框外部关闭
-  document.addEventListener('click', function(e) {
-    if (closeModal.style.display === 'block' && !closeModal.contains(e.target) && !closeBtnTop.contains(e.target)) {
-      hideCloseOptions();
-    }
-    if (configModal.style.display === 'block' && !configModal.contains(e.target)) {
-      hideConfigModal();
-    }
-  });
-
   // Helper to get valid results so far
   function getResultsSoFar() {
-      // Return objects { line, bib } only for processed items
       return batchLines.map((line, idx) => ({
           line: line,
           bib: batchResults[idx]
@@ -628,11 +463,8 @@ var headers = {
       const results = getResultsSoFar();
       if(results.length === 0) { Toast("Nothing fetched yet."); return; }
 
-      // CSV Header
-      // BOM (\uFEFF) is added so Excel opens it in UTF-8 correctly
       let csvContent = "\uFEFF原始搜索词,提取标题,URL,BibTeX\n";
 
-      // Escape CSV value: wrap in quotes, escape double quotes as ""
       const esc = (val) => {
           if (val === null || val === undefined) return "";
           val = String(val);
@@ -656,7 +488,7 @@ var headers = {
 
   closeBtn.onclick = () => {
       overlay.style.display = 'none';
-      isBatchProcessing = false; // Stop if closed early? Or just hide.
+      isBatchProcessing = false;
   };
 
   // Clipboard Confirm Logic
@@ -676,14 +508,8 @@ var headers = {
       });
   }
 
-  // 修改主按钮点击事件，添加屏蔽检查
+  // 主按钮点击事件
   button.addEventListener('click', async function() {
-    // 检查是否被屏蔽
-    if (isBlocked()) {
-      Toast(lang_hint.config_blocked_info);
-      return;
-    }
-
     if (isBatchProcessing) {
         Toast("正在批量处理中，请使用中间面板控制");
         return;
@@ -736,18 +562,15 @@ var headers = {
         batchResults = new Array(lines.length).fill(null);
         let completedCount = 0;
 
-        // Init UI
         overlay.style.display = 'block';
         closeBtn.style.display = 'none';
-        // All buttons visible now to support "Download while fetching"
-        // We assume user knows that incomplete items won't be in the download
 
         titleEl.innerText = lang_hint.batch_title(0, lines.length);
         currentEl.innerText = "Initializing...";
 
         lines.forEach((line, index) => {
             setTimeout(() => {
-                if (!isBatchProcessing) return; // Stop if canceled/closed logic added later
+                if (!isBatchProcessing) return;
 
                 currentEl.innerText = lang_hint.current_prefix + line;
 
@@ -765,7 +588,6 @@ var headers = {
                         currentEl.innerText = "";
                         closeBtn.style.display = 'inline-block';
 
-                        // Auto Copy BibTeX (optional, maybe annoying for huge lists, but requested in v1)
                         const finalContent = batchResults.map(r => r === "None" ? "% Failed" : r).join('\n\n');
                         GM_setClipboard(finalContent);
                         Toast(lang_hint.done_copy);
@@ -776,31 +598,77 @@ var headers = {
     }
   });
 
-  // 修改原有的显示/隐藏菜单
-  GM_registerMenuCommand(lang_hint.default_btn === "Get BibTeX" ? "Show/Hide Button" : "显示/隐藏按钮", function() {
-    // 如果被屏蔽，先提示
-    if (isBlocked()) {
-      Toast(lang_hint.config_blocked_info);
+  // --- 注册菜单命令 ---
+
+  // 1. 设置站点白名单
+  // 1. 设置站点白名单 (已修改为面板模式)
+  GM_registerMenuCommand(lang_hint.menu_whitelist_config, function() {
+    const currentWhitelist = getWhitelist().join('\n');
+    whitelistTextarea.value = currentWhitelist;
+    whitelistModal.style.display = 'block';
+  });
+
+  // 2. 将本域名添加到白名单
+  GM_registerMenuCommand(lang_hint.menu_add_current, function() {
+    const currentDomain = window.location.hostname;
+    const whitelist = getWhitelist();
+
+    if (whitelist.includes(currentDomain)) {
+      Toast(lang_hint.domain_already_exists);
       return;
     }
 
-    buttonContainer.style.display = buttonContainer.style.display === 'none' ? 'flex' : 'none';
-    GM_setValue('showButton', buttonContainer.style.display === 'flex');
+    whitelist.push(currentDomain);
+    saveWhitelist(whitelist);
+    Toast(lang_hint.domain_added);
+
+    // 刷新按钮显示状态
+    updateButtonVisibility();
   });
 
-  // 新增配置屏蔽菜单
-  GM_registerMenuCommand(lang_hint.close_config_menu, function() {
-    showConfigModal();
-  });
+  // 3. 全局禁用/启用（动态切换）
+  let disableMenuId = null;
 
-  // 初始化时检查屏蔽状态
-  if (isBlocked()) {
-    buttonContainer.style.display = 'none';
-  } else {
-    // 原有的显示/隐藏逻辑
-    if (!GM_getValue('showButton', true)) {
-        buttonContainer.style.display = 'none';
+  function updateDisableMenu() {
+    const isEnabled = isGloballyEnabled();
+    const menuText = isEnabled ? lang_hint.menu_disable : lang_hint.menu_enable;
+
+    if (disableMenuId !== null) {
+      // Tampermonkey 不支持直接更新菜单，所以我们只能重新注册
+      // 但由于 GM_registerMenuCommand 会累积菜单项，这里采用简单方案
+    }
+
+    disableMenuId = GM_registerMenuCommand(menuText, function() {
+      const currentState = isGloballyEnabled();
+      setGlobalEnabled(!currentState);
+      Toast(!currentState ? lang_hint.feature_enabled : lang_hint.feature_disabled);
+
+      // 刷新按钮显示状态
+      updateButtonVisibility();
+
+      // 刷新页面以更新菜单文本
+      setTimeout(() => window.location.reload(), 1000);
+    });
+  }
+
+  // 初始化禁用/启用菜单
+  updateDisableMenu();
+
+  // --- 按钮显示逻辑 ---
+  function updateButtonVisibility() {
+    if (!isGloballyEnabled()) {
+      button.style.display = 'none';
+      return;
+    }
+
+    if (isInWhitelist()) {
+      button.style.display = 'block';
+    } else {
+      button.style.display = 'none';
     }
   }
+
+  // 初始化按钮显示状态
+  updateButtonVisibility();
 
 })();

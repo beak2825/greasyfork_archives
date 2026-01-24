@@ -1,105 +1,178 @@
 // ==UserScript==
-// @name         Gemini Code Block Scroller (v1.2)
+// @name         Gemini Code Block Scroller (v2.0)
 // @namespace    http://tampermonkey.net/
-// @version      1.2
-// @description  强制 Gemini 代码块内部滚动。双击代码区域切换“折叠/展开”。
+// @version      2.0.0
+// @description  Gemini 代码块滚动增强：标题居中、状态跟随、自动历史补全、双击展开。
 // @author       Gemini User
 // @match        https://gemini.google.com/*
 // @grant        GM_addStyle
-// @run-at       document-start
+// @run-at       document-idle
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/559798/Gemini%20Code%20Block%20Scroller%20%28v12%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/559798/Gemini%20Code%20Block%20Scroller%20%28v12%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/559798/Gemini%20Code%20Block%20Scroller%20%28v20%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/559798/Gemini%20Code%20Block%20Scroller%20%28v20%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
     // ================= 配置区域 =================
-    // 建议：调试时设为 '300px'，确认生效后可改为 '70vh' 或 '80vh'
     const CONFIG = {
-        maxHeight: '300px',      // 限制高度（设小一点以便立刻看到效果）
-        transitionTime: '0.2s'   // 动画速度
+        maxHeight: '300px',       // 限制高度
+        transitionTime: '0.2s',   // 动画速度
+        statusText: {
+            generating: '⏳ 生成中...',
+            done: '✅ 代码生成完毕'
+        }
     };
-    // ===========================================
 
+    // 1. 注入样式
     GM_addStyle(`
-        /* === 核心功能：限制高度 + 内部滚动 === */
-        /* 使用更具体的选择器，防止被覆盖 */
+        /* 核心滚动样式 */
         .code-block .formatted-code-block-internal-container pre {
             max-height: ${CONFIG.maxHeight} !important;
             overflow-y: auto !important;
-            overflow-x: auto !important; /* 水平方向也允许滚动 */
             display: block !important;
-            
-            /* 交互提示：默认显示“放大镜”，暗示可点击 */
             cursor: zoom-in !important;
-            
-            /* 动画效果 */
             transition: max-height ${CONFIG.transitionTime} ease-out;
-            
-            /* 底部留白，防止最后一行代码太贴底 */
             padding-bottom: 20px !important;
-            border-bottom: 2px solid rgba(138, 180, 248, 0.1); /* 底部加一条隐约的线 */
+            border-bottom: 2px solid rgba(138, 180, 248, 0.1);
         }
-
-        /* === 展开状态 (Expanded) === */
-        /* JS 切换此类名来实现展开 */
+        
         .code-block .formatted-code-block-internal-container pre.gm-expanded {
-            max-height: none !important; /* 取消限制，由内容撑开 */
-            cursor: zoom-out !important; /* 展开后显示“缩小镜” */
+            max-height: none !important;
+            cursor: zoom-out !important;
         }
 
-        /* === 标题栏悬浮优化 === */
-        /* 确保标题栏不随代码滚动，始终吸附在顶部（如果父级允许）或保持在上方 */
-        .code-block-decoration {
-            z-index: 10 !important;
-            position: relative;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15); /* 加深阴影，增加层次感 */
+        /* === 布局核心样式 === */
+        
+        /* 1. 状态标签样式 */
+        .gm-status-badge {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            
+            /* 关键布局：把右边的按钮组狠狠推到最右边 */
+            margin-right: auto !important; 
+            
+            /* 和左边的语言标签保持距离 */
+            margin-left: 10px !important; 
+            
+            font-family: "Google Sans", Roboto, sans-serif;
+            font-weight: 500;
+            z-index: 999;
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+            height: 24px;
+        }
+        
+        /* 2. 语言标签样式 (JS动态添加此类名) */
+        /* 作用：把左边的红绿灯/空白狠狠推到最左边 */
+        .gm-lang-label-centered {
+            margin-left: auto !important;
         }
 
-        /* === 滚动条美化 (Windows下不仅好用而且要好看) === */
-        /* 垂直滚动条 */
-        .formatted-code-block-internal-container pre::-webkit-scrollbar {
-            width: 12px;
-            height: 12px;
+        .gm-status-badge.generating {
+            background-color: rgba(253, 214, 99, 0.15);
+            color: #fdd663;
+            border: 1px solid rgba(253, 214, 99, 0.3);
+            animation: pulse 1.5s infinite;
         }
-        /* 轨道 */
-        .formatted-code-block-internal-container pre::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.02);
+        
+        .gm-status-badge.done {
+            background-color: rgba(129, 201, 149, 0.15);
+            color: #81c995;
+            border: 1px solid rgba(129, 201, 149, 0.3);
         }
-        /* 滑块 */
-        .formatted-code-block-internal-container pre::-webkit-scrollbar-thumb {
-            background-color: rgba(95, 99, 104, 0.5);
-            border: 3px solid transparent;
-            background-clip: content-box;
-            border-radius: 99px;
-        }
-        /* 滑块悬停 */
-        .formatted-code-block-internal-container pre::-webkit-scrollbar-thumb:hover {
-            background-color: rgba(144, 148, 154, 0.8);
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
         }
     `);
 
-    // === JS 交互逻辑 ===
-    // 监听全局双击事件，使用“事件委托”处理动态加载的代码块
+    // 2. 双击交互
     document.addEventListener('dblclick', function(e) {
-        // 寻找点击目标是否在 pre 标签内部
-        // 使用 closest 向上查找，哪怕你点的是代码里的某个高亮关键词 span 也能识别到
         const preBlock = e.target.closest('.formatted-code-block-internal-container pre');
-        
         if (preBlock) {
-            // 阻止默认行为（防止双击选中一大片代码文字，干扰体验）
             e.preventDefault();
-            // 清除可能已经产生的选区
             window.getSelection()?.removeAllRanges();
-            
-            // 切换类名，触发 CSS 变化
             preBlock.classList.toggle('gm-expanded');
-            
-            console.log('Gemini Scroller: 切换代码块展开状态');
         }
     });
 
-    console.log('Gemini Scroller v1.2: 已加载，高度限制 ' + CONFIG.maxHeight);
+    // 3. 智能检测与布局修正
+    setInterval(() => {
+        fixAllBlocks();
+    }, 500);
+
+    function checkIsGenerating() {
+        const buttons = Array.from(document.querySelectorAll('button[aria-label]'));
+        const stopBtn = buttons.find(btn => {
+            const label = btn.getAttribute('aria-label');
+            const hasStop = label.includes('Stop') || label.includes('停止');
+            const isMedia = label.includes('朗读') || label.includes('收听') || label.includes('播放') || label.includes('Read') || label.includes('Listen');
+            return hasStop && !isMedia;
+        });
+        return !!stopBtn;
+    }
+
+    function fixAllBlocks() {
+        const allBlocks = document.querySelectorAll('.code-block');
+        if (allBlocks.length === 0) return;
+
+        const isGenerating = checkIsGenerating();
+
+        allBlocks.forEach((block, index) => {
+            const isLast = index === allBlocks.length - 1;
+            const status = (isGenerating && isLast) ? 'generating' : 'done';
+            
+            ensureBadgeAndLayout(block, status);
+        });
+    }
+
+    function ensureBadgeAndLayout(block, statusType) {
+        let header = block.querySelector('.code-block-decoration');
+        if (!header) header = block.querySelector('div:first-child');
+        if (!header) return;
+
+        // === 步骤1：处理语言标签居中 ===
+        // 查找语言标签 (通常是 span)
+        const langSpan = header.querySelector('span');
+        if (langSpan && !langSpan.classList.contains('gm-lang-label-centered')) {
+            langSpan.classList.add('gm-lang-label-centered');
+        }
+
+        // === 步骤2：处理状态徽章 ===
+        let badge = header.querySelector('.gm-status-badge');
+        const targetText = statusType === 'generating' ? CONFIG.statusText.generating : CONFIG.statusText.done;
+
+        if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'gm-status-badge ' + statusType;
+            badge.textContent = targetText;
+            
+            // 插入逻辑：紧跟在语言标签后面
+            if (langSpan) {
+                // 插在 span 后面，这样它们就形成了一个中间的组
+                // header.insertBefore(badge, langSpan.nextSibling);
+                // 为了保险，如果 span 后面有东西，插在它前面；如果没东西，appendChild
+                if (langSpan.nextSibling) {
+                    header.insertBefore(badge, langSpan.nextSibling);
+                } else {
+                    header.appendChild(badge);
+                }
+            } else {
+                // 找不到 span？那只能插在最前面凑合一下
+                header.appendChild(badge);
+            }
+        } 
+        else if (badge.textContent !== targetText || !badge.classList.contains(statusType)) {
+            badge.className = 'gm-status-badge ' + statusType;
+            badge.textContent = targetText;
+        }
+    }
+
+    console.log('Gemini Scroller v2.4: 居中布局版已启动');
 })();

@@ -7,7 +7,7 @@
 // @description:ja  フォローアーティスト作品、アーティスト作品、タグ作品ページで、いいね數でソートし、閾値以上の作品のみを表示します。
 // @description:en  Sort Illustration by likes and display only those above the threshold on followed artist illustrations, artist illustrations, and tag illustrations pages.
 // @namespace    https://github.com/Max46656
-// @version      1.10.3
+// @version      1.10.6
 // @author       Max
 // @match        https://www.pixiv.net/bookmark_new_illust.php*
 // @match        https://www.pixiv.net/users/*
@@ -116,9 +116,11 @@ class artScraper {
         this.likesMinLimit = GM_getValue("likesMinLimit", 50) || likesMinLimit;
         this.discardLikesMinLimit = GM_getValue("discardLikesMinLimit",false);
         this.strategy = this.setStrategy();
+        this.ensurePageParam();
         this.currentArtCount=0;
         // console.log(strategy.getThumbnailClass(),strategy.getArtsClass(),strategy.getRenderArtWallClass(),strategy.getButtonAtClass(),strategy.getAllButtonClass())
     }
+
     setStrategy(){
         const url = self.location.href;
         if (url.includes('https://www.pixiv.net/bookmark_new_illust')) {
@@ -130,6 +132,21 @@ class artScraper {
         } else {
             throw `${GM_info.script.name} Unsupported page type`;
         }
+    }
+
+    ensurePageParam() {
+        if (!this.setStrategy()) return;
+
+        const params = new URLSearchParams(location.search);
+        const pValue = params.get('p');
+
+        const isValidP = pValue !== ""  && !isNaN(pValue);
+        if (isValidP) return;
+
+        params.set('p', '1');
+        const newUrl = location.pathname + '?' + params.toString();
+
+        location.replace(newUrl);
     }
 
     async eatAllArts() {
@@ -146,14 +163,17 @@ class artScraper {
         console.log(`${GM_info.script.name} 總耗時: ${(endTime - startTime) / 1000} 秒`);
     }
 
-    async getElementBySelector(selector) {
-        let elements = document.querySelectorAll(selector);
-        while (elements.length === 0) {
+    async getElementBySelector(selector, timeoutMs = 30000) {
+        const start = Date.now();
+
+        while (Date.now() - start < timeoutMs) {
+            const el = document.querySelector(selector);
+            if (el) return el;
+
             await this.delay(50);
-            elements = document.querySelectorAll(selector);
-            //console.log("selector",selector,"找不到，將重試")
         }
-        return elements[0];
+
+        throw new Error(`Timeout: 找不到元素 ${selector} (${timeoutMs}ms)`);
     }
 
     async getElementListBySelector(selector) {
@@ -171,27 +191,38 @@ class artScraper {
         if(document.getElementById("RerenderButton")){
             this.toNextPage();
         }
+        const allArtCount = this.getMaxPage();
+        const artInpage = this.getElementListBySelector(artsClass).length - 1;
         const initPage = Number(document.querySelector("nav button span").textContent) - 1;
-        for (let i = initPage; i <= this.targetPages + initPage; i++) {
+        const endPage = this.targetPages + initPage;
+        let lastPage = location.search;
+        const nextButton = document.querySelector('a:has(polyline[points="1,2 5,6 9,2"]):last-of-type');
+        let page = Number(new URLSearchParams(location.search).get('p'));
+        for (let i = initPage; i <= endPage; i++) {
             const iterationStartTime = performance.now();
-            let page = Number(document.querySelector("nav button span").textContent);
+            page = Number(new URLSearchParams(location.search).get('p'));
             if(page && i > page){
                 i--;
-            }else if(!page){
-                console.log(this.getAPIMessageLocalization("pageZeroError"));
-                break;
+            }else if(!page || page == 0){
+                console.error(this.getAPIMessageLocalization("pageZeroError"));
+                this.toPervPage();
+                await this.delay(3000);
+                i--;
             }
+            lastPage = location.search;
             await this.getArtsInPage(thumbnailClass, artsClass);
 
             let nextPageLink = document.querySelectorAll('a:has(polyline[points="1,2 5,6 9,2"]');
             let retryCount = 0;
-            while(nextPageLink[nextPageLink.length-1].hasAttribute("hidden") && retryCount < 100) {
-                await this.delay(1);
-                retryCount++;
-            }
-            if(retryCount >= 100){
+            if(page *  artInpage > allArtCount){
                 console.log(this.getAPIMessageLocalization("lastPageReached"));
                 break;
+            }else{
+                while(nextPageLink[nextPageLink.length-1].hasAttribute("hidden") && retryCount < 1000) {
+                    await this.delay(1);
+                    retryCount++;
+                }
+                if(retryCount >= 1000) break;
             }
 
             let checkInterval = Math.floor(Math.random() * 10) + 30;
@@ -222,19 +253,20 @@ class artScraper {
                     try{
                         await this.executeAndcountUpSec('appendLikeElementToAllArts',()=>this.appendLikeElementToAllArts());
                     }catch (e){
-                        const cooldownMessage = this.getAPIMessageLocalization("apiCooldown", { waitTime: cooldown });
+                        /*const cooldownMessage = this.getAPIMessageLocalization("apiCooldown", { waitTime: cooldown });
                         console.log(`${GM_info.script.name} `+cooldownMessage);
                         const sorterContainer = document.getElementById("SorterBtnContainer");
                         const messageElement = document.createElement("span");
                         messageElement.textContent = cooldownMessage;
                         sorterContainer.appendChild(messageElement);
                         await this.delay(cooldown);
-                        sorterContainer.removeChild(messageElement);
+                        sorterContainer.removeChild(messageElement);*/
                     }
                 }
             }
 
-            if (i < this.targetPages + initPage - 1) {
+            if (i <= endPage - 1) {
+                //if((endPage - i) % 15 ===0) await this.delay(Math.random() * 2000 + 1000);
                 this.toNextPage();
             }
 
@@ -337,7 +369,7 @@ class artScraper {
 
         likeCounts.forEach((likeCount, index) => {
             const art = this.allArtsWithoutLike[index];
-            if (!art.getElementsByClassName('likes').length) {// 檢查是否已經有處理過
+            if (!art.getElementsByClassName('likes').length) {
                 if (this.discardLikesMinLimit && likeCount < this.likesMinLimit) return;
                 const referenceElement = art.getElementsByTagName('div')[0];
                 if (referenceElement) {
@@ -359,7 +391,6 @@ class artScraper {
         let pageButtonsShape='a:has(polyline[points="1,2 5,6 9,2"])';
         const pageButtons = document.querySelectorAll(pageButtonsShape);
         let nextPageButton = pageButtons[pageButtons.length - 1];
-        //console.log(nextPageButton);
         nextPageButton.click();
     }
 
@@ -377,23 +408,19 @@ class artScraper {
     }
 
     async sortArts() {
-        // 使用 Map 來儲存每個 img src 對應的 art 元素
         const artMap = new Map();
 
-        // 依據 likeCount 進行排序，並且過濾掉重複的 art
         this.allArts
             .sort((a, b) => b.likeCount - a.likeCount) // 依據 likeCount 排序
             .forEach(({ art }) => {
             if (art) {
                 const imgSrc = art.getElementsByTagName("img")[0];
                 if (imgSrc && !artMap.has(imgSrc)) {
-                    // 如果 img src 不在 artMap 中，則將 art 存入 artMap
                     artMap.set(imgSrc, art);
                 }
             }
         });
 
-        // 更新 allArts 為排除重複的 art 元素列表
         this.allArts = Array.from(artMap.values());
     }
 
@@ -429,7 +456,7 @@ class artScraper {
         table.appendChild(tr);
         let row = GM_getValue("rowsOfArtsWall", 7);
 
-        let artCount = 0; // 計算繪畫數量
+        let artCount = 0;
 
         for (let art of this.allArts) {
             if (art.getElementsByClassName('likes')[0].textContent >= this.likesMinLimit) {
@@ -441,7 +468,7 @@ class artScraper {
 
                 td.innerHTML = art.innerHTML;
                 tr.appendChild(td);
-                artCount++; // 增加繪畫數量
+                artCount++;
 
                 if (tr.children.length % row === 0) {
                     tr = document.createElement('tr');
@@ -618,7 +645,6 @@ class artScraper {
         likeRangeInput.style.marginRight = '10px';
         likeRangeInput.style.backgroundColor = 'red';
         likeRangeInput.id="LikeRangeInput";
-        // reRender
         if(document.querySelector('.TableArtWall')){
             likeRangeInput.addEventListener('input', (event) => {
                 this.likesMinLimit = likesMinLimitsRange[event.target.value];
@@ -654,10 +680,9 @@ class artScraper {
         pageRangeInput.min = '1';
 
         let max = await this.getMaxPage();
-        const stepSize = Math.floor(max / 24);
+        const stepSize = Math.floor(max / 25) > 40 ? 39 : Math.floor(max / 25);
 
-        //console.log(this.getMaxPage());
-        pageRangeInput.max = max || 34;
+        pageRangeInput.max = max > 1000 ? 1000 : max;
 
         if (this.targetPages > max) {
             pageRangeInput.value = max;
@@ -676,7 +701,7 @@ class artScraper {
 
         sorterContainer.appendChild(pageIcon);
         sorterContainer.appendChild(pageRangeInput);
-        if(max>50){
+        if(max > 50){
             const pageInputBox = document.createElement('input');
             pageInputBox.type = 'number';
             pageInputBox.min = '1';

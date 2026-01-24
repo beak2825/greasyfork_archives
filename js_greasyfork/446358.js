@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Instagram 2014
 // @namespace rlego
-// @version 2.0.11
+// @version 2.0.12
 // @description Makes Instagram (WEB) look like it did in 2014
 // @author legosavant
 // @license GPLv3
@@ -149,10 +149,11 @@ if ((location.hostname === "www.instagram.com" || location.hostname.endsWith(".w
       }
       .xvbhtw8[style] > div:first-child div[tabindex] > div[class] {
           height:auto;
+          width: 100%
       }
       .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div:first-child {
-          width:100%;;
-          height: 43px;
+          width:100%!important;
+          height: 43px!important;
           border-bottom: 1px solid #1c5380;
           border-bottom-color: rgba(4, 40, 71, 0.8);
           box-shadow: 0 1px 0 rgba(111, 151, 182, 50%) inset, 0 -1px 0 rgba(111, 151, 182, 20%) inset, 0px 1px 1px rgba(0, 0, 0, 20%);
@@ -172,6 +173,7 @@ if ((location.hostname === "www.instagram.com" || location.hostname.endsWith(".w
           background:none!important;
           border:0;
           box-shadow:none;
+          padding:0;
       }
       /*top right buttons*/
       .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div > div > div > div:has([href*="https://www.threads.net/"]) {
@@ -189,6 +191,9 @@ if ((location.hostname === "www.instagram.com" || location.hostname.endsWith(".w
           padding:0;
           height:44px;
           margin:0;
+          display: flex;
+          align-items: end;
+          justify-content: end;
       }
       .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div > div > div > div div ~ div[style^="opacity;"], .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div > div > div > div div ~ div[style^="opacity"] {
           display:none
@@ -200,7 +205,10 @@ if ((location.hostname === "www.instagram.com" || location.hostname.endsWith(".w
           align-items:center;
           border-radius: 0;
       }
-      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div:first-child > div > div > div:not(:nth-child(2)):not([class]) {
+      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div:first-child > div > div > div a[href] > div > div:nth-child(2) {
+          display: none!important
+      }
+      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div:first-child > div > div:nth-child(2) > div a[href] > div {
           border-right: 1px solid #06365f;
           border-right-color: rgba(0, 0, 0, 0.1);
           box-shadow: inset 1px 0 0 rgb(255 255 255 / 10%);
@@ -317,12 +325,14 @@ if ((location.hostname === "www.instagram.com" || location.hostname.endsWith(".w
           display:none
       }
       /*search*/
-      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div:first-child > div > div > div:nth-child(2) {
+      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div:first-child > div > div > div > div:nth-child(4) {
           order:-1;
-          margin-right:64px
+          margin-right:64px;
+          position: relative;
+          top:-5px;
       }
       
-      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div:first-child > div > div > div:nth-child(2) a[href="#"] > div {
+      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div:first-child > div > div > div > div:nth-child(4) a[href="#"] > div {
           background: rgba(6, 54, 95, 0.35);
           height: 36px;
           margin-top: 4px;
@@ -330,11 +340,11 @@ if ((location.hostname === "www.instagram.com" || location.hostname.endsWith(".w
           border-radius:2px;
           border:none;
       }
-      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div > div > div > div:nth-child(2) a[href="#"] > div {
+      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div:first-child > div > div > div > div:nth-child(4) a[href="#"] > div {
           padding:0 8px
       }
       
-      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div > div > div > div:nth-child(2) a[href="#"] > div:before {
+      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div:first-child > div > div > div > div:nth-child(4) a[href="#"] > div:before {
           content:"Search";
           display:inline-block;
           position:absolute;
@@ -342,9 +352,27 @@ if ((location.hostname === "www.instagram.com" || location.hostname.endsWith(".w
           color:#ccc;
           line-height:36px;
       }
-      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div > div > div > div:nth-child(2) a[href="#"] > div > div:not([class]) > div {
+      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div:first-child > div > div > div > div:nth-child(4) a[href="#"] > div > div:not([class]) > div {
           display:none
       }
+      /*NEW SEARCH BAR*/
+      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div[style*="width: 460px;"] > div {
+          justify-content: center;
+      }
+      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div[style*="width: 460px;"] > div,
+      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div[style*="width: 460px;"] > div > div,
+      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div[style*="width: 460px;"] > div > div > div {
+          height:auto;
+          width: auto;
+          background: none;
+          border: 0;
+      }
+      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div[style*="width: 460px;"] > div > div > div div ~ div[style^="opacity"] {
+          display:block;
+      }
+      
+      
+      /*THIS SECTION IS NOW IRREVELVANT*/
       /*search popup.. the last child thing is where it splits from search popup to header*/
       .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div:first-child ~ div:last-child  > div {
           left:0;
@@ -381,7 +409,7 @@ if ((location.hostname === "www.instagram.com" || location.hostname.endsWith(".w
       .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div:first-child ~ div:last-child > div > div > div > div > div {
           opacity:1!important;
       }
-      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div:first-child ~ div:last-child > div > div > div > div:first-child:not([style]) { /*search title text*/
+      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] > div[style*="width: 460px;"] > div > div > div div ~ div[style^="opacity"] > div:first-child { /*search title text*/
           display:none
       }
       .xvbhtw8[style] > div:first-child div[tabindex] > div[class]  .x1ys307a { /*REAL sbox*/
@@ -390,16 +418,17 @@ if ((location.hostname === "www.instagram.com" || location.hostname.endsWith(".w
       .xvbhtw8[style] > div:first-child div[tabindex] > div[class]  .x1ys307a > div > div {
           margin:0
       }
-      .xvbhtw8[style] > div:first-child div[tabindex] > div[class]  .x1ys307a input[class] {
+      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] .x1ys307a input[class] {
           background: rgba(55, 115, 165, 1);
           border-radius:0;
           padding:0 8px;
-          width:260px;
+          width:320px;
           margin-top:4px;
           color:#fff;
       }
       .xvbhtw8[style] > div:first-child div[tabindex] > div[class]  .x1ys307a input[class]::placeholder {
           color:#fff;
+          background: none
       }
       .xvbhtw8[style] > div:first-child div[tabindex] > div[class]  .x1ys307a input[class] ~ div[style="cursor: pointer;"] { /*close*/
           top:22px
@@ -417,27 +446,35 @@ if ((location.hostname === "www.instagram.com" || location.hostname.endsWith(".w
           height:min-content;
           max-height:70vh;
           min-height:300px;
+          
       }
       /*suggests*/
       .xvbhtw8[style] > div:first-child div[tabindex] > div[class] .x1ys307a ~  div ul {
           margin:0
       }
-      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] .x1ys307a ~  div ul > a {
+      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] .x1ys307a ~  div ul > div {
+          padding:0;
+      }
+      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] .x1ys307a ~  div ul a {
           border-top: 1px solid #f6f6f6;
           border-bottom: 1px solid #ddd;
           padding:0
       }
-      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] .x1ys307a ~  div ul > a > div {
+      body .xvbhtw8[style] > div:first-child div[tabindex] > div[class]:first-child .x1ys307a ~  div ul a > div[class] {
           padding:4px 8px;  
           border:1px solid transparent;
           margin:1px 3px;
           border-radius:4px;
+          height: auto;
           
       }
-      .xvbhtw8[style] > div:first-child div[tabindex] > div[class] .x1ys307a ~  div ul > a > div:hover {
+      body .xvbhtw8[style] > div:first-child div[tabindex] > div[class]:first-child .x1ys307a ~  div ul a > div[class]:hover {
           background:linear-gradient(#eee,#f5f5f5);
           box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
           border:1px solid #eee;
+      }
+      body .xvbhtw8[style] > div:first-child div[tabindex] > div[class]:first-child .x1ys307a ~  div ul a > div[class] > div {
+          width: 100%
       }
       /*non user suggests*/
       .xvbhtw8[style] > div:first-child div[tabindex] > div[class] .x1ys307a ~ div [href^="/explore/search/keyword/"] > div { 
@@ -1879,6 +1916,7 @@ if ((location.hostname === "www.instagram.com" || location.hostname.endsWith(".w
           border:1px solid #BDBDBD;
           border-top:0;
           border-radius:0 0 4px 4px;
+          padding:0
       }
       [style^="--x-maxWidth:"] > div:is(:nth-child(1),:nth-child(3)) > div[style] > article > div > div:nth-child(3) > div {
           background:none;
@@ -1893,13 +1931,16 @@ if ((location.hostname === "www.instagram.com" || location.hostname.endsWith(".w
           margin:0;
       }
       [style^="--x-maxWidth:"] > div:is(:nth-child(1),:nth-child(3)) > div[style] > article > div > div:nth-child(3) > div > div > section:first-child > div:first-child > span > div {
-          border-right:1px solid #ddd;
           padding:8px 12px;
+      }
+      [style^="--x-maxWidth:"] > div:is(:nth-child(1),:nth-child(3)) > div[style] > article > div > div:nth-child(3) > div > div > section:first-child > div:first-child > span:nth-child(odd):not(:first-child) {
+          border-left: 1px solid #ddd;
+          margin-left:16px
       }
       [style^="--x-maxWidth:"] > div:is(:nth-child(1),:nth-child(3)) > div[style] > article > div > div:nth-child(3) > div > div > section:first-child > div:first-child > span > div > div {
           padding:0;
       }
-      [style^="--x-maxWidth:"] > div:is(:nth-child(1),:nth-child(3)) > div[style] > article > div > div:nth-child(3) > div > div > section:first-child > div:first-child > span > div svg {
+      [style^="--x-maxWidth:"] > div:is(:nth-child(1),:nth-child(3)) > div[style] > article > div > div:nth-child(3) > div > div > section:first-child > div:first-child > span:first-child > div svg {
           background:var(--hearts) -6.5px -4px; /*i need a better image*/
           background-size:170px;
           fill:transparent
@@ -1912,9 +1953,6 @@ if ((location.hostname === "www.instagram.com" || location.hostname.endsWith(".w
           top:0;
           left:100px;
       }
-      [style^="--x-maxWidth:"] > div:is(:nth-child(1),:nth-child(3)) > div[style] > article > div > div:nth-child(3) > div > div > section:first-child > div:first-child > :is(span:nth-child(2),button) { /*replyshare*/
-          display:none;
-      }   
       [style^="--x-maxWidth:"] > div:is(:nth-child(1),:nth-child(3)) > div[style] > article > div > div:nth-child(3) > div > div > section:first-child > div:last-child > div > div > div > :is(div,a) {
           border-left:1px solid #ddd;
           margin:0!important;

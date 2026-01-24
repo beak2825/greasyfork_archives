@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         아카라이브 썸네일 이미지, 이미지 뷰어, 모두 열기
-// @version      1.78
+// @version      1.79
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=arca.live
 // @description  아카라이브 썸네일 이미지 생성, 이미지 뷰어, 모두 열기 버튼 생성, 그 외 잡다한 기능..
 // @author       ChatGPT
@@ -12,11 +12,10 @@
 // @grant        GM_setValue
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js
 // @namespace    Violentmonkey Scripts
+
 // @downloadURL https://update.greasyfork.org/scripts/492373/%EC%95%84%EC%B9%B4%EB%9D%BC%EC%9D%B4%EB%B8%8C%20%EC%8D%B8%EB%84%A4%EC%9D%BC%20%EC%9D%B4%EB%AF%B8%EC%A7%80%2C%20%EC%9D%B4%EB%AF%B8%EC%A7%80%20%EB%B7%B0%EC%96%B4%2C%20%EB%AA%A8%EB%91%90%20%EC%97%B4%EA%B8%B0.user.js
 // @updateURL https://update.greasyfork.org/scripts/492373/%EC%95%84%EC%B9%B4%EB%9D%BC%EC%9D%B4%EB%B8%8C%20%EC%8D%B8%EB%84%A4%EC%9D%BC%20%EC%9D%B4%EB%AF%B8%EC%A7%80%2C%20%EC%9D%B4%EB%AF%B8%EC%A7%80%20%EB%B7%B0%EC%96%B4%2C%20%EB%AA%A8%EB%91%90%20%EC%97%B4%EA%B8%B0.meta.js
 // ==/UserScript==
-
-// TODO
 
 (function() {
     'use strict';
@@ -41,8 +40,7 @@
         thumbBlur: true,
         thumbBlurAmount: 2,
         thumbShadow: false,
-        orignalThumb: false,
-        thumbHoverBest: true,
+        thumbForce: false,
         viewer: true,
         viewerShortcut: true,
         viewerOpacity: 0.9,
@@ -89,8 +87,7 @@
             thumbBlur: '썸네일 블러 효과',
             thumbBlurAmount: '썸네일 블러 효과의 정도',
             thumbShadow: '썸네일 그림자 효과',
-            orignalThumb: '썸네일 클릭 시 원본 이미지 불러오기(유머 채널 개념글)',
-            thumbHoverBest: '썸네일에 마우스 올리면 프리뷰 이미지 출력(유머 채널 개념글)',
+            thumbForce: '썸네일 강제 생성',
             viewer: '게시글 이미지 클릭시 이미지 뷰어로 열기',
             viewerShortcut: '뷰어 단축키',
             viewerOpacity: '뷰어 배경 투명도',
@@ -117,7 +114,7 @@
 
         var mainConfigKeys = Object.keys(descriptions).filter(key =>
             !['openAllButton', 'downAllButton', 'sortButton', 'closeButton', 'bookmarkButton', 'downButton', 'compressFiles', 'countImages', 'downOriginalImage', 'downNumber',
-              'thumbWidth', 'thumbHeight', 'thumbHover', 'thumbBlur', 'thumbBlurAmount', 'thumbShadow', 'orignalThumb', 'thumbHoverBest',
+              'thumbWidth', 'thumbHeight', 'thumbHover', 'thumbBlur', 'thumbBlurAmount', 'thumbShadow', 'thumbForce',
               'viewerShortcut', 'viewerOpacity', 'viewerType', 'viewerWidth', 'scrollSpeed', 'preloadImage', 'preloadCount', 'originalImage', 'hideButtons',
               'viewerCloseButton', 'viewerAutoOpenButton', 'viewerBookmarkButton', 'viewerDownloadButton', 'findImage', 'autoOpenViewer', 'test01', 'test02', 'test03', 'test04'].includes(key)
         );
@@ -137,6 +134,7 @@
                 }
             }
         }
+
 
         function createBaseWindow(id, titleText) {
             var existingWindow = document.getElementById(id);
@@ -298,7 +296,7 @@
         }
 
         function createThumbnailWindow() {
-            createSubSettingsWindow('thumbnailWindow', 'Thumbnail', ['thumbWidth', 'thumbHeight', 'thumbHover', 'thumbBlur', 'thumbBlurAmount', 'thumbShadow', 'orignalThumb', 'thumbHoverBest']);
+            createSubSettingsWindow('thumbnailWindow', 'Thumbnail', ['thumbWidth', 'thumbHeight', 'thumbHover', 'thumbBlur', 'thumbBlurAmount', 'thumbShadow', 'thumbForce']);
         }
 
         function createViewerWindow() {
@@ -556,6 +554,10 @@
 
         channelFilter.addEventListener('change', updateTabFilter);
         tabFilter.addEventListener('change', filterPosts);
+    }
+
+    function isArticle() {
+        return document.querySelector('.article-wrapper') != null
     }
 
     function arcaLive() {
@@ -1215,157 +1217,142 @@
                         vcolTitle.parentNode.insertBefore(vcolThumb, vcolTitle);
                     }
 
-                    var vrowPreview = vrow.querySelector('.vrow-preview');
-
                     // vrowPreview가 존재할 때만 썸네일을 추가하도록 조건 추가
-                    if (vrowPreview) {
-                        var thumbnailCreated = false;  // 썸네일 생성 여부 플래그
-                        function createThumbnail() {
-                            if (thumbnailCreated) return;  // 이미 썸네일이 생성되었으면 더 이상 생성하지 않음
+                    var thumbnailCreated = false;  // 썸네일 생성 여부 플래그
+                    function createThumbnail(vrowPreview) {
+                        if (thumbnailCreated) return;  // 이미 썸네일이 생성되었으면 더 이상 생성하지 않음
 
-                            var previewImg = vrowPreview.querySelector('img');
-                            if (!previewImg) return;
+                        var previewImg = vrowPreview.querySelector('img');
+                        if (!previewImg) return;
 
-                            vrow.style.height = 'auto';
-                            vrow.style.paddingTop = '3.75px';
-                            vrow.style.paddingBottom = '3.75px';
-                            vcolThumb.style.height = config.thumbHeight + 'px';
+                        vrow.style.height = 'auto';
+                        vrow.style.paddingTop = '3.75px';
+                        vrow.style.paddingBottom = '3.75px';
+                        vcolThumb.style.height = config.thumbHeight + 'px';
 
-                            var thumbImg = vcolThumb.querySelector('img');
-                            if (!thumbImg) {
-                                thumbImg = document.createElement('img');
-                                thumbImg.src = previewImg.src;
-                                thumbImg.style.width = '100%';
-                                thumbImg.style.height = '100%';
-                                thumbImg.style.objectFit = 'cover';
-                                if (config.thumbShadow) {
-                                    thumbImg.onload = function () {
-                                        vcolThumb.style.boxShadow = 'rgba(0, 0, 0, 0.4) 2px 2px 2px';
-                                    }
+                        var thumbImg = vcolThumb.querySelector('img');
+                        if (!thumbImg) {
+                            thumbImg = document.createElement('img');
+                            thumbImg.src = previewImg.src;
+                            thumbImg.style.width = '100%';
+                            thumbImg.style.height = '100%';
+                            thumbImg.style.objectFit = 'cover';
+                            if (config.thumbShadow) {
+                                thumbImg.onload = function () {
+                                    vcolThumb.style.boxShadow = 'rgba(0, 0, 0, 0.4) 2px 2px 2px';
                                 }
-                                if (config.test) {
-                                    if (config.test01) {
-                                        fetchReferenceImagesFromArcaOnce(() => {
-                                            checkImageSimilarityWithMultiple(thumbImg, function (isSimilar) {
-                                                if (isSimilar) {
-                                                    setSecondImg(vrow, thumbImg);
-                                                }
-                                            });
-                                        });
-                                    }
-
-                                    if (config.test02) {
-                                        function removeQueryString(url) {
-                                            var parsedUrl = new URL(url);
-                                            return parsedUrl.origin + parsedUrl.pathname;
-                                        }
-
-                                        var savedLinks = GM_getValue('savedLinks', []);
-                                        var cleanSrc = removeQueryString(thumbImg.src);
-                                        if (savedLinks.some(link => cleanSrc.includes(removeQueryString(link)))) {
-                                            setSecondImg(vrow, thumbImg);
-                                            console.log("Filtered Image:", vcolId.querySelector('span').textContent, thumbImg.src);
-                                        }
-                                    }
-                                }
-
-                                if (config.thumbBlur) {
-                                    thumbImg.style.filter = 'blur(' + config.thumbBlurAmount + 'px)';
-                                    thumbImg.addEventListener('mouseenter', function() {
-                                        thumbImg.style.filter = 'none';
-                                    });
-                                    thumbImg.addEventListener('mouseleave', function() {
-                                        thumbImg.style.filter = 'blur(' + config.thumbBlurAmount + 'px)';
-                                    });
-                                }
-
-                                if (config.thumbHover) {
-                                    thumbImg.addEventListener('mouseenter', function() {
-                                        vrowPreview.style.display = null;
-                                    });
-                                    thumbImg.addEventListener('mouseleave', function() {
-                                        vrowPreview.style.display = 'none';
-                                    });
-                                }
-                                vcolThumb.appendChild(thumbImg);
-
-                                thumbnailCreated = true;  // 썸네일 생성 완료
                             }
-                            vrowPreview.style.display = 'none';
-                            vrowPreview.style.pointerEvents = 'none';
-                            vrowPreview.style.width = '30rem';
-                            vrowPreview.style.height = 'auto';
-                            vrowPreview.style.top = 'auto';
-                            vrowPreview.style.left = (99) + parseFloat(config.thumbWidth) + 'px';
-                            previewImg.src = previewImg.src.replace("&type=list", '');
-                        }
+                            if (config.test) {
+                                if (config.test01) {
+                                    fetchReferenceImagesFromArcaOnce(() => {
+                                        checkImageSimilarityWithMultiple(thumbImg, function (isSimilar) {
+                                            if (isSimilar) {
+                                                setSecondImg(vrow, thumbImg);
+                                            }
+                                        });
+                                    });
+                                }
 
-                        function tryCreateThumbnail(retryCount) {
-                            if (retryCount >= 100 || thumbnailCreated) return;  // 썸네일이 이미 생성되었으면 더 이상 시도하지 않음
-                            setTimeout(function() {
-                                if (retryCount === 0) createThumbnail();
-                                tryCreateThumbnail(retryCount + 1);
-                            }, 100);
-                        }
+                                if (config.test02) {
+                                    function removeQueryString(url) {
+                                        var parsedUrl = new URL(url);
+                                        return parsedUrl.origin + parsedUrl.pathname;
+                                    }
 
-                        tryCreateThumbnail(0);
+                                    var savedLinks = GM_getValue('savedLinks', []);
+                                    var cleanSrc = removeQueryString(thumbImg.src);
+                                    if (savedLinks.some(link => cleanSrc.includes(removeQueryString(link)))) {
+                                        setSecondImg(vrow, thumbImg);
+                                        console.log("Filtered Image:", vcolId.querySelector('span').textContent, thumbImg.src);
+                                    }
+                                }
+                            }
+
+                            if (config.thumbBlur) {
+                                thumbImg.style.filter = 'blur(' + config.thumbBlurAmount + 'px)';
+                                thumbImg.addEventListener('mouseenter', function() {
+                                    thumbImg.style.filter = 'none';
+                                });
+                                thumbImg.addEventListener('mouseleave', function() {
+                                    thumbImg.style.filter = 'blur(' + config.thumbBlurAmount + 'px)';
+                                });
+                            }
+
+                            if (config.thumbHover) {
+                                thumbImg.addEventListener('mouseenter', function() {
+                                    vrowPreview.style.display = null;
+                                });
+                                thumbImg.addEventListener('mouseleave', function() {
+                                    vrowPreview.style.display = 'none';
+                                });
+                            }
+                            vcolThumb.appendChild(thumbImg);
+
+                            thumbnailCreated = true;  // 썸네일 생성 완료
+                        }
+                        vrowPreview.style.display = 'none';
+                        vrowPreview.style.pointerEvents = 'none';
+                        vrowPreview.style.width = '30rem';
+                        vrowPreview.style.height = 'auto';
+                        vrowPreview.style.top = 'auto';
+                        vrowPreview.style.left = (99) + parseFloat(config.thumbWidth) + 'px';
+                        previewImg.src = previewImg.src.replace("&type=list", '');
                     }
-                });
-            });
-        }
 
-        // 썸네일 클릭 시 원본 이미지 불러오기
-        if (config.orignalThumb) {
-            document.querySelectorAll('a.title.preview-image').forEach(function(link) {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault(); // 기본 동작 방지
-                    var imageUrl = link.querySelector('img').getAttribute('src').replace(/&type=list/g, '');
-                    window.location.href = imageUrl;
-                });
-            });
-        }
+                    function tryCreateThumbnail(retryCount, vrowPreview) {
+                        if (retryCount >= 100 || thumbnailCreated) return;  // 썸네일이 이미 생성되었으면 더 이상 시도하지 않음
+                        setTimeout(function() {
+                            if (retryCount === 0) createThumbnail(vrowPreview);
+                            tryCreateThumbnail(retryCount + 1, vrowPreview);
+                        }, 100);
+                    }
+                    var vrowPreview = vrow.querySelector('.vrow-preview')
+                    if (vrowPreview) {
+                        tryCreateThumbnail(0, vrowPreview);
+                    } else if (!isArticle() && config.thumbForce) {
+                        // 썸네일 없으면 내용 검색
+                        function putPreview(dest, img) {
+                            var div = document.createElement('div')
+                            div.className = 'vrow-preview'
+                            if (img.src) {
+                                if (!img.src.includes('type=list')) {
+                                    img.src += (img.src.includes('?') ? '&' : '?') + 'type=list';
+                                }
+                            }
+                            div.appendChild(img)
+                            dest.appendChild(div)
+                            tryCreateThumbnail(0, div);
+                        }
 
-        // 개념글 미리보기 이미지 마우스 오버시 보이게
-        if (config.thumbHoverBest) {
-            // 이미지 요소 선택
-            var vrowPreviewImgs = document.querySelectorAll('.vrow.hybrid .title.preview-image .vrow-preview img');
+                        function findFrom(url) {
+                            fetch(url)
+                                .then(res => res.text())
+                                .then(html => {
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(html, 'text/html');
 
-            // 각 이미지 요소에 이벤트 추가
-            vrowPreviewImgs.forEach(function(vrowPreviewImg) {
-                // 이미지에 호버 이벤트 추가
-                vrowPreviewImg.addEventListener('mouseenter', function() {
-                    // 이미지의 부모 요소 찾기
-                    var parentDiv = vrowPreviewImg.closest('.vrow.hybrid');
+                                const innerImgs = doc.querySelectorAll(".fr-view.article-content img");
 
-                    // 복제된 이미지 요소 생성
-                    var duplicatevrowPreviewImg = document.createElement('img');
-                    duplicatevrowPreviewImg.src = vrowPreviewImg.src.replace('&type=list', '');
-
-                    // 복제된 이미지의 스타일 설정
-                    duplicatevrowPreviewImg.style.position = 'absolute';
-                    duplicatevrowPreviewImg.style.width = '30rem';
-                    duplicatevrowPreviewImg.style.height = 'auto';
-                    duplicatevrowPreviewImg.style.top = 'auto';
-                    duplicatevrowPreviewImg.style.left = '7.5rem'; // 오른쪽으로 10rem 이동
-                    duplicatevrowPreviewImg.style.zIndex = '1';
-                    duplicatevrowPreviewImg.style.padding = '5px';
-                    duplicatevrowPreviewImg.style.border = '1px solid';
-                    duplicatevrowPreviewImg.style.borderRadius = '5px';
-                    duplicatevrowPreviewImg.style.boxSizing = 'content-box';
-                    duplicatevrowPreviewImg.style.backgroundColor = '#fff'; // 배경색
-                    duplicatevrowPreviewImg.style.borderColor = '#bbb'; // 테두리 색상
-
-                    // vrow hybrid 클래스에 align-items: center; 스타일 추가
-                    parentDiv.classList.add('hybrid');
-                    parentDiv.style.alignItems = 'center'; // 수직 가운데 정렬
-
-                    // 복제된 이미지 요소를 기존 이미지 요소 다음에 추가
-                    parentDiv.appendChild(duplicatevrowPreviewImg);
-
-                    // 마우스를 이미지에서 떼었을 때 복제된 이미지 제거
-                    vrowPreviewImg.addEventListener('mouseleave', function() {
-                        duplicatevrowPreviewImg.remove();
-                    });
+                                if (innerImgs && innerImgs.length > 0) {
+                                    putPreview(
+                                        vrow,
+                                        innerImgs[0]
+                                    )
+                                } else {
+                                    const innerVideos = doc.querySelectorAll(".fr-view.article-content video");
+                                    if (innerVideos && innerVideos.length > 0) {
+                                        var poster = document.createElement("img")
+                                        poster.src = innerVideos[0].poster
+                                        putPreview(
+                                            vrow,
+                                            poster
+                                        )
+                                    }
+                                }
+                            });
+                        }
+                        findFrom(vrow.href)
+                    }
                 });
             });
         }

@@ -34,7 +34,7 @@
 // @name:pt-br   Boosteroid Guardião de Sessão
 // @name:fr-ca   Boosteroid Gardien de Session
 // @namespace    ProfessionalScripts
-// @version      1.0
+// @version      1.1
 // @description  A tool that automatically clicks to extend your session.
 // @description:id Alat yang secara otomatis mengklik untuk memperpanjang sesi Anda.
 // @description:ug مەشغۇلات ۋاقتىنى ئۇزارتىش ئۈچۈن ئاپتوماتىك چېكىش قورالى.
@@ -78,57 +78,60 @@
 // @downloadURL https://update.greasyfork.org/scripts/560576/Boosteroid%20Session%20Keeper.user.js
 // @updateURL https://update.greasyfork.org/scripts/560576/Boosteroid%20Session%20Keeper.meta.js
 // ==/UserScript==
-
 (function() {
     'use strict';
 
     const CONFIG = {
-        SCAN_INTERVAL: 10000,
+        // Kontroluje přítomnost tlačítka každých 5-12 sekund (náhodně)
+        MIN_SCAN: 5000,
+        MAX_SCAN: 12000,
         SELECTORS: {
             BUTTON: "#confirm_btn",
             LABEL: "#confirm_btn span"
         },
         THEME: {
-            TOAST: "position:fixed;top:25px;left:50%;transform:translateX(-50%);background:#0f0f0f;color:#00ff88;padding:14px 28px;border-radius:2px;font-family:'Consolas',monospace;font-size:12px;z-index:10000;box-shadow:0 10px 30px rgba(0,0,0,0.8);border-left:4px solid #00ff88;opacity:0;transition:opacity 0.5s ease;pointer-events:none;letter-spacing:1px;text-transform:uppercase;"
+            TOAST: "position:fixed;top:20px;right:20px;background:rgba(15,15,15,0.9);color:#00ff88;padding:10px 20px;border-radius:4px;font-family:'Consolas',monospace;font-size:11px;z-index:10001;box-shadow:0 4px 15px rgba(0,0,0,0.5);border-left:3px solid #00ff88;opacity:0;transition:opacity 0.4s ease;pointer-events:none;letter-spacing:1px;"
         }
     };
 
-    function displayStatus(text) {
+    function showToast(message) {
         const el = document.createElement("div");
         el.style.cssText = CONFIG.THEME.TOAST;
-        el.innerText = `> ${text}`;
+        el.innerText = `> ${message}`;
         document.body.appendChild(el);
 
         requestAnimationFrame(() => el.style.opacity = "1");
-
         setTimeout(() => {
             el.style.opacity = "0";
-            setTimeout(() => el.remove(), 600);
-        }, 3500);
+            setTimeout(() => el.remove(), 500);
+        }, 3000);
     }
 
     function processVerification() {
         const actionTarget = document.querySelector(CONFIG.SELECTORS.BUTTON);
 
         if (actionTarget) {
-            const interaction = new MouseEvent("click", {
-                view: window,
-                bubbles: true,
-                cancelable: true
+            // Simulace přirozené sekvence (vypadá to jako lidský klik)
+            ['mousedown', 'mouseup', 'click'].forEach(type => {
+                actionTarget.dispatchEvent(new MouseEvent(type, {
+                    view: window, bubbles: true, cancelable: true, buttons: 1
+                }));
             });
-
-            actionTarget.dispatchEvent(interaction);
 
             const subElement = document.querySelector(CONFIG.SELECTORS.LABEL);
             if (subElement) subElement.click();
 
-            displayStatus("SESSION EXTENDED: SUCCESS");
+            showToast("SESSION EXTENDED: OK");
         }
+
+        // Naplánování dalšího cyklu s náhodným zpožděním
+        const nextTick = Math.floor(Math.random() * (CONFIG.MAX_SCAN - CONFIG.MIN_SCAN + 1) + CONFIG.MIN_SCAN);
+        setTimeout(processVerification, nextTick);
     }
 
     const bootstrap = () => {
-        displayStatus("MONITORING SYSTEM INITIALIZED");
-        setInterval(processVerification, CONFIG.SCAN_INTERVAL);
+        showToast("STEALTH MONITOR ACTIVE");
+        processVerification();
     };
 
     if (document.readyState === "complete") {
@@ -136,5 +139,4 @@
     } else {
         window.addEventListener("load", bootstrap);
     }
-
 })();

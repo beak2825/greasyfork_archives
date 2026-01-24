@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TorrentBD Shoutbox Manager
 // @namespace    TBD-Shoutbox-Manager
-// @version      1.2.6.1
+// @version      1.2.7
 // @description  Complete shoutbox overhaul
 // @author       CornHub
 // @license      MIT
@@ -3475,6 +3475,111 @@ const MemeCreatorModule = {
 };
 
 
+
+// ============================================================================
+// MODULE 14: BBCODE VALIDATOR (Built-in - Always Active)
+// ============================================================================
+
+const BBCodeValidatorModule = {
+    warningElement: null,
+    checkTimeout: null,
+
+    DISALLOWED_BBCODES: [
+        'img', 'color', 'size', 'font', 'b', 'i', 'u', 's',
+        'spoiler', 'center', 'quote', 'df', 'imgw'
+    ],
+
+createWarningElement() {
+    if (this.warningElement) return;
+    this.warningElement = document.createElement('div');
+    this.warningElement.id = 'bbcode-warning';
+    this.warningElement.style.cssText = `
+        display: none;
+        position: absolute;
+        top: 45px;
+        right: 12px;
+        background: rgba(220, 38, 38, 0.15);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1.5px solid rgba(239, 68, 68, 0.4);
+        color: #ef4444;
+        padding: 10px 16px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        box-shadow: 0 4px 16px rgba(220, 38, 38, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05);
+        animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 10000;
+        pointer-events: none;
+        letter-spacing: 0.3px;
+    `;
+    this.warningElement.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span style="vertical-align: middle;">BBCode is not allowed. Read rules.</span>
+        <img src="https://www.torrentbd.net/images/smilies/an_slap.gif"
+             alt="slap"
+             style="display: inline-block; vertical-align: middle; margin-left: 8px; height: 24px; width: auto;">
+    `;
+    const container = document.getElementById('shoutbox-container');
+    if (container) {
+        container.style.position = 'relative';
+        container.appendChild(this.warningElement);
+    }
+},
+
+    checkForBBCode(text) {
+        // Check for disallowed BBCode patterns
+        const pattern = new RegExp(`\\[(${this.DISALLOWED_BBCODES.join('|')})(=.*?)?\\]`, 'i');
+        return pattern.test(text);
+    },
+
+    showWarning() {
+        if (this.warningElement) {
+            this.warningElement.style.display = 'flex';
+            this.warningElement.style.alignItems = 'center';
+        }
+    },
+
+    hideWarning() {
+        if (this.warningElement) {
+            this.warningElement.style.display = 'none';
+        }
+    },
+
+    handleInput(e) {
+        clearTimeout(this.checkTimeout);
+
+        this.checkTimeout = setTimeout(() => {
+            const text = e.target.value;
+
+            if (this.checkForBBCode(text)) {
+                this.showWarning();
+            } else {
+                this.hideWarning();
+            }
+        }, 300);
+    },
+
+    init() {
+        const shoutInput = document.querySelector('#shout_text');
+        if (!shoutInput) return;
+
+        this.createWarningElement();
+
+        shoutInput.addEventListener('input', (e) => this.handleInput(e));
+
+        // Hide warning when sending message
+        const sendBtn = document.getElementById('sendShoutBtn');
+        if (sendBtn) {
+            sendBtn.addEventListener('click', () => this.hideWarning());
+        }
+    }
+};
+
     // ============================================================================
     // SETTINGS UI
     // ============================================================================
@@ -4782,6 +4887,17 @@ const MemeCreatorModule = {
             transform: translateY(0);
         }
 
+/* BBCode Warning Animation */
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
         /* Mappings */
         .tbdm-mapping-header {
             display: flex;
@@ -5103,6 +5219,7 @@ const MemeCreatorModule = {
         if (CONFIG.gif_picker_enabled) GifPickerModule.init();
         if (CONFIG.image_viewer_enabled) ImageViewerModule.init();
         if (CONFIG.meme_creator_enabled) MemeCreatorModule.init();
+        BBCodeValidatorModule.init();
 
 
         UIImprovementsModule.init();

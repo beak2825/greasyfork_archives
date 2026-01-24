@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Global Video Controls Hotkeys for Nontonime
 // @namespace    https://github.com/dngda
-// @version      1.0.3
+// @version      1.0.4
 // @description  Adds global video control hotkeys (space: play/pause, left/right: seek -5s/+5s) to Nontonime website.
 // @author       @dngda
 // @match        https://nontonime.vercel.app/anime/*
@@ -150,8 +150,8 @@
                             0,
                             Math.min(
                                 video.duration,
-                                video.currentTime + pendingSeekTime
-                            )
+                                video.currentTime + pendingSeekTime,
+                            ),
                         );
                         pendingSeekTime = 0;
                         isSeeking = false;
@@ -175,6 +175,30 @@
                         video.parentElement.requestFullscreen();
                         hideCursor();
                     }
+                    break;
+
+                case "Digit0":
+                case "Digit1":
+                case "Digit2":
+                case "Digit3":
+                case "Digit4":
+                case "Digit5":
+                case "Digit6":
+                case "Digit7":
+                case "Digit8":
+                case "Digit9":
+                    event.preventDefault();
+                    const digit = parseInt(event.code.replace("Digit", ""));
+                    const percentage = digit * 10;
+                    const targetTime = (video.duration * percentage) / 100;
+                    video.currentTime = targetTime;
+
+                    const minutes = Math.floor(targetTime / 60);
+                    const seconds = Math.floor(targetTime % 60);
+                    showToast(
+                        `${percentage}% (${minutes}:${seconds.toString().padStart(2, "0")})`,
+                        true,
+                    );
                     break;
             }
         });

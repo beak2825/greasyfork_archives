@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         SENASA – Sumar Peso Neto (todas las páginas)
+// @name         SENASA – Sumar Peso Neto por categorías
 // @namespace    https://github.com/TU_USUARIO/senasa-peso-neto
-// @version      1.5.0
-// @description  Suma el Peso Neto de todos los certificados TXT en SENASA, incluyendo todas las páginas de resultados.
+// @version      2.6.0
+// @description  Suma el Peso Neto de certificados TXT en SENASA, separando por País Destino y Establecimiento Emisor.
 // @author       Tu Nombre
 // @match        https://aps2.senasa.gov.ar/certificaciones/*
 // @grant        none
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/563408/SENASA%20%E2%80%93%20Sumar%20Peso%20Neto%20%28todas%20las%20p%C3%A1ginas%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563408/SENASA%20%E2%80%93%20Sumar%20Peso%20Neto%20%28todas%20las%20p%C3%A1ginas%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563408/SENASA%20%E2%80%93%20Sumar%20Peso%20Neto%20por%20categor%C3%ADas.user.js
+// @updateURL https://update.greasyfork.org/scripts/563408/SENASA%20%E2%80%93%20Sumar%20Peso%20Neto%20por%20categor%C3%ADas.meta.js
 // ==/UserScript==
 
 (function () {
@@ -73,6 +73,9 @@
         panel.textContent = 'Procesando...\n';
 
         let totalGeneral = 0;
+        let totalArgentina = 0;
+        let totalGrupo1 = 0; // Establecimientos 2062, 3676, 1918
+        let totalGrupo2 = 0; // Establecimientos 3574, 4073, 2085, 3203
 
         const botonesTxt = Array.from(
             document.querySelectorAll(
@@ -88,6 +91,8 @@
             const name = boton.getAttribute('name');
             const rowId = `ROW_${i}`;
             let totalArchivo = 0;
+            let paisDestino = null;
+            let establecimiento = null;
 
             const formData = new FormData(form);
             formData.append(name, name);
@@ -103,9 +108,22 @@
                 const lineas = txt.split('\n');
 
                 lineas.forEach(linea => {
-                    const match = linea.match(/Peso\s+Neto\s*:?\s*([\d.]+)/i);
-                    if (match) {
-                        const valor = parseFloat(match[1]);
+                    // Buscar "País Destino :"
+                    const matchDestino = linea.match(/País\s+Destino\s*:\s*(.+)/i);
+                    if (matchDestino) {
+                        paisDestino = matchDestino[1].trim();
+                    }
+
+                    // Buscar "Establecimiento Emisor :"
+                    const matchEst = linea.match(/Establecimiento\s+Emisor\s*:\s*(\d+)/i);
+                    if (matchEst) {
+                        establecimiento = matchEst[1].trim();
+                    }
+
+                    // Buscar "Peso Neto"
+                    const matchPeso = linea.match(/Peso\s+Neto\s*:?\s*([\d.,]+)/i);
+                    if (matchPeso) {
+                        const valor = parseFloat(matchPeso[1].replace(',', '.'));
                         if (!isNaN(valor)) {
                             totalArchivo += valor;
                         }
@@ -115,16 +133,31 @@
                 totalArchivo = Number(totalArchivo.toFixed(2));
                 totalGeneral += totalArchivo;
 
-                panel.textContent += `${rowId} (${name}): ${totalArchivo.toFixed(2)}\n`;
+                // Acumular según país destino
+                if (paisDestino && paisDestino.toLowerCase() === "argentina") {
+                    totalArgentina += totalArchivo;
+                }
+
+                // Acumular según establecimiento
+                if (establecimiento) {
+                    if (["2062", "3676", "1918"].includes(establecimiento)) {
+                        totalGrupo1 += totalArchivo;
+                    } else if (["3574", "4073", "2085", "3203"].includes(establecimiento)) {
+                        totalGrupo2 += totalArchivo;
+                    }
+                }
+
+                panel.textContent += `${rowId} (${name}) → País Destino: ${paisDestino || "N/A"} → Establecimiento: ${establecimiento || "N/A"} → ${totalArchivo.toFixed(2)}\n`;
 
             } catch (err) {
                 panel.textContent += `${rowId}: ERROR\n`;
             }
         }
 
-        totalGeneral = Number(totalGeneral.toFixed(2));
-
         panel.textContent += '\n----------------------\n';
+        panel.textContent += `TOTAL ARGENTINA: ${totalArgentina.toFixed(2)}\n`;
+        panel.textContent += `TOTAL Grupo Establecimientos [2062, 3676, 1918]: ${totalGrupo1.toFixed(2)}\n`;
+        panel.textContent += `TOTAL Grupo Establecimientos [3574, 4073, 2085, 3203]: ${totalGrupo2.toFixed(2)}\n`;
         panel.textContent += `TOTAL GENERAL: ${totalGeneral.toFixed(2)}`;
     };
 

@@ -10,7 +10,7 @@
 // @grant        GM_addStyle
 // @grant        GM_xmlhttpRequest
 // @run-at       document-start
-// @version      2.9
+// @version      3.0
 // @author       Gemini
 // @license      GPLv3
 // @icon      data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAABmJLR0QA/wD/AP+gvaeTAAABZElEQVR4nO3cQUrEMBiAURXv5QFceVJXHsCT6VYGpA5J+6X2vbVI4OPvZNJpHx4AAICredz6g5e3j68jFvKbz/fXzTX+dLb1Pu21EP5GgJgAMQFiAsQEiAkQex79B/fue28dvW9fbb0mICZATIDY8GfAra1r5Og1eLZ6vSYgJkBMgJgAMQFiAsQEiE3/HrDaPn9LvV4TEBMgJkBs+DOg/h3OvVZbrwmICRATICZATICYADEBYrufg4zecx3dt89+vmD22ZEJiAkQEyAmQEyAmAAxAWLDe9p6nz/b6Ho9J3wyAsQEiG3eEx69Rq92jV+NCYgJEBMgdvr3BdXPeI0yATEBYgLELveuiL3PrpwFncz0J2Rmq3dhezMBscu/K6JmAmICxASILb8Lmm21syUTEFt+As72q4p7mYDY5d8VUTMBMQFiAsSWvye85ehnwNwP+GcEiAkQEyAmQEyAmAAAAAAAcJBvjUVu7tMNP9IAAAAASUVORK5CYII=
@@ -731,7 +731,7 @@
         ctx.drawImage(tempCanvas, 0, 0, curW, curH, targetX, targetY, targetW, targetH);
     }
 
-    function processImage(imageObj, canvas, context, targetEl, cacheKey, force, type, displayWidth, displayHeight, cropRect, prevCache) {
+    function processImage(imageObj, canvas, context, targetEl, cacheKey, force, type, displayWidth, displayHeight, cropRect) {
         // 1. 获取原始尺寸
         let naturalW = imageObj.naturalWidth;
         let naturalH = imageObj.naturalHeight;
@@ -743,18 +743,16 @@
         // 标记：是否必须使用 5 参数模式 (SVG 或 无尺寸图片)
         const forceSimpleMode = isSVG || isUnknownSize;
 
-        // 如果没有原始尺寸（通常是某些 SVG） 才使用显示尺寸兜底
-        // 如果 SVG 有原始尺寸（如 width="1000"） 则保留原始尺寸以获得更高清晰度
         if (isUnknownSize) {
             naturalW = displayWidth || 300;
             naturalH = displayHeight || 300;
         }
 
-        // 2. 计算目标尺寸
+        // 2. 计算目标尺寸 (初始为原图尺寸)
         let targetW = naturalW;
         let targetH = naturalH;
 
-        // 仅在框选模式下计算裁剪尺寸
+        // 如果是框选模式 先计算裁剪后的理论尺寸
         if (cropRect && !forceSimpleMode) {
             const scaleX = naturalW / displayWidth;
             const scaleY = naturalH / displayHeight;
@@ -763,17 +761,30 @@
         }
 
         // === 关键修改：缩放限制逻辑 ===
-        // 只有在【框选模式】下才执行缩小 (为了性能和聚焦)
-        // 【全图模式】下始终保持 1:1 原始分辨率 (为了最高识别率)
+        let shouldDownscale = false;
+
         if (cropRect) {
-            // 如果 cropRect.noScale 为 true 则跳过缩小逻辑
-            if (!cropRect.noScale) {
-                const maxDim = Math.max(targetW, targetH);
-                if (maxDim > CROP_TARGET_SIZE) {
-                    const scale = CROP_TARGET_SIZE / maxDim;
-                    targetW *= scale;
-                    targetH *= scale;
-                }
+            // 场景 A: 框选模式
+            // 默认缩小 除非开启了 noScale (原图框选)
+            if (!cropRect.noScale) shouldDownscale = true;
+        } else {
+            // 场景 B: 全图模式
+            if (!force) {
+                // 1. 悬停自动解析 -> 强制缩小 (提升性能)
+                shouldDownscale = true;
+            } else {
+                // 2. 右键强制解析 -> 不缩小 (保留原图细节)
+                shouldDownscale = false;
+            }
+        }
+
+        // 执行缩小计算
+        if (shouldDownscale) {
+            const maxDim = Math.max(targetW, targetH);
+            if (maxDim > CROP_TARGET_SIZE) {
+                const scale = CROP_TARGET_SIZE / maxDim;
+                targetW *= scale;
+                targetH *= scale;
             }
         }
 
@@ -787,7 +798,7 @@
 
         // 4. 绘制图像
         if (cropRect && !forceSimpleMode) {
-            // 【模式 A：位图裁剪】(仅框选且非SVG)
+            // 【模式 A：位图裁剪】
             const scaleX = naturalW / displayWidth;
             const scaleY = naturalH / displayHeight;
 
@@ -802,25 +813,24 @@
             if (sourceX + sourceW > naturalW) sourceW = naturalW - sourceX;
             if (sourceY + sourceH > naturalH) sourceH = naturalH - sourceY;
 
-            // 框选模式下 targetW 已经被限制在 500px 以内 smartDownscale 会自动处理缩放
             smartDownscale(imageObj, context, sourceX, sourceY, sourceW, sourceH, padding, padding, targetW, targetH);
 
         } else {
-            // 【模式 B：全图模式】(SVG 或 全图位图)
+            // 【模式 B：全图模式】
             if (forceSimpleMode) {
-                // SVG: 浏览器原生绘制 (矢量无损)
+                // SVG: 浏览器原生绘制
                 context.imageSmoothingEnabled = true;
                 context.imageSmoothingQuality = 'high';
                 context.drawImage(imageObj, padding, padding, targetW, targetH);
             } else {
-                // 位图全图:
-                // 因为移除了尺寸限制 targetW 等于 naturalW
-                // smartDownscale 内部检测到源尺寸和目标尺寸一致时 会直接绘制 不会产生性能损耗
+                // 位图全图: 使用 smartDownscale
+                // 如果 shouldDownscale 为 true 这里会自动执行高质量缩小
+                // 如果 shouldDownscale 为 false 这里就是原图绘制
                 smartDownscale(imageObj, context, 0, 0, naturalW, naturalH, padding, padding, targetW, targetH);
             }
         }
 
-        runScanPipeline(canvas, context, targetEl, force, type, cacheKey, !!cropRect, prevCache);
+        runScanPipeline(canvas, context, targetEl, force, type, cacheKey, !!cropRect);
     }
 
     // ==========================================

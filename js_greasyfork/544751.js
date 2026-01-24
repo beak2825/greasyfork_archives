@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Harmony: Enhancements
 // @namespace    https://musicbrainz.org/user/chaban
-// @version      1.22.2
+// @version      1.24.0
 // @tag          ai-created
 // @description  Adds some convenience features, various UI and behavior settings, as well as an improved language detection to Harmony.
 // @author       chaban
@@ -32,16 +32,6 @@
     // The top-level keys of this object MUST match the function names in the `enhancements` object.
     const SETTINGS_CONFIG = {
         // Seeder Behavior
-        skipConfirmation: {
-            key: 'enhancements.seeder.skipConfirmation',
-            label: 'Skip MusicBrainz confirmation page when adding a new release',
-            description: 'Automatically skips the interstitial page when seeding data from external pages.',
-            defaultValue: false,
-            section: 'Seeder Behavior',
-            type: 'checkbox',
-            runAt: 'submit',
-            formName: 'release-seeder',
-        },
         updateProperties: {
             key: 'enhancements.seeder.updateProperties',
             label: 'Include GTIN and packaging when updating an existing release',
@@ -114,16 +104,6 @@
             type: 'checkbox',
             runAt: 'load',
             paths: [/^\/$/, /^\/release(?!\/actions)/],
-        },
-        addActionsRelookupLink: {
-            key: 'enhancements.ui.actionsRelookup',
-            label: 'Add "Re-Lookup" link on Release Actions page',
-            description: 'Adds a link to re-lookup a release from the Harmony release actions page.',
-            defaultValue: true,
-            section: 'Convenience Features',
-            type: 'checkbox',
-            runAt: 'load',
-            paths: [/^\/release\/actions/],
         },
 
         // Release Data
@@ -1414,29 +1394,6 @@
             });
         },
 
-        addActionsRelookupLink: () => {
-            if (document.getElementById('he-relookup-link-container')) return;
-            const { actionsHeader } = AppState.dom;
-            if (!actionsHeader) return;
-
-            const mbid = new URLSearchParams(window.location.search).get('release_mbid');
-            if (!mbid) return;
-
-            const params = new URLSearchParams({ musicbrainz: mbid });
-            document.querySelectorAll('.provider-list li').forEach(item => {
-                const pName = item.getAttribute('data-provider')?.toLowerCase();
-                const pId = item.querySelector('.provider-id')?.textContent.trim();
-                if (pName && pId) params.set(pName, pId);
-            });
-
-            const url = `/release?${params.toString()}`;
-            const container = document.createElement('div');
-            container.id = 'he-relookup-link-container';
-            container.className = 'message';
-            container.innerHTML = `<svg class="icon" width="24" height="24" stroke-width="2"><use xlink:href="/icon-sprite.svg#brand-metabrainz"></use></svg><p><a href="${url}">Re-Lookup with Harmony</a></p>`;
-            actionsHeader.parentNode.insertBefore(container, actionsHeader.nextSibling);
-        },
-
         makePermalinkCopyable: () => {
             const { permaLink } = AppState.dom;
             if (!permaLink || permaLink.hasAttribute(DATA_ATTRIBUTE_APPLIED)) return;
@@ -2241,14 +2198,6 @@
             createAndInsertMessage('he-artist-sync', messageContent, 'debug', ['he-release-type-override', 'he-language-analysis']);
         },
 
-        skipConfirmation: (form) => {
-            const url = new URL(form.action);
-            if (!url.searchParams.has('skip_confirmation')) {
-                url.searchParams.set('skip_confirmation', '1');
-                form.action = url.toString();
-            }
-
-        },
         cleanArtistNames: () => {
             const clean = (artists) => {
                 if (!Array.isArray(artists)) return;

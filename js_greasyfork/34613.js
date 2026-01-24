@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name YouTube™ Multi Downloader v11.2 🌐 (PC & Mobile 🚀) — AdBlock, Zero ADS 🚫🔥 | Shorts, Videos & Music
-// @name:pt-BR YouTube™ Multi Downloader v11.2 🌐 (PC & Mobile 🚀) — AdBlock, Zero ADS 🚫🔥 | Shorts, Videos & Music
+// @name YouTube™ Multi Downloader v11.3 🌐 (PC & Mobile 🚀) — AdBlock, Zero ADS 🚫🔥 | Shorts, Videos & Music
+// @name:pt-BR YouTube™ Multi Downloader v11.3 🌐 (PC & Mobile 🚀) — AdBlock, Zero ADS 🚫🔥 | Shorts, Videos & Music
 // @description Adds a floating button to download YouTube videos, Shorts, and music in high quality, with built-in ad blocking for a fast and smooth experience. 
 // @description:pt-BR Adiciona um botão flutuante para baixar vídeos, Shorts e músicas do YouTube em alta qualidade, com bloqueio de anúncios integrado para uma experiência rápida e suave.
 // @description:ar Adds a floating button to download YouTube videos, Shorts, and music in high quality, with built-in ad blocking for a fast and smooth experience.
@@ -39,8 +39,8 @@
 // @homepageURL https://greasyfork.org/scripts/34613
 // @supportURL https://greasyfork.org/scripts/34613/feedback
 // @author Punisher
-// @version 11.2 RTM
-// @date 2026-01-22
+// @version 11.3 RTM
+// @date 2026-01-23
 // @icon https://iili.io/fOyuFFS.png
 // @compatible chrome
 // @compatible firefox
@@ -52,18 +52,18 @@
 // @match https://music.youtube.com/*
 // @grant GM_addStyle
 // @run-at document-idle
-// @downloadURL https://update.greasyfork.org/scripts/34613/YouTube%E2%84%A2%20Multi%20Downloader%20v112%20%F0%9F%8C%90%20%28PC%20%20Mobile%20%F0%9F%9A%80%29%20%E2%80%94%20AdBlock%2C%20Zero%20ADS%20%F0%9F%9A%AB%F0%9F%94%A5%20%7C%20Shorts%2C%20Videos%20%20Music.user.js
-// @updateURL https://update.greasyfork.org/scripts/34613/YouTube%E2%84%A2%20Multi%20Downloader%20v112%20%F0%9F%8C%90%20%28PC%20%20Mobile%20%F0%9F%9A%80%29%20%E2%80%94%20AdBlock%2C%20Zero%20ADS%20%F0%9F%9A%AB%F0%9F%94%A5%20%7C%20Shorts%2C%20Videos%20%20Music.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/34613/YouTube%E2%84%A2%20Multi%20Downloader%20v113%20%F0%9F%8C%90%20%28PC%20%20Mobile%20%F0%9F%9A%80%29%20%E2%80%94%20AdBlock%2C%20Zero%20ADS%20%F0%9F%9A%AB%F0%9F%94%A5%20%7C%20Shorts%2C%20Videos%20%20Music.user.js
+// @updateURL https://update.greasyfork.org/scripts/34613/YouTube%E2%84%A2%20Multi%20Downloader%20v113%20%F0%9F%8C%90%20%28PC%20%20Mobile%20%F0%9F%9A%80%29%20%E2%80%94%20AdBlock%2C%20Zero%20ADS%20%F0%9F%9A%AB%F0%9F%94%A5%20%7C%20Shorts%2C%20Videos%20%20Music.meta.js
 // ==/UserScript==
 
-(function() {
+(function() { 
   "use strict";
 
   let video;
   const floatBtnID = "ytPunisherBtn";
   const btnColor = "#575656";
   const punisherURL = "//exploreai.ca/convert/?id=";
-  const cssSelectorArr = [".video-ads.ytp-ad-module,#player-ads .ytp-ad-module,.ytp-ad-player-overlay,.ytp-ad-preview-container,.ytp-ad-progress-list,.ytp-ad-skip-button,.ytp-ad-skip-button-modern,.ytp-ad-chrome-button,.ytp-ad-persistent-progress-bar,.ytp-featured-product,.ytp-suggested-action,#related ytd-ad-slot-renderer,#related #player-ads,#related .#-ad-,ytd-companion-ad-renderer,.ytd-watch-next-secondary-results-renderer ytd-ad-slot-renderer,yt-mealbar-promo-renderer,tp-yt-paper-dialog:has(yt-mealbar-promo-renderer),ytd-popup-container:has(a[href='/premium']),ytmusic-mealbar-promo-renderer,ytmusic-statement-banner-renderer,ytd-promoted-sparkles-web-renderer,.ytd-promoted-video-renderer,.ytd-promoted-sparkles-text-search-renderer,.ytd-sponsor-message-renderer,.ytd-display-ad-renderer,.ytd-display-ad-notice-renderer,.ad-container,ad-slot-renderer,ytd-shorts-ad-renderer,ytd-reel-shelf-renderer ytd-ad-slot-renderer,ytd-reel-video-renderer ytd-ad-slot-renderer,#shorts-player ytd-ad-slot-renderer,ytm-companion-ad-renderer,ytd-endpoint-ad-renderer,#masthead-ad,ytd-merch-shelf-renderer,ytd-rich-item-renderer.style-scope.ytd-rich-grid-row #content:has(.ytd-display-ad-renderer),ytd-engagement-panel-section-list-renderer[target-id='engagement-panel-ads'],#panels > ytd-engagement-panel-section-list-renderer[target-id='engagement-panel-ads']"];
+  const cssSelectorArr = [".video-ads.ytp-ad-module","#player-ads .ytp-ad-module",".ytp-ad-player-overlay",".ytp-ad-preview-container",".ytp-ad-progress-list",".ytp-ad-skip-button",".ytp-ad-skip-button-modern",".ytp-ad-chrome-button",".ytp-ad-persistent-progress-bar",".yt-featured-product",".ytp-suggested-action",".ytp-ad-button",".ytp-ad-overlay-container",".ytp-ad-progress",".ytp-ad-text",".ytp-ad-overlay-slot",".ytp-ad-top-slot",".ytp-ad-bottom-slot","ytd-reel-shelf-renderer ytd-ad-slot-renderer","ytd-reel-video-renderer ytd-ad-slot-renderer","#shorts-player ytd-ad-slot-renderer",".ytd-display-ad-renderer",".ytd-display-ad-notice-renderer",".ad-container","ad-slot-renderer","ytd-shorts-ad-renderer","ytm-companion-ad-renderer","ytd-endpoint-ad-renderer","#related ytd-ad-slot-renderer","#related #player-ads","#related .#-ad-","ytd-companion-ad-renderer","ytd-watch-next-secondary-results-renderer ytd-ad-slot-renderer",".ytd-rich-item-renderer.style-scope.ytd-rich-grid-row #content:has(.ytd-display-ad-renderer)","#masthead-ad","#player-ads",".ytd-merch-shelf-renderer","ytd-engagement-panel-section-list-renderer[target-id='engagement-panel-ads']","#panels > ytd-engagement-panel-section-list-renderer[target-id='engagement-panel-ads']","ytd-popup-container:has(a[href='/premium'])","tp-yt-paper-dialog:has(yt-mealbar-promo-renderer)","ytmusic-mealbar-promo-renderer","ytmusic-statement-banner-renderer",".ytd-promoted-video-renderer",".ytd-promoted-sparkles-web-renderer",".ytd-promoted-sparkles-text-search-renderer",".ytd-sponsor-message-renderer",".ytd-reel-shelf-renderer ytd-ad-slot-renderer:has(.yt-sparkle-overlay)","ytd-reel-video-renderer ytd-ad-slot-renderer:has(.yt-sparkle-overlay)","#secondary ytd-compact-promoted-video-renderer","#secondary ytd-promoted-sparkles-web-renderer","#secondary ytd-rich-item-renderer:has(.ytd-display-ad-renderer)","ytm-companion-ad-renderer",".ytd-endpoint-ad-renderer","ytd-rich-section-renderer:has(ytd-display-ad-renderer)",".ytd-video-masthead-ad",".ytp-ad-image-overlay",".ytp-ad-click-target",".ytp-ad-annotation",".ytp-ad-quiz-overlay",".ytp-ad-companion-slot"];
 
   const checkRunFlag = id => {
     if (document.getElementById(id)) return true;

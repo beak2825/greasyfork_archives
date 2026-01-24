@@ -1,171 +1,76 @@
 // ==UserScript==
-// @name SearX Proxified Image Source
+// @name SearX: Link to proxified image
 // @namespace -
-// @version 1.0.0
-// @description changes original href link to proxified.
+// @version 1.1.0
+// @description changes original href link of the image to proxified. Instances list updates automatically every 2 weeks
 // @author NotYou
-// @include *searx.fmac.xyz/*
-// @include *searx.be/*
-// @include *serx.ml/*
-// @include *searx.tiekoetter.com/*
-// @include *paulgo.io/*
-// @include *search.unlocked.link/*
-// @include *search.sapti.me/*
-// @include *search.rhscze.cf/*
-// @include *priv.au/*
-// @include *search.bus-hit.me/*
-// @include *notsearch.uk/*
-// @include *northboot.xyz/*
-// @include *opnxng.com/*
-// @include *searx.ebnar.xyz/*
-// @include *searxng.nicfab.eu/*
-// @include *searx.tuxcloud.net/*
-// @include *search.rabbit-company.com/*
-// @include *search.chemicals-in-the-water.eu/*
-// @include *searx.namejeff.xyz/*
-// @include *swag.pw/*
-// @include *search.smnz.de/*
-// @include *trydex.tk/*searxng/
-// @include *searx.prvcy.eu/*
-// @include *searx.oakleycord.dev/*
-// @include *searx.mha.fi/*
-// @include *sh0.it/*
-// @include *metasearch.nl/*
-// @include *search.mdosch.de/*
-// @include *searx.ericaftereric.top/*
-// @include *searxngsearch.com/*
-// @include *search.drivet.xyz/*
-// @include *de.xcxc.ml/*
-// @include *searx.sev.monster/*
-// @include *searx.baczek.me/*
-// @include *search.rowie.at/*
-// @include *search.cronobox.one/*
-// @include *searx.fi/*
-// @include *ooglester.com/*
-// @include *xo.wtf/*
-// @include *s.frlt.one/*
-// @include *s.zhaocloud.net/*
-// @include *www.gruble.de/*
-// @include *search.projectsegfau.lt/*
-// @include *search.gcomm.ch/*
-// @include *searx.priv.pw/*
-// @include *search.zzls.xyz/*
-// @include *searx.chocoflan.net/*
-// @include *searx.mistli.net/*
-// @include *s.trung.fun/*
-// @include *searxng.zackptg5.com/*
-// @include *searx.rimkus.it/*
-// @include *searx.org/*
-// @include *search.mpx.wtf/*
-// @include *search.disroot.org/*
-// @include *search.privacyguides.net/*
-// @include *searx.esmailelbob.xyz/*
-// @include *search.vidhukant.xyz/*
-// @include *searx.sethforprivacy.com/*
-// @include *search.serginho.dev/*
-// @include *search.affusio.com/*
-// @include *searx.juancord.xyz/*
-// @include *searxng.dupa.edu.pl/*
-// @include *darmarit.org/*searx/
-// @include *search.neet.works/*
-// @include *searx.zcyph.cc/*
-// @include *search.teamriverbubbles.com/*
-// @include *jackgoss.xyz/*
-// @include *etsi.me/*
-// @include *soek.allesbeste.com/*
-// @include *search.uspersec.com/*
-// @include *saber.tk/*
-// @include *search.kiwitalk.de/*
-// @include *search.0relay.com/*
-// @include *srx.cosmohub.io/*
-// @include *privatus.live/*
-// @include *searx.kujonello.cf/*
-// @include *searx.becomesovran.com/*
-// @include *searx.gnous.eu/*
-// @include *searx.orion-hub.fr/*
-// @include *searx.slipfox.xyz/*searx/
-// @include *searx.ru/*
-// @include *searx.webheberg.info/*
-// @include *searx.mastodontech.de/*
-// @include *searx.dresden.network/*
-// @include *searx.sp-codes.de/*
-// @include *searx.xyz/*
-// @include *searx.win/*
-// @include *searx.roflcopter.fr/*
-// @include *searx.netzspielplatz.de/*
-// @include *sx.catgirl.cloud/*
-// @include *suche.tromdienste.de/*
-// @include *search.trom.tf/*
-// @include *searx.mxchange.org/*
-// @include *searx.tyil.nl/*
-// @include *search.stinpriza.org/*
-// @include *salsa.debian.org/*debian/searx
-// @include *searx.bissisoft.com/*
-// @include *searx.stuehieyr.com/*
-// @include *searx.gnu.style/*
-// @include *searx.divided-by-zero.eu/*
-// @include *dynabyte.ca/*
-// @include *search.snopyta.org/*
-// @include *searxng.ir/*
-// @include *searx.run/*
-// @include *searx.nakhan.net/*
-// @include *searx.nixnet.services/*
-// @include *timdor.noip.me/*searx/
-// @include *search.ethibox.fr/*
-// @include *searx.zapashcanon.fr/*
-// @include *searx.vanwa.tech/*
-// @include *spot.ecloud.global/*
-// @include *jsearch.pw/*
-// @include *www.webrats.xyz/*
-// @grant none
-// @run-at document-idle
+// @match *://*/*
+// @grant GM.xmlHttpRequest
+// @grant GM.setValue
+// @grant GM.getValue
+// @connect searx.space
+// @run-at document-start
 // @license GPL-3.0
-// @downloadURL https://update.greasyfork.org/scripts/437299/SearX%20Proxified%20Image%20Source.user.js
-// @updateURL https://update.greasyfork.org/scripts/437299/SearX%20Proxified%20Image%20Source.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/437299/SearX%3A%20Link%20to%20proxified%20image.user.js
+// @updateURL https://update.greasyfork.org/scripts/437299/SearX%3A%20Link%20to%20proxified%20image.meta.js
 // ==/UserScript==
 
-var not_jQuery = class {
-    constructor(el, els) {
-        this.el = el instanceof HTMLElement ? el : document.querySelector(el)
-        this.els = el instanceof HTMLElement ? [el] : Array.from(document.querySelectorAll(el))
+!async function () {
+    'use strict';
+
+    const getLinkNode = node => {
+        if (node.tagName.toLowerCase() === 'a') {
+            return node
+        } else if (node.tagName.toLowerCase() === 'html' || !node.tagName) {
+            return null
+        }
+
+        return getLinkNode(node.parentNode)
     }
 
-    each(fn) {
-        if(this.els) {
-            for (let i = 0; i < this.els.length; i++) {
-                fn(new not_jQuery(this.els[i]))
+    const getInstances = async () => {
+        return new Promise(async (resolve, reject) => {
+            const instances = await GM.getValue('instances', {})
+            const instancesLastUpdate = await GM.getValue('instancesLastUpdate', '1970-01-01T00:00:00.000Z')
+            const instancesLastUpdateDate = new Date(instancesLastUpdate)
+
+            instancesLastUpdateDate.setDate(instancesLastUpdateDate.getDate() + 14)
+
+            const currentDate = new Date()
+
+            if (currentDate > instancesLastUpdateDate) {
+                GM.xmlHttpRequest({
+                    url: 'https://searx.space/data/instances.json',
+                    responseType: 'json',
+                    onload: async ({ response }) => {
+                        const instances = Object.keys(response.instances)
+
+                        await GM.setValue('instances', instances)
+                        await GM.setValue('instancesLastUpdate', currentDate.toJSON())
+
+                        resolve(instances)
+                    },
+                    onerror: reject
+                })
+            } else {
+                return resolve(null)
             }
-        }
+        })
     }
 
-    attr(name, value) {
-        if(!value) {
-            return this.el.getAttribute(name)
-        }
+    const instances = await getInstances()
 
-        return this.el.setAttribute(name, value)
-    }
+    if (instances === null) return
 
-    parent() {
-        return new not_jQuery(this.el.parentNode)
-    }
-}
+    const foundHost = instances.find(instance => instance.includes(location.host))
 
-$('.img-thumbnail').each(e => {
-    let src = e.attr('src')
-    e.parent().attr('href', src)
-})
+    if (typeof foundHost === 'undefined') return
 
-$('.image-thumbnail').each(e => {
-    let src = e.attr('src')
-    e.parent().attr('href', src)
-})
+    document.querySelectorAll('.img-thumbnail, .image-thumbnail, .image_thumbnail').forEach($imageThumb => {
+        const $link = getLinkNode($imageThumb)
 
-$('.image_thumbnail').each(e => {
-    let src = e.attr('src')
-    e.parent().attr('href', src)
-})
+        if ($link === null) return
 
-function $(selector) {
-    return new not_jQuery(selector)
-}
+        $link.href = $imageThumb.src
+    })
+}()

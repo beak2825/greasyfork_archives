@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         YouTube No Saturated Hover
 // @namespace    https://greasyfork.org/users/1476331-jon78
-// @version      1.2.3
+// @version      1.2.4
 // @description  Removes YouTube's 2025 saturated hover effects.
 // @author       jon78
-// @license      CC0
+// @license      CC0-1.0
 // @match        *://*.youtube.com/*
 // @icon         https://www.youtube.com/favicon.ico
 // @run-at       document-idle
@@ -160,11 +160,19 @@ ytd-watch-metadata, .ytd-watch-metadata {
   padding-bottom: 1px !important;
 }
 
-/* Home / rich grid metadata must stay secondary */
+/* Home metadata color */
 .yt-content-metadata-view-model__metadata-text,
 .yt-content-metadata-view-model__metadata-text span,
 .yt-content-metadata-view-model__delimiter {
   color: var(--yt-spec-text-secondary, var(--ytc-text-secondary)) !important;
+}
+
+/* Fix transparent header background */
+ytd-masthead[is-watch-page][dark]:not([theater]):not([fullscreen]) #background.ytd-masthead,
+ytd-masthead[is-shorts-page][dark] #background.ytd-masthead,
+#background.ytd-masthead {
+opacity: 1 !important;
+background: var(--yt-spec-base-background, var(--ytc-base-background)) !important;
 }
 `).trim();
   };
@@ -207,7 +215,7 @@ ytd-watch-metadata, .ytd-watch-metadata {
   /* --------------------------
      Retry-based playlist finder
   -------------------------- */
-  const MAX_RAF_ATTEMPTS = 60; // ~1s at 60Hz; tweak if needed
+  const MAX_RAF_ATTEMPTS = 60;
   let rafAttempts = 0;
   let playlistRafId = null;
 

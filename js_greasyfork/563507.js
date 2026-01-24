@@ -1,12 +1,14 @@
 // ==UserScript==
-// @name         Jp-Books2Douban
+// @name         J-Biblio2Dou
 // @namespace    http://tampermonkey.net/
-// @version      1.31
-// @description  Hanmoto: openBD + hanmoto sections(目次/著者プロフィール + cover); CiNii: RIS + 内容説明・目次 + cover; then fill Douban new_subject (3 steps incl. cover download)
+// @version      2.00
+// @description  Hanmoto: openBD + hanmoto sections(目次/著者プロフィール + cover); CiNii: RIS + 内容説明・目次 + cover; fill Douban new_subject; add shortcuts on Douban search pages
 // @author       千叶ゃ
 // @match        *://*.hanmoto.com/bd/isbn/*
 // @match        *://ci.nii.ac.jp/ncid/*
 // @match        *://book.douban.com/new_subject*
+// @match        *://www.douban.com/search*
+// @match        *://search.douban.com/book/subject_search*
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_xmlhttpRequest
@@ -18,8 +20,8 @@
 // @connect      *
 // @run-at       document-end
 // @license MIT
-// @downloadURL https://update.greasyfork.org/scripts/563507/Jp-Books2Douban.user.js
-// @updateURL https://update.greasyfork.org/scripts/563507/Jp-Books2Douban.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563507/J-Biblio2Dou.user.js
+// @updateURL https://update.greasyfork.org/scripts/563507/J-Biblio2Dou.meta.js
 // ==/UserScript==
 
 (() => {
@@ -105,18 +107,37 @@
         return { main_title: full, subtitle: null };
     };
 
-    const normalizeFormat = (binding) => {
-        if (!binding) return '';
-        const lower = String(binding).toLowerCase();
-        if (lower.includes('paperback')) return 'Paperback';
-        if (lower.includes('hardcover') || lower.includes('hardback')) return 'Hardcover';
-        if (lower.includes('ebook')) return 'eBook';
-        if (lower.includes('audiobook')) return 'Audiobook';
-        if (lower.includes('並製') || lower.includes('ソフトカバー') || lower.includes('ペーパーバック')) return 'Paperback';
-        if (lower.includes('上製') || lower.includes('ハードカバー')) return 'Hardcover';
-        if (lower.includes('電子') || lower.includes('kindle')) return 'eBook';
-        return String(binding).trim();
+    // 姓名规范化：
+    // - 始终去掉逗号/数字
+    // - 含拉丁字母：保留中间空格；保留连字符“-”，并把两边空白规整成无空白（Jean - Paul -> Jean-Paul）
+    // - 纯 CJK（不含拉丁字母）：去掉所有空白；去掉“-”
+    const normalizePersonName = (s) => {
+        let t = String(s || '')
+        .replace(/[,，]/g, '')
+        .replace(/\d+/g, '')
+        .trim();
+
+        const hasLatin = /[A-Za-z]/.test(t);
+        const hasCJK = /[\u3040-\u30FF\u31F0-\u31FF\u3400-\u4DBF\u4E00-\u9FFF]/.test(t);
+
+        if (hasLatin) {
+            // 英文/混合：保留“-”，但规整成无空白连字符
+            t = t.replace(/[　]+/g, ' ');      // 全角空格 -> 半角
+            t = t.replace(/\s*-\s*/g, '-');    // 连字符两边空白去掉
+            t = t.replace(/\s+/g, ' ').trim(); // 其他空白压成单空格
+        } else if (hasCJK) {
+            // 纯 CJK：去掉“-”和全部空白
+            t = t.replace(/-/g, '');
+            t = t.replace(/[\s　]+/g, '');
+        } else {
+            // 既非拉丁也非 CJK：保守处理（不删“-”，只规整空白）
+            t = t.replace(/[　]+/g, ' ');
+            t = t.replace(/\s+/g, ' ').trim();
+        }
+
+        return t;
     };
+
 
     const uniq = (arr) => {
         const out = [];
@@ -129,6 +150,8 @@
         });
         return out;
     };
+
+    const appendSourceNote = (text, note) => (text ? `${text}\n\n(${note})` : text);
 
     const gmGetJson = (url) => new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
@@ -171,8 +194,7 @@
     // Hanmoto: sections + cover (LIVE DOM only)
     // -----------------------------
     const extractHanmotoSectionsFromDoc = (doc) => {
-        // 著者プロフィール：h3 + note；h3 行压缩多余空格
-        const author_profile = cleanText(
+        let author_profile = cleanText(
             Array.from(doc.querySelectorAll('.book-author-profiles .book-author-profile'))
             .map(block => {
                 const h3 = block.querySelector('h3');
@@ -185,8 +207,7 @@
             .join('\n\n')
         );
 
-        // 目次：h2(目次) + nextElementSibling(p.book-info-more...)，用 innerHTML 保留 <br>
-        const toc = (() => {
+        let toc = (() => {
             const h = Array.from(doc.querySelectorAll('h1,h2,h3,h4,h5,h6'))
             .find(el => (el.textContent || '').trim() === '目次');
             if (!h) return '';
@@ -194,6 +215,9 @@
             if (!p) return '';
             return cleanText(p.innerHTML || p.textContent || '');
         })();
+
+        author_profile = appendSourceNote(author_profile, 'Data from 版元ドットコム');
+        toc = appendSourceNote(toc, 'Data from 版元ドットコム');
 
         return { toc, author_profile };
     };
@@ -205,20 +229,15 @@
     };
 
     async function enrichMetaFromHanmoto(meta) {
-        try {
-            const sec = extractHanmotoSectionsFromDoc(document);
-            const cover = extractHanmotoCoverFromDoc(document, location.href);
-            return {
-                ...meta,
-                toc: meta.toc || sec.toc,
-                author_profile: meta.author_profile || sec.author_profile,
-                cover: meta.cover || cover,
-                _hanmoto_url: meta._hanmoto_url || location.href
-            };
-        } catch (e) {
-            console.warn('[Hanmoto] enrich failed:', e);
-            return meta;
-        }
+        const sec = extractHanmotoSectionsFromDoc(document);
+        const cover = extractHanmotoCoverFromDoc(document, location.href);
+        return {
+            ...meta,
+            toc: meta.toc || sec.toc,
+            author_profile: meta.author_profile || sec.author_profile,
+            cover: meta.cover || cover,
+            _hanmoto_url: meta._hanmoto_url || location.href
+        };
     }
 
     // -----------------------------
@@ -254,13 +273,30 @@
         return pages ? String(pages) : null;
     };
 
+    // author / translator（B06）
     const extractContributors = (onix) => {
         const cons = onix?.DescriptiveDetail?.Contributor;
-        if (!Array.isArray(cons)) return [];
-        return uniq(cons.map(c => c?.PersonName?.content?.trim()).filter(Boolean));
+        if (!Array.isArray(cons)) return { author: [], translator: [] };
+
+        const authors = [];
+        const translators = [];
+
+        for (const c of cons) {
+            const name = normalizePersonName(c?.PersonName?.content || '');
+            if (!name) continue;
+
+            const rolesRaw = c?.ContributorRole;
+            const roles = Array.isArray(rolesRaw) ? rolesRaw : (rolesRaw ? [rolesRaw] : []);
+            const isTranslator = roles.map(r => String(r || '').trim().toUpperCase()).includes('B06');
+
+            if (isTranslator) translators.push(name);
+            else authors.push(name);
+        }
+
+        return { author: uniq(authors), translator: uniq(translators) };
     };
 
-    // NEW: price (PriceAmount) from openBD onix.ProductSupply.SupplyDetail.Price[*].PriceAmount
+    // price (PriceAmount) from onix.ProductSupply.SupplyDetail.Price[*].PriceAmount
     const extractPriceAmount = (onix) => {
         const prices = onix?.ProductSupply?.SupplyDetail?.Price;
         if (!Array.isArray(prices) || prices.length === 0) return null;
@@ -272,7 +308,6 @@
             return pa;
         };
 
-        // Prefer PriceType=01 if exists; else first usable
         let preferred = prices.find(p => String(p?.PriceType) === '01');
         let v = pick(preferred);
         if (v == null) {
@@ -292,51 +327,71 @@
         if (!isbn) return null;
 
         const url = `https://api.openbd.jp/v1/get?isbn=${encodeURIComponent(isbn)}`;
-        try {
-            const arr = await gmGetJson(url);
-            const data = Array.isArray(arr) ? arr[0] : null;
-            if (!data) return null;
+        const arr = await gmGetJson(url);
+        const data = Array.isArray(arr) ? arr[0] : null;
+        if (!data) return null;
 
-            const summary = data.summary || {};
-            const onix = data.onix || {};
-            const hanmoto = data.hanmoto || {};
+        const summary = data.summary || {};
+        const onix = data.onix || {};
+        const hanmoto = data.hanmoto || {};
 
-            const title = summary.title
-            || onix?.DescriptiveDetail?.TitleDetail?.TitleElement?.TitleText?.content
-            || '';
+        // title：优先 onix TitleText + Subtitle；否则 summary.title 再 splitTitle
+        const onixTitleText = String(onix?.DescriptiveDetail?.TitleDetail?.TitleElement?.TitleText?.content || '').trim();
+        const onixSubtitle = String(onix?.DescriptiveDetail?.TitleDetail?.TitleElement?.Subtitle?.content || '').trim();
 
-            const authors = extractContributors(onix);
-            const pubdateRaw = summary.pubdate || onix?.PublishingDetail?.PublishingDate?.[0]?.Date || '';
-            const pubParts = parsePubdate(pubdateRaw);
+        let title = '';
+        let main_title = '';
+        let subtitle = null;
 
-            const binding = hanmoto?.hankeidokuji || '';
-            //      const format = normalizeFormat(binding);
-
-            const description = pickTextContent(onix, '03') || pickTextContent(onix, '02') || hanmoto?.maegakinado || '';
-
-            const price = extractPriceAmount(onix);
-
-            return {
-                title,
-                ...splitTitle(title),
-                description: cleanText(description),
-                author: authors,
-                cover: extractCoverFromOpenBD(onix, summary) || '',
-                pages: extractPages(onix),
-                binding,
-                //        format,
-                price, // numeric string (e.g. "1500")
-                publisher: summary.publisher || onix?.PublishingDetail?.Imprint?.ImprintName || '',
-                isbn: normalizeIsbn(summary.isbn || summary.isbn13 || isbn),
-                ...pubParts,
-                toc: '',
-                author_profile: '',
-                _source: 'openBD'
-            };
-        } catch (e) {
-            console.warn('[openBD] fetch failed:', e);
-            return null;
+        if (onixSubtitle) {
+            main_title = onixTitleText || '';
+            subtitle = onixSubtitle || null;
+            title = subtitle ? `${main_title}：${subtitle}` : main_title;
+        } else {
+            title = String(summary.title || '').trim() || onixTitleText || '';
+            const sp = splitTitle(title);
+            main_title = sp.main_title;
+            subtitle = sp.subtitle;
         }
+
+        const contrib = extractContributors(onix);
+
+        const pubdateRaw = summary.pubdate || onix?.PublishingDetail?.PublishingDate?.[0]?.Date || '';
+        const pubParts = parsePubdate(pubdateRaw);
+
+        // binding：toji + hankeidokuji（中间空格）
+        const toji = String(hanmoto?.toji || '').trim();
+        const hankeidokuji = String(hanmoto?.hankeidokuji || '').trim();
+        const binding = [toji, hankeidokuji].filter(Boolean).join(' ').trim();
+
+        // 紹介：末尾加 (Data from OpenBD)，但为空就不加
+        const descriptionRaw = pickTextContent(onix, '03') || pickTextContent(onix, '02') || hanmoto?.maegakinado || '';
+        const description = appendSourceNote(cleanText(descriptionRaw), 'Data from OpenBD');
+
+        const price = extractPriceAmount(onix);
+
+        // 原題（genshomei）-> Original_title
+        const Original_title = String(hanmoto?.genshomei || '').trim() || null;
+
+        return {
+            title,
+            main_title,
+            subtitle,
+            description,
+            author: contrib.author,
+            translator: contrib.translator,
+            cover: extractCoverFromOpenBD(onix, summary) || '',
+            pages: extractPages(onix),
+            binding,
+            price, // numeric string
+            Original_title,
+            publisher: summary.publisher || onix?.PublishingDetail?.Imprint?.ImprintName || '',
+            isbn: normalizeIsbn(summary.isbn || summary.isbn13 || isbn),
+            ...pubParts,
+            toc: '',
+            author_profile: '',
+            _source: 'openBD'
+        };
     }
 
     // -----------------------------
@@ -358,7 +413,7 @@
     }
 
     // -----------------------------
-    // CiNii entry (RIS + 内容説明/目次 + cover) — no extra fallbacks
+    // CiNii entry (RIS + 内容説明/目次 + cover)
     // -----------------------------
     function extractNcidFromCiNiiUrl() {
         const m = location.pathname.match(/\/ncid\/([^\/?#]+)/);
@@ -388,7 +443,8 @@
 
     const risToMeta = (risMap) => {
         const title = (risMap.TI?.[0] || '').trim();
-        const authors = uniq([...(risMap.AU || [])]);
+        const sp = splitTitle(title);
+        const authors = uniq([...(risMap.AU || [])].map(normalizePersonName));
         const publisher = (risMap.PB?.[0] || '').trim();
         const isbn = normalizeIsbn((risMap.SN?.[0] || '').trim());
         const py = (risMap.PY?.[0] || '').trim();
@@ -397,8 +453,10 @@
 
         return {
             title,
-            ...splitTitle(title),
+            main_title: sp.main_title,
+            subtitle: sp.subtitle,
             author: authors,
+            translator: [],
             publisher,
             isbn: isbn || null,
             pages: pages || null,
@@ -406,9 +464,9 @@
             description: '',
             toc: '',
             cover: '',
-            format: '',
             binding: '',
             price: null,
+            Original_title: null,
             author_profile: '',
             _source: 'CiNii'
         };
@@ -436,6 +494,10 @@
                 : cleanText(bodyEl.innerHTML || bodyEl.textContent || '');
             }
         }
+
+        description = appendSourceNote(description, 'Data from BOOKデータベース');
+        toc = appendSourceNote(toc, 'Data from BOOKデータベース');
+
         return { description, toc };
     }
 
@@ -456,7 +518,6 @@
         const risMap = parseRIS(risText);
         const meta = risToMeta(risMap);
 
-        // wait a bit for the toc block to exist (still LIVE DOM, not a fallback source)
         await waitForElement('.dataContainer.biblio-contents.toc', 4000, 100);
 
         const { description, toc } = extractContentsFromCiNiiLiveDom();
@@ -555,6 +616,29 @@
         return true;
     };
 
+    const fillListInputs = (baseId, values) => {
+        if (!Array.isArray(values) || values.length === 0) return;
+
+        const first = document.querySelector(`#${baseId}_0`) || document.querySelector(`#${baseId}`);
+        if (!first) return;
+
+        const addLink =
+              first.closest('ul')?.querySelector('.add') ||
+              document.querySelector('ul li:last-child .add');
+
+        values.forEach((nameRaw, i) => {
+            const name = normalizePersonName(nameRaw);
+            if (!name) return;
+
+            const selPrimary = (i === 0 && document.querySelector(`#${baseId}`)) ? `#${baseId}` : `#${baseId}_${i}`;
+
+            if (!setValue(selPrimary, name)) {
+                if (addLink) addLink.click();
+                setValue(`#${baseId}_${i}`, name) || (i === 0 && setValue(`#${baseId}`, name));
+            }
+        });
+    };
+
     async function fillDoubanPage1() {
         const meta = readStored();
         if (!meta) return;
@@ -579,35 +663,123 @@
             if (meta[metaKey] != null) setValue(selector, meta[metaKey]);
         }
 
-        // 介绍/内容简介
         setTextarea('textarea[name="p_3_other"]', meta.description);
 
-        // 价格：p_8，输出为「数值円+税」
-        if (meta.price) {
-            setValue('#p_8', `${meta.price}円+税`);
-        }
+        if (meta.price) setValue('#p_8', `${meta.price}円+税`);
 
-        // 作者（可多作者）
-        if (Array.isArray(meta.author)) {
-            const addLink = document.querySelector("ul li:last-child .add");
-            meta.author.forEach((name, i) => {
-                const selector = `#p_5_${i}`;
-                setValue(selector, name) || (addLink && addLink.click(), setValue(selector, name));
-            });
-        }
+        // 原题
+        if (meta.Original_title) setValue('#p_98', meta.Original_title);
 
-        // 出版日期
+        fillListInputs('p_5', meta.author);
+        fillListInputs('p_41', meta.translator);
+
         setSelectValue('#p_7_selectYear', meta.pub_year);
         setTimeout(() => setSelectValue('#p_7_selectMonth', meta.pub_month), 250);
         setTimeout(() => setSelectValue('#p_7_selectDay', meta.pub_day), 500);
 
-        // 著者プロフィール / 目次
         setTextarea('textarea[name="p_40_other"]', meta.author_profile);
         setTextarea('textarea[name="p_99_other"]', meta.toc);
     }
 
     // -----------------------------
-    // Toolbar
+    // Douban search page shortcuts (www.douban.com/search & search.douban.com/book/subject_search)
+    // -----------------------------
+    function buildSearchLinks(keyword) {
+        const kw = (keyword || '').trim();
+        if (!kw) return null;
+
+        const enc = encodeURIComponent(kw);
+        return {
+            hanmoto: `https://www.hanmoto.com/bd/search/top?keyword=${enc}`,
+            cinii: `https://ci.nii.ac.jp/books/search?advanced=false&count=50&sortorder=7&q=${enc}&type=1&update_keep=true`,
+            google: `https://www.google.com/search?q=${enc}`
+    };
+  }
+
+    function injectShortcutsOnWwwDoubanSearch() {
+        const kw = new URLSearchParams(location.search).get('q') || '';
+        const links = buildSearchLinks(kw);
+        if (!links) return;
+
+        // 找到右侧“添加书籍/杂志/丛书/作者”的那一块（.bd 里有多个 p.pl）
+        const addBookA =
+              document.querySelector('a[href*="book.douban.com/new_subject?cat=1001"]') ||
+              document.querySelector('a[href*="book.douban.com/new_subject"]');
+
+        const bd = addBookA?.closest('.bd');
+        if (!bd) return;
+
+        if (bd.querySelector('#jp-books2douban-search-shortcuts')) return;
+
+        const mkP = (href, text) => {
+            const p = document.createElement('p');
+            p.className = 'pl';
+            const a = document.createElement('a');
+            a.href = href;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.textContent = `>\u00A0${text}`;
+            p.appendChild(a);
+            return p;
+        };
+
+        const wrap = document.createElement('div');
+        wrap.id = 'jp-books2douban-search-shortcuts';
+        wrap.appendChild(mkP(links.hanmoto, '在版元ドットコム检索'));
+        wrap.appendChild(mkP(links.cinii, '在CiNii检索'));
+        wrap.appendChild(mkP(links.google, '在Google检索'));
+
+        // 放到原有4个链接下面：直接 append 到 bd 的末尾
+        bd.appendChild(wrap);
+    }
+
+    function injectShortcutsOnSearchDoubanSubjectSearch() {
+        const kw = new URLSearchParams(location.search).get('search_text') || '';
+        const links = buildSearchLinks(kw);
+        if (!links) return;
+
+        const titleDiv = Array.from(document.querySelectorAll('div.title'))
+        .find(el => (el.textContent || '').includes('添加豆瓣没有的图书'));
+        if (!titleDiv) return;
+
+        const container = titleDiv.parentElement;
+        if (!container) return;
+
+        if (container.querySelector('#jp-books2douban-search-shortcuts')) return;
+
+        const mkLinkDiv = (href, label) => {
+            const d = document.createElement('div');
+            d.className = 'link';
+            const a = document.createElement('a');
+            a.href = href;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.textContent = `> ${label} ${kw}`.trim();
+            d.appendChild(a);
+            return d;
+        };
+
+        const wrap = document.createElement('div');
+        wrap.id = 'jp-books2douban-search-shortcuts';
+        wrap.appendChild(mkLinkDiv(links.hanmoto, '在版元ドットコム检索'));
+        wrap.appendChild(mkLinkDiv(links.cinii, '在CiNii检索'));
+        wrap.appendChild(mkLinkDiv(links.google, '在Google检索'));
+
+        // 放到原有4个链接下面：append 到 container 的末尾
+        container.appendChild(wrap);
+    }
+
+    function injectDoubanSearchShortcuts() {
+        const host = location.hostname || '';
+        if (host === 'www.douban.com' && location.pathname === '/search') {
+            injectShortcutsOnWwwDoubanSearch();
+        } else if (host === 'search.douban.com' && location.pathname.includes('/book/subject_search')) {
+            injectShortcutsOnSearchDoubanSubjectSearch();
+        }
+    }
+
+    // -----------------------------
+    // Toolbar (Hanmoto / CiNii / book.douban.com/new_subject only)
     // -----------------------------
     function createToolbarElement() {
         const toolbar = document.createElement('div');
@@ -626,24 +798,33 @@
 
         const host = location.hostname || '';
         if (/hanmoto\.com/i.test(host)) {
-            toolbar.appendChild(makeButton('Add to Douban (openBD + Hanmoto)', parseAndRedirectFromHanmoto));
-        } else if (/ci\.nii\.ac\.jp/i.test(host)) {
-            toolbar.appendChild(makeButton('Add to Douban (CiNii)', parseAndRedirectFromCiNii));
-        } else if (/douban\.com/i.test(host)) {
+            toolbar.appendChild(makeButton('Add to Douban', parseAndRedirectFromHanmoto));
+            return toolbar;
+        }
+        if (/ci\.nii\.ac\.jp/i.test(host)) {
+            toolbar.appendChild(makeButton('Add to Douban', parseAndRedirectFromCiNii));
+            return toolbar;
+        }
+
+        // 只在 book.douban.com/new_subject 上显示
+        if (host === 'book.douban.com' && location.pathname.startsWith('/new_subject')) {
             const isPage1 = !!document.querySelector('#p_title') || !!document.querySelector('input[name="p_title"]');
             const isPage2 = !!document.querySelector('#p_2');
             const isPage3 = !!document.querySelector('input[name="img_submit"]');
             if (isPage1) toolbar.appendChild(makeButton('ISBN & Title', fillDoubanPage1));
             if (isPage2) toolbar.appendChild(makeButton('Autofill More', fillDoubanPage2));
             if (isPage3) toolbar.appendChild(makeButton('Download Cover', saveCover));
+            return (toolbar.childNodes.length ? toolbar : null);
         }
 
-        return toolbar;
+        return null;
     }
 
     function ensureToolbar() {
         if (document.getElementById('douban-helper-toolbar')) return;
         const toolbar = createToolbarElement();
+        if (!toolbar) return;
+
         const h1 = document.querySelector('h1');
         if (h1 && h1.parentNode) h1.insertAdjacentElement('afterend', toolbar);
         else document.body.appendChild(toolbar);
@@ -655,22 +836,41 @@
 
         const observer = new MutationObserver(() => {
             if (!document.getElementById('douban-helper-toolbar')) ensureToolbar();
+            // 搜索页也可能是动态的
+            injectDoubanSearchShortcuts();
         });
         observer.observe(document.documentElement || document.body, { childList: true, subtree: true });
 
-        window.addEventListener('popstate', () => setTimeout(ensureToolbar, 200));
+        window.addEventListener('popstate', () => {
+            setTimeout(() => {
+                ensureToolbar();
+                injectDoubanSearchShortcuts();
+            }, 200);
+        });
+
         const _pushState = history.pushState;
         history.pushState = function () {
             const r = _pushState.apply(this, arguments);
-            setTimeout(ensureToolbar, 200);
+            setTimeout(() => {
+                ensureToolbar();
+                injectDoubanSearchShortcuts();
+            }, 200);
             return r;
         };
     }
 
+    // -----------------------------
+    // Init
+    // -----------------------------
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => { ensureToolbar(); installToolbarObserver(); });
+        document.addEventListener('DOMContentLoaded', () => {
+            ensureToolbar();
+            injectDoubanSearchShortcuts();
+            installToolbarObserver();
+        });
     } else {
         ensureToolbar();
+        injectDoubanSearchShortcuts();
         installToolbarObserver();
     }
 })();

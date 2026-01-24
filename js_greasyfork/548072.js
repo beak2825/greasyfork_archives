@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn: Refill Blood Bag Reminder
 // @namespace    torn.tools.reminders
-// @version      4.2.1
+// @version      4.3.0
 // @description  Show blood-bag icon when ready to fill blood bags. Configurable 1-3 bags with dynamic life/cooldown thresholds.
 // @author       ButtChew [3840391]
 // @license      MIT
@@ -135,6 +135,10 @@
         };
     }
 
+    function getOpenInNewTab() {
+        return safeGM.getValue('bloodBagNewTab', true);  // Default: open in new tab
+    }
+
     function openSettingsModal() {
         // Remove existing modal if present
         const existingModal = document.getElementById('bloodbag-settings-modal');
@@ -142,6 +146,7 @@
 
         const currentDestination = safeGM.getValue('bloodBagDestination', 'factionArmoury');
         const currentBags = getBagsToFill();
+        const currentNewTab = getOpenInNewTab();
         const thresholds = getThresholds();
 
         const settingsModal = document.createElement('div');
@@ -240,6 +245,21 @@
                         </p>
                     </div>
 
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: flex; align-items: center; cursor: pointer; color: #ccc; font-size: 14px;">
+                            <input type="checkbox" id="bloodbag-newtab" ${currentNewTab ? 'checked' : ''} style="
+                                width: 18px;
+                                height: 18px;
+                                margin-right: 10px;
+                                cursor: pointer;
+                            ">
+                            Open in new tab
+                        </label>
+                        <p style="font-size: 12px; color: #888; margin-top: 5px; margin-left: 28px;">
+                            When disabled, clicking the icon navigates in the same tab.
+                        </p>
+                    </div>
+
                     <div id="trigger-conditions" style="
                         background: rgba(255,255,255,0.05);
                         padding: 12px;
@@ -301,8 +321,10 @@
         document.getElementById('save-bloodbag-settings').addEventListener('click', () => {
             const bags = parseInt(document.getElementById('bloodbag-count').value, 10);
             const destination = document.getElementById('bloodbag-destination').value;
+            const newTab = document.getElementById('bloodbag-newtab').checked;
             safeGM.setValue('bloodBagCount', bags);
             safeGM.setValue('bloodBagDestination', destination);
+            safeGM.setValue('bloodBagNewTab', newTab);
             settingsModal.remove();
             updateIcon();
         });
@@ -375,8 +397,10 @@
 
         const a = document.createElement('a');
         a.href = getDestinationURL();
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
+        if (getOpenInNewTab()) {
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+        }
         a.setAttribute('aria-label', tooltipText);
         a.tabIndex = 0;
         a.setAttribute('data-is-tooltip-opened', 'false');
@@ -465,6 +489,13 @@
         const a = li.querySelector('a');
         if (!a) return;
         a.href = getDestinationURL();
+        if (getOpenInNewTab()) {
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+        } else {
+            a.removeAttribute('target');
+            a.removeAttribute('rel');
+        }
         a.setAttribute('aria-label', text);
         if (typeof a.__tmUpdateTipText === 'function') a.__tmUpdateTipText(text);
     }
@@ -680,6 +711,6 @@
     // Initial check
     scheduleCheck();
 
-    console.log('[Blood Bag v4.2.1] Initialized - using sessionStorage');
+    console.log('[Blood Bag v4.3.0] Initialized - using sessionStorage');
 
 })();

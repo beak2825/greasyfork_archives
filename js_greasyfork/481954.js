@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name                YouTube Direct Downloader
-// @version             5.0
+// @version             5.1
 // @description         Video/short download button next to subscribe button. Downloads MP4, WEBM, MP3 or subtitles from youtube + option to redirect shorts to normal videos. Choose your preferred quality from 8k to audio only, codec (h264, vp9 or av1) or service provider (cobalt, yt5s, yt1s, ytmp3) in settings.
 // @author              FawayTT
 // @namespace           FawayTT
@@ -8,7 +8,7 @@
 // @icon                https://github.com/FawayTT/userscripts/blob/main/ydd-icon.png?raw=true
 // @match               *://*.youtube.com/*
 // @match               *://*.yt5s.in/*
-// @match               *://*.cobalt.tools/*
+// @match               *://*.cobalt.meowing.de/*
 // @match               *://*.5smp3.com/*
 // @match               *://*.yt1s.biz/*
 // @match               *://*.ytmp3.ai/*
@@ -357,7 +357,7 @@ const downloadServices = {
       else window.open('https://yt5s.in/');
     },
     checkPage: () => {
-      if (document.location.href.indexOf('yt5s.in') > -1) {
+      if (checkUrl('yt5s.in')) {
         const url = GM_getValue('yt5sUrl');
         if (url) {
           const input = document.querySelector('#txt-url');
@@ -384,7 +384,7 @@ const downloadServices = {
       window.open('https://ytmp3.ai/');
     },
     checkPage: () => {
-      if (document.location.href.indexOf('ytmp3.ai') > -1) {
+      if (checkUrl('ytmp3.ai')) {
         const url = GM_getValue('ytmp3Url');
         const audioOnly = GM_getValue('ytmp3AudioOnly');
         if (url) {
@@ -417,7 +417,7 @@ const downloadServices = {
       else window.open('https://yt1s.biz/');
     },
     checkPage: () => {
-      if (document.location.href.indexOf('yt1s.biz') > -1) {
+      if (checkUrl('yt1s.biz')) {
         const url = GM_getValue('yt1sUrl');
         if (url) {
           const input = document.querySelector('.index-module--search--fb2ee');
@@ -441,10 +441,10 @@ const downloadServices = {
     download: (isAudioOnly) => {
       GM_setValue('cobaltUrl', document.location.href);
       GM_setValue('cobaltUrlAudioOnly', isAudioOnly);
-      window.open('https://cobalt.tools/');
+      window.open('https://cobalt.meowing.de/');
     },
     checkPage: () => {
-      if (document.location.href.indexOf('cobalt.tools') > -1) {
+      if (checkUrl('cobalt.meowing.de')) {
         const url = GM_getValue('cobaltUrl');
         const audioOnly = GM_getValue('cobaltUrlAudioOnly');
         if (url) {
@@ -463,6 +463,23 @@ const downloadServices = {
               if (loadingIcon.classList.contains('loading') || !loadingIcon) return;
               const dwnButton = document.querySelector('#download-button');
               dwnButton.click();
+              const queue = document.querySelector('#processing-popover');
+              queue.style.backgroundColor = 'rgba(255, 37, 37, 0.56)';
+              const downloadObserver = new MutationObserver(function () {
+                const queueItems = queue.querySelectorAll('.processing-item');
+                const latestItem = queueItems[0];
+                if (!latestItem) return;
+                const downloadButton = latestItem.querySelector('button[aria-label="download"]');
+                if (latestItem && downloadButton) {
+                  queue.style.backgroundColor = 'rgba(40, 90, 62, 0.56)';
+                  downloadButton.click();
+                  downloadObserver.disconnect();
+                }
+                return;
+              });
+
+              downloadObserver.observe(queue, { childList: true, attributes: true, subtree: true });
+
               observer.disconnect();
             });
             observer.observe(loadingIcon, { attributes: true, attributeFilter: ['class'] });
@@ -530,7 +547,7 @@ const extraDownloadServices = {
       window.open('https://5smp3.com/watch');
     },
     checkPage: () => {
-      if (document.location.href.indexOf('5smp3.com') > -1) {
+      if (checkUrl('5smp3.com')) {
         const url = GM_getValue('5smp3Url');
         if (url) {
           const input = document.querySelector('#inputUrl');
@@ -678,6 +695,10 @@ let oldHref = document.location.href;
 let yddAdded = false;
 let dError;
 let dTimeout;
+
+function checkUrl(url) {
+  return document.location.href.includes(url);
+}
 
 function getHeaders() {
   const userAgent = navigator.userAgent;
@@ -829,7 +850,7 @@ function createButton(bar, short) {
 }
 
 function checkShort(replace = true) {
-  if (document.location.href.indexOf('youtube.com/shorts') > -1) {
+  if (checkUrl('youtube.com/shorts')) {
     if (gmc.get('redirectShorts') && replace) window.location.replace(window.location.toString().replace('/shorts/', '/watch?v='));
     return true;
   } else return false;
@@ -859,7 +880,7 @@ function checkPage(alternative) {
 function modify() {
   const short = checkShort();
   if (checkPage() || checkPage(true)) return;
-  if (document.location.href.indexOf('youtube.com/watch') === -1 && !short) {
+  if (!checkUrl('youtube.com/watch') && !short) {
     yddAdded = true;
     return;
   }

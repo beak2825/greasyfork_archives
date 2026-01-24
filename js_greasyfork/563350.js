@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Gemini Shot
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-15
+// @version      1.1.0
 // @description  screenshot gemini conversation
 // @author       momo1037
-// @match        https://gemini.google.com/*
+// @match        https://gemini.google.com/app*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @require      https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.js
 // @grant        none

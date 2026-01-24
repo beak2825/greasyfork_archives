@@ -5,21 +5,43 @@
 // @name:de      NeuraVeil - KI-Chat in deinem Browser
 // @name:it      NeuraVeil - Chat IA nel tuo browser
 // @name:ja      NeuraVeil - ブラウザ内AIチャット
+// @name:pt      NeuraVeil - Chat IA no seu navegador
+// @name:ru      NeuraVeil - ИИ-чат в вашем браузере
+// @name:zh-CN   NeuraVeil - 浏览器内 AI 聊天
+// @name:zh-TW   NeuraVeil - 瀏覽器內 AI 聊天
+// @name:ko      NeuraVeil - 브라우저 내 AI 채팅
+// @name:ar      NeuraVeil - دردشة ذكاء اصطناعي في المتصفح
+// @name:hi      NeuraVeil - आपके ब्राउज़र में AI चैट
+// @name:nl      NeuraVeil - AI-chat in je browser
+// @name:pl      NeuraVeil - Czat AI w przeglądarce
+// @name:tr      NeuraVeil - Tarayıcınızda Yapay Zeka Sohbeti
 // @namespace    https://github.com/DREwX-code
-// @version      1.1.3
+
 // @description     Lightweight floating AI chat panel that works on any webpage. Free and no signup required. Uses Pollinations.ai for text and image generation, supports multiple conversations, reasoning levels, response styles, image tools, and a privacy-focused Ghost Mode.
 // @description:fr  Panneau de chat IA flottant, léger et moderne, utilisable sur n’importe quelle page web. Gratuit et sans inscription. Utilise Pollinations.ai pour la génération de texte et d’images, avec conversations multiples, niveaux de raisonnement, styles de réponse, outils d’image et un mode Ghost axé sur la confidentialité.
 // @description:es  Panel de chat IA flotante, ligero y moderno, que funciona en cualquier página web. Gratis y sin registro. Utiliza Pollinations.ai para la generación de texto e imágenes, con múltiples conversaciones, niveles de razonamiento, estilos de respuesta, herramientas de imagen y un modo Ghost centrado en la privacidad.
 // @description:de  Leichtes, schwebendes KI-Chatpanel, das auf jeder Webseite funktioniert. Kostenlos und ohne Registrierung. Nutzt Pollinations.ai für Text- und Bildgenerierung, unterstützt mehrere Unterhaltungen, Denkstufen, Antwortstile, Bildtools und einen datenschutzorientierten Ghost-Modus.
 // @description:it  Pannello di chat IA fluttuante, leggero e moderno, utilizzabile su qualsiasi pagina web. Gratuito e senza registrazione. Utilizza Pollinations.ai per la generazione di testo e immagini, con conversazioni multiple, livelli di ragionamento, stili di risposta, strumenti per le immagini e una modalità Ghost orientata alla privacy.
 // @description:ja  あらゆるWebページで使用できる、軽量でモダンなフローティングAIチャットパネル。無料・登録不要。Pollinations.aiを使用したテキストおよび画像生成に対応し、複数の会話、推論レベル、応答スタイル、画像ツール、プライバシー重視のゴーストモードを搭載。
+// @description:pt  Painel de chat IA flutuante, leve e moderno, que funciona em qualquer página web. Gratuito e sem necessidade de cadastro. Usa Pollinations.ai para geração de texto e imagens, com múltiplas conversas, níveis de raciocínio, estilos de resposta, ferramentas de imagem e um modo Ghost focado em privacidade.
+// @description:ru  Лёгкая плавающая панель ИИ-чата, работающая на любом веб-сайте. Бесплатно и без регистрации. Использует Pollinations.ai для генерации текста и изображений, поддерживает несколько диалогов, уровни рассуждений, стили ответов, инструменты для изображений и ориентированный на приватность Ghost-режим.
+// @description:zh-CN  轻量级浮动 AI 聊天面板，可在任何网页上使用。免费且无需注册。使用 Pollinations.ai 进行文本和图像生成，支持多对话、推理等级、回复风格、图像工具以及注重隐私的幽灵模式。
+// @description:zh-TW  輕量級浮動 AI 聊天面板，可在任何網頁上使用。免費且無需註冊。使用 Pollinations.ai 進行文字與圖片生成，支援多重對話、推理層級、回應風格、圖片工具，以及重視隱私的 Ghost 模式。
+// @description:ko  어떤 웹페이지에서도 작동하는 가볍고 현대적인 플로팅 AI 채팅 패널입니다. 무료이며 가입이 필요 없습니다. Pollinations.ai를 사용해 텍스트와 이미지를 생성하고, 다중 대화, 추론 수준, 응답 스타일, 이미지 도구, 개인정보 보호 중심의 고스트 모드를 지원합니다.
+// @description:ar  لوحة دردشة ذكاء اصطناعي عائمة وخفيفة تعمل على أي صفحة ويب. مجانية وبدون تسجيل. تستخدم Pollinations.ai لتوليد النصوص والصور، مع دعم محادثات متعددة، مستويات التفكير، أنماط الرد، أدوات الصور، ووضع Ghost يركز على الخصوصية.
+// @description:hi  हल्का और आधुनिक फ्लोटिंग AI चैट पैनल जो किसी भी वेबपेज पर काम करता है। पूरी तरह मुफ्त और बिना पंजीकरण। Pollinations.ai का उपयोग टेक्स्ट और इमेज जनरेशन के लिए करता है, और मल्टीपल बातचीत, रीजनिंग लेवल, रिस्पॉन्स स्टाइल, इमेज टूल्स और प्राइवेसी-केंद्रित Ghost मोड को सपोर्ट करता है.
+// @description:nl  Lichtgewicht en modern zwevend AI-chatpaneel dat op elke webpagina werkt. Gratis en zonder registratie. Gebruikt Pollinations.ai voor tekst- en afbeeldingsgeneratie, met meerdere gesprekken, redeneerniveaus, antwoordstijlen, afbeeldingshulpmiddelen en een privacygerichte Ghost-modus.
+// @description:pl  Lekki, nowoczesny pływający panel czatu AI działający na każdej stronie internetowej. Darmowy i bez rejestracji. Wykorzystuje Pollinations.ai do generowania tekstu i obrazów, obsługuje wiele rozmów, poziomy rozumowania, style odpowiedzi, narzędzia graficzne oraz tryb Ghost nastawiony na prywatność.
+// @description:tr  Her web sayfasında çalışan hafif ve modern bir yüzen yapay zeka sohbet paneli. Ücretsiz ve kayıt gerektirmez. Metin ve görsel üretimi için Pollinations.ai kullanır; çoklu sohbetler, akıl yürütme seviyeleri, yanıt stilleri, görsel araçlar ve gizliliğe odaklı Ghost modunu destekler.
+
+// @version      1.1.4
 // @author       Dℝ∃wX
 // @match        *://*/*
 // @icon         https://raw.githubusercontent.com/DREwX-code/NeuraVeil/refs/heads/main/assets/icon/Icon_NeuraVeil_Script.png
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_xmlhttpRequest
-// @require      https://update.greasyfork.org/scripts/561659/1729069/NeuraVeil%20Styles%20%28Library%29.js
+// @require      https://update.greasyfork.org/scripts/561659/1740746/NeuraVeil%20Styles%20%28Library%29.js
 // @connect      text.pollinations.ai
 // @connect      image.pollinations.ai
 // @connect      api.openverse.org
@@ -28,7 +50,7 @@
 // @connect      *
 // @run-at       document-end
 // @license      Apache-2.0
-// @copyright    2025 Dℝ∃wX
+// @copyright    2026 Dℝ∃wX
 // @noframes
 // @tag          productivity
 // @downloadURL https://update.greasyfork.org/scripts/560252/NeuraVeil%20-%20AI%20Chat%20in%20Your%20Browser.user.js
@@ -37,7 +59,7 @@
 
 /*
 
-Copyright 2025 Dℝ∃wX
+Copyright 2026 Dℝ∃wX
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -123,6 +145,26 @@ License: CC0
 
 ---
 
+Mathematical Rendering (KaTeX):
+
+This project uses KaTeX to render mathematical expressions efficiently
+from LaTeX syntax into high-quality HTML and CSS.
+KaTeX is designed for fast client-side rendering and does not execute
+arbitrary JavaScript during rendering.
+
+KaTeX is used to display mathematical formulas generated or normalized
+by the project (e.g. square roots, fractions, exponents).
+
+Website: https://katex.org/
+Source code: https://github.com/KaTeX/KaTeX
+License: MIT
+
+--------------------------------
+
+Disclaimer :
+NeuraVeil is an AI assistant and may generate inaccurate information.
+Always verify critical or sensitive information independently.
+
 */
 
 
@@ -154,9 +196,26 @@ License: CC0
             this.DEFAULT_GREETING = 'Hello! I am NeuraVeil. How can I help you today?';
             this.hljsReady = null;
             this.hljsCssLoaded = false;
+            this.hljsInstance = null;
+            this.hljsCdnCssReady = null;
+            this.hljsCdnScriptReady = null;
+            this.HLJS_CSS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+            this.HLJS_JS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js';
+            this.katexReady = null;
+            this.katexCssLoaded = false;
+            this.katexInstance = null;
+            this.katexAutoRender = null;
+            this.katexCdnCssReady = null;
+            this.katexCdnScriptReady = null;
+            this.katexCdnAutoReady = null;
+            this.KATEX_CSS_URL = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css';
+            this.KATEX_JS_URL = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
+            this.KATEX_AUTO_URL = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js';
             this.host = null;
             this.shadow = null;
             this.elements = {};
+            this.tableModalOverlay = null;
+            this.tableModalBody = null;
             this.state = {
                 isOpen: false,
                 isTyping: false,
@@ -181,6 +240,8 @@ License: CC0
             this.messages = [
                 { role: 'assistant', content: this.DEFAULT_GREETING }
             ];
+            this.loadingByChat = new Map();
+            this.loadingTextByChat = new Map();
 
             this.recognition = null;
             this.isRecording = false;
@@ -192,21 +253,7 @@ License: CC0
         }
 
         loadHighlightJS() {
-            if (this.hljsReady) return this.hljsReady;
-
-            this.hljsReady = new Promise((resolve) => {
-                const link = document.createElement('link');
-                link.rel = 'stylesheet';
-                link.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
-                this.shadow.appendChild(link);
-
-                const script = document.createElement('script');
-                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js';
-                script.onload = () => resolve();
-                this.shadow.appendChild(script);
-            });
-
-            return this.hljsReady;
+            return this.ensureHighlight();
         }
 
         request(url, options = {}) {
@@ -410,6 +457,87 @@ License: CC0
             });
         }
 
+        getPanelPlacementMetrics() {
+            const panel = this.elements.panel;
+            const hostRect = this.host.getBoundingClientRect();
+            const panelWidth = panel.offsetWidth || 425;
+            const panelHeight = panel.offsetHeight || 500;
+            const hostWidth = this.host.offsetWidth || 56;
+            const hostHeight = this.host.offsetHeight || 56;
+            return {
+                panel,
+                hostRect,
+                panelWidth,
+                panelHeight,
+                hostWidth,
+                hostHeight,
+                gap: 12,
+                padding: 8,
+                viewportWidth: window.innerWidth,
+                viewportHeight: window.innerHeight
+            };
+        }
+
+        chooseOpenDirection(primarySpace, secondarySpace, panelSize) {
+            const preferPrimary = primarySpace >= secondarySpace;
+            if (primarySpace < panelSize && secondarySpace >= panelSize) return false;
+            if (primarySpace >= panelSize && secondarySpace < panelSize) return true;
+            return preferPrimary;
+        }
+
+        getPanelOffset(openRight, openAbove, metrics) {
+            const left = openRight ? 0 : (metrics.hostWidth - metrics.panelWidth);
+            const top = openAbove ? (-metrics.panelHeight - metrics.gap) : (metrics.hostHeight + metrics.gap);
+            return { left, top };
+        }
+
+        clampPanelOffset(offset, metrics) {
+            const absLeft = metrics.hostRect.left + offset.left;
+            const absTop = metrics.hostRect.top + offset.top;
+            const clampedLeft = Math.min(
+                Math.max(metrics.padding, absLeft),
+                metrics.viewportWidth - metrics.panelWidth - metrics.padding
+            );
+            const clampedTop = Math.min(
+                Math.max(metrics.padding, absTop),
+                metrics.viewportHeight - metrics.panelHeight - metrics.padding
+            );
+            offset.left += clampedLeft - absLeft;
+            offset.top += clampedTop - absTop;
+            return offset;
+        }
+
+        avoidHostOverlap(offset, metrics) {
+            const absLeft = metrics.hostRect.left + offset.left;
+            const absTop = metrics.hostRect.top + offset.top;
+            const overlapsHost = absLeft < metrics.hostRect.right &&
+                (absLeft + metrics.panelWidth) > metrics.hostRect.left &&
+                absTop < metrics.hostRect.bottom &&
+                (absTop + metrics.panelHeight) > metrics.hostRect.top;
+            if (!overlapsHost) return offset;
+
+            const hostOnLeft = (metrics.hostRect.left + (metrics.hostWidth / 2)) <= (metrics.viewportWidth / 2);
+            if (hostOnLeft) {
+                const targetLeft = metrics.hostRect.right + metrics.gap;
+                const shift = targetLeft - absLeft;
+                if (shift > 0) offset.left += shift;
+            } else {
+                const targetRight = metrics.hostRect.left - metrics.gap;
+                const shift = targetRight - (absLeft + metrics.panelWidth);
+                if (shift < 0) offset.left += shift;
+            }
+            return this.clampPanelOffset(offset, metrics);
+        }
+
+        applyPanelPlacementStyles(panel, offset, openRight, openAbove) {
+            panel.style.position = 'absolute';
+            panel.style.left = `${offset.left}px`;
+            panel.style.top = `${offset.top}px`;
+            panel.style.right = 'auto';
+            panel.style.bottom = 'auto';
+            panel.style.transformOrigin = `${openRight ? 'left' : 'right'} ${openAbove ? 'bottom' : 'top'}`;
+        }
+
         updatePanelPlacement() {
             if (!this.elements.panel || !this.host) return;
             if (this.state.isSidebar) {
@@ -417,76 +545,17 @@ License: CC0
                 return;
             }
 
-            const panel = this.elements.panel;
-            const hostRect = this.host.getBoundingClientRect();
-            const panelWidth = panel.offsetWidth || 425;
-            const panelHeight = panel.offsetHeight || 500;
-            const hostWidth = this.host.offsetWidth || 56;
-            const hostHeight = this.host.offsetHeight || 56;
-            const gap = 12;
-            const padding = 8;
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-            const spaceLeft = hostRect.left;
-            const spaceRight = viewportWidth - hostRect.right;
-            const spaceAbove = hostRect.top;
-            const spaceBelow = viewportHeight - hostRect.bottom;
-
-            let openRight = spaceRight >= spaceLeft;
-            if (spaceRight < panelWidth && spaceLeft >= panelWidth) {
-                openRight = false;
-            } else if (spaceRight >= panelWidth && spaceLeft < panelWidth) {
-                openRight = true;
-            }
-
-            let openAbove = spaceAbove >= spaceBelow;
-            if (spaceAbove < panelHeight && spaceBelow >= panelHeight) {
-                openAbove = false;
-            } else if (spaceAbove >= panelHeight && spaceBelow < panelHeight) {
-                openAbove = true;
-            }
-
-            let left = openRight ? 0 : (hostWidth - panelWidth);
-            let top = openAbove ? (-panelHeight - gap) : (hostHeight + gap);
-
-            const clampToViewport = () => {
-                const absLeft = hostRect.left + left;
-                const absTop = hostRect.top + top;
-                const clampedLeft = Math.min(Math.max(padding, absLeft), viewportWidth - panelWidth - padding);
-                const clampedTop = Math.min(Math.max(padding, absTop), viewportHeight - panelHeight - padding);
-                left += clampedLeft - absLeft;
-                top += clampedTop - absTop;
-            };
-
-            clampToViewport();
-
-            const hostOnLeft = (hostRect.left + (hostWidth / 2)) <= (viewportWidth / 2);
-            let absLeft = hostRect.left + left;
-            let absTop = hostRect.top + top;
-            const overlapsHost = absLeft < hostRect.right &&
-                (absLeft + panelWidth) > hostRect.left &&
-                absTop < hostRect.bottom &&
-                (absTop + panelHeight) > hostRect.top;
-
-            if (overlapsHost) {
-                if (hostOnLeft) {
-                    const targetLeft = hostRect.right + gap;
-                    const shift = targetLeft - absLeft;
-                    if (shift > 0) left += shift;
-                } else {
-                    const targetRight = hostRect.left - gap;
-                    const shift = targetRight - (absLeft + panelWidth);
-                    if (shift < 0) left += shift;
-                }
-                clampToViewport();
-            }
-
-            panel.style.position = 'absolute';
-            panel.style.left = `${left}px`;
-            panel.style.top = `${top}px`;
-            panel.style.right = 'auto';
-            panel.style.bottom = 'auto';
-            panel.style.transformOrigin = `${openRight ? 'left' : 'right'} ${openAbove ? 'bottom' : 'top'}`;
+            const metrics = this.getPanelPlacementMetrics();
+            const spaceLeft = metrics.hostRect.left;
+            const spaceRight = metrics.viewportWidth - metrics.hostRect.right;
+            const spaceAbove = metrics.hostRect.top;
+            const spaceBelow = metrics.viewportHeight - metrics.hostRect.bottom;
+            const openRight = this.chooseOpenDirection(spaceRight, spaceLeft, metrics.panelWidth);
+            const openAbove = this.chooseOpenDirection(spaceAbove, spaceBelow, metrics.panelHeight);
+            let offset = this.getPanelOffset(openRight, openAbove, metrics);
+            offset = this.clampPanelOffset(offset, metrics);
+            offset = this.avoidHostOverlap(offset, metrics);
+            this.applyPanelPlacementStyles(metrics.panel, offset, openRight, openAbove);
         }
 
         // CSS styles are not loaded from GitHub, as GreasyFork blocks external script connections.
@@ -496,6 +565,7 @@ License: CC0
             style.textContent = NEURAVEIL_CSS;
             this.shadow.appendChild(style);
         }
+
 
         createUI() {
             const trigger = document.createElement('div');
@@ -1213,33 +1283,275 @@ License: CC0
             }
         }
 
-        async ensureHighlight() {
-            if (this.hljsReady) return this.hljsReady;
-            this.hljsReady = new Promise((resolve) => {
-                if (!this.hljsCssLoaded) {
-                    const link = document.createElement('link');
-                    link.rel = 'stylesheet';
-                    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
-                    this.shadow.appendChild(link);
-                    this.hljsCssLoaded = true;
-                }
+        async fetchTextAsset(url) {
+            try {
+                const response = await this.request(url);
+                if (!response || !response.ok) return '';
+                return await response.text();
+            } catch (e) {
+                return '';
+            }
+        }
 
-                if (window.hljs) {
-                    resolve(window.hljs);
+        injectHighlightCss(cssText) {
+            if (!cssText || !this.shadow) return;
+            const style = document.createElement('style');
+            style.textContent = cssText;
+            this.shadow.appendChild(style);
+        }
+
+        injectKatexCss(cssText) {
+            if (!cssText || !this.shadow) return;
+            const style = document.createElement('style');
+            style.textContent = cssText;
+            this.shadow.appendChild(style);
+        }
+
+        loadHighlightCdnCss() {
+            if (this.hljsCssLoaded) return Promise.resolve(true);
+            if (this.hljsCdnCssReady) return this.hljsCdnCssReady;
+            this.hljsCdnCssReady = new Promise((resolve) => {
+                if (!this.shadow) {
+                    resolve(false);
                     return;
                 }
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = this.HLJS_CSS_URL;
+                link.onload = () => {
+                    this.hljsCssLoaded = true;
+                    resolve(true);
+                };
+                link.onerror = () => resolve(false);
+                this.shadow.appendChild(link);
+            });
+            return this.hljsCdnCssReady;
+        }
 
+        loadHighlightCdnScript() {
+            if (this.hljsInstance) return Promise.resolve(this.hljsInstance);
+            if (window.hljs) {
+                this.hljsInstance = window.hljs;
+                return Promise.resolve(this.hljsInstance);
+            }
+            if (this.hljsCdnScriptReady) return this.hljsCdnScriptReady;
+            this.hljsCdnScriptReady = new Promise((resolve) => {
+                if (!this.shadow) {
+                    resolve(null);
+                    return;
+                }
                 const script = document.createElement('script');
-                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js';
-                script.onload = () => resolve(window.hljs || null);
+                script.src = this.HLJS_JS_URL;
+                script.onload = () => {
+                    this.hljsInstance = window.hljs || null;
+                    resolve(this.hljsInstance);
+                };
                 script.onerror = () => resolve(null);
                 this.shadow.appendChild(script);
             });
+            return this.hljsCdnScriptReady;
+        }
+
+        async loadHighlightFallbackCss() {
+            if (this.hljsCssLoaded) return;
+            const cssText = await this.fetchTextAsset(this.HLJS_CSS_URL);
+            if (cssText) {
+                this.injectHighlightCss(cssText);
+                this.hljsCssLoaded = true;
+            }
+        }
+
+        async loadHighlightFallbackScript() {
+            if (this.hljsInstance) return this.hljsInstance;
+            if (window.hljs) {
+                this.hljsInstance = window.hljs;
+                return this.hljsInstance;
+            }
+            const scriptText = await this.fetchTextAsset(this.HLJS_JS_URL);
+            if (!scriptText) return null;
+            try {
+                const target = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
+                const runner = new Function('window', 'globalThis', 'self', `${scriptText}\nreturn window.hljs || globalThis.hljs || null;`);
+                const hljs = runner(target, target, target);
+                this.hljsInstance = hljs || target.hljs || null;
+            } catch (e) {
+                this.hljsInstance = null;
+            }
+            return this.hljsInstance;
+        }
+
+        applyHighlightFallback(container) {
+            container.querySelectorAll('pre code').forEach(codeEl => {
+                codeEl.classList.add('hljs');
+            });
+        }
+
+        async ensureHighlight() {
+            if (this.hljsReady) return this.hljsReady;
+            this.hljsReady = (async () => {
+                const cssLoaded = await this.loadHighlightCdnCss();
+                if (!cssLoaded) await this.loadHighlightFallbackCss();
+                const hljs = await this.loadHighlightCdnScript();
+                if (hljs) return hljs;
+                return await this.loadHighlightFallbackScript();
+            })();
             return this.hljsReady;
         }
 
+        loadKatexCdnCss() {
+            if (this.katexCssLoaded) return Promise.resolve(true);
+            if (this.katexCdnCssReady) return this.katexCdnCssReady;
+            this.katexCdnCssReady = new Promise((resolve) => {
+                if (!this.shadow) {
+                    resolve(false);
+                    return;
+                }
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = this.KATEX_CSS_URL;
+                link.onload = () => {
+                    this.katexCssLoaded = true;
+                    resolve(true);
+                };
+                link.onerror = () => resolve(false);
+                this.shadow.appendChild(link);
+            });
+            return this.katexCdnCssReady;
+        }
+
+        loadKatexCdnScript() {
+            if (this.katexInstance) return Promise.resolve(this.katexInstance);
+            if (window.katex) {
+                this.katexInstance = window.katex;
+                return Promise.resolve(this.katexInstance);
+            }
+            if (this.katexCdnScriptReady) return this.katexCdnScriptReady;
+            this.katexCdnScriptReady = new Promise((resolve) => {
+                if (!this.shadow) {
+                    resolve(null);
+                    return;
+                }
+                const script = document.createElement('script');
+                script.src = this.KATEX_JS_URL;
+                script.onload = () => {
+                    this.katexInstance = window.katex || null;
+                    resolve(this.katexInstance);
+                };
+                script.onerror = () => resolve(null);
+                this.shadow.appendChild(script);
+            });
+            return this.katexCdnScriptReady;
+        }
+
+        loadKatexCdnAutoRender() {
+            if (this.katexAutoRender) return Promise.resolve(this.katexAutoRender);
+            if (window.renderMathInElement) {
+                this.katexAutoRender = window.renderMathInElement;
+                return Promise.resolve(this.katexAutoRender);
+            }
+            if (this.katexCdnAutoReady) return this.katexCdnAutoReady;
+            this.katexCdnAutoReady = new Promise((resolve) => {
+                if (!this.shadow) {
+                    resolve(null);
+                    return;
+                }
+                const script = document.createElement('script');
+                script.src = this.KATEX_AUTO_URL;
+                script.onload = () => {
+                    this.katexAutoRender = window.renderMathInElement || null;
+                    resolve(this.katexAutoRender);
+                };
+                script.onerror = () => resolve(null);
+                this.shadow.appendChild(script);
+            });
+            return this.katexCdnAutoReady;
+        }
+
+        async loadKatexFallbackCss() {
+            if (this.katexCssLoaded) return;
+            const cssText = await this.fetchTextAsset(this.KATEX_CSS_URL);
+            if (cssText) {
+                this.injectKatexCss(cssText);
+                this.katexCssLoaded = true;
+            }
+        }
+
+        async loadKatexFallbackScript() {
+            if (this.katexInstance) return this.katexInstance;
+            if (window.katex) {
+                this.katexInstance = window.katex;
+                return this.katexInstance;
+            }
+            const scriptText = await this.fetchTextAsset(this.KATEX_JS_URL);
+            if (!scriptText) return null;
+            try {
+                const target = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
+                const runner = new Function('window', 'globalThis', 'self', `${scriptText}\nreturn window.katex || globalThis.katex || null;`);
+                const katex = runner(target, target, target);
+                this.katexInstance = katex || target.katex || null;
+            } catch (e) {
+                this.katexInstance = null;
+            }
+            return this.katexInstance;
+        }
+
+        async loadKatexFallbackAutoRender() {
+            if (this.katexAutoRender) return this.katexAutoRender;
+            if (window.renderMathInElement) {
+                this.katexAutoRender = window.renderMathInElement;
+                return this.katexAutoRender;
+            }
+            const scriptText = await this.fetchTextAsset(this.KATEX_AUTO_URL);
+            if (!scriptText) return null;
+            try {
+                const target = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
+                const runner = new Function('window', 'globalThis', 'self', `${scriptText}\nreturn window.renderMathInElement || globalThis.renderMathInElement || null;`);
+                const render = runner(target, target, target);
+                this.katexAutoRender = render || target.renderMathInElement || null;
+            } catch (e) {
+                this.katexAutoRender = null;
+            }
+            return this.katexAutoRender;
+        }
+
+        async ensureKatex() {
+            if (this.katexReady) return this.katexReady;
+            this.katexReady = (async () => {
+                const cssLoaded = await this.loadKatexCdnCss();
+                if (!cssLoaded) await this.loadKatexFallbackCss();
+                const katex = await this.loadKatexCdnScript();
+                const autoRender = await this.loadKatexCdnAutoRender();
+                if (katex && autoRender) return { katex, renderMathInElement: autoRender };
+                const fallbackKatex = katex || await this.loadKatexFallbackScript();
+                const fallbackRender = autoRender || await this.loadKatexFallbackAutoRender();
+                if (fallbackKatex && fallbackRender) return { katex: fallbackKatex, renderMathInElement: fallbackRender };
+                return null;
+            })();
+            return this.katexReady;
+        }
+
+        applyMathTypesetting(container) {
+            this.ensureKatex().then((api) => {
+                if (!api || typeof api.renderMathInElement !== 'function') return;
+                api.renderMathInElement(container, {
+                    delimiters: [
+                        { left: '$$', right: '$$', display: true },
+                        { left: '\\[', right: '\\]', display: true },
+                        { left: '\\begin{equation}', right: '\\end{equation}', display: true },
+                        { left: '\\(', right: '\\)', display: false }
+                    ],
+                    throwOnError: false,
+                    ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+                });
+            });
+        }
+
         applyHighlighting(container) {
-            this.loadHighlightJS().then(() => {
+            this.ensureHighlight().then((hljs) => {
+                if (!hljs || typeof hljs.highlightElement !== 'function') {
+                    this.applyHighlightFallback(container);
+                    return;
+                }
                 container.querySelectorAll('pre code').forEach(codeEl => {
                     hljs.highlightElement(codeEl);
                 });
@@ -1364,7 +1676,7 @@ License: CC0
 
         async handleImageGen() {
             const prompt = this.elements.input.value.trim();
-            if (!prompt || this.state.isTyping) return;
+            if (!prompt || this.isChatLoading(this.currentChatId)) return;
 
             const requestChatId = this.currentChatId;
             this.elements.input.value = '';
@@ -1737,12 +2049,7 @@ License: CC0
             this.elements.settingsPanel.classList.remove('visible');
             this.state.isInfoOpen = false;
             this.elements.infoPanel.classList.remove('visible');
-            this.state.isTyping = false;
-            this.state.loadingChatId = null;
-            this.elements.sendBtn.disabled = false;
-            this.elements.input.disabled = false;
-            this.updateTypingIndicatorVisibility();
-            this.elements.input.focus();
+            this.syncCurrentChatLoadingUi(true);
         }
 
         setActiveChatId(chatId) {
@@ -1780,6 +2087,7 @@ License: CC0
             }
 
             this.renderMessages();
+            this.syncCurrentChatLoadingUi();
         }
 
         async generateTextOnce(prompt) {
@@ -2074,6 +2382,7 @@ License: CC0
             this.state.autoTitle = chat.autoTitle || null;
 
             this.renderMessages();
+            this.syncCurrentChatLoadingUi();
             this.toggleHistory(); // Close history
         }
 
@@ -2776,13 +3085,32 @@ License: CC0
         }
 
         renderTextWithBoldAndLinks(text) {
+            const tokens = [
+                { open: '**', close: '**', tag: 'strong' },
+                { open: '~~', close: '~~', tag: 'del' },
+                { open: '<u>', close: '</u>', tag: 'u' },
+                { open: '*', close: '*', tag: 'em' },
+                { open: '_', close: '_', tag: 'em' }
+            ];
+            const findNextToken = (fromIndex) => {
+                let best = null;
+                tokens.forEach((token) => {
+                    const idx = text.indexOf(token.open, fromIndex);
+                    if (idx === -1) return;
+                    if (!best || idx < best.idx || (idx === best.idx && token.open.length > best.token.open.length)) {
+                        best = { idx, token };
+                    }
+                });
+                return best;
+            };
+
             let html = '';
             let hasMarkup = false;
             let index = 0;
 
             while (index < text.length) {
-                const start = text.indexOf('**', index);
-                if (start === -1) {
+                const next = findNextToken(index);
+                if (!next) {
                     const tail = text.slice(index);
                     const renderedTail = this.renderTextWithLinks(tail);
                     html += renderedTail.html;
@@ -2790,34 +3118,39 @@ License: CC0
                     break;
                 }
 
-                const before = text.slice(index, start);
-                const renderedBefore = this.renderTextWithLinks(before);
-                html += renderedBefore.html;
-                hasMarkup = hasMarkup || renderedBefore.hasLinks;
-
-                const end = text.indexOf('**', start + 2);
-                if (end === -1) {
-                    const rest = text.slice(start);
-                    const renderedRest = this.renderTextWithLinks(rest);
-                    html += renderedRest.html;
-                    hasMarkup = hasMarkup || renderedRest.hasLinks;
-                    break;
+                if (next.idx > index) {
+                    const before = text.slice(index, next.idx);
+                    const renderedBefore = this.renderTextWithLinks(before);
+                    html += renderedBefore.html;
+                    hasMarkup = hasMarkup || renderedBefore.hasLinks;
                 }
 
-                const boldText = text.slice(start + 2, end);
-                if (!boldText.trim()) {
-                    const literal = text.slice(start, end + 2);
+                const { open, close, tag } = next.token;
+                const start = next.idx;
+                const end = text.indexOf(close, start + open.length);
+                if (end === -1) {
+                    const literal = text.slice(start, start + open.length);
                     const renderedLiteral = this.renderTextWithLinks(literal);
                     html += renderedLiteral.html;
                     hasMarkup = hasMarkup || renderedLiteral.hasLinks;
-                    index = end + 2;
+                    index = start + open.length;
                     continue;
                 }
 
-                const renderedBold = this.renderTextWithLinks(boldText);
-                html += `<strong>${renderedBold.html}</strong>`;
+                const inner = text.slice(start + open.length, end);
+                if (!inner.trim()) {
+                    const literal = text.slice(start, end + close.length);
+                    const renderedLiteral = this.renderTextWithLinks(literal);
+                    html += renderedLiteral.html;
+                    hasMarkup = hasMarkup || renderedLiteral.hasLinks;
+                    index = end + close.length;
+                    continue;
+                }
+
+                const renderedInner = this.renderTextWithBoldAndLinks(inner);
+                html += `<${tag}>${renderedInner.html}</${tag}>`;
                 hasMarkup = true;
-                index = end + 2;
+                index = end + close.length;
             }
 
             return { html, hasMarkup };
@@ -2852,9 +3185,210 @@ License: CC0
         }
 
         renderInlineMarkdown(text) {
-            const rendered = this.renderTextWithInlineCode(text);
-            const html = rendered.html.replace(/\n/g, '<br>');
-            return { html, hasMarkup: rendered.hasMarkup || html !== this.escapeHtml(text) };
+            const extracted = this.extractMathSegments(text);
+            const rendered = this.renderTextWithInlineCode(extracted.text);
+            let html = rendered.html.replace(/\n/g, '<br>');
+            extracted.segments.forEach((segment) => {
+                const safeMath = this.escapeHtml(segment.text);
+                html = html.split(segment.placeholder).join(safeMath);
+            });
+            const fallback = this.escapeHtml(text).replace(/\n/g, '<br>');
+            return { html, hasMarkup: rendered.hasMarkup || html !== fallback };
+        }
+
+        extractMathSegments(text) {
+            const delimiters = [
+                { start: '$$', end: '$$' },
+                { start: '\\\\[', end: '\\\\]' },
+                { start: '\\\\(', end: '\\\\)' },
+                { start: '\\\\begin{equation}', end: '\\\\end{equation}' }
+            ];
+            const segments = [];
+            let output = '';
+            let index = 0;
+
+            const findNext = (fromIndex) => {
+                let found = null;
+                delimiters.forEach((delim) => {
+                    const idx = text.indexOf(delim.start, fromIndex);
+                    if (idx === -1) return;
+                    if (!found || idx < found.index) {
+                        found = { index: idx, delim };
+                    }
+                });
+                return found;
+            };
+
+            while (index < text.length) {
+                const next = findNext(index);
+                if (!next) {
+                    output += text.slice(index);
+                    break;
+                }
+                output += text.slice(index, next.index);
+                const endIndex = text.indexOf(next.delim.end, next.index + next.delim.start.length);
+                if (endIndex === -1) {
+                    output += text.slice(next.index);
+                    break;
+                }
+                const raw = text.slice(next.index, endIndex + next.delim.end.length);
+                const normalized = this.normalizeMathText(raw);
+                const placeholder = `%%NV-MATH-${segments.length}%%`;
+                segments.push({ placeholder, text: normalized });
+                output += placeholder;
+                index = endIndex + next.delim.end.length;
+            }
+
+            return { text: output, segments };
+        }
+
+        normalizeMathText(text) {
+            let output = String(text || '');
+            output = output.replace(/\\displaystyle\s*(?=\\begin\{equation\})/g, '');
+            output = output.replace(/\\displaystyle/g, '');
+            output = output.replace(/\\sum\s*\{([^}]*)\}\s*\^\s*\{([^}]*)\}/g, '\\sum_{$1}^{$2}');
+            output = output.replace(/\\prod\s*\{([^}]*)\}\s*\^\s*\{([^}]*)\}/g, '\\prod_{$1}^{$2}');
+            output = output.replace(/(^|[^\\a-zA-Z])([a-zA-Z])\{([a-zA-Z0-9]+)\}/g, '$1$2_{$3}');
+            return output;
+        }
+
+        getTableWrapIconSvg() {
+            return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18"/><path d="M3 8h12a3 3 0 0 1 0 6h-1"/><path d="M3 12h12"/><path d="M3 16h6"/><path d="m15 14-3 3 3 3"/></svg>`;
+        }
+
+        getTableFullscreenIconSvg() {
+            return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h6"/><path d="M3 3v6"/><path d="M21 3h-6"/><path d="M21 3v6"/><path d="M3 21h6"/><path d="M3 21v-6"/><path d="M21 21h-6"/><path d="M21 21v-6"/></svg>`;
+        }
+
+        getTableCloseIconSvg() {
+            return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+        }
+
+        isTableSeparatorLine(line) {
+            return /^\s*\|?(?:\s*:?-{3,}:?\s*\|)+\s*$/.test(line || '');
+        }
+
+        parseTableRow(line) {
+            const trimmed = String(line || '').trim();
+            const row = trimmed.replace(/^\|/, '').replace(/\|$/, '');
+            return row.split('|').map(cell => cell.trim());
+        }
+
+        isTableRowLine(line, requireEdges = true) {
+            const trimmed = String(line || '').trim();
+            if (!trimmed) return false;
+            if (requireEdges && !/^\|.*\|$/.test(trimmed)) return false;
+            const cells = this.parseTableRow(trimmed);
+            return cells.length >= 2;
+        }
+
+        isTabRowLine(line) {
+            const trimmed = String(line || '');
+            if (!trimmed.trim()) return false;
+            if (!trimmed.includes('\t')) return false;
+            const cells = this.parseTabRow(trimmed);
+            return cells.length >= 2;
+        }
+
+        parseTabRow(line) {
+            return String(line || '').split('\t').map(cell => cell.trim());
+        }
+
+        renderTableFromRows(headerCells, bodyRows) {
+            const maxCols = Math.max(headerCells.length, ...bodyRows.map(row => row.length), 0);
+            const renderCell = (cell) => {
+                const rendered = this.renderInlineMarkdown(cell || '');
+                return rendered.html;
+            };
+            const tableBar = `<div class="nv-md-table-bar"><div class="nv-md-table-title"><span class="nv-code-label">Table</span><button class="nv-md-table-action" data-nv-table-wrap-toggle title="Wrap text" aria-pressed="false">${this.getTableWrapIconSvg()}</button><button class="nv-md-table-action" data-nv-table-fullscreen title="Fullscreen">${this.getTableFullscreenIconSvg()}</button></div></div>`;
+            let html = `<div class="nv-md-table-wrap nv-table-scroll-x">${tableBar}<div class="nv-md-table-scroll"><table class="nv-md-table"><thead><tr>`;
+            for (let c = 0; c < maxCols; c += 1) {
+                html += `<th>${renderCell(headerCells[c])}</th>`;
+            }
+            html += '</tr></thead><tbody>';
+            bodyRows.forEach((row) => {
+                html += '<tr>';
+                for (let c = 0; c < maxCols; c += 1) {
+                    html += `<td>${renderCell(row[c])}</td>`;
+                }
+                html += '</tr>';
+            });
+            html += '</tbody></table></div></div>';
+            return html;
+        }
+
+        ensureTableModal() {
+            if (this.tableModalOverlay || !this.shadow) return;
+            const overlay = document.createElement('div');
+            overlay.className = 'nv-table-modal';
+            overlay.innerHTML = `
+                <div class="nv-table-modal-content" role="dialog" aria-modal="true">
+                    <div class="nv-table-modal-header">
+                        <div class="nv-md-table-title"><span class="nv-code-label">Table</span></div>
+                        <button class="nv-table-modal-close" data-nv-table-close title="Close">${this.getTableCloseIconSvg()}</button>
+                    </div>
+                    <div class="nv-table-modal-body"></div>
+                </div>
+            `;
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) this.closeTableModal();
+            });
+            const closeBtn = overlay.querySelector('[data-nv-table-close]');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => this.closeTableModal());
+            }
+            this.shadow.appendChild(overlay);
+            this.tableModalOverlay = overlay;
+            this.tableModalBody = overlay.querySelector('.nv-table-modal-body');
+        }
+
+        closeTableModal() {
+            if (!this.tableModalOverlay) return;
+            this.tableModalOverlay.classList.remove('visible');
+            if (this.tableModalBody) {
+                this.tableModalBody.innerHTML = '';
+            }
+        }
+
+        openTableFullscreen(tableWrap) {
+            if (!tableWrap) return;
+            this.ensureTableModal();
+            if (!this.tableModalOverlay || !this.tableModalBody) return;
+            const table = tableWrap.querySelector('table');
+            if (!table) return;
+            this.tableModalBody.innerHTML = '';
+            const scroll = document.createElement('div');
+            scroll.className = 'nv-md-table-scroll nv-md-table-scroll-lg nv-table-scroll-x';
+            scroll.appendChild(table.cloneNode(true));
+            this.tableModalBody.appendChild(scroll);
+            this.tableModalOverlay.classList.add('visible');
+        }
+
+        initTableActions(container) {
+            const fullscreenButtons = container.querySelectorAll('[data-nv-table-fullscreen]');
+            fullscreenButtons.forEach((btn) => {
+                if (btn.dataset.nvTableBound === '1') return;
+                btn.dataset.nvTableBound = '1';
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const wrap = btn.closest('.nv-md-table-wrap');
+                    this.openTableFullscreen(wrap);
+                });
+            });
+
+            const wrapButtons = container.querySelectorAll('[data-nv-table-wrap-toggle]');
+            wrapButtons.forEach((btn) => {
+                if (btn.dataset.nvTableBound === '1') return;
+                btn.dataset.nvTableBound = '1';
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const wrap = btn.closest('.nv-md-table-wrap');
+                    if (!wrap) return;
+                    const active = btn.classList.toggle('active');
+                    wrap.classList.toggle('nv-table-scroll-x', !active);
+                    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+                });
+            });
         }
 
         renderMarkdownBlocks(text) {
@@ -2889,14 +3423,78 @@ License: CC0
                 quoteLines = [];
             };
 
-            lines.forEach((line) => {
+            for (let i = 0; i < lines.length; i += 1) {
+                const line = lines[i];
                 const trimmed = line.trim();
 
                 if (!trimmed) {
                     flushParagraph();
                     flushQuote();
                     flushList();
-                    return;
+                    continue;
+                }
+
+                const nextLine = lines[i + 1] || '';
+                if (this.isTabRowLine(line)) {
+                    flushParagraph();
+                    flushQuote();
+                    flushList();
+
+                    const headerCells = this.parseTabRow(line);
+                    const bodyRows = [];
+                    while (i + 1 < lines.length && this.isTabRowLine(lines[i + 1])) {
+                        bodyRows.push(this.parseTabRow(lines[i + 1]));
+                        i += 1;
+                    }
+                    html += this.renderTableFromRows(headerCells, bodyRows);
+                    hasMarkup = true;
+                    continue;
+                }
+
+                if (this.isTableRowLine(line) && this.isTableSeparatorLine(nextLine)) {
+                    flushParagraph();
+                    flushQuote();
+                    flushList();
+
+                    const headerCells = this.parseTableRow(line);
+                    i += 1;
+                    const bodyRows = [];
+                    while (i + 1 < lines.length && this.isTableRowLine(lines[i + 1]) && lines[i + 1].trim()) {
+                        bodyRows.push(this.parseTableRow(lines[i + 1]));
+                        i += 1;
+                    }
+                    html += this.renderTableFromRows(headerCells, bodyRows);
+                    hasMarkup = true;
+                    continue;
+                }
+
+                const mathStartMatch = trimmed.match(/^\\\[(.*)$/);
+                if (mathStartMatch) {
+                    flushParagraph();
+                    flushQuote();
+                    flushList();
+                    let mathContent = (mathStartMatch[1] || '').trim();
+                    let closed = false;
+                    if (mathContent.includes('\\]')) {
+                        const endIndex = mathContent.indexOf('\\]');
+                        mathContent = mathContent.slice(0, endIndex);
+                        closed = true;
+                    }
+                    while (!closed && i + 1 < lines.length) {
+                        i += 1;
+                        const nextMathLine = lines[i];
+                        const endIndex = nextMathLine.indexOf('\\]');
+                        if (endIndex !== -1) {
+                            mathContent += (mathContent ? '\n' : '') + nextMathLine.slice(0, endIndex);
+                            closed = true;
+                            break;
+                        }
+                        mathContent += (mathContent ? '\n' : '') + nextMathLine;
+                    }
+                    const mathBlock = this.normalizeMathText(`\\[${mathContent}\\]`);
+                    html += `<div class="nv-md-math">${this.escapeHtml(mathBlock)}</div>`;
+                    hasMarkup = true;
+                    continue;
                 }
 
                 const hrMatch = /^(?:-{3,}|\*{3,}|_{3,})$/.test(trimmed);
@@ -2906,7 +3504,7 @@ License: CC0
                     flushList();
                     html += '<hr class="nv-md-hr">';
                     hasMarkup = true;
-                    return;
+                    continue;
                 }
 
                 const headingMatch = trimmed.match(/^(#{1,6})\s+(.*)$/);
@@ -2918,7 +3516,7 @@ License: CC0
                     const rendered = this.renderInlineMarkdown(headingMatch[2] || '');
                     html += `<div class="nv-md-h${level}">${rendered.html}</div>`;
                     hasMarkup = true;
-                    return;
+                    continue;
                 }
 
                 const quoteMatch = line.match(/^\s*>\s?(.*)$/);
@@ -2926,7 +3524,7 @@ License: CC0
                     flushParagraph();
                     flushList();
                     quoteLines.push(quoteMatch[1] || '');
-                    return;
+                    continue;
                 }
 
                 if (quoteLines.length) {
@@ -2950,11 +3548,11 @@ License: CC0
                     const rendered = this.renderInlineMarkdown(itemText || '');
                     html += `<li>${rendered.html}</li>`;
                     hasMarkup = true;
-                    return;
+                    continue;
                 }
 
                 paragraphLines.push(line);
-            });
+            }
 
             flushParagraph();
             flushQuote();
@@ -3172,6 +3770,66 @@ License: CC0
             return { html, hasTool };
         }
 
+        createActionButton(title, svgMarkup, onClick) {
+            const btn = document.createElement('button');
+            btn.className = 'nv-action-btn';
+            btn.title = title;
+            btn.innerHTML = svgMarkup;
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                onClick(btn);
+            };
+            return btn;
+        }
+
+        getMessageCopyText(messageEl, fallbackText) {
+            if (messageEl) {
+                const contentEl = messageEl.querySelector('.nv-message-content');
+                const text = contentEl?.innerText || contentEl?.textContent || '';
+                if (text && text.replace(/\s/g, '')) return text;
+            }
+            return fallbackText || '';
+        }
+
+        appendImageActionButtons(actions, htmlContent) {
+            const urlMatch = htmlContent.match(/src="([^"]+)"/);
+            if (!urlMatch) return false;
+            const altMatch = htmlContent.match(/alt="([^"]*)"/);
+            const altText = altMatch ? altMatch[1] : '';
+            const imageUrl = urlMatch[1];
+            const downloadBtn = this.createActionButton(
+                'Download Image',
+                `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>`,
+                () => {
+                    const filename = this.buildImageFilename(altText, imageUrl);
+                    this.downloadImage(imageUrl, filename);
+                }
+            );
+            actions.appendChild(downloadBtn);
+
+            const copyImgBtn = this.createActionButton(
+                'Copy Image',
+                `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`,
+                (btn) => {
+                    this.copyImageToClipboard(imageUrl, btn);
+                }
+            );
+            actions.appendChild(copyImgBtn);
+            return true;
+        }
+
+        appendTextCopyButton(actions, text, messageEl = null) {
+            const copyBtn = this.createActionButton(
+                'Copy',
+                `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`,
+                (btn) => {
+                    const plainText = this.getMessageCopyText(messageEl, text);
+                    this.copyToClipboard(plainText, btn);
+                }
+            );
+            actions.appendChild(copyBtn);
+        }
+
         applyAssistantContent(contentDiv, content, forceHtml = false) {
             if (forceHtml || content.startsWith('<img')) {
                 contentDiv.innerHTML = content;
@@ -3188,8 +3846,10 @@ License: CC0
             this.wrapStandaloneImages(contentDiv);
             this.initDirectImages(contentDiv);
             this.initImageActions(contentDiv);
+            this.initTableActions(contentDiv);
             this.initCodeCopy(contentDiv);
             this.applyHighlighting(contentDiv);
+            this.applyMathTypesetting(contentDiv);
         }
 
         updateMessageContent(messageIndex) {
@@ -3306,47 +3966,9 @@ License: CC0
                     actions.className = 'nv-message-actions';
 
                     if (msg.content.trim().startsWith('<img')) {
-                        // Extract image URL from HTML
-                        const urlMatch = msg.content.match(/src="([^"]+)"/);
-                        const altMatch = msg.content.match(/alt="([^"]*)"/);
-                        const altText = altMatch ? altMatch[1] : '';
-                        if (urlMatch) {
-                            const imageUrl = urlMatch[1];
-
-                            // Download Button (Icon Only)
-                            const downloadBtn = document.createElement('button');
-                            downloadBtn.className = 'nv-action-btn';
-                            downloadBtn.title = 'Download Image';
-                            downloadBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>`;
-                            downloadBtn.onclick = (e) => {
-                                e.stopPropagation();
-                                const filename = this.buildImageFilename(altText, imageUrl);
-                                this.downloadImage(imageUrl, filename);
-                            };
-                            actions.appendChild(downloadBtn);
-
-                            // Copy Image Button (Icon Only)
-                            const copyImgBtn = document.createElement('button');
-                            copyImgBtn.className = 'nv-action-btn';
-                            copyImgBtn.title = 'Copy Image';
-                            copyImgBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
-                            copyImgBtn.onclick = (e) => {
-                                e.stopPropagation();
-                                this.copyImageToClipboard(imageUrl, copyImgBtn);
-                            };
-                            actions.appendChild(copyImgBtn);
-                        }
+                        this.appendImageActionButtons(actions, msg.content);
                     } else {
-                        // Copy button for text (Icon Only)
-                        const copyBtn = document.createElement('button');
-                        copyBtn.className = 'nv-action-btn';
-                        copyBtn.title = 'Copy';
-                        copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
-                        copyBtn.onclick = (e) => {
-                            e.stopPropagation();
-                            this.copyToClipboard(msg.content, copyBtn);
-                        };
-                        actions.appendChild(copyBtn);
+                        this.appendTextCopyButton(actions, msg.content, div);
                     }
 
                     // Regenerate button (Icon Only)
@@ -3852,47 +4474,9 @@ License: CC0
                 actions.className = 'nv-message-actions';
 
                 if (isHtml && content.trim().startsWith('<img')) {
-                    // Extract image URL from HTML
-                    const urlMatch = content.match(/src="([^"]+)"/);
-                    const altMatch = content.match(/alt="([^"]*)"/);
-                    const altText = altMatch ? altMatch[1] : '';
-                    if (urlMatch) {
-                        const imageUrl = urlMatch[1];
-
-                        // Download Button (Icon Only)
-                        const downloadBtn = document.createElement('button');
-                        downloadBtn.className = 'nv-action-btn';
-                        downloadBtn.title = 'Download Image';
-                        downloadBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>`;
-                        downloadBtn.onclick = (e) => {
-                            e.stopPropagation();
-                            const filename = this.buildImageFilename(altText, imageUrl);
-                            this.downloadImage(imageUrl, filename);
-                        };
-                        actions.appendChild(downloadBtn);
-
-                        // Copy Image Button (Icon Only)
-                        const copyImgBtn = document.createElement('button');
-                        copyImgBtn.className = 'nv-action-btn';
-                        copyImgBtn.title = 'Copy Image';
-                        copyImgBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
-                        copyImgBtn.onclick = (e) => {
-                            e.stopPropagation();
-                            this.copyImageToClipboard(imageUrl, copyImgBtn);
-                        };
-                        actions.appendChild(copyImgBtn);
-                    }
+                    this.appendImageActionButtons(actions, content);
                 } else {
-                    // Copy button for text (Icon Only)
-                    const copyBtn = document.createElement('button');
-                    copyBtn.className = 'nv-action-btn';
-                    copyBtn.title = 'Copy';
-                    copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
-                    copyBtn.onclick = (e) => {
-                        e.stopPropagation();
-                        this.copyToClipboard(content, copyBtn);
-                    };
-                    actions.appendChild(copyBtn);
+                    this.appendTextCopyButton(actions, content, div);
                 }
 
                 // Regenerate button (Icon Only)
@@ -3929,43 +4513,77 @@ License: CC0
             container.scrollTop = container.scrollHeight;
         }
 
-        updateTypingIndicatorVisibility() {
-            const shouldShow = this.state.isTyping && this.state.loadingChatId === this.currentChatId;
-            this.elements.typingIndicator.classList.toggle('visible', shouldShow);
+        getChatLoadingCount(chatId) {
+            return this.loadingByChat.get(chatId) || 0;
         }
 
-        setLoadingText(text) {
+        isChatLoading(chatId) {
+            return this.getChatLoadingCount(chatId) > 0;
+        }
+
+        applyLoadingText(text) {
             if (this.elements.typingText) {
                 this.elements.typingText.textContent = text || '';
                 this.elements.typingText.style.display = text ? 'inline-block' : 'none';
             }
         }
 
-        setLoading(loading, chatId = this.currentChatId) {
-            if (!loading) this.setLoadingText('');
+        syncCurrentChatLoadingUi(shouldFocus = false) {
+            const isLoading = this.isChatLoading(this.currentChatId);
+            this.elements.sendBtn.disabled = isLoading;
+            this.elements.input.disabled = isLoading;
+            this.updateTypingIndicatorVisibility();
+            if (shouldFocus && !isLoading) this.elements.input.focus();
+        }
 
+        updateTypingIndicatorVisibility() {
+            const shouldShow = this.isChatLoading(this.currentChatId);
+            this.elements.typingIndicator.classList.toggle('visible', shouldShow);
+            const text = shouldShow ? (this.loadingTextByChat.get(this.currentChatId) || '') : '';
+            this.applyLoadingText(text);
+            this.state.isTyping = shouldShow;
+            this.state.loadingChatId = shouldShow ? this.currentChatId : null;
+        }
+
+        setLoadingText(text, chatId = this.currentChatId) {
+            const normalized = text || '';
+            if (normalized) {
+                this.loadingTextByChat.set(chatId, normalized);
+            } else {
+                this.loadingTextByChat.delete(chatId);
+            }
+            if (chatId === this.currentChatId) {
+                this.applyLoadingText(normalized);
+            }
+        }
+
+        setLoading(loading, chatId = this.currentChatId) {
+            const currentCount = this.loadingByChat.get(chatId) || 0;
             if (loading) {
-                this.state.isTyping = true;
-                this.state.loadingChatId = chatId;
-            } else if (this.state.loadingChatId === chatId) {
-                this.state.isTyping = false;
-                this.state.loadingChatId = null;
+                if (currentCount === 0) this.setLoadingText('', chatId);
+                this.loadingByChat.set(chatId, currentCount + 1);
+            } else if (currentCount > 1) {
+                this.loadingByChat.set(chatId, currentCount - 1);
+            } else {
+                this.loadingByChat.delete(chatId);
+                this.setLoadingText('', chatId);
             }
 
             const isCurrentChat = chatId === this.currentChatId;
+            const isChatLoading = this.isChatLoading(chatId);
             if (isCurrentChat) {
-                this.elements.sendBtn.disabled = loading;
-                this.elements.input.disabled = loading;
+                this.elements.sendBtn.disabled = isChatLoading;
+                this.elements.input.disabled = isChatLoading;
             }
 
             this.updateTypingIndicatorVisibility();
-            if (!loading && isCurrentChat) this.elements.input.focus();
+            if (!isChatLoading && isCurrentChat) this.elements.input.focus();
             if (isCurrentChat) this.scrollToBottom();
         }
 
         async handleSend() {
             const text = this.elements.input.value.trim();
-            if (!text || this.state.isTyping) return;
+            if (!text || this.isChatLoading(this.currentChatId)) return;
 
             // Check if image mode is active
             if (this.state.isImageMode) {

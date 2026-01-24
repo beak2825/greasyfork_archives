@@ -4,7 +4,7 @@
 // @namespace            https://github.com/v2hot/v2ex.rep
 // @homepageURL          https://github.com/v2hot/v2ex.rep#readme
 // @supportURL           https://github.com/v2hot/v2ex.rep/issues
-// @version              1.6.5
+// @version              1.7.1
 // @description          专注提升 V2EX 主题回复浏览体验的浏览器扩展/用户脚本。主要功能有 ✅ 修复有被 block 的用户时错位的楼层号；✅ 回复时自动带上楼层号；✅ 显示热门回复；✅ 显示被引用的回复；✅ 查看用户在当前主题下的所有回复与被提及的回复；✅ 自动预加载所有分页，支持解析显示跨页面引用；✅ 回复时上传图片；✅ 无感自动签到；✅ 懒加载用户头像图片；✅ 一直显示感谢按钮 🙏；✅ 一直显示隐藏回复按钮 🙈；✅ 快速发送感谢/快速隐藏回复（no confirm）等。
 // @description:zh-CN    专注提升 V2EX 主题回复浏览体验的浏览器扩展/用户脚本。主要功能有 ✅ 修复有被 block 的用户时错位的楼层号；✅ 回复时自动带上楼层号；✅ 显示热门回复；✅ 显示被引用的回复；✅ 查看用户在当前主题下的所有回复与被提及的回复；✅ 自动预加载所有分页，支持解析显示跨页面引用；✅ 回复时上传图片；✅ 无感自动签到；✅ 懒加载用户头像图片；✅ 一直显示感谢按钮 🙏；✅ 一直显示隐藏回复按钮 🙈；✅ 快速发送感谢/快速隐藏回复（no confirm）等。
 // @icon                 https://www.v2ex.com/favicon.ico
@@ -601,7 +601,7 @@
     }
   }
   var style_default =
-    ':host{all:initial;--browser-extension-settings-background-color: #f2f2f7;--browser-extension-settings-text-color: #444444;--browser-extension-settings-link-color: #217dfc;--browser-extension-settings-border-radius: 8px;--browser-extension-settings-group-background-color: #ffffff;--browser-extension-settings-group-separator-color: #cccccc;--darkreader-border--browser-extension-settings-group-background-color: #303436;--darkreader-bg--browser-extension-settings-group-background-color: #303436;--darkreader-bg--browser-extension-settings-group-separator-color: #181a1b;--sb-track-color: #00000000;--sb-thumb-color: #33334480;--sb-size: 2px;--font-family: "helvetica neue", "microsoft yahei", arial, sans-serif}:host .browser_extension_settings_v2_wrapper{position:fixed;top:10px;right:30px;display:none;z-index:2147483647;border-radius:var(--browser-extension-settings-border-radius);-webkit-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);-moz-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);box-shadow:0px 10px 39px 10px rgba(62,66,66,.22) !important;display:flex;background-color:var(--browser-extension-settings-background-color);font-family:var(--font-family);border-radius:var(--browser-extension-settings-border-radius)}:host .browser_extension_settings_v2_wrapper h1,:host .browser_extension_settings_v2_wrapper h2{border:none;color:var(--browser-extension-settings-text-color);padding:0;font-family:var(--font-family);line-height:normal;letter-spacing:normal}:host .browser_extension_settings_v2_wrapper h1{font-size:26px;font-weight:800;margin:18px 0}:host .browser_extension_settings_v2_wrapper h2{font-size:18px;font-weight:600;margin:14px 0}:host .browser_extension_settings_v2_wrapper footer{display:flex;justify-content:center;flex-direction:column;font-size:11px;margin:10px auto 0px;background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}:host .browser_extension_settings_v2_wrapper footer a{color:var(--browser-extension-settings-link-color) !important;font-family:var(--font-family);text-decoration:none;padding:0}:host .browser_extension_settings_v2_wrapper footer p{text-align:center;padding:0;margin:2px;line-height:13px;font-size:11px;color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}:host .thin_scrollbar{scrollbar-color:var(--sb-thumb-color) var(--sb-track-color);scrollbar-width:thin}:host .thin_scrollbar::-webkit-scrollbar{width:var(--sb-size)}:host .thin_scrollbar::-webkit-scrollbar-track{background:var(--sb-track-color);border-radius:10px}:host .thin_scrollbar::-webkit-scrollbar-thumb{background:var(--sb-thumb-color);border-radius:10px}.browser_extension_settings_v2_main{min-width:300px;max-height:90vh;overflow-y:auto;overflow-x:hidden;border-radius:var(--browser-extension-settings-border-radius);box-sizing:border-box;padding:10px 15px;background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}.browser_extension_settings_v2_main h2{text-align:center;margin:5px 0 0}.browser_extension_settings_v2_main .close-button{cursor:pointer;width:18px;height:18px;opacity:.5;transition:opacity .2s}.browser_extension_settings_v2_main .close-button:hover{opacity:1}.browser_extension_settings_v2_main .option_groups{background-color:var(--browser-extension-settings-group-separator-color);padding:0;border-style:solid;border-color:var(--browser-extension-settings-group-background-color);border-width:6px 15px;border-radius:10px;display:flex;flex-direction:column;gap:1px;margin:10px 0 0}.browser_extension_settings_v2_main .option_groups .action{font-size:14px;padding:6px 0 6px 0;color:var(--browser-extension-settings-link-color);cursor:pointer}.browser_extension_settings_v2_main .bes_external_link{font-size:14px;padding:6px 0 6px 0}.browser_extension_settings_v2_main .bes_external_link a,.browser_extension_settings_v2_main .bes_external_link a:visited,.browser_extension_settings_v2_main .bes_external_link a:hover{color:var(--browser-extension-settings-link-color);font-family:var(--font-family);text-decoration:none;cursor:pointer}.browser_extension_settings_v2_main .option_groups textarea{background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-size:12px;margin:10px 0 10px 0;padding:4px 8px;height:100px;width:100%;border:1px solid #a9a9a9;border-radius:4px;box-sizing:border-box}.browser_extension_settings_v2_main .switch_option,.browser_extension_settings_v2_main .select_option{display:flex;justify-content:space-between;align-items:center;padding:6px 0 6px 0;font-size:14px}.browser_extension_settings_v2_main .option_groups>*{background-color:var(--browser-extension-settings-group-background-color)}.browser_extension_settings_v2_main .bes_option>.bes_icon{width:24px;height:24px;margin-right:10px}.browser_extension_settings_v2_main .bes_option>.bes_title{margin-right:10px;flex-grow:1}.browser_extension_settings_v2_main .bes_option>.bes_select{color:var(--browser-extension-settings-text-color);box-sizing:border-box;background-color:var(--browser-extension-settings-group-background-color);height:24px;padding:0 2px 0 2px;margin:0;border-radius:6px;border:1px solid #ccc}.browser_extension_settings_v2_main .option_groups .bes_tip{position:relative;margin:0;padding:0 15px 0 0;border:none;max-width:none;font-size:14px}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_anchor{cursor:help;text-decoration:underline}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_content{position:absolute;bottom:15px;left:0;background-color:#fff;color:var(--browser-extension-settings-text-color);text-align:left;overflow-y:auto;max-height:300px;padding:10px;display:none;border-radius:5px;-webkit-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);-moz-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);box-shadow:0px 10px 39px 10px rgba(62,66,66,.22) !important}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_anchor:hover+.bes_tip_content,.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_content:hover{display:block}.browser_extension_settings_v2_main .option_groups .bes_tip p,.browser_extension_settings_v2_main .option_groups .bes_tip pre{margin:revert;padding:revert}.browser_extension_settings_v2_main .option_groups .bes_tip pre{font-family:Consolas,panic sans,bitstream vera sans mono,Menlo,microsoft yahei,monospace;font-size:13px;letter-spacing:.015em;line-height:120%;white-space:pre;overflow:auto;background-color:#f5f5f5;word-break:normal;overflow-wrap:normal;padding:.5em;border:none}.browser_extension_settings_v2_main .bes_switch_container{--button-width: 51px;--button-height: 24px;--toggle-diameter: 20px;--color-off: #e9e9eb;--color-on: #34c759;width:var(--button-width);height:var(--button-height);position:relative;padding:0;margin:0;flex:none;user-select:none}.browser_extension_settings_v2_main input[type=checkbox]{opacity:0;width:0;height:0;position:absolute}.browser_extension_settings_v2_main .bes_switch{width:100%;height:100%;display:block;background-color:var(--color-off);border-radius:calc(var(--button-height)/2);border:none;cursor:pointer;transition:all .2s ease-out}.browser_extension_settings_v2_main .bes_switch::before{display:none}.browser_extension_settings_v2_main .bes_slider{width:var(--toggle-diameter);height:var(--toggle-diameter);position:absolute;left:2px;top:calc(50% - var(--toggle-diameter)/2);border-radius:50%;background:#fff;box-shadow:0px 3px 8px rgba(0,0,0,.15),0px 3px 1px rgba(0,0,0,.06);transition:all .2s ease-out;cursor:pointer}.browser_extension_settings_v2_main input[type=checkbox]:checked+.bes_switch{background-color:var(--color-on)}.browser_extension_settings_v2_main input[type=checkbox]:checked+.bes_switch .bes_slider{left:calc(var(--button-width) - var(--toggle-diameter) - 2px)}@media(max-width: 500px){:host{right:10px}.browser_extension_settings_v2_main{max-height:85%}}'
+    ':host{all:initial;--browser-extension-settings-background-color: #f2f2f7;--browser-extension-settings-text-color: #444444;--browser-extension-settings-link-color: #217dfc;--browser-extension-settings-border-radius: 8px;--browser-extension-settings-group-background-color: #ffffff;--browser-extension-settings-group-separator-color: #cccccc;--darkreader-border--browser-extension-settings-group-background-color: #303436;--darkreader-bg--browser-extension-settings-group-background-color: #303436;--darkreader-bg--browser-extension-settings-group-separator-color: #181a1b;--sb-track-color: #00000000;--sb-thumb-color: #33334480;--sb-size: 2px;--font-family: "helvetica neue", "microsoft yahei", arial, sans-serif}:host .browser_extension_settings_v2_wrapper{position:fixed;top:10px;right:30px;display:none;z-index:2147483647;border-radius:var(--browser-extension-settings-border-radius);-webkit-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);-moz-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);box-shadow:0px 10px 39px 10px rgba(62,66,66,.22) !important;display:flex;background-color:var(--browser-extension-settings-background-color);font-family:var(--font-family);border-radius:var(--browser-extension-settings-border-radius)}:host .browser_extension_settings_v2_wrapper h1,:host .browser_extension_settings_v2_wrapper h2{border:none;color:var(--browser-extension-settings-text-color);padding:0;font-family:var(--font-family);line-height:normal;letter-spacing:normal}:host .browser_extension_settings_v2_wrapper h1{font-size:26px;font-weight:800;margin:18px 0}:host .browser_extension_settings_v2_wrapper h2{font-size:18px;font-weight:600;margin:14px 0}:host .browser_extension_settings_v2_wrapper footer{display:flex;justify-content:center;flex-direction:column;font-size:11px;margin:10px auto 0px;background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}:host .browser_extension_settings_v2_wrapper footer a{color:var(--browser-extension-settings-link-color) !important;font-family:var(--font-family);text-decoration:none;padding:0}:host .browser_extension_settings_v2_wrapper footer p{text-align:center;padding:0;margin:2px;line-height:13px;font-size:11px;color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}:host .thin_scrollbar{scrollbar-color:var(--sb-thumb-color) var(--sb-track-color);scrollbar-width:thin}:host .thin_scrollbar::-webkit-scrollbar{width:var(--sb-size)}:host .thin_scrollbar::-webkit-scrollbar-track{background:var(--sb-track-color);border-radius:10px}:host .thin_scrollbar::-webkit-scrollbar-thumb{background:var(--sb-thumb-color);border-radius:10px}.browser_extension_settings_v2_main{min-width:300px;max-height:90vh;overflow-y:auto;overflow-x:hidden;border-radius:var(--browser-extension-settings-border-radius);box-sizing:border-box;padding:10px 15px;background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}.browser_extension_settings_v2_main h2{text-align:center;margin:5px 0 0}.browser_extension_settings_v2_main .close-button{cursor:pointer;width:18px;height:18px;opacity:.5;transition:opacity .2s}.browser_extension_settings_v2_main .close-button:hover{opacity:1}.browser_extension_settings_v2_main .option_groups{background-color:var(--browser-extension-settings-group-separator-color);padding:0;border-style:solid;border-color:var(--browser-extension-settings-group-background-color);border-width:6px 15px;border-radius:10px;display:flex;flex-direction:column;gap:1px;margin:10px 0 0}.browser_extension_settings_v2_main .option_groups .action{font-size:14px;padding:6px 0 6px 0;color:var(--browser-extension-settings-link-color);cursor:pointer}.browser_extension_settings_v2_main .bes_external_link{font-size:14px;padding:6px 0 6px 0}.browser_extension_settings_v2_main .bes_external_link a,.browser_extension_settings_v2_main .bes_external_link a:visited,.browser_extension_settings_v2_main .bes_external_link a:hover{color:var(--browser-extension-settings-link-color);font-family:var(--font-family);text-decoration:none;cursor:pointer}.browser_extension_settings_v2_main .option_groups textarea{background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-size:12px;margin:10px 0 10px 0;padding:4px 8px;height:100px;width:100%;border:1px solid #a9a9a9;border-radius:4px;box-sizing:border-box}.browser_extension_settings_v2_main .switch_option,.browser_extension_settings_v2_main .select_option{display:flex;justify-content:space-between;align-items:center;padding:6px 0 6px 0;font-size:14px}.browser_extension_settings_v2_main .option_groups>*{background-color:var(--browser-extension-settings-group-background-color)}.browser_extension_settings_v2_main .bes_option>.bes_icon{width:24px;height:24px;margin-right:10px}.browser_extension_settings_v2_main .bes_option>.bes_title{margin-right:10px;flex-grow:1}.browser_extension_settings_v2_main .bes_option>.bes_select{color:var(--browser-extension-settings-text-color);box-sizing:border-box;background-color:var(--browser-extension-settings-group-background-color);height:24px;padding:0 2px 0 2px;margin:0;border-radius:6px;border:1px solid #ccc}.browser_extension_settings_v2_main .option_groups .bes_tip{position:relative;margin:0;margin-top:-1px;padding:6px 15px 6px 0;border:none;max-width:none;font-size:14px}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_anchor{cursor:help;text-decoration:underline}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_content{position:absolute;bottom:15px;left:0;background-color:#fff;color:var(--browser-extension-settings-text-color);text-align:left;overflow-y:auto;max-height:300px;padding:10px;display:none;border-radius:5px;-webkit-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);-moz-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);box-shadow:0px 10px 39px 10px rgba(62,66,66,.22) !important}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_anchor:hover+.bes_tip_content,.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_content:hover{display:block}.browser_extension_settings_v2_main .option_groups .bes_tip p,.browser_extension_settings_v2_main .option_groups .bes_tip pre{margin:revert;padding:revert}.browser_extension_settings_v2_main .option_groups .bes_tip pre{font-family:Consolas,panic sans,bitstream vera sans mono,Menlo,microsoft yahei,monospace;font-size:13px;letter-spacing:.015em;line-height:120%;white-space:pre;overflow:auto;background-color:#f5f5f5;word-break:normal;overflow-wrap:normal;padding:.5em;border:none}.browser_extension_settings_v2_main .bes_switch_container{--button-width: 51px;--button-height: 24px;--toggle-diameter: 20px;--color-off: #e9e9eb;--color-on: #34c759;width:var(--button-width);height:var(--button-height);position:relative;padding:0;margin:0;flex:none;user-select:none}.browser_extension_settings_v2_main input[type=checkbox]{opacity:0;width:0;height:0;position:absolute}.browser_extension_settings_v2_main .bes_switch{width:100%;height:100%;display:block;background-color:var(--color-off);border-radius:calc(var(--button-height)/2);border:none;cursor:pointer;transition:all .2s ease-out}.browser_extension_settings_v2_main .bes_switch::before{display:none}.browser_extension_settings_v2_main .bes_slider{width:var(--toggle-diameter);height:var(--toggle-diameter);position:absolute;left:2px;top:calc(50% - var(--toggle-diameter)/2);border-radius:50%;background:#fff;box-shadow:0px 3px 8px rgba(0,0,0,.15),0px 3px 1px rgba(0,0,0,.06);transition:all .2s ease-out;cursor:pointer}.browser_extension_settings_v2_main input[type=checkbox]:checked+.bes_switch{background-color:var(--color-on)}.browser_extension_settings_v2_main input[type=checkbox]:checked+.bes_switch .bes_slider{left:calc(var(--button-width) - var(--toggle-diameter) - 2px)}@media(max-width: 500px){:host{right:10px}.browser_extension_settings_v2_main{max-height:85%}}'
   var availableLocales = ["en"]
   var regexCache = /* @__PURE__ */ new Map()
   function initAvailableLocales(array) {
@@ -1793,6 +1793,15 @@
     const once = (/once=(\d+)/.exec(html) || [])[1]
     return once
   }
+  function debounce(fn, delay) {
+    let timer
+    return function (...args) {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        fn.apply(this, args)
+      }, delay)
+    }
+  }
   var addlinkToCitedFloorNumbers = (replyElement) => {
     const content = $(".reply_content", replyElement)
     const memberLinks = $$('a[href^="/member/"]', content)
@@ -1887,6 +1896,311 @@
           '<svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.89346 2.35248C3.49195 2.35248 2.35248 3.49359 2.35248 4.90532C2.35248 6.38164 3.20954 7.9168 4.37255 9.33522C5.39396 10.581 6.59464 11.6702 7.50002 12.4778C8.4054 11.6702 9.60608 10.581 10.6275 9.33522C11.7905 7.9168 12.6476 6.38164 12.6476 4.90532C12.6476 3.49359 11.5081 2.35248 10.1066 2.35248C9.27059 2.35248 8.81894 2.64323 8.5397 2.95843C8.27877 3.25295 8.14623 3.58566 8.02501 3.88993C8.00391 3.9429 7.98315 3.99501 7.96211 4.04591C7.88482 4.23294 7.7024 4.35494 7.50002 4.35494C7.29765 4.35494 7.11523 4.23295 7.03793 4.04592C7.01689 3.99501 6.99612 3.94289 6.97502 3.8899C6.8538 3.58564 6.72126 3.25294 6.46034 2.95843C6.18109 2.64323 5.72945 2.35248 4.89346 2.35248ZM1.35248 4.90532C1.35248 2.94498 2.936 1.35248 4.89346 1.35248C6.0084 1.35248 6.73504 1.76049 7.20884 2.2953C7.32062 2.42147 7.41686 2.55382 7.50002 2.68545C7.58318 2.55382 7.67941 2.42147 7.79119 2.2953C8.265 1.76049 8.99164 1.35248 10.1066 1.35248C12.064 1.35248 13.6476 2.94498 13.6476 4.90532C13.6476 6.74041 12.6013 8.50508 11.4008 9.96927C10.2636 11.3562 8.92194 12.5508 8.00601 13.3664C7.94645 13.4194 7.88869 13.4709 7.83291 13.5206C7.64324 13.6899 7.3568 13.6899 7.16713 13.5206C7.11135 13.4709 7.05359 13.4194 6.99403 13.3664C6.0781 12.5508 4.73641 11.3562 3.59926 9.96927C2.39872 8.50508 1.35248 6.74041 1.35248 4.90532Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>'
       }
     }
+  }
+  var CHECK_INTERVAL = 60 * 1e3
+  var LOCK_TIMEOUT = 20 * 1e3
+  var KEY_LOCK = "check_lock"
+  var KEY_LAST_CHECK = "last_check"
+  var KEY_UNREAD_COUNT = "unread_count"
+  var initialized = false
+  var currentUnreadCount = 0
+  var originalFavicon
+  var utagsHostObserver
+  var utagsShadowObserver
+  function startUtagsObserver() {
+    const onShadowMutation = (mutations) => {
+      let shouldUpdate = false
+      for (const mutation of mutations) {
+        if (mutation.type === "childList") {
+          shouldUpdate = true
+          break
+        }
+      }
+      if (shouldUpdate) {
+        updateUtagsShortcuts(currentUnreadCount)
+      }
+    }
+    const onDocumentMutation = (mutations) => {
+      for (const mutation of mutations) {
+        for (const node of mutation.addedNodes) {
+          if (
+            node instanceof HTMLElement &&
+            node.dataset.ushortcutsHost === "utags-shortcuts"
+          ) {
+            observeShadowRoot(node)
+            updateUtagsShortcuts(currentUnreadCount)
+          }
+        }
+      }
+    }
+    function observeShadowRoot(host2) {
+      if (utagsShadowObserver) utagsShadowObserver.disconnect()
+      if (!host2.shadowRoot) return
+      utagsShadowObserver = new MutationObserver(onShadowMutation)
+      utagsShadowObserver.observe(host2.shadowRoot, {
+        childList: true,
+        subtree: true,
+      })
+    }
+    const host = document.querySelector(
+      '[data-ushortcuts-host="utags-shortcuts"]'
+    )
+    if (host) {
+      observeShadowRoot(host)
+    }
+    utagsHostObserver = new MutationObserver(onDocumentMutation)
+    utagsHostObserver.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    })
+  }
+  async function fetchUnreadCount() {
+    try {
+      const urls = [
+        "/t",
+        "/t/mentions",
+        "/t/home",
+        "/go/status",
+        "/go/guide",
+        "/go/v2ex",
+        "/go/random",
+        "/go/ideas",
+      ]
+      const url = urls[Math.floor(Math.random() * urls.length)]
+      const res = await fetch(url)
+      const text = await res.text()
+      const doc2 = new DOMParser().parseFromString(text, "text/html")
+      const link = doc2.querySelector('#Rightbar a[href="/notifications"]')
+      if (link && link.textContent) {
+        const match = /(\d+)\s+未读提醒/.exec(link.textContent)
+        if (match) {
+          return Number.parseInt(match[1], 10)
+        }
+      }
+    } catch (error) {
+      console.error("[v2ex.rep] Failed to fetch unread count", error)
+    }
+    return void 0
+  }
+  function updateFavicon(count) {
+    const links = document.querySelectorAll('link[rel~="icon"]')
+    let link = links[0]
+    if (links.length > 1) {
+      for (let i2 = 1; i2 < links.length; i2++) {
+        links[i2].remove()
+      }
+    }
+    if (!link) {
+      link = document.createElement("link")
+      link.rel = "icon"
+      document.head.append(link)
+    }
+    if (link.dataset.count === count.toString()) {
+      return
+    }
+    link.type = "image/png"
+    link.dataset.count = count.toString()
+    if (originalFavicon === void 0) {
+      originalFavicon = "/favicon.ico"
+    }
+    if (count === 0) {
+      link.href = originalFavicon
+      document.head.append(link)
+      return
+    }
+    const canvas = document.createElement("canvas")
+    canvas.width = 32
+    canvas.height = 32
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
+    const img = new Image()
+    img.crossOrigin = "anonymous"
+    img.addEventListener("load", () => {
+      ctx.clearRect(0, 0, 32, 32)
+      ctx.drawImage(img, 0, 0, 32, 32)
+      ctx.beginPath()
+      ctx.arc(22, 22, 10, 0, 2 * Math.PI)
+      ctx.fillStyle = "#ff0000"
+      ctx.fill()
+      const text = count > 99 ? "99+" : count.toString()
+      ctx.font = count > 99 ? "bold 12px sans-serif" : "bold 16px sans-serif"
+      ctx.fillStyle = "#ffffff"
+      ctx.textAlign = "center"
+      ctx.textBaseline = "middle"
+      ctx.fillText(text, 22, 23)
+      if (link) {
+        link.href = canvas.toDataURL("image/png")
+        document.head.append(link)
+      }
+    })
+    img.src = originalFavicon
+  }
+  var updateUtagsShortcuts = debounce((count) => {
+    const checkUnreadNotificationsUtags = getSettingsValue(
+      "checkUnreadNotificationsUtags"
+    )
+    const displayCount = checkUnreadNotificationsUtags ? count : 0
+    const host = document.querySelector(
+      '[data-ushortcuts-host="utags-shortcuts"]'
+    )
+    if (!host || !host.shadowRoot) return
+    const links = host.shadowRoot.querySelectorAll("a")
+    for (const link of links) {
+      try {
+        updateUtagsShortcutsLink(link, displayCount)
+      } catch (e) {}
+    }
+  }, 200)
+  function updateUtagsShortcutsLink(link, count) {
+    const url = new URL(link.href)
+    if (url.origin !== location.origin || url.pathname !== "/notifications")
+      return
+    const textSpan = link.querySelector(".title-text")
+    if (!textSpan) return
+    if (count > 0) {
+      if (!textSpan.dataset.originalText) {
+        textSpan.dataset.originalText = textSpan.textContent || "\u901A\u77E5"
+      }
+      const newText = ""
+        .concat(textSpan.dataset.originalText, " (")
+        .concat(count, " \u6761\u672A\u8BFB)")
+      if (textSpan.textContent !== newText) {
+        textSpan.textContent = newText
+      }
+      if (textSpan.style.fontWeight !== "bold") {
+        textSpan.style.fontWeight = "bold"
+      }
+      if (textSpan.style.color !== "red") {
+        textSpan.style.color = "red"
+      }
+    } else if (textSpan.dataset.originalText) {
+      if (textSpan.textContent !== textSpan.dataset.originalText) {
+        textSpan.textContent = textSpan.dataset.originalText
+      }
+      delete textSpan.dataset.originalText
+      if (textSpan.style.fontWeight !== "") {
+        textSpan.style.fontWeight = ""
+      }
+      if (textSpan.style.color !== "") {
+        textSpan.style.color = ""
+      }
+    }
+  }
+  function updateUI(count) {
+    var _a, _b
+    currentUnreadCount = count
+    const element = document.querySelector('#Rightbar a[href="/notifications"]')
+    if (element) {
+      const text = "".concat(count, " \u672A\u8BFB\u63D0\u9192")
+      const parent = element.parentElement
+      const isNotificationStyle =
+        (parent == null ? void 0 : parent.tagName) === "STRONG" &&
+        ((_a = parent.parentElement) == null
+          ? void 0
+          : _a.querySelector(".orange-dot"))
+      if (count > 0) {
+        if (isNotificationStyle) {
+          if (element.textContent !== text) {
+            element.textContent = text
+          }
+        } else {
+          const wrapper = document.createElement("div")
+          wrapper.innerHTML = '<div class="orange-dot"></div><strong></strong>'
+          const strong = wrapper.querySelector("strong")
+          element.textContent = text
+          element.className = ""
+          if (parent) {
+            element.before(wrapper)
+            strong.append(element)
+          }
+        }
+      } else if (isNotificationStyle) {
+        const wrapper =
+          (_b = element.parentElement) == null ? void 0 : _b.parentElement
+        if (wrapper) {
+          element.textContent = text
+          element.className = "fade"
+          wrapper.replaceWith(element)
+        }
+      } else if (element.textContent !== text) {
+        element.textContent = text
+        element.className = "fade"
+      }
+    }
+    if (getSettingsValue("checkUnreadNotificationsFavicon")) {
+      updateFavicon(count)
+    } else if (originalFavicon) {
+      updateFavicon(0)
+    }
+    updateUtagsShortcuts(count)
+    const title = document.title
+    const prefixRegex = /^\(\d+\) /
+    let newTitle = title
+    if (getSettingsValue("checkUnreadNotificationsTitle") && count > 0) {
+      const newPrefix = "(".concat(count, ") ")
+      newTitle = prefixRegex.test(title)
+        ? title.replace(prefixRegex, newPrefix)
+        : newPrefix + title
+    } else {
+      newTitle = title.replace(prefixRegex, "")
+    }
+    if (newTitle !== title) {
+      document.title = newTitle
+    }
+  }
+  async function check(force = false) {
+    if (!getSettingsValue("checkUnreadNotifications")) return
+    const now = Date.now()
+    if (!force) {
+      const lastCheck = await getValue2(KEY_LAST_CHECK, 0)
+      if (now - lastCheck < CHECK_INTERVAL) return
+    }
+    const lockTime = await getValue2(KEY_LOCK, 0)
+    if (now - lockTime < LOCK_TIMEOUT) return
+    await setValue2(KEY_LOCK, now)
+    const currentLock = await getValue2(KEY_LOCK, 0)
+    if (currentLock !== now) return
+    try {
+      const count = await fetchUnreadCount()
+      if (count !== void 0) {
+        await setValue2(KEY_UNREAD_COUNT, count)
+        await setValue2(KEY_LAST_CHECK, Date.now())
+      }
+    } finally {
+      await setValue2(KEY_LOCK, 0)
+    }
+  }
+  function initCheckNotifications() {
+    if (initialized) return
+    initialized = true
+    if (location.pathname === "/notifications") {
+      void setValue2(KEY_UNREAD_COUNT, 0)
+    }
+    startUtagsObserver()
+    void addValueChangeListener2(KEY_UNREAD_COUNT, (_key, _old, newValue) => {
+      if (typeof newValue === "number") {
+        updateUI(newValue)
+      }
+    })
+    void (async () => {
+      const value = await getValue2(KEY_UNREAD_COUNT)
+      if (typeof value === "number") {
+        updateUI(value)
+      }
+    })()
+    setInterval(() => {
+      void check()
+    }, 10 * 1e3)
+    void check()
+  }
+  function runCheckNotifications() {
+    void check()
+    void (async () => {
+      const value = await getValue2(KEY_UNREAD_COUNT)
+      if (typeof value === "number") {
+        updateUI(value)
+      }
+    })()
   }
   var fetchOnce = async () => {
     const url = ""
@@ -3497,6 +3811,22 @@
         用户头像: "avatar",
       },
     },
+    checkUnreadNotifications: {
+      title: "\u5B9A\u65F6\u68C0\u67E5\u672A\u8BFB\u63D0\u9192",
+      defaultValue: true,
+    },
+    checkUnreadNotificationsTitle: {
+      title: "\u7F51\u9875\u6807\u9898\u663E\u793A\u63D0\u9192\u4E2A\u6570",
+      defaultValue: true,
+    },
+    checkUnreadNotificationsFavicon: {
+      title: "Favicon Badge \u663E\u793A\u63D0\u9192\u4E2A\u6570",
+      defaultValue: true,
+    },
+    checkUnreadNotificationsUtags: {
+      title: "UTags Shortcuts \u663E\u793A\u63D0\u9192\u4E2A\u6570",
+      defaultValue: true,
+    },
   }
   var fixedReplyFloorNumbers = false
   async function applyAll() {
@@ -3510,6 +3840,7 @@
       })
     }
     replaceFavicon(getSettingsValue("replaceFavicon"))
+    runCheckNotifications()
     if (domReady && mainContentReady && /\/t\/\d+/.test(location.href)) {
       if (doc.documentElement && doc.documentElement.dataset) {
         const opaticyOfCitedReplies = getSettingsValue("opaticyOfCitedReplies")
@@ -3582,6 +3913,7 @@
       },
     }))
     addStyle(content_default)
+    initCheckNotifications()
     const resetCachedReplyElementsThenApplyAll = async () => {
       resetCachedReplyElements()
       await applyAll()
@@ -3643,7 +3975,7 @@
     const observer = new MutationObserver((mutationsList) => {
       scanNodes()
     })
-    observer.observe($("#Main") || doc, {
+    observer.observe($("#Main") || doc.body || doc, {
       childList: true,
       subtree: true,
     })

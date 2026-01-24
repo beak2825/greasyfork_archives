@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Настройка тем
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Автоматическое применение сохраненных настроек при создании темы
 // @author       Forest
 // @match        https://lolz.live/*
@@ -24,7 +24,8 @@
         allowPersonalRequest: true,
         subscribeToThread: false,
         emailNotifications: false,
-        allowCommentIgnoreGroup: false
+        allowCommentIgnoreGroup: false,
+        autoCloseThread: false
     };
 
     function loadSettings() {
@@ -38,64 +39,65 @@
 
     function applySettings() {
         const settings = loadSettings();
-
         const form = document.querySelector('form[action*="threads/create"]') ||
                      document.querySelector('form[action*="threads/add"]') ||
                      document.querySelector('form.AutoValidator');
 
-        if (!form) {
-            console.log('Lolz Theme Settings: Форма не найдена');
+        if (!form) return;
+
+        const replyGroupRadio = document.querySelector(`input[name="reply_group"][value="${settings.replyGroup}"]`);
+        if (replyGroupRadio && !replyGroupRadio.checked) {
+            replyGroupRadio.checked = true;
+        }
+
+        const checkboxes = [
+            { name: 'dont_alert_followers', value: settings.noNotifySubscribers },
+            { name: 'hide_contacts', value: settings.hideContacts },
+            { name: 'allow_ask_hidden_content', value: settings.allowPersonalRequest },
+            { name: 'watch_thread', value: settings.subscribeToThread },
+            { name: 'watch_thread_email', value: settings.emailNotifications },
+            { name: 'comment_ignore_group', value: settings.allowCommentIgnoreGroup }
+        ];
+
+        checkboxes.forEach(item => {
+            const checkbox = document.querySelector(`input[name="${item.name}"]`);
+            if (checkbox && checkbox.checked !== item.value) {
+                checkbox.checked = item.value;
+            }
+        });
+    }
+
+    function autoCloseThread() {
+        const settings = loadSettings();
+        if (!settings.autoCloseThread) return;
+
+        const isThreadPage = window.location.pathname.includes('/threads/') &&
+                           !window.location.pathname.includes('/create-thread');
+        if (!isThreadPage) return;
+
+        const lockIcon = document.querySelector('h1 .fa-lock');
+        if (lockIcon) {
+            console.log('[AutoClose] Тема уже закрыта');
             return;
         }
 
-        const replyGroupRadio = document.querySelector(`input[name="reply_group"][value="${settings.replyGroup}"]`);
-        if (replyGroupRadio) {
-            replyGroupRadio.checked = true;
-            console.log('Lolz Theme Settings: Применена группа ответов -', settings.replyGroup);
+        const discussionOpenCheckbox = document.querySelector('form[action*="quick-update"] input[name="discussion_open"][value="1"]');
+        if (!discussionOpenCheckbox) {
+            console.log('[AutoClose] Чекбокс не найден');
+            return;
         }
 
-        const noNotifyCheckbox = document.querySelector('input[name="dont_alert_followers"]');
-        if (noNotifyCheckbox) {
-            noNotifyCheckbox.checked = settings.noNotifySubscribers;
-            console.log('Lolz Theme Settings: Не оповещать подписчиков -', settings.noNotifySubscribers);
+        if (!discussionOpenCheckbox.checked) {
+            console.log('[AutoClose] Тема уже закрыта');
+            return;
         }
 
-        const hideContactsCheckbox = document.querySelector('input[name="hide_contacts"]');
-        if (hideContactsCheckbox) {
-            hideContactsCheckbox.checked = settings.hideContacts;
-            console.log('Lolz Theme Settings: Скрывать контакты -', settings.hideContacts);
-        }
-
-        const allowPersonalCheckbox = document.querySelector('input[name="allow_ask_hidden_content"]');
-        if (allowPersonalCheckbox) {
-            allowPersonalCheckbox.checked = settings.allowPersonalRequest;
-            console.log('Lolz Theme Settings: Разрешить просить личный -', settings.allowPersonalRequest);
-        }
-
-        const subscribeCheckbox = document.querySelector('input[name="watch_thread"]');
-        if (subscribeCheckbox) {
-            subscribeCheckbox.checked = settings.subscribeToThread;
-            console.log('Lolz Theme Settings: Подписаться на тему -', settings.subscribeToThread);
-        }
-
-        const emailCheckbox = document.querySelector('input[name="watch_thread_email"]');
-        if (emailCheckbox) {
-            emailCheckbox.checked = settings.emailNotifications;
-            console.log('Lolz Theme Settings: Уведомления на почту -', settings.emailNotifications);
-        }
-
-        const commentIgnoreCheckbox = document.querySelector('input[name="comment_ignore_group"]');
-        if (commentIgnoreCheckbox) {
-            commentIgnoreCheckbox.checked = settings.allowCommentIgnoreGroup;
-            console.log('Lolz Theme Settings: Разрешить комментировать -', settings.allowCommentIgnoreGroup);
-        }
-
-        console.log('Lolz Theme Settings: Настройки применены', settings);
+        console.log('[AutoClose] Закрываю тему...');
+        discussionOpenCheckbox.click();
     }
 
     function createSettingsModal() {
         const settings = loadSettings();
-
         const modal = document.createElement('div');
         modal.id = 'lolz-settings-modal';
         modal.style.cssText = `
@@ -104,7 +106,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.85);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -112,129 +114,115 @@
         `;
 
         modal.innerHTML = `
-            <div style="
-                background: #2d2d2d;
-                border-radius: 8px;
-                padding: 25px;
-                max-width: 500px;
-                width: 90%;
-                color: #e0e0e0;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            ">
-                <h2 style="margin-top: 0; color: #fff; border-bottom: 2px solid #4a4a4a; padding-bottom: 10px;">
-                    ⚙️ Настройки тем
-                </h2>
-
-                <div style="margin: 20px 0;">
-                    <h3 style="color: #9d9d9d; font-size: 14px; margin-bottom: 15px;">Кто может отвечать:</h3>
-                    <label style="display: block; margin: 10px 0; cursor: pointer;">
-                        <input type="radio" name="modal_reply_group" value="0" ${settings.replyGroup === '0' ? 'checked' : ''}>
-                        <span style="margin-left: 8px;">Только Команда Форума и Кураторы</span>
-                    </label>
-                    <label style="display: block; margin: 10px 0; cursor: pointer;">
-                        <input type="radio" name="modal_reply_group" value="2" ${settings.replyGroup === '2' ? 'checked' : ''}>
-                        <span style="margin-left: 8px;">Все</span>
-                    </label>
-                    <label style="display: block; margin: 10px 0; cursor: pointer;">
-                        <input type="radio" name="modal_reply_group" value="21" ${settings.replyGroup === '21' ? 'checked' : ''}>
-                        <span style="margin-left: 8px;">Местный и выше</span>
-                    </label>
-                    <label style="display: block; margin: 10px 0; cursor: pointer;">
-                        <input type="radio" name="modal_reply_group" value="22" ${settings.replyGroup === '22' ? 'checked' : ''}>
-                        <span style="margin-left: 8px;">Постоялец и выше</span>
-                    </label>
-                    <label style="display: block; margin: 10px 0; cursor: pointer;">
-                        <input type="radio" name="modal_reply_group" value="23" ${settings.replyGroup === '23' ? 'checked' : ''}>
-                        <span style="margin-left: 8px;">Эксперт и выше</span>
-                    </label>
-                    <label style="display: block; margin: 10px 0; cursor: pointer;">
-                        <input type="radio" name="modal_reply_group" value="60" ${settings.replyGroup === '60' ? 'checked' : ''}>
-                        <span style="margin-left: 8px;">Гуру и выше</span>
-                    </label>
-                    <label style="display: block; margin: 10px 0; cursor: pointer;">
-                        <input type="radio" name="modal_reply_group" value="351" ${settings.replyGroup === '351' ? 'checked' : ''}>
-                        <span style="margin-left: 8px;">Искусственный интеллект и выше</span>
-                    </label>
+            <div style="background: #1a1a1a; padding: 20px; border-radius: 8px; max-width: 550px; width: 90%; color: #e0e0e0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; box-shadow: 0 8px 32px rgba(0,0,0,0.6); border: 1px solid #333;">
+                <div style="margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #333;">
+                    <h2 style="margin: 0; font-size: 18px; font-weight: 600;">Настройки создания тем</h2>
                 </div>
 
-                <div style="margin: 20px 0;">
-                    <h3 style="color: #9d9d9d; font-size: 14px; margin-bottom: 15px;">Настройки:</h3>
-
-                    <label style="display: block; margin: 12px 0; cursor: pointer;">
-                        <input type="checkbox" id="modal_no_notify" ${settings.noNotifySubscribers ? 'checked' : ''}>
-                        <span style="margin-left: 8px;">Не оповещать подписчиков о создании темы</span>
-                    </label>
-
-                    <label style="display: block; margin: 12px 0; cursor: pointer;">
-                        <input type="checkbox" id="modal_hide_contacts" ${settings.hideContacts ? 'checked' : ''}>
-                        <span style="margin-left: 8px;">Скрывать контакты в теме</span>
-                    </label>
-
-                    <label style="display: block; margin: 12px 0; cursor: pointer;">
-                        <input type="checkbox" id="modal_allow_personal" ${settings.allowPersonalRequest ? 'checked' : ''}>
-                        <span style="margin-left: 8px;">Разрешить просить "Личный" (если есть "хайд" в теме)</span>
-                    </label>
-
-                    <label style="display: block; margin: 12px 0; cursor: pointer;">
-                        <input type="checkbox" id="modal_subscribe" ${settings.subscribeToThread ? 'checked' : ''}>
-                        <span style="margin-left: 8px;">Подписаться на тему...</span>
-                    </label>
-
-                    <label style="display: block; margin: 12px 0; cursor: pointer;">
-                        <input type="checkbox" id="modal_email" ${settings.emailNotifications ? 'checked' : ''}>
-                        <span style="margin-left: 8px;">и получать уведомления на электронную почту</span>
-                    </label>
-
-                    <label style="display: block; margin: 12px 0; cursor: pointer;">
-                        <input type="checkbox" id="modal_comment_ignore" ${settings.allowCommentIgnoreGroup ? 'checked' : ''}>
-                        <span style="margin-left: 8px;">Разрешить комментировать сообщения, если нет прав писать сообщения</span>
-                    </label>
+                <div style="margin-bottom: 18px;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #999; font-weight: 500;">Кто может отвечать</h3>
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label style="display: flex; align-items: center; padding: 6px 10px; background: #252525; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                            <input type="radio" name="modal_reply_group" value="0" ${settings.replyGroup === '0' ? 'checked' : ''} style="margin-right: 8px;">
+                            <span style="font-size: 13px;">Только Команда и Кураторы</span>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 6px 10px; background: #252525; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                            <input type="radio" name="modal_reply_group" value="2" ${settings.replyGroup === '2' ? 'checked' : ''} style="margin-right: 8px;">
+                            <span style="font-size: 13px;">Все</span>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 6px 10px; background: #252525; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                            <input type="radio" name="modal_reply_group" value="21" ${settings.replyGroup === '21' ? 'checked' : ''} style="margin-right: 8px;">
+                            <span style="font-size: 13px;">Местный и выше</span>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 6px 10px; background: #252525; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                            <input type="radio" name="modal_reply_group" value="22" ${settings.replyGroup === '22' ? 'checked' : ''} style="margin-right: 8px;">
+                            <span style="font-size: 13px;">Постоялец и выше</span>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 6px 10px; background: #252525; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                            <input type="radio" name="modal_reply_group" value="23" ${settings.replyGroup === '23' ? 'checked' : ''} style="margin-right: 8px;">
+                            <span style="font-size: 13px;">Эксперт и выше</span>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 6px 10px; background: #252525; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                            <input type="radio" name="modal_reply_group" value="60" ${settings.replyGroup === '60' ? 'checked' : ''} style="margin-right: 8px;">
+                            <span style="font-size: 13px;">Гуру и выше</span>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 6px 10px; background: #252525; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                            <input type="radio" name="modal_reply_group" value="351" ${settings.replyGroup === '351' ? 'checked' : ''} style="margin-right: 8px;">
+                            <span style="font-size: 13px;">ИИ и выше</span>
+                        </label>
+                    </div>
                 </div>
 
-                <div style="display: flex; gap: 10px; margin-top: 25px;">
-                    <button id="save-settings-btn" style="
-                        flex: 1;
-                        padding: 10px;
-                        background: #4CAF50;
-                        color: white;
-                        border: none;
-                        border-radius: 5px;
-                        cursor: pointer;
-                        font-size: 14px;
-                        font-weight: bold;
-                    ">💾 Сохранить</button>
+                <div style="margin-bottom: 18px;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #999; font-weight: 500;">Параметры темы</h3>
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label style="display: flex; align-items: center; padding: 8px 10px; background: #2a1a1a; border: 1px solid #d32f2f; border-radius: 4px; cursor: pointer;">
+                            <input type="checkbox" id="modal_auto_close" ${settings.autoCloseThread ? 'checked' : ''} style="margin-right: 8px; width: 16px; height: 16px;">
+                            <span style="font-size: 13px; font-weight: bold; color: #ff8a80;">Закрывать тему после создания</span>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 6px 10px; background: #252525; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                            <input type="checkbox" id="modal_no_notify" ${settings.noNotifySubscribers ? 'checked' : ''} style="margin-right: 8px;">
+                            <span style="font-size: 13px;">Не оповещать подписчиков</span>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 6px 10px; background: #252525; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                            <input type="checkbox" id="modal_hide_contacts" ${settings.hideContacts ? 'checked' : ''} style="margin-right: 8px;">
+                            <span style="font-size: 13px;">Скрывать контакты</span>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 6px 10px; background: #252525; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                            <input type="checkbox" id="modal_allow_personal" ${settings.allowPersonalRequest ? 'checked' : ''} style="margin-right: 8px;">
+                            <span style="font-size: 13px;">Разрешить просить личный</span>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 6px 10px; background: #252525; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                            <input type="checkbox" id="modal_subscribe" ${settings.subscribeToThread ? 'checked' : ''} style="margin-right: 8px;">
+                            <span style="font-size: 13px;">Подписаться на тему</span>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 6px 10px; background: #252525; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                            <input type="checkbox" id="modal_email" ${settings.emailNotifications ? 'checked' : ''} style="margin-right: 8px;">
+                            <span style="font-size: 13px;">Уведомления на почту</span>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 6px 10px; background: #252525; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                            <input type="checkbox" id="modal_comment_ignore" ${settings.allowCommentIgnoreGroup ? 'checked' : ''} style="margin-right: 8px;">
+                            <span style="font-size: 13px;">Разрешить комментировать</span>
+                        </label>
+                    </div>
+                </div>
 
-                    <button id="reset-settings-btn" style="
-                        flex: 1;
-                        padding: 10px;
-                        background: #ff9800;
-                        color: white;
-                        border: none;
-                        border-radius: 5px;
-                        cursor: pointer;
-                        font-size: 14px;
-                        font-weight: bold;
-                    ">🔄 Сбросить</button>
-
-                    <button id="close-settings-btn" style="
-                        flex: 1;
-                        padding: 10px;
-                        background: #666;
-                        color: white;
-                        border: none;
-                        border-radius: 5px;
-                        cursor: pointer;
-                        font-size: 14px;
-                    ">✖️ Закрыть</button>
+                <div style="display: flex; gap: 8px; justify-content: flex-end; padding-top: 12px; border-top: 1px solid #333;">
+                    <button id="save-settings-btn" style="padding: 8px 16px; background: #4a9eff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500;">Сохранить</button>
+                    <button id="reset-settings-btn" style="padding: 8px 16px; background: #ff4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500;">Сбросить</button>
+                    <button id="close-settings-btn" style="padding: 8px 16px; background: #555; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500;">Закрыть</button>
                 </div>
             </div>
         `;
 
         document.body.appendChild(modal);
 
+        modal.querySelectorAll('label').forEach(label => {
+            label.addEventListener('mouseenter', () => {
+                if (!label.style.border) {
+                    label.style.background = '#2a2a2a';
+                }
+            });
+            label.addEventListener('mouseleave', () => {
+                if (!label.style.border) {
+                    label.style.background = '#252525';
+                }
+            });
+        });
+
+        modal.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mouseenter', () => {
+                button.style.opacity = '0.9';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.opacity = '1';
+            });
+        });
+
         document.getElementById('save-settings-btn').addEventListener('click', () => {
             const newSettings = {
                 replyGroup: document.querySelector('input[name="modal_reply_group"]:checked').value,
+                autoCloseThread: document.getElementById('modal_auto_close').checked,
                 noNotifySubscribers: document.getElementById('modal_no_notify').checked,
                 hideContacts: document.getElementById('modal_hide_contacts').checked,
                 allowPersonalRequest: document.getElementById('modal_allow_personal').checked,
@@ -244,14 +232,14 @@
             };
 
             saveSettings(newSettings);
-            alert('✅ Настройки сохранены! Они будут автоматически применяться при создании новых тем.');
+            alert('Настройки сохранены');
             modal.remove();
         });
 
         document.getElementById('reset-settings-btn').addEventListener('click', () => {
-            if (confirm('Вы уверены, что хотите сбросить все настройки к значениям по умолчанию?')) {
+            if (confirm('Сбросить настройки?')) {
                 saveSettings(defaultSettings);
-                alert('🔄 Настройки сброшены к значениям по умолчанию!');
+                alert('Настройки сброшены');
                 modal.remove();
             }
         });
@@ -267,11 +255,12 @@
         });
     }
 
-    GM_registerMenuCommand('⚙️ Настройки тем', createSettingsModal);
+    GM_registerMenuCommand('Настройки тем', createSettingsModal);
 
     function init() {
         setTimeout(applySettings, 500);
         setTimeout(applySettings, 1500);
+        setTimeout(autoCloseThread, 2000);
     }
 
     const observer = new MutationObserver((mutations) => {
@@ -297,6 +286,7 @@
 
     setTimeout(applySettings, 2000);
     setTimeout(applySettings, 3000);
+    setTimeout(autoCloseThread, 3500);
 
     document.addEventListener('click', (e) => {
         const target = e.target;
@@ -312,5 +302,5 @@
         }
     });
 
-    console.log('Lolz Theme Settings Manager загружен!');
+    console.log('Theme Settings Manager загружен');
 })();

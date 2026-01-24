@@ -1,24 +1,24 @@
 // ==UserScript==
-// @name         Grok Imagine VideoAutoClicker(自動點擊生成影片) v1.11
+// @name         Grok Imagine VideoAutoClicker(自動點擊生成影片) v1.12
 // @namespace    http://tampermonkey.net/
-// @version      1.11
+// @version      1.12
 // @description  自動點擊生成影片按鈕，有使用者介面可調整閾值。
 // @match        https://grok.com/*
 // @grant        none
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/553978/Grok%20Imagine%20VideoAutoClicker%28%E8%87%AA%E5%8B%95%E9%BB%9E%E6%93%8A%E7%94%9F%E6%88%90%E5%BD%B1%E7%89%87%29%20v111.user.js
-// @updateURL https://update.greasyfork.org/scripts/553978/Grok%20Imagine%20VideoAutoClicker%28%E8%87%AA%E5%8B%95%E9%BB%9E%E6%93%8A%E7%94%9F%E6%88%90%E5%BD%B1%E7%89%87%29%20v111.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/553978/Grok%20Imagine%20VideoAutoClicker%28%E8%87%AA%E5%8B%95%E9%BB%9E%E6%93%8A%E7%94%9F%E6%88%90%E5%BD%B1%E7%89%87%29%20v112.user.js
+// @updateURL https://update.greasyfork.org/scripts/553978/Grok%20Imagine%20VideoAutoClicker%28%E8%87%AA%E5%8B%95%E9%BB%9E%E6%93%8A%E7%94%9F%E6%88%90%E5%BD%B1%E7%89%87%29%20v112.meta.js
 // ==/UserScript==
- 
+
 (function () {
     'use strict';
- 
+
     // === 設定 ===
     // 使用包含 tabular-nums 的 class 名稱；改為使用多重 class selector，並對含方括號的 class 名稱做 escape
     const targetClassString = 'text-xs font-semibold w-[4ch] mb-[1px] tabular-nums';
     // CSS selector 中含有方括號的 class 名稱需要 escape，例如 w-[4ch] 要寫成 w-\[4ch\]
     const selector = 'div.text-xs.font-semibold.w-\\[4ch\\].mb-\\[1px\\].tabular-nums';
- 
+
     let lastValue = null;
     let wasPresent = false;
     let autoMode = true;
@@ -28,17 +28,17 @@
     let beepVolume = 0.005;
     let limitAlertShown = false;
     let persistentSuccessNotify = false; // 新增: 成功後持續通知
- 
+
     let zeroCount = 0;
     let consecutiveRetries = 0;
     let maxRetriesAlertShown = false; // 新增：記錄是否已經顯示過最大重試次數警報
     const zeroThreshold = 20; // seconds
     const checkInterval = 500; // ms
     const zeroMaxCount = Math.floor(zeroThreshold * 1000 / checkInterval);
-    const maxConsecutiveRetries = 3; // 最多重試次數
- 
+    const maxConsecutiveRetries = 2; // 最多重試次數
+
     let worker = null;
- 
+
     // 生成統計
     let stats = { total: 0, success: 0, fail: 0 };
     // 失敗時自動填入的關鍵字（可透過控制面板設定）
@@ -49,13 +49,13 @@
         const pad = n => n.toString().padStart(2, '0');
         return `[${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}]`;
     }
- 
+
     function parseNumber(text) {
         if (!text) return null;
         const match = text.match(/-?\d+(\.\d+)?/);
         return match ? parseFloat(match[0]) : null;
     }
- 
+
     function beepTriple(frequency = 880, duration = 0.1, volume = beepVolume) {
         try {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -77,7 +77,7 @@
             console.log(getTimeString(), '無法播放聲音:', e);
         }
     }
- 
+
     function playCmaj7Arpeggio(volume = beepVolume, duration = 0.25) {
         try {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -98,11 +98,11 @@
             console.log(getTimeString(), '無法播放 arpeggio:', e);
         }
     }
- 
+
     // === 控制面板 ===
     function createControlPanel() {
         if (window.__grokImaginePanel) return window.__grokImaginePanel.querySelector('#grok-console');
- 
+
         const panel = document.createElement('div');
         panel.style.position = 'fixed';
         panel.style.top = '80px';
@@ -122,7 +122,7 @@
         panel.style.flexDirection = 'column';
         panel.style.pointerEvents = 'auto';
         panel.style.userSelect = 'none';
- 
+
         // Header (用作拖曳)
         const header = document.createElement('div');
         header.style.display = 'flex';
@@ -131,18 +131,18 @@
         header.style.cursor = 'move';
         header.style.marginBottom = '6px';
         header.style.gap = '8px';
- 
+
         const title = document.createElement('div');
         title.style.fontWeight = 'bold';
         title.textContent = 'Grok 檢查控制';
         header.appendChild(title);
- 
+
         // buttons group (minimize)
         const btnGroup = document.createElement('div');
         btnGroup.style.display = 'flex';
         btnGroup.style.alignItems = 'center';
         btnGroup.style.gap = '6px';
- 
+
         const minimizeBtn = document.createElement('button');
         minimizeBtn.textContent = '－';
         minimizeBtn.title = '縮小/展開';
@@ -153,10 +153,10 @@
         minimizeBtn.style.cursor = 'pointer';
         minimizeBtn.style.padding = '0 6px';
         btnGroup.appendChild(minimizeBtn);
- 
+
         header.appendChild(btnGroup);
         panel.appendChild(header);
- 
+
         // 內容區塊（可縮放）
         const content = document.createElement('div');
         content.style.display = 'flex';
@@ -164,14 +164,14 @@
         content.style.gap = '6px';
         content.style.flex = '1';
         content.style.overflow = 'hidden';
- 
+
         // Controls HTML (用 JS 建)
         const rowAuto = document.createElement('div');
         rowAuto.style.display = 'flex';
         rowAuto.style.alignItems = 'center';
         rowAuto.innerHTML = `<label style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="autoModeToggle" checked /> 自動模式</label>`;
         content.appendChild(rowAuto);
- 
+
         const rowThreshold = document.createElement('div');
         rowThreshold.style.display = 'flex';
         rowThreshold.style.alignItems = 'center';
@@ -190,7 +190,7 @@
         thresholdInput.style.borderRadius = '4px';
         thresholdInput.style.border = 'none';
         thresholdInput.style.textAlign = 'center';
- 
+
         const thresholdSlider = document.createElement('input');
         thresholdSlider.type = 'range';
         thresholdSlider.id = 'thresholdSlider';
@@ -199,23 +199,23 @@
         thresholdSlider.step = 1;
         thresholdSlider.value = threshold;
         thresholdSlider.style.flex = '1';
- 
+
         rowThreshold.appendChild(thresholdInput);
         rowThreshold.appendChild(thresholdSlider);
         content.appendChild(rowThreshold);
- 
+
         const rowBeep = document.createElement('div');
         rowBeep.style.display = 'flex';
         rowBeep.style.alignItems = 'center';
         rowBeep.innerHTML = `<label style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="beepToggle" checked /> 低於閾值播放音效</label>`;
         content.appendChild(rowBeep);
- 
+
     const rowLimit = document.createElement('div');
     rowLimit.style.display = 'flex';
     rowLimit.style.alignItems = 'center';
     rowLimit.innerHTML = `<label style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="limitToggle" checked /> 額度用完提醒音效</label>`;
     content.appendChild(rowLimit);
- 
+
     // 新增: 成功後持續通知勾選盒
     const rowPersistentSuccess = document.createElement('div');
     rowPersistentSuccess.style.display = 'flex';
@@ -244,7 +244,7 @@
     });
     rowKeyword.appendChild(keywordInput);
     content.appendChild(rowKeyword);
- 
+
         // 音量 row 改百分比顯示
         const rowVolume = document.createElement('div');
         rowVolume.style.display = 'flex';
@@ -265,20 +265,20 @@
         rowVolume.appendChild(volumeSlider);
         rowVolume.appendChild(volumeDisplay);
         content.appendChild(rowVolume);
- 
+
         // 統計顯示
         const statTitle = document.createElement('div');
         statTitle.style.fontWeight = 'bold';
         statTitle.textContent = '生成統計';
         content.appendChild(statTitle);
- 
+
         const statRow = document.createElement('div');
         statRow.style.display = 'flex';
         statRow.style.gap = '10px';
         statRow.style.fontSize = '13px';
         statRow.innerHTML = `<span id="statTotal">總生成: 0</span><span id="statSuccess">成功: 0</span><span id="statFail">失敗: 0</span>`;
         content.appendChild(statRow);
- 
+
         // console box
         const consoleBox = document.createElement('div');
         consoleBox.id = 'grok-console';
@@ -293,14 +293,14 @@
         consoleBox.style.minHeight = '120px';
         consoleBox.style.maxHeight = '250px'; // ⚡ 防止擠壓按鈕
         content.appendChild(consoleBox);
- 
+
         // 按鈕列
         const btnRow = document.createElement('div');
         btnRow.style.display = 'flex';
         btnRow.style.gap = '8px';
         btnRow.style.marginTop = '6px';
         btnRow.style.justifyContent = 'flex-start';
- 
+
         // 清空紀錄
         const clearBtn = document.createElement('button');
         clearBtn.textContent = '🧹 清空紀錄';
@@ -318,7 +318,7 @@
             if (window.__grokImaginePanel && window.__grokImaginePanel._updateStatsDisplay)
                 window.__grokImaginePanel._updateStatsDisplay();
         });
- 
+
         // 複製記錄
         const copyBtn = document.createElement('button');
         copyBtn.textContent = '📋 複製記錄';
@@ -340,7 +340,7 @@
                 console.log(summary);
             } catch (e) { console.log(`${getTimeString()} 複製失敗:`, e); }
         });
- 
+
         // 登出按鈕
         const logoutBtn = document.createElement('button');
         logoutBtn.textContent = '🚪 登出';
@@ -353,16 +353,16 @@
         logoutBtn.addEventListener('mouseenter', () => logoutBtn.style.opacity = '0.85');
         logoutBtn.addEventListener('mouseleave', () => logoutBtn.style.opacity = '1');
         logoutBtn.addEventListener('click', tryLogout);
- 
+
         btnRow.appendChild(clearBtn);
         btnRow.appendChild(copyBtn);
         btnRow.appendChild(logoutBtn);
         content.appendChild(btnRow);
- 
+
         panel.appendChild(content);
         document.body.appendChild(panel);
         window.__grokImaginePanel = panel;
- 
+
         // 變數綁定
     const autoModeToggle = panel.querySelector('#autoModeToggle');
     const thresholdInputEl = thresholdInput;
@@ -372,13 +372,13 @@
     const persistentSuccessToggle = panel.querySelector('#persistentSuccessToggle');
     const volumeSliderEl = volumeSlider;
     const volumeDisplayEl = volumeDisplay;
- 
+
         // hook console
         hookConsole(consoleBox);
- 
+
         // 同步事件綁定
         autoModeToggle.addEventListener('change', () => { autoMode = autoModeToggle.checked; console.log(`${getTimeString()} 自動模式: ${autoMode ? '啟用' : '停用'}`); });
- 
+
         thresholdInputEl.addEventListener('input', () => {
             let val = parseFloat(thresholdInputEl.value);
             if (isNaN(val)) val = 0;
@@ -389,17 +389,17 @@
             threshold = parseFloat(thresholdSliderEl.value);
             thresholdInputEl.value = threshold;
         });
- 
+
     beepToggle.addEventListener('change', () => { playBeepOnLow = beepToggle.checked; });
     limitToggle.addEventListener('change', () => { playBeepOnLimit = limitToggle.checked; });
     persistentSuccessToggle.addEventListener('change', () => { persistentSuccessNotify = persistentSuccessToggle.checked; });
- 
+
         volumeSliderEl.addEventListener('input', () => {
             beepVolume = parseFloat(volumeSliderEl.value);
             const percent = Math.round(beepVolume / 0.05 * 100);
             volumeDisplayEl.textContent = percent + '%';
         });
- 
+
         function updateStatsDisplay() {
             const totalEl = panel.querySelector('#statTotal');
             const successEl = panel.querySelector('#statSuccess');
@@ -409,7 +409,7 @@
             if (failEl) failEl.textContent = `失敗: ${stats.fail}`;
         }
         panel._updateStatsDisplay = updateStatsDisplay;
- 
+
         // 拖曳功能 (保持在視窗內)
         let isDragging = false, offsetX = 0, offsetY = 0;
         header.addEventListener('mousedown', e => {
@@ -436,7 +436,7 @@
             panel.style.transition = '';
             document.body.style.userSelect = '';
         });
- 
+
         // 縮小/展開
         let minimized = false;
         minimizeBtn.addEventListener('click', () => {
@@ -444,10 +444,10 @@
             content.style.display = minimized ? 'none' : 'flex';
             minimizeBtn.textContent = minimized ? '＋' : '－';
         });
- 
+
         return consoleBox;
     }
- 
+
     function hookConsole(consoleBox) {
         const originalLog = console.log;
         console.log = (...args) => {
@@ -464,7 +464,7 @@
             } catch (e) { originalLog('hookConsole error:', e); }
         };
     }
- 
+
     // === 檢查邏輯 ===
     // 新增: 持續音效控制
     let persistentBeepInterval = null;
@@ -483,7 +483,7 @@
             persistentBeepInterval = null;
         }
     }
- 
+
     function showPersistentSuccessBox() {
         // 若已存在則不重複顯示
         if (document.getElementById('persistent-success-msgbox')) return;
@@ -510,7 +510,7 @@
             box.remove();
         });
     }
- 
+
     function check() {
         try {
             const upgradeElem = document.querySelector('span.text-secondary.font-medium');
@@ -521,7 +521,7 @@
                     if (playBeepOnLimit) beepTriple(440, 0.15);
                 }
             } else { limitAlertShown = false; }
- 
+
             const elem = document.querySelector(selector);
             // console.log('check()', '檢測進度元素:', elem ? '存在' : '不存在');
             if (elem) {
@@ -540,28 +540,28 @@
                             }
                             return;
                         }
-                        const button = document.querySelector('button.bg-button-filled.inline-flex'); // 生成按鈕
-                        if (button) { 
-                            button.click(); 
+                        const button = document.querySelector('button[data-slot="button"].bg-button-filled'); // 生成按鈕
+                        if (button) {
+                            button.click();
                             console.log(`${getTimeString()} 長時間為0，已再次點擊生成按鈕 (第${consecutiveRetries + 1}次重試)`);
                             consecutiveRetries++;
                         }
                         else { console.log(`${getTimeString()} 長時間為0，但找不到生成按鈕`); }
                         zeroCount = 0;
                     }
-                } else { 
+                } else {
                     zeroCount = 0;
                     consecutiveRetries = 0; // 當進度不為0時重置重試計數
                     maxRetriesAlertShown = false; // 重置警報標記
                 }
- 
+
             } else if (wasPresent) {
                 wasPresent = false;
                 stats.total++;
                 const progress = lastValue !== null ? lastValue : "未知";
                 // console.log(`${getTimeString()} (進度: ${lastValue})`);
                 // ===== 新增功能：生成成功後 5 秒內每秒檢測 Content Moderated =====
-				const moderationCheckDuration = 5000; // 5 秒
+				const moderationCheckDuration = 10000; // 10 秒
 				const checkInterval = 1000; // 每秒檢測
 				const startTime = Date.now();
 				const moderationIntervalId = setInterval(() => {
@@ -572,7 +572,7 @@
                     if (!(finalElem && finalElem.textContent.includes('Content Moderated. Try a different idea.'))) {
                         // 沒有偵測到警告，判定為生成成功
                         stats.success++;
-                        console.log(`${getTimeString()} 5秒內未檢測到Content Moderated，判定成功！(進度: ${progress}%)`);
+                        console.log(`${getTimeString()} 10秒內未檢測到Content Moderated，判定成功！(進度: ${progress}%)`);
                         if (persistentSuccessNotify) {
                             showPersistentSuccessBox();
                             startPersistentBeep();
@@ -588,7 +588,7 @@
                 const elem = document.querySelector('body > section > ol > li > div > span'); // Content Moderated 訊息元素
 
                 if (elem && elem.textContent.includes('Content Moderated. Try a different idea.')) {
-                    const button = document.querySelector('button.bg-button-filled.inline-flex'); // 生成按鈕
+                    const button = document.querySelector('button[data-slot="button"].bg-button-filled'); // 生成按鈕
                     stats.fail++;
                     if (window.__grokImaginePanel && window.__grokImaginePanel._updateStatsDisplay) window.__grokImaginePanel._updateStatsDisplay();
                     if (autoMode && progress >= threshold) {
@@ -670,13 +670,13 @@
                 }
 				}, checkInterval);
 				// ===== End 新增功能 =====
-				
+
                 if (window.__grokImaginePanel && window.__grokImaginePanel._updateStatsDisplay) window.__grokImaginePanel._updateStatsDisplay();
                 lastValue = null;
             }
         } catch (e) { console.log(getTimeString(), 'check() 發生錯誤:', e); }
     }
- 
+
     function tryLogout() {
         const attemptLogout = () => {
             const sidebar = document.querySelector('div[data-variant="sidebar"][data-side="left"]');
@@ -690,7 +690,7 @@
                 setTimeout(() => {
                     const allItems = document.querySelectorAll('div[role="menuitem"].flex.cursor-pointer');
                     const logoutBtn = allItems[allItems.length - 1]; // 通常登出是最後一個
- 
+
                     if (logoutBtn) {
                         ['pointerdown','mousedown','mouseup','pointerup','click'].forEach(type =>
                             logoutBtn.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, view: window }))
@@ -705,7 +705,7 @@
         };
         attemptLogout();
     }
- 
+
     function startChecker() {
         if (worker) return;
         const workerCode = `setInterval(()=>postMessage('tick'), ${checkInterval});`;
@@ -713,24 +713,24 @@
         worker = new Worker(URL.createObjectURL(blob));
         worker.onmessage = () => check();
     }
- 
+
     function stopChecker() { if(worker) { worker.terminate(); worker = null; } }
- 
+
     function isImaginePage() { return location.pathname.startsWith('/imagine/'); }
- 
+
     function handlePageChange() {
         if (isImaginePage()) { if(window.__grokImaginePanel) window.__grokImaginePanel.style.display='flex'; startChecker(); }
         else { if(window.__grokImaginePanel) window.__grokImaginePanel.style.display='none'; stopChecker(); }
     }
- 
+
     const consoleBox = createControlPanel();
     handlePageChange();
- 
+
     let lastPath = location.pathname;
     const observer = new MutationObserver(()=>{ if(location.pathname !== lastPath){ lastPath = location.pathname; handlePageChange(); }});
- 
+
 observer.observe(document, {subtree:true, childList:true});
- 
+
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden) check(); });
- 
+
 })();

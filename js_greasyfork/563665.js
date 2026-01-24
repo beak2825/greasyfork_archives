@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ヤフコメ ユーザー評価表示
 // @namespace    https://github.com/zszushi/YahooCommentRatio
-// @version      2.0
+// @version      2.1
 // @description  Yahoo!ニュースのコメント欄にユーザーの評価(共感した/なるほど/うーん)を表示
 // @author       zszushi, Google Antigravity
 // @match        https://news.yahoo.co.jp/*
@@ -15,6 +15,7 @@
 // @downloadURL https://update.greasyfork.org/scripts/563665/%E3%83%A4%E3%83%95%E3%82%B3%E3%83%A1%20%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E8%A9%95%E4%BE%A1%E8%A1%A8%E7%A4%BA.user.js
 // @updateURL https://update.greasyfork.org/scripts/563665/%E3%83%A4%E3%83%95%E3%82%B3%E3%83%A1%20%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E8%A9%95%E4%BE%A1%E8%A1%A8%E7%A4%BA.meta.js
 // ==/UserScript==
+
 
 (function () {
   "use strict";
@@ -47,8 +48,7 @@
     roundTotal: false,
     hideBasis: "account", // "account", "comment", or "either"
     enableTurboMode: false,
-    showCommentBar: true, // コメント本体への評価バー表示
-    showCommentBar: true, // コメント本体への評価バー表示
+    showCommentBar: true, // 個別コメント評価バー（デフォルト有効）
   };
 
   /**
@@ -77,17 +77,38 @@
   }
 
   /**
+   * 比率に基づく色を取得する (フラット版)
+   */
+  function getRatingColor(rate) {
+    const { color } = calculateRating(rate, 100 - rate);
+    return color;
+  }
+
+  /**
    * 評価バーの要素を作成する
    */
-  function createBarElement(rate, color, height = "4px", margin = "0") {
+  function createBarElement(rate, color, height = "6px", margin = "0") {
     const container = document.createElement("div");
-    container.style.cssText = `height: ${height}; background: #eee; margin: ${margin}; border-radius: ${parseInt(height) / 2}px; overflow: hidden; width: 100%; border: 1px solid #e0e0e0;`;
+    container.style.cssText = `
+      height: ${height};
+      background: #f0f0f0;
+      margin: ${margin};
+      border-radius: ${parseInt(height)}px;
+      overflow: hidden;
+      width: 100%;
+    `;
     const bar = document.createElement("div");
-    bar.style.cssText = `height: 100%; width: ${rate}%; background: ${color}; transition: width 0.5s;`;
+    // フラットな色と統一された太さ
+    bar.style.cssText = `
+      height: 100%;
+      width: ${rate}%;
+      background: ${color};
+      border-radius: ${parseInt(height)}px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    `;
     container.appendChild(bar);
     return container;
   }
-
 
   let settings = { ...defaultSettings };
   let updateInterval = null; // eslint-disable-line no-unused-vars
@@ -251,34 +272,67 @@
 
             const statsText = doc.body.textContent;
 
-            // より柔軟なパース (ラベルと数値の間の空白を許容)
-            const findMatch = (pattern) => {
-              const m = statsText.match(pattern);
-              return m ? parseNumber(m[1]) : 0;
+            // DOMベースのパース: 特定のラベルを持つ要素を探索して数値を取得
+            const findNumByLabel = (label) => {
+              const elements = Array.from(doc.querySelectorAll("span, div, b, strong"));
+              const labelEl = elements.find((el) => el.textContent.trim() === label);
+              if (!labelEl) return 0;
+
+              // 探索範囲: 隣接要素、親の隣接、または同じコンテナ内の要素
+              const searchArea = [
+                labelEl.nextElementSibling,
+                labelEl.parentElement?.nextElementSibling,
+                labelEl.parentElement?.querySelector("span:last-child, b, strong, [class*='count']"),
+                labelEl.parentElement,
+              ];
+
+              for (const area of searchArea) {
+                if (!area) continue;
+                const val = parseNumber(area.textContent);
+                if (!isNaN(val) && val > 0) return val;
+              }
+              return 0;
             };
 
-            ratings.sympathized = findMatch(/共感した\s*([\d.万,]+)/);
-            ratings.understood = findMatch(/なるほど\s*([\d.万,]+)/);
-            ratings.hmm = findMatch(/うーん\s*([\d.万,]+)/);
-            ratings.commentCount = findMatch(/投稿コメント\s*([\d.万,]+)/);
+            ratings.sympathized = findNumByLabel("共感した");
+            ratings.understood = findNumByLabel("なるほど");
+            ratings.hmm = findNumByLabel("うーん");
+            ratings.commentCount = findNumByLabel("投稿コメント") || findNumByLabel("コメント");
 
-            // フォールバック: window.__PRELOADED_STATE__ から取得 (モバイル等でDOMが異なる場合用)
+            // フォールバック1: 正規表現
             if (ratings.sympathized === 0) {
-              const scriptText = Array.from(doc.querySelectorAll('script')).find(s => s.innerText.includes('__PRELOADED_STATE__'))?.innerText;
+              const findMatch = (pattern) => {
+                const m = statsText.match(pattern);
+                return m ? parseNumber(m[1]) : 0;
+              };
+              ratings.sympathized = findMatch(/共感した\s*([\d.万,]+)/);
+              ratings.understood = findMatch(/なるほど\s*([\d.万,]+)/);
+              ratings.hmm = findMatch(/うーん\s*([\d.万,]+)/);
+              ratings.commentCount = ratings.commentCount || findMatch(/(?:投稿)?コメント\s*([\d.万,]+)/);
+            }
+
+            // フォールバック2: __PRELOADED_STATE__
+            if (ratings.sympathized === 0) {
+              const script = Array.from(doc.querySelectorAll("script")).find((s) =>
+                (s.textContent || s.innerText || "").includes("__PRELOADED_STATE__"),
+              );
+              const scriptText = script ? (script.textContent || script.innerText || "") : "";
               if (scriptText) {
                 try {
-                  const jsonMatch = scriptText.match(/window\.__PRELOADED_STATE__\s*=\s*(\{[\s\S]*?\});/);
+                  const jsonMatch = scriptText.match(/__PRELOADED_STATE__\s*=\s*(\{[\s\S]*?\})(?:;|\n|$)/);
                   if (jsonMatch) {
                     const state = JSON.parse(jsonMatch[1]);
                     const detail = state.profileDetail;
                     if (detail) {
                       ratings.sympathized = detail.totalEmpathyCount || 0;
-                      ratings.understood = detail.totalGoodCount || 0;
-                      ratings.hmm = detail.totalBadCount || 0;
-                      ratings.commentCount = detail.totalCommentCount || 0;
+                      ratings.understood = detail.totalInsightCount || detail.totalGoodCount || 0;
+                      ratings.hmm = detail.totalNegativeCount || detail.totalBadCount || 0;
+                      ratings.commentCount = ratings.commentCount || detail.totalCommentCount || 0;
                     }
                   }
-                } catch (e) { }
+                } catch (e) {
+                  /* ignore */
+                }
               }
             }
 
@@ -368,9 +422,9 @@
   }
 
   function getCommentBackgroundColor(rate) {
-    if (rate >= 60) return "rgba(40, 167, 69, 0.08)";
-    if (rate >= 40) return "rgba(255, 193, 7, 0.08)";
-    return "rgba(220, 53, 69, 0.08)";
+    const { color } = calculateRating(rate, 100 - rate);
+    // 背景用により透明度を高く (0.08)
+    return color.replace("rgb", "rgba").replace(")", ", 0.08)");
   }
 
   function shouldHideComment(ratings, commentStats) {
@@ -408,8 +462,10 @@
     container.style.cssText = `
             display: inline-block;
             margin-left: 8px;
-            vertical-align: middle;
-        `;
+      vertical-align: middle;
+      pointer-events: auto;
+      z-index: 10;
+    `;
     container.className = "yahoo-user-rating-badge";
 
     const positive = ratings.sympathized + ratings.understood;
@@ -459,11 +515,15 @@
       parts.push(`${positiveRate}%`);
     }
 
+    const isMobile = window.innerWidth <= 768;
     const textSpan = document.createElement("span");
     textSpan.style.cssText = `
             font-size: ${settings.compactMode ? "10px" : "11px"};
             color: #666;
-            white-space: nowrap;
+            white-space: ${isMobile ? "normal" : "nowrap"};
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
         `;
     textSpan.textContent = parts.join(" ");
 
@@ -473,13 +533,20 @@
 
     wrapper.style.cssText = `
             display: inline-flex;
+            flex-wrap: ${isMobile ? "wrap" : "nowrap"};
             align-items: center;
-            gap: 2px;
-            padding: ${settings.compactMode ? "1px 4px" : "2px 6px"};
+            gap: 6px;
+            padding: ${settings.compactMode ? "2px 6px" : "3px 8px"};
             background: ${bgColor};
-            border-radius: 4px;
+            border-radius: 6px;
             border: 1px solid ${borderColor};
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            line-height: 1.2;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
         `;
+
 
     wrapper.appendChild(textSpan);
 
@@ -526,23 +593,35 @@
     };
     const timeVal = parseTimeToMinutes(timeText);
 
-    // ボタンの特定 (テキスト内容に基づく)
+    // ボタンの特定 (表示されているボタンのみを対象)
     const buttons = Array.from(commentElement.querySelectorAll("button"));
-    const findBtn = (text) => buttons.find(b => b.innerText.includes(text));
+    // 表示されているボタンのみをフィルタ (隠しボタンを除外)
+    const findBtn = (text) => buttons.find(b => {
+      if (!b.innerText.includes(text)) return false;
+      // 表示状態をチェック: offsetParentがnullなら非表示
+      if (b.offsetParent === null) return false;
+      return true;
+    });
 
     const agreeBtn = findBtn("共感した");
     const disagreeBtn = findBtn("うーん");
 
     const extract = (btn) => {
       if (!btn) return 0;
-      // 数値が含まれる可能性がある要素を探索 (最後の数値を優先)
-      const spans = Array.from(btn.querySelectorAll("span"));
-      for (let i = spans.length - 1; i >= 0; i--) {
-        const val = parseNumber(spans[i].textContent);
-        if (!isNaN(val) && val > 0) return val;
+      // ボタン内の最後のspan要素に数値が入っている
+      const spans = btn.querySelectorAll("span");
+      if (spans.length > 0) {
+        const lastSpan = spans[spans.length - 1];
+        const text = lastSpan.textContent.trim();
+        // 文字列が数字のみで構成されているかチェック（万単位も考慮）
+        if (/^[\d,]+$/.test(text)) {
+          return parseNumber(text);
+        }
+        if (/^[\d.]+万$/.test(text)) {
+          return Math.round(parseFloat(text) * 10000);
+        }
       }
-      const topVal = parseNumber(btn.textContent);
-      return isNaN(topVal) ? 0 : topVal;
+      return 0;
     };
 
     const sympathized = extract(agreeBtn);
@@ -929,14 +1008,66 @@
       const existingBadges = link.parentElement?.querySelectorAll(".yahoo-user-rating-badge");
       existingBadges?.forEach((b) => b.remove());
 
+      const isAuthorLink = !!link.closest('header, [class*="Header"], [class*="Author"], h2') || !!link.querySelector('img');
+
       if (commentElement && commentElement.querySelector(".yahoo-user-rating-badge")) return;
 
       if (link.textContent.trim().length > 0) {
-        if (link.parentElement) {
-          if (link.nextSibling) {
-            link.parentElement.insertBefore(badge, link.nextSibling);
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile && isAuthorLink && commentElement) {
+          // モバイル環境: ヘッダー行（ユーザー名やフォローボタンがあるエリア）の直後に挿入
+          // これにより、既存のフレックスボックス構造に干渉せず、確実に次の行に配置されます
+
+          // コメントヘッダー部分を特定
+          let headerEl = link.closest('header, [class*="Header"], [class*="Author"]');
+
+          if (headerEl) {
+            // commentElement(article等)の直下の子要素まで遡る
+            // これにより、横並びのフレックスボックス等の影響を完全に排除する
+            let topLevelChild = headerEl;
+            while (topLevelChild.parentElement && topLevelChild.parentElement !== commentElement) {
+              topLevelChild = topLevelChild.parentElement;
+            }
+
+            // 既存の同じクラスのコンテナがあれば削除（重複防止）
+            commentElement.querySelectorAll(".yahoo-rating-mobile-row").forEach(el => el.remove());
+
+            const mobileRow = document.createElement("div");
+            mobileRow.className = "yahoo-rating-mobile-row";
+            mobileRow.style.cssText = `
+              display: block !important;
+              width: 100% !important;
+              max-width: 100% !important;
+              margin: 4px 0 8px 0 !important;
+              padding: 0 !important;
+              box-sizing: border-box !important;
+              clear: both !important;
+              line-height: 1 !important;
+              pointer-events: none !important; /* 背景の要素を透過させる */
+            `;
+
+            // バッジスタイル指定
+            badge.style.cssText = `
+              display: inline-flex !important;
+              font-size: 10px !important;
+              padding: 1px 4px !important;
+              margin: 0 !important;
+              pointer-events: auto !important;
+              vertical-align: middle !important;
+            `;
+
+            mobileRow.appendChild(badge);
+            // ヘッダー要素の親（topLevelChild）の直後に挿入することで、物理的に「次の行」を確定させる
+            topLevelChild.insertAdjacentElement("afterend", mobileRow);
+          }
+        } else if (link.parentElement) {
+          // PC版: 投稿時間/詳細リンクの後に配置
+          const timeLink = link.parentElement.querySelector('a[href*="comments"], span[class*="Time"], time');
+          const target = timeLink || link;
+          if (target.nextSibling) {
+            target.parentElement.insertBefore(badge, target.nextSibling);
           } else {
-            link.parentElement.appendChild(badge);
+            target.parentElement.appendChild(badge);
           }
         }
       }
@@ -944,46 +1075,110 @@
       const commentStats = getIndividualCommentRating(commentElement);
 
       if (shouldHideComment(ratings, commentStats)) {
-        if (commentElement) {
+        if (commentElement && isAuthorLink) {
           commentElement.style.display = "none";
           commentElement.dataset.hiddenByRating = "true";
         }
-      } else if (settings.enableBackgroundColor && commentElement && !ratings.isExpert) {
+      } else if (settings.enableBackgroundColor && commentElement && !ratings.isExpert && isAuthorLink) {
         const stats = settings.bgColorBasis === "comment" ? commentStats : {
           sympathized: (ratings.sympathized || 0) + (ratings.understood || 0),
           hmm: ratings.hmm || 0,
           total: (ratings.sympathized || 0) + (ratings.understood || 0) + (ratings.hmm || 0)
         };
 
-        if (stats && stats.total > 0) {
+        // ハードゲート: bgColorBasisが"comment"の場合、実際の評価数が0なら背景色を適用しない
+        const actualCommentTotal = commentStats.sympathized + commentStats.hmm;
+        if (settings.bgColorBasis === "comment" && actualCommentTotal <= 0) {
+          // コメント基準で評価0なら背景色なし
+        } else if (stats && stats.total > 0) {
           const rate = Math.round((stats.sympathized / stats.total) * 100);
+          const isMobile = window.innerWidth <= 768;
+          commentElement.style.padding = isMobile ? "10px" : "12px";
+          commentElement.style.margin = isMobile ? "0 8px 12px 8px" : "0 0 16px 0";
+          commentElement.style.borderRadius = isMobile ? "12px" : "18px";
           commentElement.style.backgroundColor = getCommentBackgroundColor(rate);
+          // テキスト欠け防止のため overflowX は設定しない
+          commentElement.style.wordBreak = "break-word";
         }
       }
 
-      // 個別コメント用の評価バー
-      if (settings.showCommentBar && commentElement && commentStats.total > 0 && !commentElement.querySelector(".yahoo-comment-rating-bar-container")) {
-        const rate = (commentStats.sympathized / commentStats.total) * 100;
+      // 個別コメント評価バー（3つの指標の下に表示）
+      // ハードゲート: 合計0の場合は絶対に表示しない
+      const actualTotal = commentStats.sympathized + commentStats.hmm;
+      if (settings.showCommentBar && commentElement && actualTotal > 0 && !commentElement.querySelector(".yahoo-comment-rating-bar-container")) {
+        const rate = (commentStats.sympathized / actualTotal) * 100;
+        const { color } = calculateRating(commentStats.sympathized, commentStats.hmm);
+
         const barContainer = document.createElement("div");
         barContainer.className = "yahoo-comment-rating-bar-container";
-        barContainer.style.cssText = "height: 4px; background: #eee; margin-top: 8px; border-radius: 2px; overflow: hidden; width: 100%;";
+        // CSSによる強制改行: flex-basis: 100% で横幅を占有し、次の行に回る
+        barContainer.style.cssText = `
+            flex-basis: 100%;
+            width: 100%;
+            height: 6px;
+            background: #f0f0f0;
+            margin: 10px 0 4px 0;
+            border-radius: 6px;
+            overflow: hidden;
+            box-sizing: border-box;
+            order: 9999;
+          `;
 
         const bar = document.createElement("div");
-        bar.style.cssText = `height: 100%; width: ${rate}%; background: ${getRatingColor(rate)}; transition: width 0.3s;`;
+        bar.style.cssText = `
+            height: 100%;
+            width: ${rate}%;
+            background: ${color};
+            border-radius: 6px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+          `;
         barContainer.appendChild(bar);
 
-        // リアクションボタンの親または適切な位置に挿入
-        const reactionArea = commentElement.querySelector('div[class*="Reaction"], div[class*="reaction"], ul[class*="Reaction"]');
-        if (reactionArea) {
-          reactionArea.parentElement.insertBefore(barContainer, reactionArea.nextSibling);
-        } else {
-          commentElement.appendChild(barContainer);
+        // リアクションボタンの親コンテナを探し、flex-wrapを有効化してバーを追加
+        const buttons = Array.from(commentElement.querySelectorAll("button"));
+        const empathyBtn = buttons.find(b => b.textContent && b.textContent.includes("共感した"));
+
+        if (empathyBtn) {
+          // ul を探し、それをラッパーで包んでバーを配置する
+          const ul = empathyBtn.closest("ul");
+          if (ul && ul.parentElement) {
+            // 既にラッパーがあるか確認
+            let wrapper = ul.parentElement.closest(".yahoo-rating-reaction-stack");
+            if (!wrapper) {
+              wrapper = document.createElement("div");
+              wrapper.className = "yahoo-rating-reaction-stack";
+              // 縦並びにして、ボタン群の幅に合わせる
+              wrapper.style.cssText = `
+                      display: inline-flex;
+                      flex-direction: column;
+                      align-items: flex-start;
+                      width: auto;
+                      margin: 0;
+                      padding: 0;
+                  `;
+              ul.parentElement.insertBefore(wrapper, ul);
+              wrapper.appendChild(ul);
+            }
+
+            // バーのスタイルを調整: コンテナ内で全幅（＝ULの幅）にする
+            barContainer.style.cssText = `
+                width: 100%;
+                height: 6px;
+                background: #f0f0f0;
+                margin: 8px 0 4px 0;
+                border-radius: 6px;
+                overflow: hidden;
+                box-sizing: border-box;
+              `;
+            wrapper.appendChild(barContainer);
+          }
         }
       }
     } catch (err) {
       // エラー時はサイレントにスキップ
     }
   }
+
 
   /**
    * プロフィールページの情報を取得・表示する

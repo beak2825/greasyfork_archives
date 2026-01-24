@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bh3helper-enhancer
 // @namespace    4b8b542a-3500-49bd-b857-8d62413434c7
-// @version      1.3.4
+// @version      1.4.1
 // @description  在bh3helper（《崩坏3》剧情助手）上提供增强功能
 // @author       -
 // @match        https://bh3helper.xrysnow.xyz/*
@@ -43,6 +43,10 @@
         COMMON_PAGE_BASE_URL: '/pages/common.html',
         PAGE_BASE_URL: '/pages/',
         IGNORE_COLOR_CODE: ['#fedf4c'],
+        STORY_PAGE_RANGE: [
+            [1, 199], // 主线第一部+第二部
+            [2001, 2004], // 2001:樱色轮回，2002:天命总部，2003:后崩坏书，2003.5:星坠之前，2004:后崩坏书第二部
+        ],
     };
 
     // ---------- //
@@ -768,7 +772,7 @@ details[open] > .dlg-help-summary::before {
                     return this.page === '/';
                 },
                 isStoryPage() {
-                    return this.page === '/pages/common.html' && !isNaN(this.commonid) && (this.commonid >= 1 && this.commonid <= 199);
+                    return this.page === '/pages/common.html' && !isNaN(this.commonid) && checkIdInRange(this.commonid, CONFIG.STORY_PAGE_RANGE);
                 },
                 isSearchPage() {
                     return this.page === '/pages/search.html';
@@ -871,7 +875,7 @@ details[open] > .dlg-help-summary::before {
                     this.prompt('请输入新昵称', state.PJMS_NICKNAME ?? '寻梦者', '熵').then(nickname => {
                         if (nickname) state.PJMS_NICKNAME = nickname;
                         else delete state.PJMS_NICKNAME;
-                        showMessage(`设置已保存，刷新页面才能生效`);
+                        showMessage(`${nickname ? '设置已保存' : '已恢复默认'}，刷新页面才能生效`);
                     }).catch(() => {});
                 },
                 hidePanelInSession() {
@@ -1147,6 +1151,7 @@ details[open] > .dlg-help-summary::before {
         const result = [];
         const extractRulesArr = Object.entries(PG_DOWNLOAD_STRUCT.contentExtractRules);
         const nodeTextExt = { useColor: useColorTag };
+        const cssInjected = addCSS(`html.no-scroll{overflow:unset !important;}`); // 解决快速切换时的滚动条闪烁问题
         ui.loading_indicator.show();
         ui.loading_indicator.innerText = '正在下载...';
 
@@ -1154,13 +1159,13 @@ details[open] > .dlg-help-summary::before {
             // 1. 获取所有 .external-link
             const main_content = document.getElementById('main-content');
             const constraints = [], otherSelectors = [];
-            if (!includeMainline) constraints.push(':not(#text-review-switch)');
+            if (!includeMainline) constraints.push(':not(#text-review-switch):not(.text-review-wrapper)');
             // if (!includeCollections) constraints.push(':not(#collection-review-switch)');
             if (includeRecapitulation) otherSelectors.push('.content-section#前情提要 div.external-link:not(:empty)');
-            const selectorBase = `.content-section.level-4{}${constraints.join('')} div.external-link:not(:empty)`; // 注意必须是div，而不是<a>，<a>是真·外链
+            const selectorBase = `${constraints.join('')}{} div.external-link:not(:empty)`; // 注意必须是div，而不是<a>，<a>是真·外链
             const selectorBaseEx = `.content > *{}${constraints.join('')} > div.external-link:not(:empty)${otherSelectors.length ? (',' + otherSelectors.join(',')) : ''}`;
-            const selectorMainStory = selectorBase.replace("{}", ":not(#collection-review-switch)") + ',' + selectorBaseEx.replace("{}", ":not(#collection-review-switch)"),
-                selectorCollections = selectorBase.replace("{}", "#collection-review-switch");
+            const selectorMainStory = selectorBase.replace("{}", ".text-review-wrapper>") + ',' + selectorBaseEx.replace("{}", ":not(#collection-review-switch)"),
+                selectorCollections = selectorBase.replace("{}", ".collection-review-wrapper");
             let skipCount = 0;
             const resources = []; // 额外资源
             
@@ -1177,10 +1182,16 @@ details[open] > .dlg-help-summary::before {
                 current++;
                 //if (!button.innerText) continue; //已经通过CSS选择器排除
                 updateProgress(current);
-                await new Promise(resolve => requestAnimationFrame(resolve));
+                await nextAnimationFrame();
                 button.click();
                 // 3. 等待内容加载完成
-                const loadContent = () => waitForElement('.dialog-viewer-wrapper:not([style*="display: none"])', CONFIG.CONTENT_WAIT_TIMEOUT, main_content).then(element => element).catch(() => null);
+                const btnParents = parents(button, '.content');
+                const contentContainer = btnParents[btnParents.length - 1] ?? main_content;
+                const loadContent = () => waitForElement(
+                    '.dialog-viewer-wrapper:not([style*="display: none"])',
+                    CONFIG.CONTENT_WAIT_TIMEOUT,
+                    contentContainer
+                ).catch(() => null);
                 let contentDialog = await loadContent();
                 if (!contentDialog) {
                     // 重试1次
@@ -1193,7 +1204,12 @@ details[open] > .dlg-help-summary::before {
                         return; // 跳过
                     }
                 }
-                if (contentDialog.classList.contains('dialog-embedded')) return;
+                await nextAnimationFrame();
+                if (contentDialog.classList.contains('dialog-embedded')) {
+                    console.log(`[bh3helper-downloader] I: 点击按钮 "${button.innerText}" 后加载出的内容对话框是嵌入对话框，正在跳过`);
+                    skipCount += 1;
+                    return;
+                }
                 updateProgress(current, button.innerText);
                 // 4. 提取对话内容
                 const contents = [];
@@ -1298,7 +1314,7 @@ details[open] > .dlg-help-summary::before {
             if (includeRecapitulation) {
                 const m = main_content.querySelectorAll('#前情提要 > .content > .md-content');
                 if (m.length === 1) {
-                    result.push(`【前情提要】\n${extractNodeText({ childNodes: m }, nodeTextExt).join('')}\n\n-----\n\n`);
+                    result.push(`【前情提要】\n${extractNodeText({ childNodes: m }, nodeTextExt).join('')}\n\n`, '-----\n\n');
                 }
             }
             // 如果选择拆分收藏品，那么单独收集收藏品内容
@@ -1330,6 +1346,9 @@ details[open] > .dlg-help-summary::before {
 
             // 9. 合并所有内容
             result.pop();
+            if (result.length < 1 && !returnData) {
+                throw new Error('未找到任何内容');
+            }
             const blob = new Blob(result, { type: 'text/plain;charset=utf-8' });
             // 10. 获取页面标题，生成文件名
             const pageTitle = main_content.querySelector('.content-title-wrapper > .main-title')?.innerText || document.title;
@@ -1377,6 +1396,7 @@ details[open] > .dlg-help-summary::before {
             console.error('[bh3helper-downloader] download failed:', error);
         } finally {
             ui.loading_indicator.hide();
+            cssInjected.remove();
         }
     }
 
@@ -1682,6 +1702,7 @@ details[open] > .dlg-help-summary::before {
         // 直接把数据按一样的方法硬编码拉过来😂
         const m1 = MainLineData, // 主线第一部
             m2 = MarsMainLineData, // 主线第二部
+            ow = GameOwData, // 开放世界
             rouge = GameRogueData; // 往世乐土
         // 上述数据全都在Scripts作用域里面，无法通过window或unsafeWindow访问
         // 因此直接这样写，这不是错误
@@ -1715,6 +1736,23 @@ details[open] > .dlg-help-summary::before {
                     },
                 ]
             },
+            {
+                id: 'other',
+                label: '其他内容',
+                nodes: [
+                    {
+                        id: 'other-ow',
+                        label: '开放世界',
+                        nodes: [
+                            {
+                                id: 'ow-content',
+                                label: '开放世界',
+                                nodes: [],
+                            }
+                        ]
+                    },
+                ]
+            },
         ];
         // 填充数据
         const processData = (reference, data, nodeId, part) => {
@@ -1730,7 +1768,7 @@ details[open] > .dlg-help-summary::before {
                 title = TYPOFIX.homepageStruct.mainlineGroupTypo[title];
             }
             const data1 = {
-                id: `mainline1-${title}`,
+                id: `mainline-${title}`,
                 label: title,
                 nodes: []
             };
@@ -1811,9 +1849,18 @@ details[open] > .dlg-help-summary::before {
             nodes: rougeContainer,
         });
 
+        // 手动添加开放世界数据
+        for (const i of Object.values(ow)) {
+            tree[2].nodes[0].nodes[0].nodes.push({
+                id: i.id,
+                label: i.title,
+                leaf: true,
+            });
+        }
+
         const processTree = (nodes) => {
             for (const node of nodes) {
-                node.checked = true;
+                if (!node.hidden) node.checked = true;
                 if (node.nodes) {
                     node.expanded = true;
                     processTree(node.nodes);
@@ -1937,12 +1984,20 @@ details[open] > .dlg-help-summary::before {
         }
     }
 
+    const extractNodeText_unityRichTextTagMap = {
+        'B': 'b',
+        'STRONG': 'b',
+        'I': 'i',
+        'U': 'u',
+        'DEL': 's',
+        'S': 's',
+    };
     /**
- * 提取节点文本内容
- * @param {Node} node - 要提取文本内容的节点
- * @param {any} ctx - 上下文对象，用于递归调用时传递状态
- * @returns {string[]} - 节点文本内容的数组
- */
+     * 提取节点文本内容
+     * @param {Node} node - 要提取文本内容的节点
+     * @param {any} ctx - 上下文对象，用于递归调用时传递状态
+     * @returns {string[]} - 节点文本内容的数组
+     */
     function extractNodeText(node, ctx = {}) {
         let value = []; for (let index = 0, len = node.childNodes.length; index < len; index++) {
             const i = node.childNodes[index];
@@ -1990,6 +2045,23 @@ details[open] > .dlg-help-summary::before {
                     if (ctx.type === 'UL') value.push('· ', ...extractNodeText(i, ctx));
                     else if (ctx.type === 'OL') value.push((++ctx.index) + '. ', ...extractNodeText(i, ctx));
                     else value.push(...extractNodeText(i, ctx));
+                    addLinebreak(i);
+                    break;
+                case 'B':
+                case 'STRONG':
+                case 'I':
+                case 'U':
+                case 'DEL':
+                case 'S':
+                    const tag = extractNodeText_unityRichTextTagMap[i.tagName];
+                    value.push(`<${tag}>`);
+                    if (ctx.useColor) { 
+                        const text = extractNodeText(i, ctx).join('');
+                        const colorProp = i.style.getPropertyValue('--color');
+                        value.push((colorProp && (!CONFIG.IGNORE_COLOR_CODE.includes(colorProp))) ? `<color=${colorProp}>${text}</color>` : text);
+                    }
+                    else value.push(...extractNodeText(i, ctx));
+                    value.push(`</${tag}>`);
                     addLinebreak(i);
                     break;
                 default:
@@ -2100,23 +2172,17 @@ details[open] > .dlg-help-summary::before {
      * @param {string} selector 元素选择器
      * @param {number} timeout 超时时间，单位毫秒
      * @param {Document | Element} on 查找范围，默认是 document
+     * @param {string} method 查找方法，默认是 querySelector
      * @returns {Promise<Element>} 找到的元素
      */
-    function waitForElement(selector, timeout = 5000, on = document) {
+    async function waitForElement(selector, timeout = 5000, on = document, method = 'querySelector') {
         const startTime = Date.now();
-        return new Promise((resolve, reject) => {
-            function checkElement() {
-                const element = on.querySelector(selector);
-                if (element) {
-                    resolve(element);
-                } else if (Date.now() - startTime < timeout) {
-                    requestAnimationFrame(checkElement);
-                } else {
-                    reject(new Error("Element not found"));
-                }
-            }
-            requestAnimationFrame(checkElement);
-        });
+        while (Date.now() - startTime < timeout) {
+            await nextAnimationFrame();
+            const element = on[method](selector);
+            if (element) return element;
+        }
+        throw new Error("Element not found");
     }
 
     /**
@@ -2263,6 +2329,9 @@ details[open] > .dlg-help-summary::before {
     }
 
     class EmbeddedFrame {
+        /**
+         * @type {HTMLIFrameElement}
+         */
         #el = document.createElement('iframe');
 
         /**
@@ -2273,10 +2342,6 @@ details[open] > .dlg-help-summary::before {
             container.append(this.#el);
         }
 
-        /**
-         * 获取 iframe 元素
-         * @returns {HTMLIFrameElement} iframe 元素
-         */
         get element() {
             return this.#el;
         }
@@ -2357,14 +2422,12 @@ details[open] > .dlg-help-summary::before {
         }
         /**
          * 获取 iframe 的 contentWindow
-         * @returns {Window} iframe 的 contentWindow
          */
         get contentWindow() {
             return this.#el.contentWindow;
         }
         /**
          * 获取 iframe 的 contentDocument
-         * @returns {Document} iframe 的 contentDocument
          */
         get contentDocument() {
             return this.#el.contentDocument;
@@ -2374,9 +2437,10 @@ details[open] > .dlg-help-summary::before {
          * 向 iframe 发送消息
          * @param {*} data - 要发送的数据
          * @param {string} targetOrigin - 目标源，默认为 '*'
+         * @param {Transferable[]} transfer - 可选的可传输对象数组
          */
-        postMessage(data, targetOrigin = '*') {
-            this.#el.contentWindow.postMessage(data, targetOrigin);
+        postMessage(data, targetOrigin = '*', transfer = undefined) {
+            this.#el.contentWindow.postMessage(data, targetOrigin, transfer);
         }
 
         /**
@@ -2405,10 +2469,45 @@ details[open] > .dlg-help-summary::before {
      * @param {Object} [options={}] - fflate 压缩配置选项
      * @param {number} [options.level=6] - 压缩级别，取值 0-9，0 为无压缩，9 为最高压缩（速度最慢）
      * @param {number} [options.mem] - 压缩内存占用级别，影响压缩速度与内存消耗，取值建议参考 fflate 官方文档
-     * @returns {Promise<Uint8Array>} 成功返回压缩后的 ZIP 数据 Uint8Array，失败则 reject 抛出错误
+     * @returns {Promise<Uint8Array<ArrayBuffer>>} 成功返回压缩后的 ZIP 数据 Uint8Array，失败则 reject 抛出错误
      */
     function createZip(files, options = {}) {
         return new Promise((resolve, reject) => fflate.zip(files, options, (err, out) => err ? reject(err) : resolve(out)));
+    }
+
+    /**
+     * 获取元素的所有符合选择器的父元素
+     * @param {Element} element - 起始元素
+     * @param {string} [selector=null] - 可选的选择器，用于筛选父元素
+     * @returns {Element[]} 符合选择器的父元素数组
+     */
+    function parents(element, selector = null) {
+        const parents = [];
+        let current = element.parentElement;
+
+        while (current) {
+            if (!selector || current.matches(selector)) {
+                parents.push(current);
+            }
+            current = current.parentElement;
+        }
+
+        return parents;
+    }
+
+    /**
+     * 检查 ID 是否在指定的范围列表内
+     * @param {number} id - 要检查的 ID
+     * @param {Array<number|Array<number>>} ranges - 范围列表，每个元素可以是单个数字或数字范围数组
+     * @returns {boolean} 如果 ID 在范围内返回 true，否则返回 false
+     */
+    function checkIdInRange(id, ranges) {
+        for (const range of ranges) {
+            if (Array.isArray(range)) {
+                if (id >= range[0] && id <= range[1]) return true;
+            } else if (id === range) return true;
+        }
+        return false;
     }
 
 })((typeof unsafeWindow !== "undefined" ? unsafeWindow : window), window))

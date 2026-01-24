@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Vector Layout for Wikipedia (Fast)
 // @namespace -
-// @version 1.2.0
+// @version 1.2.1
 // @description returns old Wikipedia layout. (layout before 2023 redesign of the website)
 // @author NotYou
 // @match *://wikipedia.org/*
@@ -34,14 +34,8 @@
 // @match *://wikisource.org/*
 // @match *://*.wikisource.org/*
 
-// @match *://www.mediawiki.org/*
-// @match *://wikitech.wikimedia.org/*
-// @match *://foundation.wikimedia.org/*
-// @match *://meta.wikimedia.org/*
-// @match *://species.wikimedia.org/*
-// @match *://incubator.wikimedia.org/*
-// @match *://outreach.wikimedia.org/*
-// @match *://wikimania.wikimedia.org/*
+// @match *://mediawiki.org/*
+// @match *://*.wikimedia.org/*
 
 // @run-at document-start
 // @license GPL-3.0-or-later

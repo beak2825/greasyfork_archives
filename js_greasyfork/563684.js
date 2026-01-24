@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Abroad Items Info (YATA) - Overlay
 // @namespace    hardy.yata.abroad.robust
-// @version      4.4.1
-// @description  Shows a movable, resizable YATA abroad prices overlay only on the Travel Agency page
+// @version      4.4.2
+// @description  Shows a movable, resizable YATA abroad prices overlay on the Travel Agency page and during in-flight travel
 // @author       R4G3RUNN3R[3877028] - (based on Hardy script)
 // @license      MIT
 // @match        https://www.torn.com/*
@@ -30,7 +30,7 @@
         sou: "South Africa"
     };
 
-    const STORAGE_KEY = "yata_overlay_state_v426";
+    const STORAGE_KEY = "yata_overlay_state_v442";
     const defaultState = { x: null, y: null, width: 1100, height: 420 };
 
     function loadState() {
@@ -45,20 +45,28 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
-    // ---------- WAIT FOR TRAVEL AGENCY ----------
+    // ---------- PAGE DETECTION ----------
 
-    function isTravelDOMPresent() {
+    function isTravelAgency() {
         return document.body.innerText.includes("Welcome to the Torn City travel agency");
     }
 
-    function waitForTravelPage(callback) {
-        if (isTravelDOMPresent()) {
+    function isInFlight() {
+        return document.body.innerText.includes("Remaining Flight Time");
+    }
+
+    function shouldShowOverlay() {
+        return isTravelAgency() || isInFlight();
+    }
+
+    function waitForRelevantPage(callback) {
+        if (shouldShowOverlay()) {
             callback();
             return;
         }
 
         const observer = new MutationObserver(() => {
-            if (isTravelDOMPresent()) {
+            if (shouldShowOverlay()) {
                 observer.disconnect();
                 callback();
             }
@@ -68,7 +76,7 @@
         setTimeout(() => observer.disconnect(), 15000);
     }
 
-    waitForTravelPage(initOverlay);
+    waitForRelevantPage(initOverlay);
 
     // ---------- MAIN ----------
 

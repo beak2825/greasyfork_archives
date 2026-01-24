@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         BullionVault Pro Dashboard Suite
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
-// @description  Complete visual overhaul: Live Spreads & Fees on Order Board + Real-time Liquidation Values on P&L.
+// @version      1.1.0
+// @description  Complete visual overhaul: Live Spreads & Fees + True Liquidation Values. Hides misleading default valuations.
 // @author       http://github.com/9iiota
 // @match        https://www.bullionvault.com/secure/order-board.do*
 // @match        https://www.bullionvault.com/secure/profit-and-loss.do*
@@ -255,7 +255,7 @@
 
 
     // =========================================================================
-    // MODULE 2: PROFIT & LOSS (Real-time Liquidation)
+    // MODULE 2: PROFIT & LOSS (True Liquidation)
     // =========================================================================
     function initProfitLoss() {
         console.log("BV Suite: Initializing P&L Module...");
@@ -267,7 +267,7 @@
             refreshInterval: 30000,
             tooltips: {
                 realVal: "The 'Liquidation Value'. This is the exact amount you would receive if you sold this position right now at the best market Bid price, minus the 0.5% selling commission.",
-                realPL: "Your actual Profit/Loss if you exited the market immediately. Calculated as: (Real Valuation) - (Book Cost).",
+                realPL: "Your actual Profit/Loss if you exited the market immediately. Calculated as: (True Valuation) - (Book Cost).",
                 realChange: "The percentage return on your investment after all fees."
             }
         };
@@ -313,6 +313,9 @@
 
             /* --- 5. TOTALS ROW --- */
             #bv-totals-row { border-top: 2px solid #ccc; background-color: #f9f9f9; }
+
+            /* --- 6. HIDING ORIGINAL ELEMENTS --- */
+            .bv-hidden-original { display: none !important; }
         `;
             document.head.appendChild(style);
         }
@@ -405,9 +408,18 @@
 
             rows.forEach(row => {
                 const label = row.cells[0].textContent.trim();
-                if (label.includes('Overall account valuation')) overallValRow = row;
-                else if (label.includes('Total return')) totalReturnRow = row;
-                else if (label.includes('Net deposit')) netDeposit = parseCurrency(row.cells[1].textContent);
+                // We use includes to match, but check for our own inserted rows to avoid hiding them
+                if (label === 'Overall account valuation') {
+                    overallValRow = row;
+                    row.classList.add('bv-hidden-original'); // Hide original
+                }
+                else if (label === 'Total return') {
+                    totalReturnRow = row;
+                    row.classList.add('bv-hidden-original'); // Hide original
+                }
+                else if (label.includes('Net deposit')) {
+                    netDeposit = parseCurrency(row.cells[1].textContent);
+                }
             });
 
             const realTotalReturn = realAccountValuation - netDeposit;
@@ -438,9 +450,10 @@
                 }
             };
 
-            updateOrInsertRow('bv-real-val-row', 'Real overall account valuation', realAccountValuation);
-            updateOrInsertRow('bv-real-return-row', 'Real total return', realTotalReturn);
-            updateOrInsertRow('bv-real-return-pct-row', 'Real total return %', realReturnPct, true);
+            // Using "True" terminology now
+            updateOrInsertRow('bv-real-val-row', 'True overall account valuation', realAccountValuation);
+            updateOrInsertRow('bv-real-return-row', 'True total return', realTotalReturn);
+            updateOrInsertRow('bv-real-return-pct-row', 'True total return %', realReturnPct, true);
         }
 
         function updateMainTable() {
@@ -450,7 +463,15 @@
             const theadRow = table.querySelector('thead tr');
             const tbody = table.querySelector('tbody');
 
-            // Add Headers if missing
+            // --- 1. HIDE ORIGINAL HEADERS ---
+            Array.from(theadRow.cells).forEach(cell => {
+                const txt = cell.textContent.trim();
+                if (txt === 'Valuation' || txt === 'Change') {
+                    cell.classList.add('bv-hidden-original');
+                }
+            });
+
+            // --- 2. ADD CUSTOM HEADERS IF MISSING ---
             if (!theadRow.querySelector('.bv-real-col')) {
                 const createTh = (text, tooltip) => {
                     const th = document.createElement('th');
@@ -458,9 +479,9 @@
                     th.innerHTML = `${text} <span class="bv-info-icon" title="${tooltip}">i</span>`;
                     return th;
                 };
-                theadRow.insertBefore(createTh('Real Valuation', CONFIG.tooltips.realVal), theadRow.lastElementChild); // Insert before Change
-                theadRow.insertBefore(createTh('Real P/L', CONFIG.tooltips.realPL), theadRow.lastElementChild);
-                theadRow.appendChild(createTh('Real Change', CONFIG.tooltips.realChange));
+                theadRow.insertBefore(createTh('True Valuation', CONFIG.tooltips.realVal), theadRow.lastElementChild); // Insert before Change
+                theadRow.insertBefore(createTh('True P/L', CONFIG.tooltips.realPL), theadRow.lastElementChild);
+                theadRow.appendChild(createTh('True Change', CONFIG.tooltips.realChange));
             }
 
             let totalRealVal = 0;
@@ -480,6 +501,17 @@
                 else if (metalName.includes('PLATINUM')) row.classList.add('bv-row--platinum');
                 else if (metalName.includes('PALLADIUM')) row.classList.add('bv-row--palladium');
 
+                // --- HIDE ORIGINAL CELLS (VALUATION & CHANGE) ---
+                Array.from(row.cells).forEach(cell => {
+                    const labelSpan = cell.querySelector('.bookcost__label');
+                    if (labelSpan) {
+                        const labelTxt = labelSpan.textContent.trim();
+                        if (labelTxt === 'Valuation' || labelTxt === 'Change') {
+                            cell.classList.add('bv-hidden-original');
+                        }
+                    }
+                });
+
                 const posData = state.positions.find(p => p.narrative.toUpperCase() === metalName);
 
                 let bookCost = 0;
@@ -493,7 +525,7 @@
                 if (!realValCell) {
                     // Insert columns in specific order to match headers
                     realValCell = document.createElement('td'); realValCell.className = 'bv-real-val-cell bv-mono';
-                    row.insertBefore(realValCell, row.lastElementChild); // Before Change column
+                    row.insertBefore(realValCell, row.lastElementChild); // Before Change column (which might be hidden now)
                     realPLCell = document.createElement('td'); realPLCell.className = 'bv-real-pl-cell bv-mono';
                     row.insertBefore(realPLCell, row.lastElementChild);
                     realChangeCell = document.createElement('td'); realChangeCell.className = 'bv-real-change-cell bv-mono';
@@ -524,10 +556,10 @@
 
             // --- UPDATE TOTALS ROW ---
             let totalsRow = document.getElementById('bv-totals-row');
-            // Calculate header index for alignment
+            // Calculate header index for alignment. We filter out hidden columns to count correctly or just rely on colSpan.
+            // Since we use colspan, we need to count visible columns before "True Valuation".
             const headerCells = Array.from(theadRow.cells);
-            const valColIndex = headerCells.findIndex(cell => cell.textContent.includes('Real Valuation'));
-            const totalCols = headerCells.length;
+            const valColIndex = headerCells.findIndex(cell => cell.textContent.includes('True Valuation'));
 
             if (!totalsRow) {
                 totalsRow = document.createElement('tr');
@@ -537,7 +569,12 @@
                 labelCell.textContent = 'Totals';
                 labelCell.style.fontWeight = 'bold';
                 labelCell.style.textAlign = 'right';
-                labelCell.colSpan = valColIndex > 0 ? valColIndex : 1;
+                // Adjust colspan: -2 because we hid Valuation and Change?
+                // Actually, finding index is dynamic.
+                // Visible columns before True Val = (Empty) + (Bookcost). Valuation is hidden.
+                // So index of True Val is technically 3 in DOM, but visually 2.
+                // We'll set colspan to match the visual gap.
+                labelCell.colSpan = 2; // Usually Empty + Bookcost
                 totalsRow.appendChild(labelCell);
 
                 const valCell = document.createElement('td');
@@ -550,12 +587,11 @@
                 plCell.className = 'bv-mono';
                 totalsRow.appendChild(plCell);
 
-                const remainingCols = totalCols - (valColIndex + 2);
-                if (remainingCols > 0) {
-                    const spacer = document.createElement('td');
-                    spacer.colSpan = remainingCols;
-                    totalsRow.appendChild(spacer);
-                }
+                // Spacer for remaining cols
+                const spacer = document.createElement('td');
+                spacer.colSpan = 2; // True Change + leftover
+                totalsRow.appendChild(spacer);
+
                 tbody.appendChild(totalsRow);
             }
 

@@ -3,7 +3,7 @@
 // @name:zh-CN   embyToLocalPlayer
 // @name:en      embyToLocalPlayer
 // @namespace    https://github.com/kjtsune/embyToLocalPlayer
-// @version      2025.12.26
+// @version      2026.01.23
 // @description  Emby/Jellyfin 调用外部本地播放器，并回传播放记录。适配 Plex。
 // @description:zh-CN Emby/Jellyfin 调用外部本地播放器，并回传播放记录。适配 Plex。
 // @description:en  Play in an external player. Update watch history to Emby/Jellyfin server. Support Plex.
@@ -41,7 +41,17 @@
         crackFullPath: undefined,
         disableForLiveTv: undefined, // undefined 改为 true 则在浏览器里播放 IPTV。
         enableResumeReorder: true, // true 改为 undefined 则禁用。继续观看的前2位不变, 余下近3天更新的前移。
+        resumeHideSomeSeries: undefined, // undefined 改为 true 则启用隐藏特定电视剧的油猴功能菜单。
     };
+
+    let etlpStorageKeys = {
+        webPlayerEnable: 'webPlayerEnable',
+        mountDiskEnable: 'mountDiskEnable',
+        crackFullPath: 'etlpCrackFullPath',
+        resumeHide: 'etlpResumeHideSomeSeries',
+        cacheResumeIds: 'etlpCacheResumeIds',
+        hideSeriesIds: 'etlpResumeHideSeriesIds',
+    }
 
     const originFetch = fetch;
 
@@ -90,8 +100,8 @@
         }
     }
 
-    function _init_config_main() {
-        function _init_config_by_key(confKey) {
+    function overwriteConfByStore() {
+        function overwriteByKey(confKey) {
             let confLocal = localStorage.getItem(confKey);
             if (confLocal == null) return;
             if (confLocal == 'true') {
@@ -101,9 +111,15 @@
                 GM_setValue(confKey, false);
             }
             let confGM = GM_getValue(confKey, null);
-            if (confGM !== null) { config[confKey] = confGM };
+            if (confGM !== null) {
+                // 注意：etlpResumeHideSomeSeries 转换为 resumeHideSomeSeries。
+                let _confKey = confKey.replace(/^etlp/, '');
+                _confKey = _confKey.charAt(0).toLowerCase() + _confKey.slice(1);
+                config[_confKey] = confGM;
+            };
         }
-        _init_config_by_key('crackFullPath');
+        overwriteByKey(etlpStorageKeys.crackFullPath);
+        overwriteByKey(etlpStorageKeys.resumeHide);
     }
 
     function playNotifiy(title = '正在播放', subtitle = '开始享受您的内容') {
@@ -205,6 +221,47 @@
         });
 
         registerAllMenus();
+    }
+
+    function hideCurrentSeries() {
+        const urlMatch = window.location.href.match(/id=(\d+)/);
+        let hint = '请在需要隐藏的电视剧【条目根页面】操作';
+        if (!urlMatch) {
+            alert(hint);
+            return;
+        }
+
+        const seriesId = urlMatch[1];
+        if (!seriesId) {
+            alert(hint);
+            return;
+        }
+
+        let hideList = [];
+        const stored = localStorage.getItem(etlpStorageKeys.hideSeriesIds);
+        if (stored) {
+            try {
+                hideList = JSON.parse(stored);
+            } catch (e) {
+                logger.error('解析隐藏列表失败:', e);
+                hideList = [];
+            }
+        }
+
+        if (!hideList.includes(seriesId)) {
+            hideList.push(seriesId);
+            localStorage.setItem(etlpStorageKeys.hideSeriesIds, JSON.stringify(hideList));
+            logger.info('已隐藏电视剧, SeriesId:', seriesId);
+            alert(`已隐藏该电视剧，注意要电视剧条目主页面操作 SeriesId=${seriesId}`);
+        } else {
+            alert('该电视剧已在隐藏列表中');
+        }
+    }
+
+    function resetHiddenSeries() {
+        localStorage.removeItem(etlpStorageKeys.hideSeriesIds);
+        logger.info('已重置隐藏设置');
+        alert('已重置隐藏设置,刷新页面后生效');
     }
 
     function removeErrorWindows() {
@@ -408,7 +465,7 @@
             playbackData: playbackData,
             playbackUrl: playbackUrl,
             request: request,
-            mountDiskEnable: localStorage.getItem('mountDiskEnable'),
+            mountDiskEnable: localStorage.getItem(etlpStorageKeys.mountDiskEnable),
             extraData: extraData,
             fistTime: fistTime,
         };
@@ -563,7 +620,7 @@
     }
 
     document.addEventListener('click', e => {
-        if (localStorage.getItem('webPlayerEnable') == 'true') { return; }
+        if (localStorage.getItem(etlpStorageKeys.webPlayerEnable) == 'true') { return; }
         // if (window.location.hash != '#!/home') { return; }
         const cardPlayBtn = e.target.closest('button.cardOverlayFab-primary[data-action="play"]');
         // 最新电视和媒体库电视会是 "resume" 需要额外请求 nextup 获取季和集信息。但多版本会只返回一个版本。播放前又要请求多版本信息来确定。
@@ -606,7 +663,7 @@
     async function cacheResumeItemInfo() {
         let inInit = !myBool(resumeRawInfoCache);
         let resumeIds;
-        let storageKey = 'etlpResumeIds'
+        let storageKey = etlpStorageKeys.cacheResumeIds;
         if (inInit) {
             resumeIds = localStorage.getItem(storageKey)
             if (resumeIds) {
@@ -658,7 +715,7 @@
         if (serverName === null) {
             serverName = typeof ApiClient === 'undefined' ? null : ApiClient._appName.split(' ')[0].toLowerCase();
         } else {
-            if (typeof ApiClient != 'undefined' && ApiClient._deviceName != 'embyToLocalPlayer' && localStorage.getItem('webPlayerEnable') != 'true') {
+            if (typeof ApiClient != 'undefined' && ApiClient._deviceName != 'embyToLocalPlayer' && localStorage.getItem(etlpStorageKeys.webPlayerEnable) != 'true') {
                 ApiClient._deviceName = 'embyToLocalPlayer'
                 cacheResumeItemInfo();
             }
@@ -670,8 +727,8 @@
                 logger.info('cleanOptionalCache by metadataMayChange')
             }
         }
-        // 适配播放列表及媒体库的全部播放、随机播放。限电影及音乐视频。
-        if (urlStr.includes('Items?') && (urlStr.includes('Limit=300') || urlStr.includes('Limit=1000'))) {
+        // 适配播放列表及媒体库的全部播放、随机播放。会禁用版本筛选和美化标题。
+        if (urlStr.includes('Items?') && /Limit=(300|1000|5\d\d\d)/.test(urlStr)) {
             let _resp = await originFetch(input, options);
             if (serverName == 'emby') {
                 await ApiClient._userViewsPromise?.then(result => {
@@ -699,7 +756,7 @@
                 logger.error('playlist is empty, skip');
                 return _resp;
             }
-            if (['Movie', 'MusicVideo'].includes(_resd.Items[0].Type)) {
+            if (['Movie', 'MusicVideo', 'Episode'].includes(_resd.Items[0].Type)) {
                 playlistInfoCache = _resd
                 logger.info('playlistInfoCache', playlistInfoCache);
             }
@@ -726,6 +783,27 @@
 
             let _resp = await originFetch(fetchInput, options);
             let _resd = await _resp.clone().json();
+
+            // 处理隐藏特定电视剧
+            if (config.resumeHideSomeSeries && _resd.Items && _resd.Items.length > 0) {
+                const hideListStr = localStorage.getItem(etlpStorageKeys.hideSeriesIds);
+                if (hideListStr) {
+                    try {
+                        const hideList = JSON.parse(hideListStr);
+                        const originalLength = _resd.Items.length;
+                        _resd.Items = _resd.Items.filter(item => {
+                            if (!item.SeriesId) return true;
+                            return !hideList.includes(item.SeriesId);
+                        });
+                        const hiddenCount = originalLength - _resd.Items.length;
+                        if (hiddenCount > 0) {
+                            logger.info(`已隐藏 ${hiddenCount} 个电视剧条目`);
+                        }
+                    } catch (e) {
+                        logger.error('解析隐藏列表失败:', e);
+                    }
+                }
+            }
 
             if (config.enableResumeReorder && _resd.Items && _resd.Items.length > 2) {
                 const now = new Date();
@@ -769,7 +847,7 @@
         }
         try {
             if (urlStr.indexOf('/PlaybackInfo?UserId') != -1) {
-                if (urlStr.indexOf('IsPlayback=true') != -1 && localStorage.getItem('webPlayerEnable') != 'true') {
+                if (urlStr.indexOf('IsPlayback=true') != -1 && localStorage.getItem(etlpStorageKeys.webPlayerEnable) != 'true') {
                     let dealRes = await dealWithPlaybackInfo(input, urlStr, options);
                     if (dealRes && dealRes != 'disableForLiveTv') { return; }
                 } else {
@@ -781,7 +859,7 @@
                     cloneAndCacheFetch(resp.clone(), itemId, allPlaybackCache);
                     return resp;
                 }
-            } else if (urlStr.indexOf('/Playing/Stopped') != -1 && localStorage.getItem('webPlayerEnable') != 'true') {
+            } else if (urlStr.indexOf('/Playing/Stopped') != -1 && localStorage.getItem(etlpStorageKeys.webPlayerEnable) != 'true') {
                 return
             }
         } catch (error) {
@@ -819,7 +897,7 @@
 
             if (serverName === null && this._url.indexOf('X-Plex-Product') != -1) { serverName = 'plex' };
             let catchPlex = (serverName == 'plex' && this._url.indexOf('playQueues?type=video') != -1)
-            if (catchPlex && localStorage.getItem('webPlayerEnable') != 'true') { // Plex
+            if (catchPlex && localStorage.getItem(etlpStorageKeys.webPlayerEnable) != 'true') { // Plex
                 fetch(this._url, {
                     method: this._method,
                     headers: {
@@ -835,7 +913,7 @@
                         let data = {
                             playbackData: res,
                             playbackUrl: this._url,
-                            mountDiskEnable: localStorage.getItem('mountDiskEnable'),
+                            mountDiskEnable: localStorage.getItem(etlpStorageKeys.mountDiskEnable),
                             extraData: extraData,
                         };
                         sendDataToLocalServer(data, 'plexToLocalPlayer');
@@ -849,7 +927,7 @@
         XMLHttpRequest.prototype.send = function (body) {
 
             let catchJellyfin = (this._method === 'POST' && this._url.endsWith('PlaybackInfo'))
-            if (catchJellyfin && localStorage.getItem('webPlayerEnable') != 'true') { // Jellyfin
+            if (catchJellyfin && localStorage.getItem(etlpStorageKeys.webPlayerEnable) != 'true') { // Jellyfin
                 let pbUrl = this._url;
                 body = JSON.parse(body);
                 let _body = {};
@@ -870,8 +948,8 @@
 
     initXMLHttpRequest();
 
-    setModeSwitchMenu('webPlayerEnable', '脚本在当前服务器 已', '', '启用', '禁用', '启用');
-    setModeSwitchMenu('mountDiskEnable', '读取硬盘模式已经 ');
+    setModeSwitchMenu(etlpStorageKeys.webPlayerEnable, '脚本在当前服务器 已', '', '可用', '禁用', '可用');
+    setModeSwitchMenu(etlpStorageKeys.mountDiskEnable, '读取硬盘模式已经 ');
 
     function showGuiMenu() {
         sendDataToLocalServer({ 'showTaskManager': true }, 'embyToLocalPlayer');
@@ -880,7 +958,12 @@
         setCallbackMenu('查看缓存任务', showGuiMenu);
     }
 
-    _init_config_main();
+    overwriteConfByStore();
+
+    if (config.resumeHideSomeSeries || localStorage.getItem(etlpStorageKeys.resumeHide) === 'true') {
+        setCallbackMenu('继续播放: 隐藏该电视剧', hideCurrentSeries);
+        setCallbackMenu('继续播放: 重置隐藏设置', resetHiddenSeries);
+    }
 
     // let debounceTimer; # 有的 css 选择器比较宽泛，播放后再检测比较稳妥。
     // const observer = new MutationObserver(() => {

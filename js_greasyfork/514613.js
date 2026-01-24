@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         IPFS CID Copy Helper
 // @namespace    http://tampermonkey.net/
-// @version      3.11
+// @version      3.12
 // @description  自动为网页中的 IPFS 链接和文本添加 CID 复制功能，可以管理排除网址，打开 IPFS-SCAN，以及对 CID 进行网关测速。
 // @author       cenglin123
 // @match        *://*/*
@@ -2420,24 +2420,30 @@
 
     //// 将URL模式转换为正则表达式
     function urlPatternToRegex(pattern) {
-        // 先处理通配符，避免被转义
-        let escapedPattern = pattern
-            .replace(/\*/g, '___WILDCARD___') // 临时替换通配符
-            .replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // 转义其他特殊字符
-            .replace(/___WILDCARD___/g, '.*'); // 还原通配符为正则表达式
+        // 使用 split/join 处理通配符，避免字符类转义问题
+        const escapedPattern = pattern
+            .split('*')
+            .map(part => part.replace(/[.+?^${}()|\\[\]]/g, '\\$&'))
+            .join('.*');
         
-        // 根据模式决定是否需要完全匹配
-        if (pattern.startsWith('*') && pattern.endsWith('*')) {
-            // 两端都有通配符，包含匹配
+        // 根据原始模式的通配符位置决定匹配方式
+        const startsWithWildcard = pattern.startsWith('*');
+        const endsWithWildcard = pattern.endsWith('*');
+        
+        if (startsWithWildcard && endsWithWildcard) {
+            // 两端都有通配符：包含匹配
+            // 例如 *example.com* 匹配任何包含 example.com 的URL
             return new RegExp(escapedPattern, 'i');
-        } else if (pattern.startsWith('*')) {
-            // 开头有通配符，结尾匹配
+        } else if (startsWithWildcard) {
+            // 只有开头有通配符：结尾匹配
+            // 例如 *.jpg 匹配以 .jpg 结尾的URL
             return new RegExp(escapedPattern + '$', 'i');
-        } else if (pattern.endsWith('*')) {
-            // 结尾有通配符，开头匹配
+        } else if (endsWithWildcard) {
+            // 只有结尾有通配符：开头匹配
+            // 例如 https://example.com/* 匹配该域名下的所有页面
             return new RegExp('^' + escapedPattern, 'i');
         } else {
-            // 没有通配符，完全匹配
+            // 没有通配符：完全匹配
             return new RegExp('^' + escapedPattern + '$', 'i');
         }
     }

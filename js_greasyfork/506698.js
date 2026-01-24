@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WaniKani Stats
 // @namespace    http://tampermonkey.net/
-// @version      0.15
+// @version      0.16
 // @description  Add stats info to WaniKani
 // @author       Jigen
 // @match        https://www.wanikani.com/*
@@ -3040,6 +3040,22 @@ function useId() {
 }
 function markAsyncBoundary(instance2) {
   instance2.ids = [instance2.ids[0] + instance2.ids[2]++ + "-", 0, 0];
+}
+function useTemplateRef(key) {
+  const i2 = getCurrentInstance();
+  const r2 = /* @__PURE__ */ shallowRef(null);
+  if (i2) {
+    const refs = i2.refs === EMPTY_OBJ ? i2.refs = {} : i2.refs;
+    {
+      Object.defineProperty(refs, key, {
+        enumerable: true,
+        get: () => r2.value,
+        set: (val) => r2.value = val
+      });
+    }
+  }
+  const ret = r2;
+  return ret;
 }
 const pendingSetRefMap = /* @__PURE__ */ new WeakMap();
 function setRef(rawRef, oldRawRef, parentSuspense, vnode, isUnmount = false) {
@@ -11857,7 +11873,7 @@ function useRouter() {
 const useChangelogStore = /* @__PURE__ */ defineStore(
   "changelog",
   () => {
-    const currentVersion = /* @__PURE__ */ ref(0.15), lastLoadedVersion = /* @__PURE__ */ ref(0), log2 = /* @__PURE__ */ ref([
+    const currentVersion = /* @__PURE__ */ ref(0.16), lastLoadedVersion = /* @__PURE__ */ ref(0), log2 = /* @__PURE__ */ ref([
       {
         changes: ["Fixed Levels Progression Tab"],
         version: 0.11
@@ -11874,6 +11890,10 @@ const useChangelogStore = /* @__PURE__ */ defineStore(
           "Accuracy details"
         ],
         version: 0.15
+      },
+      {
+        changes: ["Joyo and JLPT Item Details pages"],
+        version: 0.16
       }
     ]), showLog = /* @__PURE__ */ ref(false), showSince = /* @__PURE__ */ ref(0);
     const checkLog = () => {
@@ -17042,14 +17062,14 @@ var script$h = {
     }
   }
 };
-var _hoisted_1$i = ["data-p"];
+var _hoisted_1$m = ["data-p"];
 function render$g(_ctx, _cache, $props, $setup, $data, $options) {
   return openBlock(), createElementBlock("span", mergeProps({
     "class": _ctx.cx("root"),
     "data-p": $options.dataP
   }, _ctx.ptmi("root")), [renderSlot(_ctx.$slots, "default", {}, function() {
     return [createTextVNode(toDisplayString(_ctx.value), 1)];
-  })], 16, _hoisted_1$i);
+  })], 16, _hoisted_1$m);
 }
 script$h.render = render$g;
 var style$5 = "\n    .p-ink {\n        display: block;\n        position: absolute;\n        background: dt('ripple.background');\n        border-radius: 100%;\n        transform: scale(0);\n        pointer-events: none;\n    }\n\n    .p-ink-active {\n        animation: ripple 0.4s linear;\n    }\n\n    @keyframes ripple {\n        100% {\n            opacity: 0;\n            transform: scale(2.5);\n        }\n    }\n";
@@ -18093,8 +18113,8 @@ var script$g = {
     ripple: Ripple
   }
 };
-var _hoisted_1$h = ["data-p"];
-var _hoisted_2$d = ["data-p"];
+var _hoisted_1$l = ["data-p"];
+var _hoisted_2$h = ["data-p"];
 function render$f(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_SpinnerIcon = resolveComponent("SpinnerIcon");
   var _component_Badge = resolveComponent("Badge");
@@ -18126,13 +18146,13 @@ function render$f(_ctx, _cache, $props, $setup, $data, $options) {
             key: 0,
             "class": [_ctx.cx("icon"), _ctx.icon, _ctx.iconClass],
             "data-p": $options.dataIconP
-          }, _ctx.ptm("icon")), null, 16, _hoisted_1$h)) : createCommentVNode("", true)];
+          }, _ctx.ptm("icon")), null, 16, _hoisted_1$l)) : createCommentVNode("", true)];
         }), _ctx.label ? (openBlock(), createElementBlock("span", mergeProps({
           key: 2,
           "class": _ctx.cx("label")
         }, _ctx.ptm("label"), {
           "data-p": $options.dataLabelP
-        }), toDisplayString(_ctx.label), 17, _hoisted_2$d)) : createCommentVNode("", true), _ctx.badge ? (openBlock(), createBlock(_component_Badge, {
+        }), toDisplayString(_ctx.label), 17, _hoisted_2$h)) : createCommentVNode("", true), _ctx.badge ? (openBlock(), createBlock(_component_Badge, {
           key: 3,
           value: _ctx.badge,
           "class": normalizeClass(_ctx.badgeClass),
@@ -18902,11 +18922,11 @@ function _toPrimitive$3(t2, r2) {
   }
   return ("string" === r2 ? String : Number)(t2);
 }
-var _hoisted_1$g = ["aria-label"];
-var _hoisted_2$c = ["aria-modal"];
-var _hoisted_3$b = ["aria-label"];
-var _hoisted_4$6 = ["aria-label"];
-var _hoisted_5$6 = ["disabled", "aria-label"];
+var _hoisted_1$k = ["aria-label"];
+var _hoisted_2$g = ["aria-modal"];
+var _hoisted_3$f = ["aria-label"];
+var _hoisted_4$8 = ["aria-label"];
+var _hoisted_5$8 = ["disabled", "aria-label"];
 var _hoisted_6$3 = ["disabled", "aria-label"];
 var _hoisted_7$3 = ["aria-label"];
 var _hoisted_8$3 = ["src"];
@@ -18944,7 +18964,7 @@ function render$7(_ctx, _cache, $props, $setup, $data, $options) {
     return [(openBlock(), createBlock(resolveDynamicComponent(_ctx.previewIcon || _ctx.indicatorIcon ? "i" : "EyeIcon"), mergeProps({
       "class": [_ctx.cx("previewIcon"), _ctx.previewIcon]
     }, _ctx.ptm("previewIcon")), null, 16, ["class"]))];
-  })], 16, _hoisted_1$g)) : createCommentVNode("", true), createVNode(_component_Portal, null, {
+  })], 16, _hoisted_1$k)) : createCommentVNode("", true), createVNode(_component_Portal, null, {
     "default": withCtx(function() {
       return [$data.maskVisible ? withDirectives((openBlock(), createElementBlock("div", mergeProps({
         key: 0,
@@ -18971,7 +18991,7 @@ function render$7(_ctx, _cache, $props, $setup, $data, $options) {
         "data-pc-group-section": "action"
       }), [renderSlot(_ctx.$slots, "refresh", {}, function() {
         return [createVNode(_component_RefreshIcon, normalizeProps(guardReactiveProps(_ctx.ptm("rotateRightIcon"))), null, 16)];
-      })], 16, _hoisted_3$b), createBaseVNode("button", mergeProps({
+      })], 16, _hoisted_3$f), createBaseVNode("button", mergeProps({
         "class": _ctx.cx("rotateLeftButton"),
         onClick: _cache[3] || (_cache[3] = function() {
           return $options.rotateLeft && $options.rotateLeft.apply($options, arguments);
@@ -18982,7 +19002,7 @@ function render$7(_ctx, _cache, $props, $setup, $data, $options) {
         "data-pc-group-section": "action"
       }), [renderSlot(_ctx.$slots, "undo", {}, function() {
         return [createVNode(_component_UndoIcon, normalizeProps(guardReactiveProps(_ctx.ptm("rotateLeftIcon"))), null, 16)];
-      })], 16, _hoisted_4$6), createBaseVNode("button", mergeProps({
+      })], 16, _hoisted_4$8), createBaseVNode("button", mergeProps({
         "class": _ctx.cx("zoomOutButton"),
         onClick: _cache[4] || (_cache[4] = function() {
           return $options.zoomOut && $options.zoomOut.apply($options, arguments);
@@ -18994,7 +19014,7 @@ function render$7(_ctx, _cache, $props, $setup, $data, $options) {
         "data-pc-group-section": "action"
       }), [renderSlot(_ctx.$slots, "zoomout", {}, function() {
         return [createVNode(_component_SearchMinusIcon, normalizeProps(guardReactiveProps(_ctx.ptm("zoomOutIcon"))), null, 16)];
-      })], 16, _hoisted_5$6), createBaseVNode("button", mergeProps({
+      })], 16, _hoisted_5$8), createBaseVNode("button", mergeProps({
         "class": _ctx.cx("zoomInButton"),
         onClick: _cache[5] || (_cache[5] = function() {
           return $options.zoomIn && $options.zoomIn.apply($options, arguments);
@@ -19045,7 +19065,7 @@ function render$7(_ctx, _cache, $props, $setup, $data, $options) {
           })], 16)) : createCommentVNode("", true)];
         }),
         _: 3
-      }, 16, ["onBeforeEnter", "onEnter", "onLeave", "onBeforeLeave", "onAfterLeave"])], 16, _hoisted_2$c)), [[_directive_focustrap]]) : createCommentVNode("", true)];
+      }, 16, ["onBeforeEnter", "onEnter", "onLeave", "onBeforeLeave", "onAfterLeave"])], 16, _hoisted_2$g)), [[_directive_focustrap]]) : createCommentVNode("", true)];
     }),
     _: 3
   })], 16);
@@ -19234,11 +19254,11 @@ function _toPrimitive$2(t2, r2) {
   }
   return ("string" === r2 ? String : Number)(t2);
 }
-var _hoisted_1$f = ["data-p"];
-var _hoisted_2$b = ["data-p"];
-var _hoisted_3$a = ["data-p"];
-var _hoisted_4$5 = ["aria-label", "data-p"];
-var _hoisted_5$5 = ["data-p"];
+var _hoisted_1$j = ["data-p"];
+var _hoisted_2$f = ["data-p"];
+var _hoisted_3$e = ["data-p"];
+var _hoisted_4$7 = ["aria-label", "data-p"];
+var _hoisted_5$7 = ["data-p"];
 function render$6(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_TimesIcon = resolveComponent("TimesIcon");
   var _directive_ripple = resolveDirective("ripple");
@@ -19274,7 +19294,7 @@ function render$6(_ctx, _cache, $props, $setup, $data, $options) {
         key: 0,
         "class": _ctx.cx("text"),
         "data-p": $options.dataP
-      }, _ctx.ptm("text")), [renderSlot(_ctx.$slots, "default")], 16, _hoisted_3$a)) : createCommentVNode("", true), _ctx.closable ? withDirectives((openBlock(), createElementBlock("button", mergeProps({
+      }, _ctx.ptm("text")), [renderSlot(_ctx.$slots, "default")], 16, _hoisted_3$e)) : createCommentVNode("", true), _ctx.closable ? withDirectives((openBlock(), createElementBlock("button", mergeProps({
         key: 1,
         "class": _ctx.cx("closeButton"),
         "aria-label": $options.closeAriaLabel,
@@ -19288,12 +19308,12 @@ function render$6(_ctx, _cache, $props, $setup, $data, $options) {
           key: 0,
           "class": [_ctx.cx("closeIcon"), _ctx.closeIcon],
           "data-p": $options.dataP
-        }, _ctx.ptm("closeIcon")), null, 16, _hoisted_5$5)) : (openBlock(), createBlock(_component_TimesIcon, mergeProps({
+        }, _ctx.ptm("closeIcon")), null, 16, _hoisted_5$7)) : (openBlock(), createBlock(_component_TimesIcon, mergeProps({
           key: 1,
           "class": [_ctx.cx("closeIcon"), _ctx.closeIcon],
           "data-p": $options.dataP
         }, _ctx.ptm("closeIcon")), null, 16, ["class", "data-p"]))];
-      })], 16, _hoisted_4$5)), [[_directive_ripple]]) : createCommentVNode("", true)], 16, _hoisted_2$b))], 16)], 16, _hoisted_1$f)) : createCommentVNode("", true)];
+      })], 16, _hoisted_4$7)), [[_directive_ripple]]) : createCommentVNode("", true)], 16, _hoisted_2$f))], 16)], 16, _hoisted_1$j)) : createCommentVNode("", true)];
     }),
     _: 3
   }, 16);
@@ -19606,7 +19626,7 @@ var script$6 = {
     Portal: script$9
   }
 };
-var _hoisted_1$e = ["aria-modal"];
+var _hoisted_1$i = ["aria-modal"];
 function render$5(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Portal = resolveComponent("Portal");
   var _directive_focustrap = resolveDirective("focustrap");
@@ -19648,7 +19668,7 @@ function render$5(_ctx, _cache, $props, $setup, $data, $options) {
             onKeydown: _cache[2] || (_cache[2] = function() {
               return $options.onContentKeydown && $options.onContentKeydown.apply($options, arguments);
             })
-          }, _ctx.ptm("content")), [renderSlot(_ctx.$slots, "default")], 16))], 16, _hoisted_1$e)), [[_directive_focustrap]]) : createCommentVNode("", true)];
+          }, _ctx.ptm("content")), [renderSlot(_ctx.$slots, "default")], 16))], 16, _hoisted_1$i)), [[_directive_focustrap]]) : createCommentVNode("", true)];
         }),
         _: 3
       }, 16, ["onEnter", "onLeave", "onAfterLeave"])];
@@ -19657,14 +19677,14 @@ function render$5(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8, ["appendTo"]);
 }
 script$6.render = render$5;
-const _hoisted_1$d = { class: "header" };
-const _hoisted_2$a = { class: "buttons" };
-const _hoisted_3$9 = { class: "number" };
-const _sfc_main$d = /* @__PURE__ */ defineComponent({
+const _hoisted_1$h = { class: "header" };
+const _hoisted_2$e = { class: "buttons" };
+const _hoisted_3$d = { class: "number" };
+const _sfc_main$h = /* @__PURE__ */ defineComponent({
   __name: "Changelog",
   setup(__props) {
-    const changelogStore = useChangelogStore(), indexStore = useIndexStore(), kofi = /* @__PURE__ */ ref(), kofiToggle = (event) => {
-      kofi.value.toggle(event);
+    const changelogStore = useChangelogStore(), indexStore = useIndexStore(), kofi = useTemplateRef("kofi"), kofiToggle = (event) => {
+      kofi.value?.toggle(event);
     }, visible = /* @__PURE__ */ ref(true);
     onMounted(() => {
       changelogStore.checkLog();
@@ -19689,11 +19709,11 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
         unref(changelogStore).showLog ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
           visible.value ? (openBlock(), createBlock(unref(script$7), { key: 0 }, {
             default: withCtx(() => [
-              createBaseVNode("div", _hoisted_1$d, [
+              createBaseVNode("div", _hoisted_1$h, [
                 _cache[2] || (_cache[2] = createBaseVNode("div", { class: "title" }, [
                   createBaseVNode("span", null, "WaniKani Stats has been updated")
                 ], -1)),
-                createBaseVNode("div", _hoisted_2$a, [
+                createBaseVNode("div", _hoisted_2$e, [
                   createVNode(unref(script$g), {
                     onClick: kofiToggle,
                     outlined: "",
@@ -19726,7 +19746,7 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
                     class: "version",
                     key: index2
                   }, [
-                    createBaseVNode("span", _hoisted_3$9, toDisplayString(version2.version.toFixed(2)) + ":", 1),
+                    createBaseVNode("span", _hoisted_3$d, toDisplayString(version2.version.toFixed(2)) + ":", 1),
                     createBaseVNode("ul", null, [
                       (openBlock(true), createElementBlock(Fragment, null, renderList(version2.changes, (change, index22) => {
                         return openBlock(), createElementBlock("li", { key: index22 }, toDisplayString(change), 1);
@@ -19750,7 +19770,7 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const Changelog = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-303c1b1b"]]);
+const Changelog = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-c6a65fa3"]]);
 var script$5 = {
   name: "BarsIcon",
   "extends": script$j
@@ -20108,10 +20128,10 @@ var script$1 = {
   }
 };
 var _hoisted_1$1$1 = ["id", "aria-label", "aria-disabled", "aria-expanded", "aria-haspopup", "aria-setsize", "aria-posinset", "data-p-active", "data-p-focused", "data-p-disabled"];
-var _hoisted_2$9 = ["onClick", "onMouseenter", "onMousemove"];
-var _hoisted_3$8 = ["href", "target"];
-var _hoisted_4$4 = ["id"];
-var _hoisted_5$4 = ["id"];
+var _hoisted_2$d = ["onClick", "onMouseenter", "onMousemove"];
+var _hoisted_3$c = ["href", "target"];
+var _hoisted_4$6 = ["id"];
+var _hoisted_5$6 = ["id"];
 function render$1(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_MenubarSub = resolveComponent("MenubarSub", true);
   var _directive_ripple = resolveDirective("ripple");
@@ -20175,7 +20195,7 @@ function render$1(_ctx, _cache, $props, $setup, $data, $options) {
       "class": _ctx.cx("itemLabel")
     }, {
       ref_for: true
-    }, $options.getPTOptions(processedItem, index2, "itemLabel")), toDisplayString($options.getItemLabel(processedItem)), 17, _hoisted_4$4), $options.getItemProp(processedItem, "items") ? (openBlock(), createElementBlock(Fragment, {
+    }, $options.getPTOptions(processedItem, index2, "itemLabel")), toDisplayString($options.getItemLabel(processedItem)), 17, _hoisted_4$6), $options.getItemProp(processedItem, "items") ? (openBlock(), createElementBlock(Fragment, {
       key: 2
     }, [$props.templates.submenuicon ? (openBlock(), createBlock(resolveDynamicComponent($props.templates.submenuicon), {
       key: 0,
@@ -20187,14 +20207,14 @@ function render$1(_ctx, _cache, $props, $setup, $data, $options) {
       "class": _ctx.cx("submenuIcon")
     }, {
       ref_for: true
-    }, $options.getPTOptions(processedItem, index2, "submenuIcon")), null, 16, ["class"]))], 64)) : createCommentVNode("", true)], 16, _hoisted_3$8)), [[_directive_ripple]]) : (openBlock(), createBlock(resolveDynamicComponent($props.templates.item), {
+    }, $options.getPTOptions(processedItem, index2, "submenuIcon")), null, 16, ["class"]))], 64)) : createCommentVNode("", true)], 16, _hoisted_3$c)), [[_directive_ripple]]) : (openBlock(), createBlock(resolveDynamicComponent($props.templates.item), {
       key: 1,
       item: processedItem.item,
       root: $props.root,
       hasSubmenu: $options.getItemProp(processedItem, "items"),
       label: $options.getItemLabel(processedItem),
       props: $options.getMenuItemProps(processedItem, index2)
-    }, null, 8, ["item", "root", "hasSubmenu", "label", "props"]))], 16, _hoisted_2$9), $options.isItemVisible(processedItem) && $options.isItemGroup(processedItem) ? (openBlock(), createBlock(_component_MenubarSub, {
+    }, null, 8, ["item", "root", "hasSubmenu", "label", "props"]))], 16, _hoisted_2$d), $options.isItemVisible(processedItem) && $options.isItemGroup(processedItem) ? (openBlock(), createBlock(_component_MenubarSub, {
       key: 0,
       id: $options.getItemId(processedItem) + "_list",
       menuId: $props.menuId,
@@ -20228,7 +20248,7 @@ function render$1(_ctx, _cache, $props, $setup, $data, $options) {
       role: "separator"
     }, {
       ref_for: true
-    }, _ctx.ptm("separator")), null, 16, _hoisted_5$4)) : createCommentVNode("", true)], 64);
+    }, _ctx.ptm("separator")), null, 16, _hoisted_5$6)) : createCommentVNode("", true)], 64);
   }), 128))], 16);
 }
 script$1.render = render$1;
@@ -20884,7 +20904,7 @@ function _toPrimitive(t2, r2) {
   }
   return ("string" === r2 ? String : Number)(t2);
 }
-var _hoisted_1$c = ["aria-haspopup", "aria-expanded", "aria-controls", "aria-label"];
+var _hoisted_1$g = ["aria-haspopup", "aria-expanded", "aria-controls", "aria-label"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_BarsIcon = resolveComponent("BarsIcon");
   var _component_MenubarSub = resolveComponent("MenubarSub");
@@ -20920,7 +20940,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       })
     }, _objectSpread(_objectSpread({}, _ctx.buttonProps), _ctx.ptm("button"))), [renderSlot(_ctx.$slots, _ctx.$slots.buttonicon ? "buttonicon" : "menubuttonicon", {}, function() {
       return [createVNode(_component_BarsIcon, normalizeProps(guardReactiveProps(_ctx.ptm("buttonicon"))), null, 16)];
-    })], 16, _hoisted_1$c)) : createCommentVNode("", true)];
+    })], 16, _hoisted_1$g)) : createCommentVNode("", true)];
   }), createVNode(_component_MenubarSub, {
     ref: $options.menubarRef,
     id: _ctx.$id + "_list",
@@ -20951,10 +20971,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, _ctx.ptm("end")), [renderSlot(_ctx.$slots, "end")], 16)) : createCommentVNode("", true)], 16);
 }
 script.render = render;
-const _sfc_main$c = /* @__PURE__ */ defineComponent({
+const _sfc_main$g = /* @__PURE__ */ defineComponent({
   __name: "Menu",
   setup(__props) {
-    const router2 = useRouter();
+    const indexStore = useIndexStore(), kofi = useTemplateRef("kofi"), kofiToggle = (event) => {
+      kofi.value?.toggle(event);
+    }, router2 = useRouter();
     onMounted(() => {
     });
     return (_ctx, _cache) => {
@@ -20989,18 +21011,65 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
               {
                 label: "WaniKani",
                 command: () => {
-                  unref(router2).push("/ItemDetails");
+                  unref(router2).push("/ItemDetailsWaniKani");
+                }
+              },
+              {
+                label: "JLPT",
+                command: () => {
+                  unref(router2).push("/ItemDetailsJLPT");
+                }
+              },
+              {
+                label: "Joyo",
+                command: () => {
+                  unref(router2).push("/ItemDetailsJoyo");
                 }
               }
             ]
           }
         ]
-      }, null, 8, ["model"]);
+      }, {
+        end: withCtx(() => [
+          createVNode(unref(script$6), {
+            ref_key: "kofi",
+            ref: kofi
+          }, {
+            default: withCtx(() => [..._cache[0] || (_cache[0] = [
+              createBaseVNode("iframe", {
+                id: "kofiframe",
+                src: "https://ko-fi.com/daisukejigen/?hidefeed=true&widget=true&embed=true&preview=true",
+                style: { "border": "none", "width": "100%", "padding": "4px", "background": "#f9f9f9" },
+                height: "712",
+                title: "daisukejigen"
+              }, null, -1)
+            ])]),
+            _: 1
+          }, 512),
+          createBaseVNode("div", null, [
+            createVNode(unref(script$g), {
+              onClick: kofiToggle,
+              outlined: "",
+              rounded: ""
+            }, {
+              default: withCtx(() => [
+                createVNode(unref(script$8), {
+                  src: unref(indexStore).kofiImage,
+                  alt: "ko-fi",
+                  width: "16"
+                }, null, 8, ["src"])
+              ]),
+              _: 1
+            })
+          ])
+        ]),
+        _: 1
+      }, 8, ["model"]);
     };
   }
 });
-const _hoisted_1$b = { class: "sitemap__section" };
-const _sfc_main$b = /* @__PURE__ */ defineComponent({
+const _hoisted_1$f = { class: "sitemap__section" };
+const _sfc_main$f = /* @__PURE__ */ defineComponent({
   __name: "StatsButton",
   setup(__props) {
     const changelogStore = useChangelogStore(), indexStore = useIndexStore();
@@ -21022,7 +21091,7 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
       indexStore.visible = !indexStore.visible;
     };
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("li", _hoisted_1$b, [
+      return openBlock(), createElementBlock("li", _hoisted_1$f, [
         createBaseVNode("button", {
           class: "sitemap__section-header sitemap__section-header--stats",
           onClick: toggle3
@@ -21033,7 +21102,7 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const StatsButton = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-95c4d51b"]]);
+const StatsButton = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["__scopeId", "data-v-95c4d51b"]]);
 const addMenuItem = () => {
   const li2 = document.createElement("li");
   li2.classList.add("sitemap__section");
@@ -21138,6 +21207,103 @@ class cOverallNumbersSubPiece {
     this.incorrect = 0;
   }
 }
+const percent = (num) => {
+  return (num * 100).toFixed(2) + "%";
+}, ZeroIfNaN = (num) => Number.isFinite(num) ? num : 0;
+function at$1(arr, indices) {
+  const result = new Array(indices.length);
+  const length = arr.length;
+  for (let i2 = 0; i2 < indices.length; i2++) {
+    let index2 = indices[i2];
+    index2 = Number.isInteger(index2) ? index2 : Math.trunc(index2) || 0;
+    if (index2 < 0) {
+      index2 += length;
+    }
+    result[i2] = arr[index2];
+  }
+  return result;
+}
+function difference(firstArr, secondArr) {
+  const secondSet = new Set(secondArr);
+  return firstArr.filter((item2) => !secondSet.has(item2));
+}
+function flatten(arr, depth = 1) {
+  const result = [];
+  const flooredDepth = Math.floor(depth);
+  const recursive = (arr2, currentDepth) => {
+    for (let i2 = 0; i2 < arr2.length; i2++) {
+      const item2 = arr2[i2];
+      if (Array.isArray(item2) && currentDepth < flooredDepth) {
+        recursive(item2, currentDepth + 1);
+      } else {
+        result.push(item2);
+      }
+    }
+  };
+  recursive(arr, 0);
+  return result;
+}
+function compareValues(a2, b2, order) {
+  if (a2 < b2) {
+    return order === "asc" ? -1 : 1;
+  }
+  if (a2 > b2) {
+    return order === "asc" ? 1 : -1;
+  }
+  return 0;
+}
+function orderBy(arr, criteria, orders) {
+  return arr.slice().sort((a2, b2) => {
+    const ordersLength = orders.length;
+    for (let i2 = 0; i2 < criteria.length; i2++) {
+      const order = ordersLength > i2 ? orders[i2] : orders[ordersLength - 1];
+      const criterion = criteria[i2];
+      const criterionIsFunction = typeof criterion === "function";
+      const valueA = criterionIsFunction ? criterion(a2) : a2[criterion];
+      const valueB = criterionIsFunction ? criterion(b2) : b2[criterion];
+      const result = compareValues(valueA, valueB, order);
+      if (result !== 0) {
+        return result;
+      }
+    }
+    return 0;
+  });
+}
+function pullAt(arr, indicesToRemove) {
+  const removed = at$1(arr, indicesToRemove);
+  const indices = new Set(indicesToRemove.slice().sort((x2, y2) => y2 - x2));
+  for (const index2 of indices) {
+    arr.splice(index2, 1);
+  }
+  return removed;
+}
+function sum(nums) {
+  let result = 0;
+  for (let i2 = 0; i2 < nums.length; i2++) {
+    result += nums[i2];
+  }
+  return result;
+}
+function mean(nums) {
+  return sum(nums) / nums.length;
+}
+function sumBy(items, getValue) {
+  let result = 0;
+  for (let i2 = 0; i2 < items.length; i2++) {
+    result += getValue(items[i2], i2);
+  }
+  return result;
+}
+function meanBy(items, getValue) {
+  return sumBy(items, (item2) => getValue(item2)) / items.length;
+}
+function round(value, precision = 0) {
+  if (!Number.isInteger(precision)) {
+    throw new Error("Precision must be an integer.");
+  }
+  const multiplier = Math.pow(10, precision);
+  return Math.round(value * multiplier) / multiplier;
+}
 class cAssignments {
   available_at;
   burned_at;
@@ -21150,28 +21316,6 @@ class cAssignments {
   subject_id;
   subject_type;
   unlocked_at;
-  constructor(data6) {
-    Object.assign(this, data6);
-  }
-}
-class cAuxiliaryMeaning {
-  meaning;
-  type;
-  constructor(data6) {
-    Object.assign(this, data6);
-  }
-}
-class cCharacterImage {
-  content_type;
-  metadata;
-  url;
-  constructor(data6) {
-    Object.assign(this, data6);
-  }
-}
-class cContextSentence {
-  en;
-  ja;
   constructor(data6) {
     Object.assign(this, data6);
   }
@@ -21200,29 +21344,7 @@ let cData$1 = class cData {
   spaced_repetition_system_id;
   visually_similar_subject_ids;
   constructor(data6) {
-    Object.assign(this, data6);
-    this.auxiliary_meanings = data6.auxiliary_meanings.map((i2) => {
-      return new cAuxiliaryMeaning(i2);
-    });
-    if (data6.character_images != void 0)
-      this.character_images = data6.character_images.map((i2) => {
-        return new cCharacterImage(i2);
-      });
-    if (data6.context_sentences != void 0)
-      this.context_sentences = data6.context_sentences.map((i2) => {
-        return new cContextSentence(i2);
-      });
-    this.meanings = data6.meanings.map((i2) => {
-      return new cMeaning(i2);
-    });
-    if (data6.pronunciation_audios != void 0)
-      this.pronunciation_audios = data6.pronunciation_audios.map((i2) => {
-        return new cPronunciationAudio(i2);
-      });
-    if (data6.readings != void 0)
-      this.readings = data6.readings.map((i2) => {
-        return new cReading(i2);
-      });
+    Object.assign(this, cloneDeep(data6));
   }
 };
 class cItemData {
@@ -21252,43 +21374,6 @@ class cItemData {
   //     return 2
   //   }
 }
-class cMeaning {
-  accepted_answer;
-  meaning;
-  primary;
-  constructor(data6) {
-    Object.assign(this, data6);
-  }
-}
-class cMetadata2 {
-  gender;
-  pronunciation;
-  source_id;
-  voice_actor_id;
-  voice_actor_name;
-  voice_description;
-  constructor(data6) {
-    Object.assign(this, data6);
-  }
-}
-class cPronunciationAudio {
-  content_type;
-  metadata;
-  url;
-  constructor(data6) {
-    Object.assign(this, data6);
-    this.metadata = new cMetadata2(data6.metadata);
-  }
-}
-class cReading {
-  accepted_answer;
-  primary;
-  reading;
-  type;
-  constructor(data6) {
-    Object.assign(this, data6);
-  }
-}
 class cReviewStatistics {
   created_at;
   hidden;
@@ -21305,6 +21390,10 @@ class cReviewStatistics {
   subject_type;
   constructor(data6) {
     Object.assign(this, data6);
+    this.meaning_correct = ZeroIfNaN(this.meaning_correct);
+    this.meaning_incorrect = ZeroIfNaN(this.meaning_incorrect);
+    this.reading_correct = ZeroIfNaN(this.reading_correct);
+    this.reading_incorrect = ZeroIfNaN(this.reading_incorrect);
   }
 }
 class cStudyMaterials {
@@ -21320,7 +21409,55 @@ class cStudyMaterials {
   }
 }
 const useItemDataStore = /* @__PURE__ */ defineStore("itemData", () => {
-  const itemData = /* @__PURE__ */ ref([]), loadingCount = /* @__PURE__ */ ref(0), OverallNumbers = /* @__PURE__ */ ref(new cOverallNumbers()), types = ["radical", "kanji", "vocabulary", "kana_vocabulary"];
+  const dummyItem = {
+    assignments: {
+      available_at: "",
+      burned_at: "",
+      created_at: "",
+      hidden: false,
+      passed_at: "",
+      resurrected_at: null,
+      srs_stage: -1,
+      started_at: "",
+      subject_id: 1,
+      subject_type: "",
+      unlocked_at: ""
+    },
+    data: {
+      amalgamation_subject_ids: [],
+      auxiliary_meanings: [],
+      character_images: [],
+      characters: "",
+      created_at: "",
+      document_url: "",
+      hidden_at: null,
+      lesson_position: 0,
+      level: -1,
+      meaning_mnemonic: "",
+      meanings: [],
+      slug: "",
+      spaced_repetition_system_id: -1
+    },
+    data_updated_at: "",
+    id: -99,
+    object: "",
+    review_statistics: {
+      created_at: "",
+      hidden: false,
+      meaning_correct: 0,
+      meaning_current_streak: 0,
+      meaning_incorrect: 0,
+      meaning_max_streak: 0,
+      percentage_correct: 0,
+      reading_correct: 0,
+      reading_current_streak: 0,
+      reading_incorrect: 0,
+      reading_max_streak: 0,
+      subject_id: 0,
+      subject_type: ""
+    },
+    url: ""
+  }, itemData = /* @__PURE__ */ ref([]), loadingCount = /* @__PURE__ */ ref(0), OverallNumbers = /* @__PURE__ */ ref(new cOverallNumbers()), types = ["radical", "kanji", "vocabulary", "kana_vocabulary"];
   const fetchItemData = async () => {
     if (itemData.value.length > 0) return;
     itemData.value = [];
@@ -21369,8 +21506,16 @@ const useItemDataStore = /* @__PURE__ */ defineStore("itemData", () => {
     ) : itemData.value.filter(
       (d2) => d2.object == type && stages.includes(d2.assignments.srs_stage) && (d2.assignments.hidden == false || includeHidden)
     );
-  }, loading = computed(() => loadingCount.value > 0);
-  return { assignmentsForTypeAndLevel, fetchItemData, itemData, loading, OverallNumbers, types };
+  }, blankItem = () => cloneDeep(dummyItem), loading = computed(() => loadingCount.value > 0);
+  return {
+    assignmentsForTypeAndLevel,
+    blankItem,
+    fetchItemData,
+    itemData,
+    loading,
+    OverallNumbers,
+    types
+  };
 });
 const useUserStore = /* @__PURE__ */ defineStore("user", () => {
   const loadingCount = /* @__PURE__ */ ref(0), userData = /* @__PURE__ */ ref(null);
@@ -21402,8 +21547,8 @@ const loadTurbo = () => {
     itemDataStore.fetchItemData();
   });
 };
-const _hoisted_1$a = { class: "main" };
-const _sfc_main$a = /* @__PURE__ */ defineComponent({
+const _hoisted_1$e = { class: "main" };
+const _sfc_main$e = /* @__PURE__ */ defineComponent({
   __name: "App",
   setup(__props) {
     const indexStore = useIndexStore(), makeStatsDiv = () => {
@@ -21440,31 +21585,28 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
           createVNode(StatsButton)
         ])) : createCommentVNode("", true),
         unref(indexStore).dashboardLoaded ? (openBlock(), createBlock(Changelog, { key: 1 })) : createCommentVNode("", true),
-        createBaseVNode("div", _hoisted_1$a, [
-          createVNode(_sfc_main$c),
+        createBaseVNode("div", _hoisted_1$e, [
+          createVNode(_sfc_main$g),
           createVNode(unref(RouterView))
         ])
       ], 64);
     };
   }
 });
-const percent = (num) => {
-  return (num * 100).toFixed(2) + "%";
-};
-const _hoisted_1$9 = {
+const _hoisted_1$d = {
   id: "tblAccuracy",
   name: "accuracy"
 };
-const _hoisted_2$8 = { class: "border-bottom" };
-const _hoisted_3$7 = { class: "radicals" };
-const _hoisted_4$3 = { class: "radicals" };
-const _hoisted_5$3 = { class: "kanji" };
+const _hoisted_2$c = { class: "border-bottom" };
+const _hoisted_3$b = { class: "radicals" };
+const _hoisted_4$5 = { class: "radicals" };
+const _hoisted_5$5 = { class: "kanji" };
 const _hoisted_6$2 = { class: "kanji" };
 const _hoisted_7$2 = { class: "kanji" };
 const _hoisted_8$2 = { class: "vocab" };
 const _hoisted_9$2 = { class: "vocab" };
 const _hoisted_10$1 = { class: "vocab" };
-const _sfc_main$9 = /* @__PURE__ */ defineComponent({
+const _sfc_main$d = /* @__PURE__ */ defineComponent({
   __name: "Accuracy",
   setup(__props) {
     const itemDataStore = useItemDataStore();
@@ -21473,7 +21615,7 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock(Fragment, null, [
         _cache[9] || (_cache[9] = createBaseVNode("span", { class: "header" }, "Accuracy", -1)),
-        createBaseVNode("table", _hoisted_1$9, [
+        createBaseVNode("table", _hoisted_1$d, [
           createBaseVNode("tbody", null, [
             _cache[8] || (_cache[8] = createBaseVNode("tr", { class: "border-bottom" }, [
               createBaseVNode("th"),
@@ -21499,7 +21641,7 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
               createBaseVNode("td", null, toDisplayString(unref(itemDataStore).OverallNumbers?.meaningIncorrect()), 1),
               createBaseVNode("td", null, toDisplayString(unref(itemDataStore).OverallNumbers?.totalIncorrect()), 1)
             ]),
-            createBaseVNode("tr", _hoisted_2$8, [
+            createBaseVNode("tr", _hoisted_2$c, [
               _cache[3] || (_cache[3] = createBaseVNode("th", null, "Accuracy:", -1)),
               createBaseVNode("td", null, toDisplayString(unref(percent)(unref(itemDataStore).OverallNumbers?.accuracy())), 1),
               createBaseVNode("td", null, toDisplayString(unref(percent)(unref(itemDataStore).OverallNumbers?.meaningAccuracy())), 1),
@@ -21508,12 +21650,12 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
             createBaseVNode("tr", null, [
               _cache[4] || (_cache[4] = createBaseVNode("th", null, "Radicals:", -1)),
               _cache[5] || (_cache[5] = createBaseVNode("td", { class: "radicals" }, "---", -1)),
-              createBaseVNode("td", _hoisted_3$7, toDisplayString(unref(percent)(unref(itemDataStore).OverallNumbers?.radicals.meaningAccuracy())), 1),
-              createBaseVNode("td", _hoisted_4$3, toDisplayString(unref(percent)(unref(itemDataStore).OverallNumbers?.radicals.accuracy())), 1)
+              createBaseVNode("td", _hoisted_3$b, toDisplayString(unref(percent)(unref(itemDataStore).OverallNumbers?.radicals.meaningAccuracy())), 1),
+              createBaseVNode("td", _hoisted_4$5, toDisplayString(unref(percent)(unref(itemDataStore).OverallNumbers?.radicals.accuracy())), 1)
             ]),
             createBaseVNode("tr", null, [
               _cache[6] || (_cache[6] = createBaseVNode("th", null, "Kanji:", -1)),
-              createBaseVNode("td", _hoisted_5$3, toDisplayString(unref(percent)(unref(itemDataStore).OverallNumbers?.kanji.meaningAccuracy())), 1),
+              createBaseVNode("td", _hoisted_5$5, toDisplayString(unref(percent)(unref(itemDataStore).OverallNumbers?.kanji.meaningAccuracy())), 1),
               createBaseVNode("td", _hoisted_6$2, toDisplayString(unref(percent)(unref(itemDataStore).OverallNumbers?.kanji.readingAccuracy())), 1),
               createBaseVNode("td", _hoisted_7$2, toDisplayString(unref(percent)(unref(itemDataStore).OverallNumbers?.kanji.meaningAccuracy())), 1)
             ]),
@@ -21529,7 +21671,7 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const Accuracy = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__scopeId", "data-v-0857b5ad"]]);
+const Accuracy = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-0857b5ad"]]);
 const millisecondsInWeek = 6048e5;
 const millisecondsInDay = 864e5;
 const constructFromSymbol = /* @__PURE__ */ Symbol.for("constructDateFrom");
@@ -21687,14 +21829,14 @@ function differenceInDays(laterDate, earlierDate, options) {
     earlierDate
   );
   const sign = compareLocalAsc(laterDate_, earlierDate_);
-  const difference = Math.abs(
+  const difference2 = Math.abs(
     differenceInCalendarDays(laterDate_, earlierDate_)
   );
-  laterDate_.setDate(laterDate_.getDate() - sign * difference);
+  laterDate_.setDate(laterDate_.getDate() - sign * difference2);
   const isLastDayNotFull = Number(
     compareLocalAsc(laterDate_, earlierDate_) === -sign
   );
-  const result = sign * (difference - isLastDayNotFull);
+  const result = sign * (difference2 - isLastDayNotFull);
   return result === 0 ? 0 : result;
 }
 function compareLocalAsc(laterDate, earlierDate) {
@@ -21727,18 +21869,18 @@ function differenceInMonths(laterDate, earlierDate, options) {
     earlierDate
   );
   const sign = compareAsc(workingLaterDate, earlierDate_);
-  const difference = Math.abs(
+  const difference2 = Math.abs(
     differenceInCalendarMonths(workingLaterDate, earlierDate_)
   );
-  if (difference < 1) return 0;
+  if (difference2 < 1) return 0;
   if (workingLaterDate.getMonth() === 1 && workingLaterDate.getDate() > 27)
     workingLaterDate.setDate(30);
-  workingLaterDate.setMonth(workingLaterDate.getMonth() - sign * difference);
+  workingLaterDate.setMonth(workingLaterDate.getMonth() - sign * difference2);
   let isLastMonthNotFull = compareAsc(workingLaterDate, earlierDate_) === -sign;
-  if (isLastDayOfMonth(laterDate_) && difference === 1 && compareAsc(laterDate_, earlierDate_) === 1) {
+  if (isLastDayOfMonth(laterDate_) && difference2 === 1 && compareAsc(laterDate_, earlierDate_) === 1) {
     isLastMonthNotFull = false;
   }
-  const result = sign * (difference - +isLastMonthNotFull);
+  const result = sign * (difference2 - +isLastMonthNotFull);
   return result === 0 ? 0 : result;
 }
 function differenceInYears(laterDate, earlierDate, options) {
@@ -23139,11 +23281,11 @@ function cleanEscapedString(input) {
   }
   return matched[1].replace(doubleQuoteRegExp, "'");
 }
-const _hoisted_1$8 = {
+const _hoisted_1$c = {
   id: "tblUser",
   name: "user"
 };
-const _sfc_main$8 = /* @__PURE__ */ defineComponent({
+const _sfc_main$c = /* @__PURE__ */ defineComponent({
   __name: "User",
   setup(__props) {
     const userStore = useUserStore();
@@ -23165,7 +23307,7 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock(Fragment, null, [
         _cache[4] || (_cache[4] = createBaseVNode("span", { class: "header" }, "Current Status", -1)),
-        createBaseVNode("table", _hoisted_1$8, [
+        createBaseVNode("table", _hoisted_1$c, [
           createBaseVNode("tbody", null, [
             createBaseVNode("tr", null, [
               _cache[0] || (_cache[0] = createBaseVNode("th", null, "Username:", -1)),
@@ -23189,26 +23331,26 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const User = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-70e4bc14"]]);
-const _hoisted_1$7 = { class: "container" };
-const _hoisted_2$7 = { class: "row" };
-const _hoisted_3$6 = { class: "col" };
-const _hoisted_4$2 = { class: "row" };
-const _hoisted_5$2 = { class: "col" };
-const _sfc_main$7 = /* @__PURE__ */ defineComponent({
+const User = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-70e4bc14"]]);
+const _hoisted_1$b = { class: "container" };
+const _hoisted_2$b = { class: "row" };
+const _hoisted_3$a = { class: "col" };
+const _hoisted_4$4 = { class: "row" };
+const _hoisted_5$4 = { class: "col" };
+const _sfc_main$b = /* @__PURE__ */ defineComponent({
   __name: "HomeView",
   setup(__props) {
     onMounted(() => {
     });
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$7, [
-        createBaseVNode("div", _hoisted_2$7, [
-          createBaseVNode("div", _hoisted_3$6, [
+      return openBlock(), createElementBlock("div", _hoisted_1$b, [
+        createBaseVNode("div", _hoisted_2$b, [
+          createBaseVNode("div", _hoisted_3$a, [
             createVNode(User)
           ])
         ]),
-        createBaseVNode("div", _hoisted_4$2, [
-          createBaseVNode("div", _hoisted_5$2, [
+        createBaseVNode("div", _hoisted_4$4, [
+          createBaseVNode("div", _hoisted_5$4, [
             createVNode(Accuracy)
           ])
         ])
@@ -23216,22 +23358,23 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const HomeView = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-4b4f69f4"]]);
-const _hoisted_1$6 = {
+const HomeView = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-4b4f69f4"]]);
+const _hoisted_1$a = {
   key: 1,
   class: "slug"
 };
-const _hoisted_2$6 = {
+const _hoisted_2$a = {
   key: 1,
   class: "slug"
 };
-const _sfc_main$6 = /* @__PURE__ */ defineComponent({
+const _sfc_main$a = /* @__PURE__ */ defineComponent({
   __name: "ItemDetail",
   props: {
     item: {}
   },
   setup(__props) {
     const indexStore = useIndexStore(), linkUrl = (item2) => {
+      if (item2.id == -99) return `https://jisho.org/search/#kanji ${item2.data.slug.replace(" ", "-")}`;
       return item2.object.toLowerCase() == "radical" ? `https://www.wanikani.com/radicals/${item2.data.slug.replace(" ", "-")}` : `https://www.wanikani.com/${item2.object.toLowerCase()}/${item2.data.slug}`;
     };
     return (_ctx, _cache) => {
@@ -23244,7 +23387,7 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
           "item",
           __props.item.object,
           "v-center",
-          unref(indexStore).stageNumberToName(__props.item.assignments.srs_stage)
+          __props.item.assignments.srs_stage == -1 ? "notInWK" : unref(indexStore).stageNumberToName(__props.item.assignments.srs_stage)
         ])
       }, {
         default: withCtx(() => [
@@ -23252,15 +23395,2137 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
             __props.item.data.characters == null ? (openBlock(), createBlock(unref(script$8), {
               key: 0,
               src: __props.item.data.character_images?.filter((o2) => o2.content_type == "image/svg+xml")[0]?.url
-            }, null, 8, ["src"])) : (openBlock(), createElementBlock("span", _hoisted_1$6, toDisplayString(__props.item.data.characters), 1))
-          ], 64)) : (openBlock(), createElementBlock("span", _hoisted_2$6, toDisplayString(__props.item.data.slug), 1))
+            }, null, 8, ["src"])) : (openBlock(), createElementBlock("span", _hoisted_1$a, toDisplayString(__props.item.data.characters), 1))
+          ], 64)) : (openBlock(), createElementBlock("span", _hoisted_2$a, toDisplayString(__props.item.data.slug), 1))
         ]),
         _: 1
       }, 8, ["href", "class"]);
     };
   }
 });
-const ItemDetail = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId", "data-v-8ffd4b7d"]]);
+const ItemDetail = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["__scopeId", "data-v-0d6f9005"]]);
+const useJlptStore = /* @__PURE__ */ defineStore("jlpt", () => {
+  const data6 = {
+    kanji: {
+      N1: "氏統保第結派案策基価提挙応企検藤沢裁証援施井護展態鮮視条幹独宮率衛張監環審義訴株姿閣衆評影松撃佐核整融製票渉響推請器士討攻崎督授催及憲離激摘系批郎健盟従修隊織拡故振弁就異献厳維浜遺塁邦素遣抗模雄益緊標宣昭廃伊江僚吉盛皇臨踏壊債興源儀創障継筋闘葬避司康善逮迫惑崩紀聴脱級博締救執房撤削密措志載陣我為抑幕染奈傷択秀徴弾償功拠秘拒刑塚致繰尾描鈴盤項喪伴養懸街契掲躍棄邸縮還属慮枠恵露沖緩節需射購揮充貢鹿却端賃獲郡併徹貴衝焦奪災浦析譲称納樹挑誘紛至宗促慎控智握宙俊銭渋銃操携診託撮誕侵括謝駆透津壁稲仮裂敏是排裕堅訳芝綱典賀扱顧弘看訟戒祉誉歓奏勧騒閥甲縄郷揺免既薦隣華範隠徳哲杉釈己妥威豪熊滞微隆症暫忠倉彦肝喚沿妙唱阿索誠襲懇俳柄驚麻李浩剤瀬趣陥斎貫仙慰序旬兼聖旨即柳舎偽較覇詳抵脅茂犠旗距雅飾網竜詩繁翼潟敵魅嫌斉敷擁圏酸滅罰礎腐脚潮梅尽僕桜滑孤炎賠句鋼頑鎖彩摩励縦輝蓄軸巡稼瞬砲噴誇祥牲秩帝宏唆阻泰賄撲堀菊絞縁唯膨矢耐塾漏慶猛芳懲剣彰棋丁恒揚冒之倫陳憶潜梨仁克岳概拘墓黙須偏雰遇諮狭卓亀糧簿炉牧殊殖艦輩穴奇慢鶴謀暖昌拍朗寛覆胞泣隔浄没暇肺貞靖鑑飼陰銘随烈尋稿丹啓也丘棟壌漫玄粘悟舗妊熟旭恩騰往豆遂狂岐陛緯培衰艇屈径淡抽披廷錦准暑磯奨浸剰胆繊駒虚霊帳悔諭惨虐翻墜沼据肥徐糖搭盾脈滝軌俵妨擦鯨荘諾雷漂懐勘栽拐駄添冠斜鏡聡浪亜覧詐壇勲魔酬紫曙紋卸奮欄逸涯拓眼獄尚彫穏顕巧矛垣欺釣萩粛栗愚嘉遭架鬼庶稚滋幻煮姫誓把践呈疎仰剛疾征砕謡嫁謙后嘆菌鎌巣頻琴班棚潔酷宰廊寂辰霞伏碁俗漠邪晶墨鎮洞履劣那殴娠奉憂朴亭淳怪鳩酔惜穫佳潤悼乏該赴桑桂髄虎盆晋穂壮堤飢傍疫累痴搬晃癒桐寸郭尿凶吐宴鷹賓虜陶鐘憾猪紘磁弥昆粗訂芽庄傘敦騎寧循忍怠如寮祐鵬鉛珠凝苗獣哀跳匠垂蛇澄縫僧眺亘呉凡憩媛溝恭刈睡錯伯笹穀陵霧魂弊妃舶餓窮掌麗綾臭悦刃縛暦宜盲粋辱毅轄猿弦稔窒炊洪摂飽冗桃狩朱渦紳枢碑鍛刀鼓裸猶塊旋弓幣膜扇腸槽慈楊伐駿漬糾亮墳坪紺娯椿舌羅峡俸厘峰圭醸蓮弔乙汁尼遍衡薫猟羊款閲偵喝敢胎酵憤豚遮扉硫赦窃泡瑞又慨紡恨肪扶戯伍忌濁奔斗蘭迅肖鉢朽殻享秦茅藩沙輔媒鶏禅嘱胴迭挿嵐椎絹陪剖譜郁悠淑帆暁傑楠笛玲奴錠拳翔遷拙侍尺峠篤肇渇叔雌亨堪叙酢吟逓嶺甚喬崇漆岬癖愉寅礁乃洲屯樺槙姻巌擬塀唇睦閑胡幽峻曹詠卑侮鋳抹尉槻隷禍蝶酪茎帥逝汽琢匿襟蛍蕉寡琉痢庸朋坑藍賊搾畔遼唄孔橘漱呂拷嬢苑巽杜渓翁廉謹瞳湧欣窯褒醜升殉煩巴禎劾堕租稜桟倭婿慕斐罷矯某囚魁虹鴻泌於赳漸蚊葵厄藻禄孟嫡尭嚇巳凸暢韻霜硝勅芹杏棺儒鳳馨慧愁楼彬匡眉欽薪褐賜嵯綜繕栓翠鮎榛凹艶惣蔦錬隼渚衷逐斥稀芙詔皐雛惟佑耀黛渥憧宵妄惇脩甫酌蚕嬉蒼暉頒只肢檀凱彗謄梓丑嗣叶汐絢朔伽畝抄爽黎惰蛮冴萌旺壱偲瑠允侯蒔鯉弧遥舜瑛附彪卯但綺芋茜凌皓洸毬婆緋鯛怜邑倣碧啄穣酉悌倹柚繭亦詢采紗賦眸玖弐錘諄倖痘笙侃裟洵爾耗昴銑莞伶碩宥滉晏伎朕迪綸且竣晨吏燦麿頌箇楓琳梧哉澪匁晟衿凪梢丙颯茄勺恕蕗瑚遵瞭燎虞柊侑謁斤嵩捺蓉茉袈燿誼冶栞墾勁菖旦椋叡紬胤凜亥爵脹麟莉汰瑶瑳耶椰絃丞璃奎塑昂柾熙菫諒鞠崚濫捷",
+      N2: "党協総区領県設改府査委軍団各島革村勢減再税営比防補境導副算輸述線農州武象域額欧担準賞辺造被技低復移個門課脳極含蔵量型況針専谷史階管兵接細効丸湾録省旧橋岸周材戸央券編捜竹超並療採森競介根販歴将幅般貿講林装諸劇河航鉄児禁印逆換久短油暴輪占植清倍均億圧芸署伸停爆陸玉波帯延羽固則乱普測豊厚齢囲卒略承順岩練軽了庁城患層版令角絡損募裏仏績築貨混昇池血温季星永著誌庫刊像香坂底布寺宇巨震希触依籍汚枚複郵仲栄札板骨傾届巻燃跡包駐弱紹雇替預焼簡章臓律贈照薄群秒奥詰双刺純翌快片敬悩泉皮漁荒貯硬埋柱祭袋筆訓浴童宝封胸砂塩賢腕兆床毛緑尊祝柔殿濃液衣肩零幼荷泊黄甘臣浅掃雲掘捨軟沈凍乳恋紅郊腰炭踊冊勇械菜珍卵湖喫干虫刷湯溶鉱涙匹孫鋭枝塗軒毒叫拝氷乾棒祈拾粉糸綿汗銅湿瓶咲召缶隻脂蒸肌耕鈍泥隅灯辛磨麦姓筒鼻粒詞胃畳膚机濯塔灰沸菓帽枯涼舟貝符憎皿肯燥畜挟曇滴伺",
+      N3: "政議民連対部合市内相定回選米実関決全表戦経最現調化当約首法性要制治務成期取都和機平加受続進数記初指権支産点報済活原共得解交資予向際勝面告反判認参利組信在件側任引求所次昨論官増係感情投示変打直両式確果容必演歳争談能位置流格疑過局放常状球職与供役構割費付由説難優夫収断石違消神番規術備宅害配警育席訪乗残想声念助労例然限追商葉伝働形景落好退頭負渡失差末守若種美命福望非観察段横深申様財港識呼達良候程満敗値突光路科積他処太客否師登易速存飛殺号単座破除完降責捕危給苦迎園具辞因馬愛富彼未舞亡冷適婦寄込顔類余王返妻背熱宿薬険頼覚船途許抜便留罪努精散静婚喜浮絶幸押倒等老曲払庭徒勤遅居雑招困欠更刻賛抱犯恐息遠戻願絵越欲痛笑互束似列探逃遊迷夢君閉緒折草暮酒悲晴掛到寝暗盗吸陽御歯忘雪吹娘誤洗慣礼窓昔貧怒祖泳杯疲皆鳴腹煙眠怖耳頂箱晩寒髪忙才靴恥偶偉猫幾",
+      N4: "会同事自社発者地業方新場員立開手力問代明動京目通言理体田主題意不作用度強公持野以思家世多正安院心界教文元重近考画海売知道集別物使品計死特私始朝運終台広住真有口少町料工建空急止送切転研足究楽起着店病質待試族銀早映親験英医仕去味写字答夜音注帰古歌買悪図週室歩風紙黒花春赤青館屋色走秋夏習駅洋旅服夕借曜飲肉貸堂鳥飯勉冬昼茶弟牛魚兄犬妹姉漢",
+      N5: "日一国人年大十二本中長出三時行見月後前生五間上東四今金九入学高円子外八六下来気小七山話女北午百書先名川千水半男西電校語土木聞食車何南万毎白天母火右読友左休父雨"
+    },
+    "Not In WaniKani": [
+      {
+        kanji: "丑",
+        kunyomi: ["うし"],
+        meanings: ["sign of the ox or cow", "1-3AM", "second sign of Chinese zodiac"],
+        onyomi: ["チュウ"]
+      },
+      {
+        kanji: "丙",
+        kunyomi: ["ひのえ"],
+        meanings: ["third class", "3rd", "3rd calendar sign"],
+        onyomi: ["ヘイ"]
+      },
+      {
+        kanji: "丞",
+        kunyomi: ["すく", "たす"],
+        meanings: ["help"],
+        onyomi: ["ジョウ", "ショウ"]
+      },
+      {
+        kanji: "亘",
+        kunyomi: ["わた", "もと"],
+        meanings: ["span", "range", "extend over"],
+        onyomi: ["コウ", "カン", "セン"]
+      },
+      {
+        kanji: "亥",
+        kunyomi: ["い"],
+        meanings: ["sign of the hog", "9-11PM", "twelfth sign of the Chinese zodiac"],
+        onyomi: ["ガイ", "カイ"]
+      },
+      { kanji: "亦", kunyomi: ["また"], meanings: ["also", "again"], onyomi: ["エキ", "ヤク"] },
+      {
+        kanji: "亨",
+        kunyomi: ["とお"],
+        meanings: ["pass through", "go smoothly"],
+        onyomi: ["コウ", "キョウ", "ホウ"]
+      },
+      {
+        kanji: "伍",
+        kunyomi: ["いつつ"],
+        meanings: ["five", "five-man squad", "file", "line"],
+        onyomi: ["ゴ"]
+      },
+      { kanji: "伶", kunyomi: ["わざおぎ"], meanings: ["actor"], onyomi: ["レイ", "リョウ"] },
+      {
+        kanji: "伽",
+        kunyomi: ["とぎ"],
+        meanings: ["nursing", "attending", "entertainer"],
+        onyomi: ["カ", "ガ", "キャ", "ギャ"]
+      },
+      { kanji: "但", kunyomi: ["ただ"], meanings: ["however", "but"], onyomi: ["タン"] },
+      { kanji: "佑", kunyomi: ["たす"], meanings: ["help", "assist"], onyomi: ["ユウ", "ウ"] },
+      {
+        kanji: "侃",
+        kunyomi: ["つよ"],
+        meanings: ["strong", "just", "righteous", "peace-loving"],
+        onyomi: ["カン"]
+      },
+      {
+        kanji: "侑",
+        kunyomi: ["すす", "たす"],
+        meanings: ["urge to eat"],
+        onyomi: ["ユウ", "ウ"]
+      },
+      { kanji: "侯", kunyomi: [""], meanings: ["marquis", "lord", "daimyo"], onyomi: ["コウ"] },
+      {
+        kanji: "倖",
+        kunyomi: ["しあわ", "さいわ"],
+        meanings: ["happiness", "luck"],
+        onyomi: ["コウ"]
+      },
+      { kanji: "倣", kunyomi: ["なら"], meanings: ["emulate", "imitate"], onyomi: ["ホウ"] },
+      {
+        kanji: "倭",
+        kunyomi: ["やまと", "したが"],
+        meanings: ["Yamato", "ancient Japan"],
+        onyomi: ["ワ", "イ"]
+      },
+      {
+        kanji: "偲",
+        kunyomi: ["しの"],
+        meanings: ["recollect", "remember"],
+        onyomi: ["サイ", "シ"]
+      },
+      { kanji: "儒", kunyomi: [""], meanings: ["Confucian"], onyomi: ["ジュ"] },
+      {
+        kanji: "允",
+        kunyomi: ["じょう", "まこと", "ゆるす"],
+        meanings: ["license", "sincerity", "permit"],
+        onyomi: ["イン"]
+      },
+      {
+        kanji: "冴",
+        kunyomi: ["さ", "こお", "ひ"],
+        meanings: ["be clear", "serene", "cold", "skilful"],
+        onyomi: ["ゴ", "コ"]
+      },
+      { kanji: "冶", kunyomi: ["い"], meanings: ["melting", "smelting"], onyomi: ["ヤ"] },
+      {
+        kanji: "凜",
+        kunyomi: ["きびし"],
+        meanings: ["cold", "strict", "severe"],
+        onyomi: ["リン"]
+      },
+      {
+        kanji: "凪",
+        kunyomi: ["なぎ", "な"],
+        meanings: ["lull", "calm", "(kokuji)"],
+        onyomi: [""]
+      },
+      {
+        kanji: "凱",
+        kunyomi: ["かちどき", "やわらぐ"],
+        meanings: ["victory song"],
+        onyomi: ["ガイ", "カイ"]
+      },
+      { kanji: "勁", kunyomi: ["つよ"], meanings: ["strong"], onyomi: ["ケイ"] },
+      {
+        kanji: "勅",
+        kunyomi: ["いまし", "みことのり"],
+        meanings: ["imperial order"],
+        onyomi: ["チョク"]
+      },
+      {
+        kanji: "勺",
+        kunyomi: [""],
+        meanings: ["ladle", "one tenth of a go", "dip"],
+        onyomi: ["シャク"]
+      },
+      {
+        kanji: "匁",
+        kunyomi: ["もんめ", "め"],
+        meanings: ["monme", "3.75 grams", "(kokuji)"],
+        onyomi: [""]
+      },
+      {
+        kanji: "匡",
+        kunyomi: ["すく"],
+        meanings: ["correct", "save", "assist"],
+        onyomi: ["キョウ", "オウ"]
+      },
+      {
+        kanji: "卯",
+        kunyomi: ["う"],
+        meanings: ["sign of the hare or rabbit", "fourth sign of Chinese zodiac", "5-7AM", "east"],
+        onyomi: ["ボウ", "モウ"]
+      },
+      { kanji: "厘", kunyomi: [""], meanings: ["rin", "1/10 sen", "1/10 bu"], onyomi: ["リン"] },
+      {
+        kanji: "叡",
+        kunyomi: ["あき"],
+        meanings: ["intelligence", "imperial"],
+        onyomi: ["エイ"]
+      },
+      {
+        kanji: "只",
+        kunyomi: ["ただ"],
+        meanings: ["only", "free", "in addition"],
+        onyomi: ["シ"]
+      },
+      {
+        kanji: "叶",
+        kunyomi: ["かな", "かな"],
+        meanings: ["grant", "answer"],
+        onyomi: ["キョウ"]
+      },
+      { kanji: "吏", kunyomi: [""], meanings: ["officer", "an official"], onyomi: ["リ"] },
+      {
+        kanji: "啄",
+        kunyomi: ["ついば", "つつ"],
+        meanings: ["peck", "pick up"],
+        onyomi: ["タク", "ツク", "トク"]
+      },
+      { kanji: "喬", kunyomi: ["たか"], meanings: ["high", "boasting"], onyomi: ["キョウ"] },
+      { kanji: "嗣", kunyomi: [""], meanings: ["heir", "succeed"], onyomi: ["シ"] },
+      {
+        kanji: "嚇",
+        kunyomi: ["おど"],
+        meanings: ["menacing", "dignity", "majesty", "threaten"],
+        onyomi: ["カク"]
+      },
+      {
+        kanji: "圭",
+        kunyomi: [""],
+        meanings: ["square jewel", "corner", "angle", "edge"],
+        onyomi: ["ケイ", "ケ"]
+      },
+      { kanji: "塑", kunyomi: ["でく"], meanings: ["model", "molding"], onyomi: ["ソ"] },
+      {
+        kanji: "墾",
+        kunyomi: ["は", "ひら"],
+        meanings: ["ground-breaking", "open up farmland"],
+        onyomi: ["コン"]
+      },
+      {
+        kanji: "壱",
+        kunyomi: ["ひとつ"],
+        meanings: ["one (in documents)"],
+        onyomi: ["イチ", "イツ"]
+      },
+      {
+        kanji: "奎",
+        kunyomi: [""],
+        meanings: ["star", "god of literature"],
+        onyomi: ["ケイ", "キ"]
+      },
+      {
+        kanji: "嫡",
+        kunyomi: [""],
+        meanings: ["legitimate wife", "direct descent (non-bastard)"],
+        onyomi: ["チャク", "テキ"]
+      },
+      {
+        kanji: "嬉",
+        kunyomi: ["うれ", "たの"],
+        meanings: ["glad", "pleased", "rejoice"],
+        onyomi: ["キ"]
+      },
+      {
+        kanji: "孟",
+        kunyomi: ["かしら"],
+        meanings: ["chief", "beginning"],
+        onyomi: ["モウ", "ボウ", "ミョウ"]
+      },
+      { kanji: "宏", kunyomi: ["ひろ"], meanings: ["wide", "large"], onyomi: ["コウ"] },
+      {
+        kanji: "宥",
+        kunyomi: ["なだ", "ゆる"],
+        meanings: ["soothe", "calm", "pacify"],
+        onyomi: ["ユウ"]
+      },
+      {
+        kanji: "宵",
+        kunyomi: ["よい"],
+        meanings: ["wee hours", "evening", "early night"],
+        onyomi: ["ショウ"]
+      },
+      {
+        kanji: "寅",
+        kunyomi: ["とら"],
+        meanings: ["sign of the tiger", "3-5AM", "third sign of Chinese zodiac"],
+        onyomi: ["イン"]
+      },
+      { kanji: "尭", kunyomi: ["たか"], meanings: ["high", "far"], onyomi: ["ギョウ"] },
+      { kanji: "峻", kunyomi: ["けわ", "たか"], meanings: ["high", "steep"], onyomi: ["シュン"] },
+      {
+        kanji: "崚",
+        kunyomi: [""],
+        meanings: ["mountains towering in a row"],
+        onyomi: ["リョウ"]
+      },
+      {
+        kanji: "嵩",
+        kunyomi: ["かさ", "かさ", "たか"],
+        meanings: ["be aggravated", "grow worse", "grow bulky", "swell"],
+        onyomi: ["スウ", "シュウ"]
+      },
+      {
+        kanji: "嵯",
+        kunyomi: [""],
+        meanings: ["steep", "craggy", "rugged"],
+        onyomi: ["サ", "シ"]
+      },
+      {
+        kanji: "嶺",
+        kunyomi: ["みね"],
+        meanings: ["peak", "summit"],
+        onyomi: ["レイ", "リョウ"]
+      },
+      {
+        kanji: "巌",
+        kunyomi: ["いわ", "いわお", "けわ"],
+        meanings: ["rock", "crag", "boulder"],
+        onyomi: ["ガン"]
+      },
+      {
+        kanji: "巳",
+        kunyomi: ["み"],
+        meanings: ["sign of the snake or serpent", "9-11AM", "sixth sign of Chinese zodiac"],
+        onyomi: ["シ"]
+      },
+      {
+        kanji: "巴",
+        kunyomi: ["ともえ", "うずまき"],
+        meanings: ["comma-design"],
+        onyomi: ["ハ"]
+      },
+      { kanji: "巽", kunyomi: ["たつみ"], meanings: ["southeast"], onyomi: ["ソン"] },
+      {
+        kanji: "弐",
+        kunyomi: ["ふた", "そえ"],
+        meanings: ["II", "two", "second"],
+        onyomi: ["ニ", "ジ"]
+      },
+      {
+        kanji: "弘",
+        kunyomi: ["ひろ"],
+        meanings: ["vast", "broad", "wide"],
+        onyomi: ["コウ", "グ"]
+      },
+      {
+        kanji: "彗",
+        kunyomi: ["ほうき"],
+        meanings: ["comet"],
+        onyomi: ["スイ", "エ", "ケイ", "セイ"]
+      },
+      { kanji: "彦", kunyomi: ["ひこ"], meanings: ["lad", "boy (ancient)"], onyomi: ["ゲン"] },
+      {
+        kanji: "彪",
+        kunyomi: ["あや"],
+        meanings: ["spotted", "mottled", "patterned", "small tiger"],
+        onyomi: ["ヒョウ", "ヒュウ"]
+      },
+      {
+        kanji: "彬",
+        kunyomi: ["うるわ", "あき"],
+        meanings: ["refined", "gentle"],
+        onyomi: ["ヒン", "フン"]
+      },
+      {
+        kanji: "怜",
+        kunyomi: ["あわ", "さと"],
+        meanings: ["wise"],
+        onyomi: ["レイ", "レン", "リョウ"]
+      },
+      {
+        kanji: "恕",
+        kunyomi: ["ゆる"],
+        meanings: ["excuse", "tolerate", "forgive"],
+        onyomi: ["ジョ", "ショ"]
+      },
+      { kanji: "悌", kunyomi: [""], meanings: ["serving our elders"], onyomi: ["テイ", "ダイ"] },
+      {
+        kanji: "惇",
+        kunyomi: ["あつ"],
+        meanings: ["sincere", "kind", "considerate"],
+        onyomi: ["シュン", "ジュン", "トン"]
+      },
+      {
+        kanji: "惟",
+        kunyomi: ["おも", "これ", "おも"],
+        meanings: ["consider", "reflect", "think"],
+        onyomi: ["イ", "ユイ"]
+      },
+      { kanji: "惣", kunyomi: ["すべ"], meanings: ["all"], onyomi: ["ソウ"] },
+      {
+        kanji: "愁",
+        kunyomi: ["うれ", "うれ"],
+        meanings: ["distress", "grieve", "lament", "be anxious"],
+        onyomi: ["シュウ"]
+      },
+      { kanji: "慧", kunyomi: ["さとい"], meanings: ["wise"], onyomi: ["ケイ", "エ"] },
+      {
+        kanji: "抄",
+        kunyomi: [""],
+        meanings: ["extract", "selection", "summary", "copy", "spread thin"],
+        onyomi: ["ショウ"]
+      },
+      {
+        kanji: "捷",
+        kunyomi: ["はや"],
+        meanings: ["victory", "fast"],
+        onyomi: ["ショウ", "ソウ"]
+      },
+      {
+        kanji: "捺",
+        kunyomi: ["さ", "お"],
+        meanings: ["press", "print", "affix a seal", "stamp"],
+        onyomi: ["ナツ", "ダツ"]
+      },
+      {
+        kanji: "敦",
+        kunyomi: ["あつ"],
+        meanings: ["industry", "kindliness"],
+        onyomi: ["トン", "タイ", "ダン", "チョウ"]
+      },
+      {
+        kanji: "斤",
+        kunyomi: [""],
+        meanings: [
+          "axe",
+          "1.32 lb",
+          "catty",
+          "counter for loaves of bread",
+          "axe radical (no. 69)"
+        ],
+        onyomi: ["キン"]
+      },
+      {
+        kanji: "斥",
+        kunyomi: ["しりぞ"],
+        meanings: ["reject", "retreat", "recede", "withdraw", "repel", "repulse"],
+        onyomi: ["セキ"]
+      },
+      {
+        kanji: "於",
+        kunyomi: ["おい", "お", "ああ", "より"],
+        meanings: ["at", "in", "on", "as for"],
+        onyomi: ["オ", "ヨ"]
+      },
+      {
+        kanji: "旭",
+        kunyomi: ["あさひ"],
+        meanings: ["rising sun", "morning sun"],
+        onyomi: ["キョク"]
+      },
+      {
+        kanji: "旺",
+        kunyomi: ["かがや", "うつくし", "さかん"],
+        meanings: ["flourishing", "successful", "beautiful", "vigorous"],
+        onyomi: ["オウ", "キョウ", "ゴウ"]
+      },
+      {
+        kanji: "昂",
+        kunyomi: ["あ", "たか", "たか"],
+        meanings: ["rise"],
+        onyomi: ["コウ", "ゴウ"]
+      },
+      { kanji: "昴", kunyomi: ["すばる"], meanings: ["the Pleiades"], onyomi: ["コウ", "ボウ"] },
+      { kanji: "晃", kunyomi: ["あきらか"], meanings: ["clear"], onyomi: ["コウ"] },
+      { kanji: "晋", kunyomi: ["すす"], meanings: ["advance"], onyomi: ["シン"] },
+      {
+        kanji: "晏",
+        kunyomi: ["おそ"],
+        meanings: ["late", "quiet", "sets (sun)"],
+        onyomi: ["アン"]
+      },
+      { kanji: "晟", kunyomi: ["あきらか"], meanings: ["clear"], onyomi: ["セイ", "ジョウ"] },
+      {
+        kanji: "晨",
+        kunyomi: ["あした", "とき", "あさ"],
+        meanings: ["morning", "early"],
+        onyomi: ["シン"]
+      },
+      { kanji: "暉", kunyomi: ["かが"], meanings: ["shine", "light"], onyomi: ["キ"] },
+      { kanji: "暢", kunyomi: ["のび"], meanings: ["stretch"], onyomi: ["チョウ"] },
+      { kanji: "朋", kunyomi: ["とも"], meanings: ["companion", "friend"], onyomi: ["ホウ"] },
+      {
+        kanji: "朔",
+        kunyomi: ["ついたち"],
+        meanings: ["conjunction (astronomy)", "first day of month", "north"],
+        onyomi: ["サク"]
+      },
+      {
+        kanji: "朕",
+        kunyomi: [""],
+        meanings: ["majestic plural", "imperial we"],
+        onyomi: ["チン"]
+      },
+      { kanji: "李", kunyomi: ["すもも"], meanings: ["plum"], onyomi: ["リ"] },
+      {
+        kanji: "杜",
+        kunyomi: ["もり", "ふさ", "やまなし"],
+        meanings: ["woods", "grove"],
+        onyomi: ["ト", "トウ", "ズ"]
+      },
+      { kanji: "柊", kunyomi: ["ひいらぎ"], meanings: ["holly"], onyomi: ["シュ", "シュウ"] },
+      { kanji: "柚", kunyomi: ["ゆず"], meanings: ["citron"], onyomi: ["ユ", "ユウ", "ジク"] },
+      {
+        kanji: "柾",
+        kunyomi: ["まさ", "まさめ", "まさき"],
+        meanings: ["straight grain", "spindle tree", "(kokuji)"],
+        onyomi: [""]
+      },
+      {
+        kanji: "栗",
+        kunyomi: ["くり", "おののく"],
+        meanings: ["chestnut"],
+        onyomi: ["リツ", "リ"]
+      },
+      {
+        kanji: "桂",
+        kunyomi: ["かつら"],
+        meanings: ["Japanese Judas-tree", "cinnamon tree"],
+        onyomi: ["ケイ"]
+      },
+      { kanji: "桐", kunyomi: ["きり"], meanings: ["paulownia"], onyomi: ["トウ", "ドウ"] },
+      {
+        kanji: "梢",
+        kunyomi: ["こずえ", "くすのき"],
+        meanings: ["treetops", "twig"],
+        onyomi: ["ショウ"]
+      },
+      {
+        kanji: "梧",
+        kunyomi: ["あおぎり"],
+        meanings: ["Chinese parasol tree", "phoenix tree"],
+        onyomi: ["ゴ"]
+      },
+      { kanji: "棺", kunyomi: [""], meanings: ["coffin", "casket"], onyomi: ["カン"] },
+      {
+        kanji: "椋",
+        kunyomi: ["むく"],
+        meanings: ["type of deciduous tree", "grey starling"],
+        onyomi: ["リョウ"]
+      },
+      { kanji: "椰", kunyomi: ["やし"], meanings: ["coconut tree"], onyomi: ["ヤ"] },
+      { kanji: "椿", kunyomi: ["つばき"], meanings: ["camellia"], onyomi: ["チン", "チュン"] },
+      { kanji: "楊", kunyomi: ["やなぎ"], meanings: ["willow"], onyomi: ["ヨウ"] },
+      {
+        kanji: "楠",
+        kunyomi: ["くす", "くすのき"],
+        meanings: ["camphor tree"],
+        onyomi: ["ナン", "ダン", "ゼン", "ネン"]
+      },
+      {
+        kanji: "楼",
+        kunyomi: ["たかどの"],
+        meanings: ["watchtower", "lookout", "high building"],
+        onyomi: ["ロウ"]
+      },
+      {
+        kanji: "榛",
+        kunyomi: ["はしばみ", "はり"],
+        meanings: ["hazelnut", "filbert"],
+        onyomi: ["シン", "ハン"]
+      },
+      {
+        kanji: "槙",
+        kunyomi: ["まき", "こずえ"],
+        meanings: ["twig", "ornamental evergreen"],
+        onyomi: ["テン", "シン"]
+      },
+      { kanji: "槻", kunyomi: ["つき"], meanings: ["Zelkova tree"], onyomi: ["キ"] },
+      {
+        kanji: "樺",
+        kunyomi: ["かば", "かんば"],
+        meanings: ["birch", "dark red"],
+        onyomi: ["カ"]
+      },
+      { kanji: "橘", kunyomi: ["たちばな"], meanings: ["mandarin orange"], onyomi: ["キツ"] },
+      {
+        kanji: "檀",
+        kunyomi: ["まゆみ"],
+        meanings: ["cedar", "sandlewood", "spindle tree"],
+        onyomi: ["ダン", "タン"]
+      },
+      {
+        kanji: "欣",
+        kunyomi: ["よろこ", "よろこ"],
+        meanings: ["take pleasure in", "rejoice"],
+        onyomi: ["キン", "ゴン", "コン"]
+      },
+      {
+        kanji: "欽",
+        kunyomi: ["つつし"],
+        meanings: ["respect", "revere", "long for"],
+        onyomi: ["キン", "コン"]
+      },
+      { kanji: "毅", kunyomi: ["つよ"], meanings: ["strong"], onyomi: ["キ", "ギ"] },
+      { kanji: "毬", kunyomi: ["いが", "まり"], meanings: ["burr", "ball"], onyomi: ["キュウ"] },
+      {
+        kanji: "汐",
+        kunyomi: ["しお", "うしお", "せい"],
+        meanings: ["eventide", "tide", "salt water", "opportunity"],
+        onyomi: ["セキ"]
+      },
+      {
+        kanji: "洲",
+        kunyomi: ["しま"],
+        meanings: ["continent", "sandbar", "island", "country"],
+        onyomi: ["シュウ", "ス"]
+      },
+      {
+        kanji: "洵",
+        kunyomi: ["の", "まこと"],
+        meanings: ["alike", "truth"],
+        onyomi: ["ジュン", "シュン"]
+      },
+      { kanji: "洸", kunyomi: [""], meanings: ["sparkling water"], onyomi: ["コウ"] },
+      {
+        kanji: "浩",
+        kunyomi: ["おおき", "ひろ"],
+        meanings: ["wide expanse", "abundance", "vigorous"],
+        onyomi: ["コウ"]
+      },
+      { kanji: "淳", kunyomi: ["あつ"], meanings: ["pure"], onyomi: ["ジュン", "シュン"] },
+      {
+        kanji: "渚",
+        kunyomi: ["なぎさ"],
+        meanings: ["strand", "beach", "shore"],
+        onyomi: ["ショ"]
+      },
+      {
+        kanji: "渥",
+        kunyomi: ["あつ", "うるお"],
+        meanings: ["kindness", "moisten"],
+        onyomi: ["アク"]
+      },
+      { kanji: "滉", kunyomi: ["ひろ"], meanings: ["deep and broad"], onyomi: ["コウ"] },
+      {
+        kanji: "漱",
+        kunyomi: ["くちすす", "くちそそ", "うがい", "すす"],
+        meanings: ["gargle", "rinse mouth"],
+        onyomi: ["ソウ", "シュウ", "ス"]
+      },
+      {
+        kanji: "澪",
+        kunyomi: ["みお"],
+        meanings: ["water route", "shipping channel"],
+        onyomi: ["レイ"]
+      },
+      {
+        kanji: "濫",
+        kunyomi: ["みだ", "みだ"],
+        meanings: ["excessive", "overflow", "spread out"],
+        onyomi: ["ラン"]
+      },
+      {
+        kanji: "熙",
+        kunyomi: ["たのし", "ひか", "ひろ", "よろこ", "かわ", "あきらか", "ひろ", "ひろ"],
+        meanings: ["bright", "sunny", "prosperous", "merry"],
+        onyomi: ["キ"]
+      },
+      { kanji: "燎", kunyomi: ["かがりび"], meanings: ["burn", "bonfire"], onyomi: ["リョウ"] },
+      {
+        kanji: "燦",
+        kunyomi: ["さん", "あき", "きらめ", "きら"],
+        meanings: ["brilliant"],
+        onyomi: ["サン"]
+      },
+      { kanji: "燿", kunyomi: ["かがや", "ひかり"], meanings: ["shine"], onyomi: ["ヨウ"] },
+      {
+        kanji: "爵",
+        kunyomi: [""],
+        meanings: ["baron", "peerage", "court rank"],
+        onyomi: ["シャク"]
+      },
+      {
+        kanji: "爾",
+        kunyomi: ["なんじ", "しかり", "その", "のみ", "おれ", "しか"],
+        meanings: ["you", "thou", "second person"],
+        onyomi: ["ジ", "ニ"]
+      },
+      { kanji: "猪", kunyomi: ["い", "いのしし"], meanings: ["boar"], onyomi: ["チョ"] },
+      {
+        kanji: "玖",
+        kunyomi: [""],
+        meanings: ["beautiful black jewel", "nine"],
+        onyomi: ["キュウ", "ク"]
+      },
+      { kanji: "玲", kunyomi: [""], meanings: ["sound of jewels"], onyomi: ["レイ"] },
+      {
+        kanji: "琉",
+        kunyomi: [""],
+        meanings: ["precious stone", "gem", "lapis lazuli"],
+        onyomi: ["リュウ", "ル"]
+      },
+      { kanji: "琢", kunyomi: ["みが"], meanings: ["polish"], onyomi: ["タク"] },
+      {
+        kanji: "琳",
+        kunyomi: [""],
+        meanings: ["jewel", "tinkling of jewelry"],
+        onyomi: ["リン"]
+      },
+      {
+        kanji: "瑚",
+        kunyomi: [""],
+        meanings: ["ancestral offering receptacle", "coral"],
+        onyomi: ["コ", "ゴ"]
+      },
+      {
+        kanji: "瑳",
+        kunyomi: ["みが"],
+        meanings: ["polish", "brilliant white luster of a gem", "artful smile"],
+        onyomi: ["サ"]
+      },
+      { kanji: "瑶", kunyomi: ["たま"], meanings: ["beautiful as a jewel"], onyomi: ["ヨウ"] },
+      {
+        kanji: "甫",
+        kunyomi: ["はじ"],
+        meanings: ["for the first time", "not until"],
+        onyomi: ["ホ", "フ"]
+      },
+      {
+        kanji: "畝",
+        kunyomi: ["せ", "うね"],
+        meanings: ["furrow", "thirty tsubo", "ridge", "rib"],
+        onyomi: ["ボウ", "ホ", "モ", "ム"]
+      },
+      { kanji: "痘", kunyomi: [""], meanings: ["pox", "smallpox"], onyomi: ["トウ"] },
+      { kanji: "皐", kunyomi: ["さつき"], meanings: ["swamp", "shore"], onyomi: ["コウ"] },
+      { kanji: "皓", kunyomi: ["しろ", "ひか"], meanings: ["white", "clear"], onyomi: ["コウ"] },
+      { kanji: "眉", kunyomi: ["まゆ"], meanings: ["eyebrow"], onyomi: ["ビ", "ミ"] },
+      {
+        kanji: "眸",
+        kunyomi: ["ひとみ"],
+        meanings: ["pupil of the eye"],
+        onyomi: ["ボウ", "ム"]
+      },
+      { kanji: "硝", kunyomi: [""], meanings: ["nitrate", "saltpeter"], onyomi: ["ショウ"] },
+      { kanji: "碧", kunyomi: [""], meanings: ["blue", "green"], onyomi: ["ヘキ", "ヒャク"] },
+      {
+        kanji: "碩",
+        kunyomi: ["おお"],
+        meanings: ["large", "great", "eminent"],
+        onyomi: ["セキ"]
+      },
+      { kanji: "磯", kunyomi: ["いそ"], meanings: ["seashore", "beach"], onyomi: ["キ"] },
+      { kanji: "祐", kunyomi: ["たす"], meanings: ["help"], onyomi: ["ユウ", "ウ"] },
+      {
+        kanji: "禄",
+        kunyomi: ["さいわ", "ふち"],
+        meanings: ["fief", "allowance", "pension", "grant", "happiness"],
+        onyomi: ["ロク"]
+      },
+      {
+        kanji: "禎",
+        kunyomi: ["さいわ"],
+        meanings: ["happiness", "blessed", "good fortune", "auspicious"],
+        onyomi: ["テイ"]
+      },
+      {
+        kanji: "秦",
+        kunyomi: ["はた"],
+        meanings: ["Manchu dynasty", "name given to naturalized foreigners"],
+        onyomi: ["シン"]
+      },
+      {
+        kanji: "稀",
+        kunyomi: ["まれ", "まばら"],
+        meanings: ["rare", "phenomenal", "dilute (acid)"],
+        onyomi: ["キ", "ケ"]
+      },
+      {
+        kanji: "稔",
+        kunyomi: ["みの", "みのり"],
+        meanings: ["harvest", "ripen"],
+        onyomi: ["ネン", "ジン", "ニン"]
+      },
+      {
+        kanji: "稜",
+        kunyomi: ["いつ", "かど"],
+        meanings: ["angle", "edge", "corner", "power", "majesty"],
+        onyomi: ["リョウ", "ロウ"]
+      },
+      {
+        kanji: "穣",
+        kunyomi: ["わら", "ゆたか"],
+        meanings: ["good crops", "prosperity", "10**28"],
+        onyomi: ["ジョウ"]
+      },
+      { kanji: "窯", kunyomi: ["かま"], meanings: ["kiln", "oven", "furnace"], onyomi: ["ヨウ"] },
+      {
+        kanji: "竣",
+        kunyomi: ["わらわ", "わらべ", "おわ"],
+        meanings: ["end", "finish"],
+        onyomi: ["ドウ", "シュン"]
+      },
+      {
+        kanji: "笙",
+        kunyomi: ["ふえ"],
+        meanings: ["a reed instrument"],
+        onyomi: ["ショウ", "ソウ"]
+      },
+      { kanji: "笹", kunyomi: ["ささ"], meanings: ["bamboo grass", "(kokuji)"], onyomi: [""] },
+      { kanji: "箇", kunyomi: [""], meanings: ["counter for articles"], onyomi: ["カ", "コ"] },
+      {
+        kanji: "紗",
+        kunyomi: ["うすぎぬ"],
+        meanings: ["gauze", "gossamer"],
+        onyomi: ["サ", "シャ"]
+      },
+      {
+        kanji: "紘",
+        kunyomi: ["おおづな", "つな", "つなぐ"],
+        meanings: ["large"],
+        onyomi: ["コウ"]
+      },
+      {
+        kanji: "紬",
+        kunyomi: ["つむぎ", "つむ"],
+        meanings: ["pongee (a knotted silk cloth)"],
+        onyomi: ["チュウ"]
+      },
+      {
+        kanji: "絃",
+        kunyomi: ["いと"],
+        meanings: ["string", "cord", "samisen music"],
+        onyomi: ["ゲン"]
+      },
+      { kanji: "絢", kunyomi: [""], meanings: ["brilliant fabric design"], onyomi: ["ケン"] },
+      {
+        kanji: "綜",
+        kunyomi: ["おさ", "す"],
+        meanings: ["rule", "synthesize"],
+        onyomi: ["ソウ"]
+      },
+      {
+        kanji: "綸",
+        kunyomi: ["いと"],
+        meanings: ["thread", "silk cloth"],
+        onyomi: ["リン", "カン"]
+      },
+      {
+        kanji: "繕",
+        kunyomi: ["つくろ"],
+        meanings: ["darning", "repair", "mend", "trim", "tidy up", "adjust"],
+        onyomi: ["ゼン"]
+      },
+      { kanji: "繭", kunyomi: ["まゆ", "きぬ"], meanings: ["cocoon"], onyomi: ["ケン"] },
+      { kanji: "翁", kunyomi: ["おきな"], meanings: ["venerable old man"], onyomi: ["オウ"] },
+      {
+        kanji: "翠",
+        kunyomi: ["かわせみ", "みどり"],
+        meanings: ["green", "kingfisher"],
+        onyomi: ["スイ"]
+      },
+      {
+        kanji: "耀",
+        kunyomi: ["かがや", "ひかり"],
+        meanings: ["shine", "sparkle", "gleam", "twinkle"],
+        onyomi: ["ヨウ"]
+      },
+      { kanji: "耗", kunyomi: [""], meanings: ["decrease"], onyomi: ["モウ", "コウ"] },
+      { kanji: "耶", kunyomi: ["か"], meanings: ["question mark"], onyomi: ["ヤ", "ジャ"] },
+      {
+        kanji: "肇",
+        kunyomi: ["はじ", "はじめ"],
+        meanings: ["beginning"],
+        onyomi: ["チョウ", "ジョウ", "トウ"]
+      },
+      { kanji: "肢", kunyomi: [""], meanings: ["limb", "arms & legs"], onyomi: ["シ"] },
+      {
+        kanji: "胤",
+        kunyomi: ["たね"],
+        meanings: ["descendent", "issue", "offspring"],
+        onyomi: ["イン"]
+      },
+      {
+        kanji: "脩",
+        kunyomi: ["おさ", "なが", "ほじし"],
+        meanings: ["dried meat"],
+        onyomi: ["シュウ"]
+      },
+      {
+        kanji: "脹",
+        kunyomi: ["は", "ふく", "ふく"],
+        meanings: ["dilate", "distend", "bulge", "fill out", "swell"],
+        onyomi: ["チョウ"]
+      },
+      {
+        kanji: "舜",
+        kunyomi: [""],
+        meanings: ["type of morning glory", "rose of Sharon", "althea"],
+        onyomi: ["シュン"]
+      },
+      {
+        kanji: "艶",
+        kunyomi: ["つや", "なま", "あで", "つや", "なま"],
+        meanings: ["glossy", "luster", "glaze", "polish", "charm", "colorful", "captivating"],
+        onyomi: ["エン"]
+      },
+      { kanji: "芙", kunyomi: [""], meanings: ["lotus", "Mt Fuji"], onyomi: ["フ"] },
+      { kanji: "芹", kunyomi: ["せり"], meanings: ["parsley"], onyomi: ["キン"] },
+      {
+        kanji: "苑",
+        kunyomi: ["その", "う"],
+        meanings: ["garden", "farm", "park"],
+        onyomi: ["エン", "オン"]
+      },
+      { kanji: "茄", kunyomi: [""], meanings: ["eggplant"], onyomi: ["カ"] },
+      {
+        kanji: "茅",
+        kunyomi: ["かや", "ちがや"],
+        meanings: ["miscanthus reed"],
+        onyomi: ["ボウ", "ミョウ"]
+      },
+      { kanji: "茉", kunyomi: [""], meanings: ["jasmine"], onyomi: ["マツ", "バツ", "マ"] },
+      {
+        kanji: "莞",
+        kunyomi: ["い"],
+        meanings: ["smiling", "reed used to cover tatami"],
+        onyomi: ["カン"]
+      },
+      { kanji: "菖", kunyomi: [""], meanings: ["iris"], onyomi: ["ショウ"] },
+      { kanji: "菫", kunyomi: ["すみれ"], meanings: ["the violet"], onyomi: ["キン"] },
+      { kanji: "萩", kunyomi: ["はぎ"], meanings: ["bush clover"], onyomi: ["シュウ"] },
+      { kanji: "蒔", kunyomi: ["う", "ま"], meanings: ["sow (seeds)"], onyomi: ["シ", "ジ"] },
+      { kanji: "蓉", kunyomi: [""], meanings: ["lotus"], onyomi: ["ヨウ"] },
+      { kanji: "蔦", kunyomi: ["つた"], meanings: ["vine", "ivy"], onyomi: ["チョウ"] },
+      { kanji: "蕉", kunyomi: [""], meanings: ["banana", "plantain"], onyomi: ["ショウ"] },
+      {
+        kanji: "蕗",
+        kunyomi: ["ふき"],
+        meanings: ["butterbur", "bog rhubarb"],
+        onyomi: ["ロ", "ル"]
+      },
+      {
+        kanji: "薪",
+        kunyomi: ["たきぎ", "まき"],
+        meanings: ["fuel", "firewood", "kindling"],
+        onyomi: ["シン"]
+      },
+      {
+        kanji: "薫",
+        kunyomi: ["かお"],
+        meanings: ["send forth fragrance", "fragrant", "be scented", "smoke (tobacco)"],
+        onyomi: ["クン"]
+      },
+      { kanji: "蘭", kunyomi: [""], meanings: ["orchid", "Holland"], onyomi: ["ラン", "ラ"] },
+      {
+        kanji: "虞",
+        kunyomi: ["おそれ", "おもんぱか", "はか", "うれ", "あざむ", "あやま", "のぞ", "たの"],
+        meanings: ["fear", "uneasiness", "anxiety", "concern", "expectation", "consideration"],
+        onyomi: ["グ"]
+      },
+      {
+        kanji: "蚕",
+        kunyomi: ["かいこ", "こ"],
+        meanings: ["silkworm"],
+        onyomi: ["サン", "テン"]
+      },
+      {
+        kanji: "衷",
+        kunyomi: [""],
+        meanings: ["inmost", "heart", "mind", "inside"],
+        onyomi: ["チュウ"]
+      },
+      {
+        kanji: "衿",
+        kunyomi: ["えり"],
+        meanings: ["neck", "collar", "lapel"],
+        onyomi: ["キン", "コン"]
+      },
+      { kanji: "袈", kunyomi: [""], meanings: ["a coarse camlet"], onyomi: ["ケ", "カ"] },
+      { kanji: "裟", kunyomi: [""], meanings: ["Buddhist surplice"], onyomi: ["サ", "シャ"] },
+      { kanji: "褐", kunyomi: [""], meanings: ["brown", "woollen kimono"], onyomi: ["カツ"] },
+      { kanji: "詔", kunyomi: ["みことのり"], meanings: ["imperial edict"], onyomi: ["ショウ"] },
+      {
+        kanji: "詢",
+        kunyomi: ["はか", "まこと"],
+        meanings: ["consult with"],
+        onyomi: ["ジュン", "シュン"]
+      },
+      {
+        kanji: "誼",
+        kunyomi: ["よしみ", "よい"],
+        meanings: ["friendship", "intimacy"],
+        onyomi: ["ギ"]
+      },
+      {
+        kanji: "諄",
+        kunyomi: ["ひちくど", "くど", "くどくど", "ねんご"],
+        meanings: ["tedious"],
+        onyomi: ["シュン"]
+      },
+      {
+        kanji: "謁",
+        kunyomi: [""],
+        meanings: ["audience", "audience (with king)"],
+        onyomi: ["エツ"]
+      },
+      { kanji: "謄", kunyomi: [""], meanings: ["mimeograph", "copy"], onyomi: ["トウ"] },
+      {
+        kanji: "賜",
+        kunyomi: ["たまわ", "たま", "たも"],
+        meanings: ["grant", "gift", "boon", "results"],
+        onyomi: ["シ"]
+      },
+      {
+        kanji: "賦",
+        kunyomi: [""],
+        meanings: ["levy", "ode", "prose", "poem", "tribute", "installment"],
+        onyomi: ["フ", "ブ"]
+      },
+      { kanji: "赳", kunyomi: [""], meanings: ["strong and brave"], onyomi: ["キュウ"] },
+      {
+        kanji: "辰",
+        kunyomi: ["たつ"],
+        meanings: [
+          "sign of the dragon",
+          "7-9AM",
+          "fifth sign of Chinese zodiac",
+          "shin dragon radical (no. 161)"
+        ],
+        onyomi: ["シン", "ジン"]
+      },
+      {
+        kanji: "迪",
+        kunyomi: ["みち", "みちび", "すす", "いた"],
+        meanings: ["edify", "way", "path"],
+        onyomi: ["テキ"]
+      },
+      {
+        kanji: "逐",
+        kunyomi: [""],
+        meanings: ["pursue", "drive away", "chase", "accomplish", "attain", "commit"],
+        onyomi: ["チク"]
+      },
+      {
+        kanji: "逓",
+        kunyomi: ["かわ", "たがいに"],
+        meanings: ["relay", "in turn", "sending"],
+        onyomi: ["テイ"]
+      },
+      {
+        kanji: "遵",
+        kunyomi: [""],
+        meanings: ["abide by", "follow", "obey", "learn"],
+        onyomi: ["ジュン"]
+      },
+      {
+        kanji: "邑",
+        kunyomi: ["むら"],
+        meanings: ["village", "rural community", "right village radical (no. 163)"],
+        onyomi: ["ユウ"]
+      },
+      {
+        kanji: "郁",
+        kunyomi: [""],
+        meanings: ["cultural progress", "perfume"],
+        onyomi: ["イク"]
+      },
+      {
+        kanji: "酉",
+        kunyomi: ["とり"],
+        meanings: [
+          "west",
+          "bird",
+          "sign of the bird",
+          "5-7PM",
+          "tenth sign of Chinese zodiac",
+          "sake radical (no. 164)"
+        ],
+        onyomi: ["ユウ"]
+      },
+      {
+        kanji: "采",
+        kunyomi: ["と", "いろどり"],
+        meanings: ["dice", "form", "appearance", "take", "gather", "coloring"],
+        onyomi: ["サイ"]
+      },
+      { kanji: "銑", kunyomi: [""], meanings: ["pig iron"], onyomi: ["セン"] },
+      {
+        kanji: "錘",
+        kunyomi: ["つむ", "おもり"],
+        meanings: ["weight", "plumb bob", "sinker", "spindle"],
+        onyomi: ["スイ"]
+      },
+      {
+        kanji: "附",
+        kunyomi: ["つ", "つ"],
+        meanings: ["affixed", "attach", "refer to", "append"],
+        onyomi: ["フ"]
+      },
+      {
+        kanji: "雛",
+        kunyomi: ["ひな", "ひよこ"],
+        meanings: ["chick", "squab", "duckling", "doll"],
+        onyomi: ["スウ", "ス", "ジュ"]
+      },
+      {
+        kanji: "霞",
+        kunyomi: ["かすみ", "かす"],
+        meanings: ["be hazy", "grow dim", "blurred"],
+        onyomi: ["カ", "ゲ"]
+      },
+      { kanji: "鞠", kunyomi: ["まり"], meanings: ["ball"], onyomi: ["キク", "キュウ"] },
+      { kanji: "韻", kunyomi: [""], meanings: ["rhyme", "elegance", "tone"], onyomi: ["イン"] },
+      {
+        kanji: "頌",
+        kunyomi: ["かたち", "たた", "ほめ"],
+        meanings: ["eulogy"],
+        onyomi: ["ショウ", "ジュ", "ヨウ"]
+      },
+      {
+        kanji: "頒",
+        kunyomi: ["わか"],
+        meanings: ["distribute", "disseminate", "partition", "understand"],
+        onyomi: ["ハン"]
+      },
+      {
+        kanji: "馨",
+        kunyomi: ["かお", "かおり"],
+        meanings: ["fragrant", "balmy", "favourable"],
+        onyomi: ["ケイ", "キョウ"]
+      },
+      {
+        kanji: "魁",
+        kunyomi: ["さきがけ", "かしら"],
+        meanings: ["charging ahead of others"],
+        onyomi: ["カイ"]
+      },
+      {
+        kanji: "鮎",
+        kunyomi: ["あゆ", "なまず"],
+        meanings: ["freshwater trout", "smelt"],
+        onyomi: ["デン", "ネン"]
+      },
+      {
+        kanji: "鯛",
+        kunyomi: ["たい"],
+        meanings: ["sea bream", "red snapper"],
+        onyomi: ["チョウ"]
+      },
+      { kanji: "鳳", kunyomi: [""], meanings: ["male mythical bird"], onyomi: ["ホウ", "フウ"] },
+      {
+        kanji: "鴻",
+        kunyomi: ["おおとり", "ひしくい", "おおがり"],
+        meanings: ["large bird", "wild goose", "large", "great", "powerful", "prosperous"],
+        onyomi: ["コウ", "ゴウ"]
+      },
+      { kanji: "鵬", kunyomi: ["おおとり"], meanings: ["phoenix"], onyomi: ["ホウ"] },
+      { kanji: "鷹", kunyomi: ["たか"], meanings: ["hawk"], onyomi: ["ヨウ", "オウ"] },
+      {
+        kanji: "麟",
+        kunyomi: [""],
+        meanings: ["Chinese unicorn", "genius", "giraffe", "bright", "shining"],
+        onyomi: ["リン"]
+      },
+      { kanji: "麿", kunyomi: ["まろ"], meanings: ["I", "you", "(kokuji)"], onyomi: [""] },
+      {
+        kanji: "黎",
+        kunyomi: ["くろ"],
+        meanings: ["dark", "black", "many"],
+        onyomi: ["レイ", "リ"]
+      },
+      { kanji: "黛", kunyomi: ["まゆずみ"], meanings: ["blackened eyebrows"], onyomi: ["タイ"] }
+    ]
+  };
+  const toItemData = (d2) => {
+    const itemDetailStore = useItemDataStore();
+    const id = itemDetailStore.blankItem();
+    id.assignments.srs_stage = -1;
+    id.object = "kanji";
+    id.data.slug = d2.kanji;
+    id.data.meanings = [];
+    d2.meanings.forEach((m2, i2) => {
+      id.data.meanings.push({
+        accepted_answer: true,
+        meaning: m2,
+        primary: i2 == 0
+      });
+    });
+    return id;
+  };
+  return { data: data6, toItemData };
+});
+const _hoisted_1$9 = { class: "row" };
+const _hoisted_2$9 = { class: "col" };
+const _hoisted_3$9 = { class: "level" };
+const _hoisted_4$3 = { class: "container" };
+const _hoisted_5$3 = { class: "row itemDetails" };
+const _sfc_main$9 = /* @__PURE__ */ defineComponent({
+  __name: "Main",
+  setup(__props) {
+    const itemDataStore = useItemDataStore(), itemInWK = (slug) => {
+      return itemDataStore.itemData.find((i2) => i2.object == "kanji" && i2.data.slug == slug);
+    }, jlptStore = useJlptStore(), sortByWK = (items) => {
+      const sortedWkitems = orderBy(
+        itemDataStore.itemData.filter((d2) => items.split("").includes(d2.data.slug)),
+        [(i2) => i2.assignments.srs_stage, (i2) => i2.data.level],
+        ["asc", "asc"]
+      ).map((r2) => r2.data.slug);
+      return [...sortedWkitems, ...difference(items.split(""), sortedWkitems)];
+    };
+    return (_ctx, _cache) => {
+      const _component_BlockUI = resolveComponent("BlockUI");
+      return openBlock(), createBlock(_component_BlockUI, {
+        blocked: unref(itemDataStore).loading
+      }, {
+        default: withCtx(() => [
+          (openBlock(true), createElementBlock(Fragment, null, renderList(Object.keys(unref(jlptStore).data.kanji).sort().reverse(), (n2) => {
+            return openBlock(), createElementBlock("div", {
+              key: n2,
+              class: "container"
+            }, [
+              createBaseVNode("div", _hoisted_1$9, [
+                createBaseVNode("div", _hoisted_2$9, [
+                  createBaseVNode("span", _hoisted_3$9, toDisplayString(n2), 1)
+                ])
+              ]),
+              createBaseVNode("div", _hoisted_4$3, [
+                createBaseVNode("div", _hoisted_5$3, [
+                  (openBlock(true), createElementBlock(Fragment, null, renderList(sortByWK(unref(jlptStore).data.kanji[n2]), (item2) => {
+                    return openBlock(), createBlock(ItemDetail, {
+                      key: item2,
+                      item: itemInWK(item2) ?? unref(jlptStore).toItemData(
+                        unref(jlptStore).data["Not In WaniKani"].find(
+                          (i2) => i2.kanji == item2
+                        )
+                      )
+                    }, null, 8, ["item"]);
+                  }), 128))
+                ])
+              ])
+            ]);
+          }), 128))
+        ]),
+        _: 1
+      }, 8, ["blocked"]);
+    };
+  }
+});
+const _hoisted_1$8 = { class: "container" };
+const _hoisted_2$8 = { class: "row" };
+const _hoisted_3$8 = { class: "col" };
+const _sfc_main$8 = /* @__PURE__ */ defineComponent({
+  __name: "JLPTView",
+  setup(__props) {
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("div", _hoisted_1$8, [
+        createBaseVNode("div", _hoisted_2$8, [
+          createBaseVNode("div", _hoisted_3$8, [
+            createVNode(_sfc_main$9)
+          ])
+        ])
+      ]);
+    };
+  }
+});
+const useJoyoStore = /* @__PURE__ */ defineStore("joyo", () => {
+  const data6 = {
+    kanji: {
+      "Grade 1": "一右雨円王音下火花貝学気九休玉金空月犬見五口校左三山子四糸字耳七車手十出女小上森人水正生青夕石赤千川先早草足村大男竹中虫町天田土二日入年白八百文木本名目立力林六",
+      "Grade 2": "引羽雲園遠何科夏家歌画回会海絵外角楽活間丸岩顔汽記帰弓牛魚京強教近兄形計元言原戸古午後語工公広交光考行高黄合谷国黒今才細作算止市矢姉思紙寺自時室社弱首秋週春書少場色食心新親図数西声星晴切雪船線前組走多太体台地池知茶昼長鳥朝直通弟店点電刀冬当東答頭同道読内南肉馬売買麦半番父風分聞米歩母方北毎妹万明鳴毛門夜野友用曜来里理話",
+      "Grade 3": "悪安暗医委意育員院飲運泳駅央横屋温化荷界開階寒感漢館岸起期客究急級宮球去橋業曲局銀区苦具君係軽血決研県庫湖向幸港号根祭皿仕死使始指歯詩次事持式実写者主守取酒受州拾終習集住重宿所暑助昭消商章勝乗植申身神真深進世整昔全相送想息速族他打対待代第題炭短談着注柱丁帳調追定庭笛鉄転都度投豆島湯登等動童農波配倍箱畑発反坂板皮悲美鼻筆氷表秒病品負部服福物平返勉放味命面問役薬由油有遊予羊洋葉陽様落流旅両緑礼列練路和",
+      "Grade 4": "愛案以衣位囲胃印英栄塩億加果貨課芽改械害街各覚完官管関観願希季紀喜旗器機議求泣救給挙漁共協鏡競極訓軍郡径型景芸欠結建健験固功好候航康告差菜最材昨札刷殺察参産散残士氏史司試児治辞失借種周祝順初松笑唱焼象照賞臣信成省清静席積折節説浅戦選然争倉巣束側続卒孫帯隊達単置仲貯兆腸低底停的典伝徒努灯堂働特得毒熱念敗梅博飯飛費必票標不夫付府副粉兵別辺変便包法望牧末満未脈民無約勇要養浴利陸良料量輪類令冷例歴連老労録",
+      "Grade 5": "圧移因永営衛易益液演応往桜恩可仮価河過賀快解格確額刊幹慣眼基寄規技義逆久旧居許境均禁句群経潔件券険検限現減故個護効厚耕鉱構興講混査再災妻採際在財罪雑酸賛支志枝師資飼示似識質舎謝授修述術準序招承証条状常情織職制性政勢精製税責績接設舌絶銭祖素総造像増則測属率損退貸態団断築張提程適敵統銅導徳独任燃能破犯判版比肥非備俵評貧布婦富武復複仏編弁保墓報豊防貿暴務夢迷綿輸余預容略留領",
+      "Grade 6": "異遺域宇映延沿我灰拡革閣割株干巻看簡危机揮貴疑吸供胸郷勤筋系敬警劇激穴絹権憲源厳己呼誤后孝皇紅降鋼刻穀骨困砂座済裁策冊蚕至私姿視詞誌磁射捨尺若樹収宗就衆従縦縮熟純処署諸除将傷障城蒸針仁垂推寸盛聖誠宣専泉洗染善奏窓創装層操蔵臓存尊宅担探誕段暖値宙忠著庁頂潮賃痛展討党糖届難乳認納脳派拝背肺俳班晩否批秘腹奮並陛閉片補暮宝訪亡忘棒枚幕密盟模訳郵優幼欲翌乱卵覧裏律臨朗論",
+      "Grade 9": "亜哀挨曖握扱宛嵐依威為畏尉萎偉椅彙違維慰緯壱逸茨芋咽姻淫陰隠韻唄鬱畝浦詠影鋭疫悦越謁閲炎怨宴媛援煙猿鉛縁艶汚凹押旺欧殴翁奥岡憶臆虞乙俺卸穏佳苛架華菓渦嫁暇禍靴寡箇稼蚊牙瓦雅餓介戒怪拐悔皆塊楷潰壊懐諧劾崖涯慨蓋該概骸垣柿核殻郭較隔獲嚇穫岳顎掛潟括喝渇葛滑褐轄且釜鎌刈甘汗缶肝冠陥乾勘患貫喚堪換敢棺款閑勧寛歓監緩憾還環韓艦鑑含玩頑企伎岐忌奇祈軌既飢鬼亀幾棋棄毀畿輝騎宜偽欺儀戯擬犠菊吉喫詰却脚虐及丘朽臼糾嗅窮巨拒拠虚距御凶叫狂享況峡挟狭恐恭脅矯響驚仰暁凝巾斤菌琴僅緊錦謹襟吟駆惧愚偶遇隅串屈掘窟熊繰勲薫刑茎契恵啓掲渓蛍傾携継詣慶憬稽憩鶏迎鯨隙撃桁傑肩倹兼剣拳軒圏堅嫌献遣賢謙鍵繭顕懸幻玄弦舷股虎孤弧枯雇誇鼓錮顧互呉娯悟碁勾孔巧甲江坑抗攻更拘肯侯恒洪荒郊香貢控梗喉慌硬絞項溝綱酵稿衡購乞拷剛傲豪克酷獄駒込頃昆恨婚痕紺魂墾懇佐沙唆詐鎖挫采砕宰栽彩斎債催塞歳載埼剤崎削柵索酢搾錯咲刹拶撮擦桟惨傘斬暫旨伺刺祉肢施恣脂紫嗣雌摯賜諮侍滋慈餌璽鹿軸叱疾執湿嫉漆芝赦斜煮遮邪蛇酌釈爵寂朱狩殊珠腫趣寿呪需儒囚舟秀臭袖羞愁酬醜蹴襲汁充柔渋銃獣叔淑粛塾俊瞬旬巡盾准殉循潤遵庶緒如叙徐升召匠床抄肖尚昇沼宵症祥称渉紹訟掌晶焦硝粧詔奨詳彰憧衝償礁鐘丈冗浄剰畳縄壌嬢錠譲醸拭殖飾触嘱辱尻伸芯辛侵津唇娠振浸紳診寝慎審震薪刃尽迅甚陣尋腎須吹炊帥粋衰酔遂睡穂随髄枢崇据杉裾瀬是井姓征斉牲凄逝婿誓請醒斥析脊隻惜戚跡籍拙窃摂仙占扇栓旋煎羨腺詮践箋潜遷薦繊鮮禅漸膳繕狙阻租措粗疎訴塑遡礎双壮荘捜挿桑掃曹曽爽喪痩葬僧遭槽踪燥霜騒藻憎贈即促捉俗賊遜汰妥唾堕惰駄耐怠胎泰堆袋逮替滞戴滝択沢卓拓託濯諾濁但脱奪棚誰丹旦胆淡嘆端綻鍛弾壇恥致遅痴稚緻畜逐蓄秩窒嫡沖抽衷酎鋳駐弔挑彫眺釣貼超跳徴嘲澄聴懲勅捗沈珍朕陳鎮椎墜塚漬坪爪鶴呈廷抵邸亭貞帝訂逓偵堤艇締諦泥摘滴溺迭哲徹撤添填殿斗吐妬途渡塗賭奴怒到逃倒凍唐桃透悼盗陶塔搭棟痘筒稲踏謄藤闘騰洞胴瞳峠匿督篤栃凸突屯豚頓貪鈍曇丼那奈梨謎鍋軟尼弐匂虹尿妊忍寧捻粘悩濃把覇婆罵杯排廃輩培陪媒賠伯拍泊迫剥舶薄漠縛爆箸肌鉢髪伐抜罰閥氾帆汎伴阪畔般販斑搬煩頒範繁藩蛮盤妃彼披卑疲被扉碑罷避尾眉微膝肘匹泌姫漂苗描猫浜賓頻敏瓶扶怖阜附訃赴浮符普腐敷膚賦譜侮舞封伏幅覆払沸紛雰噴墳憤丙併柄塀幣弊蔽餅壁璧癖蔑偏遍哺捕舗募慕簿芳邦奉抱泡胞俸倣峰砲崩蜂飽褒縫乏忙坊妨房肪某冒剖紡傍帽貌膨謀頬朴睦僕墨撲没勃堀奔翻凡盆麻摩磨魔昧埋膜枕又抹慢漫魅岬蜜妙眠矛霧娘冥銘滅免麺茂妄盲耗猛網黙紋冶弥厄躍闇喩愉諭癒唯幽悠湧猶裕雄誘憂融与誉妖庸揚揺溶腰瘍踊窯擁謡抑沃翼拉裸羅雷頼絡酪辣濫藍欄吏痢履璃離慄柳竜粒隆硫侶虜慮了涼猟陵僚寮療瞭糧厘倫隣瑠涙累塁励戻鈴零霊隷齢麗暦劣烈裂恋廉錬呂炉賂露弄郎浪廊楼漏籠麓賄脇惑枠湾腕"
+    },
+    "Not In WaniKani": [
+      {
+        kanji: "丙",
+        kunyomi: ["ひのえ"],
+        meanings: ["third class", "3rd", "3rd calendar sign"],
+        onyomi: ["ヘイ"]
+      },
+      {
+        kanji: "串",
+        kunyomi: ["くし", "つらぬ"],
+        meanings: ["spit", "skewer"],
+        onyomi: ["カン", "ケン", "セン"]
+      },
+      {
+        kanji: "乞",
+        kunyomi: ["こ"],
+        meanings: ["beg", "invite", "ask"],
+        onyomi: ["コツ", "キツ", "キ", "キケ", "コチ"]
+      },
+      { kanji: "但", kunyomi: ["ただ"], meanings: ["however", "but"], onyomi: ["タン"] },
+      { kanji: "侯", kunyomi: [""], meanings: ["marquis", "lord", "daimyo"], onyomi: ["コウ"] },
+      {
+        kanji: "侶",
+        kunyomi: ["とも"],
+        meanings: ["companion", "follower"],
+        onyomi: ["リョ", "ロ"]
+      },
+      { kanji: "倣", kunyomi: ["なら"], meanings: ["emulate", "imitate"], onyomi: ["ホウ"] },
+      { kanji: "僅", kunyomi: ["わず"], meanings: ["a wee bit"], onyomi: ["キン", "ゴン"] },
+      { kanji: "儒", kunyomi: [""], meanings: ["Confucian"], onyomi: ["ジュ"] },
+      { kanji: "冥", kunyomi: ["くら"], meanings: ["dark"], onyomi: ["メイ", "ミョウ"] },
+      { kanji: "冶", kunyomi: ["い"], meanings: ["melting", "smelting"], onyomi: ["ヤ"] },
+      {
+        kanji: "凄",
+        kunyomi: ["さむ", "すご", "すさ"],
+        meanings: ["uncanny", "weird", "threatening", "horrible"],
+        onyomi: ["セイ", "サイ"]
+      },
+      { kanji: "刹", kunyomi: [""], meanings: ["temple"], onyomi: ["セチ", "セツ", "サツ"] },
+      {
+        kanji: "剥",
+        kunyomi: ["へ", "へず", "む", "む", "は", "は", "は", "は"],
+        meanings: ["come off", "peel", "fade", "discolor"],
+        onyomi: ["ハク", "ホク"]
+      },
+      {
+        kanji: "勃",
+        kunyomi: ["おこ", "にわかに"],
+        meanings: ["suddenness", "rise"],
+        onyomi: ["ボツ", "ホツ"]
+      },
+      {
+        kanji: "勅",
+        kunyomi: ["いまし", "みことのり"],
+        meanings: ["imperial order"],
+        onyomi: ["チョク"]
+      },
+      {
+        kanji: "勾",
+        kunyomi: ["かぎ", "ま"],
+        meanings: ["be bent", "slope", "capture"],
+        onyomi: ["コウ", "ク"]
+      },
+      {
+        kanji: "匂",
+        kunyomi: ["にお", "にお", "にお"],
+        meanings: ["fragrant", "stink", "glow", "insinuate", "(kokuji)"],
+        onyomi: [""]
+      },
+      { kanji: "厘", kunyomi: [""], meanings: ["rin", "1/10 sen", "1/10 bu"], onyomi: ["リン"] },
+      { kanji: "吏", kunyomi: [""], meanings: ["officer", "an official"], onyomi: ["リ"] },
+      {
+        kanji: "咽",
+        kunyomi: ["むせ", "むせ", "のど", "の"],
+        meanings: ["throat", "choked", "smothered", "stuffy"],
+        onyomi: ["イン", "エン", "エツ"]
+      },
+      {
+        kanji: "唾",
+        kunyomi: ["つば", "つばき"],
+        meanings: ["saliva", "sputum"],
+        onyomi: ["ダ", "タ"]
+      },
+      { kanji: "喉", kunyomi: ["のど"], meanings: ["throat", "voice"], onyomi: ["コウ"] },
+      {
+        kanji: "喩",
+        kunyomi: ["たと", "さと"],
+        meanings: ["metaphor", "compare"],
+        onyomi: ["ユ"]
+      },
+      { kanji: "嗅", kunyomi: ["か"], meanings: ["smell", "sniff", "scent"], onyomi: ["キュウ"] },
+      { kanji: "嗣", kunyomi: [""], meanings: ["heir", "succeed"], onyomi: ["シ"] },
+      {
+        kanji: "嘲",
+        kunyomi: ["あざけ"],
+        meanings: ["ridicule", "insult"],
+        onyomi: ["チョウ", "トウ"]
+      },
+      {
+        kanji: "嚇",
+        kunyomi: ["おど"],
+        meanings: ["menacing", "dignity", "majesty", "threaten"],
+        onyomi: ["カク"]
+      },
+      { kanji: "堆", kunyomi: ["うずたか"], meanings: ["piled high"], onyomi: ["タイ", "ツイ"] },
+      { kanji: "塑", kunyomi: ["でく"], meanings: ["model", "molding"], onyomi: ["ソ"] },
+      {
+        kanji: "塞",
+        kunyomi: ["ふさ", "とりで", "み"],
+        meanings: ["close", "shut", "cover", "block", "obstruct"],
+        onyomi: ["ソク", "サイ"]
+      },
+      {
+        kanji: "填",
+        kunyomi: ["は", "は", "うず", "しず", "ふさ"],
+        meanings: ["fill in"],
+        onyomi: ["テン", "チン"]
+      },
+      {
+        kanji: "墾",
+        kunyomi: ["は", "ひら"],
+        meanings: ["ground-breaking", "open up farmland"],
+        onyomi: ["コン"]
+      },
+      {
+        kanji: "壱",
+        kunyomi: ["ひとつ"],
+        meanings: ["one (in documents)"],
+        onyomi: ["イチ", "イツ"]
+      },
+      {
+        kanji: "妖",
+        kunyomi: ["あや", "なま", "わざわ"],
+        meanings: ["attractive", "bewitching", "calamity"],
+        onyomi: ["ヨウ"]
+      },
+      {
+        kanji: "妬",
+        kunyomi: ["ねた", "そね", "つも", "ふさ"],
+        meanings: ["jealous", "envy"],
+        onyomi: ["ト", "ツ"]
+      },
+      {
+        kanji: "嫉",
+        kunyomi: ["そね", "ねた", "にく"],
+        meanings: ["jealous", "envy"],
+        onyomi: ["シツ"]
+      },
+      {
+        kanji: "嫡",
+        kunyomi: [""],
+        meanings: ["legitimate wife", "direct descent (non-bastard)"],
+        onyomi: ["チャク", "テキ"]
+      },
+      {
+        kanji: "宛",
+        kunyomi: ["あ", "-あて", "-づつ", "あたか"],
+        meanings: ["address", "just like", "fortunately"],
+        onyomi: ["エン"]
+      },
+      {
+        kanji: "宵",
+        kunyomi: ["よい"],
+        meanings: ["wee hours", "evening", "early night"],
+        onyomi: ["ショウ"]
+      },
+      {
+        kanji: "弄",
+        kunyomi: ["いじく", "ろう", "いじ", "ひねく", "たわむ", "もてあそ"],
+        meanings: ["play with", "tamper", "trifle with"],
+        onyomi: ["ロウ", "ル"]
+      },
+      {
+        kanji: "弐",
+        kunyomi: ["ふた", "そえ"],
+        meanings: ["II", "two", "second"],
+        onyomi: ["ニ", "ジ"]
+      },
+      {
+        kanji: "彙",
+        kunyomi: ["はりねずみ"],
+        meanings: ["same kind", "collect", "classify", "category", "hedgehog"],
+        onyomi: ["イ"]
+      },
+      {
+        kanji: "怨",
+        kunyomi: ["うら", "うらみ", "うら"],
+        meanings: ["grudge", "show resentment", "be jealous"],
+        onyomi: ["エン", "オン", "ウン"]
+      },
+      {
+        kanji: "恣",
+        kunyomi: ["ほしいまま"],
+        meanings: ["selfish", "arbitrary"],
+        onyomi: ["シ"]
+      },
+      {
+        kanji: "惧",
+        kunyomi: ["おそ"],
+        meanings: ["fear", "be afraid of", "dread"],
+        onyomi: ["ク", "グ"]
+      },
+      {
+        kanji: "愁",
+        kunyomi: ["うれ", "うれ"],
+        meanings: ["distress", "grieve", "lament", "be anxious"],
+        onyomi: ["シュウ"]
+      },
+      { kanji: "慄", kunyomi: ["ふる", "おそ", "おのの"], meanings: ["fear"], onyomi: ["リツ"] },
+      {
+        kanji: "慌",
+        kunyomi: ["あわ", "あわ"],
+        meanings: ["disconcerted", "be confused", "lose one's head"],
+        onyomi: ["コウ"]
+      },
+      {
+        kanji: "憬",
+        kunyomi: ["あこが"],
+        meanings: ["yearn for", "aspire to", "admire"],
+        onyomi: ["ケイ"]
+      },
+      {
+        kanji: "戚",
+        kunyomi: ["いた", "うれ", "みうち"],
+        meanings: ["grieve", "relatives"],
+        onyomi: ["ソク", "セキ"]
+      },
+      {
+        kanji: "抄",
+        kunyomi: [""],
+        meanings: ["extract", "selection", "summary", "copy", "spread thin"],
+        onyomi: ["ショウ"]
+      },
+      {
+        kanji: "拉",
+        kunyomi: ["らっ", "ひし", "くだ"],
+        meanings: ["Latin", "kidnap", "crush"],
+        onyomi: ["ラツ", "ラ", "ロウ"]
+      },
+      {
+        kanji: "拭",
+        kunyomi: ["ぬぐ", "ふ"],
+        meanings: ["wipe", "mop", "swab"],
+        onyomi: ["ショク", "シキ"]
+      },
+      {
+        kanji: "拶",
+        kunyomi: ["せま"],
+        meanings: ["be imminent", "draw close"],
+        onyomi: ["サツ"]
+      },
+      {
+        kanji: "挨",
+        kunyomi: ["ひら"],
+        meanings: ["approach", "draw near", "push open"],
+        onyomi: ["アイ"]
+      },
+      {
+        kanji: "挫",
+        kunyomi: ["くじ", "くじ"],
+        meanings: ["crush", "break", "sprain", "discourage"],
+        onyomi: ["ザ", "サ"]
+      },
+      {
+        kanji: "捉",
+        kunyomi: ["とら"],
+        meanings: ["catch", "capture"],
+        onyomi: ["ソク", "サク"]
+      },
+      { kanji: "捗", kunyomi: ["はかど"], meanings: ["make progress"], onyomi: ["チョク", "ホ"] },
+      {
+        kanji: "捻",
+        kunyomi: ["ね", "ねじ", "ひね", "ひね"],
+        meanings: ["twirl", "twist", "play with"],
+        onyomi: ["ネン", "ジョウ"]
+      },
+      { kanji: "摯", kunyomi: ["いた"], meanings: ["gift", "seriousness"], onyomi: ["シ"] },
+      {
+        kanji: "斑",
+        kunyomi: ["ふ", "まだら"],
+        meanings: ["spot", "blemish", "speck", "patches"],
+        onyomi: ["ハン"]
+      },
+      {
+        kanji: "斤",
+        kunyomi: [""],
+        meanings: [
+          "axe",
+          "1.32 lb",
+          "catty",
+          "counter for loaves of bread",
+          "axe radical (no. 69)"
+        ],
+        onyomi: ["キン"]
+      },
+      {
+        kanji: "斥",
+        kunyomi: ["しりぞ"],
+        meanings: ["reject", "retreat", "recede", "withdraw", "repel", "repulse"],
+        onyomi: ["セキ"]
+      },
+      {
+        kanji: "旺",
+        kunyomi: ["かがや", "うつくし", "さかん"],
+        meanings: ["flourishing", "successful", "beautiful", "vigorous"],
+        onyomi: ["オウ", "キョウ", "ゴウ"]
+      },
+      {
+        kanji: "昧",
+        kunyomi: ["くら", "むさぼ"],
+        meanings: ["dark", "foolish"],
+        onyomi: ["マイ", "バイ"]
+      },
+      { kanji: "曖", kunyomi: ["くら"], meanings: ["dark", "not clear"], onyomi: ["アイ"] },
+      {
+        kanji: "曽",
+        kunyomi: ["かつ", "かつて", "すなわち"],
+        meanings: ["formerly", "once", "before", "ever", "never", "ex-"],
+        onyomi: ["ソウ", "ソ", "ゾウ"]
+      },
+      {
+        kanji: "朕",
+        kunyomi: [""],
+        meanings: ["majestic plural", "imperial we"],
+        onyomi: ["チン"]
+      },
+      {
+        kanji: "柵",
+        kunyomi: ["しがら", "しがらみ", "とりで", "やらい"],
+        meanings: ["stockade", "fence", "weir", "entwine around"],
+        onyomi: ["サク", "サン"]
+      },
+      { kanji: "柿", kunyomi: ["かき"], meanings: ["persimmon"], onyomi: ["シ"] },
+      {
+        kanji: "桁",
+        kunyomi: ["けた"],
+        meanings: ["beam", "girder", "spar", "unit or column (accounting)"],
+        onyomi: ["コウ"]
+      },
+      {
+        kanji: "梗",
+        kunyomi: ["ふさぐ", "やまにれ", "おおむね"],
+        meanings: ["for the most part", "close up", "flower stem"],
+        onyomi: ["コウ", "キョウ"]
+      },
+      { kanji: "棺", kunyomi: [""], meanings: ["coffin", "casket"], onyomi: ["カン"] },
+      {
+        kanji: "楷",
+        kunyomi: [""],
+        meanings: ["square character style", "correctness"],
+        onyomi: ["カイ"]
+      },
+      {
+        kanji: "楼",
+        kunyomi: ["たかどの"],
+        meanings: ["watchtower", "lookout", "high building"],
+        onyomi: ["ロウ"]
+      },
+      {
+        kanji: "毀",
+        kunyomi: ["こぼ", "こわ", "こぼ", "こわ", "そし", "やぶ"],
+        meanings: [
+          "break",
+          "destroy",
+          "censure",
+          "be chipped",
+          "be scratched",
+          "be broken",
+          "be ruined"
+        ],
+        onyomi: ["キ"]
+      },
+      { kanji: "氾", kunyomi: ["ひろ"], meanings: ["spread out", "wide"], onyomi: ["ハン"] },
+      {
+        kanji: "汎",
+        kunyomi: ["ただよ", "ひろ"],
+        meanings: ["pan-"],
+        onyomi: ["ハン", "ブ", "フウ", "ホウ", "ホン"]
+      },
+      {
+        kanji: "沃",
+        kunyomi: ["そそ"],
+        meanings: ["fertility"],
+        onyomi: ["ヨウ", "ヨク", "オク"]
+      },
+      {
+        kanji: "淫",
+        kunyomi: ["ひた", "ほしいまま", "みだ", "みだ", "みだり"],
+        meanings: ["lewdness", "licentiousness"],
+        onyomi: ["イン"]
+      },
+      {
+        kanji: "溺",
+        kunyomi: ["いばり", "おぼ"],
+        meanings: ["drown", "indulge"],
+        onyomi: ["デキ", "ジョウ", "ニョウ"]
+      },
+      {
+        kanji: "潰",
+        kunyomi: ["つぶ", "つぶ", "つい"],
+        meanings: ["crush", "smash", "break", "dissipate"],
+        onyomi: ["カイ", "エ"]
+      },
+      {
+        kanji: "濫",
+        kunyomi: ["みだ", "みだ"],
+        meanings: ["excessive", "overflow", "spread out"],
+        onyomi: ["ラン"]
+      },
+      {
+        kanji: "煎",
+        kunyomi: ["せん", "い", "に"],
+        meanings: ["broil", "parch", "roast", "boil"],
+        onyomi: ["セン"]
+      },
+      {
+        kanji: "爵",
+        kunyomi: [""],
+        meanings: ["baron", "peerage", "court rank"],
+        onyomi: ["シャク"]
+      },
+      {
+        kanji: "玩",
+        kunyomi: ["もちあそ", "もてあそ"],
+        meanings: ["play", "take pleasure in", "trifle with", "make sport of"],
+        onyomi: ["ガン"]
+      },
+      { kanji: "璧", kunyomi: ["たま"], meanings: ["sphere", "ball"], onyomi: ["ヘキ"] },
+      { kanji: "璽", kunyomi: [""], meanings: ["emperor's seal"], onyomi: ["ジ"] },
+      { kanji: "瓦", kunyomi: ["かわら", "ぐらむ"], meanings: ["tile", "gram"], onyomi: ["ガ"] },
+      {
+        kanji: "畏",
+        kunyomi: ["おそ", "かしこま", "かしこ", "かしこ"],
+        meanings: ["fear", "majestic", "graciously", "be apprehensive"],
+        onyomi: ["イ"]
+      },
+      {
+        kanji: "畝",
+        kunyomi: ["せ", "うね"],
+        meanings: ["furrow", "thirty tsubo", "ridge", "rib"],
+        onyomi: ["ボウ", "ホ", "モ", "ム"]
+      },
+      {
+        kanji: "畿",
+        kunyomi: ["みやこ"],
+        meanings: ["capital", "suburbs of capital"],
+        onyomi: ["キ"]
+      },
+      { kanji: "痕", kunyomi: ["あと"], meanings: ["mark", "foot print"], onyomi: ["コン"] },
+      { kanji: "痘", kunyomi: [""], meanings: ["pox", "smallpox"], onyomi: ["トウ"] },
+      {
+        kanji: "痩",
+        kunyomi: ["や"],
+        meanings: ["get thin"],
+        onyomi: ["ソウ", "チュウ", "シュウ", "シュ"]
+      },
+      {
+        kanji: "瘍",
+        kunyomi: ["かさ"],
+        meanings: ["swelling", "boil", "tumor"],
+        onyomi: ["ヨウ"]
+      },
+      { kanji: "眉", kunyomi: ["まゆ"], meanings: ["eyebrow"], onyomi: ["ビ", "ミ"] },
+      { kanji: "硝", kunyomi: [""], meanings: ["nitrate", "saltpeter"], onyomi: ["ショウ"] },
+      {
+        kanji: "稽",
+        kunyomi: ["かんが", "とど"],
+        meanings: ["think", "consider"],
+        onyomi: ["ケイ"]
+      },
+      {
+        kanji: "窟",
+        kunyomi: ["いわや", "いはや", "あな"],
+        meanings: ["cavern"],
+        onyomi: ["クツ", "コツ"]
+      },
+      { kanji: "窯", kunyomi: ["かま"], meanings: ["kiln", "oven", "furnace"], onyomi: ["ヨウ"] },
+      { kanji: "箇", kunyomi: [""], meanings: ["counter for articles"], onyomi: ["カ", "コ"] },
+      {
+        kanji: "箋",
+        kunyomi: ["ふだ"],
+        meanings: ["paper", "label", "letter", "composition"],
+        onyomi: ["セン"]
+      },
+      {
+        kanji: "籠",
+        kunyomi: ["かご", "こ", "こも", "こ"],
+        meanings: ["basket", "devote oneself", "seclude oneself", "cage", "coop", "implied"],
+        onyomi: ["ロウ", "ル"]
+      },
+      {
+        kanji: "綻",
+        kunyomi: ["ほころ"],
+        meanings: ["be rent", "ripped", "unravel", "run", "begin to open", "smile"],
+        onyomi: ["タン"]
+      },
+      { kanji: "緻", kunyomi: ["こまか"], meanings: ["fine (i.e. not coarse)"], onyomi: ["チ"] },
+      {
+        kanji: "繕",
+        kunyomi: ["つくろ"],
+        meanings: ["darning", "repair", "mend", "trim", "tidy up", "adjust"],
+        onyomi: ["ゼン"]
+      },
+      { kanji: "繭", kunyomi: ["まゆ", "きぬ"], meanings: ["cocoon"], onyomi: ["ケン"] },
+      { kanji: "罵", kunyomi: ["ののし"], meanings: ["abuse", "insult"], onyomi: ["バ"] },
+      {
+        kanji: "羞",
+        kunyomi: ["はじ", "すすめ", "は"],
+        meanings: ["feel ashamed"],
+        onyomi: ["シュウ"]
+      },
+      {
+        kanji: "羨",
+        kunyomi: ["うらや", "あまり"],
+        meanings: ["envious", "be jealous", "covet"],
+        onyomi: ["セン", "エン"]
+      },
+      { kanji: "翁", kunyomi: ["おきな"], meanings: ["venerable old man"], onyomi: ["オウ"] },
+      { kanji: "耗", kunyomi: [""], meanings: ["decrease"], onyomi: ["モウ", "コウ"] },
+      { kanji: "肘", kunyomi: ["ひじ"], meanings: ["elbow", "arm"], onyomi: ["チュウ"] },
+      { kanji: "股", kunyomi: ["また", "もも"], meanings: ["thigh", "crotch"], onyomi: ["コ"] },
+      { kanji: "肢", kunyomi: [""], meanings: ["limb", "arms & legs"], onyomi: ["シ"] },
+      { kanji: "腎", kunyomi: [""], meanings: ["kidney"], onyomi: ["ジン"] },
+      {
+        kanji: "腫",
+        kunyomi: ["は", "は", "は", "く", "はれもの"],
+        meanings: ["tumor", "swelling"],
+        onyomi: ["シュ", "ショウ"]
+      },
+      { kanji: "腺", kunyomi: [""], meanings: ["gland"], onyomi: ["セン"] },
+      { kanji: "膝", kunyomi: ["ひざ"], meanings: ["knee", "lap"], onyomi: ["シツ"] },
+      {
+        kanji: "膳",
+        kunyomi: ["かしわ", "すす", "そな"],
+        meanings: ["small low table", "tray"],
+        onyomi: ["ゼン", "セン"]
+      },
+      {
+        kanji: "臆",
+        kunyomi: ["むね", "おくする"],
+        meanings: ["timidity", "heart", "mind", "fear", "cowardly"],
+        onyomi: ["オク", "ヨク"]
+      },
+      {
+        kanji: "臼",
+        kunyomi: ["うす", "うすづ"],
+        meanings: ["mortar"],
+        onyomi: ["キュウ", "グ"]
+      },
+      { kanji: "舷", kunyomi: ["ふなばた", "ふなべり"], meanings: ["gunwale"], onyomi: ["ゲン"] },
+      {
+        kanji: "艶",
+        kunyomi: ["つや", "なま", "あで", "つや", "なま"],
+        meanings: ["glossy", "luster", "glaze", "polish", "charm", "colorful", "captivating"],
+        onyomi: ["エン"]
+      },
+      {
+        kanji: "苛",
+        kunyomi: ["いじ", "さいな", "いらだ", "からい", "こまかい"],
+        meanings: ["torment", "scold", "chastise"],
+        onyomi: ["カ"]
+      },
+      {
+        kanji: "萎",
+        kunyomi: ["な", "しお", "しな", "しぼ", "な"],
+        meanings: ["wither", "droop", "lame"],
+        onyomi: ["イ"]
+      },
+      {
+        kanji: "葛",
+        kunyomi: ["つづら", "くず"],
+        meanings: ["arrowroot", "kudzu"],
+        onyomi: ["カツ", "カチ"]
+      },
+      {
+        kanji: "蓋",
+        kunyomi: ["ふた", "けだ", "おお", "かさ", "かこう"],
+        meanings: ["cover", "lid", "flap"],
+        onyomi: ["ガイ", "カイ", "コウ"]
+      },
+      {
+        kanji: "蔽",
+        kunyomi: ["おお", "おお"],
+        meanings: ["cover", "shade", "mantle", "capsize", "be ruined"],
+        onyomi: ["ヘイ", "ヘツ", "フツ"]
+      },
+      {
+        kanji: "薪",
+        kunyomi: ["たきぎ", "まき"],
+        meanings: ["fuel", "firewood", "kindling"],
+        onyomi: ["シン"]
+      },
+      {
+        kanji: "薫",
+        kunyomi: ["かお"],
+        meanings: ["send forth fragrance", "fragrant", "be scented", "smoke (tobacco)"],
+        onyomi: ["クン"]
+      },
+      {
+        kanji: "虞",
+        kunyomi: ["おそれ", "おもんぱか", "はか", "うれ", "あざむ", "あやま", "のぞ", "たの"],
+        meanings: ["fear", "uneasiness", "anxiety", "concern", "expectation", "consideration"],
+        onyomi: ["グ"]
+      },
+      {
+        kanji: "蚕",
+        kunyomi: ["かいこ", "こ"],
+        meanings: ["silkworm"],
+        onyomi: ["サン", "テン"]
+      },
+      {
+        kanji: "衷",
+        kunyomi: [""],
+        meanings: ["inmost", "heart", "mind", "inside"],
+        onyomi: ["チュウ"]
+      },
+      {
+        kanji: "袖",
+        kunyomi: ["そで"],
+        meanings: ["sleeve", "wing (building)", "extension", "give cold shoulder"],
+        onyomi: ["シュウ"]
+      },
+      {
+        kanji: "裾",
+        kunyomi: ["すそ"],
+        meanings: ["cuff", "hem", "foot of mountain"],
+        onyomi: ["キョ", "コ"]
+      },
+      { kanji: "褐", kunyomi: [""], meanings: ["brown", "woollen kimono"], onyomi: ["カツ"] },
+      { kanji: "訃", kunyomi: ["しらせ"], meanings: ["obituary"], onyomi: ["フ"] },
+      { kanji: "詔", kunyomi: ["みことのり"], meanings: ["imperial edict"], onyomi: ["ショウ"] },
+      {
+        kanji: "詣",
+        kunyomi: ["けい", "まい", "いた", "もう"],
+        meanings: ["visit a temple", "arrive", "attain"],
+        onyomi: ["ケイ", "ゲイ"]
+      },
+      {
+        kanji: "詮",
+        kunyomi: ["せん", "かい", "あき"],
+        meanings: ["discussion", "methods called for", "selection", "result"],
+        onyomi: ["セン"]
+      },
+      {
+        kanji: "諦",
+        kunyomi: ["あきら", "つまびらか", "まこと"],
+        meanings: ["truth", "clarity", "abandon", "give up"],
+        onyomi: ["テイ", "タイ"]
+      },
+      { kanji: "諧", kunyomi: ["かな", "やわ"], meanings: ["harmony"], onyomi: ["カイ"] },
+      {
+        kanji: "謁",
+        kunyomi: [""],
+        meanings: ["audience", "audience (with king)"],
+        onyomi: ["エツ"]
+      },
+      { kanji: "謄", kunyomi: [""], meanings: ["mimeograph", "copy"], onyomi: ["トウ"] },
+      {
+        kanji: "貌",
+        kunyomi: ["かたち", "かたどる"],
+        meanings: ["form", "appearance", "countenance"],
+        onyomi: ["ボウ", "バク"]
+      },
+      {
+        kanji: "貪",
+        kunyomi: ["むさぼ"],
+        meanings: ["covet", "indulge in"],
+        onyomi: ["タン", "ドン", "トン"]
+      },
+      {
+        kanji: "賜",
+        kunyomi: ["たまわ", "たま", "たも"],
+        meanings: ["grant", "gift", "boon", "results"],
+        onyomi: ["シ"]
+      },
+      {
+        kanji: "賦",
+        kunyomi: [""],
+        meanings: ["levy", "ode", "prose", "poem", "tribute", "installment"],
+        onyomi: ["フ", "ブ"]
+      },
+      {
+        kanji: "踪",
+        kunyomi: ["あと"],
+        meanings: ["remains", "clue", "footprint"],
+        onyomi: ["ソウ", "ショウ"]
+      },
+      { kanji: "蹴", kunyomi: ["け"], meanings: ["kick"], onyomi: ["シュク", "シュウ"] },
+      {
+        kanji: "辣",
+        kunyomi: ["から"],
+        meanings: ["pungent", "spicy", "harsh", "cruel", "severe"],
+        onyomi: ["ラツ"]
+      },
+      {
+        kanji: "逐",
+        kunyomi: [""],
+        meanings: ["pursue", "drive away", "chase", "accomplish", "attain", "commit"],
+        onyomi: ["チク"]
+      },
+      {
+        kanji: "逓",
+        kunyomi: ["かわ", "たがいに"],
+        meanings: ["relay", "in turn", "sending"],
+        onyomi: ["テイ"]
+      },
+      {
+        kanji: "遡",
+        kunyomi: ["さかのぼ"],
+        meanings: ["go upstream", "retrace the past"],
+        onyomi: ["ソ", "サク"]
+      },
+      {
+        kanji: "遵",
+        kunyomi: [""],
+        meanings: ["abide by", "follow", "obey", "learn"],
+        onyomi: ["ジュン"]
+      },
+      {
+        kanji: "醒",
+        kunyomi: ["さ", "さ"],
+        meanings: ["awake", "be disillusioned", "sober up"],
+        onyomi: ["セイ"]
+      },
+      {
+        kanji: "采",
+        kunyomi: ["と", "いろどり"],
+        meanings: ["dice", "form", "appearance", "take", "gather", "coloring"],
+        onyomi: ["サイ"]
+      },
+      {
+        kanji: "釜",
+        kunyomi: ["かま"],
+        meanings: ["kettle", "cauldron", "iron pot"],
+        onyomi: ["フ"]
+      },
+      { kanji: "錮", kunyomi: ["ふさ"], meanings: ["confinement", "to tie"], onyomi: ["コ"] },
+      {
+        kanji: "附",
+        kunyomi: ["つ", "つ"],
+        meanings: ["affixed", "attach", "refer to", "append"],
+        onyomi: ["フ"]
+      },
+      { kanji: "韻", kunyomi: [""], meanings: ["rhyme", "elegance", "tone"], onyomi: ["イン"] },
+      {
+        kanji: "頒",
+        kunyomi: ["わか"],
+        meanings: ["distribute", "disseminate", "partition", "understand"],
+        onyomi: ["ハン"]
+      },
+      {
+        kanji: "頓",
+        kunyomi: ["にわか", "とん", "つまず", "とみ", "ぬかずく"],
+        meanings: [
+          "suddenly",
+          "immediately",
+          "in a hurry",
+          "arrange",
+          "stay in place",
+          "bow",
+          "kowtow"
+        ],
+        onyomi: ["トン", "トツ"]
+      },
+      { kanji: "頬", kunyomi: ["ほお", "ほほ"], meanings: ["cheeks", "jaw"], onyomi: ["キョウ"] },
+      {
+        kanji: "顎",
+        kunyomi: ["あご", "あぎと"],
+        meanings: ["jaw", "chin", "gill"],
+        onyomi: ["ガク"]
+      },
+      {
+        kanji: "餅",
+        kunyomi: ["もち", "もちい"],
+        meanings: ["mochi rice cake"],
+        onyomi: ["ヘイ", "ヒョウ"]
+      },
+      {
+        kanji: "餌",
+        kunyomi: ["え", "えば", "えさ", "もち"],
+        meanings: ["food", "bait", "prey", "tempting profit"],
+        onyomi: ["ジ", "ニ"]
+      },
+      {
+        kanji: "骸",
+        kunyomi: ["むくろ"],
+        meanings: ["bone", "body", "corpse"],
+        onyomi: ["ガイ", "カイ"]
+      },
+      { kanji: "麓", kunyomi: ["ふもと"], meanings: ["foot of a mountain"], onyomi: ["ロク"] },
+      {
+        kanji: "麺",
+        kunyomi: ["むぎこ"],
+        meanings: ["noodles", "wheat flour"],
+        onyomi: ["メン", "ベン"]
+      }
+    ]
+  };
+  const toItemData = (d2) => {
+    const itemDetailStore = useItemDataStore();
+    const id = itemDetailStore.blankItem();
+    id.assignments.srs_stage = -1;
+    id.object = "kanji";
+    id.data.slug = d2.kanji;
+    id.data.meanings = [];
+    d2.meanings.forEach((m2, i2) => {
+      id.data.meanings.push({
+        accepted_answer: true,
+        meaning: m2,
+        primary: i2 == 0
+      });
+    });
+    return id;
+  };
+  return { data: data6, toItemData };
+});
+const _hoisted_1$7 = { class: "row" };
+const _hoisted_2$7 = { class: "col" };
+const _hoisted_3$7 = { class: "level" };
+const _hoisted_4$2 = { class: "container" };
+const _hoisted_5$2 = { class: "row itemDetails" };
+const _sfc_main$7 = /* @__PURE__ */ defineComponent({
+  __name: "Main",
+  setup(__props) {
+    const itemDataStore = useItemDataStore(), itemInWK = (slug) => {
+      return itemDataStore.itemData.find((i2) => i2.object == "kanji" && i2.data.slug == slug);
+    }, joyoStore = useJoyoStore(), sortByWK = (items) => {
+      const sortedWkitems = orderBy(
+        itemDataStore.itemData.filter((d2) => items.split("").includes(d2.data.slug)),
+        [(i2) => i2.assignments.srs_stage, (i2) => i2.data.level],
+        ["asc", "asc"]
+      ).map((r2) => r2.data.slug);
+      return [...sortedWkitems, ...difference(items.split(""), sortedWkitems)];
+    };
+    return (_ctx, _cache) => {
+      const _component_BlockUI = resolveComponent("BlockUI");
+      return openBlock(), createBlock(_component_BlockUI, {
+        blocked: unref(itemDataStore).loading
+      }, {
+        default: withCtx(() => [
+          (openBlock(true), createElementBlock(Fragment, null, renderList(Object.keys(unref(joyoStore).data.kanji).sort(), (n2) => {
+            return openBlock(), createElementBlock("div", {
+              key: n2,
+              class: "container"
+            }, [
+              createBaseVNode("div", _hoisted_1$7, [
+                createBaseVNode("div", _hoisted_2$7, [
+                  createBaseVNode("span", _hoisted_3$7, toDisplayString(n2), 1)
+                ])
+              ]),
+              createBaseVNode("div", _hoisted_4$2, [
+                createBaseVNode("div", _hoisted_5$2, [
+                  (openBlock(true), createElementBlock(Fragment, null, renderList(sortByWK(unref(joyoStore).data.kanji[n2]), (item2) => {
+                    return openBlock(), createBlock(ItemDetail, {
+                      key: item2,
+                      item: itemInWK(item2) ?? unref(joyoStore).toItemData(
+                        unref(joyoStore).data["Not In WaniKani"].find(
+                          (i2) => i2.kanji == item2
+                        )
+                      )
+                    }, null, 8, ["item"]);
+                  }), 128))
+                ])
+              ])
+            ]);
+          }), 128))
+        ]),
+        _: 1
+      }, 8, ["blocked"]);
+    };
+  }
+});
+const _hoisted_1$6 = { class: "container" };
+const _hoisted_2$6 = { class: "row" };
+const _hoisted_3$6 = { class: "col" };
+const _sfc_main$6 = /* @__PURE__ */ defineComponent({
+  __name: "JoyoView",
+  setup(__props) {
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("div", _hoisted_1$6, [
+        createBaseVNode("div", _hoisted_2$6, [
+          createBaseVNode("div", _hoisted_3$6, [
+            createVNode(_sfc_main$7)
+          ])
+        ])
+      ]);
+    };
+  }
+});
 const _hoisted_1$5 = { class: "row" };
 const _hoisted_2$5 = { class: "col" };
 const _hoisted_3$5 = { class: "level" };
@@ -23271,7 +25536,7 @@ const _hoisted_7$1 = { class: "col" };
 const _hoisted_8$1 = { class: "type" };
 const _hoisted_9$1 = { class: "row itemDetails" };
 const _sfc_main$5 = /* @__PURE__ */ defineComponent({
-  __name: "ItemDetails",
+  __name: "WaniKani",
   setup(__props) {
     const itemDataStore = useItemDataStore(), userStore = useUserStore();
     onMounted(() => {
@@ -23327,116 +25592,24 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const ItemDetails = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-a22dcadd"]]);
+const WaniKani = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-68f88925"]]);
 const _hoisted_1$4 = { class: "container" };
 const _hoisted_2$4 = { class: "row" };
 const _hoisted_3$4 = { class: "col" };
 const _sfc_main$4 = /* @__PURE__ */ defineComponent({
-  __name: "ItemDetailsView",
+  __name: "WaniKaniView",
   setup(__props) {
-    onMounted(() => {
-    });
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$4, [
         createBaseVNode("div", _hoisted_2$4, [
           createBaseVNode("div", _hoisted_3$4, [
-            createVNode(ItemDetails)
+            createVNode(WaniKani)
           ])
         ])
       ]);
     };
   }
 });
-function at$1(arr, indices) {
-  const result = new Array(indices.length);
-  const length = arr.length;
-  for (let i2 = 0; i2 < indices.length; i2++) {
-    let index2 = indices[i2];
-    index2 = Number.isInteger(index2) ? index2 : Math.trunc(index2) || 0;
-    if (index2 < 0) {
-      index2 += length;
-    }
-    result[i2] = arr[index2];
-  }
-  return result;
-}
-function flatten(arr, depth = 1) {
-  const result = [];
-  const flooredDepth = Math.floor(depth);
-  const recursive = (arr2, currentDepth) => {
-    for (let i2 = 0; i2 < arr2.length; i2++) {
-      const item2 = arr2[i2];
-      if (Array.isArray(item2) && currentDepth < flooredDepth) {
-        recursive(item2, currentDepth + 1);
-      } else {
-        result.push(item2);
-      }
-    }
-  };
-  recursive(arr, 0);
-  return result;
-}
-function compareValues(a2, b2, order) {
-  if (a2 < b2) {
-    return order === "asc" ? -1 : 1;
-  }
-  if (a2 > b2) {
-    return order === "asc" ? 1 : -1;
-  }
-  return 0;
-}
-function orderBy(arr, criteria, orders) {
-  return arr.slice().sort((a2, b2) => {
-    const ordersLength = orders.length;
-    for (let i2 = 0; i2 < criteria.length; i2++) {
-      const order = ordersLength > i2 ? orders[i2] : orders[ordersLength - 1];
-      const criterion = criteria[i2];
-      const criterionIsFunction = typeof criterion === "function";
-      const valueA = criterionIsFunction ? criterion(a2) : a2[criterion];
-      const valueB = criterionIsFunction ? criterion(b2) : b2[criterion];
-      const result = compareValues(valueA, valueB, order);
-      if (result !== 0) {
-        return result;
-      }
-    }
-    return 0;
-  });
-}
-function pullAt(arr, indicesToRemove) {
-  const removed = at$1(arr, indicesToRemove);
-  const indices = new Set(indicesToRemove.slice().sort((x2, y2) => y2 - x2));
-  for (const index2 of indices) {
-    arr.splice(index2, 1);
-  }
-  return removed;
-}
-function sum(nums) {
-  let result = 0;
-  for (let i2 = 0; i2 < nums.length; i2++) {
-    result += nums[i2];
-  }
-  return result;
-}
-function mean(nums) {
-  return sum(nums) / nums.length;
-}
-function sumBy(items, getValue) {
-  let result = 0;
-  for (let i2 = 0; i2 < items.length; i2++) {
-    result += getValue(items[i2], i2);
-  }
-  return result;
-}
-function meanBy(items, getValue) {
-  return sumBy(items, (item2) => getValue(item2)) / items.length;
-}
-function round(value, precision = 0) {
-  if (!Number.isInteger(precision)) {
-    throw new Error("Precision must be an integer.");
-  }
-  const multiplier = Math.pow(10, precision);
-  return Math.round(value * multiplier) / multiplier;
-}
 function t(t2, e2) {
   (null == e2 || e2 > t2.length) && (e2 = t2.length);
   for (var i2 = 0, a2 = Array(e2); i2 < e2; i2++) a2[i2] = t2[i2];
@@ -36449,8 +38622,20 @@ const router = createRouter({
     {
       // component: () => import('@/views/ItemDetailsView.vue'),
       component: _sfc_main$4,
-      name: "ItemDetails",
-      path: "/ItemDetails"
+      name: "ItemDetailsWaniKani",
+      path: "/ItemDetailsWaniKani"
+    },
+    {
+      // component: () => import('@/views/ItemDetailsView.vue'),
+      component: _sfc_main$8,
+      name: "ItemDetailsJLPT",
+      path: "/ItemDetailsJLPT"
+    },
+    {
+      // component: () => import('@/views/ItemDetailsView.vue'),
+      component: _sfc_main$6,
+      name: "ItemDetailsJoyo",
+      path: "/ItemDetailsJoyo"
     },
     {
       // component: () => import('@/views/ItemsSummaryView.vue'),
@@ -36481,7 +38666,7 @@ const MyPreset = ke$1(index, {
     }
   }
 }), pinia = createPinia();
-const app = createApp(_sfc_main$a);
+const app = createApp(_sfc_main$e);
 const addStatsDiv = () => {
   const newSpot = document.createElement("div");
   const spotBefore = document.getElementsByClassName("site-content-container")[0];
@@ -37247,30 +39432,30 @@ label.v.center {
 
 .app {
   z-index: 9999999;
-}[data-v-303c1b1b] .p-message-text {
+}[data-v-c6a65fa3] .p-message-text {
   width: 100%;
 }
-.version[data-v-303c1b1b] {
+.version[data-v-c6a65fa3] {
   display: flex;
 }
-.version .number[data-v-303c1b1b] {
+.version .number[data-v-c6a65fa3] {
   padding-right: 10px;
 }
-.header[data-v-303c1b1b] {
+.header[data-v-c6a65fa3] {
   display: flex;
   flex-grow: 1;
   flex-basis: 0;
 }
-.header .title[data-v-303c1b1b] {
+.header .title[data-v-c6a65fa3] {
   width: 75%;
 }
-.header .title span[data-v-303c1b1b] {
+.header .title span[data-v-c6a65fa3] {
   font-size: 2rem;
 }
-.header .buttons[data-v-303c1b1b] {
+.header .buttons[data-v-c6a65fa3] {
   width: 25%;
 }
-.header .buttons .p-button[data-v-303c1b1b] {
+.header .buttons .p-button[data-v-c6a65fa3] {
   border: none;
 }.col[data-v-95c4d51b] {
   display: flex;
@@ -37333,98 +39518,104 @@ label.v.center {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-}.container[data-v-8ffd4b7d] {
+}.container[data-v-0d6f9005] {
   width: 75vw;
 }
-.item[data-v-8ffd4b7d] {
+.item[data-v-0d6f9005] {
   border: 1px solid gray;
   border-radius: 5px;
   min-width: 35px;
   margin: 2px;
   padding: 5px;
 }
-.item .slug[data-v-8ffd4b7d] {
+.item .slug[data-v-0d6f9005] {
   margin: 5px;
   font-size: 1rem;
   margin: 0;
 }
-.item.apprentice[data-v-8ffd4b7d], .item.guru[data-v-8ffd4b7d], .item.master[data-v-8ffd4b7d], .item.enlightened[data-v-8ffd4b7d], .item.burned[data-v-8ffd4b7d], .item.locked[data-v-8ffd4b7d], .item.initiate[data-v-8ffd4b7d] {
+.item.apprentice[data-v-0d6f9005], .item.guru[data-v-0d6f9005], .item.master[data-v-0d6f9005], .item.enlightened[data-v-0d6f9005], .item.burned[data-v-0d6f9005], .item.locked[data-v-0d6f9005], .item.initiate[data-v-0d6f9005] {
   color: white;
 }
-.item.apprentice[data-v-8ffd4b7d] {
+.item.apprentice[data-v-0d6f9005] {
   background-color: var(--stats-apprentice);
 }
-.item.apprentice[data-v-8ffd4b7d]:hover {
+.item.apprentice[data-v-0d6f9005]:hover {
   background-color: var(--stats-apprentice);
 }
-.item.guru[data-v-8ffd4b7d] {
+.item.notInWK[data-v-0d6f9005] {
+  background-color: #9fdf9f;
+}
+.item.notInWK[data-v-0d6f9005]:hover {
+  background-color: #9fdf9f;
+}
+.item.guru[data-v-0d6f9005] {
   background-color: var(--stats-guru);
 }
-.item.guru[data-v-8ffd4b7d]:hover {
+.item.guru[data-v-0d6f9005]:hover {
   background-color: var(--stats-guru);
 }
-.item.master[data-v-8ffd4b7d] {
+.item.master[data-v-0d6f9005] {
   background-color: var(--stats-master);
 }
-.item.master[data-v-8ffd4b7d]:hover {
+.item.master[data-v-0d6f9005]:hover {
   background-color: var(--stats-master);
 }
-.item.enlightened[data-v-8ffd4b7d] {
+.item.enlightened[data-v-0d6f9005] {
   background-color: var(--stats-enlightened);
 }
-.item.enlightened[data-v-8ffd4b7d]:hover {
+.item.enlightened[data-v-0d6f9005]:hover {
   background-color: var(--stats-enlightened);
 }
-.item.burned[data-v-8ffd4b7d] {
+.item.burned[data-v-0d6f9005] {
   background-color: var(--stats-burned);
 }
-.item.burned[data-v-8ffd4b7d]:hover {
+.item.burned[data-v-0d6f9005]:hover {
   background-color: var(--stats-burned);
 }
-.item.locked[data-v-8ffd4b7d] {
+.item.locked[data-v-0d6f9005] {
   background-color: var(--stats-locked);
 }
-.item.locked[data-v-8ffd4b7d]:hover {
+.item.locked[data-v-0d6f9005]:hover {
   background-color: var(--stats-locked);
 }
-.item.initiate[data-v-8ffd4b7d] {
+.item.initiate[data-v-0d6f9005] {
   background-color: var(--stats-initiate);
 }
-.item.initiate[data-v-8ffd4b7d]:hover {
+.item.initiate[data-v-0d6f9005]:hover {
   background-color: var(--stats-initiate);
 }
-.poItem .slug[data-v-8ffd4b7d] {
+.poItem .slug[data-v-0d6f9005] {
   font-size: 3rem;
 }
-.poItem .slug[data-v-8ffd4b7d] img {
+.poItem .slug[data-v-0d6f9005] img {
   width: 35px;
 }
-.itemDetails .item[data-v-8ffd4b7d] img {
+.itemDetails .item[data-v-0d6f9005] img {
   width: 15px;
   filter: invert(100%);
 }
-.p-button[data-v-8ffd4b7d] {
+.p-button[data-v-0d6f9005] {
   text-decoration: none;
 }
-.characters[data-v-8ffd4b7d] {
+.characters[data-v-0d6f9005] {
   font-size: 4rem;
   color: black;
   text-decoration: none;
 }
-.characters[data-v-8ffd4b7d]:hover .p-button-label {
+.characters[data-v-0d6f9005]:hover .p-button-label {
   text-decoration: none;
   color: black;
-}.level[data-v-a22dcadd],
-.type[data-v-a22dcadd] {
+}.level[data-v-68f88925],
+.type[data-v-68f88925] {
   font-weight: bold;
 }
-.col[data-v-a22dcadd]:has(.level) {
+.col[data-v-68f88925]:has(.level) {
   padding: 1px;
 }
-.row[data-v-a22dcadd]:has(.level) {
+.row[data-v-68f88925]:has(.level) {
   background-color: var(--p-gray-200);
 }
-.itemDetails[data-v-a22dcadd] {
+.itemDetails[data-v-68f88925] {
   display: flex;
   flex-wrap: wrap;
 }[data-v-fa9f73fb] .tooltip {

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         yt blocker
-// @version      50
+// @version      51
 // @description  none
 // @run-at       document-start
 // @author       rssaromeo
@@ -18,7 +18,7 @@
 // @downloadURL https://update.greasyfork.org/scripts/530026/yt%20blocker.user.js
 // @updateURL https://update.greasyfork.org/scripts/530026/yt%20blocker.meta.js
 // ==/UserScript==
-
+// findAllValues(ytInitialData, "UCdVBvoLL26v7JjiICMeIUPg")
 // % of video watched to hide, 0 to not hide any
 const hideWatchedVidProg = 1
 
@@ -27,73 +27,74 @@ const rclickBlocksTitle = false
 
 const updateInterval = 1000
 
-unsafeWindow.newJsData ??= []
-
-// Intercept XMLHttpRequest
-const originalOpen = XMLHttpRequest.prototype.open
-unsafeWindow.XMLHttpRequest.prototype.open = function (method, url) {
-  // log(url)
-  if (url.includes("youtube.com/youtubei/v1/player")) {
-    const originalSend = this.send
-
-    this.send = function (body) {
-      this.addEventListener("load", function () {
-        try {
-          const responseData = JSON.parse(this.responseText)
-          unsafeWindow.newJsData.push(responseData)
-          console.log(
-            "Intercepted YouTube player data:",
-            responseData
-          )
-        } catch (e) {
-          console.error("Failed to parse response data:", e)
-        }
-      })
-      originalSend.call(this, body)
-    }
-  }
-  originalOpen.call(this, method, url)
-}
-
-// Intercept fetch requests
-const originalFetch = window.fetch
-unsafeWindow.fetch = newfetch
-var timerId = setInterval(() => {
-  if (unsafeWindow.fetch != newfetch) {
-    clearInterval(timerId)
-    log("Intercepted fetch request:")
-    unsafeWindow.fetch = newfetch
-  }
-})
-
-function newfetch(...args) {
-  const url = args[0]
-  // log(url)
-  if (
-    (url?.url ?? url)?.includes?.("youtube.com/youtubei/v1/player")
-  ) {
-    return originalFetch.apply(this, args).then((response) => {
-      const clone = response.clone() // Clone the response to read it
-      clone
-        .json()
-        .then((data) => {
-          unsafeWindow.newJsData.push(data)
-          console.log(
-            "Intercepted YouTube player data from fetch:",
-            data
-          )
-        })
-        .catch((e) => {
-          console.error("Failed to parse fetch response data:", e)
-        })
-      return response // Return the original response
-    })
-  }
-  return originalFetch.apply(this, args)
-}
 var creatorNameCache = {}
-
+var firstNav = true
+window.addEventListener("yt-navigate-finish", () => {
+  if (firstNav) firstNav = false
+  else if (!location.href.includes("@")) location.reload()
+})
 ;(async () => {
+  unsafeWindow.newJsData ??= [unsafeWindow.ytInitialData]
+  // // Save the original fetch
+  // const originalFetch = unsafeWindow.fetch;
+
+  // unsafeWindow.fetch = async function(input, init) {
+  //     // Check if the request URL contains /youtubei/v1/next
+  //     const url = (typeof input === 'string') ? input : input.url;
+  //     // if (url.includes('/youtubei/v1/next')) {
+  //         console.log('YT next request detected:', url);
+
+  //         // Call the original fetch
+  //         const response = await originalFetch(input, init);
+
+  //         // Clone the response so we can read it without affecting YouTube
+  //         const cloned = response.clone();
+  //           try{
+  //         cloned.json().then(data => {
+
+  //             console.log('ytInitialData (soft nav) updated:', data);
+  //             // You can now store this data in a global variable
+  //           log(findAllKeys(
+  //             unsafeWindow.ytInitialData,
+  //             "lockupMetadataViewModel"
+  //           ), findAllKeys(
+  //             data,
+  //             "lockupMetadataViewModel"
+  //           ))
+  //           // unsafeWindow.newJsData.push(data)
+  //             deepAssignMerge(unsafeWindow.ytInitialData, data)
+  //         });
+  //           }
+  //           catch(e){}
+
+  //         return response; // return original response
+  //     // }
+
+  //     // Otherwise, just call fetch normally
+  //     return originalFetch(input, init);
+  // };
+  //   function deepAssignMerge(...objects) {
+  //   const isObject = v => v && typeof v === "object" && !Array.isArray(v);
+
+  //   return objects.reduce((acc, obj) => {
+  //     for (const key in obj) {
+  //       const prev = acc[key];
+  //       const next = obj[key];
+
+  //       if (Array.isArray(prev) && Array.isArray(next)) {
+  //         acc[key] = [...new Set([...prev, ...next])];
+  //       }
+  //       else if (isObject(prev) && isObject(next)) {
+  //         acc[key] = deepAssignMerge(prev, next);
+  //       }
+  //       else {
+  //         acc[key] = next;
+  //       }
+  //     }
+  //     return acc;
+  //   }, {});
+  // }
+
   const a = loadlib("allfuncs")
   const sp = new storageproxy("globaloptions")
   var ls = sp.get()
@@ -129,7 +130,7 @@ var creatorNameCache = {}
       // watch
       var data = findAllKeys(
         unsafeWindow.ytInitialData,
-        "listItemViewModel"
+        "listItemViewModel",
       )
         .flat()
         .find((e) => findValue(e, cweatorId))?.title?.content
@@ -138,29 +139,32 @@ var creatorNameCache = {}
       }
 
       // root
-      var manyData = ytInitialData?.["contents"]?.[
-        "twoColumnBrowseResultsRenderer"
-      ]?.["tabs"]?.["0"]?.["tabRenderer"]?.["content"]?.[
-        "richGridRenderer"
-      ]?.["contents"]
-        ?.map((e) => {
-          const temp =
-            e?.["richItemRenderer"]?.["content"]?.[
-              "lockupViewModel"
-            ]?.["metadata"]?.["lockupMetadataViewModel"]
-          return {
-            name: temp?.["metadata"]?.["contentMetadataViewModel"]?.[
-              "metadataRows"
-            ]?.["0"]?.["metadataParts"]?.["0"]?.["text"]?.["content"],
-            id: temp?.["image"]?.["decoratedAvatarViewModel"]?.[
-              "rendererContext"
-            ]?.["commandContext"]?.["onTap"]?.["innertubeCommand"]?.[
-              "browseEndpoint"
-            ]?.["browseId"],
-          }
-        })
-        ?.flat()
-        ?.filter((e) => e?.name && e?.id)
+      var manyData =
+        ytInitialData?.["contents"]?.[
+          "twoColumnBrowseResultsRenderer"
+        ]?.["tabs"]?.["0"]?.["tabRenderer"]?.["content"]?.[
+          "richGridRenderer"
+        ]?.["contents"]
+          ?.map?.((e) => {
+            const temp =
+              e?.["richItemRenderer"]?.["content"]?.[
+                "lockupViewModel"
+              ]?.["metadata"]?.["lockupMetadataViewModel"]
+            return {
+              name: temp?.["metadata"]?.[
+                "contentMetadataViewModel"
+              ]?.["metadataRows"]?.["0"]?.["metadataParts"]?.["0"]?.[
+                "text"
+              ]?.["content"],
+              id: temp?.["image"]?.["decoratedAvatarViewModel"]?.[
+                "rendererContext"
+              ]?.["commandContext"]?.["onTap"]?.[
+                "innertubeCommand"
+              ]?.["browseEndpoint"]?.["browseId"],
+            }
+          })
+          ?.flat?.()
+          ?.filter?.((e) => e?.name && e?.id) ?? []
       if (a.gettype(manyData, "array")) {
         var cweatorName = null
         for (var { id, name } of manyData) {
@@ -176,29 +180,22 @@ var creatorNameCache = {}
         }
       }
       // watch
-      var manyData = ytInitialData?.["contents"]?.[
-        "twoColumnWatchNextResults"
-      ]?.["secondaryResults"]?.["secondaryResults"]?.["results"]
-        ?.map((e) =>
-          e?.["itemSectionRenderer"]?.["contents"]?.map((e) => {
-            var base =
-              e?.["lockupViewModel"]?.["metadata"]?.[
-                "lockupMetadataViewModel"
-              ]
+      var manyData =
+        unsafeWindow.ytInitialData["contents"]?.[
+          "twoColumnWatchNextResults"
+        ]?.["results"]?.["results"]?.["contents"]?.["1"]?.[
+          "videoSecondaryInfoRenderer"
+        ]?.["owner"]?.["videoOwnerRenderer"]?.title?.runs?.[0]
+          ?.map?.((e) => {
             return {
-              name: base?.["metadata"]?.[
-                "contentMetadataViewModel"
-              ]?.["metadataRows"]?.["0"]?.["metadataParts"]?.["0"]?.[
-                "text"
-              ]?.["content"],
-              id: base?.image?.decoratedAvatarViewModel
-                ?.rendererContext?.commandContext?.onTap
-                ?.innertubeCommand?.browseEndpoint?.browseId,
+              name: e?.text,
+              id: e?.["navigationEndpoint"]?.["browseEndpoint"]?.[
+                "browseId"
+              ],
             }
           })
-        )
-        ?.flat()
-        ?.filter((e) => e?.name && e?.id)
+          ?.flat?.()
+          ?.filter?.((e) => e?.name && e?.id) ?? []
       if (a.gettype(manyData, "array")) {
         var cweatorName = null
         for (var { id, name } of manyData) {
@@ -213,31 +210,109 @@ var creatorNameCache = {}
           return cweatorName
         }
       }
-      var manyData = unsafeWindow.ytInitialData?.["contents"]?.[
-        "twoColumnWatchNextResults"
-      ]?.["secondaryResults"]?.["secondaryResults"]?.["results"]
-        ?.map((e) =>
-          e?.["itemSectionRenderer"]?.["contents"]?.map(
-            (e) =>
-              e?.["lockupViewModel"]?.["metadata"]?.[
+      // asdsasdasdasdads
+      var manyData =
+        unsafeWindow.ytInitialData["contents"]?.[
+          "twoColumnWatchNextResults"
+        ]?.["secondaryResults"]?.["secondaryResults"]?.["results"]
+          ?.map((ee) => {
+            ee =
+              ee?.["lockupViewModel"]?.["metadata"]?.[
                 "lockupMetadataViewModel"
               ]
-          )
-        )
-        .flat()
-        ?.map((e) => {
-          return {
-            name: e?.["metadata"]?.["contentMetadataViewModel"]?.[
-              "metadataRows"
-            ]?.["0"]?.["metadataParts"]?.["0"]?.["text"]?.["content"],
-            id: e?.["image"]?.["decoratedAvatarViewModel"]?.[
-              "rendererContext"
-            ]?.["commandContext"]?.["onTap"]?.["innertubeCommand"]?.[
-              "browseEndpoint"
-            ]?.["browseId"],
+            return {
+              name: ee?.metadata?.contentMetadataViewModel
+                ?.metadataRows?.[0]?.metadataParts?.[0]?.text
+                ?.content,
+              id: ee?.["image"]?.["decoratedAvatarViewModel"]?.[
+                "rendererContext"
+              ]?.["commandContext"]?.["onTap"]?.[
+                "innertubeCommand"
+              ]?.["browseEndpoint"]?.["browseId"],
+            }
+          })
+          ?.flat?.()
+          ?.filter?.((e) => e?.name && e?.id) ?? []
+      if (a.gettype(manyData, "array")) {
+        var cweatorName = null
+        for (var { id, name } of manyData) {
+          if (id == cweatorId) {
+            cweatorName = name
           }
-        })
-        ?.filter((e) => e?.name && e?.id)
+          if (!creatorNameCache[id]) {
+            creatorNameCache[id] = name
+          }
+        }
+        if (cweatorName) {
+          return cweatorName
+        }
+      }
+      var manyData =
+        ytInitialData?.["contents"]?.["twoColumnWatchNextResults"]?.[
+          "secondaryResults"
+        ]?.["secondaryResults"]?.["results"]
+          ?.map?.((e) =>
+            e?.["itemSectionRenderer"]?.["contents"]?.map((e) => {
+              var base =
+                e?.["lockupViewModel"]?.["metadata"]?.[
+                  "lockupMetadataViewModel"
+                ]
+              return {
+                name: base?.["metadata"]?.[
+                  "contentMetadataViewModel"
+                ]?.["metadataRows"]?.["0"]?.["metadataParts"]?.[
+                  "0"
+                ]?.["text"]?.["content"],
+                id: base?.image?.decoratedAvatarViewModel
+                  ?.rendererContext?.commandContext?.onTap
+                  ?.innertubeCommand?.browseEndpoint?.browseId,
+              }
+            }),
+          )
+          ?.flat?.()
+          ?.filter?.((e) => e?.name && e?.id) ?? []
+      if (a.gettype(manyData, "array")) {
+        var cweatorName = null
+        for (var { id, name } of manyData) {
+          if (id == cweatorId) {
+            cweatorName = name
+          }
+          if (!creatorNameCache[id]) {
+            creatorNameCache[id] = name
+          }
+        }
+        if (cweatorName) {
+          return cweatorName
+        }
+      }
+      var manyData =
+        unsafeWindow.ytInitialData?.["contents"]?.[
+          "twoColumnWatchNextResults"
+        ]?.["secondaryResults"]?.["secondaryResults"]?.["results"]
+          ?.map?.((e) =>
+            e?.["itemSectionRenderer"]?.["contents"]?.map(
+              (e) =>
+                e?.["lockupViewModel"]?.["metadata"]?.[
+                  "lockupMetadataViewModel"
+                ],
+            ),
+          )
+          .flat?.()
+          ?.map?.((e) => {
+            return {
+              name: e?.["metadata"]?.["contentMetadataViewModel"]?.[
+                "metadataRows"
+              ]?.["0"]?.["metadataParts"]?.["0"]?.["text"]?.[
+                "content"
+              ],
+              id: e?.["image"]?.["decoratedAvatarViewModel"]?.[
+                "rendererContext"
+              ]?.["commandContext"]?.["onTap"]?.[
+                "innertubeCommand"
+              ]?.["browseEndpoint"]?.["browseId"],
+            }
+          })
+          ?.filter?.((e) => e?.name && e?.id) ?? []
       // log(manyData)
       if (a.gettype(manyData, "array")) {
         var cweatorName = null
@@ -346,7 +421,7 @@ var creatorNameCache = {}
               if (ls.blockedCreators.includes(cweator))
                 ls.blockedCreators.splice(
                   ls.blockedCreators.indexOf(cweator),
-                  1
+                  1,
                 )
             }
           } else if (whatToBlock == "block all") {
@@ -358,7 +433,7 @@ var creatorNameCache = {}
             if (whatToBlock.isBlocked) {
               ls.blockedCreators.splice(
                 ls.blockedCreators.indexOf(whatToBlock.id),
-                1
+                1,
               )
             } else {
               ls.blockedCreators.push(whatToBlock.id)
@@ -368,7 +443,7 @@ var creatorNameCache = {}
           if (isCreatorBlocked(this.creator)) {
             ls.blockedCreators.splice(
               ls.blockedCreators.indexOf(this.creator),
-              1
+              1,
             )
           } else {
             ls.blockedCreators.push(this.creator)
@@ -396,7 +471,7 @@ var creatorNameCache = {}
           if (ls.blockedTitles.includes(this.title)) {
             ls.blockedTitles.splice(
               ls.blockedTitles.indexOf(this.title),
-              1
+              1,
             )
           } else {
             ls.blockedTitles.push(this.title)
@@ -438,17 +513,17 @@ var creatorNameCache = {}
         var video =
           findAllKeys(
             unsafeWindow.ytInitialData,
-            "lockupMetadataViewModel"
+            "lockupMetadataViewModel",
           ).find((e) => findValue(e, id)) ||
           findAllKeys(
             unsafeWindow.ytInitialData,
-            "videoRenderer"
+            "videoRenderer",
           ).find((e) => findValue(e, id))
         var res = [
           ...new Set(
             findAllKeys(video, "browseEndpoint").map(
-              (e) => e?.browseId
-            )
+              (e) => e?.browseId,
+            ),
           ),
         ].filter((e) => e)
         if (res.length == 1) {
@@ -460,7 +535,7 @@ var creatorNameCache = {}
         }
         log(
           1111111,
-          unsafeWindow.newJsData.find((e) => findValue(e, id))
+          unsafeWindow.newJsData.find((e) => findValue(e, id)),
         )
         failCount += 1
         if ((LOC.watch || LOC.root || LOC.search) && failCount > 5) {
@@ -480,7 +555,7 @@ var creatorNameCache = {}
           "#video-title",
           getCreatorId,
           "#channel-info",
-          "#text > a"
+          "#text > a",
         )
       } else if (LOC.root) {
         globalname = null
@@ -490,7 +565,7 @@ var creatorNameCache = {}
           "a:has(> .cbCustomTitle:first-child)>*:not(.cbCustomTitle)",
           getCreatorId,
           "yt-lockup-metadata-view-model",
-          "a.yt-core-attributed-string__link"
+          "a.yt-core-attributed-string__link",
         )
         addVid(
           "ytd-rich-item-renderer:has(#content > yt-lockup-view-model > div > div > yt-lockup-metadata-view-model > div.yt-lockup-metadata-view-model-wiz__text-container > div > yt-content-metadata-view-model > div:nth-child(1) > span > span > a)",
@@ -498,7 +573,7 @@ var creatorNameCache = {}
           "#content > yt-lockup-view-model > div > div > yt-lockup-metadata-view-model > div.yt-lockup-metadata-view-model-wiz__text-container > h3 > a > span.yt-core-attributed-string.yt-core-attributed-string--white-space-pre-wrap:not(.cbCustomTitle)",
           getCreatorId,
           "#content > yt-lockup-view-model > div > div > yt-lockup-metadata-view-model",
-          "#content > yt-lockup-view-model > div > div > yt-lockup-metadata-view-model > div.yt-lockup-metadata-view-model-wiz__text-container > div > yt-content-metadata-view-model > div:nth-child(1) > span > span > a"
+          "#content > yt-lockup-view-model > div > div > yt-lockup-metadata-view-model > div.yt-lockup-metadata-view-model-wiz__text-container > div > yt-content-metadata-view-model > div:nth-child(1) > span > span > a",
         )
         // addVid(
         //   "ytd-rich-item-renderer:not(:has(#blockbtn))",
@@ -515,7 +590,7 @@ var creatorNameCache = {}
           "a:has(> .cbCustomTitle:first-child)>*:not(.cbCustomTitle)",
           getCreatorId,
           "yt-lockup-metadata-view-model",
-          "a.yt-core-attributed-string__link"
+          "a.yt-core-attributed-string__link",
         )
         addVid(
           "#dismissible:has(#video-title-link)",
@@ -523,29 +598,29 @@ var creatorNameCache = {}
           "#video-title-link>yt-formatted-string:not(.cbCustomTitle)",
           getCreatorId,
           "#byline-container",
-          "#container>#text-container>yt-formatted-string#text>a"
+          "#container>#text-container>yt-formatted-string#text>a",
         )
         // ['contents']['twoColumnBrowseResultsRenderer']['tabs']['0']['tabRenderer']['content']['richGridRenderer']['contents']['5']['richItemRenderer']['content']['lockupViewModel']
       } else if (LOC.userhome || LOC.uservids) {
         const CREATOR = getCreatorNameFromUrl(location.href)
         const btn = a.qs(
-          "#page-header > yt-page-header-renderer > yt-page-header-view-model > div > div.page-header-view-model-wiz__page-header-headline > div > yt-dynamic-text-view-model > h1 > #blockbtn"
+          "#page-header > yt-page-header-renderer > yt-page-header-view-model > div > div.page-header-view-model-wiz__page-header-headline > div > yt-dynamic-text-view-model > h1 > #blockbtn",
         )
         if (
           a.qs(
-            "#page-header > yt-page-header-renderer > yt-page-header-view-model > div > div.page-header-view-model-wiz__page-header-headline > div > yt-dynamic-text-view-model > h1"
+            "#page-header > yt-page-header-renderer > yt-page-header-view-model > div > div.page-header-view-model-wiz__page-header-headline > div > yt-dynamic-text-view-model > h1",
           ) &&
           !btn
         ) {
           a.qs(
-            "#page-header > yt-page-header-renderer > yt-page-header-view-model > div > div.page-header-view-model-wiz__page-header-headline > div > yt-dynamic-text-view-model > h1"
+            "#page-header > yt-page-header-renderer > yt-page-header-view-model > div > div.page-header-view-model-wiz__page-header-headline > div > yt-dynamic-text-view-model > h1",
           ).appendChild(newBlockBtn(null, CREATOR))
         } else if (btn) {
           btn.innerHTML =
             isBlocked(btn.creator, btn.title, btn.url) ?
               "unblock - " +
               JSON.stringify(
-                isBlocked(btn.creator, btn.title, btn.url)
+                isBlocked(btn.creator, btn.title, btn.url),
               )
             : "block"
         }
@@ -555,7 +630,7 @@ var creatorNameCache = {}
             "#video-title-link",
             "#video-title-link",
             () => CREATOR,
-            "#byline-container"
+            "#byline-container",
           )
           addVid(
             "#dismissible:has(#video-title-link)",
@@ -569,7 +644,7 @@ var creatorNameCache = {}
                 .split("&")[0]
               var video = findAllKeys(
                 unsafeWindow.ytInitialData,
-                "lockupMetadataViewModel"
+                "lockupMetadataViewModel",
               ).find((e) => findValue(e, id))
               return (
                 findKey(video, "browseEndpoint")?.browseId ??
@@ -577,7 +652,7 @@ var creatorNameCache = {}
               )
             },
             "#byline-container",
-            "#container>#text-container>yt-formatted-string#text"
+            "#container>#text-container>yt-formatted-string#text",
           )
         }
         if (LOC.uservids) {
@@ -586,7 +661,7 @@ var creatorNameCache = {}
             "#video-title-link",
             "#video-title-link > #video-title:not(.cbCustomTitle)",
             () => CREATOR,
-            "#meta > h3"
+            "#meta > h3",
           )
         }
       } else if (LOC.watch) {
@@ -654,8 +729,8 @@ var creatorNameCache = {}
                     update()
                   },
                 }),
-              ]
-            )
+              ],
+            ),
           )
         }
         globalname =
@@ -666,7 +741,7 @@ var creatorNameCache = {}
           ]?.videoSecondaryInfoRenderer?.owner?.videoOwnerRenderer?.attributedTitle?.commandRuns?.[0]?.onTap?.innertubeCommand?.showDialogCommand?.panelLoadingStrategy?.inlineContent?.dialogViewModel?.customContent?.listViewModel?.listItems?.map(
             (e) =>
               e?.listItemViewModel?.title?.commandRuns[0]?.onTap
-                ?.innertubeCommand?.browseEndpoint?.browseId
+                ?.innertubeCommand?.browseEndpoint?.browseId,
           ) ||
           unsafeWindow.ytInitialData?.["contents"]?.[
             "twoColumnWatchNextResults"
@@ -715,7 +790,7 @@ var creatorNameCache = {}
             ?.map(
               (e) =>
                 e?.listItemViewModel?.title?.commandRuns?.[0]?.onTap
-                  ?.innertubeCommand?.browseEndpoint?.browseId
+                  ?.innertubeCommand?.browseEndpoint?.browseId,
             )
             .filter((e) => e)
         //  a.qs(
@@ -734,7 +809,7 @@ var creatorNameCache = {}
               return globalname
             },
             "ytd-video-owner-renderer",
-            "#container>#text-container>yt-formatted-string#text>a"
+            "#container>#text-container>yt-formatted-string#text>a",
           )
           a.qs("ytd-watch-metadata").style.display = ""
           const btn = a.qs("ytd-video-owner-renderer>#blockbtn")
@@ -743,7 +818,7 @@ var creatorNameCache = {}
             isBlocked(btn.creator, btn.title, btn.url) ?
               "unblock - " +
               JSON.stringify(
-                isBlocked(btn.creator, btn.title, btn.url)
+                isBlocked(btn.creator, btn.title, btn.url),
               )
             : "block"
         }
@@ -770,7 +845,7 @@ var creatorNameCache = {}
           ".yt-lockup-metadata-view-model__title",
           ".yt-lockup-metadata-view-model__title",
           getCreatorId,
-          ".yt-lockup-metadata-view-model__text-container"
+          ".yt-lockup-metadata-view-model__text-container",
         )
 
         // log(video)
@@ -909,7 +984,7 @@ var creatorNameCache = {}
     blockButtonParentID,
     // OLDurl,
     // OLDtitleID,
-    creatorName
+    creatorName,
     // OLDblockButtonParentID
   ) {
     try {
@@ -969,11 +1044,11 @@ var creatorNameCache = {}
         var prog =
           a.qs(
             ".ytd-thumbnail-overlay-resume-playback-renderer.style-scope",
-            viddiv
+            viddiv,
           ) ||
           a.qs(
             ".ytThumbnailOverlayProgressBarHostWatchedProgressBarSegment",
-            viddiv
+            viddiv,
           )
         // if (OLDcreatorID && btn.creator) {
         //   var OLDcreator =
@@ -1073,29 +1148,29 @@ var creatorNameCache = {}
   function updateLoc() {
     Object.assign(LOC, {
       root: /^https?:\/\/(?:www\.)?youtube\.com\/?(?:\?|#|$)/.test(
-        location.href
+        location.href,
       ),
       watch:
         /^https?:\/\/(?:www\.)?youtube\.com\/watch\/?(?:\?|#|$)/.test(
-          location.href
+          location.href,
         ),
       search:
         /^https?:\/\/(?:www\.)?youtube\.com\/results\?search_query=.*(?:#|$)/.test(
-          location.href
+          location.href,
         ),
       feed: /^https?:\/\/(?:www\.)?youtube\.com\/feed\/subscriptions/.test(
-        location.href
+        location.href,
       ),
       userhome:
         /^https?:\/\/(?:www\.)?youtube\.com\/@[^\/]+\/?$/.test(
-          location.href
+          location.href,
         ),
       uservids:
         /^https?:\/\/(?:www\.)?youtube\.com\/@[^\/]+\/videos\/?$/.test(
-          location.href
+          location.href,
         ) ||
         /^https?:\/\/(?:www\.)?youtube\.com\/(?:channel|user|c)\/[^\/]+\/videos\/?$/.test(
-          location.href
+          location.href,
         ),
     })
   }

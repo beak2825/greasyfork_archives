@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name         MilkyWayIdle Fullscreen Chat
 // @namespace    tampermonkey.net
+// @namespace    greasyfork.org/en/scripts/563424-milkywayidle-fullscreen-chat
 // @version      0.0.49
 // @description  Fullscreen chat overlay to focus on game chat. Useful for general users, but especially for admins, moderators, and the game owner.
 // @author       KelleN

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         snooker.org ZHCN
-// @version      2.0.27
+// @version      2.0.28
 // @description  Basic Chinese UI for snooker.org
 // @author       Nan Zhu
 // @include      *://*snooker.org/*
@@ -332,7 +332,8 @@ const playerMapD = {
   2797: "奥利弗·赛克斯",
   2755: "艾丹·墨菲",
   3982: "凯兰·帕特尔",
-  4643: "伊森·卢埃林"
+  4643: "伊森·卢埃林",
+  3528: "米哈伊洛·拉尔科夫"
 };
 
 const tournamentNameGroup = {

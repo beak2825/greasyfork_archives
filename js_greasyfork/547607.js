@@ -1,13 +1,18 @@
 // ==UserScript==
-// @name         YouTube One-Ear/Mono Audio Fix (Stereo-Safe, Optimized)
-// @namespace    danielytuk
-// @version      1.1
-// @description  Preserve stereo and fix mono/one-ear audio.
-// @match        *://www.youtube.com/watch?v=*
-// @grant        none
-// @license      CC BY-NC 4.0
-// @downloadURL https://update.greasyfork.org/scripts/547607/YouTube%20One-EarMono%20Audio%20Fix%20%28Stereo-Safe%2C%20Optimized%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/547607/YouTube%20One-EarMono%20Audio%20Fix%20%28Stereo-Safe%2C%20Optimized%29.meta.js
+// @name        YouTube One-Ear/Mono Audio Fix
+// @namespace   danielytuk/YTMONOFIX
+// @version     1.0.2
+// @description Preserve stereo and fix mono/one-ear audio.
+// @author      danielytuk
+// @license     Unlicense
+// @match       *://www.youtube.com/watch?v=*
+// @homepageURL https://github.com/danielytuk/UserScripts
+// @supportURL  https://github.com/danielytuk/UserScripts/Issues
+// @icon        https://www.youtube.com/yts/img/favicon-vfl8qSV2F.ico
+// @run-at      document-end
+// @grant       none
+// @downloadURL https://update.greasyfork.org/scripts/547607/YouTube%20One-EarMono%20Audio%20Fix.user.js
+// @updateURL https://update.greasyfork.org/scripts/547607/YouTube%20One-EarMono%20Audio%20Fix.meta.js
 // ==/UserScript==
 
 (() => {

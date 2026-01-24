@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        FreshRSS Duplicate Filter
 // @namespace   https://github.com/hiroki-miya
-// @version     1.0.5
+// @version     1.0.6
 // @description Mark as read and hide older articles in the FreshRSS feed list that have the same title, URL and content within a category or feed.
 // @author      hiroki-miya
 // @license     MIT
@@ -63,7 +63,6 @@
     #freshrss-duplicate-filter button{ margin-right: 6px; }
   `);
 
-
   // -----------------------------
   // Settings
   // -----------------------------
@@ -84,34 +83,54 @@
     const seen = new Set();
     const push = (t) => {
       t = (t || '').trim();
-      if (t && !seen.has(t)) { seen.add(t); out.push(t); }
+      if (t && !seen.has(t)) {
+        seen.add(t);
+        out.push(t);
+      }
     };
 
     const categories = $$('.category', sidebar);
     if (categories.length) {
-      categories.forEach(cat => {
-        push($(':scope > a span.title, :scope > a .title, :scope > a', cat)?.textContent);
-        $$(':scope ul li a span.title, :scope ul li a .title, :scope ul li a', cat).forEach(a => push(a.textContent));
+      categories.forEach((cat) => {
+        push(
+          $(':scope > a span.title, :scope > a .title, :scope > a', cat)
+            ?.textContent,
+        );
+        $$(
+          ':scope ul li a span.title, :scope ul li a .title, :scope ul li a',
+          cat,
+        ).forEach((a) => push(a.textContent));
       });
       return out;
     }
 
-    $$('a span.title, a .title, .title', sidebar).forEach(el => push(el.textContent));
+    $$('a span.title, a .title, .title', sidebar).forEach((el) =>
+      push(el.textContent),
+    );
     return out;
   }
 
   function getActiveSidebarTitles() {
-    const cat = $('#sidebar .category.active > a span.title, #sidebar .category.active > a .title')?.textContent?.trim();
-    const feed = $('#sidebar .category.active ul li.active > a span.title, #sidebar .category.active ul li.active > a .title')?.textContent?.trim();
-    const deep = $$('#sidebar li.active a span.title, #sidebar li.active a .title')
-      .map(e => e.textContent.trim()).filter(Boolean).pop();
+    const cat = $(
+      '#sidebar .category.active > a span.title, #sidebar .category.active > a .title',
+    )?.textContent?.trim();
+    const feed = $(
+      '#sidebar .category.active ul li.active > a span.title, #sidebar .category.active ul li.active > a .title',
+    )?.textContent?.trim();
+    const deep = $$(
+      '#sidebar li.active a span.title, #sidebar li.active a .title',
+    )
+      .map((e) => e.textContent.trim())
+      .filter(Boolean)
+      .pop();
 
     return [cat, feed, deep].filter(Boolean);
   }
 
   function shouldRunHere() {
-    if (!Array.isArray(selectedCategories) || selectedCategories.length === 0) return false;
-    return getActiveSidebarTitles().some(t => selectedCategories.includes(t));
+    if (!Array.isArray(selectedCategories) || selectedCategories.length === 0)
+      return false;
+    return getActiveSidebarTitles().some((t) => selectedCategories.includes(t));
   }
 
   // -----------------------------
@@ -141,7 +160,7 @@
     const list = document.createElement('div');
     list.id = 'fdfs-categories';
 
-    titles.forEach(t => {
+    titles.forEach((t) => {
       const label = document.createElement('label');
 
       const cb = document.createElement('input');
@@ -190,10 +209,16 @@
       panel.style.transform = 'none';
     }
 
-    makeDraggable(panel, h2, (left, top) => GM_setValue(PANEL_POS_KEY, { left, top }));
+    makeDraggable(panel, h2, (left, top) =>
+      GM_setValue(PANEL_POS_KEY, { left, top }),
+    );
 
     saveBtn.addEventListener('click', () => {
-      selectedCategories = Array.from(panel.querySelectorAll('#fdfs-categories input[type="checkbox"]:checked')).map(el => el.value);
+      selectedCategories = Array.from(
+        panel.querySelectorAll(
+          '#fdfs-categories input[type="checkbox"]:checked',
+        ),
+      ).map((el) => el.value);
       checkLimit = Math.max(1, parseInt(limitInput.value, 10) || DEFAULT_LIMIT);
 
       GM_setValue('selectedCategories', selectedCategories);
@@ -208,7 +233,10 @@
 
   // Make element draggable (handle = header)
   function makeDraggable(elmnt, handle, onSave) {
-    let startX = 0, startY = 0, startLeft = 0, startTop = 0;
+    let startX = 0,
+      startY = 0,
+      startLeft = 0,
+      startTop = 0;
 
     handle.addEventListener('mousedown', (e) => {
       e.preventDefault();
@@ -254,7 +282,6 @@
 
   GM_registerMenuCommand('Settings', showSettings);
 
-
   // -----------------------------
   // Duplicate key: Title + URL
   // -----------------------------
@@ -273,8 +300,16 @@
 
       // Remove common tracking params
       const drop = new Set([
-        'utm_source','utm_medium','utm_campaign','utm_term','utm_content','utm_id','utm_name','utm_reader',
-        'ref','source'
+        'utm_source',
+        'utm_medium',
+        'utm_campaign',
+        'utm_term',
+        'utm_content',
+        'utm_id',
+        'utm_name',
+        'utm_reader',
+        'ref',
+        'source',
       ]);
       for (const k of Array.from(u.searchParams.keys())) {
         if (drop.has(k)) u.searchParams.delete(k);
@@ -289,10 +324,13 @@
   }
 
   function getTitleUrlKey(flux) {
-    const a = $('a.item-element.title, a.title, .item-title a, h1 a, h2 a, h3 a', flux);
+    const a = $(
+      'a.item-element.title, a.title, .item-title a, h1 a, h2 a, h3 a',
+      flux,
+    );
     const title = normalizeText(a?.textContent);
     const url = canonicalizeUrl(a?.href);
-    return (title && url) ? `t:${title}||u:${url}` : '';
+    return title && url ? `t:${title}||u:${url}` : '';
   }
 
   // -----------------------------
@@ -305,7 +343,8 @@
   }
 
   function getFreshRssContext() {
-    if (window.context && typeof window.context === 'object') return window.context;
+    if (window.context && typeof window.context === 'object')
+      return window.context;
 
     const el = $('#jsonVars');
     if (!el) return null;
@@ -313,18 +352,27 @@
     const raw = (el.textContent || '').trim();
     if (!raw) return null;
 
-    const txt = (raw.includes('&quot;') || raw.includes('&#')) ? htmlDecode(raw) : raw;
-    try { return JSON.parse(txt); } catch { return null; }
+    const txt =
+      raw.includes('&quot;') || raw.includes('&#') ? htmlDecode(raw) : raw;
+    try {
+      return JSON.parse(txt);
+    } catch {
+      return null;
+    }
   }
 
   function findCsrfToken(ctx) {
     const c = ctx && (ctx.csrf || ctx._csrf || ctx.csrf_token || ctx.token);
     if (typeof c === 'string' && c) return c;
 
-    const meta = $('meta[name="csrf-token"], meta[name="csrf"], meta[name="_csrf"]');
+    const meta = $(
+      'meta[name="csrf-token"], meta[name="csrf"], meta[name="_csrf"]',
+    );
     if (meta?.content) return meta.content;
 
-    const inp = $('input[name="_csrf"], input[name="csrf"], input[name="csrf_token"]');
+    const inp = $(
+      'input[name="_csrf"], input[name="csrf"], input[name="csrf_token"]',
+    );
     if (inp?.value) return inp.value;
 
     return '';
@@ -349,21 +397,28 @@
     };
 
     walk(ctx);
-    return found.find(s => /ajax=1/i.test(s)) || found[0] || '';
+    return found.find((s) => /ajax=1/i.test(s)) || found[0] || '';
   }
 
   // -----------------------------
-  // Extract entry id from a ".flux" node
+  // Extract entry id from a '.flux' node
   // -----------------------------
   function extractEntryId(flux) {
     // dataset often contains numeric ids
     const ds = flux.dataset || {};
-    for (const k of ['entryId', 'entry', 'id', 'fluxId', 'id_entry', 'idEntry']) {
+    for (const k of [
+      'entryId',
+      'entry',
+      'id',
+      'fluxId',
+      'id_entry',
+      'idEntry',
+    ]) {
       const v = ds[k];
       if (v && /^\d+$/.test(v)) return v;
     }
 
-    // id attribute like "flux_12345"
+    // id attribute like 'flux_12345'
     if (flux.id) {
       const m = flux.id.match(/(\d+)/);
       if (m) return m[1];
@@ -374,9 +429,14 @@
     if (a?.href) {
       try {
         const u = new URL(a.href, location.href);
-        const id = u.searchParams.get('id') || u.searchParams.get('entry') || u.searchParams.get('entry_id');
+        const id =
+          u.searchParams.get('id') ||
+          u.searchParams.get('entry') ||
+          u.searchParams.get('entry_id');
         if (id && /^\d+$/.test(id)) return id;
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
     }
 
     return '';
@@ -395,7 +455,9 @@
         window.mark_read(flux, true, true);
         return true;
       }
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
 
     const ctx = getFreshRssContext();
     const csrf = findCsrfToken(ctx);
@@ -406,7 +468,7 @@
 
     if (tpl) {
       try {
-        if (/\{id\}/i.test(tpl)) url = tpl.replace(/\{id\}/ig, entryId);
+        if (/\{id\}/i.test(tpl)) url = tpl.replace(/\{id\}/gi, entryId);
         else if (/%d/.test(tpl)) url = tpl.replace(/%d/g, entryId);
         else {
           const u = new URL(tpl, location.href);
@@ -414,7 +476,9 @@
           u.searchParams.set('ajax', '1');
           url = u.toString();
         }
-      } catch { url = ''; }
+      } catch {
+        url = '';
+      }
     }
 
     if (!url) {
@@ -440,14 +504,22 @@
       const r = await fetch(url, {
         method: 'POST',
         credentials: 'same-origin',
-        headers: { ...headers, 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+        headers: {
+          ...headers,
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        },
         body: body.toString(),
       });
       if (r.ok) return true;
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
 
     try {
-      const r2 = await fetch(url, { method: 'GET', credentials: 'same-origin' });
+      const r2 = await fetch(url, {
+        method: 'GET',
+        credentials: 'same-origin',
+      });
       return r2.ok;
     } catch {
       return false;
@@ -473,7 +545,7 @@
     if (!items.length) return;
 
     const seen = new Set();
-    items.slice(0, Math.max(1, checkLimit)).forEach(flux => {
+    items.slice(0, Math.max(1, checkLimit)).forEach((flux) => {
       const key = getTitleUrlKey(flux);
       if (!key) return;
 
@@ -501,7 +573,8 @@
 
   function scheduleRun(force = false) {
     if (!force && !shouldRunHere()) return;
-    if ('requestIdleCallback' in window) requestIdleCallback(() => debouncedRun(), { timeout: 1500 });
+    if ('requestIdleCallback' in window)
+      requestIdleCallback(() => debouncedRun(), { timeout: 1500 });
     else debouncedRun();
   }
 
@@ -510,25 +583,37 @@
     if (!stream) return void setTimeout(setup, 800);
 
     // Stream updates (infinite scroll / AJAX load)
-    new MutationObserver(muts => {
-      const added = muts.some(m =>
-        m.addedNodes?.length &&
-        Array.from(m.addedNodes).some(n =>
-          n instanceof HTMLElement && (n.classList.contains('flux') || n.querySelector?.('.flux'))
-        )
-      );
-      if (added) scheduleRun();
+    new MutationObserver((muts) => {
+      const hasRelevantChanges = muts.some((m) => {
+        if (!m.addedNodes?.length) return false;
+        return Array.from(m.addedNodes).some((n) => {
+          if (!(n instanceof HTMLElement)) return false;
+          // Direct .flux element
+          if (n.classList.contains('flux')) return true;
+          // Container with .flux children
+          if (n.querySelector?.('.flux')) return true;
+          // Child of .flux (content added to flux items during infinite scroll)
+          if (n.closest?.('.flux')) return true;
+          return false;
+        });
+      });
+      if (hasRelevantChanges) scheduleRun();
     }).observe(stream, { childList: true, subtree: true });
 
     // Sidebar navigation
-    $('#sidebar')?.addEventListener('click', e => {
-      if (e.target?.closest?.('a')) setTimeout(() => scheduleRun(), 700);
-    }, true);
+    $('#sidebar')?.addEventListener(
+      'click',
+      (e) => {
+        if (e.target?.closest?.('a')) setTimeout(() => scheduleRun(), 700);
+      },
+      true,
+    );
 
     // Initial run after first paint
     setTimeout(() => scheduleRun(), 1200);
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup, { once: true });
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', setup, { once: true });
   else setup();
 })();

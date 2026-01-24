@@ -9,7 +9,7 @@
 // @run-at      document-start
 // @license     MIT
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @version     1.8.1
+// @version     1.8.2
 // @grant       GM_info
 // @grant       GM_addStyle
 // @grant       GM_setValue
@@ -138,7 +138,7 @@
 
     class ConfigManager {
         constructor() {
-            this.DEFAULT_SETTINGS = {
+            this.defaults = {
                 ENABLE_KEYWORD_FILTER: true,
                 KEYWORD_BLACKLIST: ['預告', 'Teaser', 'Trailer', 'PV', 'CM', 'MV', 'Cover', '翻唱'],
                 ENABLE_CHANNEL_FILTER: false,

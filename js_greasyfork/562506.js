@@ -3,7 +3,7 @@
 // @namespace    https://github.com/examplecode/useful-user-scripts
 // @homepageURL  https://scriptcat.org/zh-CN/users/157252
 // @author       examplecode && Aloazny && Gemini
-// @version      4.1
+// @version      4.4
 // @description  二改@examplecode的搜索脚本，感谢@examplecode，添加MD3配色+高斯模糊+编辑/添加搜索引擎功能+搜索栏切换顶部底部+搜索框，保留原本的X浏览器搜索引擎读取，排序等功能。
 // @match        *://*/*
 // @icon          data:image/png;base64,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
@@ -171,6 +171,7 @@
         if (saved.cache && saved.cache.length > 0) {
             return saved.cache;
         }
+        if (!saved.pathRules) saved.pathRules = {};
         
         let pool = [...(saved.custom || []), ...defaultEngines, ...xEngines];
         let map = new Map();
@@ -317,38 +318,30 @@
                     const mergedOrder = [ ...local.order, ...remote.order.filter(id => !local.order.includes(id))];
                     const mergedHidden  = [...new Set([...(local.hidden  || []), ...(remote.hidden  || [])])];
                     const mergedDeleted = [...new Set([...(local.deleted || []), ...(remote.deleted || [])])];
+                    const mergedPathRules = { ...(local.pathRules || {}), ...(remote.pathRules || {}) };
                     const merged = {
                         custom  : mergedCustom,
                         order   : mergedOrder,
                         hidden  : mergedHidden,
                         deleted : mergedDeleted,
+                        pathRules: mergedPathRules,
                         cache   : null
                     };
-                    if (typeof GM_setValue !== 'undefined') {
-                        GM_setValue(STORAGE_KEY, merged);
-                    } else {
-                        localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
-                    }
+                    if (typeof GM_setValue !== 'undefined') GM_setValue(STORAGE_KEY, merged);
+                    else localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
                 }
             } 
             else {
-                if (pendingData[THEME_KEY]) {
-                    storage.themeSave(pendingData[THEME_KEY]);
-                }
-                if (pendingData[LAYOUT_KEY]) {
-                    storage.layoutSave(pendingData[LAYOUT_KEY]);
-                }
+                if (pendingData[THEME_KEY]) storage.themeSave(pendingData[THEME_KEY]);
+                if (pendingData[LAYOUT_KEY]) storage.layoutSave(pendingData[LAYOUT_KEY]);
                 if (pendingData[STORAGE_KEY]) {
                     const d = pendingData[STORAGE_KEY];
                     d.cache = null;
-                    if (typeof GM_setValue !== 'undefined') {
-                        GM_setValue(STORAGE_KEY, d);
-                    } else {
-                        localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
-                    }
+                    if (typeof GM_setValue !== 'undefined') GM_setValue(STORAGE_KEY, d);
+                    else localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
                 }
             }
-          location.reload();
+            location.reload();
         };
 
         const themeBtn = card.querySelector('#m-theme-btn'), themePanel = card.querySelector('#m-theme-panel');
@@ -427,14 +420,14 @@
                 container.querySelector('.up').onclick = () => { if (i > 0) { [allEngines[i], allEngines[i - 1]] = [allEngines[i - 1], allEngines[i]]; storage.save(allEngines, saved.deleted); render(); } };
                 container.querySelector('.down').onclick = () => { if (i < allEngines.length - 1) { [allEngines[i], allEngines[i + 1]] = [allEngines[i + 1], allEngines[i]]; storage.save(allEngines, saved.deleted); render(); } };
                 container.querySelector('.del').onclick = () => { saved.deleted.push(e.id); allEngines.splice(i, 1); storage.save(allEngines, saved.deleted); render(); };
-                container.querySelector('.ed-save').onclick=()=>{const n=container.querySelector('.ed-name').value.trim(),h=container.querySelector('.ed-host').value.trim(),u=normalizeUrl(container.querySelector('.ed-url').value.trim()),p=container.querySelector('.ed-path').value.trim();if(n&&h&&u.includes('%s')){if(p){if(!saved.pathRules)saved.pathRules={};saved.pathRules[h]=p}else if(saved.pathRules){delete saved.pathRules[h]}const newId=(n===e.name&&h===e.host)?e.id:storage.getStableId(n,h);Object.assign(e,{name:n,host:h,url:u,id:newId});storage.save(allEngines,saved.deleted);render()}else{alert('请检查输入')}};
+                container.querySelector('.ed-save').onclick=()=>{const n=container.querySelector('.ed-name').value.trim(),h=container.querySelector('.ed-host').value.trim(),u=normalizeUrl(container.querySelector('.ed-url').value.trim()),p=container.querySelector('.ed-path').value.trim().replace(/%(s|keywords)%?/gi, '');if(n&&h&&u.includes('%s')){if(p){if(!saved.pathRules)saved.pathRules={};saved.pathRules[h]=p}else if(saved.pathRules){delete saved.pathRules[h]}const newId=(n===e.name&&h===e.host)?e.id:storage.getStableId(n,h);Object.assign(e,{name:n,host:h,url:u,id:newId});storage.save(allEngines,saved.deleted);render()}else{alert('请检查输入')}};
                 list.appendChild(container);
             });
         };
 
         const addForm = card.querySelector('#m-add-form'), inName = card.querySelector('#in-name'), inHost = card.querySelector('#in-host'), inUrl = card.querySelector('#in-url');
         inUrl.oninput=()=>{try{const u=inUrl.value.trim();if(!u)return;const f=new URL(u.startsWith('http')?u:'https://'+u).hostname.replace(/^www\./i,'');if(!inHost.value)inHost.value=f;if(!inName.value){const r=f.split('.')[0];inName.value=r.charAt(0).toUpperCase()+r.slice(1)}}catch(e){}};
-        card.querySelector('#in-confirm').onclick=()=>{const u=normalizeUrl(inUrl.value);let n=inName.value.trim(),h=inHost.value.trim();if(!u.includes('%s'))return alert('URL必须包含%s');if(allEngines.some(e=>e.host===h&&e.name===n))return alert('已存在');try{const p1=u.split('%s')[0],m=p1.match(/([\/|?|&][^\/|?|&]+)$/);if(m){const s=m[1];if(s.length>1&&!longSignals.some(l=>s.includes(l))&&!strictSignals.some(t=>s==='/'+t)){if(!saved.pathRules)saved.pathRules={};saved.pathRules[h]=s}}else{const tU=new URL(u.replace('%s','pk')),pA=tU.pathname.split('/'),i=pA.indexOf('pk');if(i>0){const s=pA[i-1];if(s&&!longSignals.includes(s)&&!strictSignals.includes(s)){if(!saved.pathRules)saved.pathRules={};saved.pathRules[h]='/'+s+'/'}}}}catch(e){}const ne={name:n,host:h,url:u,id:storage.getStableId(n,h),visible:true};if(h.startsWith('/')&&h.endsWith('/')){try{const p=h.slice(1,-1);ne._matchFn=s=>new RegExp(p,'i').test(s)}catch(e){ne._matchFn=s=>s.toLowerCase().includes(h.toLowerCase())}}else{ne._matchFn=s=>s.toLowerCase().includes(h.toLowerCase())}allEngines.push(ne);storage.save(allEngines,saved.deleted);addForm.style.display='none';render()};
+        card.querySelector('#in-confirm').onclick=()=>{const u=normalizeUrl(inUrl.value);let n=inName.value.trim(),h=inHost.value.trim();if(!u.includes('%s'))return alert('URL必须包含%s');if(allEngines.some(e=>e.host===h&&e.name===n))return alert('已存在');try{const p1=u.split('%s')[0],m=p1.match(/([\/|?|&][^\/|?|&]+)$/);if(m){const s=m[1].replace(/%(s|keywords)%?/gi, '');if(s.length>1&&!longSignals.some(l=>s.includes(l))&&!strictSignals.some(t=>s==='/'+t)){if(!saved.pathRules)saved.pathRules={};saved.pathRules[h]=s}}else{const tU=new URL(u.replace('%s','pk')),pA=tU.pathname.split('/'),i=pA.indexOf('pk');if(i>0){const s=pA[i-1];if(s&&!longSignals.includes(s)&&!strictSignals.includes(s)){if(!saved.pathRules)saved.pathRules={};saved.pathRules[h]='/'+s+'/'}}}}catch(e){}const ne={name:n,host:h,url:u,id:storage.getStableId(n,h),visible:true};if(h.startsWith('/')&&h.endsWith('/')){try{const p=h.slice(1,-1);ne._matchFn=s=>new RegExp(p,'i').test(s)}catch(e){ne._matchFn=s=>s.toLowerCase().includes(h.toLowerCase())}}else{ne._matchFn=s=>s.toLowerCase().includes(h.toLowerCase())}allEngines.push(ne);storage.save(allEngines,saved.deleted);addForm.style.display='none';render()};
         card.querySelector('#m-add-btn').onclick = () => { addForm.style.display = 'block'; inName.value = inHost.value = inUrl.value = ''; };
         card.querySelector('#in-cancel').onclick = () => addForm.style.display = 'none';
         card.querySelector('#m-reset-btn').onclick=()=>{if(confirm('确定还原？')){saved={custom:[],order:[],hidden:[],deleted:[]};allEngines=initEngines();storage.save(allEngines,[]);render()}};render();
@@ -453,9 +446,10 @@
             const fullPath = url.pathname + url.search + url.hash;
             const customRule = saved.pathRules ? saved.pathRules[currentEngine.host] : null;
             if (customRule) {
-                const ruleIdx = fullPath.toLowerCase().indexOf(customRule.toLowerCase());
+                const cleanRule = customRule.replace(/%(s|keywords)%?/gi, '');
+                const ruleIdx = fullPath.toLowerCase().indexOf(cleanRule.toLowerCase());
                 if (ruleIdx !== -1) {
-                    let part = fullPath.substring(ruleIdx + customRule.length).split(/[&?]/)[0];
+                    let part = fullPath.substring(ruleIdx + cleanRule.length).split(/[&?]/)[0];
                     if (part) {
                         if (part.includes('/')) {
                             const allSignals = [...longSignals, ...strictSignals];
@@ -497,7 +491,7 @@
             const getBestMatched = () => allEngines.filter(e => e.visible && e.host && e._matchFn(location.host.toLowerCase())).map(e => { let s = (e.host === location.host.toLowerCase() ? 1000 : (!e.host.includes('/') ? 500 : 0)), u; try { u = new URL(e.url); s += (u.pathname !== '/' && location.pathname.toLowerCase().includes(u.pathname.toLowerCase()) ? 200 : 0); u.searchParams.forEach(v => { const f = v.replace(/%s|%keywords%/g, '').trim().toLowerCase(); if (f) s += decodeURIComponent(location.href.toLowerCase()).includes(f) ? 600 : -800; }); } catch(e) {} return { e, s: s + (allEngines.length - allEngines.indexOf(e)) }; }).sort((a, b) => b.s - a.s)[0]?.e;
             const bestMatched = getBestMatched();
             const syncInputs = (val) => { bar.querySelectorAll('.qs-main-input').forEach(el => { if (el.value !== val) el.value = val; });};
-            const doSearch = (targetEngine, keyword) => { let targetUrl = targetEngine.url; const isCur = targetEngine.host && targetEngine._matchFn(location.host.toLowerCase()); if (isCur) { try { const uObj = new URL(targetEngine.url); targetUrl = location.origin + uObj.pathname + uObj.search; } catch {} } location.href = targetUrl.replace(/%s/g, encodeURIComponent(keyword)).replace(/%keywords%/g, encodeURIComponent(keyword));};
+            const doSearch = (targetEngine, keyword) => { if (!keyword) return; let targetUrl = targetEngine.url; const isCur = targetEngine.host && targetEngine._matchFn(location.host.toLowerCase()); if (isCur) { try { const uObj = new URL(targetEngine.url); targetUrl = location.origin + uObj.pathname + uObj.search; } catch {} } window.location.href = targetUrl.replace(/%s/g, encodeURIComponent(keyword)).replace(/%keywords%/g, encodeURIComponent(keyword)); };
             const curStyle = layout.inputStyle || 1;
 
             if (curStyle === 3 && layout.showInput) {
@@ -509,7 +503,7 @@
                 input.onfocus = () => { input.style.width = '130px'; input.style.background = 'rgba(var(--qs-pri-rgb),0.15)'; };
                 input.onblur = () => { input.style.width = '80px'; input.style.background = 'rgba(var(--qs-pri-rgb),0.08)'; };
                 input.oninput = (ev) => syncInputs(ev.target.value);
-                input.onkeydown = (e) => {e.stopPropagation();if (e.key === 'Enter') doSearch(bestMatched || allEngines[0], input.value);};
+                input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); e.stopImmediatePropagation(); const val = e.target.value.trim(); doSearch(bestMatched || allEngines[0], val); } }, true);
                 bar.appendChild(input);
             }
 
@@ -527,10 +521,11 @@
                         input.oninput = (ev) => syncInputs(ev.target.value);
                         input.onfocus = () => input.style.width = '140px';
                         input.onblur = () => input.style.width = '90px';
-                        input.onkeydown = (ev) => {ev.stopPropagation(); if (ev.key === 'Enter') doSearch(e, input.value);};
+                        input.addEventListener('keydown', (e_ev) => { if (e_ev.key === 'Enter') { e_ev.preventDefault(); e_ev.stopImmediatePropagation(); const val = input.value.trim(); doSearch(e, val); } }, true);
                         const label = document.createElement('span');
                         label.textContent = e.name;
-                        label.style.cssText = `padding:0 14px 0 8px;color:var(--qs-on-pri);font-size:14px;font-weight:600;white-space:nowrap;`;
+                        label.style.cssText = `padding:0 14px 0 8px;color:var(--qs-on-pri);font-size:14px;font-weight:600;white-space:nowrap;cursor:pointer;`;
+                        label.onclick = (ev) => { ev.preventDefault(); ev.stopImmediatePropagation(); const val = input.value.trim(); doSearch(e, val); };
                         wrapper.append(input, label);
                         bar.appendChild(wrapper);
                         return;
@@ -542,7 +537,7 @@
                         input.oninput = (ev) => syncInputs(ev.target.value);
                         input.onfocus = () => input.style.width = '130px';
                         input.onblur = () => input.style.width = '80px';
-                        input.onkeydown = (ev) => { ev.stopPropagation(); if (ev.key === 'Enter') doSearch(e, input.value);};
+                        input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); e.stopImmediatePropagation(); const val = e.target.value.trim(); doSearch(bestMatched || allEngines[0], val); } }, true);
                         bar.appendChild(input);
                     }
                 }
@@ -552,11 +547,7 @@
                 btn.textContent = e.name;
                 btn.href = 'javascript:void(0);';
                 if (isBest) btn.setAttribute('data-active', 'true');
-                btn.onclick = (ev) => {
-                    ev.preventDefault();
-                    const currentVal = bar.querySelector('.qs-main-input')?.value || query;
-                    doSearch(e, currentVal);
-                };
+                btn.onclick = (ev) => { ev.preventDefault(); ev.stopImmediatePropagation(); const inputEl = bar.querySelector('.qs-main-input'); const currentVal = inputEl ? inputEl.value.trim() : query; doSearch(e, currentVal); };
                 bar.appendChild(btn);
             });
 
@@ -566,7 +557,6 @@
             setBtn.onclick = showManager;
             bar.append(setBtn);
             document.body.appendChild(bar);
- 
             setTimeout(() => {
                 const activeEl = bar.querySelector('[data-active="true"]');
                 if (activeEl) bar.scrollLeft = activeEl.offsetLeft - (bar.offsetWidth / 2) + (activeEl.offsetWidth / 2);

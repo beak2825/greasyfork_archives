@@ -1,254 +1,219 @@
 // ==UserScript==
-// @name         YouTube Pro: Audio Enhancer
+// @name         YouTube Pro: Audio Enhancer (Final)
 // @namespace    https://github.com/Beyazprens/youtube-pro-audio-ambient
-// @version      2.1.3
-// @description  Cinema-quality sound with a professional 5-band EQ and multiband compressor. Remembers your settings!
+// @version      2.2.1
+// @description  Stable, optimized cinema-quality audio enhancer for YouTube
 // @author       Beyazprens
 // @match        https://www.youtube.com/*
 // @license      MIT
 // @homepageURL  https://github.com/Beyazprens/youtube-pro-audio-ambient
 // @supportURL   https://github.com/Beyazprens/youtube-pro-audio-ambient/issues
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/559816/YouTube%20Pro%3A%20Audio%20Enhancer.user.js
-// @updateURL https://update.greasyfork.org/scripts/559816/YouTube%20Pro%3A%20Audio%20Enhancer.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/559816/YouTube%20Pro%3A%20Audio%20Enhancer%20%28Final%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/559816/YouTube%20Pro%3A%20Audio%20Enhancer%20%28Final%29.meta.js
 // ==/UserScript==
 
-(function () {
+(() => {
     'use strict';
 
-    let audioCtx = null;
-    let filters = {};
-    let isEnhanced = false;
+    let audioCtx;
+    let enabled = localStorage.getItem('yt-pro-audio-enabled') === 'true';
+    let lastInject = 0;
 
-    let isEnabledInStorage = localStorage.getItem('yt-pro-audio-enabled') === 'true';
+    /* ===================== CSS ===================== */
 
-    const css = `
-        .audio-enhance-btn {
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            cursor: pointer !important;
-            background: none !important;
-            border: none !important;
-            outline: none !important;
-            vertical-align: top !important;
-            width: 48px !important;
-            height: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            opacity: 0.9;
-            transition: opacity 0.2s;
-            position: relative;
-            z-index: 1000; /* Butonu öne çıkarır */
-        }
-        .audio-enhance-btn:hover {
-            opacity: 1;
-        }
-        .audio-enhance-btn svg {
-            width: 28px !important;
-            height: 28px !important;
-            fill: #fff !important;
-            transition: transform 0.2s, fill 0.2s;
-            pointer-events: none; /* ÖNEMLİ: Tıklamanın butona geçmesini sağlar */
-        }
-        .audio-enhance-btn:active svg {
-            transform: scale(0.95);
-        }
-        .audio-enhance-btn.active svg {
-            fill: #3ea6ff !important;
-            filter: drop-shadow(0 0 8px rgba(62,166,255,0.8));
-        }
-    `;
+    const CSS = `
+    .audio-enhance-btn {
+        display:inline-flex!important;
+        align-items:center;
+        justify-content:center;
+        width:48px;height:100%;
+        cursor:pointer;
+        background:none;border:0;
+        opacity:.9;
+    }
+    .audio-enhance-btn:hover { opacity:1; }
+    .audio-enhance-btn.active svg {
+        fill:#3ea6ff!important;
+        filter:drop-shadow(0 0 6px rgba(62,166,255,.8));
+    }
+    .audio-enhance-btn svg {
+        width:26px;height:26px;
+        fill:#fff;
+        pointer-events:none;
+    }`;
 
-    if (!document.getElementById('yt-pro-audio-style')) {
-        const style = document.createElement('style');
-        style.id = 'yt-pro-audio-style';
-        style.textContent = css;
-        document.head.appendChild(style);
+    function ensureStyle() {
+        if (document.getElementById('yt-pro-audio-style')) return;
+        const s = document.createElement('style');
+        s.id = 'yt-pro-audio-style';
+        s.textContent = CSS;
+        document.head.appendChild(s);
     }
 
-    function initAudioContext() {
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
+    /* ===================== AUDIO ===================== */
+
+    function getCtx() {
+        if (!audioCtx) audioCtx = new AudioContext();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
         return audioCtx;
     }
 
-    function createAudioGraph(video) {
-        initAudioContext();
+    function cleanupChain(video) {
+        if (!video?._ytChain) return;
 
-        let source;
-        if (video._ytAudioSource) {
-            source = video._ytAudioSource;
-        } else {
-            try {
-                source = audioCtx.createMediaElementSource(video);
-                video._ytAudioSource = source;
-            } catch (e) {
-                console.warn('[AudioEnhancer] Source creation skipped:', e);
-                return null;
-            }
-        }
+        video._ytChain.forEach(n => {
+            try { n.disconnect(); } catch {}
+        });
 
-        if (filters.subBass) return source;
-
-        filters.subBass = audioCtx.createBiquadFilter();
-        filters.subBass.type = 'lowshelf';
-        filters.subBass.frequency.value = 60;
-        filters.subBass.gain.value = 5.0;
-
-        filters.mudCut = audioCtx.createBiquadFilter();
-        filters.mudCut.type = 'peaking';
-        filters.mudCut.frequency.value = 250;
-        filters.mudCut.Q.value = 1.0;
-        filters.mudCut.gain.value = -3.0;
-
-        filters.presence = audioCtx.createBiquadFilter();
-        filters.presence.type = 'peaking';
-        filters.presence.frequency.value = 2500;
-        filters.presence.Q.value = 1.0;
-        filters.presence.gain.value = 2.5;
-
-        filters.brilliance = audioCtx.createBiquadFilter();
-        filters.brilliance.type = 'highshelf';
-        filters.brilliance.frequency.value = 8000;
-        filters.brilliance.gain.value = 5.0;
-
-        filters.comp = audioCtx.createDynamicsCompressor();
-        filters.comp.threshold.value = -18;
-        filters.comp.knee.value = 20;
-        filters.comp.ratio.value = 3.5;
-        filters.comp.attack.value = 0.05;
-        filters.comp.release.value = 0.20;
-
-        filters.gain = audioCtx.createGain();
-        filters.gain.gain.value = 1.15;
-
-        return source;
+        video._ytChain = null;
+        video._ytAudioEnhanced = false;
     }
 
-    function enableEnhancement(video) {
-        const source = createAudioGraph(video);
-        if (!source) return;
+    function buildChain(video) {
+        if (video._ytChain) return;
+
+        const ctx = getCtx();
+
+        if (!video._ytSource) {
+            video._ytSource = ctx.createMediaElementSource(video);
+        }
+
+        const source = video._ytSource;
+
+        const sub = ctx.createBiquadFilter();
+        sub.type = 'lowshelf';
+        sub.frequency.value = 70;    // göğüs hissi
+        sub.gain.value = 5.6;        // uçuş başlar
+
+
+        const mud = ctx.createBiquadFilter();
+        mud.type = 'peaking';
+        mud.frequency.value = 300;   // bulanıklık merkezi
+        mud.Q.value = 1.25;
+        mud.gain.value = -4.2;       // perdeyi kaldırır
+
+
+        const pres = ctx.createBiquadFilter();
+        pres.type = 'peaking';
+        pres.frequency.value = 3400; // insan kulağı “wow” noktası
+        pres.Q.value = 0.85;
+        pres.gain.value = 3.4;       // vokal + detay öne fırlar
+
+
+        const high = ctx.createBiquadFilter();
+        high.type = 'highshelf';
+        high.frequency.value = 10000; // hava bandı
+        high.gain.value = 5.2;        // ipek parlaklık
+
+
+        const comp = ctx.createDynamicsCompressor();
+        comp.threshold.value = -20;   // loud ama ezmez
+        comp.knee.value = 24;         // tereyağı gibi geçiş
+        comp.ratio.value = 3.8;       // cinema punch
+        comp.attack.value = 0.07;     // transient ölmez
+        comp.release.value = 0.25;    // nefes alan ses
+
+
+        const gain = ctx.createGain();
+        gain.gain.value = 1.18;       // salon seviyesi
+
+
+
+
+        source.disconnect();
+        source.connect(sub)
+            .connect(mud)
+            .connect(pres)
+            .connect(high)
+            .connect(comp)
+            .connect(gain)
+            .connect(ctx.destination);
+
+        video._ytChain = [sub, mud, pres, high, comp, gain];
+        video._ytAudioEnhanced = true;
+    }
+
+    function disableEnhancer(video) {
+        if (!video?._ytSource) return;
+
+        cleanupChain(video);
 
         try {
-            source.disconnect();
-
-            source
-                .connect(filters.subBass)
-                .connect(filters.mudCut)
-                .connect(filters.presence)
-                .connect(filters.brilliance)
-                .connect(filters.comp)
-                .connect(filters.gain)
-                .connect(audioCtx.destination);
-
-            isEnhanced = true;
-        } catch (e) {
-            console.warn('[AudioEnhancer] Enable failed:', e);
-        }
+            video._ytSource.disconnect();
+            video._ytSource.connect(getCtx().destination);
+        } catch {}
     }
 
-    function disableEnhancement(video) {
-        if (!audioCtx || !video._ytAudioSource) return;
+    /* ===================== UI ===================== */
 
-        const source = video._ytAudioSource;
-        try {
-            source.disconnect();
-            source.connect(audioCtx.destination);
-            isEnhanced = false;
-        } catch (e) {
-            console.warn('[AudioEnhancer] Disable failed:', e);
-        }
-    }
+    function inject() {
+        const now = performance.now();
+        if (now - lastInject < 500) return;
+        lastInject = now;
 
-    function toggleState(video, btn) {
-        if (audioCtx && audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
+        const controls = document.querySelector('.ytp-left-controls');
+        if (!controls || document.querySelector('.audio-enhance-btn')) return;
 
-        if (isEnhanced) {
-            disableEnhancement(video);
-            btn.classList.remove('active');
-            isEnabledInStorage = false;
-        } else {
-            enableEnhancement(video);
-            btn.classList.add('active');
-            isEnabledInStorage = true;
-        }
-
-        localStorage.setItem('yt-pro-audio-enabled', isEnabledInStorage);
-    }
-
-    function injectButton() {
-        const leftControls = document.querySelector('.ytp-left-controls');
-        if (!leftControls || document.querySelector('.audio-enhance-btn')) return;
+        ensureStyle();
 
         const btn = document.createElement('button');
         btn.className = 'ytp-button audio-enhance-btn';
-        btn.title = 'Enhance Audio';
-
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        svg.setAttribute("viewBox", "0 0 24 24");
-
-        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        path.setAttribute("d", "M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z");
-
-        svg.appendChild(path);
-        btn.appendChild(svg);
-
-        const timeDisplay = document.querySelector('.ytp-time-display');
-        leftControls.insertBefore(btn, timeDisplay || leftControls.lastChild);
+        btn.innerHTML = `
+        <svg viewBox="0 0 24 24">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3z"/>
+        </svg>`;
 
         const video = document.querySelector('video');
 
-        if (isEnabledInStorage) {
+        if (enabled && video) {
+            buildChain(video);
             btn.classList.add('active');
-            if (video) {
-                if (!video.paused) {
-                     enableEnhancement(video);
-                } else {
-                    video.addEventListener('play', () => {
-                        if (isEnabledInStorage && !isEnhanced) enableEnhancement(video);
-                    }, { once: true });
-                }
-            }
         }
 
-        btn.addEventListener('click', (e) => {
+        btn.onclick = e => {
             e.stopPropagation();
-            e.preventDefault();
+            const v = document.querySelector('video');
+            if (!v) return;
 
-            const currentVideo = document.querySelector('video');
-            if (currentVideo) toggleState(currentVideo, btn);
-        });
+            if (v._ytAudioEnhanced) {
+                disableEnhancer(v);
+                btn.classList.remove('active');
+                enabled = false;
+            } else {
+                buildChain(v);
+                btn.classList.add('active');
+                enabled = true;
+            }
+
+            localStorage.setItem('yt-pro-audio-enabled', enabled);
+        };
+
+        const volumePanel = controls.querySelector('.ytp-volume-panel');
+        if (volumePanel && volumePanel.nextSibling) {
+            controls.insertBefore(btn, volumePanel.nextSibling);
+        } else {
+            controls.appendChild(btn);
+        }
     }
 
-    const observer = new MutationObserver((mutations) => {
-        if (!document.querySelector('.audio-enhance-btn')) {
-            injectButton();
-        }
-    });
+    /* ===================== OBSERVERS ===================== */
 
-    observer.observe(document.body, { childList: true, subtree: true });
+    const obs = new MutationObserver(inject);
+
+    const waitPlayer = setInterval(() => {
+        const player = document.querySelector('#player');
+        if (!player) return;
+        clearInterval(waitPlayer);
+        obs.observe(player, { childList: true, subtree: false });
+        inject();
+    }, 500);
 
     window.addEventListener('yt-navigate-finish', () => {
-        isEnhanced = false;
-        injectButton();
-
-        if (isEnabledInStorage) {
-            const video = document.querySelector('video');
-            const btn = document.querySelector('.audio-enhance-btn');
-            if (video && btn) {
-                btn.classList.add('active');
-                enableEnhancement(video);
-            }
-        }
+        const video = document.querySelector('video');
+        disableEnhancer(video);
+        inject();
+        if (enabled && video) buildChain(video);
     });
-
-    injectButton();
 
 })();

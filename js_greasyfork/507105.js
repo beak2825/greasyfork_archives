@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         RA-See More
 // @namespace    https://metalsnake.space/
-// @version      0.6.1
+// @version      0.6.2
 // @description  Clicks the "see more" button on the user and game page
 // @author       MetalSnake
 // @match        *://retroachievements.org/*
+// @icon         https://static.retroachievements.org/assets/images/favicon.webp
 // @grant        none
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/507105/RA-See%20More.user.js

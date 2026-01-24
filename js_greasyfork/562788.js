@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MWI Wondher Tools (WS)
 // @namespace    https://github.com/wondher/mwi-wondher-tools
-// @version      v3.1.1
+// @version      v3.2.1
 // @license      CC-BY-NC-SA-4.0
 // @description  A new type of calculator for MWI - Real-time combat analytics with DPS Meter, Loot Tracker, XP Tracker, Party Overview, and more.
 // @author       Brian Mendes (Wondher)
@@ -15,590 +15,721 @@
 // ==/UserScript==
 
 (function () {
-  "use strict";
+    "use strict";
 
-  if (window.__mwiWondherInjected) return;
-  window.__mwiWondherInjected = true;
+    if (window.__mwiWondherInjected) return;
+    window.__mwiWondherInjected = true;
 
-  const MARKET_API_URL = window.location.href.includes("milkywayidle.com")
+    const MARKET_API_URL = window.location.href.includes("milkywayidle.com")
     ? "https://www.milkywayidle.com/game_data/marketplace.json"
     : "https://www.milkywayidlecn.com/game_data/marketplace.json";
 
-  const FALLBACK_PRICE_TABLE = {
-    "/items/apple_gummy": 15,
-    "/items/bear_essence": 2,
-    "/items/dragon_fruit": 25,
-    "/items/dragon_fruit_gummy": 20,
-    "/items/orange_gummy": 12,
-    "/items/sugar": 5,
-  };
+    const state = {
+        sessionStartTs: null,
+        lastUpdateTs: null,
+        battleId: null,
+        players: [],
+        monsters: [],
+        playerDamage: {},
+        playerDamageTaken: {},
+        partyDamage: 0,
+        partyDamageTaken: 0,
+        encountersCompleted: 0,
+        coinsGained: 0,
+        estimatedValueGained: 0,
+        loot: {},
+        unknownValueLoot: {},
+        xpGainedBySkill: {},
+        totalExpGained: 0,
+        totalLevelExpGained: 0,
+        lastAbilityByPlayer: {},
+        isInCombat: false,
+    };
 
-  const state = {
-    sessionStartTs: null,
-    lastUpdateTs: null,
-    battleId: null,
-    players: [],
-    monsters: [],
-    playerDamage: {},
-    playerDamageTaken: {},
-    partyDamage: 0,
-    partyDamageTaken: 0,
-    encountersCompleted: 0,
-    coinsGained: 0,
-    estimatedValueGained: 0,
-    loot: {},
-    unknownValueLoot: {},
-    xpGainedBySkill: {},
-    totalExpGained: 0,
-    totalLevelExpGained: 0,
-    lastAbilityByPlayer: {},
-    isInCombat: false,
-  };
+    const internal = {
+        lastActionCount: null,
+        lastItemCountsByHash: {},
+        lastSkillExp: {},
+        lastPlayerDmg: {},
+        lastMonsterDmg: {},
+        lastPlayerHP: {},
+        playerIndexToName: {},
+        monsterIndexToName: {},
+        inventoryCountsByItemHrid: {},
+        priceTable: {},
+        marketData: null,
+        priceTableSource: "none",
+        itemsInitialized: false,
+        skillsInitialized: false,
+    };
 
-  const internal = {
-    lastActionCount: null,
-    lastItemCountsByHash: {},
-    lastSkillExp: {},
-    lastPlayerDmg: {},
-    lastMonsterDmg: {},
-    lastPlayerHP: {},
-    playerIndexToName: {},
-    monsterIndexToName: {},
-    inventoryCountsByItemHrid: {},
-    priceTable: { ...FALLBACK_PRICE_TABLE },
-    marketData: null,
-    priceTableSource: "fallback",
-    itemsInitialized: false,
-    skillsInitialized: false,
-  };
-
-  function toNumber(value) {
-    if (typeof value === "number") return value;
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed : 0;
-  }
-
-  function normalizeName(text, fallback) {
-    if (typeof text === "string" && text.trim()) return text.trim();
-    return fallback;
-  }
-
-  function updateSessionStart(timestamp) {
-    if (!state.sessionStartTs) state.sessionStartTs = timestamp || Date.now();
-  }
-
-  function updateLastTimestamp(timestamp) {
-    state.lastUpdateTs = timestamp || Date.now();
-  }
-
-  function formatHrid(hrid) {
-    if (!hrid) return "";
-    return hrid.split("/").pop().replace(/_/g, " ");
-  }
-
-  function formatNumber(value) {
-    const num = Number(value || 0);
-    return new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 2 }).format(
-      num
-    );
-  }
-
-  function formatCompact(value) {
-    const num = Number(value || 0);
-    const abs = Math.abs(num);
-    if (abs < 1000) return formatNumber(num);
-    const units = [
-      { v: 1e12, s: "t" },
-      { v: 1e9, s: "b" },
-      { v: 1e6, s: "m" },
-      { v: 1e3, s: "k" },
-    ];
-    const unit = units.find((u) => abs >= u.v) || units[units.length - 1];
-    const val = num / unit.v;
-    return `${formatNumber(val)}${unit.s}`;
-  }
-
-  function formatDuration(totalSeconds) {
-    const seconds = Math.max(0, Math.floor(totalSeconds || 0));
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-    return `${String(h).padStart(2, "0")}:${String(m).padStart(
-      2,
-      "0"
-    )}:${String(s).padStart(2, "0")}`;
-  }
-
-  const MARKET_CACHE_KEY = "mwi_market_price_cache_v1";
-  const MARKET_CACHE_TTL_MS = 30 * 60 * 1000;
-
-  async function loadMarketPrices(force = false) {
-    try {
-      const cached = getCachedPrices();
-      if (cached && !force) {
-        internal.priceTable = cached.map;
-        internal.marketData = null;
-        internal.priceTableSource = "cache";
-        return;
-      }
-
-      const res = await fetch(MARKET_API_URL, { cache: "no-store" });
-      if (!res.ok) return;
-      const data = await res.json();
-      const map = extractPriceTable(data);
-      if (Object.keys(map).length > 0) {
-        internal.priceTable = map;
-        internal.marketData = data?.marketData || data;
-        internal.priceTableSource = "market";
-        setCachedPrices(map);
-      }
-    } catch (err) {
-      // fallback silencioso
-    }
-  }
-
-  function getCachedPrices() {
-    try {
-      const raw = localStorage.getItem(MARKET_CACHE_KEY);
-      if (!raw) return null;
-      const parsed = JSON.parse(raw);
-      if (!parsed || !parsed.map || !parsed.savedAt) return null;
-      if (Date.now() - parsed.savedAt > MARKET_CACHE_TTL_MS) return null;
-      return parsed;
-    } catch {
-      return null;
-    }
-  }
-
-  function setCachedPrices(map) {
-    try {
-      const payload = { savedAt: Date.now(), map };
-      localStorage.setItem(MARKET_CACHE_KEY, JSON.stringify(payload));
-    } catch {
-      // ignore cache errors
-    }
-  }
-
-  function extractPriceTable(data) {
-    const map = {};
-    const source = data?.marketData || data;
-    if (source && typeof source === "object" && !Array.isArray(source)) {
-      Object.entries(source).forEach(([hrid, levels]) => {
-        if (!levels || typeof levels !== "object") return;
-        const levelKey = levels["0"] ? "0" : getLowestLevelKey(levels);
-        const level = levels[levelKey];
-        if (!level) return;
-        const price = resolveBestPrice(level);
-        if (price > 0) map[hrid] = price;
-      });
-      return map;
+    function toNumber(value) {
+        if (typeof value === "number") return value;
+        const parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : 0;
     }
 
-    const visited = new Set();
-    const queue = [data];
-    let steps = 0;
-
-    while (queue.length && steps < 2000) {
-      const node = queue.shift();
-      steps += 1;
-      if (!node || typeof node !== "object") continue;
-      if (visited.has(node)) continue;
-      visited.add(node);
-
-      if (Array.isArray(node)) {
-        node.forEach((item) => queue.push(item));
-        continue;
-      }
-
-      const maybeItemHrid =
-        node.itemHrid || node.hrid || node.item || node.item_hrid;
-      const maybePrice =
-        node.sellPrice ??
-        node.unitPrice ??
-        node.price ??
-        node.minPrice ??
-        node.minimumPrice ??
-        node.averagePrice ??
-        node.value;
-
-      if (maybeItemHrid && typeof maybePrice === "number" && maybePrice > 0) {
-        map[maybeItemHrid] = maybePrice;
-      }
-
-      Object.values(node).forEach((child) => queue.push(child));
+    function normalizeName(text, fallback) {
+        if (typeof text === "string" && text.trim()) return text.trim();
+        return fallback;
     }
 
-    return map;
-  }
-
-  function getLowestLevelKey(levels) {
-    const keys = Object.keys(levels || {})
-      .map((k) => Number(k))
-      .filter((n) => Number.isFinite(n));
-    if (!keys.length) return "0";
-    return String(Math.min(...keys));
-  }
-
-  function resolveBestPrice(level) {
-    if (!level || typeof level !== "object") return 0;
-    const bid = Number(level.b);
-    if (Number.isFinite(bid) && bid > 0) return bid;
-    const ask = Number(level.a);
-    if (Number.isFinite(ask) && ask > 0) return ask;
-    return 0;
-  }
-
-  function getMarketPrice(hrid, enhancementLevel = 0) {
-    if (internal.marketData && internal.marketData[hrid]) {
-      const levels = internal.marketData[hrid];
-      const key = levels[String(enhancementLevel)]
-        ? String(enhancementLevel)
-        : levels["0"]
-        ? "0"
-        : getLowestLevelKey(levels);
-      const level = levels[key];
-      const price = resolveBestPrice(level);
-      if (price > 0) return price;
-    }
-    const fallback = internal.priceTable[hrid];
-    return typeof fallback === "number" ? fallback : 0;
-  }
-
-  function handleNewBattle(data, timestamp) {
-    updateSessionStart(timestamp);
-    state.isInCombat = true;
-    state.battleId = data.battleId || state.battleId;
-
-    const players = Array.isArray(data.players) ? data.players : [];
-    internal.playerIndexToName = {};
-    state.players = players.map((p, idx) => {
-      const name = normalizeName(p?.name, `Player ${idx + 1}`);
-      internal.playerIndexToName[idx] = name;
-      return {
-        name,
-        currentHP: toNumber(p?.currentHitpoints),
-        maxHP: toNumber(p?.maxHitpoints),
-        currentMP: toNumber(p?.currentManapoints),
-        maxMP: toNumber(p?.maxManapoints),
-        combatStyle: p?.combatStyleHrid || p?.primaryTraining || "",
-      };
-    });
-
-    const monsters = Array.isArray(data.monsters) ? data.monsters : [];
-    internal.monsterIndexToName = {};
-    state.monsters = monsters.map((m, idx) => {
-      const name = normalizeName(
-        m?.name,
-        m?.hrid?.split("/").pop()?.replace(/_/g, " ") || `Monster ${idx + 1}`
-      );
-      internal.monsterIndexToName[idx] = name;
-      return { name, hrid: m?.hrid || "" };
-    });
-
-    internal.lastPlayerDmg = {};
-    internal.lastMonsterDmg = {};
-    internal.lastPlayerHP = {};
-  }
-
-  function updatePlayerVitalsFromBattle(pMap) {
-    if (!pMap) return;
-    const updatedPlayers = [...state.players];
-    Object.entries(pMap).forEach(([idx, entry]) => {
-      const index = Number(idx);
-      const name = internal.playerIndexToName[index] || `Player ${index + 1}`;
-      const playerIndex = updatedPlayers.findIndex((p) => p.name === name);
-      const current = {
-        name,
-        currentHP: toNumber(entry.cHP),
-        maxHP: toNumber(entry.mHP),
-        currentMP: toNumber(entry.cMP),
-        maxMP: toNumber(entry.mMP),
-        combatStyle: updatedPlayers[playerIndex]?.combatStyle || "",
-      };
-
-      if (playerIndex >= 0) {
-        updatedPlayers[playerIndex] = current;
-      } else {
-        updatedPlayers.push(current);
-      }
-
-      if (entry.abilityHrid)
-        state.lastAbilityByPlayer[name] = entry.abilityHrid;
-    });
-    state.players = updatedPlayers;
-  }
-
-  function handleBattleUpdated(data, timestamp) {
-    updateSessionStart(timestamp);
-    state.isInCombat = true;
-    state.battleId = data.battleId || state.battleId;
-
-    const pMap = data.pMap || {};
-    const mMap = data.mMap || {};
-
-    updatePlayerVitalsFromBattle(pMap);
-
-    Object.entries(pMap).forEach(([idx, entry]) => {
-      const index = Number(idx);
-      const name = internal.playerIndexToName[index] || `Player ${index + 1}`;
-      const dmg = toNumber(entry.dmgCounter);
-      const prev = internal.lastPlayerDmg[index] || 0;
-      const delta = Math.max(0, dmg - prev);
-      internal.lastPlayerDmg[index] = dmg;
-
-      if (delta > 0) {
-        state.playerDamage[name] = (state.playerDamage[name] || 0) + delta;
-        state.partyDamage += delta;
-      }
-
-      const currentHP = toNumber(entry.cHP);
-      const prevHP = internal.lastPlayerHP[index];
-      if (typeof prevHP === "number") {
-        const taken = Math.max(0, prevHP - currentHP);
-        if (taken > 0) {
-          state.playerDamageTaken[name] =
-            (state.playerDamageTaken[name] || 0) + taken;
-          state.partyDamageTaken += taken;
-        }
-      }
-      internal.lastPlayerHP[index] = currentHP;
-    });
-
-    Object.entries(mMap).forEach(([idx, entry]) => {
-      const index = Number(idx);
-      const dmg = toNumber(entry.dmgCounter);
-      const prev = internal.lastMonsterDmg[index] || 0;
-      const delta = Math.max(0, dmg - prev);
-      internal.lastMonsterDmg[index] = dmg;
-
-      if (delta > 0) state.partyDamageTaken += delta;
-    });
-  }
-
-  function applyItemDelta(item, delta) {
-    if (delta <= 0) return;
-    if (item.itemHrid === "/items/coin") {
-      state.coinsGained += delta;
-      state.estimatedValueGained += delta;
-      return;
-    }
-    state.loot[item.itemHrid] = (state.loot[item.itemHrid] || 0) + delta;
-
-    const price = getMarketPrice(item.itemHrid, item.enhancementLevel || 0);
-    if (typeof price === "number") {
-      state.estimatedValueGained += delta * price;
-    } else {
-      state.unknownValueLoot[item.itemHrid] =
-        (state.unknownValueLoot[item.itemHrid] || 0) + delta;
-    }
-  }
-
-  function handleItemsUpdated(data) {
-    const items = Array.isArray(data.endCharacterItems)
-      ? data.endCharacterItems
-      : [];
-    items.forEach((item) => {
-      if (item.itemLocationHrid !== "/item_locations/inventory") return;
-      const hash =
-        item.hash ||
-        `${item.characterID || "0"}::${item.itemHrid}::${
-          item.enhancementLevel || 0
-        }`;
-      const count = toNumber(item.count);
-      const hasSeen = Object.prototype.hasOwnProperty.call(
-        internal.lastItemCountsByHash,
-        hash
-      );
-      const prev = hasSeen ? internal.lastItemCountsByHash[hash] : 0;
-      const delta = count - prev;
-      internal.lastItemCountsByHash[hash] = count;
-
-      if (!hasSeen) {
-        internal.inventoryCountsByItemHrid[item.itemHrid] =
-          (internal.inventoryCountsByItemHrid[item.itemHrid] || 0) + count;
-        return;
-      }
-
-      internal.inventoryCountsByItemHrid[item.itemHrid] =
-        (internal.inventoryCountsByItemHrid[item.itemHrid] || 0) + delta;
-
-      if (internal.itemsInitialized) {
-        applyItemDelta(item, delta);
-      }
-    });
-    if (!internal.itemsInitialized) internal.itemsInitialized = true;
-  }
-
-  function handleSkillsUpdated(skills) {
-    const skillList = Array.isArray(skills) ? skills : [];
-    skillList.forEach((skill) => {
-      const hrid = skill.skillHrid || "";
-      if (!hrid) return;
-      const exp = toNumber(skill.experience);
-      const prev = internal.lastSkillExp[hrid] || 0;
-      const delta = exp - prev;
-      internal.lastSkillExp[hrid] = exp;
-      if (!internal.skillsInitialized) return;
-      if (delta <= 0) return;
-
-      state.xpGainedBySkill[hrid] = (state.xpGainedBySkill[hrid] || 0) + delta;
-      state.totalExpGained += delta;
-      if (hrid === "/skills/total_level") state.totalLevelExpGained += delta;
-    });
-    if (!internal.skillsInitialized) internal.skillsInitialized = true;
-  }
-
-  function handleActionCompleted(data, timestamp) {
-    updateSessionStart(timestamp);
-    const action = data.endCharacterAction || {};
-    const currentCount = toNumber(action.currentCount);
-    if (currentCount && internal.lastActionCount !== null) {
-      const delta = Math.max(0, currentCount - internal.lastActionCount);
-      state.encountersCompleted += delta;
-    }
-    if (currentCount) internal.lastActionCount = currentCount;
-
-    handleItemsUpdated(data);
-    handleSkillsUpdated(data.endCharacterSkills);
-  }
-
-  function handleMessage(payload, timestamp) {
-    if (!payload || typeof payload !== "object") return;
-    const message =
-      payload.data && payload.type === "message" ? payload.data : payload;
-    const type = message?.type || payload?.eventType;
-    if (!type) return;
-    updateLastTimestamp(timestamp);
-
-    if (type === "new_battle") return handleNewBattle(message, timestamp);
-    if (type === "battle_updated")
-      return handleBattleUpdated(message, timestamp);
-    if (type === "items_updated") return handleItemsUpdated(message);
-    if (type === "action_completed")
-      return handleActionCompleted(message, timestamp);
-  }
-
-  function parseMessageData(messageEvent) {
-    const raw = messageEvent?.data;
-    if (!raw) return null;
-
-    if (typeof raw === "string") {
-      try {
-        return JSON.parse(raw);
-      } catch {
-        return null;
-      }
+    function updateSessionStart(timestamp) {
+        if (!state.sessionStartTs) state.sessionStartTs = timestamp || Date.now();
     }
 
-    if (raw instanceof ArrayBuffer) {
-      try {
-        const decoded = new TextDecoder("utf-8").decode(raw);
-        return JSON.parse(decoded);
-      } catch {
-        return null;
-      }
+    function updateLastTimestamp(timestamp) {
+        state.lastUpdateTs = timestamp || Date.now();
     }
 
-    if (raw instanceof Blob) {
-      return raw.text().then((text) => {
+    function formatHrid(hrid) {
+        if (!hrid) return "";
+        return hrid.split("/").pop().replace(/_/g, " ");
+    }
+
+    const LOCALE_KEY = "mwi_wondher_locale";
+
+    function getInitialLocale() {
         try {
-          return JSON.parse(text);
+            const stored = localStorage.getItem(LOCALE_KEY);
+            if (stored === "pt-BR" || stored === "en-US") return stored;
         } catch {
-          return null;
+            // ignore storage errors
         }
-      });
+        const lang = (navigator.language || "en-US").toLowerCase();
+        return lang.startsWith("pt") ? "pt-BR" : "en-US";
     }
 
-    return null;
-  }
+    let currentLocale = getInitialLocale();
 
-  function patchWebSocket() {
-    const OriginalWebSocket = window.WebSocket;
-    window.WebSocket = function (...args) {
-      const ws = new OriginalWebSocket(...args);
-      ws.addEventListener("message", (event) => {
-        const maybePromise = parseMessageData(event);
-        if (maybePromise && typeof maybePromise.then === "function") {
-          maybePromise.then((data) => handleMessage(data, Date.now()));
+    function formatNumber(value) {
+        const num = Number(value || 0);
+        return new Intl.NumberFormat(currentLocale, {
+            maximumFractionDigits: 2,
+        }).format(num);
+    }
+
+    function formatCompact(value) {
+        const num = Number(value || 0);
+        const abs = Math.abs(num);
+        if (abs < 1000) return formatNumber(num);
+        const units = [
+            { v: 1e12, s: "t" },
+            { v: 1e9, s: "b" },
+            { v: 1e6, s: "m" },
+            { v: 1e3, s: "k" },
+        ];
+        const unit = units.find((u) => abs >= u.v) || units[units.length - 1];
+        const val = num / unit.v;
+        return `${formatNumber(val)}${unit.s}`;
+    }
+
+    function formatDuration(totalSeconds) {
+        const seconds = Math.max(0, Math.floor(totalSeconds || 0));
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        return `${String(h).padStart(2, "0")}:${String(m).padStart(
+            2,
+            "0"
+        )}:${String(s).padStart(2, "0")}`;
+    }
+
+    const MARKET_CACHE_KEY = "mwi_market_price_cache_v1";
+    const MARKET_CACHE_TTL_MS = 30 * 60 * 1000;
+
+    async function loadMarketPrices(force = false) {
+        try {
+            const cached = getCachedPrices();
+            if (cached && !force) {
+                internal.priceTable = cached.map;
+                internal.marketData = null;
+                internal.priceTableSource = "cache";
+                return;
+            }
+
+            const res = await fetch(MARKET_API_URL, { cache: "no-store" });
+            if (!res.ok) return;
+            const data = await res.json();
+            const map = extractPriceTable(data);
+            if (Object.keys(map).length > 0) {
+                internal.priceTable = map;
+                internal.marketData = data?.marketData || data;
+                internal.priceTableSource = "market";
+                setCachedPrices(map);
+            }
+        } catch (err) {
+            // fallback silencioso
+        }
+    }
+
+    function getCachedPrices() {
+        try {
+            const raw = localStorage.getItem(MARKET_CACHE_KEY);
+            if (!raw) return null;
+            const parsed = JSON.parse(raw);
+            if (!parsed || !parsed.map || !parsed.savedAt) return null;
+            if (Date.now() - parsed.savedAt > MARKET_CACHE_TTL_MS) return null;
+            return parsed;
+        } catch {
+            return null;
+        }
+    }
+
+    function setCachedPrices(map) {
+        try {
+            const payload = { savedAt: Date.now(), map };
+            localStorage.setItem(MARKET_CACHE_KEY, JSON.stringify(payload));
+        } catch {
+            // ignore cache errors
+        }
+    }
+
+    function extractPriceTable(data) {
+        const map = {};
+        const source = data?.marketData || data;
+        if (source && typeof source === "object" && !Array.isArray(source)) {
+            Object.entries(source).forEach(([hrid, levels]) => {
+                if (!levels || typeof levels !== "object") return;
+                const levelKey = levels["0"] ? "0" : getLowestLevelKey(levels);
+                const level = levels[levelKey];
+                if (!level) return;
+                const price = resolveBestPrice(level);
+                if (price > 0) map[hrid] = price;
+            });
+            return map;
+        }
+
+        const visited = new Set();
+        const queue = [data];
+        let steps = 0;
+
+        while (queue.length && steps < 2000) {
+            const node = queue.shift();
+            steps += 1;
+            if (!node || typeof node !== "object") continue;
+            if (visited.has(node)) continue;
+            visited.add(node);
+
+            if (Array.isArray(node)) {
+                node.forEach((item) => queue.push(item));
+                continue;
+            }
+
+            const maybeItemHrid =
+                  node.itemHrid || node.hrid || node.item || node.item_hrid;
+            const maybePrice =
+                  node.sellPrice ??
+                  node.unitPrice ??
+                  node.price ??
+                  node.minPrice ??
+                  node.minimumPrice ??
+                  node.averagePrice ??
+                  node.value;
+
+            if (maybeItemHrid && typeof maybePrice === "number" && maybePrice > 0) {
+                map[maybeItemHrid] = maybePrice;
+            }
+
+            Object.values(node).forEach((child) => queue.push(child));
+        }
+
+        return map;
+    }
+
+    function getLowestLevelKey(levels) {
+        const keys = Object.keys(levels || {})
+        .map((k) => Number(k))
+        .filter((n) => Number.isFinite(n));
+        if (!keys.length) return "0";
+        return String(Math.min(...keys));
+    }
+
+    function resolveBestPrice(level) {
+        if (!level || typeof level !== "object") return 0;
+        const bid = Number(level.b);
+        if (Number.isFinite(bid) && bid > 0) return bid;
+        const ask = Number(level.a);
+        if (Number.isFinite(ask) && ask > 0) return ask;
+        return 0;
+    }
+
+    function getMarketPrice(hrid, enhancementLevel = 0) {
+        if (internal.marketData && internal.marketData[hrid]) {
+            const levels = internal.marketData[hrid];
+            const key = levels[String(enhancementLevel)]
+            ? String(enhancementLevel)
+            : levels["0"]
+            ? "0"
+            : getLowestLevelKey(levels);
+            const level = levels[key];
+            const price = resolveBestPrice(level);
+            if (price > 0) return price;
+        }
+        const fallback = internal.priceTable[hrid];
+        return typeof fallback === "number" ? fallback : 0;
+    }
+
+    function handleNewBattle(data, timestamp) {
+        updateSessionStart(timestamp);
+        state.isInCombat = true;
+        state.battleId = data.battleId || state.battleId;
+
+        const players = Array.isArray(data.players) ? data.players : [];
+        internal.playerIndexToName = {};
+        state.players = players.map((p, idx) => {
+            const name = normalizeName(p?.name, `Player ${idx + 1}`);
+            internal.playerIndexToName[idx] = name;
+            return {
+                name,
+                currentHP: toNumber(p?.currentHitpoints),
+                maxHP: toNumber(p?.maxHitpoints),
+                currentMP: toNumber(p?.currentManapoints),
+                maxMP: toNumber(p?.maxManapoints),
+                combatStyle: p?.combatStyleHrid || p?.primaryTraining || "",
+            };
+        });
+
+        const monsters = Array.isArray(data.monsters) ? data.monsters : [];
+        internal.monsterIndexToName = {};
+        state.monsters = monsters.map((m, idx) => {
+            const name = normalizeName(
+                m?.name,
+                m?.hrid?.split("/").pop()?.replace(/_/g, " ") || `Monster ${idx + 1}`
+      );
+            internal.monsterIndexToName[idx] = name;
+            return { name, hrid: m?.hrid || "" };
+        });
+
+        internal.lastPlayerDmg = {};
+        internal.lastMonsterDmg = {};
+        internal.lastPlayerHP = {};
+    }
+
+    function updatePlayerVitalsFromBattle(pMap) {
+        if (!pMap) return;
+        const updatedPlayers = [...state.players];
+        Object.entries(pMap).forEach(([idx, entry]) => {
+            const index = Number(idx);
+            const name = internal.playerIndexToName[index] || `Player ${index + 1}`;
+            const playerIndex = updatedPlayers.findIndex((p) => p.name === name);
+            const current = {
+                name,
+                currentHP: toNumber(entry.cHP),
+                maxHP: toNumber(entry.mHP),
+                currentMP: toNumber(entry.cMP),
+                maxMP: toNumber(entry.mMP),
+                combatStyle: updatedPlayers[playerIndex]?.combatStyle || "",
+            };
+
+            if (playerIndex >= 0) {
+                updatedPlayers[playerIndex] = current;
+            } else {
+                updatedPlayers.push(current);
+            }
+
+            if (entry.abilityHrid) {
+                state.lastAbilityByPlayer[name] = entry.abilityHrid;
+            }
+        });
+        state.players = updatedPlayers;
+    }
+
+    function handleBattleUpdated(data, timestamp) {
+        updateSessionStart(timestamp);
+        state.isInCombat = true;
+        state.battleId = data.battleId || state.battleId;
+
+        const pMap = data.pMap || {};
+        const mMap = data.mMap || {};
+
+        updatePlayerVitalsFromBattle(pMap);
+
+        Object.entries(pMap).forEach(([idx, entry]) => {
+            const index = Number(idx);
+            const name = internal.playerIndexToName[index] || `Player ${index + 1}`;
+            const dmg = toNumber(entry.dmgCounter);
+            const prev = internal.lastPlayerDmg[index] || 0;
+            const delta = Math.max(0, dmg - prev);
+            internal.lastPlayerDmg[index] = dmg;
+
+            if (delta > 0) {
+                state.playerDamage[name] = (state.playerDamage[name] || 0) + delta;
+                state.partyDamage += delta;
+            }
+
+            const currentHP = toNumber(entry.cHP);
+            const prevHP = internal.lastPlayerHP[index];
+            if (typeof prevHP === "number") {
+                const taken = Math.max(0, prevHP - currentHP);
+                if (taken > 0) {
+                    state.playerDamageTaken[name] =
+                        (state.playerDamageTaken[name] || 0) + taken;
+                    state.partyDamageTaken += taken;
+                }
+            }
+            internal.lastPlayerHP[index] = currentHP;
+        });
+
+        Object.entries(mMap).forEach(([idx, entry]) => {
+            const index = Number(idx);
+            const dmg = toNumber(entry.dmgCounter);
+            const prev = internal.lastMonsterDmg[index] || 0;
+            const delta = Math.max(0, dmg - prev);
+            internal.lastMonsterDmg[index] = dmg;
+
+            if (delta > 0) state.partyDamageTaken += delta;
+        });
+    }
+
+    function applyItemDelta(item, delta) {
+        if (delta <= 0) return;
+        if (item.itemHrid === "/items/coin") {
+            state.coinsGained += delta;
+            state.estimatedValueGained += delta;
+            return;
+        }
+        state.loot[item.itemHrid] = (state.loot[item.itemHrid] || 0) + delta;
+
+        const price = getMarketPrice(item.itemHrid, item.enhancementLevel || 0);
+        if (typeof price === "number") {
+            state.estimatedValueGained += delta * price;
         } else {
-          handleMessage(maybePromise, Date.now());
+            state.unknownValueLoot[item.itemHrid] =
+                (state.unknownValueLoot[item.itemHrid] || 0) + delta;
         }
-      });
-      return ws;
-    };
-    window.WebSocket.prototype = OriginalWebSocket.prototype;
-    Object.setPrototypeOf(window.WebSocket, OriginalWebSocket);
-  }
-
-  function getDerived() {
-    const now = Date.now();
-    const durationMs = state.sessionStartTs
-      ? Math.max(0, now - state.sessionStartTs)
-      : 0;
-    const durationHours = Math.max(durationMs / 3600000, 0.0001);
-    const totalLevelExp = state.totalLevelExpGained || 0;
-    const totalExp = totalLevelExp || state.totalExpGained || 0;
-    const skillExpTotal = Math.max(
-      0,
-      (state.totalExpGained || 0) - totalLevelExp
-    );
-
-    const rates = {
-      encountersPerHour: state.encountersCompleted / durationHours,
-      estimatedRevenuePerHour: state.estimatedValueGained / durationHours,
-      coinsPerHour: state.coinsGained / durationHours,
-      expPerHour: totalExp / durationHours,
-      skillExpPerHour: skillExpTotal / durationHours,
-    };
-
-    const projectionsHours =
-      uiState.projectionHours + uiState.projectionDays * 24;
-    const projections = {
-      encounters: rates.encountersPerHour * projectionsHours,
-      estimatedRevenue: rates.estimatedRevenuePerHour * projectionsHours,
-      coins: rates.coinsPerHour * projectionsHours,
-      exp: rates.expPerHour * projectionsHours,
-      skillExp: rates.skillExpPerHour * projectionsHours,
-    };
-
-    return { durationMs, durationHours, totalExp, rates, projections };
-  }
-
-  const uiState = {
-    currentTab: "rates",
-    projectionHours: 1,
-    projectionDays: 0,
-    minimized: false,
-    isInteracting: false,
-    panelWidth: null,
-    panelHeight: null,
-  };
-
-  function setLauncherVisible(visible) {
-    const launcher = document.getElementById("mwi-launcher");
-    if (!launcher) return;
-    launcher.style.display = visible ? "flex" : "none";
-  }
-
-  function openPanel() {
-    const container = document.getElementById("mwi-wondher-panel");
-    if (container) {
-      container.style.display = "block";
-      setLauncherVisible(false);
-      render();
-      return;
     }
-    createPanel();
-    setLauncherVisible(false);
-    render();
-  }
 
-  function createLauncher() {
-    if (document.getElementById("mwi-launcher")) return;
-    const launcher = document.createElement("button");
-    launcher.id = "mwi-launcher";
-    launcher.textContent = "⚙️";
-    launcher.style.cssText = `
+    function handleItemsUpdated(data) {
+        const items = Array.isArray(data.endCharacterItems)
+        ? data.endCharacterItems
+        : [];
+        items.forEach((item) => {
+            if (item.itemLocationHrid !== "/item_locations/inventory") return;
+            const hash =
+                  item.hash ||
+                  `${item.characterID || "0"}::${item.itemHrid}::${
+          item.enhancementLevel || 0
+            }`;
+            const count = toNumber(item.count);
+            const hasSeen = Object.prototype.hasOwnProperty.call(
+                internal.lastItemCountsByHash,
+                hash
+            );
+            const prev = hasSeen ? internal.lastItemCountsByHash[hash] : 0;
+            const delta = count - prev;
+            internal.lastItemCountsByHash[hash] = count;
+
+            if (!hasSeen) {
+                internal.inventoryCountsByItemHrid[item.itemHrid] =
+                    (internal.inventoryCountsByItemHrid[item.itemHrid] || 0) + count;
+                return;
+            }
+
+            internal.inventoryCountsByItemHrid[item.itemHrid] =
+                (internal.inventoryCountsByItemHrid[item.itemHrid] || 0) + delta;
+
+            if (internal.itemsInitialized) {
+                applyItemDelta(item, delta);
+            }
+        });
+        if (!internal.itemsInitialized) internal.itemsInitialized = true;
+    }
+
+    function handleSkillsUpdated(skills) {
+        const skillList = Array.isArray(skills) ? skills : [];
+        skillList.forEach((skill) => {
+            const hrid = skill.skillHrid || "";
+            if (!hrid) return;
+            const exp = toNumber(skill.experience);
+            const prev = internal.lastSkillExp[hrid] || 0;
+            const delta = exp - prev;
+            internal.lastSkillExp[hrid] = exp;
+            if (!internal.skillsInitialized) return;
+            if (delta <= 0) return;
+
+            state.xpGainedBySkill[hrid] = (state.xpGainedBySkill[hrid] || 0) + delta;
+            state.totalExpGained += delta;
+            if (hrid === "/skills/total_level") state.totalLevelExpGained += delta;
+        });
+        if (!internal.skillsInitialized) internal.skillsInitialized = true;
+    }
+
+    function handleActionCompleted(data, timestamp) {
+        updateSessionStart(timestamp);
+        const action = data.endCharacterAction || {};
+        const currentCount = toNumber(action.currentCount);
+        if (currentCount && internal.lastActionCount !== null) {
+            const delta = Math.max(0, currentCount - internal.lastActionCount);
+            state.encountersCompleted += delta;
+        }
+        if (currentCount) internal.lastActionCount = currentCount;
+
+        handleItemsUpdated(data);
+        handleSkillsUpdated(data.endCharacterSkills);
+    }
+
+    function handleMessage(payload, timestamp) {
+        if (!payload || typeof payload !== "object") return;
+        const message =
+              payload.data && payload.type === "message" ? payload.data : payload;
+        const type = message?.type || payload?.eventType;
+        if (!type) return;
+        updateLastTimestamp(timestamp);
+
+        if (type === "new_battle") return handleNewBattle(message, timestamp);
+        if (type === "battle_updated") {
+            return handleBattleUpdated(message, timestamp);
+        }
+        if (type === "items_updated") return handleItemsUpdated(message);
+        if (type === "action_completed") {
+            return handleActionCompleted(message, timestamp);
+        }
+    }
+
+    function parseMessageData(messageEvent) {
+        const raw = messageEvent?.data;
+        if (!raw) return null;
+
+        if (typeof raw === "object" && !(raw instanceof ArrayBuffer) && !(raw instanceof Blob)) {
+            return raw;
+        }
+
+        if (typeof raw === "string") {
+            try {
+                return JSON.parse(raw);
+            } catch {
+                return null;
+            }
+        }
+
+        if (raw instanceof ArrayBuffer) {
+            try {
+                const decoded = new TextDecoder("utf-8").decode(raw);
+                return JSON.parse(decoded);
+            } catch {
+                return null;
+            }
+        }
+
+        if (ArrayBuffer.isView(raw)) {
+            try {
+                const decoded = new TextDecoder("utf-8").decode(raw);
+                return JSON.parse(decoded);
+            } catch {
+                return null;
+            }
+        }
+
+        if (raw instanceof Blob) {
+            return raw.text().then((text) => {
+                try {
+                    return JSON.parse(text);
+                } catch {
+                    return null;
+                }
+            });
+        }
+
+        return null;
+    }
+
+    function patchWebSocket() {
+        const OriginalWebSocket = window.WebSocket;
+        window.WebSocket = function (...args) {
+            const ws = new OriginalWebSocket(...args);
+            ws.addEventListener("message", (event) => {
+                const maybePromise = parseMessageData(event);
+                if (maybePromise && typeof maybePromise.then === "function") {
+                    maybePromise.then((data) => handleMessage(data, Date.now()));
+                } else {
+                    handleMessage(maybePromise, Date.now());
+                }
+            });
+            return ws;
+        };
+        window.WebSocket.prototype = OriginalWebSocket.prototype;
+        Object.setPrototypeOf(window.WebSocket, OriginalWebSocket);
+    }
+
+    function getDerived() {
+        const now = Date.now();
+        const durationMs = state.sessionStartTs
+        ? Math.max(0, now - state.sessionStartTs)
+        : 0;
+        const durationHours = Math.max(durationMs / 3600000, 0.0001);
+        const totalLevelExp = state.totalLevelExpGained || 0;
+        const totalExp = totalLevelExp || state.totalExpGained || 0;
+        const skillExpTotal = Math.max(
+            0,
+            (state.totalExpGained || 0) - totalLevelExp
+        );
+
+        const rates = {
+            encountersPerHour: state.encountersCompleted / durationHours,
+            estimatedRevenuePerHour: state.estimatedValueGained / durationHours,
+            coinsPerHour: state.coinsGained / durationHours,
+            expPerHour: totalExp / durationHours,
+            skillExpPerHour: skillExpTotal / durationHours,
+        };
+
+        const projectionsHours =
+              uiState.projectionHours + uiState.projectionDays * 24;
+        const projections = {
+            encounters: rates.encountersPerHour * projectionsHours,
+            estimatedRevenue: rates.estimatedRevenuePerHour * projectionsHours,
+            coins: rates.coinsPerHour * projectionsHours,
+            exp: rates.expPerHour * projectionsHours,
+            skillExp: rates.skillExpPerHour * projectionsHours,
+        };
+
+        return { durationMs, durationHours, totalExp, rates, projections };
+    }
+
+    const uiState = {
+        currentTab: "rates",
+        projectionHours: 1,
+        projectionDays: 0,
+        minimized: false,
+        isInteracting: false,
+        panelWidth: null,
+        panelHeight: null,
+        locale: currentLocale,
+    };
+
+    const i18n = {
+        "pt-BR": {
+            tabs_rates: "📊 Taxas",
+            tabs_dps: "⚔️ Batalha",
+            tabs_loot: "💰 Loot",
+            tabs_xp: "✨ XP",
+            tabs_session: "📈 Sessão",
+            waiting_ws: "Aguardando WebSocket",
+            waiting_combat: "Aguardando Combate",
+            no_loot: "Nenhum Loot",
+            no_xp: "Nenhum XP",
+            rates_title: "Taxas atuais",
+            projections_title: "Projeções",
+            hours: "Horas",
+            days: "Dias",
+            encounters_per_hour: "Encontros/h",
+            revenue_per_hour: "Receita estim./h",
+            coins_per_hour: "Moedas/h",
+            xp_per_hour: "XP/h",
+            skill_xp_per_hour: "XP Skill/h",
+            encounters: "Encontros",
+            est_revenue: "Receita estim.",
+            coins: "Moedas",
+            xp: "XP",
+            skill_xp: "XP Skill",
+            group: "Grupo",
+            monsters: "Monstros",
+            total_damage_done: "Dano Total Realizado",
+            total_damage_taken: "Dano Total Recebido",
+            resources_obtained: "Recursos Obtidos",
+            inventory: "Inventário",
+            price: "Preço",
+            drop_value: "Valor drop",
+            inventory_value: "Valor inv.",
+            inventory_fee_note: "Inventário (2% taxa)",
+            missing_price_table: "Sem preço na tabela",
+            xp_gains: "Ganhos de XP",
+            session: "Sessão",
+            duration: "Duração",
+            total_damage: "Dano Total",
+            total_taken: "Dano Recebido",
+            total_xp: "XP Total",
+            price_table: "Tabela de preços",
+            drops: "drops",
+        },
+        "en-US": {
+            tabs_rates: "📊 Rates",
+            tabs_dps: "⚔️ Battle",
+            tabs_loot: "💰 Loot",
+            tabs_xp: "✨ XP",
+            tabs_session: "📈 Session",
+            waiting_ws: "Waiting for WebSocket",
+            waiting_combat: "Waiting for Combat",
+            no_loot: "No Loot",
+            no_xp: "No XP",
+            rates_title: "Current rates",
+            projections_title: "Projections",
+            hours: "Hours",
+            days: "Days",
+            encounters_per_hour: "Encounters/h",
+            revenue_per_hour: "Est. revenue/h",
+            coins_per_hour: "Coins/h",
+            xp_per_hour: "XP/h",
+            skill_xp_per_hour: "Skill XP/h",
+            encounters: "Encounters",
+            est_revenue: "Est. revenue",
+            coins: "Coins",
+            xp: "XP",
+            skill_xp: "Skill XP",
+            group: "Party",
+            monsters: "Monsters",
+            total_damage_done: "Total Damage Done",
+            total_damage_taken: "Total Damage Taken",
+            resources_obtained: "Resources Obtained",
+            inventory: "Inventory",
+            price: "Price",
+            drop_value: "Drop value",
+            inventory_value: "Inventory value",
+            inventory_fee_note: "Inventory (2% fee)",
+            missing_price_table: "Missing price in table",
+            xp_gains: "XP Gains",
+            session: "Session",
+            duration: "Duration",
+            total_damage: "Total Damage",
+            total_taken: "Damage Taken",
+            total_xp: "Total XP",
+            price_table: "Price table",
+            drops: "drops",
+            language_label: "Language",
+        },
+    };
+
+    function t(key) {
+        return (i18n[currentLocale] || i18n["en-US"])[key] || key;
+    }
+
+    function setLocale(locale) {
+        if (locale !== "pt-BR" && locale !== "en-US") return;
+        currentLocale = locale;
+        uiState.locale = locale;
+        try {
+            localStorage.setItem(LOCALE_KEY, locale);
+        } catch {
+            // ignore storage errors
+        }
+        render();
+    }
+
+    function setLauncherVisible(visible) {
+        const launcher = document.getElementById("mwi-launcher");
+        if (!launcher) return;
+        launcher.style.display = visible ? "flex" : "none";
+    }
+
+    function openPanel() {
+        const container = document.getElementById("mwi-wondher-panel");
+        if (container) {
+            container.style.display = "block";
+            setLauncherVisible(false);
+            render();
+            return;
+        }
+        createPanel();
+        setLauncherVisible(false);
+        render();
+    }
+
+    function createLauncher() {
+        if (document.getElementById("mwi-launcher")) return;
+        const launcher = document.createElement("button");
+        launcher.id = "mwi-launcher";
+        launcher.textContent = "⚙️";
+        launcher.style.cssText = `
       position: fixed;
       right: 18px;
       bottom: 18px;
@@ -616,14 +747,14 @@
       align-items: center;
       justify-content: center;
     `;
-    launcher.onclick = () => openPanel();
-    document.body.appendChild(launcher);
-  }
+        launcher.onclick = () => openPanel();
+        document.body.appendChild(launcher);
+    }
 
-  function createPanel() {
-    const container = document.createElement("div");
-    container.id = "mwi-wondher-panel";
-    container.style.cssText = `
+    function createPanel() {
+        const container = document.createElement("div");
+        container.id = "mwi-wondher-panel";
+        container.style.cssText = `
             position: fixed;
             top: 20px;
             left: 20px;
@@ -639,8 +770,8 @@
             overflow: hidden;
         `;
 
-    const header = document.createElement("div");
-    header.style.cssText = `
+        const header = document.createElement("div");
+        header.style.cssText = `
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -650,74 +781,84 @@
             cursor: move;
         `;
 
-    const title = document.createElement("div");
-    title.innerHTML = `<span style="font-weight:700;background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;color:transparent;">Wondher Tools</span>`;
+        const title = document.createElement("div");
+        title.innerHTML = `<span style="font-weight:700;background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;color:transparent;">Wondher Tools</span>`;
 
-    const headerActions = document.createElement("div");
-    headerActions.style.cssText = `display:flex;gap:6px;align-items:center;`;
+        const headerActions = document.createElement("div");
+        headerActions.style.cssText = `display:flex;gap:6px;align-items:center;`;
 
-    const statusDot = document.createElement("span");
-    statusDot.id = "mwi-status-dot";
-    statusDot.style.cssText = `width:8px;height:8px;border-radius:50%;background:#64748b;box-shadow:0 0 8px #64748b;`;
+        const statusDot = document.createElement("span");
+        statusDot.id = "mwi-status-dot";
+        statusDot.style.cssText = `width:8px;height:8px;border-radius:50%;background:#64748b;box-shadow:0 0 8px #64748b;`;
 
-    const btnMin = document.createElement("button");
-    btnMin.textContent = "➖";
-    btnMin.style.cssText = buttonCss();
-    btnMin.onclick = () => {
-      uiState.minimized = !uiState.minimized;
-      render();
-    };
+        const langToggle = document.createElement("button");
+        langToggle.id = "mwi-lang-toggle";
+        langToggle.textContent = uiState.locale === "pt-BR" ? "PT-BR" : "EN-US";
+        langToggle.style.cssText = buttonCss();
+        langToggle.title = "Language";
+        langToggle.onclick = () => {
+            setLocale(uiState.locale === "pt-BR" ? "en-US" : "pt-BR");
+        };
 
-    const btnClose = document.createElement("button");
-    btnClose.textContent = "✕";
-    btnClose.style.cssText = buttonCss("danger");
-    btnClose.onclick = () => {
-      container.style.display = "none";
-      uiState.minimized = false;
-      setLauncherVisible(true);
-    };
+        const btnMin = document.createElement("button");
+        btnMin.textContent = "➖";
+        btnMin.style.cssText = buttonCss();
+        btnMin.onclick = () => {
+            uiState.minimized = !uiState.minimized;
+            render();
+        };
 
-    headerActions.appendChild(statusDot);
-    headerActions.appendChild(btnMin);
-    headerActions.appendChild(btnClose);
-    header.appendChild(title);
-    header.appendChild(headerActions);
+        const btnClose = document.createElement("button");
+        btnClose.textContent = "✕";
+        btnClose.style.cssText = buttonCss("danger");
+        btnClose.onclick = () => {
+            container.style.display = "none";
+            uiState.minimized = false;
+            setLauncherVisible(true);
+        };
 
-    const tabs = document.createElement("div");
-    tabs.id = "mwi-tabs";
-    tabs.style.cssText = `display:flex;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(30,41,59,0.35);`;
+        headerActions.appendChild(statusDot);
+        headerActions.appendChild(langToggle);
+        headerActions.appendChild(btnMin);
+        headerActions.appendChild(btnClose);
+        header.appendChild(title);
+        header.appendChild(headerActions);
 
-    const tabList = [
-      { id: "rates", label: "📊 Taxas" },
-      { id: "dps", label: "⚔️ Batalha" },
-      { id: "loot", label: "💰 Loot" },
-      { id: "xp", label: "✨ XP" },
-      { id: "session", label: "📈 Sessão" },
-    ];
+        const tabs = document.createElement("div");
+        tabs.id = "mwi-tabs";
+        tabs.style.cssText = `display:flex;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(30,41,59,0.35);`;
 
-    tabList.forEach((tab) => {
-      const btn = document.createElement("button");
-      btn.textContent = tab.label;
-      btn.style.cssText = tabButtonCss(tab.id === uiState.currentTab);
-      btn.onclick = () => {
-        uiState.currentTab = tab.id;
-        render();
-      };
-      btn.dataset.tabId = tab.id;
-      tabs.appendChild(btn);
-    });
+        const tabList = [
+            { id: "rates", label: t("tabs_rates") },
+            { id: "dps", label: t("tabs_dps") },
+            { id: "loot", label: t("tabs_loot") },
+            { id: "xp", label: t("tabs_xp") },
+            { id: "session", label: t("tabs_session") },
+        ];
 
-    const content = document.createElement("div");
-    content.id = "mwi-content";
-    content.style.cssText = `padding:10px;max-height:70vh;overflow:auto;`;
+        tabList.forEach((tab) => {
+            const btn = document.createElement("button");
+            btn.textContent = tab.label;
+            btn.style.cssText = tabButtonCss(tab.id === uiState.currentTab);
+            btn.onclick = () => {
+                uiState.currentTab = tab.id;
+                render();
+            };
+            btn.dataset.tabId = tab.id;
+            tabs.appendChild(btn);
+        });
 
-    container.appendChild(header);
-    container.appendChild(tabs);
-    container.appendChild(content);
+        const content = document.createElement("div");
+        content.id = "mwi-content";
+        content.style.cssText = `padding:10px;max-height:70vh;overflow:auto;`;
 
-    const resizeHandle = document.createElement("div");
-    resizeHandle.id = "mwi-resize";
-    resizeHandle.style.cssText = `
+        container.appendChild(header);
+        container.appendChild(tabs);
+        container.appendChild(content);
+
+        const resizeHandle = document.createElement("div");
+        resizeHandle.id = "mwi-resize";
+        resizeHandle.style.cssText = `
       position:absolute;
       right:6px;
       bottom:6px;
@@ -730,116 +871,116 @@
       border-radius:2px;
     `;
 
-    container.appendChild(resizeHandle);
+        container.appendChild(resizeHandle);
 
-    makeDraggable(container, header);
-    makeResizable(container, resizeHandle);
+        makeDraggable(container, header);
+        makeResizable(container, resizeHandle);
 
-    document.body.appendChild(container);
-    setLauncherVisible(false);
-  }
-
-  function makeDraggable(container, handle) {
-    let isDragging = false;
-    let offsetX = 0;
-    let offsetY = 0;
-    handle.addEventListener("mousedown", (e) => {
-      isDragging = true;
-      offsetX = e.clientX - container.getBoundingClientRect().left;
-      offsetY = e.clientY - container.getBoundingClientRect().top;
-    });
-    handle.addEventListener("touchstart", (e) => {
-      const touch = e.touches[0];
-      if (!touch) return;
-      isDragging = true;
-      const rect = container.getBoundingClientRect();
-      offsetX = touch.clientX - rect.left;
-      offsetY = touch.clientY - rect.top;
-    }, { passive: true });
-    window.addEventListener("mousemove", (e) => {
-      if (!isDragging) return;
-      container.style.left = `${e.clientX - offsetX}px`;
-      container.style.top = `${e.clientY - offsetY}px`;
-    });
-    window.addEventListener("touchmove", (e) => {
-      if (!isDragging) return;
-      const touch = e.touches[0];
-      if (!touch) return;
-      container.style.left = `${touch.clientX - offsetX}px`;
-      container.style.top = `${touch.clientY - offsetY}px`;
-    }, { passive: true });
-    window.addEventListener("mouseup", () => {
-      isDragging = false;
-    });
-    window.addEventListener("touchend", () => {
-      isDragging = false;
-    });
-  }
-
-  function makeResizable(container, handle) {
-    let isResizing = false;
-    let startX = 0;
-    let startY = 0;
-    let startW = 0;
-    let startH = 0;
-
-    const begin = (clientX, clientY) => {
-      isResizing = true;
-      const rect = container.getBoundingClientRect();
-      startX = clientX;
-      startY = clientY;
-      startW = rect.width;
-      startH = rect.height;
-    };
-
-    handle.addEventListener("mousedown", (e) => {
-      e.preventDefault();
-      begin(e.clientX, e.clientY);
-    });
-    handle.addEventListener("touchstart", (e) => {
-      const touch = e.touches[0];
-      if (!touch) return;
-      begin(touch.clientX, touch.clientY);
-    }, { passive: true });
-
-    window.addEventListener("mousemove", (e) => {
-      if (!isResizing) return;
-      const newW = Math.min(700, Math.max(300, startW + (e.clientX - startX)));
-      const newH = Math.min(900, Math.max(360, startH + (e.clientY - startY)));
-      container.style.width = `${newW}px`;
-      container.style.height = `${newH}px`;
-      uiState.panelWidth = newW;
-      uiState.panelHeight = newH;
-    });
-    window.addEventListener("touchmove", (e) => {
-      if (!isResizing) return;
-      const touch = e.touches[0];
-      if (!touch) return;
-      const newW = Math.min(700, Math.max(300, startW + (touch.clientX - startX)));
-      const newH = Math.min(900, Math.max(360, startH + (touch.clientY - startY)));
-      container.style.width = `${newW}px`;
-      container.style.height = `${newH}px`;
-      uiState.panelWidth = newW;
-      uiState.panelHeight = newH;
-    }, { passive: true });
-
-    window.addEventListener("mouseup", () => {
-      isResizing = false;
-    });
-    window.addEventListener("touchend", () => {
-      isResizing = false;
-    });
-  }
-
-  function buttonCss(type) {
-    if (type === "danger") {
-      return `background:transparent;border:none;color:#f87171;cursor:pointer;font-size:0.8rem;opacity:0.8;`;
+        document.body.appendChild(container);
+        setLauncherVisible(false);
     }
-    return `background:transparent;border:none;color:#e2e8f0;cursor:pointer;font-size:0.8rem;opacity:0.8;`;
-  }
 
-  function tabButtonCss(active) {
-    return `
+    function makeDraggable(container, handle) {
+        let isDragging = false;
+        let offsetX = 0;
+        let offsetY = 0;
+        handle.addEventListener("mousedown", (e) => {
+            isDragging = true;
+            offsetX = e.clientX - container.getBoundingClientRect().left;
+            offsetY = e.clientY - container.getBoundingClientRect().top;
+        });
+        handle.addEventListener("touchstart", (e) => {
+            const touch = e.touches[0];
+            if (!touch) return;
+            isDragging = true;
+            const rect = container.getBoundingClientRect();
+            offsetX = touch.clientX - rect.left;
+            offsetY = touch.clientY - rect.top;
+        }, { passive: true });
+        window.addEventListener("mousemove", (e) => {
+            if (!isDragging) return;
+            container.style.left = `${e.clientX - offsetX}px`;
+            container.style.top = `${e.clientY - offsetY}px`;
+        });
+        window.addEventListener("touchmove", (e) => {
+            if (!isDragging) return;
+            const touch = e.touches[0];
+            if (!touch) return;
+            container.style.left = `${touch.clientX - offsetX}px`;
+            container.style.top = `${touch.clientY - offsetY}px`;
+        }, { passive: true });
+        window.addEventListener("mouseup", () => {
+            isDragging = false;
+        });
+        window.addEventListener("touchend", () => {
+            isDragging = false;
+        });
+    }
+
+    function makeResizable(container, handle) {
+        let isResizing = false;
+        let startX = 0;
+        let startY = 0;
+        let startW = 0;
+        let startH = 0;
+
+        const begin = (clientX, clientY) => {
+            isResizing = true;
+            const rect = container.getBoundingClientRect();
+            startX = clientX;
+            startY = clientY;
+            startW = rect.width;
+            startH = rect.height;
+        };
+
+        handle.addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            begin(e.clientX, e.clientY);
+        });
+        handle.addEventListener("touchstart", (e) => {
+            const touch = e.touches[0];
+            if (!touch) return;
+            begin(touch.clientX, touch.clientY);
+        }, { passive: true });
+
+        window.addEventListener("mousemove", (e) => {
+            if (!isResizing) return;
+            const newW = Math.min(700, Math.max(300, startW + (e.clientX - startX)));
+            const newH = Math.min(900, Math.max(360, startH + (e.clientY - startY)));
+            container.style.width = `${newW}px`;
+            container.style.height = `${newH}px`;
+            uiState.panelWidth = newW;
+            uiState.panelHeight = newH;
+        });
+        window.addEventListener("touchmove", (e) => {
+            if (!isResizing) return;
+            const touch = e.touches[0];
+            if (!touch) return;
+            const newW = Math.min(700, Math.max(300, startW + (touch.clientX - startX)));
+            const newH = Math.min(900, Math.max(360, startH + (touch.clientY - startY)));
+            container.style.width = `${newW}px`;
+            container.style.height = `${newH}px`;
+            uiState.panelWidth = newW;
+            uiState.panelHeight = newH;
+        }, { passive: true });
+
+        window.addEventListener("mouseup", () => {
+            isResizing = false;
+        });
+        window.addEventListener("touchend", () => {
+            isResizing = false;
+        });
+    }
+
+    function buttonCss(type) {
+        if (type === "danger") {
+            return `background:transparent;border:none;color:#f87171;cursor:pointer;font-size:0.8rem;opacity:0.8;`;
+        }
+        return `background:transparent;border:none;color:#e2e8f0;cursor:pointer;font-size:0.8rem;opacity:0.8;`;
+    }
+
+    function tabButtonCss(active) {
+        return `
             flex:1;
             padding:8px 4px;
             background:${active ? "rgba(168,85,247,0.15)" : "transparent"};
@@ -850,630 +991,685 @@
             font-size:0.7rem;
             transition:all 0.2s;
         `;
-  }
+    }
 
-  function statCard(label, value, color) {
-    return `
+    function statCard(label, value, color) {
+        return `
             <div style="padding:6px 8px;background:rgba(30,41,59,0.65);border-radius:6px;border:1px solid rgba(255,255,255,0.06);">
                 <div style="font-size:0.55rem;color:#64748b;margin-bottom:1px;">${label}</div>
                 <div style="font-size:0.9rem;font-weight:700;color:${color};">${value}</div>
             </div>
         `;
-  }
-
-  function updateProjectionUI() {
-    const derived = getDerived();
-    const hoursTotal = uiState.projectionHours + uiState.projectionDays * 24;
-
-    const hoursLabel = document.getElementById("mwi-proj-hours");
-    const hoursValue = document.getElementById("mwi-hours-value");
-    const daysValue = document.getElementById("mwi-days-value");
-    if (hoursLabel) hoursLabel.textContent = `${hoursTotal.toFixed(0)}h`;
-    if (hoursValue) hoursValue.textContent = `${uiState.projectionHours}`;
-    if (daysValue) daysValue.textContent = `${uiState.projectionDays}`;
-
-    const updateText = (id, value) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = value;
-    };
-
-    updateText(
-      "mwi-proj-encounters",
-      formatCompact(derived.projections.encounters)
-    );
-    updateText(
-      "mwi-proj-revenue",
-      formatCompact(derived.projections.estimatedRevenue)
-    );
-    updateText("mwi-proj-coins", formatCompact(derived.projections.coins));
-    updateText("mwi-proj-exp", formatCompact(derived.projections.exp));
-    updateText("mwi-proj-skill", formatCompact(derived.projections.skillExp));
-  }
-
-  function render() {
-    const container = document.getElementById("mwi-wondher-panel");
-    if (!container) return;
-    const content = document.getElementById("mwi-content");
-    const tabs = document.getElementById("mwi-tabs");
-    const statusDot = document.getElementById("mwi-status-dot");
-    const resizeHandle = document.getElementById("mwi-resize");
-
-    statusDot.style.background = state.isInCombat ? "#ef4444" : "#64748b";
-    statusDot.style.boxShadow = state.isInCombat
-      ? "0 0 8px #ef4444"
-      : "0 0 8px #64748b";
-
-    if (uiState.isInteracting) {
-      return;
     }
 
-    if (uiState.minimized) {
-      tabs.style.display = "none";
-      content.style.display = "none";
-      if (resizeHandle) resizeHandle.style.display = "none";
-      container.style.height = "auto";
-      return;
+    function updateProjectionUI() {
+        const derived = getDerived();
+        const hoursTotal = uiState.projectionHours + uiState.projectionDays * 24;
+
+        const hoursLabel = document.getElementById("mwi-proj-hours");
+        const hoursValue = document.getElementById("mwi-hours-value");
+        const daysValue = document.getElementById("mwi-days-value");
+        if (hoursLabel) hoursLabel.textContent = `${hoursTotal.toFixed(0)}h`;
+        if (hoursValue) hoursValue.textContent = `${uiState.projectionHours}`;
+        if (daysValue) daysValue.textContent = `${uiState.projectionDays}`;
+
+        const updateText = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+        };
+
+        updateText(
+            "mwi-proj-encounters",
+            formatCompact(derived.projections.encounters)
+        );
+        updateText(
+            "mwi-proj-revenue",
+            formatCompact(derived.projections.estimatedRevenue)
+        );
+        updateText("mwi-proj-coins", formatCompact(derived.projections.coins));
+        updateText("mwi-proj-exp", formatCompact(derived.projections.exp));
+        updateText("mwi-proj-skill", formatCompact(derived.projections.skillExp));
     }
-    tabs.style.display = "flex";
-    content.style.display = "block";
-    if (resizeHandle) resizeHandle.style.display = "block";
-    if (uiState.panelWidth) container.style.width = `${uiState.panelWidth}px`;
-    if (uiState.panelHeight) container.style.height = `${uiState.panelHeight}px`;
 
-    Array.from(tabs.children).forEach((btn) => {
-      const isActive = btn.dataset.tabId === uiState.currentTab;
-      btn.style.cssText = tabButtonCss(isActive);
-    });
+    function render() {
+        const container = document.getElementById("mwi-wondher-panel");
+        if (!container) return;
+        const content = document.getElementById("mwi-content");
+        const tabs = document.getElementById("mwi-tabs");
+        const statusDot = document.getElementById("mwi-status-dot");
+        const langToggle = document.getElementById("mwi-lang-toggle");
+        const resizeHandle = document.getElementById("mwi-resize");
 
-    const derived = getDerived();
-    const durationSeconds = Math.floor(derived.durationMs / 1000);
+        statusDot.style.background = state.isInCombat ? "#ef4444" : "#64748b";
+        statusDot.style.boxShadow = state.isInCombat
+            ? "0 0 8px #ef4444"
+        : "0 0 8px #64748b";
 
-    if (!state.sessionStartTs && uiState.currentTab !== "session") {
-      content.innerHTML = `<div style="text-align:center;padding:20px 12px;color:#64748b;background:rgba(30,41,59,0.3);border-radius:8px;border:1px dashed rgba(100,116,139,0.2);">📡<div style="margin-top:6px">Aguardando WebSocket</div></div>`;
-      return;
-    }
+        if (langToggle) {
+            langToggle.textContent = uiState.locale === "pt-BR" ? "PT-BR" : "EN-US";
+        }
 
-    if (uiState.currentTab === "rates") {
-      content.innerHTML = `
+        if (uiState.isInteracting) {
+            return;
+        }
+
+        if (uiState.minimized) {
+            tabs.style.display = "none";
+            content.style.display = "none";
+            if (resizeHandle) resizeHandle.style.display = "none";
+            container.style.height = "auto";
+            return;
+        }
+        tabs.style.display = "flex";
+        content.style.display = "block";
+        if (resizeHandle) resizeHandle.style.display = "block";
+        if (uiState.panelWidth) container.style.width = `${uiState.panelWidth}px`;
+        if (uiState.panelHeight) container.style.height = `${uiState.panelHeight}px`;
+
+        Array.from(tabs.children).forEach((btn) => {
+            const isActive = btn.dataset.tabId === uiState.currentTab;
+            btn.style.cssText = tabButtonCss(isActive);
+            if (btn.dataset.tabId === "rates") btn.textContent = t("tabs_rates");
+            if (btn.dataset.tabId === "dps") btn.textContent = t("tabs_dps");
+            if (btn.dataset.tabId === "loot") btn.textContent = t("tabs_loot");
+            if (btn.dataset.tabId === "xp") btn.textContent = t("tabs_xp");
+            if (btn.dataset.tabId === "session") {
+                btn.textContent = t("tabs_session");
+            }
+        });
+
+        const derived = getDerived();
+        const durationSeconds = Math.floor(derived.durationMs / 1000);
+
+        if (!state.sessionStartTs && uiState.currentTab !== "session") {
+            content.innerHTML = `<div style="text-align:center;padding:20px 12px;color:#64748b;background:rgba(30,41,59,0.3);border-radius:8px;border:1px dashed rgba(100,116,139,0.2);">📡<div style="margin-top:6px">${t(
+                "waiting_ws"
+            )}</div></div>`;
+            return;
+        }
+
+        if (uiState.currentTab === "rates") {
+            content.innerHTML = `
                 <div style="margin-bottom:12px;">
-                    <div style="font-size:0.65rem;color:#64748b;text-transform:uppercase;margin-bottom:6px;">Taxas atuais</div>
+                    <div style="font-size:0.65rem;color:#64748b;text-transform:uppercase;margin-bottom:6px;">${t(
+                "rates_title"
+            )}</div>
                     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;">
                         ${statCard(
-                          "Encounters/h",
-                          formatCompact(derived.rates.encountersPerHour),
-                          "#ec4899"
-                        )}
+                t("encounters_per_hour"),
+                formatCompact(derived.rates.encountersPerHour),
+                "#ec4899"
+            )}
                         ${statCard(
-                          "Receita estim./h",
-                          formatCompact(derived.rates.estimatedRevenuePerHour),
-                          "#22c55e"
-                        )}
+                t("revenue_per_hour"),
+                formatCompact(derived.rates.estimatedRevenuePerHour),
+                "#22c55e"
+            )}
                         ${statCard(
-                          "Moedas/h",
-                          formatCompact(derived.rates.coinsPerHour),
-                          "#eab308"
-                        )}
+                t("coins_per_hour"),
+                formatCompact(derived.rates.coinsPerHour),
+                "#eab308"
+            )}
                         ${statCard(
-                          "XP/h",
-                          formatCompact(derived.rates.expPerHour),
-                          "#3b82f6"
-                        )}
+                t("xp_per_hour"),
+                formatCompact(derived.rates.expPerHour),
+                "#3b82f6"
+            )}
                         ${statCard(
-                          "XP Skill/h",
-                          formatCompact(derived.rates.skillExpPerHour),
-                          "#8b5cf6"
-                        )}
+                t("skill_xp_per_hour"),
+                formatCompact(derived.rates.skillExpPerHour),
+                "#8b5cf6"
+            )}
                     </div>
                 </div>
                 <div>
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                        <div style="font-size:0.65rem;color:#64748b;text-transform:uppercase;">Projeções</div>
+                        <div style="font-size:0.65rem;color:#64748b;text-transform:uppercase;">${t(
+                "projections_title"
+            )}</div>
                         <div id="mwi-proj-hours" style="font-size:0.7rem;color:#a855f7;font-weight:600;">${(
-                          uiState.projectionHours +
-                          uiState.projectionDays * 24
-                        ).toFixed(0)}h</div>
+                uiState.projectionHours +
+                uiState.projectionDays * 24
+            ).toFixed(0)}h</div>
                     </div>
                     <div style="margin-bottom:8px;padding:8px;background:rgba(30,41,59,0.4);border-radius:6px;">
                         <div style="margin-bottom:6px;">
-                            <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:#94a3b8;margin-bottom:2px;"><span>Horas</span><span id="mwi-hours-value">${
+                            <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:#94a3b8;margin-bottom:2px;"><span>${t(
+                "hours"
+            )}</span><span id="mwi-hours-value">${
                               uiState.projectionHours
-                            }</span></div>
+        }</span></div>
                             <input id="mwi-hours" type="range" min="0" max="23" value="${
                               uiState.projectionHours
-                            }" style="width:100%;height:3px;accent-color:#a855f7;" />
+        }" style="width:100%;height:3px;accent-color:#a855f7;" />
                         </div>
                         <div>
-                            <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:#94a3b8;margin-bottom:2px;"><span>Dias</span><span id="mwi-days-value">${
+                            <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:#94a3b8;margin-bottom:2px;"><span>${t(
+                "days"
+            )}</span><span id="mwi-days-value">${
                               uiState.projectionDays
-                            }</span></div>
+        }</span></div>
                             <input id="mwi-days" type="range" min="0" max="30" value="${
                               uiState.projectionDays
-                            }" style="width:100%;height:3px;accent-color:#a855f7;" />
+        }" style="width:100%;height:3px;accent-color:#a855f7;" />
                         </div>
                     </div>
                     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;">
                         ${statCard(
-                          "Encounters",
-                          `<span id="mwi-proj-encounters">${formatCompact(
-                            derived.projections.encounters
-                          )}</span>`,
-                          "#a855f7"
-                        )}
+                t("encounters"),
+                `<span id="mwi-proj-encounters">${formatCompact(
+                    derived.projections.encounters
+                )}</span>`,
+                "#a855f7"
+            )}
                         ${statCard(
-                          "Receita estim.",
-                          `<span id="mwi-proj-revenue">${formatCompact(
-                            derived.projections.estimatedRevenue
-                          )}</span>`,
-                          "#a855f7"
-                        )}
+                t("est_revenue"),
+                `<span id="mwi-proj-revenue">${formatCompact(
+                    derived.projections.estimatedRevenue
+                )}</span>`,
+                "#a855f7"
+            )}
                         ${statCard(
-                          "Moedas",
-                          `<span id="mwi-proj-coins">${formatCompact(
-                            derived.projections.coins
-                          )}</span>`,
-                          "#a855f7"
-                        )}
+                t("coins"),
+                `<span id="mwi-proj-coins">${formatCompact(
+                    derived.projections.coins
+                )}</span>`,
+                "#a855f7"
+            )}
                         ${statCard(
-                          "XP",
-                          `<span id="mwi-proj-exp">${formatCompact(
-                            derived.projections.exp
-                          )}</span>`,
-                          "#a855f7"
-                        )}
+                t("xp"),
+                `<span id="mwi-proj-exp">${formatCompact(
+                    derived.projections.exp
+                )}</span>`,
+                "#a855f7"
+            )}
                         ${statCard(
-                          "XP Skill",
-                          `<span id="mwi-proj-skill">${formatCompact(
-                            derived.projections.skillExp
-                          )}</span>`,
-                          "#a855f7"
-                        )}
+                t("skill_xp"),
+                `<span id="mwi-proj-skill">${formatCompact(
+                    derived.projections.skillExp
+                )}</span>`,
+                "#a855f7"
+            )}
                     </div>
                 </div>
             `;
 
-      const hoursInput = document.getElementById("mwi-hours");
-      const daysInput = document.getElementById("mwi-days");
-      if (hoursInput) {
-        const updateHours = (e) => {
-          uiState.projectionHours = Number(e.target.value);
-          updateProjectionUI();
-        };
-        hoursInput.oninput = updateHours;
-        hoursInput.onchange = updateHours;
-        hoursInput.ontouchstart = () => {
-          uiState.isInteracting = true;
-        };
-        hoursInput.ontouchend = () => {
-          uiState.isInteracting = false;
-          render();
-        };
-        hoursInput.onmousedown = () => {
-          uiState.isInteracting = true;
-        };
-        hoursInput.onmouseup = () => {
-          uiState.isInteracting = false;
-          render();
-        };
-        hoursInput.onpointerdown = () => {
-          uiState.isInteracting = true;
-        };
-        hoursInput.onpointerup = () => {
-          uiState.isInteracting = false;
-          render();
-        };
-        hoursInput.onpointerleave = () => {
-          uiState.isInteracting = false;
-          render();
-        };
-      }
-      if (daysInput) {
-        const updateDays = (e) => {
-          uiState.projectionDays = Number(e.target.value);
-          updateProjectionUI();
-        };
-        daysInput.oninput = updateDays;
-        daysInput.onchange = updateDays;
-        daysInput.ontouchstart = () => {
-          uiState.isInteracting = true;
-        };
-        daysInput.ontouchend = () => {
-          uiState.isInteracting = false;
-          render();
-        };
-        daysInput.onmousedown = () => {
-          uiState.isInteracting = true;
-        };
-        daysInput.onmouseup = () => {
-          uiState.isInteracting = false;
-          render();
-        };
-        daysInput.onpointerdown = () => {
-          uiState.isInteracting = true;
-        };
-        daysInput.onpointerup = () => {
-          uiState.isInteracting = false;
-          render();
-        };
-        daysInput.onpointerleave = () => {
-          uiState.isInteracting = false;
-          render();
-        };
-      }
-      return;
-    }
+            const hoursInput = document.getElementById("mwi-hours");
+            const daysInput = document.getElementById("mwi-days");
+            if (hoursInput) {
+                const updateHours = (e) => {
+                    uiState.projectionHours = Number(e.target.value);
+                    updateProjectionUI();
+                };
+                hoursInput.oninput = updateHours;
+                hoursInput.onchange = updateHours;
+                hoursInput.ontouchstart = () => {
+                    uiState.isInteracting = true;
+                };
+                hoursInput.ontouchend = () => {
+                    uiState.isInteracting = false;
+                    render();
+                };
+                hoursInput.onmousedown = () => {
+                    uiState.isInteracting = true;
+                };
+                hoursInput.onmouseup = () => {
+                    uiState.isInteracting = false;
+                    render();
+                };
+                hoursInput.onpointerdown = () => {
+                    uiState.isInteracting = true;
+                };
+                hoursInput.onpointerup = () => {
+                    uiState.isInteracting = false;
+                    render();
+                };
+                hoursInput.onpointerleave = () => {
+                    uiState.isInteracting = false;
+                    render();
+                };
+            }
+            if (daysInput) {
+                const updateDays = (e) => {
+                    uiState.projectionDays = Number(e.target.value);
+                    updateProjectionUI();
+                };
+                daysInput.oninput = updateDays;
+                daysInput.onchange = updateDays;
+                daysInput.ontouchstart = () => {
+                    uiState.isInteracting = true;
+                };
+                daysInput.ontouchend = () => {
+                    uiState.isInteracting = false;
+                    render();
+                };
+                daysInput.onmousedown = () => {
+                    uiState.isInteracting = true;
+                };
+                daysInput.onmouseup = () => {
+                    uiState.isInteracting = false;
+                    render();
+                };
+                daysInput.onpointerdown = () => {
+                    uiState.isInteracting = true;
+                };
+                daysInput.onpointerup = () => {
+                    uiState.isInteracting = false;
+                    render();
+                };
+                daysInput.onpointerleave = () => {
+                    uiState.isInteracting = false;
+                    render();
+                };
+            }
+            return;
+        }
 
-    if (uiState.currentTab === "dps") {
-      const entries = Object.entries(state.playerDamage || {});
-      if (!entries.length || !state.players || state.players.length === 0) {
-        content.innerHTML = `<div style="text-align:center;padding:20px 12px;color:#64748b;background:rgba(30,41,59,0.3);border-radius:8px;border:1px dashed rgba(100,116,139,0.2);">⚔️<div style="margin-top:6px">Aguardando Combate</div></div>`;
-        return;
-      }
+        if (uiState.currentTab === "dps") {
+            if (!state.players || state.players.length === 0) {
+                content.innerHTML = `<div style="text-align:center;padding:20px 12px;color:#64748b;background:rgba(30,41,59,0.3);border-radius:8px;border:1px dashed rgba(100,116,139,0.2);">⚔️<div style="margin-top:6px">${t(
+                    "waiting_combat"
+                )}</div></div>`;
+                return;
+            }
 
-      const durationSec = Math.max(1, durationSeconds);
-      const playerVitals = new Map(state.players.map((p) => [p.name, p]));
-      const players = entries
-        .map(([name, totalDamage]) => {
-          const vitals = playerVitals.get(name) || {};
-          const hpPct = vitals.maxHP
-            ? (vitals.currentHP / vitals.maxHP) * 100
-            : 0;
-          const mpPct = vitals.maxMP
-            ? (vitals.currentMP / vitals.maxMP) * 100
-            : 0;
-          return {
-            name,
-            totalDamage,
-            dps: totalDamage / durationSec,
-            damageTaken: state.playerDamageTaken[name] || 0,
-            hpPct,
-            mpPct,
-            currentHP: vitals.currentHP || 0,
-            maxHP: vitals.maxHP || 0,
-            currentMP: vitals.currentMP || 0,
-            maxMP: vitals.maxMP || 0,
-          };
-        })
-        .sort((a, b) => b.totalDamage - a.totalDamage);
+            const durationSec = Math.max(1, durationSeconds);
+            const players = state.players
+            .map((player) => {
+                const name = player.name;
+                const totalDamage = state.playerDamage[name] || 0;
+                const vitals = player || {};
+                const hpPct = vitals.maxHP
+                ? (vitals.currentHP / vitals.maxHP) * 100
+                : 0;
+                const mpPct = vitals.maxMP
+                ? (vitals.currentMP / vitals.maxMP) * 100
+                : 0;
+                return {
+                    name,
+                    totalDamage,
+                    dps: totalDamage / durationSec,
+                    damageTaken: state.playerDamageTaken[name] || 0,
+                    hpPct,
+                    mpPct,
+                    currentHP: vitals.currentHP || 0,
+                    maxHP: vitals.maxHP || 0,
+                    currentMP: vitals.currentMP || 0,
+                    maxMP: vitals.maxMP || 0,
+                };
+            })
+            .filter((player) => player.maxHP > 0 || player.currentHP > 0)
+            .sort((a, b) => b.totalDamage - a.totalDamage);
 
-      content.innerHTML = `
-                <div style="font-size:0.65rem;color:#64748b;text-transform:uppercase;margin-bottom:10px;">Grupo</div>
+            content.innerHTML = `
+                <div style="font-size:0.65rem;color:#64748b;text-transform:uppercase;margin-bottom:10px;">${t(
+              "group"
+          )}</div>
                 ${players
-                  .map(
-                    (player, idx) => `
+              .map(
+              (player, idx) => `
                     <div style="margin-bottom:10px;padding:8px;background:rgba(30,41,59,0.4);border-radius:6px;">
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
                             <span style="font-size:0.75rem;font-weight:600;color:#e2e8f0;">${
                               idx === 0 ? "👑 " : ""
-                            }${player.name}</span>
+              }${player.name}</span>
                             <span style="font-size:0.7rem;color:#a855f7;font-weight:600;">${formatNumber(
-                              player.dps
+                                player.dps
                             )} DPS</span>
                         </div>
                         <div style="margin-bottom:6px;">
                             <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:#94a3b8;margin-bottom:1px;"><span>HP</span><span>${
                               player.currentHP
-                            }/${player.maxHP}</span></div>
+              }/${player.maxHP}</span></div>
                             <div style="height:6px;background:rgba(0,0,0,0.3);border-radius:3px;overflow:hidden;"><div style="width:${
                               player.hpPct
-                            }%;height:100%;background:${
+              }%;height:100%;background:${
                       player.hpPct > 50
-                        ? "#22c55e"
-                        : player.hpPct > 25
-                        ? "#eab308"
-                        : "#ef4444"
-                    };"></div></div>
+              ? "#22c55e"
+              : player.hpPct > 25
+              ? "#eab308"
+              : "#ef4444"
+              };"></div></div>
                         </div>
                         <div style="margin-bottom:6px;">
                             <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:#94a3b8;margin-bottom:1px;"><span>MP</span><span>${
                               player.currentMP
-                            }/${player.maxMP}</span></div>
+              }/${player.maxMP}</span></div>
                             <div style="height:6px;background:rgba(0,0,0,0.3);border-radius:3px;overflow:hidden;"><div style="width:${
                               player.mpPct
-                            }%;height:100%;background:#3b82f6;"></div></div>
+              }%;height:100%;background:#3b82f6;"></div></div>
                         </div>
                         <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:#94a3b8;">
-                            <span>Dano Total Realizado: ${formatCompact(
-                              player.totalDamage
+                            <span>${t("total_damage_done")}: ${formatCompact(
+                                player.totalDamage
                             )}</span>
-                            <span>Dano Total Recebido: ${formatCompact(
-                              player.damageTaken
+                            <span>${t("total_damage_taken")}: ${formatCompact(
+                                player.damageTaken
                             )}</span>
                         </div>
                     </div>
                 `
                   )
-                  .join("")}
+              .join("")}
                 ${
                   state.monsters?.length
-                    ? `
-                    <div style="margin-top:12px;font-size:0.65rem;color:#64748b;text-transform:uppercase;">Monstros</div>
+              ? `
+                    <div style="margin-top:12px;font-size:0.65rem;color:#64748b;text-transform:uppercase;">${t(
+              "monsters"
+          )}</div>
                     <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;">
                         ${state.monsters
-                          .map(
-                            (m) =>
-                              `<span style="padding:3px 6px;background:rgba(239,68,68,0.1);border-radius:4px;font-size:0.65rem;color:#f87171;">${m.name}</span>`
+              .map(
+              (m) =>
+              `<span style="padding:3px 6px;background:rgba(239,68,68,0.1);border-radius:4px;font-size:0.65rem;color:#f87171;">${m.name}</span>`
                           )
-                          .join("")}
+              .join("")}
                     </div>
                 `
                     : ""
-                }
+      }
             `;
-      return;
-    }
-
-    if (uiState.currentTab === "loot") {
-      const lootEntries = Object.entries(state.loot || {}).sort(
-        (a, b) => b[1] - a[1]
-      );
-      const unknownEntries = Object.entries(state.unknownValueLoot || {}).sort(
-        (a, b) => b[1] - a[1]
-      );
-      if (lootEntries.length === 0 && !state.coinsGained) {
-        content.innerHTML = `<div style="text-align:center;padding:20px 12px;color:#64748b;background:rgba(30,41,59,0.3);border-radius:8px;border:1px dashed rgba(100,116,139,0.2);">💰<div style="margin-top:6px">Nenhum Loot</div></div>`;
-        return;
+          return;
       }
 
-      content.innerHTML = `
-                <div style="font-size:0.65rem;color:#64748b;text-transform:uppercase;margin-bottom:10px;">Recursos Obtidos</div>
+        if (uiState.currentTab === "loot") {
+            const lootEntries = Object.entries(state.loot || {}).sort(
+                (a, b) => b[1] - a[1]
+            );
+            const unknownEntries = Object.entries(state.unknownValueLoot || {}).sort(
+                (a, b) => b[1] - a[1]
+            );
+            if (lootEntries.length === 0 && !state.coinsGained) {
+                content.innerHTML = `<div style="text-align:center;padding:20px 12px;color:#64748b;background:rgba(30,41,59,0.3);border-radius:8px;border:1px dashed rgba(100,116,139,0.2);">💰<div style="margin-top:6px">${t(
+                    "no_loot"
+                )}</div></div>`;
+                return;
+            }
+
+            content.innerHTML = `
+                <div style="font-size:0.65rem;color:#64748b;text-transform:uppercase;margin-bottom:10px;">${t(
+              "resources_obtained"
+          )}</div>
                 ${
                   state.coinsGained
-                    ? `
+              ? `
                     <div style="margin-bottom:8px;padding:8px;background:rgba(234,179,8,0.15);border-radius:6px;border:1px solid rgba(234,179,8,0.3);display:flex;justify-content:space-between;align-items:center;">
-                        <span style="font-size:0.8rem;color:#facc15;font-weight:bold;">🪙 Coins</span>
+                        <span style="font-size:0.8rem;color:#facc15;font-weight:bold;">🪙 ${t(
+              "coins"
+          )}</span>
                         <span style="font-size:0.9rem;color:#facc15;font-weight:bold;">${formatCompact(
-                          state.coinsGained
-                        )}</span>
+              state.coinsGained
+          )}</span>
                     </div>
                 `
                     : ""
-                }
+      }
                 <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">
                     ${lootEntries
-                      .map(([item, count]) => {
-                        const inventoryCount =
-                          internal.inventoryCountsByItemHrid[item] || 0;
-                        const price = getMarketPrice(item, 0);
-                        const lootValue = price ? count * price : 0;
-                        const inventoryValue = price
-                          ? inventoryCount * price * 0.98
-                          : 0;
-                        return `
+              .map(([item, count]) => {
+              const inventoryCount =
+                    internal.inventoryCountsByItemHrid[item] || 0;
+              const price = getMarketPrice(item, 0);
+              const lootValue = price ? count * price : 0;
+              const inventoryValue = price
+              ? inventoryCount * price * 0.98
+              : 0;
+              return `
                             <div style="padding:8px;background:rgba(30,41,59,0.4);border-radius:6px;display:flex;flex-direction:column;gap:4px;">
                                 <div style="display:flex;justify-content:space-between;align-items:center;">
                                     <span style="font-size:0.75rem;color:#e2e8f0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:70%;" title="${formatHrid(
-                                      item
-                                    )}">${formatHrid(item)}</span>
+              item
+          )}">${formatHrid(item)}</span>
                                     <span style="font-size:0.7rem;color:#a855f7;font-weight:600;">${formatNumber(
-                                      count
-                                    )} drops</span>
+              count
+          )} ${t("drops")}</span>
                                 </div>
                                 <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:#94a3b8;">
-                                    <span>Inventário: ${formatNumber(
-                                      inventoryCount
-                                    )}</span>
-                                    <span>Preço: ${
+                                    <span>${t("inventory")}: ${formatNumber(
+              inventoryCount
+          )}</span>
+                                    <span>${t("price")}: ${
                                       price ? formatCompact(price) : "—"
-                                    }</span>
+          }</span>
                                 </div>
                                 <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:#94a3b8;">
-                                    <span>Valor drop: ${
+                                    <span>${t("drop_value")}: ${
                                       price ? formatCompact(lootValue) : "—"
-                                    }</span>
+          }</span>
 
                                 </div>
                                 <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:#94a3b8;">
-                                     <span>Valor inv.: ${
+                                     <span>${t("inventory_value")}: ${
                                        price
-                                         ? formatCompact(inventoryValue)
-                                         : "—"
-                                     }</span>
+              ? formatCompact(inventoryValue)
+          : "—"
+          }</span>
 
                                 </div>
 
-                                <div style="font-size:0.55rem;color:#64748b;">Inventário (2% taxa)</div>
+                                <div style="font-size:0.55rem;color:#64748b;">${t(
+              "inventory_fee_note"
+          )}</div>
                             </div>
                         `;
-                      })
-                      .join("")}
+          })
+              .join("")}
                 </div>
                 ${
                   unknownEntries.length
-                    ? `
+              ? `
                     <div style="margin-top:10px;">
-                        <div style="font-size:0.6rem;color:#f59e0b;margin-bottom:6px;">Sem preço na tabela</div>
+                        <div style="font-size:0.6rem;color:#f59e0b;margin-bottom:6px;">${t(
+              "missing_price_table"
+          )}</div>
                         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;">
                             ${unknownEntries
-                              .map(
-                                ([item, count]) => `
+              .map(
+              ([item, count]) => `
                                 <div style="padding:6px 8px;background:rgba(245,158,11,0.12);border-radius:5px;display:flex;justify-content:space-between;align-items:center;">
                                     <span style="font-size:0.65rem;color:#fcd34d;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:70%;" title="${formatHrid(
-                                      item
+                                        item
                                     )}">${formatHrid(item)}</span>
                                     <span style="font-size:0.75rem;font-weight:600;color:#fcd34d;">${formatNumber(
-                                      count
+                                        count
                                     )}</span>
                                 </div>
                             `
                               )
-                              .join("")}
+              .join("")}
                         </div>
                     </div>
                 `
                     : ""
-                }
-            `;
-      return;
-    }
-
-    if (uiState.currentTab === "xp") {
-      const skillEntries = Object.entries(state.xpGainedBySkill || {}).filter(
-        ([skill]) => skill !== "/skills/total_level"
-      );
-      if (!skillEntries.length) {
-        content.innerHTML = `<div style="text-align:center;padding:20px 12px;color:#64748b;background:rgba(30,41,59,0.3);border-radius:8px;border:1px dashed rgba(100,116,139,0.2);">✨<div style="margin-top:6px">Nenhum XP</div></div>`;
-        return;
       }
-      const xp = skillEntries.sort((a, b) => b[1] - a[1]);
-      content.innerHTML = `
-                <div style="font-size:0.65rem;color:#64748b;text-transform:uppercase;margin-bottom:10px;">Ganhos de XP</div>
+            `;
+          return;
+      }
+
+        if (uiState.currentTab === "xp") {
+            const skillEntries = Object.entries(state.xpGainedBySkill || {}).filter(
+                ([skill]) => skill !== "/skills/total_level"
+            );
+            if (!skillEntries.length) {
+                content.innerHTML = `<div style="text-align:center;padding:20px 12px;color:#64748b;background:rgba(30,41,59,0.3);border-radius:8px;border:1px dashed rgba(100,116,139,0.2);">✨<div style="margin-top:6px">${t(
+                    "no_xp"
+                )}</div></div>`;
+                return;
+            }
+            const xp = skillEntries.sort((a, b) => b[1] - a[1]);
+            content.innerHTML = `
+                <div style="font-size:0.65rem;color:#64748b;text-transform:uppercase;margin-bottom:10px;">${t(
+              "xp_gains"
+          )}</div>
                 <div style="display:flex;flex-direction:column;gap:6px;">
                     ${xp
-                      .map(
-                        ([skill, amount]) => `
+              .map(
+              ([skill, amount]) => `
                         <div style="padding:8px;background:rgba(30,41,59,0.4);border-radius:6px;">
                             <div style="display:flex;justify-content:space-between;margin-bottom:2px;">
                                 <span style="font-size:0.75rem;font-weight:600;color:#e2e8f0;">${formatHrid(
-                                  skill
+                                    skill
                                 )}</span>
-                                <span style="font-size:0.75rem;font-weight:600;color:#3b82f6;">${formatNumber(
-                                  amount
+                                <span style="font-size:0.75rem;font-weight:600;color:#3b82f6;">${formatCompact(
+                                    amount
                                 )} XP</span>
                             </div>
-                            <div style="font-size:0.6rem;color:#64748b;text-align:right;">${formatNumber(
-                              amount / Math.max(0.001, derived.durationHours)
-                            )} XP/h</div>
+                            <div style="font-size:0.6rem;color:#64748b;text-align:right;">${formatCompact(
+                                amount / Math.max(0.001, derived.durationHours)
+                            )} ${t("xp_per_hour")}</div>
                         </div>
                     `
                       )
-                      .join("")}
+              .join("")}
                 </div>
             `;
-      return;
-    }
+          return;
+      }
 
-    if (uiState.currentTab === "session") {
-      content.innerHTML = `
+        if (uiState.currentTab === "session") {
+            content.innerHTML = `
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                    <div style="font-size:0.65rem;color:#64748b;text-transform:uppercase;">Sessão</div>
+                    <div style="font-size:0.65rem;color:#64748b;text-transform:uppercase;">${t(
+              "session"
+          )}</div>
                     <div style="display:flex;gap:4px;">
+                        <button id="mwi-locale-toggle" style="font-size:0.55rem;padding:3px 6px;background:rgba(148,163,184,0.15);border:1px solid rgba(148,163,184,0.3);border-radius:4px;color:#e2e8f0;cursor:pointer;">${
+                          uiState.locale === "pt-BR" ? "PT-BR" : "EN-US"
+                        }</button>
                         <button id="mwi-export" style="font-size:0.55rem;padding:3px 6px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:4px;color:#4ade80;cursor:pointer;">📥</button>
                         <button id="mwi-reset" style="font-size:0.55rem;padding:3px 6px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:4px;color:#f87171;cursor:pointer;">🔄</button>
                     </div>
                 </div>
                 <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;">
                     ${statCard(
-                      "Duração",
-                      formatDuration(durationSeconds),
-                      "#a855f7"
-                    )}
+              t("duration"),
+              formatDuration(durationSeconds),
+              "#a855f7"
+          )}
                     ${statCard(
-                      "Encounters",
-                      formatNumber(state.encountersCompleted || 0),
-                      "#ec4899"
-                    )}
+              t("encounters"),
+              formatNumber(state.encountersCompleted || 0),
+              "#ec4899"
+          )}
                     ${statCard(
-                      "Dano Total",
-                      formatCompact(state.partyDamage || 0),
-                      "#f87171"
-                    )}
+              t("total_damage"),
+              formatCompact(state.partyDamage || 0),
+              "#f87171"
+          )}
                     ${statCard(
-                      "Dano Recebido",
-                      formatCompact(state.partyDamageTaken || 0),
-                      "#f59e0b"
-                    )}
+              t("total_taken"),
+              formatCompact(state.partyDamageTaken || 0),
+              "#f59e0b"
+          )}
                     ${statCard(
-                      "Moedas",
-                      formatCompact(state.coinsGained || 0),
-                      "#eab308"
-                    )}
+              t("coins"),
+              formatCompact(state.coinsGained || 0),
+              "#eab308"
+          )}
                     ${statCard(
-                      "XP Total",
-                      formatCompact(derived.totalExp),
-                      "#3b82f6"
-                    )}
+              t("total_xp"),
+              formatCompact(derived.totalExp),
+              "#3b82f6"
+          )}
                     ${statCard(
-                      "Receita estim.",
-                      formatCompact(state.estimatedValueGained || 0),
-                      "#22c55e"
-                    )}
+              t("est_revenue"),
+              formatCompact(state.estimatedValueGained || 0),
+              "#22c55e"
+          )}
                 </div>
                 <div style="margin-top:10px;font-size:0.6rem;color:#94a3b8;">
-                    Tabela de preços: ${internal.priceTableSource}
+                    ${t("price_table")}: ${internal.priceTableSource}
                 </div>
             `;
 
-      const exportBtn = document.getElementById("mwi-export");
-      const resetBtn = document.getElementById("mwi-reset");
-      if (exportBtn) exportBtn.onclick = exportSession;
-      if (resetBtn) resetBtn.onclick = () => resetSession();
-      return;
+                    const exportBtn = document.getElementById("mwi-export");
+                    const resetBtn = document.getElementById("mwi-reset");
+                    const localeBtn = document.getElementById("mwi-locale-toggle");
+                    if (exportBtn) exportBtn.onclick = exportSession;
+                    if (resetBtn) resetBtn.onclick = () => resetSession();
+                    if (localeBtn) {
+                        localeBtn.textContent = uiState.locale === "pt-BR" ? "PT-BR" : "EN-US";
+                        localeBtn.onclick = () => {
+                            setLocale(uiState.locale === "pt-BR" ? "en-US" : "pt-BR");
+                        };
+                    }
+          return;
+      }
     }
-  }
 
-  function resetSession() {
-    state.sessionStartTs = null;
-    state.lastUpdateTs = null;
-    state.battleId = null;
-    state.players = [];
-    state.monsters = [];
-    state.playerDamage = {};
-    state.playerDamageTaken = {};
-    state.partyDamage = 0;
-    state.partyDamageTaken = 0;
-    state.encountersCompleted = 0;
-    state.coinsGained = 0;
-    state.estimatedValueGained = 0;
-    state.loot = {};
-    state.unknownValueLoot = {};
-    state.xpGainedBySkill = {};
-    state.totalExpGained = 0;
-    state.totalLevelExpGained = 0;
-    state.lastAbilityByPlayer = {};
-    state.isInCombat = false;
+    function resetSession() {
+        state.sessionStartTs = null;
+        state.lastUpdateTs = null;
+        state.battleId = null;
+        state.players = [];
+        state.monsters = [];
+        state.playerDamage = {};
+        state.playerDamageTaken = {};
+        state.partyDamage = 0;
+        state.partyDamageTaken = 0;
+        state.encountersCompleted = 0;
+        state.coinsGained = 0;
+        state.estimatedValueGained = 0;
+        state.loot = {};
+        state.unknownValueLoot = {};
+        state.xpGainedBySkill = {};
+        state.totalExpGained = 0;
+        state.totalLevelExpGained = 0;
+        state.lastAbilityByPlayer = {};
+        state.isInCombat = false;
 
-    internal.lastActionCount = null;
-    internal.lastItemCountsByHash = {};
-    internal.lastSkillExp = {};
-    internal.lastPlayerDmg = {};
-    internal.lastMonsterDmg = {};
-    internal.lastPlayerHP = {};
-    internal.playerIndexToName = {};
-    internal.monsterIndexToName = {};
-    internal.inventoryCountsByItemHrid = {};
-    internal.itemsInitialized = false;
-    internal.skillsInitialized = false;
+        internal.lastActionCount = null;
+        internal.lastItemCountsByHash = {};
+        internal.lastSkillExp = {};
+        internal.lastPlayerDmg = {};
+        internal.lastMonsterDmg = {};
+        internal.lastPlayerHP = {};
+        internal.playerIndexToName = {};
+        internal.monsterIndexToName = {};
+        internal.inventoryCountsByItemHrid = {};
+        internal.itemsInitialized = false;
+        internal.skillsInitialized = false;
 
-    render();
-  }
+        render();
+    }
 
-  function exportSession() {
-    const derived = getDerived();
-    const report = {
-      generatedAt: new Date().toISOString(),
-      session: state,
-      derived,
-      priceTable: internal.priceTable,
-      priceTableSource: internal.priceTableSource,
-      note: "Valores iniciam após baseline (primeiro snapshot de itens/skills).",
-    };
-    const blob = new Blob([JSON.stringify(report, null, 2)], {
-      type: "application/json",
-    });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `mwi-session-${new Date().toISOString().split("T")[0]}.json`;
-    a.click();
-  }
+    function exportSession() {
+        const derived = getDerived();
+        const report = {
+            generatedAt: new Date().toISOString(),
+            session: state,
+            derived,
+            priceTable: internal.priceTable,
+            priceTableSource: internal.priceTableSource,
+            note: "Valores iniciam após baseline (primeiro snapshot de itens/skills).",
+        };
+        const blob = new Blob([JSON.stringify(report, null, 2)], {
+            type: "application/json",
+        });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `mwi-session-${new Date().toISOString().split("T")[0]}.json`;
+        a.click();
+    }
 
-  function startRenderLoop() {
-    setInterval(render, 1000);
-  }
+    function startRenderLoop() {
+        setInterval(render, 1000);
+    }
 
-  function startMarketRefresh() {
-    setInterval(() => {
-      loadMarketPrices(true).finally(() => render());
-    }, MARKET_CACHE_TTL_MS);
-  }
+    function startMarketRefresh() {
+        setInterval(() => {
+            loadMarketPrices(true).finally(() => render());
+        }, MARKET_CACHE_TTL_MS);
+    }
 
-  function init() {
-    patchWebSocket();
-    createLauncher();
-    createPanel();
-    loadMarketPrices().finally(() => render());
-    startRenderLoop();
-    startMarketRefresh();
-  }
+    function init() {
+        patchWebSocket();
+        createLauncher();
+        createPanel();
+        loadMarketPrices().finally(() => render());
+        startRenderLoop();
+        startMarketRefresh();
+    }
 
-  init();
+    init();
 })();

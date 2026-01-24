@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Pollination AI Page Summarizer
-// @version      1.1
+// @version      1.2
 // @description  Summarize webpage or selected text via Pollinations API (Free, Anonymous, Keyless)
 // @author       SH3LL
 // @match        *://*/*
@@ -34,7 +34,7 @@
 
     // === Fade timeout ===
     let hoverTimeout;
-    setTimeout(() => toggleButton.style.opacity = '0.3', 2000);
+    setTimeout(() => toggleButton.style.opacity = '0.3', 1000);
 
     toggleButton.addEventListener('mouseover', () => {
         clearTimeout(hoverTimeout);
@@ -44,7 +44,7 @@
     toggleButton.addEventListener('mouseout', () => {
         hoverTimeout = setTimeout(() => {
             if (!isSidebarVisible) toggleButton.style.opacity = '0.3';
-        }, 3000);
+        }, 2000);
     });
 
     // === Event Listeners ===
@@ -114,17 +114,17 @@
         isSidebarVisible = !isSidebarVisible;
         sidebar.style.transform = isSidebarVisible ? 'translateX(0)' : 'translateX(100%)';
         toggleButton.style.right = isSidebarVisible ? '300px' : '0';
-        toggleButton.innerHTML = isSidebarVisible ? '›' : '‹';
+        toggleButton.innerHTML = isSidebarVisible ? '✨' : '✨'; //open : closed
         toggleButton.style.opacity = isSidebarVisible ? '1' : '0.3';
     }
     function updateButtonText() {
         if (loading) return summarizeButton.textContent = '⏳';
         const sel = window.getSelection().toString().trim();
-        summarizeButton.textContent = sel ? `✨ "${sel.slice(0, 6)}..."` : '✨ Summarize';
+        summarizeButton.textContent = sel ? `✨ "${sel.slice(0, 6)}..."` : '✨ Summary';
     }
 
     function updateStatus(text, color) {
-        statusDisplay.innerHTML = `<span style="color:${color}">● ${text}</span> <span style="color:#0af;margin-left:4px">${selectedLanguage}</span>`;
+        statusDisplay.innerHTML = `<span style="color:${color}; margin-right: 4px;">● ${text}</span> - <span style="color:#0af;margin-left:4px">${selectedLanguage}</span>`;
     }
 
     // Render summary con supporto markdown
@@ -183,8 +183,8 @@
 
         const css = `
             *{box-sizing:border-box;margin:0;padding:0}
-            .sidebar{position:fixed;right:0;top:0;width:300px;height:100vh;background:#0a0a0a;color:#fff;padding:10px;z-index:999999;font-family:system-ui,sans-serif;display:flex;flex-direction:column;gap:8px;transform:translateX(100%);transition:transform .2s ease;border-left:1px solid #222}
-            .toggle{position:fixed;right:0;top:50%;transform:translateY(-50%);width:18px;height:48px;background:#151515;border:1px solid #2a2a2a;border-right:none;border-radius:6px 0 0 6px;cursor:pointer;z-index:1000000;display:flex;align-items:center;justify-content:center;color:#555;font-size:14px;transition:right .2s,background .15s,opacity .3s;opacity:0.3}
+            .sidebar{position:fixed;right:0;top:0;width:300px;height:100vh;background:#0a0a0a;color:#fff;padding:10px;z-index:999999;font-family:system-ui,sans-serif;display:flex;flex-direction:column;gap:8px;transform:translateX(100%);transition:transform .2s ease;border-left:1px solid #444}
+            .toggle{position:fixed;right:0;top:50%;transform:translateY(-50%);width:18px;height:48px;background:#151515;border:1px solid #444;border-right:none;border-radius:6px 0 0 6px;cursor:pointer;z-index:1000000;display:flex;align-items:center;justify-content:center;color:#555;font-size:14px;transition:right .2s,background .15s,opacity .3s;opacity:0.3}
             .toggle:hover{background:#1a1a1a;color:#888;opacity:1}
             .row{display:flex;gap:6px}
             select{flex:1;padding:6px 8px;font-size:13px;border-radius:5px;border:1px solid #2a2a2a;background:#111;color:#aaa;cursor:pointer;outline:none}
@@ -192,14 +192,14 @@
             button.sum{padding:6px 10px;font-size:13px;font-weight:600;border-radius:5px;border:none;background:#0af;color:#000;cursor:pointer;white-space:nowrap;transition:opacity .15s}
             button.sum:hover{opacity:.85}
             button.sum:disabled{opacity:.4;cursor:not-allowed}
-            .status{font-size:12px;color:#444;padding:4px 0;border-bottom:1px solid #1a1a1a}
-            .status{font-size:10px;color:#444;padding:4px 0;border-bottom:1px solid #1a1a1a}
+            .status{font-size:12px;color:#444;padding:4px 0;border-bottom:1px solid #444}
+            .status{font-size:10px;color:#444;padding:4px 0;border-bottom:1px solid #444}
             .summary{flex:1;overflow-y:auto;display:none;scrollbar-width:thin;scrollbar-color:#222 transparent}
             .summary::-webkit-scrollbar{width:3px}
             .summary::-webkit-scrollbar-thumb{background:#222;border-radius:3px}
 
             /* Card styles */
-            .card{padding:4px 0;margin-bottom:6px;border-bottom:1px solid #1a1a1a}
+            .card{padding:4px 0;margin-bottom:6px;border-bottom:1px solid #444}
             .card-title{font-weight:600;font-size:14px;color:#eee;margin-bottom:3px}
             .card-text{color:#888;font-size:13px;line-height:1.4}
 
@@ -227,7 +227,7 @@
 
         const toggleButton = document.createElement('div');
         toggleButton.className = 'toggle';
-        toggleButton.innerHTML = '‹';
+        toggleButton.innerHTML = '✨';
 
         const row = document.createElement('div');
         row.className = 'row';

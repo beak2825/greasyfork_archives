@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Codeforces Visual Enhancer (Dynamic Elo Tier)
 // @namespace    http://tampermonkey.net/
-// @version      4.6
+// @version      4.7
 // @license      MIT
 // @description  rank 排名着色，提交结果流光效果
 // @author       Gemini & Guanglong Shen
@@ -196,7 +196,7 @@
             const text = el.innerText.trim();
             if (!text || text.length < 2) return;
             el.classList.add('tm-vfx-base');
-            if (text.includes('Accepted')) el.classList.add('tm-ac');
+            if (text.includes('Accepted') || text.includes('passed')) el.classList.add('tm-ac');
             else if (text.includes('Pretests')) el.classList.add('tm-pre');
             else if (text.includes('Wrong')) el.classList.add('tm-wa');
             else if (text.includes('error')) el.classList.add('tm-orange');

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         QwenPersona (Domestic)
 // @namespace    https://www.kev1nweng.space
-// @version      1769111004
+// @version      1769138683
 // @description  一个便于用户自定义、保存并同步 Qwen Chat 自定义角色的 Tampermonkey 脚本。A Tampermonkey script for customizing user-defined personas in Qwen Chat.
 // @author       小翁同学 (kev1nweng)
 // @license      AGPL-3.0

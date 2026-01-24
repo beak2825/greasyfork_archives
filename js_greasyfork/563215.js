@@ -3,7 +3,7 @@
 // @namespace    https://github.com/snacks-yummy/Greasy-Fork
 // @supportURL   https://github.com/snacks-yummy/Greasy-Fork/issues
 // @homepageURL  https://github.com/snacks-yummy/Greasy-Fork
-// @version      1.5.382
+// @version      1.5.399
 // @author       零食怎么吃都不胖
 // @description  全站网页增强：新标签页打开｜直达/去重定向/短链还原｜文本裸链转链接｜网盘提取码识别/自动填充（历史/收藏）｜悬浮提示真实链接/完整URL｜已访问变色/统计｜自动展开｜置顶/置底｜通用登录遮挡｜百度搜索净化/布局/屏蔽AI/官网置顶｜CSDN 强力复制/净化/解锁｜QQ邮箱去广告｜设置面板/导入导出/审计/调试/黑名单/性能保护
 // @match        *://*/*
@@ -935,7 +935,7 @@
             let smartRedirectAutoJumpDone = false;
 
             const SCRIPT_LABEL = '新标签页Pro·全站网页增强工具箱';
-            const SCRIPT_VERSION = '1.5.382';
+            const SCRIPT_VERSION = '1.5.399';
             const SCRIPT_INSTALL_URL = 'https://update.greasyfork.org/scripts/563215/%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5Pro-%E5%85%A8%E7%AB%99%E7%BD%91%E9%A1%B5%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E7%AE%B1.user.js';
             const SCRIPT_INFO_URL = 'https://greasyfork.org/zh-CN/scripts/563215-%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5pro-%E5%85%A8%E7%AB%99%E7%BD%91%E9%A1%B5%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E7%AE%B1';
             const SCRIPT_UPDATE_URL = (function() {
@@ -11114,68 +11114,7 @@
                 try {
                     restore();
                 } catch (e4) {}
-
-                if (!isSearchPage || !isDouble) return;
-
-                let timerId = 0;
-                const patchOnce = () => {
-                    const page = document.getElementById('page');
-                    if (!page) return;
-                    const spans = page.querySelectorAll('a.n .n-word_1TXWP');
-                    if (!spans || !spans.length) return;
-                    for (let i = 0; i < spans.length; i++) {
-                        const el = spans[i];
-                        if (!(el instanceof Element)) continue;
-                        let text = '';
-                        try {
-                            text = String(el.textContent || '').trim();
-                        } catch (e0) {
-                            text = '';
-                        }
-                        if (!text) continue;
-                        if (text.includes('上一页')) {
-                            try {
-                                if (!el.hasAttribute('data-ntp-orig-text')) el.setAttribute('data-ntp-orig-text', text);
-                            } catch (e1) {}
-                            try {
-                                el.textContent = '<';
-                            } catch (e2) {}
-                            continue;
-                        }
-                        if (text.includes('下一页')) {
-                            try {
-                                if (!el.hasAttribute('data-ntp-orig-text')) el.setAttribute('data-ntp-orig-text', text);
-                            } catch (e3) {}
-                            try {
-                                el.textContent = '>';
-                            } catch (e4) {}
-                            continue;
-                        }
-                    }
-                };
-
-                const schedule = () => {
-                    if (timerId) return;
-                    timerId = TimerRegistry.setTimeout(() => {
-                        timerId = 0;
-                        try {
-                            patchOnce();
-                        } catch (e) {}
-                    }, 80);
-                };
-
-                schedule();
-                const obsRoot = document.getElementById('page') || document.body;
-                const obs = obsRoot ? MutationRegistry.observe(obsRoot, { childList: true, subtree: true }, schedule, 30 * 1000) : null;
-                baiduPaginationPatchStop = () => {
-                    try {
-                        if (timerId) clearTimeout(timerId);
-                    } catch (e1) {}
-                    timerId = 0;
-                    try {
-                        if (obs) obs.disconnect();
-                    } catch (e2) {}
-                };
+                return;
             }
 
             function applyBaiduRecommendListCleanupRuntime(active) {
@@ -12284,8 +12223,7 @@
                                 'body.double-column #rs > div, body.double-column #page > div { margin-left: 0 !important; margin-right: auto !important; padding-left: 0 !important; padding-right: 0 !important; left: auto !important; right: auto !important; float: none !important; transform: none !important; }',
                                 'body.double-column #page > div[class*="page-inner_"]{display:flex !important;align-items:center !important;justify-content:center !important;flex-wrap:wrap !important;gap:8px !important;width:100% !important;max-width:100% !important;margin:0 auto !important;box-sizing:border-box !important;}',
                                 'body.double-column #page > div[class*="page-inner_"] > a,body.double-column #page > div[class*="page-inner_"] > strong,body.double-column #page > div[class*="page-inner_"] > span{display:inline-flex !important;align-items:center !important;justify-content:center !important;vertical-align:middle !important;margin:0 !important;}',
-                                'body.double-column #page a.n{display:inline-flex !important;align-items:center !important;justify-content:center !important;line-height:1 !important;vertical-align:middle !important;}body.double-column #page a.n .n-word_1TXWP,body.double-column #page a.n img{display:inline-block !important;vertical-align:middle !important;line-height:1 !important;}',
-                                'body.double-column #page a.n img.leftArrow_ag-Qe,body.double-column #page a.n img.rightArrow_2RcSz,body.double-column #page a.n img[alt="上一页"],body.double-column #page a.n img[alt="下一页"]{display:none !important;}',
+                                'body.double-column #page a.n{display:inline-flex !important;align-items:center !important;justify-content:center !important;line-height:1 !important;vertical-align:middle !important;}',
                                 'body.double-column #rs > div > div, body.double-column #page > div > div { margin-left: 0 !important; margin-right: auto !important; }',
                                 'body.single-column #rs, body.single-column #rs_new, body.single-column #page { display: block !important; width: 100% !important; max-width: 1200px !important; margin: 20px auto !important; margin-left: auto !important; margin-right: auto !important; padding: 0 20px !important; box-sizing: border-box !important; float: none !important; left: auto !important; right: auto !important; transform: none !important; }',
                                 'body.single-column #rs > div, body.single-column #rs_new > div, body.single-column #page > div { margin-left: 0 !important; margin-right: auto !important; padding-left: 0 !important; padding-right: 0 !important; left: auto !important; right: auto !important; float: none !important; transform: none !important; }',
@@ -12297,19 +12235,50 @@
                         if (isBaiduNewsSearch) {
                             cssRules.push(
                                 [
-                                    '#head .head-left_19j2w{width:100% !important;display:flex !important;align-items:center !important;justify-content:center !important;gap:16px !important;}',
-                                    '#head a[id^="result_logo"],a[id^="result_logo"],#head a[id^="result_logo"] img,#head [class^="index-logo-"],#head [class*="index-logo-"]{display:none !important;}',
-                                    '#head .ci-root{margin:0 auto !important;flex:1 1 auto !important;max-width:760px !important;width:100% !important;padding:0 12px !important;box-sizing:border-box !important;}',
-                                    'body.single-column #head .ci-root{max-width:760px !important;}',
-                                    'body.double-column #head .ci-root{max-width:860px !important;}',
-                                    '#head .ci-root #ci-main,#head .ci-root .ci-wrapper,#head .ci-root .ci-container{width:100% !important;max-width:100% !important;box-sizing:border-box !important;}',
+                                    '.input-head-wrapper,.head_4gETA{width:100% !important;max-width:100% !important;display:flex !important;align-items:center !important;justify-content:center !important;box-sizing:border-box !important;}',
+                                    '.input-head-wrapper{padding-left:0 !important;padding-right:0 !important;}',
+                                    '.head_4gETA{position:relative !important;padding:0 180px !important;margin:0 auto !important;}',
+                                    '.menu__ff4S,#u{position:absolute !important;right:16px !important;top:50% !important;transform:translateY(-50%) !important;}',
+                                    '.head-left_19j2w{width:100% !important;display:flex !important;align-items:center !important;justify-content:center !important;gap:16px !important;flex:1 1 auto !important;min-width:0 !important;margin:0 auto !important;padding-left:0 !important;padding-right:0 !important;}',
+                                    'a[id^="result_logo"],a[id^="result_logo"] img,[class^="index-logo-"],[class*="index-logo-"]{display:none !important;}',
+                                    '#header_top_bar,.header_top_bar,.head_nums_cont_outer_q2,.search_sort.search_sort_news{display:none !important;}',
+                                    '#right-tool{display:none !important;}',
+                                    '#ci-right-tool{display:none !important;}',
+                                    '#gotoPage,.gotoPage,#foot,.foot{display:none !important;}',
+                                    '.ci-root{margin:0 auto !important;flex:1 1 auto !important;max-width:760px !important;width:100% !important;padding:0 12px !important;box-sizing:border-box !important;}',
+                                    'body.single-column .ci-root{max-width:760px !important;}',
+                                    'body.double-column .ci-root{max-width:860px !important;}',
+                                    '.ci-root #ci-main,.ci-root .ci-wrapper,.ci-root .ci-container{width:100% !important;max-width:100% !important;box-sizing:border-box !important;}',
                                     '#ci-main{width:100% !important;max-width:760px !important;margin:0 auto !important;box-sizing:border-box !important;}',
                                     'body.double-column #ci-main{max-width:860px !important;}',
                                     '#ci-main .ci-wrapper,#ci-main .ci-container,#ci-main .ci-file-input-wrapper,#ci-main #ci-area{margin:0 auto !important;width:100% !important;max-width:100% !important;box-sizing:border-box !important;}',
-                                    `body.${BAIDU_DARK_BODY_CLASS} #head .ci-textarea{background:#303134 !important;color:#e8e6e3 !important;border-color:#5f6368 !important;}`,
-                                    `body.${BAIDU_DARK_BODY_CLASS} #head .ci-textarea::placeholder{color:#9aa0a6 !important;}`,
-                                    '#page .page-inner{display:flex !important;align-items:center !important;justify-content:center !important;flex-wrap:wrap !important;gap:8px !important;width:100% !important;margin:0 auto !important;}',
-                                    '#page .page-inner a,#page .page-inner strong,#page .page-inner span{display:inline-flex !important;align-items:center !important;justify-content:center !important;vertical-align:middle !important;margin:0 !important;}',
+                                    '.ci-root #content_left .result-op[tpl="news-normal"] .c-row,.ci-root #content_left .result-op[tpl="news-normal"] .c-row.content-wrapper_1SuJ0,.ci-root #content_left .result-op[tpl="news-normal"] .c-row.c-gap-top-small,#content_left .result-op[tpl="news-normal"] .c-row,#content_left .result-op[tpl="news-normal"] .c-row.content-wrapper_1SuJ0,#content_left .result-op[tpl="news-normal"] .c-row.c-gap-top-small{display:flex !important;align-items:flex-start !important;gap:12px !important;flex-wrap:nowrap !important;}',
+                                    'body.single-column .ci-root #content_left .result-op[tpl="news-normal"] .c-span3,body.double-column .ci-root #content_left .result-op[tpl="news-normal"] .c-span3,body.single-column #content_left .result-op[tpl="news-normal"] .c-span3,body.double-column #content_left .result-op[tpl="news-normal"] .c-span3{flex:0 0 120px !important;width:120px !important;max-width:120px !important;float:none !important;margin:0 !important;}',
+                                    'body.single-column .ci-root #content_left .result-op[tpl="news-normal"] .c-span9,body.double-column .ci-root #content_left .result-op[tpl="news-normal"] .c-span9,body.single-column #content_left .result-op[tpl="news-normal"] .c-span9,body.double-column #content_left .result-op[tpl="news-normal"] .c-span9{flex:1 1 auto !important;min-width:0 !important;width:auto !important;float:none !important;margin-left:0 !important;padding-left:0 !important;}',
+                                    '.ci-root #content_left .result-op[tpl="news-normal"] .c-span3 .c-img,.ci-root #content_left .result-op[tpl="news-normal"] .c-span3 img,#content_left .result-op[tpl="news-normal"] .c-span3 .c-img,#content_left .result-op[tpl="news-normal"] .c-span3 img{width:100% !important;height:auto !important;display:block !important;object-fit:cover !important;}',
+                                    '@media (max-width:900px){.ci-root #content_left .result-op[tpl="news-normal"] .c-row,#content_left .result-op[tpl="news-normal"] .c-row{flex-direction:column !important;align-items:stretch !important;} .ci-root #content_left .result-op[tpl="news-normal"] .c-span3,#content_left .result-op[tpl="news-normal"] .c-span3{width:100% !important;max-width:100% !important;flex:0 0 auto !important;} .ci-root #content_left .result-op[tpl="news-normal"] .c-span9,#content_left .result-op[tpl="news-normal"] .c-span9{width:100% !important;}}',
+                                    `body.${BAIDU_DARK_BODY_CLASS}{background:#202124 !important;color:#e8e6e3 !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} .input-head-wrapper,body.${BAIDU_DARK_BODY_CLASS} .head_4gETA{background:#202124 !important;border-bottom:1px solid #303134 !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} .menu__ff4S a,body.${BAIDU_DARK_BODY_CLASS} #u a{color:#e8e6e3 !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} .menu__ff4S a:hover,body.${BAIDU_DARK_BODY_CLASS} #u a:hover{color:#8ab4f8 !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} .ci-wrapper,body.${BAIDU_DARK_BODY_CLASS} .ci-container{background:#202124 !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} .ci-wrapper-border{border-color:#5f6368 !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} .ci-wrapper-box-shadow{box-shadow:0 0 0 1px rgba(95,99,104,0.6) !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} .ci-textarea{background:#303134 !important;color:#e8e6e3 !important;border-color:#5f6368 !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} .ci-textarea::placeholder{color:#9aa0a6 !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} .ci-tool,body.${BAIDU_DARK_BODY_CLASS} .ci-tool *{color:#e8e6e3 !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} .ci-root,body.${BAIDU_DARK_BODY_CLASS} #ci-main,body.${BAIDU_DARK_BODY_CLASS} .ci-normal-wrapper,body.${BAIDU_DARK_BODY_CLASS} .ci-file-input-wrapper,body.${BAIDU_DARK_BODY_CLASS} #ci-area,body.${BAIDU_DARK_BODY_CLASS} .ci-op-anime,body.${BAIDU_DARK_BODY_CLASS} .tools-placeholder-wrapper,body.${BAIDU_DARK_BODY_CLASS} .right-tools-wrapper{background:#202124 !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} #ci-submit-button{background:#4e6ef2 !important;color:#fff !important;border:1px solid #4e6ef2 !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} #page .page-inner a,body.${BAIDU_DARK_BODY_CLASS} #page .page-inner strong{background:#2b2d31 !important;border:1px solid #5f6368 !important;color:#e8e6e3 !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} #page .page-inner a:hover{background:#4e6ef2 !important;border-color:#4e6ef2 !important;color:#fff !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} #page .page-inner .fk i{color:#cbd5e1 !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} #page,body.${BAIDU_DARK_BODY_CLASS} #page .page-inner{background:transparent !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} #page .page-inner .pc,body.${BAIDU_DARK_BODY_CLASS} #page .page-inner .fk{color:#e8e6e3 !important;}`,
+                                    '#page{width:100% !important;max-width:100% !important;margin:20px auto !important;display:block !important;box-sizing:border-box !important;float:none !important;}',
+                                    '#page .page-inner{display:flex !important;align-items:center !important;justify-content:center !important;flex-wrap:wrap !important;gap:8px !important;width:100% !important;margin:0 auto !important;box-sizing:border-box !important;float:none !important;}',
+                                    '#page .page-inner a,#page .page-inner strong,#page .page-inner span{display:inline-flex !important;align-items:center !important;justify-content:center !important;vertical-align:middle !important;margin:0 !important;text-align:center !important;}',
+                                    '#page .page-inner .fk,#page .page-inner .pc{display:inline-flex !important;align-items:center !important;justify-content:center !important;line-height:1 !important;min-width:1.4em !important;}',
+                                    '#page .page-inner .fk i{line-height:1 !important;}',
                                 ].join('\n')
                             );
                         }
@@ -12778,25 +12747,31 @@
                                     '.pc-fresh-wrapper-con,.c-group-wrapper,[tpl="kg_entity_card"],[tpl*="baike"],[data-module="baike"],[tpl="yl_ps_main"],[m-name*="yl_ps_main"]';
                                 const isFullWidthCard = bestResult.matches(fullWidthSelector);
                                 if (isDouble && !isFullWidthCard) {
-                                    const allCards = Array.from(root.children).filter(
-                                        (el) => el instanceof Element && el.matches('.c-container, .result, .result-op')
-                                    );
-                                    const visibleCards = allCards.filter((el) => {
+                                    const isVisibleCard = (el) => {
+                                        if (!(el instanceof Element)) return false;
                                         try {
                                             if (el.getClientRects().length === 0) return false;
                                         } catch (e0) {
                                             return true;
                                         }
+                                        let style;
                                         try {
-                                            const style = window.getComputedStyle(el);
+                                            style = window.getComputedStyle(el);
                                             if (style && (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0')) return false;
                                         } catch (e1) {}
                                         try {
+                                            if ((!style || style.position !== 'fixed') && !el.offsetParent) return false;
+                                        } catch (e2) {}
+                                        try {
                                             const rect = el.getBoundingClientRect();
                                             if (rect.width <= 1 || rect.height <= 1) return false;
-                                        } catch (e2) {}
+                                        } catch (e3) {}
                                         return true;
-                                    });
+                                    };
+                                    const allCards = Array.from(root.children).filter(
+                                        (el) => el instanceof Element && el.matches('.c-container, .result, .result-op')
+                                    );
+                                    const visibleCards = allCards.filter(isVisibleCard);
                                     const halfCards = visibleCards.filter(
                                         (el) => el instanceof Element && !el.matches(fullWidthSelector)
                                     );

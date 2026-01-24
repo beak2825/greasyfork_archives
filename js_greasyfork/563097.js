@@ -2,9 +2,8 @@
 // @name         悬浮精准时间显示（秒杀助手）
 // @name:en      Precision Floating Clock (Synchronized)
 // @namespace    http://tampermonkey.net/
-// @version      1.3.2
-// @description  在网页右上角显示带有毫秒的精准北京时间，支持自动与京东、淘宝服务器同步，确保秒杀不掉链子。支持拖拽、亮暗色自动切换及自定义颜色。
-// @description:en Display high-precision network time (including milliseconds) on any webpage. Supports synchronization with Tmall and Suning servers, perfect for flash sales. Features include drag-and-drop, dark mode support, and customizable colors.
+// @version      1.3.3
+// @description  在网页右上角显示带有毫秒的精准北京时间，支持自动与京东、淘宝服务器同步。点击设置颜色：选白则白底黑字，选黑则黑底白字。
 // @author       l_greasy
 // @match        *://*/*
 // @run-at       document-start
@@ -19,13 +18,12 @@
 // @updateURL https://update.greasyfork.org/scripts/563097/%E6%82%AC%E6%B5%AE%E7%B2%BE%E5%87%86%E6%97%B6%E9%97%B4%E6%98%BE%E7%A4%BA%EF%BC%88%E7%A7%92%E6%9D%80%E5%8A%A9%E6%89%8B%EF%BC%89.meta.js
 // ==/UserScript==
 
-
 (function() {
     'use strict';
 
     let config = GM_getValue('clockConfig_v5_7', {
-        bgColor: '#ffffff',
-        textColor: '#000000',
+        bgColor: 'rgba(255,255,255,', // 基础背景色前缀
+        textColor: 'auto',
         bgOpacity: 0.45,
         pos: { top: '30px', left: (window.innerWidth - 250) + 'px' }
     });
@@ -36,9 +34,22 @@
     // --- 样式定义 ---
     function updateStyles() {
         const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const displayTextColor = config.textColor === 'auto'
-            ? (isDarkMode ? '#ffffff' : '#000000')
-            : config.textColor;
+
+        // 核心逻辑：颜色联动
+        let displayTextColor, baseBgColor;
+
+        if (config.textColor === 'auto') {
+            displayTextColor = isDarkMode ? '#ffffff' : '#000000';
+            baseBgColor = isDarkMode ? 'rgba(0,0,0,' : 'rgba(255,255,255,';
+        } else if (config.textColor === '#ffffff') {
+            // 用户点击了黑色 -> 黑底白字
+            displayTextColor = '#ffffff';
+            baseBgColor = 'rgba(0,0,0,';
+        } else {
+            // 用户点击了白色 -> 白底黑字
+            displayTextColor = '#000000';
+            baseBgColor = 'rgba(255,255,255,';
+        }
 
         const css = `
             @keyframes glassFlow {
@@ -61,15 +72,15 @@
                 font-variant-numeric: tabular-nums !important;
                 font-weight: 200 !important;
                 font-size: 32px !important;
-                background: linear-gradient(135deg, rgba(255,255,255,${config.bgOpacity}), rgba(255,255,255,${config.bgOpacity + 0.15})) !important;
+                background: linear-gradient(135deg, ${baseBgColor}${config.bgOpacity}), ${baseBgColor}${config.bgOpacity + 0.15})) !important;
                 background-size: 200% 200% !important;
                 animation: glassFlow 8s ease infinite !important;
                 color: ${displayTextColor} !important;
                 border-radius: 22px !important;
                 cursor: move !important;
                 user-select: none !important;
-                border: 0.5px solid rgba(255, 255, 255, 0.5) !important;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+                border: 0.5px solid rgba(150, 150, 150, 0.3) !important;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
                 backdrop-filter: blur(25px) saturate(190%) !important;
                 -webkit-backdrop-filter: blur(25px) saturate(190%) !important;
                 transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1);
@@ -90,8 +101,8 @@
             .s-item { margin-bottom: 18px; }
             .s-item label { display: flex; justify-content: space-around; align-items: center; }
             #cfg-ok-v5 { width: 100%; background: #007AFF; color: #fff; border: none; padding: 10px; border-radius: 14px; cursor: pointer; font-weight: 600; }
-            .color-dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: 0.2s; }
-            .dot-active { border-color: #007AFF !important; transform: scale(1.15); }
+            .color-dot { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.2s; position: relative; }
+            .dot-active { border-color: #007AFF !important; transform: scale(1.15); box-shadow: 0 0 8px rgba(0,122,255,0.4); }
         `;
         const existingStyle = document.getElementById('tm-clock-style-v5');
         if (existingStyle) existingStyle.remove();
@@ -139,17 +150,15 @@
             });
         });
 
-        // 竞争机制：哪家先回用哪家
         Promise.any([fetchTaobao, fetchJD]).then(res => {
             const endTime = Date.now();
-            // 修正后的偏移计算
             const offset = (res.serverTime + (res.rtt / 2)) - endTime;
             if (!isNaN(offset)) {
                 timeOffset = offset;
                 console.log(`[Clock] 校准成功 (${res.source}), 偏移: ${timeOffset}ms`);
             }
         }).catch(() => {
-            console.warn("[Clock] 接口请求失败，维持当前偏移");
+            console.warn("[Clock] 接口请求失败");
         });
     }
 
@@ -159,7 +168,6 @@
         const localNow = Date.now();
         const adjustedNow = new Date(localNow + timeOffset);
 
-        // 极致容错：如果计算结果非法，强制显示本地时间
         const h = String(isNaN(adjustedNow.getTime()) ? new Date().getHours() : adjustedNow.getHours()).padStart(2, '0');
         const m = String(isNaN(adjustedNow.getTime()) ? new Date().getMinutes() : adjustedNow.getMinutes()).padStart(2, '0');
         const s = String(isNaN(adjustedNow.getTime()) ? new Date().getSeconds() : adjustedNow.getSeconds()).padStart(2, '0');
@@ -183,7 +191,6 @@
 
         updateStyles();
 
-        // 交互逻辑
         let isDragging = false, hasMoved = false, ox, oy, startX, startY;
         clockDiv.onmousedown = (e) => {
             if (e.button !== 0) return;
@@ -204,7 +211,7 @@
             if (!isDragging) return;
             isDragging = false;
             if (!hasMoved) {
-                syncTime(); // 点击时强制同步
+                syncTime();
                 showSettings(e.clientX, e.clientY);
             } else {
                 GM_setValue('clockConfig_v5_7', config);
@@ -218,15 +225,15 @@
 
     function showSettings(x, y) {
         settingsPanel.innerHTML = `
-            <div style="font-weight:600; margin-bottom:15px; font-size:14px; color:#1d1d1f; text-align:center;">Settings</div>
+            <div style="font-weight:600; margin-bottom:15px; font-size:14px; color:#1d1d1f; text-align:center;">外观设置</div>
             <div class="s-item">
                 <label>
-                    <div class="color-dot" data-col="auto" style="background: linear-gradient(135deg, #000 50%, #fff 50%); border: 1px solid #ddd;"></div>
-                    <div class="color-dot" data-col="#000000" style="background: #000;"></div>
-                    <div class="color-dot" data-col="#ffffff" style="background: #fff; border: 1px solid #eee;"></div>
+                    <div class="color-dot" data-col="auto" title="自动模式" style="background: linear-gradient(135deg, #000 50%, #fff 50%);"></div>
+                    <div class="color-dot" data-col="#000000" title="白底黑字" style="background: #fff; border: 1px solid #ccc;"></div>
+                    <div class="color-dot" data-col="#ffffff" title="黑底白字" style="background: #000; border: 1px solid #444;"></div>
                 </label>
             </div>
-            <button id="cfg-ok-v5">Done</button>
+            <button id="cfg-ok-v5">确定</button>
         `;
         settingsPanel.style.display = 'block';
         settingsPanel.style.left = Math.min(x, window.innerWidth - 200) + 'px';
@@ -237,7 +244,7 @@
             dot.onclick = () => {
                 settingsPanel.querySelectorAll('.color-dot').forEach(d => d.classList.remove('dot-active'));
                 dot.classList.add('dot-active');
-                config.textColor = dot.dataset.col;
+                config.textColor = dot.dataset.col; // 这里的逻辑已在 updateStyles 中联动背景
                 updateStyles();
             };
         });

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         复制当前页面链接
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.4.1
 // @description  添加一个菜单项来复制当前页面链接
 // @author       momo
 // @license      MIT

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube 2 columns fix
 // @namespace    http://tampermonkey.net/
-// @version      1.07
+// @version      1.08
 // @description  Youtube watch page with 1 column videos
 // @author       You
 // @match        *://www.youtube.com/*
@@ -97,6 +97,11 @@ width: 170px;
 }
 ytd-compact-radio-renderer #video-title {
 width: 230px;
+}
+ytd-watch-flexy #secondary-inner .yt-badge-shape__icon {
+width: 13px !important;
+height:13px !important;
+margin-bottom: 1px;
 }`;
 style.textContent = cssOutput;
 document.head.appendChild(style);

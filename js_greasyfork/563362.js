@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         虹色解除
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  虹色無効化
 // @author       ワイ
-// @match        *://*.hayabusa.open2ch.net/test/read.cgi/*
+// @match        https://*.open2ch.net/test/read.cgi/*
 // @license	     CC0-1.0
 // @run-at       document-start
 // @grant        none

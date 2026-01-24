@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LD 丑化脚本
 // @namespace    http://tampermonkey.net/
-// @version      1.31
+// @version      1.33
 // @description  替换文字、图片、链接，并隐藏指定元素
 // @author       chengdu
 // @match        https://linux.do/*
@@ -22,7 +22,7 @@
     { oldText: /常见问题解答/g,         newText: '社区准则' },
     { oldText: /我的帖子/g,             newText: '帖子' },
     { oldText: /我的消息/g,             newText: '消息' },
-    { oldText: /近期活动/g,             newText: '分发' },
+    { oldText: /近期活动/g,             newText: 'LDC' },
     { oldText: /Leaderboard/g,          newText: '活跃度' },
     { oldText: /外部链接/g,             newText: '外链' },
     { oldText: /类别/g,                 newText: '版块' },
@@ -55,9 +55,19 @@
   const linkReplacements = [
     {
       selector: '[data-link-name="upcoming-events"]',
-      newHref:  'https://cdk.linux.do',
-      newTitle: '分发',
+      newHref:  'https://credit.linux.do/home',
+      newTitle: 'LDC',
       newTarget: '_blank'
+    }
+  ];
+
+  /* ---------- 新增菜单项规则 ---------- */
+  const menuInserts = [
+    {
+      afterSelector: '[data-link-name="upcoming-events"]', // 在 LDC 后面插入
+      text: '状态',
+      href: 'https://check.linux.do/',
+      target: '_blank'
     }
   ];
 
@@ -132,6 +142,39 @@
     });
   }
 
+  /* ---------- 注入菜单项 ---------- */
+  function insertMenuItems(root) {
+    menuInserts.forEach(({ afterSelector, text, href, target }) => {
+      const refElement = root.querySelector(afterSelector);
+      if (!refElement) return;
+
+      const li = refElement.closest('li');
+      if (!li || li.dataset.injectedApi) return; // 避免重复插入
+
+      // 克隆结构并修改内容
+      const newLi = li.cloneNode(true);
+      newLi.removeAttribute('data-list-item-name');
+      newLi.dataset.injectedApi = 'true';
+
+      const link = newLi.querySelector('a');
+      if (link) {
+        link.setAttribute('href', href);
+        link.setAttribute('title', text);
+        link.removeAttribute('data-link-name');
+        if (target) {
+          link.setAttribute('target', target);
+          link.setAttribute('rel', 'noopener noreferrer');
+        }
+        // 替换文字
+        const textSpan = link.querySelector('.sidebar-section-link-content-text');
+        if (textSpan) textSpan.textContent = text;
+      }
+
+      li.after(newLi);
+      console.log(`➕ 已插入菜单项: ${text} → ${href}`);
+    });
+  }
+
   /* ---------- 隐藏指定元素（CSS 注入） ---------- */
   function hideElements() {
     const style = document.createElement('style');
@@ -147,6 +190,7 @@
     replaceInTextNodes(root);
     replaceImageSources(root);
     replaceLinks(root);
+    insertMenuItems(root);
   }
 
   /* ---------- 初始执行 ---------- */
