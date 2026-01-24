@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Batch Remove Cover Art
 // @namespace    https://musicbrainz.org/user/chaban
-// @version      0.5.6
+// @version      0.6.0
 // @description  Allows batch removing cover art from MusicBrainz releases.
 // @tag          ai-created
 // @author       chaban, jesus2099
@@ -15,7 +15,7 @@
 // @updateURL https://update.greasyfork.org/scripts/541232/MusicBrainz%3A%20Batch%20Remove%20Cover%20Art.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     // --- START OF INLINED LIBRARIES ---
@@ -26,41 +26,41 @@
     CONTROL_POMME.ctrl = {
         key: CONTROL_POMME.is_macintosh ? "metaKey" : "ctrlKey",
         label: CONTROL_POMME.is_macintosh ? "\u2318" : "Ctrl+",
-        test: function(event) { return CONTROL_POMME.arePressed(event, ["ctrl"]); }
+        test: function (event) { return CONTROL_POMME.arePressed(event, ["ctrl"]); }
     };
     CONTROL_POMME.shift = {
         key: "shiftKey",
         label: CONTROL_POMME.is_macintosh ? "\u21E7" : "Shift+",
-        test: function(event) { return CONTROL_POMME.arePressed(event, ["shift"]); }
+        test: function (event) { return CONTROL_POMME.arePressed(event, ["shift"]); }
     };
     CONTROL_POMME.alt = {
         key: "altKey",
         label: CONTROL_POMME.is_macintosh ? "\u2325" : "Alt+",
-        test: function(event) { return CONTROL_POMME.arePressed(event, ["alt"]); }
+        test: function (event) { return CONTROL_POMME.arePressed(event, ["alt"]); }
     };
     CONTROL_POMME.ctrl_shift = {
         label: CONTROL_POMME.is_macintosh ? CONTROL_POMME.shift.label + CONTROL_POMME.ctrl.label : CONTROL_POMME.ctrl.label + CONTROL_POMME.shift.label,
-        test: function(event) { return CONTROL_POMME.arePressed(event, ["ctrl", "shift"]); }
+        test: function (event) { return CONTROL_POMME.arePressed(event, ["ctrl", "shift"]); }
     };
     CONTROL_POMME.ctrl_alt = {
         label: CONTROL_POMME.is_macintosh ? CONTROL_POMME.alt.label + CONTROL_POMME.ctrl.label : CONTROL_POMME.ctrl.label + CONTROL_POMME.alt.label,
-        test: function(event) { return CONTROL_POMME.arePressed(event, ["ctrl", "alt"]); }
+        test: function (event) { return CONTROL_POMME.arePressed(event, ["ctrl", "alt"]); }
     };
     CONTROL_POMME.alt_shift = {
         label: CONTROL_POMME.alt.label + CONTROL_POMME.shift.label,
-        test: function(event) { return CONTROL_POMME.arePressed(event, ["alt", "shift"]); }
+        test: function (event) { return CONTROL_POMME.arePressed(event, ["alt", "shift"]); }
     };
     CONTROL_POMME.ctrl_alt_shift = {
         label: CONTROL_POMME.is_macintosh ? CONTROL_POMME.alt.label + CONTROL_POMME.shift.label + CONTROL_POMME.ctrl.label : CONTROL_POMME.ctrl.label + CONTROL_POMME.alt.label + CONTROL_POMME.shift.label,
-        test: function(event) { return CONTROL_POMME.arePressed(event, ["ctrl", "alt", "shift"]); }
+        test: function (event) { return CONTROL_POMME.arePressed(event, ["ctrl", "alt", "shift"]); }
     };
-    CONTROL_POMME.new_tab_mod_keys = function(event) {
+    CONTROL_POMME.new_tab_mod_keys = function (event) {
         return CONTROL_POMME.is_macintosh ? /* ⇧⌘click */ event.shiftKey && event.metaKey : /* Shift+click */ event.shiftKey;
     };
-    CONTROL_POMME.new_bg_tab_mod_keys = function(event) {
+    CONTROL_POMME.new_bg_tab_mod_keys = function (event) {
         return CONTROL_POMME.is_macintosh ? /* ⌘click */ event.metaKey : /* Ctrl+click */ event.ctrlKey;
     };
-    CONTROL_POMME.arePressed = function(event, mod_keys) {
+    CONTROL_POMME.arePressed = function (event, mod_keys) {
         var wanted_mod_keys = !(CONTROL_POMME.is_macintosh ? event.ctrlKey : event.metaKey);
         for (var k = 0, mk = ["ctrl", "shift", "alt"]; wanted_mod_keys !== false && k < mk.length; k++) {
             wanted_mod_keys = wanted_mod_keys && mod_keys.indexOf(mk[k]) > -1 === event[CONTROL_POMME[mk[k]].key];
@@ -165,7 +165,7 @@
         var _eventName = eventName.toLowerCase();
         var event;
         if (_eventName.match(/^mouse|click$/)) {
-            var parameters = {modifierKeys: []};
+            var parameters = { modifierKeys: [] };
             if (_eventName.match(/\+/)) {
                 parameters.modifierKeys = _eventName.split("+");
                 _eventName = parameters.modifierKeys.pop();
@@ -185,7 +185,7 @@
         return false;
     }
     function waitForElement(selector, callback) {
-        var waitForElementIntervalID = setInterval(function() {
+        var waitForElementIntervalID = setInterval(function () {
             var element = document.querySelector(selector);
             if (element) {
                 clearInterval(waitForElementIntervalID);
@@ -194,9 +194,9 @@
         }, 123);
     }
     function forceValue(input, value) {
-        input.dispatchEvent(new Event("input", {bubbles: true}));
+        input.dispatchEvent(new Event("input", { bubbles: true }));
         (Object.getOwnPropertyDescriptor(Object.getPrototypeOf(input), "value").set).call(input, value);
-        input.dispatchEvent(new Event("change", {bubbles: true}));
+        input.dispatchEvent(new Event("change", { bubbles: true }));
     }
     function decodeHTML(HTMLBlurb) {
         var decoder = document.createElement("div");
@@ -340,7 +340,7 @@
 
         function createClearButton() {
             let butt = createButton("×", "25px");
-            butt.addEventListener("click", function(event) {
+            butt.addEventListener("click", function (event) {
                 forceValue(notetext, "");
                 if (event[CONTROL_POMME.shift.key] && submit_button) { sendEvent(submit_button, "click"); }
                 else { notetext.focus(); }
@@ -361,11 +361,13 @@
             const save_checkbox = save_label.appendChild(createTag("input", {
                 a: { type: "checkbox", tabindex: "-1" },
                 s: { display: "inline" },
-                e: { change: function() {
-                    save = this.checked;
-                    this.parentNode.style.backgroundColor = save ? colours.ok : colours.warning;
-                    localStorage.setItem(userjs + "forget", save ? "" : "1");
-                }}
+                e: {
+                    change: function () {
+                        save = this.checked;
+                        this.parentNode.style.backgroundColor = save ? colours.ok : colours.warning;
+                        localStorage.setItem(userjs + "forget", save ? "" : "1");
+                    }
+                }
             }));
             save_checkbox.checked = save;
             save_label.appendChild(document.createTextNode(" remember "));
@@ -383,7 +385,7 @@
                 } else {
                     butt.setAttribute("title", lastnotetext);
                     butt.setAttribute("value", summarise(lastnotetext));
-                    butt.addEventListener("click", function(event) {
+                    butt.addEventListener("click", function (event) {
                         if (CONTROL_POMME.ctrl.test(event)) {
                             forget(this.id.match(/(\d)$/)[1]);
                         } else {
@@ -489,6 +491,7 @@
 
         let totalRemovals = 0;
         let completedRemovals = 0;
+        let lastChecked = null;
 
         coverArtDivs.forEach((artworkContDiv) => {
             if (artworkContDiv.closest('.mb-batch-remove-artwork-wrapper')) return;
@@ -527,6 +530,7 @@
                 span.classList.remove('has-content', 'status-success', 'status-error');
             });
             isAborting = false;
+            lastChecked = null;
         };
 
         selectAllCheckbox.addEventListener('change', (event) => {
@@ -634,6 +638,27 @@
                 });
             });
         };
+
+        document.getElementById('content').addEventListener('click', (event) => {
+            if (event.target.classList.contains('cover-art-checkbox')) {
+                const checkbox = event.target;
+                if (event.shiftKey && lastChecked && lastChecked !== checkbox) {
+                    const checkboxes = Array.from(document.querySelectorAll('input.cover-art-checkbox:not(:disabled)'));
+                    const start = checkboxes.indexOf(lastChecked);
+                    const end = checkboxes.indexOf(checkbox);
+
+                    if (start > -1 && end > -1) {
+                        const low = Math.min(start, end);
+                        const high = Math.max(start, end);
+                        const shouldCheck = checkbox.checked;
+                        for (let i = low; i <= high; i++) {
+                            checkboxes[i].checked = shouldCheck;
+                        }
+                    }
+                }
+                lastChecked = checkbox;
+            }
+        });
     };
 
     observeDOM();

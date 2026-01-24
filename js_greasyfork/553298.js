@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         shikimori-ext-beta
 // @namespace    http://tampermonkey.net/
-// @version      0.22.6-beta
+// @version      0.23.1-beta
 // @description  Добавляет ссылки на просмотр и горячую клавишу C (с ограничением по вышедшим эпизодам)
 // @author       https://greasyfork.org/ru/users/1065796-kazaev
 // @match        https://shikimori.one/animes/*
@@ -146,28 +146,33 @@
         constructor() { this.init(); }
 
         init() {
-            document.addEventListener("keydown", (e) => {
+            document.addEventListener("keydown", async (e) => {
                 const episodesEl = Array.from(document.querySelectorAll("#animes_show .c-info-left .block .value"))
                 .find(el => el.previousElementSibling?.textContent.trim() === "Эпизоды:");
-                const rateSpan = document.querySelector("#animes_show .b-user_rate .rate-number .current-episodes");
-                const addBtn = document.querySelector(".rate-number .item-add.increment");
 
                 // Клавиша C – увеличить эпизод
                 if (e.code === Settings.config.hotkeys.incrementEpisode) {
-                    if (!episodesEl || !rateSpan || !addBtn) return;
+                    if (!episodesEl) return;
+
+                    const controls = ensureRateControlsOpen();
+                    if (!controls) {
+                        Logger.log("Управление эпизодами пока недоступно", "warn");
+                        return;
+                    }
+
+                    const { addBtn, rateSpan } = controls;
 
                     const match = episodesEl.textContent.match(/(\d+)(?:\s*\/\s*(\d+))?/);
-                    console.log(episodesEl,rateSpan,addBtn,match);
-
                     if (!match) return;
 
                     const current = parseInt(rateSpan.textContent.trim()) || 0;
                     const released = parseInt(match[1], 10);
+
                     if (current < released) {
                         addBtn.click();
-                        Logger.log(`Эпизод добавлен: ${current+1}/${released}`, 'success');
+                        Logger.log(`Эпизод добавлен: ${current + 1}/${released}`, "success");
                     } else {
-                        Logger.log(`Максимум вышедших эпизодов достигнут: ${current}/${released}`, 'warn');
+                        Logger.log(`Максимум вышедших эпизодов достигнут: ${current}/${released}`, "warn");
                     }
                 }
 
@@ -182,6 +187,26 @@
                     }
                 }
             });
+
+            const ensureRateControlsOpen = () => {
+                let addBtn = document.querySelector(".rate-number .item-add.increment");
+                let rateSpan = document.querySelector("#animes_show .b-user_rate .rate-number .current-episodes");
+
+                if (addBtn && rateSpan) {
+                    return { addBtn, rateSpan };
+                }
+
+                const addTrigger = document.querySelector(".b-user_rate .add-trigger");
+                if (!addTrigger) return null;
+
+                addTrigger.click();
+
+                addBtn = document.querySelector(".rate-number .item-add.increment");
+                rateSpan = document.querySelector("#animes_show .b-user_rate .rate-number .current-episodes");
+
+                if (!addBtn || !rateSpan) return null;
+                return { addBtn, rateSpan };
+            };
         }
     }
 

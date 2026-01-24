@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MIUI Browser Tab KeepAlive
 // @namespace    https://github.com/DJ-Flitzefinger/miui-browser-tab-keepalive
-// @version      2.0.0
+// @version      2.1.0
 // @description  Tampermonkey userscript that helps prevent MIUI/HyperOS from killing mobile browser tabs. No root required.
 // @license      GPL-3.0-or-later
 // @match        https://www.youtube.com/*
@@ -31,7 +31,8 @@
     // --------------------------------------------------------
     // VIDEO KEEPALIVE
     // --------------------------------------------------------
-    VideoKeepAlive: true,     // Enable/disable Video KeepAlive (hidden video + MediaSession)
+    VideoKeepAlive: true,            // Enable/disable Video KeepAlive (hidden video + MediaSession)
+    VideoKeepAliveAllowInput: true, // Allow pause/play from notification controls (true = can pause, false = resumes automatically)
 
     // --------------------------------------------------------
     // KEEPALIVE PRIORITY
@@ -64,6 +65,7 @@
     // AUDIO KEEPALIVE (audio playback + MediaSession)
     // --------------------------------------------------------
     AudioKeepAlive: false,
+    AudioKeepAliveAllowInput: true, // Allow pause/play from notification controls (true = can pause, false = resumes automatically)
     AudioFrequencyHz: 440,
     AudioGain: 0.0001,
     AudioResumeIntervalMs: 5000, // Audio resume interval, if it somehow stops (0 = off)
@@ -74,6 +76,7 @@
     // VIDEO KEEPALIVE
     // --------------------------------------------------------
     VideoKeepAlive: true,
+    VideoKeepAliveAllowInput: false, // Allow pause/play from notification controls (true = can pause, false = resumes automatically)
 
     // --------------------------------------------------------
     // KEEPALIVE PRIORITY
@@ -106,6 +109,7 @@
     // AUDIO KEEPALIVE
     // --------------------------------------------------------
     AudioKeepAlive: true,
+    AudioKeepAliveAllowInput: false, // Allow pause/play from notification controls (true = can pause, false = resumes automatically)
     AudioFrequencyHz: 440,
     AudioGain: 0.0001,
     AudioResumeIntervalMs: 5000,
@@ -127,6 +131,7 @@
       },
       videoKeepAlive: {
         enabled: profile.VideoKeepAlive,
+        allowInput: !!profile.VideoKeepAliveAllowInput,
         retryWatchdog: {
           enabled: profile.retryWatchdog,
           retryDelayMinMs: profile.retryDelayMinMs,
@@ -141,6 +146,7 @@
 
         audioKeepAlive: {
           enabled: profile.AudioKeepAlive,
+          allowInput: !!profile.AudioKeepAliveAllowInput,
           frequencyHz: profile.AudioFrequencyHz,
           gain: profile.AudioGain,
           resumeIntervalMs: profile.AudioResumeIntervalMs,
@@ -401,6 +407,24 @@
   }
 
   // ============================================================
+  // Manual pause state (for AllowInput feature)
+  // ============================================================
+  // When user pauses via notification controls and AllowInput is true,
+  // we set this flag to prevent automatic resume by timers/watchdogs.
+
+  let keepAliveManuallyPaused = false;
+
+  function isInputAllowedForMode(mode) {
+    if (mode === 'video') {
+      return !!SETTINGS?.videoKeepAlive?.allowInput;
+    }
+    if (mode === 'audio') {
+      return !!SETTINGS?.extras?.audioKeepAlive?.allowInput;
+    }
+    return false;
+  }
+
+  // ============================================================
   // Audio KeepAlive (audio playback + MediaSession)
   // ============================================================
 
@@ -498,6 +522,8 @@
         const interval = clampMs(resumeMs, 250, 5000);
         audioResumeTimer = setInterval(() => {
           if (!runningKeepAlive) return;
+          // Skip resume if manually paused and input is allowed
+          if (keepAliveManuallyPaused && isInputAllowedForMode('audio')) return;
           try {
             if (audioCtx?.state === 'suspended') audioCtx.resume();
           } catch {}
@@ -566,6 +592,9 @@
     if (!videoEl) return;
     if (!videoEl.paused) return;
 
+    // Skip resume if manually paused and input is allowed
+    if (keepAliveManuallyPaused && isInputAllowedForMode('video')) return;
+
     try {
       await videoEl.play();
 
@@ -630,17 +659,40 @@
         };
 
         const targetPlay = async () => {
+          // Clear manual pause flag when user explicitly plays
+          keepAliveManuallyPaused = false;
+
           try {
             if (mode === 'video') await videoEl?.play();
             else if (mode === 'audio') await audioEl?.play();
           } catch {}
+
+          // Update playback state
+          try { navigator.mediaSession.playbackState = 'playing'; } catch {}
         };
 
         const targetPause = () => {
+          const allowInput = isInputAllowedForMode(mode);
+
           try {
             if (mode === 'video') videoEl?.pause();
             else if (mode === 'audio') audioEl?.pause();
           } catch {}
+
+          if (allowInput) {
+            // Mark as manually paused - timers will respect this
+            keepAliveManuallyPaused = true;
+            // Update playback state to paused
+            try { navigator.mediaSession.playbackState = 'paused'; } catch {}
+          } else {
+            // Input not allowed - immediately resume playback
+            void (async () => {
+              try {
+                if (mode === 'video') await videoEl?.play();
+                else if (mode === 'audio') await audioEl?.play();
+              } catch {}
+            })();
+          }
         };
 
         safe('play', targetPlay);
@@ -668,6 +720,13 @@
 
   function refreshKeepAliveMediaSession() {
     if (!runningKeepAlive) return;
+
+    // Don't override manual pause state during refresh
+    if (keepAliveManuallyPaused) {
+      // Just re-register handlers, don't change playback state
+      setMediaSessionPlaying(true);
+      return;
+    }
 
     setMediaSessionPlaying(true);
 
@@ -706,6 +765,9 @@
     if (runningKeepAlive) return;
     runningKeepAlive = true;
 
+    // Reset manual pause state when starting fresh
+    keepAliveManuallyPaused = false;
+
     await acquireWebLock();
 
     const mode = primaryKeepAliveMode();
@@ -734,6 +796,9 @@
   function stopKeepAlive() {
     if (!runningKeepAlive) return;
     runningKeepAlive = false;
+
+    // Reset manual pause state
+    keepAliveManuallyPaused = false;
 
     stopMediaSessionRefresh();
     setMediaSessionPlaying(false);

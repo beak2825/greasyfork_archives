@@ -2,10 +2,10 @@
 // @name ASMR.one Ultimate (Radio + Learner)
 // @name:zh-CN ASMR.one 终极增强 (电台 + 学习模式)
 // @namespace http://tampermonkey.net/
-// @version 101
+// @version 119
 // @description The ultimate enhancement suite for ASMR.one. Features: Radio Mode (Continuous random playback, smart navigation, shuffling) and Learner Mode (Bilingual subtitles, auto-translation, study mode).
 // @description:zh-CN ASMR.one 的终极增强套件。功能：电台模式（连续随机播放、智能导航、混洗）和学习模式（双语字幕、自动翻译、学习/模糊模式）。
-// @author You
+// @author Henry
 // @match https://asmr.one/*
 // @match https://www.asmr.one/*
 // @match https://asmr-100.com/*
@@ -19,14 +19,12 @@
 // @grant unsafeWindow
 // @run-at document-idle
 // @license MIT
+// @icon https://images2.imgbox.com/c8/21/h1DhlGPW_o.png
 // @downloadURL https://update.greasyfork.org/scripts/563283/ASMRone%20Ultimate%20%28Radio%20%2B%20Learner%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/563283/ASMRone%20Ultimate%20%28Radio%20%2B%20Learner%29.meta.js
 // ==/UserScript==
 (function () {
     'use strict';
-    // =========================================================================
-    // 0. I18N
-    // =========================================================================
     const I18n = {
         lang: navigator.language.startsWith('zh') ? 'zh' : 'en',
         data: {
@@ -41,6 +39,8 @@
                 shuffleSub: 'Randomize playback order',
                 prefFormat: 'Preferred Format',
                 prefFormatSub: 'e.g. wav, mp3',
+                sePref: 'SE Preference',
+                sePrefSub: 'Prefer folders with sound effects',
                 targetLang: 'Target Language',
                 targetLangSub: 'Language code for secondary subtitles (e.g. en, es, fr)',
                 liveCaptionTitle: 'Pro Tip: Live Caption',
@@ -60,6 +60,8 @@
                 shuffleSub: '打乱播放顺序',
                 prefFormat: '偏好格式',
                 prefFormatSub: '例如 wav, mp3',
+                sePref: 'SE 偏好',
+                sePrefSub: '优先进入包含音效 (SE) 的目录',
                 targetLang: '目标语言',
                 targetLangSub: '副字幕的语言代码 (如 en, es)',
                 liveCaptionTitle: '小贴士: 实时字幕',
@@ -73,14 +75,9 @@
             return this.data[this.lang][key] || this.data['en'][key] || key;
         }
     };
-    // =========================================================================
-    // 1. STYLES
-    // =========================================================================
     const CSS = `
-        /* --- General Utilities --- */
         #lyric { opacity: 0 !important; pointer-events: none !important; }
         #draggable, #lyricsBar { display: none !important; }
-        /* --- Learner Mode Styles --- */
         .learner-subs-expanded {
             display: flex;
             flex-direction: column;
@@ -160,15 +157,13 @@
         style.textContent = CSS;
         document.head.append(style);
     }
-    // =========================================================================
-    // 2. CONFIG & STATE
-    // =========================================================================
     const Config = {
         defaults: {
             playAllInFolder: false,
             shuffle: false,
             autoFilterFolders: true,
-            preferredFormat: 'wav',
+            preferredFormat: 'wav > mp3 > flac > opus > m4a > aac',
+            sePreference: true,
             showJP: true,
             subtitleLang: 'en',
         },
@@ -185,15 +180,39 @@
         log: (...args) => console.log(Logger.prefix, ...args),
         error: (...args) => console.error(Logger.prefix, ...args)
     };
+    const SafeUtils = {
+        waitFor(predicate, timeoutMs = 10000, intervalMs = 200) {
+            return new Promise(resolve => {
+                if (predicate()) {
+                    resolve(true);
+                    return;
+                }
+                const start = Date.now();
+                const timer = setInterval(() => {
+                    if (predicate()) {
+                        clearInterval(timer);
+                        resolve(true);
+                    } else if (Date.now() - start > timeoutMs) {
+                        clearInterval(timer);
+                        resolve(false);
+                    }
+                }, intervalMs);
+            });
+        },
+        async waitForElement(selector, timeoutMs = 10000) {
+            const found = await this.waitFor(() => document.querySelector(selector), timeoutMs);
+            return found ? document.querySelector(selector) : null;
+        },
+        async getVue() {
+            await this.waitFor(() => {
+                const app = document.querySelector('#q-app');
+                return app && app.__vue__ && app.__vue__.$store && app.__vue__.$router;
+            });
+            return document.querySelector('#q-app').__vue__;
+        }
+    };
     const VueUtils = {
         getApp: () => document.querySelector('#q-app')?.__vue__ || null,
-        async waitUntilReady() {
-            while (true) {
-                const app = this.getApp();
-                if (app && app.$store && app.$router && app.$axios) return app;
-                await new Promise(r => setTimeout(r, 1000));
-            }
-        },
         findComponent(root, predicate) {
             if (!root) return null;
             const queue = [root];
@@ -208,9 +227,6 @@
             return null;
         }
     };
-    // =========================================================================
-    // 3. FEATURE: LEARNER
-    // =========================================================================
     const TranslationService = {
         cache: new Map(),
         queue: new Map(),
@@ -308,7 +324,7 @@
                 SubtitleManager.pollForLyrics();
                 const lyricEl = document.getElementById('lyric');
                 if (lyricEl && lyricEl.textContent) {
-                    SubtitleManager.updateDisplay( lyricEl.textContent.trim());
+                    SubtitleManager.updateDisplay(lyricEl.textContent.trim());
                 }
             }, 500);
         },
@@ -395,9 +411,6 @@
             });
         }
     };
-    // =========================================================================
-    // 4. FEATURE: RADIO
-    // =========================================================================
     const DurationParser = {
         parse(caption) {
             if (!caption) return 0;
@@ -414,22 +427,48 @@
         }
     };
     const SmartSelector = {
-        regexSample: /サンプル|Sample|Trial|Preview|体験版/i,
+        regexSample: /サンプル|Sample|Trial|Preview|体验版/i,
+        formatPriority: ['wav', 'mp3', 'flac', 'opus', 'm4a', 'aac'],
+        calcScore(name, count, caption, isSample) {
+            let score = 0;
+            const lowerName = (name || "").toLowerCase();
+            // 1. Durations & Counts (Preference to density)
+            const duration = DurationParser.parse(caption);
+            if (duration > 0) score += (duration / 60) * 10;
+            score += (count || 0) * 5;
+            // 2. Penalize Samples & Metadata
+            if (isSample || this.regexSample.test(name)) score -= 1000000;
+            if (lowerName.includes('封面') || lowerName.includes('cover') || lowerName.includes('illust')) score -= 500000;
+            if (lowerName.includes('script') || lowerName.includes('台本') || lowerName.includes('剧本')) score -= 300000;
+            // 3. SE Preference
+            const isSE = /SE|Sound Effect|音效/i.test(name);
+            if (isSE) {
+                if (Config.get('sePreference')) score += 2000000;
+                else score += 1000;
+            }
+            // 4. Tiered Format Priority
+            const userPrefStr = (Config.get('preferredFormat') || '').toLowerCase();
+            const prefs = userPrefStr.split(/>|,/).map(s => s.trim()).filter(Boolean);
+            const priorities = [...prefs, ...this.formatPriority];
+            const uniquePriorities = [...new Set(priorities)];
+            for (let i = 0; i < uniquePriorities.length; i++) {
+                if (lowerName.includes(uniquePriorities[i])) {
+                    score += (uniquePriorities.length - i) * 100000;
+                    break;
+                }
+            }
+            return score;
+        },
         selectBestFolder(dirs) {
             if (!dirs?.length) return null;
-            const pref = (Config.get('preferredFormat') || '').toLowerCase();
             const candidates = dirs.map(dir => {
-                const name = (dir.name || dir.title || "").toLowerCase();
-                const caption = (dir.caption || "").toLowerCase();
-                let score = 0;
-                score += DurationParser.parse(caption);
-                if (pref && name.includes(pref)) score += 100000;
-                if (this.regexSample.test(name)) score -= 50000;
-                score += (dir.children_count || 0) * 0.1;
-                return { ...dir, _score: score };
+                const name = dir.name || dir.title || "";
+                const count = dir.children_count || dir.tracks?.length || 0;
+                const caption = dir.caption || dir.duration_text || "";
+                return { original: dir, _score: this.calcScore(name, count, caption, false) };
             });
             candidates.sort((a, b) => b._score - a._score);
-            return candidates[0]?.name;
+            return candidates[0]?._score > -400000 ? candidates[0]?.original?.name : null;
         }
     };
     const WorkFlattener = {
@@ -445,11 +484,13 @@
             return tracks;
         },
         tryFlatten(vm) {
-            if (!vm?.work || vm.tracks?.length > 0) return false;
-            const all = this.collectTracks(vm.work);
-            if (all.length > 0) {
-                Logger.log(`[Flatten] Surfacing ${all.length} tracks.`);
-                vm.tracks = all;
+            const root = vm.work || vm;
+            if (!root) return false;
+            const allTracks = this.collectTracks(root);
+            if (allTracks.length === 0) return false;
+            if (!vm.tracks || vm.tracks.length === 0) {
+                Logger.log(`[Flatten] Surfacing ${allTracks.length} tracks from depth.`);
+                vm.tracks = allTracks;
                 vm.dirs = [];
                 return true;
             }
@@ -457,135 +498,364 @@
         }
     };
     const RadioManager = {
-        isActive: false,
-        isLoading: false,
-        idleTicks: 0,
+        state: {
+            isActive: false,
+            isSkipping: false,
+            idleCounter: 0,
+            lastWorkId: null,
+            lastTrackSrc: null
+        },
         app: null,
-        loop: null,
+        intervalId: null,
+        playbackTimer: null,
         async init() {
-            this.app = await VueUtils.waitUntilReady();
+            this.app = await SafeUtils.getVue();
             FolderDiver.init(this.app);
             UIManager.init(this.app);
             LearnerUI.init();
         },
         toggle() {
-            this.isActive = !this.isActive;
-            this.isActive ? this.start() : this.stop();
+            this.state.isActive = !this.state.isActive;
+            this.state.isActive ? this.start() : this.stop();
         },
         start() {
             UIManager.updateRadioStatus(true);
+            this.state.idleCounter = 0;
+            this.state.lastWorkId = null;
+            this.state.lastTrackSrc = null;
             const player = this.app.$store.state.AudioPlayer;
-            // If nothing is playing or track is basically finished, trigger immediate skip on start
-            const isAtEnd = (player.duration > 0 && (player.duration - player.currentTime < 1.0));
-            this.idleTicks = (!player.playing || isAtEnd) ? 5 : 0;
-
-            this.loop = setInterval(() => this.tick(), 1000);
-            this.tick();
+            const isFinished = (player.duration > 0 && (player.duration - player.currentTime < 1.0));
+            this.intervalId = setInterval(() => this.tick(), 1000);
+            if (!player.playing || isFinished) {
+                Logger.log("Radio started: Initial jump triggered immediately.");
+                this.skipToNextWork();
+            } else {
+                this.tick();
+            }
         },
         stop() {
             UIManager.updateRadioStatus(false);
-            clearInterval(this.loop);
+            if (this.intervalId) clearInterval(this.intervalId);
+            if (this.playbackTimer) clearInterval(this.playbackTimer);
+            this.state.isActive = false;
         },
         async tick() {
-            if (!this.isActive || this.isLoading) return;
+            if (!this.state.isActive || this.state.isSkipping) return;
             const player = this.app.$store.state.AudioPlayer;
-            const playAll = Config.get('playAllInFolder');
+            if (this.hasDrifted(player)) {
+                Logger.log('Drift detected: Track changed within same work. Forcing skip.');
+                await this.skipToNextWork();
+                return;
+            }
+            this.updateTracking(player);
             if (player.playing) {
-                this.idleTicks = 0;
-                if (!playAll && (player.duration - player.currentTime < 1.0) && player.duration > 0) {
-                    await this.skipWork();
+                this.state.idleCounter = 0;
+                if (this.shouldSkipNow(player)) {
+                    Logger.log('Track nearing end. Skipping to next work.');
+                    await this.skipToNextWork();
                 }
-                return;
+            } else {
+                this.handleIdle(player);
             }
-
-            // Detect manual pause vs track end
-            const remaining = player.duration - player.currentTime;
-            const isPausedInMiddle = player.duration > 0 && player.currentTime > 0.5 && remaining > 0.5;
-
-            if (isPausedInMiddle) {
-                this.idleTicks = 0;
-                return;
-            }
-
-            this.idleTicks++;
-            if (this.idleTicks > 3) await this.skipWork();
         },
-        async skipWork() {
-            if (this.isLoading) return;
-            this.isLoading = true;
+        hasDrifted(player) {
+            if (Config.get('playAllInFolder')) return false;
+            const currentWorkId = this.app.$route.params.id;
+            const currentSrc = player.src || player.currentSrc;
+            if (this.state.lastWorkId &&
+                this.state.lastWorkId === currentWorkId &&
+                this.state.lastTrackSrc &&
+                this.state.lastTrackSrc !== currentSrc) {
+                return true;
+            }
+            return false;
+        },
+        updateTracking(player) {
+            this.state.lastWorkId = this.app.$route.params.id;
+            this.state.lastTrackSrc = player.src || player.currentSrc;
+        },
+        shouldSkipNow(player) {
+            if (Config.get('playAllInFolder')) return false;
+            const remaining = player.duration - player.currentTime;
+            return (player.duration > 0 && remaining < 1.5);
+        },
+        async handleIdle(player) {
+            const remaining = player.duration - player.currentTime;
+            const isPausedInMiddle = (player.currentTime > 1.0 && remaining > 1.0);
+            if (isPausedInMiddle) {
+                this.state.idleCounter = 0;
+                return;
+            }
+            this.state.idleCounter++;
+            const threshold = (player.currentTime < 0.5) ? 15 : 3;
+            if (this.state.idleCounter > threshold) {
+                Logger.log(`Idle timeout (${this.state.idleCounter}s). Skipping...`);
+                await this.skipToNextWork();
+            }
+        },
+        async skipToNextWork() {
+            if (this.state.isSkipping) return;
+            this.state.isSkipping = true;
             try {
                 const res = await this.app.$axios.get('/api/works', { params: { order: 'betterRandom' } });
                 const work = res.data.works[0];
                 if (work) {
-                    Logger.log(`Next: ${work.title}`);
+                    Logger.log(`Navigating to: ${work.title} (ID: ${work.id})`);
+                    this.state.lastWorkId = null;
+                    this.state.lastTrackSrc = null;
                     await this.app.$router.push(`/work/${work.id}`);
-                    this.idleTicks = 0;
-                    this.waitForPlayback();
-                } else { this.isLoading = false; }
-            } catch (e) { console.error(e); this.isLoading = false; }
+                    this.state.idleCounter = 0;
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    this.ensurePlayback(work.id);
+                } else {
+                    Logger.error("API returned no works.");
+                    this.state.isSkipping = false;
+                }
+            } catch (e) {
+                Logger.error("Skip error:", e);
+                this.state.isSkipping = false;
+            }
         },
-        waitForPlayback() {
-            let att = 0;
-            const chk = setInterval(() => {
-                att++;
-                const container = document.querySelector('.q-page-container');
-                if (!container) return;
-
+        ensurePlayback(targetWorkId) {
+            let attempts = 0;
+            const maxAttempts = 15;
+            if (this.playbackTimer) clearInterval(this.playbackTimer);
+            this.playbackTimer = setInterval(async () => {
+                attempts++;
+                const playerState = this.app.$store.state.AudioPlayer;
+                const currentWorkId = playerState.work ? playerState.work.id : null;
+                const isMatchingWork = targetWorkId && currentWorkId == targetWorkId;
+                const isPlaying = playerState.playing;
+                const container = await SafeUtils.waitForElement('.q-page-container', 1000);
+                const hasPauseButton = container && Array.from(container.querySelectorAll('button'))
+                    .some(b => b.textContent.includes('pause'));
+                const fileItems = document.querySelectorAll('.file-list-item, .q-item');
+                Logger.log(`[Playback Check ${attempts}] MatchingID: ${isMatchingWork}, Playing: ${isPlaying}, HasPause: ${hasPauseButton}, Items: ${fileItems.length}`);
+                if (fileItems.length === 0 && attempts < 5) {
+                    Logger.log("Waiting for file list...");
+                    return;
+                }
+                if ((isPlaying && isMatchingWork) || hasPauseButton) {
+                    Logger.log("Playback success.");
+                    clearInterval(this.playbackTimer);
+                    this.state.isSkipping = false;
+                    return;
+                }
+                if (attempts > maxAttempts) {
+                    Logger.log("Playback timeout. Skipping work (Dud detected?).");
+                    clearInterval(this.playbackTimer);
+                    this.state.isSkipping = false;
+                    this.skipToNextWork();
+                    return;
+                }
+                if (isMatchingWork && !isPlaying) {
+                    if (this.app.$store._actions['AudioPlayer/play']) {
+                        Logger.log("Attempting store play dispatch...");
+                        this.app.$store.dispatch('AudioPlayer/play');
+                    } else if (this.app.$store._actions['AudioPlayer/playTrack']) {
+                        Logger.log("Attempting store playTrack dispatch...");
+                        const vm = VueUtils.findComponent(this.app, v => Array.isArray(v.tracks) && v.tracks.length > 0);
+                        if (vm && vm.tracks[0]) {
+                            this.app.$store.dispatch('AudioPlayer/playTrack', vm.tracks[0]);
+                        } else {
+                            const audio = document.querySelector('audio');
+                            if (audio && audio.paused) {
+                                Logger.log("Attempting direct play...");
+                                audio.play().catch(e => Logger.error("Direct play fail", e));
+                            } else if (!audio) {
+                                this.clickPlayButton();
+                            }
+                        }
+                    } else {
+                        const audio = document.querySelector('audio');
+                        if (audio && audio.paused) {
+                            Logger.log("Attempting direct play...");
+                            audio.play().catch(e => Logger.error("Direct play fail", e));
+                        } else if (!audio) {
+                            this.clickPlayButton();
+                        }
+                    }
+                } else if (!isMatchingWork) {
+                    if (attempts % 2 !== 0) {
+                        Logger.log("Work ID mismatch. Clicking play button...");
+                        this.clickPlayButton();
+                    }
+                }
+            }, 1000);
+        },
+        clickPlayButton() {
+            const container = document.querySelector('.q-page-container');
+            if (container) {
                 const buttons = Array.from(container.querySelectorAll('button'));
                 const playButtons = buttons.filter(b => b.textContent.includes('play_arrow'));
-
                 if (playButtons.length > 0) {
-                    clearInterval(chk);
                     let btn = playButtons[0];
                     if (Config.get('shuffle')) {
                         btn = playButtons[Math.floor(Math.random() * playButtons.length)];
                     }
                     btn.click();
-                    setTimeout(() => { this.isLoading = false; this.idleTicks = 0; }, 1000);
-                } else if (att > 30) {
-                    clearInterval(chk);
-                    this.isLoading = false;
+                } else {
+                    const firstItem = container.querySelector('.file-list-item, .q-item');
+                    if (firstItem) {
+                        Logger.log("No play button. Clicking first item as fallback.");
+                        firstItem.click();
+                    }
                 }
-            }, 500);
+            }
         }
     };
     const FolderDiver = {
         app: null,
         lastDive: 0,
-        init(app) { this.app = app; setInterval(() => this.tick(), 1000); },
+        currentWorkId: null,
+        hasDived: false,
+        init(app) {
+            this.app = app;
+            setInterval(() => this.tick(), 500);
+        },
         tick() {
             if (!Config.get('autoFilterFolders')) return;
-            if (Date.now() - this.lastDive < 1500) return;
+            // Check for Work ID change to reset dive state
             const route = this.app.$route;
+            const currentId = route.params.id;
+            if (currentId !== this.currentWorkId) {
+                Logger.log(`[FolderDiver] New Work ID: ${currentId}. Resetting dive state.`);
+                this.currentWorkId = currentId;
+                this.hasDived = false;
+                this.lastPathLength = 0;
+                this.manualWaitUntil = 0;
+                this.diveDepth = 0;
+            }
+            if (this.hasDived) return;
+            // Navigation Freedom: If audio is playing, do not auto-dive.
+            const player = this.app.$store.state.AudioPlayer;
+            if (player && player.playing) return;
+            if (Date.now() < this.manualWaitUntil) return;
+            if (Date.now() - this.lastDive < 800) return;
+            const pathLen = JSON.parse(route.query.path || '[]').length;
+            if (pathLen < this.lastPathLength) {
+                Logger.log("[FolderDiver] User navigated UP. Pausing auto-dive for 10s.");
+                this.manualWaitUntil = Date.now() + 10000;
+                this.lastPathLength = pathLen;
+                return;
+            }
+            this.lastPathLength = pathLen;
             if (!route.path.includes('/work/')) return;
-            const vm = VueUtils.findComponent(this.app, v => v.tracks || v.dirs);
+            let vm = VueUtils.findComponent(this.app, v => {
+                if (v.tracks || v.dirs) return true;
+                if (v.work && (v.work.id === currentId || v.work.id == currentId)) return true;
+                return false;
+            });
+            if (Math.random() < 0.05) Logger.log(`[FolderDiver] Tick. VM Found: ${!!vm} (ID: ${currentId})`);
             if (vm) {
-                const pathStr = route.query.path || '[]';
-                if (pathStr === '[]' && WorkFlattener.tryFlatten(vm)) return;
-                if ((!vm.tracks || !vm.tracks.length) && vm.dirs?.length) {
-                    const enriched = vm.dirs.map(d => ({ ...d, caption: d.duration_text || "" }));
+                const tracks = vm.tracks || (vm.work ? vm.work.tracks : []) || [];
+                const dirs = vm.dirs || (vm.work ? vm.work.dirs : []) || [];
+                // Audio Detection: If tracks are already surfaced, we might not need to dive?
+                // Actually, logic is: if tracks > 0, we are good.
+                if (tracks.length > 0) {
+                    Logger.log(`[FolderDiver] Tracks found (${tracks.length}). Stopping dive.`);
+                    this.hasDived = true;
+                    if (RadioManager.state.isActive) this.tryAutoPlay();
+                    return;
+                }
+                if (tracks.length === 0 && dirs.length > 0) {
+                    const enriched = dirs.map(d => ({ ...d, caption: d.duration_text || "" }));
                     const best = SmartSelector.selectBestFolder(enriched);
-                    if (best) this.dive(best);
+                    if (best) {
+                        Logger.log(`[FolderDiver] Intermediate folder detected. Diving into: ${best}`);
+                        this.dive(best);
+                    }
+                }
+                else if (tracks.length === 0 && WorkFlattener.tryFlatten(vm)) {
+                    Logger.log("[FolderDiver] Flattened structure.");
+                    this.hasDived = true;
+                } else {
+                    this.domFallback();
+                }
+            } else {
+                this.domFallback();
+            }
+        },
+        domFallback() {
+            // Navigation Freedom: If audio is playing, do not auto-dive.
+            const player = this.app?.$store?.state?.AudioPlayer;
+            if (player && player.playing) return;
+            if (this.hasDived) return;
+            // Filter to only ACTUAL folders based on amber color (ASMROne standard for folders)
+            const folderItems = Array.from(document.querySelectorAll('.q-tree__node, #work-tree .q-item'))
+                .filter(el => el.querySelector('.text-amber'));
+            // Audio Detection: Look for track-specific markers
+            const workContainer = document.querySelector('#work-tree') || document.querySelector('.q-page-container');
+            if (workContainer) {
+                const playIcons = Array.from(workContainer.querySelectorAll('.q-btn i.material-icons, i.material-icons'))
+                    .filter(i => i.textContent.trim() === 'play_arrow');
+                const hasAudioMarks = workContainer.querySelector('.q-icon[name="audio_file"], .q-icon.text-primary, i.material-icons.text-primary') || playIcons.length > 0;
+                if (hasAudioMarks) {
+                    Logger.log(`[FolderDiver] Audio tracks found (DOM). Stopping dive.`);
+                    this.hasDived = true;
+                    if (RadioManager.state.isActive) this.tryAutoPlay();
+                    return;
+                }
+            }
+            if (folderItems.length > 0 && this.diveDepth < 10) {
+                const folderCandidates = [];
+                folderItems.forEach(el => {
+                    const labelEl = el.querySelector('.q-tree__node-header-content .ellipsis, .q-item__label, .ellipsis');
+                    const captionEl = el.querySelector('.q-tree__node-header-content .text-caption, .q-item__label--caption, .text-caption');
+                    if (labelEl) {
+                        const name = labelEl.textContent.trim();
+                        const caption = captionEl ? captionEl.textContent.trim() : "";
+                        const score = SmartSelector.calcScore(name, 0, caption, false);
+                        folderCandidates.push({ element: el, name, _score: score });
+                    }
+                });
+                folderCandidates.sort((a, b) => b._score - a._score);
+                const best = folderCandidates[0];
+                if (best && best._score > -400000) {
+                    Logger.log(`[FolderDiver] DOM Fallback (Multi-Dive). Diving into: ${best.name}`);
+                    this.dive(best.name);
                 }
             }
         },
         dive(name) {
             const q = this.app.$route.query;
-            const path = JSON.parse(q.path || '[]');
-            path.push(name);
-            this.app.$router.push({ query: { ...q, path: JSON.stringify(path) } });
+            const currentPath = JSON.parse(q.path || '[]');
+            if (currentPath.includes(name)) return;
+            const newPath = [...currentPath, name];
+            this.app.$router.replace({
+                query: { ...q, path: JSON.stringify(newPath) }
+            }).catch(err => { });
+            Logger.log(`[FolderDiver] Diving executed: ${name}`);
             this.lastDive = Date.now();
+            this.diveDepth++;
+        },
+        tryAutoPlay() {
+            if (!RadioManager.state.isActive) return;
+            if (this.app?.$store?.state?.AudioPlayer?.playing) return;
+            // Try to find the "Play All" button first
+            const playAll = Array.from(document.querySelectorAll('.q-btn'))
+                .find(b => b.textContent.includes('全部播放') || b.textContent.includes('Play All'));
+            if (playAll) {
+                Logger.log("[FolderDiver] Auto-playing: Clicking Play All");
+                playAll.click();
+                return;
+            }
+            // Fallback: Click the first track play button
+            const firstPlay = Array.from(document.querySelectorAll('#work-tree .q-btn i, #work-tree .material-icons'))
+                .find(i => i.textContent.trim() === 'play_arrow');
+            if (firstPlay) {
+                Logger.log("[FolderDiver] Auto-playing: Clicking first track");
+                firstPlay.closest('button')?.click() || firstPlay.parentElement?.click();
+            }
         }
     };
-    // =========================================================================
-    // 5. UI MANAGER
-    // =========================================================================
     const UIManager = {
         init(app) {
             this.injectSidebar();
             this.injectSettingsHook(app);
         },
-        injectSidebar() {
+        async injectSidebar() {
+            await SafeUtils.waitForElement('.q-drawer--left .q-list');
             setInterval(() => {
                 const sidebar = document.querySelector('.q-drawer--left .q-list');
                 if (sidebar && !document.getElementById('asmr-radio-toggle')) {
@@ -593,7 +863,7 @@
                     el.id = 'asmr-radio-toggle';
                     el.className = 'q-item q-item-type row no-wrap q-item--clickable q-link cursor-pointer';
                     el.innerHTML = `
-                        <div class="q-item__section column q-item__section--avatar q-item__section--side justify-center"><i class="q-icon material-icons">radio</i></div>
+                        <div class="q-item__section column q-item__section--avatar q-item__section--side justify-center"><i class="q-icon notranslate material-icons">radio</i></div>
                         <div class="q-item__section column q-item__section--main justify-center">
                             <div class="q-item__label text-subtitle1">${I18n.t('radioMode')}</div>
                             <div class="q-item__label text-caption" id="asmr-radio-status">${I18n.t('off')}</div>
@@ -663,6 +933,8 @@
                 ${divider}
                 ${this.toggleHTML('shuffle', I18n.t('shuffle'), I18n.t('shuffleSub'))}
                 ${divider}
+                ${this.toggleHTML('sePreference', I18n.t('sePref'), I18n.t('sePrefSub'))}
+                ${divider}
                 ${this.inputHTML('preferredFormat', I18n.t('prefFormat'), I18n.t('prefFormatSub'), 'wav')}
             `;
             refNode.parentNode.insertBefore(header, refNode.nextSibling);
@@ -704,10 +976,6 @@
                 </div>`;
         }
     };
-
-    // =========================================================================
-    // 6. EXPORT API
-    // =========================================================================
     const API = {
         toggle(key, el) {
             const n = !Config.get(key);
@@ -726,15 +994,13 @@
         },
         set(key, val) { Config.set(key, val); }
     };
-
     window.ASMRUlt = API;
     try {
         if (typeof unsafeWindow !== 'undefined') {
             unsafeWindow.ASMRUlt = API;
         }
-    } catch(e) {
+    } catch (e) {
         console.warn('ASMR Ultimate: unsafeWindow not available', e);
     }
-
     RadioManager.init();
 })();

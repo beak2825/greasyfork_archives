@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Mission Rewards Book Notifier
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  Notifies you of when there is a book in the mission rewards.
 // @author       ScatterBean [3383329]
 // @license      MIT
@@ -9,55 +9,64 @@
 // @connect      api.torn.com
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
 // @grant        GM.xmlHttpRequest
-// @grant        GM.setValue
-// @grant        GM.getValue
-// @grant        GM.deleteValue
-// @grant        GM.registerMenuCommand
-// @grant        GM.unregisterMenuCommand
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_deleteValue
+// @grant        GM_registerMenuCommand
+// @grant        GM_unregisterMenuCommand
 // @downloadURL https://update.greasyfork.org/scripts/563814/Mission%20Rewards%20Book%20Notifier.user.js
 // @updateURL https://update.greasyfork.org/scripts/563814/Mission%20Rewards%20Book%20Notifier.meta.js
 // ==/UserScript==
 
-const minimal_key = GM.getValue("bScriptKey", null);
-if (minimal_key == null || minimal_key == "") {
+var minimal_key = GM_getValue("bScriptKey", null);
+if (minimal_key == null || minimal_key == "" || typeof(minimal_key) != "string") {
     try {
-    const menucmd = GM.registerMenuCommand("Set API key.", async function() {
-        var value = prompt("Add a minimal access API key.", null);
-        if (value != null && value != "") {
-          await GM.setValue("bScriptKey", value);
-          await GM.unregisterMenuCommand(menucmd);
-          alert("Api key successfully saved.");
-          window.reload();
-          return;
-        }
-        else alert("Invalid key");
-    });
-    alert("[Book Notifier Script] Missing an API Key. Open the script in the Tampermonkey extension popup to add one.");
+        const menucmd = GM_registerMenuCommand("Set API key.", function() {
+            var value = prompt("Add a minimal access API key.", null);
+            if (value != null && value != "") {
+                GM_setValue("bScriptKey", value);
+                minimal_key = GM_getValue("bScriptKey", null);
+                if (minimal_key != null) {
+                alert("Api key successfully saved.");
+                GM_unregisterMenuCommand(menucmd);
+                location.reload();
+                return;
+                }
+                else throw minimal_key;
+            }
+        });
+        alert("[Book Notifier Script] Missing an API Key. Open the script in the Tampermonkey extension popup to add one.");
     } catch (e) {
+        console.log(`[Book Notifier] `);
         console.log(e);
-        clearInterval(interval);
     }
 }
-else if (minimal_key != null && minimal_key != "") {
+else if (minimal_key != null && minimal_key != "" && typeof(minimal_key) == "string") {
     try {
-    const menuRmvCmd = GM.registerMenuCommand("Remove API key.", async function() {
-        await GM.deleteValue("bScriptKey");
+    const menuRmvCmd = GM_registerMenuCommand("Remove API key.", function() {
+        GM_deleteValue("bScriptKey");
         minimal_key = null;
+        GM_unregisterMenuCommand(menuRmvCmd);
         alert("[Book Notifier Script] Key successfully removed.");
+        clearInterval(interval);
+        location.reload();
         return;
     });
     var interval = setInterval(Tick, 30000, minimal_key);
     } catch (e) {
+        console.log(`[Book Notifier] `);
         console.log(e);
         clearInterval(interval);
     }
 }
 async function Tick(key) {
     try {
-    const check = await CheckForBook(key)
+    const check = await CheckForBook(key);
     if (check) Notify();
     else ClearNotif();
+    console.log(`Pull ticked. Return: ${check}`);
     } catch (e) {
+        console.log(`[Book Notifier] `);
         console.log(e);
         clearInterval(interval);
     }
@@ -74,13 +83,17 @@ async function CheckForBook(key) {
         }
     }).catch(e => console.log(e));
     const data = JSON.parse(response.responseText);
-    if ("error" in data) throw data;
+    if ("error" in data) {
+        console.log(`Key: ${key}`);
+        throw data;
+    }
     const rewards = data.missions.rewards;
     for (var reward of rewards) {
         if (reward.details.type == "Book") return true;
     }
     return false;
     } catch (e) {
+        console.log(`[Book Notifier] `);
         console.log(e);
         clearInterval(interval);
     }
@@ -90,6 +103,7 @@ function ClearNotif() {
     const elem = document.getElementById("bookNotif");
     if (elem) elem.remove();
     } catch (e) {
+        console.log(`[Book Notifier] `);
         console.log(e);
         clearInterval(interval);
     }
@@ -109,6 +123,7 @@ function Notify() {
     newElem.appendChild(child);
     parent.appendChild(newElem);
     } catch (e) {
+        console.log(`[Book Notifier] `);
         console.log(e);
         clearInterval(interval);
     }

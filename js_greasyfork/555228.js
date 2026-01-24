@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         YouTube Full Dates (v2)
+// @name         YouTube Full Dates (v3)
 // @namespace    YouTube Full Dates
-// @version      2
-// @description  Replace "1 year ago" with exact dates (2024-11-08). Customizable formats, works everywhere on YouTube.
+// @version      3
+// @description  Replace "1 year ago" with exact dates. Now with full day/month names and multi-language support (English, French, Spanish, German, etc.)
 // @author       Solomon (improved from InMirrors)
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/814d40a6/img/favicon_144x144.png
@@ -11,12 +11,125 @@
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/555228/YouTube%20Full%20Dates%20%28v2%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/555228/YouTube%20Full%20Dates%20%28v2%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/555228/YouTube%20Full%20Dates%20%28v3%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/555228/YouTube%20Full%20Dates%20%28v3%29.meta.js
 // ==/UserScript==
+
+/*
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 📋 CHANGELOG
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ * Previous Features (Preserved):
+ * ✅ Replace relative dates with exact dates
+ * ✅ Works on all YouTube pages (home, search, channels, playlists, sidebar)
+ * ✅ Custom date format templates
+ * ✅ Show both dates option (e.g., "3 hours ago · 2024-11-08")
+ * ✅ API response caching for performance
+ * ✅ Settings panel with live preview
+ * ✅ Debug mode for troubleshooting
+ *
+ * 🆕 NEW in v3:
+ * ✨ Full day names: wwww token (Monday, Tuesday, etc.)
+ * ✨ Full month names: MMMM token (January, February, etc.)
+ * ✨ Multi-language support: English, French, Spanish, German, Italian, Portuguese
+ * ✨ Language selector in settings panel
+ * ✨ Custom language keywords for non-English YouTube interfaces
+ * ✨ Improved format preview with selected language
+ *
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
 
 (function() {
     'use strict';
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🌍 LANGUAGE DEFINITIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const LANGUAGES = {
+        en: {
+            name: 'English',
+            monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            monthsFull: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            daysFull: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+            agoKeywords: ['ago'],
+            dateKeywords: ['second', 'minute', 'hour', 'day', 'week', 'month', 'year']
+        },
+        fr: {
+            name: 'Français',
+            monthsShort: ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'],
+            monthsFull: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
+            daysShort: ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'],
+            daysFull: ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'],
+            agoKeywords: ['il y a'],
+            dateKeywords: ['seconde', 'minute', 'heure', 'jour', 'semaine', 'mois', 'an', 'année']
+        },
+        es: {
+            name: 'Español',
+            monthsShort: ['ene.', 'feb.', 'mar.', 'abr.', 'may.', 'jun.', 'jul.', 'ago.', 'sep.', 'oct.', 'nov.', 'dic.'],
+            monthsFull: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+            daysShort: ['dom.', 'lun.', 'mar.', 'mié.', 'jue.', 'vie.', 'sáb.'],
+            daysFull: ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'],
+            agoKeywords: ['hace'],
+            dateKeywords: ['segundo', 'minuto', 'hora', 'día', 'semana', 'mes', 'año']
+        },
+        de: {
+            name: 'Deutsch',
+            monthsShort: ['Jan.', 'Feb.', 'März', 'Apr.', 'Mai', 'Juni', 'Juli', 'Aug.', 'Sep.', 'Okt.', 'Nov.', 'Dez.'],
+            monthsFull: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+            daysShort: ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.'],
+            daysFull: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+            agoKeywords: ['vor'],
+            dateKeywords: ['Sekunde', 'Minute', 'Stunde', 'Tag', 'Woche', 'Monat', 'Jahr']
+        },
+        it: {
+            name: 'Italiano',
+            monthsShort: ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'],
+            monthsFull: ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'],
+            daysShort: ['dom', 'lun', 'mar', 'mer', 'gio', 'ven', 'sab'],
+            daysFull: ['domenica', 'lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato'],
+            agoKeywords: ['fa'],
+            dateKeywords: ['secondo', 'minuto', 'ora', 'giorno', 'settimana', 'mese', 'anno']
+        },
+        pt: {
+            name: 'Português',
+            monthsShort: ['jan.', 'fev.', 'mar.', 'abr.', 'mai.', 'jun.', 'jul.', 'ago.', 'set.', 'out.', 'nov.', 'dez.'],
+            monthsFull: ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
+            daysShort: ['dom.', 'seg.', 'ter.', 'qua.', 'qui.', 'sex.', 'sáb.'],
+            daysFull: ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'],
+            agoKeywords: ['há'],
+            dateKeywords: ['segundo', 'minuto', 'hora', 'dia', 'semana', 'mês', 'ano']
+        },
+        zh: {
+            name: '中文',
+            monthsShort: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+            monthsFull: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+            daysShort: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+            daysFull: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+            agoKeywords: ['前'],
+            dateKeywords: ['秒', '分', '时', '時', '天', '日', '周', '週', '月', '年']
+        },
+        ja: {
+            name: '日本語',
+            monthsShort: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+            monthsFull: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+            daysShort: ['日', '月', '火', '水', '木', '金', '土'],
+            daysFull: ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
+            agoKeywords: ['前'],
+            dateKeywords: ['秒', '分', '時間', '日', '週間', 'か月', '年']
+        },
+        ru: {
+            name: 'Русский',
+            monthsShort: ['янв.', 'февр.', 'март', 'апр.', 'май', 'июнь', 'июль', 'авг.', 'сент.', 'окт.', 'нояб.', 'дек.'],
+            monthsFull: ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'],
+            daysShort: ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'],
+            daysFull: ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'],
+            agoKeywords: ['назад'],
+            dateKeywords: ['секунд', 'минут', 'час', 'день', 'дней', 'недел', 'месяц', 'год', 'лет']
+        }
+    };
 
     // ═══════════════════════════════════════════════════════════════════════════
     // 🔧 CONFIGURATION
@@ -24,20 +137,18 @@
 
     const DEFAULT_CONFIG = {
         dateFormat: 'yyyy-MM-dd',
+        language: 'en',
         prependDates: false,
         showBothDates: true,
         debugMode: false,
-        // Keywords for detecting relative dates
-        dateKeywords: ['second', 'minute', 'hour', 'day', 'week', 'month', 'year',
-                       '秒', '分', '时', '時', '天', '日', '周', '週', '月', '年'],
-        agoKeywords: ['ago', '前'],
-        oldUploadKeywords: ['day', 'week', 'month', 'year', '天', '日', '周', '週', '月', '年'],
-        monthNames: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
-        dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        oldUploadKeywords: ['day', 'week', 'month', 'year', '天', '日', '周', '週', '月', '年', 'jour', 'semaine', 'mois', 'an']
     };
 
     // Merge saved settings with defaults
     const SETTINGS = { ...DEFAULT_CONFIG, ...GM_getValue('settings', {}) };
+
+    // Get current language config
+    const getLang = () => LANGUAGES[SETTINGS.language] || LANGUAGES.en;
 
     // Processing marker (zero-width space)
     const PROCESSED = '\u200B';
@@ -58,25 +169,43 @@
     // 🛠️ UTILITY FUNCTIONS
     // ═══════════════════════════════════════════════════════════════════════════
 
-    const log = (...args) => SETTINGS.debugMode && console.log('📅 [YT Dates]', ...args);
+    const log = (...args) => SETTINGS.debugMode && console.log('📅 [YT Dates v3]', ...args);
 
     /**
      * Format date with custom template
-     * Tokens: yyyy, yy, MMM, MM, dd, ww, HH, hh, mm, ss, ap
+     * 🆕 v3: Added wwww (full day) and MMMM (full month) tokens
+     *
+     * Tokens:
+     * - yyyy: Full year (2024)
+     * - yy: Short year (24)
+     * - MMMM: Full month name (November) 🆕
+     * - MMM: Short month name (Nov)
+     * - MM: Month number padded (11)
+     * - wwww: Full day name (Monday) 🆕
+     * - ww: Short day name (Mon)
+     * - dd: Day padded (08)
+     * - HH: 24-hour padded (14)
+     * - hh: 12-hour padded (02)
+     * - mm: Minutes padded (30)
+     * - ss: Seconds padded (45)
+     * - ap: AM/PM
      */
-    function formatDate(date, template = SETTINGS.dateFormat) {
+    function formatDate(date, template = SETTINGS.dateFormat, langCode = SETTINGS.language) {
         const d = new Date(date);
         if (isNaN(d.getTime())) return '';
 
+        const lang = LANGUAGES[langCode] || LANGUAGES.en;
         const pad = (n, len = 2) => String(n).padStart(len, '0');
 
         const tokens = {
             yyyy: d.getFullYear(),
             yy: String(d.getFullYear()).slice(-2),
-            MMM: SETTINGS.monthNames[d.getMonth()],
+            MMMM: lang.monthsFull[d.getMonth()],  // 🆕 v3: Full month name
+            MMM: lang.monthsShort[d.getMonth()],
             MM: pad(d.getMonth() + 1),
+            wwww: lang.daysFull[d.getDay()],      // 🆕 v3: Full day name
+            ww: lang.daysShort[d.getDay()],
             dd: pad(d.getDate()),
-            ww: SETTINGS.dayNames[d.getDay()],
             HH: pad(d.getHours()),
             hh: pad(d.getHours() % 12 || 12),
             mm: pad(d.getMinutes()),
@@ -84,7 +213,8 @@
             ap: d.getHours() < 12 ? 'AM' : 'PM'
         };
 
-        return template.replace(/yyyy|yy|MMM|MM|dd|ww|HH|hh|mm|ss|ap/g, match => tokens[match]);
+        // Process tokens from longest to shortest to avoid partial replacements
+        return template.replace(/yyyy|yy|MMMM|MMM|MM|wwww|ww|dd|HH|hh|mm|ss|ap/g, match => tokens[match]);
     }
 
     /**
@@ -110,18 +240,27 @@
 
     /**
      * Check if element contains relative date text
+     * 🆕 v3: Now uses language-specific keywords
      */
     function hasRelativeDate(text) {
         if (!text) return false;
-        return SETTINGS.agoKeywords.some(kw => text.includes(kw)) &&
-               SETTINGS.dateKeywords.some(kw => text.includes(kw));
+        const lang = getLang();
+
+        // Check all supported languages for better detection
+        const allAgoKeywords = Object.values(LANGUAGES).flatMap(l => l.agoKeywords);
+        const allDateKeywords = Object.values(LANGUAGES).flatMap(l => l.dateKeywords);
+
+        const hasAgo = allAgoKeywords.some(kw => text.toLowerCase().includes(kw.toLowerCase()));
+        const hasDate = allDateKeywords.some(kw => text.toLowerCase().includes(kw.toLowerCase()));
+
+        return hasAgo && hasDate;
     }
 
     /**
      * Check if upload is "old" (should show only formatted date)
      */
     function isOldUpload(text) {
-        return SETTINGS.oldUploadKeywords.some(kw => text.includes(kw));
+        return SETTINGS.oldUploadKeywords.some(kw => text.toLowerCase().includes(kw.toLowerCase()));
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -450,8 +589,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 420px;
-            max-height: 80vh;
+            width: 480px;
+            max-height: 85vh;
             overflow-y: auto;
             background: #fff;
             border-radius: 12px;
@@ -522,13 +661,27 @@
         }
 
         .ytfd-input {
-            width: 180px;
+            width: 200px;
             padding: 8px 12px;
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 13px;
         }
         .ytfd-input:focus {
+            outline: none;
+            border-color: #065fd4;
+        }
+
+        .ytfd-select {
+            width: 200px;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 13px;
+            background: white;
+            cursor: pointer;
+        }
+        .ytfd-select:focus {
             outline: none;
             border-color: #065fd4;
         }
@@ -591,15 +744,38 @@
             font-size: 11px;
             color: #909090;
             margin-top: 4px;
+            line-height: 1.4;
         }
 
         .ytfd-preview {
             margin-top: 8px;
-            padding: 8px 12px;
+            padding: 10px 12px;
             background: #e8f0fe;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 14px;
             color: #1a73e8;
+            font-weight: 500;
+        }
+
+        .ytfd-token-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .ytfd-token {
+            font-size: 11px;
+            padding: 4px 6px;
+            background: #e5e5e5;
+            border-radius: 4px;
+            font-family: monospace;
+            text-align: center;
+        }
+
+        .ytfd-token-new {
+            background: #d4edda;
+            color: #155724;
         }
     `);
 
@@ -611,20 +787,53 @@
         const panel = document.createElement('div');
         panel.id = 'ytfd-panel';
 
+        // Build language options
+        const langOptions = Object.entries(LANGUAGES)
+            .map(([code, lang]) => `<option value="${code}" ${SETTINGS.language === code ? 'selected' : ''}>${lang.name}</option>`)
+            .join('');
+
         panel.innerHTML = `
             <div class="ytfd-header">
-                <h2>📅 YouTube Full Dates Settings</h2>
+                <h2>📅 YouTube Full Dates v3 Settings</h2>
                 <button class="ytfd-close" title="Close">✕</button>
             </div>
             <div class="ytfd-body">
                 <div class="ytfd-section">
-                    <div class="ytfd-section-title">Date Format</div>
+                    <div class="ytfd-section-title">🌍 Language</div>
+                    <div class="ytfd-row">
+                        <label class="ytfd-label">Display Language</label>
+                        <select class="ytfd-select" id="ytfd-language">
+                            ${langOptions}
+                        </select>
+                    </div>
+                    <div class="ytfd-help">
+                        Choose the language for day and month names
+                    </div>
+                </div>
+
+                <div class="ytfd-section">
+                    <div class="ytfd-section-title">📅 Date Format</div>
                     <div class="ytfd-row">
                         <label class="ytfd-label">Format Template</label>
                         <input type="text" class="ytfd-input" id="ytfd-format" value="${SETTINGS.dateFormat}">
                     </div>
                     <div class="ytfd-help">
-                        Tokens: yyyy, yy, MM, MMM, dd, ww, HH, hh, mm, ss, ap
+                        Available tokens:
+                    </div>
+                    <div class="ytfd-token-grid">
+                        <span class="ytfd-token">yyyy</span>
+                        <span class="ytfd-token">yy</span>
+                        <span class="ytfd-token">MM</span>
+                        <span class="ytfd-token">MMM</span>
+                        <span class="ytfd-token ytfd-token-new">MMMM 🆕</span>
+                        <span class="ytfd-token">dd</span>
+                        <span class="ytfd-token">ww</span>
+                        <span class="ytfd-token ytfd-token-new">wwww 🆕</span>
+                        <span class="ytfd-token">HH</span>
+                        <span class="ytfd-token">hh</span>
+                        <span class="ytfd-token">mm</span>
+                        <span class="ytfd-token">ss</span>
+                        <span class="ytfd-token">ap</span>
                     </div>
                     <div class="ytfd-preview" id="ytfd-preview">
                         Preview: ${formatDate(new Date())}
@@ -632,7 +841,7 @@
                 </div>
 
                 <div class="ytfd-section">
-                    <div class="ytfd-section-title">Display Options</div>
+                    <div class="ytfd-section-title">⚙️ Display Options</div>
                     <div class="ytfd-row">
                         <label class="ytfd-label">Show both dates (recent videos)</label>
                         <div class="ytfd-toggle ${SETTINGS.showBothDates ? 'on' : ''}" data-key="showBothDates"></div>
@@ -642,19 +851,20 @@
                         <div class="ytfd-toggle ${SETTINGS.prependDates ? 'on' : ''}" data-key="prependDates"></div>
                     </div>
                     <div class="ytfd-row">
-                        <label class="ytfd-label">Debug mode</label>
+                        <label class="ytfd-label">Debug mode (console logging)</label>
                         <div class="ytfd-toggle ${SETTINGS.debugMode ? 'on' : ''}" data-key="debugMode"></div>
                     </div>
                 </div>
 
                 <div class="ytfd-section">
-                    <div class="ytfd-section-title">Keywords (Advanced)</div>
-                    <div class="ytfd-row">
-                        <label class="ytfd-label">"Ago" keywords</label>
-                        <input type="text" class="ytfd-input" id="ytfd-ago" value="${SETTINGS.agoKeywords.join(' ')}">
-                    </div>
-                    <div class="ytfd-help">
-                        Words that indicate relative dates (e.g., "ago" in "2 days ago")
+                    <div class="ytfd-section-title">📝 Quick Format Examples</div>
+                    <div class="ytfd-help" style="font-size: 12px; line-height: 1.8;">
+                        <strong>French:</strong> <code>wwww dd MMMM yyyy HH:mm:ss</code><br>
+                        → ${formatDate(new Date(), 'wwww dd MMMM yyyy HH:mm:ss', 'fr')}<br><br>
+                        <strong>US:</strong> <code>MMMM dd, yyyy</code><br>
+                        → ${formatDate(new Date(), 'MMMM dd, yyyy', 'en')}<br><br>
+                        <strong>ISO:</strong> <code>yyyy-MM-dd</code><br>
+                        → ${formatDate(new Date(), 'yyyy-MM-dd', 'en')}
                     </div>
                 </div>
             </div>
@@ -678,22 +888,28 @@
             });
         });
 
-        // Format preview
+        // Format preview - update on format OR language change
         const formatInput = panel.querySelector('#ytfd-format');
+        const langSelect = panel.querySelector('#ytfd-language');
         const preview = panel.querySelector('#ytfd-preview');
 
-        formatInput.addEventListener('input', () => {
-            preview.textContent = `Preview: ${formatDate(new Date(), formatInput.value)}`;
-        });
+        const updatePreview = () => {
+            const lang = langSelect.value;
+            const format = formatInput.value;
+            preview.textContent = `Preview: ${formatDate(new Date(), format, lang)}`;
+        };
+
+        formatInput.addEventListener('input', updatePreview);
+        langSelect.addEventListener('change', updatePreview);
 
         // Save button
         panel.querySelector('#ytfd-save').addEventListener('click', () => {
             const newSettings = {
                 dateFormat: formatInput.value,
+                language: langSelect.value,
                 showBothDates: panel.querySelector('[data-key="showBothDates"]').classList.contains('on'),
                 prependDates: panel.querySelector('[data-key="prependDates"]').classList.contains('on'),
-                debugMode: panel.querySelector('[data-key="debugMode"]').classList.contains('on'),
-                agoKeywords: panel.querySelector('#ytfd-ago').value.split(' ').filter(Boolean)
+                debugMode: panel.querySelector('[data-key="debugMode"]').classList.contains('on')
             };
 
             GM_setValue('settings', newSettings);
@@ -781,6 +997,6 @@
     // Initial run
     setTimeout(runProcessors, 1000);
 
-    console.log('📅 YouTube Full Dates v2 loaded!');
+    console.log('📅 YouTube Full Dates v3 loaded! Language:', SETTINGS.language);
 
 })();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Disable YouTube Hotkeys with Modern Settings Page
 // @namespace    https://github.com/VKrishna04
-// @version      4.3
+// @version      4.5.0
 // @description  Disable various YouTube hotkeys with fine-grained control (Excludes Search/Comments)
 // @author       VKrishna04
 // @match        *://www.youtube.com/*
@@ -10,10 +10,7 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addStyle
-// @compatible   firefox >= 60
-// @compatible   chrome >= 70
-// @compatible   opera >= 57
-// @compatible   edge >= 79
+// @run-at       document-start
 // @license      Apache-2.0
 // @homepageURL  https://yt-hotkeys.vkrishna04.me/
 // @supportURL   https://github.com/Life-Experimentalist/Youtube-Keystrokes-Blocker/issues
@@ -25,104 +22,229 @@
   "use strict";
 
   // --- CONFIGURATION ---
-  let settings = GM_getValue("hotkeySettings", {
+  const DEFAULT_SETTINGS = {
     disableNumericKeys: true,
-    disableSpacebar: false,
-    disableArrowKeys: false,
+    disableMKey: true,
     disableCtrlLeft: true,
     disableCtrlRight: true,
+    disableSpacebar: false,
+    disableHorizontalArrows: false,
+    disableVerticalArrows: false,
+    disablePlayPauseK: false,
+    disableRewindJ: false,
+    disableFastForwardL: false,
+    disablePreviousVideoP: false,
+    disableNextVideoN: false,
     disableFKey: false,
-    disableMKey: true,
+    disableVKey: false,
+    disableTheatreModeT: false,
+    disableMiniPlayerI: false,
+    disableCloseDialogEsc: false,
+    disableCaptionsC: false,
+    disableTextOpacityO: false,
+    disableWindowOpacityW: false,
+    disableFontIncrease: false,
+    disableFontDecrease: false,
+    disablePanUpW: false,
+    disablePanLeftA: false,
+    disablePanDownS: false,
+    disablePanRightD: false,
+    disableZoomIn: false,
+    disableZoomOut: false,
+    disableShiftSlash: false,
     disableSpeedControl: false,
     disableFrameSkip: false,
-  });
+  };
 
-  // Ensure disableSpacebar is properly loaded
-  if (typeof settings.disableSpacebar === "undefined") {
-    settings.disableSpacebar = true;
+  let settings = loadSettings();
+
+  function loadSettings() {
+    const stored = GM_getValue("hotkeySettings", DEFAULT_SETTINGS);
+    // Migrate legacy single-arrow toggle into split horizontal/vertical controls
+    if (stored.disableArrowKeys !== undefined) {
+      if (stored.disableHorizontalArrows === undefined) stored.disableHorizontalArrows = stored.disableArrowKeys;
+      if (stored.disableVerticalArrows === undefined) stored.disableVerticalArrows = stored.disableArrowKeys;
+    }
+    return { ...DEFAULT_SETTINGS, ...stored };
+  }
+
+  function persistSettings(newSettings) {
+    settings = { ...DEFAULT_SETTINGS, ...newSettings };
     GM_setValue("hotkeySettings", settings);
+    return settings;
   }
 
   // Helper function to get fresh settings
   function getSettings() {
-    return GM_getValue("hotkeySettings", settings);
+    return loadSettings();
   }
 
   // --- 1. HOTKEY BLOCKING LOGIC ---
-  window.addEventListener(
-    "keydown",
-    function (e) {
-      // Get fresh settings on every keystroke
-      const currentSettings = getSettings();
-      const target = e.target;
-      const isTyping =
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable;
+  function handleHotkeyEvent(e) {
+    const currentSettings = getSettings();
+    const target = e.target;
+    const isTyping =
+      target.tagName === "INPUT" ||
+      target.tagName === "TEXTAREA" ||
+      target.isContentEditable;
 
-      if (isTyping) return;
+    if (isTyping) return;
 
-      if (currentSettings.disableCtrlLeft && e.ctrlKey && e.code === "ArrowLeft") {
-        e.preventDefault();
-        e.stopPropagation();
-        return;
-      }
-      if (currentSettings.disableCtrlRight && e.ctrlKey && e.code === "ArrowRight") {
-        e.preventDefault();
-        e.stopPropagation();
-        return;
-      }
-      if (currentSettings.disableNumericKeys && e.key >= "0" && e.key <= "9") {
-        e.preventDefault();
-        e.stopPropagation();
-        return;
-      }
-      if (currentSettings.disableSpacebar && (e.code === "Space" || e.key === " ")) {
-        e.preventDefault();
-        e.stopPropagation();
-        return;
-      }
-      if (
-        currentSettings.disableArrowKeys &&
-        !e.ctrlKey &&
-        ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.code)
-      ) {
-        e.preventDefault();
-        e.stopPropagation();
-        return;
-      }
-      if (
-        (currentSettings.disableFKey && e.key.toLowerCase() === "f") ||
-        e.key === "F"
-      ) {
-        e.preventDefault();
-        e.stopPropagation();
-        return;
-      }
-      if (
-        (currentSettings.disableMKey && e.key.toLowerCase() === "m") ||
-        e.key === "M"
-      ) {
-        e.preventDefault();
-        e.stopPropagation();
-        return;
-      }
-      if (
-        settings.disableSpeedControl &&
-        e.shiftKey &&
-        (e.key === "<" || e.key === ">")
-      ) {
-        e.preventDefault();
-        e.stopPropagation();
-        return;
-      }
-      if (settings.disableFrameSkip && (e.key === "," || e.key === ".")) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    },
-    true,
-  );
+    const block = () => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    if (currentSettings.disableCtrlLeft && e.ctrlKey && e.code === "ArrowLeft") {
+      block();
+      return;
+    }
+    if (currentSettings.disableCtrlRight && e.ctrlKey && e.code === "ArrowRight") {
+      block();
+      return;
+    }
+    if (currentSettings.disablePlayPauseK && (e.key === "k" || e.key === "K")) {
+      block();
+      return;
+    }
+    if (currentSettings.disableRewindJ && (e.key === "j" || e.key === "J")) {
+      block();
+      return;
+    }
+    if (currentSettings.disableFastForwardL && (e.key === "l" || e.key === "L")) {
+      block();
+      return;
+    }
+    if (currentSettings.disablePreviousVideoP && e.shiftKey && (e.key === "p" || e.key === "P")) {
+      block();
+      return;
+    }
+    if (currentSettings.disableNextVideoN && e.shiftKey && (e.key === "n" || e.key === "N")) {
+      block();
+      return;
+    }
+    if (currentSettings.disableShiftSlash && e.shiftKey && (e.key === "?" || e.key === "/")) {
+      block();
+      return;
+    }
+    if (currentSettings.disableNumericKeys && e.key >= "0" && e.key <= "9") {
+      block();
+      return;
+    }
+    if (
+      currentSettings.disableSpacebar &&
+      (e.code === "Space" || e.key === " " || e.key === "Spacebar" || e.keyCode === 32)
+    ) {
+      block();
+      return;
+    }
+    if (
+      currentSettings.disableHorizontalArrows &&
+      !e.ctrlKey &&
+      ["ArrowLeft", "ArrowRight"].includes(e.code)
+    ) {
+      block();
+      return;
+    }
+    if (
+      currentSettings.disableVerticalArrows &&
+      !e.ctrlKey &&
+      ["ArrowUp", "ArrowDown"].includes(e.code)
+    ) {
+      block();
+      return;
+    }
+    if (currentSettings.disableFKey && (e.key === "f" || e.key === "F")) {
+      block();
+      return;
+    }
+    if (currentSettings.disableMKey && (e.key === "m" || e.key === "M")) {
+      block();
+      return;
+    }
+    if (currentSettings.disableVKey && (e.key === "v" || e.key === "V")) {
+      block();
+      return;
+    }
+    if (currentSettings.disableTheatreModeT && (e.key === "t" || e.key === "T")) {
+      block();
+      return;
+    }
+    if (currentSettings.disableMiniPlayerI && (e.key === "i" || e.key === "I")) {
+      block();
+      return;
+    }
+    if (currentSettings.disableCloseDialogEsc && (e.key === "Escape" || e.key === "Esc")) {
+      block();
+      return;
+    }
+    if (currentSettings.disableCaptionsC && (e.key === "c" || e.key === "C")) {
+      block();
+      return;
+    }
+    if (currentSettings.disableTextOpacityO && (e.key === "o" || e.key === "O")) {
+      block();
+      return;
+    }
+    if (currentSettings.disableWindowOpacityW && (e.key === "w" || e.key === "W")) {
+      block();
+      return;
+    }
+    if (currentSettings.disableFontIncrease && (e.key === "+" || e.key === "=")) {
+      block();
+      return;
+    }
+    if (currentSettings.disableFontDecrease && (e.key === "-" || e.key === "_")) {
+      block();
+      return;
+    }
+    if (currentSettings.disablePanUpW && (e.key === "w" || e.key === "W")) {
+      block();
+      return;
+    }
+    if (currentSettings.disablePanLeftA && (e.key === "a" || e.key === "A")) {
+      block();
+      return;
+    }
+    if (currentSettings.disablePanDownS && (e.key === "s" || e.key === "S")) {
+      block();
+      return;
+    }
+    if (currentSettings.disablePanRightD && (e.key === "d" || e.key === "D")) {
+      block();
+      return;
+    }
+    if (
+      currentSettings.disableZoomIn &&
+      (e.key === "+" || e.key === "=" || e.key === "]")
+    ) {
+      block();
+      return;
+    }
+    if (
+      currentSettings.disableZoomOut &&
+      (e.key === "-" || e.key === "_" || e.key === "[")
+    ) {
+      block();
+      return;
+    }
+    if (
+      currentSettings.disableSpeedControl &&
+      e.shiftKey &&
+      (e.key === "<" || e.key === ">")
+    ) {
+      block();
+      return;
+    }
+    if (currentSettings.disableFrameSkip && (e.key === "," || e.key === ".")) {
+      block();
+      return;
+    }
+  }
+
+  ["keydown", "keypress", "keyup"].forEach((evt) => {
+    window.addEventListener(evt, handleHotkeyEvent, true);
+  });
 
   // --- 2. UI: SETTINGS MODAL ---
   function openSettings() {
@@ -158,7 +280,7 @@
 
     let closeIcon = document.createElement("div");
     closeIcon.className = "yt-hk-close";
-    closeIcon.textContent = "×";
+    closeIcon.textContent = "❌";
 
     header.append(titleContainer, closeIcon);
     modal.appendChild(header);
@@ -167,80 +289,116 @@
     let content = document.createElement("div");
     content.className = "yt-hk-content";
 
-    let options = [
-      {
-        id: "disableNumericKeys",
-        label: "Disable Numbers (0-9)",
-        checked: settings.disableNumericKeys,
-      },
-      {
-        id: "disableSpacebar",
-        label: "Disable Spacebar",
-        checked: settings.disableSpacebar,
-      },
-      {
-        id: "disableArrowKeys",
-        label: "Disable Arrow Keys",
-        checked: settings.disableArrowKeys,
-      },
-      {
-        id: "disableCtrlLeft",
-        label: "Disable Ctrl + Left",
-        checked: settings.disableCtrlLeft,
-      },
-      {
-        id: "disableCtrlRight",
-        label: "Disable Ctrl + Right",
-        checked: settings.disableCtrlRight,
-      },
-      {
-        id: "disableFKey",
-        label: 'Disable "F" (Fullscreen)',
-        checked: settings.disableFKey,
-      },
-      {
-        id: "disableMKey",
-        label: 'Disable "M" (Mute)',
-        checked: settings.disableMKey,
-      },
-      {
-        id: "disableSpeedControl",
-        label: "Disable Speed (Shift+<>)",
-        checked: settings.disableSpeedControl,
-      },
-      {
-        id: "disableFrameSkip",
-        label: "Disable Frame Skip (./,)",
-        checked: settings.disableFrameSkip,
-      },
+    const liveSettings = getSettings();
+
+    const resetSettings = () => {
+      settings = persistSettings(DEFAULT_SETTINGS);
+      [...document.querySelectorAll(".yt-hk-row input[type='checkbox']")].forEach((checkbox) => {
+        if (checkbox.id in DEFAULT_SETTINGS) {
+          checkbox.checked = DEFAULT_SETTINGS[checkbox.id];
+        }
+      });
+    };
+
+    const baseOptions = [
+      { id: "disableNumericKeys", label: "Disable Numbers (0-9)", checked: liveSettings.disableNumericKeys },
+      { id: "disableSpacebar", label: "Disable Spacebar", checked: liveSettings.disableSpacebar },
+      { id: "disableHorizontalArrows", label: "Disable Progress Forward / Rewind (← →)", checked: liveSettings.disableHorizontalArrows },
+      { id: "disableVerticalArrows", label: "Disable Volume Up / Down (↑ ↓)", checked: liveSettings.disableVerticalArrows },
+      { id: "disableCtrlLeft", label: "Disable (Ctrl + Left)", checked: liveSettings.disableCtrlLeft },
+      { id: "disableCtrlRight", label: "Disable Ctrl + Right", checked: liveSettings.disableCtrlRight },
+      { id: "disableFKey", label: 'Disable "F" (Fullscreen)', checked: liveSettings.disableFKey },
+      { id: "disableMKey", label: 'Disable "M" (Mute)', checked: liveSettings.disableMKey },
+      { id: "disableVKey", label: 'Disable "V" (Captions toggle)', checked: liveSettings.disableVKey },
+      { id: "disableSpeedControl", label: "Disable Speed (Shift+<>)", checked: liveSettings.disableSpeedControl },
+      { id: "disableFrameSkip", label: "Disable Frame Skip (./,)", checked: liveSettings.disableFrameSkip },
     ];
 
-    options.forEach((opt) => {
-      let row = document.createElement("div");
-      row.className = "yt-hk-row";
-      let label = document.createElement("span");
-      label.textContent = opt.label;
-      let labelSwitch = document.createElement("label");
-      labelSwitch.className = "yt-hk-switch";
-      let input = document.createElement("input");
-      input.type = "checkbox";
-      input.id = opt.id;
-      input.checked = opt.checked;
-      let slider = document.createElement("span");
-      slider.className = "yt-hk-slider";
-      labelSwitch.append(input, slider);
-      row.append(label, labelSwitch);
-      content.appendChild(row);
-    });
+    const advancedOptions = [
+      { id: "disablePlayPauseK", label: "Play/Pause (k)", checked: liveSettings.disablePlayPauseK },
+      { id: "disableRewindJ", label: "Rewind (j)", checked: liveSettings.disableRewindJ },
+      { id: "disableFastForwardL", label: "Fast Forward (l)", checked: liveSettings.disableFastForwardL },
+      { id: "disablePreviousVideoP", label: "Previous Video (Shift+p)", checked: liveSettings.disablePreviousVideoP },
+      { id: "disableNextVideoN", label: "Next Video (Shift+n)", checked: liveSettings.disableNextVideoN },
+      { id: "disableTheatreModeT", label: "Theatre Mode (t)", checked: liveSettings.disableTheatreModeT },
+      { id: "disableMiniPlayerI", label: "Miniplayer (i)", checked: liveSettings.disableMiniPlayerI },
+      { id: "disableCloseDialogEsc", label: "Escape (close dialog)", checked: liveSettings.disableCloseDialogEsc },
+      { id: "disableCaptionsC", label: "Captions (c)", checked: liveSettings.disableCaptionsC },
+      { id: "disableTextOpacityO", label: "Text Opacity (o)", checked: liveSettings.disableTextOpacityO },
+      { id: "disableWindowOpacityW", label: "Window Opacity (w)", checked: liveSettings.disableWindowOpacityW },
+      { id: "disableFontIncrease", label: "Font Size + (+)", checked: liveSettings.disableFontIncrease },
+      { id: "disableFontDecrease", label: "Font Size - (-)", checked: liveSettings.disableFontDecrease },
+      { id: "disablePanUpW", label: "Pan Up (w)", checked: liveSettings.disablePanUpW },
+      { id: "disablePanLeftA", label: "Pan Left (a)", checked: liveSettings.disablePanLeftA },
+      { id: "disablePanDownS", label: "Pan Down (s)", checked: liveSettings.disablePanDownS },
+      { id: "disablePanRightD", label: "Pan Right (d)", checked: liveSettings.disablePanRightD },
+      { id: "disableZoomIn", label: "Zoom In (+ or ])", checked: liveSettings.disableZoomIn },
+      { id: "disableZoomOut", label: "Zoom Out (- or [)", checked: liveSettings.disableZoomOut },
+      { id: "disableShiftSlash", label: "Keyboard Shortcuts (Shift+/)", checked: liveSettings.disableShiftSlash },
+    ];
+
+    const buildRows = (opts, container) => {
+      opts.forEach((opt) => {
+        let row = document.createElement("div");
+        row.className = "yt-hk-row";
+        let label = document.createElement("span");
+        label.textContent = opt.label;
+        let labelSwitch = document.createElement("label");
+        labelSwitch.className = "yt-hk-switch";
+        let input = document.createElement("input");
+        input.type = "checkbox";
+        input.id = opt.id;
+        input.checked = opt.checked;
+        let slider = document.createElement("span");
+        slider.className = "yt-hk-slider";
+        labelSwitch.append(input, slider);
+        row.append(label, labelSwitch);
+        container.appendChild(row);
+      });
+    };
+
+    buildRows(baseOptions, content);
+
+    const advancedToggle = document.createElement("button");
+    advancedToggle.className = "yt-hk-advanced-toggle";
+    advancedToggle.textContent = "Show more controls";
+
+    const advancedContainer = document.createElement("div");
+    advancedContainer.className = "yt-hk-advanced";
+
+    buildRows(advancedOptions, advancedContainer);
+
+    advancedToggle.onclick = () => {
+      const isOpen = advancedContainer.classList.toggle("open");
+      advancedToggle.textContent = isOpen ? "Hide extra controls" : "Show more controls";
+    };
+
+    content.appendChild(advancedToggle);
+    content.appendChild(advancedContainer);
     modal.appendChild(content);
 
     // Footer
     let footer = document.createElement("div");
     footer.className = "yt-hk-footer";
+
+    let resetBtn = document.createElement("button");
+    resetBtn.className = "yt-hk-reset-btn";
+    resetBtn.textContent = "Reset to defaults";
+
+    let shortcutsBtn = document.createElement("button");
+    shortcutsBtn.className = "yt-hk-shortcuts-btn";
+    shortcutsBtn.textContent = "Show Keyboard Shortcuts";
+    shortcutsBtn.title = "Open YouTube's keyboard shortcuts help (Shift+?)";
+
+    let footerActions = document.createElement("div");
+    footerActions.className = "yt-hk-footer-actions";
+
     let saveBtn = document.createElement("button");
     saveBtn.className = "yt-hk-save-btn";
     saveBtn.textContent = "Save";
-    footer.appendChild(saveBtn);
+
+    footer.append(resetBtn, shortcutsBtn, footerActions);
+    footerActions.appendChild(saveBtn);
     modal.appendChild(footer);
 
     document.body.append(overlay, modal);
@@ -254,27 +412,43 @@
       }, 200);
     };
     closeIcon.onclick = overlay.onclick = close;
+    resetBtn.onclick = () => {
+      resetSettings();
+      resetBtn.textContent = "Reset ✓";
+      setTimeout(() => {
+        resetBtn.textContent = "Reset to defaults";
+      }, 1200);
+    };
+    shortcutsBtn.onclick = () => {
+      const evt = new KeyboardEvent("keydown", {
+        key: "?",
+        shiftKey: true,
+        code: "Slash",
+        keyCode: 191,
+        bubbles: true,
+        cancelable: true,
+      });
+      document.dispatchEvent(evt);
+      close();
+    };
     saveBtn.onclick = () => {
-      // Update all settings from checkboxes
       const newSettings = {};
-      options.forEach((opt) => {
-        newSettings[opt.id] = document.getElementById(opt.id).checked;
+      [...baseOptions, ...advancedOptions].forEach((opt) => {
+        const el = document.getElementById(opt.id);
+        newSettings[opt.id] = el ? el.checked : DEFAULT_SETTINGS[opt.id];
       });
 
-      // Save to persistent storage
-      GM_setValue("hotkeySettings", newSettings);
+      const mergedSettings = persistSettings({ ...liveSettings, ...newSettings });
+      settings = mergedSettings;
 
-      // Visual feedback
       saveBtn.textContent = "Saved!";
       saveBtn.style.backgroundColor = "#00cc00";
 
-      // Revert button text after 1 second
       setTimeout(() => {
         saveBtn.textContent = "Save";
         saveBtn.style.backgroundColor = "";
       }, 1000);
 
-      // Close modal after 500ms
       setTimeout(close, 500);
     };
 
@@ -352,33 +526,105 @@
     actionsContainer.appendChild(wrapper);
   }
 
-  // --- 4. OBSERVER LOGIC ---
-  // Watch for the actions bar appearing (It loads lazily below the video)
+  // --- 4. OBSERVER LOGIC WITH PROPER TIMING ---
+  let injectionAttempts = 0;
+  let isInjecting = false;
+
+  // Improved injection with better timing and waiting for specific elements
+  async function tryInjectWithRetry() {
+    if (isInjecting) return;
+    isInjecting = true;
+
+    // Don't try if button already exists
+    if (document.getElementById("yt-hk-action-btn")) {
+      isInjecting = false;
+      return;
+    }
+
+    // Wait for the video player and actions container to be present
+    const maxAttempts = 20;
+    const baseDelay = 100;
+
+    for (let i = 0; i < maxAttempts; i++) {
+      // Check if we're on a watch page
+      if (!window.location.pathname.startsWith('/watch')) {
+        isInjecting = false;
+        return;
+      }
+
+      // Check if button already exists (another attempt might have succeeded)
+      if (document.getElementById("yt-hk-action-btn")) {
+        isInjecting = false;
+        return;
+      }
+
+      // Look for the video player AND the actions container
+      const videoPlayer = document.querySelector('ytd-watch-flexy') || document.querySelector('#player');
+      const actionsContainer = document.querySelector("ytd-menu-renderer #top-level-buttons-computed") ||
+                               document.querySelector("ytd-menu-renderer #menu-top-level-buttons") ||
+                               document.querySelector("ytd-menu-renderer #flexible-item-buttons");
+
+      if (videoPlayer && actionsContainer) {
+        // Both elements are ready, inject now
+        injectActionButton();
+        isInjecting = false;
+        return;
+      }
+
+      // Exponential backoff: wait longer each attempt
+      const delay = baseDelay * Math.pow(1.3, i);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+
+    isInjecting = false;
+  }
+
+  // Watch for YouTube's SPA navigation events
+  function handlePageChange() {
+    // Reset injection state on navigation
+    injectionAttempts = 0;
+
+    // Try injection after a short delay to let the page render
+    setTimeout(() => tryInjectWithRetry(), 200);
+  }
+
+  // Listen for YouTube's navigation events (SPA)
+  if (window.yt && window.yt.config_) {
+    // YouTube is loaded, set up listeners
+    document.addEventListener('yt-navigate-finish', handlePageChange);
+    document.addEventListener('yt-page-data-updated', handlePageChange);
+  } else {
+    // YouTube not loaded yet, wait for it
+    window.addEventListener('yt-navigate-finish', handlePageChange);
+    window.addEventListener('yt-page-data-updated', handlePageChange);
+  }
+
+  // Backup: MutationObserver to catch when the actions container appears
   const observer = new MutationObserver((mutations) => {
-    if (!document.getElementById("yt-hk-action-btn")) {
-      injectActionButton();
+    // Only observe if on a watch page and button doesn't exist
+    if (window.location.pathname.startsWith('/watch') && !document.getElementById("yt-hk-action-btn")) {
+      tryInjectWithRetry();
     }
   });
 
-  observer.observe(document.body, { childList: true, subtree: true });
+  // Start observing once the body is available
+  if (document.body) {
+    observer.observe(document.body, { childList: true, subtree: true });
+  } else {
+    document.addEventListener('DOMContentLoaded', () => {
+      observer.observe(document.body, { childList: true, subtree: true });
+    });
+  }
 
-  // Aggressive fallback: Try to inject button periodically
-  let injectionAttempts = 0;
-  const injectionInterval = setInterval(() => {
-    if (document.getElementById("yt-hk-action-btn")) {
-      clearInterval(injectionInterval);
-      return;
-    }
-    injectActionButton();
-    injectionAttempts++;
-    if (injectionAttempts > 30) {
-      // Stop trying after 30 attempts (15 seconds)
-      clearInterval(injectionInterval);
-    }
-  }, 500);
-
-  // Try once when page loads
-  setTimeout(() => injectActionButton(), 1000);
+  // Initial injection attempts
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => tryInjectWithRetry(), 500);
+    });
+  } else {
+    // DOM already loaded
+    setTimeout(() => tryInjectWithRetry(), 500);
+  }
 
   // Fallback Tampermonkey Menu
   GM_registerMenuCommand("YouTube Hotkey Settings", openSettings);
@@ -387,12 +633,12 @@
   GM_addStyle(`
         /* Modal Styles */
         .yt-hk-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; opacity: 0; transition: opacity 0.2s; }
-        .yt-hk-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 350px; background: #212121; color: #eee; border-radius: 12px; z-index: 10000; font-family: 'Roboto', sans-serif; box-shadow: 0 12px 24px rgba(0,0,0,0.6); border: 1px solid #333; opacity: 0; transition: opacity 0.2s; }
+        .yt-hk-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 420px; background: #212121; color: #eee; border-radius: 12px; z-index: 10000; font-family: 'Roboto', sans-serif; box-shadow: 0 12px 24px rgba(0,0,0,0.6); border: 1px solid #333; opacity: 0; transition: opacity 0.2s; }
         .yt-hk-header { padding: 16px 20px; border-bottom: 1px solid #3d3d3d; display: flex; justify-content: space-between; align-items: center; }
         .yt-hk-header h2 { margin: 0; font-size: 18px; font-weight: 500; color: #fff; }
         .yt-hk-close { cursor: pointer; font-size: 28px; color: #aaa; }
         .yt-hk-close:hover { color: #fff; }
-        .yt-hk-content { padding: 10px 0; }
+        .yt-hk-content { padding: 10px 0; max-height: 60vh; overflow-y: auto; overflow-x: hidden; }
         .yt-hk-row { padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; font-size: 15px; }
         .yt-hk-row:hover { background: #2a2a2a; }
         .yt-hk-switch { position: relative; width: 40px; height: 20px; display: inline-block; }
@@ -401,9 +647,18 @@
         .yt-hk-slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
         input:checked + .yt-hk-slider { background-color: #ff0033; }
         input:checked + .yt-hk-slider:before { transform: translateX(20px); }
-        .yt-hk-footer { padding: 12px 20px; text-align: right; border-top: 1px solid #3d3d3d; }
+        .yt-hk-advanced-toggle { width: calc(100% - 40px); margin: 10px 20px; padding: 10px 12px; background: #2a2a2a; border: 1px solid #3d3d3d; color: #eee; border-radius: 8px; cursor: pointer; text-align: left; }
+        .yt-hk-advanced-toggle:hover { background: #333; }
+        .yt-hk-advanced { display: none; padding-top: 6px; }
+        .yt-hk-advanced.open { display: block; }
+        .yt-hk-footer { padding: 12px 20px; border-top: 1px solid #3d3d3d; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .yt-hk-footer-actions { display: flex; gap: 10px; }
         .yt-hk-save-btn { background: #ff0033; border: none; padding: 10px 18px; color: #fff; font-weight: 500; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-size: 15px; transition: background-color 0.2s; }
         .yt-hk-save-btn:hover { background: #CC0000; }
+        .yt-hk-reset-btn { background: transparent; border: 1px solid #555; color: #eee; padding: 9px 14px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+        .yt-hk-reset-btn:hover { background: #2a2a2a; border-color: #777; }
+        .yt-hk-shortcuts-btn { background: #2a2a2a; border: 1px solid #444; color: #eee; padding: 9px 14px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: all 0.2s; white-space: nowrap; }
+        .yt-hk-shortcuts-btn:hover { background: #333; border-color: #666; }
 
         /* NATIVE BUTTON STYLES (MATCHING SHARE BUTTON) */
         .yt-hk-native-pill-btn {

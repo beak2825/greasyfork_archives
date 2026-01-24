@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Background Video Playback Fix (Instagram, Facebook, Reddit, TikTok)
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      1.6
+// @version      1.7
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Prevents videos from pausing when the tab/window loses visibility or focus. Spoofs Page Visibility API, blocks lifecycle events, and auto-resumes videos paused by the site.
@@ -264,6 +264,14 @@
     const handleVideoPause = (event) => {
       /** @type {HTMLVideoElement} */
       const video = event.currentTarget;
+
+      // Skip if video is in Picture-in-Picture mode
+      // User has explicit native controls there; PiP pause clicks don't register
+      // as gestures on the main page, so we must not interfere
+      if (document.pictureInPictureElement === video) {
+        log('Video is in PiP, not resuming');
+        return;
+      }
 
       // Skip if this looks like a user-initiated pause
       if (isUserInitiatedPause()) {

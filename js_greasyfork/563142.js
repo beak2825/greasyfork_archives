@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         AnMe
 // @author       zjw
-// @version      9.7.9
+// @version      9.8.0
 // @namespace    https://github.com/Zhu-junwei/AnMe
-// @description  通用网站多账号切换器
-// @description:zh  通用网站多账号切换器
+// @description  通用多网站多账号切换器
+// @description:zh  通用多网站多账号切换器
 // @description:en  Universal Multi-Site Account Switcher
 // @description:es  Conmutador universal de múltiples cuentas para múltiples sitios web
 // @icon         data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMWVtIiBoZWlnaHQ9IjFlbSIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0yMSAxNy41QzIxIDE5LjQzMyAxOS40MzMgMjEgMTcuNSAyMUMxNS41NjcgMjEgMTQgMTkuNDMzIDE0IDE3LjVDMTQgMTUuNTY3IDE1LjU2NyAxNCAxNy41IDE0QzE5LjQzMyAxNCAyMSAxNS41NjcgMjEgMTcuNVoiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjEuNSIvPjxwYXRoIGQ9Ik0yIDExSDIyIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik00IDExTDQuNjEzOCA4LjU0NDc5QzUuMTU5NDcgNi4zNjIxMSA1LjQzMjMxIDUuMjcwNzcgNi4yNDYwOSA0LjYzNTM4QzcuMDU5ODggNCA4LjE4NDggNCAxMC40MzQ3IDRIMTMuNTY1M0MxNS44MTUyIDQgMTYuOTQwMSA0IDE3Ljc1MzkgNC42MzUzOEMxOC41Njc3IDUuMjcwNzcgMTguODQwNSA2LjM2MjExIDE5LjM4NjIgOC41NDQ3OUwyMCAxMSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTAgMTcuNUMxMCAxOS40MzMgOC40MzMgMjEgNi41IDIxQzQuNTY3IDIxIDMgMTkuNDMzIDMgMTcuNUMzIDE1LjU2NyA0LjU2NyAxNCA2LjUgMTRDOC40MzMgMTQgMTAgMTUuNTY3IDEwIDE3LjVaIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNMTAgMTcuNDk5OUwxMC42NTg0IDE3LjE3MDdDMTEuNTAyOSAxNi43NDg0IDEyLjQ5NzEgMTYuNzQ4NCAxMy4zNDE2IDE3LjE3MDdMMTQgMTcuNDk5OSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4=
@@ -74,7 +74,7 @@
     // Shadow DOM CSS
     const STYLE_CSS = `
         :host {
-            all: initial; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;font-size: 14px;line-height: 1.5;color: #333;z-index: 2147483647; position: fixed;
+            all: initial; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif!important;font-size: 14px!important;line-height: 1.5;color: #333!important;z-index: 2147483647; position: fixed;
             top: 0;left: 0;width: 0;height: 0;pointer-events: none;
         }
 
@@ -163,7 +163,7 @@
         .acc-btn-plus { width: 38px; height: 38px; background: #fff; color: #666; border: 1px solid #ddd; font-size: 20px; }
         .acc-btn-plus:hover { border-color: #2196F3; color: #2196F3; }
         .acc-help-tip, .acc-lock-tip { display: inline-block; width: 16px; height: 16px; line-height: 16px; text-align: center; cursor: help; font-size: 16px; }
-        .acc-help-tip { color:#f5a623; margin-left: 10px;}
+        .acc-help-tip { color:#f5a623; margin-left:10px; margin-right:4px}
         .acc-lock-tip { color: #999; }
         .acc-set-group { margin-bottom: 10px; }
         .acc-set-title { font-size: 12px; font-weight: bold; color: #999; margin-bottom: 8px; }
@@ -175,8 +175,8 @@
         .acc-notice-content h4 { margin: 15px 0 8px 0; color: #333; border-left: 3px solid #2196F3; padding-left: 8px; }
         .acc-link-btn { color: #2196F3; cursor: pointer; font-size: 12px; }
         .acc-select-ui { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; background: #fff; cursor: pointer; outline: none; color: #333; }
-        .aac-chk {display:flex; align-items:center; flex-wrap:wrap; font-size:11px; color:#666; margin:10px 0;}
-        .acc-chk-label { display: inline-flex !important; align-items: center !important; cursor: pointer !important; user-select: none; font-size: 12px; color: #666; }
+        .acc-chk {display:flex; align-items:center; flex-wrap:wrap; font-size:11px; color:#666; margin:5px 0;-webkit-user-select: none;}
+        .acc-chk-label { display: inline-flex !important; align-items: center !important; cursor: pointer !important; margin-right:4px; font-size: 12px; color: #666; }
         .acc-custom-chk { appearance: none !important; width: 14px !important; height: 14px !important; border: 1px solid #ccc !important; border-radius: 3px !important; margin-right: 4px !important; cursor: pointer !important; position: relative !important; background: #fff; }
         .acc-custom-chk:checked { background-color: #2196F3 !important; border-color: #2196F3 !important; }
         .acc-custom-chk:checked::after { content: ''; position: absolute !important; left: 4px !important; top: 1px !important; width: 3px !important; height: 7px !important; border: solid white !important; border-width: 0 2px 2px 0 !important; transform: rotate(45deg) !important; }
@@ -185,6 +185,7 @@
         .acc-spinner{width:30px;height:30px;border:3px solid #f3f3f3;border-top:3px solid #2196F3;border-radius:50%;animation:acc-spin 1s linear infinite}
         @keyframes acc-spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
         .acc-loading-text{margin-top:10px;font-size:12px;color:#2196F3;font-weight:700}
+
     `;
 
     // ========================================================================

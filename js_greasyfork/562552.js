@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BiliSub - 哔哩哔哩字幕下载工具
 // @namespace    https://github.com/ShinoharaHaruna/bilisub
-// @version      1.1.1
+// @version      1.2.0
 // @description  在哔哩哔哩页面直接下载字幕，支持AI字幕和普通字幕
 // @author       Shinohara Haruna
 // @match        *://*.bilibili.com/video/*
@@ -18,6 +18,12 @@
 // @downloadURL https://update.greasyfork.org/scripts/562552/BiliSub%20-%20%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E5%AD%97%E5%B9%95%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7.user.js
 // @updateURL https://update.greasyfork.org/scripts/562552/BiliSub%20-%20%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E5%AD%97%E5%B9%95%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7.meta.js
 // ==/UserScript==
+class BiliSubAuthError extends Error {
+    constructor(message) {
+        super(message || "账号未登录或 SESSDATA 已失效");
+        this.name = "BiliSubAuthError";
+    }
+}
 // 工具函数
 function sanitizeFilename(filename) {
     return filename.replace(/[<>:"/\\|?*]/g, "_").trim();
@@ -318,6 +324,11 @@ class BilibiliAPI {
                         if (response.status >= 200 && response.status < 300) {
                             try {
                                 const parsed = JSON.parse(response.responseText);
+                                const code = parsed?.code;
+                                if (code === -101) {
+                                    reject(new BiliSubAuthError(parsed?.message));
+                                    return;
+                                }
                                 resolve(parsed);
                             }
                             catch (error) {
@@ -344,7 +355,12 @@ class BilibiliAPI {
         if (!response.ok) {
             throw new Error(`请求失败，状态码：${response.status}`);
         }
-        return (await response.json());
+        const parsed = (await response.json());
+        const code = parsed?.code;
+        if (code === -101) {
+            throw new BiliSubAuthError(parsed?.message);
+        }
+        return parsed;
     }
     static sanitizeParamValue(value) {
         return String(value).replace(/[!'()*]/g, "");
@@ -501,6 +517,36 @@ class BiliSub {
         }
         const fallback = localStorage.getItem(this.sessdataStorageKey);
         return fallback ?? undefined;
+    }
+    clearStoredSessdata() {
+        try {
+            if (typeof GM_setValue === "function") {
+                GM_setValue(this.sessdataStorageKey, "");
+            }
+        }
+        catch {
+            // ignore
+        }
+        try {
+            localStorage.removeItem(this.sessdataStorageKey);
+        }
+        catch {
+            // ignore
+        }
+    }
+    handleSessdataInvalid(error) {
+        if (!(error instanceof BiliSubAuthError)) {
+            return false;
+        }
+        this.sessdata = undefined;
+        this.clearStoredSessdata();
+        this.availableSubtitles = [];
+        this.subtitleCache.clear();
+        this.currentSubtitleItem = null;
+        this.currentSubtitleData = null;
+        this.showToast("SESSDATA 已失效，请重新设置");
+        this.promptSessdataGuide();
+        return true;
     }
     saveSessdata(value) {
         const normalized = value.trim();
@@ -1249,11 +1295,11 @@ class BiliSub {
             this.renderSubtitleTimeline();
         }
         catch (error) {
-            console.error("加载字幕失败:", error, "url:", subtitle.subtitle_url, "lan:", subtitle.lan);
-            if (this.subtitleTimelineContainer) {
-                this.subtitleTimelineContainer.innerHTML =
-                    '<div class="bilisub-empty">加载失败，请重试</div>';
+            if (this.handleSessdataInvalid(error)) {
+                return;
             }
+            console.error("加载字幕失败:", error);
+            this.showToast("加载字幕失败，请重试");
         }
     }
     renderSubtitleTimeline() {
@@ -1336,6 +1382,9 @@ class BiliSub {
             return list;
         }
         catch (error) {
+            if (this.handleSessdataInvalid(error)) {
+                return [];
+            }
             console.error("获取字幕列表失败:", error);
             return [];
         }

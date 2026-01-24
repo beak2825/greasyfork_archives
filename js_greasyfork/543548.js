@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         x-RedDragon Client
 // @namespace    https://www.youtube.com/@x-RedDragonOficial
-// @version      1.5.6.1
-// @description  R=InstaNormal | T=ReverseInsta | Y=BoostInsta | G=BoostSpike | B=4Traps/Boost | C=4Spikes | ,=AntiTrap | M=AutoMills | F=Trap/BoostPad | V=Spike | N=Mill | H=Teleport/Turret | AutoBiomeHat | Esc=MenuGoldbot/Music | ClickRight=FastBreak | AutoHeal | AutoGG | AntiInstas | Visual Mods.
+// @version      1.5.6.2
+// @description  Hotkeys & Features: R=Insta | T=ReverseInsta | Y=BoostInsta | G=BoostSpike | B=4xTraps/Boost | C=4xSpikes | M=AutoMills | F=Trap/BoostPad | V=Spike | N=Mill | H=Teleport/Turret | AutoBiomeHat | Esc=Goldbot Menu & Music | RightClick=FastBreak | AutoHeal | AutoGG | AntiInstas | Visual Enhancements
 // @icon         https://i.imgur.com/AFJt4iq.png
 // @author       x-RedDragonYT
 // @match        *://moomoo.io/*
@@ -742,150 +742,6 @@ function autoBiomeHatController() {
 }
 
 autoBiomeHatController();
-
-// === AntiTrap ===
-let antiTrap = false;
-let intrap = false;
-let trapAngle = null;
-let trapId = null;
-let trapOwnerId = null;
-let antiTrapRunning = false;
-let enteredTrap = false;
-
-const FAST_ATTACK_TIMES_ALT = {
-    0: 260, 1: 360, 2: 360, 3: 260, 4: 260,
-    5: 500, 6: 660, 7: 60, 8: 360,
-    9: 560, 10: 360, 12: 660, 13: 170,
-    14: 660, 15: 1460
-};
-
-document.addEventListener("keydown", e => {
-    if (document.activeElement?.id?.toLowerCase() === "chatbox") return;
-    if (e.key === ",") {
-        antiTrap = !antiTrap;
-        doNewSend(["6", ["AntiTrap : " + antiTrap]]);
-    }
-});
-
-function handleTrapData(node) {
-    for (let i = 0; i < node[1].length / 8; i++) {
-        const obj = node[1].slice(i * 8, i * 8 + 8);
-        if (obj[6] !== 15) continue;
-        if (obj[7] === myPlayer.id || obj[7] === myPlayer.clan) continue;
-
-        const dx = obj[1] - myPlayer.x;
-        const dy = obj[2] - myPlayer.y;
-        const dist = Math.hypot(dx, dy);
-
-        if (dist < 90 && !intrap) {
-            intrap = true;
-            trapAngle = Math.atan2(dy, dx);
-            trapId = obj[0];
-            trapOwnerId = obj[7];
-            enteredTrap = false;
-            doNewSend(["6", ["Trap Detected"]]);
-
-            if (!antiTrapRunning) {
-                antiTrapRunning = true;
-                antiTrapLoop();
-            }
-        }
-    }
-}
-
-const oldHandleMessageTrap = handleMessage;
-handleMessage = function (m) {
-    const temp = msgpack5.decode(new Uint8Array(m.data));
-    const data = temp?.length > 1 ? [temp[0], ...temp[1]] : temp;
-    if (!data) return;
-
-    if (data[0] === "H") handleTrapData(data);
-
-    if (data[0] === "E" && trapOwnerId === data[1] && intrap) {
-        intrap = false;
-        trapId = null;
-        trapOwnerId = null;
-        antiTrapRunning = false;
-        setTimeout(() => doNewSend(["c", [0, 6, 0]]), 100);
-        doNewSend(["6", ["Trap Owner Disconnected"]]);
-    }
-
-    if (data[0] === "Q" && intrap && trapId === data[1]) {
-        intrap = false;
-        trapId = null;
-        trapOwnerId = null;
-        antiTrapRunning = false;
-        setTimeout(() => doNewSend(["c", [0, 6, 0]]), 100);
-        doNewSend(["6", ["Trap Cleared"]]);
-    }
-
-    oldHandleMessageTrap(m);
-};
-
-function getCorrectWeapon() {
-    const primary = myPlayer.weapon;
-    const secondary = getSecondaryWeaponIndex();
-    return secondary === 10 ? secondary : primary;
-}
-
-function equipCorrectWeapon() {
-    const weapon = getCorrectWeapon();
-    doNewSend(["z", [weapon, true]]);
-}
-
-function antiTrapEnterSequence() {
-    const a1 = trapAngle + (135 * Math.PI / 180);
-    const a2 = a1 + (45 * Math.PI / 180);
-    const a3 = a2 + (45 * Math.PI / 180);
-
-    place(spikeType, a1);
-    place(spikeType, a2);
-    place(spikeType, a3);
-
-    enteredTrap = true;
-}
-
-function antiTrapAttackStep() {
-    if (!antiTrap || !intrap) return;
-    if (myPlayer?.health !== undefined && myPlayer.health <= 0) {
-        intrap = false;
-        antiTrapRunning = false;
-        setTimeout(() => doNewSend(["c", [0, 6, 0]]), 100);
-        return;
-    }
-
-    const weapon = getCorrectWeapon();
-    const attackDelay = FAST_ATTACK_TIMES_ALT[weapon] || 300;
-
-    equipCorrectWeapon();
-    doNewSend(["c", [0, 40, 0]]);
-    doNewSend(["D", [trapAngle]]);
-    doNewSend(["F", [1, trapAngle]]);
-    setTimeout(() => doNewSend(["F", [0, trapAngle]]), 15);
-
-    setTimeout(() => {
-        if (antiTrap && intrap) {
-            doNewSend(["c", [0, 6, 0]]);
-        }
-    }, 20);
-
-    return attackDelay;
-}
-
-function antiTrapLoop() {
-    if (!antiTrap || !intrap) {
-        antiTrapRunning = false;
-        return;
-    }
-
-    if (!enteredTrap) antiTrapEnterSequence();
-
-    const delay = antiTrapAttackStep();
-
-    setTimeout(() => {
-        if (antiTrap && intrap) antiTrapLoop();
-    }, delay);
-}
 })();
 
 //AntiGrid
@@ -1762,7 +1618,7 @@ window.addEventListener('load', () => {
 })();
 
 //Radar
-(function(){const _=['Map','div','xrd-radar-layer','fixed','0','none','strict','transform','40','mainMenu','zIndex','appendChild','documentElement','addEventListener','message','decode','C','a','clear','set','createElement','style','pointerEvents','contain','willChange','getElementById','getComputedStyle','isNaN','innerWidth','innerHeight','requestAnimationFrame','has','get','atan2','PI','hypot','cos','sin','querySelectorAll','remove','xrd-r-','block','opacity','rotate(','deg)','left','top','#00ff00','#ff0000'];const $=i=>_[i];let M=new window[$(0)](),I=null,L=null,H=false;function G(){if(L)return L;L=document[$(20)]($(1));L.id=$(2);Object.assign(L[$(21)],{position:$(3),inset:$(4),pointerEvents:$(5),contain:$(6),willChange:$(7),zIndex:$(8)});const u=document[$(25)]($(9));if(u){const z=parseInt(window[$(26)](u)[$(10)]);if(!window[$(27)](z))L[$(21)][$(10)]=z-1}document[$(12)][$(11)](L);return L}function W(){if(H)return;H=true;const A=WebSocket.prototype[$(13)];WebSocket.prototype[$(13)]=function(t,l,o){if(t===$(14)){const w=function(e){try{if(e.data instanceof ArrayBuffer){const d=msgpack[$(15)](e.data);if(d[0]===$(16))I=d[1][0];else if(d[0]===$(17)){M[$(18)]();const r=d[1][0];for(let i=0;i<r.length;i+=13)M[$(19)](r[i],{x:r[i+1],y:r[i+2],t:r[i+7]})}}}catch(e){}l.call(this,e)};return A.call(this,t,w,o)}return A.call(this,t,l,o)}}function A(i){let e=document[$(25)]($(40)+i);if(e)return e;e=document[$(20)]($(1));e.id=$(40)+i;Object.assign(e[$(21)],{position:$(3),width:$(4),height:$(4),borderStyle:'solid',borderWidth:'10px 0 10px 20px',pointerEvents:$(5),zIndex:'1'});G()[$(11)](e);return e}function R(){window[$(30)](R);if(!I||!M[$(31)](I))return;const m=M[$(32)](I),cx=window[$(28)]/2,cy=window[$(29)]/2;for(const [i,p] of M){if(i===I)continue;const a=A(i),dx=p.x-m.x,dy=m.y-p.y,ang=Math[$(33)](dy,dx),rot=-ang*180/Math[$(34)],dist=Math.min(Math[$(35)](dx,dy)/600,1);Object.assign(a[$(21)],{display:$(41),opacity:dist,transform:$(43)+rot+$(44),left:(cx+Math[$(36)](ang)*cy*dist)+'px',top:(cy-Math[$(37)](ang)*cy*dist)+'px',borderColor:p.t&&p.t===m.t?'transparent transparent transparent '+$(47):'transparent transparent transparent '+$(48)})}document[$(38)]('[id^="'+$(40)+'"]').forEach(e=>{const i=+e.id.replace($(40),'');M[$(31)](i)||e[$(39)]()})}W();R()})();
+(function(){const radarMap=new Map();let selfId=null,container=null,hooked=false;function getContainer(){if(container)return container;container=document.createElement("div");container.id="xrd-radar-layer";Object.assign(container.style,{position:"fixed",inset:"0",pointerEvents:"none",contain:"strict",willChange:"transform",zIndex:"40"});const menu=document.getElementById("mainMenu");if(menu){const z=parseInt(getComputedStyle(menu).zIndex);if(!isNaN(z))container.style.zIndex=z-1}document.documentElement.appendChild(container);return container}function hookSocket(){if(hooked)return;hooked=true;const original=WebSocket.prototype.addEventListener;WebSocket.prototype.addEventListener=function(type,listener,opts){if(type==="message"){const wrapped=function(e){try{if(e.data instanceof ArrayBuffer){const data=msgpack.decode(e.data);if(data[0]==="C")selfId=data[1][0];else if(data[0]==="a"){radarMap.clear();const r=data[1][0];for(let i=0;i<r.length;i+=13)radarMap.set(r[i],{x:r[i+1],y:r[i+2],t:r[i+7]})}}}catch(err){}listener.call(this,e)};return original.call(this,type,wrapped,opts)}return original.call(this,type,listener,opts)}}function getArrow(id){let el=document.getElementById("xrd-r-"+id);if(el)return el;el=document.createElement("div");el.id="xrd-r-"+id;Object.assign(el.style,{position:"fixed",width:"0",height:"0",borderStyle:"solid",borderWidth:"10px 0 10px 20px",pointerEvents:"none",zIndex:"1"});getContainer().appendChild(el);return el}function loop(){requestAnimationFrame(loop);if(!selfId||!radarMap.has(selfId))return;const me=radarMap.get(selfId),cx=innerWidth/2,cy=innerHeight/2;for(const [id,p] of radarMap){if(id===selfId)continue;const el=getArrow(id),dx=p.x-me.x,dy=me.y-p.y,ang=Math.atan2(dy,dx),rot=-ang*180/Math.PI,dist=Math.min(Math.hypot(dx,dy)/600,1);Object.assign(el.style,{display:"block",opacity:dist,transform:"rotate("+rot+"deg)",left:(cx+Math.cos(ang)*cy*dist)+"px",top:(cy-Math.sin(ang)*cy*dist)+"px",borderColor:p.t&&p.t===me.t?"transparent transparent transparent #00ff00":"transparent transparent transparent #ff0000"})}document.querySelectorAll('[id^="xrd-r-"]').forEach(e=>{const id=+e.id.replace("xrd-r-","");radarMap.has(id)||e.remove()})}hookSocket();loop()})();
 
 //Menu
 (function () {
@@ -1858,7 +1714,6 @@ window.addEventListener('load', () => {
         {name:"BoostSpike", key:"G"},
         {name:"4Traps/Boost", key:"B"},
         {name:"4Spikes", key:"C"},
-        {name:"AntiTrap", key:","},
         {name:"AutoMills", key:"M"},
         {name:"Trap/BoostPad", key:"F"},
         {name:"Spike", key:"V"},

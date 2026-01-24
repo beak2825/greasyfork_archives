@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         🌌V2 Kастомизация для сайта Black Russia Forum
 // @namespace    http://tampermonkey.net/
-// @version      17.6.11
+// @version      17.6.13
 // @description  Полный визуальный редизайн форума Black Russia. Выбор обоев, плавные анимации, оптимизация интерфейса и гибкая настройка под себя.
 // @author       Maras Rofls
 // @match        https://forum.blackrussia.online/*
@@ -46,7 +46,7 @@ class DOMWatcher {
     const globalDOMWatcher = new DOMWatcher();
     const STYLE_ID = 'blackrussia-custom-style';
     const WELCOME_SCREEN_ID = 'br-style-welcome-screen';
-    const SCRIPT_VERSION = '17.6.11';
+    const SCRIPT_VERSION = '17.6.13';
     const PANEL_ID = 'blackrussia-settings-panel';
     const BOTTOM_NAV_ID = 'blackrussia-bottom-nav-bar';
     const CLOCK_ID = 'br-style-clock';
@@ -119,7 +119,7 @@ class DOMWatcher {
         };
     }
 
-const defaultSettings={fontColor:'#F0F8FF',bgImageDataUri:'',opacityValue:0.3, borderRadius:'10px',bgColor:'#18181b',enableRounding:true,enableEdge:true,edgeColor:'#4A90E2',edgeWidth:1.5,edgeOpacity:0.6,edgeStyle:'cloud_glow',fontFamily:'"Georgia", serif',transparentElementsOpacity:1,enableGradient:false,gradientColor1:'#333333',gradientColor2:'#000000',gradientColor3:'#555555',gradientColor4:'#222222',gradientDirection:'135deg',enableAnimatedGradient:false,animatedGradientSpeed:'5s',enableBottomNav:true,bottomNavOpacity:0.85,bottomNavBorderRadius:'25px',bottomNavPosition:'bottom-center',quickLinks:[{name:'Главная',url:'https://forum.blackrussia.online/',icon:'fas fa-home'},{name:'Правила',url:'https://forum.blackrussia.online/index.php?forums/%D0%9F%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0-%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%D0%BE%D0%B2.10/',icon:'fas fa-gavel'},{name:'Жалобы',url:'https://forum.blackrussia.online/index.php?forums/%D0%96%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B.14/',icon:'fas fa-exclamation-shield'}],enableTextGlow:false,textGlowColor:'#FFFF00',textGlowIntensity:'5px',effectType:'none',effectIntensity:50,effectSpeed:1,effectSwayIntensity:1,effectRainLength:20,customPresets:{},enableBlockBlur:false,blockBlurAmount:5,enableOwnMessageHighlight:false,ownMessageHighlightBgColor:'#2c3e50',ownMessageHighlightEdgeColor:'#3498db',ownMessageHighlightEdgeWidth:'0.2px', enableAvatarBorder:false,avatarBorderColor1:'#FF00DE',avatarBorderColor2:'#00F0FF',avatarBorderColor3:'#00FF85',avatarBorderSize:'2px',avatarBorderSpeed:'3s',avatarBorderStyle:'gradient',avatarPulsateColor:'#FFFFFF',enablePulsatingNicks:false,pulsatingNickColor:'#FFFFFF',pulsatingNickIntensity:1.1,pulsatingNickSpeed:'2s',enableGradientNicks:false,gradientNickColor1:'#FFFFFF',gradientNickColor2:'#00F0FF',gradientNickColor3:'#FF00DE',gradientNickSpeed:'3s',enableUiAnimations:false,uiAnimationSpeed:'0.2s',enableScrollFadeIn:true,scrollFadeInType:'fade-in-up',enableParallaxScroll:false,enableScrollIndicator:true,scrollIndicatorColor:'#00F0FF',scrollIndicatorHeight:'3px',enableWideMode:false,enableOpHighlight:true,opHighlightBgColor:'#3a2e4a',opHighlightEdgeColor:'#9b59b6',opHighlightEdgeWidth:'1px',enableSmartNav:true,enable3DAvatarHover:false,enableLikeAnimations:false,enableDynamicWelcome:true,enableInteractiveParticles:false,enableContextualBackgrounds:false,contextualBgUrl:'zhaloby',contextualBgPreset:'default_dark',enableLiveCounters:true,enableLiveFeed:true, enableHotTopicPulse:false,liveUpdateInterval:60,imgbbApiKey:'',uploaderBtnBgUrl:'',enableComplaintTracker:true,complaintTrackerWarnTime:12,complaintTrackerCritTime:24,complaintTrackerSections:'жалоб, обжалован, техническ, биографи, заявлен',panelTheme:'classic_dark',enableTopicAnimation:false,topicAnimationType:'fade-in',enableBinder:true,bottomNavTheme:'nav_theme_fire',enableThreadPreview:false,enableSectionStats:false,enableSkeletonLoading:true,enableCopyToast:true,};
+const defaultSettings={fontColor:'#F0F8FF',bgImageDataUri:'',opacityValue:0.3, borderRadius:'10px',bgColor:'#18181b',enableRounding:true,enableEdge:true,edgeColor:'#4A90E2',edgeWidth:1.5,edgeOpacity:0.6,edgeStyle:'cloud_glow',fontFamily:'"Georgia", serif',transparentElementsOpacity:1,enableGradient:false,gradientColor1:'#333333',gradientColor2:'#000000',gradientColor3:'#555555',gradientColor4:'#222222',gradientDirection:'135deg',enableAnimatedGradient:false,animatedGradientSpeed:'5s',enableBottomNav:true,bottomNavOpacity:0.85,bottomNavBorderRadius:'25px',bottomNavPosition:'bottom-center',quickLinks:[{name:'Главная',url:'https://forum.blackrussia.online/',icon:'fas fa-home'},{name:'Правила',url:'https://forum.blackrussia.online/index.php?forums/%D0%9F%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0-%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%D0%BE%D0%B2.10/',icon:'fas fa-gavel'},{name:'Жалобы',url:'https://forum.blackrussia.online/index.php?forums/%D0%96%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B.14/',icon:'fas fa-exclamation-shield'}],enableTextGlow:false,textGlowColor:'#FFFF00',textGlowIntensity:'5px',effectType:'none',effectIntensity:50,effectSpeed:1,effectSwayIntensity:1,effectRainLength:20,customPresets:{},enableBlockBlur:false,blockBlurAmount:5,enableOwnMessageHighlight:false,ownMessageHighlightBgColor:'#2c3e50',ownMessageHighlightEdgeColor:'#3498db',ownMessageHighlightEdgeWidth:'0.2px', enableAvatarBorder:false,avatarBorderColor1:'#FF00DE',avatarBorderColor2:'#00F0FF',avatarBorderColor3:'#00FF85',avatarBorderSize:'2px',avatarBorderSpeed:'3s',avatarBorderStyle:'gradient',avatarPulsateColor:'#FFFFFF',enablePulsatingNicks:false,pulsatingNickColor:'#FFFFFF',pulsatingNickIntensity:1.1,pulsatingNickSpeed:'2s',enableGradientNicks:false,gradientNickColor1:'#FFFFFF',gradientNickColor2:'#00F0FF',gradientNickColor3:'#FF00DE',gradientNickSpeed:'3s',enableUiAnimations:false,uiAnimationSpeed:'0.2s',enableScrollFadeIn:false,scrollFadeInType:'fade-in-up',enableParallaxScroll:false,enableScrollIndicator:true,scrollIndicatorColor:'#00F0FF',scrollIndicatorHeight:'3px',enableWideMode:false,enableOpHighlight:true,opHighlightBgColor:'#3a2e4a',opHighlightEdgeColor:'#9b59b6',opHighlightEdgeWidth:'1px',enableSmartNav:true,enable3DAvatarHover:false,enableLikeAnimations:false,enableDynamicWelcome:true,enableInteractiveParticles:false,enableContextualBackgrounds:false,contextualBgUrl:'zhaloby',contextualBgPreset:'default_dark',enableLiveCounters:true,enableLiveFeed:true, enableHotTopicPulse:false,liveUpdateInterval:60,imgbbApiKey:'',uploaderBtnBgUrl:'',enableComplaintTracker:true,complaintTrackerWarnTime:12,complaintTrackerCritTime:24,complaintTrackerSections:'жалоб, обжалован, техническ, биографи, заявлен',panelTheme:'classic_dark',enableTopicAnimation:false,topicAnimationType:'fade-in',enableBinder:true,bottomNavTheme:'nav_theme_fire',enableThreadPreview:false,enableSectionStats:false,enableSkeletonLoading:true,enableCopyToast:true,};
 const availableFonts=[{name:"Georgia",value:'"Georgia", serif',url:''},{name:"Science Gothic",value:'"Science Gothic", sans-serif',url:'https://fonts.googleapis.com/css2?family=Science+Gothic&display=swap'},{name:"Rubik",value:'"Rubik", sans-serif',url:'https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap'},{name:"Roboto Slab",value:'"Roboto Slab", serif',url:'https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap'},{name:"Pacifico",value:'"Pacifico", cursive',url:'https://fonts.googleapis.com/css2?family=Pacifico&display=swap'},{name:"Lobster",value:'"Lobster", cursive',url:'https://fonts.googleapis.com/css2?family=Lobster&display=swap'},{name:"Russo One",value:'"Russo One", sans-serif',url:'https://fonts.googleapis.com/css2?family=Russo+One&display=swap'},{name:"Playfair Display SC",value:'"Playfair Display SC", serif',url:'https://fonts.googleapis.com/css2?family=Playfair+Display+SC:wght@400;700&display=swap'},{name:"Dela Gothic One",value:'"Dela Gothic One", cursive',url:'https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap'},{name:"Orelega One",value:'"Orelega One", cursive',url:'https://fonts.googleapis.com/css2?family=Orelega+One&display=swap'},{name:"Rubik Vinyl",value:'"Rubik Vinyl", cursive',url:'https://fonts.googleapis.com/css2?family=Rubik+Vinyl&display=swap'}];const builtInPresets={'new_year':{enableGradient:true,gradientColor1:'#0a1931',gradientColor2:'#173a6a',gradientColor3:'#ffffff',gradientColor4:'#0a1931',gradientDirection:'135deg',enableAnimatedGradient:true,animatedGradientSpeed:'15s',bgColor:'#1a2a47',opacityValue:0.9,enableBlockBlur:true,blockBlurAmount:3,enableRounding:true,borderRadius:'10px',enableEdge:true,edgeColor:'#ffffff',edgeWidth:'1px',edgeOpacity:0.7,enableTextGlow:true,textGlowColor:'#cce7ff',textGlowIntensity:'8px',effectType:'snow',effectIntensity:100,effectSpeed:1,effectSwayIntensity:1.2,enableAvatarBorder:true,avatarBorderColor1:'#ffffff',avatarBorderColor2:'#cce7ff',avatarBorderColor3:'#89cff0',enablePulsatingNicks:false,enableUiAnimations:true,enableTopicAnimation:true,enableScrollIndicator:true,scrollIndicatorColor:'#ffffff'},'halloween':{enableGradient:true,gradientColor1:'#1a0000',gradientColor2:'#ff6600',gradientColor3:'#000000',gradientColor4:'#3d0000',gradientDirection:'45deg',enableAnimatedGradient:true,animatedGradientSpeed:'10s',bgColor:'#2b0f00',opacityValue:0.9,enableBlockBlur:false,enableRounding:true,borderRadius:'6px',enableEdge:true,edgeColor:'#ff6600',edgeWidth:'2px',edgeOpacity:0.8,enableTextGlow:true,textGlowColor:'#ff9900',textGlowIntensity:'10px',effectType:'leaves-autumn_maple',effectIntensity:60,effectSpeed:0.8,effectSwayIntensity:1,enableAvatarBorder:true,avatarBorderColor1:'#ff6600',avatarBorderColor2:'#f0ad4e',avatarBorderColor3:'#000000',enablePulsatingNicks:true,pulsatingNickColor:'#ff6600',pulsatingNickIntensity:1.1,pulsatingNickSpeed:'2s',enableUiAnimations:true,enableTopicAnimation:true,enableScrollIndicator:true,scrollIndicatorColor:'#ff6600'},'cyberpunk':{enableGradient:true,gradientColor1:'#000000',gradientColor2:'#ff00ff',gradientColor3:'#00ffff',gradientColor4:'#000000',gradientDirection:'45deg',enableAnimatedGradient:true,animatedGradientSpeed:'6s',bgColor:'#1a001a',opacityValue:0.9,enableBlockBlur:true,blockBlurAmount:2,enableRounding:true,borderRadius:'2px',enableEdge:true,edgeColor:'#00ffff',edgeWidth:'1px',edgeOpacity:0.8,enableTextGlow:true,textGlowColor:'#ff00ff',textGlowIntensity:'10px',effectType:'matrix',effectIntensity:90,effectSpeed:1.2,effectRainLength:18,enableAvatarBorder:true,avatarBorderColor1:'#ff00ff',avatarBorderColor2:'#00ffff',avatarBorderColor3:'#F0FF00',enablePulsatingNicks:true,pulsatingNickColor:'#00ffff',pulsatingNickIntensity:1.05,pulsatingNickSpeed:'1.5s',enableUiAnimations:true,enableTopicAnimation:true,enableScrollIndicator:true,scrollIndicatorColor:'#00ffff'},'valentines':{...defaultSettings,enableGradient:true,gradientColor1:'#ffc0cb',gradientColor2:'#e63946',gradientColor3:'#ffffff',gradientColor4:'#ffb6c1',gradientDirection:'135deg',enableAnimatedGradient:true,animatedGradientSpeed:'12s',bgColor:'#3d1a2a',opacityValue:0.9,enableBlockBlur:true,blockBlurAmount:3,enableRounding:true,borderRadius:'22px',enableEdge:true,edgeColor:'#ff8fab',edgeWidth:'1px',edgeOpacity:0.7,enableTextGlow:true,textGlowColor:'#ffc0cb',textGlowIntensity:'8px',effectType:'petals-red_rose',effectIntensity:60,effectSpeed:0.8,effectSwayIntensity:1.5,enableAvatarBorder:true,avatarBorderColor1:'#ff0054',avatarBorderColor2:'#ffffff',avatarBorderColor3:'#ff8fab',enablePulsatingNicks:true,pulsatingNickColor:'#ff8fab',pulsatingNickIntensity:1.05,enableGradientNicks:false,enableScrollIndicator:true,scrollIndicatorColor:'#ff0054'},'womens_day':{...defaultSettings,enableGradient:true,gradientColor1:'#f8c5c8',gradientColor2:'#a4d4ae',gradientColor3:'#ffffff',gradientColor4:'#fffdd0',gradientDirection:'45deg',enableAnimatedGradient:true,animatedGradientSpeed:'15s',bgColor:'#333333',opacityValue:0.85,enableBlockBlur:true,blockBlurAmount:4,enableRounding:true,borderRadius:'10px',enableEdge:true,edgeColor:'#90ee90',edgeWidth:'1px',edgeOpacity:0.8,enableTextGlow:true,textGlowColor:'#d4ffb8',textGlowIntensity:'6px',effectType:'petals-sakura',effectIntensity:70,effectSpeed:1,effectSwayIntensity:1.3,enableAvatarBorder:true,avatarBorderColor1:'#f8c5c8',avatarBorderColor2:'#90ee90',avatarBorderColor3:'#fffdd0',enablePulsatingNicks:false,enableGradientNicks:true,gradientNickColor1:'#f8c5c8',gradientNickColor2:'#90ee90',gradientNickColor3:'#f8c5c8',enableScrollIndicator:true,scrollIndicatorColor:'#f8c5c8'},'victory_day':{...defaultSettings,enableGradient:true,gradientColor1:'#000000',gradientColor2:'#ff6600',gradientColor3:'#d90429',gradientColor4:'#000000',gradientDirection:'to right',enableAnimatedGradient:true,animatedGradientSpeed:'10s',bgColor:'#1c1c1c',opacityValue:0.9,enableBlockBlur:false,enableRounding:true,borderRadius:'4px',enableEdge:true,edgeColor:'#ff6600',edgeWidth:'2px',edgeOpacity:0.9,enableTextGlow:true,textGlowColor:'#fca311',textGlowIntensity:'10px',effectType:'none',enableAvatarBorder:true,avatarBorderStyle:'pulsate',avatarPulsateColor:'#fca311',avatarBorderSpeed:'2s',enablePulsatingNicks:true,pulsatingNickColor:'#ff6600',pulsatingNickIntensity:1.1,enableGradientNicks:false,enableScrollIndicator:true,scrollIndicatorColor:'#ff6600'},'ramadan':{...defaultSettings,enableGradient:true,gradientColor1:'#004d40',gradientColor2:'#ffd700',gradientColor3:'#ffffff',gradientColor4:'#00695c',gradientDirection:'135deg',enableAnimatedGradient:true,animatedGradientSpeed:'14s',bgColor:'#003d33',opacityValue:0.9,enableBlockBlur:true,blockBlurAmount:2,enableRounding:true,borderRadius:'8px',enableEdge:true,edgeColor:'#ffd700',edgeWidth:'0.3px',edgeOpacity:0.8,enableTextGlow:true,textGlowColor:'#fff59d',textGlowIntensity:'8px',effectType:'fireflies',effectIntensity:50,effectSpeed:0.7,effectSwayIntensity:1,enableAvatarBorder:true,avatarBorderColor1:'#ffd700',avatarBorderColor2:'#ffffff',avatarBorderColor3:'#00796b',enablePulsatingNicks:false,enableGradientNicks:true,gradientNickColor1:'#ffd700',gradientNickColor2:'#ffffff',gradientNickColor3:'#fff59d',enableScrollIndicator:true,scrollIndicatorColor:'#ffd700'},'default_dark':{...defaultSettings}};
 const navThemes = {
     'nav_theme_fire': { mainBg: '#111111', borderColor: 'rgba(255, 102, 0, 0.3)', boxShadow: '0 0 10px rgba(255, 102, 0, 0.4), inset 0 0 5px #000000', glowGradient: 'linear-gradient(45deg, #FF6600, #B83E00, #4B0082, #FF6600)', glowOpacity: '0.5', linkHoverBg: 'rgba(255, 140, 0, 0.1)', linkHoverShadow: '0 0 5px rgba(255, 140, 0, 0.3)', accentColor: '#FF6600', mainGradient: 'linear-gradient(120deg, #80DEEA, #A7FFEB, #E1BEE7, #BA68C8, #80DEEA)' },
@@ -324,7 +324,7 @@ ${settings.enableGradientNicks ? '' : '.username,'}
                 @keyframes br-pulsating-avatar-border { 0% { transform: scale(1); box-shadow: 0 0 0 0 ${settings.avatarPulsateColor}B3; } 70% { transform: scale(1.02); box-shadow: 0 0 0 10px transparent; } 100% { transform: scale(1); box-shadow: 0 0 0 0 transparent; } }
             `;
 
-            const finalBlockBlur = (settings.enableBlockBlur && settings.effectType === 'none') ? `blur(${settings.blockBlurAmount}px)` : 'none';
+            const finalBlockBlur = 'none';
             const glowIntensityValue = (typeof settings.textGlowIntensity === 'number') ? `${settings.textGlowIntensity}px` : settings.textGlowIntensity;
             const ownMsgEdgeWidthValue = (typeof settings.ownMessageHighlightEdgeWidth === 'number') ? `${settings.ownMessageHighlightEdgeWidth}px` : settings.ownMessageHighlightEdgeWidth;
             const ownMessageHighlightStyle = (settings.enableOwnMessageHighlight && myUsername) ? `
@@ -886,9 +886,9 @@ ${pageWrapperSelector}, ${mainElementsSelector} {
                     max-width: 95vw;
                     height: 54px;
                     padding: 0 12px;
-                    background: rgba(30, 30, 35, 0.85); /* Чуть меньше прозрачности для снижения нагрузки на блюр */
-                    backdrop-filter: blur(10px);
-                    -webkit-backdrop-filter: blur(10px);
+                    background: #151515;
+backdrop-filter: none;
+-webkit-backdrop-filter: none;
                     border: 1.5px solid rgba(255, 255, 255, 0.7);
                     border-radius: 40px;
                     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -1026,11 +1026,11 @@ ${pageWrapperSelector}, ${mainElementsSelector} {
                 ${avatar3dHoverStyle}
                 ${scrollIndicatorStyle}
                 .menu, .menu-content, .menu-header, .menu-footer, .menu-tabHeader, .menu-row, .menu-link,
-                .p-drawer, .p-drawer-body, .p-drawer-header, .p-drawer-footer,
-                .tooltip-content, .memberTooltip, .memberTooltip-header, .memberTooltip-content {
-                    background-color: color-mix(in srgb, var(--br-edge-color) 10%, rgba(0,0,0,0.1)) !important;
-                    backdrop-filter: blur(22px) !important;
-                    -webkit-backdrop-filter: blur(22px) !important;
+.p-drawer, .p-drawer-body, .p-drawer-header, .p-drawer-footer,
+.tooltip-content, .memberTooltip, .memberTooltip-header, .memberTooltip-content {
+    background-color: #1a1a1a !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
                     border-radius: var(--br-border-radius, 10px) !important;
                     box-shadow: 0 10px 40px rgba(0,0,0,0.3) !important;
                     border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -1045,17 +1045,17 @@ ${pageWrapperSelector}, ${mainElementsSelector} {
                     z-index: 10000 !important;
                 }
 
-                ..offCanvasMenu-backdrop {
-                    background-color: rgba(0, 0, 0, 0.6) !important;
-                    backdrop-filter: blur(4px) !important;
-                    -webkit-backdrop-filter: blur(4px) !important;
-                    transition: opacity 0.4s ease !important;
-                }
+                .offCanvasMenu-backdrop {
+    background-color: rgba(0, 0, 0, 0.85) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transition: opacity 0.4s ease !important;
+}
 
-                .offCanvasMenu-content {
-                    background: rgba(var(--br-edge-color), 0.15) !important;
-                    backdrop-filter: blur(15px) !important;
-                    -webkit-backdrop-filter: blur(15px) !important;
+.offCanvasMenu-content {
+    background: #121212 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
                     border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
                     box-shadow: 15px 0 40px rgba(0, 0, 0, 0.6) !important;
                     transform: translate3d(0, 0, 0) !important;
@@ -1096,22 +1096,54 @@ ${pageWrapperSelector}, ${mainElementsSelector} {
                     font-weight: inherit !important;
                 }
 
+                .fr-box, .fr-wrapper, .fr-toolbar, .fr-element, .fr-box.fr-basic {
+                    overflow: visible !important;
+                    transform: none !important;
+                    z-index: auto;
+                }
+
+                .fr-toolbar {
+                    position: relative !important;
+                    z-index: 10 !important;
+                    background: #151515 !important;
+                    border-top: 1px solid rgba(255,255,255,0.1) !important;
+                }
+
+                .fr-popup, .fr-dropdown-menu, .fr-command.fr-btn+.fr-dropdown-menu {
+                    position: absolute !important;
+                    z-index: 2147483647 !important;
+                    background: #1a1a1a !important;
+                    border: 1px solid rgba(255,255,255,0.2) !important;
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.9) !important;
+                    backdrop-filter: none !important;
+                    -webkit-backdrop-filter: none !important;
+                    margin-top: 5px !important;
+                    opacity: 1 !important;
+                    visibility: visible !important;
+                }
+
+                .fr-popup .fr-colors-tab .fr-colors-tab-active {
+                    background: #333 !important;
+                }
+
                 input[type="text"], input[type="search"], input[type="password"], textarea, .search-input, .inputbox {
-                    background: rgba(var(--br-edge-color), 0.2) !important;
-                    border: 0.5px solid rgba(255, 255, 255, 0.9) !important;
+                    background: #0f0f0f !important;
+                    border: 0.5px solid rgba(255, 255, 255, 0.3) !important;
                     border-radius: var(--br-border-radius) !important;
                     color: #ffffff !important;
-                    backdrop-filter: blur(4px);
-                    -webkit-backdrop-filter: blur(4px);
-                    transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s, transform 0.3s !important;
+                    backdrop-filter: none !important;
+                    -webkit-backdrop-filter: none !important;
+                    transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s !important;
                     outline: none !important;
-                    transform: translateZ(0);
+                    transform: none !important;
+                    z-index: auto !important;
                 }
 
                 input[type="text"]:focus, input[type="search"]:focus, input[type="password"]:focus, textarea:focus, .search-input:focus, .inputbox:focus, .fr-box.is-focused {
-                    background: rgba(var(--br-edge-color), 0.3) !important;
+                    background: #1a1a1a !important;
                     border-color: rgba(var(--br-edge-color), 0.8) !important;
-                    transform: scale(1.01);
+                    transform: none !important;
+                    z-index: auto !important;
                     box-shadow: 0 0 15px rgba(var(--br-edge-color), 0.3) !important;
                 }
                 ::selection {
@@ -2707,49 +2739,40 @@ function setupScrollObserver(settings) {
         scrollObserver = null;
     }
 
-    const selectors = '.structItem, .message, .block-row, .node, .block, .contentRow';
-    const elements = document.querySelectorAll(selectors);
-    const isBackNavigation = (window.performance &&
-                             (window.performance.navigation.type === 2 ||
-                              window.performance.getEntriesByType?.("navigation")[0]?.type === "back_forward"));
+    if (!settings.enableScrollFadeIn) return;
 
-    if (isBackNavigation || !settings.enableScrollFadeIn || elements.length > 30) {
-        requestAnimationFrame(() => {
-            elements.forEach(el => {
-                el.classList.add('br-anim-no-anim', 'br-is-visible');
-                el.style.opacity = '1';
-                el.style.transform = 'none';
-            });
-        });
-        return;
-    }
+    const selectors = '.message, .structItem, .block-container, .notice'; 
+    const elements = document.querySelectorAll(selectors);
 
     const observerOptions = {
         root: null,
-        rootMargin: '200px 0px',
-        threshold: 0
+        rootMargin: '0px 0px -50px 0px',
+        threshold: 0.05
     };
 
-    const observerCallback = (entries, observer) => {
-        entries.forEach((entry) => {
+    scrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const el = entry.target;
                 requestAnimationFrame(() => {
-                    el.classList.add('br-is-visible');
-                    el.style.willChange = 'auto';
+                    el.classList.add('br-scroll-visible');
                 });
-                observer.unobserve(el);
+                scrollObserver.unobserve(el);
             }
         });
-    };
+    }, observerOptions);
 
-    scrollObserver = new IntersectionObserver(observerCallback, observerOptions);
-
-    const fragment = document.createDocumentFragment();
     elements.forEach(el => {
-        if (!el.classList.contains('br-anim-scroll') && !el.closest('.br-panel-body') && !el.closest('.offCanvasMenu') && !el.closest('.menu-content')) {
-            el.classList.add('br-anim-scroll');
-            el.style.willChange = 'opacity, transform';
+        if (el.closest('.br-panel-body') || el.closest('.offCanvasMenu') || el.closest('.menu-content') || el.closest('.br-modal-window')) return;
+        
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+            el.classList.add('br-scroll-visible');
+        } else {
+            el.classList.add('br-scroll-item');
+            if (settings.scrollFadeInType && settings.scrollFadeInType !== 'fade-in') {
+                el.classList.add(`br-anim-${settings.scrollFadeInType}`);
+            }
             scrollObserver.observe(el);
         }
     });
@@ -2766,7 +2789,7 @@ function observeNewNodes(mutationsList) {
 
     let addedNodes = false;
     let relevantUploaderNode = false;
-    const animSelectors = '.structItem, .message, .block-row, .node, .block, .contentRow';
+    const animSelectors = '.message, .structItem, .block-container'; 
     const nodesToAnimate = [];
 
     for (const mutation of mutationsList) {
@@ -2778,12 +2801,13 @@ function observeNewNodes(mutationsList) {
                      node.dataset.brProcessed = 'true';
                      addedNodes = true;
                      
-                 if (currentSettings.enableScrollFadeIn) {
-                         if (node.matches(animSelectors) && !node.classList.contains('br-is-visible') && !node.closest('.offCanvasMenu') && !node.closest('.menu-content')) nodesToAnimate.push(node);
-                         const children = node.querySelectorAll(animSelectors);
-                         if(children.length > 0) {
+                     if (currentSettings.enableScrollFadeIn) {
+                         if (node.matches(animSelectors) && !node.closest('.offCanvasMenu')) {
+                             nodesToAnimate.push(node);
+                         } else if (node.querySelectorAll) {
+                             const children = node.querySelectorAll(animSelectors);
                              children.forEach(child => {
-                                 if (!child.dataset.brProcessed && !child.classList.contains('br-is-visible') && !child.closest('.offCanvasMenu') && !child.closest('.menu-content')) {
+                                 if (!child.dataset.brProcessed && !child.closest('.offCanvasMenu')) {
                                      child.dataset.brProcessed = 'true';
                                      nodesToAnimate.push(child);
                                  }
@@ -2799,21 +2823,14 @@ function observeNewNodes(mutationsList) {
         }
     }
 
-    if (nodesToAnimate.length > 0) {
-        const isBulkLoad = nodesToAnimate.length > 15;
-        
+    if (nodesToAnimate.length > 0 && scrollObserver) {
         requestAnimationFrame(() => {
             nodesToAnimate.forEach(el => {
-                if (isBulkLoad) {
-                    el.style.opacity = '1';
-                    el.style.transform = 'none';
-                    el.classList.add('br-is-visible', 'br-anim-no-anim');
-                } else {
-                    if (!el.classList.contains('br-is-visible')) {
-                        el.classList.add('br-anim-scroll', `br-anim-${currentSettings.scrollFadeInType}`);
-                        if(scrollObserver) scrollObserver.observe(el);
-                    }
+                el.classList.add('br-scroll-item');
+                if (currentSettings.scrollFadeInType !== 'fade-in') {
+                    el.classList.add(`br-anim-${currentSettings.scrollFadeInType}`);
                 }
+                scrollObserver.observe(el);
             });
         });
     }
@@ -3738,20 +3755,20 @@ letter-spacing: 0.02em; }
             }
 
             .br-neon-badge {
-                    float: right;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 6px;
-                    padding: 4px 10px 4px 8px;
-                    border-radius: 8px;
-                    font-family: 'Manrope', sans-serif;
-                    font-weight: 700;
-                    font-size: 11px;
-                    color: #fff;
-                    margin-left: 10px;
-                    background: rgba(20, 20, 25, 0.6);
-                    backdrop-filter: blur(12px);
-                    -webkit-backdrop-filter: blur(12px);
+    float: right;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px 4px 8px;
+    border-radius: 8px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: #fff;
+    margin-left: 10px;
+    background: #18181b;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
                     border: 1px solid rgba(255, 255, 255, 0.08);
                     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
                     white-space: nowrap;
@@ -3916,28 +3933,41 @@ letter-spacing: 0.02em; }
                     transform: scale(1.1) rotate(15deg);
                 }              #${STYLE_ICON_ID}:hover { background-color: rgba(80, 80, 80, 0.9); transform: scale(1.1); }
 
-                .br-anim-scroll {
-                    opacity: 0;
-                    transform: translateY(20px);
-                    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-                    pointer-events: none;
-                    will-change: opacity, transform;
-                }
-                .br-anim-scroll.br-is-visible {
-                    opacity: 1;
-                    transform: translateY(0);
-                    pointer-events: auto;
-                    content-visibility: visible;
-                }
-                .br-anim-no-anim {
-                    opacity: 1 !important;
-                    transform: none !important;
-                    transition: none !important;
-                    animation: none !important;
-                }
-                .br-anim-slide-in-left.br-is-visible {
-                    animation: br-rich-slide-right 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-                }
+                .br-scroll-item {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: opacity, transform;
+}
+
+.br-scroll-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+.br-scroll-item.br-anim-slide-in-left {
+    transform: translateX(-30px);
+}
+
+.br-scroll-item.br-anim-slide-in-left.br-scroll-visible {
+    transform: translateX(0) !important;
+}
+
+.br-scroll-item.br-anim-zoom-in {
+    transform: scale(0.95);
+}
+
+.br-scroll-item.br-anim-zoom-in.br-scroll-visible {
+    transform: scale(1) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .br-scroll-item {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}
 
                 @keyframes br-rich-spring-up {
                     0% { opacity: 0; transform: translateY(40px) scale(0.95); }
@@ -6217,198 +6247,199 @@ const MODAL_OVERLAY_ID = 'br-style-copy-modal';
 }
 
 function showSkeletonLoader() {
-        if (document.getElementById('br-skeleton-layer')) return;
+    const existingLayer = document.getElementById('br-skeleton-layer');
+    if (existingLayer) {
+        existingLayer.classList.remove('br-skeleton-fade-out');
+        delete existingLayer.dataset.closing;
+        return;
+    }
 
-        const isMobile = window.innerWidth < 900;
-        const nav = performance.getEntriesByType("navigation")[0];
-        const hideTip = nav && (nav.type === 'reload' || nav.type === 'back_forward');
+    const isMobile = window.innerWidth < 900;
+    const nav = performance.getEntriesByType("navigation")[0];
+    const hideTip = nav && (nav.type === 'reload' || nav.type === 'back_forward');
 
-        const style = document.createElement('style');
-        style.id = 'br-skeleton-css';
-        style.textContent = `
-            .p-pageWrapper { opacity: 0; transition: opacity 0.3s ease; will-change: opacity; }
-            .br-content-visible { opacity: 1 !important; }
-            #br-skeleton-layer { 
-                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-                background: #0e0e10; z-index: 9000; overflow-y: scroll; 
-                transition: opacity 0.3s linear; 
-                will-change: opacity, transform;
-                transform: translate3d(0,0,0);
-                backface-visibility: hidden;
-            }
-            .br-skeleton-fade-out { opacity: 0 !important; pointer-events: none; }
-            
-            @keyframes br-glare { 
-                0% { transform: translateX(-100%) skewX(-20deg) translateZ(0); } 
-                100% { transform: translateX(200%) skewX(-20deg) translateZ(0); } 
-            }
-            @keyframes br-progress { 
-                0% { transform: scaleX(0); } 
-                40% { transform: scaleX(0.6); } 
-                100% { transform: scaleX(0.95); } 
-            }
-
-            .br-shimmer { 
-                position: relative; background: #1c1c1f; overflow: hidden; 
-                border: none !important; box-shadow: none !important; 
-                transform: translateZ(0);
-            }
-            .br-shimmer::after { 
-                content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent); 
-                transform: translateX(-100%) translateZ(0); 
-                animation: br-glare 1.5s infinite linear; 
-                will-change: transform;
-            }
-
-            .br-sk-progress-bar { 
-                position: fixed; top: 0; left: 0; height: 3px; width: 100%;
-                background: var(--br-edge-color, #d32f2f); z-index: 9001; 
-                box-shadow: 0 0 15px var(--br-edge-color, #d32f2f); 
-                transform-origin: left;
-                transform: scaleX(0);
-                will-change: transform;
-                animation: br-progress 4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
-            }
-
-            .br-sk-body { display: flex; width: 96%; margin: 130px auto 50px; gap: 20px; align-items: flex-start; }
-            .br-sk-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 15px; }
-            .br-sk-sidebar { width: 300px; flex-shrink: 0; display: flex; flex-direction: column; gap: 20px; }
-
-            .br-sk-block-header { height: 50px; margin-bottom: 10px; border-radius: 6px; width: 40%; }
-            .br-sk-row { display: flex; gap: 15px; padding: 15px; background: #161618; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03); align-items: center; }
-            .br-sk-ava { width: 45px; height: 45px; border-radius: 50%; flex-shrink: 0; }
-            .br-sk-content { flex: 1; display: flex; flex-direction: column; gap: 10px; }
-            .br-sk-text { height: 12px; border-radius: 4px; width: 100%; }
-            .br-sk-text.w-40 { width: 40%; } .br-sk-text.w-60 { width: 60%; }
-
-            .br-sk-widget { height: 200px; border-radius: 8px; width: 100%; }
-
-            .br-sk-tip-container { position: absolute; top: 70px; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; pointer-events: none; }
-            .br-sk-tip-text { background: rgba(20,20,23,0.9); border: 1px solid rgba(255,255,255,0.05); padding: 8px 20px; border-radius: 50px; color: #aaa; font-size: 13px; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); backdrop-filter: blur(5px); }
-            .br-sk-tip-highlight { color: var(--br-edge-color, #d32f2f); font-weight: bold; }
-
-            @media (max-width: 900px) { .br-sk-sidebar { display: none; } .br-sk-body { width: 95%; margin-top: 100px; } }
-        `;
-        document.head.appendChild(style);
-
-        const tips = [
-            "Никому не сообщайте пароль, даже администрации.", "Используйте /binder для быстрой отыгровки.",
-            "Фиксируйте условия сделок на видео с /time.", "Команда /mm открывает меню персонажа.",
-            "Привяжите Telegram и VK к аккаунту.", "Покупайте авто только на б/у или в салонах.",
-            "Соблюдайте правила сервера.", "Читеров репортим через /report.",
-            "Проверяйте форум на наличие заявок.", "RP сон разрешен без формы.",
-            "Не качайте читы и сборки.", "Админы не просят пароль.",
-            "Используйте /gps для поиска мест.", "Смена NonRP ника через меню.",
-            "Учите термины DM, DB, SK, TK.", "Будьте вежливы с игроками.",
-            "Новости в группе VK.", "Проверяйте жалобы на форуме.",
-            "Соблюдайте правила ограблений.", "Сложный пароль — залог безопасности.",
-            "Не ведитесь на удвоение денег.", "Команда /anim — анимации.",
-            "Военный билет нужен для госслужб.", "Следите за авто через /carpass.",
-            "Соблюдайте ценовую политику.", "В казино играйте осторожно.",
-            "Уважайте лидеров фракций.", "Для семьи нужен 2 уровень.",
-            "Закупайте продукты в бизнес.", "Используйте /f и /fn чаты.",
-            "Полиция: /wanted для розыска.", "Лицензии в Правительстве.",
-            "Медкарта в больнице.", "Не капсите в чат.",
-            "MG — это смешивание чатов.", "Отыгрывайте ДТП.",
-            "Команда /eject выкидывает из авто.", "Кольца в 24/7 для свадьбы.",
-            "Ешьте в закусочных.", "Оплачивайте жилье в банке.",
-            "Оск родных — бан навсегда.", "/try для спорных ситуаций.",
-            "/history — история ников.", "Общайтесь в Курилке.",
-            "Скрины с /time — 3 дня.", "Не спамьте в репорт.",
-            "Тюнинг авто в СТО.", "VIP дает бонусы."
-        ];
-
-        const randomTip = tips[Math.floor(Math.random() * tips.length)];
-        const tipHTML = hideTip ? '' : `
-            <div class="br-sk-tip-container">
-                <span class="br-sk-tip-text">
-                    <i class="fas fa-info-circle"></i> <span class="br-sk-tip-highlight">INFO:</span> ${randomTip}
-                </span>
-            </div>`;
-
-        let mainContent = '';
-        const href = window.location.href;
-
-        if (href.includes('threads/')) {
-            mainContent = `
-                <div class="br-sk-block-header br-shimmer" style="height: 60px; width: 70%; margin-bottom: 20px;"></div>
-                <div class="br-sk-row" style="margin-bottom: 20px; background: transparent; padding: 0; border: none;">
-                    <div class="br-sk-ava br-shimmer" style="width: 60px; height: 60px;"></div>
-                    <div class="br-sk-content">
-                        <div class="br-sk-text br-shimmer w-40" style="height: 15px;"></div>
-                        <div class="br-sk-text br-shimmer w-60"></div>
-                    </div>
-                </div>
-                <div class="br-shimmer" style="width: 100%; height: 200px; border-radius: 8px; margin-bottom: 15px;"></div>
-                <div class="br-sk-text br-shimmer w-40"></div>`;
-        } else if (href.includes('members/')) {
-            mainContent = `
-                <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-                    <div class="br-shimmer" style="width: 200px; height: 200px; border-radius: 8px;"></div>
-                    <div style="flex: 1; display: flex; flex-direction: column; gap: 15px;">
-                        <div class="br-shimmer" style="height: 40px; width: 50%;"></div>
-                        <div class="br-shimmer" style="height: 20px; width: 30%;"></div>
-                        <div class="br-shimmer" style="height: 100px; width: 100%;"></div>
-                    </div>
-                </div>`;
-        } else {
-            mainContent = `
-                <div class="br-sk-block-header br-shimmer"></div>
-                ${Array(8).fill(0).map(() => `
-                <div class="br-sk-row">
-                    <div class="br-sk-ava br-shimmer"></div>
-                    <div class="br-sk-content">
-                        <div class="br-sk-text br-shimmer w-60"></div>
-                        <div class="br-sk-text br-shimmer w-40" style="margin-top: 5px;"></div>
-                    </div>
-                </div>`).join('')}`;
+    const style = document.createElement('style');
+    style.id = 'br-skeleton-css';
+    style.textContent = `
+        .p-pageWrapper { opacity: 0; transition: opacity 0.3s ease; will-change: opacity; }
+        .br-content-visible { opacity: 1 !important; }
+        #br-skeleton-layer { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #0e0e10; z-index: 9000; overflow-y: scroll; 
+            transition: opacity 0.3s linear; 
+            will-change: opacity, transform;
+            transform: translate3d(0,0,0);
+            backface-visibility: hidden;
+        }
+        .br-skeleton-fade-out { opacity: 0 !important; pointer-events: none; }
+        
+        @keyframes br-glare { 
+            0% { transform: translateX(-100%) skewX(-20deg) translateZ(0); } 
+            100% { transform: translateX(200%) skewX(-20deg) translateZ(0); } 
+        }
+        @keyframes br-progress { 
+            0% { transform: scaleX(0); } 
+            40% { transform: scaleX(0.6); } 
+            100% { transform: scaleX(0.95); } 
         }
 
-        const sidebarContent = isMobile ? '' : `
-            <div class="br-sk-sidebar">
-                <div class="br-sk-widget br-shimmer" style="height: 150px;"></div>
-                <div class="br-sk-widget br-shimmer" style="height: 250px;"></div>
-            </div>`;
+        .br-shimmer { 
+            position: relative; background: #1c1c1f; overflow: hidden; 
+            border: none !important; box-shadow: none !important; 
+            transform: translateZ(0);
+        }
+        .br-shimmer::after { 
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent); 
+            transform: translateX(-100%) translateZ(0); 
+            animation: br-glare 1.5s infinite linear; 
+            will-change: transform;
+        }
 
-        const layer = document.createElement('div');
-        layer.id = 'br-skeleton-layer';
-        layer.innerHTML = `
-            <div class="br-sk-progress-bar"></div>
-            ${tipHTML}
-            <div class="br-sk-body">
-                <div class="br-sk-main">
-                    ${mainContent}
+        .br-sk-progress-bar { 
+            position: fixed; top: 0; left: 0; height: 3px; width: 100%;
+            background: var(--br-edge-color, #d32f2f); z-index: 9001; 
+            box-shadow: 0 0 15px var(--br-edge-color, #d32f2f); 
+            transform-origin: left;
+            transform: scaleX(0);
+            will-change: transform;
+            animation: br-progress 4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
+        }
+
+        .br-sk-body { display: flex; width: 96%; margin: 130px auto 50px; gap: 20px; align-items: flex-start; }
+        .br-sk-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 15px; }
+        .br-sk-sidebar { width: 300px; flex-shrink: 0; display: flex; flex-direction: column; gap: 20px; }
+
+        .br-sk-block-header { height: 50px; margin-bottom: 10px; border-radius: 6px; width: 40%; }
+        .br-sk-row { display: flex; gap: 15px; padding: 15px; background: #161618; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03); align-items: center; }
+        .br-sk-ava { width: 45px; height: 45px; border-radius: 50%; flex-shrink: 0; }
+        .br-sk-content { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        .br-sk-text { height: 12px; border-radius: 4px; width: 100%; }
+        .br-sk-text.w-40 { width: 40%; } .br-sk-text.w-60 { width: 60%; }
+
+        .br-sk-widget { height: 200px; border-radius: 8px; width: 100%; }
+
+        .br-sk-tip-container { position: absolute; top: 70px; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; pointer-events: none; }
+        .br-sk-tip-text { background: #141417; border: 1px solid rgba(255,255,255,0.05); padding: 8px 20px; border-radius: 50px; color: #aaa; font-size: 13px; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); backdrop-filter: none; }
+        .br-sk-tip-highlight { color: var(--br-edge-color, #d32f2f); font-weight: bold; }
+
+        @media (max-width: 900px) { .br-sk-sidebar { display: none; } .br-sk-body { width: 95%; margin-top: 100px; } }
+    `;
+    document.head.appendChild(style);
+
+    const tips = [
+        "Никому не сообщайте пароль, даже администрации.", "Используйте /binder для быстрой отыгровки.",
+        "Фиксируйте условия сделок на видео с /time.", "Команда /mm открывает меню персонажа.",
+        "Привяжите Telegram и VK к аккаунту.", "Покупайте авто только на б/у или в салонах.",
+        "Соблюдайте правила сервера.", "Читеров репортим через /report.",
+        "Проверяйте форум на наличие заявок.", "RP сон разрешен без формы.",
+        "Не качайте читы и сборки.", "Админы не просят пароль.",
+        "Используйте /gps для поиска мест.", "Смена NonRP ника через меню.",
+        "Учите термины DM, DB, SK, TK.", "Будьте вежливы с игроками.",
+        "Новости в группе VK.", "Проверяйте жалобы на форуме.",
+        "Соблюдайте правила ограблений.", "Сложный пароль — залог безопасности.",
+        "Не ведитесь на удвоение денег.", "Команда /anim — анимации.",
+        "Военный билет нужен для госслужб.", "Следите за авто через /carpass.",
+        "Соблюдайте ценовую политику.", "В казино играйте осторожно.",
+        "Уважайте лидеров фракций.", "Для семьи нужен 2 уровень.",
+        "Закупайте продукты в бизнес.", "Используйте /f и /fn чаты.",
+        "Полиция: /wanted для розыска.", "Лицензии в Правительстве.",
+        "Медкарта в больнице.", "Не капсите в чат.",
+        "MG — это смешивание чатов.", "Отыгрывайте ДТП.",
+        "Команда /eject выкидывает из авто.", "Кольца в 24/7 для свадьбы.",
+        "Ешьте в закусочных.", "Оплачивайте жилье в банке.",
+        "Оск родных — бан навсегда.", "/try для спорных ситуаций.",
+        "/history — история ников.", "Общайтесь в Курилке.",
+        "Скрины с /time — 3 дня.", "Не спамьте в репорт.",
+        "Тюнинг авто в СТО.", "VIP дает бонусы."
+    ];
+
+    const randomTip = tips[Math.floor(Math.random() * tips.length)];
+    const tipHTML = hideTip ? '' : `
+        <div class="br-sk-tip-container">
+            <span class="br-sk-tip-text">
+                <i class="fas fa-info-circle"></i> <span class="br-sk-tip-highlight">INFO:</span> ${randomTip}
+            </span>
+        </div>`;
+
+    let mainContent = '';
+    const href = window.location.href;
+
+    if (href.includes('threads/')) {
+        mainContent = `
+            <div class="br-sk-block-header br-shimmer" style="height: 60px; width: 70%; margin-bottom: 20px;"></div>
+            <div class="br-sk-row" style="margin-bottom: 20px; background: transparent; padding: 0; border: none;">
+                <div class="br-sk-ava br-shimmer" style="width: 60px; height: 60px;"></div>
+                <div class="br-sk-content">
+                    <div class="br-sk-text br-shimmer w-40" style="height: 15px;"></div>
+                    <div class="br-sk-text br-shimmer w-60"></div>
                 </div>
-                ${sidebarContent}
             </div>
-        `;
-        document.documentElement.appendChild(layer);
+            <div class="br-shimmer" style="width: 100%; height: 200px; border-radius: 8px; margin-bottom: 15px;"></div>
+            <div class="br-sk-text br-shimmer w-40"></div>`;
+    } else if (href.includes('members/')) {
+        mainContent = `
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div class="br-shimmer" style="width: 200px; height: 200px; border-radius: 8px;"></div>
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 15px;">
+                    <div class="br-shimmer" style="height: 40px; width: 50%;"></div>
+                    <div class="br-shimmer" style="height: 20px; width: 30%;"></div>
+                    <div class="br-shimmer" style="height: 100px; width: 100%;"></div>
+                </div>
+            </div>`;
+    } else {
+        mainContent = `
+            <div class="br-sk-block-header br-shimmer"></div>
+            ${Array(8).fill(0).map(() => `
+            <div class="br-sk-row">
+                <div class="br-sk-ava br-shimmer"></div>
+                <div class="br-sk-content">
+                    <div class="br-sk-text br-shimmer w-60"></div>
+                    <div class="br-sk-text br-shimmer w-40" style="margin-top: 5px;"></div>
+                </div>
+            </div>`).join('')}`;
+    }
 
-        const removeSkeleton = () => {
-            if (layer.dataset.closing) return;
-            layer.dataset.closing = 'true';
-            layer.classList.add('br-skeleton-fade-out');
-            document.querySelector('.p-pageWrapper')?.classList.add('br-content-visible');
-            setTimeout(() => {
+    const sidebarContent = isMobile ? '' : `
+        <div class="br-sk-sidebar">
+            <div class="br-sk-widget br-shimmer" style="height: 150px;"></div>
+            <div class="br-sk-widget br-shimmer" style="height: 250px;"></div>
+        </div>`;
+
+    const layer = document.createElement('div');
+    layer.id = 'br-skeleton-layer';
+    layer.innerHTML = `
+        <div class="br-sk-progress-bar"></div>
+        ${tipHTML}
+        <div class="br-sk-body">
+            <div class="br-sk-main">
+                ${mainContent}
+            </div>
+            ${sidebarContent}
+        </div>
+    `;
+    document.documentElement.appendChild(layer);
+
+    const removeSkeleton = () => {
+        if (layer.dataset.closing) return;
+        layer.dataset.closing = 'true';
+        layer.classList.add('br-skeleton-fade-out');
+        document.querySelector('.p-pageWrapper')?.classList.add('br-content-visible');
+        setTimeout(() => {
+            if (layer.parentNode) {
                 layer.remove();
                 style.remove();
-                document.querySelector('.p-pageWrapper')?.classList.remove('br-content-visible');
-            }, 300);
-        };
-
-        const timer = setTimeout(removeSkeleton, 5000);
-        const onLoad = () => { clearTimeout(timer); removeSkeleton(); };
-
-        if (document.readyState === 'complete') onLoad();
-        else window.addEventListener('load', onLoad);
-
-        window.addEventListener('pageshow', (event) => {
-            if (event.persisted) {
-                removeSkeleton();
             }
-        });
-    }
+            document.querySelector('.p-pageWrapper')?.classList.remove('br-content-visible');
+        }, 300);
+    };
+
+    const timer = setTimeout(removeSkeleton, 5000);
+    const onLoad = () => { clearTimeout(timer); removeSkeleton(); };
+
+    if (document.readyState === 'complete') onLoad();
+    else window.addEventListener('load', onLoad);
+}
 
 function setupPageTransitions() {
     if (document.getElementById('br-page-transition-style')) return;
@@ -6463,10 +6494,12 @@ function setupPageTransitions() {
         }, 2000);
     });
 
-    window.addEventListener('pageshow', (event) => {
-        overlay.classList.remove('br-page-exit-active');
-        overlay.style.opacity = '0';
-        overlay.style.pointerEvents = 'none';
+    window.addEventListener('pageshow', () => {
+        setTimeout(() => {
+            overlay.classList.remove('br-page-exit-active');
+            overlay.style.opacity = '0';
+            overlay.style.pointerEvents = 'none';
+        }, 10);
     });
 }
 
@@ -6809,7 +6842,7 @@ this.state.modal = {
                 try {
 
             const antiFouc = document.createElement('style');
-            antiFouc.innerHTML = '';
+            antiFouc.innerHTML = 'body { opacity: 0 !important; visibility: hidden !important; } html { background: #09090b !important; }';
             (document.head || document.documentElement).appendChild(antiFouc);
 
             injectStaticStyles();
@@ -6829,18 +6862,56 @@ this.state.modal = {
             }
             applyForumStyles(currentSettings);
 
-            requestAnimationFrame(() => {
+            const showContent = () => {
                 if (antiFouc) {
                     antiFouc.innerHTML = 'html { opacity: 1 !important; visibility: visible !important; }';
                     setTimeout(() => antiFouc.remove(), 600);
                 }
+                document.documentElement.style.opacity = '1';
+                document.documentElement.style.visibility = 'visible';
+            };
+
+            requestAnimationFrame(showContent);
+
+            window.addEventListener('pagehide', () => {
+                document.body.style.opacity = '0';
+                document.documentElement.style.backgroundColor = '#09090b';
             });
 
-            window.addEventListener('pageshow', (event) => {
-                if (event.persisted) {
-                    applyForumStyles(currentSettings);
-                    document.documentElement.style.opacity = '1';
+            window.addEventListener('pageshow', () => {
+                document.documentElement.style.backgroundColor = '#09090b';
+                document.body.style.opacity = '0';
+                document.body.style.visibility = 'hidden';
+
+                if (currentSettings.enableSkeletonLoading) {
+                    showSkeletonLoader();
                 }
+
+                setTimeout(() => {
+                    injectStaticStyles();
+                    applyForumStyles(currentSettings);
+                    
+                    const overlay = document.querySelector('.br-page-exit-overlay');
+                    if (overlay) {
+                        overlay.classList.remove('br-page-exit-active');
+                        overlay.style.opacity = '0';
+                    }
+
+                    if (antiFouc) {
+                        antiFouc.innerHTML = 'body { opacity: 1 !important; visibility: visible !important; transition: opacity 0.4s ease !important; }';
+                        setTimeout(() => antiFouc.remove(), 600);
+                    }
+                    
+                    document.body.style.opacity = '1';
+                    document.body.style.visibility = 'visible';
+
+                    const skeleton = document.getElementById('br-skeleton-layer');
+                    if (skeleton) {
+                        skeleton.classList.add('br-skeleton-fade-out');
+                        skeleton.dataset.closing = 'true';
+                        setTimeout(() => { if(skeleton.parentNode) skeleton.remove(); }, 300);
+                    }
+                }, 0);
             });
 
             const onDomReady = async () => {
@@ -7007,7 +7078,7 @@ globalDOMWatcher.start();
     }
 
     (function() {
-    const A="TWFyYXMgUm9mbHM=",V="MTcuNi4xMQ==",K="0J/QvtC70L3Ri9C5INCy0LjQt9GD0LDQu9GM0L3Ri9C5INGA0LXQtNC40LfQsNC50L0g0YTQvtGA0YPQvNCwIEJsYWNrIFJ1c3NpYQ==",C=98;
+    const A="TWFyYXMgUm9mbHM=",V="MTcuNi4xMw==",K="0J/QvtC70L3Ri9C5INCy0LjQt9GD0LDQu9GM0L3Ri9C5INGA0LXQtNC40LfQsNC50L0g0YTQvtGA0YPQvNCwIEJsYWNrIFJ1c3NpYQ==",C=98;
         try{
             const s=GM_info.script;
             if(s.author!==atob(A)||s.version!==atob(V)||!s.description.includes(decodeURIComponent(escape(atob(K))))||Object.keys(defaultSettings).length!==C)throw 0;

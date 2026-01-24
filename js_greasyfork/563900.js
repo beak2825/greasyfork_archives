@@ -224,7 +224,7 @@
                     justify-content: space-between;
                     align-items: center;
                 ">
-                    <span>Bonker Client</span>
+                    <span>Bonker Nigga Client </span>
                     <button id="toggle-debug" style="
                         background: #d4d0c8;
                         border: 1px outset #ffffff;

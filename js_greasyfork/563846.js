@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WebView 错误美化
 // @namespace    https://viayoo.com/h88v22
-// @version      1.4
+// @version      1.6
 // @description  基于MIUIX设计语言重绘的 WebView 错误页面，并且给出一定程度上的解决方案。
 // @author       Aloazny && Gemini
 // @run-at       document-start
@@ -56,10 +56,29 @@
     }
 
     function getInfo() {
+        const html = document.documentElement.innerHTML;
         const text = document.body ? document.body.textContent : "";
         const match = text.match(/(ERR_[A-Z_]+|DNS_[A-Z_]+|SSL_[A-Z_]+|CERT_[A-Z_]+|PROXY_[A-Z_]+|NS_ERROR_[A-Z_]+|PR_[A-Z_]+)/i);
         const code = match ? match[0].toUpperCase() : "ERR_FAILED";
-        
+        // URL提取参(抄)考(袭)了大萌主的脚本，感谢
+        // https://update.greasyfork.org/scripts/561334/%E4%BC%98%E9%9B%85%E7%9A%84%E9%94%99%E8%AF%AF%E9%A1%B5%E9%9D%A2%E7%BE%8E%E5%8C%96.user.js
+        let url = window.location.href;
+        const urlPatterns = [
+            /位于\s*<strong>([^<]+)<\/strong>/i,
+            /位于\s*<b>([^<]+)<\/b>/i,
+            /https?:\/\/[^\s<>"']+/i
+        ];
+        for (const pattern of urlPatterns) {
+            const urlMatch = html.match(pattern);
+            if (urlMatch && urlMatch[1]) {
+                url = urlMatch[1].trim();
+                break;
+            } else if (urlMatch && urlMatch[0] && !pattern.source.includes('(')) {
+                url = urlMatch[0].trim();
+                break;
+            }
+        }
+        const ua = navigator.userAgent;
         let type = '网络错误', desc = '无法访问此网站，请检查网络连接', help = '<li>检查数据流量或 Wi-Fi 连接</li><li>尝试关闭并重新开启飞行模式</li>';
 
         if (/TIMED_OUT|TIMEOUT/.test(code)) {
@@ -93,114 +112,119 @@
             type = '地址无法访问'; desc = '无法找到通往目标服务器的路径';
             help = '<li>检查输入的网址是否包含错误的 IP 或域名</li><li>尝试切换网络（如由 Wi-Fi 切换至移动数据）</li><li>如果你正在使用 VPN，请尝试更换节点或关闭它</li><li>检查局域网网关及子网掩码配置是否正确</li>';
         }
-        return { code, type, desc, help };
+        return { code, type, desc, help, url, ua };
     }
 
     function render() {
-        if (isApplied) return;
+        if (isApplied || !document.body) return;
         isApplied = true;
         const data = getInfo();
+        const host = document.createElement('div');
+        host.id = 'error-beautify-host';
+        const shadow = host.attachShadow({ mode: 'open' });
 
-        const html = `
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>${data.type}</title>
-    <style>
-        :root { --mi-blue: #0078FF; --mi-bg: #F7F7F7; --mi-text: #1A1A1A; --mi-sub: #8C8C8C; --mi-card: #FFFFFF; }
-        body { margin: 0; background: var(--mi-bg); font-family: "MiSans", system-ui, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; color: var(--mi-text); }
-        .card { width: 88%; max-width: 440px; text-align: center; padding: 20px; }
+        const style = `
+        :host { --mi-blue: #0078FF; --mi-bg: #F7F7F7; --mi-text: #1A1A1A; --mi-sub: #8C8C8C; --mi-card: #FFFFFF; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2147483647; overflow-y: auto; background: var(--mi-bg); display: block; }
+        .wrapper { display: flex; align-items: center; justify-content: center; min-height: 100vh; color: var(--mi-text); font-family: "MiSans", system-ui, sans-serif; padding: 20px 0; box-sizing: border-box; }
+        .card { width: 88%; max-width: 440px; text-align: center; padding: 20px; margin: auto; }
         .icon-circle { width: 80px; height: 80px; background: var(--mi-card); border-radius: 26px; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(0,0,0,0.05); margin-bottom: 30px; }
         .err-badge { display: inline-block; background: rgba(0,120,255,0.08); color: var(--mi-blue); padding: 4px 14px; border-radius: 12px; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
         h1 { font-size: 24px; font-weight: 600; margin: 0 0 12px 0; }
         .desc { font-size: 16px; color: var(--mi-sub); line-height: 1.6; margin-bottom: 36px; padding: 0 10px; }
         .btn-group { display: flex; flex-direction: column; gap: 14px; }
-        button { border: none; padding: 16px; border-radius: 20px; font-size: 17px; font-weight: 600; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); -webkit-tap-highlight-color: transparent; }
+        button { border: none; padding: 16px; border-radius: 20px; font-size: 17px; font-weight: 600; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); -webkit-tap-highlight-color: transparent; outline: none; }
         .btn-primary { background: var(--mi-blue); color: #fff; }
         .btn-primary:active { background: #0062D1; transform: scale(0.97); }
         .btn-secondary { background: #EAEAEA; color: var(--mi-text); }
         .btn-secondary:active { background: #DBDBDB; transform: scale(0.97); }
-        
-        .toggle-btn { 
-            background: none; color: #B0B0B0; font-size: 13px; margin-top: 32px; font-weight: normal;
-            animation: mi-float 2s ease-in-out infinite;
-        }
+        .toggle-btn { background: none; color: #B0B0B0; font-size: 13px; margin-top: 32px; font-weight: normal; animation: mi-float 2s ease-in-out infinite; width: 100%; }
         .toggle-btn.active { animation: none; color: var(--mi-blue); }
-        
-        @keyframes mi-float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); color: var(--mi-blue); }
-        }
-
-        .details { display: none; text-align: left; background: var(--mi-card); border-radius: 20px; padding: 20px; margin-top: 20px; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); animation: mi-slide-up 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
-        @keyframes mi-slide-up {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        @keyframes mi-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); color: var(--mi-blue); } }
+        .details { display: none; text-align: left; background: var(--mi-card); border-radius: 20px; padding: 20px; margin-top: 20px; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); animation: mi-slide-up 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); position: relative; }
+        .copy-btn { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.05); color: var(--mi-sub); padding: 5px; border-radius: 8px; font-size: 14px; width: auto; font-weight: normal; transition: all 0.2s; }
+        .copy-btn:active { background: var(--mi-blue); color: #fff; transform: scale(0.9); }
+        @keyframes mi-slide-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .details strong { color: var(--mi-text); display: block; margin-bottom: 8px; font-size: 14px; }
         .details ul { margin: 0; padding-left: 20px; color: var(--mi-sub); line-height: 1.8; }
         .details .code-line { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #EEE; font-family: monospace; font-size: 11px; color: #BBB; word-break: break-all; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <div class="icon-circle">
-            <svg width="38" height="38" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="var(--mi-blue)"/></svg>
-        </div><br>
-        <span class="err-badge">${data.type}</span>
-        <h1>页面加载失败</h1>
-        <div class="desc" id="errorDesc">${data.desc}</div>
-        <div class="btn-group">
-            <button class="btn-primary" onclick="location.reload()">重新加载</button>
-            <button class="btn-secondary" onclick="history.back()">返回上一页</button>
-        </div>
-        <button class="toggle-btn" id="tgl">查看解决方案</button>
-        <div class="details" id="det">
-            <strong>建议操作：</strong>
-            <ul>${data.help}</ul>
-            <div class="code-line">
-                CODE: ${data.code}<br>
-                TIME: ${new Date().toLocaleString()}
+        `;
+
+        shadow.innerHTML = `
+        <style>${style}</style>
+        <div class="wrapper">
+            <div class="card">
+                <div class="icon-circle">
+                    <svg width="38" height="38" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="var(--mi-blue)"/></svg>
+                </div><br>
+                <span class="err-badge">${data.type}</span>
+                <h1>页面加载失败</h1>
+                <div class="desc" id="errorDesc">${data.desc}</div>
+                <div class="btn-group">
+                    <button class="btn-primary" id="retryBtn">重新加载</button>
+                    <button class="btn-secondary" id="backBtn">返回上一页</button>
+                </div>
+                <button class="toggle-btn" id="tgl">查看解决方案</button>
+                <div class="details" id="det">
+                    <button class="copy-btn" id="cp">📋</button>
+                    <strong>建议操作：</strong>
+                    <ul id="helpList">${data.help}</ul>
+                    <div class="code-line" id="codeLine">
+                        CODE: ${data.code}<br>
+                        URL: ${data.url}<br>
+                        UA: ${data.ua}<br>
+                        TIME: ${new Date().toLocaleString()}
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <script>
-        document.getElementById('tgl').onclick = function() {
-            const det = document.getElementById('det');
-            const isH = det.style.display !== 'block';
-            det.style.display = isH ? 'block' : 'none';
-            this.innerText = isH ? '隐藏解决方案' : '查看解决方案';
-            if (isH) {
-                this.classList.add('active');
-            } else {
-                this.classList.remove('active');
-            }
+        </div>`;
+
+        shadow.getElementById('retryBtn').onclick = () => location.reload();
+        shadow.getElementById('backBtn').onclick = () => history.back();
+        shadow.getElementById('tgl').onclick = function() {
+            const det = shadow.getElementById('det');
+            const isVisible = det.style.display === 'block';
+            det.style.display = isVisible ? 'none' : 'block';
+            this.innerText = isVisible ? '查看解决方案' : '隐藏解决方案';
+            this.classList.toggle('active', !isVisible);
         };
-        window.onpopstate = function(event) {
-            const params = new URLSearchParams(window.location.search);
-            if (!params.get('err') && !params.get('code')) {
-                window.location.reload(); 
+
+        shadow.getElementById('cp').onclick = function() {
+            const textToCopy = `错误类型: ${data.type}\n错误代码: ${data.code}\n请求网址: ${data.url}\n设备信息: ${data.ua}\n生成时间: ${new Date().toLocaleString()}`;
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            textArea.style.top = "0";
+            shadow.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    const oldText = this.innerText;
+                    this.innerText = '✅';
+                    setTimeout(() => this.innerText = oldText, 1500);
+                }
+            } catch (err) {
+                console.error('复制失败:', err);
             }
+            shadow.removeChild(textArea);
         };
+
+        const clearAndAppend = () => {
+            document.body.innerHTML = '';
+            document.body.appendChild(host);
+        };
+
+        if (document.readyState === 'complete') clearAndAppend();
+        else window.addEventListener('load', clearAndAppend);
+
         window.addEventListener('online', () => {
-            document.getElementById('errorDesc').innerText = '网络已恢复，正在自动刷新...';
+            const desc = shadow.getElementById('errorDesc');
+            if (desc) desc.innerText = '网络已恢复，正在自动刷新...';
             setTimeout(() => location.reload(), 1000);
         });
-        document.addEventListener('keydown', e => {
-            if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) location.reload();
-            if (e.key === 'Escape') history.back();
-        });
-    </script>
-</body>
-</html>`;
-        document.open();
-        document.write(html);
-        document.close();
     }
-
 
     const main = () => { if (detect()) render(); };
     const obs = new MutationObserver(main);

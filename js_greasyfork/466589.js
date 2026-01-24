@@ -4,7 +4,7 @@
 // @namespace            https://github.com/v2hot/v2ex.rep
 // @homepageURL          https://github.com/v2hot/v2ex.rep#readme
 // @supportURL           https://github.com/v2hot/v2ex.rep/issues
-// @version              1.7.2
+// @version              1.7.3
 // @description          专注提升 V2EX 主题回复浏览体验的浏览器扩展/用户脚本。主要功能有 ✅ 修复有被 block 的用户时错位的楼层号；✅ 回复时自动带上楼层号；✅ 显示热门回复；✅ 显示被引用的回复；✅ 查看用户在当前主题下的所有回复与被提及的回复；✅ 自动预加载所有分页，支持解析显示跨页面引用；✅ 回复时上传图片；✅ 无感自动签到；✅ 懒加载用户头像图片；✅ 一直显示感谢按钮 🙏；✅ 一直显示隐藏回复按钮 🙈；✅ 快速发送感谢/快速隐藏回复（no confirm）等。
 // @description:zh-CN    专注提升 V2EX 主题回复浏览体验的浏览器扩展/用户脚本。主要功能有 ✅ 修复有被 block 的用户时错位的楼层号；✅ 回复时自动带上楼层号；✅ 显示热门回复；✅ 显示被引用的回复；✅ 查看用户在当前主题下的所有回复与被提及的回复；✅ 自动预加载所有分页，支持解析显示跨页面引用；✅ 回复时上传图片；✅ 无感自动签到；✅ 懒加载用户头像图片；✅ 一直显示感谢按钮 🙏；✅ 一直显示隐藏回复按钮 🙈；✅ 快速发送感谢/快速隐藏回复（no confirm）等。
 // @icon                 https://www.v2ex.com/favicon.ico
@@ -1897,7 +1897,6 @@
       }
     }
   }
-  var CHECK_INTERVAL = 60 * 1e3
   var LOCK_TIMEOUT = 20 * 1e3
   var KEY_LOCK = "check_lock"
   var KEY_LAST_CHECK = "last_check"
@@ -2143,8 +2142,10 @@
     if (!getSettingsValue("checkUnreadNotifications")) return
     const now = Date.now()
     if (!force) {
+      const interval =
+        Number(getSettingsValue("checkUnreadNotificationsInterval")) * 60 * 1e3
       const lastCheck = await getValue2(KEY_LAST_CHECK, 0)
-      if (now - lastCheck < CHECK_INTERVAL) return
+      if (now - lastCheck < interval) return
     }
     const lockTime = await getValue2(KEY_LOCK, 0)
     if (now - lockTime < LOCK_TIMEOUT) return
@@ -2166,6 +2167,17 @@
     initialized = true
     if (location.pathname === "/notifications") {
       void setValue2(KEY_UNREAD_COUNT, 0)
+      void setValue2(KEY_LAST_CHECK, Date.now())
+    } else {
+      const link = document.querySelector('#Rightbar a[href="/notifications"]')
+      if (link && link.textContent) {
+        const match = /(\d+)\s+未读提醒/.exec(link.textContent)
+        if (match) {
+          const count = Number.parseInt(match[1], 10)
+          void setValue2(KEY_UNREAD_COUNT, count)
+          void setValue2(KEY_LAST_CHECK, Date.now())
+        }
+      }
     }
     startUtagsObserver()
     void addValueChangeListener2(KEY_UNREAD_COUNT, (_key, _old, newValue) => {
@@ -2183,15 +2195,6 @@
       void check()
     }, 10 * 1e3)
     void check()
-  }
-  function runCheckNotifications() {
-    void check()
-    void (async () => {
-      const value = await getValue2(KEY_UNREAD_COUNT)
-      if (typeof value === "number") {
-        updateUI(value)
-      }
-    })()
   }
   var fetchOnce = async () => {
     const url = ""
@@ -3806,6 +3809,20 @@
       title: "\u5B9A\u65F6\u68C0\u67E5\u672A\u8BFB\u63D0\u9192",
       defaultValue: true,
     },
+    checkUnreadNotificationsInterval: {
+      title: "\u5B9A\u65F6\u68C0\u67E5\u65F6\u95F4\u95F4\u9694",
+      type: "select",
+      defaultValue: "5",
+      options: {
+        "1 \u5206\u949F": "1",
+        "2 \u5206\u949F": "2",
+        "3 \u5206\u949F": "3",
+        "5 \u5206\u949F": "5",
+        "8 \u5206\u949F": "8",
+        "13 \u5206\u949F": "13",
+        "21 \u5206\u949F": "21",
+      },
+    },
     checkUnreadNotificationsTitle: {
       title: "\u7F51\u9875\u6807\u9898\u663E\u793A\u63D0\u9192\u4E2A\u6570",
       defaultValue: true,
@@ -3831,7 +3848,6 @@
       })
     }
     replaceFavicon(getSettingsValue("replaceFavicon"))
-    runCheckNotifications()
     if (domReady && mainContentReady && /\/t\/\d+/.test(location.href)) {
       if (doc.documentElement && doc.documentElement.dataset) {
         const opaticyOfCitedReplies = getSettingsValue("opaticyOfCitedReplies")
@@ -3904,7 +3920,11 @@
       },
     }))
     addStyle(content_default)
-    initCheckNotifications()
+    if (doc.readyState === "loading") {
+      addEventListener(doc, "DOMContentLoaded", initCheckNotifications)
+    } else {
+      initCheckNotifications()
+    }
     const resetCachedReplyElementsThenApplyAll = async () => {
       resetCachedReplyElements()
       await applyAll()

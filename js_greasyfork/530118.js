@@ -3,7 +3,7 @@
 // @description  Set playback speed for Read Aloud on ChatGPT.com, navigate between messages, and open a settings menu by clicking the speed display to toggle additional UI tweaks. Features include color-coded icons under ChatGPT's responses, highlighted color for bold text, compact sidebar, square design, and more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      5.15.4
+// @version      5.15.7
 // @namespace    TimMacy.ReadAloudSpeedster
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=chatgpt.com
 // @match        https://*.chatgpt.com/*
@@ -20,7 +20,7 @@
 *                                                                       *
 *                    Copyright © 2026 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 5.15.4 - Read Aloud Speedster             *
+*                    Version: 5.15.7 - Read Aloud Speedster             *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -884,6 +884,7 @@
             padding-right: 0;
         }
 
+        :root:has(div.z-1.shrink-0.overflow-x-hidden) div.sticky:has([data-testid="accounts-profile-button"]),
         :root:has(section [data-testid="bar-search-sources-header"]) div.sticky:has([data-testid="accounts-profile-button"]),
         :root:has(.bg-token-bg-primary.absolute.start-0.z-20.h-full.overflow-hidden) div.sticky:has([data-testid="accounts-profile-button"]) {
             opacity: 0;
@@ -905,7 +906,8 @@
         :root:has(.bg-token-bg-primary.absolute.start-0.z-20.h-full.overflow-hidden) #page-header,
         :root:has(section [data-testid="bar-search-sources-header"]) #page-header,
         :root:has(#stage-sidebar-tiny-bar.opacity-100) main > div > header,
-        :root:has(#stage-sidebar-tiny-bar.opacity-100) #page-header {
+        :root:has(#stage-sidebar-tiny-bar.opacity-100) #page-header,
+        :root:has(div.z-1.shrink-0.overflow-x-hidden) #page-header {
             padding: calc(var(--spacing)*2);
         }
 
@@ -921,6 +923,10 @@
 
         :root:has(nav > aside > a.__menu-item:not(:disabled):not([data-disabled])[data-active] svg use[href*="#266724"]) div.sticky:has([data-testid="accounts-profile-button"]) > div > div:hover {
             background-color: var(--menu-item-highlighted);
+        }
+
+        #stage-slideover-sidebar nav > div.align-end {
+            display: none;
         }
 
         /* scroll position fix */
@@ -957,10 +963,6 @@
         #composer-submit-button {
             min-width: 36px;
             min-height: 36px;
-        }
-
-        :root:has(.bg-token-bg-primary.absolute.start-0.z-20.h-full.overflow-hidden) #CentAnni-gpt-model-quickbar {
-            display: none;
         }
 
         :root:has(.bg-token-bg-primary.absolute.start-0.z-20.h-full.overflow-hidden) div.\\[grid-area\\:footer\\] {
@@ -1006,7 +1008,9 @@
         }
 
         :root:has(main header div.gap-4.ps-4) #CentAnni-gpt-model-quickbar,
-        :root:has(#main > div > header > div:nth-child(1) > h1) #CentAnni-gpt-model-quickbar {
+        :root:has(#main > div > header > div:nth-child(1) > h1) #CentAnni-gpt-model-quickbar,
+        :root:has(.bg-token-bg-primary.absolute.start-0.z-20.h-full.overflow-hidden) #CentAnni-gpt-model-quickbar,
+        :root:has(nav > aside > a.__menu-item:not(:disabled):not([data-disabled])[data-active] svg use[href*="#266724"]) #CentAnni-gpt-model-quickbar {
             display: none;
         }
 
@@ -1420,6 +1424,7 @@
             enabled: false,
             sheet: null,
             style: `
+                button[aria-label="Start Voice"],
                 button[aria-label="Start voice mode"] {
                     pointer-events: none;
                     opacity: 0.5;

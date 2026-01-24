@@ -2,7 +2,7 @@
 // @name        B站评论显示状态
 // @namespace   https://github.com/ZBpine/bili-danmaku-adapt/
 // @description 评论显示状态，以便知道是否被阿瓦隆。
-// @version     1.0.0
+// @version     1.0.1
 // @author      ZBpine
 // @icon        https://www.bilibili.com/favicon.ico
 // @match       https://www.bilibili.com/*
@@ -85,18 +85,6 @@ function performInjection(ctx) {
     const state = data.state;
     const attr = data.attr;
 
-    if (settings.showIP) {
-        // 4. 插入显示信息 (兼容性处理)
-        let ipSpan = pubdate.querySelector('.ip-location');
-        if (!ipSpan && ip) {
-            ipSpan = document.createElement('span');
-            ipSpan.className = 'ip-location';
-            ipSpan.style.marginLeft = '15px';
-            ipSpan.textContent = ip;
-            pubdate.appendChild(ipSpan);
-        }
-    }
-
     let text = "";
     if (settings.showState && state > 0) text += `状态：${state} `;
     if (settings.showAttr && attr > 0) text += `属性：${parseAttr(attr)} `;
@@ -109,6 +97,18 @@ function performInjection(ctx) {
             pubdate.appendChild(extra);
         }
         extra.textContent = text;
+    }
+
+    if (settings.showIP) {
+        // 4. 插入显示信息 (兼容性处理)
+        let ipSpan = pubdate.querySelector('.ip-location');
+        if (!ipSpan && ip) {
+            ipSpan = document.createElement('span');
+            ipSpan.className = 'ip-location';
+            ipSpan.style.marginLeft = '15px';
+            ipSpan.textContent = ip;
+            pubdate.appendChild(ipSpan);
+        }
     }
 }
 

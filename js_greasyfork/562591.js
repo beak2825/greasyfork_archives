@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         A Better Recent Threads for Lost Media Wiki Forums
 // @namespace    http://tampermonkey.net/
-// @version      2.7
+// @version      3.2
 // @description  A clean, consolidated view of all recent threads with live search, sorting, and no-flash loading.
 // @author       Ghosty-Tongue
 // @match        https://forums.lostmediawiki.com/user/*/recent_threads*
@@ -15,7 +15,6 @@
 (function() {
     'use strict';
 
-    // Hide original content immediately via CSS injection
     const style = document.createElement('style');
     style.innerHTML = `
         td.sidebarr-center-td { visibility: hidden !important; opacity: 0 !important; }
@@ -42,7 +41,7 @@
     const observer = new MutationObserver((mutations, obs) => {
         const targetCell = document.querySelector('td.sidebarr-center-td');
         if (targetCell) {
-            obs.disconnect(); // Stop looking once found
+            obs.disconnect();
             init(targetCell);
         }
     });
@@ -62,10 +61,10 @@
                         </div>
                         <div id="loading-area" style="padding: 60px; text-align: center; background: rgba(0,0,0,0.05);">
                             <div class="custom-loader"></div>
-                            <div style="font-weight: bold; font-size: 1.2em; color: #333; margin-bottom: 10px;">Loading threads, please wait...</div>
+                            <div style="font-weight: bold; font-size: 1.2em; color: #333; margin-bottom: 10px;">Aggregating all pages for accurate sorting...</div>
                             <div style="font-size: 1em; color: #666;">
-                                Pages: <span id="pages-checked">0</span> / <span id="total-pages">0</span><br>
-                                Threads found: <span id="threads-found">0</span>
+                                Progress: <span id="pages-checked">0</span> / <span id="total-pages">0</span><br>
+                                Threads collected: <span id="threads-found">0</span>
                             </div>
                         </div>
                     </div>
@@ -73,7 +72,6 @@
             </div>
         `;
 
-        // Show the cell now that our loading UI is inside it
         targetCell.style.setProperty('visibility', 'visible', 'important');
         targetCell.style.setProperty('opacity', '1', 'important');
 
@@ -100,23 +98,29 @@
 
             let gathered = [];
             for (let i = 1; i <= totalPages; i++) {
-                const response = await fetch(`${baseUrl}?page=${i}`);
-                const html = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, "text/html");
-                const dataScript = Array.from(doc.querySelectorAll('script')).find(s => s.innerText.includes('proboards.thread'));
+                try {
+                    const response = await fetch(`${baseUrl}?page=${i}`);
+                    const html = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, "text/html");
+                    const scripts = Array.from(doc.querySelectorAll('script'));
+                    const dataScript = scripts.find(s => s.textContent.includes('proboards.thread'));
 
-                if (dataScript) {
-                    const match = dataScript.innerText.match(/'proboards\.thread',\s*(\{.*?\})\s*\]\]\);/);
-                    if (match) {
-                        const pageThreads = JSON.parse(match[1]);
-                        gathered = gathered.concat(Object.values(pageThreads));
+                    if (dataScript) {
+                        const match = dataScript.textContent.match(/'proboards\.thread',\s*(\{.*?\})\s*\]/);
+                        if (match) {
+                            const pageThreads = JSON.parse(match[1]);
+                            gathered = gathered.concat(Object.values(pageThreads));
+                        }
                     }
-                }
+                } catch (e) {}
                 document.getElementById('pages-checked').innerText = i;
                 document.getElementById('threads-found').innerText = gathered.length;
             }
-            return gathered;
+
+            const uniqueMap = new Map();
+            gathered.forEach(t => uniqueMap.set(t.id, t));
+            return Array.from(uniqueMap.values());
         }
 
         function renderRows(threads) {
@@ -124,6 +128,8 @@
                 const dateStr = new Date(t.created_on * 1000).toLocaleDateString();
                 const relativeStr = getRelativeTime(t.created_on);
                 const replyCount = Math.max(0, parseInt(t.posts) - 1);
+                const viewCount = parseInt(t.views?.toString().replace(/,/g, '') || 0);
+
                 return `
                 <tr class="item thread" onclick="window.location.href='${t.url}'">
                     <td class="icon" style="width: 1%; padding: 5px 10px; white-space: nowrap;">
@@ -135,7 +141,7 @@
                         </span>
                     </td>
                     <td class="replies" style="text-align: center; width: 10%;">${replyCount}</td>
-                    <td class="views" style="text-align: center; width: 10%;">${parseInt(t.views).toLocaleString()}</td>
+                    <td class="views" style="text-align: center; width: 10%;">${viewCount.toLocaleString()}</td>
                     <td class="latest last" style="text-align: right; padding-right: 15px; width: 25%; white-space: nowrap;">
                         <span>${dateStr}</span>
                         <span style="font-size: 0.85em; opacity: 0.7; margin-left: 8px;">(${relativeStr})</span>
@@ -148,11 +154,19 @@
             const searchTerm = document.getElementById('threadSearch').value.toLowerCase();
             const sortVal = document.getElementById('threadSort').value;
             let filtered = allThreads.filter(t => t.subject.toLowerCase().includes(searchTerm));
+
             filtered.sort((a, b) => {
-                if (sortVal === 'newest') return b.created_on - a.created_on;
-                if (sortVal === 'oldest') return a.created_on - b.created_on;
-                if (sortVal === 'replies') return parseInt(b.posts) - parseInt(a.posts);
-                if (sortVal === 'views') return parseInt(b.views.toString().replace(/,/g, '')) - parseInt(a.views.toString().replace(/,/g, ''));
+                const valA_Views = parseInt(a.views?.toString().replace(/,/g, '') || 0);
+                const valB_Views = parseInt(b.views?.toString().replace(/,/g, '') || 0);
+                const valA_Posts = parseInt(a.posts || 0);
+                const valB_Posts = parseInt(b.posts || 0);
+                const valA_Time = parseInt(a.created_on || 0);
+                const valB_Time = parseInt(b.created_on || 0);
+
+                if (sortVal === 'newest') return valB_Time - valA_Time;
+                if (sortVal === 'oldest') return valA_Time - valB_Time;
+                if (sortVal === 'replies') return valB_Posts - valA_Posts;
+                if (sortVal === 'views') return valB_Views - valA_Views;
                 return 0;
             });
             document.getElementById('threadBody').innerHTML = renderRows(filtered);

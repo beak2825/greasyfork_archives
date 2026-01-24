@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Скрипт на обжалования | KAZAN
 // @namespace    https://forum.blackrussia.online
-// @version      1.2
+// @version      1.3
 // @description  Скрипт для сервера KAZAN.
 // @author       ɴɪᴋᴀ ᴀᴄᴏᴠᴇʀʀʏ
 // @match        *://forum.blackrussia.online/threads/*
@@ -61,7 +61,7 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* Верхние кнопки */
+   
     .persona-btn {
       border-radius: 999px;
       border: 1px solid var(--btn-border);
@@ -101,7 +101,7 @@
       box-shadow: 0 6px 16px rgba(15, 23, 42, 0.85);
     }
 
-    /* Оверлей */
+   
     .select_answer_container .overlay-content {
       background: var(--card-bg);
       border-radius: 16px;
@@ -215,7 +215,7 @@
       .persona-answer-btn { min-width: 100%; }
     }
 
-    /* formButtonGroup без мусора */
+    
     .formButtonGroup,
     .formButtonGroup-primary { display:flex; align-items:center; justify-content:center; gap:6px; }
     .formButtonGroup button,
@@ -328,10 +328,11 @@ const bottomImage = `[CENTER][IMG]https://i.postimg.cc/tg2f3qFM/1.png[/IMG][/CEN
     },
     {
       title: `Ошибочный раздел`,
-      content: wrapTemplate(`Здравствуйте, [COLOR=#FFD700]{{ user.mention }}[/COLOR].<br><br>Ваше обращение не соответствует тематике данного раздела.<br><br>Полезные ссылки:<br>[URL='https://forum.blackrussia.online/forums/%D0%96%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B-%D0%BD%D0%B0-%D0%BB%D0%B8%D0%B4%D0%B5%D1%80%D0%BE%D0%B2.1401/']Жалобы на лидеров[/URL]<br>[URL='https://forum.blackrussia.online/forums/%D0%96%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B-%D0%BD%D0%B0-%D0%B8%D0%B3%D1%80%D0%BE%D0%BA%D0%BE%D0%B2.1402/']Жалобы на игроков[/URL]<br>[URL='https://forum.blackrussia.online/forums/%D0%A2%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9-%D1%80%D0%B0%D0%B7%D0%B4%D0%B5%D0%BB-anapa.1416/']Технический раздел сервера[/URL]<br>[URL='https://forum.blackrussia.online/forums/%D0%96%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B-%D0%BD%D0%B0-%D0%90%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D1%8E.1400/']Жалобы на Администрацию[/URL]<br><br>[COLOR=red][ICODE]Закрыто.[/ICODE][/COLOR]`),
+      content: wrapTemplate(`Здравствуйте, [COLOR=#FFD700]{{ user.mention }}[/COLOR].<br><br>Ваше обращение не соответствует тематике данного раздела.<br><br>Полезные ссылки:<br>[URL='https://forum.blackrussia.online/forums/%D0%96%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B-%D0%BD%D0%B0-%D0%BB%D0%B8%D0%B4%D0%B5%D1%80%D0%BE%D0%B2.1275/']Жалобы на лидеров[/URL]<br>[URL='https://forum.blackrussia.online/forums/%D0%96%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B-%D0%BD%D0%B0-%D0%B8%D0%B3%D1%80%D0%BE%D0%BA%D0%BE%D0%B2.1276/']Жалобы на игроков[/URL]<br>[URL='https://forum.blackrussia.online/forums/%D0%A2%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9-%D1%80%D0%B0%D0%B7%D0%B4%D0%B5%D0%BB-kazan.1290/']Технический раздел сервера[/URL]<br>[URL='https://forum.blackrussia.online/forums/%D0%96%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B-%D0%BD%D0%B0-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D1%8E.1274/']Жалобы на Администрацию[/URL]<br><br>[COLOR=red][ICODE]Закрыто.[/ICODE][/COLOR]`),
       prefix: PREFIXES.UNACCEPT,
       status: false
     },
+
 
     { title: 'Отказы по сути', isDivider: true },
     {

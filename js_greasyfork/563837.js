@@ -1,128 +1,117 @@
 // ==UserScript==
-// @name         AI Chat: Enter = Newline (Never Send)
+// @name         AI Chat: Enter = Newline
 // @namespace    https://mekineer.com
-// @author       mekineer and Nova (GPT-5.2 Thinking)
-// @version      1.2
+// @author       mekineer and Nova (ChatGPT 5.2 Thinking)
+// @version      1.3.1
 // @description  Forces Enter to insert a newline in chat composers; Ctrl/Cmd+Enter sends.
 // @license      GPL-3.0-or-later
-// @match        *://chat.openai.com/*
 // @match        *://chatgpt.com/*
+// @match        *://chat.openai.com/*
 // @match        *://claude.ai/*
 // @match        *://gemini.google.com/*
 // @match        *://poe.com/*
 // @match        *://www.perplexity.ai/*
-// @match        *://x.com/*
 // @match        *://grok.com/*
-// @match        *://*.openrouter.ai/*
-// @match        *://*.mistral.ai/*
-// @match        *://*.cohere.com/*
-// @match        *://*.huggingface.co/*
+// @match        *://x.com/*
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/563837/AI%20Chat%3A%20Enter%20%3D%20Newline%20%28Never%20Send%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563837/AI%20Chat%3A%20Enter%20%3D%20Newline%20%28Never%20Send%29.meta.js
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/563837/AI%20Chat%3A%20Enter%20%3D%20Newline.user.js
+// @updateURL https://update.greasyfork.org/scripts/563837/AI%20Chat%3A%20Enter%20%3D%20Newline.meta.js
 // ==/UserScript==
 
-(function () {
+(() => {
   'use strict';
 
-  // ---------- helpers ----------
-  function isProbablyChatComposer(el) {
-    if (!el) return false;
+  function getComposerFrom(target) {
+    if (!(target instanceof Element)) return null;
 
-    // Textareas are almost always safe to treat as composers.
-    if (el.tagName === 'TEXTAREA') return true;
+    // ChatGPT: textarea OR ProseMirror editor
+    const byId = target.closest?.('#prompt-textarea');
+    if (byId) return byId;
 
-    // Some portals use contenteditable divs for the prompt box.
-    const isCE = el.isContentEditable || el.getAttribute('contenteditable') === 'true';
-    if (isCE) {
-      const role = (el.getAttribute('role') || '').toLowerCase();
-      if (role === 'textbox') return true;
+    const byName = target.closest?.('textarea[name="prompt-textarea"]');
+    if (byName) return byName;
 
-      // Heuristic: contenteditable with "prompt/message" hints nearby.
-      const aria = (el.getAttribute('aria-label') || '').toLowerCase();
-      const ph = (el.getAttribute('data-placeholder') || '').toLowerCase();
-      if (aria.includes('message') || aria.includes('prompt') || aria.includes('chat') ||
-          ph.includes('message') || ph.includes('prompt')) return true;
-    }
+    const pm = target.closest?.('.ProseMirror[contenteditable="true"]');
+    if (pm) return pm;
 
-    return false;
-  }
+    // Generic: any textarea or textbox-like contenteditable
+    const ta = target.closest?.('textarea');
+    if (ta) return ta;
 
-  function insertNewline(target) {
-    // TEXTAREA: clean insertion with cursor preserved
-    if (target && target.tagName === 'TEXTAREA') {
-      const start = target.selectionStart ?? target.value.length;
-      const end = target.selectionEnd ?? target.value.length;
-      target.setRangeText('\n', start, end, 'end');
-      target.dispatchEvent(new Event('input', { bubbles: true }));
-      return;
-    }
+    const ce = target.closest?.('[contenteditable="true"], [role="textbox"]');
+    if (ce) return ce;
 
-    // contenteditable: use execCommand as a pragmatic cross-site solution
-    if (target && (target.isContentEditable || target.getAttribute('contenteditable') === 'true')) {
-      // Insert a line break at caret position
-      document.execCommand('insertLineBreak');
-      target.dispatchEvent(new Event('input', { bubbles: true }));
-    }
-  }
-
-  function findSendButtonNear(target) {
-    // Walk up a bit and look for a likely send button
-    let root = target;
-    for (let i = 0; i < 6 && root; i++) root = root.parentElement;
-
-    const scope = root || document;
-
-    // Common patterns across portals
-    const candidates = scope.querySelectorAll(
-      [
-        'button[type="submit"]',
-        'button[aria-label*="Send" i]',
-        'button[aria-label*="send" i]',
-        'button[data-testid*="send" i]',
-        'button[class*="send" i]',
-        'button[title*="Send" i]'
-      ].join(',')
-    );
-
-    // Prefer enabled, visible buttons
-    for (const btn of candidates) {
-      const style = window.getComputedStyle(btn);
-      const visible = style && style.display !== 'none' && style.visibility !== 'hidden' && btn.offsetParent !== null;
-      if (!btn.disabled && visible) return btn;
-    }
     return null;
   }
 
-  // ---------- key handler ----------
-  function onKeyDown(e) {
-    // Ignore IME composition (Japanese/Chinese input etc.)
-    if (e.isComposing || e.keyCode === 229) return;
-
-    const t = e.target;
-
-    // Only affect chat composer-ish inputs
-    if (!isProbablyChatComposer(t)) return;
-
-    // Ctrl/Cmd+Enter => try to send
-    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-      const btn = findSendButtonNear(t);
-      if (btn) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        btn.click();
-      }
+  function insertNewline(el) {
+    if (el instanceof HTMLTextAreaElement) {
+      const start = el.selectionStart ?? el.value.length;
+      const end = el.selectionEnd ?? el.value.length;
+      el.setRangeText('\n', start, end, 'end');
+      el.dispatchEvent(new Event('input', { bubbles: true }));
       return;
     }
 
-    // Plain Enter => newline (never send)
-    if (e.key === 'Enter' && !e.shiftKey && !e.altKey && !e.ctrlKey && !e.metaKey) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      insertNewline(t);
+    // ProseMirror / contenteditable: simulate Shift+Enter (line break)
+    const evt = new KeyboardEvent('keydown', {
+      key: 'Enter',
+      code: 'Enter',
+      keyCode: 13,
+      which: 13,
+      shiftKey: true,
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    });
+    el.dispatchEvent(evt);
+  }
+
+  function clickSendNear(el) {
+    const form = el.closest?.('form') || document;
+    const btn = form.querySelector?.(
+      'button[data-testid="send-button"], button#composer-submit-button, button[type="submit"]'
+    );
+    if (btn && btn instanceof HTMLButtonElement && !btn.disabled) {
+      btn.click();
+      return true;
+    }
+    return false;
+  }
+
+  // Extra safety: block submit triggered by Enter paths
+  let blockSubmitOnce = false;
+  document.addEventListener('submit', (e) => {
+    if (!blockSubmitOnce) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    blockSubmitOnce = false;
+  }, true);
+
+  function onKeyDown(e) {
+    if (e.key !== 'Enter') return;
+    if (!e.isTrusted) return;
+    if (e.isComposing || e.keyCode === 229) return;
+
+    const composer = getComposerFrom(e.target) || getComposerFrom(document.activeElement);
+    if (!composer) return;
+
+    const wantsSend = e.ctrlKey || e.metaKey;
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    if (wantsSend) {
+      blockSubmitOnce = false;
+      clickSendNear(composer);
+    } else {
+      blockSubmitOnce = true;
+      insertNewline(composer);
+      setTimeout(() => (blockSubmitOnce = false), 0);
     }
   }
 
-  // Capture phase so we beat site handlers that send on Enter
+  // IMPORTANT: window capture (beats most site handlers)
   window.addEventListener('keydown', onKeyDown, true);
 })();

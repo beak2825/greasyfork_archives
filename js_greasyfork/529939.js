@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Dark Mode (kid4rm90s fork)
 // @namespace    https://greasyfork.org/en/users/1434751-poland-fun
-// @version      1.11
+// @version      1.11.1
 // @description  Enable dark mode in WME.
 // @author       poland_fun
 // @contributor	 kid4rm90s and luan_tavares_127
@@ -169,7 +169,8 @@ Version
 		- Other bug fixes and memory leaks improvements
 1.11 - Fixed - 
 		- Fixed for place opening hours delete icon showing incorrect color
-
+1.11.1 - Fixed - 
+		- Added support for WME AD to BS Calendar pop-up
 */
 
 /* global W */
@@ -180,7 +181,7 @@ Version
 
 (function main() {
   ('use strict');
-  const updateMessage = '<strong>Fixed :</strong><br> - Fixed for place opening hours delete icon showing incorrect color <br>';
+  const updateMessage = '<strong>Fixed :</strong><br> - Added support for WME AD to BS Calendar pop-up <br>';
   const scriptName = GM_info.script.name;
   const scriptVersion = GM_info.script.version;
 	const downloadUrl = 'https://greasyfork.org/scripts/529939-wme-dark-mode-kid4rm90s-fork/code/WME%20Dark%20Mode%20%28kid4rm90s%20fork%29.user.js';
@@ -1748,6 +1749,10 @@ Version
 				background: var(--background_default) !important;
 			}
 
+/*********** WME UR Colors ***********************************************/	
+			[wz-theme="dark"] .bs-calendar-popup {
+				background: var(--background_default) !important;
+			}
 
 			`;
 
@@ -1921,9 +1926,9 @@ Version
       // We technically call updateUI() twice since it is called per toggle option,
       // but repeatedly calling this function is harmless.
       updateUI();
-    } else {
+    } /*else {
       console.log('Form div with class "settings__form" not found.');
-    }
+    }*/
   }
 
   // MutationObserver integration for settings UI

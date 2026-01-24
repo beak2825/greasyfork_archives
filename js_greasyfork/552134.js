@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google Photo Gradient Remover
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  Remove black gradient on the top in Google Photos
 // @author       yclee126
 // @match        https://photos.google.com/*
@@ -14,9 +14,7 @@
 (function() {
     'use strict';
 
-    // TODO: get rid of the call loop
-    var intv = setInterval(function() {
-
+    const removeGradient = () => {
         // get elements
         const elems = document.querySelectorAll('[role="menubar"]');
 
@@ -24,7 +22,17 @@
         for (const elem of elems) { // don't use "in" -- it will iterate over keys.
             elem.style.setProperty('background', 'transparent');
         }
+    };
 
-        //clearInterval(intv);
-    }, 100);
+    // observe layout changes
+    const observer = new MutationObserver((mutations) => {
+        removeGradient();
+    });
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    // initial call
+    removeGradient();
 })();

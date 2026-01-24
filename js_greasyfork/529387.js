@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Web性能综合优化工具箱 (通用增强版)
 // @namespace    http://tampermonkey.net/
-// @version      3.6.2-compatibility-optimized
-// @description  Web浏览提速80%，DOM渲染及GPU加速，适用于现代网站。包含完整性能优化功能
+// @version      3.6.3-compatibility-optimized
+// @description  Web浏览提速80%，DOM渲染及GPU加速，包含自动吸附隐藏功能
 // @author       KiwiFruit
 // @match        *://*/*
 // @grant        none
@@ -39,7 +39,11 @@
         ui: {
             enabled: true,
             position: 'bottom-right',
-            zIndex: 9999
+            zIndex: 9999,
+            autoHideDelay: 2000, // 自动隐藏延迟(毫秒)
+            hoverDelay: 300, // 悬停显示延迟(毫秒)
+            hideOffset: { bottom: 20, right: -50 }, // 隐藏位置偏移
+            showOffset: { bottom: 20, right: 20 } // 显示位置偏移
         },
         lazyLoad: {
             enabled: true,
@@ -405,7 +409,6 @@
         }
         destroy() {
             super.destroy();
-            // 移除事件监听器
             document.removeEventListener('click', this.handleEventDelegate);
         }
     }
@@ -458,12 +461,16 @@
     }
 
     // ========================
-    // 9. UI控制器
+    // 9. UI控制器（包含自动吸附隐藏功能）
     // ========================
     class UIController extends BaseModule {
         constructor() {
             super('UIController');
             this.visible = false;
+            this.panelVisible = false;
+            this.autoHideTimeout = null;
+            this.hoverTimeout = null;
+            this.isHovered = false;
             this.button = null;
             this.panel = null;
             this.updateInterval = null;
@@ -477,7 +484,8 @@
                 this.attachEvents();
                 this.updateStats();
                 this.startAutoUpdate();
-                Logger.info('UIController', 'UI组件创建成功');
+                this.startAutoHideTimer();
+                Logger.info('UIController', 'UI组件创建成功（包含自动吸附隐藏功能）');
             } catch (error) {
                 Logger.error('UIController', `UI创建失败: ${error.message}`);
                 Logger.error('UIController', error.stack);
@@ -491,8 +499,8 @@
             style.textContent = `
                 .perfopt-ui-button {
                     position: fixed !important;
-                    bottom: 20px !important;
-                    right: 20px !important;
+                    bottom: ${Config.ui.showOffset.bottom}px !important;
+                    right: ${Config.ui.showOffset.right}px !important;
                     width: 56px !important;
                     height: 56px !important;
                     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
@@ -503,7 +511,7 @@
                     justify-content: center !important;
                     cursor: pointer !important;
                     z-index: ${Config.ui.zIndex} !important;
-                    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+                    transition: transform 0.3s ease, box-shadow 0.3s ease, right 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
                     font-size: 24px !important;
                     opacity: 1 !important;
                     visibility: visible !important;
@@ -511,6 +519,11 @@
                 }
                 .perfopt-ui-button:hover { transform: scale(1.1) !important; }
                 .perfopt-ui-button:active { transform: scale(0.95) !important; }
+                .perfopt-ui-button.hidden {
+                    right: ${Config.ui.hideOffset.right}px !important;
+                    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+                }
+                .perfopt-ui-button.hidden:hover { right: ${Config.ui.showOffset.right}px !important; }
 
                 .perfopt-ui-panel {
                     position: fixed !important;
@@ -527,8 +540,15 @@
                     max-height: 80vh !important;
                     overflow-y: auto !important;
                     display: none !important;
+                    transition: opacity 0.3s ease, transform 0.3s ease !important;
+                    transform: translateY(10px) !important;
+                    opacity: 0 !important;
                 }
-                .perfopt-ui-panel.visible { display: block !important; }
+                .perfopt-ui-panel.visible {
+                    display: block !important;
+                    transform: translateY(0) !important;
+                    opacity: 1 !important;
+                }
 
                 .perfopt-panel-header {
                     display: flex !important;
@@ -695,7 +715,7 @@
                     </div>
                     <div class="perfopt-stats-row">
                         <span>版本:</span>
-                        <span id="perfopt-version">v${GM_info?.script?.version || '3.6.2-compatibility-optimized'}</span>
+                        <span id="perfopt-version">v${GM_info?.script?.version || '3.6.3-compatibility-optimized'}</span>
                     </div>
                 </div>
             `;
@@ -727,7 +747,7 @@
             this.button.onclick = () => {
                 const info = `
 性能优化工具已加载
-版本: 3.6.2-compatibility-optimized
+版本: v3.6.3-compatibility-optimized
 状态: 已运行
 
 优化功能:
@@ -746,6 +766,31 @@
             document.body.appendChild(this.button);
 
             Logger.warn('UIController', '使用降级UI');
+        }
+        startAutoHideTimer() {
+            this.autoHideTimeout = setTimeout(() => {
+                if (!this.panelVisible && !this.isHovered) {
+                    this.hideButton();
+                }
+            }, Config.ui.autoHideDelay);
+        }
+        resetAutoHideTimer() {
+            if (this.autoHideTimeout) {
+                clearTimeout(this.autoHideTimeout);
+            }
+            if (!this.panelVisible) {
+                this.startAutoHideTimer();
+            }
+        }
+        showButton() {
+            if (this.button) {
+                this.button.classList.remove('hidden');
+            }
+        }
+        hideButton() {
+            if (this.button) {
+                this.button.classList.add('hidden');
+            }
         }
         updateStats() {
             if (!this.panel) return;
@@ -780,33 +825,97 @@
         attachEvents() {
             if (!this.button) return;
 
+            // 按钮点击事件
             this.button.addEventListener('click', () => {
                 if (this.panel) {
-                    this.visible = !this.visible;
+                    this.panelVisible = !this.panelVisible;
                     this.panel.classList.toggle('visible');
-                    if (this.visible) this.updateStats();
+                    if (this.panelVisible) {
+                        this.showButton();
+                        this.updateStats();
+                        this.resetAutoHideTimer();
+                    } else {
+                        this.startAutoHideTimer();
+                    }
                 }
             });
 
+            // 按钮悬停事件
+            this.button.addEventListener('mouseenter', () => {
+                this.isHovered = true;
+                if (this.hoverTimeout) {
+                    clearTimeout(this.hoverTimeout);
+                }
+                this.showButton();
+            });
+
+            this.button.addEventListener('mouseleave', () => {
+                this.isHovered = false;
+                this.hoverTimeout = setTimeout(() => {
+                    if (!this.panelVisible) {
+                        this.hideButton();
+                    }
+                }, Config.ui.hoverDelay);
+            });
+
             if (this.panel) {
+                // 面板关闭事件
                 const closeBtn = this.panel.querySelector('.perfopt-panel-close');
                 closeBtn.addEventListener('click', () => {
-                    this.visible = false;
+                    this.panelVisible = false;
                     this.panel.classList.remove('visible');
+                    this.startAutoHideTimer();
                 });
 
+                // 面板悬停事件
+                this.panel.addEventListener('mouseenter', () => {
+                    this.isHovered = true;
+                    this.showButton();
+                });
+
+                this.panel.addEventListener('mouseleave', () => {
+                    this.isHovered = false;
+                    if (!this.panelVisible) {
+                        this.startAutoHideTimer();
+                    }
+                });
+
+                // 点击外部关闭面板
                 document.addEventListener('click', (e) => {
                     if (!this.button.contains(e.target) && !this.panel.contains(e.target)) {
-                        this.visible = false;
+                        this.panelVisible = false;
                         this.panel.classList.remove('visible');
+                        this.startAutoHideTimer();
                     }
                 });
             }
+
+            // 页面滚动和交互事件（重置自动隐藏计时器）
+            window.addEventListener('scroll', () => {
+                this.resetAutoHideTimer();
+                this.showButton();
+            }, { passive: true });
+
+            window.addEventListener('mousemove', () => {
+                this.resetAutoHideTimer();
+                this.showButton();
+            }, { passive: true });
+
+            window.addEventListener('resize', () => {
+                this.resetAutoHideTimer();
+                this.showButton();
+            }, { passive: true });
         }
         destroy() {
             super.destroy();
             if (this.updateInterval) {
                 clearInterval(this.updateInterval);
+            }
+            if (this.autoHideTimeout) {
+                clearTimeout(this.autoHideTimeout);
+            }
+            if (this.hoverTimeout) {
+                clearTimeout(this.hoverTimeout);
             }
             const style = document.getElementById('perfopt-ui-style');
             if (style) style.remove();
@@ -898,7 +1007,6 @@
         } catch (error) {
             Logger.error('Bootstrap', `加载失败: ${error.message}`);
             Logger.error('Bootstrap', error.stack);
-            // 紧急UI创建
             createEmergencyUI();
         }
     }

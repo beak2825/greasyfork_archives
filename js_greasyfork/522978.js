@@ -2,7 +2,7 @@
 // @name         Video Volume/Playback Speed Controller
 // @name:zh-TW   影片音量/撥放速度控制器
 // @namespace    https://github.com/jmsch23280866
-// @version      1.1
+// @version      1.1.1
 // @description  Adjust video playback speed and volume with HUD showing real-time values inside the video frame. Conditional scroll blocking applied. (Script assisted by AI)
 // @description:zh-TW 使用滑鼠滾輪和按鍵組合調整影片播放速度和音量，並在影片框架內顯示即時值提示框。僅在條件下阻止滾動。（此腳本由AI協助撰寫）
 // @author       特務E04
@@ -82,7 +82,7 @@
 
         // Shift + 滾輪：調整音量
         if (event.shiftKey) {
-            const delta = Math.sign(deltaY) * 0.05; // 每次增減 0.05 音量
+            const delta = Math.sign(deltaY) * 0.01; // 每次增減 0.01 音量
             const newVolume = Math.max(0, Math.min(media.volume + delta, 1)); // 限制範圍 0 到 1
             media.volume = newVolume;
             showHUD(media, `音量：${Math.round(newVolume * 100)}%`);

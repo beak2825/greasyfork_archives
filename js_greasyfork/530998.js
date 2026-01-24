@@ -3,7 +3,7 @@
 // @name:zh-tw   YouTube聊天室增強
 // @name:en      YouTube Chat Enhancement
 // @namespace    http://tampermonkey.net/
-// @version      20.9.6
+// @version      20.9.7
 // @description  多色自動化著色用戶；非原生封鎖用戶；UI操作和功能選擇自由度；移除礙眼置頂；清理/標示洗版；發言次數統計；強化@體驗等
 // @description:zh-tw  多色自動化著色用戶；非原生封鎖用戶；UI操作和功能選擇自由度；移除礙眼置頂；清理/標示洗版；發言次數統計；強化@體驗等
 // @description:en Multi-color automated user highlighting；Non-native user blocking；Flexible UI operations and feature selection；Removal of distracting pinned messages；Spam cleanup/flagging；Message count statistics；Improved @mention experience
@@ -22,12 +22,14 @@
 20.8.12 本地儲存資料從四散的項目改為集中於featureSettings，名單仍舊獨立設置，且往後遷移設置只包含名單。暫時添加舊格式名單資料遷移、自動清理舊設定項目、更新格式通知的腳本段落。
 20.8.19 新增頂部聊天室頻率統計、洗版檢測(時間限制)+快取數量統計，單擊切換功能洗版範圍(10分鐘~60分鐘和全部)，雙擊切換統計開關。(洗版相關功能不相容super fast chat，無法解決)
 20.9.6 增加前置階段：於直播頁面啟動腳本；於非直播頁面檢測並啟動聊天室重播。
+20.9.7 改善用戶頭像懸停對話記錄框的消失邏輯，即使用戶被ban也能正常消失。
 Update note:
 20.6 Added user chat history access based on spam cache; hover over user avatars to read data, and move cursor right to select text.
 20.7.20 Blocking in Temporary Mode (renamed from Ephemeral Mode) no longer saves data, same as highlighting users.
 20.8.12 Local storage restructured: scattered settings consolidated into featureSettings; lists remain independently configured; future migrations will only include lists. Temporary script segments added for migrating old-format lists, auto-cleaning obsolete settings, and notifying users of format updates.
 20.8.19 Added top chat room frequency statistics, spam detection (time-limited) with cache count stats; single-click toggles spam detection range (10–60 minutes and All), double-click toggles statistics on/off. (Spam-related features incompatible with Super Fast Chat; issue cannot be resolved.)
 20.9.6 Added pre-check phase: initialize script on live stream pages; on non-live pages, detect and click chat replay once to activate core script.
+20.9.7 Improved user avatar hover chat log box disappearance logic so it disappears normally even if the user is banned.
 關於按鈕：「懸停顯示說明文字」。
 1.臨:切換短暫模式，對於用戶上色為臨時性/無永久記憶。
 2.頂:切換移除置頂
@@ -1280,6 +1282,11 @@ function handleAuthorPhotoHover(event) {
         isMouseOverExtendedArea = false;
         resetTooltipTimeout();
     };
+    const removeTooltipOnBlock = () => {
+        if (document.body.contains(tooltip)) {
+            document.body.removeChild(tooltip);
+        }
+    };
     tooltip.addEventListener('mouseenter', handleMouseOverTooltip);
     tooltip.addEventListener('mouseleave', handleMouseOutTooltip);
     imgElement.addEventListener('mouseenter', handleMouseOverImg);
@@ -1327,6 +1334,16 @@ function handleAuthorPhotoHover(event) {
     }
     tooltip.style.top = `${adjustedTop}px`;
     tooltip.style.left = `${adjustedLeft}px`;
+    const observer = new MutationObserver(() => {
+        const updatedMsgElement = imgElement.closest('yt-live-chat-text-message-renderer, .super-fast-chat-message');
+        if (!updatedMsgElement || updatedMsgElement.getAttribute('data-blocked') === 'true') {
+            if (document.body.contains(tooltip)) {
+                document.body.removeChild(tooltip);
+            }
+            observer.disconnect();
+        }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
 }
 function init() {
     document.querySelectorAll('yt-live-chat-text-message-renderer, .super-fast-chat-message').forEach(msg => {

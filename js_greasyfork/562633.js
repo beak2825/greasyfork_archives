@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube 2 columns fix
 // @namespace    http://tampermonkey.net/
-// @version      1.08
+// @version      1.09
 // @description  Youtube watch page with 1 column videos
 // @author       You
 // @match        *://www.youtube.com/*
@@ -59,6 +59,9 @@ margin-left: 6px !important;
 margin-top: -4px !important;
 line-height: normal !important;
 max-width: 260px !important;
+}
+ytd-watch-flexy #secondary-inner .yt-lockup-metadata-view-model__menu-button {
+margin-top: -4px !important;
 }
 ytd-watch-flexy #secondary-inner ytd-compact-video-renderer {
 display: none !important;

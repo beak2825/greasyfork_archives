@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WaniKani Stats
 // @namespace    http://tampermonkey.net/
-// @version      0.16
+// @version      0.17
 // @description  Add stats info to WaniKani
 // @author       Jigen
 // @match        https://www.wanikani.com/*
@@ -38360,7 +38360,7 @@ const useLevelProgressionsStore = /* @__PURE__ */ defineStore("levelProgressions
     return new Promise((resolve2, reject) => {
       loadingCount.value += 1;
       instance.get("level_progressions").then((ret) => {
-        levelProgressions.value = ret.filter((o2) => o2.data.abandoned_at == null).map((d2) => {
+        levelProgressions.value = ret.filter((o2) => !o2.data.abandoned_at).map((d2) => {
           return new cLevelProgression(d2);
         });
         loadingCount.value -= 1;

@@ -2,7 +2,7 @@
 // @name         视频倍速播放增强版
 // @name:en      Enhanced Video Speed Controller
 // @namespace    http://tampermonkey.net/
-// @version      1.6.1
+// @version      1.6.2
 // @description  长按右方向键倍速播放，松开恢复原速。按+/-键调整倍速，按]/[键快速调整倍速，按P键恢复默认速度。上/下方向键调节音量，回车键切换全屏。左/右方向键快退/快进5秒。支持YouTube、Bilibili等大多数视频网站。脚本会自动检测页面中的iframe视频并启用相应控制。
 // @description:en  Hold right arrow key for speed playback, release to restore. Press +/- to adjust speed, press ]/[ for quick speed adjustment, press P to restore default speed. Up/Down arrows control volume, Enter toggles fullscreen. Left/Right arrows for 5s rewind/forward. Supports most sites. The script automatically detects iframe videos on the page and enables control.
 // @author       ternece
@@ -113,30 +113,27 @@
         }
     }
 
-    // 显示浮动提示 (保留在外部，因为它是一个独立的UI工具函数)
-    function showFloatingMessage(message) {
-        const messageElement = document.createElement("div");
-        messageElement.textContent = message;
-        messageElement.style.position = "fixed";
-        messageElement.style.top = "10px";
-        messageElement.style.left = "50%";
-        messageElement.style.transform = "translateX(-50%)";
-        messageElement.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
-        messageElement.style.color = "white";
-        messageElement.style.padding = "8px 16px";
-        messageElement.style.borderRadius = "4px";
-        messageElement.style.zIndex = "10000";
-        messageElement.style.fontFamily = "Arial, sans-serif";
-        messageElement.style.fontSize = "14px";
-        messageElement.style.transition = "opacity 0.5s ease-out";
-        document.body.appendChild(messageElement);
-        setTimeout(() => {
-            messageElement.style.opacity = "0";
-            setTimeout(() => {
-                document.body.removeChild(messageElement);
-            }, 500);
-        }, 2000);
-    }
+    // 显示浮动提示 - 单例模式，避免高频调用时闪烁
+    const showFloatingMessage = (function() {
+        let el = null;
+        let timer = null;
+        return function(msg) {
+            if (!el) {
+                el = document.createElement("div");
+                Object.assign(el.style, {
+                    position: "fixed", top: "10px", left: "50%", transform: "translateX(-50%)",
+                    backgroundColor: "rgba(0, 0, 0, 0.8)", color: "white", padding: "8px 16px",
+                    borderRadius: "4px", zIndex: "10000", fontFamily: "Arial, sans-serif",
+                    fontSize: "14px", transition: "opacity 0.2s ease-out", opacity: "0", pointerEvents: "none"
+                });
+                document.body.appendChild(el);
+            }
+            el.textContent = msg;
+            el.style.opacity = "1";
+            clearTimeout(timer);
+            timer = setTimeout(() => { el.style.opacity = "0"; }, 2000);
+        };
+    })();
 
     // 显示域名管理弹窗（分层级）
     function showDomainManager(groups, controller) {
@@ -472,7 +469,8 @@
             this.currentUrl = location.href;
             this.lastManualRateChangeTime = 0;
             this.activeVideo = null;
-            this.videoControlButtons = new Map();
+            this.videoControlButtons = new WeakMap();
+            this._videoControlButtonsList = new Set(); // 辅助 Set 用于遍历按钮（WeakMap 不可遍历）
             this.rightKeyTimer = null;
             this.downCount = 0;
             this._keyupCallCount = 0; // 调试：KeyUp调用次数
@@ -485,11 +483,21 @@
             // 监听器和观察器引用
             this.keydownListener = null;
             this.keyupListener = null;
+            this.blurListener = null; // Bug2 修复：blur 监听器
+            this.visibilityListener = null; // Bug2 修复：visibilitychange 监听器
             this.mainObserver = null; // 合并后的主观察器
             this.videoChangeObserver = null;
             this.fallbackVideoObserver = null; // 后备视频监听器
             this.fallbackPollingTimer = null; // 后备轮询定时器
             this.activeObservers = new Set();
+
+            // Bug5 修复：初始化状态管理
+            this._isInitializing = false;
+            this._initRetryTimer = null;
+            this._urlChangeTimer = null;
+
+            // Bug6 修复：长按判定时间戳
+            this._rightKeyDownTime = 0;
 
             // 创建防抖版的视频检测函数
             this.debouncedDetectAndSetupVideos = debounce(this.detectAndSetupVideos.bind(this), 500);
@@ -788,6 +796,12 @@
                     this.settings[key] = value;
                     GM_setValue(key, value);
                     showFloatingMessage(`设置已更新: ${value}`);
+
+                    // Bug4 修复：同步 targetRate 实例变量
+                    if (key === 'targetRate') {
+                        this.targetRate = value;
+                    }
+
                     if (key === 'defaultRate' && this.activeVideo) {
                         this.activeVideo.playbackRate = value;
                     }
@@ -801,6 +815,19 @@
 
         // 4. 初始化流程
         async initialize(isRetry = false) {
+            // Bug5 修复：初始化锁，防止并发调用
+            if (this._isInitializing) {
+                Logger.debug("初始化正在进行中，跳过重复调用");
+                return;
+            }
+            this._isInitializing = true;
+
+            // 清理旧的重试定时器
+            if (this._initRetryTimer) {
+                clearTimeout(this._initRetryTimer);
+                this._initRetryTimer = null;
+            }
+
             // 🔧 修复: 使用专门的重初始化清理，不清除后备监听器
             this._cleanupForReinit();
 
@@ -821,7 +848,11 @@
                 // 仅在首次尝试时启动重试逻辑
                 if (!isRetry) {
                     if (error.type === "no_video" || error.type === "timeout") {
-                        setTimeout(() => this.initialize(true).catch(e => Logger.error("重试初始化失败:", e)), this.config.INIT_RETRY_DELAY);
+                        this._initRetryTimer = setTimeout(() => {
+                            this._isInitializing = false; // 重置锁，允许重试
+                            this.initialize(true).catch(e => Logger.error("重试初始化失败:", e));
+                        }, this.config.INIT_RETRY_DELAY);
+                        return; // 不在这里重置 _isInitializing，等待重试
                     }
                 } else {
                     // 重试也失败了，设置持续监听器以捕获延迟加载的视频
@@ -831,6 +862,11 @@
                     } catch (e) {
                         Logger.error("设置后备监听器时出错:", e);
                     }
+                }
+            } finally {
+                // 只有在不等待重试时才重置锁
+                if (!this._initRetryTimer) {
+                    this._isInitializing = false;
                 }
             }
         }
@@ -864,11 +900,21 @@
                 }
                 this.keyupListener = null;
             }
+            // Bug2 修复：清理 blur/visibilitychange 监听器
+            if (this.blurListener) {
+                window.removeEventListener('blur', this.blurListener);
+                this.blurListener = null;
+            }
+            if (this.visibilityListener) {
+                document.removeEventListener('visibilitychange', this.visibilityListener);
+                this.visibilityListener = null;
+            }
             this.activeObservers.forEach(observer => observer.disconnect());
             this.activeObservers.clear();
             // 🔧 注意: 不清除后备监听器，让它继续工作直到成功初始化
-            this.videoControlButtons.forEach(button => button.remove());
-            this.videoControlButtons.clear();
+            this._videoControlButtonsList.forEach(button => button.remove());
+            this._videoControlButtonsList.clear();
+            this.videoControlButtons = new WeakMap();
             this.activeVideo = null;
         }
         
@@ -1018,18 +1064,29 @@
                         videosToRemove.forEach(video => {
                              Logger.debug("垃圾回收：清理被移除的视频", video);
                              const button = this.videoControlButtons.get(video);
-                             if (button) button.remove();
-                             this.videoControlButtons.delete(video);
+                             if (button) {
+                                 button.remove();
+                                 this._videoControlButtonsList.delete(button);
+                             }
+                             // WeakMap 条目会随视频 GC 自动清理，但主动删除更及时
                              if (this.activeVideo === video) {
                                  this.activeVideo = null;
                              }
                         });
                     });
 
-                    // 检查是否有新视频被添加
-                    const hasNewVideos = Array.from(mutation.addedNodes).some(n => n.tagName === 'VIDEO' || (n.querySelector && n.querySelector('video')));
-                    if (hasNewVideos) {
-                         Logger.debug("侦测到新视频相关的DOM变动，调用防抖版检测...");
+                    // Bug10 修复：增量扫描新增节点，而非全量扫描
+                    const newVideos = [];
+                    mutation.addedNodes.forEach(node => {
+                        if (node.nodeType !== Node.ELEMENT_NODE) return;
+                        if (node.tagName === 'VIDEO') {
+                            newVideos.push(node);
+                        } else if (node.querySelectorAll) {
+                            node.querySelectorAll('video').forEach(v => newVideos.push(v));
+                        }
+                    });
+                    if (newVideos.length > 0) {
+                         Logger.debug("增量检测到新视频:", newVideos.length);
                          this.debouncedDetectAndSetupVideos();
                     }
                 });
@@ -1087,19 +1144,38 @@
 
                 this.keyupListener = null;
             }
+            // Bug2 修复：清理 blur/visibilitychange 监听器
+            if (this.blurListener) {
+                window.removeEventListener('blur', this.blurListener);
+                this.blurListener = null;
+            }
+            if (this.visibilityListener) {
+                document.removeEventListener('visibilitychange', this.visibilityListener);
+                this.visibilityListener = null;
+            }
             this.activeObservers.forEach(observer => observer.disconnect());
             this.activeObservers.clear();
             this._cleanupFallbackObserver();
-            this.videoControlButtons.forEach(button => button.remove());
-            this.videoControlButtons.clear();
+            this._videoControlButtonsList.forEach(button => button.remove());
+            this._videoControlButtonsList.clear();
+            this.videoControlButtons = new WeakMap();
             this.activeVideo = null;
         }
 
         handleUrlChange() {
             this.currentUrl = location.href;
             Logger.info("URL发生变化，重新初始化...");
-            // 使用 setTimeout 延迟执行，确保新页面的 DOM 元素已加载
-            setTimeout(() => this.initialize().catch(e => Logger.error("URL变化后初始化失败:", e)), this.config.URL_CHANGE_INIT_DELAY);
+
+            // Bug5 修复：防抖处理，清理旧的 URL 变化定时器
+            if (this._urlChangeTimer) {
+                clearTimeout(this._urlChangeTimer);
+            }
+
+            this._urlChangeTimer = setTimeout(() => {
+                this._urlChangeTimer = null;
+                this._isInitializing = false; // 重置锁，允许新初始化
+                this.initialize().catch(e => Logger.error("URL变化后初始化失败:", e));
+            }, this.config.URL_CHANGE_INIT_DELAY);
         }
 
         watchUrlChange() {
@@ -1139,6 +1215,12 @@
             window.addEventListener("keydown", this.keydownListener, true);
             window.addEventListener("keyup", this.keyupListener, true);
 
+            // Bug2 修复：添加 blur/visibilitychange 监听器，失焦时恢复速度
+            this.blurListener = this._resetSpeedOnBlur.bind(this);
+            this.visibilityListener = this._resetSpeedOnBlur.bind(this);
+            window.addEventListener('blur', this.blurListener);
+            document.addEventListener('visibilitychange', this.visibilityListener);
+
             // 如果视频在 iframe 中，也在 iframe 内设置监听
             if (this.activeVideo) {
                 try {
@@ -1149,6 +1231,23 @@
                     }
                 } catch(e) {
                     // 忽略跨域错误
+                }
+            }
+        }
+
+        /**
+         * Bug2 修复：失焦或页面不可见时强制恢复播放速度
+         */
+        _resetSpeedOnBlur() {
+            // 如果正在长按状态，强制恢复速度
+            if (this.rightKeyTimer || this.downCount > 0 || this._rightKeyDownTime > 0) {
+                clearTimeout(this.rightKeyTimer);
+                this.rightKeyTimer = null;
+                this.downCount = 0;
+                this._rightKeyDownTime = 0;
+                if (this.activeVideo && this.originalRate) {
+                    this.activeVideo.playbackRate = this.originalRate;
+                    Logger.debug("失焦时恢复播放速度:", this.originalRate);
                 }
             }
         }
@@ -1213,18 +1312,23 @@
 
         findAllVideos() {
             const allVideos = new Set(document.querySelectorAll('video'));
+            const MAX_DEPTH = 3; // Bug10 修复：限制遍历深度，避免性能抖动
 
-            const findIn = (root) => {
+            const findIn = (root, depth = 0) => {
+                if (depth > MAX_DEPTH) return;
                 try {
                     root.querySelectorAll('video').forEach(v => allVideos.add(v));
                     root.querySelectorAll('iframe').forEach(f => {
                          try {
-                            if (f.contentDocument) findIn(f.contentDocument);
+                            if (f.contentDocument) findIn(f.contentDocument, depth + 1);
                          } catch(e) {/* cross-origin */}
                     });
-                    root.querySelectorAll('*').forEach(el => {
-                        if (el.shadowRoot) findIn(el.shadowRoot);
-                    });
+                    // 只在浅层检查 shadowRoot（深层嵌套的 shadowRoot 场景较少）
+                    if (depth < 2) {
+                        root.querySelectorAll('*').forEach(el => {
+                            if (el.shadowRoot) findIn(el.shadowRoot, depth + 1);
+                        });
+                    }
                 } catch(e) {/* ignore */}
             };
             findIn(document);
@@ -1391,6 +1495,7 @@
             // 添加到DOM
             container.appendChild(button);
             this.videoControlButtons.set(video, button);
+            this._videoControlButtonsList.add(button);
         }
 
         /**
@@ -1454,8 +1559,8 @@
          * @param {HTMLElement} button 按钮元素
          */
         switchActiveVideo(video, button) {
-            // 重置所有按钮样式
-            this.videoControlButtons.forEach((btn) => {
+            // 重置所有按钮样式（使用辅助 Set 遍历）
+            this._videoControlButtonsList.forEach((btn) => {
                 this.resetButtonStyle(btn);
             });
 
@@ -1513,17 +1618,28 @@
 
         // 8. 按键事件处理
         handleKeyDown(e) {
-            // 忽略因长按而重复触发的 keydown 事件 (除了右箭头，它有自己的长按逻辑)
-            if (e.repeat && e.code !== 'ArrowRight') {
+            // 允许响应长按重复的按键：音量调节(上/下箭头)、右箭头(有自己的长按逻辑)
+            const allowRepeatKeys = ['ArrowUp', 'ArrowDown', 'ArrowRight'];
+            if (e.repeat && !allowRepeatKeys.includes(e.code)) {
                 return;
             }
-            
+
             const path = e.composedPath();
-            const isInputFocused = path.some(el => el.isContentEditable || ['INPUT', 'TEXTAREA'].includes(el.tagName));
+            // Bug1 修复：增强交互元素检测，避免破坏原生键盘导航
+            const isInteractiveElement = (el) => {
+                if (!el || !el.tagName) return false;
+                const interactiveTags = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON', 'A'];
+                return el.isContentEditable ||
+                       interactiveTags.includes(el.tagName) ||
+                       el.getAttribute?.('role') === 'button' ||
+                       el.getAttribute?.('role') === 'textbox' ||
+                       el.getAttribute?.('role') === 'link';
+            };
+            const isInputFocused = path.some(isInteractiveElement);
             if (isInputFocused || !this.activeVideo) {
                 return;
             }
-        
+
             const handler = this.keyHandlers[e.code];
             if (handler) {
                 e.preventDefault();
@@ -1556,10 +1672,16 @@
                 clearTimeout(this.rightKeyTimer);
                 this.rightKeyTimer = null;
 
-                if (this.downCount < this.config.SHORT_PRESS_MAX_COUNT) { //判定为短按
+                // Bug6 修复：使用时间戳判定长按/短按
+                const pressDuration = Date.now() - this._rightKeyDownTime;
+                this._rightKeyDownTime = 0; // 重置时间戳
+
+                if (pressDuration < this.LONG_PRESS_DELAY) {
+                    // 短按 - 快进
                     this.seek(this.config.SEEK_STEP_SECONDS);
-                } else { //判定为长按
-                    if(this.activeVideo) {
+                } else {
+                    // 长按 - 恢复速度
+                    if (this.activeVideo && this.originalRate) {
                         this.activeVideo.playbackRate = this.originalRate;
                         showFloatingMessage(`恢复播放速度: ${this.originalRate.toFixed(1)}x`);
                     }
@@ -1578,10 +1700,11 @@
                 'Space': this.togglePlayPause.bind(this),
                 'ArrowLeft': this.seek.bind(this, -this.config.SEEK_STEP_SECONDS),
                 'ArrowRight': this.handleRightArrowPress.bind(this), // 此函数逻辑复杂，保留原样
-                'Equal': this.adjustTargetRate.bind(this, this.settings.targetRateStep),
-                'Minus': this.adjustTargetRate.bind(this, -this.settings.targetRateStep),
-                'BracketRight': this.adjustPlaybackRate.bind(this, this.settings.quickRateStep),
-                'BracketLeft': this.adjustPlaybackRate.bind(this, -this.settings.quickRateStep),
+                // Bug4 修复：使用箭头函数运行时读取 settings，避免 bind 固化值
+                'Equal': () => this.adjustTargetRate(this.settings.targetRateStep),
+                'Minus': () => this.adjustTargetRate(-this.settings.targetRateStep),
+                'BracketRight': () => this.adjustPlaybackRate(this.settings.quickRateStep),
+                'BracketLeft': () => this.adjustPlaybackRate(-this.settings.quickRateStep),
                 'KeyP': this.resetPlaybackRate.bind(this),
                 'Comma': this.frameStep.bind(this, -1),
                 'Period': this.frameStep.bind(this, 1),
@@ -1591,6 +1714,7 @@
         // 移除了 _handle... 系列的中间函数，因为它们已被 .bind 替代
 
         adjustVolume(delta) {
+            if (!this.activeVideo) return; // Bug3 扩展修复：空引用保护
             this.activeVideo.volume = Math.max(0, Math.min(1, this.activeVideo.volume + delta));
             showFloatingMessage(`音量：${Math.round(this.activeVideo.volume * 100)}%`);
         }
@@ -1628,6 +1752,7 @@
         }
 
         togglePlayPause() {
+            if (!this.activeVideo) return; // Bug3 修复：空引用保护
             if (this.activeVideo.paused) {
                 this.activeVideo.play();
                 showFloatingMessage('播放');
@@ -1636,28 +1761,37 @@
                 showFloatingMessage('暂停');
             }
         }
-        
+
         seek(delta) {
+            if (!this.activeVideo) return; // Bug3 修复：空引用保护
             if (this.activeVideo.paused) this.activeVideo.play();
             this.activeVideo.currentTime = Math.max(0, this.activeVideo.currentTime + delta);
             showFloatingMessage(`快${delta > 0 ? '进' : '退'} ${this.config.SEEK_STEP_SECONDS} 秒`);
         }
-        
+
         // 此方法逻辑复杂，保留原名，仅在 handler 中调用
+        // Bug6 修复：改用纯时间戳判定，避免高键盘重复率下的冲突
         handleRightArrowPress() {
+            if (!this.activeVideo) return; // Bug3 修复：空引用保护
             if (this.activeVideo.paused) this.activeVideo.play();
 
             // 重置标记，允许新的KeyUp处理
             this._rightKeyUpHandled = false;
 
-            if (this.downCount === 0) {
+            // 首次按下时记录时间和原始速率
+            if (this._rightKeyDownTime === 0) {
+                this._rightKeyDownTime = Date.now();
                 this.originalRate = this.activeVideo.playbackRate;
+
+                // 延迟后进入长按模式
                 this.rightKeyTimer = setTimeout(() => {
-                    this.activeVideo.playbackRate = this.targetRate;
-                    showFloatingMessage(`倍速播放: ${this.targetRate.toFixed(2)}x`);
-                    this.downCount = this.config.SHORT_PRESS_MAX_COUNT; // 设置为长按状态
+                    if (this._rightKeyDownTime > 0) { // 仍在按住
+                        this.activeVideo.playbackRate = this.targetRate;
+                        showFloatingMessage(`倍速播放: ${this.targetRate.toFixed(2)}x`);
+                    }
                 }, this.LONG_PRESS_DELAY);
             }
+            // 移除 downCount++，完全依赖时间戳
             this.downCount++;
         }
 
@@ -1680,12 +1814,14 @@
         }
         
         resetPlaybackRate() {
+            if (!this.activeVideo) return; // Bug3 修复：空引用保护
             this.activeVideo.playbackRate = this.settings.defaultRate;
             this.lastManualRateChangeTime = Date.now();
             showFloatingMessage(`播放速度重置为: ${this.settings.defaultRate.toFixed(2)}x`);
         }
-        
+
         frameStep(direction) {
+            if (!this.activeVideo) return; // Bug3 修复：空引用保护
             if (this.activeVideo.paused) {
                  this.activeVideo.currentTime += (direction / this.config.DEFAULT_FPS);
                  showFloatingMessage(direction > 0 ? `下一帧` : `上一帧`);

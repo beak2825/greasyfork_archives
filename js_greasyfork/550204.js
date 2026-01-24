@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AI Navigation Bar
 // @namespace    http://tampermonkey.net/
-// @version      3.1
+// @version      3.2
 // @description  Automatically clicks annoyance of M365 and adds navigation buttons to AI chat services
 // @author       Jerry
 // @match        https://m365.cloud.microsoft/*
@@ -189,6 +189,45 @@
         console.log('Navigation bar created successfully!');
     }
 
+    // Focus the M365 chat input textbox
+    function focusChatInput() {
+        console.log("Attempting to focus chat input...");
+
+        // Try multiple selectors to find the input
+        const selectors = [
+            '#m365-chat-editor-target-element',
+            '[role="combobox"][contenteditable="true"]',
+            '.fai-EditorInput__input[contenteditable="true"]',
+            '[aria-label="Message Copilot"]'
+        ];
+
+        for (const selector of selectors) {
+            const input = document.querySelector(selector);
+            if (input) {
+                console.log(`Found chat input with selector: ${selector}`);
+
+                // Try multiple focus methods for better compatibility
+                setTimeout(() => {
+                    input.focus();
+                    input.click();
+
+                    // Trigger a click on parent if needed
+                    const parent = input.closest('.fai-EditorInput');
+                    if (parent) {
+                        parent.click();
+                    }
+
+                    console.log("Chat input focused successfully!");
+                }, 100);
+
+                return true;
+            }
+        }
+
+        console.log("Chat input not found yet");
+        return false;
+    }
+
     // Original auto-click functionality
     let attempts = 0;
     const maxAttempts = 20;
@@ -217,6 +256,8 @@
         });
         if (found) {
             console.log("GPT-5 button clicked successfully!");
+            // Focus input after clicking button
+            setTimeout(focusChatInput, 500);
             observer.disconnect();
             return;
         }
@@ -236,6 +277,8 @@
             editorElement.click();
             editorClicked = true;
             console.log("Chat editor element clicked successfully!");
+            // Focus input after clicking editor
+            setTimeout(focusChatInput, 300);
         } else {
             console.log("Chat editor element not found yet");
         }
@@ -252,6 +295,7 @@
             '.fui-TeachingPopoverSurface button'
         ];
 
+        let dismissed = false;
         for (const selector of selectors) {
             const buttons = document.querySelectorAll(selector);
             buttons.forEach(button => {
@@ -261,6 +305,7 @@
                     console.log("Found mobile app popup button, dismissing...");
                     button.click();
                     mobileAppPopupDismissed = true;
+                    dismissed = true;
                     console.log("Mobile app popup dismissed successfully!");
                 }
             });
@@ -272,6 +317,12 @@
             console.log("Hiding mobile app popup directly...");
             popup.style.display = 'none';
             mobileAppPopupDismissed = true;
+            dismissed = true;
+        }
+
+        // Focus input after dismissing popup
+        if (dismissed) {
+            setTimeout(focusChatInput, 300);
         }
     }
 
@@ -326,6 +377,8 @@
 
         window.addEventListener('load', () => {
             setTimeout(findAndClickButton, 2000);
+            // Also try to focus input on initial load
+            setTimeout(focusChatInput, 2500);
         });
 
         const observer = new MutationObserver((mutations) => {

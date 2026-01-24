@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         水源关键词屏蔽插件
 // @namespace    https://github.com/why002/
-// @version      2.0
+// @version      3.0
 // @description  屏蔽水源中包含指定关键词的内容
 // @author       why002
 // @match        https://shuiyuan.sjtu.edu.cn/*
@@ -61,6 +61,8 @@
 
     const hiddenPostIds = new Set();
     const visiblePostIds = new Set();
+    const showReplyPostIds = new Set();
+    const hiddenReplyIds = new Set();
 
     // --- 1. 基础样式 ---
     const baseCss = `
@@ -107,7 +109,22 @@
             const selectors = Array.from(hiddenPostIds).map(id => `#${id}`).join(',\n');
             cssRules += `${selectors} { display: none !important; }`;
         }
-
+        if (hiddenReplyIds.size > 0) {
+            console.log(hiddenReplyIds)
+            // 回复的选择器：[data-post-id="xxx"]（精准定位单个回复）
+            const replySelectors = Array.from(hiddenReplyIds).map(id => `[data-post-id="${id}"]`).join(',\n');
+            cssRules += `
+            /* 屏蔽嵌入式回复 */
+            ${replySelectors} {
+                display: none !important;
+                height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
+                visibility: hidden !important; /* 双重保障，防止display失效 */
+            }
+        `;
+        }
         styleTag.textContent = cssRules;
     }
 
@@ -119,13 +136,33 @@
             // 3. 读取 data-user-card 属性的值
             userName = userCardElement.getAttribute('data-user-card');
         }
-        console.log(userName)
         const content = node.querySelector('.cooked');
         for (const user of users) {
             if (user == userName) {
                 logger.log("匹配到用户", user)
                 return true
             }
+        }
+        // 匹配回复对象
+        const replyToTab = node.querySelector('.reply-to-tab');
+        if (replyToTab) {
+            const avatarImg = replyToTab.querySelector('img.avatar');
+
+            //  解析src
+            const imgSrc = avatarImg.getAttribute('src') || '';
+            let replyUsername = '';
+            // 按“/”分割路径，取第3段（索引2）就是用户名
+            const srcParts = imgSrc.split('/').filter(part => part); // 分割并过滤空字符串
+            if (srcParts.length >= 5) {
+                replyUsername = srcParts[2];
+            }
+            for (const user of users) {
+                if (user == replyUsername) {
+                    logger.log("匹配到回复用户", user)
+                    return true
+                }
+            }
+                
         }
         // 2. 提取.cooked容器内的纯文本内容（去除HTML标签）
         const textContent = content.textContent.trim().toLowerCase();
@@ -156,7 +193,22 @@
         // 5. 未匹配到任何关键词，返回false
         return false;
     }
-
+    function replyHasKeyWord(section) {
+        let newCount = 0;
+        const replyDivs = section.querySelectorAll('.reply');
+        replyDivs.forEach(reply => {
+            if (hasKeyword(reply)) {
+                const replyPostId = reply.getAttribute('data-post-id');
+                if (replyPostId) {
+                    hiddenReplyIds.add(replyPostId); // 加入屏蔽集合
+                    newCount++;
+                    logger.info(`[屏蔽回复] #${replyPostId}`);
+                }
+            }
+        })
+        if (newCount > 0) return true;
+        return false;
+    }
     // --- 4. 扫描器 ---
     function scan() {
         if (!isActive) return;
@@ -176,7 +228,19 @@
             // 忽略主楼
             if (node.getAttribute('data-post-number') === '1') return;
 
-            if (hiddenPostIds.has(targetId) || visiblePostIds.has(targetId)) return;
+            if (hiddenPostIds.has(targetId)) return;
+            if (visiblePostIds.has(targetId)) {
+                if (showReplyPostIds.has(targetId)) {
+                    if (node.querySelector('[aria-pressed="true"]')) return;
+                    else showReplyPostIds.delete(targetId)
+                }
+                if (node.querySelector('[aria-pressed="true"]')) {
+                    const embeddedSection = node.querySelector('.post__embedded-posts--bottom');
+                    if (replyHasKeyWord(embeddedSection)) newCount++;
+                    showReplyPostIds.add(targetId)
+                }
+                else return;
+            }
 
             if (!hasKeyword(node)) {
                 visiblePostIds.add(targetId);
@@ -213,6 +277,13 @@
     }
 
     // --- 7. 开关逻辑 ---
+    function updatePage() {
+        hiddenPostIds.clear();
+        visiblePostIds.clear();
+        updateHiddenCSS();
+        scan();
+        smartLoad();
+    }
     function toggle(forceState = null) {
         // 如果指定了状态，就用指定的，否则反转
         const nextState = forceState !== null ? forceState : !isActive;
@@ -231,11 +302,7 @@
             lockedTopicId = getCurrentTopicId();
 
             // 开启时，基于当前页面重置数据
-            hiddenPostIds.clear();
-            visiblePostIds.clear();
-            updateHiddenCSS();
-            scan();
-            smartLoad();
+            updatePage();
         } else {
             logger.log('关闭过滤 (状态清除)');
             lockedTopicId = null;
@@ -397,7 +464,8 @@
         overlay.style.display = 'none';
         setTimeout(() => {
             alert('内容保存成功！');
-            getKeywords()
+            getKeywords();
+            updatePage();
         }, 0);
     });
 
@@ -454,22 +522,6 @@
             scan();
             smartLoad();
         }
-        // --- 核心路由检查 ---
-        /*
-        if (isActive) {
-            const currentId = getCurrentTopicId();
-
-            // 如果 URL 里甚至没有 Topic ID (比如去了主页)，或者 ID 变了
-            if (currentId !== lockedTopicId) {
-                logger.log(`检测到离开原话题 (${lockedTopicId} -> ${currentId})，自动关闭`);
-                toggle(false); // 强制关闭
-            } else {
-                // 如果还在同一个话题里，继续干活
-                scan();
-                smartLoad();
-            }
-        }
-*/
         requestAnimationFrame(loop);
     }
 

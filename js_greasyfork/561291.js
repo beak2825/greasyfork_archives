@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TornW3B Trading Companion
 // @namespace    http://tampermonkey.net/
-// @version      2.02
+// @version      2.03
 // @description  Calculates the total value of items in a trade on Torn.com.
 // @match        https://www.torn.com/*
 // @grant        GM_setValue
@@ -354,8 +354,8 @@ a:hover {color:var(--text)}
 .save-changes-button.error {background:var(--error);animation:shake .5s}
 .save-changes-button.save-button-hidden {display:none}
 .receipt-url-copy {margin-bottom:12px;padding:14px;background:var(--bg-darker);border-radius:6px;border:1px solid var(--border)}
-.url-display {display:flex;align-items:center;justify-content:space-between;gap:12px}
-.url-text {color:var(--text-muted);font:12px 'Courier New',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.url-display {display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.url-text {color:var(--text-muted);font:12px 'Courier New',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
 .items-table input[type="text"] {background:var(--bg-med);border:2px solid #4a9eff;color:var(--text);border-radius:4px;font:14px 'Segoe UI',sans-serif;width:100%;padding:8px;box-shadow:0 0 0 3px rgba(74,158,255,0.1);outline:none;text-align:center;touch-action:manipulation}
 .items-table input[type="text"]:focus {border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.2)}
 .editable-input {width:100px;padding:6px;text-align:center;font-size:15px;touch-action:manipulation}
@@ -517,6 +517,45 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
     };
 
     const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    const copyToClipboard = async (text) => {
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(text);
+                return true;
+            }
+        } catch (e) {
+            console.log('Clipboard API failed, using fallback');
+        }
+
+        try {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-999999px';
+            textarea.style.top = '-999999px';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            const success = document.execCommand('copy');
+            document.body.removeChild(textarea);
+            return success;
+        } catch (e) {
+            console.error('Copy failed:', e);
+            return false;
+        }
+    };
+
+    const readFromClipboard = async () => {
+        try {
+            if (navigator.clipboard && navigator.clipboard.readText) {
+                return await navigator.clipboard.readText();
+            }
+        } catch (e) {
+            console.log('Clipboard read failed');
+        }
+        return '';
+    };
 
     const waitForElement = (selector, timeout = 60000) => {
         return new Promise((resolve) => {
@@ -1365,9 +1404,9 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
                 const copyMsgBtn = el('button', {
                     classes: 'action-btn',
                     html: `${SVG_ICONS.paste} Copy Message`,
-                    onClick: () => {
-                        navigator.clipboard.writeText(message);
-                        showMsg(copyMsgBtn, 'Copied!', 1000);
+                    onClick: async () => {
+                        const success = await copyToClipboard(message);
+                        showMsg(copyMsgBtn, success ? 'Copied!' : 'Copy failed', 1000);
                     }
                 });
                 actionsDiv.appendChild(copyMsgBtn);
@@ -1784,9 +1823,9 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             stripe.classList.add('expanded');
 
             removeHandler(total);
-            addHandler(total, () => {
-                navigator.clipboard.writeText(currentReceipt.total_value.toString());
-                showMsg(total, 'Copied!', 1000);
+            addHandler(total, async () => {
+                const success = await copyToClipboard(currentReceipt.total_value.toString());
+                showMsg(total, success ? 'Copied!' : 'Copy failed', 1000);
             });
 
             updateAcceptBtn();
@@ -2113,7 +2152,10 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
                 const copyMsgBtn = el('button', {
                     classes: 'copy-url-button',
                     text: 'Copy Message',
-                    onClick: () => navigator.clipboard.writeText(currentTradeMessage).then(() => showMsg(copyMsgBtn, 'Copied!', 2000))
+                    onClick: async () => {
+                        const success = await copyToClipboard(currentTradeMessage);
+                        showMsg(copyMsgBtn, success ? 'Copied!' : 'Copy failed', 2000);
+                    }
                 });
 
                 const messageContainer = el('div', { classes: 'message-section' });
@@ -2127,12 +2169,21 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             const copyBtn = el('button', {
                 classes: 'copy-url-button',
                 text: 'Copy URL',
-                onClick: () => navigator.clipboard.writeText(currentReceiptURL).then(() => showMsg(copyBtn, 'Copied!', 2000))
+                onClick: async () => {
+                    const success = await copyToClipboard(currentReceiptURL);
+                    showMsg(copyBtn, success ? 'Copied!' : 'Copy failed', 2000);
+                }
+            });
+
+            const openBtn = el('button', {
+                classes: 'copy-url-button',
+                text: 'Open Receipt',
+                onClick: () => window.open(currentReceiptURL, '_blank')
             });
 
             content.appendChild(el('div', {
                 classes: 'receipt-url-copy',
-                children: [el('div', { classes: 'url-display', children: [el('span', { classes: 'url-text', text: currentReceiptURL }), copyBtn] })]
+                children: [el('div', { classes: 'url-display', children: [el('span', { classes: 'url-text', text: currentReceiptURL }), copyBtn, openBtn] })]
             }));
 
             const table = createTable(currentReceipt.items);
@@ -2285,7 +2336,11 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
                 const total = el('div', {
                     classes: ['total-value-container'],
                     text: 'Total Value: $0',
-                    onClick: () => currentReceipt?.total_value && (navigator.clipboard.writeText(currentReceipt.total_value.toString()), showMsg(total, 'Copied!', 1000))
+                    onClick: async () => {
+                        if (!currentReceipt?.total_value) return;
+                        const success = await copyToClipboard(currentReceipt.total_value.toString());
+                        showMsg(total, success ? 'Copied!' : 'Copy failed', 1000);
+                    }
                 });
 
                 const receipt = el('div', {
@@ -2362,7 +2417,11 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
         const total = el('div', {
             classes: ['hidden', 'total-value-container'],
             text: 'Total Value: $0',
-            onClick: () => currentReceipt?.total_value && (navigator.clipboard.writeText(currentReceipt.total_value.toString()), showMsg(total, 'Copied!', 1000))
+            onClick: async () => {
+                if (!currentReceipt?.total_value) return;
+                const success = await copyToClipboard(currentReceipt.total_value.toString());
+                showMsg(total, success ? 'Copied!' : 'Copy failed', 1000);
+            }
         });
 
         const receipt = el('div', {
@@ -2376,7 +2435,11 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
 
         if (isAddMoneyPage) {
             const pasteBtn = createButton(['calculate-button'], SVG_ICONS.paste, 'Paste', async () => {
-                const text = await navigator.clipboard.readText();
+                const text = await readFromClipboard();
+                if (!text) {
+                    showMsg(pasteBtn, 'Paste failed', 1000);
+                    return;
+                }
                 qa('input.input-money').forEach(input => {
                     input.value = text;
                     input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -2513,10 +2576,10 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             text: matchedTrade
                 ? `Total Value: $${matchedTrade.totalValue.toLocaleString()}`
                 : `Trade Value: $${moneyPaid.toLocaleString()}`,
-            onClick: () => {
+            onClick: async () => {
                 const value = matchedTrade?.totalValue || moneyPaid;
-                navigator.clipboard.writeText(value.toString());
-                showMsg(total, 'Copied!', 1000);
+                const success = await copyToClipboard(value.toString());
+                showMsg(total, success ? 'Copied!' : 'Copy failed', 1000);
             }
         });
 

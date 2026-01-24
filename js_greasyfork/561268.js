@@ -79,21 +79,24 @@
 // @description:uk      Перекладайте та замінюйте те, що ви вводите, у режимі реального часу. Пропонує практичний базовий режим для повсякденного використання та режим ШІ для складних текстів з людським відтінком, що працює безпосередньо в текстових полях на всіх сайтах.
 // @description:ug      يازغانلىرىڭىزنى دەل ۋاقتىدا تەرجىمە قىلىدۇ ۋە ئالماشتۇرىدۇ. كۈندىلىك تۇرمۇشقا ماس كېلىدىغان قوللىنىشچان ئاساسىي مودېل ۋە ئادەم تېگىش قىلىنغان مۇرەككەپ تېكىستلەر ئۈچۈن سۈنئىي ئىدراك مودېلى بىلەن تەمىنلەيدۇ، پۈتۈن تور ئارا تېكىست رامكىلىرىدا بىۋاسىتە ئىشلەيدۇ.
 // @description:vi      Dịch và thay thế những gì bạn nhập trong thời gian thực. Cung cấp chế độ cơ bản thực tế cho cuộc sống hàng ngày và chế độ AI cho các văn bản phức tạp với nét chạm của con người, hoạt động trực tiếp trong các khung văn bản trên toàn nền tảng web.
-// @version             1.1
+// @version             1.2
 // @author              OHAS
 // @license             CC-BY-NC-ND-4.0
 // @copyright           2026 OHAS. All Rights Reserved.
 // @namespace           http://github.com/0H4S
 // @icon                https://cdn-icons-png.flaticon.com/512/2014/2014826.png
 // @require             https://update.greasyfork.org/scripts/549920.js
-// @connect             translate.googleapis.com
-// @connect             api.longcat.chat
+// @match               *://*/*
+// @connect             i.imgur.com
 // @connect             gist.github.com
+// @connect             api.longcat.chat
+// @connect             files.catbox.moe
+// @connect             translate.googleapis.com
 // @grant               GM_registerMenuCommand
 // @grant               GM_xmlhttpRequest
+// @grant               GM_setClipboard
 // @grant               GM_setValue
 // @grant               GM_getValue
-// @match               *://*/*
 // @run-at              document-end
 // @noframes
 // @compatible          chrome
@@ -113,11 +116,16 @@
 (function() {
     'use strict';
     /*eslint-disable*/
+
     // --- NOTIFICAÇÃO ---
-    const SCRIPT_CONFIG = {notificationsUrl: 'https://gist.github.com/0H4S/d133ce7b86ab1815acf1bb149ce2f059', scriptVersion: '1.1',};
+    const SCRIPT_CONFIG = {notificationsUrl: 'https://gist.github.com/0H4S/d133ce7b86ab1815acf1bb149ce2f059', scriptVersion: '1.2',};
     const notifier = new ScriptNotifier(SCRIPT_CONFIG);
     notifier.run();
+
+    // ======
     // #region INTERNACIONALIZAÇÃO E CONFIGURAÇÕES
+    // ======
+
     // --- TRADUÇÕES ---
     const I18N_STRINGS = {
         pt: {
@@ -624,8 +632,15 @@
         { code: "zap",      name: "Zapotec" }
     ];
     SUPPORTED_LANGS.sort((a, b) => a.name.localeCompare(b.name));
-    // #endregion
+
+    // ======
+    // #endregion INTERNACIONALIZAÇÃO E CONFIGURAÇÕES
+    // ======
+
+    // ======
     // #region FUNÇÕES DE TRADUÇÃO
+    // ======
+
     const API_URL_IA = "https://api.longcat.chat/openai/v1/chat/completions";
 
     // --- FUNÇÃO PARA PEGAR AS CONFIGURAÇÕES ---
@@ -652,8 +667,15 @@
         const keys = GM_getValue("LONGCAT_KEYS_ARRAY", []);
         return keys.length > 0 ? keys[Math.floor(Math.random() * keys.length)] : null;
     }
-    // #endregion
+
+    // ======
+    // #endregion FUNÇÕES DE TRADUÇÃO
+    // ======
+
+    // ======
     // #region MOTORES DE TRADUÇÃO
+    // ======
+
     // --- GOOGLE TRADUTOR---
     function translateGoogle(text, targetLang, callback, errorCallback) {
         const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
@@ -713,8 +735,15 @@
             onerror: () => errorCallback("AI Connection Fail")
         });
     }
-    // #endregion
+
+    // ======
+    // #endregion MOTORES DE TRADUÇÃO
+    // ======
+
+    // ======
     // #region UI
+    // ======
+
     // --- ESCUDO DE INTERFACE ---
     class ShieldedUI {
         constructor() {
@@ -760,6 +789,7 @@
         // --- CSS ---
         _getStyles() {
             return `
+            @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;600;700&display=swap');
                 :host {
                     all: initial !important;
                     position: fixed !important;
@@ -1335,13 +1365,27 @@
         }
     }
     const ui = new ShieldedUI();
-    // #endregion
+
+    // ======
+    // #endregion UI
+    // ======
+
+    // ======
     // #region LÓGICA CORE
-    // --- REPLACE SEGURO DE TEXTO ---
+    // ======
+
+    // --- REPLACE SEGURO (CLIPBOARD + PASTE) ---
     function safeReplace(targetElement, newText) {
+        GM_setClipboard(newText, "text");
         if (!targetElement) return;
         try { targetElement.focus(); } catch(e) {}
-        const success = document.execCommand("insertText", false, newText);
+        let success = false;
+        try {
+            success = document.execCommand("paste");
+        } catch (e) {}
+        if (!success) {
+            success = document.execCommand("insertText", false, newText);
+        }
         if (!success) {
             if (typeof targetElement.value === 'string' && targetElement.selectionStart !== undefined) {
                 const start = targetElement.selectionStart;
@@ -1409,7 +1453,7 @@
     GM_registerMenuCommand(T('menu_config'), () => ui.toggleModal(true));
 
     // --- ATALHOS DE TECLADO ---
-    document.addEventListener('keydown', function(e) {
+    window.addEventListener('keydown', function(e) {
         const cfg = getConfig();
         if (cfg.shortcuts && cfg.shortcuts.length > 0) {
             const pressedKeys = [];
@@ -1425,6 +1469,7 @@
             if (match) {
                 e.preventDefault();
                 e.stopPropagation();
+                e.stopImmediatePropagation();
                 runTranslation(match.lang);
                 return;
             }
@@ -1434,8 +1479,13 @@
         if (e.altKey && (e.key === 't' || e.key === 'T')) {
             e.preventDefault();
             e.stopPropagation();
+            e.stopImmediatePropagation();
             runTranslation();
         }
-    });
-    // #endregion
+    }, true);
+
+    // =======
+    // #endregion LÓGICA CORE
+    // ======
+
 })();

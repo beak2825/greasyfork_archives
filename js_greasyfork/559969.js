@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         元元大王直播间弹幕布局
-// @version      1.6
-// @description  1、自适应弹幕布局（按键 '0' 关闭或打开自适应弹幕）；2、弹幕画板可拖移；3、PK或连线状态变化时刷新视频画面（10秒冷却）避免音画不同步或画面卡顿
+// @version      1.6.2
+// @description  1、自适应弹幕布局（按键 '0' 关闭或打开此功能）；2、弹幕画板可拖移；3、按键 'e' 或 '/' 进入弹幕输入框；4、连线或PK状态变化时自动刷新视频画面（30秒冷却）避免音画不同步或者画面卡顿。
 // @match        https://live.douyin.com/*
 // @match        https://www.douyin.com/follow/live/*
 // @match        https://www.douyin.com/root/live/*
@@ -172,7 +172,7 @@
         let count = getLinkMicLayoutContainer().querySelectorAll(':scope div.LGzZT73_').length;
         let now = Date.now();
 
-        if ( count != LAST_SEATS_COUNT && now - LAST_REFRESH > 1*60*1000 ) {
+        if ( count != LAST_SEATS_COUNT && now - LAST_REFRESH > 30*1000 ) {
             const button = document.querySelector('div.douyin-player-controls-left > slot[data-index="1"] > div > div:has(svg)')
             if (button) {
                 setTimeout(button.click,200);
@@ -185,7 +185,7 @@
         let names = ''
         getLinkMicLayoutContainer().querySelectorAll(':scope div.mkxwziet').forEach((e,i)=>{ if (i>0) names+='、'; names += e.textContent;})
         if (names != '')
-            console.log('DYLIVELAYOUT: 连线主播 ',names);
+            console.log('DYLIVELAYOUT:', Date(now), ' 连线主播 ',names);
     }
 
     function makeDanmakuDraggable() {
@@ -309,20 +309,13 @@
     waitForElements(['#LinkMicLayout'], registerLayoutObserver);
     waitForElements(['div.CanvasDanmakuPlugin'], makeDanmakuDraggable);
 
-    let danmakuOn = true
     document.addEventListener('keydown', (event) => {
+
+        const elInput = document.querySelector('#chatInput div.editor-kit-container');
+        if (document.activeElement == elInput) return;
+
         let key = event.key.toLowerCase()
-        if (key === 'b') {
-            danmakuOn = !danmakuOn
-            console.log('DYLIVELAYOUT: Danmaku',danmakuOn);
-            if (danmakuOn)
-                onLinkMicLayoutChange();
-            else {
-                moveCanvasDanmaku(0, 0);
-                moveVideo(0, 0);
-                moveLinkMicLayout(0, 0);
-            }
-        } else if (key === '0') {
+        if (key === '0') {
             RESPONSIVE = !RESPONSIVE;
             if (RESPONSIVE)
                 onLinkMicLayoutChange();
@@ -331,8 +324,11 @@
                 moveVideo(0, 0);
                 moveLinkMicLayout(0, 0);
             }
+        } else if (key === 'e' || key === '/') {
+            event.stopImmediatePropagation();
+            event.preventDefault();
+            elInput.click()
         }
-
     });
 
 

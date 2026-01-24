@@ -3,7 +3,7 @@
 // @name:en      Facebook Login Wall Remover
 // @name:zh-TW   Facebook 登入牆移除器
 // @name:ja      Facebook ログインウォールリムーバー
-// @version      0.8.3
+// @version      0.8.4
 // @description  This script improves the guest browsing experience on the Facebook desktop site. It aims to remove common interruptions and add helpful features for users who are not logged in.
 // @description:en This script improves the guest browsing experience on the Facebook desktop site. It aims to remove common interruptions and add helpful features for users who are not logged in.
 // @description:zh-TW 這個腳本的用途是改善在 Facebook 桌面版網站上未登入狀態的瀏覽體驗。它會移除一些常見的干擾，並加入一些方便的功能。
@@ -41,29 +41,34 @@
             PROCESSED_MARKER: 'gmProcessed',
             WORKER_PARAM: 'fpc_worker_task',
             TRACKING_PARAMS: [
-                'fb_content_id', 'encrypted_payload', 'channel_type',
-                'fbclid', 'ref', 'ref_id', 'h', '__cft__', '__tn__', '__eep__',
-                'igsh', 'xmt',
-                'si', 'feature',
-                'gclid', 'gclsrc', 'dclid', '_ga', '_gl',
-                'srsltid', 'gbraid', 'wbraid',
-                's', 't', 'ref_src', 'twclid',
-                'share_id', 'ref_campaign', 'ref_source',
-                'ref_', 'pf_rd_r', 'pf_rd_p', 'pf_rd_m',
-                'mkcid', 'mkrid', '_trkparms', 'ssuid',
-                'shpxid',
-                'ldtag_cl',
-                'smtt', 'is_from_login', 'stm_source', 'stm_medium',
-                'yj_r', '_ly_c', '_ly_r',
-                'scid',
-                'tt_from', 'tt_medium', 'tt_content', '_r', '_t',
-                'li_fat_id', 'trk',
-                'epik', 'pp',
-                'sc_cid', 'snap_campaign_id',
-                'mc_cid', 'mc_eid', 'mkt_tok',
-                '_hsenc', '_hsmi',
+                // Google / Analytics
                 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_id',
-                'cjevent', 'msclkid'
+                'gclid', 'gclsrc', 'dclid', 'gbraid', 'wbraid', 'srsltid', '_ga', '_gl',
+
+                // Facebook Internal
+                'fbclid', 'ref', 'ref_id', 'ref_src', 'ref_campaign', 'ref_source', 'ref_',
+                'hc_ref', 'hc_location', 'acontext', 'dti', 'fref',
+                'action_object_map', 'action_ref_map', 'action_type_map', 'fb_action_ids', 'fb_action_types',
+                '__cft__', '__tn__', '__eep__', 'h', 's', 't',
+                'm_entstream_source', 'hoisted_section_header_type', 'store_visit_source', 'entrypoint', 'paipv',
+                'rdid', '_rdc', '_rdr', '_ft_', 'mibextid', 'extid',
+
+                // Facebook Ad / Marketing
+                'fbadid', 'nb_placement', 'nb_expid_meta', 'nbt',
+                'fb_content_id', 'encrypted_payload', 'channel_type',
+                'adfrom', 'nx_source', '_zucks_suid',
+                'fb_comment_id', 'fb_ref', 'fb_source',
+
+                // Instagram / Media / CDN
+                'igsh', 'xmt', 'si', 'feature',
+                '_nc_cat', '_nc_sid', 'ccb',
+
+                // External Marketing
+                'twclid', 'mc_cid', 'mc_eid', 'hsenc', '_hsmi',
+                'mkcid', 'mkrid', 'cjevent', 'msclkid',
+                'epik', 'pp', 'sc_cid', 'snap_campaign_id', 'tt_from', 'tt_medium', 'tt_content',
+                'guccounter', 'guce_referrer', 'guce_referrer_sig',
+                '_openstat', 'li_fat_id', 'trk'
             ],
             SCROLL_RESTORER_CONFIG: {
                 CORRECTION_DURATION: 250,
@@ -217,6 +222,7 @@
                 }
             },
             SETTINGS_DEFAULTS: {
+                LINK_DETRACKER: true,
                 AUTO_OPEN_MEDIA: true,
                 HIDE_USELESS: true,
                 HIDE_STATS: false,
@@ -276,6 +282,7 @@
             STRINGS: {
                 en: {
                     // --- General ---
+                    linkDetrackerEnabled: 'Enable Link De-tracker (Anti-Ad/Tracking)',
                     setting_batchCopyMode: 'Batch Copy Output Mode',
                     batchCopyMode_file: 'Download as File',
                     batchCopyMode_clipboard: 'Copy to Clipboard',
@@ -477,6 +484,7 @@
                 },
                 'zh-TW': {
                     // --- General ---
+                    linkDetrackerEnabled: '啟用連結去追蹤化 (移除廣告參數)',
                     setting_batchCopyMode: '批次複製輸出模式',
                     batchCopyMode_file: '下載為檔案',
                     batchCopyMode_clipboard: '複製到剪貼簿',
@@ -683,6 +691,7 @@
                 },
                 ja: {
                     // --- 一般 ---
+                    linkDetrackerEnabled: 'リンクの追跡防止を有効にする',
                     notificationDeadlock: 'ログインプロンプトが非表示になりましたが、フィードは新しいコンテンツを読み込めなくなりました。\n【ヒント】フィードがロックされないように、新しいタブでリンクを開く（中央クリック）習慣を付けてください。閲覧を続けるには、このページをリロードしてください。',
                     notificationSettingsReload: '一部の設定が更新されました。完全に有効にするには、ページをリロードしてください。',
                     resetSettings: '設定をリセット',
@@ -1441,6 +1450,7 @@
                 _getDefinitions() {
                     const D = this.app.config.SETTINGS_DEFAULTS;
                     const generalSettings = [
+                        { key: 'linkDetrackerEnabled', type: 'boolean', defaultValue: D.LINK_DETRACKER, labelKey: 'linkDetrackerEnabled', group: 'general' },
                         { key: 'autoOpenMediaInNewTab', type: 'boolean', defaultValue: D.AUTO_OPEN_MEDIA, labelKey: 'autoOpenMediaInNewTab', group: 'general' },
                         { key: 'hideUselessElements', type: 'boolean', defaultValue: D.HIDE_USELESS, labelKey: 'hideUselessElements', group: 'general', needsReload: true },
                         { key: 'hidePostStats', type: 'boolean', defaultValue: D.HIDE_STATS, labelKey: 'hidePostStats', group: 'general', instant: true },
@@ -2235,6 +2245,7 @@
                     // Use capture phase (true) to intercept events before Facebook's React handlers
                     document.addEventListener('click', this.handleClick.bind(this), true);
                     document.addEventListener('auxclick', this.handleClick.bind(this), true); // For middle-click
+                    document.addEventListener('mouseover', this.handleMouseover.bind(this), true); // Link De-tracker
 
                     // Re-enable context menu (Right-click)
                     document.addEventListener('contextmenu', (e) => {
@@ -2381,7 +2392,88 @@
                                     // We must allow it to fall through to the "Auto-Open in New Tab" logic below.
                                     const link = target.closest('a');
                                     if (link && /\/photo\/?\?|\/photos?\/|\/videos?\/|\/reel\/|\/watch\/|fbid=/.test(link.href)) {
-                                        // Do not return; let it fall through to "Auto-open Media" logic
+                                        /**
+                                         * VIDEO PLAYER INTERACTION STRATEGY (Zone Defense)
+                                         * ------------------------------------------------
+                                         * Goal: Prevent "Video Viewer" Deadlock (SPA Overlay) while maintaining native player usability.
+                                         * 
+                                         * Zone 1: SAFE ZONE (Native Controls)
+                                         * - Target: Sliders, Volume, Settings, Fullscreen, Play Overlay.
+                                         * - Action: RETURN (Allow native event).
+                                         * - Detection: role="slider", CSS Sprites (data-visualcompletion), SVG, or specific Regex.
+                                         * 
+                                         * Zone 2: DEAD ZONE (Video Surface)
+                                         * - Target: The main click area of the video that triggers the Viewer overlay.
+                                         * - Action: INTERCEPT -> PREVENT DEFAULT -> TOGGLE PLAY/PAUSE.
+                                         * - Detection: Link control that CONTAINS a <video> element.
+                                         * 
+                                         * Zone 3: NAVIGATION ZONE (Enlarge/Details)
+                                         * - Target: "Enlarge" button, timestamp links, etc.
+                                         * - Action: FALL THROUGH -> OPEN IN NEW TAB.
+                                         * - Detection: Link control that does NOT contain a <video> element.
+                                         */
+
+                                        // EXCEPTION: Video Player Controls (Volume, Seeker, etc.)
+                                        // These are interactive elements inside the media link container, but they should NOT trigger navigation.
+
+                                        // 0. ABSOLUTE PRIORITY: Seekers / Sliders
+                                        // These elements (and their children) must ALWAYS be interactive, even if wrapped in a link.
+                                        // The user reported that clicking the slider (wrapped in the video link) triggers navigation if we don't exempt it first.
+                                        if (target.closest('[role="slider"], [role="progressbar"]')) {
+                                            return; // Allow native interaction
+                                        }
+
+                                        // 1. Check if the element is acting as a LINK (Navigation) -> If so, it is NOT a "Safe Control" (it's likely Enlarge or the Video itself)
+                                        // We want to intercept these.
+                                        // "Enlarge" button is <a role="link">. Video Surface is <a href...> wrapper.
+                                        // "Play Video" Overlay involves a div[role="button"], so it is NOT a link control.
+                                        const isLinkControl = btn && (btn.tagName === 'A' || btn.getAttribute('role') === 'link');
+
+                                        if (isLinkControl) {
+                                            // DISTINCTION: Enlarge Button vs. Video Surface (Dead Zone)
+                                            // Video Surface (Dead Zone Link) ALWAYS contains the <video> element.
+                                            // Enlarge button (Reels) does NOT contain the video element (it overlays it).
+                                            const video = btn.querySelector('video');
+
+                                            if (video) {
+                                                // Video Surface (Dead Zone): Should Toggle Play/Pause
+                                                //    If clicking the background link, we simply toggle the video to prevent the overlay.
+                                                event.preventDefault();
+                                                event.stopPropagation();
+                                                if (video.paused) video.play(); else video.pause();
+                                                return;
+                                            }
+
+                                            // Fallback: It's a link control but DOESN'T contain the video.
+                                            // Likely the "Enlarge" button (Reels) or other navigation links.
+                                            // Fall through to interception logic (Open in New Tab)
+                                        } else {
+                                            // 2. Language-Agnostic Check: CSS Sprites (Standard Facebook Icons) & SVG
+                                            // Most controls (Play, Pause, Volume, Settings, Fullscreen) use an <i> with this attribute or are raw SVGs.
+                                            const hasCssSprite = btn && (
+                                                btn.querySelector('[data-visualcompletion="css-img"]') ||
+                                                target.getAttribute('data-visualcompletion') === 'css-img'
+                                            );
+                                            const isSvg = target.tagName === 'svg' || target.tagName === 'path' || (btn && btn.querySelector('svg'));
+
+                                            const isSafeControl =
+                                                // target.closest('[role="slider"], [role="progressbar"]') ||     // MOVED UP
+                                                hasCssSprite ||
+                                                isSvg || // Progressive enhancement for SVG icons (if FB switches/A-B tests)
+                                                // 3. Play/Pause Button AND "Play Video" Overlay (Allow in-place playback)
+                                                // We allow the big "Play Video" overlay to function natively (play in place),
+                                                // but we rely on regex for this specifically to distinguish from generic click-throughs if needed.
+                                                // Note: The CSS Sprite check above usually covers the "Play Video" overlay icon too.
+                                                /Play|Pause|播放|暫停|再生|Play video|播放影片|動画を再生/i.test(label) ||
+                                                // 4. Regex Fallback for legacy/non-standard controls
+                                                /Volume|Mute|Unmute|Settings|Fullscreen|Captions|音量|靜音|設定|全螢幕|字幕|フルスクリーン|ミュート/i.test(label);
+
+                                            if (isSafeControl) {
+                                                return; // Allow native interaction
+                                            }
+                                        }
+
+                                        // Otherwise, do not return; let it fall through to "Auto-open Media" logic
                                     } else {
                                         return; // Allow native Facebook control for non-media interactions (Like, Comment, Settings)
                                     }
@@ -2457,9 +2549,28 @@
 
                     // --- Feature 2: Link Sanitization on Click ---
                     // Covers: Middle Click (button 1), Ctrl+Click, or target="_blank"
-                    if (link.target === '_blank' || event.ctrlKey || event.metaKey || event.button === 1) {
+                    if (settings.linkDetrackerEnabled && (link.target === '_blank' || event.ctrlKey || event.metaKey || event.button === 1)) {
                         const clean = this.cleanUrl(link.href);
                         if (clean !== link.href) link.href = clean;
+                    }
+                },
+
+                /**
+                 * Pre-cleans URLs on hover to remove tracking parameters before click.
+                 * @param {MouseEvent} event 
+                 */
+                handleMouseover(event) {
+                    if (!this.app.state.settings.linkDetrackerEnabled) return;
+
+                    const link = event.target.closest('a');
+                    if (!link || !link.href) return;
+
+                    // Optimization: Check for common tracking indicators before parsing
+                    // This reduces overhead on generic "Home" or "Profile" links
+                    const url = link.href;
+                    if (url.includes('?') || url.includes('l.facebook.com')) {
+                        const clean = this.cleanUrl(url);
+                        if (clean !== url) link.href = clean;
                     }
                 },
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Full_Black_List
 // @namespace    Full_Black_List
-// @version      0.54.0
+// @version      0.55.2
 // @description  Supprime totalement les sujets des pseudo blacklistés depuis la blacklist JVC.
 // @author       Atlantis
 // @match        *://www.jeuxvideo.com/recherche/forums/0-*
@@ -53,37 +53,32 @@ async function fonctionSynchBLForums() {
 
     // /SSO/BLACKLIST.PHP => VERS_LOCAL_STORAGE
     let pseudoList = [...pseudos].map(span => span.textContent.trim().toLowerCase());
-    localStorage.setItem('fullblacklistJVC', JSON.stringify(pseudoList));
+    localStorage.setItem('fullBlacklistJVC', JSON.stringify(pseudoList));
 }
 
 
 
 //2___Fetch_MP_LIST_______(FETCH_MP_LIST_PAGE)___
 // GET — ID et Hash Blacklist /indesirables.php
-let idListFetch = [];
-let hashListFetch = [];
-
 async function getBLListMP() {
-    let docFetched = await fetchParseDom('/messages-prives/indesirables.php');
-    let listItems = docFetched.querySelectorAll('#blacklist .mp_delete_blacklist');
+    const docFetched = await fetchParseDom('/messages-prives/indesirables.php');
+    const listItems = docFetched.querySelectorAll('#blacklist .mp_delete_blacklist');
 
-    //recupere pour chaque id
+    const mpBlacklistHashIndex = {};
     listItems.forEach(user => {
-        let idAlias = user.dataset.id;
-        let hashTempo = user.dataset.hash;
-        idListFetch.push(idAlias); // Get ID en liste
-        hashListFetch.push(hashTempo); // Get hash temp (necessaire pour suppression)
-    });
+        const idAlias = user.dataset.id; 
+        const hashTempo = user.dataset.hash;
+        mpBlacklistHashIndex[idAlias] = hashTempo; // { [idAlias] : hashTempo }
+    }); 
+    return mpBlacklistHashIndex;
 }
 
 //2A___CLEAN_MP___
 // POST — Delete User MP
-function deleteBlacklistMP(idAlias) {
-    const index = idListFetch.indexOf(idAlias);
-    if (index === -1) return; // No index
-    const hashTempo = hashListFetch[index];
-    // Effectuer la fetch de suppression (EN MP)
-    fetch('/messages-prives/ajax/ajax_mp_blacklist_delete.php', {
+async function deleteBlacklistMP(idAlias, mpBlacklistHashIndex) {
+    const hashTempo = mpBlacklistHashIndex[idAlias]; // { [idAlias] : hashTempo }
+    if (!hashTempo) return; //pas de hash indexe
+    await fetch('/messages-prives/ajax/ajax_mp_blacklist_delete.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: `id=${idAlias}&hash=${hashTempo}`
@@ -93,16 +88,16 @@ function deleteBlacklistMP(idAlias) {
 
 //2B___CLEAN_MP_ALL_____
 // POST_LOT — Delete All Users MP
-async function deleteBlacklistMPALL(onProgress) {
-    for (const [index, idAlias] of idListFetch.entries()) {
-        const hashTempo = hashListFetch[index];
+async function deleteBlacklistMPALL(mpBlacklistHashIndex, onProgress) {
+    for (const idAlias in mpBlacklistHashIndex) {
+        const hashTempo = mpBlacklistHashIndex[idAlias]; // { [idAlias] : hashTempo }
         // Effectuer la fetch de suppression (EN MP)
         await fetch('/messages-prives/ajax/ajax_mp_blacklist_delete.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: `id=${idAlias}&hash=${hashTempo}`
         });
-        onProgress(); // Call Back avancement.
+        onProgress?.(); // Call Back avancement.
     }
 }
 
@@ -110,7 +105,7 @@ async function deleteBlacklistMPALL(onProgress) {
 ///// PAGES GEREES //////
 //3_______PAGE_DE______CONNEXION___(Login)___
 if (location.href.includes('jeuxvideo.com/login')) {
-    localStorage.removeItem('fullblacklistJVC'); // Efface LocalStorage => EN CAS DE DECONNEXION
+    localStorage.removeItem('fullBlacklistJVC'); // Efface LocalStorage => EN CAS DE DECONNEXION
 }
 
 
@@ -118,7 +113,7 @@ if (location.href.includes('jeuxvideo.com/login')) {
 //5______BLACKLIST____LISTE_SUJETS___(Liste_Sujet_et_Recherche)___
 if (location.href.includes('jeuxvideo.com/forums/0-') || location.href.includes('jeuxvideo.com/recherche/forums/0-')) {
 
-    let listeLocalStorage = localStorage.getItem('fullblacklistJVC');
+    let listeLocalStorage = localStorage.getItem('fullBlacklistJVC');
     // Si aucune blacklist locale, on synchronise depuis le serveur JVC et on recharge la page
     if (!listeLocalStorage) {
       fonctionSynchBLForums().then(() => location.reload());
@@ -175,19 +170,40 @@ if (location.href.includes('jeuxvideo.com/forums/1-') || location.href.includes(
             </span>
         </div>
     `);
+
     //HTML-JS-IMPERATIF
     const showMsgBtn = document.querySelector('#show-msg');
     let countBlBtn = 0;
-    showMsgBtn.addEventListener('mouseover', () => {
+    showMsgBtn.addEventListener('mouseenter', () => {
         countBlBtn = document.querySelectorAll('.msg-pseudo-blacklist, .msg-pseudo-blacklist-off').length;
         showMsgBtn.title = `${countBlBtn} messages filtrés (Voir)`;
     });
-    showMsgBtn.addEventListener('click', async () => {
+    showMsgBtn.addEventListener('click', () => {
         document.querySelector('.conteneur-messages-pagi')?.classList.add('show-blacklist');
         showMsgBtn.textContent = `(${countBlBtn}) BL`;
     });
 
-    //CSS pour declaratif
+    //JS Conteneur
+    const scopeForumBlocs = document.querySelector('.conteneur-messages-pagi');
+    scopeForumBlocs.addEventListener('click', async(e) => {
+        const btnPicto = e.target.closest('.picto-msg-tronche');
+        const btnCancel = e.target.closest('.btn-blacklist-cancel');
+        if (e.target.closest('#jvchat-main')) return; //dont touche if jvchat
+        if (btnPicto) {
+            sessionStorage.setItem('fullBlacklistJVCAwait', 'true');
+            /* TOPIC LIVE PATCH
+            e.preventDefault(); e.stopImmediatePropagation();
+            const hash = document.getElementById('ajax_hash_preference_user').value;
+            await fetch(`/forums/ajax_forum_blacklist.php?id_alias_msg=${btnPicto.dataset.idAlias}&action=add&ajax_hash=${hash}`);
+            location.reload();
+            */
+        } else if (btnCancel) {
+            sessionStorage.setItem('fullBlacklistJVCAwait', 'true');
+        }
+    }, { capture: true });
+
+
+    //CSS HIDE
     const style = document.createElement('style');
     style.textContent = `
     /* Hide block*/
@@ -203,8 +219,7 @@ if (location.href.includes('jeuxvideo.com/forums/1-') || location.href.includes(
     .conteneur-messages-pagi.show-blacklist .msg-pseudo-blacklist { display: block; }
     .conteneur-messages-pagi.show-blacklist .bloc-message-forum .blockquote-jv--blacklist > * {
         display: block; 
-    }
-    `;
+    }`;
     document.head.appendChild(style);
 
     //Doublage Div pour eviter bug alternance couleur
@@ -212,31 +227,13 @@ if (location.href.includes('jeuxvideo.com/forums/1-') || location.href.includes(
         block.insertAdjacentHTML("afterend", `<div class="msg-ghost-block" style="display:none;"></div>`)
     );
 
-    //ajout dun event au bouton blacklist
-    const scopeForumBlocs = document.querySelector('.conteneur-messages-pagi');
-    scopeForumBlocs.addEventListener('click', async(e) => {
-        const btnPicto = e.target.closest('.picto-msg-tronche');
-        const btnCancel = e.target.closest('.btn-blacklist-cancel');
-        if (e.target.closest('#jvchat-main')) return; //dont touche if jvchat
-        if (btnPicto) {
-            sessionStorage.setItem('fullblacklistJVCAwait', 'true');
-            /* TOPIC LIVE PATCH
-            e.preventDefault(); e.stopImmediatePropagation();
-            const hash = document.getElementById('ajax_hash_preference_user').value;
-            await fetch(`/forums/ajax_forum_blacklist.php?id_alias_msg=${btnPicto.dataset.idAlias}&action=add&ajax_hash=${hash}`);
-            location.reload();
-            */
-        } else if (btnCancel) {
-            sessionStorage.setItem('fullblacklistJVCAwait', 'true');
-        }
-    }, { capture: true });
-
     //Masquage_Citations
     function hidePseudoQuotes() {
-        const blacklistStorage = JSON.parse(localStorage.getItem("fullblacklistJVC") || "[]");
+        const blacklistStorage = JSON.parse(localStorage.getItem("fullBlacklistJVC") || "[]");
         document.querySelectorAll(".blockquote-jv > p:first-of-type").forEach(p => {
-            const pseudoIRC = p.textContent.startsWith("[") && p.textContent.split("<")[1]?.split(">")[0]?.toLowerCase(); //IRC
-            const pseudo = p.textContent.replace(/\s+/g, ' ').split(" a écrit")[0]?.split(" ")?.pop()?.trim()?.toLowerCase(); //FOFO
+            const txtQuot = p.textContent;
+            const pseudoIRC = txtQuot.startsWith("[") && txtQuot.split("<")[1]?.split(">")[0]?.toLowerCase(); //IRC
+            const pseudo = txtQuot.replace(/\s+/g, ' ').split(" a écrit")[0]?.split(" ").pop()?.trim().toLowerCase(); //FOFO
             if (blacklistStorage.includes(pseudo) || blacklistStorage.includes(pseudoIRC)) {
                 p.closest(".blockquote-jv").classList.add("blockquote-jv--blacklist");
             }
@@ -245,9 +242,9 @@ if (location.href.includes('jeuxvideo.com/forums/1-') || location.href.includes(
     hidePseudoQuotes();
 
     // Mise à jour de la Blacklist du script APRES actualisation
-    if (sessionStorage.getItem('fullblacklistJVCAwait') === 'true') {
+    if (sessionStorage.getItem('fullBlacklistJVCAwait') === 'true') {
         fonctionSynchBLForums().then(hidePseudoQuotes);
-        sessionStorage.removeItem('fullblacklistJVCAwait');
+        sessionStorage.removeItem('fullBlacklistJVCAwait');
     }
 
 }
@@ -255,16 +252,21 @@ if (location.href.includes('jeuxvideo.com/forums/1-') || location.href.includes(
 //7______________MASQUAGE____BLOC__MESSAGE_MP__(Message_MP)____
 if (location.href.includes('jeuxvideo.com/messages-prives/message.php')) {
 
+
+    //JS Conteneur
     // [1] Ajout d'un event sur les boutons "blacklist MP" pour quils agissent aussi sur la blacklist forum
-    document.querySelectorAll('.picto-msg-tronche').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const idAlias = btn.dataset.url.match(/add_blacklist=(\d+)/)[1];
-            sessionStorage.setItem('fullblacklistJVCidAlias', idAlias);
-        });
-    });
+    const scopeMPBlocs = document.querySelector('.conteneur-messages-pagi');
+    scopeMPBlocs.addEventListener('click', (e) => {
+        const btnPicto = e.target.closest('.picto-msg-tronche');
+        if (e.target.closest('#jvchat-main')) return; //dont touche if jvchat
+        if (btnPicto) {
+            const idAlias = btnPicto.dataset.url.match(/add_blacklist=(\d+)/)[1];
+            sessionStorage.setItem('fullBlacklistJVCidAlias', idAlias);
+        }
+    }, { capture: true });
 
     // [2] localStorage => simulation de clic sur bouton "blacklist MP"
-    let listeLocalStorage = localStorage.getItem('fullblacklistJVC');
+    let listeLocalStorage = localStorage.getItem('fullBlacklistJVC');
     // Si aucune blacklist locale, on synchronise depuis le serveur JVC et on recharge la page
     if (!listeLocalStorage) {
         fonctionSynchBLForums().then(() => location.reload());
@@ -280,7 +282,7 @@ if (location.href.includes('jeuxvideo.com/messages-prives/message.php')) {
     }
 
     // [3] Appel black list MP => Synch Fofo
-    let idAlias = sessionStorage.getItem('fullblacklistJVCidAlias');
+    let idAlias = sessionStorage.getItem('fullBlacklistJVCidAlias');
     if (idAlias) {
       (async () => {
         // Fetch recuperer hash preference forum
@@ -291,7 +293,7 @@ if (location.href.includes('jeuxvideo.com/messages-prives/message.php')) {
         await fetch(`/forums/ajax_forum_blacklist.php?id_alias_msg=${idAlias}&action=add&ajax_hash=${hashValue}`);
         await fonctionSynchBLForums();
         //Clean
-        sessionStorage.removeItem('fullblacklistJVCidAlias'); // Supprime ID => Il vient d'etre traité.
+        sessionStorage.removeItem('fullBlacklistJVCidAlias'); // Supprime ID => Il vient d'etre traité.
       })();
     }
 
@@ -310,7 +312,7 @@ if (location.href.includes('jeuxvideo.com/messages-prives/indesirables.php')) {
         button.addEventListener('click', () => {
             const userId = button.dataset.id;
             fetch(`/sso/ajax_delete_blacklist.php?id_alias_unblacklist=${userId}`);
-            localStorage.removeItem('fullblacklistJVC');
+            localStorage.removeItem('fullBlacklistJVC');
         });
     });
 }
@@ -320,17 +322,16 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
 
     fonctionSynchBLForumsNoFetch(); // Liste Page vers LocalStorage (on est sur la page => PAS de fetch)
 
-    let hashMPListed;
+    let mpBlacklistHashIndex;
     // Suppression par pseudo
     document.querySelectorAll('.icon-cross-entypo').forEach(cross => {
         cross.addEventListener('click', async () => {
-            let idAlias = cross.closest('li')?.dataset.idAlias; // Récupérer l'id
-            if (typeof hashMPListed === 'undefined') {
-                await getBLListMP(); //Get_MP_BL
-                hashMPListed = true;
-            }
-            deleteBlacklistMP(idAlias); // Supprime PSEUDO EN MP
-            fonctionSynchBLForumsNoFetch(); // Liste Page vers LocalStorage
+           const idAlias = cross.closest('li')?.dataset.idAlias;
+           if (!mpBlacklistHashIndex) {
+               mpBlacklistHashIndex = await getBLListMP();
+           }
+           await deleteBlacklistMP(idAlias, mpBlacklistHashIndex);
+           fonctionSynchBLForumsNoFetch();
         });
     });
 
@@ -340,7 +341,7 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
 
         let pseudos = document.querySelectorAll('#blacklist span');
         let pseudoList = [...pseudos].map(span => span.textContent.trim().toLowerCase());
-        localStorage.setItem('fullblacklistJVC', JSON.stringify(pseudoList));
+        localStorage.setItem('fullBlacklistJVC', JSON.stringify(pseudoList));
     }
 }
 
@@ -363,8 +364,8 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
 
         // Nettoyage de TOUT pseudo blacklistes en MP
         let countMP = 1
-        await getBLListMP(); // récupère sa propre liste depuis la messagerie
-        await deleteBlacklistMPALL(() => { // supprime côté MP
+        const mpBlacklistHashIndex = await getBLListMP();
+        await deleteBlacklistMPALL(mpBlacklistHashIndex, () => { // supprime côté MP
             document.querySelector('#bl-clear').textContent = `Loading (OK) (MP : ${countMP})`;
             countMP++;
         });
@@ -399,7 +400,6 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
             document.querySelector('#bl-import').textContent = `Load (${count})`;
             count++;
         }
-
         window.location.reload();
     }
 

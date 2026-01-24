@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name        AI语言学习专家
 // @namespace   http://tampermonkey.net/
-// @version     1.15
+// @version     1.39
 // @license     MIT
-// @description 全DeepSeek驱动的英语学习专家。双击Alt查词(0.5s)，Alt+1高亮，Alt+2开关侧边栏(自动吸附查词)，Alt+3开关阅读模式。生词本点击查词。
-// @author      Gemini & 豆包编程助手
+// @description 全DeepSeek驱动的英语学习专家。双击Alt查词(0.5s)，Alt+1高亮，Alt+2开关侧边栏(自动吸附查词)，Alt+3开关阅读模式。支持自定义跳转AI网站与生词本。
+// @author      杨俊贤 & Gemini & 豆包编程助手
 // @match       *://*/*
 // @run-at      document-end
 // @grant       GM_addStyle
@@ -12,6 +12,7 @@
 // @grant       GM_setValue
 // @grant       GM_getValue
 // @grant       GM_setClipboard
+// @grant       GM_openInTab
 // @require     https://cdn.jsdelivr.net/npm/@mozilla/readability@0.4.4/Readability.min.js
 // @connect     api.deepseek.com
 // @downloadURL https://update.greasyfork.org/scripts/563162/AI%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E4%B8%93%E5%AE%B6.user.js
@@ -34,10 +35,22 @@ const UI = {
                 element.className = val;
             } else if (key === 'onclick' && typeof val === 'function') {
                 element.onclick = val;
+            } else if (key === 'onchange' && typeof val === 'function') {
+                element.onchange = val;
+            } else if (key === 'onmousedown' && typeof val === 'function') {
+                element.onmousedown = val;
+            } else if (key === 'onblur' && typeof val === 'function') {
+                element.onblur = val;
+            } else if (key === 'oninput' && typeof val === 'function') {
+                element.oninput = val;
             } else if (key === 'checked') {
                 element.checked = !!val;
+            } else if (key === 'value') {
+                element.value = val;
             } else if (key === 'type') {
                 element.type = val;
+            } else if (key === 'draggable') {
+                element.draggable = val;
             } else {
                 element[key] = val;
             }
@@ -175,14 +188,23 @@ const DEFAULT_PROMPTS = [
     "词源词根=请详细分析该词的词源和词根，字数控制在50字到200字之间。"
 ];
 
-const parsePrompts = (list) => {
+const DEFAULT_SITES = [
+    "DeepSeek=https://chat.deepseek.com/",
+    "豆包=https://www.doubao.com/chat/",
+    "元宝=https://yuanbao.tencent.com/chat",
+    "Gemini=https://gemini.google.com/app",
+    "ChatGPT=https://chatgpt.com/",
+    "Grok=https://grok.com/"
+];
+
+const parseConfigLines = (list) => {
     let result = [];
     if (Array.isArray(list)) {
         list.forEach(item => {
             if (typeof item === 'string') {
                 let parts = item.indexOf('=') > -1 ? item.split('=') : item.split('::');
                 if (parts.length >= 2) {
-                    result.push({name: parts[0].trim(), template: item.substring(item.indexOf('=') + 1).trim()});
+                    result.push({name: parts[0].trim(), value: item.substring(item.indexOf('=') + 1).trim()});
                 }
             } else if (typeof item === 'object') {
                 result.push(item);
@@ -190,6 +212,12 @@ const parsePrompts = (list) => {
         });
     }
     return result;
+};
+
+// Compatible parser for Prompts (uses 'template' instead of 'value')
+const parsePrompts = (list) => {
+    const parsed = parseConfigLines(list);
+    return parsed.map(p => ({ name: p.name, template: p.template || p.value }));
 };
 
 const DS_CONFIG = {
@@ -201,13 +229,17 @@ const DS_CONFIG = {
         popupHeight: GM_getValue('ds_popup_height', '350px'),
         autoImport: true,
         autoCopy: GM_getValue('ds_auto_copy', false),
+        jumpCopy: GM_getValue('ds_jump_copy', true),
         isDocked: GM_getValue('ds_is_docked', false),
-        // pushMode: GM_getValue('ds_push_mode', false), // 移除手动控制，改为默认开启
         customPrompts: parsePrompts(GM_getValue('ds_custom_prompts', DEFAULT_PROMPTS)),
+        customSites: parseConfigLines(GM_getValue('ds_custom_sites', DEFAULT_SITES)),
         disabledSites: GM_getValue('ds_disabled_sites', []),
+        lastAiSite: GM_getValue('ds_last_ai_site', DEFAULT_SITES[0].split('=')[1]),
+        historySort: GM_getValue('ds_history_sort', 'time_desc'),
+        hiddenIcons: GM_getValue('ds_hidden_icons', []) // 新增：存储隐藏的图标ID
     },
     runtime: {
-        activeTab: 'highlight',
+        activeTab: 'history',
         isPageTranslated: false,
         observer: null,
         observerTimeout: null,
@@ -233,18 +265,21 @@ const DS_CONFIG = {
         isRestoring: false,
         lastPopupParams: { left: null, right: null },
         isSwitchingContext: false,
-        // Reader Mode
         isReaderMode: false,
         readerFontSize: 20,
-        readerLineHeight: 1.6, // New
-        readerPageWidth: 800
+        readerLineHeight: 1.6,
+        readerPageWidth: 800,
+        preventContextMenuOnce: false,
+        historyLimit: 50 // 新增：控制历史记录显示数量
     },
     consts: {
         API_URL: 'https://api.deepseek.com/v1/chat/completions',
         MODEL_NAME: 'deepseek-chat',
         HIGHLIGHT_CLASS: 'custom-web-highlight-tag',
         STORAGE_PREFIX: 'v3_pos_highlights_',
+        GLOBAL_STORAGE_KEY: 'ds_global_history_v1',
         VOCAB_CACHE_KEY: 'v3_vocab_ds_cache',
+        GLOBAL_DICT_CACHE_KEY: 'ds_dict_cache_global', // Cache for dictionaries
         STORAGE_KEY: 'v3_pos_highlights_' + btoa(encodeURIComponent(window.location.host + window.location.pathname)).substring(0, 50)
     }
 };
@@ -267,16 +302,83 @@ function injectStyles() {
     .ds-v-label { display: none; margin-left: 8px; font-size: 13px; white-space: nowrap; color: var(--ds-text); }
     #ds-vertical-toolbar.expanded .ds-v-label { display: inline-block; }
 
+    /* 新增：侧边栏分区与编辑模式样式 */
+    #ds-toolbar-active { display: flex; flex-direction: column; gap: 12px; width: 100%; align-items: center; padding-bottom: 10px; min-height: 50px; transition: all 0.2s; }
+
+    #ds-toolbar-hidden {
+        display: none; /* 默认隐藏 */
+        flex-direction: column; gap: 12px; width: 100%; align-items: center;
+        background: rgba(255,255,255,0.08); /* 稍微亮一点的背景 */
+        border-top: 1px dashed #555;
+        margin-top: auto; /* 关键：推到最底部 */
+        flex-grow: 1; /* 占据剩余空间 */
+        padding-top: 40px;
+        padding-bottom: 15px;
+        justify-content: flex-end;
+        position: relative;
+        box-sizing: border-box;
+    }
+
+    #ds-vertical-toolbar.ds-edit-mode #ds-toolbar-hidden { display: flex; animation: fadeIn 0.3s; }
+    #ds-vertical-toolbar.ds-edit-mode { height: 100vh; overflow: hidden; } /* 确保容器占满高度 */
+
+    .ds-hidden-text {
+        position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+        writing-mode: vertical-rl; text-orientation: mixed;
+        font-size: 11px; color: #777; letter-spacing: 3px;
+        pointer-events: none; white-space: nowrap; opacity: 0.8;
+    }
+
+    .ds-v-icon.dragging { opacity: 0.3; transform: scale(0.9); border: 1px dashed #fff; }
+
+    /* 处于编辑模式时，活跃区即使为空也要有高度以便拖回 */
+    #ds-vertical-toolbar.ds-edit-mode #ds-toolbar-active { min-height: 150px; padding-bottom: 20px; border-bottom: 1px solid transparent; }
+
     #ds-main-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
 
     #ds-resizer{position:absolute;width:10px;height:100%;z-index:2147483648;background:transparent;cursor:ew-resize;transition:background .2s}#ds-resizer:hover{background:rgba(58,123,213,.1)}
 
     #ds-tab-header{height:42px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--ds-border);background:var(--ds-bg);padding:0 8px;flex-shrink:0}
-    #ds-tabs-wrapper{display:flex;gap:2px;align-items:center;height:100%;z-index:1}.ds-tab{width:32px;height:28px;cursor:pointer;font-size:15px;border-radius:6px;transition:background .2s,color .2s;color:var(--ds-tab-inactive-text);user-select:none;display:flex;align-items:center;justify-content:center;background:transparent!important;border:1px solid transparent!important}.ds-tab:hover{color:#eee;background:var(--ds-hover-bg)!important}.ds-tab.active{background:var(--ds-tab-active-bg)!important;color:#fff!important;font-weight:700;border:1px solid #555!important;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+    #ds-tabs-wrapper{display:flex;gap:4px;align-items:center;height:100%;z-index:1}
+    /* Updated Tab Styling */
+    .ds-tab{height:28px;cursor:pointer;font-size:15px;border-radius:6px;transition:all .2s;color:var(--ds-text);user-select:none;display:flex;align-items:center;justify-content:center;background:transparent!important;border:1px solid transparent!important;opacity:0.6;padding:0 8px;}
+    .ds-tab:hover{color:#eee;background:var(--ds-hover-bg)!important;opacity:1}
+    .ds-tab.active{background:var(--ds-tab-active-bg)!important;color:#fff!important;font-weight:700;border:1px solid #555!important;box-shadow:0 1px 2px rgba(0,0,0,.2);opacity:1}
+    .ds-tab.dragging { opacity: 0.5; border: 1px dashed #666 !important; }
 
-    #ds-tab-content{flex:1;overflow:hidden;display:flex;flex-direction:column;position:relative}.tab-panel{display:none;flex-direction:column;height:100%;width:100%;overflow:hidden}.tab-panel.active{display:flex}#ds-ai-content{flex:1}#ds-chat-log{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:15px;margin:0;scroll-behavior:smooth}.ds-msg{padding:12px 16px;border-radius:8px;font-size:14.5px;line-height:1.6;max-width:94%;word-wrap:break-word}.user-msg{align-self:flex-end;background:var(--ds-user-bg)!important;color:var(--ds-user-text)!important;border-top-right-radius:2px}.ai-msg{align-self:flex-start;background:var(--ds-msg-bg)!important;color:var(--ds-text)!important;border:1px solid var(--ds-border);border-top-left-radius:2px;white-space:pre-wrap}.ds-continue-text{display:block;margin-top:12px;color:var(--ds-accent);font-weight:700;cursor:pointer;text-decoration:none!important;transition:all .2s;font-size:14px;padding:4px 0;opacity:.9;letter-spacing:.5px}.ds-continue-text:hover{opacity:1;filter:brightness(1.3)}.ds-instruction-text{color:var(--ds-text);font-weight:700;font-size:13px;margin-bottom:5px}.ds-instruction-highlight{color:#FFD700!important;font-weight:700}.highlight-word{color:#1E90FF!important;font-weight:700!important;text-decoration:none!important;background:rgba(30,144,255,.1);padding:0 2px;border-radius:2px}#ds-fn-bar{padding:8px 10px;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--ds-border);background:var(--ds-bg);flex-shrink:0;max-height:120px;overflow-y:auto}.fn-btn{flex:1;min-width:60px;padding:6px 8px;text-align:center;border-radius:4px;cursor:pointer;font-size:12px;color:var(--ds-text)!important;background:var(--ds-menu-active-bg);border:1px solid var(--ds-border);transition:all .2s;white-space:nowrap;display:flex;align-items:center;justify-content:center}.fn-btn:hover{background:var(--ds-hover-bg);border-color:#666}.fn-btn:active{transform:scale(.98)}.custom-prompt-btn{flex:0 1 auto!important}#ds-input-area{padding:10px 10px 15px;background:var(--ds-bg);flex-shrink:0;box-sizing:border-box!important;width:100%;border-top:1px solid var(--ds-border)}#ds-input-wrapper{display:flex;flex-direction:column;gap:8px;width:100%;box-sizing:border-box}#ds-input{width:100%;height:96px!important;border-radius:6px;border:1px solid var(--ds-border);padding:8px;outline:0;box-sizing:border-box;background:var(--ds-msg-bg)!important;color:rgba(255,255,255,0.08)!important;font-family:inherit;resize:none;font-size:14px;line-height:1.5;margin:0;overflow-y:auto;transition:color .2s ease,border-color .2s ease}#ds-input:focus{border-color:var(--ds-accent);color:var(--ds-text)!important}#ds-send-row{display:flex;justify-content:flex-end;align-items:center;margin-top:4px}.ds-action-btn{width:80px;padding:6px 0;border:0;border-radius:12px;background:var(--ds-accent)!important;color:#fff!important;cursor:pointer;font-size:13px;font-weight:700;transition:opacity .2s ease,transform .1s;text-align:center}.ds-action-btn:hover{opacity:.9}.ds-action-btn:active{transform:scale(.96)}
+    .ds-tab-label { display: none; margin-left: 6px; font-size: 13px; }
+    #ds-sidebar.expanded .ds-tab { width: auto; padding: 0 12px; }
+    #ds-sidebar.expanded .ds-tab-label { display: inline; }
 
-    #ds-config-panel,#ds-help-panel{position:absolute;top:0;left:0;width:100%;height:100%;background:var(--ds-bg);z-index:1001;padding:20px;box-sizing:border-box;display:none;flex-direction:column;overflow-y:auto}.cfg-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;font-size:14px}#cfg-api-key{width:100%;margin-top:5px;padding:8px;border-radius:4px;border:1px solid var(--ds-border);background:var(--ds-msg-bg);color:var(--ds-text);font-size:13px}.ds-cfg-textarea{width:100%;height:120px;padding:8px;border-radius:4px;border:1px solid var(--ds-border);background:var(--ds-msg-bg);color:var(--ds-text);font-family:monospace;font-size:12px;resize:vertical;margin-top:5px;white-space:pre-wrap;overflow-x:hidden;word-wrap:break-word}.ds-panel-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--ds-border);padding-bottom:10px;margin-bottom:20px}.ds-panel-title{font-size:18px;font-weight:700;color:var(--ds-accent)}.ds-panel-top-btn{padding:4px 12px;background:var(--ds-accent);color:#fff;border-radius:4px;font-size:12px;cursor:pointer;border:none}.ds-panel-top-btn:hover{opacity:0.9}.ds-help-item{margin-bottom:15px;display:flex;flex-direction:column;gap:5px}.ds-help-key{font-weight:700;color:var(--ds-text);font-family:monospace;background:var(--ds-msg-bg);padding:2px 6px;border-radius:4px;display:inline-block;width:fit-content}.ds-help-desc{font-size:13px;color:var(--ds-text);opacity:.8;line-height:1.4;white-space:pre-wrap}.ds-primary-btn{width:100%;padding:8px;background:var(--ds-accent);color:#fff;border:0;border-radius:4px;cursor:pointer;font-size:14px;transition:opacity .2s;text-align:center}.ds-primary-btn:hover{opacity:.9}#ds-highlight-content{flex:1}#ds-highlight-log{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:0;margin:0}.${DS_CONFIG.consts.HIGHLIGHT_CLASS}{background-color:var(--ds-highlight-bg)!important;color:var(--ds-highlight-text)!important;padding:0 2px!important;border-radius:2px;cursor:pointer;display:inline}.web-inline-trans{color:#1E90FF!important;font-size:.95em!important;font-weight:400!important;margin-left:0!important;display:block!important;background:0 0!important;box-shadow:none!important;border:0!important;padding:4px 0 8px!important}.web-inline-trans::before{content:""}.ds-inline-loading{animation:pulse 1.5s infinite}.ds-full-page-trans{color:#1E90FF!important;font-size:14px!important;font-weight:400!important;display:block!important;margin-top:4px!important;padding:2px 0 6px!important;line-height:1.5!important}.web-menu-item{display:flex!important;flex-direction:column!important;align-items:flex-start!important;padding:8px 12px!important;margin:0!important;background:var(--ds-menu-bg)!important;border-radius:0!important;cursor:default!important;transition:background-color .1s ease!important;border-bottom:1px solid rgba(255,255,255,.05)}.web-menu-item:hover{background:#353b45!important}.web-menu-header{display:flex;justify-content:space-between;width:100%;align-items:center;gap:8px;cursor:pointer}.web-menu-word{font-weight:700!important;color:#1E90FF!important;font-size:15px!important;}.web-menu-word:hover{text-decoration:none!important;color:var(--ds-accent)!important}.web-menu-jump{cursor:pointer;opacity:0.5;font-size:14px;padding:2px 6px}.web-menu-jump:hover{opacity:1;background:var(--ds-hover-bg);border-radius:4px}.web-menu-trans{display:none;margin-top:2px!important;color:#aaa!important;opacity:1;font-size:13px!important;line-height:1.4!important;white-space:pre-wrap!important;word-break:break-all!important;width:100%!important}#ds-confirm-modal{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);z-index:2000;display:none;align-items:center;justify-content:center;animation:fadeIn .2s ease}.ds-confirm-box{background:var(--ds-modal-bg);padding:25px 20px;border-radius:12px;width:75%;text-align:center;border:1px solid var(--ds-border);box-shadow:0 10px 30px rgba(0,0,0,.5);color:var(--ds-text)}.ds-confirm-text{font-size:15px;margin-bottom:20px;font-weight:500}.ds-confirm-btns{display:flex;gap:12px;justify-content:center}.ds-btn{padding:8px 20px;border-radius:6px;border:0;cursor:pointer;font-size:14px;font-weight:700;transition:transform .1s}.ds-btn:active{transform:scale(.95)}.ds-btn-yes{background:#ff3b30;color:#fff}.ds-btn-no{background:var(--ds-msg-bg);color:var(--ds-text);border:1px solid var(--ds-border)}@keyframes fadeIn{from{opacity:0}to{opacity:1}}#ds-popup{position:fixed;background:var(--ds-popup-bg);color:var(--ds-text);border:1px solid var(--ds-popup-border);border-radius:8px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.6);z-index:2147483650;display:none;flex-direction:column;min-width:400px;min-height:250px;max-width:90vw;max-height:80vh}.ds-resize-handle{position:absolute;z-index:100;opacity:0}.ds-resize-handle:hover{background:rgba(30,144,255,.2);opacity:1}.ds-rh-n{top:0;left:10px;right:10px;height:5px;cursor:ns-resize}.ds-rh-s{bottom:0;left:10px;right:10px;height:5px;cursor:ns-resize}.ds-rh-w{left:0;top:10px;bottom:10px;width:5px;cursor:ew-resize}.ds-rh-e{right:0;top:10px;bottom:10px;width:5px;cursor:ew-resize}.ds-rh-nw{top:0;left:0;width:10px;height:10px;cursor:nwse-resize;z-index:101}.ds-rh-ne{top:0;right:0;width:10px;height:10px;cursor:nesw-resize;z-index:101}.ds-rh-sw{bottom:0;left:0;width:10px;height:10px;cursor:nesw-resize;z-index:101}.ds-rh-se{bottom:0;right:0;width:10px;height:10px;cursor:nwse-resize;z-index:101}#ds-popup-header-bar{height:36px;width:100%;cursor:move;flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;padding-right:18px;gap:6px;background:var(--ds-header-bg);border-bottom:1px solid var(--ds-border)}.ds-popup-icon{cursor:pointer;font-size:15px;opacity:.6;transition:opacity .2s;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:var(--ds-text)}.ds-popup-icon:hover{opacity:1;background:var(--ds-hover-bg)}#ds-popup-close-float{font-size:16px}#ds-popup-body{display:flex;flex:1;overflow:hidden;position:relative;padding:0;width:100%;height:100%;cursor:default}.ds-split-view{width:100%;height:100%;display:flex}.ds-split-left{flex:1;border-right:1px solid var(--ds-border);padding:16px;overflow-y:auto;background:var(--ds-popup-bg)}.ds-split-right{flex:1;padding:16px;overflow-y:auto;background:var(--ds-popup-bg)}#ds-docked-panel{flex-direction:column;background:var(--ds-bg)}.ds-docked-toolbar{padding:8px;border-bottom:1px solid var(--ds-border);display:flex;justify-content:center;align-items:center;background:#2f343c}.ds-docked-title{font-size:13px;font-weight:700;color:#aaa}#ds-undock-btn{padding:4px 12px;border:1px solid var(--ds-border);background:var(--ds-menu-bg);color:var(--ds-text);border-radius:4px;font-size:12px;cursor:pointer}#ds-undock-btn:hover{background:var(--ds-hover-bg);border-color:#666}.ds-docked-content{flex:1;overflow-y:auto;display:flex;flex-direction:column}.ds-docked-section{padding:15px;border-bottom:1px solid var(--ds-border)}.ds-docked-scroll{overflow-y:auto;max-height:50%}.ds-popup-title{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--ds-accent);opacity:.9;letter-spacing:.5px;display:flex;align-items:center;gap:6px}.ds-popup-text{font-size:14px;line-height:1.6;white-space:pre-wrap;color:#ccc}.ds-popup-loading{color:#888;font-style:italic;animation:pulse 1.5s infinite}@keyframes pulse{0%{opacity:.5}50%{opacity:1}100%{opacity:.5}}.ds-target-italic{color:#1E90FF!important;font-weight:700;font-style:italic}.ds-head-row{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;flex-wrap:wrap}.ds-headword{color:#1E90FF!important;font-weight:700;font-size:15px!important;display:inline-block}.ds-dict-grid{display:grid;grid-template-columns:45px 1fr;gap:4px 0;align-items:flex-start}.ds-pos-label{text-align:right;color:#98c379;font-style:italic;font-weight:700;font-size:12px;user-select:none;white-space:nowrap;overflow:visible;padding-right:8px;margin-top:3px}.ds-def-split{cursor:pointer;border-bottom:1px dashed transparent;transition:all .1s}.ds-def-split:hover{color:var(--ds-accent)}#ds-fab{display:none!important;}.ds-is-streaming .ds-def-split{pointer-events:none!important;cursor:wait}.ds-is-streaming{cursor:wait}#ds-input::placeholder{color:rgba(255,255,255,0.15)!important;opacity:1}#ds-tab-docked{padding:0 2px!important}.ds-dock-lock{cursor:default}.ds-dock-restore{cursor:pointer;opacity:.6;transition:opacity .2s,background-color .2s;border-radius:4px;padding:0 4px;width:20px;text-align:center}.ds-dock-restore:hover{opacity:1;background:var(--ds-hover-bg)}.ds-clickable-ipa{color:#98c379;font-family:'Lucida Sans Unicode','Arial Unicode MS',sans-serif}`;
+    #ds-tab-content{flex:1;overflow:hidden;display:flex;flex-direction:column;position:relative}.tab-panel{display:none;flex-direction:column;height:100%;width:100%;overflow:hidden}.tab-panel.active{display:flex}#ds-ai-content{flex:1}#ds-chat-log{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:15px;margin:0;scroll-behavior:smooth}.ds-msg{padding:12px 16px;border-radius:8px;font-size:14.5px;line-height:1.6;max-width:94%;word-wrap:break-word}.user-msg{align-self:flex-end;background:var(--ds-user-bg)!important;color:var(--ds-user-text)!important;border-top-right-radius:2px}.ai-msg{align-self:flex-start;background:var(--ds-msg-bg)!important;color:var(--ds-text)!important;border:1px solid var(--ds-border);border-top-left-radius:2px;white-space:pre-wrap}.ds-continue-text{display:block;margin-top:12px;color:var(--ds-accent);font-weight:700;cursor:pointer;text-decoration:none!important;transition:all .2s;font-size:14px;padding:4px 0;opacity:.9;letter-spacing:.5px}.ds-continue-text:hover{opacity:1;filter:brightness(1.3)}.ds-instruction-text{color:var(--ds-text);font-weight:700;font-size:13px;margin-bottom:5px}.ds-instruction-highlight{color:#FFD700!important;font-weight:700}.highlight-word{color:#1E90FF!important;font-weight:700!important;text-decoration:none!important;background:rgba(30,144,255,.1);padding:0 2px;border-radius:2px}#ds-fn-bar{padding:8px 10px;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--ds-border);background:var(--ds-bg);flex-shrink:0;max-height:120px;overflow-y:auto}.fn-btn{flex:1;min-width:60px;padding:6px 8px;text-align:center;border-radius:4px;cursor:pointer;font-size:12px;color:var(--ds-text)!important;background:var(--ds-menu-active-bg);border:1px solid var(--ds-border);transition:all .2s;white-space:nowrap;display:flex;align-items:center;justify-content:center}.fn-btn:hover{background:var(--ds-hover-bg);border-color:#666}.fn-btn:active{transform:scale(.98)}.custom-prompt-btn{flex:0 1 auto!important}#ds-input-area{padding:10px 10px 15px;background:var(--ds-bg);flex-shrink:0;box-sizing:border-box!important;width:100%;border-top:1px solid var(--ds-border)}#ds-input-wrapper{display:flex;flex-direction:column;gap:8px;width:100%;box-sizing:border-box}#ds-input{width:100%;height:96px!important;border-radius:6px;border:1px solid var(--ds-border);padding:8px;outline:0;box-sizing:border-box;background:var(--ds-msg-bg)!important;color:rgba(255,255,255,0.08)!important;font-family:inherit;resize:none;font-size:14px;line-height:1.5;margin:0;overflow-y:auto;transition:color .2s ease,border-color .2s ease}#ds-input:focus{border-color:var(--ds-accent);color:var(--ds-text)!important}#ds-send-row{display:flex;justify-content:space-between;align-items:center;margin-top:4px}.ds-action-btn{width:80px;padding:6px 0;border:0;border-radius:12px;background:var(--ds-accent)!important;color:#fff!important;cursor:pointer;font-size:13px;font-weight:700;transition:opacity .2s ease,transform .1s;text-align:center}.ds-action-btn:hover{opacity:.9}.ds-action-btn:active{transform:scale(.96)}
+
+    .ds-jump-wrapper{display:flex;gap:5px;align-items:center;position:relative;}
+    .ds-jump-select-wrapper {position:relative;}
+    .ds-jump-select-btn {background:var(--ds-msg-bg);color:var(--ds-text);border:1px solid var(--ds-border);border-radius:6px;padding:4px 8px;font-size:12px;min-width:85px;cursor:pointer;height:26px;display:flex;align-items:center;justify-content:space-between;}
+    .ds-jump-select-btn:hover{border-color:#666}
+    .ds-site-panel {
+        position: absolute; bottom: 100%; left: 0; margin-bottom: 5px;
+        background: var(--ds-msg-bg); border: 1px solid var(--ds-border);
+        border-radius: 6px; padding: 8px; width: 220px;
+        display: none; grid-template-columns: repeat(2, 1fr); gap: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 100;
+    }
+    .ds-site-panel.active { display: grid; }
+    .ds-site-item {
+        padding: 6px; font-size: 12px; color: var(--ds-text);
+        background: var(--ds-menu-active-bg); border: 1px solid transparent;
+        border-radius: 4px; cursor: pointer; text-align: center;
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .ds-site-item:hover { background: var(--ds-hover-bg); border-color: #666; }
+    .ds-site-item.active { border-color: var(--ds-accent); color: var(--ds-accent); }
+
+    #ds-config-panel,#ds-help-panel{position:absolute;top:0;left:0;width:100%;height:100%;background:var(--ds-bg);z-index:1001;padding:20px;box-sizing:border-box;display:none;flex-direction:column;overflow-y:auto}.cfg-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;font-size:14px}#cfg-api-key{width:100%;margin-top:5px;padding:8px;border-radius:4px;border:1px solid var(--ds-border);background:var(--ds-msg-bg);color:var(--ds-text);font-size:13px}.ds-cfg-textarea{width:100%;height:120px;padding:8px;border-radius:4px;border:1px solid var(--ds-border);background:var(--ds-msg-bg);color:var(--ds-text);font-family:monospace;font-size:12px;resize:vertical;margin-top:5px;white-space:pre-wrap;overflow-x:hidden;word-wrap:break-word}.ds-panel-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--ds-border);padding-bottom:10px;margin-bottom:20px}.ds-panel-title{font-size:18px;font-weight:700;color:var(--ds-accent)}.ds-panel-top-btn{padding:4px 12px;background:var(--ds-accent);color:#fff;border-radius:4px;font-size:12px;cursor:pointer;border:none}.ds-panel-top-btn:hover{opacity:0.9}.ds-help-item{margin-bottom:15px;display:flex;flex-direction:column;gap:5px}.ds-help-key{font-weight:700;color:var(--ds-text);font-family:monospace;background:var(--ds-msg-bg);padding:2px 6px;border-radius:4px;display:inline-block;width:fit-content}.ds-help-desc{font-size:13px;color:var(--ds-text);opacity:.8;line-height:1.4;white-space:pre-wrap}.ds-primary-btn{width:100%;padding:8px;background:var(--ds-accent);color:#fff;border:0;border-radius:4px;cursor:pointer;font-size:14px;transition:opacity .2s;text-align:center}.ds-primary-btn:hover{opacity:.9}#ds-highlight-content{flex:1}#ds-highlight-log,#ds-history-log{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:0;margin:0}.${DS_CONFIG.consts.HIGHLIGHT_CLASS}{background-color:var(--ds-highlight-bg)!important;color:var(--ds-highlight-text)!important;padding:0 2px!important;border-radius:2px;cursor:pointer;display:inline}.web-inline-trans{color:#1E90FF!important;font-size:.95em!important;font-weight:400!important;margin-left:0!important;display:block!important;background:0 0!important;box-shadow:none!important;border:0!important;padding:4px 0 8px!important}.web-inline-trans::before{content:""}.ds-inline-loading{animation:pulse 1.5s infinite}.ds-full-page-trans{color:#1E90FF!important;font-size:14px!important;font-weight:400!important;display:block!important;margin-top:4px!important;padding:2px 0 6px!important;line-height:1.5!important}.web-menu-item{display:flex!important;flex-direction:column!important;align-items:flex-start!important;padding:8px 12px!important;margin:0!important;background:var(--ds-menu-bg)!important;border-radius:0!important;cursor:default!important;transition:background-color .1s ease!important;border-bottom:1px solid rgba(255,255,255,.05)}.web-menu-item:hover{background:#353b45!important}.web-menu-header{display:flex;justify-content:space-between;width:100%;align-items:center;gap:8px;cursor:pointer}.web-menu-word{font-weight:700!important;color:#1E90FF!important;font-size:15px!important;}.web-menu-word:hover{text-decoration:none!important;color:var(--ds-accent)!important}.web-menu-jump{cursor:pointer;opacity:0.5;font-size:14px;padding:2px 6px}.web-menu-jump:hover{opacity:1;background:var(--ds-hover-bg);border-radius:4px}.web-menu-trans{display:none;margin-top:2px!important;color:#aaa!important;opacity:1;font-size:13px!important;line-height:1.4!important;white-space:pre-wrap!important;word-break:break-all!important;width:100%!important}#ds-confirm-modal{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);z-index:2000;display:none;align-items:center;justify-content:center;animation:fadeIn .2s ease}.ds-confirm-box{background:var(--ds-modal-bg);padding:25px 20px;border-radius:12px;width:75%;text-align:center;border:1px solid var(--ds-border);box-shadow:0 10px 30px rgba(0,0,0,.5);color:var(--ds-text)}.ds-confirm-text{font-size:15px;margin-bottom:20px;font-weight:500}.ds-confirm-btns{display:flex;gap:12px;justify-content:center}.ds-btn{padding:8px 20px;border-radius:6px;border:0;cursor:pointer;font-size:14px;font-weight:700;transition:transform .1s}.ds-btn:active{transform:scale(.95)}.ds-btn-yes{background:#ff3b30;color:#fff}.ds-btn-no{background:var(--ds-msg-bg);color:var(--ds-text);border:1px solid var(--ds-border)}@keyframes fadeIn{from{opacity:0}to{opacity:1}}#ds-popup{position:fixed;background:var(--ds-popup-bg);color:var(--ds-text);border:1px solid var(--ds-popup-border);border-radius:8px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.6);z-index:2147483660;display:none;flex-direction:column;min-width:400px;min-height:250px;max-width:90vw;max-height:80vh}.ds-resize-handle{position:absolute;z-index:100;opacity:0}.ds-resize-handle:hover{background:rgba(30,144,255,.2);opacity:1}.ds-rh-n{top:0;left:10px;right:10px;height:5px;cursor:ns-resize}.ds-rh-s{bottom:0;left:10px;right:10px;height:5px;cursor:ns-resize}.ds-rh-w{left:0;top:10px;bottom:10px;width:5px;cursor:ew-resize}.ds-rh-e{right:0;top:10px;bottom:10px;width:5px;cursor:ew-resize}.ds-rh-nw{top:0;left:0;width:10px;height:10px;cursor:nwse-resize;z-index:101}.ds-rh-ne{top:0;right:0;width:10px;height:10px;cursor:nesw-resize;z-index:101}.ds-rh-sw{bottom:0;left:0;width:10px;height:10px;cursor:nesw-resize;z-index:101}.ds-rh-se{bottom:0;right:0;width:10px;height:10px;cursor:nwse-resize;z-index:101}#ds-popup-header-bar{height:36px;width:100%;cursor:move;flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;padding-right:18px;gap:6px;background:var(--ds-header-bg);border-bottom:1px solid var(--ds-border)}.ds-popup-icon{cursor:pointer;font-size:15px;opacity:.6;transition:opacity .2s;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:var(--ds-text)}.ds-popup-icon:hover{opacity:1;background:var(--ds-hover-bg)}#ds-popup-close-float{font-size:16px}#ds-popup-body{display:flex;flex:1;overflow:hidden;position:relative;padding:0;width:100%;height:100%;cursor:default}.ds-split-view{width:100%;height:100%;display:flex}.ds-split-left{flex:1;border-right:1px solid var(--ds-border);padding:16px;overflow-y:auto;background:var(--ds-popup-bg)}.ds-split-right{flex:1;padding:16px;overflow-y:auto;background:var(--ds-popup-bg)}#ds-docked-panel{flex-direction:column;background:var(--ds-bg)}.ds-docked-toolbar{padding:8px;border-bottom:1px solid var(--ds-border);display:flex;justify-content:center;align-items:center;background:#2f343c}.ds-docked-title{font-size:13px;font-weight:700;color:#aaa}#ds-undock-btn{padding:4px 12px;border:1px solid var(--ds-border);background:var(--ds-menu-bg);color:var(--ds-text);border-radius:4px;font-size:12px;cursor:pointer}#ds-undock-btn:hover{background:var(--ds-hover-bg);border-color:#666}.ds-docked-content{flex:1;overflow-y:auto;display:flex;flex-direction:column}.ds-docked-section{padding:15px;border-bottom:1px solid var(--ds-border)}.ds-docked-scroll{overflow-y:auto;max-height:50%}.ds-popup-title{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--ds-accent);opacity:.9;letter-spacing:.5px;display:flex;align-items:center;gap:6px}.ds-popup-text{font-size:14px;line-height:1.6;white-space:pre-wrap;color:#ccc}.ds-popup-loading{color:#888;font-style:italic;animation:pulse 1.5s infinite}@keyframes pulse{0%{opacity:.5}50%{opacity:1}100%{opacity:.5}}.ds-target-italic{color:#1E90FF!important;font-weight:700;font-style:italic}.ds-head-row{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;flex-wrap:wrap}.ds-headword{color:#1E90FF!important;font-weight:700;font-size:15px!important;display:inline-block}.ds-dict-grid{display:grid;grid-template-columns:45px 1fr;gap:4px 0;align-items:baseline}.ds-pos-label{text-align:right;color:#98c379;font-style:italic;font-weight:700;font-size:12px;user-select:none;white-space:nowrap;overflow:visible;padding-right:8px}.ds-def-split{cursor:pointer;border-bottom:1px dashed transparent;transition:all .1s}.ds-def-split:hover{color:var(--ds-accent)}#ds-fab{display:none!important;}.ds-is-streaming .ds-def-split{pointer-events:none!important;cursor:wait}.ds-is-streaming{cursor:wait}#ds-input::placeholder{color:rgba(255,255,255,0.15)!important;opacity:1}#ds-tab-docked{padding:0 8px!important}.ds-dock-lock{cursor:default}.ds-dock-restore{cursor:pointer;opacity:.6;transition:opacity .2s,background-color .2s;border-radius:4px;padding:0 4px;width:20px;text-align:center}.ds-dock-restore:hover{opacity:1;background:var(--ds-hover-bg)}.ds-clickable-ipa{color:#98c379;font-family:'Lucida Sans Unicode','Arial Unicode MS',sans-serif}
+    #ds-config-panel input, #ds-config-panel textarea {font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif!important;color:var(--ds-text)!important;background:var(--ds-msg-bg)!important;border:1px solid var(--ds-border)!important;font-size:13px!important}
+    .web-menu-item.active .ds-history-date { display: none; }
+    .ds-undo-mode { background: transparent !important; cursor: default !important; justify-content: center; align-items: center; display: flex; }
+    .ds-undo-mode:hover { background: transparent !important; }
+    `;
     const switchCss = `.ds-switch{position:relative;display:inline-block;width:36px;height:20px}.ds-switch input{opacity:0;width:0;height:0}.ds-slider-btn{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:var(--ds-slider-off);transition:.4s;border-radius:34px}.ds-slider-btn:before{position:absolute;content:"";height:14px;width:14px;left:3px;bottom:3px;background-color:#fff;transition:.4s;border-radius:50%}input:checked+.ds-slider-btn{background-color:var(--ds-slider-on)}input:checked+.ds-slider-btn:before{transform:translateX(16px)}`;
     const readerCss = `
     #custom-reader-overlay {
@@ -352,7 +454,6 @@ function injectStyles() {
     GM_addStyle(css + switchCss + readerCss + fixCss);
 }
 
-// NEW: Update page layout based on push mode (Always ON if sidebar is visible)
 function updatePageLayout() {
     const sb = document.getElementById('ds-sidebar');
     const readerOverlay = document.getElementById('custom-reader-overlay');
@@ -423,7 +524,9 @@ function updatePageLayout() {
 // Replaced toggleSidebarPushMode with toggleToolbarExpansion
 function toggleToolbarExpansion() {
     const toolbar = document.getElementById('ds-vertical-toolbar');
+    const sidebar = document.getElementById('ds-sidebar');
     if (toolbar) toolbar.classList.toggle('expanded');
+    if (sidebar) sidebar.classList.toggle('expanded');
 }
 
 function updateSidebarPosition(animate = true) {
@@ -670,8 +773,45 @@ async function requestAI({ messages, signal, onUpdate, onFinish, onError }) {
     }
 }
 
+// Global Cache Helper
+const manageGlobalCache = {
+    get: (key) => {
+        try {
+            const cache = JSON.parse(GM_getValue(DS_CONFIG.consts.GLOBAL_DICT_CACHE_KEY, '{}'));
+            return cache[key] ? cache[key].data : null;
+        } catch(e) { return null; }
+    },
+    save: (key, data) => {
+        try {
+            let cache = JSON.parse(GM_getValue(DS_CONFIG.consts.GLOBAL_DICT_CACHE_KEY, '{}'));
+            cache[key] = { data: data, time: Date.now() };
+
+            const json = JSON.stringify(cache);
+            // Limit to roughly 50MB
+            if (json.length > 50 * 1024 * 1024) {
+                 const entries = Object.entries(cache).sort((a,b) => a[1].time - b[1].time);
+                 // Delete oldest 20%
+                 const limit = Math.floor(entries.length * 0.2);
+                 for(let i=0; i<limit; i++) {
+                     delete cache[entries[i][0]];
+                 }
+            }
+            GM_setValue(DS_CONFIG.consts.GLOBAL_DICT_CACHE_KEY, JSON.stringify(cache));
+        } catch(e) {}
+    }
+};
+
 function fetchVocabDefinition(word, container) {
     if (!DS_CONFIG.settings.apiKey) return;
+
+    // Check Global Cache First
+    const cachedData = manageGlobalCache.get(word);
+    if (cachedData) {
+        UI.renderDict(container, cachedData);
+        // Sync to runtime cache
+        DS_CONFIG.runtime.popupCache.dict[word] = cachedData;
+        return;
+    }
 
     if (DS_CONFIG.runtime.popupCache.dict[word]) {
         UI.renderDict(container, DS_CONFIG.runtime.popupCache.dict[word]);
@@ -681,7 +821,7 @@ function fetchVocabDefinition(word, container) {
     UI.clear(container);
     container.appendChild(UI.el('span', { className: 'ds-popup-loading' }, 'DeepSeek 查询中...'));
 
-    const prompt = isChinese(word) ? "你是一个专业的汉语词典接口。请严格按照词典格式输出，不要废话。" : "你是一个基于 ECDICT (Collins + Oxford) 数据库的词典接口。请严格按照以下 ECDICT 数据结构输出信息，不要提供例句。\n\n格式要求：\n单词原型\n/音标/\n词性. 中文释义\nExchange: ...\nTags: ...\n...";
+    const prompt = isChinese(word) ? "你是一个专业的汉语词典接口。请严格按照词典格式输出，不要废话。" : "你是一个基于 ECDICT (Collins + Oxford) 数据库的词典接口。请严格按照以下 ECDICT 数据结构输出信息，不要提供例句。请严格控制输出在150字以内，避免重复循环。\n\n格式要求：\n单词原型\n/音标/\n词性. 中文释义\nExchange: ...\nTags: ...\n...";
 
     requestAI({
         messages: [{role:"system",content:prompt},{role:"user",content:word}],
@@ -690,6 +830,7 @@ function fetchVocabDefinition(word, container) {
         },
         onFinish: (full) => {
             DS_CONFIG.runtime.popupCache.dict[word] = full;
+            manageGlobalCache.save(word, full); // Save to global
         },
         onError: (e) => {
             container.innerText = "查询失败: " + e.message;
@@ -721,6 +862,16 @@ async function streamDeepSeekInline(text, targetElement, signal = null) {
 }
 
 async function streamToElement(sysPrompt, userPrompt, targetElement, cacheCategory, cacheKey, highlightWord = null, mode = 'normal', signal = null) {
+    // Check global cache for dict mode
+    if (mode === 'dict') {
+        const gCache = manageGlobalCache.get(highlightWord);
+        if (gCache) {
+            UI.renderDict(targetElement, gCache);
+            DS_CONFIG.runtime.popupCache.dict[highlightWord] = gCache;
+            return;
+        }
+    }
+
     if (cacheCategory && cacheKey && DS_CONFIG.runtime.popupCache[cacheCategory][cacheKey]) {
         if (mode === 'dict') UI.renderDict(targetElement, DS_CONFIG.runtime.popupCache[cacheCategory][cacheKey]);
         else UI.renderMarkdown(targetElement, DS_CONFIG.runtime.popupCache[cacheCategory][cacheKey], highlightWord);
@@ -748,6 +899,7 @@ async function streamToElement(sysPrompt, userPrompt, targetElement, cacheCatego
             isStreamFinished = true;
             targetElement.classList.remove('ds-is-streaming');
             if (cacheCategory && cacheKey && fullText) { DS_CONFIG.runtime.popupCache[cacheCategory][cacheKey] = fullText; }
+            if (mode === 'dict' && fullText) { manageGlobalCache.save(highlightWord, fullText); }
         },
         onError: (e) => {
             targetElement.classList.remove('ds-is-streaming');
@@ -758,7 +910,7 @@ async function streamToElement(sysPrompt, userPrompt, targetElement, cacheCatego
                     if (targetElement.closest('#ds-popup-right-content') || targetElement.closest('#ds-docked-right-content')) sideKey = 'right';
 
                     if (sideKey && !targetElement.querySelector('.ds-continue-text')) {
-                         const wrapper = UI.el('div', { className: 'ds-continue-text', 'data-side': sideKey }, '🖌️ 继续');
+                         const wrapper = UI.el('div', { className: 'ds-continue-text', 'data-side': sideKey }, '▶️ 继续');
                          targetElement.appendChild(wrapper);
                     }
                 }
@@ -864,12 +1016,46 @@ async function askAI(query, targetWord = "", mode = "chat", continueMessages = n
                         newMessages.push({role: "user", content: "请继续（Continue）"});
                         askAI("", targetWord, mode, newMessages);
                     }
-                }, '🖌️ 继续');
+                }, '▶️ 继续');
                 aiMsg.appendChild(continueElem);
                 log.scrollTop = log.scrollHeight;
             } else { aiMsg.appendChild(document.createTextNode("\n[请求失败: " + e.message + "]")); }
         }
     });
+}
+
+// Undo Helper
+function softDelete(element, onConfirm) {
+    if (!element) return;
+    const originalHTML = element.innerHTML;
+    const originalClass = element.className;
+
+    // 获取当前条目绑定的单词 (防止undefined，给个空字符串兜底)
+    const word = element.dataset.word || "";
+
+    element.className = 'web-menu-item ds-undo-mode';
+
+    // 修改：将 word 包裹在 span 中，并设置 color:#1E90FF (这是DeepSeek查词/高亮的标准蓝色)
+    // 外层文字保持 #6db3f2 (浅蓝)，中间单词变为 #1E90FF (亮蓝)
+    element.innerHTML = `<span style="color:#6db3f2;cursor:pointer;font-weight:bold">🔄 取消对 <span style="color:#1E90FF">“${word}”</span> 的删除</span>`;
+
+    let isRestored = false;
+    const timer = setTimeout(() => {
+        if (!isRestored) {
+            element.remove();
+            if (onConfirm) onConfirm();
+        }
+    }, 3000); // 保持3秒撤回时间
+
+    element.onclick = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        clearTimeout(timer);
+        isRestored = true;
+        element.className = originalClass;
+        element.innerHTML = originalHTML;
+        element.onclick = null; // Remove temp handler
+    };
 }
 
 function saveHighlights() {
@@ -885,32 +1071,54 @@ function saveHighlights() {
         }
     });
     localStorage.setItem(DS_CONFIG.consts.STORAGE_KEY, JSON.stringify(h));
-    if (DOM.highlightContent && DS_CONFIG.runtime.activeTab === 'highlight') refreshHighlightMenu();
+    // 修改处：如果当前在 history 标签页，则刷新 history 菜单以更新📍状态
+    if (DS_CONFIG.runtime.activeTab === 'history') renderHistoryMenu();
     setTimeout(() => { DS_CONFIG.runtime.isRestoring = false; }, 100);
 }
 
 function removeHighlight(el) {
-    DS_CONFIG.runtime.isRestoring = true; const p = el.parentNode;
-    if (p) { while (el.firstChild) p.insertBefore(el.firstChild, p.contains(el) ? el : null); el.remove(); saveHighlights(); }
+    DS_CONFIG.runtime.isRestoring = true;
+
+    // --- 新增逻辑开始 ---
+    // 1. 获取当前高亮文本
+    const text = el.textContent.trim();
+    // 2. 调用历史记录删除函数（从全局历史中移除该词）
+    if(text) deleteFromHistory(text);
+    // --- 新增逻辑结束 ---
+
+    const p = el.parentNode;
+    if (p) {
+        while (el.firstChild) p.insertBefore(el.firstChild, p.contains(el) ? el : null);
+        el.remove();
+        saveHighlights();
+    }
 }
 
-function deleteWord(word) {
-    let removedFromDom = false;
-    document.querySelectorAll(`.${DS_CONFIG.consts.HIGHLIGHT_CLASS}`).forEach(el => {
-        if (el.textContent.trim() === word) {
-            const p = el.parentNode;
-            while (el.firstChild) p.insertBefore(el.firstChild, el);
-            el.remove();
-            removedFromDom = true;
+function deleteWord(word, elementRef = null) {
+    const doDelete = () => {
+        let removedFromDom = false;
+        document.querySelectorAll(`.${DS_CONFIG.consts.HIGHLIGHT_CLASS}`).forEach(el => {
+            if (el.textContent.trim() === word) {
+                const p = el.parentNode;
+                while (el.firstChild) p.insertBefore(el.firstChild, el);
+                el.remove();
+                removedFromDom = true;
+            }
+        });
+        if (removedFromDom) {
+            saveHighlights();
+        } else {
+            const saved = JSON.parse(localStorage.getItem(DS_CONFIG.consts.STORAGE_KEY) || '[]');
+            const newSaved = saved.filter(h => h.text !== word);
+            localStorage.setItem(DS_CONFIG.consts.STORAGE_KEY, JSON.stringify(newSaved));
+            refreshHighlightMenu();
         }
-    });
-    if (removedFromDom) {
-        saveHighlights();
+    };
+
+    if (elementRef) {
+        softDelete(elementRef, doDelete);
     } else {
-        const saved = JSON.parse(localStorage.getItem(DS_CONFIG.consts.STORAGE_KEY) || '[]');
-        const newSaved = saved.filter(h => h.text !== word);
-        localStorage.setItem(DS_CONFIG.consts.STORAGE_KEY, JSON.stringify(newSaved));
-        refreshHighlightMenu();
+        doDelete();
     }
 }
 
@@ -998,11 +1206,20 @@ const hideSidebar = () => {
 };
 
 const switchTab = (tabName) => {
-    if (tabName !== 'ai' && tabName !== 'highlight' && tabName !== 'docked') return;
+    // 移除了 'highlight' 的判断
+    if (tabName !== 'ai' && tabName !== 'docked' && tabName !== 'history') return;
     DS_CONFIG.runtime.activeTab = tabName;
     document.querySelectorAll('.ds-tab').forEach(tab => { tab.classList.remove('active'); if (tab.dataset.tab === tabName) tab.classList.add('active'); });
     document.querySelectorAll('.tab-panel').forEach(panel => { panel.classList.remove('active'); if (panel.dataset.panel === tabName) panel.classList.add('active'); });
-    if (tabName === 'highlight') { refreshHighlightMenu(); applySavedHighlights(); }
+
+// 原 highlight 的 applySavedHighlights 现在由定时器或初始化自动调用
+    // history tab 承担渲染职责
+    if (tabName === 'history') {
+        // 修改：每次打开历史Tab，强制按最新时间排序，无需保存
+        DS_CONFIG.settings.historySort = 'time_desc';
+        DS_CONFIG.runtime.historyLimit = 50; // 重置显示数量
+        renderHistoryMenu();
+    }
 };
 
 function toggleDockingMode(enable, isInit = false) {
@@ -1018,9 +1235,9 @@ function toggleDockingMode(enable, isInit = false) {
         if (!isInit) {
             switchTab('docked');
         }
-    } else {
+} else {
         if (dockedTab) dockedTab.style.display = 'none';
-        if (DS_CONFIG.runtime.activeTab === 'docked') switchTab('highlight');
+        if (DS_CONFIG.runtime.activeTab === 'docked') switchTab('history'); // 改为回退到 history
     }
 }
 
@@ -1066,6 +1283,11 @@ function enterReaderMode() {
         </div>
     `;
     document.body.appendChild(DOM.readerWrapper);
+
+    // 【新增修复】：将浮窗元素重新移动到 Body 末尾，确保它位于阅读模式遮罩层之上
+    if (DOM.popup && DOM.popup.parentNode) {
+        document.body.appendChild(DOM.popup);
+    }
 
     updateReaderCtrlPosition();
     updatePageLayout();
@@ -1141,6 +1363,12 @@ function updateReaderStyle(type, delta) {
 }
 
 function showSmartPopup(text, targetHighlight, context = "", isSelection = false) {
+    // NEW: 强制关闭可能遮挡的面板
+    const cp = document.getElementById('ds-config-panel');
+    const hp = document.getElementById('ds-help-panel');
+    if (cp) cp.style.display = 'none';
+    if (hp) hp.style.display = 'none';
+
     DS_CONFIG.runtime.isSwitchingContext = true;
     if (DS_CONFIG.runtime.popupAbortCtrl) DS_CONFIG.runtime.popupAbortCtrl.abort();
     setTimeout(() => { DS_CONFIG.runtime.isSwitchingContext = false; }, 0);
@@ -1148,7 +1376,8 @@ function showSmartPopup(text, targetHighlight, context = "", isSelection = false
     DS_CONFIG.runtime.popupAbortCtrl = new AbortController();
     const signal = DS_CONFIG.runtime.popupAbortCtrl.signal;
 
-    const dictPrompt = isChinese(text) ? "你是一个专业的汉语词典接口。请严格按照词典格式输出，不要废话。" : "你是一个基于 ECDICT (Collins + Oxford) 数据库的词典接口。请严格按照以下 ECDICT 数据结构输出信息，不要提供例句。\n\n格式要求：\n单词原型\n/音标/\n词性. 中文释义\nExchange: ...\nTags: ...\n...";
+    // Modified Prompt: Added strict word limit
+    const dictPrompt = isChinese(text) ? "你是一个专业的汉语词典接口。请严格按照词典格式输出，不要废话。" : "你是一个基于 ECDICT (Collins + Oxford) 数据库的词典接口。请严格按照以下 ECDICT 数据结构输出信息，不要提供例句。请严格控制输出在150字以内，避免重复循环。\n\n格式要求：\n单词原型\n/音标/\n词性. 中文释义\nExchange: ...\nTags: ...\n...";
     const dictKey = text;
     const contextKey = text + "_" + context.substring(0, 20);
     const contextPrompt = `你是一个语言专家。请分析"${text}"在以下句子中的用法：\n\n"${context}"\n\n请模仿以下风格进行解析：\n"在句子 '...' 中，'${text}' 是...词性...形式，与...构成...搭配，表示...。这里的固定搭配是...，意思是...。"`;
@@ -1160,8 +1389,9 @@ function showSmartPopup(text, targetHighlight, context = "", isSelection = false
         leftEl = document.querySelector('#ds-docked-left-content .ds-popup-text');
         rightEl = document.querySelector('#ds-docked-right-content .ds-popup-text');
 
+        // Update Title to "🧠 文中解析"
         const rightTitle = document.querySelector('#ds-docked-right-content .ds-popup-title');
-        if (rightTitle) rightTitle.innerText = '🔍 文中解析';
+        if (rightTitle) rightTitle.innerText = '🧠 文中解析';
     } else {
         if (!DOM.popup) return;
         let rect;
@@ -1189,14 +1419,15 @@ function showSmartPopup(text, targetHighlight, context = "", isSelection = false
         ]);
         DOM.popup.appendChild(headerBar);
 
+        // Update Titles in Popup
         const body = UI.el('div', { id: 'ds-popup-body' }, [
             UI.el('div', { className: 'ds-split-view' }, [
                 UI.el('div', { className: 'ds-split-left', id: 'ds-popup-left-content' }, [
-                      UI.el('div', { className: 'ds-popup-title' }, '🔤 词典解析'),
+                      UI.el('div', { className: 'ds-popup-title' }, '🔍 词典解析'),
                       UI.el('div', { className: 'ds-popup-text' })
                 ]),
                 UI.el('div', { className: 'ds-split-right', id: 'ds-popup-right-content' }, [
-                      UI.el('div', { className: 'ds-popup-title' }, '🔍 文中解析'),
+                      UI.el('div', { className: 'ds-popup-title' }, '🧠 文中解析'),
                       UI.el('div', { className: 'ds-popup-text' })
                 ])
             ])
@@ -1259,49 +1490,97 @@ function buildUI() {
 
     const container = UI.el('div', { id: 'ds-sidebar' });
     const promptString = DS_CONFIG.settings.customPrompts.map(p => `${p.name}=${p.template}`).join('\n');
+    const sitesString = DS_CONFIG.settings.customSites.map(s => `${s.name}=${s.value}`).join('\n');
     const disabledSitesString = DS_CONFIG.settings.disabledSites.join('\n');
 
-    // ============ 1. Vertical Toolbar ============
-    const verticalToolbar = UI.el('div', { id: 'ds-vertical-toolbar' }, [
-        createSidebarIcon('ds-close', '✖', '关闭', '关闭'),
-        createSidebarIcon('ds-side-toggle', '👈🏻', '切换侧边栏方向', '切至左侧'),
-        createSidebarIcon('ds-full-page-trans-btn', '🌐', '全文翻译开关', '全文翻译'),
-        createSidebarIcon('ds-expand-toolbar', '↔️', '展开菜单', '展开菜单'),
-        createSidebarIcon('ds-summary-btn', '🎯', '全文总结', '全文总结'), // Moved from Input Area
-        createSidebarIcon('ds-reader-mode-btn', '👓', '阅读模式 (简读)', '阅读模式'),
-        createSidebarIcon('ds-help-btn', '💡', '使用说明', '使用说明'),
-        createSidebarIcon('ds-clear-cache', '♻️', '清除缓存', '清除缓存'),
-        createSidebarIcon('ds-cfg-toggle', '⚙️', '设置', '设置'),
+    const activeZone = UI.el('div', { id: 'ds-toolbar-active' });
+    const hiddenZone = UI.el('div', { id: 'ds-toolbar-hidden' }, [
+        UI.el('span', { className: 'ds-hidden-text' }, '可将图标拖动此处隐藏')
     ]);
 
-    // Drag and Drop Logic
+    const verticalToolbar = UI.el('div', { id: 'ds-vertical-toolbar' }, [activeZone, hiddenZone]);
+
+    // 定义所有图标数据
+    const allIconsData = [
+        { id: 'ds-close', icon: '✖', title: '关闭', label: '关闭' },
+        { id: 'ds-side-toggle', icon: '👈🏻', title: '切换侧边栏方向', label: '切至左侧' },
+        { id: 'ds-full-page-trans-btn', icon: '🌐', title: '全文翻译开关', label: '全文翻译' },
+        { id: 'ds-expand-toolbar', icon: '↔️', title: '展开菜单', label: '展开菜单' },
+        { id: 'ds-summary-btn', icon: '🎯', title: '全文总结', label: '全文总结' },
+        { id: 'ds-reader-mode-btn', icon: '👓', title: '阅读模式 (简读)', label: '阅读模式' },
+        { id: 'ds-help-btn', icon: '💡', title: '使用说明', label: '使用说明' },
+        { id: 'ds-cfg-toggle', icon: '⚙️', title: '设置', label: '设置' }
+    ];
+
+    // 根据配置渲染图标到不同区域
+    const hiddenSet = new Set(DS_CONFIG.settings.hiddenIcons);
+    allIconsData.forEach(data => {
+        const btn = createSidebarIcon(data.id, data.icon, data.title, data.label);
+        // 强制 设置按钮 和 关闭按钮 始终显示（防止用户把自己锁死）
+        if (data.id === 'ds-cfg-toggle' || data.id === 'ds-close') {
+            activeZone.appendChild(btn);
+        } else if (hiddenSet.has(data.id)) {
+            hiddenZone.appendChild(btn); // 放入隐藏区
+        } else {
+            activeZone.appendChild(btn); // 放入活跃区
+        }
+    });
+
+    // Drag and Drop Logic (Refined for 2 Zones)
     let draggedItem = null;
-    verticalToolbar.addEventListener('dragstart', (e) => {
+
+    const handleDragStart = (e) => {
         if (e.target.classList.contains('ds-v-icon')) {
             draggedItem = e.target;
-            e.target.style.opacity = '0.5';
             e.dataTransfer.effectAllowed = 'move';
+            // 关键修正：添加 dragging 类名，确保 getDragAfterElement 计算准确
+            setTimeout(() => e.target.classList.add('dragging'), 0);
         }
-    });
-    verticalToolbar.addEventListener('dragend', (e) => {
-        if (e.target.classList.contains('ds-v-icon')) {
-            e.target.style.opacity = '1';
+    };
+
+    const handleDragEnd = (e) => {
+        if (draggedItem) {
+            draggedItem.classList.remove('dragging');
+            draggedItem.style.opacity = '';
+
+            // 保存隐藏状态
+            const newHiddenList = [];
+            hiddenZone.querySelectorAll('.ds-v-icon').forEach(el => newHiddenList.push(el.id));
+            GM_setValue('ds_hidden_icons', newHiddenList);
+            DS_CONFIG.settings.hiddenIcons = newHiddenList;
+
             draggedItem = null;
         }
-    });
-    verticalToolbar.addEventListener('dragover', (e) => {
+    };
+
+    // ... (前面是 handleDragStart 和 handleDragEnd) ...
+
+    const handleDragOver = (e, container) => {
         e.preventDefault();
-        const afterElement = getDragAfterElement(verticalToolbar, e.clientY);
-        if (afterElement == null) {
-            verticalToolbar.appendChild(draggedItem);
-        } else {
-            verticalToolbar.insertBefore(draggedItem, afterElement);
+
+        // 1. 只有在编辑模式下，或者 目标是活跃区 时才允许拖动 (允许从隐藏区拖回活跃区)
+        const isEditMode = verticalToolbar.classList.contains('ds-edit-mode');
+
+        // 如果不在编辑模式，严禁拖入隐藏区
+        if (!isEditMode && container.id === 'ds-toolbar-hidden') return;
+
+        // 2. 保护机制：强制 设置按钮 和 关闭按钮 不能被拖入隐藏区
+        if (draggedItem && (draggedItem.id === 'ds-cfg-toggle' || draggedItem.id === 'ds-close') && container.id === 'ds-toolbar-hidden') {
+            return;
         }
-    });
+
+        const afterElement = getDragAfterElement(container, e.clientY);
+        if (afterElement == null) {
+            container.appendChild(draggedItem);
+        } else {
+            container.insertBefore(draggedItem, afterElement);
+        }
+    };
+
     function getDragAfterElement(container, y) {
+        // 排除正在拖动的元素自身
         const draggableElements = [...container.querySelectorAll('.ds-v-icon:not(.dragging)')];
         return draggableElements.reduce((closest, child) => {
-            if (child === draggedItem) return closest;
             const box = child.getBoundingClientRect();
             const offset = y - box.top - box.height / 2;
             if (offset < 0 && offset > closest.offset) {
@@ -1312,17 +1591,82 @@ function buildUI() {
         }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
+
+    // 绑定事件
+    verticalToolbar.addEventListener('dragstart', handleDragStart);
+    verticalToolbar.addEventListener('dragend', handleDragEnd);
+    activeZone.addEventListener('dragover', (e) => handleDragOver(e, activeZone));
+    hiddenZone.addEventListener('dragover', (e) => handleDragOver(e, hiddenZone));
+
     // ============ 2. Main Content Panel (New Wrapper) ============
     const mainPanel = UI.el('div', { id: 'ds-main-panel' });
 
     // Header for Tabs (Simplified)
-    const tabHeader = UI.el('div', { id: 'ds-tab-header' }, [
+    const createTab = (id, icon, label, title, active=false) => {
+         return UI.el('div', { className: `ds-tab ${active?'active':''}`, 'data-tab': id, title: title, draggable: true }, [
+             document.createTextNode(icon),
+             UI.el('span', { className: 'ds-tab-label' }, label)
+         ]);
+    };
+
+const tabHeader = UI.el('div', { id: 'ds-tab-header' }, [
         UI.el('div', { id: 'ds-tabs-wrapper' }, [
-            UI.el('div', { className: 'ds-tab active', 'data-tab': 'highlight', title: '生词本' }, '📝'),
-            UI.el('div', { className: 'ds-tab', 'data-tab': 'ai', title: 'AI 助手' }, '💬'),
-            UI.el('div', { className: 'ds-tab', id: 'ds-tab-docked', 'data-tab': 'docked', title: '固定模式', style: { display: 'none' } }, '📖')
+            // 合并后的Tab：使用🕒图标，名字改为历史，默认active
+            createTab('history', '🕒', '历史', '历史与高亮', true),
+            createTab('ai', '💬', '对话', 'AI 助手'),
+            UI.el('div', { className: 'ds-tab', id: 'ds-tab-docked', 'data-tab': 'docked', title: '固定模式', style: { display: 'none' }, draggable: true }, [
+                document.createTextNode('📖'),
+                UI.el('span', { className: 'ds-tab-label' }, '词典')
+            ])
         ])
     ]);
+
+    // Tab Drag and Drop Logic
+    let draggedTab = null;
+    const tabsWrapper = tabHeader.querySelector('#ds-tabs-wrapper');
+
+    tabsWrapper.addEventListener('dragstart', (e) => {
+        const tab = e.target.closest('.ds-tab');
+        if (tab) {
+            draggedTab = tab;
+            tab.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+    });
+
+    tabsWrapper.addEventListener('dragend', (e) => {
+        const tab = e.target.closest('.ds-tab');
+        if (tab) {
+            tab.classList.remove('dragging');
+            draggedTab = null;
+        }
+    });
+
+    tabsWrapper.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        const afterElement = getDragAfterTab(tabsWrapper, e.clientX);
+        const dragging = tabsWrapper.querySelector('.dragging');
+        if (dragging) {
+            if (afterElement == null) {
+                tabsWrapper.appendChild(dragging);
+            } else {
+                tabsWrapper.insertBefore(dragging, afterElement);
+            }
+        }
+    });
+
+    function getDragAfterTab(container, x) {
+        const draggableElements = [...container.querySelectorAll('.ds-tab:not(.dragging)')];
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = x - box.left - box.width / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
 
     // Confirm Modal
     const confirmModal = UI.el('div', { id: 'ds-confirm-modal' }, [
@@ -1341,8 +1685,8 @@ function buildUI() {
             UI.el('span', { className: 'ds-panel-title' }, '⚙️ 设置'),
             UI.el('button', { id: 'save-api-key', className: 'ds-panel-top-btn' }, '保存并退出')
         ]),
-        UI.el('div', { className: 'cfg-row' }, [
-            UI.el('span', { style: { fontWeight: 'bold' } }, '高亮/查询时自动复制:'),
+UI.el('div', { className: 'cfg-row' }, [
+            UI.el('span', { style: { fontWeight: 'bold' } }, '查询/高亮/跳转时复制文本:'),
             UI.el('label', { className: 'ds-switch' }, [
                 UI.el('input', { type: 'checkbox', id: 'cfg-auto-copy', checked: DS_CONFIG.settings.autoCopy }),
                 UI.el('span', { className: 'ds-slider-btn' })
@@ -1356,6 +1700,12 @@ function buildUI() {
             UI.el('span', { className: 'ds-instruction-text' }, '自定义Prompt格式（每行一个Prompt）：'),
             UI.el('span', { className: 'ds-instruction-text', style: { fontWeight: 'normal', color: 'var(--ds-text)', opacity: 0.8 } }, '按钮名=prompt具体指令'),
             UI.el('textarea', { id: 'cfg-prompts', className: 'ds-cfg-textarea', placeholder: '按钮名称=具体指令内容\n每行一条...', value: promptString })
+        ]),
+        // New: Custom AI Sites Config
+        UI.el('div', { className: 'cfg-row', style: { flexDirection: 'column', alignItems: 'flex-start' } }, [
+            UI.el('span', { className: 'ds-instruction-text' }, '自定义求助网站格式（每行一个网站）：'),
+            UI.el('span', { className: 'ds-instruction-text', style: { fontWeight: 'normal', color: 'var(--ds-text)', opacity: 0.8 } }, '按钮名=网站具体网址'),
+            UI.el('textarea', { id: 'cfg-ai-sites', className: 'ds-cfg-textarea', placeholder: 'DeepSeek=https://chat.deepseek.com/\n...', value: sitesString })
         ]),
         UI.el('div', { className: 'cfg-row', style: { flexDirection: 'column', alignItems: 'flex-start' } }, [
             UI.el('span', { className: 'ds-instruction-text' }, '禁用网站名单：'),
@@ -1381,32 +1731,75 @@ function buildUI() {
         createHelpItem('Alt + 左键', '可对鼠标所指文本段落进行翻译。'),
     ]);
 
-    // Tab Content
+// Tab Content
     const tabContent = UI.el('div', { id: 'ds-tab-content' }, [
-        UI.el('div', { className: 'tab-panel active', 'data-panel': 'highlight', id: 'ds-highlight-content' }),
+        // 删除了 ds-highlight-content，将 history 设为 active
+        UI.el('div', { className: 'tab-panel active', 'data-panel': 'history', id: 'ds-history-content' }),
         UI.el('div', { className: 'tab-panel', 'data-panel': 'ai', id: 'ds-ai-content' }, [
             UI.el('div', { id: 'ds-chat-log' })
         ]),
         UI.el('div', { className: 'tab-panel', 'data-panel': 'docked', id: 'ds-docked-panel' }, [
             UI.el('div', { className: 'ds-docked-content' }, [
                 UI.el('div', { className: 'ds-docked-section ds-docked-scroll', id: 'ds-docked-left-content', style: { flex: 1, borderBottom: '1px solid #444' } }, [
-                    UI.el('div', { className: 'ds-popup-title' }, '🔤 词典解析'),
+                    UI.el('div', { className: 'ds-popup-title' }, '🔍 词典解析'),
                     UI.el('div', { className: 'ds-popup-text' })
                 ]),
                 UI.el('div', { className: 'ds-docked-section ds-docked-scroll', id: 'ds-docked-right-content', style: { flex: 1 } }, [
-                    UI.el('div', { className: 'ds-popup-title' }, '🔍 文中解析'),
+                    UI.el('div', { className: 'ds-popup-title' }, '🧠 文中解析'),
                     UI.el('div', { className: 'ds-popup-text' })
                 ])
             ])
         ])
     ]);
 
+    // NEW: Jump Button Panel Implementation (No more Select)
+    const currentSiteName = DS_CONFIG.settings.customSites.find(s => s.value === DS_CONFIG.settings.lastAiSite)?.name || "DeepSeek";
+
+    const jumpWrapper = UI.el('div', { className: 'ds-jump-wrapper' }, [
+        UI.el('button', { id: 'ds-jump-btn', className: 'ds-action-btn', style: { marginRight: '5px' } }, '🔗 求助'),
+        UI.el('div', { className: 'ds-jump-select-wrapper' }, [
+            UI.el('button', { id: 'ds-cur-site-btn', className: 'ds-jump-select-btn', title: '点击切换跳转目标' }, [
+                 document.createTextNode(currentSiteName),
+                 UI.el('span', { style: {fontSize: '10px', opacity: 0.7} }, '▼')
+            ]),
+            UI.el('div', { id: 'ds-site-panel', className: 'ds-site-panel' })
+        ])
+    ]);
+
+    // Populate Site Panel
+    const updateSitePanel = () => {
+        const panel = jumpWrapper.querySelector('#ds-site-panel');
+        UI.clear(panel);
+        DS_CONFIG.settings.customSites.forEach(s => {
+            const btn = UI.el('div', {
+                className: `ds-site-item ${s.value === DS_CONFIG.settings.lastAiSite ? 'active' : ''}`,
+                title: s.value
+            }, s.name);
+            btn.addEventListener('click', () => {
+                DS_CONFIG.settings.lastAiSite = s.value;
+                GM_setValue('ds_last_ai_site', s.value);
+
+                // Active class update
+                panel.querySelectorAll('.ds-site-item').forEach(el => el.classList.remove('active'));
+                btn.classList.add('active');
+
+                const curBtn = document.getElementById('ds-cur-site-btn');
+                if (curBtn) {
+                     curBtn.firstChild.textContent = s.name;
+                }
+                panel.classList.remove('active');
+            });
+            panel.appendChild(btn);
+        });
+    };
+    updateSitePanel();
+
     // Input Area
     const inputArea = UI.el('div', { id: 'ds-input-area' }, [
         UI.el('div', { id: 'ds-input-wrapper' }, [
             UI.el('textarea', { id: 'ds-input', placeholder: 'DeepSeek AI 等待您的指令...' }),
             UI.el('div', { id: 'ds-send-row' }, [
-                // Summary Button Removed from here
+                jumpWrapper,
                 UI.el('button', { id: 'ds-send', className: 'ds-action-btn' }, '🚀 发送')
             ])
         ])
@@ -1437,12 +1830,15 @@ function buildUI() {
     DOM.popup = popupEl;
     DOM.highlightContent = document.getElementById('ds-highlight-content');
 
-    const autoCopySwitch = document.getElementById('cfg-auto-copy');
+const autoCopySwitch = document.getElementById('cfg-auto-copy');
     if (autoCopySwitch) {
         autoCopySwitch.addEventListener('change', (e) => {
              const isChecked = e.target.checked;
              DS_CONFIG.settings.autoCopy = isChecked;
+             // 同时更新两个值以保持兼容性，或者后续逻辑只用 autoCopy
              GM_setValue('ds_auto_copy', isChecked);
+             GM_setValue('ds_jump_copy', isChecked);
+             DS_CONFIG.settings.jumpCopy = isChecked;
         });
     }
 
@@ -1458,6 +1854,8 @@ function buildUI() {
 function renderCustomButtons() {
     const bar = document.getElementById('ds-fn-bar'); if (!bar) return;
     UI.clear(bar);
+
+    // Add Custom Prompts ONLY (Summary removed from here)
     DS_CONFIG.settings.customPrompts.forEach(item => {
         if (!item.name || !item.template) return;
         const btn = UI.el('div', {
@@ -1467,7 +1865,12 @@ function renderCustomButtons() {
                 const input = document.getElementById('ds-input');
                 if (input) {
                     const val = input.value.trim();
-                    if (!val) { return; }
+                    if (!val) {
+                        // Optional: Flash input placeholder or similar if needed
+                         input.placeholder = "请输入内容后点击...";
+                         setTimeout(() => input.placeholder = "DeepSeek AI 等待您的指令...", 2000);
+                         return;
+                    }
                     askAI(val, "", "custom", null, item.template);
                 }
             }
@@ -1494,6 +1897,14 @@ function bindEvents() {
              const defText = e.target.dataset.def;
              const word = DS_CONFIG.runtime.lastPopupParams.left?.hw || "";
              if(word) window.updateRightPanelExamples(defText, word);
+         }
+         // Close site panel if clicking outside
+         const sitePanel = document.getElementById('ds-site-panel');
+         const curSiteBtn = document.getElementById('ds-cur-site-btn');
+         if (sitePanel && sitePanel.classList.contains('active')) {
+             if (!sitePanel.contains(e.target) && !curSiteBtn.contains(e.target)) {
+                 sitePanel.classList.remove('active');
+             }
          }
     });
 
@@ -1524,9 +1935,40 @@ function bindEvents() {
     const dockedPanel = document.getElementById('ds-docked-panel');
     if(dockedPanel) dockedPanel.addEventListener('click', handleContinueClick);
 
+    // FIX START: 拦截右键菜单 & 全局右键清除翻译
     document.addEventListener('contextmenu', (e) => {
-        stopAllStreams();
+        // 1. 如果点击的是侧边栏或浮窗内部，不进行拦截（允许复制等默认行为）
+        const inSidebar = DOM.sidebar && DOM.sidebar.contains(e.target);
+        const inPopup = DOM.popup && DOM.popup.contains(e.target);
+        if (inSidebar || inPopup) return;
+
+        // 2. 优先检查：是否点击了【高亮词】（删除高亮优先）
+        const targetHighlight = e.target.closest(`.${DS_CONFIG.consts.HIGHLIGHT_CLASS}`);
+        if (targetHighlight) {
+            e.preventDefault();
+            e.stopPropagation();
+            removeHighlight(targetHighlight); // 执行删除高亮
+            // 设置标志位，防止冲突
+            DS_CONFIG.runtime.preventContextMenuOnce = true;
+            setTimeout(() => { DS_CONFIG.runtime.preventContextMenuOnce = false; }, 300);
+            stopAllStreams();
+            return;
+        }
+
+        // 3. 次级检查：是否有可见的翻译元素 (插入式或全文)
+        const hasInlineTrans = document.querySelector('.web-inline-trans');
+        const hasPageTrans = document.querySelector('.ds-full-page-trans');
+        const hasSourceHighlight = document.querySelector('.web-trans-source-highlight');
+
+        // 如果存在翻译内容，右键动作执行“清除翻译”，并拦截菜单
+        if (hasInlineTrans || hasPageTrans || hasSourceHighlight) {
+            e.preventDefault();
+            e.stopPropagation();
+            clearAllInlineTranslations();
+            return;
+        }
     });
+    // FIX END
 
     document.addEventListener('mousemove', e => {
         DS_CONFIG.runtime.lastX = e.clientX; DS_CONFIG.runtime.lastY = e.clientY;
@@ -1598,7 +2040,7 @@ function bindEvents() {
 
             if (sidebarItem) {
                  const word = sidebarItem.dataset.word;
-                 if(word) deleteWord(word);
+                 if(word) deleteWord(word, sidebarItem);
                  return;
             }
 
@@ -1616,12 +2058,20 @@ function bindEvents() {
                             copyToClip(text);
                         }
                         const mark = document.createElement('mark'); mark.className = DS_CONFIG.consts.HIGHLIGHT_CLASS; mark.appendChild(range.extractContents()); range.insertNode(mark);
-                        saveHighlights(); sel.removeAllRanges();
+                        saveHighlights();
+                        addToGlobalHistory(text, range.commonAncestorContainer.textContent);
+                        sel.removeAllRanges();
+
+                        // ADDED: Sync to AI Input for Alt + 1
+                        // 修改：移除可见性判断，确保高亮时无论侧边栏是否打开，输入框都会同步
+                        if (window.self === window.top) {
+                             const input = document.getElementById('ds-input');
+                             if(input) input.value = text;
+                        }
                     }
                 }
             }
         }
-
         if (e.altKey && (e.key === '2' || e.code === 'Digit2')) {
             e.preventDefault();
             DS_CONFIG.runtime.sidebarLockUntil = Date.now() + 600;
@@ -1650,7 +2100,8 @@ function bindEvents() {
                         }
                         let context = ""; try { context = window.getSelection().getRangeAt(0).commonAncestorContainer.parentElement.innerText; } catch(e){}
 
-                        if (isSidebarVisible() && isTopWindow) {
+                        // 修改：移除可见性判断，浮窗选词时同步输入框
+                        if (isTopWindow) {
                             const input = document.getElementById('ds-input');
                             if(input) input.value = selText;
                         }
@@ -1665,7 +2116,8 @@ function bindEvents() {
                             }
                             const context = wordObj.node.parentElement ? wordObj.node.parentElement.innerText : wordObj.text;
 
-                            if (isSidebarVisible() && isTopWindow) {
+                            // 修改：移除可见性判断，浮窗取词时同步输入框
+                            if (isTopWindow) {
                                 const input = document.getElementById('ds-input');
                                 if(input) input.value = wordObj.text;
                             }
@@ -1699,7 +2151,11 @@ function bindEvents() {
                  if (item) {
                      e.preventDefault();
                      const word = item.dataset.word;
-                     if(word) deleteWord(word);
+                     if (DS_CONFIG.runtime.activeTab === 'history') {
+                         deleteFromHistory(word, item);
+                     } else {
+                         if(word) deleteWord(word, item);
+                     }
                  }
             });
         }
@@ -1735,7 +2191,9 @@ function bindEvents() {
                 const trans = item.querySelector('.web-menu-trans');
                 const isActive = item.classList.contains('active');
 
-                document.querySelectorAll('#ds-highlight-content .web-menu-item.active').forEach(activeItem => {
+                // Clear other active items
+                const contentId = DS_CONFIG.runtime.activeTab === 'history' ? 'ds-history-content' : 'ds-highlight-content';
+                document.querySelectorAll(`#${contentId} .web-menu-item.active`).forEach(activeItem => {
                     activeItem.classList.remove('active');
                     const t = activeItem.querySelector('.web-menu-trans');
                     if (t) t.style.display = 'none';
@@ -1781,25 +2239,72 @@ function bindEvents() {
             else if (targetId === 'ds-cfg-toggle') {
                 const cp = document.getElementById('ds-config-panel');
                 const hp = document.getElementById('ds-help-panel');
+                const tb = document.getElementById('ds-vertical-toolbar');
+
                 if (hp) hp.style.display = 'none';
-                if (cp) cp.style.display = cp.style.display === 'flex' ? 'none' : 'flex';
+
+                const isOpening = cp.style.display !== 'flex';
+                cp.style.display = isOpening ? 'flex' : 'none';
+
+                // 切换编辑模式样式
+                if (isOpening) {
+                    tb.classList.add('ds-edit-mode');
+                } else {
+                    tb.classList.remove('ds-edit-mode');
+                }
             }
             else if (targetId === 'ds-close') { hideSidebar(); }
             else if (targetId === 'ds-side-toggle') { toggleSidebarSide(); }
             else if (targetId === 'ds-expand-toolbar') { toggleToolbarExpansion(); } // New Handler
             else if (targetId === 'ds-reader-mode-btn') { toggleReaderMode(); }
+            else if (targetId === 'ds-cur-site-btn') { // New Site Panel Toggle
+                const panel = document.getElementById('ds-site-panel');
+                if (panel) panel.classList.toggle('active');
+            }
             else if (targetId === 'save-api-key') {
                 const cfgApiKey = document.getElementById('cfg-api-key');
                 const cfgPrompts = document.getElementById('cfg-prompts');
+                const cfgSites = document.getElementById('cfg-ai-sites');
                 const cfgDisabled = document.getElementById('cfg-disabled-sites');
 
                 if (!cfgApiKey) return;
                 DS_CONFIG.settings.apiKey = cfgApiKey.value;
 
-                const rawLines = cfgPrompts.value.split('\n'); DS_CONFIG.settings.customPrompts = [];
+                // Save Custom Prompts
+                const rawLines = cfgPrompts.value.split('\n');
+                DS_CONFIG.settings.customPrompts = [];
                 rawLines.forEach(line => {
                     if (line.includes('=')) { const parts = line.split('='); if (parts.length >= 2) { const name = parts[0].trim(); const template = line.substring(line.indexOf('=') + 1).trim(); if(name && template) DS_CONFIG.settings.customPrompts.push({name, template}); } }
                 });
+
+                // Save Custom Sites
+                if (cfgSites) {
+                    const rawSites = cfgSites.value.split('\n');
+                    DS_CONFIG.settings.customSites = parseConfigLines(rawSites);
+                    GM_setValue('ds_custom_sites', DS_CONFIG.settings.customSites);
+
+                    // Refresh Site Panel (Explicit Rebuild)
+                    const panel = document.getElementById('ds-site-panel');
+                    if (panel) {
+                         UI.clear(panel);
+                         DS_CONFIG.settings.customSites.forEach(s => {
+                            const btn = UI.el('div', {
+                                className: `ds-site-item ${s.value === DS_CONFIG.settings.lastAiSite ? 'active' : ''}`,
+                                title: s.value
+                            }, s.name);
+                            btn.addEventListener('click', () => {
+                                DS_CONFIG.settings.lastAiSite = s.value;
+                                GM_setValue('ds_last_ai_site', s.value);
+                                panel.querySelectorAll('.ds-site-item').forEach(el => el.classList.remove('active'));
+                                btn.classList.add('active');
+                                const curBtn = document.getElementById('ds-cur-site-btn');
+                                if (curBtn) curBtn.firstChild.textContent = s.name;
+                                panel.classList.remove('active');
+                            });
+                            panel.appendChild(btn);
+                        });
+                    }
+                }
 
                 if (cfgDisabled) {
                     const sites = cfgDisabled.value.split('\n').map(s => s.trim()).filter(s => s !== '');
@@ -1810,17 +2315,37 @@ function bindEvents() {
                 GM_setValue('ds_api_key', DS_CONFIG.settings.apiKey); GM_setValue('ds_custom_prompts', DS_CONFIG.settings.customPrompts);
                 renderCustomButtons();
                 document.getElementById('ds-config-panel').style.display = 'none';
+                document.getElementById('ds-vertical-toolbar').classList.remove('ds-edit-mode'); // 退出编辑模式
             }
             else if (targetId === 'ds-send') {
                 const el = document.getElementById('ds-input'); if (!el) return; const val = el.value.trim();
                 if (val) { if (DS_CONFIG.runtime.activeTab !== 'ai') switchTab('ai'); askAI(val,"","chat"); el.value = ""; }
             }
-            else if (targetId === 'ds-summary-btn') { // New Handler Location
+            else if (targetId === 'ds-jump-btn') {
+                // New Jump Logic: No Auto-Fill Transfer
+                const el = document.getElementById('ds-input');
+                const text = el ? el.value.trim() : "";
+
+                // Copy to clipboard if enabled (使用统一的 autoCopy 设置)
+                if (DS_CONFIG.settings.autoCopy && text) {
+                    copyToClip(text);
+                }
+
+                // Simply open the tab
+                window.open(DS_CONFIG.settings.lastAiSite, '_blank');
+            }
+            else if (targetId === 'ds-summary-btn') { // New Handler Location (legacy check, though we have explicit onclick now)
                   const content = getArticleContent();
                   askAI(`请对以下文章内容进行结构化总结：\n\n${content}`, "", "summary");
             }
             else if (targetId === 'ds-confirm-yes') {
-                Object.keys(localStorage).forEach(k => { if(k.startsWith(DS_CONFIG.consts.STORAGE_PREFIX) || k === DS_CONFIG.consts.VOCAB_CACHE_KEY) localStorage.removeItem(k); });
+                // Clear Local Storage (Current Page Highlights)
+                Object.keys(localStorage).forEach(k => {
+                    if(k.startsWith(DS_CONFIG.consts.STORAGE_PREFIX) || k === DS_CONFIG.consts.VOCAB_CACHE_KEY) localStorage.removeItem(k);
+                });
+                // Clear Global Storage (Cross-Page History & Cache)
+                GM_setValue(DS_CONFIG.consts.GLOBAL_STORAGE_KEY, '[]');
+                GM_setValue(DS_CONFIG.consts.GLOBAL_DICT_CACHE_KEY, '{}');
                 location.reload();
             }
             else if (targetId === 'ds-confirm-no') { document.getElementById('ds-confirm-modal').style.display = 'none'; }
@@ -1855,11 +2380,7 @@ function bindEvents() {
         if (!inSidebar && !inPopup) { if (DOM.popup && DOM.popup.style.display !== 'none' && isTopWindow) { DOM.popup.style.display = 'none'; DS_CONFIG.runtime.currentPopupTrigger = null; clearAllInlineTranslations(); } }
         if (e.altKey) { DS_CONFIG.runtime.sidebarLockUntil = Date.now() + 600; }
     });
-    document.addEventListener('mousedown', (e) => {
-        if (e.button !== 2) return;
-        const targetTrans = e.target.closest('.web-inline-trans, .ds-full-page-trans'); if (targetTrans) { e.preventDefault(); e.stopPropagation(); targetTrans.remove(); return; }
-        const targetHighlight = e.target.closest(`.${DS_CONFIG.consts.HIGHLIGHT_CLASS}`); if (targetHighlight) { e.preventDefault(); e.stopPropagation(); removeHighlight(targetHighlight); return; }
-    });
+
     document.addEventListener('mousedown', e => {
         const targetHighlight = e.target.closest(`.${DS_CONFIG.consts.HIGHLIGHT_CLASS}`);
         if (e.altKey && e.button === 0 && !targetHighlight) {
@@ -1919,6 +2440,214 @@ function bindEvents() {
     }, true);
 }
 
+function addToGlobalHistory(word, context) {
+    if (!word) return;
+    // 使用 GM_getValue 读取全局历史
+    let history = [];
+    try {
+        history = JSON.parse(GM_getValue(DS_CONFIG.consts.GLOBAL_STORAGE_KEY, '[]'));
+    } catch(e) { history = []; }
+
+    const existingIndex = history.findIndex(i => i.word === word);
+    if (existingIndex > -1) {
+        history.splice(existingIndex, 1);
+    }
+    history.push({ word, context: "", date: Date.now() });
+    // 使用 GM_setValue 保存全局历史
+    GM_setValue(DS_CONFIG.consts.GLOBAL_STORAGE_KEY, JSON.stringify(history));
+    if (DS_CONFIG.runtime.activeTab === 'history') renderHistoryMenu();
+}
+
+function deleteFromHistory(word, elementRef = null) {
+    const doDelete = () => {
+        let history = [];
+        try {
+            history = JSON.parse(GM_getValue(DS_CONFIG.consts.GLOBAL_STORAGE_KEY, '[]'));
+        } catch(e) { history = []; }
+
+        const newHistory = history.filter(i => i.word !== word);
+        GM_setValue(DS_CONFIG.consts.GLOBAL_STORAGE_KEY, JSON.stringify(newHistory));
+        renderHistoryMenu();
+    };
+
+    if (elementRef) {
+        softDelete(elementRef, doDelete);
+    } else {
+        doDelete();
+    }
+}
+
+// Added export functionality
+function exportHistoryToTxt() {
+    let history = [];
+    try {
+        history = JSON.parse(GM_getValue(DS_CONFIG.consts.GLOBAL_STORAGE_KEY, '[]'));
+    } catch(e) { history = []; }
+
+    if (history.length === 0) {
+        alert('没有历史记录可导出');
+        return;
+    }
+
+    // 根据当前的排序设置对数据进行排序
+    history.sort((a, b) => {
+        if (DS_CONFIG.settings.historySort === 'time_desc') return b.date - a.date;
+        if (DS_CONFIG.settings.historySort === 'time_asc') return a.date - b.date;
+        if (DS_CONFIG.settings.historySort === 'alpha_asc') return a.word.localeCompare(b.word);
+        if (DS_CONFIG.settings.historySort === 'alpha_desc') return b.word.localeCompare(a.word);
+        return 0;
+    });
+
+    const content = history.map(h => h.word).join('\n');
+
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `DeepSeek_Words_${new Date().toISOString().slice(0,10)}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function renderHistoryMenu() {
+    const container = document.getElementById('ds-history-content');
+    if (!container) return;
+
+    // 记录当前的滚动位置 (如果存在)
+    const currentScroll = document.getElementById('ds-history-log')?.scrollTop || 0;
+
+    UI.clear(container);
+
+    // Modified control bar with split layout
+    const controls = UI.el('div', { style: { padding: '10px', borderBottom: '1px solid var(--ds-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--ds-menu-bg)' } }, [
+        // Left side: Sort icons
+        UI.el('div', { style: { display: 'flex', gap: '10px' } }, [
+            UI.el('span', {
+                className: 'ds-sort-btn ' + (DS_CONFIG.settings.historySort.includes('time') ? 'active' : ''),
+                style: { cursor: 'pointer', opacity: DS_CONFIG.settings.historySort.includes('time') ? 1 : 0.5 },
+                onclick: () => {
+                    DS_CONFIG.settings.historySort = DS_CONFIG.settings.historySort === 'time_desc' ? 'time_asc' : 'time_desc';
+                    GM_setValue('ds_history_sort', DS_CONFIG.settings.historySort);
+                    DS_CONFIG.runtime.historyLimit = 50; // 切换排序时重置显示数量
+                    renderHistoryMenu();
+                }
+            }, DS_CONFIG.settings.historySort === 'time_asc' ? '📅 ⬆️' : '📅 ⬇️'),
+            UI.el('span', {
+                className: 'ds-sort-btn ' + (DS_CONFIG.settings.historySort.includes('alpha') ? 'active' : ''),
+                style: { cursor: 'pointer', opacity: DS_CONFIG.settings.historySort.includes('alpha') ? 1 : 0.5 },
+                onclick: () => {
+                    DS_CONFIG.settings.historySort = DS_CONFIG.settings.historySort === 'alpha_asc' ? 'alpha_desc' : 'alpha_asc';
+                    GM_setValue('ds_history_sort', DS_CONFIG.settings.historySort);
+                    DS_CONFIG.runtime.historyLimit = 50; // 切换排序时重置显示数量
+                    renderHistoryMenu();
+                }
+            }, DS_CONFIG.settings.historySort === 'alpha_desc' ? '🔤 ⬇️' : '🔤 ⬆️')
+        ]),
+        // Right side: Export and Delete
+        UI.el('div', { style: { display: 'flex', gap: '10px' } }, [
+             UI.el('span', {
+                className: 'ds-sort-btn',
+                style: { cursor: 'pointer', opacity: 0.7 },
+                title: '导出为TXT',
+                onclick: exportHistoryToTxt
+            }, '📤'),
+            UI.el('span', {
+                className: 'ds-sort-btn',
+                style: { cursor: 'pointer', opacity: 0.7 },
+                title: '清空所有缓存',
+                onclick: () => { document.getElementById('ds-confirm-modal').style.display = 'flex'; }
+            }, '🗑️')
+        ])
+    ]);
+    container.appendChild(controls);
+
+    const listContainer = UI.el('div', { id: 'ds-history-log' });
+
+    // 从 GM_getValue 读取全局数据
+    let history = [];
+    try {
+        history = JSON.parse(GM_getValue(DS_CONFIG.consts.GLOBAL_STORAGE_KEY, '[]'));
+    } catch(e) { history = []; }
+
+    // 获取当前页面所有高亮的词，用于判断是否显示跳转按钮
+    const localHighlights = new Set(JSON.parse(localStorage.getItem(DS_CONFIG.consts.STORAGE_KEY) || '[]').map(h => h.text));
+
+    history.sort((a, b) => {
+        if (DS_CONFIG.settings.historySort === 'time_desc') return b.date - a.date;
+        if (DS_CONFIG.settings.historySort === 'time_asc') return a.date - b.date;
+        if (DS_CONFIG.settings.historySort === 'alpha_asc') return a.word.localeCompare(b.word);
+        if (DS_CONFIG.settings.historySort === 'alpha_desc') return b.word.localeCompare(a.word);
+        return 0;
+    });
+
+    // === 分页逻辑开始 ===
+    if (!DS_CONFIG.runtime.historyLimit) DS_CONFIG.runtime.historyLimit = 50;
+    const totalCount = history.length;
+    const visibleHistory = history.slice(0, DS_CONFIG.runtime.historyLimit);
+    // === 分页逻辑结束 ===
+
+    if (visibleHistory.length === 0) {
+        listContainer.appendChild(UI.el('div', { style: { textAlign: 'center', color: '#666', marginTop: '20px', fontSize: '13px' } }, "暂无历史记录"));
+    } else {
+        visibleHistory.forEach(item => {
+             // 检查该词是否在当前页面高亮中
+             const isLocal = localHighlights.has(item.word);
+             const children = [
+                UI.el('span', { className: 'web-menu-word' }, item.word)
+             ];
+
+             // 如果是当前页面的词，添加跳转图标
+             if (isLocal) {
+                 children.push(UI.el('span', {
+                     className: 'web-menu-jump',
+                     title: '跳转到文中位置',
+                     style: { marginLeft: 'auto', marginRight: '4px' } // 靠右对齐
+                 }, '📍'));
+             }
+
+             const div = UI.el('div', { className: 'web-menu-item', 'data-word': item.word }, [
+                UI.el('div', { className: 'web-menu-header' }, children),
+                UI.el('div', { className: 'web-menu-trans', style: { display: 'none' } })
+             ]);
+             listContainer.appendChild(div);
+        });
+
+        // === 载入更多按钮 ===
+        if (totalCount > DS_CONFIG.runtime.historyLimit) {
+            const remaining = totalCount - DS_CONFIG.runtime.historyLimit;
+            const loadMoreBtn = UI.el('div', {
+                style: {
+                    textAlign: 'center', padding: '12px', cursor: 'pointer',
+                    color: '#3a7bd5', fontSize: '13px', fontWeight: 'bold',
+                    borderTop: '1px solid var(--ds-border)', marginTop: '5px',
+                    transition: 'background 0.2s', borderRadius: '4px'
+                },
+                className: 'ds-load-more-btn',
+                onclick: function() {
+                    this.textContent = "载入中...";
+                    DS_CONFIG.runtime.historyLimit += 50; // 增加50个
+                    renderHistoryMenu();
+                }
+            }, `⬇️ 载入更多 (剩余 ${remaining} 个)`);
+
+            // 鼠标悬停效果
+            loadMoreBtn.onmouseover = () => loadMoreBtn.style.background = 'var(--ds-hover-bg)';
+            loadMoreBtn.onmouseout = () => loadMoreBtn.style.background = 'transparent';
+
+            listContainer.appendChild(loadMoreBtn);
+        }
+    }
+
+    container.appendChild(listContainer);
+
+    // 恢复滚动位置
+    if (currentScroll > 0) {
+        setTimeout(() => {
+            if (listContainer) listContainer.scrollTop = currentScroll;
+        }, 0);
+    }
+}
+
 function initTimedTasks() { setInterval(() => { if (!DS_CONFIG.runtime.isRestoring && isSidebarVisible()) { applySavedHighlights(); } }, 2000); }
 async function init() {
     const currentUrl = window.location.href;
@@ -1937,6 +2666,7 @@ async function init() {
     bindEvents();
     initTimedTasks();
     refreshHighlightMenu();
+    // AutoFill logic removed as requested
 }
 init();
 })();

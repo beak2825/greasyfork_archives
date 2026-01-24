@@ -1,41 +1,166 @@
 // ==UserScript==
-// @name         YouTube Speed Control (v13)
+// @name         YouTube Speed Control (v14)
 // @namespace    http://tampermonkey.net/
 // @author       Solomon
 // @license      CC-BY-4.0
-// @version      13
-// @description  Modern speed button with readable colors. Located between channel and like buttons.
+// @version      14
+// @description  Modern speed button with per-channel memory. Automatically remembers your preferred speed for each channel.
 // @match        https://www.youtube.com/*
 // @match        https://youtube.com/*
 // @grant        none
 // @run-at       document-idle
-// @downloadURL https://update.greasyfork.org/scripts/562041/YouTube%20Speed%20Control%20%28v13%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/562041/YouTube%20Speed%20Control%20%28v13%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562041/YouTube%20Speed%20Control%20%28v14%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/562041/YouTube%20Speed%20Control%20%28v14%29.meta.js
 // ==/UserScript==
+
+/*
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 📋 CHANGELOG
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ * Previous Features (Preserved):
+ * ✅ Speed options: 1x, 1.25x, 1.5x, 1.75x, 2x
+ * ✅ Remember speed preference
+ * ✅ Keyboard shortcuts: [ ] \ P
+ * ✅ Double-click to reset to 1x
+ * ✅ Modern red button design
+ * ✅ Positioned next to channel/like buttons
+ *
+ * 🆕 NEW in v14:
+ * ✨ Per-channel speed memory - automatically remembers speed for each channel
+ * ✨ Channel indicator shows when using channel-specific speed
+ * ✨ Falls back to default speed for new/unknown channels
+ * ✨ Toggle between global and per-channel mode
+ *
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
 
 (function() {
     'use strict';
 
-    const SPEEDS = [1, 1.25, 1.5, 1.75, 2];
-    const SAVE_KEY = 'yt_speed_save_v13';
-    const SPEED_KEY = 'yt_speed_value_v13';
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🔧 CONFIGURATION
+    // ═══════════════════════════════════════════════════════════════════════════
 
-    if (localStorage.getItem(SAVE_KEY) === null) {
-        localStorage.setItem(SAVE_KEY, 'true');
+    const SPEEDS = [1, 1.25, 1.5, 1.75, 2];
+    const STORAGE_KEYS = {
+        SAVE_ENABLED: 'yt_speed_save_v14',
+        DEFAULT_SPEED: 'yt_speed_default_v14',
+        CHANNEL_SPEEDS: 'yt_speed_channels_v14',
+        PER_CHANNEL_MODE: 'yt_speed_perchannel_v14'
+    };
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 📊 STATE
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const state = {
+        currentSpeed: 1,
+        currentChannel: null,
+        isOpen: false,
+        inserted: false,
+        btn: null,
+        menu: null
+    };
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 💾 STORAGE FUNCTIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Initialize defaults
+    if (localStorage.getItem(STORAGE_KEYS.SAVE_ENABLED) === null) {
+        localStorage.setItem(STORAGE_KEYS.SAVE_ENABLED, 'true');
+    }
+    if (localStorage.getItem(STORAGE_KEYS.PER_CHANNEL_MODE) === null) {
+        localStorage.setItem(STORAGE_KEYS.PER_CHANNEL_MODE, 'true');
+    }
+    if (localStorage.getItem(STORAGE_KEYS.CHANNEL_SPEEDS) === null) {
+        localStorage.setItem(STORAGE_KEYS.CHANNEL_SPEEDS, '{}');
     }
 
-    const isSaveOn = () => localStorage.getItem(SAVE_KEY) === 'true';
-    const getSavedSpeed = () => parseFloat(localStorage.getItem(SPEED_KEY)) || 1;
-    const saveSpeed = (s) => localStorage.setItem(SPEED_KEY, String(s));
+    const isSaveEnabled = () => localStorage.getItem(STORAGE_KEYS.SAVE_ENABLED) === 'true';
+    const isPerChannelMode = () => localStorage.getItem(STORAGE_KEYS.PER_CHANNEL_MODE) === 'true';
 
-    let currentSpeed = isSaveOn() ? getSavedSpeed() : 1;
-    let btn = null;
-    let menu = null;
-    let checkbox = null;
-    let isOpen = false;
-    let inserted = false;
+    const getDefaultSpeed = () => parseFloat(localStorage.getItem(STORAGE_KEYS.DEFAULT_SPEED)) || 1;
+    const setDefaultSpeed = (speed) => localStorage.setItem(STORAGE_KEYS.DEFAULT_SPEED, String(speed));
 
-    // ===== STYLES =====
+    const getChannelSpeeds = () => {
+        try {
+            return JSON.parse(localStorage.getItem(STORAGE_KEYS.CHANNEL_SPEEDS)) || {};
+        } catch {
+            return {};
+        }
+    };
+
+    const setChannelSpeed = (channelId, speed) => {
+        if (!channelId) return;
+        const speeds = getChannelSpeeds();
+        speeds[channelId] = speed;
+        localStorage.setItem(STORAGE_KEYS.CHANNEL_SPEEDS, JSON.stringify(speeds));
+    };
+
+    const getChannelSpeed = (channelId) => {
+        if (!channelId) return null;
+        const speeds = getChannelSpeeds();
+        return speeds[channelId] || null;
+    };
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🔍 CHANNEL DETECTION
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function getCurrentChannel() {
+        // Try multiple methods to get channel identifier
+
+        // Method 1: Channel link in video owner section
+        const ownerLink = document.querySelector(
+            '#owner a[href*="/@"], ' +
+            '#owner a[href*="/channel/"], ' +
+            '#owner a[href*="/c/"], ' +
+            'ytd-video-owner-renderer a[href*="/@"], ' +
+            'ytd-video-owner-renderer a[href*="/channel/"]'
+        );
+
+        if (ownerLink) {
+            const href = ownerLink.getAttribute('href');
+            if (href) {
+                // Extract @handle or channel ID
+                const handleMatch = href.match(/\/@([^/?]+)/);
+                if (handleMatch) return '@' + handleMatch[1];
+
+                const channelMatch = href.match(/\/channel\/([^/?]+)/);
+                if (channelMatch) return channelMatch[1];
+
+                const customMatch = href.match(/\/c\/([^/?]+)/);
+                if (customMatch) return 'c/' + customMatch[1];
+            }
+        }
+
+        // Method 2: Channel name element
+        const channelName = document.querySelector(
+            '#owner #channel-name a, ' +
+            '#owner ytd-channel-name a, ' +
+            'ytd-video-owner-renderer #channel-name a'
+        );
+
+        if (channelName) {
+            const href = channelName.getAttribute('href');
+            if (href) {
+                const handleMatch = href.match(/\/@([^/?]+)/);
+                if (handleMatch) return '@' + handleMatch[1];
+            }
+            // Fallback to channel name text
+            const name = channelName.textContent?.trim();
+            if (name) return 'name:' + name;
+        }
+
+        return null;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🎨 STYLES
+    // ═══════════════════════════════════════════════════════════════════════════
+
     const css = document.createElement('style');
     css.textContent = `
         #ytspeed-wrapper {
@@ -82,6 +207,11 @@
             background: #990000 !important;
         }
 
+        /* 🆕 v14: Channel indicator */
+        #ytspeed-btn.has-channel {
+            background: linear-gradient(135deg, #cc0000 0%, #ff6600 100%) !important;
+        }
+
         /* Icon */
         .ytspeed-icon {
             font-size: 14px !important;
@@ -93,6 +223,15 @@
             font-size: 14px !important;
             font-weight: 600 !important;
             line-height: 1 !important;
+        }
+
+        /* 🆕 v14: Channel badge */
+        .ytspeed-channel-badge {
+            font-size: 10px !important;
+            background: rgba(255,255,255,0.2) !important;
+            padding: 2px 6px !important;
+            border-radius: 10px !important;
+            margin-left: 4px !important;
         }
 
         /* ===== DROPDOWN MENU ===== */
@@ -107,7 +246,7 @@
             border: 1px solid #404040 !important;
             border-radius: 12px !important;
             padding: 8px !important;
-            min-width: 130px !important;
+            min-width: 160px !important;
             box-shadow: 0 8px 24px rgba(0,0,0,0.4) !important;
             z-index: 9999 !important;
             font-family: "YouTube Sans", "Roboto", Arial, sans-serif !important;
@@ -161,128 +300,179 @@
             margin: 8px 4px !important;
         }
 
-        /* ===== SAVE TOGGLE ===== */
-        .ytspeed-save {
+        /* ===== TOGGLE OPTIONS ===== */
+        .ytspeed-toggle-row {
             display: flex !important;
             align-items: center !important;
-            justify-content: center !important;
-            gap: 8px !important;
-            padding: 10px 16px !important;
+            justify-content: space-between !important;
+            padding: 8px 12px !important;
             color: #aaaaaa !important;
-            font-size: 13px !important;
+            font-size: 12px !important;
             font-weight: 500 !important;
             cursor: pointer !important;
             border-radius: 8px !important;
             transition: all 0.15s ease !important;
         }
 
-        .ytspeed-save:hover {
+        .ytspeed-toggle-row:hover {
             background: #353535 !important;
             color: #ffffff !important;
         }
 
-        /* Checkbox */
-        .ytspeed-save input {
-            appearance: none !important;
-            -webkit-appearance: none !important;
+        /* Toggle switch */
+        .ytspeed-toggle {
+            position: relative !important;
+            width: 36px !important;
+            height: 20px !important;
+            background: #555555 !important;
+            border-radius: 10px !important;
+            cursor: pointer !important;
+            transition: background 0.2s ease !important;
+        }
+
+        .ytspeed-toggle.on {
+            background: #cc0000 !important;
+        }
+
+        .ytspeed-toggle::after {
+            content: "" !important;
+            position: absolute !important;
+            top: 2px !important;
+            left: 2px !important;
             width: 16px !important;
             height: 16px !important;
-            border: 2px solid #666666 !important;
-            border-radius: 4px !important;
-            cursor: pointer !important;
-            transition: all 0.15s ease !important;
-            position: relative !important;
-            background: transparent !important;
+            background: #ffffff !important;
+            border-radius: 50% !important;
+            transition: left 0.2s ease !important;
         }
 
-        .ytspeed-save input:checked {
-            background: #cc0000 !important;
-            border-color: #cc0000 !important;
+        .ytspeed-toggle.on::after {
+            left: 18px !important;
         }
 
-        .ytspeed-save input:checked::after {
-            content: "✓" !important;
-            position: absolute !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            color: #ffffff !important;
+        /* 🆕 v14: Channel info display */
+        .ytspeed-channel-info {
+            padding: 8px 12px !important;
+            background: #1a1a1a !important;
+            border-radius: 8px !important;
+            margin-bottom: 8px !important;
             font-size: 11px !important;
-            font-weight: bold !important;
-            line-height: 1 !important;
+            color: #888888 !important;
+            text-align: center !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+        }
+
+        .ytspeed-channel-info strong {
+            color: #ff6600 !important;
+            font-weight: 600 !important;
         }
     `;
     document.head.appendChild(css);
 
-    // ===== CREATE ELEMENTS =====
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🎛️ UI CREATION
+    // ═══════════════════════════════════════════════════════════════════════════
+
     function createElements() {
         const wrapper = document.createElement('div');
         wrapper.id = 'ytspeed-wrapper';
 
-        btn = document.createElement('button');
-        btn.id = 'ytspeed-btn';
-        btn.title = 'Playback Speed (Double-click to reset)';
+        // Main button
+        state.btn = document.createElement('button');
+        state.btn.id = 'ytspeed-btn';
+        state.btn.title = 'Playback Speed (Double-click to reset)';
 
-        // Icon
         const icon = document.createElement('span');
         icon.className = 'ytspeed-icon';
         icon.textContent = '⚡';
 
-        // Text
         const text = document.createElement('span');
         text.className = 'ytspeed-text';
-        text.textContent = currentSpeed + 'x';
+        text.id = 'ytspeed-text';
+        text.textContent = state.currentSpeed + 'x';
 
-        btn.appendChild(icon);
-        btn.appendChild(text);
+        state.btn.appendChild(icon);
+        state.btn.appendChild(text);
 
-        // Menu
-        menu = document.createElement('div');
-        menu.id = 'ytspeed-menu';
+        // Dropdown menu
+        state.menu = document.createElement('div');
+        state.menu.id = 'ytspeed-menu';
 
+        // 🆕 v14: Channel info display
+        const channelInfo = document.createElement('div');
+        channelInfo.className = 'ytspeed-channel-info';
+        channelInfo.id = 'ytspeed-channel-info';
+        channelInfo.innerHTML = 'Channel: <strong>detecting...</strong>';
+        state.menu.appendChild(channelInfo);
+
+        // Speed options
         SPEEDS.forEach(speed => {
             const item = document.createElement('div');
-            item.className = 'ytspeed-item' + (Math.abs(speed - currentSpeed) < 0.01 ? ' active' : '');
+            item.className = 'ytspeed-item' + (Math.abs(speed - state.currentSpeed) < 0.01 ? ' active' : '');
             item.setAttribute('data-speed', speed);
             item.textContent = speed + 'x';
             item.onclick = (e) => {
                 e.stopPropagation();
                 setSpeed(speed);
             };
-            menu.appendChild(item);
+            state.menu.appendChild(item);
         });
 
-        const divider = document.createElement('div');
-        divider.className = 'ytspeed-divider';
-        menu.appendChild(divider);
+        // Divider
+        const divider1 = document.createElement('div');
+        divider1.className = 'ytspeed-divider';
+        state.menu.appendChild(divider1);
 
-        const saveRow = document.createElement('label');
-        saveRow.className = 'ytspeed-save';
-
-        checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = isSaveOn();
-        checkbox.onclick = (e) => e.stopPropagation();
-        checkbox.onchange = () => {
-            localStorage.setItem(SAVE_KEY, checkbox.checked ? 'true' : 'false');
-            if (checkbox.checked) saveSpeed(currentSpeed);
-        };
-
-        saveRow.appendChild(checkbox);
-        saveRow.appendChild(document.createTextNode('Remember'));
-        menu.appendChild(saveRow);
-
-        wrapper.appendChild(btn);
-        wrapper.appendChild(menu);
-
-        btn.onclick = (e) => {
+        // 🆕 v14: Per-channel mode toggle
+        const perChannelRow = document.createElement('div');
+        perChannelRow.className = 'ytspeed-toggle-row';
+        perChannelRow.innerHTML = `
+            <span>Per-Channel</span>
+            <div class="ytspeed-toggle ${isPerChannelMode() ? 'on' : ''}" id="ytspeed-perchannel-toggle"></div>
+        `;
+        perChannelRow.onclick = (e) => {
             e.stopPropagation();
-            isOpen = !isOpen;
-            menu.classList.toggle('open', isOpen);
-            btn.classList.toggle('open', isOpen);
+            const toggle = document.getElementById('ytspeed-perchannel-toggle');
+            const newValue = !isPerChannelMode();
+            localStorage.setItem(STORAGE_KEYS.PER_CHANNEL_MODE, newValue ? 'true' : 'false');
+            toggle.classList.toggle('on', newValue);
+            loadSpeedForCurrentChannel();
+        };
+        state.menu.appendChild(perChannelRow);
+
+        // Remember toggle
+        const rememberRow = document.createElement('div');
+        rememberRow.className = 'ytspeed-toggle-row';
+        rememberRow.innerHTML = `
+            <span>Remember</span>
+            <div class="ytspeed-toggle ${isSaveEnabled() ? 'on' : ''}" id="ytspeed-remember-toggle"></div>
+        `;
+        rememberRow.onclick = (e) => {
+            e.stopPropagation();
+            const toggle = document.getElementById('ytspeed-remember-toggle');
+            const newValue = !isSaveEnabled();
+            localStorage.setItem(STORAGE_KEYS.SAVE_ENABLED, newValue ? 'true' : 'false');
+            toggle.classList.toggle('on', newValue);
+            if (newValue) saveCurrentSpeed();
+        };
+        state.menu.appendChild(rememberRow);
+
+        wrapper.appendChild(state.btn);
+        wrapper.appendChild(state.menu);
+
+        // Button click - toggle menu
+        state.btn.onclick = (e) => {
+            e.stopPropagation();
+            state.isOpen = !state.isOpen;
+            state.menu.classList.toggle('open', state.isOpen);
+            state.btn.classList.toggle('open', state.isOpen);
+            updateChannelInfo();
         };
 
-        btn.ondblclick = (e) => {
+        // Double-click - reset to 1x
+        state.btn.ondblclick = (e) => {
             e.stopPropagation();
             setSpeed(1);
         };
@@ -290,13 +480,124 @@
         return wrapper;
     }
 
-    // ===== INSERT INTO PAGE =====
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🔄 SPEED MANAGEMENT
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function setSpeed(speed) {
+        state.currentSpeed = speed;
+
+        // Apply to video
+        const video = document.querySelector('video');
+        if (video) video.playbackRate = speed;
+
+        // Save speed
+        if (isSaveEnabled()) {
+            saveCurrentSpeed();
+        }
+
+        updateUI();
+        console.log(`[YouTube Speed v14] ⚡ Speed set to ${speed}x` + 
+            (isPerChannelMode() && state.currentChannel ? ` for ${state.currentChannel}` : ' (global)'));
+    }
+
+    function saveCurrentSpeed() {
+        if (isPerChannelMode() && state.currentChannel) {
+            // Save per-channel
+            setChannelSpeed(state.currentChannel, state.currentSpeed);
+        } else {
+            // Save global default
+            setDefaultSpeed(state.currentSpeed);
+        }
+    }
+
+    function loadSpeedForCurrentChannel() {
+        // Detect current channel
+        state.currentChannel = getCurrentChannel();
+
+        let speed = getDefaultSpeed();
+
+        if (isPerChannelMode() && state.currentChannel) {
+            const channelSpeed = getChannelSpeed(state.currentChannel);
+            if (channelSpeed !== null) {
+                speed = channelSpeed;
+                console.log(`[YouTube Speed v14] 📺 Loaded ${speed}x for channel: ${state.currentChannel}`);
+            } else {
+                console.log(`[YouTube Speed v14] 📺 New channel: ${state.currentChannel}, using default ${speed}x`);
+            }
+        }
+
+        state.currentSpeed = speed;
+        applySpeed();
+        updateUI();
+    }
+
+    function applySpeed() {
+        const video = document.querySelector('video');
+        if (video && Math.abs(video.playbackRate - state.currentSpeed) > 0.01) {
+            video.playbackRate = state.currentSpeed;
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🎨 UI UPDATES
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function updateUI() {
+        // Update button text
+        const text = document.getElementById('ytspeed-text');
+        if (text) text.textContent = state.currentSpeed + 'x';
+
+        // Update button style for channel mode
+        if (state.btn) {
+            const hasChannelSpeed = isPerChannelMode() && state.currentChannel && getChannelSpeed(state.currentChannel) !== null;
+            state.btn.classList.toggle('has-channel', hasChannelSpeed);
+        }
+
+        // Update active speed in menu
+        if (state.menu) {
+            state.menu.querySelectorAll('.ytspeed-item').forEach(item => {
+                const speed = parseFloat(item.getAttribute('data-speed'));
+                item.classList.toggle('active', Math.abs(speed - state.currentSpeed) < 0.01);
+            });
+        }
+
+        updateChannelInfo();
+    }
+
+    function updateChannelInfo() {
+        const channelInfo = document.getElementById('ytspeed-channel-info');
+        if (!channelInfo) return;
+
+        state.currentChannel = getCurrentChannel();
+
+        if (state.currentChannel) {
+            const displayName = state.currentChannel.startsWith('@') 
+                ? state.currentChannel 
+                : state.currentChannel.startsWith('name:') 
+                    ? state.currentChannel.substring(5) 
+                    : state.currentChannel.substring(0, 15) + '...';
+
+            const savedSpeed = getChannelSpeed(state.currentChannel);
+            if (savedSpeed !== null && isPerChannelMode()) {
+                channelInfo.innerHTML = `📺 <strong>${displayName}</strong> → ${savedSpeed}x`;
+            } else {
+                channelInfo.innerHTML = `📺 <strong>${displayName}</strong> <span style="color:#666">(new)</span>`;
+            }
+        } else {
+            channelInfo.innerHTML = 'Channel: <strong>detecting...</strong>';
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 📍 INSERTION
+    // ═══════════════════════════════════════════════════════════════════════════
+
     function insertButton() {
         if (document.getElementById('ytspeed-wrapper')) {
-            inserted = true;
-            btn = document.getElementById('ytspeed-btn');
-            menu = document.getElementById('ytspeed-menu');
-            checkbox = menu?.querySelector('input[type="checkbox"]');
+            state.inserted = true;
+            state.btn = document.getElementById('ytspeed-btn');
+            state.menu = document.getElementById('ytspeed-menu');
             return;
         }
 
@@ -323,83 +624,71 @@
             owner.parentNode.appendChild(wrapper);
         }
 
-        inserted = true;
-        console.log('[YouTube Speed v13] ⚡ Button inserted!');
+        state.inserted = true;
+        console.log('[YouTube Speed v14] ⚡ Button inserted!');
     }
 
-    // ===== UPDATE UI =====
-    function updateUI() {
-        if (btn) {
-            const text = btn.querySelector('.ytspeed-text');
-            if (text) text.textContent = currentSpeed + 'x';
-        }
-        if (menu) {
-            menu.querySelectorAll('.ytspeed-item').forEach(item => {
-                const speed = parseFloat(item.getAttribute('data-speed'));
-                item.classList.toggle('active', Math.abs(speed - currentSpeed) < 0.01);
-            });
-        }
-    }
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ⌨️ KEYBOARD SHORTCUTS
+    // ═══════════════════════════════════════════════════════════════════════════
 
-    // ===== SET SPEED =====
-    function setSpeed(speed) {
-        currentSpeed = speed;
-
-        const video = document.querySelector('video');
-        if (video) video.playbackRate = speed;
-
-        if (checkbox?.checked) saveSpeed(speed);
-
-        updateUI();
-    }
-
-    // ===== APPLY SPEED =====
-    function applySpeed() {
-        const video = document.querySelector('video');
-        if (video && Math.abs(video.playbackRate - currentSpeed) > 0.01) {
-            video.playbackRate = currentSpeed;
-        }
-    }
-
-    // ===== CLOSE MENU =====
-    document.addEventListener('click', (e) => {
-        if (isOpen && btn && menu && e.target !== btn && !btn.contains(e.target) && !menu.contains(e.target)) {
-            isOpen = false;
-            menu.classList.remove('open');
-            btn.classList.remove('open');
-        }
-    });
-
-    // ===== KEYBOARD =====
     document.addEventListener('keydown', (e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
 
-        if (e.key === '[') setSpeed(Math.max(0.25, currentSpeed - 0.25));
-        if (e.key === ']') setSpeed(Math.min(4, currentSpeed + 0.25));
+        if (e.key === '[') setSpeed(Math.max(0.25, state.currentSpeed - 0.25));
+        if (e.key === ']') setSpeed(Math.min(4, state.currentSpeed + 0.25));
         if (e.key === '\\') setSpeed(1);
         if (e.key === 'p' || e.key === 'P') setSpeed(1.25);
     });
 
-    // ===== INIT =====
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🖱️ CLOSE MENU ON OUTSIDE CLICK
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    document.addEventListener('click', (e) => {
+        if (state.isOpen && state.btn && state.menu && 
+            e.target !== state.btn && !state.btn.contains(e.target) && !state.menu.contains(e.target)) {
+            state.isOpen = false;
+            state.menu.classList.remove('open');
+            state.btn.classList.remove('open');
+        }
+    });
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🚀 INITIALIZATION
+    // ═══════════════════════════════════════════════════════════════════════════
+
     function init() {
         insertButton();
-        applySpeed();
-        updateUI();
+        loadSpeedForCurrentChannel();
     }
 
     init();
 
+    // Watch for page changes
     const observer = new MutationObserver(() => {
-        if (!document.getElementById('ytspeed-wrapper')) inserted = false;
-        if (!inserted) init();
+        if (!document.getElementById('ytspeed-wrapper')) state.inserted = false;
+        if (!state.inserted) init();
     });
     observer.observe(document.body, { childList: true, subtree: true });
 
+    // YouTube SPA navigation
     document.addEventListener('yt-navigate-finish', () => {
-        inserted = false;
+        state.inserted = false;
+        state.currentChannel = null;
         setTimeout(init, 500);
     });
 
+    // Keep speed applied
     setInterval(applySpeed, 1000);
+
+    // Periodically check for channel changes (for playlists, autoplay)
+    setInterval(() => {
+        const newChannel = getCurrentChannel();
+        if (newChannel && newChannel !== state.currentChannel) {
+            console.log(`[YouTube Speed v14] 📺 Channel changed: ${state.currentChannel} → ${newChannel}`);
+            loadSpeedForCurrentChannel();
+        }
+    }, 2000);
 
 })();

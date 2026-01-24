@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         Universal Website Optimizer (v3.0 Spec) / 通用網站優化工具 (v3.0)
-// @name:zh-TW   通用網站優化工具 (v3.0 實驗版)
+// @name         Universal Website Optimizer (v3 Spec) / 通用網站優化工具 (v3)
+// @name:zh-TW   通用網站優化工具 (v3 實驗版)
 // @namespace    https://github.com/jmsch23280866
 // @version      3.1.0
 // @description  The ultimate performance booster for modern web browsing. Optimizes CPU, RAM, Network, and Storage usage while maintaining site functionality.
@@ -13,8 +13,8 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/501085/Universal%20Website%20Optimizer%20%28v30%20Spec%29%20%20%E9%80%9A%E7%94%A8%E7%B6%B2%E7%AB%99%E5%84%AA%E5%8C%96%E5%B7%A5%E5%85%B7%20%28v30%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/501085/Universal%20Website%20Optimizer%20%28v30%20Spec%29%20%20%E9%80%9A%E7%94%A8%E7%B6%B2%E7%AB%99%E5%84%AA%E5%8C%96%E5%B7%A5%E5%85%B7%20%28v30%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/501085/Universal%20Website%20Optimizer%20%28v3%20Spec%29%20%20%E9%80%9A%E7%94%A8%E7%B6%B2%E7%AB%99%E5%84%AA%E5%8C%96%E5%B7%A5%E5%85%B7%20%28v3%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/501085/Universal%20Website%20Optimizer%20%28v3%20Spec%29%20%20%E9%80%9A%E7%94%A8%E7%B6%B2%E7%AB%99%E5%84%AA%E5%8C%96%E5%B7%A5%E5%85%B7%20%28v3%29.meta.js
 // ==/UserScript==
 
 (function () {

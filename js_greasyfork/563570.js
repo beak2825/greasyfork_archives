@@ -358,6 +358,9 @@ const HeldItemsManager = {
             } else {
                 player.loseItem(heldItem.name, 1);
                 this.heldItems.push(heldItem);
+                if (!this.heldItem()) {
+                    this.heldItem(heldItem);
+                }
             }
         };
 

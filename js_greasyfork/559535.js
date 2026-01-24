@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         I'm not a robot neal.fun cheats
 // @namespace    http://tampermonkey.net/
-// @version      12.4
+// @version      12.6
 // @description  Adds features to help with certain levels.
 // @author       Suomynona589
 // @match        https://neal.fun/not-a-robot/*
@@ -116,47 +116,35 @@ function clickAt(x, y) {
 //----Stop sign cheat----
 
     async function runStopSignCheat() {
-        const ready = await waitFor('.grid-item.grid-item-with-image');
-        if (!ready) { log('stop-sign: tiles not found'); return; }
+    const ready = await waitFor('.grid-item.grid-item-with-image');
+    if (!ready) { log('stop-sign: tiles not found'); return; }
 
-        const targets = [
-    "66.6667% 0%",
-    "100% 0%",
-    "66.6667% 33.3333%",
-    "100% 33.3333%"
-  ];
+    const targets = [
+        "66.6667% 0%",
+        "100% 0%",
+        "66.6667% 33.3333%",
+        "100% 33.3333%"
+    ];
 
-  const tiles = Array.from(document.querySelectorAll('.grid-item.grid-item-with-image'));
-  let clicks = 0;
+    const tiles = Array.from(document.querySelectorAll('.grid-item.grid-item-with-image'));
+    let clicks = 0;
 
-  tiles.forEach(el => {
-    const style = el.getAttribute('style') || "";
-    if (targets.some(pos => style.includes(`background-position: ${pos}`))) {
-      if (!el.classList.contains('grid-item-selected')) {
-        simulateClick(el);
-        clicks++;
-      }
-    }
-  });
+    tiles.forEach(el => {
+        const style = el.getAttribute('style') || "";
+        if (targets.some(pos => style.includes(`background-position: ${pos}`))) {
+            if (!el.classList.contains('grid-item-selected')) {
+                simulateClick(el);
+                clicks++;
+            }
+        }
+    });
 
-  log('stop-sign: clicked', clicks, 'tiles');
-
-  // Wait 500ms then click the verify button
-  setTimeout(() => {
-    const verifyBtn = document.querySelector('#captcha-verify-button.verify-button');
-    if (verifyBtn) {
-      simulateClick(verifyBtn);
-      log('stop-sign: clicked verify button');
-    } else {
-      log('stop-sign: verify button not found');
-    }
-  }, 750);
+    log('stop-sign: clicked', clicks, 'tiles');
 }
 
 //----Veggie cheat----
 
     async function runVegetableCheat() {
-    // Wait until vegetable images exist
     const ready = await waitFor('.grid-item img.vegetable-image');
     if (!ready) { log('vegetables: tiles not found'); return; }
 
@@ -172,7 +160,7 @@ function clickAt(x, y) {
             const src = img.getAttribute('src') || "";
             if (veggies.some(v => src.includes(`/vegetables/${v}`))) {
                 if (!el.classList.contains('grid-item-selected')) {
-                    simulateClick(el); // click the parent tile only
+                    simulateClick(el);
                     clicks++;
                 }
             }
@@ -180,7 +168,6 @@ function clickAt(x, y) {
 
         if (clicks > 0) log('vegetables: clicked', clicks, 'tiles');
 
-        // Check if all target veggies are now selected
         const allSelected = tiles.filter(el => {
             const img = el.querySelector('img.vegetable-image');
             if (!img) return false;
@@ -191,102 +178,81 @@ function clickAt(x, y) {
         return allSelected;
     }
 
-    // Keep watching until all target veggies are selected
     const observer = new MutationObserver(() => {
         if (selectVeggies()) observer.disconnect();
     });
     observer.observe(document.body, { childList: true, subtree: true });
 
-    // Also retry periodically in case images load late
     let attempts = 0;
-    const maxAttempts = 100; // ~10 seconds at 100ms
+    const maxAttempts = 100;
     const interval = setInterval(() => {
         attempts++;
         if (selectVeggies() || attempts >= maxAttempts) clearInterval(interval);
     }, 100);
-
-// Wait 500ms then click the verify button
-  setTimeout(() => {
-    const verifyBtn = document.querySelector('#captcha-verify-button');
-    if (verifyBtn) {
-      simulateClick(verifyBtn);
-      log('stop-sign: clicked verify button');
-    } else {
-      log('stop-sign: verify button not found');
-    }
-  }, 500);
 }
 
 //----Intersection Cheat----
 
 async function runIntersectionCheat() {
-  console.log("intersection cheat: starting");
+    console.log("intersection cheat: starting");
 
-  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-  async function waitForSelector(selector, timeout = 6000) {
-    const start = Date.now();
-    return new Promise(resolve => {
-      const tick = () => {
-        const els = document.querySelectorAll(selector);
-        if (els.length) return resolve(Array.from(els));
-        if (Date.now() - start > timeout) return resolve([]);
-        requestAnimationFrame(tick);
-      };
-      tick();
-    });
-  }
-
-  function clickElement(el) {
-    if (!el) return;
-    const opts = { bubbles: true, cancelable: true };
-    el.dispatchEvent(new PointerEvent("pointerdown", opts));
-    el.dispatchEvent(new MouseEvent("mousedown", opts));
-    el.dispatchEvent(new PointerEvent("pointerup", opts));
-    el.dispatchEvent(new MouseEvent("mouseup", opts));
-    el.dispatchEvent(new MouseEvent("click", opts));
-  }
-
-  function getRotationDeg(el) {
-    const inline = el.getAttribute("style") || "";
-    const m = inline.match(/rotate\((-?\d+(?:\.\d+)?)deg\)/i);
-    if (m) return parseFloat(m[1]);
-    return 0;
-  }
-
-  function isGoodRotation(el) {
-    const deg = getRotationDeg(el);
-    const mod = ((deg % 360) + 360) % 360;
-    return mod === 0;
-  }
-
-  const items = await waitForSelector(".rotating-item");
-  if (!items.length) {
-    console.warn("intersection cheat: no items found");
-    return;
-  }
-
-  let totalClicks = 0;
-  for (const el of items) {
-    if (isGoodRotation(el)) continue;
-    const maxAttempts = 20;
-    for (let i = 0; i < maxAttempts; i++) {
-      clickElement(el);
-      totalClicks++;
-      await sleep(100);
-      if (isGoodRotation(el)) break;
+    async function waitForSelector(selector, timeout = 6000) {
+        const start = Date.now();
+        return new Promise(resolve => {
+            const tick = () => {
+                const els = document.querySelectorAll(selector);
+                if (els.length) return resolve(Array.from(els));
+                if (Date.now() - start > timeout) return resolve([]);
+                requestAnimationFrame(tick);
+            };
+            tick();
+        });
     }
-  }
 
-  console.log("intersection cheat: total clicks", totalClicks);
+    function clickElement(el) {
+        if (!el) return;
+        const opts = { bubbles: true, cancelable: true };
+        el.dispatchEvent(new PointerEvent("pointerdown", opts));
+        el.dispatchEvent(new MouseEvent("mousedown", opts));
+        el.dispatchEvent(new PointerEvent("pointerup", opts));
+        el.dispatchEvent(new MouseEvent("mouseup", opts));
+        el.dispatchEvent(new MouseEvent("click", opts));
+    }
 
-  const verifyBtn = document.querySelector("#captcha-verify-button.verify-button");
-  if (verifyBtn) {
-    clickElement(verifyBtn);
-    console.log("intersection cheat: clicked Verify");
-  } else {
-    console.warn("intersection cheat: Verify button not found");
-  }
+    function getRotationDeg(el) {
+        const inline = el.getAttribute("style") || "";
+        const m = inline.match(/rotate\((-?\d+(?:\.\d+)?)deg\)/i);
+        if (m) return parseFloat(m[1]);
+        return 0;
+    }
+
+    function isGoodRotation(el) {
+        const deg = getRotationDeg(el);
+        const mod = ((deg % 360) + 360) % 360;
+        return mod === 0;
+    }
+
+    const items = await waitForSelector(".rotating-item");
+    if (!items.length) {
+        console.warn("intersection cheat: no items found");
+        return;
+    }
+
+    let totalClicks = 0;
+    for (const el of items) {
+        if (isGoodRotation(el)) continue;
+        const maxAttempts = 20;
+        for (let i = 0; i < maxAttempts; i++) {
+            clickElement(el);
+            totalClicks++;
+            await sleep(100);
+            if (isGoodRotation(el)) break;
+        }
+    }
+
+    console.log("intersection cheat: total clicks", totalClicks);
 }
 
 //----License Plate Cheat----
@@ -294,11 +260,9 @@ async function runIntersectionCheat() {
 async function runLicensePlateCheat() {
   log("runLicensePlateCheat: starting");
 
-  // Wait until license plate image exists
   const ready = await waitFor(".license-image");
   if (!ready) { log("license: image not found"); return; }
 
-  // Grab the src and extract the text between /license/ and .webp
   const img = document.querySelector(".license-image");
   if (!img) { log("license: no image element"); return; }
   const src = img.getAttribute("src") || "";
@@ -307,11 +271,9 @@ async function runLicensePlateCheat() {
   const answer = m[1];
   log("license: answer =", answer);
 
-  // Find the input box
   const input = document.querySelector(".captcha-input-text");
   if (!input) { log("license: captcha input not found"); return; }
 
-  // Type into the input like a user, letter-by-letter
   input.focus();
   input.value = "";
   const perCharDelay = 150;
@@ -322,17 +284,6 @@ async function runLicensePlateCheat() {
       log("license: typed", ch);
     }, i * perCharDelay);
   });
-
-  // Click the submit button 750ms after typing finishes
-  const totalTypingTime = answer.length * perCharDelay;
-  setTimeout(() => {
-    const btn = document.querySelector(".captcha-button.captcha-button-valid");
-    if (!btn) { log("license: submit button not found"); return; }
-    ["pointerdown", "mousedown", "click", "mouseup"].forEach(type => {
-      btn.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, view: window }));
-    });
-    log("license: clicked submit button");
-  }, totalTypingTime + 750);
 }
 
 //----Box In Box Cheat----
@@ -353,7 +304,7 @@ async function runBoxInBoxCheat() {
   }
 
   log("runBoxInBoxCheat: finished");
-  runBoxInBox2Cheat(); // chain the second run
+  runBoxInBox2Cheat();
 }
 
 //----Part 2----
@@ -375,23 +326,11 @@ async function runBoxInBox2Cheat() {
   }
 
   log("runBoxInBox2Cheat: finished");
-
-  // Wait 250 ms, then click the verify button
-  setTimeout(() => {
-    const verifyBtn = document.getElementById("captcha-verify-button");
-    if (verifyBtn) {
-      verifyBtn.click();
-      log("Verify button clicked");
-    } else {
-      log("Verify button not found");
-    }
-  }, 250);
 }
 
 //----Waldo Cheat----
 
 async function runWaldoCheat() {
-  // Wait until Waldo tiles exist
   const ready = await waitFor('.grid-item.grid-item-with-image');
   if (!ready) {
     log('waldo: tiles not found');
@@ -417,29 +356,11 @@ async function runWaldoCheat() {
   });
 
   log('waldo: clicked', clicks, 'tiles');
-
-  // After selecting, scroll to bottom of page
-  if (clicks > 0) {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    log('waldo: scrolled to bottom');
-
-    // Wait 250ms then click the verify button
-    setTimeout(() => {
-      const verifyBtn = document.querySelector('.verify-button');
-      if (verifyBtn) {
-        simulateClick(verifyBtn);
-        log('waldo: clicked verify button');
-      } else {
-        log('waldo: verify button not found');
-      }
-    }, 750);
-  }
 }
 
 //----Chihuahua Cheat----
 
-async function runMuffinCheat() {
-    // Wait until muffin images exist
+async function runChihuahuaCheat() {
     const ready = await waitFor('img.muffin-img');
     if (!ready) { log('muffins: tiles not found'); return; }
 
@@ -462,7 +383,7 @@ async function runMuffinCheat() {
             const src = img.getAttribute('src') || "";
             if (targets.some(t => src.includes(t))) {
                 if (!el.classList.contains('grid-item-selected')) {
-                    simulateClick(el); // click parent tile
+                    simulateClick(el);
                     clicks++;
                 }
             }
@@ -470,7 +391,6 @@ async function runMuffinCheat() {
 
         if (clicks > 0) log('muffins: clicked', clicks, 'tiles');
 
-        // Check if all target muffins are now selected
         const allSelected = tiles.filter(el => {
             const img = el.querySelector('img.muffin-img');
             if (!img) return false;
@@ -481,49 +401,29 @@ async function runMuffinCheat() {
         return allSelected;
     }
 
-    // Keep watching until all target muffins are selected
     const observer = new MutationObserver(() => {
         if (selectMuffins()) observer.disconnect();
     });
     observer.observe(document.body, { childList: true, subtree: true });
 
-    // Also retry periodically in case images load late
     let attempts = 0;
     const maxAttempts = 100;
     const interval = setInterval(() => {
         attempts++;
         if (selectMuffins() || attempts >= maxAttempts) clearInterval(interval);
     }, 100);
-
-setTimeout(() => {
-    const verifyBtn = document.getElementById("captcha-verify-button");
-    if (verifyBtn) {
-      verifyBtn.click();
-      log("Verify button clicked");
-    } else {
-      log("Verify button not found");
-    }
-  }, 750);
 }
 
 //----Without Stop Sign Cheat----
 
 async function runWithoutCheat() {
-    // Wait until the tiles exist
     const ready = await waitFor('.grid-item.grid-item-with-image');
     if (!ready) { log('without: tiles not found'); return; }
 
     const targets = [
-        "0% 0%",
-        "0% 33.3333%",
-        "0% 66.6667%",
-        "0% 100%",
-        "33.3333% 100%",
-        "66.6667% 100%",
-        "100% 100%",
-        "100% 66.6667%",
-        "100% 33.3333%",
-        "100% 0%"
+        "0% 0%","0% 33.3333%","0% 66.6667%","0% 100%",
+        "33.3333% 100%","66.6667% 100%","100% 100%",
+        "100% 66.6667%","100% 33.3333%","100% 0%"
     ];
 
     function selectTiles() {
@@ -544,7 +444,6 @@ async function runWithoutCheat() {
 
         if (clicks > 0) log('without: clicked', clicks, 'tiles');
 
-        // Check if all target tiles are now selected
         const allSelected = tiles.filter(el => {
             const style = el.getAttribute('style') || "";
             return style.includes('/not-a-robot/without/1.webp') &&
@@ -554,50 +453,35 @@ async function runWithoutCheat() {
         return allSelected;
     }
 
-    // Keep watching until all target tiles are selected
     const observer = new MutationObserver(() => {
         if (selectTiles()) observer.disconnect();
     });
     observer.observe(document.body, { childList: true, subtree: true });
 
-    // Also retry periodically in case tiles load late
     let attempts = 0;
     const maxAttempts = 100;
     const interval = setInterval(() => {
         attempts++;
         if (selectTiles() || attempts >= maxAttempts) clearInterval(interval);
     }, 100);
-setTimeout(() => {
-    const verifyBtn = document.getElementById("captcha-verify-button");
-    if (verifyBtn) {
-      verifyBtn.click();
-      log("Verify button clicked");
-    } else {
-      log("Verify button not found");
-    }
-  }, 750);
 }
 
 //----Recaptcha Cheat----
 
 async function runRecaptchaCheat() {
-    // Wait until the "I'm not a robot" text appears
     const ready = await waitFor('.captcha-text');
     if (!ready) { log('recaptcha: captcha text not found'); return; }
 
-    // Find the captcha block with the exact text
     const captchaTextEls = Array.from(document.querySelectorAll('.captcha-text'));
     const targetTextEl = captchaTextEls.find(el => el.textContent.trim() === "I'm not a robot");
     if (!targetTextEl) { log('recaptcha: correct text not found'); return; }
 
-    // From that text element, locate the sibling checkbox within the same captcha box
     const captchaBox = targetTextEl.closest('.captcha-box');
     if (!captchaBox) { log('recaptcha: captcha box not found'); return; }
 
     const checkbox = captchaBox.querySelector('.captcha-box-checkbox-input');
     if (!checkbox) { log('recaptcha: checkbox not found in target box'); return; }
 
-    // Click the checkbox
     simulateClick(checkbox);
     log('recaptcha: clicked checkbox linked to "I\'m not a robot"');
 }
@@ -688,14 +572,11 @@ function runHydrantCheat() {
 function runInDarkCheat() {
   log("runInDarkCheat: starting");
 
-  // Step 1: collect all .letter elements
   let letters = [...document.querySelectorAll(".letter")].map(el => el.textContent.trim());
   let answer = letters.join("");
 
-  // Step 2: log the answer
   console.log("Answer is:", answer);
 
-  // Step 3: find the input box
   let input = document.querySelector(".captcha-input-text");
   if (!input) {
     log("runInDarkCheat: captcha input not found");
@@ -708,35 +589,18 @@ function runInDarkCheat() {
       input.value += ch;
       input.dispatchEvent(new Event("input", { bubbles: true }));
       console.log("Typed:", ch);
-    }, i * 150); // 300ms delay between each character
+    }, i * 150);
   });
-
-  // Step 4: click the submit button 750ms after typing finishes
-  const totalTypingTime = letters.length * 300;
-  setTimeout(() => {
-    const btn = document.querySelector(".captcha-button.captcha-button-valid");
-    if (!btn) {
-      log("runInDarkCheat: submit button not found");
-      return;
-    }
-    ["pointerdown", "mousedown", "click", "mouseup"].forEach(type => {
-      btn.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, view: window }));
-    });
-    log("runInDarkCheat: clicked submit button");
-  }, totalTypingTime + 750);
 }
 
 //----Describe What You See Cheat----
 
 async function runWhatYouSeeCheat() {
-    // Wait until the input box exists
     const ready = await waitFor('.captcha-input-text');
     if (!ready) { log('what-you-see: input not found'); return; }
 
     const input = document.querySelector('.captcha-input-text');
-    const button = document.querySelector('.captcha-button.captcha-button-valid');
 
-    // Generate a random 6‑letter string
     const letters = "abcdefghijklmnopqrstuvwxyz";
     let randomWord = "";
     for (let i = 0; i < 6; i++) {
@@ -745,18 +609,9 @@ async function runWhatYouSeeCheat() {
 
     if (input) {
         input.value = randomWord;
-        // Fire events so the app notices the change
         input.dispatchEvent(new Event('input', { bubbles: true }));
         input.dispatchEvent(new Event('change', { bubbles: true }));
         log('what-you-see: filled with "' + randomWord + '"');
-    }
-
-    if (button) {
-        // Wait 0.75 seconds before clicking submit
-        setTimeout(() => {
-            simulateClick(button);
-            log('what-you-see: submit clicked after delay');
-        }, 750);
     }
 }
 
@@ -765,7 +620,6 @@ async function runWhatYouSeeCheat() {
 async function runMinecraftCheat() {
     console.log("minecraft cheat: starting");
 
-    // Helper: wait until a slot exists
     function waitForSelector(selector, timeout = 8000) {
         return new Promise(resolve => {
             const start = Date.now();
@@ -779,7 +633,6 @@ async function runMinecraftCheat() {
         });
     }
 
-    // Helper: click element with left or right button
     function clickElement(el, button = 0) {
         if (!el) return;
         const opts = { bubbles: true, cancelable: true, button };
@@ -793,7 +646,6 @@ async function runMinecraftCheat() {
         }
     }
 
-    // Grab slots we need
     const invLog0 = await waitForSelector('.crafting-slot[data-location="inventoryItems"][data-index="0"]');
     const invDiam1 = await waitForSelector('.crafting-slot[data-location="inventoryItems"][data-index="1"]');
     const grid0 = await waitForSelector('.crafting-slot[data-location="craftingGrid"][data-index="0"]');
@@ -804,13 +656,11 @@ async function runMinecraftCheat() {
     const output = await waitForSelector('.crafting-slot[data-location="outputCell"][data-index="0"]');
     const inv0 = await waitForSelector('.crafting-slot[data-location="inventoryItems"][data-index="0"]');
 
-    // If any are missing, log and stop
     if (!invLog0 || !invDiam1 || !grid0 || !grid1 || !grid2 || !grid4 || !grid7 || !output) {
         console.warn("minecraft cheat: missing slots, run dumpSlots() in console to debug");
         return;
     }
 
-    // Sequence (with delays)
     await new Promise(r => setTimeout(r, 200)); clickElement(invLog0, 0);
     await new Promise(r => setTimeout(r, 200)); clickElement(grid7, 0);
     await new Promise(r => setTimeout(r, 200)); clickElement(output, 0);
@@ -828,19 +678,6 @@ async function runMinecraftCheat() {
     await new Promise(r => setTimeout(r, 300)); clickElement(output, 0);
 
     console.log("minecraft cheat: done");
-
-    // Click verify button 750ms after done
-    setTimeout(() => {
-        const btn = document.querySelector(".verify-button");
-        if (!btn) {
-            console.warn("minecraft cheat: verify button not found");
-            return;
-        }
-        ["pointerdown", "mousedown", "click", "mouseup"].forEach(type => {
-            btn.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, view: window }));
-        });
-        console.log("minecraft cheat: clicked verify button");
-    }, 750);
 }
 
 //----Catch Ducks Cheat----
@@ -848,7 +685,6 @@ async function runMinecraftCheat() {
 async function runCatchDucksCheat() {
     console.log("duck cheat: starting");
 
-    // Wait until ducks exist
     function waitForSelector(selector, timeout = 5000) {
         return new Promise(resolve => {
             const start = Date.now();
@@ -862,7 +698,6 @@ async function runCatchDucksCheat() {
         });
     }
 
-    // Click helper
     function clickElement(el) {
         const opts = { bubbles: true, cancelable: true };
         el.dispatchEvent(new PointerEvent('pointerdown', opts));
@@ -872,27 +707,14 @@ async function runCatchDucksCheat() {
         el.dispatchEvent(new MouseEvent('click', opts));
     }
 
-    // Grab all ducks
     const ducks = await waitForSelector('.duck.roaming');
     if (!ducks.length) {
         console.warn("duck cheat: no ducks found");
         return;
     }
 
-    // Click them all
     ducks.forEach(el => clickElement(el));
     console.log("duck cheat: clicked", ducks.length, "ducks");
-
-    // After 1ms, click the Verify button
-    setTimeout(() => {
-        const verifyBtn = document.querySelector('#captcha-verify-button.verify-button');
-        if (verifyBtn) {
-            clickElement(verifyBtn);
-            console.log("duck cheat: clicked Verify button");
-        } else {
-            console.warn("duck cheat: Verify button not found");
-        }
-    }, 1);
 }
 
 //----Eye Exam Cheat----
@@ -900,7 +722,6 @@ async function runCatchDucksCheat() {
 async function runEyeExamCheat() {
   console.log("eye exam cheat: starting");
 
-  // Helper: simulate a user click at element center
   function clickAtCenter(el) {
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -914,7 +735,6 @@ async function runEyeExamCheat() {
     el.dispatchEvent(new MouseEvent("click", opts));
   }
 
-  // Poll until the odd square is found
   const interval = setInterval(() => {
     const squares = document.querySelectorAll(".color-square");
     let target = null;
@@ -927,9 +747,9 @@ async function runEyeExamCheat() {
     if (target) {
       clickAtCenter(target);
       console.log("eye exam cheat: clicked odd color square");
-      clearInterval(interval); // stop once done
+      clearInterval(interval);
     }
-  }, 200); // check every 200ms
+  }, 200);
 }
 
 //----Soul Cheat----
@@ -938,7 +758,6 @@ async function runSoulCheat() {
   const ready = await waitFor('.grid-item');
   log("runSoulCheat: starting");
 
-  // target soul image links
   const targets = [
     "/not-a-robot/soul/1.webp",
     "/not-a-robot/soul/3.webp",
@@ -968,17 +787,6 @@ async function runSoulCheat() {
   });
 
   log("soul: clicked", clicks, "tiles");
-
-  // after 750ms, click the verify button
-  setTimeout(() => {
-    const verifyBtn = document.querySelector(".verify-button");
-    if (verifyBtn) {
-      simulateClick(verifyBtn);
-      log("soul: clicked verify button after 750ms");
-    } else {
-      log("soul: verify button not found");
-    }
-  }, 750);
 }
 
 //----Traffic Tree Cheat----
@@ -986,7 +794,6 @@ async function runSoulCheat() {
 async function runTrafficTreeCheat() {
   log("runTrafficTreeCheat: starting");
 
-  // Simulate a user click at the element's center
   function clickAtCenter(el) {
     const rect = el.getBoundingClientRect();
     const x = Math.floor(rect.left + rect.width / 2);
@@ -998,25 +805,22 @@ async function runTrafficTreeCheat() {
     el.dispatchEvent(new MouseEvent("mouseup", opts));
   }
 
-  // Extract background-position from style
   function getBackgroundPos(styleStr) {
     const m = styleStr.match(/background-position:\s*([0-9.]+%)\s+([0-9.]+%)/);
     return m ? `${m[1]} ${m[2]}` : null;
   }
 
-  // Exclude these positions
   const exclude = new Set(["100% 0%", "0% 0%"]);
 
-  // Wait until tiles exist
   const ready = await waitFor(".grid-item.grid-item-with-image");
   if (!ready) { log("traffic-tree: tiles not found"); return; }
 
-  // Click all valid tiles
   const tiles = document.querySelectorAll(".grid-item.grid-item-with-image");
   let clicks = 0;
+
   tiles.forEach(tile => {
     const style = tile.getAttribute("style") || "";
-    if (!/tree\/tree\.webp/.test(style)) return; // only tree puzzle tiles
+    if (!/tree\/tree\.webp/.test(style)) return;
     const bp = getBackgroundPos(style);
     if (!bp || exclude.has(bp)) return;
     clickAtCenter(tile);
@@ -1025,17 +829,6 @@ async function runTrafficTreeCheat() {
   });
 
   log("traffic-tree: total clicked =", clicks);
-
-  // After 750ms, click the verify button
-  setTimeout(() => {
-    const verifyBtn = document.querySelector(".verify-button");
-    if (verifyBtn) {
-      clickAtCenter(verifyBtn);
-      log("traffic-tree: clicked verify button after 750ms");
-    } else {
-      log("traffic-tree: verify button not found");
-    }
-  }, 750);
 }
 
 //----Brands Cheat----
@@ -1090,17 +883,6 @@ async function runBrandsCheat() {
       input.dispatchEvent(new Event("input", { bubbles: true }));
     }, i * perCharDelay);
   });
-
-  // Click the submit button 750ms after typing finishes
-  const totalTypingTime = letters.length * perCharDelay;
-  setTimeout(() => {
-    const btn = document.querySelector(".captcha-button.captcha-button-valid");
-    if (!btn) { log("brands: submit button not found"); return; }
-    ["pointerdown", "mousedown", "click", "mouseup"].forEach(type => {
-      btn.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, view: window }));
-    });
-    log("brands: clicked submit button");
-  }, totalTypingTime + 750);
 }
 
 //----Impostor Cheat----
@@ -1108,7 +890,6 @@ async function runBrandsCheat() {
 async function runImpostorCheat() {
   log("runImpostorCheat: starting");
 
-  // Simulate a user click at the element's center
   function clickAtCenter(el) {
     const rect = el.getBoundingClientRect();
     const x = Math.floor(rect.left + rect.width / 2);
@@ -1120,20 +901,18 @@ async function runImpostorCheat() {
     el.dispatchEvent(new MouseEvent("mouseup", opts));
   }
 
-  // Wait until tiles exist
   const ready = await waitFor(".grid-item.grid-item");
   if (!ready) { log("impostor: tiles not found"); return; }
 
-  // Define target impostor image paths
   const targets = new Set([
     "/not-a-robot/imposters/1.webp",
     "/not-a-robot/imposters/6.webp",
     "/not-a-robot/imposters/9.webp"
   ]);
 
-  // Click all matching tiles
   const tiles = document.querySelectorAll(".grid-item.grid-item");
   let clicks = 0;
+
   tiles.forEach(tile => {
     const img = tile.querySelector("img.ai-generated");
     if (!img) return;
@@ -1148,17 +927,6 @@ async function runImpostorCheat() {
   });
 
   log("impostor: total clicked =", clicks);
-
-  // After 750ms, click the verify button
-  setTimeout(() => {
-    const verifyBtn = document.querySelector(".verify-button");
-    if (verifyBtn) {
-      clickAtCenter(verifyBtn);
-      log("impostor: clicked verify button after 750ms");
-    } else {
-      log("impostor: verify button not found");
-    }
-  }, 750);
 }
 
 //----Convo Cheat----
@@ -1179,7 +947,6 @@ async function runConvoCheat() {
     });
   }
 
-  // Wait for input
   const input = await waitFor('input[placeholder="Type your message..."]');
   if (!input) {
     console.log("Input not found");
@@ -1188,14 +955,12 @@ async function runConvoCheat() {
 
   console.log("Input found, proceeding");
 
-  // Focus input
   input.focus();
   console.log("Input focused");
 
-  // Type text
-  input.value = "START AT 100%";
+  input.value = "Start at 95%";
   input.dispatchEvent(new Event("input", { bubbles: true }));
-  console.log("Input set to START AT 100%");
+  console.log("Input set to Start at 95%");
 }
 
 //----Jessica Cheat----
@@ -1216,7 +981,6 @@ async function runJessicaCheat() {
     });
   }
 
-  // Wait for Jessica's input
   const input = await waitFor('input[placeholder="Chat with Jessica..."]');
   if (!input) {
     console.log("jessica: input not found");
@@ -1225,11 +989,9 @@ async function runJessicaCheat() {
 
   console.log("jessica: input found, proceeding");
 
-  // Focus input
   input.focus();
   console.log("jessica: input focused");
 
-  // Type text
   input.value = 'START AT "END"';
   input.dispatchEvent(new Event("input", { bubbles: true }));
   console.log('jessica: input set to START AT "END"');
@@ -1269,26 +1031,6 @@ async function runEmpSteCheat() {
   });
 
   log('empire: clicked', clicks, 'tiles');
-
-  // After selecting, scroll to bottom of page
-  if (clicks > 0) {
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: 'smooth'
-    });
-    log('empire: scrolled to bottom');
-
-    // Wait 750ms then click verify
-    setTimeout(() => {
-      const verifyBtn = document.querySelector('.verify-button');
-      if (verifyBtn) {
-        simulateClick(verifyBtn);
-        log('empire: clicked verify button');
-      } else {
-        log('empire: verify button not found');
-      }
-    }, 750);
-  }
 }
 
     //----Orchestrator----
@@ -1311,7 +1053,7 @@ async function runEmpSteCheat() {
     if (level === 7) runLicensePlateCheat();
     if (level === 8) runBoxInBoxCheat();
     if (level === 10) runWaldoCheat();
-    if (level === 11) runMuffinCheat();
+    if (level === 11) runChihuahuaCheat();
     if (level === 12) runWithoutCheat();
     if (level === 13) runRecaptchaCheat();
     if (level === 17) runHydrantCheat();

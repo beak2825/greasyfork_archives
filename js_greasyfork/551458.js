@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Janitor AI - Automatic Message Formatting Corrector (Settings Menu)
 // @namespace    http://tampermonkey.net/
-// @version      10.7
+// @version      10.8
 // @description  The "One-Click" cleanup script. Floating, Inline Top, or Inline Bottom. Select Italics/Bold/Plain text. Edge compatible.
 // @author       accforfaciet
 // @match        *://janitorai.com/chats/*
@@ -26,9 +26,10 @@
         removeThinkTags: true,
         removeSystemPrompt: true,
         removeGeneralTags: true,
-        removeEmDashes: false, // New: Disabled by default
+        removeEmDashes: false,
+        removeEllipses: false, // New: Disabled by default
         // UI
-        buttonPosition: 'floating', // 'floating', 'inline-top', 'inline-bottom'
+        buttonPosition: 'floating',
         floatSize: 50,
         floatOpacity: 50,
         showButtonText: true,
@@ -84,21 +85,47 @@
 
     // --- TEXT PROCESSING ---
     function processText(text) {
-        // 1. Remove Em Dashes (If enabled)
+        
+        // 1. Check for "Whole Message is Thought" Edge Case
+        // If the entire message is wrapped in <think> tags, we strip the tags but KEEP the content.
+        const trimmed = text.trim();
+        const wholeMsgRegex = /^<(think|thought|thoughts)>([\s\S]*?)<\/(think|thought|thoughts)>$/i;
+        const wholeMatch = trimmed.match(wholeMsgRegex);
+
+        if (wholeMatch) {
+            // It is a whole message thought. Remove the wrapper tags, keep content.
+            // We replace the start/end tags in the original text to preserve surrounding whitespace if any
+            text = text.replace(/^[\s\n]*<(think|thought|thoughts)>/i, '')
+                       .replace(/<\/(think|thought|thoughts)>[\s\n]*$/i, '');
+        } else {
+            // Normal behavior: Remove <think> AND its content if enabled
+            if (currentSettings.removeThinkTags) {
+                text = text.replace(/\n?\s*<(thought|thoughts)>[\s\S]*?<\/(thought|thoughts)>\s*\n?/g, '');
+                text = text.replace(/\n?\s*<think>[\s\S]*?<\/think>\s*\n?/g, '');
+                text = text.replace('</think>', '');
+                text = text.replace(/<(system|response)>|<\/response>/g, '');
+            }
+        }
+
+        // 2. Remove Em Dashes (If enabled)
         if (currentSettings.removeEmDashes) {
-            // Replace em dash with a space, then collapse any double spaces created
             text = text.replace(/—/g, ' ').replace(/ {2,}/g, ' ');
         }
 
-        if (currentSettings.removeThinkTags) {
-            text = text.replace(/\n?\s*<(thought|thoughts)>[\s\S]*?<\/(thought|thoughts)>\s*\n?/g, '');
-            text = text.replace(/<(system|response)>|<\/response>/g, '');
-            text = text.replace(/\n?\s*<think>[\s\S]*?<\/think>\s*\n?/g, '');
-            text = text.replace('</think>', '');
+        // 3. Remove Ellipses (If enabled)
+        if (currentSettings.removeEllipses) {
+            // Replace ... or … with a single period.
+            text = text.replace(/\.{3,}|…/g, '.');
+            // Cleanup: If this created double periods (e.g. ".."), fix them.
+            text = text.replace(/\.{2,}/g, '.');
         }
+
+        // 4. General Tag Cleaning
         if (currentSettings.removeGeneralTags) {
             text = text.replace(/<\/?[a-zA-Z0-9:-]+(\s[^>]*)?>/g, '');
         }
+
+        // 5. Remove System Prompt
         if (currentSettings.removeSystemPrompt) {
             text = removeSystemPrompt(text);
         }
@@ -381,6 +408,10 @@
                             <input type="checkbox" id="setting-emdashes" ${currentSettings.removeEmDashes ? 'checked' : ''}>
                             <label for="setting-emdashes">Remove Em Dashes (—)</label>
                         </div>
+                        <div class="setting-group checkbox">
+                            <input type="checkbox" id="setting-ellipses" ${currentSettings.removeEllipses ? 'checked' : ''}>
+                            <label for="setting-ellipses">Remove Ellipses (...)</label>
+                        </div>
                     </div>
                 </div>
 
@@ -433,6 +464,7 @@
                 removeGeneralTags: document.getElementById('setting-gentags').checked,
                 removeSystemPrompt: document.getElementById('setting-prompt').checked,
                 removeEmDashes: document.getElementById('setting-emdashes').checked,
+                removeEllipses: document.getElementById('setting-ellipses').checked,
                 buttonPosition: posSelect.value,
                 showButtonText: document.getElementById('setting-showtext').checked,
                 showSettingsText: document.getElementById('setting-showsettings-text').checked,
@@ -562,5 +594,5 @@
     `);
 
     initUI();
-    console.log('Janitor Formatter v10.7 Loaded');
+    console.log('Janitor Formatter v10.8 Loaded');
 })();

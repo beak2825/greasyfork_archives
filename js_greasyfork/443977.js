@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         WordPress.org Plugins - Copy Helpers
 // @namespace    https://brickslabs.com/
-// @version      0.2
+// @version      0.3
 // @description  Adds Copy buttons to WP.org plugin pages.
 // @author       Sridhar Katakam & Gemini
-// @match        https://wordpress.org/plugins/*
+// @match        https://*.wordpress.org/plugins/*
 // @grant        none
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/443977/WordPressorg%20Plugins%20-%20Copy%20Helpers.user.js

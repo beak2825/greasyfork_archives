@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bh3helper-enhancer
 // @namespace    4b8b542a-3500-49bd-b857-8d62413434c7
-// @version      1.4.1
+// @version      1.4.2
 // @description  在bh3helper（《崩坏3》剧情助手）上提供增强功能
 // @author       -
 // @match        https://bh3helper.xrysnow.xyz/*
@@ -42,7 +42,7 @@
         DIALOG_SWITCH_CD_TIME: 80,
         COMMON_PAGE_BASE_URL: '/pages/common.html',
         PAGE_BASE_URL: '/pages/',
-        IGNORE_COLOR_CODE: ['#fedf4c'],
+        IGNORE_COLOR_CODE: ['#fedf4c', '#fedf5c'],
         STORY_PAGE_RANGE: [
             [1, 199], // 主线第一部+第二部
             [2001, 2004], // 2001:樱色轮回，2002:天命总部，2003:后崩坏书，2003.5:星坠之前，2004:后崩坏书第二部
@@ -169,6 +169,8 @@
     } // 这一步会在document-start执行
 
     DOMPatch(); /// 应用DOM补丁
+
+    FixLoadOrderProblem(); // 目标网站有微妙的加载顺序问题，详见FixLoadOrderProblem函数的注释
 
     // ---------- //
 
@@ -1898,6 +1900,98 @@ details[open] > .dlg-help-summary::before {
         }
     }
 
+    const extractNodeText_unityRichTextTagMap = {
+        'B': 'b',
+        'STRONG': 'b',
+        'I': 'i',
+        'U': 'u',
+        'DEL': 's',
+        'S': 's',
+    };
+    /**
+     * 提取节点文本内容
+     * @param {Node} node - 要提取文本内容的节点
+     * @param {any} ctx - 上下文对象，用于递归调用时传递状态
+     * @returns {string[]} - 节点文本内容的数组
+     */
+    function extractNodeText(node, ctx = {}) {
+        let value = []; for (let index = 0, len = node.childNodes.length; index < len; index++) {
+            const i = node.childNodes[index];
+            if (i.nodeType === Node.TEXT_NODE) { // 文本节点
+                const text = i.textContent;
+                if (text.trim()) value.push(text);
+                continue;
+            }
+            if (i.nodeType !== Node.ELEMENT_NODE) continue; // 元素节点
+            const addLinebreak = i => (isBlockElement(i) && i.nextElementSibling && index < (len - 1)) && value.push('\n');
+            switch (i.tagName) {
+                case 'BR':
+                case 'HR':
+                    value.push('\n');
+                    break;
+                case 'RUBY':
+                    //{RUBY_B#rt内容}ruby内容{RUBY_E#}
+                    {
+                        const newCtx = context.structuredClone(ctx);
+                        // ruby是文本，rt是标注
+                        // 我们假设一个ruby只包含一个rb(ruby base)，并且不包含rtc和rbc
+                        newCtx.rtText = []; // 假设是规范的HTML，rt内容不会嵌套ruby
+                        const text = extractNodeText(i, newCtx).join('');
+                        value.push(`{RUBY_B#${newCtx.rtText.join('')}}${text}{RUBY_E#}`);
+                    }
+                    addLinebreak(i);
+                    break;
+                case 'RT':
+                    ctx.rtText.push(...extractNodeText(i, ctx));
+                    break;
+                case 'RP':
+                    break; //  <rp> 元素用于为那些不能使用 <ruby> 元素展示 ruby 注解的浏览器，提供随后的圆括号
+                case 'OL':
+                case 'UL':
+                    {
+                        const newCtx = context.structuredClone(ctx);
+                        newCtx.type = i.tagName; newCtx.index = 0;
+                        newCtx.indent = (ctx.indent != undefined) ? (ctx.indent + PG_DOWNLOAD_STRUCT.listIndentCount) : 0;
+                        value.push(...extractNodeText(i, newCtx));
+                    }
+                    addLinebreak(i);
+                    break;
+                case 'LI':
+                    if (ctx.indent) value.push(' '.repeat(ctx.indent));
+                    if (ctx.type === 'UL') value.push('· ', ...extractNodeText(i, ctx));
+                    else if (ctx.type === 'OL') value.push((++ctx.index) + '. ', ...extractNodeText(i, ctx));
+                    else value.push(...extractNodeText(i, ctx));
+                    addLinebreak(i);
+                    break;
+                case 'B':
+                case 'STRONG':
+                case 'I':
+                case 'U':
+                case 'DEL':
+                case 'S':
+                    const tag = extractNodeText_unityRichTextTagMap[i.tagName];
+                    value.push(`<${tag}>`);
+                    if (ctx.useColor) {
+                        const text = extractNodeText(i, ctx).join('');
+                        const colorProp = i.style.getPropertyValue('--color');
+                        value.push((colorProp && (!CONFIG.IGNORE_COLOR_CODE.includes(colorProp))) ? `<color=${colorProp}>${text}</color>` : text);
+                    }
+                    else value.push(...extractNodeText(i, ctx));
+                    value.push(`</${tag}>`);
+                    addLinebreak(i);
+                    break;
+                default:
+                    const text = extractNodeText(i, ctx).join('');
+                    if (text) {
+                        const colorProp = i.style.getPropertyValue('--color');
+                        value.push((colorProp && ctx.useColor && (!CONFIG.IGNORE_COLOR_CODE.includes(colorProp))) ? `<color=${colorProp}>${text}</color>` : text);
+                        addLinebreak(i);
+                    }
+            }
+        }
+        return value;
+    }
+
     // 运行DOMPatch
     async function DOMPatch() {
         function GetConditionValue(conditionName, ctx) {
@@ -1984,96 +2078,108 @@ details[open] > .dlg-help-summary::before {
         }
     }
 
-    const extractNodeText_unityRichTextTagMap = {
-        'B': 'b',
-        'STRONG': 'b',
-        'I': 'i',
-        'U': 'u',
-        'DEL': 's',
-        'S': 's',
-    };
-    /**
-     * 提取节点文本内容
-     * @param {Node} node - 要提取文本内容的节点
-     * @param {any} ctx - 上下文对象，用于递归调用时传递状态
-     * @returns {string[]} - 节点文本内容的数组
-     */
-    function extractNodeText(node, ctx = {}) {
-        let value = []; for (let index = 0, len = node.childNodes.length; index < len; index++) {
-            const i = node.childNodes[index];
-            if (i.nodeType === Node.TEXT_NODE) { // 文本节点
-                const text = i.textContent;
-                if (text.trim()) value.push(text);
-                continue;
+    function FixLoadOrderProblem() {
+        /*
+        问题：在开放世界页面（如樱色轮回），偶发小概率的数据加载失败问题导致数据提取失败：
+
+        Uncaught (in promise) TypeError: Cannot convert undefined or null to object
+            at Object.keys (<anonymous>)
+            at ChapterStageInfo.getOWStoryData (common.187ecb61.js:11:4088)
+            at common.187ecb61.js:5:30199
+            at Array.forEach (<anonymous>)
+            at StoryTextReviewSection.doMakeOw (common.187ecb61.js:5:30142)
+            at Object.doMakeDomain (common.187ecb61.js:5:6877)
+            at StoryTextReviewSection.doMake (common.187ecb61.js:5:32367)
+            at common.187ecb61.js:1:25762
+            at util.43f2b9f8.js:1:8524
+            at r (util.43f2b9f8.js:1:27388)
+        getOWStoryData	@	common.187ecb61.js:11
+        （匿名）	@	common.187ecb61.js:5
+        doMakeOw	@	common.187ecb61.js:5
+        doMakeDomain	@	common.187ecb61.js:5
+        doMake	@	common.187ecb61.js:5
+        （匿名）	@	common.187ecb61.js:1
+        （匿名）	@	util.43f2b9f8.js:1
+        r	@	util.43f2b9f8.js:1
+        _requestData	@	util.43f2b9f8.js:1
+        await in _requestData		
+        requestData	@	util.43f2b9f8.js:1
+        （匿名）	@	util.43f2b9f8.js:1
+        requestMultiData	@	util.43f2b9f8.js:1
+        makeForAsyncData	@	util.43f2b9f8.js:1
+        staticMake	@	common.187ecb61.js:1
+        make	@	common.187ecb61.js:5
+        _make	@	common.187ecb61.js:1
+        make	@	common.187ecb61.js:1
+        make	@	common.187ecb61.js:1
+        （匿名）	@	2002.15f6f103.js:14
+        （匿名）	@	2002.15f6f103.js:14
+        PendingScript		
+        addScript	@	util.43f2b9f8.js:1
+        loadPage	@	util.43f2b9f8.js:1
+        （匿名）	@	common.html?id=2002:64
+
+        发生在
+        static getOWStoryData(e, t) {
+            ChapterPhaseGroup.OWStoryDataMap || (ChapterPhaseGroup.OWStoryDataMap = {},
+            Object.keys(e).forEach(t => { // e === undefined
+                e[t].forEach(t => {
+                    ChapterPhaseGroup.OWStoryDataMap[t.id] = t
+                }
+                )
             }
-            if (i.nodeType !== Node.ELEMENT_NODE) continue; // 元素节点
-            const addLinebreak = i => (isBlockElement(i) && i.nextElementSibling && index < (len - 1)) && value.push('\n');
-            switch (i.tagName) {
-                case 'BR':
-                case 'HR':
-                    value.push('\n');
-                    break;
-                case 'RUBY':
-                    //{RUBY_B#rt内容}ruby内容{RUBY_E#}
-                    {
-                        const newCtx = context.structuredClone(ctx);
-                        // ruby是文本，rt是标注
-                        // 我们假设一个ruby只包含一个rb(ruby base)，并且不包含rtc和rbc
-                        newCtx.rtText = []; // 假设是规范的HTML，rt内容不会嵌套ruby
-                        const text = extractNodeText(i, newCtx).join('');
-                        value.push(`{RUBY_B#${newCtx.rtText.join('')}}${text}{RUBY_E#}`);
+            ));
+            t = t.toFixed();
+            return ChapterPhaseGroup.OWStoryDataMap[t]
+        }
+        
+        这是因为
+            doMakeOw() {
+        if ("2003.5" === this.chapterId)
+            return this.doMakeMain();
+        var t = this.getIndexData();
+        if (!t)
+            return this.errorElement();
+        let s = DataUtil.getStore("OpenWorldStoryData") // 这里，错误地假设了OpenWorldStoryData一定可用
+          , o = new Map
+          , r = new Map
+          , l = "2002" === this.chapterId
+          , c = "2003" === this.chapterId
+          , h = "2004" === this.chapterId;
+        t.forEach( (t, e) => {
+            var a = t.id
+              , t = t.mission && ChapterStageInfo.getOWStoryData(s, t.mission)
+
+        而实际上调用这个函数的requestData，请求的是“DialogIndexOw”而不是“OpenWorldStoryData”
+        这就导致了OpenWorldStoryData为空，从而导致了页面加载失败
+
+        考虑到目标网站这架构实在过于……（我有点难评）
+        我也没有什么好的办法，只能这样hack一下……
+        */
+        const page = window.location.pathname, id = +(new URL(location.href).searchParams.get('id'));
+        if (page === '/pages/common.html' && !isNaN(id) && checkIdInRange(id, [[2001, 2004]])) {
+            // 开放世界章节
+            // 预定义一个ContentScriptEx到window上面，这是因为目标网站神奇的加载方式，这就允许我们接管页面加载过程：
+            // 
+            // let id = Util.getQueryString("id")
+            // if (id) {
+            //     try {
+            //         ContentScriptEx(id)
+            //     } catch (error) {
+            //         Util.loadPage(id)
+            //     }
+            // }
+            window.ContentScriptEx = function ContentScriptEx(id) {
+                // 先确保OpenWorldStoryData存在，使用目标网站的DataUtil
+                // 类型定义：DataUtil.requestData(e : string, t : 我也不知道是什么, a : 回调函数)
+                DataUtil.requestData("OpenWorldStoryData", null, new Proxy(function() {}, {
+                    apply: () => { // 防止hack被发现
+                        context.console.log("OpenWorldStoryData has been loaded");
+                        Util.loadPage(id);
                     }
-                    addLinebreak(i);
-                    break;
-                case 'RT':
-                    ctx.rtText.push(...extractNodeText(i, ctx));
-                    break;
-                case 'RP':
-                    break; //  <rp> 元素用于为那些不能使用 <ruby> 元素展示 ruby 注解的浏览器，提供随后的圆括号
-                case 'OL':
-                case 'UL':
-                    {
-                        const newCtx = context.structuredClone(ctx);
-                        newCtx.type = i.tagName; newCtx.index = 0;
-                        newCtx.indent = (ctx.indent != undefined) ? (ctx.indent + PG_DOWNLOAD_STRUCT.listIndentCount) : 0;
-                        value.push(...extractNodeText(i, newCtx));
-                    }
-                    addLinebreak(i);
-                    break;
-                case 'LI':
-                    if (ctx.indent) value.push(' '.repeat(ctx.indent));
-                    if (ctx.type === 'UL') value.push('· ', ...extractNodeText(i, ctx));
-                    else if (ctx.type === 'OL') value.push((++ctx.index) + '. ', ...extractNodeText(i, ctx));
-                    else value.push(...extractNodeText(i, ctx));
-                    addLinebreak(i);
-                    break;
-                case 'B':
-                case 'STRONG':
-                case 'I':
-                case 'U':
-                case 'DEL':
-                case 'S':
-                    const tag = extractNodeText_unityRichTextTagMap[i.tagName];
-                    value.push(`<${tag}>`);
-                    if (ctx.useColor) { 
-                        const text = extractNodeText(i, ctx).join('');
-                        const colorProp = i.style.getPropertyValue('--color');
-                        value.push((colorProp && (!CONFIG.IGNORE_COLOR_CODE.includes(colorProp))) ? `<color=${colorProp}>${text}</color>` : text);
-                    }
-                    else value.push(...extractNodeText(i, ctx));
-                    value.push(`</${tag}>`);
-                    addLinebreak(i);
-                    break;
-                default:
-                    const text = extractNodeText(i, ctx).join('');
-                    if (text) {
-                        const colorProp = i.style.getPropertyValue('--color');
-                        value.push((colorProp && ctx.useColor && (!CONFIG.IGNORE_COLOR_CODE.includes(colorProp))) ? `<color=${colorProp}>${text}</color>` : text);
-                        addLinebreak(i);
-                    }
+                }));
             }
         }
-        return value;
     }
 
     // ---------- //

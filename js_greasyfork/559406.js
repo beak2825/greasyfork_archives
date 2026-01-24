@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ListenBrainz: Extended Controls
 // @namespace    https://musicbrainz.org/user/chaban
-// @version      1.1.6
+// @version      1.2.1
 // @tag          ai-created
 // @description  Allows customizing which actions are shown in listen controls cards, moving "Open in Music Service" links to the main controls area, displaying source info, and auto-copying text in the "Link Listen" modal.
 // @author       chaban
@@ -14,7 +14,7 @@
 // @updateURL https://update.greasyfork.org/scripts/559406/ListenBrainz%3A%20Extended%20Controls.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     const REGISTRY = {
@@ -37,10 +37,30 @@
             harmony: {
                 viewBox: '0 0 200 200',
                 d: 'M68.08,122.59c4.17,2.66,9.11,4.23,14.42,4.23,14.82,0,26.84-12.02,26.84-26.84s-12.02-26.84-26.84-26.84c-5.35,0-10.31,1.58-14.5,4.28-.31.02-.63.02-.94.02-2.42,0-4.85-.49-6.9-1.86-2.99-1.99-4.29-6.45-4.77-11.01V21.54L7.74,48.87v102.25l47.64,27.34v-43.03c.49-4.57,1.78-9.02,4.77-11.01,2.06-1.37,4.48-1.86,6.9-1.86.34,0,.68,0,1.02.03Z M63.67,175.1v-39.19c.38-3.11,1.04-4.35,1.25-4.68.26-.13.6-.23,1-.29,5.1,2.74,10.78,4.18,16.58,4.18,19.37,0,35.13-15.76,35.13-35.13s-15.76-35.13-35.13-35.13c-5.83,0-11.53,1.45-16.64,4.21-.38-.06-.69-.16-.94-.28-.21-.33-.87-1.57-1.25-4.68V24.9L107.08,0l85.18,48.87v102.25l-85.18,48.87-43.4-24.9Z'
-            }
+            },
+            ampcast: 'https://raw.githubusercontent.com/rekkyrosso/ampcast/refs/heads/main/app/www/favicon.svg',
+            foobar2000: 'https://upload.wikimedia.org/wikipedia/de/7/7c/Foobar2000_Icon.svg',
+            funkwhale: 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/funkwhale.svg',
+            gonic: 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/gonic.svg',
+            jellyfin: 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyfin.svg',
+            kodi: 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/kodi.svg',
+            lastfm: 'https://upload.wikimedia.org/wikipedia/commons/b/b7/Last.fm_favicon.png',
+            'listenbrainz lastfm': 'https://upload.wikimedia.org/wikipedia/commons/b/b7/Last.fm_favicon.png',
+            listenbrainz: 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/listenbrainz.svg',
+            lms: 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/lyrion-dark.svg',
+            mopidy: 'https://raw.githubusercontent.com/home-assistant/brands/master/custom_integrations/mopidy/icon.png',
+            mpv: 'https://raw.githubusercontent.com/mpv-player/mpv/refs/heads/master/etc/mpv.svg',
+            'music-assistant': 'https://avatars.githubusercontent.com/u/71128003',
+            musicbee: 'https://getmusicbee.com/img/musicbee.png',
+            navidrome: 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/navidrome.svg',
+            'pano scrobbler': 'https://raw.githubusercontent.com/kawaiiDango/pano-scrobbler/refs/heads/main/composeApp/src/desktopMain/composeResources/drawable/ic_launcher_with_bg.svg',
+            plex: 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg',
+            squeezelite: 'https://raw.githubusercontent.com/CDrummond/squeezelite/android/fastlane/metadata/android/en-US/images/icon.png',
+            strawberry: 'https://raw.githubusercontent.com/strawberrymusicplayer/strawberry/master/data/icons/full/strawberry.png',
+            tidal: 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tidal.svg',
+            'web scrobbler': 'https://raw.githubusercontent.com/web-scrobbler/web-scrobbler/refs/heads/master/src/icons/main/universal.svg'
         }
     };
-
     const DEFAULT_SETTINGS = {
         moveServiceLinks: false,
         showPlayerIndicator: false,
@@ -71,17 +91,25 @@
 
         .lb-harmony-btn svg { opacity: 0.9; }
         .lb-harmony-btn:hover svg { opacity: 1; }
+
+        .lb-ext-external-icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.125em;
+        }
     `);
 
     // --- DOM Helper ---
     function el(tag, props = {}, children = []) {
-        const element = (tag === 'svg' || tag === 'path')
+        const isSvg = ['svg', 'path', 'image'].includes(tag);
+        const element = isSvg
             ? document.createElementNS('http://www.w3.org/2000/svg', tag)
             : document.createElement(tag);
         Object.entries(props).forEach(([key, value]) => {
             if (key === 'style' && typeof value === 'object') Object.assign(element.style, value);
             else if (key === 'on') Object.entries(value).forEach(([ev, fn]) => element.addEventListener(ev, fn));
-            else if (tag === 'path' || tag === 'svg') element.setAttribute(key === 'className' ? 'class' : key, value);
+            else if (isSvg) element.setAttribute(key === 'className' ? 'class' : key, value);
             else element[key] = value;
         });
         children.forEach(child => {
@@ -113,15 +141,17 @@
             const input = el('input', {
                 type: 'checkbox',
                 checked: isKey ? settings[target] : settings.enabledActions.includes(target),
-                on: { change: (e) => {
-                    if (isKey) settings[target] = e.target.checked;
-                    else {
-                        if (e.target.checked) !settings.enabledActions.includes(target) && settings.enabledActions.push(target);
-                        else settings.enabledActions = settings.enabledActions.filter(a => a !== target);
+                on: {
+                    change: (e) => {
+                        if (isKey) settings[target] = e.target.checked;
+                        else {
+                            if (e.target.checked) !settings.enabledActions.includes(target) && settings.enabledActions.push(target);
+                            else settings.enabledActions = settings.enabledActions.filter(a => a !== target);
+                        }
+                        GM_setValue('UserJS.ListenBrainz.ExtendedListenControls', settings);
+                        notify();
                     }
-                    GM_setValue('UserJS.ListenBrainz.ExtendedListenControls', settings);
-                    notify();
-                }}
+                }
             });
             return el('label', { className: 'lb-setting-item' }, [input, label]);
         };
@@ -185,78 +215,85 @@
         return !!titleLink;
     }
 
- function normalizeSpotifyAlbum(value) {
-    if (!value) return null;
-    const s = String(value).trim();
+    function normalizeSpotifyAlbum(value) {
+        if (!value) return null;
+        const s = String(value).trim();
 
-    // Full album URL
-    const m1 = s.match(/open\.spotify\.com\/album\/([A-Za-z0-9]+)/);
-    if (m1) return `https://open.spotify.com/album/${m1[1]}`;
+        // Full album URL
+        const m1 = s.match(/open\.spotify\.com\/album\/([A-Za-z0-9]+)/);
+        if (m1) return `https://open.spotify.com/album/${m1[1]}`;
 
-    // spotify:album:<id>
-    const m2 = s.match(/^spotify:album:([A-Za-z0-9]+)$/);
-    if (m2) return `https://open.spotify.com/album/${m2[1]}`;
+        // spotify:album:<id>
+        const m2 = s.match(/^spotify:album:([A-Za-z0-9]+)$/);
+        if (m2) return `https://open.spotify.com/album/${m2[1]}`;
 
-    // raw ID
-    if (/^[A-Za-z0-9]+$/.test(s)) {
-        return `https://open.spotify.com/album/${s}`;
+        // raw ID
+        if (/^[A-Za-z0-9]+$/.test(s)) {
+            return `https://open.spotify.com/album/${s}`;
+        }
+
+        return null;
     }
 
-    return null;
-}
+    function getAlbumUrlFromListen(listen) {
+        const info = listen?.track_metadata?.additional_info || {};
 
-function getAlbumUrlFromListen(listen) {
-    const info = listen?.track_metadata?.additional_info || {};
+        // Spotify (LB is inconsistent here)
+        const spotify = normalizeSpotifyAlbum(
+            info.spotify_album_id ||
+            info.spotify_album_uri ||
+            info.spotify_album_url
+        );
+        if (spotify) return spotify;
 
-    // Spotify (LB is inconsistent here)
-    const spotify = normalizeSpotifyAlbum(
-        info.spotify_album_id ||
-        info.spotify_album_uri ||
-        info.spotify_album_url
-    );
-    if (spotify) return spotify;
+        // Deezer
+        if (info.deezer_album_id) {
+            const v = String(info.deezer_album_id);
+            return v.startsWith('http')
+                ? v
+                : `https://www.deezer.com/album/${v}`;
+        }
 
-    // Deezer
-    if (info.deezer_album_id) {
-        const v = String(info.deezer_album_id);
-        return v.startsWith('http')
-            ? v
-            : `https://www.deezer.com/album/${v}`;
+        // TIDAL
+        if (info.tidal_album_id) {
+            const v = String(info.tidal_album_id);
+            return v.startsWith('http')
+                ? v
+                : `https://tidal.com/browse/album/${v}`;
+        }
+
+        // Apple Music (already a URL)
+        if (info.apple_music_album_url) return info.apple_music_album_url;
+
+        // Fallback
+        if (info.origin_url) return info.origin_url;
+        if (info.track_url) return info.track_url;
+
+        return null;
     }
 
-    // TIDAL
-    if (info.tidal_album_id) {
-        const v = String(info.tidal_album_id);
-        return v.startsWith('http')
-            ? v
-            : `https://tidal.com/browse/album/${v}`;
+    function makeHarmonyUrl(albumUrl) {
+        const h = new URL('https://harmony.pulsewidth.org.uk/release');
+        h.searchParams.set('url', albumUrl);
+        h.searchParams.set('category', 'preferred');
+        return h.toString();
     }
-
-    // Apple Music (already a URL)
-    if (info.apple_music_album_url) return info.apple_music_album_url;
-
-    // Fallback
-    if (info.origin_url) return info.origin_url;
-    if (info.track_url) return info.track_url;
-
-    return null;
-}
-
-function makeHarmonyUrl(albumUrl) {
-    const h = new URL('https://harmony.pulsewidth.org.uk/release');
-    h.searchParams.set('url', albumUrl);
-    h.searchParams.set('category', 'preferred');
-    return h.toString();
-}
 
     function getIcon(key) {
         const data = REGISTRY.icons[key];
-        const isObj = typeof data === 'object';
-        const viewBox = isObj ? data.viewBox : '0 0 512 512';
-        const d = isObj ? data.d : data;
-        return el('svg', { viewBox: viewBox, style: { width: '1em', height: '1em', fill: 'currentColor', verticalAlign: '-0.125em' } }, [
-            el('path', { d: d })
-        ]);
+        if (!data) return null;
+
+        if (typeof data === 'string' && data.startsWith('http')) {
+            return el('svg', { className: 'lb-ext-external-icon', viewBox: '0 0 1 1' }, [
+                el('image', { href: data, width: '1', height: '1' })
+            ]);
+        }
+        const viewBox = data.viewBox || '0 0 512 512';
+        const d = data.d || data;
+        const paths = Array.isArray(d) ? d : [d];
+        return el('svg', { viewBox: viewBox, style: { width: '1em', height: '1em', fill: 'currentColor', verticalAlign: '-0.125em' } },
+            paths.map(pathD => el('path', { d: pathD }))
+        );
     }
 
     function addQuickButtons(card) {
@@ -285,12 +322,12 @@ function makeHarmonyUrl(albumUrl) {
                 if (albumUrl) {
                     const harmonyBtn = el('a', {
                         className: 'btn btn-transparent lb-ext-btn lb-harmony-btn',
-                        title: 'Open in Harmony (prefilled)',
+                        title: 'Import with Harmony',
                         href: makeHarmonyUrl(albumUrl),
                         target: '_blank',
                         rel: 'noopener noreferrer',
                         on: { click: (e) => e.stopPropagation() }
-                    }, [ getIcon('harmony') ]);
+                    }, [getIcon('harmony')]);
                     controls.insertBefore(harmonyBtn, menuBtn);
                 }
             }
@@ -342,12 +379,22 @@ function makeHarmonyUrl(albumUrl) {
             if (client && client !== player) tooltipLines.push(`Client: ${client}`);
 
             if (tooltipLines.length > 0) {
+                const service = info.music_service || info.music_service_name || info.listening_from;
+                const findMatch = (val) => {
+                    if (!val) return null;
+                    const lowerVal = String(val).toLowerCase();
+                    return Object.keys(REGISTRY.icons).find(key =>
+                        !['player', 'harmony'].includes(key) && lowerVal.startsWith(key.toLowerCase())
+                    );
+                };
+
+                const iconKey = findMatch(player) || findMatch(client) || findMatch(service) || 'player';
                 indicator = el('button', {
                     className: 'btn btn-transparent lb-player-indicator',
                     style: { cursor: 'help' },
                     title: tooltipLines.join('\n'),
                     on: { click: (e) => e.stopPropagation() }
-                }, [ getIcon('player') ]);
+                }, [getIcon(iconKey)]);
                 controls.insertBefore(indicator, menuBtn);
             }
         }

@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Merge++
 // @namespace    http://tampermonkey.net/
-// @version      2.18
+// @version      2.19
 // @description  Best and only free Farm Merge Valley script
 // @author       vk.com/downcasted
-// @match        *://*.discordsays.com/*
+// @match        *://1187013846746005515.discordsays.com/*
 // @match        *://farm-merge-valley.game-files.crazygames.com/farm-merge-valley/*
-// @match        *://playfmv-*.devvit.net/*
+// @match        *://*.devvit.net/*
 // @icon         https://files.catbox.moe/d5dxaj.png
 // @discord      https://discord.gg/PtF4maDP9D
 // @license      GPL
@@ -17,6 +17,16 @@
 
 (function() {
     'use strict';
+
+    const { hostname, pathname } = location;
+
+    const isFMV =
+          hostname === '1187013846746005515.discordsays.com' ||
+          (hostname === 'farm-merge-valley.game-files.crazygames.com' &&
+           pathname.startsWith('/farm-merge-valley')) ||
+          /^playfmv-[^.]+\.devvit\.net$/i.test(hostname);
+
+    if (!isFMV) return;
 
     const originalOpen = XMLHttpRequest.prototype.open;
     const originalSend = XMLHttpRequest.prototype.send;

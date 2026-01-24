@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         RED Stats Since Last tmp
-// @version      1.4.3
+// @name         RED Stats Since Last
+// @version      1.4.4
 // @description  Shows how your Upload, Download and Ratio on Redacted have changed since your last visit.
 // @author       Lancer07
 // @include      http*://*redacted.sh/*
@@ -9,14 +9,41 @@
 // @namespace https://greasyfork.org/users/1535511
 // @license All Rights Reserved
 
-// @downloadURL https://update.greasyfork.org/scripts/562230/RED%20Stats%20Since%20Last%20tmp.user.js
-// @updateURL https://update.greasyfork.org/scripts/562230/RED%20Stats%20Since%20Last%20tmp.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562230/RED%20Stats%20Since%20Last.user.js
+// @updateURL https://update.greasyfork.org/scripts/562230/RED%20Stats%20Since%20Last.meta.js
 // ==/UserScript==
 
 // Original author: Chameleon (https://greasyfork.org/users/87476)
 
+// Changelog:
+// 1.4.4
+// - Removed alert popups
+// - Added one-time visual highlight for stat changes
+// - Persist Time unit changed from minutes to days
+// - UI improved
+//
+// 1.4.3
+// - Updated buffer calculation factor from 0.6 to 0.65
+//
+// 1.4.2
+// - Changed default settings: "Show on no change" enabled. Persist Time 14400 minutes.
+//
+// 1.4.1
+// - Fixed outdated Redacted domain suffix
+// - Removed PTP support
+
 (function() {
   'use strict';
+
+    // one-time highlight style for stat changes
+  var style = document.createElement('style');
+  style.textContent = `
+    .stats_highlight {
+      color: #e74c3c;
+      font-weight: bold;
+    }
+  `;
+  document.head.appendChild(style);
 
   if((window.location.href.indexOf("threadid=1781") != -1 && window.location.host.indexOf('redacted') != -1) || (window.location.href.indexOf("threadid=76554") != -1 && window.location.host.indexOf('redacted') != -1))
     showSettings();
@@ -49,7 +76,7 @@
   if(settings.persistTime && oldStats.time)
   {
     var difTime = (new Date())-oldStats.time;
-    if(difTime > settings.persistTime*60000)
+    if(difTime > settings.persistTime * 24 * 60 * 60000)
       window.localStorage.lastStats = JSON.stringify(currentStats);
   }
   else
@@ -77,20 +104,45 @@
   }
 
   var change = {up:currentStats.up-oldStats.up, down:currentStats.down-oldStats.down, ratio:Math.round((currentStats.ratio-oldStats.ratio)*100)/100};
+  var lastShown = window.localStorage.lastStatsShown;
+  if (lastShown) {
+    lastShown = JSON.parse(lastShown);
+  } else {
+    lastShown = { up: 0, down: 0, ratio: 0 };
+  }
+
+  var highlightUp = change.up !== lastShown.up && change.up !== 0;
+  var highlightDown = change.down !== lastShown.down && change.down !== 0;
+  var highlightRatio = change.ratio !== lastShown.ratio && change.ratio !== 0;
+
   if(settings.profileOnly && window.location.href.indexOf(document.getElementById('nav_userinfo').getElementsByTagName('a')[0].href) == -1)
     return;
-  if(change.up != 0 || settings.noChange)
-  {
-    statspans[0].innerHTML += ' <span class="stats_last up">('+renderStats(change.up)+')</span>';
-    if(difTime)
-      statspans[0].title = (prettyTime(difTime))+' ago';
-  }
-  if(change.down != 0 || settings.noChange)
-  {
-    statspans[1].innerHTML += ' <span class="stats_last down">('+renderStats(change.down)+')</span>';
-    if(difTime)
-      statspans[1].title = (prettyTime(difTime))+' ago';
-  }
+    if(change.up != 0 || settings.noChange)
+    {
+        var spanUp = document.createElement('span');
+        spanUp.className = 'stats_last up';
+        if (highlightUp) spanUp.className += ' stats_highlight';
+        spanUp.innerHTML = '(' + renderStats(change.up) + ')';
+        statspans[0].appendChild(document.createTextNode(' '));
+        statspans[0].appendChild(spanUp);
+
+        if(difTime)
+            statspans[0].title = (prettyTime(difTime))+' ago';
+    }
+
+    if(change.down != 0 || settings.noChange)
+    {
+        var spanDown = document.createElement('span');
+        spanDown.className = 'stats_last down';
+        if (highlightDown) spanDown.className += ' stats_highlight';
+        spanDown.innerHTML = '(' + renderStats(change.down) + ')';
+        statspans[1].appendChild(document.createTextNode(' '));
+        statspans[1].appendChild(spanDown);
+
+        if(difTime)
+            statspans[1].title = (prettyTime(difTime))+' ago';
+    }
+
   if((change.up != 0 || change.down != 0 || settings.noChange) && settings.showBuffer)
   {
     var span=li.getElementsByTagName('span')[0];
@@ -103,13 +155,18 @@
   }
   if(change.ratio != 0 || settings.noChange)
   {
-    statspans[2].innerHTML += ' <span class="stats_last ratio">('+change.ratio+')</span>';
-    if(difTime)
-      statspans[2].title = (prettyTime(difTime))+' ago';
+      var spanRatio = document.createElement('span');
+      spanRatio.className = 'stats_last ratio';
+      if (highlightRatio) spanRatio.className += ' stats_highlight';
+      spanRatio.innerHTML = '(' + change.ratio + ')';
+      statspans[2].appendChild(document.createTextNode(' '));
+      statspans[2].appendChild(spanRatio);
+
+      if(difTime)
+          statspans[2].title = (prettyTime(difTime))+' ago';
   }
 
-  if(settings.alert && (change.up != 0 || change.down != 0 || change.ratio != 0))
-    alert('Up: '+renderStats(change.up)+', Down: '+renderStats(change.down)+', Buffer: '+renderStats((change.up/1.05)-change.down)+', Ratio: '+change.ratio);
+    window.localStorage.lastStatsShown = JSON.stringify(change);
 })();
 
 function prettyTime(time)
@@ -131,7 +188,12 @@ function showSettings()
   before.parentNode.insertBefore(div, before);
   div.setAttribute('style', 'width: 100%; text-align: center; padding-bottom: 10px;');
   div.setAttribute('class', 'box');
-  div.innerHTML = '<h2>RED stats since last Settings</h2><br />';
+    // Title with smaller bottom margin
+    var title = document.createElement('h2');
+    title.textContent = 'RED stats since last Settings';
+    title.style.marginBottom = '4px'; // 调整这个数值，单位是 px
+    div.appendChild(title);
+
   var settings = getSettings();
 
   var a=document.createElement('a');
@@ -155,24 +217,40 @@ function showSettings()
   div.appendChild(a);
   div.appendChild(document.createElement('br'));
 
+
+    // Create Reset After input with left label and right unit
+    var wrapper = document.createElement('span');
+
+    // Left label
+    var labelLeft = document.createElement('span');
+    labelLeft.innerHTML = 'Reset after ';
+    labelLeft.style.marginRight = '4px';
+    labelLeft.style.opacity = '0.9';
+
+    // Input field
+    var input = document.createElement('input');
+    input.type = 'number';
+    input.style.width = '60px';
+    input.value = settings.persistTime ? settings.persistTime : '';
+    input.addEventListener('change', changeInput.bind(undefined, input), false);
+
+    // Right unit
+    var labelRight = document.createElement('span');
+    labelRight.innerHTML = ' days';
+    labelRight.style.marginLeft = '4px';
+    labelRight.style.opacity = '0.9';
+
+    // Combine into wrapper
+    wrapper.appendChild(labelLeft);
+    wrapper.appendChild(input);
+    wrapper.appendChild(labelRight);
+    div.appendChild(wrapper);
+    div.appendChild(document.createElement('br'));
+
+
   var a=document.createElement('a');
   a.href='javascript:void(0);';
-  a.innerHTML = 'Alert on change: '+(settings.alert ? 'On' : 'Off');
-  a.addEventListener('click', changeSetting.bind(undefined, a), false);
-  div.appendChild(a);
-  div.appendChild(document.createElement('br'));
-
-  var input=document.createElement('input');
-  input.setAttribute('placeholder', 'Persist Time');
-  input.type='number';
-  input.value = settings.persistTime ? settings.persistTime:'';
-  div.appendChild(input);
-  input.addEventListener('change', changeInput.bind(undefined, input), false);
-  div.appendChild(document.createElement('br'));
-
-  var a=document.createElement('a');
-  a.href='javascript:void(0);';
-  a.innerHTML = 'Save';
+  a.innerHTML = '>>Save<<';
   div.appendChild(a);
   div.appendChild(document.createElement('br'));
 }
@@ -181,7 +259,7 @@ function changeInput(input)
 {
   var settings = getSettings();
   settings.persistTime=input.value;
-  GM_setValue('lastStatsSettings', JSON.stringify(settings));
+  GM_setValue('lastStatsSettingsV2', JSON.stringify(settings));
 }
 
 function changeSetting(a)
@@ -206,23 +284,19 @@ function changeSetting(a)
   {
     settings.profileOnly = on;
   }
-  else if(a.innerHTML.indexOf('Alert') != -1)
-  {
-    settings.alert = on;
-  }
   else if(a.innerHTML.indexOf('Show buffer') != -1)
   {
     settings.showBuffer = on;
   }
-  GM_setValue('lastStatsSettings', JSON.stringify(settings));
+  GM_setValue('lastStatsSettingsV2', JSON.stringify(settings));
 }
 
 function getSettings()
 {
-  var settings = GM_getValue('lastStatsSettings', false);
+  var settings = GM_getValue('lastStatsSettingsV2', false);
   if(!settings)
   {
-    settings = {noChange: true, profileOnly: false, alert: false, showBuffer: false, persistTime: 14400};
+    settings = {noChange: true, profileOnly: false, showBuffer: false, persistTime: 10};
   }
   else
     settings = JSON.parse(settings);

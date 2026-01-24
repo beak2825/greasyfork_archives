@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         CryptoFuture Auto-Loop Pro + Auto Login
 // @namespace    https://tampermonkey.net/
-// @version      1.7
-// @description  UI with redirection, IconCaptcha detection, automatic loop & auto-login
+// @version      1.8
+// @description  UI with redirection, manual 3-click trigger on specific icon & auto-login
 // @author       Rubystance
 // @license      MIT
 // @match        https://cryptofuture.co.in/*
@@ -56,6 +56,29 @@
 
     createUI();
 
+    let manualClicks = 0;
+    document.addEventListener('click', (e) => {
+
+        const isCaptchaImg = e.target.closest('a[rel]') || e.target.tagName === 'IMG';
+        
+        if (isCaptchaImg) {
+            manualClicks++;
+            console.log("Captcha click detected: " + manualClicks);
+
+            if (manualClicks >= 3) {
+                const submitBtn = document.getElementById("subbutt");
+                if (submitBtn) {
+                    console.log("3 clicks reached! Pressing Submit...");
+
+                    setTimeout(() => {
+                        submitBtn.click();
+                        manualClicks = 0;
+                    }, 150);
+                }
+            }
+        }
+    }, true); 
+
     const refUsed = GM_getValue("ref_visited", false);
     if (!refUsed) {
         GM_setValue("ref_visited", true);
@@ -64,74 +87,40 @@
     }
 
     if (window.location.href === "https://cryptofuture.co.in/") {
-        const email = "YOUR_FAUCETPAY_EMAIL_HERE"; // << YOUR_FAUCETPAY_EMAIL
-
+        const email = "YOUR_FAUCETPAY_EMAIL_HERE"; 
         const walletInput = document.querySelector('input[name="wallet"]');
         if (walletInput) walletInput.value = email;
-
-        const captchaCheck = setInterval(() => {
-            const captchaTitle = document.querySelector(".iconcaptcha-modal__body-title");
-            const submitBtn = document.querySelector('button[type="submit"]');
-
-            if (captchaTitle && captchaTitle.innerText.includes("Verification complete.")) {
-                clearInterval(captchaCheck);
-                if (submitBtn) submitBtn.click();
-            }
-        }, 500);
     }
 
     const autoSkipDailyLimit = (currentCoin) => {
         const observer = new MutationObserver(() => {
             const alert = document.querySelector(".alert.alert-danger.text-center");
-
             if (alert && alert.innerText.includes("Daily claim limit for this coin reached")) {
-                console.log("Daily limit reached for", currentCoin);
-
                 observer.disconnect();
-
                 let next = getNextCoin(currentCoin);
                 setTimeout(() => {
                     window.location.href = baseUrl + next;
                 }, 1000);
             }
         });
-
         observer.observe(document.body, { childList: true, subtree: true });
     };
 
     if (window.location.href.includes("/faucet/currency/")) {
         const currentCoin = window.location.pathname.split('/').pop().toUpperCase();
-
         autoSkipDailyLimit(currentCoin);
-
-        const captchaTimer = setInterval(() => {
-            const captchaTitle = document.querySelector(".iconcaptcha-modal__body-title");
-            const submitBtn = document.getElementById("subbutt");
-
-            if (captchaTitle && captchaTitle.innerHTML.includes("Verification complete.")) {
-                console.log("Captcha completed!");
-                clearInterval(captchaTimer);
-
-                if (submitBtn) {
-                    submitBtn.click();
-                }
-            }
-        }, 500);
 
         const successObserver = new MutationObserver(() => {
             const successMsg = document.getElementById("swal2-title");
-
             if (successMsg && successMsg.innerText.includes("Success!")) {
                 successObserver.disconnect();
                 updateCounter();
-
                 let next = getNextCoin(currentCoin);
                 setTimeout(() => {
                     window.location.href = baseUrl + next;
                 }, 1000);
             }
         });
-
         successObserver.observe(document.body, { childList: true, subtree: true });
     }
 })();

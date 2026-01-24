@@ -2,9 +2,9 @@
 // @name MAM Ratio Protect
 // @namespace yyyzzz999
 // @author yyyzzz999
-// @description 7/16/22  Warns about downloading based on resulting Ratio Loss due to forgetting to buy w/FL
+// @description 1/24/26  Warns about downloading based on resulting Ratio Loss due to forgetting to buy w/FL
 // @match https://www.myanonamouse.net/t/*
-// @version 2.11
+// @version 2.40
 // @license MIT
 // @supportURL https://greasyfork.org/en/scripts/416189-mam-ratio-protect/feedback
 // @icon https://cdn.myanonamouse.net/imagebucket/164109/greenclock.png
@@ -21,8 +21,11 @@
 /*jshint esversion: 6 */
 /*eslint no-multi-spaces:0 */
 //stop pestering me 'cause I learned to type with double spaces!
-/*eslint curly: ["error", "multi-line"]*/ // Don't nag about missing {} after if's that do only one thing.
-// Release downloadURL:  https://greasyfork.org/en/scripts/416189-mam-ratio-protect
+
+/*eslint curly: ["error", "all"]*/
+/*eslint curly: ["error", "multi-or-nest"]*/
+// Don't nag about missing {} after if's that do only one thing.
+
 
 //let xhr;
 let rcRow; //Used in body and functions
@@ -33,7 +36,7 @@ let DEBUG =1; // Debugging mode on (1) or off (0) added in (v1.54) verbose (2) (
 let CICON =1; // Custom Favorite icons is ON by default, change this to 0 to keep the default icon on all tabs
 let NORATIO = 0; // Will test for new mice later v2.04
 
-if (DEBUG) console.log("Welcome to MAM Ratio Protect v2.11!");
+if (DEBUG) console.log("Welcome to MAM Ratio Protect v2.4!");
 
 /* Easter Egg bonus features, uncomment to use! */
 //Hide banner on book pages if not using MAM+
@@ -51,6 +54,13 @@ document.title=document.title.replace('" |', ' |'); // v1.98 lop loose unmatched
 /* End Easter Eggs */
 
 // Functions:
+
+function formatRatio(a,b=2){ // v2.4 Thank you sotiac! Deals with Trillion ratios from 2601 Holiday gifts! /f/t/88196
+    if (0===a) return "0";
+    if (1000>a) return parseFloat(a.toFixed(b));
+    const d=Math.floor(Math.log(a)/Math.log(1000));
+    return parseFloat((a/Math.pow(1000,d)).toFixed(b))+"e"+d*3;
+}
 
 //https://blog.abelotech.com/posts/number-currency-formatting-javascript/
 function comma(num) { // add commas to a number
@@ -307,6 +317,7 @@ if(rnew && rcur && !seeding &&!NORATIO ){ // Need to skip this whole section for
     if (seeding == null ) { // if NOT already seeding, downloading or VIP expires (v1.54)
     dlLabel.innerHTML = `Ratio loss ${rdiff.toFixed(4)}`; //changed from toPrecision(5) (v1.54)
     if (rdiff > 99 ) dlLabel.innerHTML = `LOSS ${rdiff.toFixed(3)}`; // Large collections showed blank! v2.02
+    if (rdiff > 999 ) dlLabel.innerHTML = `LOSS ${formatRatio(rdiff)}`; // v2.4 fix from sotiac for Trillion ratio holders
     dlLabel.style.fontWeight = "normal"; //To distinguish from BOLD Titles
 
 	// Add line under Torrent: detail for Cost data "Cost to Restore Ratio"
@@ -398,6 +409,12 @@ if (CICON && (vipstat.search("On list for next FL pick") > -1)) {
     favi("MirrorGreenClock"); // use "greenclock" if you want all mice facing left
     document.title=document.title.replace(' | My Anonamouse', ' | get ' + nextFLstr()  );
     }
+if (CICON && document.querySelector('div[id^="dialog-message"]').innerHTML.includes("You have found")){
+//Book is a book hunt answer, flag with clapping smilie :clap2:   Reload page to get regular icon back
+        for (let i = 0; i < links.length; i++) {
+        links[i].href = "https://cdn.myanonamouse.net/pic/smilies/clap2.gif";
+        }
+}
 } // dlBtn == null else (we have a download button)
 
-if (DEBUG) console.log("MAM Ratio Protect v2.11 Completed Normally.");
+if (DEBUG) console.log("MAM Ratio Protect v2.4 Completed Normally.");

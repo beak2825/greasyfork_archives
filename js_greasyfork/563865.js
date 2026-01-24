@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Y2K Image Uploader
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.4
 // @description  Paste or Drag images to upload to your Y2K VPS and get Markdown links immediately.
 // @author       You
 // @match        *://*/*
@@ -21,11 +21,14 @@
     // Config - Change this to your VPS Domain
     const SERVER_URL = 'https://y2k.zrn.qzz.io';
     const UPLOAD_API = `${SERVER_URL}/api/images`;
+    const BATCH_UPLOAD_API = `${SERVER_URL}/api/images/batch`;
 
     // State
     let uploadMode = false;
     let dragCounter = 0; // To handle dragenter/dragleave bubbling
     let autoCloseTimer;
+    let pendingFiles = []; // Track files being uploaded
+    let uploadResults = [];
 
     // --- AUTH HELPERS ---
     function getStoredToken() {
@@ -150,6 +153,66 @@
             border-color: #52c41a;
             color: #52c41a;
         }
+        /* BATCH UPLOAD LIST */
+        .y2k-file-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 12px 0;
+            text-align: left;
+        }
+        .y2k-file-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+        .y2k-file-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .y2k-file-status {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+        .y2k-file-status.pending {
+            width: 14px;
+            height: 14px;
+            border: 1px solid #666;
+            border-radius: 50%;
+        }
+        .y2k-file-status.uploading {
+            border: 2px solid #1890ff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: y2k-spin 1s linear infinite;
+        }
+        .y2k-file-status.success {
+            color: #4ade80;
+        }
+        .y2k-file-status.error {
+            color: #ef4444;
+        }
+        @keyframes y2k-spin {
+            to { transform: rotate(360deg); }
+        }
+        .y2k-summary {
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 8px;
+        }
+        .y2k-summary-text {
+            color: #4ade80;
+        }
+        .y2k-summary-error {
+            color: #ef4444;
+        }
     `;
 
     function injectStyles() {
@@ -161,7 +224,7 @@
     }
 
     // --- DOM ELEMENTS ---
-    let modalBackdrop, modal, previewImg, modalTitle, modalText, progressBar, progressWrapper;
+    let modalBackdrop, modal, previewImg, modalTitle, modalText, progressBar, progressWrapper, fileListContainer, summaryText;
     let miniStat;
 
     function initUI() {
@@ -185,6 +248,8 @@
                 <div class="y2k-progress-wrapper" id="y2k-progress-wrap">
                     <div class="y2k-progress-bar" id="y2k-progress"></div>
                 </div>
+                <div class="y2k-file-list" id="y2k-file-list"></div>
+                <div class="y2k-summary" id="y2k-summary"></div>
             </div>
         `;
         document.body.appendChild(modalBackdrop);
@@ -196,6 +261,8 @@
         modalText = modalBackdrop.querySelector('#y2k-text');
         progressWrapper = modalBackdrop.querySelector('#y2k-progress-wrap');
         progressBar = modalBackdrop.querySelector('#y2k-progress');
+        fileListContainer = modalBackdrop.querySelector('#y2k-file-list');
+        summaryText = modalBackdrop.querySelector('#y2k-summary');
 
         // Close on backdrop click
         modalBackdrop.addEventListener('click', (e) => {
@@ -204,7 +271,7 @@
     }
 
     // --- MODAL CONTROLS ---
-    function showModal(title, text, showProgress = false, imgSrc = null) {
+    function showModal(title, text, showProgress = false, imgSrc = null, showFileList = false) {
         clearTimeout(autoCloseTimer);
         modalBackdrop.classList.add('active');
 
@@ -219,16 +286,69 @@
             previewImg.src = '';
         }
 
-        if (showProgress) {
+        if (showFileList) {
+            progressWrapper.style.display = 'none';
+            previewImg.classList.remove('show');
+            fileListContainer.style.display = 'block';
+        } else if (showProgress) {
             progressWrapper.style.display = 'block';
             progressBar.style.width = '0%';
+            fileListContainer.style.display = 'none';
         } else {
             progressWrapper.style.display = 'none';
+            fileListContainer.style.display = 'none';
         }
     }
 
     function updateProgress(percent) {
         progressBar.style.width = `${percent}%`;
+    }
+
+    // Update file list display
+    function updateFileList(files) {
+        fileListContainer.innerHTML = '';
+        files.forEach((file, index) => {
+            const item = document.createElement('div');
+            item.className = 'y2k-file-item';
+
+            let statusHtml = '';
+            if (file.status === 'pending') {
+                statusHtml = '<div class="y2k-file-status pending"></div>';
+            } else if (file.status === 'uploading') {
+                statusHtml = '<div class="y2k-file-status uploading"></div>';
+            } else if (file.status === 'success') {
+                statusHtml = '<svg class="y2k-file-status success" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 17"></polyline><path d="m1 12 4-4 4 4 16"></path></svg>';
+            } else if (file.status === 'error') {
+                statusHtml = '<svg class="y2k-file-status error" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+            }
+
+            item.innerHTML = `
+                ${statusHtml}
+                <div class="y2k-file-name" title="${file.name}">${file.name}</div>
+                <div class="y2k-file-size">${formatFileSize(file.size)}</div>
+            `;
+            fileListContainer.appendChild(item);
+        });
+    }
+
+    function updateSummary(summary) {
+        let html = '';
+        if (summary.uploaded > 0) {
+            html += `<span class="y2k-summary-text">✓ ${summary.uploaded} 上传成功</span>`;
+        }
+        if (summary.failed > 0) {
+            html += ` <span class="y2k-summary-error">✗ ${summary.failed} 失败</span>`;
+        }
+        if (summary.copied > 0) {
+            html += ` | 已复制 ${summary.copied} 个链接`;
+        }
+        summaryText.innerHTML = html;
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
     }
 
     function hideModal() {
@@ -276,23 +396,38 @@
     // Validates files and calls upload
     function handleFiles(files) {
         if (!files || !files.length) return;
-        const file = files[0];
-        if (file.type.indexOf('image') !== -1) {
-            uploadImage(file);
-        }
+
+        const validFiles = Array.from(files).filter(file => file.type.indexOf('image') !== -1);
+        if (validFiles.length === 0) return;
+
+        // Add to pending files with initial status
+        pendingFiles = validFiles.map(file => ({
+            file,
+            status: 'pending'
+        }));
+
+        // Show modal with file list
+        showModal('批量上传', `准备上传 ${pendingFiles.length} 个文件`, false, null, true);
+        updateFileList(pendingFiles);
+
+        // Start batch upload
+        uploadBatchImages(pendingFiles);
     }
 
     // Paste
     document.addEventListener('paste', (event) => {
         if (!uploadMode) return;
         const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+        const files = [];
         for (let i = 0; i < items.length; i++) {
             if (items[i].type.indexOf('image') !== -1) {
                 event.preventDefault();
                 const file = items[i].getAsFile();
-                if (file) uploadImage(file);
-                return;
+                if (file) files.push(file);
             }
+        }
+        if (files.length > 0) {
+            handleFiles(files);
         }
     });
 
@@ -304,28 +439,30 @@
     document.addEventListener('drop', (e) => {
         if (!uploadMode) return;
         e.preventDefault();
-        if (e.dataTransfer.files) {
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             handleFiles(e.dataTransfer.files);
         }
     });
 
-    function uploadImage(file) {
-        // 1. Show Preview Immediately
-        const objUrl = URL.createObjectURL(file);
-        showModal('Uploading...', '0%', true, objUrl);
-
+    function uploadBatchImages(files) {
         const token = getStoredToken();
         if (!token) {
-            showModal('Auth Required', 'Please set your Token first (Alt + T)', false, null);
+            showModal('需要认证', '请先设置 Token (Alt + T)', false, null, false);
             return;
         }
 
+        // Mark all as uploading
+        files.forEach(f => f.status = 'uploading');
+        updateFileList(files);
+
         const formData = new FormData();
-        formData.append('image', file);
+        files.forEach(f => {
+            formData.append('images', f.file);
+        });
 
         GM_xmlhttpRequest({
             method: 'POST',
-            url: UPLOAD_API,
+            url: BATCH_UPLOAD_API,
             headers: {
                 'Authorization': `Bearer ${token}`
             },
@@ -334,47 +471,74 @@
                 onprogress: (e) => {
                     if (e.lengthComputable) {
                         const percent = Math.round((e.loaded / e.total) * 100);
-                        updateProgress(percent);
-                        modalText.textContent = `${percent}%`;
+                        modalText.textContent = `上传中... ${percent}%`;
                     }
                 }
             },
             onload: function (response) {
                 try {
                     const res = JSON.parse(response.responseText);
-                    if (res.success && res.data && res.data.url) {
-                        let finalUrl = res.data.url;
-                        if (finalUrl.startsWith('/')) finalUrl = SERVER_URL + finalUrl;
+                    if (res.success) {
+                        // Process results
+                        const results = res.data || [];
+                        const errors = res.errors || [];
+                        const summary = res.summary || {};
 
-                        const md = `![Image](${finalUrl})`;
+                        // Update file statuses
+                        files.forEach((f, index) => {
+                            const result = results.find(r => r.data.name === f.file.name);
+                            const error = errors.find(e => e.filename === f.file.name);
 
-                        // Action
-                        GM_setClipboard(md);
-                        insertToEditor(md);
+                            if (error) {
+                                f.status = 'error';
+                            } else if (result) {
+                                f.status = 'success';
+                                f.url = SERVER_URL + result.data.url;
+                            } else {
+                                f.status = 'error';
+                            }
+                        });
 
-                        // Success Modal
-                        showModal('Uploaded!', 'Link copied to clipboard.', false, objUrl);
+                        updateFileList(files);
 
-                        // Cleanup
-                        setTimeout(() => URL.revokeObjectURL(objUrl), 5000);
-                        hideModalDelayed(2500); // Close after 2.5s
+                        // Copy all successful URLs to clipboard
+                        const successful = files.filter(f => f.status === 'success');
+                        const markdownLinks = successful.map(f => `![${f.file.name}](${f.url})`).join('\n');
+                        GM_setClipboard(markdownLinks);
+
+                        // Insert into editor if available (always insert for batch)
+                        if (successful.length >= 1) {
+                            insertToEditor(markdownLinks);
+                        }
+
+                        // Show summary
+                        updateSummary({
+                            uploaded: summary.uploaded || 0,
+                            failed: summary.failed || 0,
+                            copied: successful.length
+                        });
+
+                        // Auto-close after success
+                        hideModalDelayed(4000);
                     } else {
                         if (response.status === 401) {
-                            showModal('Unauthorized', 'Token invalid or expired. Press Alt+T to reset.', false, null);
+                            showModal('认证失败', 'Token 无效或已过期。按 Alt+T 重置。', false, null, false);
                         } else {
-                            showModal('Error', res.error || 'Upload failed', false, null);
+                            showModal('错误', res.error || '批量上传失败', false, null, false);
                         }
                     }
                 } catch (e) {
                     if (response.status === 401) {
-                        showModal('Unauthorized', 'Token required. Press Alt+T.', false, null);
+                        showModal('认证失败', '请设置 Token。按 Alt+T。', false, null, false);
                     } else {
-                        showModal('Error', 'Invalid Server Response', false, null);
+                        showModal('错误', '服务器响应无效', false, null, false);
                     }
                 }
             },
             onerror: function (err) {
-                showModal('Network Error', 'Check console', false, null);
+                showModal('网络错误', '请检查控制台', false, null, false);
+                files.forEach(f => f.status = 'error');
+                updateFileList(files);
             }
         });
     }

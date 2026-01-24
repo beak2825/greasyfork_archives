@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SV HaUI Helper
 // @namespace    https://github.com/vuquan2005/svHaUI-Helper
-// @version      2.0.0
+// @version      2.1.0
 // @author       VuQuan
 // @description  Nâng cao trải nghiệm cho sinh viên HaUI
 // @license      GPL-3.0-only
@@ -9,6 +9,7 @@
 // @homepageURL  https://github.com/vuquan2005/svHaUI-Helper
 // @supportURL   https://github.com/vuquan2005/svHaUI-Helper/issues
 // @match        https://sv.haui.edu.vn/*
+// @grant        GM_addStyle
 // @grant        GM_deleteValue
 // @grant        GM_getValue
 // @grant        GM_listValues
@@ -20,6 +21,10 @@
 
 (function () {
   'use strict';
+
+  const d=new Set;const e = async e=>{d.has(e)||(d.add(e),(t=>{typeof GM_addStyle=="function"?GM_addStyle(t):(document.head||document.documentElement).appendChild(document.createElement("style")).append(t);})(e));};
+
+  e(" .sv-quick-nav{float:right;display:inline-flex;gap:8px;align-items:center;margin-top:-2px;position:relative;z-index:9}.sv-quick-nav-link{display:inline-block;padding:4px 12px;border-radius:4px;text-decoration:none;font-size:13px;font-weight:500;color:#5a6fd6;background:#667eea26;border:1px solid rgba(102,126,234,.25);transition:all .2s ease}.sv-quick-nav-link i{margin-right:4px}.sv-quick-nav-link:hover{background:#667eea;color:#fff;border-color:#667eea;text-decoration:none}.sv-quick-nav-link.active{background:#667eea;color:#fff;border-color:#667eea;pointer-events:none;cursor:default} ");
 
   const LOG_LEVEL_PRIORITY = {
     debug: 0,
@@ -100,6 +105,101 @@ setLevel(level) {
   const log$3 = new Logger({ prefix: "HaUI" });
   function createLogger(name) {
     return log$3.child(name);
+  }
+  class WindowLocationWrapper {
+    constructor(location = window.location) {
+      this.location = location;
+    }
+get href() {
+      return this.location.href;
+    }
+get origin() {
+      return this.location.origin;
+    }
+get rawPath() {
+      return this.location.pathname;
+    }
+get path() {
+      const p = this.location.pathname;
+      return p === "/" ? "/" : p.replace(/\/+$/, "");
+    }
+get search() {
+      return this.location.search;
+    }
+get pathAndQuery() {
+      return this.path + this.search;
+    }
+  }
+  const browserLocation = new WindowLocationWrapper();
+  class Feature {
+
+
+location = browserLocation;
+
+
+id;
+    name;
+    description;
+    priority;
+    urlMatch;
+    _log;
+get log() {
+      return this._log ??= createLogger(this.name);
+    }
+matchResult = null;
+    constructor(config) {
+      this.id = config.id;
+      this.name = config.name;
+      this.description = config.description;
+      this.priority = config.priority ?? 0;
+      this.urlMatch = config.urlMatch;
+    }
+
+
+
+normalizePatterns(config) {
+      if (Array.isArray(config)) {
+        return config.map((item) => {
+          if (typeof item === "object" && "pattern" in item) {
+            return item;
+          }
+          return { pattern: item };
+        });
+      }
+      if (typeof config === "object" && "pattern" in config) {
+        return [config];
+      }
+      return [{ pattern: config }];
+    }
+testPattern(pattern) {
+      if (typeof pattern === "string") {
+        return this.location.path === pattern;
+      }
+      return pattern.test(this.location.pathAndQuery);
+    }
+shouldRun() {
+      this.matchResult = { matched: false };
+      if (!this.urlMatch) {
+        this.matchResult.matched = true;
+        return true;
+      }
+      const patterns = this.normalizePatterns(this.urlMatch);
+      for (let i = 0; i < patterns.length; i++) {
+        const { name, pattern } = patterns[i];
+        if (this.testPattern(pattern)) {
+          this.matchResult = {
+            matched: true,
+            matchIndex: i,
+            matchName: name,
+            pattern
+          };
+          return true;
+        }
+      }
+      return false;
+    }
+cleanup() {
+    }
   }
   const DEFAULT_SETTINGS = {
 logLevel: "warn",
@@ -437,101 +537,12 @@ resetAll() {
     }
   }
   const settings = new SettingsManager();
-  function normalizePath(path) {
-    if (path === "/") return "/";
-    return path.replace(/\/+$/, "");
-  }
-  const CURRENT_PATH = normalizePath(window.location.pathname);
-  const CURRENT_URL = CURRENT_PATH + window.location.search;
-  const CURRENT_HREF = window.location.origin + CURRENT_URL;
-  class Feature {
-
-
-
-static currentPath = CURRENT_PATH;
-static currentUrl = CURRENT_URL;
-static currentHref = CURRENT_HREF;
-
-
-
-get currentPath() {
-      return Feature.currentPath;
-    }
-get currentUrl() {
-      return Feature.currentUrl;
-    }
-get currentHref() {
-      return Feature.currentHref;
-    }
-
-
-id;
-    name;
-    description;
-    urlMatch;
-log;
-matchResult = null;
-    constructor(config) {
-      this.id = config.id;
-      this.name = config.name;
-      this.description = config.description;
-      this.urlMatch = config.urlMatch;
-      this.log = createLogger(config.name);
-    }
-
-
-
-normalizePatterns(config) {
-      if (Array.isArray(config)) {
-        return config.map((item) => {
-          if (typeof item === "object" && "pattern" in item) {
-            return item;
-          }
-          return { pattern: item };
-        });
-      }
-      if (typeof config === "object" && "pattern" in config) {
-        return [config];
-      }
-      return [{ pattern: config }];
-    }
-testPattern(pattern) {
-      if (typeof pattern === "string") {
-        return this.currentPath === pattern;
-      }
-      return pattern.test(this.currentUrl);
-    }
-shouldRun() {
-      if (!settings.isFeatureEnabled(this.id, this.name, this.description)) {
-        return false;
-      }
-      this.matchResult = { matched: false };
-      if (!this.urlMatch) {
-        this.matchResult.matched = true;
-        return true;
-      }
-      const patterns = this.normalizePatterns(this.urlMatch);
-      for (let i = 0; i < patterns.length; i++) {
-        const { name, pattern } = patterns[i];
-        if (this.testPattern(pattern)) {
-          this.matchResult = {
-            matched: true,
-            matchIndex: i,
-            matchName: name,
-            pattern
-          };
-          return true;
-        }
-      }
-      return false;
-    }
-destroy() {
-    }
-  }
   const log = createLogger("FeatureManager");
   class FeatureManager {
     features = new Map();
-    initialized = new Set();
+    running = new Set();
+    isApplying = false;
+    pendingApply = false;
 register(feature) {
       if (this.features.has(feature.id)) {
         log.w(`Feature "${feature.id}" already registered, skipping.`);
@@ -543,27 +554,64 @@ register(feature) {
 registerAll(features) {
       features.forEach((f) => this.register(f));
     }
-async initAll() {
-      log.d("Starting feature initialization...");
-      for (const [id, feature] of this.features) {
-        log.d(`Checking feature: ${feature.name}`);
-        if (this.initialized.has(id)) {
-          continue;
-        }
-        if (!feature.shouldRun()) {
-          log.d(`Skipping "${feature.name}" (URL mismatch or disabled)`);
-          continue;
-        }
-        try {
-          log.d(`Initializing: ${feature.name}`);
-          await feature.init();
-          this.initialized.add(id);
-        } catch (error) {
-          log.e(`Error initializing "${feature.name}":`, error);
-        }
-        log.d(`✅ Initialized: ${feature.name}`);
+async applyFeatures() {
+      if (this.isApplying) {
+        log.d("applyFeatures already in progress, queuing...");
+        this.pendingApply = true;
+        return;
       }
-      log.i(`✅ Initialized ${this.initialized.size}/${this.features.size} features`);
+      this.isApplying = true;
+      log.d("Applying features...");
+      try {
+        const sortedFeatures = [...this.features.entries()].sort(
+          ([, a], [, b]) => b.priority - a.priority
+        );
+        for (const [id, feature] of sortedFeatures) {
+          if (!this.running.has(id)) continue;
+          const isEnabled = settings.isFeatureEnabled(
+            feature.id,
+            feature.name,
+            feature.description
+          );
+          const shouldRun = feature.shouldRun();
+          if (!isEnabled || !shouldRun) {
+            try {
+              feature.cleanup();
+              this.running.delete(id);
+              log.d(
+                `🛑 Stopped: ${feature.name} (${!isEnabled ? "Disabled" : "URL mismatch"})`
+              );
+            } catch (error) {
+              log.e(`Error stopping "${feature.name}":`, error);
+            }
+          }
+        }
+        for (const [id, feature] of sortedFeatures) {
+          if (this.running.has(id)) continue;
+          if (!settings.isFeatureEnabled(feature.id, feature.name, feature.description)) {
+            continue;
+          }
+          if (!feature.shouldRun()) {
+            continue;
+          }
+          try {
+            log.d(`Starting: ${feature.name} (priority: ${feature.priority})`);
+            await feature.run();
+            this.running.add(id);
+            log.d(`✅ Started: ${feature.name}`);
+          } catch (error) {
+            log.e(`Error starting "${feature.name}":`, error);
+          }
+        }
+        log.i(`✅ Running ${this.running.size}/${this.features.size} features`);
+      } finally {
+        this.isApplying = false;
+        if (this.pendingApply) {
+          this.pendingApply = false;
+          log.d("Running pending applyFeatures...");
+          await this.applyFeatures();
+        }
+      }
     }
 get(id) {
       return this.features.get(id);
@@ -571,8 +619,50 @@ get(id) {
 getAll() {
       return Array.from(this.features.values());
     }
-isInitialized(id) {
-      return this.initialized.has(id);
+isRunning(id) {
+      return this.running.has(id);
+    }
+async startFeature(id) {
+      const feature = this.features.get(id);
+      if (!feature) {
+        log.w(`Feature "${id}" not found`);
+        return false;
+      }
+      if (this.running.has(id)) {
+        log.d(`Feature "${feature.name}" is already running`);
+        return false;
+      }
+      try {
+        log.d(`Starting feature: ${feature.name}`);
+        await feature.run();
+        this.running.add(id);
+        log.i(`✅ Started: ${feature.name}`);
+        return true;
+      } catch (error) {
+        log.e(`Error starting "${feature.name}":`, error);
+        return false;
+      }
+    }
+stopFeature(id) {
+      const feature = this.features.get(id);
+      if (!feature) {
+        log.w(`Feature "${id}" not found`);
+        return false;
+      }
+      if (!this.running.has(id)) {
+        log.d(`Feature "${feature.name}" is not running`);
+        return false;
+      }
+      try {
+        log.d(`Stopping feature: ${feature.name}`);
+        feature.cleanup();
+        this.running.delete(id);
+        log.i(`🛑 Stopped: ${feature.name}`);
+        return true;
+      } catch (error) {
+        log.e(`Error stopping "${feature.name}":`, error);
+        return false;
+      }
     }
   }
   const featureManager = new FeatureManager();
@@ -581,42 +671,63 @@ isInitialized(id) {
 "/": "🏠 Trang chủ",
 "/student/recharge/cashinqr": "💳 Nạp tiền QR",
     "/student/recharge/cashin": "💳 Nạp tiền TK",
-    "/student/recharge/inpatientpayment": "💰 Thanh toán công nợ",
+    "/student/recharge/inpatientpayment": "💰 Thanh toán môn",
     "/student/recharge/transactionhistory": "📜 Lịch sử GD",
     "/student/recharge/listeinvoice": "🧾 Hóa đơn ĐT",
 "/student/userdetail/userdetail": "👤 Thông tin SV",
     "/student/userdetail/updateuserprofile": "📝 Cập nhật hồ sơ",
     "/student/userdetail/usercerupdate": "🎓 TT in bằng",
     "/member/changepass": "🔐 Đổi mật khẩu",
-    "/student/userdetail/militaryclothes": "🎖️ Quân tư trang",
+    "/student/userdetail/militaryclothes": "🎖️ ĐK Quân tư trang",
+    "/student/userdetail/userrevenueslist": "📂 Giấy tờ/Hồ sơ",
 "/register/dangkyhocphan": "📝 ĐK HP dự kiến",
-    "/register/": "📝 Đăng ký HP",
+    "/register/": "📝 Đăng ký học phần",
+    "/register/dangkyDAKLTN": "📝 ĐK ĐA/KLTN",
     "/training/removeclasslist": "❌ Rút HP",
-    "/training/statisticregister": "📊 Thống kê ĐKHP",
+    "/training/statisticregister": "📊 TThông tin đăng ký học phần",
     "/training/viewprogram": "📚 ĐK 2 chương trình",
+    "/training/listprogramtwo": "📋 DS đơn CT2",
+    "/training/viewmodules2": "📊 Tiến độ CT2",
 "/training/viewcourseindustry": "📚 Khung CT",
     "/training/programmodulessemester": "📅 Khung theo kỳ",
-"/timestable/calendarct": "📆 KH đầu khóa",
+"/training/viewprogramsdh": "🎓 ĐK học trước ThS",
+    "/training/listprogramsdh": "📋 DS đơn ThS",
+    "/training/viewmodulessdh": "📊 Tiến độ ThS",
+    "/registersdh/onlineregister": "📝 ĐK HP ThS",
+"/timestable/calendarct": "📆 Kế hoạch đầu khóa",
     "/timestable/calendarcl": "🗓️ Thời khóa biểu",
-    "/timestable/timestableview": "🗓️ Lịch giảng dạy",
+    "/timestable/timestableview": "🗓️ Lịch môn học",
 "/student/schedulefees/examplant": "📆 Kế hoạch thi",
     "/student/schedulefees/transactionmodules": "📆 Lịch thi",
     "/student/schedulefees/testonline": "💻 Thi Online",
+    "/student/schedulefees/testonlineqpan": "🛡️ Thi QP&AN Online",
+    "/student/schedulefees/dakltnonline": "🛡️ BV ĐA/KLTN Online",
 "/student/result/studyresults": "📊 KQ học tập",
     "/student/result/examresult": "📋 KQ thi",
     "/student/result/viewscorebysemester": "📈 ĐTB học kỳ",
     "/student/result/viewmodules": "📈 ĐTB tích lũy",
-    "/student/result/sendreceiveapplications": "📨 Phúc tra",
+    "/student/result/sendreceiveapplications": "📨 Phúc khảo",
+    "/student/result/sendexamreview": "👁️ Xem lại bài",
 "/tttn/htdn/list": "🎓 Thực tập TN",
     "/student/result/graduatecal": "🎓 Xét tốt nghiệp",
-    "/student/result/degreeview": "🎓 TT in bằng",
+    "/student/result/degreeview": "🎓 Xác nhận thông tin in bằng",
+    "/student/result/degreeprint": "🖨️ Bản in bằng",
+"/student/application/advertiselist": "💼 Việc làm & HT",
 "/student/application/notifilist": "📢 Thông báo trường",
     "/student/application/messengeruserlist": "📬 Thông báo cá nhân",
     "/student/recharge/serviceonegate": "🚪 Dịch vụ một cửa",
     "/messages": "💬 Chia sẻ lớp",
     "/messages/group": "💬 Chia sẻ trường",
+    "/messages/listclass": "💬 Trao đổi lớp HP",
     "/study": "📖 Học trực tuyến",
-    "/survey": "� Khảo sát"
+    "/sso/qpan": "🛡️ GD QP&AN",
+    "/sso/dlearning": "🌐 Đào tạo từ xa",
+    "/survey": "📝 Khảo sát",
+    "/student/evaluation/listsemester": "⭐ ĐG rèn luyện",
+    "/sso/btl": "📄 KT luận văn",
+    "/STSV2023/index.html": "📘 Sổ tay SV",
+    "/student/application/sotayantoan": "📘 Sổ tay an toàn",
+    "/student/application/hddanhgiaketquahoctap": "📘 HD đánh giá KQ"
   };
   const DOM = {
 panelHeader: () => {
@@ -710,7 +821,7 @@ friendInfo: () => {
         description: "Thay đổi tiêu đề tab dựa trên trang đang xem"
       });
     }
-init() {
+run() {
       this.log.i("Initializing...");
       this.originalTitle = document.title;
       const found = this.updateTitle();
@@ -720,15 +831,15 @@ init() {
       this.log.i("Ready!");
     }
 updateTitle() {
-      const url = window.location.pathname + window.location.search;
-      const pathname = window.location.pathname;
+      const pathAndQuery = this.location.pathAndQuery;
+      const pathname = this.location.path;
       const staticTitle = URL_TITLE_MAP[pathname];
       if (staticTitle) {
         this.setTitle(staticTitle);
         return true;
       }
       for (const config of DYNAMIC_URL_PATTERNS) {
-        if (config.pattern.test(url)) {
+        if (config.pattern.test(pathAndQuery)) {
           const title = config.getTitleFn();
           if (title === null) {
             return false;
@@ -779,7 +890,7 @@ updateTitle() {
       });
       this.log.d("Started observing for dynamic content");
     }
-destroy() {
+cleanup() {
       document.title = this.originalTitle;
       if (this.debounceTimer) {
         clearTimeout(this.debounceTimer);
@@ -826,7 +937,7 @@ destroy() {
   }
   const DEBOUNCE_DELAY_MS = 30;
   const CAPTCHA_LENGTH = 5;
-  const URL_PATTERNS = [
+  const URL_PATTERNS$1 = [
     { name: "sso-login", pattern: "/sso" },
     { name: "register", pattern: "/register" }
   ];
@@ -855,10 +966,10 @@ handleInput = this.onInput.bind(this);
         id: "captcha-helper",
         name: "Captcha Helper",
         description: "Hỗ trợ nhập captcha: tự động chuyển chữ thường, loại bỏ dấu, submit khi Enter/blur",
-        urlMatch: URL_PATTERNS
+        urlMatch: URL_PATTERNS$1
       });
     }
-init() {
+run() {
       this.log.i("Initializing...");
       const matchName = this.matchResult?.matchName;
       if (!matchName) {
@@ -870,7 +981,7 @@ init() {
         this.log.w("No handler found for:", matchName);
         return;
       }
-      this.log.d(`Matched pattern: "${matchName}" at ${this.currentPath}`);
+      this.log.d(`Matched pattern: "${matchName}" at ${this.location.path}`);
       this.inputEl = document.querySelector(this.currentHandler.inputSelector);
       this.submitEl = document.querySelector(this.currentHandler.submitSelector);
       if (!this.inputEl) {
@@ -933,7 +1044,7 @@ submit() {
         this.submitEl.click();
       }
     }
-destroy() {
+cleanup() {
       if (this.normalizeTimer) {
         clearTimeout(this.normalizeTimer);
         this.normalizeTimer = null;
@@ -948,16 +1059,110 @@ destroy() {
       this.currentHandler = null;
     }
   }
-  const allFeatures = [new DynamicTitleFeature(), new CaptchaHelperFeature()];
+  const cssPrefix = "sv-quick-nav";
+  const styles = {
+    cssPrefix
+  };
+  const CSS_PREFIX = styles.cssPrefix;
+  const URL_PATTERNS = [
+{ name: "personal-study", pattern: /^\/student\/result\/studyresults$/ },
+    { name: "personal-exam", pattern: /^\/student\/result\/examresult$/ },
+{ name: "friend-study", pattern: /^\/student\/result\/viewstudyresult\?/ },
+    { name: "friend-exam", pattern: /^\/student\/result\/viewexamresult\?/ },
+{ name: "class-study", pattern: /^\/student\/result\/viewstudyresultclass\?/ },
+    { name: "class-exam", pattern: /^\/student\/result\/viewexamresultclass\?/ }
+  ];
+  class QuickNavFeature extends Feature {
+    navElement = null;
+    constructor() {
+      super({
+        id: "quick-nav",
+        name: "Quick Nav",
+        description: "Điều hướng nhanh giữa trang Điểm TX và Điểm thi",
+        urlMatch: URL_PATTERNS
+      });
+    }
+    run() {
+      this.log.i("Initializing...");
+      const navLinks = this.generateNavLinks();
+      if (navLinks.length === 0) {
+        this.log.w("No nav links generated for current URL");
+        return;
+      }
+      const panelHeading = document.querySelector(".panel-heading.panel-heading-divider");
+      if (!panelHeading) {
+        this.log.w("Panel heading not found");
+        return;
+      }
+      this.navElement = this.createNavElement(navLinks);
+      panelHeading.insertBefore(this.navElement, panelHeading.firstChild);
+      this.log.i("Ready! Nav links injected.");
+    }
+generateNavLinks() {
+      const pathname = this.location.path;
+      const search = this.location.search;
+      const isStudy = pathname.includes("studyresult");
+      const isExam = pathname.includes("examresult");
+      if (!isStudy && !isExam) return [];
+      let studyUrl;
+      let examUrl;
+      if (pathname === "/student/result/studyresults") {
+        studyUrl = pathname;
+        examUrl = "/student/result/examresult";
+      } else if (pathname === "/student/result/examresult") {
+        studyUrl = "/student/result/studyresults";
+        examUrl = pathname;
+      } else if (pathname.startsWith("/student/result/viewstudyresult") && !pathname.includes("class")) {
+        studyUrl = pathname + search;
+        examUrl = pathname.replace("viewstudyresult", "viewexamresult") + search;
+      } else if (pathname.startsWith("/student/result/viewexamresult") && !pathname.includes("class")) {
+        studyUrl = pathname.replace("viewexamresult", "viewstudyresult") + search;
+        examUrl = pathname + search;
+      } else if (pathname.includes("viewstudyresultclass")) {
+        studyUrl = pathname + search;
+        examUrl = pathname.replace("viewstudyresultclass", "viewexamresultclass") + search;
+      } else if (pathname.includes("viewexamresultclass")) {
+        studyUrl = pathname.replace("viewexamresultclass", "viewstudyresultclass") + search;
+        examUrl = pathname + search;
+      } else {
+        return [];
+      }
+      return [
+        { label: "Điểm TX", icon: "📊", url: studyUrl, isActive: isStudy },
+        { label: "Điểm thi", icon: "📋", url: examUrl, isActive: isExam }
+      ];
+    }
+createNavElement(links) {
+      const container = document.createElement("span");
+      container.className = CSS_PREFIX;
+      for (const link of links) {
+        const a = document.createElement("a");
+        a.href = link.url;
+        a.className = `${CSS_PREFIX}-link${link.isActive ? " active" : ""}`;
+        a.textContent = `${link.icon} ${link.label}`;
+        container.appendChild(a);
+      }
+      return container;
+    }
+cleanup() {
+      this.navElement?.remove();
+      this.navElement = null;
+    }
+  }
+  const allFeatures = [
+    new DynamicTitleFeature(),
+    new CaptchaHelperFeature(),
+    new QuickNavFeature()
+  ];
   console.log(
-    `%c🎓 SV HaUI Helper %cv${"2.0.0"}`,
+    `%c🎓 SV HaUI Helper %cv${"2.1.0"}`,
     "color: #667eea; font-size: 20px; font-weight: bold;",
     "color: #764ba2; font-size: 14px;"
   );
   async function main() {
     log$3.i("Initializing...");
     featureManager.registerAll(allFeatures);
-    await featureManager.initAll();
+    await featureManager.applyFeatures();
     log$3.i("✅ Ready!");
   }
   if (document.readyState === "loading") {

@@ -1,46 +1,63 @@
 // ==UserScript==
-// @name         CryptoClicks faucet Auto roll
-// @namespace    http://tampermonkey.net/
-// @version      1.3
+// @name         CryptoClicks faucet
+// @namespace    CryptoClicks Auto roll
+// @version      1.4
 // @description  Auto-roll faucet
-// @match        https://cryptoclicks.net/*
 // @author       Shnethan
+// @match        https://cryptoclicks.net/*
 // @icon         https://cryptoclicks.net/static/favicon.ico
-// @license      MIT
+// @license      GPL-3.0-or-later
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/562412/CryptoClicks%20faucet%20Auto%20roll.user.js
-// @updateURL https://update.greasyfork.org/scripts/562412/CryptoClicks%20faucet%20Auto%20roll.meta.js
+
+// @downloadURL https://update.greasyfork.org/scripts/562412/CryptoClicks%20faucet.user.js
+// @updateURL https://update.greasyfork.org/scripts/562412/CryptoClicks%20faucet.meta.js
 // ==/UserScript==
 
-(function(){
-    'use strict';
+(function() {
+  'use strict';
 
-    let a, t0=0, cClicked=false;
-    const TO=20000, CD=5000;
+  let t = 0, c = null, k = false;
+  const TO = 20000, CD = 5000;
 
-    const sc = v => {
-        const s=document.querySelector('select.captcha-select');
-        if(s){ s.value=v; s.dispatchEvent(new Event('change',{bubbles:true})); a=v; t0=Date.now(); }
-    };
+  const s = v => {
+    const e = document.querySelector('select.captcha-select');
+    if (!e) return;
+    e.value = v;
+    e.dispatchEvent(new Event('change', { bubbles: true }));
+    c = v;
+    t = Date.now();
+  };
 
-    const s = () => a==='1' ? document.querySelector('textarea[name="g-recaptcha-response"]')?.value?.length>10 :
-                   a==='3' ? document.querySelector('input[name="cf-turnstile-response"]')?.value?.length>10 : false;
+  const o = () =>
+    c === '3'
+      ? document.querySelector('input[name="cf-turnstile-response"]')?.value.length > 10
+      : c === '2'
+      ? document.querySelector('textarea[name="h-captcha-response"]')?.value.length > 10
+      : false;
 
-    const rd = () => document.querySelector('#rollFaucet')?.disabled===false;
+  const r = () => document.querySelector('#rollFaucet')?.disabled === false;
 
-    const c = o => { if(!cClicked && rd() && s()){ cClicked=true; document.querySelector('#rollFaucet').click(); o.disconnect(); setTimeout(()=>location.reload(),5000); } };
+  const l = m => {
+    if (!k && r() && o()) {
+      k = true;
+      document.querySelector('#rollFaucet').click();
+      m.disconnect();
+      setTimeout(() => location.reload(), 5000);
+    }
+  };
 
-    const o = new MutationObserver(()=>{ if(a==='1' && Date.now()-t0>TO && !s()) sc('3'); c(o); });
-    o.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['disabled','value']});
+  const m = new MutationObserver(() => { if (c==='3' && Date.now()-t>TO && !o()) s('2'); l(m); });
 
-    new MutationObserver(()=>{ if(document.querySelector('#faucet-modal.show, #faucet-modal.in') && !a) sc('1'); })
-        .observe(document.body,{subtree:true,childList:true});
+  m.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['disabled','value']});
 
-    setTimeout(()=>document.querySelector('#btn-modal')?.click(),2000);
+  new MutationObserver(()=>{ if(!c && document.querySelector('#faucet-modal.show,#faucet-modal.in')) s('3'); }).observe(document.body,{subtree:true,childList:true});
 
-    setTimeout(()=>{
-        const l=document.getElementById('loadingFaucet'), f=document.getElementById('claimFaucet');
-        if(l?.offsetParent && (!f || f.classList.contains('d-none'))) location.reload();
-    }, CD);
+  setTimeout(()=>document.querySelector('#btn-modal')?.click(),2000);
+
+  setTimeout(()=>{
+    const x = document.getElementById('loadingFaucet');
+    const y = document.getElementById('claimFaucet');
+    if(x?.offsetParent && (!y || y.classList.contains('d-none'))) location.reload();
+  },CD);
 
 })();

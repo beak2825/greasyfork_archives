@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Torn War Stuff Enhanced
+// @name         Torn War Stuff Enhanced (mod for clicking statuses to open attack page)
 // @namespace    namespace
 // @version      1.9.2
 // @description  Show travel status and hospital time and sort by hospital time on war page. Clickable statuses to attack.
@@ -10,8 +10,8 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_xmlhttpRequest
 // @connect      api.torn.com
-// @downloadURL https://update.greasyfork.org/scripts/536904/Torn%20War%20Stuff%20Enhanced.user.js
-// @updateURL https://update.greasyfork.org/scripts/536904/Torn%20War%20Stuff%20Enhanced.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/536904/Torn%20War%20Stuff%20Enhanced%20%28mod%20for%20clicking%20statuses%20to%20open%20attack%20page%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/536904/Torn%20War%20Stuff%20Enhanced%20%28mod%20for%20clicking%20statuses%20to%20open%20attack%20page%29.meta.js
 // ==/UserScript==
 
 

@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Joybuy.nl Price Tracker (Fixed)
+// @name         Joybuy.nl Price Tracker
 // @namespace    http://tampermonkey.net/
-// @version      2.3
-// @description  Track product prices with search, filter, and hover preview - FIXED
+// @version      2.5.1
+// @description  Track product prices with search, filter, and hover preview
 // @author       Keon
 // @match        https://www.joybuy.nl/*
 // @match        https://joybuy.nl/*
@@ -12,11 +12,11 @@
 // @grant        GM_addStyle
 // @run-at       document-idle
 // @license      GNU GPLv3
-// @downloadURL https://update.greasyfork.org/scripts/563031/Joybuynl%20Price%20Tracker%20%28Fixed%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563031/Joybuynl%20Price%20Tracker%20%28Fixed%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563031/Joybuynl%20Price%20Tracker.user.js
+// @updateURL https://update.greasyfork.org/scripts/563031/Joybuynl%20Price%20Tracker.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     // ==================== ROBUST SELECTORS ====================
@@ -72,6 +72,15 @@
     };
 
     // ==================== HELPER FUNCTIONS ====================
+
+    function isSearchPage() {
+        const pathname = window.location.pathname;
+        return pathname === '/s' || pathname.startsWith('/s/') || pathname.includes('/search');
+    }
+
+    function isProductPage() {
+        return window.location.pathname.match(/\/product\/|\/dp\//);
+    }
 
     function findElement(selectors, context = document) {
         for (let selector of selectors) {
@@ -153,6 +162,20 @@
 
     function saveData(data) {
         GM_setValue('joybuyPriceTracking', JSON.stringify(data));
+    }
+
+    function getConfig() {
+        return JSON.parse(GM_getValue('joybuyPriceTrackerConfig', JSON.stringify({
+            autoTrackProductPage: true,
+            autoTrackSearchPage: false,
+            trackOnScroll: true,
+            scrollDebounceMs: 2000,
+            //silentMode: true
+        })));
+    }
+
+    function saveConfig(config) {
+        GM_setValue('joybuyPriceTrackerConfig', JSON.stringify(config));
     }
 
     function getProductId() {
@@ -262,9 +285,9 @@
 
                 let url = null;
                 const linkElement = card.querySelector('a[href*="/dp/"]') ||
-                                   card.querySelector('a[href*="/product/"]') ||
-                                   card.closest('a[href*="/dp/"]') ||
-                                   card.querySelector('a');
+                    card.querySelector('a[href*="/product/"]') ||
+                    card.closest('a[href*="/dp/"]') ||
+                    card.querySelector('a');
 
                 if (linkElement) {
                     const href = linkElement.getAttribute('href');
@@ -319,19 +342,19 @@
 
     // ==================== TRACKING FUNCTIONS ====================
 
-    function trackCurrentProduct() {
+    function trackCurrentProduct(silent = false) {
         const info = extractProductInfo();
 
         console.log('Track button clicked - Extracted product info:', info);
 
         if (!info.productId) {
             showNotification('无法识别产品ID\n请确保在产品页面上', 'error');
-            return;
+            return false;
         }
 
         if (!info.name || !info.price) {
             showNotification('无法提取产品信息\n产品名: ' + (info.name ? '✓' : '✗') + '\n价格: ' + (info.price ? '✓' : '✗'), 'error');
-            return;
+            return false;
         }
 
         const data = getStoredData();
@@ -357,7 +380,7 @@
 
         if (lastPrice && lastPrice.date.startsWith(today) && lastPrice.price === info.price) {
             showNotification(`今日已记录: €${info.price}`, 'info');
-            return;
+            return false;
         }
 
         data[productId].prices.push({
@@ -367,71 +390,88 @@
 
         saveData(data);
 
-        const discount = info.originalPrice ?
-            Math.round((1 - info.price / info.originalPrice) * 100) : 0;
+        //if (!silent) {
+            const discount = info.originalPrice ?
+                Math.round((1 - info.price / info.originalPrice) * 100) : 0;
 
-        showNotification(
-            `✓ 已追踪\n${info.name.substring(0, 30)}...\n当前价格: €${info.price}` +
-            (discount > 0 ? `\n折扣: ${discount}%` : ''),
-            'success'
-        );
+            showNotification(
+                `✓ 已追踪\n${info.name.substring(0, 30)}...\n当前价格: €${info.price}` +
+                (discount > 0 ? `\n折扣: ${discount}%` : ''),
+                'success'
+            );
+        //}
+
+        return true;
     }
 
-    function trackBulkProducts() {
-        const products = extractSearchResultProducts();
+function trackBulkProducts(silent = false) {
+    const products = extractSearchResultProducts();
 
-        if (products.length === 0) {
-            showNotification('未找到可追踪的产品\n请确保在搜索结果页面', 'error');
-            return;
+    if (products.length === 0) {
+        if (!silent) showNotification('未找到可追踪的产品\n请确保在搜索结果页面', 'error');
+        return;
+    }
+
+    const data = getStoredData();
+    let newCount = 0;
+    let updateCount = 0;
+
+    products.forEach(product => {
+        const productId = product.productId;
+
+        if (!data[productId]) {
+            data[productId] = {
+                name: product.name,
+                url: product.url,
+                originalPrice: product.originalPrice,
+                prices: []
+            };
+            newCount++;
+        } else {
+            data[productId].name = product.name;
+            data[productId].url = product.url;
+            if (product.originalPrice) {
+                data[productId].originalPrice = product.originalPrice;
+            }
         }
 
-        const data = getStoredData();
-        let newCount = 0;
-        let updateCount = 0;
+        const today = new Date().toISOString().split('T')[0];
+        const lastPrice = data[productId].prices[data[productId].prices.length - 1];
 
-        products.forEach(product => {
-            const productId = product.productId;
+        if (!lastPrice || !lastPrice.date.startsWith(today) || lastPrice.price !== product.price) {
+            data[productId].prices.push({
+                price: product.price,
+                date: new Date().toISOString()
+            });
+            updateCount++;
+        }
+    });
 
-            if (!data[productId]) {
-                data[productId] = {
-                    name: product.name,
-                    url: product.url,
-                    originalPrice: product.originalPrice,
-                    prices: []
-                };
-                newCount++;
-            } else {
-                data[productId].name = product.name;
-                data[productId].url = product.url;
-                if (product.originalPrice) {
-                    data[productId].originalPrice = product.originalPrice;
-                }
-            }
+    saveData(data);
 
-            const today = new Date().toISOString().split('T')[0];
-            const lastPrice = data[productId].prices[data[productId].prices.length - 1];
+    // Always show notification when not silent (regardless of whether there were updates)
+    //if (!silent) {
+        if (newCount > 0 || updateCount > 0) {
+            showNotification(
+                `✓ 批量追踪完成\n找到 ${products.length} 个产品\n新增 ${newCount} 个\n更新 ${updateCount} 条价格记录`,
+                'success'
+            );
+        } else {
+            // Show info even when no updates
+            showNotification(
+                `✓ 批量追踪完成\n找到 ${products.length} 个产品\n今日价格无变化`,
+                'info'
+            );
+        }
+    //}
 
-            if (!lastPrice || !lastPrice.date.startsWith(today) || lastPrice.price !== product.price) {
-                data[productId].prices.push({
-                    price: product.price,
-                    date: new Date().toISOString()
-                });
-                updateCount++;
-            }
-        });
+    // Refresh hover previews after bulk tracking
+    setTimeout(() => {
+        addHoverPreviews();
+    }, 500);
 
-        saveData(data);
-
-        showNotification(
-            `✓ 批量追踪完成\n找到 ${products.length} 个产品\n新增 ${newCount} 个\n更新 ${updateCount} 条价格记录`,
-            'success'
-        );
-
-        // Refresh hover previews after bulk tracking
-        setTimeout(() => {
-            addHoverPreviews();
-        }, 500);
-    }
+    return { total: products.length, newCount, updateCount };
+}
 
     function removeProduct(productId) {
         const data = getStoredData();
@@ -458,7 +498,7 @@
         }
 
         const jsonString = JSON.stringify(data, null, 2);
-        const blob = new Blob([jsonString], {type: 'application/json'});
+        const blob = new Blob([jsonString], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -489,7 +529,7 @@
             return;
         }
 
-        const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -576,173 +616,173 @@
 
     // ==================== IMPORT FUNCTIONS ====================
 
-function importJSON() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
+    function importJSON() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
 
-    input.onchange = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
 
-        try {
-            const text = await file.text();
-            const importedData = JSON.parse(text);
+            try {
+                const text = await file.text();
+                const importedData = JSON.parse(text);
 
-            // Validate the data structure
-            if (typeof importedData !== 'object') {
-                throw new Error('Invalid JSON format');
-            }
+                // Validate the data structure
+                if (typeof importedData !== 'object') {
+                    throw new Error('Invalid JSON format');
+                }
 
-            const currentData = getStoredData();
-            let newCount = 0;
-            let updateCount = 0;
+                const currentData = getStoredData();
+                let newCount = 0;
+                let updateCount = 0;
 
-            // Merge imported data with existing data
-            Object.entries(importedData).forEach(([productId, product]) => {
-                if (!currentData[productId]) {
-                    currentData[productId] = product;
-                    newCount++;
-                } else {
-                    // Merge prices, avoiding duplicates
-                    const existingDates = new Set(
-                        currentData[productId].prices.map(p => p.date)
-                    );
+                // Merge imported data with existing data
+                Object.entries(importedData).forEach(([productId, product]) => {
+                    if (!currentData[productId]) {
+                        currentData[productId] = product;
+                        newCount++;
+                    } else {
+                        // Merge prices, avoiding duplicates
+                        const existingDates = new Set(
+                            currentData[productId].prices.map(p => p.date)
+                        );
 
-                    product.prices.forEach(priceEntry => {
-                        if (!existingDates.has(priceEntry.date)) {
-                            currentData[productId].prices.push(priceEntry);
-                            updateCount++;
+                        product.prices.forEach(priceEntry => {
+                            if (!existingDates.has(priceEntry.date)) {
+                                currentData[productId].prices.push(priceEntry);
+                                updateCount++;
+                            }
+                        });
+
+                        // Sort prices by date
+                        currentData[productId].prices.sort(
+                            (a, b) => new Date(a.date) - new Date(b.date)
+                        );
+
+                        // Update product info
+                        currentData[productId].name = product.name;
+                        currentData[productId].url = product.url;
+                        if (product.originalPrice) {
+                            currentData[productId].originalPrice = product.originalPrice;
                         }
-                    });
+                    }
+                });
 
-                    // Sort prices by date
-                    currentData[productId].prices.sort(
-                        (a, b) => new Date(a.date) - new Date(b.date)
+                saveData(currentData);
+                showNotification(
+                    `✓ 导入成功\n新增 ${newCount} 个产品\n新增 ${updateCount} 条价格记录`,
+                    'success'
+                );
+
+                // Refresh dashboard if open
+                if (document.getElementById('priceTrackerDashboard')) {
+                    showDashboard();
+                }
+            } catch (error) {
+                console.error('Import error:', error);
+                showNotification(`导入失败: ${error.message}`, 'error');
+            }
+        };
+
+        input.click();
+    }
+
+    function importCSV() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.csv';
+
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            try {
+                const text = await file.text();
+                const lines = text.split('\n').filter(line => line.trim());
+
+                if (lines.length < 2) {
+                    throw new Error('CSV file is empty');
+                }
+
+                // Skip header
+                const dataLines = lines.slice(1);
+                const currentData = getStoredData();
+                let newProducts = 0;
+                let newPrices = 0;
+
+                dataLines.forEach(line => {
+                    // Parse CSV line (handle quoted fields)
+                    const matches = line.match(/("(?:[^"]|"")*"|[^,]*)/g);
+                    if (!matches || matches.length < 6) return;
+
+                    const [productId, name, date, price, originalPrice, url] = matches.map(
+                        field => field.replace(/^"|"$/g, '').replace(/""/g, '"').trim()
                     );
 
-                    // Update product info
-                    currentData[productId].name = product.name;
-                    currentData[productId].url = product.url;
-                    if (product.originalPrice) {
-                        currentData[productId].originalPrice = product.originalPrice;
+                    if (!productId || !name || !date || !price || !url) return;
+
+                    const priceValue = parseFloat(price);
+                    if (isNaN(priceValue)) return;
+
+                    if (!currentData[productId]) {
+                        currentData[productId] = {
+                            name: name,
+                            url: url,
+                            originalPrice: originalPrice ? parseFloat(originalPrice) : null,
+                            prices: []
+                        };
+                        newProducts++;
                     }
-                }
-            });
 
-            saveData(currentData);
-            showNotification(
-                `✓ 导入成功\n新增 ${newCount} 个产品\n新增 ${updateCount} 条价格记录`,
-                'success'
-            );
+                    // Create a Set of existing dates (normalized to date-only)
+                    const existingDates = new Set(
+                        currentData[productId].prices.map(p =>
+                            new Date(p.date).toISOString().split('T')[0]
+                        )
+                    );
 
-            // Refresh dashboard if open
-            if (document.getElementById('priceTrackerDashboard')) {
-                showDashboard();
-            }
-        } catch (error) {
-            console.error('Import error:', error);
-            showNotification(`导入失败: ${error.message}`, 'error');
-        }
-    };
+                    // Check if this date already exists
+                    if (!existingDates.has(date)) {
+                        currentData[productId].prices.push({
+                            price: priceValue,
+                            date: new Date(date + 'T00:00:00.000Z').toISOString()
+                        });
+                        newPrices++;
+                    }
 
-    input.click();
-}
+                    // Update product info (keep the latest)
+                    currentData[productId].name = name;
+                    currentData[productId].url = url;
+                    if (originalPrice) {
+                        currentData[productId].originalPrice = parseFloat(originalPrice);
+                    }
+                });
 
-function importCSV() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.csv';
+                // Sort all prices by date
+                Object.values(currentData).forEach(product => {
+                    product.prices.sort((a, b) => new Date(a.date) - new Date(b.date));
+                });
 
-    input.onchange = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        try {
-            const text = await file.text();
-            const lines = text.split('\n').filter(line => line.trim());
-
-            if (lines.length < 2) {
-                throw new Error('CSV file is empty');
-            }
-
-            // Skip header
-            const dataLines = lines.slice(1);
-            const currentData = getStoredData();
-            let newProducts = 0;
-            let newPrices = 0;
-
-            dataLines.forEach(line => {
-                // Parse CSV line (handle quoted fields)
-                const matches = line.match(/("(?:[^"]|"")*"|[^,]*)/g);
-                if (!matches || matches.length < 6) return;
-
-                const [productId, name, date, price, originalPrice, url] = matches.map(
-                    field => field.replace(/^"|"$/g, '').replace(/""/g, '"').trim()
+                saveData(currentData);
+                showNotification(
+                    `✓ 导入成功\n新增 ${newProducts} 个产品\n新增 ${newPrices} 条价格记录`,
+                    'success'
                 );
 
-                if (!productId || !name || !date || !price || !url) return;
-
-                const priceValue = parseFloat(price);
-                if (isNaN(priceValue)) return;
-
-                if (!currentData[productId]) {
-                    currentData[productId] = {
-                        name: name,
-                        url: url,
-                        originalPrice: originalPrice ? parseFloat(originalPrice) : null,
-                        prices: []
-                    };
-                    newProducts++;
+                // Refresh dashboard if open
+                if (document.getElementById('priceTrackerDashboard')) {
+                    showDashboard();
                 }
-
-                // Create a Set of existing dates (normalized to date-only)
-                const existingDates = new Set(
-                    currentData[productId].prices.map(p =>
-                        new Date(p.date).toISOString().split('T')[0]
-                    )
-                );
-
-                // Check if this date already exists
-                if (!existingDates.has(date)) {
-                    currentData[productId].prices.push({
-                        price: priceValue,
-                        date: new Date(date + 'T00:00:00.000Z').toISOString()
-                    });
-                    newPrices++;
-                }
-
-                // Update product info (keep the latest)
-                currentData[productId].name = name;
-                currentData[productId].url = url;
-                if (originalPrice) {
-                    currentData[productId].originalPrice = parseFloat(originalPrice);
-                }
-            });
-
-            // Sort all prices by date
-            Object.values(currentData).forEach(product => {
-                product.prices.sort((a, b) => new Date(a.date) - new Date(b.date));
-            });
-
-            saveData(currentData);
-            showNotification(
-                `✓ 导入成功\n新增 ${newProducts} 个产品\n新增 ${newPrices} 条价格记录`,
-                'success'
-            );
-
-            // Refresh dashboard if open
-            if (document.getElementById('priceTrackerDashboard')) {
-                showDashboard();
+            } catch (error) {
+                console.error('Import error:', error);
+                showNotification(`导入失败: ${error.message}`, 'error');
             }
-        } catch (error) {
-            console.error('Import error:', error);
-            showNotification(`导入失败: ${error.message}`, 'error');
-        }
-    };
+        };
 
-    input.click();
-}
+        input.click();
+    }
 
     // ==================== DASHBOARD WITH SEARCH ====================
 
@@ -780,6 +820,28 @@ function importCSV() {
                     <button class="pt-filter-btn" data-filter="recent">最近更新</button>
                 </div>
             </div>
+<div class="pt-settings">
+    <details class="pt-settings-details">
+        <summary class="pt-settings-summary">⚙️ 设置</summary>
+        <div class="pt-settings-content">
+            <label class="pt-setting-item">
+                <input type="checkbox" id="ptAutoTrackProduct" ${getConfig().autoTrackProductPage ? 'checked' : ''}>
+                <span>自动追踪产品页面</span>
+                <small>访问产品详情页时自动记录价格</small>
+            </label>
+            <label class="pt-setting-item">
+                <input type="checkbox" id="ptAutoTrackSearch" ${getConfig().autoTrackSearchPage ? 'checked' : ''}>
+                <span>自动追踪搜索结果</span>
+                <small>在搜索页面自动追踪所有可见产品</small>
+            </label>
+            <label class="pt-setting-item">
+                <input type="checkbox" id="ptTrackOnScroll" ${getConfig().trackOnScroll ? 'checked' : ''} ${!getConfig().autoTrackSearchPage ? 'disabled' : ''}>
+                <span>滚动停止时追踪</span>
+                <small>等待滚动停止后再追踪（减少资源消耗）</small>
+            </label>
+        </div>
+    </details>
+</div>
             <div class="pt-actions">
                 <button class="pt-btn pt-btn-primary" id="ptExportJSON">导出 JSON</button>
                 <button class="pt-btn pt-btn-primary" id="ptExportCSV">导出 CSV</button>
@@ -821,6 +883,43 @@ function importCSV() {
         document.getElementById('ptImportJSON').addEventListener('click', importJSON);
         document.getElementById('ptImportCSV').addEventListener('click', importCSV);
         document.getElementById('ptClearAll').addEventListener('click', clearAllData);
+
+        // Settings event listeners
+        const autoTrackProductCheckbox = document.getElementById('ptAutoTrackProduct');
+        const autoTrackSearchCheckbox = document.getElementById('ptAutoTrackSearch');
+        const trackOnScrollCheckbox = document.getElementById('ptTrackOnScroll');
+
+        autoTrackProductCheckbox.addEventListener('change', (e) => {
+            const config = getConfig();
+            config.autoTrackProductPage = e.target.checked;
+            saveConfig(config);
+            showNotification(
+                e.target.checked ? '✓ 已启用产品页面自动追踪' : '✗ 已禁用产品页面自动追踪',
+                'info'
+            );
+        });
+
+        autoTrackSearchCheckbox.addEventListener('change', (e) => {
+            const config = getConfig();
+            config.autoTrackSearchPage = e.target.checked;
+            saveConfig(config);
+            trackOnScrollCheckbox.disabled = !e.target.checked;
+            showNotification(
+                e.target.checked ? '✓ 已启用搜索页面自动追踪' : '✗ 已禁用搜索页面自动追踪',
+                'info'
+            );
+        });
+
+        trackOnScrollCheckbox.addEventListener('change', (e) => {
+            const config = getConfig();
+            config.trackOnScroll = e.target.checked;
+            saveConfig(config);
+            showNotification(
+                e.target.checked ? '✓ 滚动停止时追踪' : '✗ 立即追踪',
+                'info'
+            );
+        });
+
     }
 
     function getCurrentFilter() {
@@ -915,119 +1014,122 @@ function importCSV() {
 </div>
 <a href="${product.url}" target="_blank" class="pt-product-link">查看产品 →</a>
 `;
-        productList.appendChild(productCard);
-    });
-
-    addChartTooltips();
-
-    document.querySelectorAll('.pt-delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const productId = e.target.dataset.productId;
-            if (confirm('确定要删除此产品的追踪记录吗？')) {
-                removeProduct(productId);
-            }
+            productList.appendChild(productCard);
         });
-    });
-}
 
-function addChartTooltips() {
-    const points = document.querySelectorAll('.pt-chart-point');
-    const data = getStoredData();
+        addChartTooltips();
 
-    points.forEach(point => {
-        point.addEventListener('mouseenter', function(e) {
-            const card = this.closest('.pt-product-card');
-            const productId = card.querySelector('.pt-delete-btn').dataset.productId;
-            const product = data[productId];
-            const index = parseInt(this.dataset.index);
-            const priceData = product.prices[index];
+        document.querySelectorAll('.pt-delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const productId = e.target.dataset.productId;
+                if (confirm('确定要删除此产品的追踪记录吗？')) {
+                    removeProduct(productId);
+                }
+            });
+        });
+    }
 
-            const tooltip = document.createElement('div');
-            tooltip.className = 'pt-chart-tooltip-show';
-            tooltip.innerHTML = `
+    function addChartTooltips() {
+        const points = document.querySelectorAll('.pt-chart-point');
+        const data = getStoredData();
+
+        points.forEach(point => {
+            point.addEventListener('mouseenter', function (e) {
+                const card = this.closest('.pt-product-card');
+                const productId = card.querySelector('.pt-delete-btn').dataset.productId;
+                const product = data[productId];
+                const index = parseInt(this.dataset.index);
+                const priceData = product.prices[index];
+
+                const tooltip = document.createElement('div');
+                tooltip.className = 'pt-chart-tooltip-show';
+                tooltip.innerHTML = `
                 <div><strong>€${priceData.price.toFixed(2)}</strong></div>
                 <div>${new Date(priceData.date).toLocaleDateString('zh-CN')}</div>
             `;
-            tooltip.style.left = e.pageX + 'px';
-            tooltip.style.top = (e.pageY - 50) + 'px';
+                tooltip.style.left = e.pageX + 'px';
+                tooltip.style.top = (e.pageY - 50) + 'px';
 
-            document.body.appendChild(tooltip);
-            this._tooltip = tooltip;
+                document.body.appendChild(tooltip);
+                this._tooltip = tooltip;
+            });
+
+            point.addEventListener('mouseleave', function () {
+                if (this._tooltip) {
+                    this._tooltip.remove();
+                    this._tooltip = null;
+                }
+            });
         });
-
-        point.addEventListener('mouseleave', function() {
-            if (this._tooltip) {
-                this._tooltip.remove();
-                this._tooltip = null;
-            }
-        });
-    });
-}
-
-function clearAllData() {
-    if (confirm('确定要清空所有追踪数据吗？此操作不可恢复！')) {
-        GM_setValue('joybuyPriceTracking', '{}');
-        showNotification('所有数据已清空', 'info');
-        const dashboard = document.getElementById('priceTrackerDashboard');
-        if (dashboard) dashboard.remove();
-    }
-}
-
-// ==================== SEARCH RESULTS HOVER PREVIEW ====================
-
-function addHoverPreviews() {
-    if (!window.location.pathname.includes('/search')) {
-        console.log('Not on search page, skipping hover previews');
-        return;
     }
 
-    // Remove existing indicators first
-    document.querySelectorAll('.pt-tracking-indicator').forEach(el => el.remove());
+    function clearAllData() {
+        if (confirm('确定要清空所有追踪数据吗？此操作不可恢复！')) {
+            GM_setValue('joybuyPriceTracking', '{}');
+            showNotification('所有数据已清空', 'info');
+            const dashboard = document.getElementById('priceTrackerDashboard');
+            if (dashboard) dashboard.remove();
+        }
+    }
 
-    const data = getStoredData();
-    console.log('Adding hover previews, tracked products:', Object.keys(data).length);
+    // ==================== SEARCH RESULTS HOVER PREVIEW ====================
 
-    const products = extractSearchResultProducts();
-    console.log('Found products on page:', products.length);
+    function addHoverPreviews() {
+        if (!isSearchPage()) {
+            console.log('Not on search page, skipping hover previews');
+            return;
+        }
 
-    products.forEach(product => {
-        const productId = product.productId;
-        const card = product.cardElement;
+        // Remove existing indicators first
+        document.querySelectorAll('.pt-tracking-indicator').forEach(el => el.remove());
 
-        if (data[productId]) {
-            console.log('Adding indicator for product:', productId);
+        const data = getStoredData();
+        console.log('Adding hover previews, tracked products:', Object.keys(data).length);
 
-            // Make card position relative if not already
-            if (getComputedStyle(card).position === 'static') {
-                card.style.position = 'relative';
-            }
+        const products = extractSearchResultProducts();
+        console.log('Found products on page:', products.length);
 
-            // Add tracking indicator
-            const indicator = document.createElement('div');
-            indicator.className = 'pt-tracking-indicator';
-            indicator.innerHTML = '📊';
-            indicator.title = '已追踪 - 悬停查看价格历史';
-            card.appendChild(indicator);
+        const HIDE_DELAY = 100;
 
-            // Remove any existing listeners
-            const oldCard = card.cloneNode(true);
-            card.parentNode.replaceChild(oldCard, card);
+        products.forEach(product => {
+            const productId = product.productId;
+            const card = product.cardElement;
 
-            // Add hover preview
-            oldCard.addEventListener('mouseenter', function() {
-                console.log('Mouse entered product card:', productId);
+            if (data[productId]) {
+                console.log('Adding indicator for product:', productId);
 
-                const trackedProduct = data[productId];
-                const prices = trackedProduct.prices;
+                // Make card position relative if not already
+                if (getComputedStyle(card).position === 'static') {
+                    card.style.position = 'relative';
+                }
 
-                const currentPrice = prices[prices.length - 1].price;
-                const minPrice = Math.min(...prices.map(p => p.price));
-                const maxPrice = Math.max(...prices.map(p => p.price));
+                // Add tracking indicator
+                const indicator = document.createElement('div');
+                indicator.className = 'pt-tracking-indicator';
+                indicator.innerHTML = '📊';
+                indicator.title = '已追踪 - 悬停查看价格历史';
+                card.appendChild(indicator);
 
-                const preview = document.createElement('div');
-                preview.className = 'pt-hover-preview';
+                // Add hover preview on indicator only
+                indicator.addEventListener('mouseenter', function (e) {
+                    e.stopPropagation();
+                    console.log('Mouse entered indicator:', productId);
 
-                preview.innerHTML = `
+                    // Remove any existing preview
+                    const existingPreview = document.querySelector('.pt-hover-preview');
+                    if (existingPreview) existingPreview.remove();
+
+                    const trackedProduct = data[productId];
+                    const prices = trackedProduct.prices;
+
+                    const currentPrice = prices[prices.length - 1].price;
+                    const minPrice = Math.min(...prices.map(p => p.price));
+                    const maxPrice = Math.max(...prices.map(p => p.price));
+
+                    const preview = document.createElement('div');
+                    preview.className = 'pt-hover-preview';
+
+                    preview.innerHTML = `
                     <div class="pt-hover-preview-header">
                         <strong>价格历史</strong>
                         <span class="pt-hover-preview-close">✕</span>
@@ -1045,164 +1147,219 @@ function addHoverPreviews() {
                     </div>
                 `;
 
-                document.body.appendChild(preview);
+                    document.body.appendChild(preview);
 
-                // Position the preview
-                const cardRect = oldCard.getBoundingClientRect();
-                const previewWidth = 320;
+                    // Position the preview near the indicator
+                    const indicatorRect = this.getBoundingClientRect();
+                    const previewWidth = 320;
 
-                let left = cardRect.right + 10;
-                let top = cardRect.top + window.scrollY;
+                    let left = indicatorRect.right + 10;
+                    let top = indicatorRect.top + window.scrollY - 50;
 
-                // Adjust if preview goes off screen
-                if (left + previewWidth > window.innerWidth) {
-                    left = cardRect.left - previewWidth - 10;
-                }
+                    // Adjust if preview goes off screen
+                    if (left + previewWidth > window.innerWidth) {
+                        left = indicatorRect.left - previewWidth - 10;
+                    }
 
-                if (left < 0) {
-                    left = 10;
-                }
+                    if (left < 0) {
+                        left = 10;
+                    }
 
-                preview.style.left = left + 'px';
-                preview.style.top = top + 'px';
+                    preview.style.left = left + 'px';
+                    preview.style.top = top + 'px';
 
-                // Store reference
-                oldCard._hoverPreview = preview;
-                preview._sourceCard = oldCard;
+                    // Store reference
+                    indicator._hoverPreview = preview;
 
-                // Close button
-                preview.querySelector('.pt-hover-preview-close').addEventListener('click', () => {
-                    preview.remove();
-                    oldCard._hoverPreview = null;
+                    // Close button
+                    preview.querySelector('.pt-hover-preview-close').addEventListener('click', () => {
+                        preview.remove();
+                        indicator._hoverPreview = null;
+                    });
+
+                    // Keep preview visible when hovering over it
+                    preview.addEventListener('mouseenter', function () {
+                        clearTimeout(this._hideTimeout);
+                    });
+
+                    preview.addEventListener('mouseleave', function () {
+                        this._hideTimeout = setTimeout(() => {
+                            this.remove();
+                            indicator._hoverPreview = null;
+                        }, HIDE_DELAY);
+                    });
                 });
 
-                // Keep preview visible when hovering over it
-                preview.addEventListener('mouseenter', function() {
-                    clearTimeout(this._hideTimeout);
+                indicator.addEventListener('mouseleave', function () {
+                    if (this._hoverPreview) {
+                        this._hoverPreview._hideTimeout = setTimeout(() => {
+                            if (this._hoverPreview && !this._hoverPreview.matches(':hover')) {
+                                this._hoverPreview.remove();
+                                this._hoverPreview = null;
+                            }
+                        }, HIDE_DELAY);
+                    }
                 });
+            }
+        });
 
-                preview.addEventListener('mouseleave', function() {
-                    this._hideTimeout = setTimeout(() => {
-                        this.remove();
-                        if (oldCard) oldCard._hoverPreview = null;
-                    }, 300);
-                });
-            });
-
-            oldCard.addEventListener('mouseleave', function() {
-                if (this._hoverPreview) {
-                    this._hoverPreview._hideTimeout = setTimeout(() => {
-                        if (!this._hoverPreview.matches(':hover')) {
-                            this._hoverPreview.remove();
-                            this._hoverPreview = null;
-                        }
-                    }, 300);
-                }
-            });
-        }
-    });
-
-    console.log('Hover previews added');
-}
-
-// ==================== NOTIFICATION ====================
-
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `pt-notification pt-notification-${type}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-
-    setTimeout(() => notification.classList.add('pt-notification-show'), 10);
-
-    setTimeout(() => {
-        notification.classList.remove('pt-notification-show');
-        setTimeout(() => notification.remove(), 300);
-    }, 4000);
-}
-
-// ==================== UI BUTTONS ====================
-
-function addTrackingButton() {
-    const productId = getProductId();
-    if (!productId) {
-        console.log('No product ID found, not adding tracking button');
-        return;
-    }
-    if (window.location.pathname.includes('/search')) {
-        console.log('On search page, not adding single tracking button');
-        return;
+        console.log('Hover previews added');
     }
 
-    const existing = document.getElementById('priceTrackerBtn');
-    if (existing) existing.remove();
+    // ==================== AUTO-TRACKING ====================
 
-    const button = document.createElement('button');
-    button.id = 'priceTrackerBtn';
-    button.innerHTML = '📊 追踪价格';
-    button.addEventListener('click', function(e) {
-        console.log('Track button clicked!');
-        e.preventDefault();
-        e.stopPropagation();
+    let scrollTimer = null;
+    let hasTrackedOnScroll = false;
+
+    function autoTrackProductPage() {
+        const config = getConfig();
+        if (!config.autoTrackProductPage) return;
+
+        const productId = getProductId();
+        if (!productId) return;
+
+        if (isSearchPage()) return;
+
+        console.log('Auto-tracking product page:', productId);
         trackCurrentProduct();
-    });
-    document.body.appendChild(button);
-
-    console.log('Tracking button added for product:', productId);
-}
-
-function addBulkTrackButton() {
-    if (!window.location.pathname.includes('/search')) {
-        console.log('Not on search page, not adding bulk track button');
-        return;
     }
 
-    const products = findElements(SELECTORS.productCards);
-    if (products.length === 0) {
-        console.log('No product cards found');
-        return;
-    }
+    function autoTrackSearchPage() {
+        const config = getConfig();
+        if (!config.autoTrackSearchPage) return;
 
-    const existing = document.getElementById('bulkTrackBtn');
-    if (existing) existing.remove();
+        if (!isSearchPage()) return;
 
-    const button = document.createElement('button');
-    button.id = 'bulkTrackBtn';
-    button.innerHTML = '📊 批量追踪';
-    button.addEventListener('click', function(e) {
-        console.log('Bulk track button clicked!');
-        e.preventDefault();
-        e.stopPropagation();
+        console.log('Auto-tracking search page');
         trackBulkProducts();
-    });
-    document.body.appendChild(button);
+    }
 
-    console.log('Bulk track button added');
-}
+    function trackVisibleProductsOnScroll() {
+        const config = getConfig();
+        if (!config.trackOnScroll || !config.autoTrackSearchPage) return;
+        if (!isSearchPage()) return;
 
-function addDashboardButton() {
-    const existing = document.getElementById('dashboardBtn');
-    if (existing) existing.remove();
+        // Clear existing timer
+        if (scrollTimer) {
+            clearTimeout(scrollTimer);
+        }
 
-    const button = document.createElement('button');
-    button.id = 'dashboardBtn';
-    button.innerHTML = '📈';
-    button.title = '打开价格追踪器';
-    button.addEventListener('click', function(e) {
-        console.log('Dashboard button clicked!');
-        e.preventDefault();
-        e.stopPropagation();
-        showDashboard();
-    });
-    document.body.appendChild(button);
+        // Set new timer
+        scrollTimer = setTimeout(() => {
+            if (!hasTrackedOnScroll) {
+                console.log('Scroll stopped, tracking visible products...');
+                autoTrackSearchPage();
+                hasTrackedOnScroll = true;
+            }
+        }, config.scrollDebounceMs);
+    }
 
-    console.log('Dashboard button added');
-}
+    function setupAutoTracking() {
+        const config = getConfig();
 
-// ==================== STYLES ====================
+        // Auto-track on product pages
+        if (isProductPage()) {
+            setTimeout(() => {
+                autoTrackProductPage();
+            }, 2000);
+        }
 
-GM_addStyle(`
-    #priceTrackerBtn, #bulkTrackBtn {
+        // Auto-track on search pages (on scroll stop)
+        if (isSearchPage()) {
+            hasTrackedOnScroll = false;
+
+            if (config.trackOnScroll && config.autoTrackSearchPage) {
+                window.addEventListener('scroll', trackVisibleProductsOnScroll, { passive: true });
+            } else if (config.autoTrackSearchPage) {
+                // Track immediately if not waiting for scroll
+                setTimeout(() => {
+                    autoTrackSearchPage();
+                }, 2000);
+            }
+        }
+    }
+
+    // ==================== NOTIFICATION ====================
+
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `pt-notification pt-notification-${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => notification.classList.add('pt-notification-show'), 10);
+
+        setTimeout(() => {
+            notification.classList.remove('pt-notification-show');
+            setTimeout(() => notification.remove(), 300);
+        }, 4000);
+    }
+
+    // ==================== UI BUTTONS ====================
+
+    function addTrackingButton() {
+        const onSearchPage = isSearchPage();
+        const productId = getProductId();
+
+        // On product page, we need a product ID; on search page, we need product cards
+        if (!onSearchPage && !productId) {
+            console.log('No product ID found, not adding tracking button');
+            return;
+        }
+
+        if (onSearchPage) {
+            const products = findElements(SELECTORS.productCards);
+            if (products.length === 0) {
+                console.log('No product cards found on search page');
+                return;
+            }
+        }
+
+        const existing = document.getElementById('priceTrackerBtn');
+        if (existing) existing.remove();
+
+        const button = document.createElement('button');
+        button.id = 'priceTrackerBtn';
+        button.innerHTML = onSearchPage ? '📊 批量追踪' : '📊 追踪价格';
+        button.addEventListener('click', function (e) {
+            console.log('Track button clicked!');
+            e.preventDefault();
+            e.stopPropagation();
+            if (onSearchPage) {
+                trackBulkProducts();
+            } else {
+                trackCurrentProduct();
+            }
+        });
+        document.body.appendChild(button);
+
+        console.log(onSearchPage ? 'Bulk tracking button added' : 'Tracking button added for product:', productId);
+    }
+
+
+    function addDashboardButton() {
+        const existing = document.getElementById('dashboardBtn');
+        if (existing) existing.remove();
+
+        const button = document.createElement('button');
+        button.id = 'dashboardBtn';
+        button.innerHTML = '📈';
+        button.title = '打开价格追踪器';
+        button.addEventListener('click', function (e) {
+            console.log('Dashboard button clicked!');
+            e.preventDefault();
+            e.stopPropagation();
+            showDashboard();
+        });
+        document.body.appendChild(button);
+
+        console.log('Dashboard button added');
+    }
+
+    // ==================== STYLES ====================
+
+    GM_addStyle(`
+    #priceTrackerBtn {
         position: fixed;
         top: 100px;
         right: 20px;
@@ -1219,7 +1376,7 @@ GM_addStyle(`
         transition: all 0.3s ease;
     }
 
-    #priceTrackerBtn:hover, #bulkTrackBtn:hover {
+    #priceTrackerBtn:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(0,0,0,0.2);
     }
@@ -1344,6 +1501,75 @@ GM_addStyle(`
         border-color: #667eea;
         box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
+
+    .pt-settings {
+    padding: 0 20px 15px 20px;
+    background: #f8f9fa;
+}
+
+.pt-settings-details {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.pt-settings-summary {
+    padding: 12px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    color: #212529;
+    user-select: none;
+    list-style: none;
+}
+
+.pt-settings-summary::-webkit-details-marker {
+    display: none;
+}
+
+.pt-settings-summary:hover {
+    background: #f8f9fa;
+}
+
+.pt-settings-content {
+    padding: 12px 16px;
+    border-top: 1px solid #e9ecef;
+}
+
+.pt-setting-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+    cursor: pointer;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.pt-setting-item:last-child {
+    border-bottom: none;
+}
+
+.pt-setting-item input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.pt-setting-item span {
+    font-size: 14px;
+    color: #212529;
+    margin-bottom: 4px;
+}
+
+.pt-setting-item small {
+    font-size: 12px;
+    color: #6c757d;
+    margin-left: 24px;
+}
+
+.pt-setting-item input[type="checkbox"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 
     .pt-filter-buttons {
         display: flex;
@@ -1580,7 +1806,13 @@ GM_addStyle(`
         font-size: 16px;
         z-index: 100;
         box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        pointer-events: none;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .pt-tracking-indicator:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
 
     .pt-hover-preview {
@@ -1685,45 +1917,46 @@ GM_addStyle(`
     }
 `);
 
-// ==================== INITIALIZATION ====================
+    // ==================== INITIALIZATION ====================
 
-GM_registerMenuCommand('📊 追踪当前产品', trackCurrentProduct);
-GM_registerMenuCommand('📋 批量追踪搜索结果', trackBulkProducts);
-GM_registerMenuCommand('📈 打开控制面板', showDashboard);
-GM_registerMenuCommand('💾 导出 JSON', downloadJSON);
-GM_registerMenuCommand('📄 导出 CSV', downloadCSV);
-GM_registerMenuCommand('📥 导入 JSON', importJSON);
-GM_registerMenuCommand('📋 导入 CSV', importCSV);
-GM_registerMenuCommand('🗑️ 清空所有数据', clearAllData);
+    GM_registerMenuCommand('📊 追踪当前产品', trackCurrentProduct);
+    GM_registerMenuCommand('📋 批量追踪搜索结果', trackBulkProducts);
+    GM_registerMenuCommand('📈 打开控制面板', showDashboard);
+    GM_registerMenuCommand('💾 导出 JSON', downloadJSON);
+    GM_registerMenuCommand('📄 导出 CSV', downloadCSV);
+    GM_registerMenuCommand('📥 导入 JSON', importJSON);
+    GM_registerMenuCommand('📋 导入 CSV', importCSV);
+    GM_registerMenuCommand('🗑️ 清空所有数据', clearAllData);
 
-// Initialize on page load
-function initializeScript() {
-    console.log('Initializing Price Tracker...');
-    console.log('Current URL:', window.location.href);
-    console.log('Is search page:', window.location.pathname.includes('/search'));
+    // Initialize on page load
+    function initializeScript() {
+        console.log('Initializing Price Tracker...');
+        console.log('Current URL:', window.location.href);
+        console.log('Is search page:', isSearchPage());
+        console.log('Is product page:', isProductPage());
 
-    addTrackingButton();
-    addBulkTrackButton();
-    addDashboardButton();
-    addHoverPreviews();
-}
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(initializeScript, 1500);
-    });
-} else {
-    setTimeout(initializeScript, 1500);
-}
-
-// Re-add hover previews when navigating on search page (for SPA behavior)
-let lastUrl = location.href;
-new MutationObserver(() => {
-    const url = location.href;
-    if (url !== lastUrl) {
-        lastUrl = url;
-        console.log('URL changed, reinitializing...');
-        setTimeout(initializeScript, 2000);
+        addTrackingButton();
+        addDashboardButton();
+        addHoverPreviews();
+        setupAutoTracking();
     }
-}).observe(document, {subtree: true, childList: true});
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(initializeScript, 1500);
+        });
+    } else {
+        setTimeout(initializeScript, 1500);
+    }
+
+    // Re-add hover previews when navigating on search page (for SPA behavior)
+    let lastUrl = location.href;
+    new MutationObserver(() => {
+        const url = location.href;
+        if (url !== lastUrl) {
+            lastUrl = url;
+            console.log('URL changed, reinitializing...');
+            setTimeout(initializeScript, 2000);
+        }
+    }).observe(document, { subtree: true, childList: true });
 })();

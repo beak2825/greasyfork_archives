@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Rem4rk's Locked Items Manager
 // @namespace    https://www.torn.com/
-// @version      2.0
+// @version      2.0.1
 // @description  This userscript allows you to lock items in your inventory to prevent accidentally trading, selling, donating, or trashing them. Perfect for protecting high-value items, collections, or anything you want to keep safe!- Now with Unique ID's, fallback protection, and a settings panel!
 // @author       rem4rk [2375926] - https://www.torn.com/profiles.php?XID=2375926
 // @match        https://www.torn.com/item.php*
@@ -54,15 +54,30 @@
         }
 
         #torn-unlock-all-btn {
-            position: fixed; left: 20px; top: 50%; transition: transform 0.4s ease;
-            background: #cf4444; color: #fff; padding: 12px 16px; border-radius: 4px;
-            z-index: 99999; cursor: pointer; border: none; font-weight: bold; font-size: 11px;
-        }
+            position: fixed;
+            left: 20px;
+            top: 50%;
 
-        #torn-unlock-all-btn:hover {
-          transform: scale(1.2);
-          transition: transform 0.4s;
-           }
+            background: #000;
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 4px;
+
+            border: 1px solid #f00;
+
+            z-index: 99999;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 11px;
+
+            opacity: 0.6;
+            transition: transform 0.4s ease, opacity 0.3s ease;
+       }
+
+       #torn-unlock-all-btn:hover {
+            transform: scale(1.2);
+            opacity: 1;
+       }
 
 
         #torn-toast-container { position: fixed; top: 20px; right: 20px; z-index: 999999; display: flex; flex-direction: column; gap: 10px; }
@@ -191,7 +206,7 @@
     // COMMENT: Reminder toast logic. Respects info-toast toggle.
     if (!window.location.href.includes('item.php')) {
         const count = Object.keys(getLockedItems()).length;
-        if (count > 0) setTimeout(() => showToast(`Reminder: ${count} items hidden by locks.`, 'reminder'), 1000);
+        if (count > 0) setTimeout(() => showToast(`Reminder: ${count} locked items are hidden. Unlock them in inventory.`, 'reminder'), 1000);
     }
 
     if (!document.getElementById('torn-lock-gear')) {

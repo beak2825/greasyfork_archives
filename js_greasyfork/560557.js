@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         小红书网页直播界面美化
 // @namespace    https://greasyfork.org/zh-CN/users/1553511
-// @version      1.2.0
+// @version      1.3.0
 // @description  1.自动点击播放，去除底部打开APP按钮。2.调整视频为全屏显示，弹幕区域悬浮在左下
 // @author       Ling77 & MAXLZ
 // @license      MIT
@@ -19,10 +19,12 @@
 (function() {
   let CONFIG = {
     danmuArea: {
+      display: true,
       height: '60%',
       width: '30%',
       position: '左下',
-      opacity: 1
+      opacity: 1,
+      alignRight: false
     }
   };
   const ScriptName = '小红书网页直播界面美化';
@@ -45,7 +47,8 @@
         ...CONFIG.danmuArea
       }
     };
-    if (result.danmuArea.position === '隐藏') result.danmuArea.display = 'none'; else result.danmuArea.inset = Position.find(item => item.label === result.danmuArea.position)?.inset;
+    result.danmuArea.inset = Position.find(item => item.label === result.danmuArea.position)?.inset;
+    delete result.danmuArea.display;
     delete result.danmuArea.position;
     return result;
   }
@@ -60,6 +63,10 @@
               label: '弹幕区域',
               desp: '弹幕区域显示效果自定义',
               items: {
+                display: {
+                  label: '显示弹幕',
+                  type: "boolean"
+                },
                 height: {
                   label: "高度",
                   desp: "支持绝对像素值 (500px) 和相对百分比 (50%)",
@@ -74,7 +81,11 @@
                   label: "位置",
                   type: "select",
                   style: "dropdown",
-                  options: [ ...Position.map(({label}) => label), '隐藏' ]
+                  options: Position.map(({label}) => label)
+                },
+                alignRight: {
+                  label: '弹幕靠右时右对齐',
+                  type: "boolean"
                 },
                 opacity: {
                   label: "透明度",
@@ -108,6 +119,14 @@
     }
     GM_registerMenuCommand("打开设置", () => settings.open());
   }
+  function addStyle(cssCode) {
+    const style = document.createElement('style');
+    style.innerHTML = cssCode;
+    document.head.appendChild(style);
+  }
+  function isMobile() {
+    return /Android|iPhone|iPad|Mobile|Phone/i.test(navigator.userAgent);
+  }
   function bootstrap() {
     const title = document.querySelector(".livestream-container .title");
     if (title && title.textContent.includes("直播已结束")) return;
@@ -117,7 +136,10 @@
       if (!playerEl) return;
       const startDom = playerEl.querySelector(".xgplayer-start");
       const videoDom = playerEl.querySelector("video");
-      startDom?.click();
+      if (startDom) if (!isMobile()) startDom.click(); else startDom.dispatchEvent(new Event('touchend', {
+        bubbles: true,
+        cancelable: true
+      }));
       const bottomButton = document.querySelector(".fixed-bottom-button.live-fixed-bottom-button");
       const poster = playerEl.querySelector(".xgplayer-poster");
       const livestreamContainer = document.querySelector(".livestream-container");
@@ -129,11 +151,14 @@
               for (let index = 0; index < addedNodes.length; index++) {
                 const node = addedNodes[index];
                 if (node instanceof HTMLElement && node.classList.contains("comment-container")) {
-                  Object.assign(node.style, parseConfig().danmuArea, {
-                    position: 'fixed',
-                    zIndex: '9999',
-                    '-webkit-mask-image': 'none'
-                  });
+                  if (!CONFIG.danmuArea.display) node.style.display = 'none'; else {
+                    Object.assign(node.style, parseConfig().danmuArea, {
+                      position: 'fixed',
+                      zIndex: '9999',
+                      '-webkit-mask-image': 'none'
+                    });
+                    if (CONFIG.danmuArea.alignRight && CONFIG.danmuArea.position.startsWith('右')) addStyle('.comment-item { align-self: flex-end !important }');
+                  }
                   mutationObserver.disconnect();
                 }
               }

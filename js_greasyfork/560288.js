@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Instagram | Auto-Close/Block "Sign up" / "Log in" Overlay Popup
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      4.17
+// @version      4.20
 // @author       Piknockyou
 // @license      AGPL-3.0
 // @description  Automatically blocks/closes Instagram login/signup overlays — includes mobile-friendly Reels fixes (end-of-video wall, poster/cover overlay, tap behavior, auto-redirect past "Continue on web").
@@ -102,13 +102,7 @@
         html:not([data-igblock-paused="1"]) [role="dialog"].x1ja2u2z.x1afcbsf.x1a2a7pz,
 
         /* Generic: any dialog with close button containing auth text */
-        html:not([data-igblock-paused="1"]) [role="dialog"]:has(svg[aria-label="Close"]):has([href*="/accounts/"]),
-
-        /* The backdrop (role="presentation") */
-        html:not([data-igblock-paused="1"]) [role="presentation"].x1ey2m1c.x9f619:empty,
-
-        /* Grey overlay backdrop (logged-out modal backdrop) */
-        html:not([data-igblock-paused="1"]) div.x1ey2m1c.xtijo5x.x1o0tod.xixxii4.x13vifvy.x1h0vfkc:empty {
+        html:not([data-igblock-paused="1"]) [role="dialog"]:has(svg[aria-label="Close"]):has([href*="/accounts/"]) {
             display: none !important;
             opacity: 0 !important;
             pointer-events: none !important;
@@ -654,22 +648,22 @@
         applyBannerState();
     }
 
-    // ========== VIDEO TAP FIX (replay + mute + keep video visible) ==========
-    const dbg = (...args) => ENABLE_DEBUG_LOGGING && console.log('%c[IG-Video]', 'color: #00ff00; font-weight: bold;', ...args);
+    // ========== POSTER IMAGE VISIBILITY FIX ==========
+    // Hide poster images that cover videos when they're playing
+    // This does NOT interfere with click handling - just visibility
+    const dbg = (...args) => ENABLE_DEBUG_LOGGING && console.log('%c[IG-Block]', 'color: #00ff00; font-weight: bold;', ...args);
 
     const rectOverlaps = (a, b) => !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom);
 
-    // Hide/show the big "poster" IMG that can cover the <video>
     const syncPosterForVideo = (video, forceHide = false) => {
         if (!(video instanceof HTMLVideoElement)) return;
 
         const vr = video.getBoundingClientRect();
         if (vr.width < 50 || vr.height < 50) return;
 
-        // When playing/replaying we want the video visible (poster hidden).
+        // When playing we want the video visible (poster hidden)
         const shouldHide = forceHide || (!video.paused && !video.ended && video.readyState >= 2);
 
-        // Search nearby (parent is usually enough on reels)
         const scope = video.parentElement || document;
         const imgs = scope.querySelectorAll('img.x15mokao');
 
@@ -686,236 +680,20 @@
         });
     };
 
-    // IG tends to re-apply the poster overlay; keep it suppressed while playing
+    // Periodically sync poster visibility (does not affect click handling)
     setInterval(() => {
+        if (scriptPaused) return;
         document.querySelectorAll('video').forEach(v => {
             const r = v.getBoundingClientRect();
             if (r.width > 0 && r.height > 0) syncPosterForVideo(v, false);
         });
     }, 450);
 
-    document.addEventListener('click', (ev) => {
+    // Listen for video play events to immediately hide posters
+    document.addEventListener('play', (ev) => {
         if (scriptPaused) return;
-
-        dbg('=== CLICK ===', { x: ev.clientX, y: ev.clientY });
-        dbg('Target:', ev.target?.tagName, ev.target?.className?.toString?.()?.slice(0, 60));
-
-        try {
-            if (ev.defaultPrevented) {
-                dbg('❌ STOP: defaultPrevented');
-                return;
-            }
-            if (ev.button !== 0) {
-                dbg('❌ STOP: not left click');
-                return;
-            }
-            if (ev.metaKey || ev.ctrlKey || ev.altKey || ev.shiftKey) {
-                dbg('❌ STOP: modifier key');
-                return;
-            }
-
-            const targetEl = ev.target instanceof Element ? ev.target : null;
-            if (!targetEl) {
-                dbg('❌ STOP: no targetEl');
-                return;
-            }
-
-            // If "Instagram Ultimate Video Controls" script is active on this video,
-            // defer to that script for all click handling (mute/play/pause via its UI)
-            if (targetEl.closest('.igu-wrapper')) {
-                dbg('❌ STOP: .igu-wrapper detected, deferring to video controls script');
-                return;
-            }
-
-            // Check 1: closest() for interactive elements
-            // NOTE: We deliberately SKIP [role="button"] here because Instagram wraps videos in <div role="button">.
-            // Real buttons (volume, scrubber) are caught by the composedPath check below.
-            const closestInteractive = targetEl.closest('a[href], button, input, textarea, select');
-            dbg('closest() interactive:', closestInteractive?.tagName, closestInteractive?.getAttribute?.('role'));
-            if (closestInteractive) {
-                dbg('❌ STOP: closest() found interactive element (a/button/input)');
-                return;
-            }
-
-            // Check 2: composedPath for buttons
-            const path = ev.composedPath ? ev.composedPath() : [];
-            dbg('composedPath length:', path.length);
-
-            let blockingElement = null;
-            let ignoredRoleButton = null;
-
-            const hasButtonInPath = path.some(n => {
-                if (!(n instanceof Element)) return false;
-                const tag = n.tagName?.toUpperCase();
-                const role = n.getAttribute?.('role');
-
-                // Hard blockers: real clickable controls
-                if (tag === 'BUTTON') {
-                    blockingElement = { tag, role, class: n.className?.toString?.()?.slice(0, 40) };
-                    return true;
-                }
-
-                // Only treat real links as blockers
-                if (tag === 'A' && n.getAttribute?.('href')) {
-                    blockingElement = { tag, role, class: n.className?.toString?.()?.slice(0, 40) };
-                    return true;
-                }
-
-                // Instagram wraps the whole video area in <div role="button">.
-                // DO NOT treat that as a blocker if it contains a <video>.
-                if (role === 'button') {
-                    const containsVideo = !!n.querySelector?.('video');
-                    if (containsVideo) {
-                        ignoredRoleButton = { tag, role, class: n.className?.toString?.()?.slice(0, 40) };
-                        return false;
-                    }
-                    blockingElement = { tag, role, class: n.className?.toString?.()?.slice(0, 40) };
-                    return true;
-                }
-
-                return false;
-            });
-
-            dbg('hasButtonInPath:', hasButtonInPath, blockingElement, { ignoredRoleButton });
-            if (hasButtonInPath) {
-                dbg('❌ STOP: button/link in composedPath (hard blocker)');
-                return;
-            }
-
-            // Find video - Strategy 1: composedPath
-            let video = null;
-            let foundVia = null;
-
-            video = path.find(n => n instanceof HTMLVideoElement);
-            if (video) foundVia = 'composedPath';
-            dbg('Strategy 1 (composedPath):', !!video);
-
-            // Strategy 2: container search
-            if (!video) {
-                const container = targetEl.closest('article, [role="dialog"], [role="presentation"], div[style*="padding-bottom"]');
-                dbg('Strategy 2 container:', container?.tagName, container?.getAttribute?.('role'));
-                if (container) {
-                    video = container.querySelector('video');
-                    if (video) foundVia = 'container';
-                }
-                dbg('Strategy 2 (container):', !!video);
-            }
-
-            // Strategy 3: DOM walk
-            if (!video) {
-                let parent = targetEl.parentElement;
-                for (let i = 0; i < 15 && parent && !video; i++) {
-                    video = parent.querySelector('video');
-                    if (video) foundVia = `DOM-walk-${i}`;
-                    parent = parent.parentElement;
-                }
-                dbg('Strategy 3 (DOM walk):', !!video);
-            }
-
-            // Strategy 4: global coordinate search
-            if (!video) {
-                const allVideos = document.querySelectorAll('video');
-                dbg('Strategy 4: total videos on page:', allVideos.length);
-                for (const v of allVideos) {
-                    const rect = v.getBoundingClientRect();
-                    if (rect.width <= 0 || rect.height <= 0) continue;
-                    const clickInVideo = (
-                        ev.clientX >= rect.left &&
-                        ev.clientX <= rect.right &&
-                        ev.clientY >= rect.top &&
-                        ev.clientY <= rect.bottom
-                    );
-                    if (clickInVideo) {
-                        video = v;
-                        foundVia = 'global-coords';
-                        break;
-                    }
-                }
-                dbg('Strategy 4 (global):', !!video);
-            }
-
-            if (!video) {
-                dbg('❌ STOP: no video found');
-                return;
-            }
-
-            dbg('✅ Video found via:', foundVia);
-            dbg('Video paused:', video.paused, 'readyState:', video.readyState);
-
-            // Bounds check
-            const rect = video.getBoundingClientRect();
-            dbg('Video rect:', { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom });
-            const inBounds = (
-                ev.clientX >= rect.left &&
-                ev.clientX <= rect.right &&
-                ev.clientY >= rect.top &&
-                ev.clientY <= rect.bottom
-            );
-            dbg('Click in bounds:', inBounds);
-
-            if (!inBounds) {
-                dbg('❌ STOP: click outside video bounds');
-                return;
-            }
-
-            // Keep poster images from visually covering the <video> while it is playing/replaying
-            syncPosterForVideo(video, false);
-
-            const nearEnd = Number.isFinite(video.duration) && video.duration > 0
-                ? (video.currentTime >= (video.duration - 0.05))
-                : false;
-
-            // Desired tap behavior on mobile reels:
-            // - ended/near-end: restart from 0 and play
-            // - paused: play
-            // - playing: toggle mute/unmute (do not rely on IG overlay handlers)
-            if (video.ended || nearEnd) {
-                dbg('🔄 Replay: resetting to 0 and playing...');
-                syncPosterForVideo(video, true);
-
-                try { video.currentTime = 0; } catch (_) {}
-
-                video.play()
-                    .then(() => dbg('▶️ play() OK (replay)'))
-                    .catch(e => dbg('❌ play() error:', e.message));
-
-                ev.preventDefault();
-                ev.stopPropagation();
-                if (typeof ev.stopImmediatePropagation === 'function') ev.stopImmediatePropagation();
-                dbg('✅ SUCCESS (replay)');
-            } else if (video.paused) {
-                dbg('▶️ Play (was paused)...');
-                syncPosterForVideo(video, true);
-
-                video.play()
-                    .then(() => dbg('▶️ play() OK'))
-                    .catch(e => dbg('❌ play() error:', e.message));
-
-                ev.preventDefault();
-                ev.stopPropagation();
-                if (typeof ev.stopImmediatePropagation === 'function') ev.stopImmediatePropagation();
-                dbg('✅ SUCCESS (play)');
-            } else {
-                // Playing -> toggle mute
-                const nextMuted = !video.muted;
-                video.muted = nextMuted;
-
-                // If we unmute but volume is 0, restore to 1
-                if (!nextMuted && (!Number.isFinite(video.volume) || video.volume === 0)) {
-                    video.volume = 1;
-                }
-
-                dbg(nextMuted ? '🔇 Muted' : '🔊 Unmuted');
-
-                // Prevent other IG click behaviors (keeps it consistent on mobile)
-                ev.preventDefault();
-                ev.stopPropagation();
-                if (typeof ev.stopImmediatePropagation === 'function') ev.stopImmediatePropagation();
-                dbg('✅ SUCCESS (mute toggle)');
-            }
-
-        } catch (err) {
-            dbg('❌ EXCEPTION:', err.message);
+        if (ev.target instanceof HTMLVideoElement) {
+            syncPosterForVideo(ev.target, true);
         }
     }, true);
 
@@ -962,6 +740,11 @@
     const removeOverlay = () => {
         if (scriptPaused) return;
 
+        // IMPORTANT:
+        // Do not hide/remove generic "presentation" layers unless we actually detected a login/signup overlay.
+        // Instagram sometimes uses empty fixed overlays as the click surface for play/pause.
+        let authOverlayDetected = false;
+
         const hideEl = (el) => {
             if (!el) return;
             if (el.getAttribute('data-igblock-hidden') === '1') return;
@@ -985,8 +768,10 @@
 
             const closeBtn = closeSvg.closest('[role="button"], button');
             if (closeBtn) {
+                authOverlayDetected = true;
                 closeBtn.click();
             } else {
+                authOverlayDetected = true;
                 hideEl(dialog);
             }
         });
@@ -1005,41 +790,46 @@
             const hasSignUpLink = el.querySelector('a[href*="/accounts/signup/"]');
 
             if (hasSignUpText || hasSignUpLink) {
+                authOverlayDetected = true;
                 hideEl(el);
             }
         });
 
 
 
-        // Only hide known/likely backdrops (do NOT delete generic role="presentation" nodes).
-        document.querySelectorAll('[role="presentation"].x1ey2m1c.x9f619').forEach(el => {
-            if (el.children.length !== 0) return;
-            if ((el.textContent || '').trim()) return;
+        // Only hide known/likely backdrops if we actually detected an auth/signup overlay.
+        // Otherwise these elements might be the play/pause click surface on reels/posts.
+        if (authOverlayDetected) {
+            // Only hide known/likely backdrops (do NOT delete generic role="presentation" nodes).
+            document.querySelectorAll('[role="presentation"].x1ey2m1c.x9f619').forEach(el => {
+                if (el.children.length !== 0) return;
+                if ((el.textContent || '').trim()) return;
 
-            const cs = getComputedStyle(el);
-            if (cs.position !== 'fixed') return;
+                const cs = getComputedStyle(el);
+                if (cs.position !== 'fixed') return;
 
-            const bg = cs.backgroundColor || '';
-            if (!bg.includes('rgba(12, 16, 20') && !bg.includes('rgb(12, 16, 20)')) return;
+                const bg = cs.backgroundColor || '';
+                if (!bg.includes('rgba(12, 16, 20') && !bg.includes('rgb(12, 16, 20)')) return;
 
-            hideEl(el);
-        });
+                hideEl(el);
+            });
 
-        // Grey overlay backdrop (hide, don't remove) to avoid breaking React/video click handlers
-        document.querySelectorAll('.x1ey2m1c.xtijo5x.x1o0tod.xixxii4.x13vifvy.x1h0vfkc').forEach(el => {
-            if (el.children.length !== 0) return;
-            if ((el.textContent || '').trim()) return;
+            // Grey overlay backdrop (hide, don't remove) to avoid breaking React/video click handlers
+            document.querySelectorAll('.x1ey2m1c.xtijo5x.x1o0tod.xixxii4.x13vifvy.x1h0vfkc').forEach(el => {
+                if (el.children.length !== 0) return;
+                if ((el.textContent || '').trim()) return;
 
-            const bg = getComputedStyle(el).backgroundColor || '';
-            const looksLikeBackdrop =
-                bg === 'rgba(12, 16, 20, 0.7)' ||
-                bg === 'rgb(12, 16, 20)' ||
-                bg.startsWith('rgba(12, 16, 20,');
+                const bg = getComputedStyle(el).backgroundColor || '';
+                const looksLikeBackdrop =
+                    bg === 'rgba(12, 16, 20, 0.7)' ||
+                    bg === 'rgb(12, 16, 20)' ||
+                    bg.startsWith('rgba(12, 16, 20,');
 
-            if (!looksLikeBackdrop) return;
+                if (!looksLikeBackdrop) return;
 
-            hideEl(el);
-        });
+                hideEl(el);
+            });
+        }
 
         if (checkForError()) handleError();
     };

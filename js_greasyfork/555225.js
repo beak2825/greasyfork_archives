@@ -1,17 +1,42 @@
 // ==UserScript==
-// @name         YouTube Channel Blocker v6
+// @name         YouTube Channel Blocker v7
 // @namespace    http://tampermonkey.net/
-// @version      6
-// @description  Block YouTube channels with gold borders, fullscreen protection, import/export. Optimized & cleaner.
+// @version      7
+// @description  Block YouTube channels with gold borders, fullscreen protection, import/export. Fixed infinite loop bug.
 // @author       Solomon
 // @match        https://www.youtube.com/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addStyle
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/555225/YouTube%20Channel%20Blocker%20v6.user.js
-// @updateURL https://update.greasyfork.org/scripts/555225/YouTube%20Channel%20Blocker%20v6.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/555225/YouTube%20Channel%20Blocker%20v7.user.js
+// @updateURL https://update.greasyfork.org/scripts/555225/YouTube%20Channel%20Blocker%20v7.meta.js
 // ==/UserScript==
+
+/*
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 📋 CHANGELOG
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 
+ * Previous Features (Preserved):
+ * ✅ Block YouTube channels from search/home/recommendations
+ * ✅ Gold border highlighting for blocked channels
+ * ✅ Floating draggable toggle button
+ * ✅ Panel to manage blocked channels
+ * ✅ Import/Export blocked list as JSON
+ * ✅ Fullscreen protection (hides UI during fullscreen)
+ * ✅ Channel page block button
+ * 
+ * 🔧 Bug Fixes in v7:
+ * 🛠️ FIXED: Infinite loop causing buttons to multiply endlessly
+ * 🛠️ FIXED: Added duplicate button detection before creating new buttons
+ * 🛠️ FIXED: Added processing lock to prevent concurrent execution
+ * 🛠️ FIXED: Reduced processing interval from 1500ms to 2000ms
+ * 🛠️ FIXED: Added button existence check using data attribute
+ * 🛠️ IMPROVED: More robust element detection
+ * 
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
 
 (function() {
     'use strict';
@@ -37,7 +62,8 @@
         blocked: GM_getValue('blockedChannels', []),
         cache: new Map(),
         isFullscreen: false,
-        lastUrl: location.href
+        lastUrl: location.href,
+        isProcessing: false  // 🆕 v7: Lock to prevent concurrent processing
     };
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -239,49 +265,73 @@
     };
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 🎯 VIDEO PROCESSOR
+    // 🎯 VIDEO PROCESSOR (v7: FIXED INFINITE LOOP)
     // ═══════════════════════════════════════════════════════════════════════════
 
     const processVideos = () => {
-        document.querySelectorAll(`${VIDEO_SELECTORS}:not([data-ycb])`).forEach(video => {
-            video.dataset.ycb = '1';
+        // 🆕 v7: Prevent concurrent processing
+        if (state.isProcessing) return;
+        state.isProcessing = true;
 
-            const info = getChannelInfo(video);
-            if (!info) return;
+        try {
+            document.querySelectorAll(`${VIDEO_SELECTORS}`).forEach(video => {
+                const info = getChannelInfo(video);
+                if (!info) return;
 
-            const blocked = isBlocked(info.name, info.id);
-            if (blocked) video.dataset.blocked = 'true';
+                const blocked = isBlocked(info.name, info.id);
+                
+                // Set blocked status
+                if (blocked) {
+                    video.dataset.blocked = 'true';
+                } else {
+                    delete video.dataset.blocked;
+                }
 
-            // Add button
-            const target = getInsertTarget(video);
-            if (target && !video.dataset.blocked) {
-                const btn = document.createElement('button');
-                btn.className = 'ycb-btn';
-                btn.textContent = '🚫 Block';
-                btn.onclick = e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    block(info.name, info.id);
-                };
-                target.appendChild(btn);
-            }
+                // 🆕 v7: Check if buttons already exist using data attribute
+                if (video.dataset.ycbProcessed === 'true') return;
 
-            // Add badge for blocked
-            if (blocked && target) {
-                const badge = document.createElement('button');
-                badge.className = 'ycb-btn blocked';
-                badge.textContent = '✓ Blocked';
-                badge.onclick = e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (confirm(`Unblock "${info.name}"?`)) {
-                        unblock(info.id || info.name);
-                        location.reload();
-                    }
-                };
-                target.appendChild(badge);
-            }
-        });
+                const target = getInsertTarget(video);
+                if (!target) return;
+
+                // 🆕 v7: Double-check no existing buttons in target
+                if (target.querySelector('.ycb-btn')) return;
+
+                // Mark as processed BEFORE adding buttons
+                video.dataset.ycbProcessed = 'true';
+
+                // Add block button for non-blocked channels
+                if (!blocked) {
+                    const btn = document.createElement('button');
+                    btn.className = 'ycb-btn';
+                    btn.textContent = '🚫 Block';
+                    btn.onclick = e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        block(info.name, info.id);
+                    };
+                    target.appendChild(btn);
+                }
+
+                // Add badge for blocked channels
+                if (blocked) {
+                    const badge = document.createElement('button');
+                    badge.className = 'ycb-btn blocked';
+                    badge.textContent = '✓ Blocked';
+                    badge.onclick = e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (confirm(`Unblock "${info.name}"?`)) {
+                            unblock(info.id || info.name);
+                            location.reload();
+                        }
+                    };
+                    target.appendChild(badge);
+                }
+            });
+        } finally {
+            // 🆕 v7: Always release the lock
+            state.isProcessing = false;
+        }
     };
 
     // Channel page button
@@ -351,6 +401,9 @@
     };
 
     const createUI = () => {
+        // 🆕 v7: Prevent duplicate UI creation
+        if (document.getElementById('ycb-toggle')) return;
+
         // Toggle button
         const toggle = document.createElement('button');
         toggle.id = 'ycb-toggle';
@@ -421,7 +474,7 @@
     window._ycbExport = exportList;
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 🚀 INITIALIZATION
+    // 🚀 INITIALIZATION (v7: IMPROVED)
     // ═══════════════════════════════════════════════════════════════════════════
 
     const process = () => {
@@ -429,23 +482,28 @@
         addChannelPageButton();
     };
 
+    // 🆕 v7: Reset processed state when URL changes (for navigation)
     const detectUrlChange = () => {
         if (location.href !== state.lastUrl) {
             state.lastUrl = location.href;
+            // Clear processed flags for new page content
+            document.querySelectorAll('[data-ycb-processed]').forEach(el => {
+                delete el.dataset.ycbProcessed;
+            });
             setTimeout(process, 400);
         }
     };
 
     setTimeout(() => {
-        console.log('[YT Blocker v6] 🚀 Initializing...');
-        console.log(`[YT Blocker v6] 📊 Blocking ${state.blocked.length} channels`);
+        console.log('[YT Blocker v7] 🚀 Initializing...');
+        console.log(`[YT Blocker v7] 📊 Blocking ${state.blocked.length} channels`);
 
         createUI();
         process();
         handleFullscreen();
 
-        // Intervals
-        setInterval(process, 1500);
+        // 🆕 v7: Increased interval to 2000ms to reduce load
+        setInterval(process, 2000);
         setInterval(detectUrlChange, 800);
 
         // Fullscreen listeners
@@ -461,7 +519,7 @@
             }
         }, 1000);
 
-        console.log('[YT Blocker v6] ✅ Ready!');
+        console.log('[YT Blocker v7] ✅ Ready!');
     }, 400);
 
 })();

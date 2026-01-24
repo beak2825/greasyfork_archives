@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Greasyfork – Auto-Translator (v17)
+// @name         Greasyfork – Auto-Translator (v19)
 // @namespace    http://tampermonkey.net/
-// @version      17
+// @version      19
 // @description  Translates ANY foreign language on Greasyfork to your chosen language (20+ languages supported)
 // @author       Solomon
 // @match        https://greasyfork.org/*
@@ -10,9 +10,35 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @connect      translate.googleapis.com
-// @downloadURL https://update.greasyfork.org/scripts/555224/Greasyfork%20%E2%80%93%20Auto-Translator%20%28v17%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/555224/Greasyfork%20%E2%80%93%20Auto-Translator%20%28v17%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/555224/Greasyfork%20%E2%80%93%20Auto-Translator%20%28v19%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/555224/Greasyfork%20%E2%80%93%20Auto-Translator%20%28v19%29.meta.js
 // ==/UserScript==
+
+/*
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 📋 CHANGELOG
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ * Previous Features (Preserved):
+ * ✅ Auto-translate foreign content on page load
+ * ✅ 20+ supported languages
+ * ✅ Smart language detection
+ * ✅ Draggable control panel
+ * ✅ Restore original text
+ * ✅ Translation badges
+ * ✅ Language preference saved
+ *
+ * 🆕 NEW in v18:
+ * 🐛 Fixed language selector text color (now black, was invisible white)
+ *
+ * 🆕 NEW in v19:
+ * 🐛 Fixed: Restore now STOPS auto-translate (won't re-translate after restore)
+ * 🐛 Fixed: Better Korean text detection (handles mixed brackets/special chars)
+ * ✨ Added: Citrus GFork theme compatibility (thanks decembre!)
+ * ✨ Added: Toggle to enable/disable auto-translate from panel
+ *
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
 
 (function() {
     'use strict';
@@ -22,9 +48,8 @@
     // ═══════════════════════════════════════════════════════════════════════════
 
     const CONFIG = {
-        autoTranslate: true,          // Auto-translate on page load
         debug: false,                 // Console logging
-        minTextLength: 10,            // Minimum text length to translate
+        minTextLength: 5,             // Minimum text length to translate (reduced for short titles)
         translationDelay: 250,        // Delay between translations (ms)
         maxConcurrent: 3,             // Max concurrent translation requests
         retryAttempts: 2,             // Retry failed translations
@@ -63,21 +88,23 @@
         processedElements: new WeakSet(),
         translationCount: 0,
         targetLanguage: GM_getValue('targetLanguage', 'en'),
+        autoTranslate: GM_getValue('autoTranslate', true),  // 🆕 v19: Saveable auto-translate
         isTranslating: false,
+        wasRestored: false,  // 🆕 v19: Track if restore was clicked
         translationQueue: [],
         activeRequests: 0
     };
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 🎨 STYLES
+    // 🎨 STYLES (with Citrus GFork compatibility)
     // ═══════════════════════════════════════════════════════════════════════════
 
     GM_addStyle(`
-        /* Translation Badge */
+        /* Translation Badge - Citrus compatible */
         .gf-translation-badge {
             display: inline-block;
             background: linear-gradient(135deg, #4caf50, #45a049);
-            color: white;
+            color: white !important;
             padding: 2px 6px;
             border-radius: 3px;
             font-size: 9px;
@@ -87,7 +114,7 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
-        /* Formatted Text */
+        /* Formatted Text - Citrus compatible */
         .gf-formatted-text {
             line-height: 1.6 !important;
             font-size: 14px !important;
@@ -102,38 +129,39 @@
             font-weight: 600 !important;
         }
 
-        /* Control Panel */
+        /* Control Panel - Citrus compatible with !important overrides */
         #gf-translator-panel {
             position: fixed;
-            background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
-            border: 2px solid #4caf50;
-            border-radius: 12px;
-            padding: 12px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            z-index: 999999;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%) !important;
+            border: 2px solid #4caf50 !important;
+            border-radius: 12px !important;
+            padding: 12px !important;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+            z-index: 999999 !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
             min-width: 220px;
             max-width: 240px;
             cursor: move;
             user-select: none;
             transition: box-shadow 0.3s ease;
+            color: #333333 !important;
         }
         #gf-translator-panel.dragging { cursor: grabbing !important; }
-        #gf-translator-panel:hover { box-shadow: 0 12px 35px rgba(0,0,0,0.2); }
-        #gf-translator-panel.minimized { min-width: 140px; padding: 8px; }
+        #gf-translator-panel:hover { box-shadow: 0 12px 35px rgba(0,0,0,0.2) !important; }
+        #gf-translator-panel.minimized { min-width: 140px; padding: 8px !important; }
 
-        /* Panel Header */
+        /* Panel Header - Citrus compatible */
         .gf-panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
             padding-bottom: 8px;
-            border-bottom: 2px solid #4caf50;
+            border-bottom: 2px solid #4caf50 !important;
         }
         .gf-panel-title {
             font-weight: bold;
-            color: #2e7d32;
+            color: #2e7d32 !important;
             font-size: 14px;
             flex: 1;
             display: flex;
@@ -144,78 +172,127 @@
         .gf-panel-btn {
             width: 22px;
             height: 22px;
-            border: none;
-            border-radius: 4px;
+            border: none !important;
+            border-radius: 4px !important;
             cursor: pointer;
             font-size: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
-            background: #f0f0f0;
+            background: #f0f0f0 !important;
+            color: #333 !important;
         }
         .gf-panel-btn:hover { transform: scale(1.1); }
-        .gf-minimize-btn { background: #FFC107; color: white; }
-        .gf-minimize-btn:hover { background: #FFB300; }
-        .gf-close-btn { background: #f44336; color: white; }
-        .gf-close-btn:hover { background: #e53935; }
+        .gf-minimize-btn { background: #FFC107 !important; color: white !important; }
+        .gf-minimize-btn:hover { background: #FFB300 !important; }
+        .gf-close-btn { background: #f44336 !important; color: white !important; }
+        .gf-close-btn:hover { background: #e53935 !important; }
 
         /* Panel Content */
         .gf-panel-content { display: block; }
         .gf-panel-content.hidden { display: none; }
 
-        /* Language Selector */
+        /* Language Selector - v18 fix + Citrus compatible */
         .gf-lang-selector {
             width: 100%;
             padding: 8px 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
+            border: 2px solid #e0e0e0 !important;
+            border-radius: 6px !important;
             font-size: 12px;
             margin-bottom: 10px;
-            background: white;
+            background: #ffffff !important;
+            color: #333333 !important;
             cursor: pointer;
             transition: border-color 0.2s;
             font-family: inherit;
         }
-        .gf-lang-selector:hover { border-color: #4caf50; }
+        .gf-lang-selector option {
+            color: #333333 !important;
+            background: #ffffff !important;
+        }
+        .gf-lang-selector:hover { border-color: #4caf50 !important; }
         .gf-lang-selector:focus {
             outline: none;
-            border-color: #4caf50;
+            border-color: #4caf50 !important;
             box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
         }
 
-        /* Stats Box */
+        /* Stats Box - Citrus compatible */
         .gf-stat-box {
             margin-bottom: 10px;
             font-size: 12px;
-            color: #555;
-            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f4 100%);
+            color: #555 !important;
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f4 100%) !important;
             padding: 10px;
-            border-radius: 8px;
+            border-radius: 8px !important;
             text-align: center;
-            border: 1px solid #c8e6c9;
+            border: 1px solid #c8e6c9 !important;
         }
         .gf-stat-count {
             font-size: 24px;
             font-weight: bold;
-            color: #2e7d32;
+            color: #2e7d32 !important;
             display: block;
             line-height: 1;
             margin-bottom: 4px;
         }
         .gf-stat-label {
             font-size: 10px;
-            color: #666;
+            color: #666 !important;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        /* Buttons */
+        /* 🆕 v19: Auto-translate toggle row */
+        .gf-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            margin-bottom: 10px;
+            background: #f5f5f5 !important;
+            border-radius: 6px !important;
+            font-size: 12px;
+            color: #333 !important;
+        }
+        .gf-toggle-label {
+            font-weight: 500;
+        }
+        .gf-toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            background: #ccc !important;
+            border-radius: 11px !important;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .gf-toggle-switch.on {
+            background: #4caf50 !important;
+        }
+        .gf-toggle-switch::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background: white !important;
+            border-radius: 50% !important;
+            transition: left 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .gf-toggle-switch.on::after {
+            left: 20px;
+        }
+
+        /* Buttons - Citrus compatible */
         .gf-btn {
             width: 100%;
             padding: 10px;
-            border: none;
-            border-radius: 6px;
+            border: none !important;
+            border-radius: 6px !important;
             cursor: pointer;
             font-weight: 600;
             font-size: 12px;
@@ -237,34 +314,34 @@
             transform: none !important;
         }
         .gf-btn-primary {
-            background: linear-gradient(135deg, #4caf50 0%, #43a047 100%);
-            color: white;
+            background: linear-gradient(135deg, #4caf50 0%, #43a047 100%) !important;
+            color: white !important;
         }
-        .gf-btn-primary:hover { background: linear-gradient(135deg, #43a047 0%, #388e3c 100%); }
+        .gf-btn-primary:hover { background: linear-gradient(135deg, #43a047 0%, #388e3c 100%) !important; }
         .gf-btn-secondary {
-            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
-            color: white;
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%) !important;
+            color: white !important;
         }
-        .gf-btn-secondary:hover { background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%); }
+        .gf-btn-secondary:hover { background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%) !important; }
         .gf-btn-tertiary {
-            background: #f5f5f5;
-            color: #333;
-            border: 1px solid #ddd;
+            background: #f5f5f5 !important;
+            color: #333 !important;
+            border: 1px solid #ddd !important;
         }
-        .gf-btn-tertiary:hover { background: #eeeeee; }
+        .gf-btn-tertiary:hover { background: #eeeeee !important; }
 
-        /* Status Bar */
+        /* Status Bar - Citrus compatible */
         #gf-status-bar {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: linear-gradient(135deg, #4caf50 0%, #43a047 100%);
-            color: white;
+            background: linear-gradient(135deg, #4caf50 0%, #43a047 100%) !important;
+            color: white !important;
             padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            z-index: 999998;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+            z-index: 999998 !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
             font-size: 13px;
             font-weight: 600;
             display: flex;
@@ -277,29 +354,14 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
-        /* Progress indicator */
-        .gf-progress {
-            width: 100%;
-            height: 4px;
-            background: #e0e0e0;
-            border-radius: 2px;
-            margin-top: 8px;
-            overflow: hidden;
-        }
-        .gf-progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #4caf50, #8bc34a);
-            border-radius: 2px;
-            transition: width 0.3s ease;
-        }
-
         /* Detected language badge */
         .gf-detected-lang {
             font-size: 9px;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.2) !important;
             padding: 1px 4px;
-            border-radius: 2px;
+            border-radius: 2px !important;
             margin-left: 4px;
+            color: white !important;
         }
     `);
 
@@ -308,7 +370,7 @@
     // ═══════════════════════════════════════════════════════════════════════════
 
     function debugLog(...args) {
-        if (CONFIG.debug) console.log('🌐 [v17]', ...args);
+        if (CONFIG.debug) console.log('🌐 [v19]', ...args);
     }
 
     function showStatus(message, duration = 3000) {
@@ -333,7 +395,7 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 🔍 LANGUAGE DETECTION
+    // 🔍 LANGUAGE DETECTION (v19: Improved Korean detection)
     // ═══════════════════════════════════════════════════════════════════════════
 
     function isTargetLanguageText(text, targetLang) {
@@ -348,29 +410,50 @@
             ru: /[\u0400-\u04FF]/,
             zh: /[\u4e00-\u9fff\u3400-\u4dbf]/,
             ja: /[\u3040-\u30ff\u4e00-\u9fff]/,
-            ko: /[\uac00-\ud7af\u1100-\u11ff]/,
+            ko: /[\uac00-\ud7af\u1100-\u11ff\u3130-\u318f]/,  // 🆕 v19: Added more Korean ranges
             ar: /[\u0600-\u06ff\u0750-\u077f]/,
             he: /[\u0590-\u05ff]/,
             th: /[\u0e00-\u0e7f]/,
             vi: /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i,
             tr: /[çğıöşüÇĞİÖŞÜ]/,
             pl: /[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/,
-            nl: /^[a-zA-Z\s\d\.,;:!?()\-"']+$/, // Dutch uses basic Latin
-            uk: /[\u0400-\u04FF]/, // Ukrainian uses Cyrillic
-            hi: /[\u0900-\u097F]/, // Hindi/Devanagari
-            id: /^[a-zA-Z\s\d\.,;:!?()\-"']+$/ // Indonesian uses basic Latin
+            nl: /^[a-zA-Z\s\d\.,;:!?()\-"']+$/,
+            uk: /[\u0400-\u04FF]/,
+            hi: /[\u0900-\u097F]/,
+            id: /^[a-zA-Z\s\d\.,;:!?()\-"']+$/
         };
 
         const pattern = langPatterns[targetLang];
         if (!pattern) return false;
 
-        // For script-based languages (CJK, Cyrillic, Arabic, etc.), check if text CONTAINS those characters
+        // For script-based languages, check if text CONTAINS those characters
         if (['ru', 'zh', 'ja', 'ko', 'ar', 'he', 'th', 'uk', 'hi'].includes(targetLang)) {
             return pattern.test(text);
         }
 
-        // For Latin-based languages, check if text is ONLY those characters
         return pattern.test(text);
+    }
+
+    /**
+     * 🆕 v19: Improved detection for foreign text
+     * Now handles Korean and other scripts mixed with brackets/special chars
+     */
+    function containsForeignScript(text) {
+        // Check for various non-Latin scripts
+        const foreignPatterns = [
+            /[\u0400-\u04FF]/,           // Cyrillic (Russian, Ukrainian)
+            /[\u4e00-\u9fff]/,           // CJK (Chinese, Japanese Kanji)
+            /[\u3040-\u30ff]/,           // Japanese Hiragana/Katakana
+            /[\uac00-\ud7af]/,           // Korean Hangul syllables
+            /[\u1100-\u11ff]/,           // Korean Jamo
+            /[\u3130-\u318f]/,           // Korean compatibility Jamo
+            /[\u0600-\u06ff]/,           // Arabic
+            /[\u0590-\u05ff]/,           // Hebrew
+            /[\u0e00-\u0e7f]/,           // Thai
+            /[\u0900-\u097F]/,           // Hindi/Devanagari
+        ];
+
+        return foreignPatterns.some(pattern => pattern.test(text));
     }
 
     function shouldTranslate(text) {
@@ -379,13 +462,26 @@
         const cleanText = text.trim();
         const targetLang = state.targetLanguage;
 
-        // If text is already in target language, skip
+        // 🆕 v19: Check if contains foreign script (more reliable than checking if NOT target lang)
+        if (containsForeignScript(cleanText)) {
+            // If target is one of these scripts, check if it matches
+            if (['ru', 'zh', 'ja', 'ko', 'ar', 'he', 'th', 'uk', 'hi'].includes(targetLang)) {
+                if (isTargetLanguageText(cleanText, targetLang)) {
+                    debugLog('⏭️ Skipping - already in target script:', targetLang);
+                    return false;
+                }
+            }
+            debugLog('✅ Will translate (foreign script detected):', cleanText.substring(0, 50) + '...');
+            return true;
+        }
+
+        // For Latin-based target languages, check if already in that language
         if (isTargetLanguageText(cleanText, targetLang)) {
             debugLog('⏭️ Skipping - already in target language:', targetLang);
             return false;
         }
 
-        // Check if text contains meaningful content (not just symbols/numbers)
+        // Check if text contains meaningful content
         const hasLetters = /[a-zA-Z\u0080-\uffff]/.test(cleanText);
         if (!hasLetters) {
             debugLog('⏭️ Skipping - no translatable content');
@@ -671,14 +767,6 @@
         if (counter) counter.textContent = state.translationCount;
     }
 
-    function updateLanguageDisplay() {
-        const langDisplay = document.getElementById('gf-current-lang');
-        const langInfo = LANGUAGES[state.targetLanguage];
-        if (langDisplay && langInfo) {
-            langDisplay.textContent = `${langInfo.flag} ${langInfo.name}`;
-        }
-    }
-
     function createLanguageSelector() {
         let options = '';
         for (const [code, info] of Object.entries(LANGUAGES)) {
@@ -688,7 +776,13 @@
         return options;
     }
 
+    /**
+     * 🆕 v19: Restore function now sets wasRestored flag to prevent auto-translate
+     */
     function restoreOriginalText() {
+        // Set flag to prevent auto-translate
+        state.wasRestored = true;
+
         // Restore elements with data-original-text
         document.querySelectorAll('[data-original-text]').forEach(el => {
             el.textContent = el.getAttribute('data-original-text');
@@ -709,7 +803,7 @@
         state.translationCount = 0;
         updateCounter();
 
-        showStatus('🔄 Restored original text!', 2000);
+        showStatus('🔄 Restored! Click "Translate" to translate again.', 3000);
     }
 
     function makeDraggable(element) {
@@ -728,7 +822,7 @@
         }
 
         element.addEventListener('mousedown', (e) => {
-            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'SELECT' || e.target.closest('button') || e.target.closest('select')) return;
+            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'SELECT' || e.target.closest('button') || e.target.closest('select') || e.target.closest('.gf-toggle-switch')) return;
 
             isDragging = true;
             element.classList.add('dragging');
@@ -768,14 +862,13 @@
     function addControlPanel() {
         if (document.getElementById('gf-translator-panel')) return;
 
-        const langInfo = LANGUAGES[state.targetLanguage];
         const panel = document.createElement('div');
         panel.id = 'gf-translator-panel';
 
         panel.innerHTML = `
             <div class="gf-panel-header">
                 <div class="gf-panel-title">
-                    🌐 <span>v17</span>
+                    🌐 <span>v19</span>
                 </div>
                 <div class="gf-panel-controls">
                     <button class="gf-panel-btn gf-minimize-btn" id="gf-minimize-btn" title="Minimize">−</button>
@@ -786,6 +879,13 @@
                 <select class="gf-lang-selector" id="gf-lang-selector" title="Select target language">
                     ${createLanguageSelector()}
                 </select>
+
+                <!-- 🆕 v19: Auto-translate toggle -->
+                <div class="gf-toggle-row">
+                    <span class="gf-toggle-label">Auto-Translate</span>
+                    <div class="gf-toggle-switch ${state.autoTranslate ? 'on' : ''}" id="gf-auto-toggle" title="Toggle auto-translate on page load"></div>
+                </div>
+
                 <div class="gf-stat-box">
                     <span class="gf-stat-count" id="gf-translation-count">0</span>
                     <span class="gf-stat-label">Translated</span>
@@ -812,6 +912,15 @@
             showStatus(`🌐 Language set to ${LANGUAGES[state.targetLanguage].flag} ${LANGUAGES[state.targetLanguage].name}`, 2000);
         });
 
+        // 🆕 v19: Auto-translate toggle
+        document.getElementById('gf-auto-toggle').addEventListener('click', (e) => {
+            e.stopPropagation();
+            state.autoTranslate = !state.autoTranslate;
+            GM_setValue('autoTranslate', state.autoTranslate);
+            e.target.classList.toggle('on', state.autoTranslate);
+            showStatus(`Auto-translate ${state.autoTranslate ? 'enabled ✅' : 'disabled ❌'}`, 2000);
+        });
+
         document.getElementById('gf-minimize-btn').addEventListener('click', (e) => {
             e.stopPropagation();
             const content = document.getElementById('gf-panel-content');
@@ -830,6 +939,7 @@
 
         document.getElementById('gf-translate-btn').addEventListener('click', async () => {
             if (state.isTranslating) return;
+            state.wasRestored = false;  // 🆕 v19: Reset flag when manually translating
             await runTranslation();
         });
 
@@ -902,7 +1012,7 @@
 
     async function init() {
         const langInfo = LANGUAGES[state.targetLanguage];
-        console.log(`🌐 Greasyfork Auto-Translator v17 loaded! Target: ${langInfo.flag} ${langInfo.name}`);
+        console.log(`🌐 Greasyfork Auto-Translator v19 loaded! Target: ${langInfo.flag} ${langInfo.name}`);
 
         // Wait for page to settle
         await sleep(1000);
@@ -910,8 +1020,8 @@
         // Add control panel
         addControlPanel();
 
-        // Auto-translate if enabled
-        if (CONFIG.autoTranslate) {
+        // 🆕 v19: Only auto-translate if enabled AND not restored
+        if (state.autoTranslate && !state.wasRestored) {
             await sleep(500);
             await runTranslation();
         }

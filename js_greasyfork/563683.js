@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Pollination AI Page Summarizer
-// @version      1.2
+// @version      1.2.1
 // @description  Summarize webpage or selected text via Pollinations API (Free, Anonymous, Keyless)
 // @author       SH3LL
 // @match        *://*/*
@@ -22,9 +22,9 @@
 
     // === Models ===
     const models = [
-        { label: 'Gemini', model: 'gemini' },
-        { label: 'OpenAI', model: 'openai' },
-        { label: 'Mistral', model: 'mistral' }
+        { label: 'Gemini 2.5 Flash Lite', model: 'gemini' },
+        { label: 'Mistral Small 3.2 24B', model: 'mistral' },
+        { label: 'GPT-OSS 20B Reasoning', model: 'openai' },
     ];
     let selectedModel = models[0].model;
 
@@ -90,8 +90,8 @@
 
     // === API Call ===
     function summarizePage(text, lang) {
-        const prompt = `Summarize the following text in ${lang}. The summary is organised in blocks of topics.
-                        Return the result in a json list composed of dictionaries with fields "title" (the title starts with a contextual modern/colored emoji) and "text".
+        const prompt = `Summarize the following text in ${lang}. The summary is organised in blocks of topics. The summary must be concise.
+                        Return the result in a json list composed of dictionaries with fields "title" (the title starts with a contextual colored emoji) and "text".
                         Don't add any other sentence like "Here is the summary".
                         Don't add any coding formatting/header like \"\`\`\`json\".
                         Don't add any formatting to title or text, no formatting at all".

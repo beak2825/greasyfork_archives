@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         Universal Video Split + VK API
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      3.0
 // @match        *://vk.com/video_ext.php*
 // @match        *://vkvideo.ru/video_ext.php*
 // @match        *://vkvideo.ru/*
 // @match        *://rutube.ru/*
 // @match        *://www.youtube.com/*
+// @match        *://shitty-auction.ru/*
 // @match        *://oauth.vk.com/blank.html*
 // @grant        GM_addStyle
 // @grant        GM_log
@@ -26,6 +27,13 @@
     const VK_TOKEN_KEY = 'vk_video_api_token';
     const VK_API_VERSION = '5.199';
     const VK_CLIENT_ID = '2685278';
+    // ============================================
+    // AUCTION SITE INTEGRATION
+    // ============================================
+    const AUCTION_DATA_KEY = 'auction_pending_data';
+    const TIMER_SOUND_3MIN = ''; // Звук на 3:00
+    const TIMER_SOUND_2MIN = ''; // Звук на 2:00
+    const TIMER_SOUND_30SEC = ''; // Звук на 0:30
     const VK_AUTH_URL = `https://oauth.vk.com/authorize?client_id=2685278&scope=1073737727&redirect_uri=https://oauth.vk.com/blank.html&display=page&response_type=token&revoke=1`;
     // Универсальное хранение токена (общий storage Tampermonkey + localStorage домена)
     function getStoredToken() {
@@ -81,7 +89,53 @@
         return;
     }
 
-    // Функция получения токена VK
+    // ============================================
+    // ОБРАБОТЧИК САЙТА АУКЦИОНА
+    // ============================================
+    if (window.location.hostname === 'shitty-auction.ru') {
+        GM_log('[Auction] Скрипт запущен на сайте аукциона');
+        // Устанавливаем флаг что аукцион открыт
+        GM_setValue('auction_tab_open', true);
+
+        // При закрытии вкладки сбрасываем флаг
+        window.addEventListener('beforeunload', () => {
+            GM_setValue('auction_tab_open', false);
+        });
+        // Функция добавления данных в первое пустое поле
+        function addToFirstEmptyField(data) {
+            const fields = document.querySelectorAll('input[type="text"], textarea');
+            for (const field of fields) {
+                if (!field.value || field.value.trim() === '') {
+                    field.value = data;
+                    field.dispatchEvent(new Event('input', { bubbles: true }));
+                    field.dispatchEvent(new Event('change', { bubbles: true }));
+                    GM_log('[Auction] Данные добавлены: ' + data);
+                    return true;
+                }
+            }
+            GM_log('[Auction] Пустых полей не найдено');
+            return false;
+        }
+
+        // Функция проверки новых данных
+        function checkForNewData() {
+            const pendingData = GM_getValue(AUCTION_DATA_KEY, '');
+            if (pendingData) {
+                GM_log('[Auction] Найдены новые данные: ' + pendingData);
+                addToFirstEmptyField(pendingData);
+                GM_setValue(AUCTION_DATA_KEY, ''); // Очищаем после обработки
+            }
+        }
+
+        // Проверяем данные при загрузке
+        setTimeout(checkForNewData, 500);
+
+        // Постоянно проверяем новые данные каждые 300мс
+        setInterval(checkForNewData, 300);
+
+        return;
+    }
+        // Функция получения токена VK
     function getVKToken(silent = false) {
         let token = getStoredToken();
         if (!token || token === 'null' || token === '') {
@@ -571,39 +625,42 @@
             return Math.ceil(minutes / interval) * step;
         }
 
-        // Функция для копирования названия с суммой выкупа
-        function copyTitleWithBuyout() {
-            const videoTitle = getVideoTitle();
+        // Функция для отправки данных на сайт аукциона
+        function sendToAuction() {
+            let dataToSend = '';
 
-            // Пытаемся получить длительность видео разными способами
-            let totalMinutes = totalVideoMinutes !== null ? totalVideoMinutes : 0;
+            // Для YouTube отправляем ссылку на видео
+            if (currentPlatform === 'youtube') {
+                dataToSend = window.location.href;
+                GM_log(`[${currentPlatform}] Подготовлена ссылка для аукциона: ${dataToSend}`);
+            } else {
+                // Для остальных платформ отправляем название + сумма выкупа
+                const videoTitle = getVideoTitle();
 
-            // Если totalVideoMinutes не определена, пытаемся получить из элемента video
-            if (totalMinutes === 0 && video && isFinite(video.duration) && video.duration > 0) {
-                totalMinutes = Math.ceil(video.duration / 60);
-                GM_log(`[${currentPlatform}] Получена длительность видео из элемента: ${totalMinutes} минут`);
+                let totalMinutes = totalVideoMinutes !== null ? totalVideoMinutes : 0;
+                if (totalMinutes === 0 && video && isFinite(video.duration) && video.duration > 0) {
+                    totalMinutes = Math.ceil(video.duration / 60);
+                }
+
+                const buyoutAmount = calculateBuyoutAmount(totalMinutes);
+                dataToSend = `${videoTitle} (${buyoutAmount})`;
+                GM_log(`[${currentPlatform}] Подготовлены данные для аукциона: ${dataToSend}`);
             }
 
-            const buyoutAmount = calculateBuyoutAmount(totalMinutes);
-            const textToCopy = `${videoTitle} (${buyoutAmount})`;
+            // Сохраняем данные
+            GM_setValue(AUCTION_DATA_KEY, dataToSend);
+            GM_log(`[${currentPlatform}] Данные сохранены`);
 
-            // Создаем временное поле для копирования
-            const tempInput = document.createElement('input');
-            tempInput.value = textToCopy;
-            tempInput.style.position = 'absolute';
-            tempInput.style.left = '-9999px';
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            tempInput.setSelectionRange(0, 99999); // Для мобильных устройств
+            // Проверяем, открыт ли уже аукцион (через флаг)
+            const auctionTabOpen = GM_getValue('auction_tab_open', false);
 
-            try {
-                document.execCommand('copy');
-                GM_log(`[${currentPlatform}] Скопировано: ${textToCopy}`);
-            } catch (err) {
-                GM_log(`[${currentPlatform}] Ошибка копирования: ${err.message}`);
+            if (!auctionTabOpen) {
+                GM_log(`[${currentPlatform}] Открываем новую вкладку аукциона`);
+                GM_setValue('auction_tab_open', true);
+                window.open('https://shitty-auction.ru/', '_blank');
+            } else {
+                GM_log(`[${currentPlatform}] Аукцион уже открыт, данные отправлены`);
             }
-
-            document.body.removeChild(tempInput);
         }
 
         function getElementId(baseId) {
@@ -1104,14 +1161,14 @@
             titleTextElement.style.overflow = "hidden";
             titleTextElement.style.textOverflow = "ellipsis";
             titleTextElement.style.whiteSpace = "nowrap";
-            panelTitleElement.appendChild(titleTextElement);
+            panelTitleElement.appendChild(titleTextElement);  // <-- СНАЧАЛА titleTextElement
 
-            const copyButton = document.createElement("button");
-            copyButton.className = "copy-title-button";
-            copyButton.textContent = "Копировать";
-            copyButton.title = "Копировать название с суммой выкупа";
-            copyButton.addEventListener("click", copyTitleWithBuyout);
-            panelTitleElement.appendChild(copyButton);
+            const auctionButton = document.createElement("button");  // <-- ПОТОМ создаём кнопку
+            auctionButton.className = "copy-title-button";
+            auctionButton.textContent = "На аукцион";
+            auctionButton.title = "Отправить на сайт аукциона";
+            auctionButton.addEventListener("click", sendToAuction);
+            panelTitleElement.appendChild(auctionButton);  // <-- И ПОТОМ добавляем
 
             panelElement.appendChild(panelTitleElement);
 
