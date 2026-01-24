@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Draftmancer Card Rating Inspector
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5
 // @description  Locate all BoosterCard instances while drafting and display delta winrate from 17lands data
 // @homepage     https://greasyfork.org/scripts/545265
 // @supportURL   https://greasyfork.org/scripts/545265/feedback
@@ -30,6 +30,7 @@
 
     // Expansion mapping from page names to 17lands parameters
     const expansionMapping = {
+        "Lorwyn Eclipsed": "ECL",
         "Avatar: The Last Airbender": "TLA",
         "Through the Omenpaths": "OM1",
         "Edge of Eternities": "EOE",
@@ -71,6 +72,7 @@
     function inferExpansionsFromSetName(setString) {
         const s = (setString || '').toLowerCase();
         const inferred = new Set();
+        if (s == 'ecl') inferred.add('ECL');
         if (['tla', 'tle'].includes(s)) inferred.add('TLA');
         if (['om1', 'spm'].includes(s)) inferred.add('OM1');
         if (['eoe', 'eos'].includes(s)) inferred.add('EOE');

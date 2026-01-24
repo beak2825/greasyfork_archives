@@ -1,215 +1,168 @@
 // ==UserScript==
-// @name         全能流媒体 ID & 链接提取工具 (Ultimate v4.7)
+// @name         全能流媒体 ID & 链接提取工具 (Ultimate v4.9)
 // @namespace    http://tampermonkey.net/
-// @version      4.7
-// @description  优化 Catchplay 动态映射逻辑，支持悬浮窗位置长久记忆与顺滑 UI。
+// @version      4.9
+// @description  大幅增强站点识别率，支持主流中外流媒体平台，优化 Catchplay 映射逻辑。
 // @author       Gemini
-// @match        https://www.netflix.com/*
-// @match        https://www.disneyplus.com/*
-// @match        https://hamivideo.hinet.net/*
-// @match        https://video.friday.tw/*
-// @match        https://v.qq.com/*
-// @match        https://v.youku.com/*
-// @match        https://www.iqiyi.com/*
-// @match        https://www.mgtv.com/*
-// @match        https://nowplayer.now.com/*
-// @match        https://www.iq.com/*
-// @match        https://www.myvideo.net.tw/*
-// @match        https://www.mewatch.sg/*
-// @match        https://www.viu.com/*
-// @match        https://www.linetv.tw/*
-// @match        https://www.mytvsuper.com/*
-// @match        https://www.bilibili.com/*
-// @match        https://www.bilibili.tv/*
-// @match        https://wetv.vip/*
-// @match        https://www.miguvideo.com/*
-// @match        https://www.catchplay.com/*
+// @match        *://*.netflix.com/*
+// @match        *://*.disneyplus.com/*
+// @match        *://*.hamivideo.hinet.net/*
+// @match        *://*.video.friday.tw/*
+// @match        *://*.v.qq.com/*
+// @match        *://*.v.youku.com/*
+// @match        *://*.iqiyi.com/*
+// @match        *://*.mgtv.com/*
+// @match        *://*.nowplayer.now.com/*
+// @match        *://*.iq.com/*
+// @match        *://*.myvideo.net.tw/*
+// @match        *://*.mewatch.sg/*
+// @match        *://*.viu.com/*
+// @match        *://*.linetv.tw/*
+// @match        *://*.mytvsuper.com/*
+// @match        *://*.bilibili.com/*
+// @match        *://*.bilibili.tv/*
+// @match        *://*.wetv.vip/*
+// @match        *://*.miguvideo.com/*
+// @match        *://*.catchplay.com/*
 // @grant        GM_setClipboard
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @downloadURL https://update.greasyfork.org/scripts/563546/%E5%85%A8%E8%83%BD%E6%B5%81%E5%AA%92%E4%BD%93%20ID%20%20%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7%20%28Ultimate%20v47%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563546/%E5%85%A8%E8%83%BD%E6%B5%81%E5%AA%92%E4%BD%93%20ID%20%20%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7%20%28Ultimate%20v47%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563546/%E5%85%A8%E8%83%BD%E6%B5%81%E5%AA%92%E4%BD%93%20ID%20%20%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7%20%28Ultimate%20v49%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563546/%E5%85%A8%E8%83%BD%E6%B5%81%E5%AA%92%E4%BD%93%20ID%20%20%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7%20%28Ultimate%20v49%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    let lastUrl = location.href;
     let currentContent = '';
-    let lastSeasonText = '';
+    let lastPath = '';
 
-    // 1. 创建悬浮窗与样式初始化
+    // --- 1. UI 组件 ---
     const btn = document.createElement('div');
-    btn.id = 'media-id-fetcher';
-
-    // 从本地存储读取位置，默认右侧 150px
-    const savedTop = GM_getValue('btn_top', '150px');
-    const savedLeft = GM_getValue('btn_left', null);
-
-    Object.assign(btn.style, {
-        position: 'fixed',
-        top: savedTop,
-        left: savedLeft,
-        right: savedLeft ? 'auto' : '20px',
-        zIndex: '2147483647',
-        padding: '12px',
-        backgroundColor: 'rgba(25, 25, 25, 0.96)',
-        color: '#fff',
-        cursor: 'grab',
-        borderRadius: '14px',
-        fontWeight: 'bold',
-        boxShadow: '0 10px 40px rgba(0,0,0,0.7)',
-        fontSize: '13px',
-        border: '1px solid #444',
-        userSelect: 'none',
-        textAlign: 'center',
-        minWidth: '140px',
-        backdropFilter: 'blur(10px)',
-        transition: 'opacity 0.3s ease, transform 0.2s ease',
-        display: 'none',
-        opacity: '0'
-    });
-    document.body.appendChild(btn);
-
-    // 2. 拖拽逻辑 (严谨的位置记忆)
-    let isDragging = false;
-    let startX, startY, initialX, initialY;
-
-    const startDrag = (e) => {
-        if (e.button !== 0) return; // 仅左键点击可拖拽
-        isDragging = true;
-        btn.style.cursor = 'grabbing';
-        btn.style.transform = 'scale(1.05)';
-        startX = e.clientX; startY = e.clientY;
-        const rect = btn.getBoundingClientRect();
-        initialX = rect.left; initialY = rect.top;
-        window.addEventListener('pointermove', doDrag, {passive: true});
-        window.addEventListener('pointerup', stopDrag);
+    const initUI = () => {
+        const top = GM_getValue('btn_top', '150px');
+        const left = GM_getValue('btn_left', (window.innerWidth - 160) + 'px');
+        Object.assign(btn.style, {
+            position: 'fixed', top, left, zIndex: '2147483647',
+            padding: '12px', backgroundColor: 'rgba(20, 20, 20, 0.95)',
+            color: '#fff', cursor: 'grab', borderRadius: '14px',
+            border: '1px solid #444', textAlign: 'center', minWidth: '130px',
+            backdropFilter: 'blur(15px)', transition: 'opacity 0.3s',
+            display: 'none', opacity: '0', userSelect: 'none',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.5)', fontSize: '12px'
+        });
+        document.body.appendChild(btn);
     };
 
-    const doDrag = (e) => {
-        if (!isDragging) return;
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-        let newX = initialX + dx;
-        let newY = initialY + dy;
-        // 边界限制
-        newX = Math.max(0, Math.min(window.innerWidth - btn.offsetWidth, newX));
-        newY = Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, newY));
-        btn.style.left = newX + 'px';
-        btn.style.top = newY + 'px';
-        btn.style.right = 'auto';
-    };
+    // --- 2. 核心提取逻辑 (增强版) ---
+    const getID = () => {
+        const url = new URL(window.location.href);
+        const p = url.pathname;
+        const host = url.hostname;
+        const sp = url.searchParams;
 
-    const stopDrag = (e) => {
-        if (!isDragging) return;
-        isDragging = false;
-        btn.style.cursor = 'grab';
-        btn.style.transform = 'scale(1)';
-        GM_setValue('btn_top', btn.style.top);
-        GM_setValue('btn_left', btn.style.left);
-        window.removeEventListener('pointermove', doDrag);
-        window.removeEventListener('pointerup', stopDrag);
-        // 如果点击位移很小，视为点击动作触发复制
-        if (Math.sqrt(Math.pow(e.clientX - startX, 2) + Math.pow(e.clientY - startY, 2)) < 8) {
-            handleCopy();
-        }
-    };
-
-    btn.addEventListener('pointerdown', startDrag);
-
-    // 3. 数字转换工具
-    function parseSeasonNum(text) {
-        if (!text) return 1;
-        const sMatch = text.match(/S(\d+)/i);
-        if (sMatch) return parseInt(sMatch[1]);
-        const rMap = {'I':1, 'V':5, 'X':10, 'L':50};
-        const rMatch = text.match(/\b([IVXLCDM]+)\b$/i);
-        if (rMatch) {
-            let roman = rMatch[1].toUpperCase(), num = 0;
-            for (let i = 0; i < roman.length; i++) {
-                const curr = rMap[roman[i]], next = rMap[roman[i+1]];
-                if (next > curr) { num += (next - curr); i++; } else { num += curr; }
+        // --- 国际站 & 特殊规则 ---
+        if (host.includes('catchplay.com')) {
+            const m = p.match(/\/video\/([a-f0-9-]+)/);
+            if (!m) return null;
+            const el = document.querySelector('.sc-3a20c785-2, .iJaIlm');
+            if (el) {
+                const s = parseSeason(el.innerText);
+                const offset = s >= 11 ? ((s - 1) % 10) : (s - 1);
+                return offset > 0 ? `${m[1]}_${offset + 1}` : m[1];
             }
-            return num;
+            return m[1];
         }
+        if (host.includes('netflix.com')) return sp.get('jbv') || p.match(/\/title\/(\d+)/)?.[1];
+        if (host.includes('disneyplus.com')) return p.match(/(?:video|series)\/([^\/]+)/)?.[1] || p.match(/entity-[a-f0-9-]+/)?.[0];
+        if (host.includes('bilibili.com')) return p.match(/\/(ep\d+|ss\d+)/)?.[1] ? p.match(/\/(ep\d+|ss\d+)/)[1] + '_tv' : null;
+        if (host.includes('bilibili.tv')) return p.match(/\/play\/\d+\/(\d+)/)?.[1] ? 'ep' + p.match(/\/play\/\d+\/(\d+)/)[1] : null;
+
+        // --- 国内站 (多路径兼容) ---
+        if (host.includes('v.qq.com')) return p.match(/\/cover\/([^\/.]+)/)?.[1] || sp.get('id');
+        if (host.includes('iqiyi.com')) return p.match(/\/(v_[^\.]+)\.html/)?.[1] || sp.get('album_id');
+        if (host.includes('v.youku.com')) return p.match(/\/id_([^\.]+)\.html/)?.[1];
+        if (host.includes('mgtv.com')) return p.match(/\/[bc]\/(\d+)/)?.[1];
+        if (host.includes('wetv.vip')) return p.match(/\/play\/([a-z0-9]+)/i)?.[1];
+        if (host.includes('iq.com')) return p.match(/-([a-z0-9]+)$/i)?.[1] || sp.get('shameid');
+        
+        // --- 港台/东南亚站 ---
+        if (host.includes('linetv.tw')) return p.match(/\/drama\/(\d+)/)?.[1];
+        if (host.includes('mytvsuper.com')) return p.match(/_(\d+)\//)?.[1] || sp.get('programme_id');
+        if (host.includes('mewatch.sg')) return p.match(/-(\d+)$/)?.[1];
+        if (host.includes('now.com')) return sp.get('id') ? `${url.origin}${p}?id=${sp.get('id')}&type=${sp.get('type')}` : null;
+        
+        // --- 完整链接返回类 ---
+        const fullLinkSites = ['viu.com', 'myvideo.net.tw', 'hamivideo.hinet.net', 'video.friday.tw', 'miguvideo.com'];
+        if (fullLinkSites.some(s => host.includes(s)) && p.length > 5) return window.location.href;
+
+        return null;
+    };
+
+    function parseSeason(t) {
+        const m = t.match(/S(\d+)/i); if (m) return parseInt(m[1]);
+        const r = { I: 1, V: 5, X: 10, L: 50 };
+        const rm = t.match(/\b([IVX]+)\b$/i);
+        if (rm) return [...rm[1]].reduce((acc, c, i, a) => r[a[i+1]] > r[c] ? acc - r[c] : acc + r[c], 0);
         return 1;
     }
 
-    // 4. 提取逻辑
-    function getIdentifier() {
-        const url = new URL(window.location.href);
-        const path = url.pathname;
+    // --- 3. 交互与记忆 ---
+    let isDrag = false, sx, sy, ix, iy;
+    btn.onpointerdown = (e) => {
+        isDrag = true; sx = e.clientX; sy = e.clientY;
+        ix = btn.offsetLeft; iy = btn.offsetTop;
+        btn.style.cursor = 'grabbing';
+        window.onpointermove = (ev) => {
+            if (!isDrag) return;
+            const nx = Math.max(0, Math.min(window.innerWidth - btn.offsetWidth, ix + (ev.clientX - sx)));
+            const ny = Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, iy + (ev.clientY - sy)));
+            btn.style.left = nx + 'px'; btn.style.top = ny + 'px';
+        };
+        window.onpointerup = (ev) => {
+            isDrag = false; btn.style.cursor = 'grab';
+            GM_setValue('btn_top', btn.style.top); GM_setValue('btn_left', btn.style.left);
+            if (Math.hypot(ev.clientX - sx, ev.clientY - sy) < 6) copyAction();
+            window.onpointermove = null; window.onpointerup = null;
+        };
+    };
 
-        if (url.hostname.includes('catchplay.com')) {
-            const idMatch = path.match(/\/video\/([a-f0-9-]+)/);
-            if (idMatch) {
-                let uuid = idMatch[1];
-                // 增加对 iJaIlm 类的兼容
-                const seasonElem = document.querySelector('.sc-3a20c785-2, .iJaIlm');
-                if (seasonElem) {
-                    const text = seasonElem.innerText.trim();
-                    lastSeasonText = text;
-                    const currentS = parseSeasonNum(text);
-                    // 逻辑：每10季作为一个潜在的起始段落
-                    let baseSeason = currentS >= 11 ? Math.floor((currentS - 1) / 10) * 10 + 1 : 1;
-                    const offset = currentS - baseSeason;
-                    return offset > 0 ? `${uuid}_${offset + 1}` : uuid;
-                }
-                return uuid;
-            }
-        }
-
-        // 其他站点逻辑（保持简练）
-        if (url.hostname.includes('wetv.vip')) return path.match(/\/play\/([a-z0-9]+)/i)?.[1];
-        if (url.hostname.includes('miguvideo.com')) return path.match(/\/detail\/(\d+)/)?.[1];
-        if (url.hostname.includes('netflix.com')) return url.searchParams.get('jbv');
-        const fullLinks = ['viu.com', 'myvideo.net.tw', 'hamivideo.hinet.net', 'video.friday.tw'];
-        if (fullLinks.some(s => url.hostname.includes(s))) return window.location.href;
-        return null;
-    }
-
-    // 5. UI 逻辑与生命周期
-    function refreshUI() {
-        const content = getIdentifier();
-        if (content) {
-            if (content !== currentContent) {
-                currentContent = content;
-                const isUrl = content.startsWith('http');
-                let displayCode = isUrl ? (content.split('?')[0].split('/').filter(Boolean).pop()) : content;
-                if (displayCode && displayCode.length > 14) displayCode = displayCode.substring(0, 11) + '...';
-
-                btn.innerHTML = `<div style="margin-bottom:4px; font-size:11px; color:#aaa;">${isUrl ? '复制链接' : '复制 ID'}</div><code style="color:#ffd700; background:#000; padding:2px 6px; border-radius:4px; font-size:10px; display:inline-block; border: 1px solid #333;">${displayCode}</code>`;
-                btn.style.display = 'block';
-                setTimeout(() => { btn.style.opacity = '1'; }, 10);
-            }
-        } else {
-            btn.style.opacity = '0';
-            setTimeout(() => { if (!getIdentifier()) btn.style.display = 'none'; }, 300);
-            currentContent = '';
-        }
-    }
-
-    function handleCopy() {
+    const copyAction = () => {
         if (!currentContent) return;
         GM_setClipboard(currentContent);
-        const oldHTML = btn.innerHTML;
-        btn.innerHTML = '<div style="color:#00ff88; padding:5px 0;">✨ 已复制 ✨</div>';
-        btn.style.border = '1px solid #00ff88';
-        setTimeout(() => {
-            btn.innerHTML = oldHTML;
-            btn.style.border = '1px solid #555';
-        }, 1000);
-    }
+        const old = btn.innerHTML;
+        btn.innerHTML = '<div style="color:#00ff88; padding:4px;">✨ 已复制 ✨</div>';
+        setTimeout(() => btn.innerHTML = old, 1000);
+    };
 
-    // 定时监测：URL 变化或季数文本变化
-    setInterval(() => {
-        const currentSeasonText = document.querySelector('.sc-3a20c785-2, .iJaIlm')?.innerText || "";
-        if (lastUrl !== location.href || currentSeasonText !== lastSeasonText) {
-            lastUrl = location.href;
-            refreshUI();
+    const refresh = () => {
+        const id = getID();
+        if (id && id !== currentContent) {
+            currentContent = id;
+            let show = id.startsWith('http') ? '链接' : id;
+            if (show.length > 14) show = show.substring(0, 11) + '...';
+            btn.innerHTML = `<div style="color:#888;font-size:10px;margin-bottom:4px;">点击复制</div><code style="color:#ffd700;background:#000;padding:2px 6px;border-radius:4px;">${show}</code>`;
+            btn.style.display = 'block';
+            setTimeout(() => btn.style.opacity = '1', 50);
+        } else if (!id) {
+            btn.style.opacity = '0';
+            setTimeout(() => { if (!getID()) btn.style.display = 'none'; }, 300);
+            currentContent = '';
         }
-    }, 800);
+    };
 
-    refreshUI();
+    // --- 4. 监听与初始化 ---
+    initUI();
+    setInterval(() => {
+        if (lastPath !== location.href) {
+            lastPath = location.href;
+            refresh();
+        }
+    }, 1000);
+    
+    // 专门针对 Catchplay 这种动态切换 Tab 的处理
+    const obs = new MutationObserver(refresh);
+    obs.observe(document.body, { childList: true, subtree: true });
+    
+    setTimeout(refresh, 2000);
 })();

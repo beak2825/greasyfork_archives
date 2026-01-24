@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         CHUNITHM Song Search
-// @version      1.0
+// @version      1.1
 // @description  Adds search bar in main page and song records page
 // @author       Alanimdeo
 // @match        https://chunithm-net-eng.com/mobile/home*
@@ -95,7 +95,7 @@
     }
 
     const form = d.createElement("form");
-    const token = (d.cookie.split(";").find((e) => e.trim().startsWith("_t=")) || "").slice(3);
+    const token = (d.cookie.split(";").find((e) => e.trim().startsWith("_t=")) || "").split("=")[1];
     if (token === "") {
       alert("Error occured while searching.");
       return;

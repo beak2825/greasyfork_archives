@@ -207,12 +207,14 @@
 
     // 注册菜单命令：查看统计
     GM_registerMenuCommand('📊 查看拦截统计', () => {
-        const count = GM_getValue('blockCount', 0);
+        const total = GM_getValue('blockCount', 0);
+        const todayStr = new Date().toISOString().slice(0, 10);
+        const todayTotal = GM_getValue('blockCount_' + todayStr, 0);
         const target = GM_getValue('redirectTarget', DEFAULT_TARGET);
         const blacklist = getBlacklist();
         const themeMode = getThemeMode();
         const themeModeText = { auto: '跟随系统', light: '明亮模式', dark: '暗黑模式' }[themeMode];
-        alert(`累计拦截次数：${count}\n当前重定向目标：${target}\n黑名单网站数：${blacklist.length}\n当前主题：${themeModeText}`);
+        alert(`今日拦截次数：${todayTotal}\n累计拦截次数：${total}\n当前重定向目标：${target}\n黑名单网站数：${blacklist.length}\n当前主题：${themeModeText}`);
     });
 
     // 注册菜单命令：切换主题
@@ -237,8 +239,14 @@
     });
 
     // 更新拦截计数
-    const count = GM_getValue('blockCount', 0) + 1;
-    GM_setValue('blockCount', count);
+    const totalCount = GM_getValue('blockCount', 0) + 1;
+    GM_setValue('blockCount', totalCount);
+
+    // 更新今日计数
+    const today = new Date().toISOString().slice(0, 10);  // YYYY-MM-DD
+    const todayKey = 'blockCount_' + today;
+    const todayCount = GM_getValue(todayKey, 0) + 1;
+    GM_setValue(todayKey, todayCount);
 
     // 阻止原页面加载
     document.documentElement.innerHTML = '';
@@ -324,7 +332,7 @@
             <div class="icon">🛑</div>
             <div class="title">${randomTitle}</div>
             <div class="subtitle">${location.hostname}</div>
-            <div class="count">这是你第 <strong>${count}</strong> 次被拦截</div>
+            <div class="count">今日第 <strong>${todayCount}</strong> 次 / 累计第 <strong>${totalCount}</strong> 次被拦截</div>
             <div class="timer" id="countdown">${CONFIG.cooldown}</div>
             <div class="hint" id="hint">${CONFIG.cooldown}秒冷静期后做出你的选择</div>
             <div class="actions" id="actions">

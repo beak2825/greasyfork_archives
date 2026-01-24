@@ -133,7 +133,7 @@ const showToast = (message) => {
         'linear-gradient(138deg, #009EFFFF, #39FF4AFF)',
     };
     window.Toastify(toastConfig).showToast();
-  } catch {}
+  } catch (e){}
 };
 
 setTimeout(() => {

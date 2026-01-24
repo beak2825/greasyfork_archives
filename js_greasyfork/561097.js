@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         TGFC论坛WAP助手
 // @namespace    http://tampermonkey.net/
-// @version      0.5.7
-// @description  TGFC论坛WAP版增强：热门话题、关注话题、用户屏蔽、Tag标签、楼主高亮、快速链接、卡片式美化、Markdown渲染、URL参数自定义、静默引用
+// @version      0.5.8
+// @description  TGFC论坛WAP版增强：热门话题、关注话题、用户屏蔽、Tag标签、楼主高亮、快速链接、卡片式美化、Markdown渲染、URL参数自定义、静默引用、自动链接识别
 // @author       Heiren + AI
 // @match        https://wap.tgfcer.com/*
 // @match        https://club.tgfcer.com/wap/*
@@ -212,7 +212,7 @@
             window.GM_info = {
                 script: {
                     name: 'TGFC论坛WAP助手',
-                    version: '0.5.7'
+                    version: '0.5.8'
                 }
             };
         }
@@ -311,6 +311,7 @@
                 hideContent: cfg.hideContent !== false,
                 showBlockTip: cfg.showBlockTip !== false,
                 silentQuote: cfg.silentQuote === true,
+                autoLinkify: cfg.autoLinkify !== false,
                 pageWidth: cfg.pageWidth || defaultCfg.pageWidth,
                 bgColor: cfg.bgColor || defaultCfg.bgColor,
                 font: cfg.font || defaultCfg.font,
@@ -2337,6 +2338,11 @@
                 window.mdEnhancer.autoEnhanceAll();
             }
 
+            // 自动链接识别（在内容页将纯文本 URL 转为可点击链接）
+            if (cfg.autoLinkify && location.href.includes('action=thread')) {
+                autoLinkify();
+            }
+
             // 处理懒加载图片（wap.tgfcer.com 使用 jQuery Lazyload）
             // 将 data-original 的值设置到 src，使图片正常显示
             // 注意：如果图片是 http:// 而页面是 https://，需要在浏览器设置中允许"不安全内容"
@@ -2363,6 +2369,83 @@
                     img.style.display = 'none';
                     img.dataset.tgfcImgFixed = '1';
                 }
+            });
+        }
+
+        // 自动链接识别：将帖子内容中的纯文本 URL 转换为可点击链接
+        function autoLinkify() {
+            // URL 匹配正则：匹配 http:// 或 https:// 开头的链接
+            const urlRegex = /(https?:\/\/[^\s<>"'\]\)）】」》]+)/gi;
+
+            document.querySelectorAll('.message').forEach(msg => {
+                if (msg.dataset.tgfcLinkified) return;
+                msg.dataset.tgfcLinkified = '1';
+
+                // 使用 TreeWalker 遍历文本节点
+                const walker = document.createTreeWalker(
+                    msg,
+                    NodeFilter.SHOW_TEXT,
+                    {
+                        acceptNode: function (node) {
+                            // 跳过已经在链接内的文本
+                            if (node.parentElement.closest('a')) {
+                                return NodeFilter.FILTER_REJECT;
+                            }
+                            // 跳过脚本和样式标签内的文本
+                            if (node.parentElement.closest('script, style')) {
+                                return NodeFilter.FILTER_REJECT;
+                            }
+                            return NodeFilter.FILTER_ACCEPT;
+                        }
+                    },
+                    false
+                );
+
+                const textNodes = [];
+                let node;
+                while (node = walker.nextNode()) {
+                    if (urlRegex.test(node.textContent)) {
+                        textNodes.push(node);
+                    }
+                    urlRegex.lastIndex = 0; // 重置正则
+                }
+
+                // 替换文本节点中的 URL
+                textNodes.forEach(textNode => {
+                    const text = textNode.textContent;
+                    const parts = [];
+                    let lastIndex = 0;
+                    let match;
+
+                    urlRegex.lastIndex = 0;
+                    while ((match = urlRegex.exec(text)) !== null) {
+                        // 添加匹配前的文本
+                        if (match.index > lastIndex) {
+                            parts.push(document.createTextNode(text.substring(lastIndex, match.index)));
+                        }
+                        // 创建链接
+                        const link = document.createElement('a');
+                        link.href = match[1];
+                        link.textContent = match[1];
+                        link.target = '_blank';
+                        link.rel = 'noopener noreferrer';
+                        link.style.wordBreak = 'break-all'; // 防止长链接撑开布局
+                        parts.push(link);
+                        lastIndex = urlRegex.lastIndex;
+                    }
+
+                    // 添加剩余文本
+                    if (lastIndex < text.length) {
+                        parts.push(document.createTextNode(text.substring(lastIndex)));
+                    }
+
+                    // 用新节点替换原文本节点
+                    if (parts.length > 0) {
+                        const fragment = document.createDocumentFragment();
+                        parts.forEach(p => fragment.appendChild(p));
+                        textNode.parentNode.replaceChild(fragment, textNode);
+                    }
+                });
             });
         }
 
@@ -3418,7 +3501,7 @@
             const tagCount = Object.keys(cfg.highlighted || {}).length;
 
             p.innerHTML = `
-            <div style="text-align:center;font-size:14px;font-weight:bold;margin-bottom:6px">WAP助手设置 <span style="font-size:10px;color:#fff;font-weight:normal;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;margin-left:4px">v0.5.7</span></div>
+            <div style="text-align:center;font-size:14px;font-weight:bold;margin-bottom:6px">WAP助手设置 <span style="font-size:10px;color:#fff;font-weight:normal;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;margin-left:4px">v0.5.8</span></div>
             
             <div style="font-size:11px;line-height:1.4">
                 <!-- 屏蔽 ID -->
@@ -3472,6 +3555,14 @@
                     <div style="display:flex;align-items:center;gap:6px">
                         <input type="checkbox" id="tg-silent-quote" ${cfg.silentQuote ? 'checked' : ''} style="margin:0">
                         <label for="tg-silent-quote" style="font-size:10px;color:#666">静默引用 (引用回复时默认不通知对方)</label>
+                    </div>
+                </div>
+                
+                <!-- 自动链接开关 -->
+                <div style="margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #eee">
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <input type="checkbox" id="tg-auto-linkify" ${cfg.autoLinkify !== false ? 'checked' : ''} style="margin:0">
+                        <label for="tg-auto-linkify" style="font-size:10px;color:#666">自动链接 (自动识别帖子中的网址并转为可点击链接)</label>
                     </div>
                 </div>
                 
@@ -3710,6 +3801,7 @@
                 newCfg.blockedKeywords = kws;
                 newCfg.showBlockTip = showBlockTip;
                 newCfg.silentQuote = document.getElementById('tg-silent-quote').checked;
+                newCfg.autoLinkify = document.getElementById('tg-auto-linkify').checked;
                 newCfg.pageWidth = pageWidth;
                 newCfg.bgColor = bgColor;
                 newCfg.font = font;
@@ -3740,7 +3832,7 @@
         }
 
         function start() {
-            console.log('[TGFC WAP] v0.5.5 启动');
+            console.log('[TGFC WAP] v0.5.8 启动');
             GM_addStyle(css);
             applyDisplaySettings();
             applyUrlParams();

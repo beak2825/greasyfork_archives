@@ -3,7 +3,7 @@
 // @namespace    https://fanis.dev/userscripts
 // @author       Fanis Hatzidakis
 // @license      PolyForm-Internal-Use-1.0.0; https://polyformproject.org/licenses/internal-use/1.0.0/
-// @version      2.1.0
+// @version      2.2.0
 // @description  Tone down sensationalist titles via OpenAI API. Auto-detect + manual selectors, exclusions, per-domain configs, domain allow/deny, caching, Android-safe storage.
 // @match        *://*/*
 // @exclude      about:*
@@ -75,7 +75,8 @@
   const UI_ATTR = 'data-neutralizer-ui';
 
   // Available models with pricing
-  // Pricing source: https://openai.com/api/pricing/ (as of 2025-01-20)
+  // Pricing source: https://openai.com/api/pricing/ (verified 2026-01)
+  // Note: Priority tier (service_tier: 'priority') provides faster processing at no additional cost
   const MODEL_OPTIONS = {
     'gpt-5-nano': {
       name: 'GPT-5 Nano',
@@ -99,8 +100,8 @@
       name: 'GPT-4.1 Nano Priority',
       apiModel: 'gpt-4.1-nano',
       description: 'Fast processing, affordable - Best for headlines',
-      inputPer1M: 0.20,
-      outputPer1M: 0.80,
+      inputPer1M: 0.10,
+      outputPer1M: 0.40,
       recommended: true,
       priority: true
     },
@@ -108,8 +109,8 @@
       name: 'GPT-5 Mini Priority',
       apiModel: 'gpt-5-mini',
       description: 'Better quality + faster processing',
-      inputPer1M: 0.45,
-      outputPer1M: 3.60,
+      inputPer1M: 0.25,
+      outputPer1M: 2.00,
       recommended: false,
       priority: true
     },
@@ -117,8 +118,8 @@
       name: 'GPT-5.2 Priority',
       apiModel: 'gpt-5.2',
       description: 'Premium quality + fastest processing (most expensive)',
-      inputPer1M: 2.50,
-      outputPer1M: 20.00,
+      inputPer1M: 1.75,
+      outputPer1M: 14.00,
       recommended: false,
       priority: true
     }
@@ -173,12 +174,12 @@
     ancestors: ['footer', 'nav', 'aside', '[role="navigation"]', '.breadcrumbs', '[aria-label*="breadcrumb" i]']
   };
 
-  // Default API pricing (gpt-4.1-nano-priority as of January 2025)
+  // Default API pricing (gpt-4.1-nano-priority, verified January 2026)
   const DEFAULT_PRICING = {
     model: 'GPT-4.1 Nano Priority',
-    inputPer1M: 0.20,    // USD per 1M input tokens
-    outputPer1M: 0.80,   // USD per 1M output tokens
-    lastUpdated: '2025-01-20',
+    inputPer1M: 0.10,    // USD per 1M input tokens
+    outputPer1M: 0.40,   // USD per 1M output tokens
+    lastUpdated: '2026-01-23',
     source: 'https://openai.com/api/pricing/'
   };
 
@@ -686,15 +687,6 @@
   }
 
   /**
-   * Reset pricing to defaults
-   */
-  async function resetPricingToDefaults(storage) {
-    PRICING = { ...DEFAULT_PRICING };
-    await storage.set(STORAGE_KEYS.PRICING, JSON.stringify(PRICING));
-    log('Pricing reset to defaults');
-  }
-
-  /**
    * API request headers
    */
   function apiHeaders(key) {
@@ -850,7 +842,6 @@
     extractOutputText: extractOutputText,
     initApiTracking: initApiTracking,
     resetApiTokens: resetApiTokens,
-    resetPricingToDefaults: resetPricingToDefaults,
     rewriteBatch: rewriteBatch,
     updateApiTokens: updateApiTokens,
     updatePricing: updatePricing,
@@ -1636,110 +1627,6 @@
     wrap.addEventListener('click', e => { if (e.target === wrap) close(); });
     shadow.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 
-    wrap.setAttribute('tabindex', '-1');
-    wrap.focus();
-  }
-
-  /**
-   * Show API pricing configuration dialog
-   */
-  function openPricingDialog(storage, PRICING, updatePricing, resetPricingToDefaults, openInfo) {
-    const host = document.createElement('div');
-    host.setAttribute(UI_ATTR, '');
-    const shadow = host.attachShadow({ mode: 'open' });
-    const style = document.createElement('style');
-    style.textContent = `
-    .wrap{position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.55);
-          display:flex;align-items:center;justify-content:center}
-    .modal{background:#fff;max-width:520px;width:92%;border-radius:10px;
-           box-shadow:0 10px 40px rgba(0,0,0,.35);padding:20px;box-sizing:border-box}
-    .modal h3{margin:0 0 16px;font:600 16px/1.2 system-ui,sans-serif}
-    .modal p{margin:0 0 12px;font:13px/1.5 system-ui,sans-serif;color:#666}
-    .modal .info{background:#f8f9fa;padding:12px;border-radius:6px;margin:12px 0;font-size:12px;color:#444}
-    .modal .info a{color:#1a73e8;text-decoration:none}
-    .modal .info a:hover{text-decoration:underline}
-    .form-group{margin:16px 0}
-    .form-group label{display:block;margin-bottom:6px;font:600 13px system-ui,sans-serif;color:#333}
-    .form-group input{width:100%;padding:10px;border:2px solid #d0d0d0;border-radius:6px;
-                      font:14px system-ui,sans-serif;box-sizing:border-box}
-    .form-group input:focus{outline:none;border-color:#1a73e8}
-    .form-group .hint{margin-top:4px;font-size:11px;color:#666}
-    .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
-    .btn{padding:10px 16px;border-radius:6px;border:none;font:600 13px system-ui,sans-serif;
-         cursor:pointer;transition:all 0.15s ease}
-    .btn.primary{background:#1a73e8;color:#fff}
-    .btn.primary:hover{background:#1557b0}
-    .btn.secondary{background:#e8eaed;color:#1a1a1a}
-    .btn.secondary:hover{background:#dadce0}
-    .btn:disabled{opacity:0.5;cursor:not-allowed}
-  `;
-    const wrap = document.createElement('div');
-    wrap.className = 'wrap';
-
-    wrap.innerHTML = `
-    <div class="modal" role="dialog" aria-modal="true" aria-label="API Pricing Configuration">
-      <h3>API Pricing Configuration</h3>
-      <p>Update pricing if OpenAI changes their rates. Current model: ${PRICING.model}</p>
-      <div class="info">
-        Last updated: ${PRICING.lastUpdated}<br>
-        Source: <a href="${PRICING.source}" target="_blank">OpenAI Pricing Page</a>
-      </div>
-      <div class="form-group">
-        <label for="inputPrice">Input tokens (per 1M tokens)</label>
-        <input type="number" id="inputPrice" step="0.01" min="0" value="${PRICING.inputPer1M}">
-        <div class="hint">USD per 1 million input tokens</div>
-      </div>
-      <div class="form-group">
-        <label for="outputPrice">Output tokens (per 1M tokens)</label>
-        <input type="number" id="outputPrice" step="0.01" min="0" value="${PRICING.outputPer1M}">
-        <div class="hint">USD per 1 million output tokens</div>
-      </div>
-      <div class="actions">
-        <button class="btn secondary reset">Reset to Defaults</button>
-        <button class="btn secondary cancel">Cancel</button>
-        <button class="btn primary save">Save</button>
-      </div>
-    </div>`;
-
-    shadow.append(style, wrap);
-    document.body.appendChild(host);
-    const close = () => host.remove();
-
-    const inputEl = shadow.querySelector('#inputPrice');
-    const outputEl = shadow.querySelector('#outputPrice');
-    const btnSave = shadow.querySelector('.save');
-    const btnCancel = shadow.querySelector('.cancel');
-    const btnReset = shadow.querySelector('.reset');
-
-    btnSave.addEventListener('click', async () => {
-      const inputPrice = parseFloat(inputEl.value);
-      const outputPrice = parseFloat(outputEl.value);
-
-      if (isNaN(inputPrice) || inputPrice < 0 || isNaN(outputPrice) || outputPrice < 0) {
-        alert('Please enter valid positive numbers');
-        return;
-      }
-
-      await updatePricing(storage, {
-        inputPer1M: inputPrice,
-        outputPer1M: outputPrice
-      });
-
-      openInfo(`Pricing updated!\nInput: $${inputPrice}/1M tokens\nOutput: $${outputPrice}/1M tokens`);
-      close();
-    });
-
-    btnReset.addEventListener('click', async () => {
-      if (confirm('Reset pricing to GPT-4.1 Nano Priority defaults ($0.20 input, $0.80 output per 1M tokens)?')) {
-        await resetPricingToDefaults(storage);
-        openInfo('Pricing reset to defaults (GPT-4.1 Nano Priority: $0.20 input, $0.80 output per 1M tokens)');
-        close();
-      }
-    });
-
-    btnCancel.addEventListener('click', close);
-    wrap.addEventListener('click', e => { if (e.target === wrap) close(); });
-    shadow.addEventListener('keydown', e => { if (e.key === 'Escape') { e.preventDefault(); close(); } });
     wrap.setAttribute('tabindex', '-1');
     wrap.focus();
   }
@@ -2729,7 +2616,7 @@
   // @namespace    https://fanis.dev/userscripts
   // @author       Fanis Hatzidakis
   // @license      PolyForm-Internal-Use-1.0.0; https://polyformproject.org/licenses/internal-use/1.0.0/
-  // @version      2.1.0
+  // @version      2.2.0
   // @description  Tone down sensationalist titles via OpenAI API. Auto-detect + manual selectors, exclusions, per-domain configs, domain allow/deny, caching, Android-safe storage.
   // @match        *://*/*
   // @exclude      about:*
@@ -3035,7 +2922,6 @@
       });
     });
     GM_registerMenuCommand?.(`AI model (${MODEL_OPTIONS[CFG.model]?.name || CFG.model})`, () => openModelSelectionDialog(storage, CFG.model, setModel));
-    GM_registerMenuCommand?.('Configure API pricing', () => openPricingDialog(storage, PRICING, updatePricing, resetPricingToDefaults, openInfo));
 
     GM_registerMenuCommand?.('Edit GLOBAL target selectors', () => {
       openEditor({

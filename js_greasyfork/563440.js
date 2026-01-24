@@ -3,7 +3,7 @@
 // @name:zh-CN   Google AI Studio | 优化工具 - Dae
 // @name:en      Google AI Studio | Enhancement tool - Dae
 // @namespace    https://space.bilibili.com/261168982
-// @version      1.0.5
+// @version      1.0.6
 // @description  Google AI Studio 增强插件。集成一键清空聊天、自动选择提示词、长文本转文件、滚动导航及引用文本等人性化功能。
 // @description:en  Enhancement tool for Google AI Studio. Features one-click chat clearing, auto-applying system instructions, long text-to-file conversion, scroll navigation, and selection quotes. Fully customizable via a gear-icon settings panel.
 // @author       Dae & Gemini
@@ -66,6 +66,10 @@
         // === 2. 增强功能 (Enhancements) ===
         // 自动配置系统指令
         autoSystemInstructionName: GM_getValue('autoSystemInstructionName', '__DISABLED__'),
+
+        // 工具栏快速指令选择器
+        enableToolbarInstructionPicker: GM_getValue('enableToolbarInstructionPicker', false),
+        toolbarSelectedInstruction: GM_getValue('toolbarSelectedInstruction', '__DISABLED__'),
     
         // 2. 存储抓取到的指令列表 (默认空数组)
         savedSystemInstructions: GM_getValue('savedSystemInstructions', []),
@@ -116,7 +120,7 @@
         lbl_model_color:            ['为模型增加底色', 'Add Background for Model'],
 
         lbl_bold_fix:               ['修复粗体Markdown', 'Fix Bold Markdown'],
-        tip_bold_fix:               ['在视觉上修复“**”粗体Markdown与引号等符号连用时的粗体失效问题。', 'Visually fix bold failure when "**" bold Markdown is used with quotation marks and other symbols.'],
+        tip_bold_fix:               ['在视觉上修复“”粗体Markdown与引号等符号连用时的粗体失效问题。', 'Visually fix bold failure when "" bold Markdown is used with quotation marks and other symbols.'],
 
         lbl_hide_feedback:          ['隐藏点赞/点踩按钮', 'Hide Feedback Buttons'],
         lbl_disclaimer:             ['隐藏底部的免责声明', 'Hide Hallucination Disclaimer'],
@@ -146,6 +150,9 @@
         val_off:                    ['关闭', 'Off'],
         val_empty_list:             ['列表为空，请创建一个系统指令\n(初次请手动打开一次提示词面板以读取)', 'List empty, please create an instruction\n(Please manually dropdown the instruction list once to load it on first use.)'],
         lbl_auto_instruction_mode:  ['自动应用系统指令', 'Auto-Apply System Instruction'],        tip_auto_instruction_mode:  ['选择在新建聊天时自动应用的指令。', 'Select the instruction to auto-apply.'],
+        // 工具栏指令选择器
+        lbl_toolbar_instruction_picker: ['启用工具栏指令选择器', 'Enable Toolbar Instruction Picker'],
+        tip_toolbar_instruction_picker: ['在编辑器工具栏添加快速切换指令的下拉框。', 'Add a quick instruction switcher dropdown in the editor toolbar.'],
 
         lbl_quote:                  ['启用“划词引用”功能', 'Enable Text Selection Quote'],
         tip_quote:                  ['选中文本后显示“引用”浮窗，点击可将内容及作者格式化后插入输入框。', 'Show a floating button upon text selection to insert formatted quotes.'],
@@ -232,7 +239,7 @@
         return text.split('').join('\u200B');
     }
 
-    // 界面文本热更新函数 (核心)
+    // 界面文本热更新函数
     function updateAllInterfaceText() {
         // 1. 查找所有带有 data-i18n-key 属性的元素
         const elements = document.querySelectorAll('[data-i18n-key]');
@@ -291,7 +298,7 @@
     // 用于在移动端侧边栏关闭（DOM元素不可见）时，依然记住上次检测到的搜索开启状态
     let cachedGoogleSearchState = GM_getValue('cachedGoogleSearchState', false);
 
-    // 核心同步函数：尝试从当前 DOM 中更新搜索状态
+    // 尝试从当前 DOM 中更新搜索状态
     // 策略：只在能明确找到 UI 元素时才更新状态，找不到时保持“上次已知状态”
     function updateGoogleSearchState() {
         let newState = null;
@@ -1528,7 +1535,7 @@
         .dae-slider-input::-webkit-slider-thumb,
         .dae-alpha-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            margin-top: -5px; /* 居中核心：(4-14)/2 */
+            margin-top: -5px;
             width: 14px;
             height: 14px;
             border-radius: 50%;
@@ -1538,7 +1545,7 @@
             background: light-dark(#747775, #a8a8a8); /* 统一默认颜色 */
         }
 
-        /* [核心增强] 统一交互逻辑：悬停时两者的滑块都会缩放并变蓝 */
+        /* 统一交互逻辑：悬停时两者的滑块都会缩放并变蓝 */
         .dae-slider-input::-webkit-slider-thumb:hover,
         .dae-alpha-slider::-webkit-slider-thumb:hover {
             transform: scale(1.25); /* 稍微加大一点点，回馈感更强 */
@@ -1827,7 +1834,7 @@
             padding: 4px;
             min-width: 160px;
             /* 强制高度约束：6行完整高度 */
-            max-height: 234px !important; 
+            max-height: 228px !important; 
             overflow-y: auto;
             opacity: 0;
             transform: scale(0.95) translateY(-5px);
@@ -1897,7 +1904,7 @@
             cursor: default;     /* 鼠标变回默认箭头 */
             opacity: 0.5;        /* 半透明 */
             font-style: italic;  /* 斜体提示 */
-            pointer-events: none; /* [核心] 禁止一切鼠标交互(包括hover和click) */
+            pointer-events: none; /* 禁止一切鼠标交互(包括hover和click) */
         }
 
         /* 默认隐藏模型搜索框的清除按钮 */
@@ -2233,7 +2240,7 @@
             // 状态检查
             if (container.hasAttribute(PROCESSED_FLAG)) {
                 // 如果内容没变且已经处理过，跳过
-                if (!container.textContent.includes('**')) return;
+                if (!container.textContent.includes('')) return;
             }
             
             container.setAttribute(PROCESSED_FLAG, 'true');
@@ -2248,7 +2255,7 @@
                 if (textNode.parentElement?.closest('code, pre, .inline-code')) continue;
                 
                 const content = textNode.nodeValue;
-                if (content.includes('**')) {
+                if (content.includes('')) {
                     tasks.push(textNode);
                 }
             }
@@ -2256,7 +2263,7 @@
             // 2. 变换阶段 (从后往前替换，保证节点索引安全)
             tasks.forEach(node => {
                 const rawText = node.nodeValue;
-                // 核心正则：匹配加粗语法
+                // 匹配加粗语法
                 const regex = /\*\*([\s\S]+?)\*\*/g;
                 
                 let hasMatch = false;
@@ -2306,7 +2313,7 @@
         
         // 寻找我们的新类名
         document.querySelectorAll('strong.md-bold-fix').forEach(el => {
-            el.replaceWith(document.createTextNode(`**${el.textContent}**`));
+            el.replaceWith(document.createTextNode(`${el.textContent}`));
         });
 
         // 移除新标记
@@ -3145,7 +3152,22 @@
               action: () => updateApiKeyVisibility() },
 
             { type: 'header', label: 'settings_group_func' },
-            
+
+            // 工具栏指令选择器开关
+            { 
+                key: 'enableToolbarInstructionPicker', 
+                label: 'lbl_toolbar_instruction_picker', 
+                tooltip: 'tip_toolbar_instruction_picker',
+                action: () => {
+                    GM_setValue('enableToolbarInstructionPicker', activeSettings.enableToolbarInstructionPicker);
+                    if (activeSettings.enableToolbarInstructionPicker) {
+                        injectToolbarInstructionPicker();
+                    } else {
+                        removeToolbarInstructionPicker();
+                    }
+                }
+            },
+
             // === 自动指令配置 (下拉菜单版) ===
             { 
                 key: 'autoSystemInstructionName', 
@@ -3586,7 +3608,7 @@
                     let width = rect.width;
                     // 预估高度算法，与 CSS 的 6 行限制保持同步
                     // 36px(高) + 2px(间距) = 38px，最后补足容器 Padding
-                    const estimatedHeight = Math.min(currentOptions.length * 38 + 8, 234); 
+                    const estimatedHeight = Math.min(currentOptions.length * 38 + 8, 228); 
 
                     if (top + estimatedHeight > window.innerHeight) {
                         top = rect.top - estimatedHeight - 4;
@@ -3731,8 +3753,15 @@
             // 回滚字体大小
             updateFontSize();
             if(!activeSettings.enableQuote) hideQuoteBtn();
+
+            // 先强制移除当前可能已存在的选择器（防止状态残留）
+            removeToolbarInstructionPicker();
+            // 根据回滚后的先前状态，决定是否重新注入
+            if (activeSettings.enableToolbarInstructionPicker) {
+                injectToolbarInstructionPicker();
+            }
             
-            // 根据回滚后的状态，决定是运行还是还原
+            // 根据回滚后的状态，决定是运行还是还原直链
             if (activeSettings.enableDirectLinks) {
                 LinkSanitizer.run();
             } else {
@@ -4266,7 +4295,7 @@
     let lastPositionSide = 'bottom'; // 记录上一次是在'top'还是'bottom'
     let flipTimer = null;            // 动画计时器
 
-    // --- 核心位置计算函数 (每帧都会调用) ---
+    // --- 位置计算函数 ---
     function updateQuoteBtnPosition(isInit = false) { // isInit 参数
         if (!quoteBtn || !activeRange) return;
 
@@ -4890,7 +4919,7 @@
             let minTop = Infinity;
             let foundText = false;
 
-            // --- 核心逻辑：遍历选区内的所有文本节点 ---
+            // --- 遍历选区内的所有文本节点 ---
             // 这样可以避开"整行选择"时包含的右侧空白区域，只计算文字的实际墨迹范围
 
             // 确定遍历的根节点 (如果选区在一个文本节点内，取其父元素)
@@ -4964,7 +4993,6 @@
             quoteBtn.style.left = `${left}px`;
         }
 
-        // --- 核心变更 ---
         // 1.  锁定当前选区 Range 对象
         activeRange = selection.getRangeAt(0).cloneRange();
 
@@ -5074,7 +5102,6 @@
         // 2. 如果抓取到的是模型
         else if (author === '模型' || author === 'Model') {
             // 根据当前优化工具的语言设置显示对应文本
-            // (注意：这里直接判断 CURRENT_LANG，避免你去修改庞大的配置表)
             finalAuthor = (typeof CURRENT_LANG !== 'undefined' && CURRENT_LANG === 'en') ? 'Model' : '模型';
         }
 
@@ -5221,9 +5248,9 @@
             // 简单判断当前界面语言环境，或者直接追加多语言版本
             // 这里我们用一个比较通用的逻辑：如果缓存状态是开的，就追加
             if (CURRENT_LANG === 'zh') {
-                return '\n\n---\n**（结合联网搜索）**';
+                return '\n\n---\n（结合联网搜索）';
             } else {
-                return '\n\n---\n**(Combined with web search)**';
+                return '\n\n---\n(Combined with web search)';
             }
         };
 
@@ -5280,6 +5307,471 @@
             const btn = e.target.closest('button[aria-label="发送"]') || e.target.closest('ms-run-button');
             if (btn) handleInjection();
         }, true); 
+    }
+
+    // --- 工具栏指令选择器注入逻辑 ---
+    function injectToolbarInstructionPicker() {
+        if (!activeSettings.enableToolbarInstructionPicker) return;
+        
+        // 检测比较模式
+        const chatContainers = document.querySelectorAll('.chat-view-container.side-by-side');
+        if (chatContainers.length >= 2) {
+            removeToolbarInstructionPicker();
+            return;
+        }
+
+        const toolbar = document.querySelector('ms-chunk-editor ms-toolbar');
+        if (!toolbar) return;
+
+        const leftSection = toolbar.querySelector('.toolbar-left') || toolbar.querySelector('div[class*="left"]');
+        const toolbarContainer = toolbar.querySelector('div') || toolbar;
+
+        // --- [防分身第一道防线] ---
+        // 严格检查 ID，如果已存在，直接通过 updateLayout 刷新位置，然后退出
+        const existingWrapper = document.getElementById('dae-toolbar-instruction-picker');
+        if (existingWrapper) {
+            // 如果已经在 DOM 中，尝试调用挂载在 DOM 上的更新方法（如果有）
+            if (existingWrapper._daeUpdateLayout) {
+                existingWrapper._daeUpdateLayout();
+            }
+            return;
+        }
+
+        // --- [防分身第二道防线] ---
+        // 扫描是否有“游离”的或“ID不对”的克隆体（通过类名识别），全部清理
+        const ghosts = toolbarContainer.querySelectorAll('.dae-select-trigger');
+        if (ghosts.length > 0) {
+            console.warn('[Gemini 优化] 发现残留克隆体，执行清理...');
+            ghosts.forEach(el => {
+                const parent = el.closest('#dae-toolbar-instruction-picker') || el.parentElement;
+                if (parent) parent.remove();
+            });
+        }
+
+        // --- 开始创建 ---
+        const pickerWrapper = document.createElement('div');
+        pickerWrapper.id = 'dae-toolbar-instruction-picker';
+        
+        // 创建触发器按钮
+        const triggerBtn = document.createElement('div');
+        triggerBtn.className = 'dae-select-trigger notranslate';
+        triggerBtn.setAttribute('data-no-translate', '1');
+
+        const getCurrentLabel = () => {
+            const currentVal = activeSettings.toolbarSelectedInstruction;
+            const list = activeSettings.savedSystemInstructions || [];
+            if (currentVal === '__DISABLED__' || !currentVal) return t('val_disabled');
+            if (list.length === 0) return t('val_empty_list');
+            return currentVal;
+        };
+
+        triggerBtn.innerHTML = `
+            <span class="dae-select-value">${protect(getCurrentLabel())}</span>
+            <span class="material-symbols-outlined dae-select-arrow">keyboard_arrow_down</span>
+        `;
+
+        let dropdownEl = null;
+
+        const closeDropdown = () => {
+            if (dropdownEl) {
+                dropdownEl.classList.remove('visible');
+                triggerBtn.classList.remove('active');
+                setTimeout(() => {
+                    if (dropdownEl && dropdownEl.parentNode) dropdownEl.remove();
+                    dropdownEl = null;
+                }, 150);
+            }
+            document.removeEventListener('click', onClickOutside);
+        };
+
+        const onClickOutside = (e) => {
+            if (dropdownEl && !dropdownEl.contains(e.target) && !triggerBtn.contains(e.target)) {
+                closeDropdown();
+            }
+        };
+
+        const openDropdown = () => {
+            if (dropdownEl) {
+                closeDropdown();
+                return;
+            }
+
+            const list = activeSettings.savedSystemInstructions || [];
+            const currentVal = activeSettings.toolbarSelectedInstruction;
+            // 读取暂存的精确索引（如果用户手动点击过）
+            const exactIndex = window._daeActiveInstructionIndex; 
+
+            // 构建选项列表，同时保留原始索引信息
+            let options = [];
+            if (list.length === 0) {
+                options.push({ val: '', label: 'val_empty_list', isDisabled: true, realIndex: -1 });
+            } else {
+                if (currentVal !== '__DISABLED__') {
+                    options.push({ val: '__DISABLED__', label: 'val_off', realIndex: -1 });
+                }
+                list.forEach((name, idx) => {
+                    options.push({ val: name, label: name, realIndex: idx });
+                });
+            }
+
+            dropdownEl = document.createElement('div');
+            dropdownEl.className = 'dae-select-dropdown notranslate';
+            dropdownEl.setAttribute('translate', 'no');
+            dropdownEl.setAttribute('data-no-translate', '1');
+
+            // [逻辑修复] 智能判定哪个该高亮
+            // 策略：如果有精确索引，且名字匹配，则匹配索引。
+            // 否则（如刷新后），只匹配第一个发现的同名项，防止多选尴尬。
+            let hasHighlighted = false;
+
+            options.forEach(opt => {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'dae-select-option';
+                optionEl.textContent = protect(t(opt.label));
+
+                if (opt.isDisabled) {
+                    optionEl.classList.add('disabled-option');
+                } else {
+                    let isSelected = false;
+
+                    // 1. 名字必须匹配
+                    if (currentVal === opt.val) {
+                        // 2. 如果是“关闭”选项，直接匹配
+                        if (opt.val === '__DISABLED__') {
+                            isSelected = true;
+                        } 
+                        // 3. 如果有精确索引记录，必须索引也匹配
+                        else if (exactIndex !== undefined && exactIndex !== null && exactIndex >= 0) {
+                            if (opt.realIndex === exactIndex) isSelected = true;
+                        } 
+                        // 4. 如果没有精确索引（被动同步），则只高亮第一个匹配项 (防止 duplicate 高亮)
+                        else if (!hasHighlighted) {
+                            isSelected = true;
+                        }
+                    }
+
+                    if (isSelected) {
+                        optionEl.classList.add('selected');
+                        hasHighlighted = true; // 标记已找到高亮，后续同名项不再高亮
+                    }
+
+                    optionEl.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        
+                        // 点击后立即加锁 1500ms
+                        ignoreNativeSyncTimestamp = Date.now() + 1500;
+
+                        const newVal = opt.val;
+                        activeSettings.toolbarSelectedInstruction = newVal;
+                        GM_setValue('toolbarSelectedInstruction', newVal);
+
+                        // 记录精确索引，以便下次打开菜单时能高亮正确的那个
+                        window._daeActiveInstructionIndex = opt.realIndex;
+
+                        let newLabel = opt.label;
+                        if (newVal === '__DISABLED__') {
+                            newLabel = 'val_disabled';
+                        }
+                        triggerBtn.querySelector('.dae-select-value').textContent = protect(t(newLabel));
+
+                        closeDropdown();
+
+                        if (newVal === '__DISABLED__') {
+                            console.log('[Gemini 优化] 工具栏选择器：选择"关闭"，应用第一项指令');
+                            // 关闭时不需要传递索引，内部逻辑通过 ID 判断
+                            await applyInstructionFromToolbar('__SELECT_FIRST__'); 
+                        } else {
+                            // [关键修复] 传递 realIndex 给执行函数
+                            console.log(`[Gemini 优化] 工具栏选择器：正在应用指令 "${newVal}" (Index: ${opt.realIndex})`);
+                            await applyInstructionFromToolbar(newVal, opt.realIndex);
+                        }
+                    });
+                }
+                dropdownEl.appendChild(optionEl);
+            });
+
+            document.body.appendChild(dropdownEl);
+
+            // 定位逻辑
+            const rect = triggerBtn.getBoundingClientRect();
+            let top = rect.bottom + 4;
+            let left = rect.left;
+            const estimatedHeight = Math.min(options.length * 38 + 8, 228);
+
+            if (top + estimatedHeight > window.innerHeight) {
+                top = rect.top - estimatedHeight - 4;
+                dropdownEl.style.transformOrigin = 'bottom center';
+            } else {
+                dropdownEl.style.transformOrigin = 'top center';
+            }
+
+            dropdownEl.style.top = `${top}px`;
+            dropdownEl.style.left = `${left}px`;
+            dropdownEl.style.minWidth = `${rect.width}px`;
+
+            triggerBtn.classList.add('active');
+            requestAnimationFrame(() => dropdownEl.classList.add('visible'));
+            setTimeout(() => document.addEventListener('click', onClickOutside), 0);
+        };
+
+        triggerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openDropdown();
+        });
+
+        // 注册到全局清理器
+        if (!window._daeDropdownCleaners) window._daeDropdownCleaners = [];
+        window._daeDropdownCleaners.push(closeDropdown);
+
+        pickerWrapper.appendChild(triggerBtn);
+
+        // --- 智能布局引擎 ---
+        const updateLayout = () => {
+            // [安全检查] 如果容器被销毁了，停止更新
+            if (!toolbarContainer.isConnected) return;
+
+            const isMobile = window.innerWidth < 768;
+            let useFlexMode = isMobile;
+
+            if (!isMobile) {
+                const containerRect = toolbarContainer.getBoundingClientRect();
+                const center = containerRect.left + (containerRect.width / 2);
+                const halfWidth = 90; 
+                
+                const leftRect = leftSection ? leftSection.getBoundingClientRect() : { right: 0 };
+                const rightSection = toolbar.querySelector('.toolbar-right') || toolbar.querySelector('div[class*="right"]');
+                const rightRect = rightSection ? rightSection.getBoundingClientRect() : { left: Infinity };
+
+                if (leftRect.right > (center - halfWidth) || rightRect.left < (center + halfWidth)) {
+                    useFlexMode = true;
+                }
+            }
+
+            let pc_width = '200px';
+            let mobile_width = '135px';
+
+            if (useFlexMode) {
+                // === Flex / Mobile / 拥挤模式 ===
+                Object.assign(pickerWrapper.style, {
+                    position: 'static', transform: 'none', left: 'auto',
+                    display: 'flex', justifyContent: 'center', alignItems: 'center',
+                    flex: '100', minWidth: '0', margin: '0 4px', zIndex: '1'
+                });
+                triggerBtn.style.width = isMobile ? mobile_width : pc_width;
+                triggerBtn.style.maxWidth = '100%';
+
+                // [防抖动移动] 只有位置不对时才移动 DOM，避免触发 MutationObserver 循环
+                if (leftSection && leftSection.nextSibling !== pickerWrapper) {
+                    leftSection.after(pickerWrapper);
+                } else if (!leftSection && toolbarContainer.firstElementChild !== pickerWrapper) {
+                    toolbarContainer.prepend(pickerWrapper);
+                }
+            } else {
+                // === Absolute / PC / 宽敞模式 ===
+                Object.assign(pickerWrapper.style, {
+                    position: 'absolute', left: '50%', transform: 'translateX(-50%)',
+                    display: 'inline-flex', justifyContent: 'normal', alignItems: 'center',
+                    flex: 'none', minWidth: 'auto', margin: '0', zIndex: '10'
+                });
+                triggerBtn.style.width = pc_width;
+                triggerBtn.style.maxWidth = 'none';
+
+                // [防抖动移动]
+                if (toolbarContainer.lastElementChild !== pickerWrapper) {
+                    toolbarContainer.appendChild(pickerWrapper);
+                }
+            }
+        };
+        
+        // 将 updateLayout 挂载到 DOM 元素上，供外部调用（防止重复注入）
+        pickerWrapper._daeUpdateLayout = updateLayout;
+
+        // 初次布局
+        updateLayout();
+
+        // 启动专用 ResizeObserver
+        if (!window._daeToolbarResizeObserver) {
+            window._daeToolbarResizeObserver = new ResizeObserver(() => {
+                const wrapper = document.getElementById('dae-toolbar-instruction-picker');
+                if (wrapper && wrapper._daeUpdateLayout) {
+                    wrapper._daeUpdateLayout();
+                } else {
+                    // 元素没了，断开观察
+                    if (window._daeToolbarResizeObserver) window._daeToolbarResizeObserver.disconnect();
+                    window._daeToolbarResizeObserver = null;
+                }
+            });
+        }
+        window._daeToolbarResizeObserver.observe(toolbarContainer);
+
+        console.log('[Gemini 优化] 指令选择器注入完成');
+    }
+
+    function removeToolbarInstructionPicker() {
+        const picker = document.getElementById('dae-toolbar-instruction-picker');
+        if (picker) picker.remove();
+    }
+
+    // 更新工具栏选择器显示
+    function updateToolbarPickerDisplay(instructionName) {
+        const picker = document.getElementById('dae-toolbar-instruction-picker');
+        if (!picker) return;
+        
+        const valueSpan = picker.querySelector('.dae-select-value');
+        if (!valueSpan) return;
+        
+        // 更新显示文本
+        const displayText = instructionName === '__DISABLED__' ? t('val_disabled') : instructionName;
+        valueSpan.textContent = protect(displayText);
+    }
+
+    // 从工具栏应用指令的核心逻辑
+    async function applyInstructionFromToolbar(targetName, targetIndex = -1) {
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+        const wait = (sel, timeout = 5000) => new Promise(resolve => {
+            if (document.querySelector(sel)) return resolve(document.querySelector(sel));
+            const obs = new MutationObserver(() => {
+                const el = document.querySelector(sel);
+                if (el) { obs.disconnect(); resolve(el); }
+            });
+            obs.observe(document.body, { childList: true, subtree: true });
+            setTimeout(() => { obs.disconnect(); resolve(null); }, timeout);
+        });
+
+        const selectRawFirstOption = (targetName === '__SELECT_FIRST__');
+        const STEALTH_STYLE_ID = 'dae-toolbar-picker-stealth';
+        
+        const toggleStealth = (enabled) => {
+            const existing = document.getElementById(STEALTH_STYLE_ID);
+            if (enabled) {
+                if (!existing) {
+                    const style = document.createElement('style');
+                    style.id = STEALTH_STYLE_ID;
+                    
+                    const isMobile = window.innerWidth < 768;
+                    const mobileSidebarCSS = isMobile ? `
+                        ms-right-side-panel,
+                        .sidebar-overlay { 
+                            opacity: 0 !important;
+                            visibility: hidden !important;
+                            position: absolute !important; 
+                            z-index: -9999 !important;
+                            pointer-events: none !important;
+                        }
+                    ` : '';
+
+                    style.textContent = `
+                        .cdk-overlay-container, 
+                        .cdk-overlay-backdrop,
+                        .mat-mdc-dialog-container,
+                        .mat-mdc-select-panel {
+                            opacity: 0 !important;
+                            visibility: hidden !important;
+                            transition: none !important;
+                            animation: none !important;
+                        }
+                        ${mobileSidebarCSS}
+                    `;
+                    document.head.appendChild(style);
+                }
+            } else {
+                if (existing) existing.remove();
+            }
+        };
+
+        try {
+            // 开启隐身模式
+            toggleStealth(true);
+
+            let openBtn = document.querySelector('ms-system-instructions-panel > button');
+
+            if (!openBtn) {
+                const tuneBtn = document.querySelector('.runsettings-toggle-button') || 
+                                document.querySelector('button[iconname="tune"]');
+                if (tuneBtn) {
+                    tuneBtn.click();
+                    openBtn = await wait('ms-system-instructions-panel > button', 2000);
+                }
+            }
+
+            if (!openBtn) {
+                console.warn('[Gemini 优化] 无法找到指令入口');
+                return;
+            }
+
+            openBtn.click();
+            const dropdown = await wait('mat-dialog-content mat-select');
+            if (!dropdown) return;
+
+            dropdown.click();
+            await wait('.cdk-overlay-pane mat-option');
+            const allOptions = document.querySelectorAll('.cdk-overlay-pane mat-option');
+
+            // 根据标记选择目标选项
+            let targetOption;
+            
+            if (selectRawFirstOption) {
+                // 模式A: 强制选择第一项（通常是“+创建”）
+                targetOption = allOptions[0];
+            } 
+            else if (targetIndex >= 0) {
+                // [关键修复] 模式B: 基于索引的精准选择
+                // 注意：allOptions 通常包含第一项 "+ Create"。
+                // 我们的 savedSystemInstructions 是去掉了 + Create 的列表。
+                // 因此 savedList[i] 对应 allOptions[i + 1]。
+                // 我们需要校验 offset 是否正确。
+                
+                // 检查第一项是否是 "+ Create" 类型的占位符
+                const firstText = allOptions[0].textContent.trim();
+                const hasHeader = firstText.startsWith('+') || firstText.includes('创建') || firstText.includes('Create');
+                const offset = hasHeader ? 1 : 0;
+                
+                const realDomIndex = targetIndex + offset;
+                
+                if (realDomIndex < allOptions.length) {
+                    targetOption = allOptions[realDomIndex];
+                    
+                    // 双重校验：如果索引对应的文字完全不对，可能列表发生了变化，回退到文字匹配
+                    const optionText = targetOption.textContent.trim();
+                    if (optionText !== targetName) {
+                        console.warn(`[Gemini 优化] 索引匹配失效 (期望: ${targetName}, 实际: ${optionText})，回退到名称匹配`);
+                        targetOption = allOptions.find(opt => opt.textContent.trim() === targetName);
+                    }
+                }
+            } 
+            
+            // 模式C: 兜底回退 (名称匹配)，总是匹配第一个同名项
+            if (!targetOption) {
+                targetOption = allOptions.find(opt => opt.textContent.trim() === targetName);
+            }
+
+            if (targetOption) {
+                await sleep(50);
+                targetOption.click();
+                console.log(`[Gemini 优化] ✅ 已应用指令: ${targetName}`);
+            }
+
+            await sleep(200);
+            const backdrop = document.querySelector('.cdk-overlay-backdrop');
+            if (backdrop) backdrop.click();
+
+            const toasts = document.querySelectorAll('ms-toast');
+            toasts.forEach(toast => {
+                const msgEl = toast.querySelector('.message');
+                if (msgEl) {
+                    const text = msgEl.textContent.trim();
+                    if (text.includes('系统指令已删除') || text.includes('System instruction deleted')) {
+                        const closeBtn = toast.querySelector('button[iconname="close"]');
+                        if (closeBtn) closeBtn.click();
+                    }
+                }
+            });
+
+        } catch (e) {
+            console.error('[Gemini 优化] 工具栏指令应用失败:', e);
+        } finally {
+            setTimeout(() => toggleStealth(false), 750);
+        }
     }
 
     // --- 链接重定向净化模块 ---
@@ -5541,7 +6033,7 @@
     // --- 系统指令列表抓取器 ---
     const instructionScraper = (function() {
 
-        // 核心抓取逻辑 (保持不变)
+        // 抓取逻辑
         function saveList(rawOptions) {
             try {
                 if (!rawOptions || rawOptions.length === 0) return;
@@ -5661,11 +6153,179 @@
 
         function reset() {
             hasConfiguredSession = false;
+            
+            // 重置工具栏选择器为未启用状态
+            activeSettings.toolbarSelectedInstruction = '__DISABLED__';
+            GM_setValue('toolbarSelectedInstruction', '__DISABLED__');
+            updateToolbarPickerDisplay('__DISABLED__');
+        }
+
+        // 从网页读取当前已选中的指令
+        async function syncFromWebPage() {
+            const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+            const wait = (sel, timeout = 5000) => new Promise((resolve) => {
+                const el = document.querySelector(sel);
+                if (el) return resolve(el);
+                const obs = new MutationObserver(() => {
+                    const target = document.querySelector(sel);
+                    if (target) {
+                        obs.disconnect();
+                        resolve(target);
+                    }
+                });
+                obs.observe(document.body, { childList: true, subtree: true });
+                setTimeout(() => {
+                    obs.disconnect();
+                    resolve(null);
+                }, timeout);
+            });
+
+            // --- 前置条件检查 ---
+            if (!location.href.includes('/prompts/')) return;
+            if (!activeSettings.enableToolbarInstructionPicker) return;
+            if (isRunning) return;
+
+            // --- 避让新聊天环境 ---
+            const isNewChat = location.href.includes('prompts/new_chat');
+            if (isNewChat) {
+                console.log('[Gemini 优化] 新聊天分支，同步逻辑避让');
+                return;
+            }
+
+            // 1. 等待主输入框（判定 UI 已就绪）
+            const mainEditor = await wait('ms-prompt-box textarea', 8000);
+            if (!mainEditor) {
+                console.warn('[Gemini 优化] 同步中止：主输入框加载超时');
+                return;
+            }
+
+            const STEALTH_STYLE_ID = 'dae-toolbar-sync-stealth';
+            const toggleStealth = (enabled) => {
+                const existing = document.getElementById(STEALTH_STYLE_ID);
+                if (enabled) {
+                    if (!existing) {
+                        const style = document.createElement('style');
+                        style.id = STEALTH_STYLE_ID;
+                        const isMobile = window.innerWidth < 768;
+                        const mobileSidebarCSS = isMobile ? `
+                            ms-right-side-panel, .sidebar-overlay { 
+                                opacity: 0 !important; visibility: hidden !important; 
+                                position: absolute !important; z-index: -9999 !important;
+                                pointer-events: none !important;
+                            }
+                        ` : '';
+                        style.textContent = `
+                            .cdk-overlay-container, .cdk-overlay-backdrop,
+                            .mat-mdc-dialog-container, .mat-mdc-select-panel {
+                                opacity: 0 !important; visibility: hidden !important;
+                                transition: none !important; animation: none !important;
+                            }
+                            ${mobileSidebarCSS}
+                        `;
+                        document.head.appendChild(style);
+                    }
+                } else if (existing) {
+                    existing.remove();
+                }
+            };
+
+            try {
+                isRunning = true;
+                toggleStealth(true);
+                console.log('[Gemini 优化] 正在同步系统指令状态...');
+
+                // 2. 检索指令入口
+                let openBtn = document.querySelector('ms-system-instructions-panel > button');
+                if (!openBtn) {
+                    const tuneBtn = document.querySelector('.runsettings-toggle-button') || 
+                                    document.querySelector('button[iconname="tune"]');
+                    if (tuneBtn) {
+                        tuneBtn.click();
+                        openBtn = await wait('ms-system-instructions-panel > button', 3000);
+                    }
+                }
+
+                if (!openBtn) {
+                    console.error('[Gemini 优化] 未能找到指令面板入口');
+                    return;
+                }
+
+                // 3. 点击进入并展开下拉框
+                openBtn.click();
+                const dropdown = await wait('mat-dialog-content mat-select', 3000);
+                if (!dropdown) return;
+                dropdown.click();
+
+                // 4. 等待选项渲染，并执行精准匹配
+                await wait('.cdk-overlay-pane mat-option', 3000);
+                const allOptions = document.querySelectorAll('.cdk-overlay-pane mat-option');
+
+                if (allOptions.length > 0) {
+                    instructionScraper.saveList(allOptions);
+
+                    let domIndex = -1;
+                    let foundText = '';
+
+                    allOptions.forEach((opt, idx) => {
+                        if (opt.getAttribute('aria-selected') === 'true') {
+                            domIndex = idx;
+                            foundText = opt.textContent.trim();
+                        }
+                    });
+
+                    let syncedName = '__DISABLED__';
+                    let internalIndex = -1;
+
+                    if (domIndex !== -1) {
+                        const firstText = allOptions[0].textContent.trim();
+                        const hasHeader = firstText.startsWith('+') || firstText.includes('创建') || firstText.includes('Create');
+
+                        if (hasHeader && domIndex === 0) {
+                            syncedName = '__DISABLED__';
+                            internalIndex = -1;
+                        } else {
+                            syncedName = foundText;
+                            internalIndex = hasHeader ? (domIndex - 1) : domIndex;
+                        }
+                        console.log(`[Gemini 优化] 同步成功: "${syncedName}" (Index: ${internalIndex})`);
+                    } else {
+                        console.warn('[Gemini 优化] 未找到选中项，可能处于初始状态');
+                    }
+
+                    // 5. 更新状态
+                    activeSettings.toolbarSelectedInstruction = syncedName;
+                    GM_setValue('toolbarSelectedInstruction', syncedName);
+                    window._daeActiveInstructionIndex = internalIndex;
+                    updateToolbarPickerDisplay(syncedName);
+                }
+
+                // 6. 收尾
+                await sleep(50);
+                const closeBtn = document.querySelector('mat-dialog-container button[iconname="close"]');
+                if (closeBtn) {
+                    closeBtn.click();
+                } else {
+                    const backdrop = document.querySelector('.cdk-overlay-backdrop');
+                    if (backdrop) backdrop.click();
+                }
+
+            } catch (e) {
+                console.error('[Gemini 优化] 同步异常:', e);
+            } finally {
+                setTimeout(() => toggleStealth(false), 500);
+                isRunning = false;
+            }
         }
 
         // --- 专门的后台扫描函数 ---
         async function performBackgroundScan() {
             if (isRunning) return;
+
+            // 检测比较模式 - 如果存在则直接退出
+            const chatContainers = document.querySelectorAll('.chat-view-container.side-by-side');
+            if (chatContainers.length >= 2) {
+                return;
+            }
 
             // 尝试获取系统指令入口
             let openBtn = document.querySelector('ms-system-instructions-panel > button');
@@ -5741,7 +6401,20 @@
 
         // --- 原有的自动配置函数 ---
         async function execute() {
-            if (activeSettings.autoSystemInstructionName === '__DISABLED__') return;
+            // 如果进入新聊天且自动应用是关闭的，确保工具栏同步显示“未启用”
+            if (activeSettings.autoSystemInstructionName === '__DISABLED__') {
+                if (location.href.includes('prompts/new_chat')) {
+                    activeSettings.toolbarSelectedInstruction = '__DISABLED__';
+                    updateToolbarPickerDisplay('__DISABLED__');
+                }
+                return;
+            }
+            
+            // 检测比较模式 - 如果存在则直接退出
+            const chatContainers = document.querySelectorAll('.chat-view-container.side-by-side');
+            if (chatContainers.length >= 2) {
+                return;
+            }
             
             if (!location.href.includes('prompts/new_chat')) {
                 hasConfiguredSession = false;
@@ -5792,6 +6465,12 @@
                 if (openBtn.textContent.trim().includes(targetName)) {
                     console.log('[Gemini 优化] 指令已匹配，标记为完成');
                     hasConfiguredSession = true;
+
+                    // 即使没打开弹窗，也要确保工具栏显示正确
+                    activeSettings.toolbarSelectedInstruction = targetName;
+                    GM_setValue('toolbarSelectedInstruction', targetName);
+                    updateToolbarPickerDisplay(targetName);
+                    
                     return;
                 }
 
@@ -5812,10 +6491,16 @@
                 );
 
                 if (targetOption) {
-                    await sleep(100); 
+                    await sleep(100);
                     targetOption.click();
-                    console.log(`[Gemini 优化] ✅ 指令已应用: ${targetName}`);
-                    hasConfiguredSession = true; 
+                    console.log('[Gemini 优化] ✅ 指令已应用: ' + targetName);
+                    
+                    hasConfiguredSession = true;
+
+                    // 配置成功后，主动更新工具栏显示
+                    activeSettings.toolbarSelectedInstruction = targetName;
+                    GM_setValue('toolbarSelectedInstruction', targetName);
+                    updateToolbarPickerDisplay(targetName);
                 }
 
                 await sleep(200); 
@@ -5829,7 +6514,7 @@
                 console.debug('[Gemini 优化] AutoConfig Error:', e);
             } finally {
                 setTimeout(() => toggleStealth(false), 750);
-                isRunning = false;
+                isRunning = false; // 释放运行锁
             }
         }
 
@@ -5898,7 +6583,8 @@
         return { 
             execute, 
             initListener,
-            forceUpdateList: performBackgroundScan 
+            forceUpdateList: performBackgroundScan,
+            syncFromWebPage // 导出同步函数  
         };
     })();
 
@@ -6004,11 +6690,11 @@
             const newBtn = originalDeleteBtn.cloneNode(true);
             newBtn.classList.add(cls); 
             
-            // 修改文字
+            // 文字
             const textSpan = newBtn.querySelector('.mat-mdc-menu-item-text span:last-child');
             if (textSpan) textSpan.textContent = protect(t(textKey)); 
 
-            // 修改图标颜色和内容
+            // 图标颜色和内容
             const iconSpan = newBtn.querySelector('.material-symbols-outlined');
             if (iconSpan) {
                 iconSpan.style.color = color; // 应用传入的颜色
@@ -6085,7 +6771,7 @@
         return false;
     }
 
-    // [重构] 核心批量删除处理器
+    // 批量删除处理器
     async function handleBatchDelete(mode) {
         if (!lastTriggeredTurn) return;
 
@@ -6289,6 +6975,37 @@
         return 'rgba(0,0,0,0.1)'; // 失败兜底
     }
 
+    // 专门监听原生下拉菜单的点击事件
+    function setupNativeActionInterceptor() {
+        document.addEventListener('click', (e) => {
+            // 1. 寻找用户点击的选项元素 (mat-option)
+            const option = e.target.closest('mat-option');
+            if (!option) return;
+
+            // 2. 获取选项文本
+            const text = option.textContent.trim();
+            
+            // 3. 判定是否为“带加号”的占位符选项 (对应 HTML: + 创建新指令)
+            const isPlaceholder = text.startsWith('+') || text.includes('创建') || text.includes('Create');
+
+            if (isPlaceholder) {
+                console.log('[Gemini 优化] 检测到手动选择原生“+”选项');
+
+                // A. 立即上锁 1.5秒 (阻断 startToolbarObserver 的读取)
+                ignoreNativeSyncTimestamp = Date.now() + 1500;
+
+                // B. 强制将自定义工具栏更新为 [未启用]
+                if (activeSettings.toolbarSelectedInstruction !== '__DISABLED__') {
+                    activeSettings.toolbarSelectedInstruction = '__DISABLED__';
+                    GM_setValue('toolbarSelectedInstruction', '__DISABLED__');
+                    
+                    // 刷新 UI
+                    updateToolbarPickerDisplay('__DISABLED__');
+                }
+            }
+        }, true); // 使用捕获模式 (Capture) 以便尽早拦截
+    }
+
     function main(event) {
         console.log('[Gemini 对话清除器] 清除按钮已触发');
         const triggerBtn = event ? event.currentTarget : null;
@@ -6297,6 +7014,18 @@
 
     function init() {
         console.log('[Gemini 对话清除器] 正在初始化...');
+        
+        // 页面刷新时也记录当前聊天ID
+        const extractChatIdFromUrl = (url) => {
+            const match = url.match(/\/prompts\/([^/?#]+)/);
+            return match ? match[1] : null;
+        };
+        window._lastChatId = extractChatIdFromUrl(location.href);
+        
+        // 初始化时重置工具栏选择器
+        activeSettings.toolbarSelectedInstruction = '__DISABLED__';
+        GM_setValue('toolbarSelectedInstruction', '__DISABLED__');
+        
         // 启动主题系统
         initThemeSystem();
 
@@ -6347,26 +7076,29 @@
         // 启动链接净化器
         LinkSanitizer.activate();
 
+        // 启动原生操作拦截器
+        setupNativeActionInterceptor(); 
+
         // 7. 初始化自动配置监听器
         autoConfigLogic.initListener();
 
-        // 尝试执行自动配置 (仅针对 /prompts/new_chat 有效，内部有判断)
-        // 给予多次尝试机会，应对 DOM 延迟
+        // A. 尝试自动配置
+        // 如果是新聊天且有配置，它会执行并更新 UI；否则直接退出
         setTimeout(() => autoConfigLogic.execute(), 1000);
-        setTimeout(() => autoConfigLogic.execute(), 3000);
 
-        // B. 强制更新列表 (针对所有页面，包括旧聊天)
-        // 无论当前在哪个页面，加载 1.5 秒后都强制后台扫描一次列表
-        // 这样可以确保用户刷新旧聊天页面时，也能获取到最新的系统指令
-        setTimeout(() => {
-            console.log('[Gemini 优化] 🔄 页面加载完成，执行列表同步...');
-            autoConfigLogic.forceUpdateList();
-        }, 1500);
+        // B. 尝试网页同步
+        // 内部有判断：如果是新聊天且自动配置开启，它会直接 return，不执行
+        // 如果是旧聊天，或者自动配置关闭，它会执行读取
+        if (activeSettings.enableToolbarInstructionPicker && location.href.includes('/prompts/')) {
+            setTimeout(() => autoConfigLogic.syncFromWebPage(), 2500);
+        }
     }
 
     let toolbarObserver = null;
 
     let specificToolbarObserver = null;
+    
+    let ignoreNativeSyncTimestamp = 0;
 
     function startToolbarObserver() {
         if (toolbarObserver) return;
@@ -6375,6 +7107,34 @@
             syncModelSearchClearBtn();
             // 每次 DOM 变动，都尝试同步搜索状态
             updateGoogleSearchState();
+            
+            // 实时同步原生指令名到工具栏
+            if (activeSettings.enableToolbarInstructionPicker) {
+                // 如果当前时间在锁定期间内，跳过同步
+                if (Date.now() >= ignoreNativeSyncTimestamp) {
+                    
+                    // 定位原生对话框中的选中项文本容器
+                    const nativeInstructionEl = document.querySelector('mat-dialog-content .mat-mdc-select-value-text .mat-mdc-select-min-line');
+                    
+                    if (nativeInstructionEl) {
+                        const rawText = nativeInstructionEl.textContent.trim();
+                        // 以下情况视为未启用
+                        const isPlaceholder = rawText.startsWith('+') || rawText.includes('创建') || rawText.includes('Create');
+                        const syncName = isPlaceholder ? '__DISABLED__' : rawText;
+
+                        // 只有当检测到状态不一致时才执行更新，防止过度触发
+                        if (activeSettings.toolbarSelectedInstruction !== syncName) {
+                            activeSettings.toolbarSelectedInstruction = syncName;
+                            GM_setValue('toolbarSelectedInstruction', syncName);
+                            
+                            // 实时更新工具栏 UI 显示
+                            updateToolbarPickerDisplay(syncName);
+                            
+                            console.log(`[Gemini 优化] 原生指令变更检测：${syncName}`);
+                        }
+                    }
+                }
+            }
 
             // 1. 尝试插入清空按钮
             ensureCorrectButtonPlacement();
@@ -6384,6 +7144,11 @@
             
             // 3. 尝试插入/更新后缀开关状态
             injectSuffixToggle(); 
+    
+            // 尝试注入工具栏指令选择器
+            if (activeSettings.enableToolbarInstructionPicker) {
+                injectToolbarInstructionPicker();
+            }
 
             // 检查独立开关
             if (activeSettings.enableBoldSpacingFix) {
@@ -6528,6 +7293,15 @@
         if (window.__geminiCleanerLocationHookInstalled) return;
         window.__geminiCleanerLocationHookInstalled = true;
 
+        // 提取聊天ID的辅助函数
+        const extractChatIdFromUrl = (url) => {
+            const match = url.match(/\/prompts\/([^/?#]+)/);
+            return match ? match[1] : null;
+        };
+        
+        // 初始化当前聊天ID
+        window._lastChatId = extractChatIdFromUrl(location.href);
+
         // 包装history方法以触发自定义事件
         const wrap = (type) => {
             const orig = history[type];
@@ -6545,9 +7319,30 @@
 
         // 监听位置变化事件，重新定位按钮
         window.addEventListener('locationchange', () => {
+            const currentChatId = extractChatIdFromUrl(location.href);
+            if (window._lastChatId !== currentChatId) {
+                window._lastChatId = currentChatId;
+                
+                // 切换聊天时重置 UI 状态
+                activeSettings.toolbarSelectedInstruction = '__DISABLED__';
+                GM_setValue('toolbarSelectedInstruction', '__DISABLED__');
+                setTimeout(() => updateToolbarPickerDisplay('__DISABLED__'), 100);
+                
+                // 只有进入 prompts 路径且开启了选择器时才尝试同步
+                if (location.href.includes('/prompts/') && activeSettings.enableToolbarInstructionPicker) {
+                    setTimeout(() => autoConfigLogic.syncFromWebPage(), 1500);
+                }
+            }
+            
             // 1. 基础 UI 修复 (按钮位置、Markdown渲染)
             setTimeout(() => {
                 ensureCorrectButtonPlacement();
+                
+                // 重新检查工具栏选择器
+                if (activeSettings.enableToolbarInstructionPicker) {
+                    injectToolbarInstructionPicker();
+                }
+                
                 if (activeSettings.enableBoldSpacingFix) {
                     optimizeMarkdownText();
                 }
@@ -6557,14 +7352,13 @@
             setTimeout(() => autoConfigLogic.execute(), 500);
 
             // 3. 空列表自动补救机制
-            // 如果检测到列表为空，且切换了页面，则强制扫描一次
             setTimeout(() => {
                 const currentList = activeSettings.savedSystemInstructions;
                 if (!currentList || currentList.length === 0) {
                     console.log('[Gemini 优化] ⚠️ 检测到指令列表为空，正在尝试获取...');
                     autoConfigLogic.forceUpdateList();
                 }
-            }, 2500); // 稍微延迟一点，等待页面加载稳态
+            }, 2500);
         });
     }
 

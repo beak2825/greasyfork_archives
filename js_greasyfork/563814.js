@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         Mission Rewards Book Notifier
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  Notifies you of when there is a book in the mission rewards.
 // @author       ScatterBean [3383329]
 // @license      MIT
 // @match        https://www.torn.com/*
 // @connect      api.torn.com
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
-// @grant        GM_xmlhttpRequest
+// @grant        GM.xmlHttpRequest
 // @grant        GM.setValue
 // @grant        GM.getValue
 // @grant        GM.deleteValue
@@ -46,7 +46,7 @@ else if (minimal_key != null && minimal_key != "") {
         alert("[Book Notifier Script] Key successfully removed.");
         return;
     });
-    var interval = setInterval(Tick(minimal_key), 30000);
+    var interval = setInterval(Tick, 30000, minimal_key);
     } catch (e) {
         console.log(e);
         clearInterval(interval);
@@ -62,7 +62,6 @@ async function Tick(key) {
         clearInterval(interval);
     }
 }
-
 async function CheckForBook(key) {
     try {
         if (!key) throw key;
@@ -86,7 +85,6 @@ async function CheckForBook(key) {
         clearInterval(interval);
     }
 }
-
 function ClearNotif() {
     try {
     const elem = document.getElementById("bookNotif");

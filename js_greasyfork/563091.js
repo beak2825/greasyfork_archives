@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Geoguessr Better Breakdown UI
+// @name         GeoGuessr Better Breakdown UI
 // @namespace    https://greasyfork.org/users/1179204
-// @version      1.1.7
+// @version      1.1.8
 // @description  built-in StreetView Window to view where you guessed and the correct location
-// @author       KaKa, Alien Perfect
+// @author       KaKa
 // @match        https://www.geoguessr.com/*
 // @icon         https://www.google.com/s2/favicons?sz=32&domain=geoguessr.com
 // @require      https://cdn.jsdelivr.net/npm/sweetalert2@11
@@ -16,8 +16,8 @@
 // @grant        GM_openInTab
 // @grant        unsafeWindow
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/563091/Geoguessr%20Better%20Breakdown%20UI.user.js
-// @updateURL https://update.greasyfork.org/scripts/563091/Geoguessr%20Better%20Breakdown%20UI.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563091/GeoGuessr%20Better%20Breakdown%20UI.user.js
+// @updateURL https://update.greasyfork.org/scripts/563091/GeoGuessr%20Better%20Breakdown%20UI.meta.js
 // ==/UserScript==
 
 "use strict";
@@ -32,6 +32,11 @@ const MONTHS_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'Ju
 // WeakMap for storing marker data to avoid DOM dataset operations
 const markerDataMap = new WeakMap();
 const markerHandlerMap = new WeakMap();
+const movementPathCache = new WeakMap();
+const mapPathOverlayMap = new WeakMap();
+const panoListenerMap = new WeakMap();
+const MOVEMENT_STORAGE_PREFIX = "ggbbui_move_path_";
+
 
 // DOM element cache to reduce repeated queries
 const domCache = {
@@ -55,7 +60,7 @@ const domCache = {
 function throttle(fn, delay) {
     let lastCall = 0;
     let timeoutId = null;
-    return function(...args) {
+    return function (...args) {
         const now = Date.now();
         const remaining = delay - (now - lastCall);
         if (remaining <= 0) {
@@ -76,16 +81,18 @@ function throttle(fn, delay) {
 }
 
 const SELECTORS = {
-    markerList: "[class*='map-pin_']:not([data-qa='correct-location-marker'])",
+    guessMarker: "[data-qa='guess-marker']",
     roundMarker: "[data-qa='correct-location-marker']",
-    duelMarker:"[class*='result-map_roundPin']",
+    duelMarker: "[class*='result-map_roundPin']",
     roundEnd: "[data-qa='close-round-result']",
     gameEnd: "[data-qa='play-again-button']",
-    duelEnd:"[class*='game-summary']",
+    duelEnd: "[class*='game-summary']",
     roundNumber: "[data-qa='round-number']",
     guessMap: "[class*='guess-map_canvas']",
     resultMap: "[class*='coordinate-result-map_map']",
-    duelMap:"[class*='result-map_map']",
+    duelMap: "[class^='result-map_map']",
+    svContainer: "panorama-container",
+    moveButton: "[data-qa='undo-move']"
 };
 
 const SVG_SOURCE = {
@@ -93,15 +100,17 @@ const SVG_SOURCE = {
     LOADING: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M12,18A6,6 0 0,1 6,12C6,11 6.25,10.03 6.7,9.2L5.24,7.74C4.46,8.97 4,10.43 4,12A8,8 0 0,0 12,20V23L16,19L12,15M12,4V1L8,5L12,9V6A6,6 0 0,1 18,12C18,13 17.75,13.97 17.3,14.8L18.76,16.26C19.54,15.03 20,13.57 20,12A8,8 0 0,0 12,4Z" fill="currentColor"></path></svg>`,
     SUCCESS: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" fill="currentColor"></path></svg>`,
     SAVE: `<svg viewBox="0 0 24 24" fill="none" width="24" height="24"> <path d="M9 6L12 3M12 3L15 6M12 3V13M7.00023 10C6.06835 10 5.60241 10 5.23486 10.1522C4.74481 10.3552 4.35523 10.7448 4.15224 11.2349C4 11.6024 4 12.0681 4 13V17.8C4 18.9201 4 19.4798 4.21799 19.9076C4.40973 20.2839 4.71547 20.5905 5.0918 20.7822C5.5192 21 6.07899 21 7.19691 21H16.8036C17.9215 21 18.4805 21 18.9079 20.7822C19.2842 20.5905 19.5905 20.2839 19.7822 19.9076C20 19.4802 20 18.921 20 17.8031V13C20 12.0681 19.9999 11.6024 19.8477 11.2349C19.6447 10.7448 19.2554 10.3552 18.7654 10.1522C18.3978 10 17.9319 10 17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-    SPAWN:`<svg height="24" width="24" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" fill="currentColor"></path></svg>`,
-    PANEL:`<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3,9H17V7H3V9M3,13H17V11H3V13M3,17H17V15H3V17M19,17H21V15H19V17M19,7V9H21V7H19M19,13H21V11H19V13Z" /></svg>`,
-    CAMERA:`<svg height="24" width="24" viewBox="0 0 24 24"><path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" fill="currentColor"></path></svg>`
+    SPAWN: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" fill="currentColor"></path></svg>`,
+    PANEL: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3,9H17V7H3V9M3,13H17V11H3V13M3,17H17V15H3V17M19,17H21V15H19V17M19,7V9H21V7H19M19,13H21V11H19V13Z" /></svg>`,
+    CAMERA: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" fill="currentColor"></path></svg>`,
+    PATH: `<svg viewBox="0 0 24 24" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.78 20H9.78C7.98 20 4.58 19.09 4.58 15.64C4.58 12.19 7.98 11.28 9.78 11.28H14.22C14.37 11.28 17.92 11.23 17.92 8.42C17.92 5.61 14.37 5.56 14.22 5.56H9.22C9.02109 5.56 8.83032 5.48098 8.68967 5.34033C8.54902 5.19968 8.47 5.00891 8.47 4.81C8.47 4.61109 8.54902 4.42032 8.68967 4.27967C8.83032 4.13902 9.02109 4.06 9.22 4.06H14.22C16.02 4.06 19.42 4.97 19.42 8.42C19.42 11.87 16.02 12.78 14.22 12.78H9.78C9.63 12.78 6.08 12.83 6.08 15.64C6.08 18.45 9.63 18.5 9.78 18.5H14.78C14.9789 18.5 15.1697 18.579 15.3103 18.7197C15.451 18.8603 15.53 19.0511 15.53 19.25C15.53 19.4489 15.451 19.6397 15.3103 19.7803C15.1697 19.921 14.9789 20 14.78 20Z" fill="currentColor"></path> <path d="M6.44 8.31C5.74314 8.30407 5.06363 8.09202 4.48708 7.70056C3.91054 7.30909 3.46276 6.75573 3.20018 6.11021C2.93759 5.46469 2.87195 4.75589 3.01153 4.07312C3.1511 3.39036 3.48965 2.76418 3.9845 2.2735C4.47935 1.78281 5.10837 1.44958 5.79229 1.31579C6.47622 1.182 7.18444 1.25363 7.82771 1.52167C8.47099 1.78971 9.02054 2.24215 9.40711 2.82199C9.79368 3.40182 9.99998 4.08311 10 4.78C10 5.2461 9.90773 5.70759 9.72846 6.13783C9.54919 6.56808 9.28648 6.95856 8.95551 7.28675C8.62453 7.61494 8.23184 7.87433 7.80009 8.04995C7.36834 8.22558 6.90609 8.31396 6.44 8.31ZM6.44 2.75C6.04444 2.75 5.65776 2.86729 5.32886 3.08706C4.99996 3.30682 4.74362 3.61918 4.59224 3.98463C4.44087 4.35008 4.40126 4.75221 4.47843 5.14018C4.5556 5.52814 4.74609 5.8845 5.02579 6.16421C5.3055 6.44391 5.66186 6.6344 6.04982 6.71157C6.43779 6.78874 6.83992 6.74913 7.20537 6.59776C7.57082 6.44638 7.88318 6.19003 8.10294 5.86114C8.32271 5.53224 8.44 5.14556 8.44 4.75C8.44 4.48735 8.38827 4.22728 8.28776 3.98463C8.18725 3.74198 8.03993 3.5215 7.85422 3.33578C7.6685 3.15007 7.44802 3.00275 7.20537 2.90224C6.96272 2.80173 6.70265 2.75 6.44 2.75Z" fill="currentColor"></path> <path d="M17.56 22.75C16.8614 22.752 16.1779 22.5466 15.5961 22.1599C15.0143 21.7733 14.5603 21.2227 14.2916 20.5778C14.0229 19.933 13.9515 19.2229 14.0866 18.5375C14.2217 17.8521 14.5571 17.2221 15.0504 16.7275C15.5437 16.2328 16.1726 15.8956 16.8577 15.7586C17.5427 15.6215 18.253 15.6909 18.8986 15.9577C19.5442 16.2246 20.0961 16.6771 20.4844 17.2578C20.8727 17.8385 21.08 18.5214 21.08 19.22C21.08 20.1545 20.7095 21.0508 20.0496 21.7125C19.3898 22.3743 18.4945 22.7473 17.56 22.75ZM17.56 17.19C17.1644 17.19 16.7778 17.3073 16.4489 17.5271C16.12 17.7468 15.8636 18.0592 15.7122 18.4246C15.5609 18.7901 15.5213 19.1922 15.5984 19.5802C15.6756 19.9681 15.8661 20.3245 16.1458 20.6042C16.4255 20.8839 16.7819 21.0744 17.1698 21.1516C17.5578 21.2287 17.9599 21.1891 18.3254 21.0377C18.6908 20.8864 19.0032 20.63 19.2229 20.3011C19.4427 19.9722 19.56 19.5856 19.56 19.19C19.56 18.6596 19.3493 18.1508 18.9742 17.7758C18.5991 17.4007 18.0904 17.19 17.56 17.19Z" fill="currentColor"></path> </g></svg>`,
 };
 
 let svs = null;
 let spawn = null;
 let viewer = null;
 let guessMap = null;
+let gameViewer = null;
 let cleanStyle = null;
 let peekMarker = null;
 let mapObserver = null;
@@ -114,11 +123,15 @@ let currentGameToken = null;
 let lastClickedCoords = null;
 let movementPath = [];
 let pathPolyline = null;
+let currentMovementPath = [];
+let currentMovementRound = null;
 
 let isPhotoMode = false;
 let isCoverageLayer = false;
+let isPathDisplayed = true;
 let gameLoopRunning = false;
 let clickListenerAttached = false;
+let roundElementInteractionsInitialized = false;
 
 let MAP_MAKING_API_KEY = GM_getValue("MAP_MAKING_API_KEY", "PASTE_YOUR_KEY_HERE");
 let MAP_LIST;
@@ -135,8 +148,16 @@ function getReactFiber(el) {
 function getGuessMapInstance(el) {
     const fiber = getReactFiber(el);
     try {
-        return fiber?.return?.memoizedState?.memoizedState?.current?.instance || fiber?.return?.updateQueue?.lastEffect?.deps?.[0]||null;
+        return fiber?.return?.memoizedState?.memoizedState?.current?.instance || fiber?.return?.updateQueue?.lastEffect?.deps?.[0] || null;
     } catch { return null; }
+}
+
+function getGameViewerInstance(el) {
+    const fiber = getReactFiber(el);
+    try {
+        return fiber?.return?.return?.return?.sibling?.memoizedProps?.panorama || null;
+    } catch { return null; }
+
 }
 
 function getRoundData() {
@@ -147,7 +168,16 @@ function getRoundData() {
     } catch { return null; }
 }
 
-function getDuelData(marker){
+function getMarkerCoords(marker) {
+    const fiber = getReactFiber(marker);
+    try {
+        const data= fiber?.return?.return?.return?.memoizedProps
+        return {lat: data.lat, lng: data.lng};
+    } catch { return null; }
+}
+
+
+function getDuelData(marker) {
     const fiber = getReactFiber(marker);
     if (!fiber) return null;
     return fiber.return?.return?.return?.return?.memoizedProps?.round || fiber.return?.return?.return?.return?.pendingProps || null;
@@ -201,7 +231,7 @@ function fetchAnswerPanoFromRoundData() {
         location: { lat: data.lat, lng: data.lng },
         pitch: data.pitch,
         radius: 0,
-        zoom:data.zoom,
+        zoom: data.zoom,
         error: false
     }
 }
@@ -219,6 +249,32 @@ function offsetMapFocus(map, coords) {
     map.panBy(offsetX, 0);
 }
 
+function attachPanoChangeListener() {
+    if (!gameViewer) return;
+    if (panoListenerMap.has(gameViewer)) return;
+
+    const round = getCurrentRound();
+    if (!round) return;
+
+    // 记录起点位置
+    const startPosition = gameViewer.getPosition();
+    if (startPosition) {
+        const startPoint = {
+            lat: Number(startPosition.lat().toFixed(5)),
+            lng: Number(startPosition.lng().toFixed(5))
+        };
+        currentMovementPath = [startPoint];
+        currentMovementRound = round;
+    }
+
+    // 添加位置变化监听器
+    const listener = gameViewer.addListener("position_changed", function () {
+        recordMovementPoint(gameViewer);
+    });
+
+    panoListenerMap.set(gameViewer, listener);
+}
+
 function attachClickListener(map) {
     map.addListener("click", async (e) => {
         lastClickedCoords = {
@@ -226,8 +282,8 @@ function attachClickListener(map) {
             lng: e.latLng.lng()
         };
         if (document.querySelector(SELECTORS.roundEnd) ||
-            document.querySelector(SELECTORS.gameEnd)||
-            (document.querySelector(SELECTORS.duelEnd))){
+            document.querySelector(SELECTORS.gameEnd) ||
+            (document.querySelector(SELECTORS.duelEnd))) {
             if (!isCoverageLayer) return
             const pano = await getNearestPano(lastClickedCoords);
             if (!pano || pano.error) return
@@ -315,13 +371,17 @@ function startMapObserver() {
     mapObserver = new MutationObserver((mutations) => {
         if (!mutations.some(m => m.addedNodes.length > 0)) return;
         const duelMap = document.querySelector(SELECTORS.duelMap)
-        const mapEl = document.querySelector(SELECTORS.guessMap) || document.querySelector(SELECTORS.resultMap)|| duelMap;
+        const mapEl = document.querySelector(SELECTORS.guessMap) || document.querySelector(SELECTORS.resultMap) || duelMap;
         if (!mapEl) return;
+        const isMove = document.querySelector(SELECTORS.moveButton)
+        if (isMove) gameViewer = getGameViewerInstance(document.getElementById(SELECTORS.svContainer))
+
         guessMap = getGuessMapInstance(mapEl);
         if (guessMap && !clickListenerAttached) {
             attachClickListener(guessMap);
+            if (gameViewer) attachPanoChangeListener()
             clickListenerAttached = true;
-            if(duelMap && window.location.href.includes('summary'))makeMapResizable()
+            if (duelMap && window.location.href.includes('summary')) makeMapResizable()
             stopMapObserver();
         }
     });
@@ -354,13 +414,54 @@ function toggleCoverageLayer(action) {
     }
 }
 
-function addCreditToPage() {
-    const isDuelEnd = document.querySelector(SELECTORS.duelMap) && window.location.href.includes('summary')
-    let container = document.querySelector(`div[data-qa="result-view-top"]`);
-    if (!container && isDuelEnd) {
-        container = isDuelEnd.parentElement;
+function setMapControls() {
+    let coverageLayerControl = document.getElementById('layer-toggle');
+    let pathDisplayControl = document.getElementById('path-toggle');
+    if (coverageLayerControl && pathDisplayControl) return
+    const container = document.querySelector(SELECTORS.resultMap) || document.querySelector(SELECTORS.duelMap)
+    if (!coverageLayerControl) {
+        coverageLayerControl = document.createElement('button');
+        coverageLayerControl.className = 'peek-map-control';
+        coverageLayerControl.id = 'layer-toggle'
+        coverageLayerControl.innerHTML = `
+            <img alt="Coverage Layer Toggle" loading="lazy" width="24" height="24" decoding="async" data-nimg="1" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2023%2038%22%3E%3Cpath%20d%3D%22M16.6%2038.1h-5.5l-.2-2.9-.2%202.9h-5.5L5%2025.3l-.8%202a1.53%201.53%200%2001-1.9.9l-1.2-.4a1.58%201.58%200%2001-1-1.9v-.1c.3-.9%203.1-11.2%203.1-11.2a2.66%202.66%200%20012.3-2l.6-.5a6.93%206.93%200%20014.7-12%206.8%206.8%200%20014.9%202%207%207%200%20012%204.9%206.65%206.65%200%2001-2.2%205l.7.5a2.78%202.78%200%20012.4%202s2.9%2011.2%202.9%2011.3a1.53%201.53%200%2001-.9%201.9l-1.3.4a1.63%201.63%200%2001-1.9-.9l-.7-1.8-.1%2012.7zm-3.6-2h1.7L14.9%2020.3l1.9-.3%202.4%206.3.3-.1c-.2-.8-.8-3.2-2.8-10.9a.63.63%200%2000-.6-.5h-.6l-1.1-.9h-1.9l-.3-2a4.83%204.83%200%20003.5-4.7A4.78%204.78%200%200011%202.3H10.8a4.9%204.9%200%2000-1.4%209.6l-.3%202h-1.9l-1%20.9h-.6a.74.74%200%2000-.6.5c-2%207.5-2.7%2010-3%2010.9l.3.1L4.8%2020l1.9.3.2%2015.8h1.6l.6-8.4a1.52%201.52%200%20011.5-1.4%201.5%201.5%200%20011.5%201.4l.9%208.4zm-10.9-9.6zm17.5-.1z%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23333%22%20opacity%3D%22.7%22/%3E%3Cpath%20d%3D%22M5.9%2013.6l1.1-.9h7.8l1.2.9%22%20fill%3D%22%23ce592c%22/%3E%3Cellipse%20cx%3D%2210.9%22%20cy%3D%2213.1%22%20rx%3D%222.7%22%20ry%3D%22.3%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23ce592c%22%20opacity%3D%22.5%22/%3E%3Cpath%20d%3D%22M20.6%2026.1l-2.9-11.3a1.71%201.71%200%2000-1.6-1.2H5.699999999999999a1.69%201.69%200%2000-1.5%201.3l-3.1%2011.3a.61.61%200%2000.3.7l1.1.4a.61.61%200%2000.7-.3l2.7-6.7.2%2016.8h3.6l.6-9.3a.47.47%200%2001.44-.5h.06c.4%200%20.4.2.5.5l.6%209.3h3.6L15.7%2020.3l2.5%206.6a.52.52%200%2000.66.31l1.2-.4a.57.57%200%2000.5-.7z%22%20fill%3D%22%23fdbf2d%22/%3E%3Cpath%20d%3D%22M7%2013.6l3.9%206.7%203.9-6.7%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23cf572e%22%20opacity%3D%22.6%22/%3E%3Ccircle%20cx%3D%2210.9%22%20cy%3D%227%22%20r%3D%225.9%22%20fill%3D%22%23fdbf2d%22/%3E%3C/svg%3E" style="color: transparent;">
+        `;
+        container.appendChild(coverageLayerControl);
+        coverageLayerControl.onclick = () => toggleCoverageLayer();
     }
+    if (!pathDisplayControl) {
+        pathDisplayControl = document.createElement('button');
+        pathDisplayControl.className = 'peek-map-control';
+        pathDisplayControl.id = 'path-toggle';
+        pathDisplayControl.title = 'Toggle Movement Path';
+        pathDisplayControl.innerHTML = SVG_SOURCE.PATH
+        container.appendChild(pathDisplayControl);
+        pathDisplayControl.onclick = () => togglePathDisplay();
+    }
+}
 
+function togglePathDisplay(action) {
+    if (!guessMap) return;
+
+    const overlay = mapPathOverlayMap.get(guessMap);
+    if (!overlay) return;
+
+    const polylines = Array.isArray(overlay) ? overlay : [overlay];
+
+    if (isPathDisplayed && action !== "on") {
+        polylines.forEach(item => item.polyline?.setMap(null));
+        isPathDisplayed = false;
+    } else if (!isPathDisplayed && action !== "off") {
+        polylines.forEach(item => item.polyline?.setMap(guessMap));
+        isPathDisplayed = true
+    }
+}
+function addCreditToPage() {
+    const duelMap = document.querySelector(SELECTORS.duelMap)
+    let container = document.querySelector(`div[data-qa="result-view-top"]`);
+    if (!container && duelMap && window.location.href.includes('summary')) {
+        container = duelMap.parentElement;
+    }
     if (!container || document.getElementById('peek-credit-container')) return;
     const element = document.createElement('div');
     element.id = 'peek-credit-container';
@@ -370,8 +471,8 @@ function addCreditToPage() {
 		<div class="peek-credit-subtitle">by <a href="https://greasyfork.org/users/1179204-kakageo/" target="_blank" rel="noopener noreferrer">kakageo</a>.</div>
 	`;
     container.appendChild(element);
-    if(isDuelEnd)element.style.left='4rem';
-    else element.style.left='1rem';
+    if (duelMap) element.style.left = '4rem';
+    else element.style.left = '1rem';
 }
 
 async function gameLoop() {
@@ -385,39 +486,63 @@ async function gameLoop() {
     const isGameEnd = !!gameEndEl;
     const isDuelEnd = !!duelEndEl
     const isRoundMarker = document.querySelector(SELECTORS.roundMarker);
+    const reactionBtn =document.querySelector('[class*="styles_hudButton__"]')
 
     if ((!token || !round) && !isDuelEnd) return;
-    if (!isRoundEnd && !isGameEnd && !isDuelEnd && isCoverageLayer) {
+    if (!isRoundEnd && !isGameEnd && !isDuelEnd) {
         removePeekMarker();
         toggleCoverageLayer("off");
+        clearRenderedMovementPath();
+        if (isCoverageLayer) toggleCoverageLayer("off");
     }
 
-    if (isRoundEnd || isGameEnd||isDuelEnd) {
+    if (isRoundEnd || isGameEnd || isDuelEnd) {
+        if(reactionBtn)reactionBtn.remove()
+        if (currentMovementRound && currentMovementPath.length > 0) {
+            const storageKey = `${MOVEMENT_STORAGE_PREFIX}${currentMovementRound}`;
+            try {
+                sessionStorage.setItem(storageKey, JSON.stringify(currentMovementPath));
+            } catch (err) {
+                console.error('[MovementPath] save failed', err);
+            }
+            currentMovementPath = [];
+            currentMovementRound = null;
+        }
+
+        if (isGameEnd || isDuelEnd) {
+            renderMovementPaths();
+            attachRoundElementInteractions();
+        } else {
+            renderMovementPaths(round);
+        }
+
+        setMapControls()
         addCreditToPage()
-    }
-    if(isDuelEnd){
-        const markers = document.querySelectorAll(SELECTORS.duelMarker);
-        for (const marker of markers) {
-            const data = getDuelData(marker);
-            if(!data) continue
-            await applyPanoToDuelMarker(marker, data);
-        }
-        if(window.location.href.includes('summary'))addDuelRoundsPanel();
-    }
-    else{
-        if (token !== currentGameToken) {
-            currentGameToken = token;
-            committedRounds.clear();
-            lastClickedCoords = null;
-        }
 
-        await commitRoundResult({
-            token,
-            round,
-            guessCoords: (isRoundEnd || isGameEnd) ? lastClickedCoords : null,
-            hasAnswerMarker: !!isRoundMarker
-        });
-        updateMarkersUI(token, round, isGameEnd);
+        if (isDuelEnd) {
+            const markers = document.querySelectorAll(SELECTORS.duelMarker);
+            for (const marker of markers) {
+                const data = getDuelData(marker);
+                if (!data) continue
+                await applyPanoToDuelMarker(marker, data);
+            }
+            if (window.location.href.includes('summary')) addDuelRoundsPanel();
+        }
+        else {
+            if (token !== currentGameToken) {
+                currentGameToken = token;
+                committedRounds.clear();
+                lastClickedCoords = null;
+            }
+
+            await commitRoundResult({
+                token,
+                round,
+                guessCoords: (isRoundEnd || isGameEnd) ? lastClickedCoords : null,
+                hasAnswerMarker: !!isRoundMarker
+            });
+            updateMarkersUI(token, round, isGameEnd);
+        }
     }
 }
 
@@ -431,7 +556,7 @@ function removePeekMarker() {
 function updateMarkersUI(token, currentRound, isFinal) {
     const data = GM_getValue(token);
     if (!data) return;
-    const markers = document.querySelectorAll(SELECTORS.markerList);
+    const markers = document.querySelectorAll(SELECTORS.guessMarker);
     const answerMarkers = document.querySelectorAll(SELECTORS.roundMarker);
     if (markers.length === 0) return;
     if (isFinal) {
@@ -574,7 +699,7 @@ function addDuelRoundsPanel() {
     const playedRounds = document.querySelectorAll('[class*="game-summary_playedRounds"]');
 
     if (!playedRounds.length) {
-        console.error('Duel rounds elements not found', {playedRounds});
+        console.error('Duel rounds elements not found', { playedRounds });
         return;
     }
 
@@ -601,7 +726,7 @@ function addDuelRoundsPanel() {
 
     const gameModeBrand = document.querySelector('[class*="game-mode-brand_root"]');
     const gameMode = document.querySelector('[class*="game-mode-brand_selected"]');
-    const mapName=document.querySelector('[class*="game-mode-brand_mapName"]');
+    const mapName = document.querySelector('[class*="game-mode-brand_mapName"]');
     gameModeBrand.style.display = "none";
 
     const gameModeHeader = document.createElement('div');
@@ -732,7 +857,7 @@ function addDuelRoundsPanel() {
                 }, 50);
             });
         }
-        originalEl.style.display='none'
+        originalEl.style.display = 'none'
     });
 
     // 初始化回合指示器
@@ -773,10 +898,10 @@ function addDuelRoundsPanel() {
 }
 
 function makeMapResizable() {
-    const summaryContainer =document.querySelector('[class^="game-summary_innerContainer"]');
+    const summaryContainer = document.querySelector('[class^="game-summary_innerContainer"]');
     const summaryBottom = document.querySelector('[class^="game-summary_bottom"]');
-    if(summaryContainer)summaryContainer.style.paddingBottom='0'
-    if(summaryBottom) summaryBottom.style.minHeight= '4rem'
+    if (summaryContainer) summaryContainer.style.paddingBottom = '0'
+    if (summaryBottom) summaryBottom.style.minHeight = '4rem'
     const mapContainer = document.querySelector('[class*="game-summary_mapContainer"]');
     if (!mapContainer) return;
 
@@ -790,7 +915,7 @@ function makeMapResizable() {
     const savedSize = GM_getValue('mapContainerSize', { width: null, height: null });
     if (savedSize.width && savedSize.height) {
         mapContainer.style.width = `${savedSize.width}px`;
-        mapContainer.style.height = `${Math.min(window.innerHeight-160,savedSize.height)}px`;
+        mapContainer.style.height = `${Math.min(window.innerHeight - 160, savedSize.height)}px`;
     }
 
     const resizerStyle = {
@@ -875,7 +1000,7 @@ function makeMapResizable() {
         const minWidth = 300;
         const maxWidth = window.innerWidth - 100;
         const minHeight = 250;
-        const maxHeight = window.innerHeight-160;
+        const maxHeight = window.innerHeight - 160;
 
         newWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
         newHeight = Math.max(minHeight, Math.min(maxHeight, newHeight));
@@ -904,33 +1029,33 @@ function makeMapResizable() {
     });
 }
 
-async function applyPanoToDuelMarker(marker, data){
+async function applyPanoToDuelMarker(marker, data) {
     if (!data) return;
     let pano;
-    if(data.panorama){
-        pano= {
-            panoId:convertPanoId(data.panorama.panoId),
-            location:{lat:data.panorama.lat,lng:data.panorama.lng},
-            heading:data.panorama.heading,
-            pitch:data.panorama.pitch,
-            zoom:data.panorama.zoom
+    if (data.panorama) {
+        pano = {
+            panoId: convertPanoId(data.panorama.panoId),
+            location: { lat: data.panorama.lat, lng: data.panorama.lng },
+            heading: data.panorama.heading,
+            pitch: data.panorama.pitch,
+            zoom: data.panorama.zoom
         };
     }
-    else{
-        pano = await getNearestPano({lat:data.lat,lng:data.lng});
+    else {
+        pano = await getNearestPano({ lat: data.lat, lng: data.lng });
     }
     marker.style.cursor = "pointer";
     marker.style.pointerEvents = "auto";
     if (!data.panorama) marker.dataset.pano = pano.error ? "false" : "true";
 
-    if(marker.querySelector(".peek-duel-tooltip")||marker.querySelector(".peek-duel-answer-tooltip"))return;
+    if (marker.querySelector(".peek-duel-tooltip") || marker.querySelector(".peek-duel-answer-tooltip")) return;
 
     const tooltip = document.createElement("div");
     tooltip.className = "peek-duel-tooltip";
     if (pano.error) {
         tooltip.innerHTML = `<div class="peek-error">No Street View found within 250km</div>`;
     }
-    else if (data.panorama){
+    else if (data.panorama) {
         tooltip.className = "peek-duel-answer-tooltip";
         tooltip.innerHTML = `
             <div class="peek-note">Click pin to view Street View</div>
@@ -1305,6 +1430,265 @@ function enterFullscreen(panoDiv) {
     }
 }
 
+function renderMovementPaths(round) {
+    if (!guessMap) return;
+
+    const existing = mapPathOverlayMap.get(guessMap);
+    if (existing) {
+        if (Array.isArray(existing)) {
+            existing.forEach(item => item.polyline?.setMap(null));
+        } else if (existing.polyline) {
+            existing.polyline.setMap(null);
+        }
+    }
+
+    const roundsToRender = round ? [round] : [1, 2, 3, 4, 5];
+    const polylines = [];
+
+    for (const roundNum of roundsToRender) {
+        const storageKey = `${MOVEMENT_STORAGE_PREFIX}${roundNum}`;
+        let path = null;
+
+        try {
+            const raw = sessionStorage.getItem(storageKey);
+            if (!raw) continue;
+            path = JSON.parse(raw);
+            if (!Array.isArray(path) || path.length < 2) continue;
+        } catch (err) {
+            console.error('[MovementPath] read failed', err);
+            continue;
+        }
+
+        const polyline = new google.maps.Polyline({
+            path,
+            geodesic: true,
+            strokeColor: 'rgb(131, 18, 223)',
+            strokeOpacity: 0.85,
+            strokeWeight: 3,
+            map: isPathDisplayed ? guessMap : null,
+            zIndex: 99999
+        });
+        polylines.push({ polyline, round: roundNum });
+    }
+
+    if (polylines.length > 0) {
+        if (round) {
+            mapPathOverlayMap.set(guessMap, polylines[0]);
+        } else {
+            mapPathOverlayMap.set(guessMap, polylines);
+        }
+    }
+}
+
+function attachRoundElementInteractions() {
+    if (roundElementInteractionsInitialized) return;
+    roundElementInteractionsInitialized = true;
+    const roundContainer = document.querySelector('[class^="result-list_listWrapper"]');
+    if (!roundContainer) {
+        roundElementInteractionsInitialized = false;
+        return;
+    }
+    const roundItemStyles = `
+        @keyframes snakeBorderTop {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+
+        @keyframes snakeBorderRight {
+            0% { top: -100%; }
+            50%, 100% { top: 100%; }
+        }
+
+        @keyframes snakeBorderBottom {
+            0% { right: -100%; }
+            50%, 100% { right: 100%; }
+        }
+
+        @keyframes snakeBorderLeft {
+            0% { bottom: -100%; }
+            50%, 100% { bottom: 100%; }
+        }
+
+        [class^="result-list_listWrapper"] {
+            pointer-events: auto !important;
+            z-index: 1000 !important;
+        }
+
+        [class*="result-list_listItemWrapper"] {
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            pointer-events: auto !important;
+            overflow: hidden;
+        }
+
+        [class*="result-list_listItemWrapper"]:hover {
+            transform: scale(1.2);
+            box-shadow: 0 8px 16px rgba(255, 198, 40, 0.3);
+        }
+
+        [class*="result-list_listItemWrapper"]:active {
+            transform: scale(1.15);
+            box-shadow: 0 4px 8px rgba(255, 198, 40, 0.2);
+        }
+
+        [class*="result-list_listItemWrapper"] .snake-border-top,
+        [class*="result-list_listItemWrapper"] .snake-border-right,
+        [class*="result-list_listItemWrapper"] .snake-border-bottom,
+        [class*="result-list_listItemWrapper"] .snake-border-left {
+            position: absolute;
+            display: none;
+            animation-play-state: paused;
+        }
+
+        [class*="result-list_listItemWrapper"] .snake-border-top {
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background-image: linear-gradient(90deg, transparent, #ffc628);
+            animation: snakeBorderTop 1.5s linear infinite;
+        }
+
+        [class*="result-list_listItemWrapper"] .snake-border-right {
+            top: -100%;
+            right: 0;
+            width: 2px;
+            height: 100%;
+            background-image: linear-gradient(180deg, transparent, #ffc628);
+            animation: snakeBorderRight 1.5s linear 0.375s infinite;
+        }
+
+        [class*="result-list_listItemWrapper"] .snake-border-bottom {
+            bottom: 0;
+            right: -100%;
+            width: 100%;
+            height: 2px;
+            background-image: linear-gradient(270deg, transparent, #ffc628);
+            animation: snakeBorderBottom 1.5s linear 0.75s infinite;
+        }
+
+        [class*="result-list_listItemWrapper"] .snake-border-left {
+            bottom: -100%;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background-image: linear-gradient(360deg, transparent, #ffc628);
+            animation: snakeBorderLeft 1.5s linear 1.125s infinite;
+        }
+
+        [class*="result-list_listItemWrapper"].show-border .snake-border-top,
+        [class*="result-list_listItemWrapper"].show-border .snake-border-right,
+        [class*="result-list_listItemWrapper"].show-border .snake-border-bottom,
+        [class*="result-list_listItemWrapper"].show-border .snake-border-left {
+            display: block;
+            animation-play-state: running;
+        }
+
+        [class*="result-list_roundNumber"],
+        [class*="result-list_points"],
+        [class*="result-list_roundInfo"] {
+            transition: color 0.3s ease;
+            pointer-events: auto !important;
+        }
+
+        [class*="result-list_listItemWrapper"]:hover [class*="result-list_roundNumber"],
+        [class*="result-list_listItemWrapper"]:hover [class*="result-list_points"],
+    `;
+
+    GM_addStyle(roundItemStyles);
+
+    const roundElements = roundContainer.querySelectorAll('[class^="result-list_listItemWrapper__"]');
+    roundElements.forEach((element, index) => {
+        ['top', 'right', 'bottom', 'left'].forEach(side => {
+            const border = document.createElement('div');
+            border.className = `snake-border-${side}`;
+            element.appendChild(border);
+        });
+
+        element.addEventListener('mouseenter', () => element.classList.add('show-border'));
+        element.addEventListener('mouseleave', () => element.classList.remove('show-border'));
+        element.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleRoundElementClick(index + 1);
+        }, true);
+    });
+}
+
+function handleRoundElementClick(num) {
+    const guessMarkers = document.querySelectorAll(SELECTORS.guessMarker);
+    const roundMarkers = document.querySelectorAll(SELECTORS.roundMarker);
+    const bounds = new google.maps.LatLngBounds();
+    roundMarkers.forEach((marker, index) => {
+        if (index+1 != num) {
+            marker.style.display = 'none';
+        } else {
+            const coords = getMarkerCoords(marker)
+            if(coords)bounds.extend(new google.maps.LatLng(coords));
+            marker.style.display = 'block';
+        }
+    })
+    guessMarkers.forEach((marker, index) => {
+        if (index+1 != num) {
+            marker.style.display = 'none';
+        } else {
+            const coords = getMarkerCoords(marker)
+            if(coords)bounds.extend(new google.maps.LatLng(coords));
+            marker.style.display = 'block';
+        }
+    })
+    if (!bounds.isEmpty()) {
+        guessMap.fitBounds(bounds);
+    }
+}
+
+function clearRenderedMovementPath() {
+    if (!guessMap) return;
+
+    const overlay = mapPathOverlayMap.get(guessMap);
+    if (overlay) {
+        if (Array.isArray(overlay)) {
+            overlay.forEach(item => item.polyline?.setMap(null));
+        } else if (overlay.polyline) {
+            overlay.polyline.setMap(null);
+        }
+    }
+
+    mapPathOverlayMap.delete(guessMap);
+}
+
+function recordMovementPoint(panorama) {
+    if (!panorama) return;
+
+    const position = panorama.getPosition();
+    if (!position) return;
+
+    const round = getCurrentRound();
+    if (!round) return;
+
+    // 如果回合变了，重新初始化
+    if (currentMovementRound !== round) {
+        const startPoint = {
+            lat: Number(position.lat().toFixed(5)),
+            lng: Number(position.lng().toFixed(5))
+        };
+        currentMovementPath = [startPoint];
+        currentMovementRound = round;
+        return;
+    }
+
+    const newPoint = {
+        lat: Number(position.lat().toFixed(5)),
+        lng: Number(position.lng().toFixed(5))
+    };
+
+    const lastPoint = currentMovementPath[currentMovementPath.length - 1];
+    if (!lastPoint || lastPoint.lat !== newPoint.lat || lastPoint.lng !== newPoint.lng) {
+        currentMovementPath.push(newPoint);
+    }
+}
+
+
 function trackMovement() {
     if (!viewer || !guessMap) return;
 
@@ -1312,11 +1696,14 @@ function trackMovement() {
     if (!position) return;
 
     const newPoint = {
-        lat: position.lat(),
-        lng: position.lng()
+        lat: Number(position.lat().toFixed(5)),
+        lng: Number(position.lng().toFixed(5))
     };
 
-    movementPath.push(newPoint);
+    const lastPoint = movementPath[movementPath.length - 1];
+    if (!lastPoint || lastPoint.lat !== newPoint.lat || lastPoint.lng !== newPoint.lng) {
+        movementPath.push(newPoint);
+    }
 
     if (movementPath.length > 1) {
         if (pathPolyline) {
@@ -1413,23 +1800,11 @@ function openNativeStreetView(pano) {
     if (shareDiv) shareDiv.style.display = 'none'
     const xpDiv = document.querySelector("[class*='level-up-xp-button']")
     if (xpDiv) xpDiv.style.opacity = '0'
-    const mapContainer = document.querySelector(SELECTORS.resultMap)|| document.querySelector(SELECTORS.duelMap);
+    const mapContainer = document.querySelector(SELECTORS.resultMap) || document.querySelector(SELECTORS.duelMap);
     const isDuelMode = !!document.querySelector(SELECTORS.duelMap);
     const actualContainer = isDuelMode ? mapContainer.parentElement : mapContainer;
 
     //offsetMapFocus(guessMap, pano.location);
-
-    let coverageLayerControl = document.getElementById('layer-toggle');
-    if (!coverageLayerControl) {
-        coverageLayerControl = document.createElement('button');
-        coverageLayerControl.className = 'peek-map-control';
-        coverageLayerControl.id = 'layer-toggle'
-        coverageLayerControl.innerHTML = `
-            <img alt="Coverage Layer Toggle" loading="lazy" width="24" height="24" decoding="async" data-nimg="1" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2023%2038%22%3E%3Cpath%20d%3D%22M16.6%2038.1h-5.5l-.2-2.9-.2%202.9h-5.5L5%2025.3l-.8%202a1.53%201.53%200%2001-1.9.9l-1.2-.4a1.58%201.58%200%2001-1-1.9v-.1c.3-.9%203.1-11.2%203.1-11.2a2.66%202.66%200%20012.3-2l.6-.5a6.93%206.93%200%20014.7-12%206.8%206.8%200%20014.9%202%207%207%200%20012%204.9%206.65%206.65%200%2001-2.2%205l.7.5a2.78%202.78%200%20012.4%202s2.9%2011.2%202.9%2011.3a1.53%201.53%200%2001-.9%201.9l-1.3.4a1.63%201.63%200%2001-1.9-.9l-.7-1.8-.1%2012.7zm-3.6-2h1.7L14.9%2020.3l1.9-.3%202.4%206.3.3-.1c-.2-.8-.8-3.2-2.8-10.9a.63.63%200%2000-.6-.5h-.6l-1.1-.9h-1.9l-.3-2a4.83%204.83%200%20003.5-4.7A4.78%204.78%200%200011%202.3H10.8a4.9%204.9%200%2000-1.4%209.6l-.3%202h-1.9l-1%20.9h-.6a.74.74%200%2000-.6.5c-2%207.5-2.7%2010-3%2010.9l.3.1L4.8%2020l1.9.3.2%2015.8h1.6l.6-8.4a1.52%201.52%200%20011.5-1.4%201.5%201.5%200%20011.5%201.4l.9%208.4zm-10.9-9.6zm17.5-.1z%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23333%22%20opacity%3D%22.7%22/%3E%3Cpath%20d%3D%22M5.9%2013.6l1.1-.9h7.8l1.2.9%22%20fill%3D%22%23ce592c%22/%3E%3Cellipse%20cx%3D%2210.9%22%20cy%3D%2213.1%22%20rx%3D%222.7%22%20ry%3D%22.3%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23ce592c%22%20opacity%3D%22.5%22/%3E%3Cpath%20d%3D%22M20.6%2026.1l-2.9-11.3a1.71%201.71%200%2000-1.6-1.2H5.699999999999999a1.69%201.69%200%2000-1.5%201.3l-3.1%2011.3a.61.61%200%2000.3.7l1.1.4a.61.61%200%2000.7-.3l2.7-6.7.2%2016.8h3.6l.6-9.3a.47.47%200%2001.44-.5h.06c.4%200%20.4.2.5.5l.6%209.3h3.6L15.7%2020.3l2.5%206.6a.52.52%200%2000.66.31l1.2-.4a.57.57%200%2000.5-.7z%22%20fill%3D%22%23fdbf2d%22/%3E%3Cpath%20d%3D%22M7%2013.6l3.9%206.7%203.9-6.7%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23cf572e%22%20opacity%3D%22.6%22/%3E%3Ccircle%20cx%3D%2210.9%22%20cy%3D%227%22%20r%3D%225.9%22%20fill%3D%22%23fdbf2d%22/%3E%3C/svg%3E" style="color: transparent;">
-        `;
-        mapContainer.appendChild(coverageLayerControl);
-        coverageLayerControl.onclick = () => toggleCoverageLayer();
-    }
 
     let splitContainer = actualContainer.querySelector('.peek-split-container');
 
@@ -1491,7 +1866,7 @@ function openNativeStreetView(pano) {
                 heading: pano.heading || 0,
                 pitch: pano.pitch || 0
             },
-            zoom: pano.zoom||1,
+            zoom: pano.zoom || 1,
             addressControl: true,
             showRoadLabels: false,
             enableCloseButton: false,
@@ -1499,10 +1874,10 @@ function openNativeStreetView(pano) {
             clickToGo: true
         })
 
-        pano.panoId?viewer.setPano(pano.panoId):viewer.setPosition(pano.location)
+        pano.panoId ? viewer.setPano(pano.panoId) : viewer.setPosition(pano.location)
 
         viewer.addListener("pano_changed", function () {
-            updatePanoSelector({panoId:viewer.getPano()}, panoSelector)
+            updatePanoSelector({ panoId: viewer.getPano() }, panoSelector)
         });
 
         viewer.addListener("position_changed", function () {
@@ -1591,16 +1966,16 @@ function openNativeStreetView(pano) {
         });
         viewer.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(copyControl);
 
-        const spawnControl=document.createElement('button')
+        const spawnControl = document.createElement('button')
         spawnControl.className = 'peek-control'
         spawnControl.id = 'peek-spawn'
         spawnControl.title = 'Back to Spawn'
         spawnControl.innerHTML = SVG_SOURCE.SPAWN
         spawnControl.addEventListener('click', async () => {
-            if(spawn &&(spawn.panoId||spawn.location)){
-                spawn.panoId?viewer.setPano(spawn.panoId):viewer.setPosition(spawn.location);
-                viewer.setPov({heading:spawn.heading||0,pitch:spawn.pitch||0});
-                viewer.setZoom(spawn.zoom||1);
+            if (spawn && (spawn.panoId || spawn.location)) {
+                spawn.panoId ? viewer.setPano(spawn.panoId) : viewer.setPosition(spawn.location);
+                viewer.setPov({ heading: spawn.heading || 0, pitch: spawn.pitch || 0 });
+                viewer.setZoom(spawn.zoom || 1);
             }
         });
         viewer.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(spawnControl);
@@ -1620,7 +1995,7 @@ function openNativeStreetView(pano) {
         });
         viewer.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(photoControl);
 
-        if(!panoSelector)panoSelector = document.createElement("select");
+        if (!panoSelector) panoSelector = document.createElement("select");
         panoSelector.id = "pano-select";
         panoSelector.addEventListener('change', function () {
             if (viewer) viewer.setPano(panoSelector.value);
@@ -1628,14 +2003,14 @@ function openNativeStreetView(pano) {
         viewer.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(panoSelector);
     }
     else {
-        pano.panoId? viewer.setPano(pano.panoId):viewer.setPosition(pano.location)
-        if(pano.heading&&pano.pitch)viewer.setPov({ heading: pano.heading||0, pitch: pano.pitch||0 })
-        if(pano.zoom)viewer.setZoom(pano.zoom);
+        pano.panoId ? viewer.setPano(pano.panoId) : viewer.setPosition(pano.location)
+        if (pano.heading && pano.pitch) viewer.setPov({ heading: pano.heading || 0, pitch: pano.pitch || 0 })
+        if (pano.zoom) viewer.setZoom(pano.zoom);
 
     }
 
     requestAnimationFrame(() => {
-        spawn=pano;
+        spawn = pano;
         updatePanoSelector(pano, document.getElementById('pano-select'));
         clearMovementPath();
         splitContainer.classList.add('active');
@@ -1985,7 +2360,7 @@ function extractDate(entry) {
 }
 
 function convertPanoId(panoId) {
-    if(!panoId) return null;
+    if (!panoId) return null;
     try {
         const bytes = new Uint8Array(panoId.match(/.{1,2}/g).map(b => parseInt(b, 16)));
         return new TextDecoder("utf-8").decode(bytes);
@@ -2213,8 +2588,14 @@ function main() {
     }
 
     #layer-toggle {
-        bottom: 32px;
-        left: 24px;
+        top: 80px;
+        left: 1rem;
+    }
+
+    #path-toggle {
+        color: rgb(131, 18, 223);
+        top: 80px;
+        left: 4.5rem;
     }
 
     .peek-modal {

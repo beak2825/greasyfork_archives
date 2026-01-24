@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Linux.do Assistant
 // @namespace    https://linux.do/
-// @version      6.3.0
+// @version      6.4.0
 // @description  Linux.do 仪表盘 - 信任级别进度 & 积分查看 & CDK社区分数 & 主页筛选工具 (支持全等级)
 // @author       Sauterne@Linux.do
 // @match        https://linux.do/*
@@ -23,11 +23,11 @@
 // ==/UserScript==
 
 /**
- * 更新日志 v6.3.0
- * - 新增：支持用户自定义上传图标（可分别设置默认图和悬停图）
- * - 优化：图片自动压缩，支持PNG/JPG/GIF/WEBP格式
+ * 更新日志 v6.4.0
+ * - 优化：自定义图标分辨率提升至512x512，与小秘书图标一致，高DPI屏幕更清晰
  *
  * 历史更新：
+ * v6.3.0 - 新增：支持用户自定义上传图标（可分别设置默认图和悬停图）
  * v6.2.0 - 修复：GM_xmlhttpRequest 请求主站时添加 CSRF Token
  * v6.1.0 - 修复：float 模式下悬浮球位置超出屏幕导致不可见的问题
  * v6.0.0 - 重大更新
@@ -4453,12 +4453,16 @@
             reader.onload = (e) => {
                 const img = new Image();
                 img.onload = () => {
-                    // 压缩到 128x128
+                    // 缩放到 512x512（与 GitHub 小秘书图标一致，保证高清）
                     const canvas = document.createElement('canvas');
-                    const size = 128;
+                    const size = 512;
                     canvas.width = size;
                     canvas.height = size;
                     const ctx = canvas.getContext('2d');
+                    
+                    // 设置高质量缩放算法
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
                     
                     // 计算缩放和裁剪（居中裁剪为正方形）
                     const srcSize = Math.min(img.width, img.height);
@@ -4470,7 +4474,7 @@
                     ctx.drawImage(img, srcX, srcY, srcSize, srcSize, 0, 0, size, size);
                     
                     // 转为 base64（PNG 保持透明度）
-                    const base64 = canvas.toDataURL('image/png', 0.9);
+                    const base64 = canvas.toDataURL('image/png');
                     
                     // 保存到对应字段
                     if (!this.customIcon) {

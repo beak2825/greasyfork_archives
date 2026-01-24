@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         NodeImage图片上传助手（兼容Safari）
 // @namespace    https://www.nodeimage.com/
-// @version      1.0.3
+// @version      1.1
 // @description  在NodeSeek编辑器中粘贴图片自动上传到NodeImage图床 (Safari完全兼容版)
-// @author       Claude AI 修改自 shuai 
+// @author       Claude AI 修改自 shuai
 // @match        *://www.nodeseek.com/*
 // @match        *://nodeimage.com/*
 // @match        *://*.nodeimage.com/*
@@ -163,7 +163,7 @@
     // Safari修复: 使用原生fetch替代GM_xmlhttpRequest,避免CORS问题
     request: async ({ url, method = 'GET', data = null, headers = {}, withAuth = false }) => {
       const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-      
+
       // Safari使用原生fetch
       if (isSafari) {
         const fetchHeaders = {
@@ -171,24 +171,24 @@
           ...(withAuth && APP.api.key ? { 'X-API-Key': APP.api.key } : {}),
           ...headers
         };
-        
+
         const fetchOptions = {
           method,
           headers: fetchHeaders,
           credentials: 'omit', // Safari的CORS问题关键:不发送凭证
         };
-        
+
         if (data) {
           fetchOptions.body = data;
         }
-        
+
         try {
           const response = await fetch(url, fetchOptions);
-          
+
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
-          
+
           const result = await response.json();
           return result;
         } catch (error) {
@@ -196,11 +196,11 @@
           throw error;
         }
       }
-      
+
       // 非Safari继续使用GM_xmlhttpRequest
       return new Promise((resolve, reject) => {
         const chromeUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
-        
+
         GM_xmlhttpRequest({
           method,
           url,
@@ -230,11 +230,11 @@
       // 如果已有API Key,先验证其有效性
       if (APP.api.key) {
         try {
-          const testResponse = await API.request({ 
+          const testResponse = await API.request({
             url: APP.api.endpoints.apiKey,
             withAuth: true
           });
-          
+
           if (testResponse.api_key) {
             // 更新为最新的key(如果服务器返回了新的)
             if (testResponse.api_key !== APP.api.key) {
@@ -246,7 +246,7 @@
           console.log('[NodeImage] 已存储的API Key验证失败,尝试Cookie方式');
         }
       }
-      
+
       // 尝试通过Cookie获取
       try {
         const response = await API.request({ url: APP.api.endpoints.apiKey });
@@ -260,13 +260,13 @@
         return false;
       } catch (error) {
         console.warn('[NodeImage] Cookie方式获取失败(Safari常见问题):', error);
-        
+
         // Safari修复: 如果已有key但验证失败,保持key不变,可能只是网络问题
         if (APP.api.key) {
           console.log('[NodeImage] 保留已存储的API Key,将在上传时验证');
           return true;
         }
-        
+
         return false;
       }
     },
@@ -276,30 +276,30 @@
         // Safari修复: 确保文件完整性
         const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         let uploadFile = file;
-        
+
         if (isSafari) {
           console.log('[NodeImage] Safari上传前检查:', {
             name: file.name,
             type: file.type,
             size: file.size
           });
-          
+
           // 如果文件没有正确的type,重新读取并构建
           if (!file.type || file.size === 0) {
             console.warn('[NodeImage] 文件信息异常,尝试重建');
             const arrayBuffer = await file.arrayBuffer();
             const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
-            
+
             let fileName = file.name || `image-${Date.now()}.jpg`;
             if (!fileName.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
               fileName = `${fileName}.jpg`;
             }
-            
-            uploadFile = new File([blob], fileName, { 
+
+            uploadFile = new File([blob], fileName, {
               type: 'image/jpeg',
               lastModified: Date.now()
             });
-            
+
             console.log('[NodeImage] 重建后文件:', {
               name: uploadFile.name,
               type: uploadFile.type,
@@ -307,21 +307,21 @@
             });
           }
         }
-        
+
         const formData = new FormData();
         formData.append('image', uploadFile);
-        
+
         console.log('[NodeImage] 开始上传...');
-        
+
         const result = await API.request({
           url: APP.api.endpoints.upload,
           method: 'POST',
           data: formData,
           withAuth: true
         });
-        
+
         console.log('[NodeImage] 上传响应:', result);
-        
+
         if (result.success) {
           return {
             url: result.links.direct,
@@ -330,7 +330,7 @@
         } else {
           const errorMsg = result.error || '未知错误';
           console.error('[NodeImage] 上传失败:', errorMsg);
-          
+
           if (errorMsg.toLowerCase().match(/unauthorized|invalid api key|未授权|无效的api密钥/)) {
             APP.api.clearKey();
             throw new Error(MESSAGE.LOGIN_EXPIRED);
@@ -339,7 +339,7 @@
         }
       } catch (error) {
         console.error('[NodeImage] 上传异常:', error);
-        
+
         if (error.status === 401 || error.status === 403) {
           APP.api.clearKey();
           throw new Error(MESSAGE.LOGIN_EXPIRED);
@@ -379,7 +379,7 @@
     openLogin: () => {
       // Safari修复: 提供两种登录方式
       const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-      
+
       if (isSafari) {
         const choice = confirm(
           'Safari用户请选择登录方式:\n\n' +
@@ -387,7 +387,7 @@
           '点击"取消" - 打开NodeImage网站\n\n' +
           '获取API Key: www.nodeimage.com → API'
         );
-        
+
         if (choice) {
           UI.manualSetApiKey();
         } else {
@@ -408,7 +408,7 @@
         '3. 粘贴到下方输入框\n\n' +
         '提示: API Key会安全保存在本地,不会上传'
       );
-      
+
       if (apiKey && apiKey.trim().length > 20) {
         APP.api.setKey(apiKey.trim());
         setStatus(STATUS.SUCCESS.class, '✓ API Key已设置', 2000);
@@ -441,6 +441,13 @@
       const statusEl = document.createElement('div');
       statusEl.id = 'nodeimage-status';
       statusEl.className = STATUS.INFO.class;
+      statusEl.style.cursor = 'pointer';
+      statusEl.title = '点击访问 NodeImage';
+      statusEl.addEventListener('click', () => {
+        if (statusEl.textContent === MESSAGE.READY) {
+          window.open(APP.site.url, '_blank');
+        }
+      });
       container.appendChild(statusEl);
       DOM.statusElements.add(statusEl);
 
@@ -479,7 +486,7 @@
     convertToStandardImage: async (file) => {
       return new Promise((resolve, reject) => {
         console.log('[NodeImage] 开始转换图片:', file.name, file.type, file.size);
-        
+
         const reader = new FileReader();
         reader.onload = (e) => {
           const img = new Image();
@@ -489,27 +496,27 @@
               canvas.width = img.width;
               canvas.height = img.height;
               const ctx = canvas.getContext('2d');
-              
+
               // 填充白色背景(防止PNG透明度问题)
               ctx.fillStyle = '#FFFFFF';
               ctx.fillRect(0, 0, canvas.width, canvas.height);
               ctx.drawImage(img, 0, 0);
-              
+
               // 使用Promise包装toBlob,确保等待完成
               const blob = await new Promise(blobResolve => {
                 canvas.toBlob(blobResolve, 'image/jpeg', 0.92);
               });
-              
+
               if (blob) {
                 // 生成标准的文件名
                 let fileName = file.name || `image-${Date.now()}.jpg`;
                 fileName = fileName.replace(/\.[^.]+$/, '.jpg');
-                
-                const newFile = new File([blob], fileName, { 
+
+                const newFile = new File([blob], fileName, {
                   type: 'image/jpeg',
                   lastModified: Date.now()
                 });
-                
+
                 console.log('[NodeImage] 转换成功:', newFile.name, newFile.type, newFile.size);
                 resolve(newFile);
               } else {
@@ -558,7 +565,7 @@
         if (isSafari) {
           console.log('[NodeImage] Safari环境,强制转换图片格式');
           setStatus(STATUS.INFO.class, '正在处理图片...');
-          
+
           try {
             const convertedFiles = await Promise.all(
               files.map(file => ImageHandler.convertToStandardImage(file))

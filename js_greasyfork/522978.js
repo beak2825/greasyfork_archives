@@ -2,9 +2,9 @@
 // @name         Video Volume/Playback Speed Controller
 // @name:zh-TW   影片音量/撥放速度控制器
 // @namespace    https://github.com/jmsch23280866
-// @version      1.0
-// @description  Adjust video playback speed and volume with HUD showing real-time values inside the video frame. Conditional scroll blocking applied. (Script assisted by ChatGPT)
-// @description:zh-TW 使用滑鼠滾輪和按鍵組合調整影片播放速度和音量，並在影片框架內顯示即時值提示框。僅在條件下阻止滾動。（此腳本由ChatGPT協助撰寫）
+// @version      1.1
+// @description  Adjust video playback speed and volume with HUD showing real-time values inside the video frame. Conditional scroll blocking applied. (Script assisted by AI)
+// @description:zh-TW 使用滑鼠滾輪和按鍵組合調整影片播放速度和音量，並在影片框架內顯示即時值提示框。僅在條件下阻止滾動。（此腳本由AI協助撰寫）
 // @author       特務E04
 // @supportURL   https://github.com/jmsch23280866/Video-Control-Enhancer/issues
 // @license      MIT
@@ -57,11 +57,12 @@
     }
 
     document.addEventListener('wheel', (event) => {
-        const video = event.target.closest('video');
-        if (!video) return;
+        // 嘗試獲取滑鼠下的 video 或 audio 元素，若沒有則獲取頁面上第一個 video 或 audio 元素
+        const media = event.target.closest('video, audio') || document.querySelector('video, audio');
+        if (!media) return;
 
-        // 僅當按下 Ctrl 或右鍵時阻止滾動
-        if (!event.ctrlKey && event.buttons !== 2) {
+        // 僅當按下 Ctrl 或 Shift 時阻止滾動
+        if (!event.ctrlKey && !event.shiftKey) {
             return;
         }
 
@@ -74,17 +75,17 @@
         // Ctrl + 滾輪：調整播放速度
         if (event.ctrlKey) {
             const delta = Math.sign(deltaY) * 0.1; // 每次增減 0.1 倍速
-            const newPlaybackRate = Math.max(0.1, Math.min(video.playbackRate + delta, 16)); // 限制範圍 0.1 到 16
-            video.playbackRate = newPlaybackRate;
-            showHUD(video, `播放速度：${newPlaybackRate.toFixed(1)}x`);
+            const newPlaybackRate = Math.max(0.1, Math.min(media.playbackRate + delta, 16)); // 限制範圍 0.1 到 16
+            media.playbackRate = newPlaybackRate;
+            showHUD(media, `播放速度：${newPlaybackRate.toFixed(1)}x`);
         }
 
-        // 右鍵 + 滾輪：調整音量
-        if (event.buttons === 2) { // 右鍵
+        // Shift + 滾輪：調整音量
+        if (event.shiftKey) {
             const delta = Math.sign(deltaY) * 0.05; // 每次增減 0.05 音量
-            const newVolume = Math.max(0, Math.min(video.volume + delta, 1)); // 限制範圍 0 到 1
-            video.volume = newVolume;
-            showHUD(video, `音量：${Math.round(newVolume * 100)}%`);
+            const newVolume = Math.max(0, Math.min(media.volume + delta, 1)); // 限制範圍 0 到 1
+            media.volume = newVolume;
+            showHUD(media, `音量：${Math.round(newVolume * 100)}%`);
         }
     }, { passive: false }); // 設定 { passive: false } 以確保可以攔截預設行為
 })();

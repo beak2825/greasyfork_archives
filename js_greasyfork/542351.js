@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Bypass Paywalls Clean - en
-// @version         4.2.8.9
+// @version         4.2.9.0
 // @description     Bypass Paywalls of news sites
 // @author          magnolia1234
 // @homepageURL     https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters
@@ -4715,7 +4715,7 @@ else if (matchDomain('the-star.co.ke')) {
       let article = document.querySelector('div.story-content');
       if (article) {
         article.removeAttribute('class');
-        let scripts = document.querySelectorAll('script[type]');
+        let scripts = document.querySelectorAll('script');
         let json_script
         let script_start = 'self.__next_f.push([1,"';
         for (let script of scripts) {
@@ -4735,7 +4735,7 @@ else if (matchDomain('the-star.co.ke')) {
         if (json_script) {
           let intro_pars = article.querySelectorAll('p');
           removeDOMElement(...intro_pars);
-          let json_text = json_script.text.split('self.__next_f.push([1,"')[1].split('"])')[0].replace(/^.+\\n\\n\\n/, '').replace(/\.\\n((\\r\\n)+)?/g, '.\r\n\r\n').replace(/(\\r)?\\n/g, ' ').replace(/\\"/g, '"').replace(/\\u0026/g, '&');
+          let json_text = json_script.text.split('self.__next_f.push([1,"')[1].split('"])')[0].replace(/^.+\\n{4,}/, '').replace(/\.\\n((\\r\\n)+)?/g, '.\r\n\r\n').replace(/(\\r)?\\n/g, ' ').replace(/\\"/g, '"').replace(/\\u0026/g, '&');
           let article_new = document.createElement('div');
           article_new.style = 'margin: 20px 0px;';
           article_new.innerText = parseHtmlEntities(json_text);

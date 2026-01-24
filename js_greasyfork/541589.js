@@ -2,9 +2,9 @@
 // @name         YouTube: Open Videos in New Tab
 // @name:zh-CN   YouTube: 新标签页打开视频
 // @namespace    https://www.gwlin.com/
-// @version      1.0.2
+// @version      1.0.3
 // @description  Clicks on YouTube video links (homepage, search results, related videos, etc.) will open in a new tab instead of the current one.
-// @description:zh-CN 在 YouTube 的任何地方（首页、搜索、侧边栏等）点击视频链接，都会在新标签页中打开，而不是当前页跳转。修复了点击时间戳和章节会在新标签页打开的问题。
+// @description:zh-CN 在 YouTube 的任何地方（首页、搜索、侧边栏等）点击视频链接，都会在新标签页中打开，而不是当前页跳转。修复了点击时间戳、章节、以及播放器内部（片尾推荐）会在新标签页打开的问题。
 // @author       elevioux
 // @match        *://www.youtube.com/*
 // @grant        none
@@ -50,16 +50,24 @@
         // 4. 确认是视频链接
         if (isVideoLink) {
             // =========================
-            // FIX: 修复时间戳和章节跳转问题
+            // FIX 1: 修复时间戳和章节跳转问题
             // =========================
             const currentVideoId = getVideoId(window.location.href);
             const targetVideoId = getVideoId(link.href);
 
             // 如果当前页面有视频ID，且点击的链接也是同一个视频ID
-            // 说明这是：时间戳、章节标记、或者是“查看摘要”等页内跳转
             if (currentVideoId && targetVideoId && currentVideoId === targetVideoId) {
-                // 不做任何处理，允许原生行为（在当前播放器跳转时间）
-                return;
+                return; // 允许原生行为
+            }
+
+            // =========================
+            // FIX 2: 修复播放器内部点击（片尾推荐、Up Next）导致新窗口打开的问题
+            // =========================
+            // 检查该链接是否位于视频播放器容器内部
+            // .html5-video-player 是 YouTube 播放器的主容器类名
+            // #movie_player 是播放器的ID
+            if (link.closest('.html5-video-player') || link.closest('#movie_player')) {
+                return; // 允许原生行为（直接在当前播放器加载下一个视频）
             }
             // =========================
 

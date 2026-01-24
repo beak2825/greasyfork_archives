@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Re:Color (Bonk.io)
 // @namespace https://greasyfork.org/en/users/1552147-ansonii-crypto
-// @version 0.0.1
+// @version 0.0.2
 // @description A script to change the in-game name of anyone you'd like using colour groups. Script now requires; https://greasyfork.org/en/scripts/560457-bonk-mod-settings-core
 // @match https://bonk.io/gameframe-release.html
 // @run-at document-start
@@ -28,16 +28,82 @@
         }, 200);
     }
 
-    let colorGroups = []; // [{ id, name, color, players: [string] }]
-    const STORAGE_KEY_BASE = 'bonk_mod_color_groups_';
-    let storageKey = STORAGE_KEY_BASE + 'default';
-    let lastAccountName = null;
-    let nameObserverInitialized = false;
+    let colorGroups = [];
+
+    const STORAGE_KEY_PREFIX_V2 = 'bonk_recolor_groups_v2_';
+    const STORAGE_KEY_PREFIX_V1 = 'bonk_mod_color_groups_';
+
+    let storageKey = null;
+    let lastStorageKey = undefined;
+    let observersInitialized = false;
 
     let activePanel = null;
 
     function normalizeName(name) {
         return (name || '').trim().toLowerCase();
+    }
+
+    function isLoggedInAccount() {
+        const lvlEl = $('pretty_top_level');
+        if (!lvlEl) return false;
+
+        const lvlText = (lvlEl.textContent || '').trim().toLowerCase();
+        if (!lvlText || lvlText === 'guest') return false;
+
+        const nameEl = $('pretty_top_name');
+        const name = (nameEl ? nameEl.textContent : '').trim();
+        return !!name;
+    }
+
+    function getAccountNameFromPrettyTopOrNull() {
+        if (!isLoggedInAccount()) return null;
+        const el = $('pretty_top_name');
+        const name = (el ? el.textContent : '').trim();
+        if (!name) return null;
+        return name.toLowerCase();
+    }
+
+    function getStorageKeyV2() {
+        const acct = getAccountNameFromPrettyTopOrNull();
+        if (!acct) return null;
+        return STORAGE_KEY_PREFIX_V2 + acct;
+    }
+
+    function guessOldV1StorageKeys() {
+        const keys = new Set();
+
+        const prettyName = $('pretty_top_name');
+        if (prettyName && prettyName.textContent.trim()) {
+            keys.add(STORAGE_KEY_PREFIX_V1 + normalizeName(prettyName.textContent.trim()));
+        }
+
+        const stored = localStorage.getItem('bonk_name');
+        if (stored && stored.trim()) keys.add(STORAGE_KEY_PREFIX_V1 + normalizeName(stored.trim()));
+
+        keys.add(STORAGE_KEY_PREFIX_V1 + 'default');
+        return Array.from(keys);
+    }
+
+    function migrateV1ToV2IfNeeded() {
+        try {
+            if (!storageKey) return;
+
+            const v2Raw = localStorage.getItem(storageKey);
+            if (v2Raw) return;
+
+            for (const k of guessOldV1StorageKeys()) {
+                const raw = localStorage.getItem(k);
+                if (raw) {
+                    try {
+                        const parsed = JSON.parse(raw);
+                        if (Array.isArray(parsed)) {
+                            localStorage.setItem(storageKey, raw);
+                            return;
+                        }
+                    } catch {}
+                }
+            }
+        } catch {}
     }
 
     function hexToRgba(hex, alpha) {
@@ -55,6 +121,10 @@
 
     function loadGroups() {
         try {
+            if (!storageKey) {
+                colorGroups = [];
+                return;
+            }
             const raw = localStorage.getItem(storageKey);
             if (!raw) {
                 colorGroups = [];
@@ -70,44 +140,74 @@
 
     function saveGroups() {
         try {
+            if (!storageKey) {
+                window.dispatchEvent(new Event('recolorGroupsChanged'));
+                updateStorageHintUI();
+                return;
+            }
             localStorage.setItem(storageKey, JSON.stringify(colorGroups));
-
             window.dispatchEvent(new Event('recolorGroupsChanged'));
+            updateStorageHintUI();
         } catch (e) {
             console.error('[Re:Color] Failed to save colour groups:', e);
         }
     }
 
-    function updateAccountFromName() {
-        const el = $('pretty_top_name');
-        const account = normalizeName(el ? el.textContent : '') || 'guest';
-        if (account === lastAccountName) return;
+    function updateStorageHintUI() {
+        const el = document.getElementById('recolor_storage_hint');
+        if (!el) return;
 
-        lastAccountName = account;
-        storageKey = STORAGE_KEY_BASE + account;
-        loadGroups();
-
-        const list = document.getElementById('cg_groups_list');
-        if (list) {
-            renderGroupsUI();
+        if (storageKey) {
+            el.style.color = '';
+            el.style.opacity = '.75';
+            el.textContent = `Per-account storage: ${storageKey}`;
+        } else {
+            el.style.color = '#ffcc66';
+            el.style.opacity = '.9';
+            el.textContent = 'Guest mode: settings are temporary until you log in.';
         }
     }
 
-    function determineStorageKey() {
-        updateAccountFromName();
+    function updateAccountStorageKey() {
+        const newKey = getStorageKeyV2();
+        if (newKey === lastStorageKey) return;
 
-        const nameEl = $('pretty_top_name');
-        if (nameEl && !nameObserverInitialized) {
-            const obs = new MutationObserver(() => {
-                updateAccountFromName();
-            });
-            obs.observe(nameEl, {
-                childList: true,
-                characterData: true,
-                subtree: true
-            });
-            nameObserverInitialized = true;
+        lastStorageKey = newKey;
+        storageKey = newKey;
+
+        if (storageKey) {
+            migrateV1ToV2IfNeeded();
         }
+
+        loadGroups();
+
+        const list = document.getElementById('cg_groups_list');
+        if (list) renderGroupsUI();
+
+        updateStorageHintUI();
+    }
+
+    function ensureAccountObservers() {
+        if (observersInitialized) return;
+        observersInitialized = true;
+
+        const attach = () => {
+            const nameEl = $('pretty_top_name');
+            const lvlEl = $('pretty_top_level');
+
+            const obs = new MutationObserver(() => updateAccountStorageKey());
+            if (nameEl) obs.observe(nameEl, { childList: true, characterData: true, subtree: true });
+            if (lvlEl) obs.observe(lvlEl, { childList: true, characterData: true, subtree: true });
+        };
+
+        attach();
+
+        const globalObs = new MutationObserver(() => {
+            updateAccountStorageKey();
+        });
+        globalObs.observe(document.documentElement || document.body, { childList: true, subtree: true });
+
+        updateAccountStorageKey();
     }
 
     function getColorForName(name) {
@@ -271,237 +371,41 @@
         const style = document.createElement('style');
         style.id = 'recolor_css';
         style.textContent = `
-        #cg_groups_outer {
-            margin-top: 8px;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding-bottom: 4px;
-            box-sizing: border-box;
-        }
-
-        #cg_groups_list {
-            display: flex;
-            flex-direction: row;
-            gap: 10px;
-            min-height: 160px;
-        }
-
-        .cg_group {
-            position: relative;
-            border: 1px solid rgba(0,0,0,0.4);
-            border-radius: 6px;
-            padding: 8px;
-            background: rgba(0,0,0,0.15);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.25);
-            display: flex;
-            flex-direction: column;
-            cursor: default;
-            flex: 0 0 33%;
-            max-width: 33%;
-            box-sizing: border-box;
-            height: 180px;
-        }
-
-        .cg_group_header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 6px;
-            padding: 2px 4px;
-            border-radius: 4px;
-            background: rgba(0,0,0,0.2);
-        }
-        .cg_group_handle {
-            width: 16px;
-            height: 16px;
-            margin-right: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: grab;
-            opacity: 0.8;
-            font-size: 10px;
-            user-select: none;
-        }
-        .cg_group_title {
-            flex: 1;
-            font-weight: bold;
-            font-size: 13px;
-            text-align: left;
-        }
-        .cg_group_menu {
-            cursor: pointer;
-            opacity: 0.8;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-        .cg_group_menu:hover {
-            background: rgba(0,0,0,0.2);
-        }
-
-        .cg_group_players {
-            margin: 4px 0;
-            max-height: 120px;
-            overflow-y: auto;
-            padding-right: 4px;
-            flex: 1 1 auto;
-        }
-        .cg_player_row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 3px 6px;
-            border-radius: 4px;
-            background: rgba(0,0,0,0.15);
-            margin-bottom: 3px;
-            font-size: 12px;
-        }
-        .cg_player_row:nth-child(even) {
-            background: rgba(0,0,0,0.28);
-        }
-        .cg_player_row:last-child {
-            margin-bottom: 0;
-        }
-        .cg_player_name {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .cg_player_menu {
-            margin-left: 6px;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.15s;
-        }
-        .cg_player_row:hover .cg_player_menu {
-            opacity: 1;
-        }
-
-        .cg_group_color {
-            display: flex;
-            align-items: center;
-            margin-top: auto;
-            gap: 6px;
-            font-size: 11px;
-            opacity: 0.9;
-            padding: 3px 4px;
-            border-radius: 4px;
-            background: rgba(0,0,0,0.2);
-        }
-        .cg_group_color input[type="color"] {
-            border: none;
-            padding: 0;
-            width: 26px;
-            height: 20px;
-            cursor: pointer;
-        }
-        .cg_group_color_value {
-            font-family: monospace;
-        }
-
-        .cg_group.cg_group_add {
-            border: 1px dashed rgba(255,255,255,0.5);
-            background: transparent;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-        .cg_group_add_inner {
-            text-align: center;
-            opacity: 0.9;
-        }
-        .cg_group_add_plus {
-            font-size: 24px;
-            line-height: 1;
-            margin-bottom: 4px;
-        }
-
-        .cg_group_placeholder {
-            flex: 0 0 33%;
-            max-width: 33%;
-            border: 2px dashed rgba(255,255,255,0.4);
-            border-radius: 6px;
-            background: rgba(255,255,255,0.04);
-            height: 180px;
-        }
-
-        .cg_group_dragging {
-            animation: cg_rock 0.25s ease-in-out infinite alternate;
-            transform-origin: center center;
-            box-shadow: 0 8px 22px rgba(0,0,0,0.7);
-            cursor: grabbing !important;
-        }
-        @keyframes cg_rock {
-            0% { transform: rotate(-1.5deg) translateY(-3px); }
-            100% { transform: rotate(1.5deg) translateY(-3px); }
-        }
-
-        .mod_ctx_panel {
-            position: fixed;
-            background: rgba(25, 25, 25, 0.96);
-            border-radius: 6px;
-            padding: 8px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.6);
-            z-index: 99999;
-            min-width: 160px;
-            font-size: 12px;
-            color: #fff;
-        }
-        .mod_ctx_title {
-            font-weight: bold;
-            margin-bottom: 6px;
-        }
-        .mod_ctx_items {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-top: 4px;
-        }
-        .mod_ctx_item {
-            padding: 4px 6px;
-            border-radius: 4px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        .mod_ctx_item:hover {
-            background: rgba(255,255,255,0.08);
-        }
-        .mod_ctx_input {
-            width: 100%;
-            box-sizing: border-box;
-            border-radius: 4px;
-            border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(0,0,0,0.2);
-            color: #fff;
-            padding: 4px 6px;
-            margin-top: 4px;
-            margin-bottom: 4px;
-        }
-        .mod_ctx_buttons {
-            display: flex;
-            justify-content: flex-end;
-            gap: 6px;
-            margin-top: 6px;
-        }
-        .mod_ctx_button {
-            padding: 3px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(255,255,255,0.05);
-            font-size: 11px;
-        }
-        .mod_ctx_button:hover {
-            background: rgba(255,255,255,0.12);
-        }
-        .mod_ctx_button_primary {
-            border-color: rgba(121,85,248,0.8);
-            background: rgba(121,85,248,0.5);
-        }
-        .mod_ctx_error {
-            color: #ff6b6b;
-            font-size: 11px;
-            margin-top: 2px;
-        }
+        #cg_groups_outer { margin-top: 8px; overflow-x: auto; overflow-y: hidden; padding-bottom: 4px; box-sizing: border-box; }
+        #cg_groups_list { display: flex; flex-direction: row; gap: 10px; min-height: 160px; }
+        .cg_group { position: relative; border: 1px solid rgba(0,0,0,0.4); border-radius: 6px; padding: 8px; background: rgba(0,0,0,0.15); box-shadow: 0 2px 4px rgba(0,0,0,0.25); display: flex; flex-direction: column; cursor: default; flex: 0 0 33%; max-width: 33%; box-sizing: border-box; height: 180px; }
+        .cg_group_header { display: flex; align-items: center; margin-bottom: 6px; padding: 2px 4px; border-radius: 4px; background: rgba(0,0,0,0.2); }
+        .cg_group_handle { width: 16px; height: 16px; margin-right: 6px; display: flex; align-items: center; justify-content: center; cursor: grab; opacity: 0.8; font-size: 10px; user-select: none; }
+        .cg_group_title { flex: 1; font-weight: bold; font-size: 13px; text-align: left; }
+        .cg_group_menu { cursor: pointer; opacity: 0.8; padding: 2px 6px; border-radius: 4px; }
+        .cg_group_menu:hover { background: rgba(0,0,0,0.2); }
+        .cg_group_players { margin: 4px 0; max-height: 120px; overflow-y: auto; padding-right: 4px; flex: 1 1 auto; }
+        .cg_player_row { display: flex; align-items: center; justify-content: space-between; padding: 3px 6px; border-radius: 4px; background: rgba(0,0,0,0.15); margin-bottom: 3px; font-size: 12px; }
+        .cg_player_row:nth-child(even) { background: rgba(0,0,0,0.28); }
+        .cg_player_row:last-child { margin-bottom: 0; }
+        .cg_player_name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .cg_player_menu { margin-left: 6px; cursor: pointer; opacity: 0; transition: opacity 0.15s; }
+        .cg_player_row:hover .cg_player_menu { opacity: 1; }
+        .cg_group_color { display: flex; align-items: center; margin-top: auto; gap: 6px; font-size: 11px; opacity: 0.9; padding: 3px 4px; border-radius: 4px; background: rgba(0,0,0,0.2); }
+        .cg_group_color input[type="color"] { border: none; padding: 0; width: 26px; height: 20px; cursor: pointer; }
+        .cg_group_color_value { font-family: monospace; }
+        .cg_group.cg_group_add { border: 1px dashed rgba(255,255,255,0.5); background: transparent; align-items: center; justify-content: center; cursor: pointer; }
+        .cg_group_add_inner { text-align: center; opacity: 0.9; }
+        .cg_group_add_plus { font-size: 24px; line-height: 1; margin-bottom: 4px; }
+        .cg_group_placeholder { flex: 0 0 33%; max-width: 33%; border: 2px dashed rgba(255,255,255,0.4); border-radius: 6px; background: rgba(255,255,255,0.04); height: 180px; }
+        .cg_group_dragging { animation: cg_rock 0.25s ease-in-out infinite alternate; transform-origin: center center; box-shadow: 0 8px 22px rgba(0,0,0,0.7); cursor: grabbing !important; }
+        @keyframes cg_rock { 0% { transform: rotate(-1.5deg) translateY(-3px); } 100% { transform: rotate(1.5deg) translateY(-3px); } }
+        .mod_ctx_panel { position: fixed; background: rgba(25, 25, 25, 0.96); border-radius: 6px; padding: 8px; box-shadow: 0 6px 18px rgba(0,0,0,0.6); z-index: 99999; min-width: 160px; font-size: 12px; color: #fff; }
+        .mod_ctx_title { font-weight: bold; margin-bottom: 6px; }
+        .mod_ctx_items { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+        .mod_ctx_item { padding: 4px 6px; border-radius: 4px; cursor: pointer; white-space: nowrap; }
+        .mod_ctx_item:hover { background: rgba(255,255,255,0.08); }
+        .mod_ctx_input { width: 100%; box-sizing: border-box; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.2); color: #fff; padding: 4px 6px; margin-top: 4px; margin-bottom: 4px; }
+        .mod_ctx_buttons { display: flex; justify-content: flex-end; gap: 6px; margin-top: 6px; }
+        .mod_ctx_button { padding: 3px 8px; border-radius: 4px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); font-size: 11px; }
+        .mod_ctx_button:hover { background: rgba(255,255,255,0.12); }
+        .mod_ctx_button_primary { border-color: rgba(121,85,248,0.8); background: rgba(121,85,248,0.5); }
+        .mod_ctx_error { color: #ff6b6b; font-size: 11px; margin-top: 2px; }
     `;
         document.head.appendChild(style);
     }
@@ -512,12 +416,8 @@
         const light = hexToRgba(color, 0.18);
         const medium = hexToRgba(color, 0.32);
 
-        if (header) {
-            header.style.background = `linear-gradient(90deg, ${light}, ${medium})`;
-        }
-        if (colorBar) {
-            colorBar.style.background = `linear-gradient(90deg, ${medium}, ${light})`;
-        }
+        if (header) header.style.background = `linear-gradient(90deg, ${light}, ${medium})`;
+        if (colorBar) colorBar.style.background = `linear-gradient(90deg, ${medium}, ${light})`;
     }
 
     function renderGroupsUI() {
@@ -574,6 +474,7 @@
         list.appendChild(addCard);
 
         attachGroupEvents();
+        updateStorageHintUI();
     }
 
     function attachGroupEvents() {
@@ -632,20 +533,13 @@
                     if (targetIndex > slots - 1) targetIndex = slots - 1;
                 }
 
-                if (placeholder && placeholder.parentNode) {
-                    placeholder.parentNode.removeChild(placeholder);
-                }
+                if (placeholder && placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
                 placeholder = null;
 
-                if (card.parentNode) {
-                    card.parentNode.removeChild(card);
-                }
+                if (card.parentNode) card.parentNode.removeChild(card);
 
-                if (targetIndex !== startIndex) {
-                    reorderGroupsToIndex(groupId, targetIndex);
-                } else {
-                    renderGroupsUI();
-                }
+                if (targetIndex !== startIndex) reorderGroupsToIndex(groupId, targetIndex);
+                else renderGroupsUI();
             }
 
             function startDrag(e) {
@@ -679,9 +573,7 @@
                 document.addEventListener('mouseup', onMouseUp);
             }
 
-            if (handle) {
-                handle.addEventListener('mousedown', startDrag);
-            }
+            if (handle) handle.addEventListener('mousedown', startDrag);
 
             if (titleEl) {
                 titleEl.addEventListener('dblclick', (e) => {
@@ -705,15 +597,11 @@
 
                         btnSave.addEventListener('click', () => {
                             const value = input.value.trim();
-                            if (value) {
-                                renameGroup(groupId, value);
-                            }
+                            if (value) renameGroup(groupId, value);
                             closePanel();
                         });
 
-                        btnCancel.addEventListener('click', () => {
-                            closePanel();
-                        });
+                        btnCancel.addEventListener('click', () => closePanel());
 
                         input.focus();
                         input.select();
@@ -767,9 +655,7 @@
                                             }
                                         });
 
-                                        btnCancel.addEventListener('click', () => {
-                                            closePanel();
-                                        });
+                                        btnCancel.addEventListener('click', () => closePanel());
 
                                         input.focus();
                                     });
@@ -790,15 +676,11 @@
 
                                         btnSave.addEventListener('click', () => {
                                             const value = input.value.trim();
-                                            if (value) {
-                                                renameGroup(groupId, value);
-                                            }
+                                            if (value) renameGroup(groupId, value);
                                             closePanel();
                                         });
 
-                                        btnCancel.addEventListener('click', () => {
-                                            closePanel();
-                                        });
+                                        btnCancel.addEventListener('click', () => closePanel());
 
                                         input.focus();
                                         input.select();
@@ -823,9 +705,7 @@
                                             closePanel();
                                         });
 
-                                        btnCancel.addEventListener('click', () => {
-                                            closePanel();
-                                        });
+                                        btnCancel.addEventListener('click', () => closePanel());
                                     });
                                 }
                             });
@@ -865,14 +745,13 @@
                                 closePanel();
 
                                 if (action === 'move') {
-                                    if (colorGroups.length < 2) {
-                                        return;
-                                    }
+                                    if (colorGroups.length < 2) return;
+
                                     openPanel(menu, panel2 => {
                                         const itemsHtml = colorGroups
-                                        .filter(g => g.id !== groupId)
-                                        .map(g => `<div class="mod_ctx_item" data-target="${g.id}">${g.name}</div>`)
-                                        .join('');
+                                            .filter(g => g.id !== groupId)
+                                            .map(g => `<div class="mod_ctx_item" data-target="${g.id}">${g.name}</div>`)
+                                            .join('');
                                         panel2.innerHTML = `
                                         <div class="mod_ctx_title">Move "${pname}" to:</div>
                                         <div class="mod_ctx_error" style="display:none;"></div>
@@ -924,9 +803,9 @@
         bonkMods.registerMod({
             id: 'recolor',
             name: 'Re:Color',
-            version: '0.1.0',
-            author: 'ansonii-crypto',
-            description: 'Colour groups for player names.',
+            version: '0.0.2',
+            author: 'SIoppy',
+            description: 'Colour groups for player names. Per-account local storage (guest mode is temporary).',
             devHint: 'Exposes window.recolorAPI.getColorForName(name).'
         });
 
@@ -947,20 +826,24 @@
                 <div class="mod_block_sub">
                     Create groups of player names and assign them a colour.
                     Players can only belong to one group at a time.
-                    Per-account, saved locally.
                 </div>
+                <div id="recolor_storage_hint" style="margin-top:6px;font-size:11px;"></div>
                 <div id="cg_groups_outer">
                     <div id="cg_groups_list"></div>
                 </div>
             `;
                 renderGroupsUI();
+                updateStorageHintUI();
             }
         });
+
+        setTimeout(() => {
+            updateAccountStorageKey();
+            updateStorageHintUI();
+        }, 0);
     }
 
-    if (window.bonkMods) {
-        initRecolorMod();
-    }
+    if (window.bonkMods) initRecolorMod();
     window.addEventListener('bonkModsReady', initRecolorMod);
 
     const origFillText = CanvasRenderingContext2D.prototype.fillText;
@@ -975,5 +858,11 @@
             origFillText.call(this, text, x, y);
         }
     };
-    waitForElement('pretty_top_name', determineStorageKey);
+
+    waitForElement('pretty_top_level', () => {
+        waitForElement('pretty_top_name', () => {
+            ensureAccountObservers();
+            updateAccountStorageKey();
+        });
+    });
 })();

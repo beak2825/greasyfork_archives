@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Scalelup Beta
 // @namespace    https://scalelup.com/
-// @version      0.1
-// @description  Automatiza Scalelup: avança posts,, gerencia likes ocasionais, exibe estatísticas.
+// @version      0.1.1
+// @description  Automatiza Scalelup: avança posts, gerencia likes ocasionais, exibe estatísticas.
 // @icon         https://scalelup.com/favicon.ico
 // @match        https://scalelup.com/*
-// @author       Miningbitcoin16/ChatGPTs Scripter
+// @author       Mbtc/ChatGPTs Scripter
 // @license      MIT
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/563816/Scalelup%20Beta.user.js

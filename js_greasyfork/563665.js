@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ヤフコメ ユーザー評価表示
 // @namespace    https://github.com/zszushi/YahooCommentRatio
-// @version      2.1
+// @version      2.1.1
 // @description  Yahoo!ニュースのコメント欄にユーザーの評価(共感した/なるほど/うーん)を表示
 // @author       zszushi, Google Antigravity
 // @match        https://news.yahoo.co.jp/*
@@ -15,7 +15,6 @@
 // @downloadURL https://update.greasyfork.org/scripts/563665/%E3%83%A4%E3%83%95%E3%82%B3%E3%83%A1%20%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E8%A9%95%E4%BE%A1%E8%A1%A8%E7%A4%BA.user.js
 // @updateURL https://update.greasyfork.org/scripts/563665/%E3%83%A4%E3%83%95%E3%82%B3%E3%83%A1%20%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E8%A9%95%E4%BE%A1%E8%A1%A8%E7%A4%BA.meta.js
 // ==/UserScript==
-
 
 (function () {
   "use strict";
@@ -91,7 +90,7 @@
     const container = document.createElement("div");
     container.style.cssText = `
       height: ${height};
-      background: #f0f0f0;
+      background: #bbbbbb; /* コントラスト向上のためさらに濃く変更 */
       margin: ${margin};
       border-radius: ${parseInt(height)}px;
       overflow: hidden;
@@ -271,68 +270,74 @@
             };
 
             const statsText = doc.body.textContent;
+            let dataFound = false;
 
-            // DOMベースのパース: 特定のラベルを持つ要素を探索して数値を取得
-            const findNumByLabel = (label) => {
-              const elements = Array.from(doc.querySelectorAll("span, div, b, strong"));
-              const labelEl = elements.find((el) => el.textContent.trim() === label);
-              if (!labelEl) return 0;
-
-              // 探索範囲: 隣接要素、親の隣接、または同じコンテナ内の要素
-              const searchArea = [
-                labelEl.nextElementSibling,
-                labelEl.parentElement?.nextElementSibling,
-                labelEl.parentElement?.querySelector("span:last-child, b, strong, [class*='count']"),
-                labelEl.parentElement,
-              ];
-
-              for (const area of searchArea) {
-                if (!area) continue;
-                const val = parseNumber(area.textContent);
-                if (!isNaN(val) && val > 0) return val;
+            // 優先度1: __PRELOADED_STATE__ (JSON)
+            const script = Array.from(doc.querySelectorAll("script")).find((s) =>
+              (s.textContent || s.innerText || "").includes("__PRELOADED_STATE__"),
+            );
+            const scriptText = script ? (script.textContent || script.innerText || "") : "";
+            if (scriptText) {
+              try {
+                const jsonMatch = scriptText.match(/__PRELOADED_STATE__\s*=\s*(\{[\s\S]*?\})(?:;|\n|$)/);
+                if (jsonMatch) {
+                  const state = JSON.parse(jsonMatch[1]);
+                  const detail = state.profileDetail;
+                  if (detail) {
+                    ratings.sympathized = detail.totalEmpathyCount || 0;
+                    ratings.understood = detail.totalInsightCount || detail.totalGoodCount || 0;
+                    ratings.hmm = detail.totalNegativeCount || detail.totalBadCount || 0;
+                    ratings.commentCount = detail.totalCommentCount || 0;
+                    dataFound = true;
+                  }
+                }
+              } catch (e) {
+                // 失敗時は続行
               }
-              return 0;
-            };
-
-            ratings.sympathized = findNumByLabel("共感した");
-            ratings.understood = findNumByLabel("なるほど");
-            ratings.hmm = findNumByLabel("うーん");
-            ratings.commentCount = findNumByLabel("投稿コメント") || findNumByLabel("コメント");
-
-            // フォールバック1: 正規表現
-            if (ratings.sympathized === 0) {
-              const findMatch = (pattern) => {
-                const m = statsText.match(pattern);
-                return m ? parseNumber(m[1]) : 0;
-              };
-              ratings.sympathized = findMatch(/共感した\s*([\d.万,]+)/);
-              ratings.understood = findMatch(/なるほど\s*([\d.万,]+)/);
-              ratings.hmm = findMatch(/うーん\s*([\d.万,]+)/);
-              ratings.commentCount = ratings.commentCount || findMatch(/(?:投稿)?コメント\s*([\d.万,]+)/);
             }
 
-            // フォールバック2: __PRELOADED_STATE__
-            if (ratings.sympathized === 0) {
-              const script = Array.from(doc.querySelectorAll("script")).find((s) =>
-                (s.textContent || s.innerText || "").includes("__PRELOADED_STATE__"),
-              );
-              const scriptText = script ? (script.textContent || script.innerText || "") : "";
-              if (scriptText) {
-                try {
-                  const jsonMatch = scriptText.match(/__PRELOADED_STATE__\s*=\s*(\{[\s\S]*?\})(?:;|\n|$)/);
-                  if (jsonMatch) {
-                    const state = JSON.parse(jsonMatch[1]);
-                    const detail = state.profileDetail;
-                    if (detail) {
-                      ratings.sympathized = detail.totalEmpathyCount || 0;
-                      ratings.understood = detail.totalInsightCount || detail.totalGoodCount || 0;
-                      ratings.hmm = detail.totalNegativeCount || detail.totalBadCount || 0;
-                      ratings.commentCount = ratings.commentCount || detail.totalCommentCount || 0;
-                    }
-                  }
-                } catch (e) {
-                  /* ignore */
+            if (!dataFound) {
+              // DOMベースのパース: 特定のラベルを持つ要素を探索して数値を取得
+              const findNumByLabel = (label) => {
+                const elements = Array.from(doc.querySelectorAll("span, div, b, strong"));
+                const labelEl = elements.find((el) => el.textContent.trim() === label);
+                if (!labelEl) return 0;
+
+                // 探索範囲: 隣接要素、親の隣接、または同じコンテナ内の要素
+                const searchArea = [
+                  labelEl.nextElementSibling,
+                  labelEl.parentElement?.nextElementSibling,
+                  labelEl.parentElement?.querySelector("span:last-child, b, strong, [class*='count']"),
+                  // labelEl.parentElement, // 危険: コンテナ全体のテキスト（PV数など）を拾う可能性があるため廃止
+                ];
+
+                for (const area of searchArea) {
+                  if (!area) continue;
+                  const text = area.textContent.trim();
+                  // 30文字以上はプロフィールの自己紹介文などの可能性が高いため無視（統計数値は短い）
+                  if (text.length > 30) continue;
+
+                  const val = parseNumber(text);
+                  if (!isNaN(val) && val > 0) return val;
                 }
+                return 0;
+              };
+
+              ratings.sympathized = findNumByLabel("共感した");
+              ratings.understood = findNumByLabel("なるほど");
+              ratings.hmm = findNumByLabel("うーん");
+              ratings.commentCount = findNumByLabel("投稿コメント") || findNumByLabel("コメント");
+
+              // フォールバック1: 正規表現
+              if (ratings.sympathized === 0) {
+                const findMatch = (pattern) => {
+                  const m = statsText.match(pattern);
+                  return m ? parseNumber(m[1]) : 0;
+                };
+                ratings.sympathized = findMatch(/共感した\s*([\d.万,]+)/);
+                ratings.understood = findMatch(/なるほど\s*([\d.万,]+)/);
+                ratings.hmm = findMatch(/うーん\s*([\d.万,]+)/);
+                ratings.commentCount = ratings.commentCount || findMatch(/(?:投稿)?コメント\s*([\d.万,]+)/);
               }
             }
 
@@ -604,6 +609,7 @@
     });
 
     const agreeBtn = findBtn("共感した");
+    const understoodBtn = findBtn("なるほど");
     const disagreeBtn = findBtn("うーん");
 
     const extract = (btn) => {
@@ -625,12 +631,14 @@
     };
 
     const sympathized = extract(agreeBtn);
+    const understood = extract(understoodBtn);
     const hmm = extract(disagreeBtn);
 
     return {
       sympathized,
+      understood,
       hmm,
-      total: sympathized + hmm,
+      total: sympathized + understood + hmm,
       time: timeVal
     };
   }
@@ -1080,7 +1088,11 @@
           commentElement.dataset.hiddenByRating = "true";
         }
       } else if (settings.enableBackgroundColor && commentElement && !ratings.isExpert && isAuthorLink) {
-        const stats = settings.bgColorBasis === "comment" ? commentStats : {
+        const stats = settings.bgColorBasis === "comment" ? {
+          sympathized: commentStats.sympathized + (commentStats.understood || 0),
+          hmm: commentStats.hmm,
+          total: commentStats.total
+        } : {
           sympathized: (ratings.sympathized || 0) + (ratings.understood || 0),
           hmm: ratings.hmm || 0,
           total: (ratings.sympathized || 0) + (ratings.understood || 0) + (ratings.hmm || 0)
@@ -1104,10 +1116,12 @@
 
       // 個別コメント評価バー（3つの指標の下に表示）
       // ハードゲート: 合計0の場合は絶対に表示しない
-      const actualTotal = commentStats.sympathized + commentStats.hmm;
+      const actualTotal = commentStats.sympathized + commentStats.understood + commentStats.hmm;
       if (settings.showCommentBar && commentElement && actualTotal > 0 && !commentElement.querySelector(".yahoo-comment-rating-bar-container")) {
-        const rate = (commentStats.sympathized / actualTotal) * 100;
-        const { color } = calculateRating(commentStats.sympathized, commentStats.hmm);
+        // 共感 + なるほど をポジティブとする
+        const positive = commentStats.sympathized + commentStats.understood;
+        const rate = (positive / actualTotal) * 100;
+        const { color } = calculateRating(positive, commentStats.hmm);
 
         const barContainer = document.createElement("div");
         barContainer.className = "yahoo-comment-rating-bar-container";
@@ -1116,7 +1130,7 @@
             flex-basis: 100%;
             width: 100%;
             height: 6px;
-            background: #f0f0f0;
+            background: #bbbbbb; /* コントラスト向上 */
             margin: 10px 0 4px 0;
             border-radius: 6px;
             overflow: hidden;
@@ -1164,7 +1178,7 @@
             barContainer.style.cssText = `
                 width: 100%;
                 height: 6px;
-                background: #f0f0f0;
+                background: #bbbbbb; /* コントラスト向上 */
                 margin: 8px 0 4px 0;
                 border-radius: 6px;
                 overflow: hidden;

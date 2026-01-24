@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         M-Team屏蔽指定关键词种子
 // @namespace    m-teamblock
-// @version      20260119
+// @version      20260124
 // @author       Badge8305@M-Team
 // @description  默认屏蔽掉馒头成人区“男娘”、“重口味”类别的种子，可以根据需求手动增删关键词
 // @match        https://*.m-team.cc/*
@@ -52,6 +52,20 @@
         'prb-',
         'SAL-',
         'sal-',
+        'IDRK-',
+        'idrk-',
+        'ARAN-',
+        'aran-',
+        'PRD-',
+        'prd-',
+        'LBOY-',
+        'lboy-',
+        'TPNS-',
+        'tpns-',
+        'SCHN-',
+        'schn-',
+        'HVG-',
+        'hvg-',
         '伪娘人妖',
         '变性',
         '喝尿',

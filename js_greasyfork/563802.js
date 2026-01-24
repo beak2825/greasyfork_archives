@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Menéame dark
 // @namespace    http://meneame.net/
-// @version      0.184
+// @version      0.333
 // @description  Meneame dark mode
 // @author       I my me
 // @match        *://*.meneame.net/*
@@ -11,118 +11,121 @@
 // @updateURL https://update.greasyfork.org/scripts/563802/Men%C3%A9ame%20dark.meta.js
 // ==/UserScript==
 
+(function () {
+    'use strict';
 
-    (function() {
-        'use strict';
-        // Es CSS un poco (bastante) marrano, pero ahora mismo me vale.
-        // Función para insertar estilos que anulan los elementos no deseados
-        function insertOverrideStyles() {
-            const style = document.createElement('style');
-            style.type = 'text/css';
-            style.innerHTML = `
-               body {
-               color: white !important;
-               background: #1A1A1A;
-               }
-               
-               .news-content {
-               color: #FFF2E8 !important;
-               }
-               
-               a {
-               color: #FFF2E8 !important;
-               }
-               
-               .header-menu01, .header-menu-wrapper, .header-top-wrapper, .news-summary .warn, .story-blog .warn {
-               background: #1A1A1A;
-               }
-               
-               .menu01-itemsl a.submit_new_post{
-               background: none;
-               border: none;
-               box-shadow: none;
-               }
-               
-               .menu01-itemsl a.submit_new_article{
-               background: none;
-               border: none;
-               box-shadow: none;
-               }
-               
-               .comment-body {
-               background: #1A1A1A;
-               color: #FFF2E8;
-               }
-               
-               .comment.author .comment-body, .threader.collapsed > .comment .comment-body {
-               background: #BF5500;
-               color: #FFF2E8;
-               }
-               
-               .comment.phantom .comment-body, .comment.high .comment-body {
-               background: #693000;
-               }
-               
-               .topbox {
-               display: none;
-               }
-               
-               .news-details a.comments {
-               background: #1A1A1A;
-               }
-               
-               .news-shakeit .votes a {
-               color: #e35614 !important;
-               }
-               
-               select, fieldset {
-               background: #1A1A1A;
-               }
-               
-               ul#userinfo a.notifications span {
-               border-color: #1A1A1A;
-               }
-               
-               #sidebar, .news-body .box {
-               display: none;
-               }
-               
-               #newswrap {
-               margin: 10px 10%;
-               }
-               
-               .news-shakeit .clics, .news-shakeit .votes, .news-shakeit.mnm-queued .votes, .news-shakeit.mnm-queued .clics {
-               background: #1A1A1A;
-               }
-               
-               .news-shakeit .votes a {
-               color: white !important;}
-               div.dropdown.menu-more.open ul.dropdown-menu.menu-subheader {
-               background: darkgrey;
-               }
+    const STYLE_ID = 'menemame-dark-style';
 
-               `;
-            document.head.appendChild(style);
+    // Evita ejecutar si ya se aplicó el estilo
+    if (document.getElementById(STYLE_ID)) return;
+
+    const style = document.createElement('style');
+    style.id = STYLE_ID;
+    style.textContent = `
+        :root {
+            --bg-primary: #1A1A1A;
+            --text-primary: #FFF2E8;
+            --accent-orange: #e35614;
+            --comment-author: #BF5500;
+            --comment-phantom: #693000;
+            --border-color: orange;
         }
 
-        // Observa cambios en el DOM
-        var observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (!mutation.addedNodes) return;
+        body {
+            color: var(--text-primary) !important;
+            background: var(--bg-primary) !important;
+        }
 
-                // Verifica si el estilo ya fue añadido, para no duplicarlo
-                if (!document.querySelector('style#customOverrideStyles')) {
-                    insertOverrideStyles();
-                }
-            });
-        });
+        .news-content,
+        a,
+        .news-details span,
+        .comment-footer .votes-counter,
+        .news-shakeit .votes a {
+            color: var(--text-primary) !important;
+        }
 
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
+        .header-menu01,
+        .header-menu-wrapper,
+        .header-top-wrapper,
+        .news-summary .warn,
+        .story-blog .warn,
+        .comment-body,
+        .news-details a.comments,
+        .news-shakeit .clics,
+        .news-shakeit .votes,
+        .news-shakeit.mnm-queued .votes,
+        .news-shakeit.mnm-queued .clics,
+        .section-profile .contents-layout,
+        .section-profile .contents-layout .contents-body {
+            background: var(--bg-primary) !important;
+        }
 
-        // Insertamos los estilos inmediatamente en caso de que los nodos relevantes ya estén en el DOM
-        insertOverrideStyles();
-    })();
+        .comment.author .comment-body,
+        .threader.collapsed > .comment .comment-body {
+            background: var(--comment-author) !important;
+            color: var(--text-primary) !important;
+        }
 
+        .comment.phantom .comment-body,
+        .comment.high .comment-body {
+            background: var(--comment-phantom) !important;
+        }
+
+        .topbox,
+        #sidebar,
+        .news-body .box {
+            display: none !important;
+        }
+
+        #newswrap {
+            margin: 10px 10% !important;
+        }
+
+        .menu01-itemsl a.submit_new_post,
+        .menu01-itemsl a.submit_new_article,
+        fieldset,
+        .button,
+        button,
+        input[type="button"],
+        input[type="submit"] {
+            background: none !important;
+            border: 1px solid var(--border-color) !important;
+            box-shadow: none !important;
+        }
+
+        ul#userinfo a.notifications span {
+            border-color: var(--bg-primary) !important;
+        }
+
+        div.dropdown.menu-more.open ul.dropdown-menu.menu-subheader,
+        div.dropdown.menu-more.open a.menu-more-button {
+            background: darkgrey !important;
+        }
+
+        .section-profile .contents-layout .contents-body table.table-condensed th:hover,
+        .table-condensed > tbody > tr > td:hover {
+            background: darkgrey !important;
+        }
+
+        .section-profile .contents-layout .contents-menu a.selected,
+        .section-profile .contents-layout .contents-menu a:hover {
+            background: var(--border-color) !important;
+        }
+
+        .btn.btn-mnm.btn-inverted {
+            background: var(--border-color) !important;
+        }
+
+        .comment-header .comment-date,
+        .comment.high .comment-date {
+            color: white !important;
+        }
+
+        select {
+            background: var(--bg-primary) !important;
+            color: var(--text-primary) !important;
+        }
+    `;
+
+    document.head.appendChild(style);
+})();

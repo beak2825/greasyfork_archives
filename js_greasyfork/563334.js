@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name              护眼模式助手（豆沙绿增强版）
+// @name              护眼模式助手 - 123云盘适配版
 // @namespace         https://github.com/syhyz1990/darkmode
-// @version           3.6.9
-// @description       全网通用护眼模式，支持白天模式、夜间模式、豆沙绿模式，白名单实时生效
-// @author            YouXiaoHou & DeepSeek
+// @version           4.1.8
+// @description       全网通用护眼模式，专门适配123云盘和Bilivod等网站
+// @author            YouXiaoHou
 // @license           MIT
 // @homepage          https://www.youxiaohou.com/tool/install-darkmode.html
 // @supportURL        https://github.com/syhyz1990/darkmode
@@ -13,9 +13,9 @@
 // @grant             GM_setValue
 // @grant             GM_registerMenuCommand
 // @grant             GM_unregisterMenuCommand
-// @icon              data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4Ij48cGF0aCBkPSJNOTMuNSA5NC1YjEwLjYgMCAyMC4zLTMuMyAyOC4yLTktOC4zIDIyLjUtMzAuMiAzOC42LTU2IDM4LjYtMzIuNyAwLTU5LjMtMjUuOC01OS4zLTU3LjdTMzIuOSA4LjcgNjUuNyA4LjdoMi4yQzU0LjYgMTcgNDUuNyAzMS41IDQ1LjcgNDhjMCAyNS43IDI1LjcgNDYuNiA1Mi4xIDQ2LjZ6IiBmaWxsPSIjZmZiNTc4Ii8+PHBhdGggZD0iTTEyMS42IDgxLjhjLS44IDAtMS42LjItMi4zLjctNy41IDUuMy0xNi41IDguMS0yNS44IDguMS0yNC4yIDAtNDMuOS0xOS4xLTQzLUtI9mmgxMy43YzEuNiAwIDIuOSAxLjMgMi45IDIuOXMtMS4zIDIuOS0yLjkgMi45em0xMy4yLTMxLjFoLTE0LjRjLTEuNiAwLTIuOS0xLjMtMi45LTIuOSAwLTEgLjUtMS45IDEuMy0yLjRsNi4yLTQuMWgtNC43YzEuNiAwIDIuOSAxLjMgMi45IDIuOXMtMS4yIDIuOS0yLjggMi45eiIgZmlsbD0iIzQ0NCIvPjwvc3ZnPg==
-// @downloadURL https://update.greasyfork.org/scripts/563334/%E6%8A%A4%E7%9C%BC%E6%A8%A1%E5%BC%8F%E5%8A%A9%E6%89%8B%EF%BC%88%E8%B1%86%E6%B2%99%E7%BB%BF%E5%A2%9E%E5%BC%BA%E7%89%88%EF%BC%89.user.js
-// @updateURL https://update.greasyfork.org/scripts/563334/%E6%8A%A4%E7%9C%BC%E6%A8%A1%E5%BC%8F%E5%8A%A9%E6%89%8B%EF%BC%88%E8%B1%86%E6%B2%99%E7%BB%BF%E5%A2%9E%E5%BC%BA%E7%89%88%EF%BC%89.meta.js
+// @icon              data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4Ij48cGF0aCBkPSJNOTMuNSA5NC1WjEwLjYgMCAyMC4zLTMuMyAyOC4yLTktOC4zIDIyLjUtMzAuMiAzOC42LTU2IDM4LjYtMzIuNyAwLTU5LjMtMjUuOC01OS4zLTU3LjdTMzIuOSA4LjcgNjUuNyA4LjdoMi4yQzU0LjYgMTcgNDUuNyAzMS41IDQ1LjcgNDhjMCAyNS43IDI1LjcgNDYuNiA1Mi4xIDQ2LjZ6IiBmaWxsPSIjZmZiNTc4Ii8+PHBhdGggZD0iTTEyMS42IDgxLjhjLS44IDAtMS42LjItMi4zLjctNy41IDUuMy0xNi41IDguMS0yNS44IDguMS0yNC4yIDAtNDMuOS0xOS4xLTQzLUtI9mmgxMy43YzEuNiAwIDIuOSAxLjMgMi45IDIuOXMtMS4zIDIuOS0yLjkgMi45em0xMy4yLTMxLjFoLTE0LjRjLTEuNiAwLTIuOS0xLjMtMi45LTIuOSAwLTEgLjUtMS45IDEuMy0yLjRsNi4yLTQuMWgtNC43YzEuNiAwIDIuOSAxLjMgMi45IDIuOXMtMS4yIDIuOS0yLjggMi45eiIgZmlsbD0iIzQ0NCIvPjwvc3ZnPg==
+// @downloadURL https://update.greasyfork.org/scripts/563334/%E6%8A%A4%E7%9C%BC%E6%A8%A1%E5%BC%8F%E5%8A%A9%E6%89%8B%20-%20123%E4%BA%91%E7%9B%98%E9%80%82%E9%85%8D%E7%89%88.user.js
+// @updateURL https://update.greasyfork.org/scripts/563334/%E6%8A%A4%E7%9C%BC%E6%A8%A1%E5%BC%8F%E5%8A%A9%E6%89%8B%20-%20123%E4%BA%91%E7%9B%98%E9%80%82%E9%85%8D%E7%89%88.meta.js
 // ==/UserScript==
 
 ;(function () {
@@ -27,9 +27,6 @@
     let EyeProtect = {
         // 当前模式存储
         currentMode: null,
-        
-        // 观察者实例
-        observer: null,
 
         // 默认配置
         defaults: {
@@ -45,7 +42,7 @@
             customDark1: '60|50',     // 亮度模式设置
             customDark2: '60|40|50|50', // 暖色模式设置
             customDark3: '90',        // 反色模式设置
-            dark3Exclude: 'img, .img, video, [style*="background"][style*="url"], svg, .video-player, .player, [class*="player"], [class*="Player"], [id*="player"], [id*="Player"], .plyr, .jw-player, .video-js' // 排除元素（增加视频播放器相关）
+            dark3Exclude: 'img, .img, video, [style*="background"][style*="url"], svg, .video-player, .player, [class*="player"], [class*="Player"], [id*="player"], [id*="Player"], .plyr, .jw-player, .video-js' // 排除元素
         },
 
         // 初始化
@@ -53,8 +50,8 @@
             this.initConfig();
             this.saveOriginThemeColor();
             
-            // 获取当前模式
-            this.currentMode = this.getConfig('currentMode') || 'light';
+            // 获取当前模式，修复可能的模式错误
+            this.fixModeIssue();
             
             this.initMenu();
             this.applyMode();
@@ -64,6 +61,23 @@
                 this.applyMode();
                 this.refreshMenu();
             });
+            
+            // 监听页面动态加载
+            this.observeDOMChanges();
+        },
+
+        // 修复模式问题：确保只有三种模式
+        fixModeIssue() {
+            let storedMode = this.getConfig('currentMode');
+            const validModes = ['light', 'dark', 'green'];
+            
+            // 如果存储的模式不是三种之一，重置为light
+            if (!validModes.includes(storedMode)) {
+                this.setConfig('currentMode', 'light');
+                this.currentMode = 'light';
+            } else {
+                this.currentMode = storedMode;
+            }
         },
 
         // 初始化配置
@@ -71,7 +85,7 @@
             for (let key in this.defaults) {
                 let value = GM_getValue(key);
                 if (value === undefined) {
-                    GM_setValue(key, this.defaults[key]);
+                    GM_getValue(key, this.defaults[key]);
                 }
             }
             
@@ -100,6 +114,30 @@
             }
         },
 
+        // 监听DOM变化（用于动态加载的页面）
+        observeDOMChanges() {
+            const observer = new MutationObserver((mutations) => {
+                // 检查是否需要重新应用模式
+                let style = document.querySelector('style[id^="eye-protect-"]');
+                if (!style && this.shouldApplyMode()) {
+                    setTimeout(() => this.applyMode(), 100);
+                }
+                
+                // 对特定网站特别处理
+                if (window.location.hostname.includes('123pan.com') ||
+                    window.location.hostname.includes('github.com') ||
+                    window.location.hostname.includes('hemudu.cc') ||
+                    window.location.hostname.includes('bilivod.com')) {
+                    setTimeout(() => this.applyMode(), 300);
+                }
+            });
+            
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        },
+
         // 判断是否为白天
         isDaytime() {
             let time = this.getConfig('customDayNight').split('|');
@@ -120,9 +158,16 @@
             return parseInt(parts[0]) * 60 + parseInt(parts[1] || 0);
         },
 
-        // 获取当前应该应用的模式
+        // 获取当前应该应用的模式 - 简化版，只返回三种模式
         getCurrentMode() {
-            let mode = this.currentMode || this.getConfig('currentMode') || 'light';
+            // 确保只有三种模式
+            let mode = this.currentMode || this.getConfig('currentMode');
+            const validModes = ['light', 'dark', 'green'];
+            
+            if (!validModes.includes(mode)) {
+                mode = 'light';
+                this.setConfig('currentMode', 'light');
+            }
             
             // 如果启用了自动切换
             if (this.getConfig('autoSwitch')) {
@@ -167,320 +212,6 @@
                 element.removeAttribute('data-eye-protect');
                 element.removeAttribute('style');
             });
-            
-            // 4. 对于bilivod.com，清除所有可能的内联样式修改
-            if (window.location.hostname.includes('bilivod.com')) {
-                this.cleanupBilivodStyles();
-            }
-            
-            // 5. 停止观察者
-            if (this.observer) {
-                this.observer.disconnect();
-                this.observer = null;
-            }
-        },
-
-        // 专门清理bilivod.com的样式
-        cleanupBilivodStyles() {
-            // 移除所有可能由脚本添加的内联样式
-            let allElements = document.querySelectorAll('*');
-            for (let element of allElements) {
-                // 如果元素有内联样式且可能由我们添加
-                if (element.hasAttribute('style')) {
-                    let style = element.getAttribute('style');
-                    
-                    // 检查是否包含我们可能设置的颜色值
-                    if (style.includes('#1e1e1e') || 
-                        style.includes('#121212') || 
-                        style.includes('#252525') ||
-                        style.includes('#e0e0e0') ||
-                        style.includes('#C7EDCC') ||
-                        style.includes('#c7edcc') ||
-                        style.includes('#64b5f6')) {
-                        
-                        // 移除整个style属性，让CSS重新接管
-                        element.removeAttribute('style');
-                    }
-                }
-            }
-        },
-
-        // 检查是否启用夜间模式（系统级别）
-        isNightMode() {
-            return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        },
-
-        // 应用豆沙绿模式（增强版）
-        applyEnhancedGreenMode() {
-            // 彻底清理所有样式
-            this.cleanupAllStyles();
-            
-            // 获取当前域名
-            let hostname = window.location.hostname;
-            
-            // 如果是bilivod.com，使用专门的豆沙绿模式
-            if (hostname.includes('bilivod.com')) {
-                this.applyBilivodGreenMode();
-            } else {
-                // 其他网站使用增强的豆沙绿模式
-                this.applyGeneralEnhancedGreenMode();
-            }
-        },
-
-        // 通用增强豆沙绿模式（集成豆沙绿护眼模式Plus的功能）
-        applyGeneralEnhancedGreenMode() {
-            let greenColor = '#C7EDCC';
-            let linkColor = '#40933C';
-            
-            // 基础样式
-            let css = `
-                /* 增强版豆沙绿模式 */
-                
-                html, body {
-                    background-color: ${greenColor} !important;
-                }
-                
-                /* 通用元素 */
-                div, p, span, article, section, main, aside, nav, footer, header,
-                li, ul, ol, table, tr, td, th,
-                .container, .wrapper, .content, .main, .box, .panel, .card,
-                .item, .list, .grid, .row, .col,
-                .breadcrumb, .pagination, .navigation, .menu,
-                .title, .heading, .subtitle,
-                .alert, .modal, .dialog {
-                    background-color: ${greenColor} !important;
-                    color: #333 !important;
-                }
-                
-                /* 链接 */
-                a, a:link, a:visited {
-                    color: ${linkColor} !important;
-                    text-decoration: none !important;
-                }
-                a:hover {
-                    color: #2d682a !important;
-                    text-decoration: underline !important;
-                }
-                
-                /* 按钮和表单 */
-                button, input, textarea, select {
-                    background-color: white !important;
-                    color: #333 !important;
-                    border: 1px solid #ddd !important;
-                }
-                
-                /* 视频和图片排除 */
-                video, .video-player, .player, [class*="player"],
-                [id*="player"], .plyr, .jw-player, .video-js,
-                .player-container, .video-container,
-                img, iframe, canvas, svg {
-                    background-color: transparent !important;
-                }
-                
-                /* 滚动条 */
-                ::-webkit-scrollbar {
-                    background-color: #e0f2e1 !important;
-                }
-                ::-webkit-scrollbar-thumb {
-                    background-color: #8bc34a !important;
-                }
-                
-                /* 特殊排除：播放器区域 */
-                [class*="player"] > *, .video > * {
-                    background-color: initial !important;
-                }
-            `;
-            
-            this.applyStyle(css, 'enhanced-green-mode');
-            
-            // 设置主题色
-            let meta = document.querySelector('meta[name="theme-color"]');
-            if (meta) {
-                meta.content = greenColor;
-            } else {
-                let metaEle = document.createElement('meta');
-                metaEle.name = 'theme-color';
-                metaEle.content = greenColor;
-                document.head.appendChild(metaEle);
-            }
-            
-            // 启动DOM变化监听，动态应用豆沙绿
-            this.startGreenModeObserver();
-        },
-
-        // 启动豆沙绿模式的DOM变化监听
-        startGreenModeObserver() {
-            // 首次应用
-            this.applyGreenBackground();
-            
-            // 设置观察者，监听DOM变化
-            this.observer = new MutationObserver((mutations) => {
-                this.applyGreenBackground();
-                setTimeout(() => {
-                    this.applyGreenBackground2();
-                }, 50);
-            });
-            
-            // 开始观察
-            this.observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-            
-            // 初始延迟执行
-            setTimeout(() => {
-                this.applyGreenBackground2();
-            }, 100);
-        },
-
-        // 应用豆沙绿背景色（动态计算）
-        applyGreenBackground() {
-            let elementList = document.querySelectorAll('*');
-            for (let i = 0; i < elementList.length; i++) {   
-                // 排除播放器区域
-                if (!(elementList[i].matches('[class*="player"] > *') || 
-                    elementList[i].matches('.video > *'))) {
-                    
-                    let srcBgColor = window.getComputedStyle(elementList[i]).backgroundColor;
-                    let splitArray = srcBgColor.match(/[\d\.]+/g);
-                    if (splitArray) {
-                        let r = parseInt(splitArray[0], 10),
-                            g = parseInt(splitArray[1], 10),
-                            b = parseInt(splitArray[2], 10);
-                        
-                        // 如果是浅色背景（RGB值都大于150），改为豆沙绿
-                        if (r > 150 && g > 150 && b > 150) {
-                            elementList[i].style.backgroundColor = '#C7EDCC';
-                            elementList[i].setAttribute('data-eye-protect', 'green');
-                        }
-                    }
-                }
-            }
-            
-            // 更改链接颜色
-            let links = document.querySelectorAll("a[href^='http']:not(.button)");
-            for (let i = 0; i < links.length; i++) {
-                links[i].style.color = "#40933C";
-                links[i].style.textDecoration = "none";
-            }
-        },
-
-        // 应用豆沙绿背景色2（针对特定元素）
-        applyGreenBackground2() {
-            let elements = document.querySelectorAll(
-                "DIV#gb-main," +
-                "DIV.url.clearfix," +
-                "DIV.nav-bar-v2-fixed > * > *:not(div.nav-bar-bottom)," +
-                "DIV.se-page-hd-content"
-            );
-            
-            elements.forEach(element => {
-                element.style.backgroundColor = "#C7EDCC";
-                element.setAttribute('data-eye-protect', 'green');
-            });
-        },
-
-        // 为bilivod.com专门定制的豆沙绿模式
-        applyBilivodGreenMode() {
-            let greenColor = '#C7EDCC';
-            let linkColor = '#40933C';
-            
-            let css = `
-                /* bilivod.com 豆沙绿模式 */
-                
-                html, body {
-                    background-color: ${greenColor} !important;
-                }
-                
-                /* 通用元素 */
-                div, p, span, article, section, main, aside, nav, footer, header,
-                li, ul, ol, table, tr, td, th,
-                .container, .wrapper, .content, .main, .box, .panel, .card,
-                .item, .list, .grid, .row, .col, .block,
-                .breadcrumb, .pagination, .navigation, .menu,
-                .title, .heading, .subtitle, .caption,
-                .alert, .modal, .dialog, .popup,
-                .search-box, .search-input, .search-form,
-                .tag, .label, .category, .chip, .badge,
-                .comment, .review, .feedback, .reply,
-                .progress, .progress-bar, .list-group, .list-group-item {
-                    background-color: ${greenColor} !important;
-                    color: #333 !important;
-                    border-color: #b0d9b5 !important;
-                }
-                
-                /* 文本强调 */
-                h1, h2, h3, h4, h5, h6, strong, b, em, i {
-                    color: #222 !important;
-                }
-                
-                /* 链接 */
-                a, a:link, a:visited {
-                    color: ${linkColor} !important;
-                    text-decoration: none !important;
-                }
-                a:hover {
-                    color: #2d682a !important;
-                    text-decoration: underline !important;
-                }
-                
-                /* 按钮和表单 */
-                button, input, textarea, select,
-                .button, .btn, .form-control, .input-group {
-                    background-color: white !important;
-                    color: #333 !important;
-                    border: 1px solid #b0d9b5 !important;
-                }
-                
-                /* 视频播放器区域 - 完全排除 */
-                video, .video-player, .player, [class*="player"],
-                [id*="player"], .plyr, .jw-player, .video-js,
-                .player-container, .video-container,
-                iframe, embed, object {
-                    background-color: transparent !important;
-                    filter: none !important;
-                }
-                
-                /* 图片 - 保持原样 */
-                img, svg, canvas, picture, figure {
-                    filter: none !important;
-                }
-                
-                /* 滚动条 */
-                ::-webkit-scrollbar {
-                    background-color: #e0f2e1 !important;
-                }
-                ::-webkit-scrollbar-thumb {
-                    background-color: #8bc34a !important;
-                }
-                
-                /* 强制覆盖白色背景 */
-                [style*="background-color: white"],
-                [style*="background: white"],
-                [style*="background:#fff"],
-                [style*="background-color:#fff"],
-                [style*="background-color: #fff"] {
-                    background-color: ${greenColor} !important;
-                }
-                
-                /* 特殊处理：表格行 */
-                tr:nth-child(even) {
-                    background-color: #d4f0d8 !important;
-                }
-            `;
-            
-            this.applyStyle(css, 'green-mode-bilivod');
-            
-            // 设置主题色
-            let meta = document.querySelector('meta[name="theme-color"]');
-            if (meta) {
-                meta.content = '#C7EDCC';
-            } else {
-                let metaEle = document.createElement('meta');
-                metaEle.name = 'theme-color';
-                metaEle.content = '#C7EDCC';
-                document.head.appendChild(metaEle);
-            }
         },
 
         // 应用夜间模式
@@ -489,74 +220,20 @@
             this.cleanupAllStyles();
             
             if (this.isDaytime() && !this.getConfig('runDuringDay')) {
-                // 白天且没有开启白天保持，不应用夜间模式
                 return;
             } else {
-                // 获取当前域名
+                // 根据域名使用不同的处理逻辑
                 let hostname = window.location.hostname;
                 
-                // 如果是bilivod.com，使用特殊处理
-                if (hostname.includes('bilivod.com')) {
+                if (hostname.includes('123pan.com')) {
+                    // 123云盘使用优化的反色模式
+                    this.apply123PanInvertMode();
+                } else if (hostname.includes('bilivod.com')) {
+                    // bilivod.com使用专门适配的反色模式
                     this.applyBilivodDarkMode();
                 } else {
-                    // 其他网站使用原来的夜间模式
-                    let style_30 = this.getConfig('customDark3');
-                    let dark3Exclude = this.getConfig('dark3Exclude');
-                    
-                    let style_31 = `
-                        html {
-                            filter: invert(${style_30}%) !important;
-                            text-shadow: 0 0 0 !important;
-                        }
-                        ${dark3Exclude} {
-                            filter: invert(1) !important;
-                        }
-                        img[alt="[公式]"] {
-                            filter: none !important;
-                        }
-                        
-                        /* 滚动条样式 */
-                        ::-webkit-scrollbar {
-                            height: 12px !important;
-                            width: 12px !important;
-                        }
-                        ::-webkit-scrollbar-thumb {
-                            border-radius: 0;
-                            border-color: transparent;
-                            border-style: dashed;
-                            background-color: #3f4752 !important;
-                            background-clip: padding-box;
-                            transition: background-color .32s ease-in-out;
-                        }
-                        ::-webkit-scrollbar-corner {
-                            background: #202020 !important;
-                        }
-                        ::-webkit-scrollbar-track {
-                            background-color: #22272e !important;
-                        }
-                        ::-webkit-scrollbar-thumb:hover {
-                            background: #3f4752 !important;
-                        }
-                    `;
-                    
-                    // Firefox特殊处理
-                    if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-                        style_31 = `
-                            html {
-                                filter: invert(${style_30}%) !important;
-                                background-image: url();
-                                text-shadow: 0 0 0 !important;
-                            }
-                            ${dark3Exclude} {
-                                filter: invert(1) !important;
-                            }
-                            img[alt="[公式]"] {
-                                filter: none !important;
-                            }
-                        `;
-                    }
-                    
-                    this.applyStyle(style_31, 'dark-mode');
+                    // 其他网站使用原始夜间模式
+                    this.applyOriginalDarkMode();
                 }
             }
             
@@ -572,76 +249,169 @@
             }
         },
 
-        // 为bilivod.com专门定制的夜间模式（修复图片偏灰问题）
-        applyBilivodDarkMode() {
-            // 创建一个更简洁但全面的CSS
+        // 原始夜间模式（恢复为最初版本）
+        applyOriginalDarkMode() {
+            let style_30 = this.getConfig('customDark3');
+            let dark3Exclude = this.getConfig('dark3Exclude');
+            
+            let style_31 = `
+                html {
+                    filter: invert(${style_30}%) !important;
+                    text-shadow: 0 0 0 !important;
+                }
+                ${dark3Exclude} {
+                    filter: invert(1) !important;
+                }
+                img[alt="[公式]"] {
+                    filter: none !important;
+                }
+                
+                /* 滚动条样式 */
+                ::-webkit-scrollbar {
+                    height: 12px !important;
+                    width: 12px !important;
+                }
+                ::-webkit-scrollbar-thumb {
+                    border-radius: 0;
+                    border-color: transparent;
+                    border-style: dashed;
+                    background-color: #3f4752 !important;
+                    background-clip: padding-box;
+                    transition: background-color .32s ease-in-out;
+                }
+                ::-webkit-scrollbar-corner {
+                    background: #202020 !important;
+                }
+                ::-webkit-scrollbar-track {
+                    background-color: #22272e !important;
+                }
+                ::-webkit-scrollbar-thumb:hover {
+                    background: #3f4752 !important;
+                }
+            `;
+            
+            if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+                style_31 = `
+                    html {
+                        filter: invert(${style_30}%) !important;
+                        background-image: url();
+                        text-shadow: 0 0 0 !important;
+                    }
+                    ${dark3Exclude} {
+                        filter: invert(1) !important;
+                    }
+                    img[alt="[公式]"] {
+                        filter: none !important;
+                    }
+                `;
+            }
+            
+            this.applyStyle(style_31, 'dark-mode-original');
+        },
+
+        // 123云盘优化的反色模式
+        apply123PanInvertMode() {
+            let style_30 = this.getConfig('customDark3') || '90';
+            
             let css = `
-                /* bilivod.com 夜间模式 - 修复图片偏灰问题 */
+                /* 123云盘优化反色模式 - 使用${style_30}%反色 */
                 
-                /* 基础设置 */
-                html, body {
-                    background-color: #121212 !important;
-                    color: #e0e0e0 !important;
+                /* 1. 对整个HTML应用反色，使用配置的值 */
+                html {
+                    filter: invert(${style_30}%) hue-rotate(180deg) !important;
+                    background-color: #1a1a1a !important;
+                    text-shadow: 0 0 0 !important;
                 }
                 
-                /* 通用元素覆盖 */
-                div, p, span, article, section, main, aside, nav, footer, header,
-                li, ul, ol, table, tr, td, th, form, label, fieldset, legend,
-                .container, .wrapper, .content, .main, .box, .panel, .card,
-                .item, .list, .grid, .row, .col, .block,
-                .breadcrumb, .pagination, .navigation, .menu,
-                .title, .heading, .subtitle, .caption,
-                .alert, .modal, .dialog, .popup,
-                .search-box, .search-input, .search-form,
-                .tag, .label, .category, .chip, .badge,
-                .comment, .review, .feedback, .reply,
-                .progress, .progress-bar, .list-group, .list-group-item {
-                    background-color: #1e1e1e !important;
-                    color: #e0e0e0 !important;
-                    border-color: #333 !important;
+                /* 2. 排除不需要反色的元素 */
+                img, 
+                svg, 
+                video, 
+                canvas,
+                iframe, 
+                embed, 
+                object,
+                [class*="icon"],
+                [class*="Icon"],
+                .icon, 
+                .svg-icon, 
+                .avatar, 
+                .logo, 
+                .thumbnail,
+                .emoji,
+                .emoticon,
+                [src*=".svg"],
+                [src*=".png"],
+                [src*=".jpg"],
+                [src*=".jpeg"],
+                [src*=".gif"],
+                [src*=".webp"],
+                .video-player,
+                .player,
+                [class*="player"],
+                [class*="Player"],
+                [id*="player"],
+                [id*="Player"],
+                .plyr,
+                .jw-player,
+                .video-js {
+                    filter: invert(1) hue-rotate(180deg) !important;
                 }
                 
-                /* 文本强调 */
-                h1, h2, h3, h4, h5, h6, strong, b, em, i,
-                .title, .name, .text, .label, .info, .meta {
-                    color: #ffffff !important;
+                /* 3. 特殊处理 - 确保背景色正确 */
+                body {
+                    background-color: #1a1a1a !important;
                 }
                 
-                /* 链接 */
-                a, a:link, a:visited {
-                    color: #64b5f6 !important;
-                }
-                a:hover {
-                    color: #90caf9 !important;
-                }
-                
-                /* 按钮和表单 */
-                button, input, textarea, select,
-                .button, .btn, .form-control, .input-group {
-                    background-color: #2d2d2d !important;
+                /* 4. 按钮和表单优化 */
+                button, 
+                .btn, 
+                .button,
+                input, 
+                textarea, 
+                select,
+                .form-control, 
+                .input, 
+                .search-input {
+                    background-color: #2a2a2a !important;
                     color: #e0e0e0 !important;
                     border-color: #444 !important;
                 }
                 
-                /* 视频播放器区域 - 完全排除 */
-                video, .video-player, .player, [class*="player"],
-                [id*="player"], .plyr, .jw-player, .video-js,
-                .player-container, .video-container,
-                iframe, embed, object {
-                    background-color: transparent !important;
-                    filter: none !important;
+                /* 5. 蓝色区域优化 */
+                [style*="background-color: blue"],
+                [style*="background:#00f"],
+                [style*="background-color:#00f"],
+                [style*="background-color: #00f"],
+                [style*="background-color: #0000ff"],
+                [style*="background-color: #007bff"],
+                .btn-primary, 
+                .primary, 
+                .blue {
+                    background-color: #ff7700 !important; /* 蓝色反色为橙色 */
                 }
                 
-                /* 图片 - 移除滤镜，恢复正常显示 */
-                img, svg, canvas, picture, figure {
-                    filter: none !important;
-                    /* 如果觉得图片太亮，可以轻微降低亮度，但不使用偏灰效果 */
-                    /* filter: brightness(0.98) !important; */
+                /* 6. 链接颜色优化 */
+                a, a:link, a:visited {
+                    color: #ff7700 !important; /* 蓝色反色为橙色 */
+                }
+                a:hover {
+                    color: #ff9933 !important;
                 }
                 
-                /* 滚动条 */
+                /* 7. 确保文字可读性 */
+                body, 
+                div, 
+                span, 
+                p, 
+                h1, h2, h3, h4, h5, h6,
+                .title, .heading, .subtitle {
+                    color: #d0d0d0 !important;
+                }
+                
+                /* 8. 滚动条样式优化 */
                 ::-webkit-scrollbar {
-                    background-color: #1e1e1e !important;
+                    background-color: #222 !important;
                 }
                 ::-webkit-scrollbar-thumb {
                     background-color: #444 !important;
@@ -649,8 +419,169 @@
                 ::-webkit-scrollbar-thumb:hover {
                     background-color: #555 !important;
                 }
+                ::-webkit-scrollbar-track {
+                    background-color: #1a1a1a !important;
+                }
                 
-                /* 强制覆盖常见浅色背景 */
+                /* 9. 卡片和面板优化 */
+                .card, .panel, .box,
+                .modal, .dialog, .popup {
+                    background-color: #222 !important;
+                    border-color: #333 !important;
+                }
+                
+                /* 10. 表格优化 */
+                table, tr, td, th {
+                    background-color: #1a1a1a !important;
+                    color: #d0d0d0 !important;
+                    border-color: #333 !important;
+                }
+                
+                /* 11. 解决反色后的亮度过高问题 */
+                * {
+                    text-shadow: 0 0 0 !important;
+                }
+                
+                /* 12. 处理半透明元素 */
+                [style*="opacity"],
+                [style*="rgba("],
+                [style*="hsla("] {
+                    opacity: 1 !important;
+                }
+                
+                /* 13. 确保Firefox兼容性 */
+                @-moz-document url-prefix() {
+                    html {
+                        filter: invert(${style_30}%) hue-rotate(180deg) !important;
+                        background-image: url() !important;
+                        background-color: #1a1a1a !important;
+                    }
+                }
+                
+                /* 14. 123云盘特殊优化 - 文件列表区域 */
+                .file-list, .folder-list, .list-view,
+                .grid-view, .item-list, .content-list,
+                .table, .data-table, .file-table {
+                    background-color: #1a1a1a !important;
+                }
+                
+                .file-item, .folder-item, .list-item,
+                .grid-item, .item, .entry {
+                    background-color: #222 !important;
+                    border-color: #333 !important;
+                }
+                
+                /* 15. 导航栏优化 */
+                .header, .navbar, .nav, .top-bar,
+                .menu, .toolbar, .bar {
+                    background-color: #222 !important;
+                }
+                
+                /* 16. 侧边栏优化 */
+                .sidebar, .side-panel, .side-nav {
+                    background-color: #222 !important;
+                }
+                
+                /* 17. 上传区域优化 */
+                .upload-area, .upload-box,
+                .dropzone, .drag-area {
+                    background-color: #222 !important;
+                    border-color: #333 !important;
+                }
+            `;
+            
+            this.applyStyle(css, 'dark-mode-123pan');
+        },
+
+        // bilivod.com专用夜间模式 - 专门优化/type/32页面
+        applyBilivodDarkMode() {
+            let style_30 = this.getConfig('customDark3') || '90';
+            let isType32Page = window.location.pathname.includes('/type/32');
+            
+            let css = `
+                /* bilivod.com专用夜间模式 - 使用${style_30}%反色 */
+                
+                /* 1. 对整个HTML应用反色 */
+                html {
+                    filter: invert(${style_30}%) hue-rotate(180deg) !important;
+                    background-color: #1a1a1a !important;
+                    text-shadow: 0 0 0 !important;
+                }
+                
+                /* 2. 排除不需要反色的元素 */
+                img, 
+                svg, 
+                video, 
+                canvas,
+                iframe, 
+                embed, 
+                object,
+                [class*="icon"],
+                [class*="Icon"],
+                .icon, 
+                .svg-icon, 
+                .avatar, 
+                .logo, 
+                .thumbnail,
+                .emoji,
+                .emoticon,
+                [src*=".svg"],
+                [src*=".png"],
+                [src*=".jpg"],
+                [src*=".jpeg"],
+                [src*=".gif"],
+                [src*=".webp"],
+                .video-player,
+                .player,
+                [class*="player"],
+                [class*="Player"],
+                [id*="player"],
+                [id*="Player"],
+                .plyr,
+                .jw-player,
+                .video-js {
+                    filter: invert(1) hue-rotate(180deg) !important;
+                }
+                
+                /* 3. 特殊处理 - 确保背景色正确 */
+                body {
+                    background-color: #1a1a1a !important;
+                }
+                
+                /* 4. bilivod.com特定优化 */
+                
+                /* 4.1 覆盖所有白色背景 */
+                body, 
+                div, 
+                section, 
+                main, 
+                article, 
+                nav, 
+                header, 
+                footer, 
+                aside,
+                .container, 
+                .wrapper, 
+                .content, 
+                .main-content,
+                .panel, 
+                .card, 
+                .box, 
+                .block,
+                .list, 
+                .item, 
+                .entry,
+                .video-list,
+                .video-item,
+                .vod-item,
+                .movie-item,
+                .film-item {
+                    background-color: #1a1a1a !important;
+                    color: #d0d0d0 !important;
+                    border-color: #333 !important;
+                }
+                
+                /* 4.2 强力覆盖所有内联白色背景 */
                 [style*="background-color: white"],
                 [style*="background: white"],
                 [style*="background:#fff"],
@@ -658,51 +589,1133 @@
                 [style*="background-color: #fff"],
                 [style*="background-color: #ffffff"],
                 [style*="background: #ffffff"],
-                [style*="background-color: #f"],
-                [style*="background: #f"] {
-                    background-color: #1e1e1e !important;
+                [style*="background-color: #f0f0f0"],
+                [style*="background-color: #f5f5f5"],
+                [style*="background-color: #f8f8f8"],
+                [style*="background-color: #fafafa"],
+                [style*="background-color: #fcfcfc"] {
+                    background-color: #1a1a1a !important;
                 }
                 
-                /* 强制覆盖常见深色文字 */
                 [style*="color: black"],
                 [style*="color:#000"],
                 [style*="color: #000"],
                 [style*="color: #333"],
-                [style*="color:#333"] {
+                [style*="color: #555"],
+                [style*="color: #666"] {
+                    color: #d0d0d0 !important;
+                }
+                
+                /* 4.3 导航栏和头部 */
+                .header, .navbar, .nav, .top-bar,
+                .menu, .toolbar, .bar,
+                [class*="header"], [class*="Header"],
+                [class*="nav"], [class*="Nav"],
+                [class*="menu"], [class*="Menu"] {
+                    background-color: #222 !important;
+                }
+                
+                /* 4.4 侧边栏 */
+                .sidebar, .side-panel, .side-nav {
+                    background-color: #222 !important;
+                }
+                
+                /* 4.5 按钮和表单 */
+                button, .btn, .button,
+                input, textarea, select,
+                .form-control, .input, .search-input {
+                    background-color: #2a2a2a !important;
                     color: #e0e0e0 !important;
+                    border-color: #444 !important;
                 }
                 
-                /* 特殊处理：表格行 */
-                tr:nth-child(even) {
-                    background-color: #252525 !important;
+                /* 4.6 链接和蓝色区域 */
+                a, a:link, a:visited {
+                    color: #ff7700 !important; /* 蓝色反色为橙色 */
+                }
+                a:hover {
+                    color: #ff9933 !important;
                 }
                 
-                /* 特殊处理：改善图片在深色背景下的显示 */
-                .poster-img, .cover-img, .thumbnail, .avatar,
-                [class*="img"], [class*="image"], [class*="photo"],
-                [class*="pic"], [class*="thumb"] {
-                    /* 为常见图片类添加轻微阴影，提高在深色背景下的可视性 */
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+                [style*="background-color: blue"],
+                [style*="background:#00f"],
+                [style*="background-color:#00f"],
+                [style*="background-color: #00f"],
+                [style*="background-color: #0000ff"],
+                [style*="background-color: #007bff"],
+                .btn-primary, .primary, .blue {
+                    background-color: #ff7700 !important;
                 }
                 
-                /* 修复图标和SVG的显示 */
-                svg, .icon, [class*="icon-"], [class*="ico-"] {
-                    filter: none !important;
-                    /* 如果SVG图标太暗，可以适当调亮 */
-                    /* filter: brightness(1.1) !important; */
+                /* 4.7 视频卡片和缩略图 */
+                .video-card, .vod-card, .movie-card,
+                .film-card, .thumb, .thumbnail,
+                .poster, .cover {
+                    background-color: #222 !important;
+                    border-color: #333 !important;
+                }
+                
+                .video-title, .vod-title, .movie-title,
+                .film-title, .title, .name {
+                    color: #ffffff !important;
+                }
+                
+                .video-info, .vod-info, .movie-info,
+                .film-info, .info, .meta {
+                    color: #a0a0a0 !important;
+                }
+                
+                /* 4.8 分页 */
+                .pagination, .page-nav, .page-numbers {
+                    background-color: #1a1a1a !important;
+                }
+                
+                .page-item, .page-link {
+                    background-color: #2a2a2a !important;
+                    color: #e0e0e0 !important;
+                    border-color: #444 !important;
+                }
+                
+                .active .page-link {
+                    background-color: #ff7700 !important;
+                    color: #ffffff !important;
+                }
+                
+                /* 4.9 搜索框 */
+                .search-box, .search-bar, .search-input {
+                    background-color: #2a2a2a !important;
+                    color: #e0e0e0 !important;
+                    border-color: #444 !important;
+                }
+                
+                /* 4.10 分类和标签 */
+                .category, .tag, .label,
+                .badge, .chip, .mark {
+                    background-color: #2a2a2a !important;
+                    color: #e0e0e0 !important;
+                    border-color: #444 !important;
+                }
+                
+                /* 4.11 滚动条 */
+                ::-webkit-scrollbar {
+                    background-color: #1a1a1a !important;
+                }
+                ::-webkit-scrollbar-thumb {
+                    background-color: #444 !important;
+                }
+                ::-webkit-scrollbar-thumb:hover {
+                    background-color: #555 !important;
+                }
+                ::-webkit-scrollbar-track {
+                    background-color: #222 !important;
+                }
+                
+                /* 4.12 确保Firefox兼容性 */
+                @-moz-document url-prefix() {
+                    html {
+                        filter: invert(${style_30}%) hue-rotate(180deg) !important;
+                        background-image: url() !important;
+                        background-color: #1a1a1a !important;
+                    }
+                }
+                
+                /* 4.13 最后的安全网 - 覆盖所有元素 */
+                body *:not(img):not(svg):not(video):not(canvas):not(iframe):not(embed):not(object):not(.avatar):not(.logo):not(.icon):not(.thumbnail):not(.poster):not(.cover) {
+                    background-color: #1a1a1a !important;
+                    color: #d0d0d0 !important;
+                    border-color: #333 !important;
                 }
             `;
             
+            // 专门为/type/32页面添加额外优化
+            if (isType32Page) {
+                css += `
+                    /* === 专门针对 /type/32 页面的优化 === */
+                    
+                    /* 1. 分类页面标题区域优化 */
+                    .type-header, .category-header, .page-header,
+                    .title-area, .header-area {
+                        background-color: #222 !important;
+                        border-bottom: 2px solid #333 !important;
+                    }
+                    
+                    /* 2. 分类页面内容区域 */
+                    .type-content, .category-content, .page-content,
+                    .main-area, .content-area {
+                        background-color: #1a1a1a !important;
+                    }
+                    
+                    /* 3. 分类页面侧边栏 */
+                    .type-sidebar, .category-sidebar, .side-content,
+                    .filter-area, .filter-sidebar {
+                        background-color: #222 !important;
+                        border-right: 1px solid #333 !important;
+                    }
+                    
+                    /* 4. 分类页面筛选器 */
+                    .filter, .filter-item, .filter-group,
+                    .sort, .sort-item, .sort-group {
+                        background-color: #2a2a2a !important;
+                        color: #e0e0e0 !important;
+                        border-color: #444 !important;
+                    }
+                    
+                    /* 5. 分类页面视频列表 */
+                    .type-video-list, .category-video-list,
+                    .video-grid, .video-container {
+                        background-color: #1a1a1a !important;
+                    }
+                    
+                    /* 6. 分类页面视频项优化 */
+                    .type-video-item, .category-video-item,
+                    .vod-grid-item, .movie-grid-item {
+                        background-color: #222 !important;
+                        border: 1px solid #333 !important;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+                    }
+                    
+                    /* 7. 分类页面分页优化 */
+                    .type-pagination, .category-pagination,
+                    .pagination-container, .pagination-wrapper {
+                        background-color: #1a1a1a !important;
+                        border-top: 1px solid #333 !important;
+                    }
+                    
+                    /* 8. 分类页面底部 */
+                    .type-footer, .category-footer, .page-footer {
+                        background-color: #222 !important;
+                        border-top: 2px solid #333 !important;
+                    }
+                    
+                    /* 9. 处理分类页面的特殊背景 */
+                    [class*="type-32"], [class*="category-32"],
+                    [id*="type32"], [id*="category32"] {
+                        background-color: #1a1a1a !important;
+                        color: #d0d0d0 !important;
+                    }
+                    
+                    /* 10. 分类页面广告区域处理 */
+                    .ad, .advertisement, .adsense,
+                    [class*="ad-"], [id*="ad-"],
+                    [class*="ads-"], [id*="ads-"] {
+                        filter: brightness(0.8) !important;
+                        background-color: #2a2a2a !important;
+                    }
+                    
+                    /* 11. 分类页面工具提示 */
+                    .tooltip, .tip, .hint {
+                        background-color: #2a2a2a !important;
+                        color: #e0e0e0 !important;
+                        border: 1px solid #444 !important;
+                    }
+                    
+                    /* 12. 分类页面模态框 */
+                    .modal, .popup, .dialog,
+                    .overlay, .lightbox {
+                        background-color: rgba(0, 0, 0, 0.8) !important;
+                    }
+                    
+                    /* 13. 分类页面加载动画 */
+                    .loading, .spinner, .loader {
+                        background-color: transparent !important;
+                    }
+                    
+                    /* 14. 分类页面空状态 */
+                    .empty, .no-results, .no-data {
+                        background-color: #1a1a1a !important;
+                        color: #888 !important;
+                    }
+                    
+                    /* 15. 分类页面悬停效果优化 */
+                    .video-item:hover, .vod-item:hover,
+                    .movie-item:hover, .film-item:hover {
+                        background-color: #2a2a2a !important;
+                        transform: translateY(-2px) !important;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4) !important;
+                    }
+                    
+                    /* 16. 分类页面选中状态 */
+                    .selected, .active-item, .current {
+                        background-color: #333 !important;
+                        border-color: #ff7700 !important;
+                    }
+                    
+                    /* 17. 分类页面按钮组 */
+                    .button-group, .btn-group, .action-group {
+                        background-color: #222 !important;
+                        border: 1px solid #333 !important;
+                    }
+                    
+                    /* 18. 分类页面表单组 */
+                    .form-group, .input-group, .field-group {
+                        background-color: #222 !important;
+                    }
+                    
+                    /* 19. 分类页面标签组 */
+                    .tag-group, .label-group, .badge-group {
+                        background-color: #222 !important;
+                    }
+                    
+                    /* 20. 分类页面网格系统 */
+                    .grid, .row, .column {
+                        background-color: #1a1a1a !important;
+                    }
+                    
+                    .grid-item, .col, .cell {
+                        background-color: #222 !important;
+                        border-color: #333 !important;
+                    }
+                    
+                    /* 21. 分类页面响应式优化 */
+                    @media (max-width: 768px) {
+                        .type-header, .category-header {
+                            background-color: #222 !important;
+                        }
+                        
+                        .type-sidebar, .category-sidebar {
+                            background-color: #222 !important;
+                        }
+                        
+                        .video-item, .vod-item {
+                            background-color: #222 !important;
+                        }
+                    }
+                    
+                    /* 22. 分类页面自定义滚动条优化 */
+                    .custom-scroll, .scroll-area {
+                        scrollbar-color: #444 #1a1a1a !important;
+                    }
+                    
+                    /* 23. 分类页面过渡动画优化 */
+                    .transition, .animate, .fade {
+                        background-color: #1a1a1a !important;
+                    }
+                    
+                    /* 24. 分类页面状态指示器 */
+                    .status, .indicator, .marker {
+                        background-color: #2a2a2a !important;
+                    }
+                    
+                    .status-success, .indicator-success {
+                        background-color: #2e7d32 !important;
+                    }
+                    
+                    .status-warning, .indicator-warning {
+                        background-color: #ff9800 !important;
+                    }
+                    
+                    .status-error, .indicator-error {
+                        background-color: #f44336 !important;
+                    }
+                    
+                    /* 25. 最后确保/type/32页面所有元素的颜色协调 */
+                    .type-32 *:not(img):not(svg):not(video):not(canvas):not(iframe):not(embed):not(object):not(.avatar):not(.logo):not(.icon) {
+                        background-color: #1a1a1a !important;
+                        color: #d0d0d0 !important;
+                        border-color: #333 !important;
+                    }
+                `;
+            }
+            
             this.applyStyle(css, 'dark-mode-bilivod');
+        },
+
+        // 应用豆沙绿模式
+        applyGreenMode() {
+            // 彻底清理所有样式
+            this.cleanupAllStyles();
+            
+            // 根据域名使用不同的豆沙绿模式
+            let hostname = window.location.hostname;
+            let isType32Page = window.location.pathname.includes('/type/32');
+            
+            if (hostname.includes('123pan.com')) {
+                this.apply123PanGreenMode();
+            } else if (hostname.includes('bilivod.com')) {
+                if (isType32Page) {
+                    this.applyBilivodType32GreenMode();
+                } else {
+                    this.applyBilivodGreenMode();
+                }
+            } else {
+                // 其他网站使用强力豆沙绿模式
+                this.applyForceGreenMode();
+            }
+        },
+
+        // 强力豆沙绿模式 - 完全覆盖所有网站
+        applyForceGreenMode() {
+            const greenColor = '#C7EDCC';
+            const textColor = '#333333';
+            const linkColor = '#40933C';
+            const borderColor = '#b0d9b5';
+            
+            let css = `
+                /* === 强力豆沙绿模式 - 完全覆盖所有网站 === */
+                
+                /* 1. 基础强制覆盖 */
+                html, body {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                }
+                
+                /* 2. 覆盖所有可能的黑色背景和内联样式 */
+                * {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 3. 专门覆盖暗色主题网站 */
+                .dark, .dark-mode, .dark-theme,
+                .night, .night-mode, .black,
+                [class*="dark"], [class*="black"],
+                [class*="night"], [class*="theme-dark"],
+                [data-theme*="dark"], [data-mode*="dark"],
+                [data-color-scheme*="dark"] {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                }
+                
+                /* 4. 强力覆盖所有内联黑色背景 */
+                [style*="background-color: black"],
+                [style*="background: black"],
+                [style*="background:#000"],
+                [style*="background-color:#000"],
+                [style*="background-color: #000"],
+                [style*="background-color: #111"],
+                [style*="background-color: #222"],
+                [style*="background-color: #333"],
+                [style*="background-color: #1a1a1a"],
+                [style*="background-color: #2a2a2a"],
+                [style*="background-color: #3a3a3a"],
+                [style*="background-color: rgb(0,0,0)"],
+                [style*="background-color: rgba(0,0,0"],
+                [style*="background-color: hsl(0, 0%, 0%)"],
+                [style*="background-color: hsla(0, 0%, 0%"] {
+                    background-color: ${greenColor} !important;
+                }
+                
+                /* 5. 强力覆盖所有内联黑色文字 */
+                [style*="color: black"],
+                [style*="color:#000"],
+                [style*="color: #000"],
+                [style*="color: #111"],
+                [style*="color: #222"],
+                [style*="color: #333"],
+                [style*="color: rgb(0,0,0)"],
+                [style*="color: rgba(0,0,0"],
+                [style*="color: hsl(0, 0%, 0%)"],
+                [style*="color: hsla(0, 0%, 0%"] {
+                    color: ${textColor} !important;
+                }
+                
+                /* 6. 覆盖白色文字（在豆沙绿背景下需要深色） */
+                [style*="color: white"],
+                [style*="color:#fff"],
+                [style*="color: #fff"],
+                [style*="color: #f0f0f0"],
+                [style*="color: #e0e0e0"],
+                [style*="color: rgb(255,255,255)"],
+                [style*="color: rgba(255,255,255"] {
+                    color: ${textColor} !important;
+                }
+                
+                /* 7. 链接样式 */
+                a, a:link, a:visited,
+                .link, .hyperlink {
+                    color: ${linkColor} !important;
+                }
+                a:hover {
+                    color: #2d682a !important;
+                }
+                
+                /* 8. 按钮和输入框 */
+                button, .btn, input, textarea, select,
+                .button, .form-control, .search-input {
+                    background-color: white !important;
+                    color: ${textColor} !important;
+                    border: 1px solid ${borderColor} !important;
+                }
+                
+                /* 9. 标题和文本 */
+                h1, h2, h3, h4, h5, h6,
+                .title, .heading, .subtitle,
+                p, span, div {
+                    color: ${textColor} !important;
+                }
+                
+                /* 10. 表格 */
+                table, tr, td, th {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 11. 列表 */
+                ul, ol, li {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                }
+                
+                /* 12. 卡片和容器 */
+                .card, .panel, .box, .container,
+                .wrapper, .content, .main {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 13. 导航栏 */
+                nav, .nav, .navbar,
+                .header, .footer, .sidebar {
+                    background-color: #d4f0d8 !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 14. 滚动条 */
+                ::-webkit-scrollbar {
+                    background-color: #e0f2e1 !important;
+                }
+                ::-webkit-scrollbar-thumb {
+                    background-color: #8bc34a !important;
+                }
+                ::-webkit-scrollbar-thumb:hover {
+                    background-color: #7cb342 !important;
+                }
+                
+                /* 15. 排除媒体元素 */
+                img, svg, video, canvas,
+                iframe, embed, object,
+                .avatar, .logo, .icon {
+                    background-color: transparent !important;
+                    filter: none !important;
+                }
+                
+                /* 16. 视频播放器特殊处理 */
+                .video-js, .plyr, .jw-player,
+                .player, [class*="player"],
+                [id*="player"], .video-player {
+                    background-color: #000 !important;
+                    filter: brightness(1.1) contrast(1.1) !important;
+                }
+                
+                /* 17. 代码块 */
+                pre, code {
+                    background-color: #d4f0d8 !important;
+                    color: ${textColor} !important;
+                    border: 1px solid ${borderColor} !important;
+                }
+                
+                /* 18. 模态框和弹出层 */
+                .modal, .popup, .dialog,
+                .overlay, .lightbox {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 19. 标签和徽章 */
+                .tag, .label, .badge,
+                .chip, .mark {
+                    background-color: ${linkColor} !important;
+                    color: white !important;
+                }
+                
+                /* 20. 最后的安全网：强力覆盖所有元素 */
+                body *:not(img):not(svg):not(video):not(canvas):not(iframe):not(embed):not(object):not(.avatar):not(.logo):not(.icon):not(.video-js):not(.plyr):not(.jw-player):not([class*="player"]):not([id*="player"]) {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+            `;
+            
+            this.applyStyle(css, 'green-mode-force');
             
             // 设置主题色
             let meta = document.querySelector('meta[name="theme-color"]');
             if (meta) {
-                meta.content = '#121212';
+                meta.content = greenColor;
             } else {
                 let metaEle = document.createElement('meta');
                 metaEle.name = 'theme-color';
-                metaEle.content = '#121212';
+                metaEle.content = greenColor;
+                document.head.appendChild(metaEle);
+            }
+        },
+
+        // 专门为123云盘优化的豆沙绿模式
+        apply123PanGreenMode() {
+            const greenColor = '#C7EDCC';
+            const textColor = '#333333';
+            const linkColor = '#40933C';
+            const borderColor = '#b0d9b5';
+            const lightGreen = '#d4f0d8';
+            
+            let css = `
+                /* 123云盘（123pan.com）豆沙绿模式 - 全面优化 */
+                
+                /* 1. 基础设置 */
+                html, body {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                }
+                
+                /* 2. 通用元素覆盖 */
+                div, section, main, article, nav, header, footer, aside,
+                .container, .wrapper, .content, .main-content,
+                .panel, .card, .box, .block {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 3. 导航栏和头部 */
+                .header, .navbar, .nav, .top-bar,
+                .menu, .toolbar, .bar {
+                    background-color: ${lightGreen} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 4. 侧边栏 */
+                .sidebar, .side-panel, .side-nav {
+                    background-color: ${lightGreen} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 5. 文件列表区域 */
+                .file-list, .folder-list, .list-view,
+                .grid-view, .item-list, .content-list,
+                .table, .data-table, .file-table {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                }
+                
+                /* 6. 文件项和文件夹项 */
+                .file-item, .folder-item, .list-item,
+                .grid-item, .item, .entry {
+                    background-color: ${lightGreen} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 7. 卡片和面板 */
+                .card, .panel, .box {
+                    background-color: ${lightGreen} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 8. 按钮和表单 */
+                button, .btn, .button,
+                input, textarea, select,
+                .form-control, .input, .search-input {
+                    background-color: white !important;
+                    color: ${textColor} !important;
+                    border: 1px solid ${borderColor} !important;
+                }
+                
+                /* 9. 链接 */
+                a, a:link, a:visited {
+                    color: ${linkColor} !important;
+                }
+                a:hover {
+                    color: #2d682a !important;
+                }
+                
+                /* 10. 标题和文本 */
+                h1, h2, h3, h4, h5, h6,
+                .title, .heading, .subtitle,
+                .name, .filename, .label {
+                    color: #222222 !important;
+                }
+                
+                /* 11. 描述性文本 */
+                .description, .info, .meta,
+                .size, .date, .time,
+                .author, .owner, .details {
+                    color: #555555 !important;
+                }
+                
+                /* 12. 图标和状态 */
+                .icon, .svg-icon, .status,
+                .badge, .tag, .mark {
+                    background-color: transparent !important;
+                    filter: none !important;
+                }
+                
+                /* 13. 上传区域 */
+                .upload-area, .upload-box,
+                .dropzone, .drag-area {
+                    background-color: ${lightGreen} !important;
+                    border: 2px dashed ${borderColor} !important;
+                    color: ${textColor} !important;
+                }
+                
+                /* 14. 进度条 */
+                .progress, .progress-bar,
+                .loader, .loading {
+                    background-color: #e0f2e1 !important;
+                }
+                
+                .progress-fill, .progress-value {
+                    background-color: ${linkColor} !important;
+                }
+                
+                /* 15. 模态框和弹出层 */
+                .modal, .dialog, .popup,
+                .overlay, .lightbox, .drawer {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 16. 工具提示 */
+                .tooltip, .hint, .tip {
+                    background-color: ${lightGreen} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 17. 分页 */
+                .pagination, .page-nav,
+                .page-list, .page-numbers {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                }
+                
+                .page-item, .page-link {
+                    background-color: ${lightGreen} !important;
+                    color: ${textColor} !important;
+                }
+                
+                .active .page-link {
+                    background-color: ${linkColor} !important;
+                    color: white !important;
+                }
+                
+                /* 18. 滚动条 */
+                ::-webkit-scrollbar {
+                    background-color: #e0f2e1 !important;
+                }
+                ::-webkit-scrollbar-thumb {
+                    background-color: #8bc34a !important;
+                }
+                ::-webkit-scrollbar-thumb:hover {
+                    background-color: #7cb342 !important;
+                }
+                ::-webkit-scrollbar-track {
+                    background-color: ${lightGreen} !important;
+                }
+                
+                /* 19. 排除媒体元素 */
+                img, svg, video, canvas,
+                iframe, embed, object,
+                .avatar, .logo, .thumbnail {
+                    filter: none !important;
+                    background-color: transparent !important;
+                }
+                
+                /* 20. 强力覆盖白色背景 */
+                [style*="background-color: white"],
+                [style*="background: white"],
+                [style*="background:#fff"],
+                [style*="background-color:#fff"],
+                [style*="background-color: #fff"],
+                [style*="background-color: #ffffff"],
+                [style*="background: #ffffff"],
+                [style*="background-color: #f0f0f0"],
+                [style*="background-color: #f5f5f5"],
+                [style*="background-color: #f8f8f8"] {
+                    background-color: ${greenColor} !important;
+                }
+                
+                [style*="color: black"],
+                [style*="color:#000"],
+                [style*="color: #000"],
+                [style*="color: #333"],
+                [style*="color: #555"] {
+                    color: ${textColor} !important;
+                }
+                
+                /* 21. 特殊处理：文件操作按钮 */
+                .upload-btn, .download-btn,
+                .share-btn, .delete-btn,
+                .rename-btn, .move-btn {
+                    background-color: white !important;
+                    color: ${textColor} !important;
+                    border: 1px solid ${borderColor} !important;
+                }
+                
+                .upload-btn:hover, .download-btn:hover {
+                    background-color: ${linkColor} !important;
+                    color: white !important;
+                }
+                
+                .delete-btn:hover {
+                    background-color: #f44336 !important;
+                    color: white !important;
+                }
+                
+                /* 22. 特殊处理：分享链接 */
+                .share-link, .public-link,
+                .url-box, .link-box {
+                    background-color: white !important;
+                    color: ${textColor} !important;
+                    border: 1px solid ${borderColor} !important;
+                }
+                
+                /* 23. 特殊处理：搜索框 */
+                .search-box, .filter-box,
+                .search-bar, .filter-bar {
+                    background-color: white !important;
+                    color: ${textColor} !important;
+                    border: 1px solid ${borderColor} !important;
+                }
+                
+                /* 24. 特殊处理：面包屑导航 */
+                .breadcrumb, .path-nav,
+                .location-bar, .nav-path {
+                    background-color: ${lightGreen} !important;
+                    color: ${textColor} !important;
+                }
+                
+                /* 25. 特殊处理：空状态 */
+                .empty-state, .no-data,
+                .empty-list, .no-results {
+                    background-color: ${lightGreen} !important;
+                    color: #555555 !important;
+                }
+                
+                /* 26. 安全网：最后通配符覆盖 */
+                body *:not(img):not(svg):not(video):not(canvas):not(iframe):not(embed):not(object):not(.avatar):not(.logo):not(.icon) {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+            `;
+            
+            this.applyStyle(css, 'green-mode-123pan');
+            
+            // 设置主题色
+            let meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) {
+                meta.content = greenColor;
+            } else {
+                let metaEle = document.createElement('meta');
+                metaEle.name = 'theme-color';
+                metaEle.content = greenColor;
+                document.head.appendChild(metaEle);
+            }
+        },
+
+        // bilivod.com豆沙绿模式
+        applyBilivodGreenMode() {
+            const greenColor = '#C7EDCC';
+            const textColor = '#333333';
+            const linkColor = '#40933C';
+            const borderColor = '#b0d9b5';
+            const lightGreen = '#d4f0d8';
+            
+            let css = `
+                /* bilivod.com豆沙绿模式 - 全面优化 */
+                
+                /* 1. 基础设置 */
+                html, body {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                }
+                
+                /* 2. 通用元素覆盖 */
+                div, section, main, article, nav, header, footer, aside,
+                .container, .wrapper, .content, .main-content,
+                .panel, .card, .box, .block,
+                .video-list, .video-item, .vod-item {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 3. 导航栏和头部 */
+                .header, .navbar, .nav, .top-bar,
+                .menu, .toolbar, .bar {
+                    background-color: ${lightGreen} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 4. 侧边栏 */
+                .sidebar, .side-panel, .side-nav {
+                    background-color: ${lightGreen} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 5. 视频卡片 */
+                .video-card, .vod-card, .movie-card,
+                .film-card, .thumb, .thumbnail {
+                    background-color: ${lightGreen} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 6. 按钮和表单 */
+                button, .btn, .button,
+                input, textarea, select,
+                .form-control, .input, .search-input {
+                    background-color: white !important;
+                    color: ${textColor} !important;
+                    border: 1px solid ${borderColor} !important;
+                }
+                
+                /* 7. 链接 */
+                a, a:link, a:visited {
+                    color: ${linkColor} !important;
+                }
+                a:hover {
+                    color: #2d682a !important;
+                }
+                
+                /* 8. 标题和文本 */
+                h1, h2, h3, h4, h5, h6,
+                .title, .heading, .subtitle,
+                .video-title, .vod-title, .movie-title {
+                    color: #222222 !important;
+                }
+                
+                /* 9. 描述性文本 */
+                .description, .info, .meta,
+                .video-info, .vod-info, .movie-info {
+                    color: #555555 !important;
+                }
+                
+                /* 10. 排除媒体元素 */
+                img, svg, video, canvas,
+                iframe, embed, object,
+                .avatar, .logo, .icon {
+                    background-color: transparent !important;
+                    filter: none !important;
+                }
+                
+                /* 11. 强力覆盖白色背景 */
+                [style*="background-color: white"],
+                [style*="background: white"],
+                [style*="background:#fff"],
+                [style*="background-color:#fff"],
+                [style*="background-color: #fff"],
+                [style*="background-color: #ffffff"],
+                [style*="background: #ffffff"],
+                [style*="background-color: #f0f0f0"],
+                [style*="background-color: #f5f5f5"],
+                [style*="background-color: #f8f8f8"] {
+                    background-color: ${greenColor} !important;
+                }
+                
+                [style*="color: black"],
+                [style*="color:#000"],
+                [style*="color: #000"],
+                [style*="color: #333"],
+                [style*="color: #555"] {
+                    color: ${textColor} !important;
+                }
+                
+                /* 12. 最后通配符覆盖 */
+                body *:not(img):not(svg):not(video):not(canvas):not(iframe):not(embed):not(object):not(.avatar):not(.logo):not(.icon):not(.thumbnail):not(.poster):not(.cover) {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+            `;
+            
+            this.applyStyle(css, 'green-mode-bilivod');
+            
+            // 设置主题色
+            let meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) {
+                meta.content = greenColor;
+            } else {
+                let metaEle = document.createElement('meta');
+                metaEle.name = 'theme-color';
+                metaEle.content = greenColor;
+                document.head.appendChild(metaEle);
+            }
+        },
+
+        // bilivod.com/type/32页面专门优化的豆沙绿模式
+        applyBilivodType32GreenMode() {
+            const greenColor = '#C7EDCC';
+            const textColor = '#333333';
+            const linkColor = '#40933C';
+            const borderColor = '#b0d9b5';
+            const lightGreen = '#d4f0d8';
+            
+            let css = `
+                /* bilivod.com/type/32页面豆沙绿模式 - 专门优化 */
+                
+                /* 1. 基础设置 */
+                html, body {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                }
+                
+                /* 2. 通用元素覆盖 */
+                div, section, main, article, nav, header, footer, aside,
+                .container, .wrapper, .content, .main-content,
+                .panel, .card, .box, .block,
+                .video-list, .video-item, .vod-item {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 3. 导航栏和头部 */
+                .header, .navbar, .nav, .top-bar,
+                .menu, .toolbar, .bar {
+                    background-color: ${lightGreen} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 4. 侧边栏 */
+                .sidebar, .side-panel, .side-nav {
+                    background-color: ${lightGreen} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 5. 视频卡片 */
+                .video-card, .vod-card, .movie-card,
+                .film-card, .thumb, .thumbnail {
+                    background-color: ${lightGreen} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+                
+                /* 6. 按钮和表单 */
+                button, .btn, .button,
+                input, textarea, select,
+                .form-control, .input, .search-input {
+                    background-color: white !important;
+                    color: ${textColor} !important;
+                    border: 1px solid ${borderColor} !important;
+                }
+                
+                /* 7. 链接 */
+                a, a:link, a:visited {
+                    color: ${linkColor} !important;
+                }
+                a:hover {
+                    color: #2d682a !important;
+                }
+                
+                /* 8. 标题和文本 */
+                h1, h2, h3, h4, h5, h6,
+                .title, .heading, .subtitle,
+                .video-title, .vod-title, .movie-title {
+                    color: #222222 !important;
+                }
+                
+                /* 9. 描述性文本 */
+                .description, .info, .meta,
+                .video-info, .vod-info, .movie-info {
+                    color: #555555 !important;
+                }
+                
+                /* 10. 排除媒体元素 */
+                img, svg, video, canvas,
+                iframe, embed, object,
+                .avatar, .logo, .icon {
+                    background-color: transparent !important;
+                    filter: none !important;
+                }
+                
+                /* 11. 强力覆盖白色背景 */
+                [style*="background-color: white"],
+                [style*="background: white"],
+                [style*="background:#fff"],
+                [style*="background-color:#fff"],
+                [style*="background-color: #fff"],
+                [style*="background-color: #ffffff"],
+                [style*="background: #ffffff"],
+                [style*="background-color: #f0f0f0"],
+                [style*="background-color: #f5f5f5"],
+                [style*="background-color: #f8f8f8"] {
+                    background-color: ${greenColor} !important;
+                }
+                
+                [style*="color: black"],
+                [style*="color:#000"],
+                [style*="color: #000"],
+                [style*="color: #333"],
+                [style*="color: #555"] {
+                    color: ${textColor} !important;
+                }
+                
+                /* 12. 专门针对/type/32页面的优化 */
+                .type-header, .category-header, .page-header {
+                    background-color: ${lightGreen} !important;
+                    border-bottom: 2px solid ${borderColor} !important;
+                }
+                
+                .type-content, .category-content, .page-content {
+                    background-color: ${greenColor} !important;
+                }
+                
+                .type-sidebar, .category-sidebar, .side-content {
+                    background-color: ${lightGreen} !important;
+                    border-right: 1px solid ${borderColor} !important;
+                }
+                
+                .type-video-list, .category-video-list {
+                    background-color: ${greenColor} !important;
+                }
+                
+                .type-video-item, .category-video-item {
+                    background-color: ${lightGreen} !important;
+                    border: 1px solid ${borderColor} !important;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+                }
+                
+                .type-video-item:hover, .category-video-item:hover {
+                    background-color: #c0e6c5 !important;
+                    transform: translateY(-2px) !important;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+                }
+                
+                /* 13. 分页优化 */
+                .type-pagination, .category-pagination {
+                    background-color: ${greenColor} !important;
+                    border-top: 1px solid ${borderColor} !important;
+                }
+                
+                /* 14. 筛选器优化 */
+                .filter, .filter-item, .filter-group {
+                    background-color: white !important;
+                    color: ${textColor} !important;
+                    border: 1px solid ${borderColor} !important;
+                }
+                
+                /* 15. 最后通配符覆盖 */
+                body *:not(img):not(svg):not(video):not(canvas):not(iframe):not(embed):not(object):not(.avatar):not(.logo):not(.icon):not(.thumbnail):not(.poster):not(.cover) {
+                    background-color: ${greenColor} !important;
+                    color: ${textColor} !important;
+                    border-color: ${borderColor} !important;
+                }
+            `;
+            
+            this.applyStyle(css, 'green-mode-bilivod-type32');
+            
+            // 设置主题色
+            let meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) {
+                meta.content = greenColor;
+            } else {
+                let metaEle = document.createElement('meta');
+                metaEle.name = 'theme-color';
+                metaEle.content = greenColor;
                 document.head.appendChild(metaEle);
             }
         },
@@ -719,17 +1732,15 @@
             document.head.appendChild(style);
         },
 
-        // 移除样式（改为使用cleanupAllStyles）
-        removeStyle() {
-            this.cleanupAllStyles();
-        },
-
         // 是否应该排除当前网站
         shouldExcludeSite() {
             let hostname = window.location.hostname;
             
-            // 对于bilivod.com，我们使用专门的处理逻辑
-            if (hostname.includes('bilivod.com')) {
+            // 对于特定网站，我们使用专门的处理逻辑
+            if (hostname.includes('123pan.com') || 
+                hostname.includes('github.com') ||
+                hostname.includes('hemudu.cc') ||
+                hostname.includes('bilivod.com')) {
                 return false;
             }
             
@@ -738,6 +1749,7 @@
                 return false;
             }
             
+            // 通用排除逻辑
             let html = document.documentElement;
             let body = document.body;
             
@@ -766,61 +1778,45 @@
             let enableList = this.getConfig('enableList');
             let host = location.host;
             
-            // 检查是否在夜间模式下且当前模式是豆沙绿
-            let currentMode = this.getCurrentMode();
-            if (currentMode === 'green' && this.isNightMode()) {
-                // 夜间模式下自动切换到夜间模式
-                return (globalEnable || enableList.includes(host)) && currentMode !== 'light';
-            }
-            
             return globalEnable || enableList.includes(host);
         },
 
-        // 应用模式
+        // 应用模式 - 简化版，只有三种模式
         applyMode() {
             if (!this.shouldApplyMode()) {
                 this.cleanupAllStyles();
                 return;
             }
             
-            // 对于bilivod.com，不使用智能排除
-            if (!window.location.hostname.includes('bilivod.com') && this.getConfig('autoExclude') && this.shouldExcludeSite()) {
+            // 智能排除逻辑
+            if (this.getConfig('autoExclude') && this.shouldExcludeSite()) {
                 this.cleanupAllStyles();
                 return;
             }
             
             let mode = this.getCurrentMode();
             
-            // 检查是否在夜间模式下且选择了豆沙绿模式
-            if (mode === 'green' && this.isNightMode()) {
-                // 夜间模式下自动切换到夜间模式
-                mode = 'dark';
-                this.currentMode = 'dark';
-                this.setConfig('currentMode', 'dark');
-                this.showNotification('夜间模式下已自动切换到夜间模式');
-            }
-            
+            // 确保只有三种模式
             switch(mode) {
                 case 'dark':
                     this.applyDarkMode();
                     break;
                 case 'green':
-                    this.applyEnhancedGreenMode();
+                    this.applyGreenMode();
                     break;
                 case 'light':
-                    this.cleanupAllStyles();
-                    break;
                 default:
                     this.cleanupAllStyles();
+                    break;
             }
         },
 
-        // 切换模式（不再需要刷新页面）
+        // 切换模式 - 严格三种模式循环
         switchMode() {
             let currentMode = this.currentMode || this.getConfig('currentMode') || 'light';
             let nextMode;
             
-            // 只在三种模式间循环: light -> dark -> green -> light
+            // 严格只在三种模式间循环: light -> dark -> green -> light
             switch(currentMode) {
                 case 'light':
                     nextMode = 'dark';
@@ -832,14 +1828,8 @@
                     nextMode = 'light';
                     break;
                 default:
+                    // 如果当前模式不是三种之一，重置为light
                     nextMode = 'light';
-            }
-            
-            // 检查是否在夜间模式下且选择了豆沙绿模式
-            if (nextMode === 'green' && this.isNightMode()) {
-                // 跳过豆沙绿模式，直接到白天模式
-                nextMode = 'light';
-                this.showNotification('夜间模式下已跳过豆沙绿模式');
             }
             
             // 更新当前模式
@@ -875,7 +1865,7 @@
         toggleGlobal() {
             let current = this.getConfig('globalEnable');
             this.setConfig('globalEnable', !current);
-            this.applyMode(); // 重新应用模式
+            this.applyMode();
             this.refreshMenu();
             this.showNotification(!current ? '已开启全局模式' : '已关闭全局模式');
         },
@@ -888,14 +1878,14 @@
             if (enableList.includes(host)) {
                 // 从白名单中移除，立即禁用
                 enableList = enableList.filter(domain => domain !== host);
-                this.cleanupAllStyles(); // 立即清理样式
+                this.cleanupAllStyles();
                 this.setConfig('enableList', enableList);
                 this.showNotification('已在当前网站禁用护眼模式');
             } else {
                 // 添加到白名单，立即启用
                 enableList.push(host);
                 this.setConfig('enableList', enableList);
-                this.applyMode(); // 立即应用模式
+                this.applyMode();
                 this.showNotification('已在当前网站启用护眼模式');
             }
             
@@ -966,7 +1956,7 @@
             let runDuringDay = this.getConfig('runDuringDay');
             let darkAuto = this.getConfig('darkAuto');
             let host = location.host;
-            let isNightMode = this.isNightMode();
+            let isType32Page = window.location.pathname.includes('/type/32');
             
             let settings = `
                 全局设置：
@@ -975,18 +1965,23 @@
                 - 智能排除：${autoExclude ? '开启' : '关闭'}
                 - 白天开启：${runDuringDay ? '开启' : '关闭'}
                 - 跟随系统：${darkAuto ? '开启' : '关闭'}
-                - 系统夜间模式：${isNightMode ? '开启' : '关闭'}
                 
                 网站设置：
                 - 当前网站：${host}
+                - 当前页面：${window.location.pathname}
+                ${isType32Page ? '- 特殊页面：已检测到/type/32页面，已启用专门优化' : ''}
                 - 白名单状态：${enableList.includes(host) ? '已启用' : '未启用'}
                 - 强制启用：${forcedList.includes(host) ? '是' : '否'}
                 
                 特别说明：
-                - 豆沙绿模式已增强，夜间模式下自动切换到夜间模式
-                - 模式切换更加流畅，无需刷新页面
-                - 对于bilivod.com使用专门优化的样式
-                - 豆沙绿模式使用#C7EDCC颜色
+                - 版本：4.1.8 专门优化版
+                - 专门适配123pan.com、bilivod.com等网站
+                - 特别优化bilivod.com/type/32页面的夜间模式
+                - 三模式精准切换：白天模式、夜间模式、豆沙绿模式
+                - 其他网站：原始夜间模式（90%反色）
+                - 123云盘：优化反色模式
+                - bilivod.com：专用优化反色模式，特别针对/type/32页面
+                - 蓝色反色为橙色
             `;
             
             let result = prompt('护眼模式设置\n\n' + settings + '\n\n输入命令:\n1=切换全局开关\n2=切换智能排除\n3=切换当前网站白名单\n4=切换强制启用\n5=切换白天开启\n6=切换跟随系统\n7=自定义昼夜时间\n8=自动切换模式\n9=清除当前网站白名单状态', '');
@@ -1073,9 +2068,10 @@
             let enableList = this.getConfig('enableList');
             let host = location.host;
             let siteEnabled = enableList.includes(host);
+            let isType32Page = window.location.pathname.includes('/type/32');
             
-            // 1. 模式切换
-            menuCommands.push(GM_registerMenuCommand(`🔄 ${this.getModeName(currentMode)}`, () => {
+            // 1. 模式切换 - 只显示三种模式
+            menuCommands.push(GM_registerMenuCommand(`🔄 ${this.getModeName(currentMode)}${isType32Page ? ' (已优化)' : ''}`, () => {
                 this.switchMode();
             }));
             

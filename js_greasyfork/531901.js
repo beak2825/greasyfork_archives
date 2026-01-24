@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Скрипт для кураторов
+// @name         Скрипт для кураторов администрации
 // @namespace    https://forum.blackrussia.online
-// @version      2.0
-// @description  ❤ скрипт
+// @version      2.2
+// @description  Скрипт 
 // @author       Rasul
 // @match        https://forum.blackrussia.online/threads/*
 // @include      https://forum.blackrussia.online/threads/
@@ -10,8 +10,8 @@
 // @license      MIT
 // @collaborator ya
 // @icon         https://i.postimg.cc/mkYpYfXx/photo-2025-05-01-19-08-17.jpg
-// @downloadURL https://update.greasyfork.org/scripts/531901/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2.user.js
-// @updateURL https://update.greasyfork.org/scripts/531901/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/531901/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D0%B8.user.js
+// @updateURL https://update.greasyfork.org/scripts/531901/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D0%B8.meta.js
 // ==/UserScript==
 
 (function () {
@@ -237,6 +237,18 @@ prefix: UNACCEPT_PREFIX,
 status: false,
 class: 'reject'
 },
+{
+title: 'Соцсети',
+content: '[SIZE=4][FONT=Times New Roman][CENTER][COLOR=rgb(255, 0, 255)]{{ greeting }},[/COLOR] уважаемый {{ user.mention }}!<br><br>'+
+"[CENTER]Доказательства из социальных сетей не принимаются.<br>"+
+"Пожалуйста, загрузите материалы на imgur.com и создайте новую жалобу.<br><br>"+
+"Рекомендуется ознакомиться с правилами подачи обжалования.<br><br>"+
+"[COLOR=rgb(255, 0, 0)][ICODE]Отказано.[/ICODE][/COLOR]<br>"+
+"Приятной игры на сервере [COLOR=rgb(255, 0, 122)]ARKHANGELSK[/COLOR].[/CENTER][/SIZE]",
+prefix: UNACCEPT_PREFIX,
+status: false,
+class: 'reject'
+},  
 {
   title: ' Наказание выдано верно ',
   content:

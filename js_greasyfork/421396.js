@@ -1,7 +1,7 @@
 // ==UserScript==
 /*
     Resizes the YouTube player to different sizes.
-    Copyright (C) 2025 John Burt
+    Copyright (C) 2026 John Burt
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 // @name          YouTube Sizer
 // @author        John Burt
 // @namespace     namespace_runio
-// @version       2.01
+// @version       2.03
 // @description   Resizes the YouTube player to different sizes
 // @match         https://www.youtube.com/*
 // @match         https://www.youtu.be/*
@@ -246,7 +246,7 @@
     }
     //==================================================================
     function showResizeButtonTooltip(btn, show = true) {
-        let tooltipTopOffset = 63; // Height Above The Button For The Tooltip
+        let tooltipTopOffset = 67; // Height Above The Button For The Tooltip
         const buttonRect = btn.getBoundingClientRect(); // Get Button Position
         const tooltipHorizontalCenter = buttonRect.left + buttonRect.width / 2; // Tooltip Horizontal Center
         const tooltipTop = buttonRect.top + buttonRect.height / 2 - tooltipTopOffset; // Tooltip Top
@@ -289,24 +289,26 @@
         var ariaLabel = "";
         var title = "";
         if (!getPref("yt-resize")) {
-            pathData.d = `M 19 23 L 11 15 L 11 23 Z M 29 25
-                          L 29 10.98 C 29 9.88 28.1 9 27 9
-                          L 9 9 C 7.9 9 7 9.88 7 10.98
-                          L 7 25 C 7 26.1 7.9 27 9 27
-                          L 27 27 C 28.1 27 29 26.1 29 25
-                          L 29 25 Z M 27 25.02 L 9 25.02 L 9 10.97
-                          L 27 10.97 L 27 25.02 L 27 25.02 Z`;
+            pathData.d = `M 13 17 L 5 9  L 5 17 Z
+                          M 23 19
+                          L 23 4.98  C 23 3.88 22.1 3 21 3
+                          L 3  3   C 1.9  3  1  3.88  1  4.98
+                          L 1  19  C 1  20.1 1.9 21  3  21
+                          L 21 21  C 22.1 21 23 20.1 23 19
+                          L 23 19 Z
+                          M 21 19.02 L 3 19.02 L 3 4.97
+                          L 21 4.97 L 21 19.02 L 21 19.02 Z`;
             ariaLabel = `Resize mode (${shortcutKey})`;
             title = `Resize mode (${shortcutKey})`;
         } else {
-            pathData.d = `M 25 21 L 25 13 L 17 13 Z M 29 25
-                          L 29 10.98 C 29 9.88 28.1 9 27 9
-                          L 9 9 C 7.9 9 7 9.88 7 10.98
-                          L 7 25 C 7 26.1 7.9 27 9 27
-                          L 27 27 C 28.1 27 29 26.1 29 25
-                          L 29 25 Z M 27 25.02
-                          L 9 25.02 L 9 10.97 L 27 10.97
-                          L 27 25.02 L 27 25.02 Z`;
+            pathData.d = `M 19 15 L 19 7 L 11 7 Z M 23 19
+                          L 23 4.98 C 23 3.88 22.1 3 21 3
+                          L 3 3 C 1.9 3 1 3.88 1 4.98
+                          L 1 19 C 1 20.1 1.9 21 3 21
+                          L 21 21 C 22.1 21 23 20.1 23 19
+                          L 23 19 Z M 21 19.02
+                          L 3 19.02 L 3 4.97
+                          L 21 4.97 L 21 19.02 L 21 19.02 Z`;
             ariaLabel = `Default view (${shortcutKey})`;
             title = `Default view (${shortcutKey})`;
         }
@@ -316,7 +318,7 @@
     }
 
     function createButton() {
-        let abtn = document.querySelector(".ytp-right-controls");
+        let abtn = document.querySelector(".ytp-right-controls-right");
         let btn = document.createElement("button");
         let path = document.createElement("path");
         let clickEvent = new Event("click", {
@@ -325,18 +327,13 @@
 
         /*Start Create SVG*/
         let svg = document.createElement("svg");
-        svg.setAttribute("height", "100%");
-        svg.setAttribute("version", "1.1");
-        svg.setAttribute("viewBox", "0 0 36 36");
-        svg.setAttribute("width", "100%");
-        let use = document.createElement("use");
-        use.setAttribute("class", "ytp-svg-shadow");
+        svg.setAttribute("height", "24");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("width", "24");
 
         setButton(btn, path); // Decide Which Button
 
-        path.setAttribute("fill", "#fff");
-        path.setAttribute("fill-rule", "evenodd");
-        svg.appendChild(use);
+        path.setAttribute("fill", "white");
         svg.appendChild(path);
 
         const btnContent = svg.outerHTML;

@@ -284,14 +284,55 @@
 
         partidoEncontrado.alreadyPlayed = true;
         const zonasActualizar = new Set([resA.indiceZona, resB.indiceZona]);
-        console.log(resA.indiceZona, resB.indiceZona);
         zonasActualizar.forEach(indiceZona => ordenarTablas(indiceZona, tabla));
+        const tablaAnual = obtenerTablaAnual();
+        if (tablaAnual) {
+            const equipoAAnual = buscarEquipo(equipoA.nombre, tablaAnual.tablaIndice)?.equipo;
+            const equipoBAnual = buscarEquipo(equipoB.nombre, tablaAnual.tablaIndice)?.equipo;
+
+            if (equipoAAnual && equipoBAnual) {
+                if (num1 > num2) {
+                    completarDatos(equipoAAnual, "w", num1, num2);
+                    completarDatos(equipoBAnual, "l", num2, num1);
+                } else if (num1 < num2) {
+                    completarDatos(equipoAAnual, "l", num1, num2);
+                    completarDatos(equipoBAnual, "w", num2, num1);
+                } else {
+                    completarDatos(equipoAAnual, "t", num1, num2);
+                    completarDatos(equipoBAnual, "t", num2, num1);
+                }
+
+                ordenarTablas(tablaAnual.zonaIndice, tablaAnual.tablaIndice);
+            }
+        }
     };
+
+    function obtenerTablaAnual() {
+        for (let t = 0; t < equipos.length; t++) {
+            for (let z = 0; z < equipos[t].zonas.length; z++) {
+                const zona = equipos[t].zonas[z];
+                if (zona.nombre.includes("Tabla Anual")) {
+                    return {
+                        tablaIndice: t,
+                        zonaIndice: z,
+                        zona: zona
+                    };
+                }
+            }
+        }
+        return null;
+    }
 
     function ordenarTablas(indiceZona, tabla) {
         const tablaContainer = document.querySelector('div[class^=page-layout_dashboard__layout_left__]');
-        console.log(tablaContainer);
-        const tablas = tablaContainer.children[tabla].children[indiceZona+1].children[1].children[0].children[0].children[1];
+        const zonaContainer = tablaContainer.children[tabla];
+        if (!zonaContainer) return;
+        let indiceDom = indiceZona;
+        if (zonaContainer.firstElementChild.tagName !== "DIV") {
+            indiceDom += 1;
+        }
+
+        const tablas = zonaContainer.children[indiceDom].querySelector("tbody");
         if (!tablas) return;
 
         const filasOriginales = Array.from(tablas.children).map(f => {
@@ -301,7 +342,7 @@
             };
         });
 
-        const zona = equipos[tabla].zonas[indiceZona];  
+        const zona = equipos[tabla].zonas[indiceZona]; 
         if (!zona) return;
 
         zona.equipos.sort((a, b) => {
@@ -324,6 +365,25 @@
             const fila = filaData.fila;
             const colorPosicion = filasOriginales[posicion - 1]?.color || "";
             fila.children[0].style.backgroundColor = colorPosicion;
+
+            if (fila.children[1].children[0].children.length === 3) {
+                const partido = fechasInfo.flatMap(f => f.partidos).find(p => p.teamA.name === eq.nombre || p.teamB.name === eq.nombre);
+
+                if (partido?.prev) {
+                    fila.children[1].children[0].children[2].textContent = `${partido.prev.golesA}-${partido.prev.golesB}`;
+                    let colorBG = "";
+                    if (eq.nombre === partido.teamA.name) {
+                        if (partido.prev.golesA > partido.prev.golesB) colorBG = "#6faa54";
+                        else if (partido.prev.golesA < partido.prev.golesB) colorBG = "#ff4848";
+                        else colorBG = "#ffc61a";
+                    } else {
+                        if (partido.prev.golesB > partido.prev.golesA) colorBG = "#6faa54";
+                        else if (partido.prev.golesB < partido.prev.golesA) colorBG = "#ff4848";
+                        else colorBG = "#ffc61a";
+                    }
+                    fila.children[1].children[0].children[2].style.backgroundColor = colorBG;
+                }
+            }
 
             const eqDifGol = eq.goles - eq.difGoles;
             fila.children[0].children[0].textContent = posicion;
@@ -356,6 +416,19 @@
     }
 
     function revertirPartido(eA, eB, prev) {
+        revertirDatosEquipo(eA, eB, prev);
+
+        const tablaAnual = obtenerTablaAnual();
+        if (tablaAnual) {
+            const eAAnual = buscarEquipo(eA.nombre, tablaAnual.tablaIndice)?.equipo;
+            const eBAnual = buscarEquipo(eB.nombre, tablaAnual.tablaIndice)?.equipo;
+            if (eAAnual && eBAnual) {
+                revertirDatosEquipo(eAAnual, eBAnual, prev);
+            }
+        }
+    }
+
+    function revertirDatosEquipo(eA, eB, prev) {
         eA.partidos--;
         eB.partidos--;
 
@@ -490,7 +563,6 @@
             }
 
             a.addEventListener("click", e => e.preventDefault());
-            console.log(resul);
 
             if (resul.children.length == 1) {
                 num1 = resul.children[0].children[0].children[1];
@@ -501,11 +573,12 @@
 
                 limitarAUnDigito(num1);
                 limitarAUnDigito(num2);
-            } else if (resul.children.length == 2) {
+            } else {
                 const nums = crearResul(resul);
                 num1 = nums.num1;
                 num2 = nums.num2;
             }
+
 
             btn.addEventListener("click", () => {
                 if (!num1 || !num2) return;
@@ -522,6 +595,14 @@
     }
 
     function crearResul(resul) {
+        if (resul.dataset.simuladorInicializado === "true") {
+            return {
+                num1: resul.querySelector(".sim-num1"),
+                num2: resul.querySelector(".sim-num2")
+            };
+        }
+
+        resul.dataset.simuladorInicializado = "true";
         while (resul.firstChild) {
             resul.removeChild(resul.firstChild);
         }
@@ -618,11 +699,13 @@
         let fechaCorrecta = null;
 
         if (primeraVez) {
-            const filtroActivo = data?.props?.pageProps?.data?.games?.filters?.find(f => f.selected);
-            if (!filtroActivo) return;
+            const filtro = getFechaActual();
+            if (!filtro) return;
 
-            const baseSeleccionada = filtroActivo.key.replace(/_\d+$/, "");
-            fechaCorrecta = fechasInfo.find(f => f.base === baseSeleccionada);
+            const baseSeleccionada = filtro.key.replace(/_\d+$/, "");
+            const numeroFecha = parseInt(filtro.name.match(/\d+/)[0]);
+
+            fechaCorrecta = fechasInfo.find(f => f.fecha === numeroFecha && f.base === baseSeleccionada);
             if (!fechaCorrecta) return;
 
             primeraVez = false;

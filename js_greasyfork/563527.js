@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         MIUI Browser Tab KeepAlive
 // @namespace    https://github.com/DJ-Flitzefinger/miui-browser-tab-keepalive
-// @version      1.0.0
-// @description  Tampermonkey userscript that prevents MIUI/HyperOS from killing mobile browser tabs. Works with Firefox, Edge, Yandex, Kiwi, and other browsers. No root required.
+// @version      2.0.0
+// @description  Tampermonkey userscript that helps prevent MIUI/HyperOS from killing mobile browser tabs. No root required.
 // @license      GPL-3.0-or-later
 // @match        https://www.youtube.com/*
 // @match        https://m.youtube.com/*
@@ -18,118 +18,115 @@
 (() => {
   'use strict';
 
-
   // ============================================================
   // PROFILE CONFIGURATION
   // ============================================================
-  // Two profiles for easy trial & error. Short-tap toggles master,
-  // long-press (450-600ms) activates Profile 2 (aggressive).
+  // Two profiles for easy trial & error.
+  // Short-tap toggles master.
+  // Long-press (500ms) activates Profile 2.
   // Profile 2 + MASTER = red lock icon.
   // ============================================================
 
   const PROFILE_1 = {
     // --------------------------------------------------------
-    // PHANTOM VIDEO
+    // VIDEO KEEPALIVE
     // --------------------------------------------------------
+    VideoKeepAlive: true,     // Enable/disable Video KeepAlive (hidden video + MediaSession)
+
+    // --------------------------------------------------------
+    // KEEPALIVE PRIORITY
+    // --------------------------------------------------------
+    KeepAlivePriority: 'video',  // Primary mode if both VideoKeepAlive and AudioKeepAlive are enabled ('video' or 'audio')
+
     canvasStreamFps: 0.1,      // FPS for canvas-based video stream
     muted: true,               // v.muted (true = silent)
     volume: 0,                 // v.volume (0 = silent, 0.001 = barely audible)
 
     // --------------------------------------------------------
-    // RETRY WATCHDOG (Phantom Video Recovery)
+    // RETRY WATCHDOG (Restarts KeepAlive if Audio/Video stops)
     // --------------------------------------------------------
-    retryWatchdog: false,      // Enable/disable watchdog
+    retryWatchdog: false,      // If KeepAlive stops entirely, re-initialize Audio/Video (stronger than the per-mode resume loops)
     retryDelayMinMs: 15000,    // Min delay between retries
     retryDelayMaxMs: 120000,   // Max delay (exponential backoff cap)
-
-    // --------------------------------------------------------
-    // INDEXEDDB HEARTBEAT (Very small periodic DB write to create an extra activity "pulse")
-    // --------------------------------------------------------
-    indexedDBHeartbeat: false, // Enable/disable IndexedDB heartbeat
-    heartbeatIntervalMs: 15000,// How often to write heartbeat
 
     // --------------------------------------------------------
     // MEDIA SESSION REFRESH (How often to re-assert the MediaSession metadata + playback state)
     // --------------------------------------------------------
     mediaSessionRefresh: false,           // Enable/disable MediaSession refresh (some music playing apps will stop playing!)
-    mediaSessionRefreshIntervalMs: 10000, // How often to re-assert MediaSession. If set to 0 and "true" only asserted one time when activating
+    mediaSessionRefreshIntervalMs: 10000, // How often to re-assert. If set to 0 and "true" only asserted one time when activating
 
     // --------------------------------------------------------
-    // WAKE LOCK (Holds a screen wake lock to prevent deep sleep (Doze mode) when screen is off. Consumes more battery)
+    // WEB LOCK (Holds an exclusive lock to make the tab look less "idle")
     // --------------------------------------------------------
-    wakeLock: false,                      // Enable/disable WakeLock API
-    wakeLockRefreshIntervalMs: 0,         // WakeLock refresh interval (0 = no refresh, hold continuously)
+    webLock: true,
 
     // --------------------------------------------------------
-    // SERVICE WORKER / ACTIVITY (Registers a background service worker with periodic activity to simulate ongoing work)
+    // AUDIO KEEPALIVE (audio playback + MediaSession)
     // --------------------------------------------------------
-    serviceWorker: false,      // Enable/disable Service Worker
-    activityIntervalMs: 10000, // SW activity interval
-
-    // --------------------------------------------------------
-    // WEB LOCK (Holds an exclusive lock to make the tab look less "idle" to the browser. Low cost, usefulness depends on ROM/device)
-    // --------------------------------------------------------
-    webLock: true,             // Enable/disable Web Locks API
+    AudioKeepAlive: false,
+    AudioFrequencyHz: 440,
+    AudioGain: 0.0001,
+    AudioResumeIntervalMs: 5000, // Audio resume interval, if it somehow stops (0 = off)
   };
 
   const PROFILE_2 = {
     // --------------------------------------------------------
-    // PHANTOM VIDEO
+    // VIDEO KEEPALIVE
     // --------------------------------------------------------
-    canvasStreamFps: 2,        // Higher FPS
-    muted: false,              // Not muted
-    volume: 0.001,             // Barely audible
+    VideoKeepAlive: true,
+
+    // --------------------------------------------------------
+    // KEEPALIVE PRIORITY
+    // --------------------------------------------------------
+    KeepAlivePriority: 'audio',
+
+    canvasStreamFps: 0.5,
+    muted: true,
+    volume: 0,
 
     // --------------------------------------------------------
     // RETRY WATCHDOG
     // --------------------------------------------------------
-    retryWatchdog: true,       // Enabled
-    retryDelayMinMs: 5000,     // Faster retry
-    retryDelayMaxMs: 30000,    // Lower cap
-
-    // --------------------------------------------------------
-    // INDEXEDDB HEARTBEAT
-    // --------------------------------------------------------
-    indexedDBHeartbeat: true,  // Enabled
-    heartbeatIntervalMs: 5000, // More frequent
+    retryWatchdog: true,
+    retryDelayMinMs: 5000,
+    retryDelayMaxMs: 15000,
 
     // --------------------------------------------------------
     // MEDIA SESSION REFRESH
     // --------------------------------------------------------
-    mediaSessionRefresh: false,          // Disabled (can interfere with other media apps)
-    mediaSessionRefreshIntervalMs: 5000, // More frequent refresh (if enabled)
-
-    // --------------------------------------------------------
-    // WAKE LOCK
-    // --------------------------------------------------------
-    wakeLock: true,                      // Enabled
-    wakeLockRefreshIntervalMs: 30000,    // Periodic refresh to handle auto-releases
-
-    // --------------------------------------------------------
-    // SERVICE WORKER / ACTIVITY
-    // --------------------------------------------------------
-    serviceWorker: true,       // Enabled
-    activityIntervalMs: 5000,  // More frequent
+    mediaSessionRefresh: false,
+    mediaSessionRefreshIntervalMs: 10000,
 
     // --------------------------------------------------------
     // WEB LOCK
     // --------------------------------------------------------
-    webLock: true,             // Enabled
+    webLock: true,
+
+    // --------------------------------------------------------
+    // AUDIO KEEPALIVE
+    // --------------------------------------------------------
+    AudioKeepAlive: true,
+    AudioFrequencyHz: 440,
+    AudioGain: 0.0001,
+    AudioResumeIntervalMs: 5000,
   };
 
   // ============================================================
   // INTERNAL: Build SETTINGS object from active profile
   // ============================================================
-
   function buildSettingsFromProfile(profile) {
     return {
+      keepAlive: {
+        priority: (profile.KeepAlivePriority === 'audio') ? 'audio' : 'video',
+      },
       mediaSession: {
         enabled: profile.mediaSessionRefresh,
         refreshIntervalMs: profile.mediaSessionRefreshIntervalMs,
         // ALWAYS active, NOT configurable per profile
         skipIfRealMediaOnPage: true,
       },
-      phantomVideo: {
+      videoKeepAlive: {
+        enabled: profile.VideoKeepAlive,
         retryWatchdog: {
           enabled: profile.retryWatchdog,
           retryDelayMinMs: profile.retryDelayMinMs,
@@ -141,17 +138,12 @@
       },
       extras: {
         webLock: profile.webLock,
-        indexedDBHeartbeat: {
-          enabled: profile.indexedDBHeartbeat,
-          heartbeatIntervalMs: profile.heartbeatIntervalMs,
-        },
-        wakeLock: {
-          enabled: profile.wakeLock,
-          refreshIntervalMs: profile.wakeLockRefreshIntervalMs,
-        },
-        serviceWorker: {
-          enabled: profile.serviceWorker,
-          activityIntervalMs: profile.activityIntervalMs,
+
+        audioKeepAlive: {
+          enabled: profile.AudioKeepAlive,
+          frequencyHz: profile.AudioFrequencyHz,
+          gain: profile.AudioGain,
+          resumeIntervalMs: profile.AudioResumeIntervalMs,
         },
       },
     };
@@ -310,7 +302,6 @@
   }
 
   lockSvg.innerHTML = createLockSvgContent(LOCK_WHITE_COLOR);
-
   badge.appendChild(lockSvg);
   document.documentElement.appendChild(badge);
 
@@ -318,10 +309,10 @@
     lockSvg.style.opacity = isMaster ? '1' : '0';
     badge.style.borderColor = isMaster ? 'rgba(255,255,255,0.78)' : 'rgba(255,255,255,0.60)';
 
-    // Update lock color based on profile (only visible when master)
     const lockColor = (profileNum === 2) ? LOCK_RED_COLOR : LOCK_WHITE_COLOR;
     lockSvg.innerHTML = createLockSvgContent(lockColor);
   }
+
 
   // ============================================================
   // Web Locks API (optional extra "not idle" signal)
@@ -365,187 +356,163 @@
   }
 
   // ============================================================
-  // WakeLock API (optional extra to prevent deep sleep)
+  // Helpers
   // ============================================================
 
-  let wakeLock = null;
-  let wakeLockRefreshTimer = null;
+  const clampMs = (n, min, max) => {
+    const v = Number(n);
+    if (!Number.isFinite(v)) return min;
+    return Math.min(max, Math.max(min, v));
+  };
 
-  async function acquireWakeLock() {
-    if (!SETTINGS.extras.wakeLock.enabled) return;
-    if (wakeLock) return;
-    if (!('wakeLock' in navigator)) return;
-
+  function isOtherMediaPlayingOnPage() {
     try {
-      wakeLock = await navigator.wakeLock.request('screen');
-    } catch (err) {
-      console.error('WakeLock failed:', err);
-    }
-  }
-
-  async function refreshWakeLock() {
-    releaseWakeLock();
-    await acquireWakeLock();
-  }
-
-  function startWakeLockRefresh() {
-    const interval = Number(SETTINGS.extras.wakeLock.refreshIntervalMs) || 0;
-    if (interval <= 0) return;
-
-    if (wakeLockRefreshTimer) clearInterval(wakeLockRefreshTimer);
-
-    wakeLockRefreshTimer = setInterval(() => {
-      if (!runningKeepAlive) return;
-      void refreshWakeLock();
-    }, Math.max(2000, interval));
-  }
-
-  function stopWakeLockRefresh() {
-    if (wakeLockRefreshTimer) {
-      clearInterval(wakeLockRefreshTimer);
-      wakeLockRefreshTimer = null;
-    }
-  }
-
-  function releaseWakeLock() {
-    if (!wakeLock) return;
-
-    try {
-      wakeLock.release();
-      wakeLock = null;
-    } catch {}
-  }
-
-  // ============================================================
-  // Service Worker (optional extra for background activity)
-  // ============================================================
-
-  let swRegistration = null;
-  let swActivityTimer = null;
-
-  async function startServiceWorker() {
-    if (!SETTINGS.extras.serviceWorker.enabled) return;
-    if (swRegistration) return;
-    if (!('serviceWorker' in navigator)) return;
-
-    try {
-      // Create an inline Service Worker script as a Blob
-      const swCode = `
-        self.addEventListener('install', () => {
-          self.skipWaiting();
-        });
-
-        self.addEventListener('activate', () => {
-          self.clients.claim();
-        });
-
-        setInterval(() => {
-          // Dummy activity to simulate ongoing work (e.g., postMessage to keep alive)
-          self.clients.matchAll().then(clients => {
-            clients.forEach(client => client.postMessage({ type: 'keepalive' }));
-          });
-        }, ${SETTINGS.extras.serviceWorker.activityIntervalMs});
-      `;
-
-      const blob = new Blob([swCode], { type: 'application/javascript' });
-      const swUrl = URL.createObjectURL(blob);
-
-      swRegistration = await navigator.serviceWorker.register(swUrl);
-
-      // Listen for messages from SW (optional, but keeps communication open)
-      navigator.serviceWorker.addEventListener('message', event => {
-        if (event.data.type === 'keepalive') {
-          // Do nothing, just acknowledge activity
-        }
-      });
-    } catch (err) {
-      console.error('Service Worker failed:', err);
-    }
-  }
-
-  async function stopServiceWorker() {
-    if (!swRegistration) return;
-
-    try {
-      await swRegistration.unregister();
-      swRegistration = null;
-    } catch {}
-
-    if (swActivityTimer) {
-      clearInterval(swActivityTimer);
-      swActivityTimer = null;
-    }
-  }
-
-  // ============================================================
-  // IndexedDB heartbeat (optional tiny periodic DB write)
-  // ============================================================
-
-  const IDB_NAME = 'ffka-keepalive-db';
-  const IDB_STORE = 'heartbeat';
-
-  let idbDatabase = null;
-  let idbHeartbeatTimer = null;
-
-  function openIndexedDB() {
-    return new Promise((resolve, reject) => {
-      try {
-        const request = indexedDB.open(IDB_NAME, 1);
-
-        request.onupgradeneeded = (event) => {
-          const db = event.target.result;
-          if (!db.objectStoreNames.contains(IDB_STORE)) {
-            db.createObjectStore(IDB_STORE, { keyPath: 'id' });
-          }
-        };
-
-        request.onsuccess = (event) => resolve(event.target.result);
-        request.onerror = () => reject(request.error);
-      } catch (e) {
-        reject(e);
+      const els = document.querySelectorAll('audio,video');
+      for (const el of els) {
+        if (el === videoEl) continue;
+        if (el === audioEl) continue;
+        if (el && !el.paused && !el.ended && el.readyState > 2) return true;
       }
-    });
+    } catch {}
+    return false;
   }
 
-  async function writeIndexedDBHeartbeat() {
-    if (!idbDatabase) return;
+  function isVideoKeepAliveEnabled() {
+    const vk = SETTINGS?.videoKeepAlive;
+    if (!vk) return true;
+    return vk.enabled !== false;
+  }
+
+  function isAudioKeepAliveEnabled() {
+    return !!SETTINGS?.extras?.audioKeepAlive?.enabled;
+  }
+
+  function primaryKeepAliveMode() {
+    const prio = SETTINGS?.keepAlive?.priority || 'video';
+    if (prio === 'audio') {
+      if (isAudioKeepAliveEnabled()) return 'audio';
+      if (isVideoKeepAliveEnabled()) return 'video';
+      return null;
+    }
+    // default: video-first
+    if (isVideoKeepAliveEnabled()) return 'video';
+    if (isAudioKeepAliveEnabled()) return 'audio';
+    return null;
+  }
+
+  // ============================================================
+  // Audio KeepAlive (audio playback + MediaSession)
+  // ============================================================
+
+  let audioCtx = null;
+  let audioOsc = null;
+  let audioGainNode = null;
+  let audioDest = null;
+  let audioEl = null;
+  let audioResumeTimer = null;
+
+  function stopAudioKeepAlive() {
     try {
-      const tx = idbDatabase.transaction(IDB_STORE, 'readwrite');
-      const store = tx.objectStore(IDB_STORE);
-      store.put({ id: tabId, ts: Date.now() });
+      if (audioResumeTimer) {
+        clearInterval(audioResumeTimer);
+        audioResumeTimer = null;
+      }
+
+      try { audioEl?.pause?.(); } catch {}
+      try {
+        const so = audioEl?.srcObject;
+        if (so?.getTracks) so.getTracks().forEach(t => { try { t.stop(); } catch {} });
+      } catch {}
+      try { audioEl?.remove?.(); } catch {}
+      audioEl = null;
+
+      try { audioOsc?.stop(); } catch {}
+      try { audioOsc?.disconnect(); } catch {}
+      audioOsc = null;
+
+      try { audioGainNode?.disconnect(); } catch {}
+      audioGainNode = null;
+
+      try { audioDest?.disconnect?.(); } catch {}
+      audioDest = null;
+
+      try { audioCtx?.close(); } catch {}
+      audioCtx = null;
     } catch {}
   }
 
-  async function startIndexedDBHeartbeat() {
-    if (!SETTINGS.extras.indexedDBHeartbeat.enabled) return;
-    if (idbHeartbeatTimer) return;
+  async function tryStartAudioPlayback(fromGesture) {
+    if (!audioEl) return;
 
     try {
-      idbDatabase = await openIndexedDB();
-      await writeIndexedDBHeartbeat();
+      // Do not force-mute here. Use gain to control audibility.
+      try { audioEl.muted = false; } catch {}
+      try { audioEl.volume = 1; } catch {}
 
-      idbHeartbeatTimer = setInterval(() => {
-        if (!runningKeepAlive) return;
-        void writeIndexedDBHeartbeat();
-      }, Math.max(5000, Number(SETTINGS.extras.indexedDBHeartbeat.heartbeatIntervalMs) || 15000));
+      try { if (audioCtx?.state === 'suspended') await audioCtx.resume(); } catch {}
+      await audioEl.play();
     } catch {
-      // IndexedDB may be unavailable; continue without it.
     }
   }
 
-  function stopIndexedDBHeartbeat() {
-    if (idbHeartbeatTimer) {
-      clearInterval(idbHeartbeatTimer);
-      idbHeartbeatTimer = null;
-    }
-    if (idbDatabase) {
-      try { idbDatabase.close(); } catch {}
-      idbDatabase = null;
+  async function startAudioKeepAlive() {
+    const cfg = SETTINGS?.extras?.audioKeepAlive;
+    if (!cfg?.enabled) return;
+    if (audioCtx || audioEl) return;
+
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+
+      audioCtx = new Ctx();
+      try { await audioCtx.resume(); } catch {}
+
+      audioOsc = audioCtx.createOscillator();
+      audioGainNode = audioCtx.createGain();
+      audioDest = audioCtx.createMediaStreamDestination();
+
+      audioOsc.frequency.value = Number(cfg.frequencyHz) || 440;
+      audioGainNode.gain.value = Number(cfg.gain) || 0.0001;
+
+      audioOsc.connect(audioGainNode);
+      audioGainNode.connect(audioDest);
+      // Also connect to speakers so the tone is actually audible (gain controls loudness).
+      try { audioGainNode.connect(audioCtx.destination); } catch {}
+
+      audioOsc.start();
+
+      audioEl = document.createElement('audio');
+      audioEl.style.cssText = 'display:none !important; width:1px; height:1px; position:fixed; left:-9999px; top:-9999px;';
+      audioEl.loop = true;
+      audioEl.autoplay = true;
+      audioEl.muted = false;
+      audioEl.volume = 1;
+      audioEl.srcObject = audioDest.stream;
+
+      document.documentElement.appendChild(audioEl);
+
+      await tryStartAudioPlayback(false);
+
+      const resumeMs = Number(cfg.resumeIntervalMs) || 0;
+      if (resumeMs > 0) {
+        const interval = clampMs(resumeMs, 250, 5000);
+        audioResumeTimer = setInterval(() => {
+          if (!runningKeepAlive) return;
+          try {
+            if (audioCtx?.state === 'suspended') audioCtx.resume();
+          } catch {}
+          try {
+            if (audioEl?.paused) void tryStartAudioPlayback(false);
+          } catch {}
+        }, interval);
+      }
+    } catch {
+      stopAudioKeepAlive();
     }
   }
 
   // ============================================================
-  // Phantom media core (silent hidden video + MediaSession)
+  // Video KeepAlive core (silent hidden video + MediaSession)
   // ============================================================
 
   let runningKeepAlive = false;
@@ -556,7 +523,8 @@
   let mediaSessionTimer = null;
 
   function isRetryWatchdogEnabled() {
-    const cfg = SETTINGS.phantomVideo.retryWatchdog;
+    if (!isVideoKeepAliveEnabled()) return false;
+    const cfg = SETTINGS.videoKeepAlive.retryWatchdog;
     if (!cfg || !cfg.enabled) return false;
     const min = Number(cfg.retryDelayMinMs) || 0;
     const max = Number(cfg.retryDelayMaxMs) || 0;
@@ -564,6 +532,7 @@
   }
 
   async function ensureVideoElement() {
+    if (!isVideoKeepAliveEnabled()) return;
     if (videoEl) return;
 
     const v = document.createElement('video');
@@ -571,10 +540,9 @@
     v.playsInline = true;
     v.loop = true;
     v.autoplay = true;
-    v.muted = SETTINGS.phantomVideo.muted;
-    v.volume = SETTINGS.phantomVideo.volume;
+    v.muted = SETTINGS.videoKeepAlive.muted;
+    v.volume = SETTINGS.videoKeepAlive.volume;
 
-    // Canvas-based video stream (low FPS to save battery).
     const canvas = document.createElement('canvas');
     canvas.width = 2;
     canvas.height = 2;
@@ -583,47 +551,45 @@
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, 2, 2);
     }
-    const stream = canvas.captureStream(SETTINGS.phantomVideo.canvasStreamFps);
+
+    const fps = Number(SETTINGS.videoKeepAlive.canvasStreamFps) || 0.1;
+    const stream = canvas.captureStream(fps);
     v.srcObject = stream;
 
     document.documentElement.appendChild(v);
     videoEl = v;
   }
 
-  async function tryResumePhantomVideo() {
+  async function tryResumeVideoKeepAlive() {
     if (!runningKeepAlive) return;
+    if (!isVideoKeepAliveEnabled()) return;
     if (!videoEl) return;
     if (!videoEl.paused) return;
 
     try {
       await videoEl.play();
 
-      // If the watchdog is enabled, reset the retry delay after a successful resume.
       if (isRetryWatchdogEnabled()) {
-        retryDelayMs = Number(SETTINGS.phantomVideo.retryWatchdog.retryDelayMinMs) || retryDelayMs;
+        retryDelayMs = Number(SETTINGS.videoKeepAlive.retryWatchdog.retryDelayMinMs) || retryDelayMs;
       }
     } catch {
-      // Only apply exponential backoff when the watchdog is enabled.
       if (isRetryWatchdogEnabled()) {
-        const max = Number(SETTINGS.phantomVideo.retryWatchdog.retryDelayMaxMs) || retryDelayMs;
-        retryDelayMs = Math.min(
-          max,
-          Math.floor(retryDelayMs * 1.6)
-        );
+        const max = Number(SETTINGS.videoKeepAlive.retryWatchdog.retryDelayMaxMs) || retryDelayMs;
+        retryDelayMs = Math.min(max, Math.floor(retryDelayMs * 1.6));
       }
     }
   }
 
   function scheduleWatchdogLoop() {
+    if (!isVideoKeepAliveEnabled()) return;
     if (!isRetryWatchdogEnabled()) return;
 
-    // Start with the configured minimum delay.
-    retryDelayMs = Number(SETTINGS.phantomVideo.retryWatchdog.retryDelayMinMs) || retryDelayMs;
+    retryDelayMs = Number(SETTINGS.videoKeepAlive.retryWatchdog.retryDelayMinMs) || retryDelayMs;
     if (retryDelayMs <= 0) return;
 
     const loop = async () => {
       if (!runningKeepAlive) return;
-      await tryResumePhantomVideo();
+      await tryResumeVideoKeepAlive();
       watchdogTimer = setTimeout(loop, retryDelayMs);
     };
 
@@ -637,37 +603,49 @@
     }
   }
 
-  function isOtherMediaPlayingOnPage() {
-    try {
-      const els = document.querySelectorAll('audio,video');
-      for (const el of els) {
-        if (el === videoEl) continue;
-        if (el && !el.paused && !el.ended && el.readyState > 2) return true;
-      }
-    } catch {}
-    return false;
-  }
-
   function setMediaSessionPlaying(isPlaying) {
     try {
       if (!('mediaSession' in navigator)) return;
 
+      const mode = primaryKeepAliveMode();
+      if (!mode) return;
+
       if (isPlaying) {
-        navigator.mediaSession.metadata = new MediaMetadata({
-          title: 'Phantom KeepAlive',
-          artist: 'Firefox',
-          album: 'MIUI workaround',
-        });
+        if (SETTINGS.mediaSession.skipIfRealMediaOnPage && isOtherMediaPlayingOnPage()) {
+          return;
+        }
+
+        let title = 'KeepAlive';
+        let artist = 'Browser';
+        let album = 'MIUI workaround';
+
+        if (mode === 'video') title = 'Video KeepAlive';
+        if (mode === 'audio') title = 'Audio KeepAlive';
+
+        navigator.mediaSession.metadata = new MediaMetadata({ title, artist, album });
         navigator.mediaSession.playbackState = 'playing';
 
         const safe = (action, fn) => {
           try { navigator.mediaSession.setActionHandler(action, fn); } catch {}
         };
 
-        safe('play', async () => { try { await videoEl?.play(); } catch {} });
-        safe('pause', () => { try { videoEl?.pause(); } catch {} });
+        const targetPlay = async () => {
+          try {
+            if (mode === 'video') await videoEl?.play();
+            else if (mode === 'audio') await audioEl?.play();
+          } catch {}
+        };
 
-        // If the user stops playback from the Android notification, disable the keepalive.
+        const targetPause = () => {
+          try {
+            if (mode === 'video') videoEl?.pause();
+            else if (mode === 'audio') audioEl?.pause();
+          } catch {}
+        };
+
+        safe('play', targetPlay);
+        safe('pause', targetPause);
+
         safe('stop', async () => {
           try {
             const st = await readMasterState();
@@ -688,22 +666,24 @@
     } catch {}
   }
 
-  function refreshPhantomMediaSession() {
+  function refreshKeepAliveMediaSession() {
     if (!runningKeepAlive) return;
 
-    if (SETTINGS.mediaSession.skipIfRealMediaOnPage && isOtherMediaPlayingOnPage()) {
-      return;
-    }
-
-    // Re-assert metadata/playbackState (Android may restore the notification/player).
     setMediaSessionPlaying(true);
 
-    // Also ensure the phantom video is actually playing.
-    void tryResumePhantomVideo();
+    const mode = primaryKeepAliveMode();
+    if (mode === 'video') {
+      void tryResumeVideoKeepAlive();
+    } else if (mode === 'audio') {
+      void tryStartAudioPlayback(false);
+    }
   }
 
   function startMediaSessionRefresh() {
+    const mode = primaryKeepAliveMode();
+    if (!mode) return;
     if (!SETTINGS.mediaSession.enabled) return;
+
     const interval = Number(SETTINGS.mediaSession.refreshIntervalMs) || 0;
     if (interval <= 0) return;
 
@@ -711,7 +691,7 @@
 
     mediaSessionTimer = setInterval(() => {
       if (!runningKeepAlive) return;
-      refreshPhantomMediaSession();
+      refreshKeepAliveMediaSession();
     }, Math.max(2000, interval));
   }
 
@@ -727,18 +707,20 @@
     runningKeepAlive = true;
 
     await acquireWebLock();
-    await acquireWakeLock();
-    startWakeLockRefresh();
-    await startServiceWorker();
-    await startIndexedDBHeartbeat();
 
-    await ensureVideoElement();
-    try { await videoEl?.play(); } catch {}
+    const mode = primaryKeepAliveMode();
+
+    if (mode === 'audio') {
+      await startAudioKeepAlive();
+    } else if (mode === 'video') {
+      await ensureVideoElement();
+      try { await videoEl?.play(); } catch {}
+    }
 
     setMediaSessionPlaying(true);
 
-    if (isRetryWatchdogEnabled()) {
-      retryDelayMs = Number(SETTINGS.phantomVideo.retryWatchdog.retryDelayMinMs) || 0;
+    if (mode === 'video' && isRetryWatchdogEnabled()) {
+      retryDelayMs = Number(SETTINGS.videoKeepAlive.retryWatchdog.retryDelayMinMs) || 0;
       clearWatchdogLoop();
       scheduleWatchdogLoop();
     } else {
@@ -755,15 +737,11 @@
 
     stopMediaSessionRefresh();
     setMediaSessionPlaying(false);
-
     clearWatchdogLoop();
-    retryDelayMs = isRetryWatchdogEnabled() ? (Number(SETTINGS.phantomVideo.retryWatchdog.retryDelayMinMs) || 0) : 0;
+
+    stopAudioKeepAlive();
 
     releaseWebLock();
-    stopWakeLockRefresh();
-    releaseWakeLock();
-    void stopServiceWorker();
-    stopIndexedDBHeartbeat();
 
     try {
       if (videoEl) {
@@ -784,7 +762,7 @@
     videoEl = null;
   }
 
-  // Reinitialize KeepAlive with new profile settings (stop + start)
+
   async function reinitKeepAliveWithProfile(profileNum) {
     applyProfileSettings(profileNum);
 
@@ -860,7 +838,6 @@
   function handlePointerDown(e) {
     longPressTriggered = false;
 
-    // Store initial position for move detection
     if (e.touches && e.touches.length > 0) {
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
@@ -875,22 +852,17 @@
       longPressTriggered = true;
       longPressTimer = null;
 
-      // Long-press action: activate Profile 2
       const st = await readMasterState();
       const isMaster = isThisTabMaster(st);
 
-      // Set profile to 2
       await setActiveProfile(2);
 
       if (!isMaster) {
-        // Make this tab master AND activate Profile 2
         await setMasterStateAsThisTab();
       }
 
-      // Reinitialize with Profile 2 settings
       await reinitKeepAliveWithProfile(2);
 
-      // Update UI to show red lock (if master)
       const newSt = await readMasterState();
       setUiState(isThisTabMaster(newSt), 2);
 
@@ -900,7 +872,6 @@
   function handlePointerMove(e) {
     if (!longPressTimer) return;
 
-    // Cancel long-press if finger moved too far
     let currentX, currentY;
     if (e.touches && e.touches.length > 0) {
       currentX = e.touches[0].clientX;
@@ -926,7 +897,6 @@
     clearLongPressTimer();
   }
 
-  // Prevent click if long-press was triggered
   function handleClick(e) {
     if (longPressTriggered) {
       e.preventDefault();
@@ -935,21 +905,18 @@
       return;
     }
 
-    // Original short-tap behavior: force-claim master / disable if master
     void (async () => {
       const st = await readMasterState();
 
       if (isThisTabMaster(st)) {
-        // Currently master -> disable keepalive
         await clearMasterState();
-        // Reset to Profile 1 when disabling
+
         await setActiveProfile(1);
         applyProfileSettings(1);
         await applyMasterState();
         return;
       }
 
-      // Not master -> make THIS tab master (keeps current profile)
       await setMasterStateAsThisTab();
       await applyMasterState();
     })();
@@ -959,7 +926,6 @@
   // Event wiring
   // ============================================================
 
-  // React to shared master state changes.
   gmOnChange(KEY_MASTER_ID, () => void applyMasterState());
   gmOnChange(KEY_MASTER_ENABLED, () => void applyMasterState());
   gmOnChange(KEY_ACTIVE_PROFILE, async () => {
@@ -969,27 +935,18 @@
     setUiState(isThisTabMaster(st), profileNum);
   });
 
-  // Best-effort resume phantom playback + ensure MediaSession (master only).
-  // Also refresh WakeLock on visibility change.
   document.addEventListener('visibilitychange', async () => {
     if (!runningKeepAlive) return;
-    await tryResumePhantomVideo();
-    setMediaSessionPlaying(true);
-    if (SETTINGS.extras.wakeLock.enabled) {
-      void refreshWakeLock();
-    }
+    refreshKeepAliveMediaSession();
   }, { passive: true });
 
-  // Badge behavior with long-press support
-  // Use touchstart/touchend for touch devices, pointerdown/pointerup as fallback
   badge.addEventListener('touchstart', handlePointerDown, { passive: true });
   badge.addEventListener('touchmove', handlePointerMove, { passive: true });
   badge.addEventListener('touchend', handlePointerUp, { passive: true });
   badge.addEventListener('touchcancel', handlePointerCancel, { passive: true });
 
-  // Fallback for non-touch (desktop testing)
   badge.addEventListener('pointerdown', (e) => {
-    if (e.pointerType === 'touch') return; // Already handled by touch events
+    if (e.pointerType === 'touch') return;
     handlePointerDown(e);
   }, { passive: true });
   badge.addEventListener('pointermove', (e) => {
@@ -1007,14 +964,11 @@
 
   badge.addEventListener('click', handleClick, { passive: false });
 
-  // Prevent context menu on long press
   badge.addEventListener('contextmenu', (e) => {
     e.preventDefault();
     e.stopPropagation();
   }, { passive: false });
 
-  // If the master tab is closed, best-effort clear the master state.
-  // Note: OS-kills may skip unload, but force-claim makes recovery easy.
   const tryClearIfMaster = async () => {
     try {
       const st = await readMasterState();
@@ -1032,7 +986,6 @@
   // ============================================================
 
   void (async () => {
-    // Load active profile on init
     const profileNum = await readActiveProfile();
     applyProfileSettings(profileNum);
     await applyMasterState();

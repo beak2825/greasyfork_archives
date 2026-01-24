@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Instagram | Auto-Close/Block "Sign up" / "Log in" Overlay Popup
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      4.16
+// @version      4.17
 // @author       Piknockyou
 // @license      AGPL-3.0
 // @description  Automatically blocks/closes Instagram login/signup overlays — includes mobile-friendly Reels fixes (end-of-video wall, poster/cover overlay, tap behavior, auto-redirect past "Continue on web").
@@ -717,6 +717,13 @@
             const targetEl = ev.target instanceof Element ? ev.target : null;
             if (!targetEl) {
                 dbg('❌ STOP: no targetEl');
+                return;
+            }
+
+            // If "Instagram Ultimate Video Controls" script is active on this video,
+            // defer to that script for all click handling (mute/play/pause via its UI)
+            if (targetEl.closest('.igu-wrapper')) {
+                dbg('❌ STOP: .igu-wrapper detected, deferring to video controls script');
                 return;
             }
 

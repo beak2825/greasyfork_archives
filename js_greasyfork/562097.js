@@ -4,14 +4,14 @@
 // @name:zh-CN   DeepSeek Think 自动收起
 // @name:zh-TW   DeepSeek Think 自動收起
 // @namespace    https://github.com/hza2002/deepseek-collapse-think
-// @version      2.4
+// @version      2.5
 // @description  自动收起 DeepSeek 对话中的 Think 思考过程部分，支持切换对话自动收起，节省屏幕空间。⚠️ 注意：本脚本依赖 DeepSeek 网站的 CSS 类名，官网更新后可能失效，届时请更新脚本或手动修改选择器。
 // @description:en  Automatically collapse the Think/Reasoning section in DeepSeek chat to save screen space. ⚠️ Note: This script relies on DeepSeek's CSS class names, which may change after website updates. Please update the script or manually modify selectors if it stops working.
 // @description:zh-CN  自动收起 DeepSeek 对话中的 Think 思考过程部分，支持切换对话自动收起，节省屏幕空间。⚠️ 注意：本脚本依赖 DeepSeek 网站的 CSS 类名，官网更新后可能失效，届时请更新脚本或手动修改选择器。
 // @description:zh-TW  自動收起 DeepSeek 對話中的 Think 思考過程部分，支援切換對話自動收起，節省螢幕空間。⚠️ 注意：本腳本依賴 DeepSeek 網站的 CSS 類名，官網更新後可能失效，届時請更新腳本或手動修改選擇器。
 // @author       hza2002
 // @license      MIT
-// @match        https://chat.deepseek.com/a/chat/s/*
+// @match        https://chat.deepseek.com/*
 // @icon         https://chat.deepseek.com/favicon.svg
 // @grant        GM_getValue
 // @grant        GM_setValue

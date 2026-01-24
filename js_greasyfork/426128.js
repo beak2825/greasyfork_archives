@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili Music Extractor
 // @namespace    http://tampermonkey.net/
-// @version      0.6.1
+// @version      0.7.0
 // @description  从B站上提取带封面的音乐
 // @license      MIT
 // @icon         https://www.bilibili.com/favicon.ico
@@ -23,7 +23,7 @@ System.register("./__entry.js", [], (function (exports, module) {
 
       const d=new Set;const importCSS = async e=>{d.has(e)||(d.add(e),(t=>{typeof GM_addStyle=="function"?GM_addStyle(t):document.head.appendChild(document.createElement("style")).append(t);})(e));};
 
-      importCSS(" .ActionButton.svelte-j4psvl{background:none;background-color:transparent;color:var(--bme-color-dark-text);border:var(--bme-border-width-medium) solid var(--bme-color-primary);cursor:pointer;text-align:center;padding:var(--bme-spacing-xsmall) var(--bme-spacing-small);transition:all .25s ease;box-sizing:border-box}.ActionButton--primary.svelte-j4psvl{border-color:transparent;background-color:var(--bme-color-primary);color:var(--bme-color-light-text)}.ActionButton--secondary.svelte-j4psvl{border-color:transparent;background-color:var(--bme-color-secondary);color:var(--bme-color-light-text)}.ActionButton.svelte-j4psvl:hover{filter:brightness(110%)}.ActionButton.svelte-j4psvl:active{filter:brightness(90%)}.ActionButton.svelte-j4psvl:disabled{background-color:var(--bme-color-disabled);cursor:not-allowed;filter:none;color:var(--bme-color-dark-text)}.AudioRangeSelector.svelte-xbq2f9{position:absolute;top:0;bottom:0;left:var(--bme-spacing-medium);right:var(--bme-spacing-medium);box-sizing:border-box}.AudioRangeSelector__PlayContainer.svelte-xbq2f9{position:absolute;top:var(--bme-spacing-xsmall)}.AudioRangeSelector__Handle.svelte-xbq2f9{position:absolute;top:0;bottom:var(--bme-spacing-medium);width:2px;border-radius:var(--bme-border-radius-small);background-color:var(--bme-color-inactive);cursor:grab}.AudioRangeSelector__PlayHandle.svelte-xbq2f9{background-color:var(--bme-color-secondary);z-index:10}.AudioRangeSelector__Handle.svelte-xbq2f9:active{cursor:grabbing}.AudioRangeSelector__SelectedRange.svelte-xbq2f9{position:absolute;top:0;bottom:var(--bme-spacing-medium);background-color:var(--bme-color-inactive);opacity:.25;pointer-events:none}.AudioRangeSelector__HandleValue.svelte-xbq2f9{position:absolute;width:var(--bme-spacing-xlarge);top:calc(100% - var(--bme-spacing-medium));box-sizing:border-box;text-align:center;transition:top .1s ease;background:none;border:solid var(--bme-border-width-small) var(--bme-color-inactive);background-color:#ffffffb3}.AudioWaveform.svelte-ib2xuc{display:flex;align-items:center;justify-content:space-evenly;overflow:hidden;width:100%;height:100%;box-sizing:border-box;position:relative}.AudioWaveform__Sample.svelte-ib2xuc{width:0px;flex-shrink:0;border-radius:1px;border:1px solid var(--bme-color-primary);background-color:var(--bme-color-primary)}.AudioWaveform__MiddleLine.svelte-ib2xuc{position:absolute;top:50%;left:0;right:0;height:1px;background-color:var(--bme-color-primary);opacity:.25;z-index:-1}.Container.svelte-1fap42e{position:absolute;top:0;left:calc(var(--bme-spacing-large) * -1);transition:all .25s ease;width:var(--bme-spacing-large);height:var(--bme-spacing-large);border-radius:var(--bme-border-radius-large);opacity:.5;z-index:var(--bme-z-index);overflow:hidden}.Container.svelte-1fap42e:hover{opacity:1}.Container--open.svelte-1fap42e{width:40rem;height:auto;background-color:#fff;box-shadow:0 0 6px #dcdcdc;opacity:1}.Cover.svelte-1470o3e{width:100%;margin-bottom:var(--bme-spacing-small)}.Cover__title.svelte-1470o3e{line-height:1.5;margin:0 var(--bme-spacing-small);padding:0;color:var(--bme-color-primary)}.Cover__image.svelte-1470o3e{width:100%;object-fit:contain}.icon.svelte-vtxwtm{flex-shrink:0}.Header.svelte-zne36e{display:flex;align-items:center;justify-content:space-between}.icon-button.svelte-zne36e{background:none;border:0;cursor:pointer}.InfoItem.svelte-1qbx53k{width:100%;margin-bottom:var(--bme-spacing-small);display:grid;grid-template-columns:3rem 1fr;align-items:center;flex-wrap:nowrap;gap:var(--bme-spacing-xsmall);padding:0 var(--bme-spacing-small);box-sizing:border-box}.InfoItem__title.svelte-1qbx53k{box-sizing:border-box;display:inline}.InfoItem__input.svelte-1qbx53k{flex:1;background:none;border:0;border-bottom:solid 1px var(--bme-color-primary);padding:var(--bme-spacing-xsmall)}.Step.svelte-1nopq0p{display:flex;align-items:stretch;width:100%;height:100%;gap:var(--bme-spacing-small)}.Step__Content.svelte-1nopq0p{flex:1}.StepsContainer.svelte-2ce4eo{box-sizing:border-box;width:100%;overflow:hidden;display:flex;flex-wrap:nowrap}.StepContainer__StepContent.svelte-2ce4eo{position:relative;flex-basis:100%;flex-shrink:0;transition:left .25s ease}.ActionsContainer.svelte-1n46o8q{height:100%;display:flex;flex-direction:column;align-items:stretch;gap:var(--bme-spacing-xsmall);padding:0 var(--bme-spacing-small) var(--bme-spacing-small) 0;flex-wrap:nowrap;overflow:auto;box-sizing:border-box}.ActionsContainer__MainAction.svelte-1n46o8q{flex:1;display:flex;align-items:stretch}.ActionsError.svelte-1n46o8q{flex:1;color:var(--bme-color-error)}.AudioWaveformContainer.svelte-1n46o8q{width:100%;height:calc(100% - var(--bme-spacing-small));padding:0 var(--bme-spacing-medium) var(--bme-spacing-medium) var(--bme-spacing-medium);overflow:hidden;box-sizing:border-box;position:relative} ");
+      importCSS(" .ActionButton.svelte-j4psvl{background:none;background-color:transparent;color:var(--bme-color-dark-text);border:var(--bme-border-width-medium) solid var(--bme-color-primary);cursor:pointer;text-align:center;padding:var(--bme-spacing-xsmall) var(--bme-spacing-small);transition:all .25s ease;box-sizing:border-box}.ActionButton--primary.svelte-j4psvl{border-color:transparent;background-color:var(--bme-color-primary);color:var(--bme-color-light-text)}.ActionButton--secondary.svelte-j4psvl{border-color:transparent;background-color:var(--bme-color-secondary);color:var(--bme-color-light-text)}.ActionButton.svelte-j4psvl:hover{filter:brightness(110%)}.ActionButton.svelte-j4psvl:active{filter:brightness(90%)}.ActionButton.svelte-j4psvl:disabled{background-color:var(--bme-color-disabled);cursor:not-allowed;filter:none;color:var(--bme-color-dark-text)}.AudioRangeSelector.svelte-xbq2f9{position:absolute;top:0;bottom:0;left:var(--bme-spacing-medium);right:var(--bme-spacing-medium);box-sizing:border-box}.AudioRangeSelector__PlayContainer.svelte-xbq2f9{position:absolute;top:var(--bme-spacing-xsmall)}.AudioRangeSelector__Handle.svelte-xbq2f9{position:absolute;top:0;bottom:var(--bme-spacing-medium);width:2px;border-radius:var(--bme-border-radius-small);background-color:var(--bme-color-inactive);cursor:grab}.AudioRangeSelector__PlayHandle.svelte-xbq2f9{background-color:var(--bme-color-secondary);z-index:10}.AudioRangeSelector__Handle.svelte-xbq2f9:active{cursor:grabbing}.AudioRangeSelector__SelectedRange.svelte-xbq2f9{position:absolute;top:0;bottom:var(--bme-spacing-medium);background-color:var(--bme-color-inactive);opacity:.25;pointer-events:none}.AudioRangeSelector__HandleValue.svelte-xbq2f9{position:absolute;width:var(--bme-spacing-xlarge);top:calc(100% - var(--bme-spacing-medium));box-sizing:border-box;text-align:center;transition:top .1s ease;background:none;border:solid var(--bme-border-width-small) var(--bme-color-inactive);background-color:#ffffffb3}.AudioWaveform.svelte-ib2xuc{display:flex;align-items:center;justify-content:space-evenly;overflow:hidden;width:100%;height:100%;box-sizing:border-box;position:relative}.AudioWaveform__Sample.svelte-ib2xuc{width:0px;flex-shrink:0;border-radius:1px;border:1px solid var(--bme-color-primary);background-color:var(--bme-color-primary)}.AudioWaveform__MiddleLine.svelte-ib2xuc{position:absolute;top:50%;left:0;right:0;height:1px;background-color:var(--bme-color-primary);opacity:.25;z-index:-1}.Container.svelte-1fap42e{position:absolute;top:0;left:calc(var(--bme-spacing-large) * -1);transition:all .25s ease;width:var(--bme-spacing-large);height:var(--bme-spacing-large);border-radius:var(--bme-border-radius-large);opacity:.5;z-index:var(--bme-z-index);overflow:hidden}.Container.svelte-1fap42e:hover{opacity:1}.Container--open.svelte-1fap42e{width:40rem;height:auto;background-color:#fff;box-shadow:0 0 6px #dcdcdc;opacity:1}.Container--dragging.svelte-1fap42e{transition:none;cursor:grabbing}.Cover.svelte-1470o3e{width:100%;margin-bottom:var(--bme-spacing-small)}.Cover__title.svelte-1470o3e{line-height:1.5;margin:0 var(--bme-spacing-small);padding:0;color:var(--bme-color-primary)}.Cover__image.svelte-1470o3e{width:100%;object-fit:contain}.icon.svelte-vtxwtm{flex-shrink:0}.Header.svelte-zne36e{display:flex;align-items:center;justify-content:space-between}.icon-button.svelte-zne36e{background:none;border:0;cursor:pointer}.drag-handle.svelte-zne36e{cursor:grab}.drag-handle.svelte-zne36e:active{cursor:grabbing}.InfoItem.svelte-1qbx53k{width:100%;margin-bottom:var(--bme-spacing-small);display:grid;grid-template-columns:3rem 1fr;align-items:center;flex-wrap:nowrap;gap:var(--bme-spacing-xsmall);padding:0 var(--bme-spacing-small);box-sizing:border-box}.InfoItem__title.svelte-1qbx53k{box-sizing:border-box;display:inline}.InfoItem__input.svelte-1qbx53k{flex:1;background:none;border:0;border-bottom:solid 1px var(--bme-color-primary);padding:var(--bme-spacing-xsmall)}.Step.svelte-1nopq0p{display:flex;align-items:stretch;width:100%;height:100%;gap:var(--bme-spacing-small)}.Step__Content.svelte-1nopq0p{flex:1}.StepsContainer.svelte-2ce4eo{box-sizing:border-box;width:100%;overflow:hidden;display:flex;flex-wrap:nowrap}.StepContainer__StepContent.svelte-2ce4eo{position:relative;flex-basis:100%;flex-shrink:0;transition:left .25s ease}.ActionsContainer.svelte-1n46o8q{height:100%;display:flex;flex-direction:column;align-items:stretch;gap:var(--bme-spacing-xsmall);padding:0 var(--bme-spacing-small) var(--bme-spacing-small) 0;flex-wrap:nowrap;overflow:auto;box-sizing:border-box}.ActionsContainer__MainAction.svelte-1n46o8q{flex:1;display:flex;align-items:stretch}.ActionsError.svelte-1n46o8q{flex:1;color:var(--bme-color-error)}.AudioWaveformContainer.svelte-1n46o8q{width:100%;height:calc(100% - var(--bme-spacing-small));padding:0 var(--bme-spacing-medium) var(--bme-spacing-medium) var(--bme-spacing-medium);overflow:hidden;box-sizing:border-box;position:relative} ");
 
       const DEV = false;
       var is_array = Array.isArray;
@@ -3463,11 +3463,26 @@ active_effect
       }
       var root$7 = from_html(`<div><!></div>`);
       function Container($$anchor, $$props) {
+        push($$props, true);
+        const isDragging = prop($$props, "isDragging", 3, false), position = prop($$props, "position", 19, () => ({ x: 0, y: 0 }));
         var div = root$7();
         var node = child(div);
         snippet(node, () => $$props.children ?? noop);
-        template_effect(() => set_class(div, 1, clsx(["Container", $$props.open && "Container--open"]), "svelte-1fap42e"));
+        template_effect(() => {
+          set_class(
+            div,
+            1,
+            clsx([
+              "Container",
+              $$props.open && "Container--open",
+              isDragging() && "Container--dragging"
+            ]),
+            "svelte-1fap42e"
+          );
+          set_style(div, `transform: translate(${position().x ?? ""}px, ${position().y ?? ""}px);`);
+        });
         append($$anchor, div);
+        pop();
       }
       const download = (url2, filename) => {
         const stubLink = document.createElement("a");
@@ -3534,12 +3549,18 @@ active_effect
         });
         append($$anchor, svg);
       }
-      var root$3 = from_html(`<div class="Header svelte-zne36e"><button class="icon-button svelte-zne36e"><!></button> <button class="icon-button svelte-zne36e"><!></button></div>`);
+      var root$3 = from_html(`<div class="Header svelte-zne36e"><button class="icon-button drag-handle svelte-zne36e"><!></button> <button class="icon-button svelte-zne36e"><!></button></div>`);
       function Header($$anchor, $$props) {
         var div = root$3();
         var button = child(div);
         button.__click = function(...$$args) {
           $$props.onHeaderIconClick?.apply(this, $$args);
+        };
+        button.__dblclick = function(...$$args) {
+          $$props.onHeaderIconDblClick?.apply(this, $$args);
+        };
+        button.__mousedown = function(...$$args) {
+          $$props.onDragStart?.apply(this, $$args);
         };
         var node = child(button);
         HeadphoneIcon(node, { width: "2rem", height: "2rem" });
@@ -3551,7 +3572,7 @@ active_effect
         CloseIcon(node_1, { width: "2rem", height: "2rem" });
         append($$anchor, div);
       }
-      delegate(["click"]);
+      delegate(["click", "dblclick", "mousedown"]);
       var root$2 = from_html(`<div class="InfoItem svelte-1qbx53k"><h5 class="InfoItem__title svelte-1qbx53k"> </h5> <input class="InfoItem__input svelte-1qbx53k"/></div>`);
       function InfoItem($$anchor, $$props) {
         push($$props, true);
@@ -3600,6 +3621,109 @@ active_effect
         });
         append($$anchor, div);
         pop();
+      }
+      function createDraggable(options) {
+        const { storageKey, onToggle } = options;
+        const loadPosition = () => {
+          try {
+            const saved = localStorage.getItem(storageKey);
+            if (saved) {
+              const parsed = JSON.parse(saved);
+              if (typeof parsed.x === "number" && typeof parsed.y === "number") {
+                return parsed;
+              }
+            }
+          } catch {
+          }
+          return { x: 0, y: 0 };
+        };
+        const savePosition = (pos) => {
+          try {
+            localStorage.setItem(storageKey, JSON.stringify(pos));
+          } catch {
+          }
+        };
+        let isDragging = state(false);
+        let hasDragged = state(false);
+        let dragStart = state(proxy({ x: 0, y: 0 }));
+        let position = state(proxy(loadPosition()));
+        let clickTimeout = null;
+        const reset = () => {
+          set(position, { x: 0, y: 0 }, true);
+          savePosition(get(position));
+        };
+        const onClick = () => {
+          if (get(hasDragged)) {
+            set(hasDragged, false);
+            return;
+          }
+          if (clickTimeout) {
+            clearTimeout(clickTimeout);
+            clickTimeout = null;
+            return;
+          }
+          clickTimeout = setTimeout(
+            () => {
+              clickTimeout = null;
+              onToggle();
+            },
+            200
+          );
+        };
+        const onDblClick = () => {
+          if (clickTimeout) {
+            clearTimeout(clickTimeout);
+            clickTimeout = null;
+          }
+          reset();
+        };
+        const onDragStart = (e) => {
+          e.preventDefault();
+          set(isDragging, true);
+          set(hasDragged, false);
+          set(
+            dragStart,
+            {
+              x: e.clientX - get(position).x,
+              y: e.clientY - get(position).y
+            },
+            true
+          );
+          const onMouseMove = (e2) => {
+            if (!get(isDragging)) return;
+            set(hasDragged, true);
+            set(
+              position,
+              {
+                x: e2.clientX - get(dragStart).x,
+                y: e2.clientY - get(dragStart).y
+              },
+              true
+            );
+          };
+          const onMouseUp = () => {
+            set(isDragging, false);
+            if (get(hasDragged)) {
+              savePosition(get(position));
+            }
+            document.removeEventListener("mousemove", onMouseMove);
+            document.removeEventListener("mouseup", onMouseUp);
+          };
+          document.addEventListener("mousemove", onMouseMove);
+          document.addEventListener("mouseup", onMouseUp);
+        };
+        return {
+          get position() {
+            return get(position);
+          },
+          get isDragging() {
+            return get(isDragging);
+          },
+          onClick,
+          onDblClick,
+          onDragStart,
+          reset
+        };
       }
       const normalizeData = (data) => {
         const max = Math.max(...data);
@@ -15215,9 +15339,12 @@ digestOutput(bytes2) {
         let playbackStartPosition = 0;
         let playbackTimer = null;
         let containerOpen = state(false);
-        const onHeaderIconClick = () => {
-          set(containerOpen, !get(containerOpen));
-        };
+        const draggable = createDraggable({
+          storageKey: "bem/container-position",
+          onToggle: () => {
+            set(containerOpen, !get(containerOpen));
+          }
+        });
         const videoName = getVideoInfo("name").replace(dummyText, "");
         const author = getVideoInfo("author");
         let filename = state(`${videoName}.mp3`);
@@ -15391,10 +15518,26 @@ ${get(lyrics)}`.trim();
           get open() {
             return get(containerOpen);
           },
+          get isDragging() {
+            return draggable.isDragging;
+          },
+          get position() {
+            return draggable.position;
+          },
           children: ($$anchor2, $$slotProps) => {
             var fragment_4 = root_7();
             var node_9 = first_child(fragment_4);
-            Header(node_9, { onHeaderIconClick });
+            Header(node_9, {
+              get onHeaderIconClick() {
+                return draggable.onClick;
+              },
+              get onDragStart() {
+                return draggable.onDragStart;
+              },
+              get onHeaderIconDblClick() {
+                return draggable.onDblClick;
+              }
+            });
             var node_10 = sibling(node_9, 2);
             Cover(node_10, {
               get imageUrl() {
@@ -15424,7 +15567,8 @@ ${get(lyrics)}`.trim();
               });
             }
             append($$anchor2, fragment_4);
-          }
+          },
+          $$slots: { default: true }
         });
         pop();
       }
@@ -15437,7 +15581,7 @@ ${get(lyrics)}`.trim();
         }
         return bilibiliPlayer2;
       };
-      const appCss = ":root{--bme-color-primary: #00a1d6;--bme-color-secondary: #ffb400;--bme-color-error: #fb7299;--bme-color-inactive: #606060;--bme-color-disabled: #cccccc;--bme-color-light-text: #f4f4f4;--bme-color-dark-text: #333333;--bme-spacing-xsmall: .25rem;--bme-spacing-small: .5rem;--bme-spacing-medium: 1rem;--bme-spacing-large: 2rem;--bme-spacing-xlarge: 3rem;--bme-border-radius-small: .125rem;--bme-border-radius-medium: .25rem;--bme-border-radius-large: .5rem;--bme-border-width-small: 1px;--bme-border-width-medium: 2px;--bme-border-width-large: 4px;--bme-z-index: 100}";
+      const appCss = ":root{--bme-color-primary: #00a1d6;--bme-color-secondary: #ffb400;--bme-color-error: #fb7299;--bme-color-inactive: #606060;--bme-color-disabled: #cccccc;--bme-color-light-text: #f4f4f4;--bme-color-dark-text: #333333;--bme-spacing-xsmall: .25rem;--bme-spacing-small: .5rem;--bme-spacing-medium: 1rem;--bme-spacing-large: 2rem;--bme-spacing-xlarge: 3rem;--bme-border-radius-small: .125rem;--bme-border-radius-medium: .25rem;--bme-border-radius-large: .5rem;--bme-border-width-small: 1px;--bme-border-width-medium: 2px;--bme-border-width-large: 4px;--bme-z-index: 1000000}";
       importCSS(appCss);
       const bilibiliPlayer = getBilibiliPlayer();
       bilibiliPlayer ? mount(App, {

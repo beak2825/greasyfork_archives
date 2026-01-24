@@ -2,7 +2,7 @@
 // @name        妖火夜间模式
 // @namespace   http://yaohuo.me/
 // @supportURL  http://zgcwkj.cn
-// @version     20260122.02
+// @version     20260124.01
 // @description 妖火论坛黑色主题样式。
 // @author      zgcwkj
 // @match       *://yaohuo.me/*
@@ -24,6 +24,9 @@
   }
   html, body {
     background: #000000 !important;
+  }
+  img {
+    opacity: 0.4 !important;
   }
   a {
     color: #7ea4e9 !important;
@@ -52,9 +55,6 @@
   }
   .retime, .footer, .welcome > a, .text-gray-800, .tg-list-item > h4 {
     color: #e0e0e0 !important;
-  }
-  .bbscontent img {
-    opacity: 0.4 !important;
   }
 }
 `;

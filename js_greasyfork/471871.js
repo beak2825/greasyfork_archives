@@ -4,7 +4,7 @@
 // @name:nl        Twitter: oude naam en logo terugbrengen
 // @name:es        Twitter: recupera el nombre y el logotipo antiguos
 // @namespace      https://github.com/rybak
-// @version        30.12
+// @version        30.13
 // @description    Changes the logo, tab name, and naming of "tweets" on Twitter
 // @description:de Ändert das Logo, den Tab-Namen und die Benennung von „Tweets“ auf Twitter
 // @description:nl Wijzigt het logo, de tabbladnaam en de naamgeving van "tweets" op Twitter
@@ -21,7 +21,7 @@
 // ==/UserScript==
 
 /*
- * Copyright (c) 2023-2024 Andrei Rybak
+ * Copyright (c) 2023-2026 Andrei Rybak
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -695,7 +695,7 @@
 		 *   - "X, Y, Z tweeted"
 		 *   - "See new tweets"
 		 */
-		uniqueWaitForElement('[data-testid="pillLabel"] span span span.css-901oao.css-16my406.r-poiln3.r-bcqeeo.r-qvutc0').then(pill => {
+		uniqueWaitForElement('[data-testid="pillLabel"] span span span').then(pill => {
 			if (pill.innerText == "posted") {
 				if (pillObserver != null) {
 					pillObserver.disconnect();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Toolasha
 // @namespace    http://tampermonkey.net/
-// @version      0.4.959
+// @version      0.4.961
 // @description  Toolasha - Enhanced tools for Milky Way Idle.
 // @author       Celasha and Claude, thank you to bot7420, DrDucky, Frotty, Truth_Light, AlphB, qu, and sentientmilk, for providing the basis for a lot of this. Thank you to Miku, Orvel, Jigglymoose, Incinarator, Knerd, and others for their time and help. Thank you to Steez for testing and helping me figure out where I'm wrong! Special thanks to Zaeter for the name.
 // @license      CC-BY-NC-SA-4.0
@@ -1073,6 +1073,21 @@
                     ],
                     dependencies: ['market_showEstimatedListingAge'],
                     help: 'Time format when using Date/Time display (only applies if Date/Time format is selected)'
+                },
+                itemDictionary_transmuteRates: {
+                    id: 'itemDictionary_transmuteRates',
+                    label: 'Item Dictionary: Show transmutation success rates',
+                    type: 'checkbox',
+                    default: true,
+                    help: 'Displays success rate percentages in the "Transmuted From (Alchemy)" section'
+                },
+                itemDictionary_transmuteIncludeBaseRate: {
+                    id: 'itemDictionary_transmuteIncludeBaseRate',
+                    label: 'Item Dictionary: Include base success rate in transmutation percentages',
+                    type: 'checkbox',
+                    default: true,
+                    dependencies: ['itemDictionary_transmuteRates'],
+                    help: 'When enabled, shows total probability (base rate × drop rate). When disabled, shows conditional probability (drop rate only, matching "Transmutes Into" section)'
                 }
             }
         },
@@ -1226,6 +1241,13 @@
                     type: 'color',
                     default: '#60a5fa',
                     help: 'Color for Bid price badges on inventory items (buyer bid price - instant-sell value)'
+                },
+                color_transmute: {
+                    id: 'color_transmute',
+                    label: 'Transmutation Rates',
+                    type: 'color',
+                    default: '#ffffff',
+                    help: 'Color used for transmutation success rate percentages in Item Dictionary'
                 }
             }
         }
@@ -3132,6 +3154,7 @@
             this.COLOR_REMAINING_XP = this.getSettingValue('color_remaining_xp', "#FFFFFF");
             this.COLOR_INVBADGE_ASK = this.getSettingValue('color_invBadge_ask', "#047857");
             this.COLOR_INVBADGE_BID = this.getSettingValue('color_invBadge_bid', "#60a5fa");
+            this.COLOR_TRANSMUTE = this.getSettingValue('color_transmute', "#ffffff");
 
             // Set legacy SCRIPT_COLOR_MAIN to accent color
             this.SCRIPT_COLOR_MAIN = this.COLOR_ACCENT;
@@ -19081,6 +19104,210 @@
     const outputTotals = new OutputTotals();
 
     /**
+     * Action Panel Sort Manager
+     *
+     * Centralized sorting logic for action panels.
+     * Handles both profit-based sorting and pin priority.
+     * Used by max-produceable and gathering-stats features.
+     */
+
+
+    class ActionPanelSort {
+        constructor() {
+            this.panels = new Map(); // actionPanel → {actionHrid, profitPerHour}
+            this.pinnedActions = new Set(); // Set of pinned action HRIDs
+            this.sortTimeout = null; // Debounce timer
+            this.initialized = false;
+        }
+
+        /**
+         * Initialize - load pinned actions from storage
+         */
+        async initialize() {
+            if (this.initialized) return;
+
+            const pinnedData = await storage.getJSON('pinnedActions', 'settings', []);
+            this.pinnedActions = new Set(pinnedData);
+            this.initialized = true;
+        }
+
+        /**
+         * Register a panel for sorting
+         * @param {HTMLElement} actionPanel - The action panel element
+         * @param {string} actionHrid - The action HRID
+         * @param {number|null} profitPerHour - Profit per hour (null if not calculated yet)
+         */
+        registerPanel(actionPanel, actionHrid, profitPerHour = null) {
+            this.panels.set(actionPanel, {
+                actionHrid: actionHrid,
+                profitPerHour: profitPerHour
+            });
+        }
+
+        /**
+         * Update profit for a registered panel
+         * @param {HTMLElement} actionPanel - The action panel element
+         * @param {number|null} profitPerHour - Profit per hour
+         */
+        updateProfit(actionPanel, profitPerHour) {
+            const data = this.panels.get(actionPanel);
+            if (data) {
+                data.profitPerHour = profitPerHour;
+            }
+        }
+
+        /**
+         * Unregister a panel (cleanup when panel removed from DOM)
+         * @param {HTMLElement} actionPanel - The action panel element
+         */
+        unregisterPanel(actionPanel) {
+            this.panels.delete(actionPanel);
+        }
+
+        /**
+         * Toggle pin state for an action
+         * @param {string} actionHrid - Action HRID to toggle
+         * @returns {boolean} New pin state
+         */
+        async togglePin(actionHrid) {
+            if (this.pinnedActions.has(actionHrid)) {
+                this.pinnedActions.delete(actionHrid);
+            } else {
+                this.pinnedActions.add(actionHrid);
+            }
+
+            // Save to storage
+            await storage.setJSON('pinnedActions', Array.from(this.pinnedActions), 'settings', true);
+
+            return this.pinnedActions.has(actionHrid);
+        }
+
+        /**
+         * Check if action is pinned
+         * @param {string} actionHrid - Action HRID
+         * @returns {boolean}
+         */
+        isPinned(actionHrid) {
+            return this.pinnedActions.has(actionHrid);
+        }
+
+        /**
+         * Get all pinned actions
+         * @returns {Set<string>}
+         */
+        getPinnedActions() {
+            return this.pinnedActions;
+        }
+
+        /**
+         * Trigger a debounced sort
+         */
+        triggerSort() {
+            this.scheduleSortIfEnabled();
+        }
+
+        /**
+         * Schedule a sort to run after a short delay (debounced)
+         */
+        scheduleSortIfEnabled() {
+            const sortByProfitEnabled = config.getSetting('actionPanel_sortByProfit');
+            const hasPinnedActions = this.pinnedActions.size > 0;
+
+            // Only sort if either profit sorting is enabled OR there are pinned actions
+            if (!sortByProfitEnabled && !hasPinnedActions) {
+                return;
+            }
+
+            // Clear existing timeout
+            if (this.sortTimeout) {
+                clearTimeout(this.sortTimeout);
+            }
+
+            // Schedule new sort after 500ms of inactivity
+            this.sortTimeout = setTimeout(() => {
+                this.sortPanelsByProfit();
+                this.sortTimeout = null;
+            }, 500);
+        }
+
+        /**
+         * Sort action panels by profit/hr (highest first), with pinned actions at top
+         */
+        sortPanelsByProfit() {
+            const sortByProfitEnabled = config.getSetting('actionPanel_sortByProfit');
+
+            // Group panels by their parent container
+            const containerMap = new Map();
+
+            // Clean up stale panels and group by container
+            for (const [actionPanel, data] of this.panels.entries()) {
+                if (!document.body.contains(actionPanel)) {
+                    this.panels.delete(actionPanel);
+                    continue;
+                }
+
+                const container = actionPanel.parentElement;
+                if (!container) continue;
+
+                if (!containerMap.has(container)) {
+                    containerMap.set(container, []);
+                }
+
+                const isPinned = this.pinnedActions.has(data.actionHrid);
+                const profitPerHour = data.profitPerHour ?? null;
+
+                containerMap.get(container).push({
+                    panel: actionPanel,
+                    profit: profitPerHour,
+                    pinned: isPinned,
+                    originalIndex: containerMap.get(container).length,
+                    actionHrid: data.actionHrid
+                });
+            }
+
+            // Sort and reorder each container
+            for (const [container, panels] of containerMap.entries()) {
+                panels.sort((a, b) => {
+                    // Pinned actions always come first
+                    if (a.pinned && !b.pinned) return -1;
+                    if (!a.pinned && b.pinned) return 1;
+
+                    // Both pinned - sort by profit if enabled, otherwise by original order
+                    if (a.pinned && b.pinned) {
+                        if (sortByProfitEnabled) {
+                            if (a.profit === null && b.profit === null) return 0;
+                            if (a.profit === null) return 1;
+                            if (b.profit === null) return -1;
+                            return b.profit - a.profit;
+                        } else {
+                            return a.originalIndex - b.originalIndex;
+                        }
+                    }
+
+                    // Both unpinned - only sort by profit if setting is enabled
+                    if (sortByProfitEnabled) {
+                        if (a.profit === null && b.profit === null) return 0;
+                        if (a.profit === null) return 1;
+                        if (b.profit === null) return -1;
+                        return b.profit - a.profit;
+                    } else {
+                        // Keep original order
+                        return a.originalIndex - b.originalIndex;
+                    }
+                });
+
+                // Reorder DOM elements
+                panels.forEach(({panel}) => {
+                    container.appendChild(panel);
+                });
+            }
+        }
+    }
+
+    // Create and export singleton instance
+    const actionPanelSort = new ActionPanelSort();
+
+    /**
      * Max Produceable Display Module
      *
      * Shows maximum craftable quantity on action panels based on current inventory.
@@ -19094,19 +19321,21 @@
 
     class MaxProduceable {
         constructor() {
-            this.actionElements = new Map(); // actionPanel → {actionHrid, displayElement}
+            this.actionElements = new Map(); // actionPanel → {actionHrid, displayElement, pinElement}
             this.unregisterObserver = null;
             this.lastCrimsonMilkCount = null; // For debugging inventory updates
-            this.sortTimeout = null; // Debounce timer for sorting
         }
 
         /**
          * Initialize the max produceable display
          */
-        initialize() {
+        async initialize() {
             if (!config.getSetting('actionPanel_maxProduceable')) {
                 return;
             }
+
+            // Initialize shared sort manager
+            await actionPanelSort.initialize();
 
             this.setupObserver();
 
@@ -19141,7 +19370,7 @@
         }
 
         /**
-         * Inject max produceable display into an action panel
+         * Inject max produceable display and pin icon into an action panel
          * @param {HTMLElement} actionPanel - The action panel element
          */
         injectMaxProduceable(actionPanel) {
@@ -19153,83 +19382,116 @@
             }
 
             const actionDetails = dataManager.getActionDetails(actionHrid);
-
-            // Only show for production actions with inputs
-            if (!actionDetails || !actionDetails.inputItems || actionDetails.inputItems.length === 0) {
+            if (!actionDetails) {
                 return;
             }
+
+            // Check if production action with inputs (for max produceable display)
+            const isProductionAction = actionDetails.inputItems && actionDetails.inputItems.length > 0;
 
             // Check if already injected
             const existingDisplay = actionPanel.querySelector('.mwi-max-produceable');
-            if (existingDisplay) {
-                // Re-register existing display (DOM elements may be reused across navigation)
+            const existingPin = actionPanel.querySelector('.mwi-action-pin');
+            if (existingPin) {
+                // Re-register existing elements
                 this.actionElements.set(actionPanel, {
                     actionHrid: actionHrid,
-                    displayElement: existingDisplay
+                    displayElement: existingDisplay || null,
+                    pinElement: existingPin
                 });
-                // Update with fresh inventory data
+                // Update pin state
+                this.updatePinIcon(existingPin, actionHrid);
+                // Update with fresh data for all actions (calculates profit for sorting/filtering)
                 this.updateCount(actionPanel);
-                // Trigger debounced sort after panels are loaded
-                this.scheduleSortIfEnabled();
+                // DON'T schedule sort here - it causes race conditions
+                // Sorting happens in updateAllCounts() which is triggered by data changes
                 return;
             }
 
-            // Create display element
-            const display = document.createElement('div');
-            display.className = 'mwi-max-produceable';
-            display.style.cssText = `
-            position: absolute;
-            bottom: -65px;
-            left: 0;
-            right: 0;
-            font-size: 0.85em;
-            padding: 4px 8px;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.7);
-            border-top: 1px solid var(--border-color, ${config.COLOR_BORDER});
-            z-index: 10;
-        `;
-
-            // Make sure the action panel has relative positioning and extra bottom margin
+            // Make sure the action panel has relative positioning
             if (actionPanel.style.position !== 'relative' && actionPanel.style.position !== 'absolute') {
                 actionPanel.style.position = 'relative';
             }
-            actionPanel.style.marginBottom = '70px';
 
-            // Append directly to action panel with absolute positioning
-            actionPanel.appendChild(display);
+            let display = null;
+
+            // Only create max produceable display for production actions
+            if (isProductionAction) {
+                actionPanel.style.marginBottom = '70px';
+
+                // Create display element
+                display = document.createElement('div');
+                display.className = 'mwi-max-produceable';
+                display.style.cssText = `
+                position: absolute;
+                bottom: -65px;
+                left: 0;
+                right: 0;
+                font-size: 0.85em;
+                padding: 4px 8px;
+                text-align: center;
+                background: rgba(0, 0, 0, 0.7);
+                border-top: 1px solid var(--border-color, ${config.COLOR_BORDER});
+                z-index: 10;
+            `;
+
+                // Append stats display to action panel with absolute positioning
+                actionPanel.appendChild(display);
+            }
+
+            // Create pin icon (for ALL actions - gathering and production)
+            const pinIcon = document.createElement('div');
+            pinIcon.className = 'mwi-action-pin';
+            pinIcon.innerHTML = '📌'; // Pin emoji
+            pinIcon.style.cssText = `
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 11;
+            user-select: none;
+            filter: grayscale(100%) brightness(0.7);
+        `;
+            pinIcon.title = 'Pin this action to keep it visible';
+
+            // Pin hover effect
+            pinIcon.addEventListener('mouseenter', () => {
+                if (!actionPanelSort.isPinned(actionHrid)) {
+                    pinIcon.style.filter = 'grayscale(50%) brightness(1)';
+                }
+            });
+            pinIcon.addEventListener('mouseleave', () => {
+                this.updatePinIcon(pinIcon, actionHrid);
+            });
+
+            // Pin click handler
+            pinIcon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.togglePin(actionHrid, pinIcon);
+            });
+
+            // Set initial pin state
+            this.updatePinIcon(pinIcon, actionHrid);
+
+            actionPanel.appendChild(pinIcon);
 
             // Store reference
             this.actionElements.set(actionPanel, {
                 actionHrid: actionHrid,
-                displayElement: display
+                displayElement: display,
+                pinElement: pinIcon
             });
 
-            // Initial update
+            // Register panel with shared sort manager
+            actionPanelSort.registerPanel(actionPanel, actionHrid);
+
+            // Initial update for all actions (calculates profit for sorting/filtering)
             this.updateCount(actionPanel);
 
             // Trigger debounced sort after panels are loaded
-            this.scheduleSortIfEnabled();
-        }
-
-        /**
-         * Schedule a sort to run after a short delay (debounced)
-         */
-        scheduleSortIfEnabled() {
-            if (!config.getSetting('actionPanel_sortByProfit')) {
-                return;
-            }
-
-            // Clear existing timeout
-            if (this.sortTimeout) {
-                clearTimeout(this.sortTimeout);
-            }
-
-            // Schedule new sort after 500ms of inactivity
-            this.sortTimeout = setTimeout(() => {
-                this.sortPanelsByProfit();
-                this.sortTimeout = null;
-            }, 500);
+            actionPanelSort.triggerSort();
         }
 
         /**
@@ -19334,14 +19596,18 @@
                 return;
             }
 
-            const maxCrafts = this.calculateMaxProduceable(data.actionHrid, inventory, dataManager.getInitClientData());
+            // Only calculate max crafts for production actions with display element
+            let maxCrafts = null;
+            if (data.displayElement) {
+                maxCrafts = this.calculateMaxProduceable(data.actionHrid, inventory, dataManager.getInitClientData());
 
-            if (maxCrafts === null) {
-                data.displayElement.style.display = 'none';
-                return;
+                if (maxCrafts === null) {
+                    data.displayElement.style.display = 'none';
+                    return;
+                }
             }
 
-            // Calculate profit/hr (if applicable)
+            // Calculate profit/hr (for both gathering and production)
             let profitPerHour = null;
             const actionDetails = dataManager.getActionDetails(data.actionHrid);
 
@@ -19358,23 +19624,30 @@
                 }
             }
 
-            // Calculate exp/hr using shared utility
-            const expData = calculateExpPerHour(data.actionHrid);
-            const expPerHour = expData?.expPerHour || null;
-
-            // Store profit value for sorting
+            // Store profit value for sorting and update shared sort manager
             data.profitPerHour = profitPerHour;
+            actionPanelSort.updateProfit(actionPanel, profitPerHour);
 
-            // Check if we should hide actions with negative profit
+            // Check if we should hide actions with negative profit (unless pinned)
             const hideNegativeProfit = config.getSetting('actionPanel_hideNegativeProfit');
-            if (hideNegativeProfit && profitPerHour !== null && profitPerHour < 0) {
-                // Hide the entire action panel
+            const isPinned = actionPanelSort.isPinned(data.actionHrid);
+            if (hideNegativeProfit && profitPerHour !== null && profitPerHour < 0 && !isPinned) {
+                // Hide the entire action panel (unless it's pinned)
                 actionPanel.style.display = 'none';
                 return;
             } else {
                 // Show the action panel (in case it was previously hidden)
                 actionPanel.style.display = '';
             }
+
+            // Only update display element if it exists (production actions only)
+            if (!data.displayElement) {
+                return;
+            }
+
+            // Calculate exp/hr using shared utility
+            const expData = calculateExpPerHour(data.actionHrid);
+            const expPerHour = expData?.expPerHour || null;
 
             // Color coding for "Can produce"
             let canProduceColor;
@@ -19424,59 +19697,49 @@
                 } else {
                     // Panel no longer in DOM, remove from tracking
                     this.actionElements.delete(actionPanel);
+                    actionPanelSort.unregisterPanel(actionPanel);
                 }
             }
 
             // Wait for all updates to complete
             await Promise.all(updatePromises);
 
-            // Sort panels if setting is enabled
-            if (config.getSetting('actionPanel_sortByProfit')) {
-                this.sortPanelsByProfit();
-            }
+            // Trigger sort via shared manager
+            actionPanelSort.triggerSort();
         }
 
         /**
-         * Sort action panels by profit/hr (highest first)
+         * Toggle pin state for an action
+         * @param {string} actionHrid - Action HRID to toggle
+         * @param {HTMLElement} pinIcon - Pin icon element
          */
-        sortPanelsByProfit() {
-            // Group panels by their parent container
-            const containerMap = new Map();
+        async togglePin(actionHrid, pinIcon) {
+            await actionPanelSort.togglePin(actionHrid);
 
-            for (const [actionPanel, data] of this.actionElements.entries()) {
-                if (!document.body.contains(actionPanel)) continue;
+            // Update icon appearance
+            this.updatePinIcon(pinIcon, actionHrid);
 
-                const container = actionPanel.parentElement;
-                if (!container) continue;
+            // Re-sort and re-filter panels
+            await this.updateAllCounts();
+        }
 
-                if (!containerMap.has(container)) {
-                    containerMap.set(container, []);
-                }
-
-                // Extract profit value from the data we already have
-                const profitPerHour = data.profitPerHour ?? null;
-
-                containerMap.get(container).push({
-                    panel: actionPanel,
-                    profit: profitPerHour
-                });
+        /**
+         * Update pin icon appearance based on pinned state
+         * @param {HTMLElement} pinIcon - Pin icon element
+         * @param {string} actionHrid - Action HRID
+         */
+        updatePinIcon(pinIcon, actionHrid) {
+            const isPinned = actionPanelSort.isPinned(actionHrid);
+            if (isPinned) {
+                // Pinned: Full color, bright, larger
+                pinIcon.style.filter = 'grayscale(0%) brightness(1.2) drop-shadow(0 0 3px rgba(255, 100, 0, 0.8))';
+                pinIcon.style.transform = 'scale(1.1)';
+            } else {
+                // Unpinned: Grayscale, dimmed, normal size
+                pinIcon.style.filter = 'grayscale(100%) brightness(0.7)';
+                pinIcon.style.transform = 'scale(1)';
             }
-
-            // Sort and reorder each container
-            for (const [container, panels] of containerMap.entries()) {
-                // Sort by profit (descending), null values go to end
-                panels.sort((a, b) => {
-                    if (a.profit === null && b.profit === null) return 0;
-                    if (a.profit === null) return 1;
-                    if (b.profit === null) return -1;
-                    return b.profit - a.profit;
-                });
-
-                // Reorder DOM elements
-                panels.forEach(({panel}) => {
-                    container.appendChild(panel);
-                });
-            }
+            pinIcon.title = isPinned ? 'Unpin this action' : 'Pin this action to keep it visible';
         }
 
         /**
@@ -19488,8 +19751,14 @@
                 this.unregisterObserver = null;
             }
 
+            if (this.mutationObserver) {
+                this.mutationObserver.disconnect();
+                this.mutationObserver = null;
+            }
+
             // Remove all injected elements
             document.querySelectorAll('.mwi-max-produceable').forEach(el => el.remove());
+            document.querySelectorAll('.mwi-action-pin').forEach(el => el.remove());
             this.actionElements.clear();
         }
     }
@@ -19509,16 +19778,18 @@
         constructor() {
             this.actionElements = new Map(); // actionPanel → {actionHrid, displayElement}
             this.unregisterObserver = null;
-            this.sortTimeout = null; // Debounce timer for sorting
         }
 
         /**
          * Initialize the gathering stats display
          */
-        initialize() {
+        async initialize() {
             if (!config.getSetting('actionPanel_gatheringStats')) {
                 return;
             }
+
+            // Initialize shared sort manager
+            await actionPanelSort.initialize();
 
             this.setupObserver();
 
@@ -19582,8 +19853,10 @@
                 });
                 // Update with fresh data
                 this.updateStats(actionPanel);
-                // Trigger debounced sort after panels are loaded
-                this.scheduleSortIfEnabled();
+                // Register with shared sort manager
+                actionPanelSort.registerPanel(actionPanel, actionHrid);
+                // Trigger sort
+                actionPanelSort.triggerSort();
                 return;
             }
 
@@ -19618,31 +19891,14 @@
                 displayElement: display
             });
 
+            // Register with shared sort manager
+            actionPanelSort.registerPanel(actionPanel, actionHrid);
+
             // Initial update
             this.updateStats(actionPanel);
 
-            // Trigger debounced sort after panels are loaded
-            this.scheduleSortIfEnabled();
-        }
-
-        /**
-         * Schedule a sort to run after a short delay (debounced)
-         */
-        scheduleSortIfEnabled() {
-            if (!config.getSetting('actionPanel_sortByProfit')) {
-                return;
-            }
-
-            // Clear existing timeout
-            if (this.sortTimeout) {
-                clearTimeout(this.sortTimeout);
-            }
-
-            // Schedule new sort after 500ms of inactivity
-            this.sortTimeout = setTimeout(() => {
-                this.sortPanelsByProfit();
-                this.sortTimeout = null;
-            }, 500);
+            // Trigger sort
+            actionPanelSort.triggerSort();
         }
 
         /**
@@ -19694,12 +19950,14 @@
             const expData = calculateExpPerHour(data.actionHrid);
             const expPerHour = expData?.expPerHour || null;
 
-            // Store profit value for sorting
+            // Store profit value for sorting and update shared sort manager
             data.profitPerHour = profitPerHour;
+            actionPanelSort.updateProfit(actionPanel, profitPerHour);
 
-            // Check if we should hide actions with negative profit
+            // Check if we should hide actions with negative profit (unless pinned)
             const hideNegativeProfit = config.getSetting('actionPanel_hideNegativeProfit');
-            if (hideNegativeProfit && profitPerHour !== null && profitPerHour < 0) {
+            const isPinned = actionPanelSort.isPinned(data.actionHrid);
+            if (hideNegativeProfit && profitPerHour !== null && profitPerHour < 0 && !isPinned) {
                 // Hide the entire action panel
                 actionPanel.style.display = 'none';
                 return;
@@ -19740,59 +19998,15 @@
                 } else {
                     // Panel no longer in DOM, remove from tracking
                     this.actionElements.delete(actionPanel);
+                    actionPanelSort.unregisterPanel(actionPanel);
                 }
             }
 
             // Wait for all updates to complete
             await Promise.all(updatePromises);
 
-            // Sort panels if setting is enabled
-            if (config.getSetting('actionPanel_sortByProfit')) {
-                this.sortPanelsByProfit();
-            }
-        }
-
-        /**
-         * Sort action panels by profit/hr (highest first)
-         */
-        sortPanelsByProfit() {
-            // Group panels by their parent container
-            const containerMap = new Map();
-
-            for (const [actionPanel, data] of this.actionElements.entries()) {
-                if (!document.body.contains(actionPanel)) continue;
-
-                const container = actionPanel.parentElement;
-                if (!container) continue;
-
-                if (!containerMap.has(container)) {
-                    containerMap.set(container, []);
-                }
-
-                // Extract profit value from the data we already have
-                const profitPerHour = data.profitPerHour ?? null;
-
-                containerMap.get(container).push({
-                    panel: actionPanel,
-                    profit: profitPerHour
-                });
-            }
-
-            // Sort and reorder each container
-            for (const [container, panels] of containerMap.entries()) {
-                // Sort by profit (descending), null values go to end
-                panels.sort((a, b) => {
-                    if (a.profit === null && b.profit === null) return 0;
-                    if (a.profit === null) return 1;
-                    if (b.profit === null) return -1;
-                    return b.profit - a.profit;
-                });
-
-                // Reorder DOM elements
-                panels.forEach(({panel}) => {
-                    container.appendChild(panel);
-                });
-            }
+            // Trigger sort via shared manager
+            actionPanelSort.triggerSort();
         }
 
         /**
@@ -28263,7 +28477,7 @@
             }
 
             return breakdown.map((book) => {
-                return `${book.name} (${book.count}): ${networthFormatter(Math.round(book.value))}`;
+                return `${book.name} (${formatKMB(book.count)}): ${networthFormatter(Math.round(book.value))}`;
             }).join('\n');
         }
 
@@ -28302,7 +28516,7 @@
 
                 // Build items HTML with newlines
                 const itemsHTML = categoryData.items.map((item) => {
-                    return `${item.name} x${item.count}: ${networthFormatter(Math.round(item.value))}`;
+                    return `${item.name} x${formatKMB(item.count)}: ${networthFormatter(Math.round(item.value))}`;
                 }).join('\n');
 
                 return `
@@ -38830,6 +39044,214 @@
     const alchemyProfitDisplay = new AlchemyProfitDisplay();
 
     /**
+     * Transmute Rates Module
+     * Shows transmutation success rate percentages in Item Dictionary modal
+     */
+
+
+    /**
+     * TransmuteRates class manages success rate display in Item Dictionary
+     */
+    class TransmuteRates {
+        constructor() {
+            this.unregisterHandlers = [];
+            this.isInitialized = false;
+        }
+
+        /**
+         * Setup setting change listener
+         */
+        setupSettingListener() {
+            config.onSettingChange('itemDictionary_transmuteRates', (enabled) => {
+                if (enabled) {
+                    this.initialize();
+                } else {
+                    this.disable();
+                }
+            });
+
+            // Listen for base rate inclusion toggle
+            config.onSettingChange('itemDictionary_transmuteIncludeBaseRate', () => {
+                if (this.isInitialized) {
+                    this.refreshRates();
+                }
+            });
+
+            // Listen for color changes
+            config.onSettingChange('color_transmute', () => {
+                if (this.isInitialized) {
+                    this.refreshRates();
+                }
+            });
+        }
+
+        /**
+         * Initialize transmute rates feature
+         */
+        initialize() {
+            if (config.getSetting('itemDictionary_transmuteRates') !== true) {
+                return;
+            }
+
+            // Prevent multiple initializations
+            if (this.isInitialized) {
+                return;
+            }
+
+            this.isInitialized = true;
+
+            // Watch for Item Dictionary modal "Transmuted From" section
+            const unregister = domObserver.onClass(
+                'TransmuteRates',
+                'ItemDictionary_transmutedFrom',
+                (elem) => {
+                    this.injectRates(elem);
+                }
+            );
+            this.unregisterHandlers.push(unregister);
+
+            // Check if dictionary is already open
+            const existingSection = document.querySelector('[class*="ItemDictionary_transmutedFrom"]');
+            if (existingSection) {
+                this.injectRates(existingSection);
+            }
+        }
+
+        /**
+         * Inject transmutation success rates into the dictionary
+         * @param {HTMLElement} transmutedFromSection - The "Transmuted From" section
+         */
+        injectRates(transmutedFromSection) {
+            // Get current item name from modal title
+            const titleElem = document.querySelector('[class*="ItemDictionary_title"]');
+            if (!titleElem) {
+                return;
+            }
+
+            const currentItemName = titleElem.textContent.trim();
+            const gameData = dataManager.getInitClientData();
+            if (!gameData) {
+                return;
+            }
+
+            // Find current item HRID by name
+            let currentItemHrid = null;
+            for (const [hrid, item] of Object.entries(gameData.itemDetailMap)) {
+                if (item.name === currentItemName) {
+                    currentItemHrid = hrid;
+                    break;
+                }
+            }
+
+            if (!currentItemHrid) {
+                return;
+            }
+
+            // Find all source items in "Transmuted From" list
+            const sourceItems = transmutedFromSection.querySelectorAll('[class*="ItemDictionary_item"]');
+
+            for (const sourceItemElem of sourceItems) {
+                // Check if we already injected rate
+                if (sourceItemElem.querySelector('.mwi-transmute-rate')) {
+                    continue;
+                }
+
+                // Get source item name
+                const nameElem = sourceItemElem.querySelector('[class*="Item_name"]');
+                if (!nameElem) {
+                    continue;
+                }
+
+                const sourceItemName = nameElem.textContent.trim();
+
+                // Find source item HRID by name
+                let sourceItemHrid = null;
+                for (const [hrid, item] of Object.entries(gameData.itemDetailMap)) {
+                    if (item.name === sourceItemName) {
+                        sourceItemHrid = hrid;
+                        break;
+                    }
+                }
+
+                if (!sourceItemHrid) {
+                    continue;
+                }
+
+                // Get source item's alchemy details
+                const sourceItem = gameData.itemDetailMap[sourceItemHrid];
+                if (!sourceItem.alchemyDetail || !sourceItem.alchemyDetail.transmuteDropTable) {
+                    continue;
+                }
+
+                const transmuteSuccessRate = sourceItem.alchemyDetail.transmuteSuccessRate;
+
+                // Find current item in source's drop table
+                const dropEntry = sourceItem.alchemyDetail.transmuteDropTable.find(
+                    entry => entry.itemHrid === currentItemHrid
+                );
+
+                if (!dropEntry) {
+                    continue;
+                }
+
+                // Calculate effective rate based on setting
+                const includeBaseRate = config.getSetting('itemDictionary_transmuteIncludeBaseRate') !== false;
+                const effectiveRate = includeBaseRate
+                    ? transmuteSuccessRate * dropEntry.dropRate  // Total probability
+                    : dropEntry.dropRate;                         // Conditional probability
+                const percentageText = `${(effectiveRate * 100).toFixed(effectiveRate * 100 % 1 === 0 ? 1 : 2)}%`;
+
+                // Create rate element
+                const rateElem = document.createElement('span');
+                rateElem.className = 'mwi-transmute-rate';
+                rateElem.textContent = ` ~${percentageText}`;
+                rateElem.style.cssText = `
+                color: ${config.COLOR_TRANSMUTE};
+                font-size: 0.9em;
+                margin-left: 4px;
+            `;
+
+                // Insert after item name
+                nameElem.appendChild(rateElem);
+            }
+        }
+
+        /**
+         * Refresh all displayed rates (e.g., after color change)
+         */
+        refreshRates() {
+            // Remove all existing rate displays
+            document.querySelectorAll('.mwi-transmute-rate').forEach(elem => elem.remove());
+
+            // Re-inject if section is visible
+            const existingSection = document.querySelector('[class*="ItemDictionary_transmutedFrom"]');
+            if (existingSection) {
+                this.injectRates(existingSection);
+            }
+        }
+
+        /**
+         * Disable the feature and clean up
+         */
+        disable() {
+            // Unregister all observers
+            this.unregisterHandlers.forEach(unregister => unregister());
+            this.unregisterHandlers = [];
+
+            // Remove all injected rate displays
+            document.querySelectorAll('.mwi-transmute-rate').forEach(elem => elem.remove());
+
+            this.isInitialized = false;
+        }
+    }
+
+    // Create and export singleton instance
+    const transmuteRates = new TransmuteRates();
+
+    // Setup setting listener (always active, even when feature is disabled)
+    transmuteRates.setupSettingListener();
+
+    /**
      * Feature Registry
      * Centralized feature initialization system
      */
@@ -39221,6 +39643,15 @@
             category: 'Notifications',
             initialize: () => emptyQueueNotification.initialize(),
             async: true
+        },
+
+        // Dictionary Features
+        {
+            key: 'itemDictionary_transmuteRates',
+            name: 'Item Dictionary Transmute Rates',
+            category: 'UI',
+            initialize: () => transmuteRates.initialize(),
+            async: false
         }
     ];
 
@@ -39873,7 +40304,7 @@
         const targetWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
 
         targetWindow.Toolasha = {
-            version: '0.4.959',
+            version: '0.4.961',
 
             // Feature toggle API (for users to manage settings via console)
             features: {

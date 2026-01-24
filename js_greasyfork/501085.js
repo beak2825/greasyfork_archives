@@ -1,329 +1,405 @@
 // ==UserScript==
-// @name         Universal Website Optimizer (WIP Beta Ver) / 通用網站優化工具 (實驗性)
-// @name:zh-TW   通用網站優化工具 (實驗性)
+// @name         Universal Website Optimizer (v3.0 Spec) / 通用網站優化工具 (v3.0)
+// @name:zh-TW   通用網站優化工具 (v3.0 實驗版)
 // @namespace    https://github.com/jmsch23280866
-// @version      2.7.9
-// @description  Optimizes website loading speed, reduces CPU and RAM usage, disables telemetry. (Script assisted by ChatGPT)
-// @description:zh-TW 加速網站載入速度、減少CPU和RAM使用、禁用遙測。（此腳本由ChatGPT協助撰寫）
+// @version      3.1.0
+// @description  The ultimate performance booster for modern web browsing. Optimizes CPU, RAM, Network, and Storage usage while maintaining site functionality.
+// @description:zh-TW 極致的網頁瀏覽效能優化工具。在不影響網站功能的前提下，降低CPU、RAM、網絡和存儲使用率。
 // @author       特務E04
 // @supportURL   https://github.com/jmsch23280866/Universal-Website-Optimizer/issues/
 // @license      MIT
-// @noframes
 // @match        *://*/*
-// @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/501085/Universal%20Website%20Optimizer%20%28WIP%20Beta%20Ver%29%20%20%E9%80%9A%E7%94%A8%E7%B6%B2%E7%AB%99%E5%84%AA%E5%8C%96%E5%B7%A5%E5%85%B7%20%28%E5%AF%A6%E9%A9%97%E6%80%A7%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/501085/Universal%20Website%20Optimizer%20%28WIP%20Beta%20Ver%29%20%20%E9%80%9A%E7%94%A8%E7%B6%B2%E7%AB%99%E5%84%AA%E5%8C%96%E5%B7%A5%E5%85%B7%20%28%E5%AF%A6%E9%A9%97%E6%80%A7%29.meta.js
+// @grant        GM_registerMenuCommand
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @run-at       document-start
+// @downloadURL https://update.greasyfork.org/scripts/501085/Universal%20Website%20Optimizer%20%28v30%20Spec%29%20%20%E9%80%9A%E7%94%A8%E7%B6%B2%E7%AB%99%E5%84%AA%E5%8C%96%E5%B7%A5%E5%85%B7%20%28v30%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/501085/Universal%20Website%20Optimizer%20%28v30%20Spec%29%20%20%E9%80%9A%E7%94%A8%E7%B6%B2%E7%AB%99%E5%84%AA%E5%8C%96%E5%B7%A5%E5%85%B7%20%28v30%29.meta.js
 // ==/UserScript==
 
-(() => {
+(function () {
     'use strict';
 
-
-    // 錯誤日誌函數，只在發生錯誤時輸出到控制台
-    const logError = (message, error) => {
-        console.error(`[Universal Website Optimizer] ${message}`, error);
-        // 新增錯誤提示
-        alert(`Error: ${message}`);
+    /**
+     * Localization
+     * 多語言支援
+     */
+    const Translations = {
+        'zh-TW': {
+            'menu_throttle': '🚀 背景資源限制',
+            'menu_lazyload': '🖼️ 圖片延遲加載',
+            'menu_tracker': '🛡️ 阻擋追蹤廣告',
+            'menu_font': '🅰️ 字型載入優化',
+            'menu_autoplay': '🎬 禁止影片自動播放',
+            'menu_simplified': '⚡ 極簡模式 (移除裝飾)',
+            'on': '開啟',
+            'off': '關閉'
+        },
+        'zh-CN': {
+            'menu_throttle': '🚀 背景资源限制',
+            'menu_lazyload': '🖼️ 图片延迟加载',
+            'menu_tracker': '🛡️ 阻挡追踪广告',
+            'menu_font': '🅰️ 字体加载优化',
+            'menu_autoplay': '🎬 禁止影片自动播放',
+            'menu_simplified': '⚡ 极简模式 (移除装饰)',
+            'on': '开启',
+            'off': '关闭'
+        },
+        'en': {
+            'menu_throttle': '🚀 Background Tab Throttling',
+            'menu_lazyload': '🖼️ Lazy Load Images',
+            'menu_tracker': '🛡️ Block Trackers & Ads',
+            'menu_font': '🅰️ Optimize Font Loading',
+            'menu_autoplay': '🎬 Disable Video Autoplay',
+            'menu_simplified': '⚡ Simplified Mode (No Decorations)',
+            'on': 'ON',
+            'off': 'OFF'
+        }
     };
 
-    // 需要阻擋的資源列表
-    const blockList = [
-        'google\\.analytics\\.com', 'analytics\\.js', 'gtag\\/js',
-        'doubleclick\\.net', 'adsbygoogle\\.js', 'googlesyndication\\.com', 'googletagmanager\\.com',
-    ].map(pattern => new RegExp(pattern));
+    class Locale {
+        static get lang() {
+            const navLang = navigator.language || 'en';
+            if (navLang.toLowerCase().includes('zh')) {
+                return navLang.includes('CN') ? 'zh-CN' : 'zh-TW';
+            }
+            return 'en';
+        }
 
-    // 防抖函數
-    const debounce = (func, wait) => {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
+        static get(key) {
+            const lang = Locale.lang;
+            const strings = Translations[lang] || Translations['en'];
+            return strings[key] || key;
+        }
+    }
+
+    /**
+     * Configuration Management
+     * 處理使用者設定與選單
+     */
+    class Config {
+        constructor() {
+            this.settings = {
+                throttleBackground: GM_getValue('throttleBackground', true),
+                lazyLoadImages: GM_getValue('lazyLoadImages', true),
+                blockAdsTrackers: GM_getValue('blockAdsTrackers', true),
+                optimizeFontLoading: GM_getValue('optimizeFontLoading', true),
+                disableVideoAutoplay: GM_getValue('disableVideoAutoplay', true),
+                simplifiedMode: GM_getValue('simplifiedMode', false)
             };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    };
+            this.initMenu();
+        }
 
-    // 本地快取
-    const MAX_CACHE_SIZE = 48 * 1024 * 1024; // 48MB
-    const CACHE_EXPIRY_TIME = 5 * 60 * 1000; // 5 minutes
+        initMenu() {
+            const getLabel = (key, value) => {
+                const status = value ? Locale.get('on') : Locale.get('off');
+                return `${Locale.get(key)}: ${status}`;
+            };
 
-    const localCache = new Map();
-    let currentCacheSize = 0;
+            GM_registerMenuCommand(getLabel('menu_throttle', this.settings.throttleBackground), () => this.toggle('throttleBackground'));
+            GM_registerMenuCommand(getLabel('menu_lazyload', this.settings.lazyLoadImages), () => this.toggle('lazyLoadImages'));
+            GM_registerMenuCommand(getLabel('menu_tracker', this.settings.blockAdsTrackers), () => this.toggle('blockAdsTrackers'));
+            GM_registerMenuCommand(getLabel('menu_font', this.settings.optimizeFontLoading), () => this.toggle('optimizeFontLoading'));
+            GM_registerMenuCommand(getLabel('menu_autoplay', this.settings.disableVideoAutoplay), () => this.toggle('disableVideoAutoplay'));
+            GM_registerMenuCommand(getLabel('menu_simplified', this.settings.simplifiedMode), () => this.toggle('simplifiedMode'));
+        }
 
-    // 檢查是否為可快取的資源
-    const isCacheable = (url) => {
-        const img = new Image();
-        img.src = url;
-        const fileName = url.split('/').pop();
-        const isNumericFileName = /^\d+$/.test(fileName.split('.').shift());
-        return !isNumericFileName && (img.complete || /\.(css|woff|woff2|ttf|eot|js)$/i.test(url)); // 添加對 .js 文件的檢查
-    };
+        toggle(key) {
+            this.settings[key] = !this.settings[key];
+            GM_setValue(key, this.settings[key]);
+            location.reload();
+        }
 
+        get(key) {
+            return this.settings[key];
+        }
+    }
 
-    const cachedFetch = (url) => {
-        const now = Date.now();
+    /**
+     * Utilities
+     * 通用工具函式
+     */
+    class Utils {
+        static log(msg, type = 'info') {
+            const prefix = '[Optimizer v3]';
+            const style = 'background: #2b2b2b; color: #bada55; padding: 2px 4px; border-radius: 2px;';
+            if (type === 'error') console.error(prefix, msg);
+            else console.log(`%c${prefix}`, style, msg);
+        }
 
-        if (localCache.has(url)) {
-            const { data, timestamp } = localCache.get(url);
-            if (now - timestamp < CACHE_EXPIRY_TIME) {
-                // 如果快取未過期，重置時間戳並返回快取的內容
-                localCache.set(url, { data, timestamp: now });
-                return Promise.resolve(data);
-            } else {
-                // 如果快取已過期，移除快取項目
-                localCache.delete(url);
-                currentCacheSize -= data.length;
+        static debounce(func, wait) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+    }
+
+    /**
+     * Network Controller
+     * 負責攔截與優化網絡請求
+     */
+    class NetworkController {
+        constructor(config) {
+            this.config = config;
+            this.blockList = [
+                'google-analytics.com', 'googletagmanager.com', 'doubleclick.net',
+                'facebook.net/en_US/fbevents.js', 'adsbygoogle.js', 'analytics.js',
+                'clarity.ms', 'hotjar.com', 'yandex.ru'
+            ];
+        }
+
+        init() {
+            if (this.config.get('blockAdsTrackers')) {
+                this.interceptFetch();
+                this.interceptXHR();
             }
         }
 
-        return fetch(url)
-            .then(response => {
-                const contentLength = response.headers.get('Content-Length');
-                if (contentLength && parseInt(contentLength) > 1048576) { // 1MB = 1048576 bytes
-                    return response.text();
-                }
+        isBlocked(url) {
+            return this.blockList.some(domain => url.includes(domain));
+        }
 
-                return response.text().then(data => {
-                    if (currentCacheSize + data.length <= MAX_CACHE_SIZE) {
-                        localCache.set(url, { data, timestamp: now });
-                        currentCacheSize += data.length;
+        interceptFetch() {
+            const originalFetch = window.fetch;
+            window.fetch = async (input, init) => {
+                const url = typeof input === 'string' ? input : input.url;
+                if (this.isBlocked(url)) {
+                    // Utils.log(`Blocked Fetch: ${url}`);
+                    return new Response(null, { status: 204, statusText: 'No Content' });
+                }
+                return originalFetch.call(window, input, init);
+            };
+        }
+
+        interceptXHR() {
+            const originalOpen = XMLHttpRequest.prototype.open;
+            const self = this;
+            XMLHttpRequest.prototype.open = function (method, url) {
+                if (self.isBlocked(url)) {
+                    // Utils.log(`Blocked XHR: ${url}`);
+                    // 將 URL 指向空，或標記此請求被取消
+                    return;
+                }
+                return originalOpen.apply(this, arguments);
+            };
+        }
+    }
+
+    /**
+     * Performance Engine
+     * 負責 CPU/RAM 資源調度與背景頁面降速
+     */
+    class PerformanceEngine {
+        constructor(config) {
+            this.config = config;
+            this.originalRAF = window.requestAnimationFrame;
+            this.originalSetInterval = window.setInterval;
+            this.originalSetTimeout = window.setTimeout;
+            this.timers = new Set();
+            this.isBackground = false;
+        }
+
+        init() {
+            if (this.config.get('throttleBackground')) {
+                document.addEventListener('visibilitychange', () => this.handleVisibilityChange());
+                this.handleVisibilityChange(); // Initial check
+            }
+        }
+
+        handleVisibilityChange() {
+            this.isBackground = document.visibilityState === 'hidden';
+
+            if (this.isBackground) {
+                this.enableThrottling();
+                document.title = `💤 ${document.title}`;
+            } else {
+                this.disableThrottling();
+                document.title = document.title.replace(/^💤\s/, '');
+            }
+        }
+
+        enableThrottling() {
+            // 強制降頻 requestAnimationFrame
+            window.requestAnimationFrame = (callback) => {
+                // 背景時，每秒只執行 1 次 RAF (或更低)
+                return this.originalSetTimeout(() => {
+                    this.originalRAF(callback);
+                }, 1000);
+            };
+
+            // 攔截並降頻 setInterval
+            window.setInterval = (callback, delay, ...args) => {
+                // 背景時，強制最小間隔為 1000ms
+                const newDelay = Math.max(delay, 1000);
+                return this.originalSetInterval(callback, newDelay, ...args);
+            };
+
+            // 暫停所有高消耗的 CSS 動畫 (如果可行)
+            document.body.style.transition = 'none';
+        }
+
+        disableThrottling() {
+            window.requestAnimationFrame = this.originalRAF;
+            window.setInterval = this.originalSetInterval;
+            document.body.style.transition = '';
+        }
+    }
+
+    /**
+     * DOM Handler
+     * 負責頁面渲染優化、懶加載與元素清理
+     */
+    class DOMHandler {
+        constructor(config) {
+            this.config = config;
+            this.observer = null;
+        }
+
+        init() {
+            if (this.config.get('lazyLoadImages')) {
+                this.setupLazyLoading();
+            }
+            if (this.config.get('optimizeFontLoading')) {
+                this.optimizeFonts();
+            }
+            if (this.config.get('disableVideoAutoplay')) {
+                this.disableAutoplay();
+            }
+            if (this.config.get('simplifiedMode')) {
+                this.simplifyUI();
+            }
+
+            // 持續監控 DOM 變動
+            this.observeMutations();
+        }
+
+        setupLazyLoading() {
+            // 對現有圖片強制啟用 lazy loading
+            const lazyImageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                        }
+                        observer.unobserve(img);
                     }
-                    return data;
                 });
             });
-    };
 
-    // 攔截請求函數
-    const interceptRequests = () => {
-        // 攔截 XMLHttpRequest
-        const originalOpen = XMLHttpRequest.prototype.open;
-        XMLHttpRequest.prototype.open = function(method, url, ...args) {
-            if (blockList.some(regex => regex.test(url))) {
-                return;
-            }
-            originalOpen.call(this, method, url, ...args);
-        };
-
-
-        // 攔截 Fetch API
-        const originalFetch = window.fetch;
-        window.fetch = function(input, init) {
-            if (typeof input === 'string' && blockList.some(regex => regex.test(input))) {
-                return Promise.reject(new Error('Request blocked by Userscript'));
-            }
-
-            if (typeof input === 'string' && isCacheable(input)) {
-                return cachedFetch(input);
-            }
-
-            return originalFetch.call(this, input, init);
-        };
-
-        // 使用防抖處理 DOM 變化
-        const handleMutations = debounce((mutations) => {
-            for (const mutation of mutations) {
-                for (const node of mutation.addedNodes) {
-                    if (node.nodeType !== Node.ELEMENT_NODE) continue;
-                    if ((node.tagName === 'SCRIPT' && node.src && blockList.some(regex => regex.test(node.src))) ||
-                        (node.tagName === 'LINK' && node.rel === 'stylesheet' && node.href && blockList.some(regex => regex.test(node.href)))) {
-                        node.remove();
-                    }
+            document.querySelectorAll('img').forEach(img => {
+                if (!img.getAttribute('loading')) {
+                    img.setAttribute('loading', 'lazy');
                 }
-            }
-        }, 100); // 100毫秒的防抖延遲
+            });
+        }
 
-        // 觀察 DOM 變化
-        new MutationObserver(handleMutations).observe(document, { childList: true, subtree: true });
-    };
+        optimizeFonts() {
+            // 強制字體顯示策略 swap
+            const style = document.createElement('style');
+            style.textContent = `
+                @font-face { font-display: swap; }
+            `;
+            document.head.appendChild(style);
+        }
 
-    // 增強的延遲加載函數
-    const enhancedLazyLoad = () => {
-        const lazyLoadElements = (selector, loadingAttribute = 'src') => {
-            const elements = document.querySelectorAll(selector);
-            if ('loading' in HTMLImageElement.prototype) {
-                elements.forEach(el => {
-                    if (!el.hasAttribute('loading')) {
-                        el.setAttribute('loading', 'lazy');
-                    }
-                    // 如果有data-src，則將其設置為src
-                    if (el.dataset.src) {
-                        el[loadingAttribute] = el.dataset.src;
-                    }
-                });
-            } else {
-                // 使用 IntersectionObserver 作為後備方案
-                const observer = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const el = entry.target;
-                            if (el.dataset.src) {
-                                el[loadingAttribute] = el.dataset.src;
+        disableAutoplay() {
+            // 捕獲並暫停 video 元素
+            const pauseVideo = (video) => {
+                video.autoplay = false;
+                video.pause();
+                video.removeAttribute('autoplay');
+            };
+
+            document.querySelectorAll('video').forEach(pauseVideo);
+        }
+
+        simplifyUI() {
+            // 移除裝飾性元素，僅保留主要內容 (實驗性)
+            const style = document.createElement('style');
+            style.textContent = `
+                * { box-shadow: none !important; text-shadow: none !important; transition: none !important; animation: none !important; }
+                .ads, .banner, .popup, [class*="ad-"], [id*="ad-"] { display: none !important; }
+            `;
+            document.head.appendChild(style);
+        }
+
+        observeMutations() {
+            const observer = new MutationObserver(Utils.debounce((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType !== 1) return;
+
+                        // 新增節點處理
+                        if (node.tagName === 'VIDEO' && this.config.get('disableVideoAutoplay')) {
+                            node.autoplay = false;
+                            node.pause();
+                        }
+                        if (node.tagName === 'IMG' && this.config.get('lazyLoadImages')) {
+                            node.setAttribute('loading', 'lazy');
+                        }
+                        // 移除常見廣告 iframe
+                        if (node.tagName === 'IFRAME' && this.config.get('blockAdsTrackers')) {
+                            if (node.src && (node.src.includes('ads') || node.src.includes('doubleclick'))) {
+                                node.remove();
                             }
-                            observer.unobserve(el);
                         }
                     });
                 });
+            }, 500));
 
-                elements.forEach(el => observer.observe(el));
-            }
-        };
-
-        // 延遲加載圖片
-        lazyLoadElements('img');
-
-        // 延遲加載 iframe
-        lazyLoadElements('iframe', 'src');
-    };
-
-    // 預加載關鍵資源
-    const preloadCriticalResources = () => {
-        const preloadLinks = new Set();
-
-        // 預加載關鍵圖片
-        document.querySelectorAll('img[data-critical]').forEach(img => {
-            const preloadLink = document.createElement('link');
-            preloadLink.rel = 'preload';
-            preloadLink.as = 'image';
-            preloadLink.href = img.src;
-            preloadLinks.add(preloadLink);
-        });
-
-        // 預加載關鍵 CSS
-        document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
-            if (link.getAttribute('data-critical') === 'true') {
-                const preloadLink = document.createElement('link');
-                preloadLink.rel = 'preload';
-                preloadLink.as = 'style';
-                preloadLink.href = link.href;
-                preloadLinks.add(preloadLink);
-            }
-        });
-
-        preloadLinks.forEach(link => document.head.appendChild(link));
-    };
-
-
-    // 替換 document.write
-    const replaceDocumentWrite = () => {
-        const originalWrite = document.write;
-
-        document.write = document.writeln = (content) => {
-            if (typeof content !== 'string') return logError('內容必須是字符串');
-            try {
-                if (document.body) {
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = content;
-                    document.body.appendChild(tempDiv);
-                } else {
-                    // 如果body不存在，使用原始方法
-                    originalWrite.call(document, content);
-                }
-            } catch (err) {
-                logError('內容插入失敗:', err);
-                // 回退到原始的document.write
-                originalWrite.call(document, content);
-            }
-        };
-    };
-
-    // 清理 HTML 元素
-    const cleanupHTMLElements = () => {
-        // 移除無障礙屬性
-        const accessibilityAttributes = ['aria-label', 'aria-describedby', 'aria-details', 'alt'];
-        const selector = accessibilityAttributes.map(attr => `[${attr}]`).join(',');
-        document.querySelectorAll(selector).forEach(el => {
-            accessibilityAttributes.forEach(attr => el.removeAttribute(attr));
-        });
-
-
-        // 定義需要移除的 <meta> 標籤黑名單
-        const metaTagBlacklist = [
-            'keywords', 'description', 'author', 'generator',
-            'robots', 'googlebot', 'revisit-after',
-            'apple-itunes-app', 'apple-mobile-web-app',  //Apple 應用程式
-            'og:',  //Open Graph 協議相關標籤
-            'twitter:', //Twitter 卡片相關標籤
-            'fb:', //Facebook 相關標籤
-            'juicyads-site-verification', 'exoclick-site-verification', 'trafficjunky-site-verification', //垃圾廣告
-            'ero_verify', 'linkbuxverifycode', //垃圾廣告
-        ];
-
-        // 定義需要移除的 <script> 標籤黑名單
-        const scriptBlacklist = [
-            'google-analytics', 'googletagmanager', 'adsbygoogle', 'doubleclick.net'
-        ];
-
-        // 移除黑名單中的 <meta> 標籤
-        document.querySelectorAll('meta').forEach(meta => {
-            const name = meta.getAttribute('name');
-            const property = meta.getAttribute('property');
-            const httpEquiv = meta.getAttribute('http-equiv');
-
-            if (name && metaTagBlacklist.some(blacklisted => name.toLowerCase().startsWith(blacklisted))) {
-                meta.remove();
-            } else if (property && metaTagBlacklist.some(blacklisted => property.toLowerCase().startsWith(blacklisted))) {
-                meta.remove();
-            } else if (httpEquiv && metaTagBlacklist.some(blacklisted => httpEquiv.toLowerCase().startsWith(blacklisted))) {
-                meta.remove();
-            }
-        });
-
-
-        // 移除黑名單中的 <script> 標籤
-        document.querySelectorAll('script').forEach(script => {
-            const src = script.getAttribute('src');
-            if (src && scriptBlacklist.some(blacklisted => src.includes(blacklisted))) {
-                script.remove();
-            }
-        });
-
-        // 移除 <noscript> 標籤
-        document.querySelectorAll('noscript').forEach(noscript => noscript.remove());
-
-        // 移除 <p>&nbsp; 標籤
-        document.querySelectorAll('p').forEach(p => p.innerHTML.trim() === '&nbsp;' && p.remove());
-    };
-
-    // 啟用 YouTube 隱私模式
-    const enableYouTubePrivacyMode = () => {
-        document.querySelectorAll('iframe').forEach(iframe => {
-            if (iframe.src.includes('youtube.com/embed/')) {
-                iframe.src = iframe.src.replace('youtube.com/embed/', 'youtube-nocookie.com/embed/');
-            }
-        });
-    };
-
-    // 立即執行的優化
-    const immediateOptimizations = () => {
-        try {
-            interceptRequests();
-            replaceDocumentWrite();
-            preloadCriticalResources();
-        } catch (error) {
-            logError('立即優化過程中發生錯誤:', error);
+            observer.observe(document.body || document.documentElement, {
+                childList: true,
+                subtree: true
+            });
         }
-    };
-
-    // DOM 內容加載完成後執行的優化
-    const domContentLoadedOptimizations = () => {
-        try {
-            enhancedLazyLoad();
-            cleanupHTMLElements();
-            enableYouTubePrivacyMode();
-        } catch (error) {
-            logError('DOM 內容加載優化過程中發生錯誤:', error);
-        }
-    };
-
-    // 立即執行優化
-    immediateOptimizations();
-
-    // 在 DOM 內容加載完成後執行其他優化
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', domContentLoadedOptimizations);
-    } else {
-        domContentLoadedOptimizations();
     }
+
+    /**
+     * Optimizer Core
+     * 主程式入口
+     */
+    class OptimizerCore {
+        constructor() {
+            Utils.log('Initializing v3.0 Core...');
+            this.config = new Config();
+            this.perfEngine = new PerformanceEngine(this.config);
+            this.netController = new NetworkController(this.config);
+            this.domHandler = new DOMHandler(this.config);
+        }
+
+        start() {
+            this.perfEngine.init();
+            this.netController.init();
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => this.domHandler.init());
+            } else {
+                this.domHandler.init();
+            }
+
+            // 全局 CSS 優化
+            this.injectGlobalStyles();
+        }
+
+        injectGlobalStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                /* 提升渲染性能：告訴瀏覽器某些區域在螢幕外不需要渲染 */
+                .heavy-content, .comments-section, .related-posts {
+                    content-visibility: auto;
+                    contain-intrinsic-size: 1px 1000px;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+
+    // 啟動優化器
+    const optimizer = new OptimizerCore();
+    optimizer.start();
+
 })();

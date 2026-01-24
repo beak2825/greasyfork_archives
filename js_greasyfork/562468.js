@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Torn Ranked War Timer
-// @version      1.0
-// @author RussianRob
+// @version      1.3
+// @author       RussianRob
 // @description  Timer for Ranked Wars
-// @license MIT
+// @license      MIT
 // @match        https://www.torn.com/factions.php*
 
 // @namespace https://greasyfork.org/users/1559564
@@ -15,6 +15,11 @@
     'use strict';
 
     const WIKI_URL = 'https://wiki.torn.com/wiki/Ranked_War';
+
+    function isDesktopLike() {
+        // Treat wider viewports as desktop; PDA/mobile usually < 1000px.
+        return window.matchMedia('(min-width: 1000px)').matches;
+    }
 
     function formatHHMM(hoursFloat) {
         const totalMinutes = Math.floor(hoursFloat * 60);
@@ -92,7 +97,6 @@
 
         const hoursRemainingFloat = gap / DROP_PER_HOUR;
 
-        // If war is over / timer would be 00:00, remove the element
         if (hoursRemainingFloat <= 0) {
             display.remove();
             return false;
@@ -130,27 +134,41 @@
             display.style.display = 'inline-block';
             display.onclick = () => window.open(WIKI_URL, '_blank');
 
-            // Precise header placement: replace .ranked-war-header___ABC12
-            // with the real class of the header line once you inspect it.
             let headerContainer =
-                warBox.querySelector('.ranked-war-header___ABC12') || // TODO: set actual class
+                warBox.querySelector('[class*="header"], [class*="title"]') ||
                 (warBox.children && warBox.children[0]) ||
                 timerBox.parentElement;
 
+            if (!headerContainer) return;
+
+            // Only shrink header font on desktop-like viewports.
+            if (isDesktopLike()) {
+                headerContainer.style.fontSize = '7px'; // adjust if needed
+                headerContainer.style.flexWrap = 'nowrap';
+            }
+
             headerContainer.appendChild(display);
 
-            // Initial calculation
             const ok = updateWarTimer(display, warBox);
             if (!ok && !document.body.contains(display)) {
                 return;
             }
 
-            // Periodic refresh every 30 seconds
             const refreshInterval = setInterval(() => {
                 if (!document.body.contains(display)) {
                     clearInterval(refreshInterval);
                     return;
                 }
+
+                // If viewport crosses the breakpoint while open, toggle size.
+                if (isDesktopLike()) {
+                    headerContainer.style.fontSize = '11px';
+                    headerContainer.style.flexWrap = 'nowrap';
+                } else {
+                    headerContainer.style.fontSize = '';
+                    headerContainer.style.flexWrap = '';
+                }
+
                 updateWarTimer(display, warBox);
             }, 30000);
         }

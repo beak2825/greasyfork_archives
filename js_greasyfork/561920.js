@@ -6,7 +6,7 @@
 // @match        https://staging.bloxd.io/*
 // @match        https://www.bloxdforge.com/studio/play/*
 // @match        https://www.crazygames.com/game/bloxdhop-io/*
-// @description  Null Client — #2 Best Bloxd.io Client! 100+ Installs! v1.2 Launched!
+// @description  Null Client — #1 Best Bloxd.io Client! 100+ Installs! v1.2 Launched!
 // @author       Nullscape
 // @icon         https://i.postimg.cc/xjzYxS0R/Null-Client.png
 // @run-at       document-start

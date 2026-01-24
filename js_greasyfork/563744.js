@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JPDB Kinetic Layout
 // @namespace    jpdb-kinetic-layout
-// @version      1.0
+// @version      1.1
 // @description  Different sections on JPDB review page are now detachable and resizable!
 // @author       Idhtft
 // @match        https://jpdb.io/
@@ -35,13 +35,11 @@
                   html.jpdbf-prehide .main-row:has(#grade-5),
                   html.jpdbf-prehide .jpdbf-prehide-target { visibility: hidden !important; }
                 `;
-
                 const st = document.createElement('style');
                 st.id = 'jpdbf-prehide';
                 st.textContent = css;
                 (document.head || document.documentElement).appendChild(st);
                 document.documentElement.classList.add('jpdbf-prehide');
-
                 window.__jpdbf_unhideJPDB = (node) => {
                     try { if (node) node.classList.remove('jpdbf-prehide-target'); } catch {}
                     document.documentElement.classList.remove('jpdbf-prehide');
@@ -82,7 +80,7 @@
                 .jpdbf-placeholder {
                     height: 0px !important;
                     min-height: 0px !important;
-                    margin: 0px !important;
+                    margin: 0 auto !important;
                     opacity: 0;
                     border: 0;
                     border-radius: 14px;
@@ -227,7 +225,8 @@
                         if (nx < 0) { nx = 0; hitL = true; } if (nx + r.width > vw) { nx = vw - r.width; hitR = true; }
                         if (ny < 0) { ny = 0; hitT = true; } if (ny + r.height > vh) { ny = vh - r.height; hitB = true; }
                         if ((hitL || hitR) && !rx && (now - lastKickX > 140)) { const k = Math.max(8, Math.min(36, 10 + 0.006 * Math.abs(preVx))); const to = hitL ? Math.min(k, vw - r.width) : Math.max(vw - r.width - k, 0);
-                            rx = { from: nx, to, t0: now, dur: 160 }; vx = 0; lastKickX = now;
+                            rx = { from: nx, to, t0: now, dur: 160 };
+                            vx = 0; lastKickX = now;
                         }
                         if ((hitT || hitB) && !ry && (now - lastKickY > 140)) { const k = Math.max(8, Math.min(36, 10 + 0.006 * Math.abs(preVy)));
                             const to = hitT ? Math.min(k, vh - r.height) : Math.max(vh - r.height - k, 0);
@@ -521,7 +520,6 @@
 
         })();
     })();
-
     (function () {
         const addStyle = (css) => {
             const style = document.createElement('style');
@@ -764,7 +762,7 @@
                     if (this.placeholder && this.placeholder.classList.contains('ready-to-dock')) {
                         this.dock();
                     } else if (this.element && this.element.classList.contains('jpdb-detached')) {
-                        if (Math.abs(this.vx) > 1 || Math.abs(this.vy) > 1) {
+                        if (Math.abs(this.vx) > 0.1 || Math.abs(this.vy) > 0.1) {
                             this.startInertia();
                         } else {
                             constrainToViewport(this.element);
@@ -867,7 +865,6 @@
 
             DragManager.onMove = DragManager.onMove.bind(DragManager);
             DragManager.onUp = DragManager.onUp.bind(DragManager);
-
             function processHeaders() {
                 const headers = document.querySelectorAll('h6, div, span');
                 headers.forEach(header => {
@@ -970,7 +967,6 @@
                     if (id) Storage.save(id, el);
                 });
             });
-
             const observer = new MutationObserver((mutations) => {
                 let relevant = false;
                 for (const m of mutations) {

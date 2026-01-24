@@ -16,14 +16,14 @@
 // @description        AI conversation enhancement tool for Gemini/ChatGPT/Claude/Grok/AI Studio
 // @description:zh-CN  为 Gemini/ChatGPT/Claude/Grok/AI Studio 等提供智能大纲、会话管理、提示词库、快捷键、完成通知、主题布局定制、阅读记录恢复、WebDAV 同步等增强功能，全面提升您的交互体验！
 // @description:zh-TW  為 Gemini/ChatGPT/Claude/Grok/AI Studio 等提供智能大綱、會話管理、提示詞庫、快捷鍵、完成通知、主題佈局定制、閱讀記錄恢復、WebDAV 同步等增強功能，全面提升您的交互體驗！
-// @description:en     Enhance Gemini/ChatGPT/Claude/Grok/AI Studio with smart outlines, conversation management, prompt library, shortcuts, completion notifications, theme customization, reading history restoration, WebDAV sync and more!
-// @description:de     Verbessern Sie Gemini/ChatGPT/Claude/Grok/AI Studio mit intelligenten Gliederungen, Konversationsverwaltung, Prompt-Bibliothek, Tastenkürzel, Benachrichtigungen, Theme-Anpassung, Leseverlauf-Wiederherstellung, WebDAV-Synchronisierung und mehr!
-// @description:es     Mejore Gemini/ChatGPT/Claude/Grok/AI Studio con esquemas inteligentes, gestión de conversaciones, biblioteca de prompts, atajos, notificaciones, personalización de temas, restauración del historial, sincronización WebDAV y más!
-// @description:fr     Améliorez Gemini/ChatGPT/Claude/Grok/AI Studio avec plans intelligents, gestion de conversations, bibliothèque de prompts, raccourcis, notifications, personnalisation de thèmes, restauration de l'historique, synchronisation WebDAV et plus!
+// @description:en     Enhance Gemini/ChatGPT/Claude/Grok/AI Studio with smart outlines, conversation management, prompts, WebDAV sync and more.
+// @description:de     Erweitert Gemini/ChatGPT/Claude/Grok/AI Studio um Gliederungen, Chats, Prompts, Shortcuts, WebDAV-Sync und mehr.
+// @description:es     Mejora Gemini/ChatGPT/Claude/Grok/AI Studio con esquemas, gestión de chats, prompts, atajos, WebDAV y más.
+// @description:fr     Améliorez Gemini/ChatGPT/Claude/Grok/AI Studio : plans, gestion de chats, prompts, raccourcis, WebDAV et plus.
 // @description:ja     Gemini/ChatGPT/Claude/Grok/AI Studio向けにスマートアウトライン、会話管理、プロンプトライブラリ、ショートカット、完了通知、テーマカスタマイズ、閲覧履歴復元、WebDAV同期などの機能を提供し、AI対話体験を向上させます！
 // @description:ko     Gemini/ChatGPT/Claude/Grok/AI Studio용 스마트 아웃라인, 대화 관리, 프롬프트 라이브러리, 단축키, 완료 알림, 테마 커스터마이징, 읽기 기록 복원, WebDAV 동기화 등 다양한 기능을 제공합니다!
-// @description:pt-BR  Melhore o Gemini/ChatGPT/Claude/Grok/AI Studio com esboços inteligentes, gestão de conversas, biblioteca de prompts, atalhos, notificações, personalização de temas, restauração do histórico, sincronização WebDAV e mais!
-// @description:ru     Улучшите Gemini/ChatGPT/Claude/Grok/AI Studio с помощью умных контуров, управления беседами, библиотеки промптов, горячих клавиш, уведомлений, настройки тем, восстановления истории чтения, синхронизации WebDAV и многого другого!
+// @description:pt-BR  Melhore Gemini/ChatGPT/Claude/Grok/AI Studio com esboços, gestão de chats, prompts, atalhos, WebDAV e mais.
+// @description:ru     Улучшите Gemini/ChatGPT/Claude/Grok/AI Studio: контуры, чаты, промпты, клавиши, WebDAV и многое другое.
 // @license            CC-BY-NC-SA-4.0
 // @icon               https://raw.githubusercontent.com/urzeye/ophel/main/assets/icon.png
 // @homepageURL        https://github.com/urzeye/ophel

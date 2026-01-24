@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RA-See More
 // @namespace    https://metalsnake.space/
-// @version      0.6.2
+// @version      0.6.3
 // @description  Clicks the "see more" button on the user and game page
 // @author       MetalSnake
 // @match        *://retroachievements.org/*
@@ -23,6 +23,7 @@
 
         for (const button of buttons) {
             const text = button.innerText.trim().toLowerCase();
+
             if (TARGETS.includes(text)) {
                 button.click();
                 return true;
@@ -36,8 +37,11 @@
         setTimeout(clickButton, 50);
     }
 
-    // Initialer Seitenaufruf
+    //// Initialer Seitenaufruf
     clickButton();
+     setTimeout(() => {
+        clickButton();
+    }, 100);
 
     // pushState / replaceState hooken
     const originalPushState = history.pushState;

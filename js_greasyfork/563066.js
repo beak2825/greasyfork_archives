@@ -1,15 +1,16 @@
 // ==UserScript==
 // @name         Rem4rk's Locked Items Manager
 // @namespace    https://www.torn.com/
-// @version      1.2
-// @description  This userscript allows you to lock items in your inventory to prevent accidentally trading, selling, donating, or trashing them. Perfect for protecting high-value items, collections, or anything you want to keep safe!
+// @version      2.0
+// @description  This userscript allows you to lock items in your inventory to prevent accidentally trading, selling, donating, or trashing them. Perfect for protecting high-value items, collections, or anything you want to keep safe!- Now with Unique ID's, fallback protection, and a settings panel!
 // @author       rem4rk [2375926] - https://www.torn.com/profiles.php?XID=2375926
 // @match        https://www.torn.com/item.php*
 // @match        https://www.torn.com/bazaar.php*
 // @match        https://www.torn.com/trade.php*
 // @match        https://www.torn.com/page.php?sid=ItemMarket*
 // @match        https://www.torn.com/factions.php*
-// @match        https://www.torn.com/shops.php?step=*
+// @match        https://www.torn.com/market.php*
+// @match        https://www.torn.com/shops.php*
 // @match        https://www.torn.com/bigalgunshop.php*
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/563066/Rem4rk%27s%20Locked%20Items%20Manager.user.js
@@ -19,623 +20,222 @@
 (function() {
     'use strict';
 
-    // ========== STORAGE & LOCK MANAGEMENT ==========
     const STORAGE_KEY = 'torn_locked_items';
+    const SETTINGS_KEY = 'torn_locked_settings';
 
-    function getLockedItems() {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        return stored ? JSON.parse(stored) : {};
-    }
+    const getSettings = () => JSON.parse(localStorage.getItem(SETTINGS_KEY)) || { padlockTransparent: true, showActionToasts: true, showInfoToasts: true, showUnlockButton: true };
+    const getLockedItems = () => JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 
-    function setLockedItems(items) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    }
+    // ========== STYLES ========== //
+    const mainStyle = document.createElement('style');
+    mainStyle.id = "rem4rk-core-styles";
+    mainStyle.textContent = `
+        .torn-locks-transparent .torn-padlock { opacity: 0.2; }
+        .torn-locks-transparent .torn-padlock.is-locked { opacity: 1 !important; }
+        .torn-hide-unlock-btn #torn-unlock-all-btn { display: none !important; }
 
-    function isItemLocked(itemId) {
-        const locked = getLockedItems();
-        return locked[itemId] === true;
-    }
-
-    function toggleItemLock(itemId) {
-        const locked = getLockedItems();
-        if (locked[itemId]) {
-            delete locked[itemId];
-        } else {
-            locked[itemId] = true;
+        .item-locked-actions li.send, .item-locked-actions li.sell,
+        .item-locked-actions li.donate, .item-locked-actions li.dump,
+        .item-locked-actions li.return {
+            opacity: 0.1 !important; pointer-events: none !important; filter: grayscale(1) brightness(0.5) !important;
         }
-        setLockedItems(locked);
-        return !locked[itemId];
-    }
 
-    function unlockAllItems() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({}));
-    }
-
-    function hasLockedItems() {
-        const locked = getLockedItems();
-        return Object.keys(locked).length > 0;
-    }
-
-    function getLockedItemCount() {
-        const locked = getLockedItems();
-        return Object.keys(locked).length;
-    }
-
-    // ========== VISUAL FEEDBACK SYSTEM ==========
-    function showToast(message, isLocked) {
-        const toast = document.createElement('div');
-        toast.className = 'torn-lock-toast';
-        toast.style.cssText = `
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            background: ${isLocked ? 'linear-gradient(to right, #d9534f, #c9302c)' : 'linear-gradient(to right, #5cb85c, #449d44)'};
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 9999999;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            font-weight: bold;
-            opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            transform: translateX(400px);
-        `;
-        toast.textContent = message;
-        document.body.appendChild(toast);
-
-        // Trigger animation
-        setTimeout(() => {
-            toast.style.opacity = '1';
-            toast.style.transform = 'translateX(0)';
-        }, 10);
-
-        // Remove after 2 seconds
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateX(400px)';
-            setTimeout(() => {
-                toast.remove();
-            }, 300);
-        }, 2000);
-    }
-
-    function showInfoToast(message) {
-        const toast = document.createElement('div');
-        toast.className = 'torn-lock-info-toast';
-        toast.style.cssText = `
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            background: linear-gradient(to right, #5bc0de, #31b0d5);
-            color: white;
-            padding: 14px 24px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 9999999;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            font-weight: bold;
-            opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            transform: translateX(400px);
-            max-width: 400px;
-        `;
-        toast.textContent = message;
-        document.body.appendChild(toast);
-
-        // Trigger animation
-        setTimeout(() => {
-            toast.style.opacity = '1';
-            toast.style.transform = 'translateX(0)';
-        }, 10);
-
-        // Remove after 4 seconds
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateX(400px)';
-            setTimeout(() => {
-                toast.remove();
-            }, 300);
-        }, 4000);
-    }
-
-    // ========== BANNER SYSTEM (NOW TOAST) ==========
-    function showLockedItemsToast(pageAction) {
-        if (!hasLockedItems()) return;
-
-        const message = `Locked items hidden. To ${pageAction}, unlock them in your inventory.`;
-        showInfoToast(message);
-    }
-
-    // Add CSS for hidden items
-    const style = document.createElement('style');
-    style.textContent = `
-        .torn-locked-hidden {
-            display: none !important;
-            visibility: hidden !important;
-            height: 0 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow: hidden !important;
-            position: absolute !important;
-            width: 0 !important;
+        #torn-lock-gear {
+            position: fixed; top: 15px; left: 15px; width: 34px; height: 34px;
+            background: #1a1a1a; color: #fff; border-radius: 4px; cursor: pointer;
+            z-index: 1000001; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 1px solid #cf4444;
         }
+
+        #torn-lock-modal {
+            display: none; position: fixed; top: 60px; left: 15px; width: 200px;
+            background: #1a1a1a; color: #fff; border: 1px solid #333; z-index: 1000002;
+            padding: 12px; border-radius: 4px; font-family: sans-serif;
+        }
+
+        #torn-unlock-all-btn {
+            position: fixed; left: 20px; top: 50%; transition: transform 0.4s ease;
+            background: #cf4444; color: #fff; padding: 12px 16px; border-radius: 4px;
+            z-index: 99999; cursor: pointer; border: none; font-weight: bold; font-size: 11px;
+        }
+
+        #torn-unlock-all-btn:hover {
+          transform: scale(1.2);
+          transition: transform 0.4s;
+           }
+
+
+        #torn-toast-container { position: fixed; top: 20px; right: 20px; z-index: 999999; display: flex; flex-direction: column; gap: 10px; }
+        .torn-toast {
+            padding: 12px 20px; background: #1a1a1a; color: #fff; border-right: 5px solid #cf4444;
+            transform: translateX(150%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .torn-toast.show { transform: translateX(0); }
+
+        body:not(.item-php) .torn-padlock, body:not(.item-php) .lock-icon { display: none !important; }
     `;
-    document.head.appendChild(style);
+    document.head.appendChild(mainStyle);
 
-    // ========== INVENTORY PAGE ==========
-    function handleInventoryPage() {
-        // Create "Unlock All" button
-        function createUnlockAllButton() {
-            if (document.getElementById('torn-unlock-all-btn')) return;
+    // COMMENT: Fixed showToast to strictly respect info/action settings toggle.
+    function showToast(msg, type = 'info') {
+        const s = getSettings();
 
-            const unlockBtn = document.createElement('button');
-            unlockBtn.id = 'torn-unlock-all-btn';
+        // COMMENT: If it's a reminder/info toast and setting is OFF, kill it.
+        if (type === 'reminder' && !s.showInfoToasts) return;
+        if (type === 'info' && !s.showInfoToasts) return;
 
-            function updateButtonText() {
-                const count = getLockedItemCount();
-                unlockBtn.textContent = count > 0 ? `UNLOCK ALL (${count})` : 'UNLOCK ALL';
-            }
+        // COMMENT: If it's a lock/unlock action toast and setting is OFF, kill it.
+        if (type === 'action' && !s.showActionToasts) return;
+        if (type === 'error' && !s.showActionToasts) return;
 
-            updateButtonText();
-
-            unlockBtn.style.cssText = `
-                position: fixed;
-                left: 20px;
-                top: 50%;
-                transform: translateY(-50%);
-                background: linear-gradient(to right, #5cb85c, #449d44);
-                color: white;
-                font-weight: bold;
-                padding: 12px 20px;
-                border: none;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-                cursor: pointer;
-                font-size: 14px;
-                z-index: 999998;
-                transition: all 0.3s ease;
-                opacity: .3;
-            `;
-
-            unlockBtn.addEventListener('mouseenter', () => {
-                unlockBtn.style.background = 'linear-gradient(to right, #449d44, #5cb85c)';
-                unlockBtn.style.transform = 'translateY(-50%) scale(1.05)';
-                unlockBtn.style.opacity = '1';
-            });
-
-            unlockBtn.addEventListener('mouseleave', () => {
-                unlockBtn.style.background = 'linear-gradient(to right, #5cb85c, #449d44)';
-                unlockBtn.style.transform = 'translateY(-50%) scale(1)';
-                unlockBtn.style.opacity = '.3';
-            });
-
-            unlockBtn.addEventListener('click', () => {
-                const count = getLockedItemCount();
-                if (count === 0) {
-                    showToast('No items to unlock', false);
-                    return;
-                }
-
-                if (confirm(`Are you sure you want to unlock ${count} item${count > 1 ? 's' : ''}?`)) {
-                    unlockAllItems();
-                    showToast(`Unlocked ${count} item${count > 1 ? 's' : ''} ✓`, false);
-
-                    // Refresh all padlocks
-                    const allPadlocks = document.querySelectorAll('.torn-padlock');
-                    allPadlocks.forEach(padlock => {
-                        padlock.textContent = '🔓';
-                    });
-
-                    // Re-enable all actions
-                    const items = document.querySelectorAll('li[data-item]');
-                    items.forEach(item => {
-                        const itemId = item.getAttribute('data-item');
-                        if (itemId) {
-                            updateItemActions(item, itemId);
-                        }
-                    });
-
-                    updateButtonText();
-                }
-            });
-
-            document.body.appendChild(unlockBtn);
-
-            // Store reference to update function
-            unlockBtn._updateText = updateButtonText;
+        let container = document.getElementById('torn-toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'torn-toast-container';
+            document.body.appendChild(container);
         }
 
-        function processInventoryItem(itemElement) {
-            const itemId = itemElement.getAttribute('data-item');
-            if (!itemId) return;
+        const toast = document.createElement('div');
+        toast.className = 'torn-toast';
+        toast.style.borderRightColor = (type === 'error' || type === 'reminder') ? '#cf4444' : '#6f9e00';
+        toast.textContent = msg;
+        container.appendChild(toast);
 
-            // Check if padlock already exists
-            let nameElement = itemElement.querySelector('.name-wrap, .name');
-            if (!nameElement) nameElement = itemElement.querySelector('div[class*="name"]');
-            if (!nameElement) return;
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 400);
+        }, 3500);
+    }
 
-            if (nameElement.querySelector('.torn-padlock')) return;
+    const getUniversalID = (el) => {
+        const armory = el.getAttribute('data-armoryid') || el.querySelector('input[name="armoryID"]')?.value;
+        if (armory) return armory;
 
-            // Create padlock
-            const padlock = document.createElement('span');
-            padlock.className = 'torn-padlock';
-            padlock.style.cssText = `
-                margin-right: 5px;
-                cursor: pointer;
-                font-size: 14px;
-                user-select: none;
-            `;
-            padlock.textContent = isItemLocked(itemId) ? '🔒' : '🔓';
+        const itemId = el.getAttribute('data-id') || el.getAttribute('data-item') || el.querySelector('input[name="ID"]')?.value;
+        if (itemId) return itemId;
 
-            padlock.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
+        const img = el.querySelector('img[src*="/items/"]');
+        if (img) {
+            const match = img.getAttribute('src').match(/\/items\/(\d+)\//);
+            if (match) return match[1];
+        }
+        return null;
+    };
 
-                const wasLocked = isItemLocked(itemId);
-                toggleItemLock(itemId);
-                const nowLocked = isItemLocked(itemId);
-
-                padlock.textContent = nowLocked ? '🔒' : '🔓';
-                updateItemActions(itemElement, itemId);
-
-                // Show toast notification
-                const itemName = itemElement.querySelector('.name')?.textContent?.trim() || 'Item';
-                if (nowLocked) {
-                    showToast(`${itemName} locked 🔒`, true);
-                } else {
-                    showToast(`${itemName} unlocked 🔓`, false);
-                }
-
-                // Update unlock all button count
-                const unlockBtn = document.getElementById('torn-unlock-all-btn');
-                if (unlockBtn && unlockBtn._updateText) {
-                    unlockBtn._updateText();
-                }
-            });
-
-            nameElement.insertBefore(padlock, nameElement.firstChild);
-            updateItemActions(itemElement, itemId);
+    function updateHidingCSS() {
+        const locked = getLockedItems();
+        const ids = Object.keys(locked);
+        if (ids.length === 0 || window.location.href.includes('item.php')) {
+            hidingStyle.textContent = ""; return;
         }
 
-        function updateItemActions(itemElement, itemId) {
-            const locked = isItemLocked(itemId);
-            const actionsToBlock = ['dump', 'send', 'donate', 'sell'];
-
-            actionsToBlock.forEach(action => {
-                const actionElement = itemElement.querySelector(`li.${action}`);
-                if (actionElement) {
-                    if (locked) {
-                        actionElement.style.opacity = '0.35';
-                        actionElement.style.pointerEvents = 'none';
-                        actionElement.style.cursor = 'not-allowed';
-                        actionElement.style.position = 'relative';
-                    } else {
-                        actionElement.style.opacity = '';
-                        actionElement.style.pointerEvents = '';
-                        actionElement.style.cursor = '';
-                    }
-                }
-            });
-        }
-
-        function observeInventory() {
-            const items = document.querySelectorAll('li[data-item]');
-            items.forEach(processInventoryItem);
-        }
-
-        createUnlockAllButton();
-        observeInventory();
-
-        const observer = new MutationObserver(() => {
-            observeInventory();
+        let css = "";
+        ids.forEach(id => {
+            css += `li[data-id="${id}"], li[data-item="${id}"], li[data-armoryid="${id}"],
+                    li:has(input[value="${id}"]), li:has(img[src*="/items/${id}/"]),
+                    div.itemRowWrapper___cFs4O:has([aria-controls*="-${id}"]),
+                    .virtualListing___jl0JE:has([aria-controls*="-${id}"]),
+                    li:has([data-reactid*=".$${id}"]) { display: none !important; }\n`;
         });
-
-        const targetNode = document.body;
-        observer.observe(targetNode, { childList: true, subtree: true });
+        hidingStyle.textContent = css;
     }
 
-    // ========== ITEM MARKET PAGE ==========
-    function handleItemMarketPage() {
-        function getItemIdFromImage(img) {
-            const src = img.getAttribute('src') || img.getAttribute('srcset');
-            if (!src) return null;
-            const match = src.match(/items\/(\d+)\//);
-            return match ? match[1] : null;
-        }
+    const hidingStyle = document.createElement('style');
+    document.head.appendChild(hidingStyle);
 
-        function removePadlocksFromPage() {
-            // Remove by class
-            const padlocksByClass = document.querySelectorAll('.torn-padlock');
-            padlocksByClass.forEach(p => {
-                p.classList.add('torn-locked-hidden');
-                p.remove();
-            });
+    function runLogic() {
+        const isInv = window.location.href.includes('item.php');
+        const locked = getLockedItems();
+        const settings = getSettings();
 
-            // Remove by content (🔒 or 🔓)
-            const allSpans = document.querySelectorAll('span');
-            allSpans.forEach(el => {
-                const text = el.textContent || '';
-                if (text === '🔒' || text === '🔓' || text.includes('🔒') || text.includes('🔓')) {
-                    if (el.classList.contains('torn-padlock') || el.style.cursor === 'pointer' || el.style.userSelect === 'none') {
-                        el.classList.add('torn-locked-hidden');
-                        el.remove();
-                    }
+        if (isInv) {
+            document.body.classList.add('item-php');
+            document.querySelectorAll('li[data-id], li[data-item]').forEach(el => {
+                const key = getUniversalID(el);
+                if (!key || el.getAttribute('data-group') === 'parent') return;
+
+                const isLocked = !!locked[key];
+                el.classList.toggle('item-locked-actions', isLocked);
+
+                let lock = el.querySelector('.torn-padlock');
+                if (!lock) {
+                    lock = document.createElement('span');
+                    lock.className = 'torn-padlock';
+                    lock.style.cssText = 'cursor:pointer; margin-right:8px; font-size:16px;';
+                    lock.onclick = (e) => {
+                        e.stopPropagation();
+                        const current = getLockedItems();
+                        const name = el.querySelector('.name')?.textContent || "Item";
+                        if (current[key]) { delete current[key]; showToast(`${name} Unlocked`, 'action'); }
+                        else { current[key] = true; showToast(`${name} Locked`, 'error'); }
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
+                        updateHidingCSS(); runLogic();
+                    };
+                    const target = el.querySelector('.name-wrap');
+                    if (target) target.insertBefore(lock, target.firstChild);
                 }
+                lock.textContent = isLocked ? '🔒' : '🔓';
+                lock.classList.toggle('is-locked', isLocked);
             });
-
-            // Check for any element with padlock-like classes
-            const padlockLikeElements = document.querySelectorAll('[class*="padlock"], [class*="lock"]');
-            padlockLikeElements.forEach(el => {
-                const text = el.innerText || el.textContent || '';
-                if (text.includes('🔒') || text.includes('🔓')) {
-                    el.classList.add('torn-locked-hidden');
-                    el.remove();
-                }
-            });
+        } else {
+            document.querySelectorAll('.lock-icon, .torn-padlock').forEach(e => e.remove());
         }
 
-        function processItemMarketItem(itemElement) {
-            if (itemElement.hasAttribute('data-lock-processed')) {
-                return;
-            }
-            itemElement.setAttribute('data-lock-processed', 'true');
+        document.body.classList.toggle('torn-locks-transparent', settings.padlockTransparent);
+        document.body.classList.toggle('torn-hide-unlock-btn', !settings.showUnlockButton);
+        const uBtn = document.getElementById('torn-unlock-all-btn');
+        if (uBtn) uBtn.textContent = `Unlock All (${Object.keys(locked).length})`;
+    }
 
-            // Remove any padlocks from this specific item
-            const padlocksInItem = itemElement.querySelectorAll('.torn-padlock, [class*="padlock"]');
-            padlocksInItem.forEach(p => {
-                p.classList.add('torn-locked-hidden');
-                p.remove();
-            });
+    // COMMENT: Reminder toast logic. Respects info-toast toggle.
+    if (!window.location.href.includes('item.php')) {
+        const count = Object.keys(getLockedItems()).length;
+        if (count > 0) setTimeout(() => showToast(`Reminder: ${count} items hidden by locks.`, 'reminder'), 1000);
+    }
 
-            const spansInItem = itemElement.querySelectorAll('span');
-            spansInItem.forEach(el => {
-                const text = el.textContent || '';
-                if (text === '🔒' || text === '🔓') {
-                    el.classList.add('torn-locked-hidden');
-                    el.remove();
-                }
-            });
+    if (!document.getElementById('torn-lock-gear')) {
+        const gear = document.createElement('div');
+        gear.id = 'torn-lock-gear'; gear.innerHTML = '⚙';
+        gear.onclick = () => { const m = document.getElementById('torn-lock-modal'); m.style.display = (m.style.display === 'block') ? 'none' : 'block'; };
+        document.body.appendChild(gear);
 
-            // Find the item image to extract item ID
-            const img = itemElement.querySelector('img[class*="torn-item"]');
-            if (!img) return;
-
-            const itemId = getItemIdFromImage(img);
-            if (!itemId) return;
-
-            // If item is locked, hide it completely
-            if (isItemLocked(itemId)) {
-                itemElement.classList.add('torn-locked-hidden');
-                return;
-            }
-        }
-
-        function observeItemMarket() {
-            removePadlocksFromPage();
-
-            const virtualListings = document.querySelectorAll('div.virtualListing___jl0JE:not([data-lock-processed]), div[class*="virtualListing"]:not([data-lock-processed])');
-            virtualListings.forEach(processItemMarketItem);
-
-            const childItems = document.querySelectorAll('li[data-group="child"]:not([data-lock-processed])');
-            childItems.forEach(processItemMarketItem);
-
-            const itemRows = document.querySelectorAll('div[class*="itemRow"]:not([data-lock-processed])');
-            itemRows.forEach(processItemMarketItem);
-        }
-
-        showLockedItemsToast('list them on the market');
-        observeItemMarket();
-
-        const observer = new MutationObserver(() => {
-            removePadlocksFromPage();
-            observeItemMarket();
+        const modal = document.createElement('div');
+        modal.id = 'torn-lock-modal';
+        const s = getSettings();
+        modal.innerHTML = `
+            <div style="font-weight:bold; margin-bottom:10px; color:#cf4444; border-bottom:1px solid #333; font-size:12px;">SETTINGS</div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:11px;"><span>TRANSPARENT</span><input type="checkbox" id="c-trans" ${s.padlockTransparent ? 'checked' : ''}></div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:11px;"><span>ACTION TOASTS</span><input type="checkbox" id="c-toast" ${s.showActionToasts ? 'checked' : ''}></div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:11px;"><span>INFO TOASTS</span><input type="checkbox" id="c-info" ${s.showInfoToasts ? 'checked' : ''}></div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:11px;"><span>UNLOCK ALL BTN</span><input type="checkbox" id="c-btn" ${s.showUnlockButton ? 'checked' : ''}></div>
+        `;
+        document.body.appendChild(modal);
+        modal.querySelectorAll('input').forEach(input => {
+            input.onchange = () => {
+                localStorage.setItem(SETTINGS_KEY, JSON.stringify({
+                    padlockTransparent: document.getElementById('c-trans').checked,
+                    showActionToasts: document.getElementById('c-toast').checked,
+                    showInfoToasts: document.getElementById('c-info').checked,
+                    showUnlockButton: document.getElementById('c-btn').checked
+                }));
+                runLogic();
+            };
         });
-
-        observer.observe(document.body, { childList: true, subtree: true, attributes: false });
-
-        setInterval(() => {
-            removePadlocksFromPage();
-        }, 500);
     }
 
-    // ========== BAZAAR PAGE ==========
-    function handleBazaarPage() {
-        function getItemIdFromImage(img) {
-            const src = img.getAttribute('src') || img.getAttribute('srcset');
-            if (!src) return null;
-            const match = src.match(/items\/(\d+)\//);
-            return match ? match[1] : null;
-        }
-
-        function processBazaarItem(itemElement) {
-            if (itemElement.hasAttribute('data-lock-processed')) {
-                return;
-            }
-            itemElement.setAttribute('data-lock-processed', 'true');
-
-            const img = itemElement.querySelector('img[data-size="medium"], img[class*="torn-item"]');
-            if (!img) return;
-
-            const itemId = getItemIdFromImage(img);
-            if (!itemId) return;
-
-            // If item is locked, hide it completely
-            if (isItemLocked(itemId)) {
-                itemElement.classList.add('torn-locked-hidden');
-                return;
-            }
-        }
-
-        function observeBazaar() {
-            const items = document.querySelectorAll('li[data-group="child"]:not([data-lock-processed])');
-            items.forEach(processBazaarItem);
-        }
-
-        showLockedItemsToast('add them to your bazaar');
-        observeBazaar();
-
-        const observer = new MutationObserver(() => {
-            observeBazaar();
-        });
-
-        observer.observe(document.body, { childList: true, subtree: true });
+    if (window.location.href.includes('item.php') && !document.getElementById('torn-unlock-all-btn')) {
+        const btn = document.createElement('button');
+        btn.id = 'torn-unlock-all-btn';
+        btn.onclick = () => { if (confirm('Unlock all items?')) { localStorage.setItem(STORAGE_KEY, '{}'); showToast('All items unlocked', 'action'); updateHidingCSS(); runLogic(); } };
+        document.body.appendChild(btn);
     }
 
-    // ========== TRADE PAGE ==========
-    function handleTradePage() {
-        function getItemIdFromImage(img) {
-            const src = img.getAttribute('src') || img.getAttribute('srcset');
-            if (!src) return null;
-            const match = src.match(/items\/(\d+)\//);
-            return match ? match[1] : null;
-        }
-
-        function processTradeItem(itemElement) {
-            if (itemElement.hasAttribute('data-lock-processed')) {
-                return;
-            }
-            itemElement.setAttribute('data-lock-processed', 'true');
-
-            const img = itemElement.querySelector('img[data-size="medium"], img[class*="torn-item"]');
-            if (!img) return;
-
-            const itemId = getItemIdFromImage(img);
-            if (!itemId) return;
-
-            // If item is locked, hide it completely
-            if (isItemLocked(itemId)) {
-                itemElement.classList.add('torn-locked-hidden');
-                return;
-            }
-        }
-
-        function observeTrade() {
-            const items = document.querySelectorAll('li[data-group="child"]:not([data-lock-processed])');
-            items.forEach(processTradeItem);
-        }
-
-        showLockedItemsToast('trade them');
-        observeTrade();
-
-        const observer = new MutationObserver(() => {
-            observeTrade();
-        });
-
-        observer.observe(document.body, { childList: true, subtree: true });
-    }
-
-    // ========== FACTION ARMORY PAGE ==========
-    function handleFactionPage() {
-        function getItemIdFromImage(img) {
-            const src = img.getAttribute('src') || img.getAttribute('srcset');
-            if (!src) return null;
-            const match = src.match(/items\/(\d+)\//);
-            return match ? match[1] : null;
-        }
-
-        function processFactionItem(itemElement) {
-            if (itemElement.hasAttribute('data-lock-processed')) {
-                return;
-            }
-            itemElement.setAttribute('data-lock-processed', 'true');
-
-            const img = itemElement.querySelector('img[data-size="medium"], img[class*="torn-item"]');
-            if (!img) return;
-
-            const itemId = getItemIdFromImage(img);
-            if (!itemId) return;
-
-            // If item is locked, hide it completely
-            if (isItemLocked(itemId)) {
-                itemElement.classList.add('torn-locked-hidden');
-                return;
-            }
-        }
-
-        function observeFaction() {
-            const items = document.querySelectorAll('li[data-group="child"]:not([data-lock-processed])');
-            items.forEach(processFactionItem);
-        }
-
-        showLockedItemsToast('donate them');
-        observeFaction();
-
-        const observer = new MutationObserver(() => {
-            observeFaction();
-        });
-
-        observer.observe(document.body, { childList: true, subtree: true });
-    }
-
-    // ========== SHOPS PAGE (shops.php and bigalgunshop.php) ==========
-    function handleShopsPage() {
-        function getItemIdFromElement(itemElement) {
-            // Try to get from data-item attribute
-            const dataItem = itemElement.getAttribute('data-item');
-            if (dataItem) return dataItem;
-
-            // Try to extract from image src
-            const img = itemElement.querySelector('img.torn-item');
-            if (img) {
-                const src = img.getAttribute('src') || img.getAttribute('srcset');
-                if (src) {
-                    const match = src.match(/items\/(\d+)\//);
-                    if (match) return match[1];
-                }
-            }
-
-            return null;
-        }
-
-        function processShopItem(itemElement) {
-            if (itemElement.hasAttribute('data-lock-processed')) {
-                return;
-            }
-            itemElement.setAttribute('data-lock-processed', 'true');
-
-            const itemId = getItemIdFromElement(itemElement);
-            if (!itemId) return;
-
-            // If item is locked, hide it completely
-            if (isItemLocked(itemId)) {
-                itemElement.classList.add('torn-locked-hidden');
-                return;
-            }
-        }
-
-        function observeShops() {
-            // Look for items in the sell-items-list
-            const sellItems = document.querySelectorAll('.sell-items-list li[data-item]:not([data-lock-processed])');
-            sellItems.forEach(processShopItem);
-        }
-
-        showLockedItemsToast('sell them');
-        observeShops();
-
-        const observer = new MutationObserver(() => {
-            observeShops();
-        });
-
-        observer.observe(document.body, { childList: true, subtree: true });
-    }
-
-    // ========== INITIALIZE ==========
-    const currentUrl = window.location.href;
-
-    if (currentUrl.includes('item.php')) {
-        handleInventoryPage();
-    } else if (currentUrl.includes('page.php?sid=ItemMarket')) {
-        handleItemMarketPage();
-    } else if (currentUrl.includes('bazaar.php')) {
-        handleBazaarPage();
-    } else if (currentUrl.includes('trade.php')) {
-        handleTradePage();
-    } else if (currentUrl.includes('factions.php')) {
-        handleFactionPage();
-    } else if (currentUrl.includes('shops.php') || currentUrl.includes('bigalgunshop.php')) {
-        handleShopsPage();
-    }
+    let t = null;
+    const obs = new MutationObserver(() => {
+        if (t) clearTimeout(t);
+        t = setTimeout(() => requestAnimationFrame(() => { runLogic(); updateHidingCSS(); }), 300);
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+    updateHidingCSS(); runLogic();
 })();

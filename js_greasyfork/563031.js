@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Joybuy.nl Price Tracker (Fixed)
 // @namespace    http://tampermonkey.net/
-// @version      2.2
+// @version      2.3
 // @description  Track product prices with search, filter, and hover preview - FIXED
 // @author       Keon
 // @match        https://www.joybuy.nl/*
@@ -11,7 +11,7 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_addStyle
 // @run-at       document-idle
-// @license      GPL
+// @license      GNU GPLv3
 // @downloadURL https://update.greasyfork.org/scripts/563031/Joybuynl%20Price%20Tracker%20%28Fixed%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/563031/Joybuynl%20Price%20Tracker%20%28Fixed%29.meta.js
 // ==/UserScript==
@@ -574,6 +574,176 @@
         return svg;
     }
 
+    // ==================== IMPORT FUNCTIONS ====================
+
+function importJSON() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+
+    input.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+            const text = await file.text();
+            const importedData = JSON.parse(text);
+
+            // Validate the data structure
+            if (typeof importedData !== 'object') {
+                throw new Error('Invalid JSON format');
+            }
+
+            const currentData = getStoredData();
+            let newCount = 0;
+            let updateCount = 0;
+
+            // Merge imported data with existing data
+            Object.entries(importedData).forEach(([productId, product]) => {
+                if (!currentData[productId]) {
+                    currentData[productId] = product;
+                    newCount++;
+                } else {
+                    // Merge prices, avoiding duplicates
+                    const existingDates = new Set(
+                        currentData[productId].prices.map(p => p.date)
+                    );
+
+                    product.prices.forEach(priceEntry => {
+                        if (!existingDates.has(priceEntry.date)) {
+                            currentData[productId].prices.push(priceEntry);
+                            updateCount++;
+                        }
+                    });
+
+                    // Sort prices by date
+                    currentData[productId].prices.sort(
+                        (a, b) => new Date(a.date) - new Date(b.date)
+                    );
+
+                    // Update product info
+                    currentData[productId].name = product.name;
+                    currentData[productId].url = product.url;
+                    if (product.originalPrice) {
+                        currentData[productId].originalPrice = product.originalPrice;
+                    }
+                }
+            });
+
+            saveData(currentData);
+            showNotification(
+                `✓ 导入成功\n新增 ${newCount} 个产品\n新增 ${updateCount} 条价格记录`,
+                'success'
+            );
+
+            // Refresh dashboard if open
+            if (document.getElementById('priceTrackerDashboard')) {
+                showDashboard();
+            }
+        } catch (error) {
+            console.error('Import error:', error);
+            showNotification(`导入失败: ${error.message}`, 'error');
+        }
+    };
+
+    input.click();
+}
+
+function importCSV() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv';
+
+    input.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+            const text = await file.text();
+            const lines = text.split('\n').filter(line => line.trim());
+
+            if (lines.length < 2) {
+                throw new Error('CSV file is empty');
+            }
+
+            // Skip header
+            const dataLines = lines.slice(1);
+            const currentData = getStoredData();
+            let newProducts = 0;
+            let newPrices = 0;
+
+            dataLines.forEach(line => {
+                // Parse CSV line (handle quoted fields)
+                const matches = line.match(/("(?:[^"]|"")*"|[^,]*)/g);
+                if (!matches || matches.length < 6) return;
+
+                const [productId, name, date, price, originalPrice, url] = matches.map(
+                    field => field.replace(/^"|"$/g, '').replace(/""/g, '"').trim()
+                );
+
+                if (!productId || !name || !date || !price || !url) return;
+
+                const priceValue = parseFloat(price);
+                if (isNaN(priceValue)) return;
+
+                if (!currentData[productId]) {
+                    currentData[productId] = {
+                        name: name,
+                        url: url,
+                        originalPrice: originalPrice ? parseFloat(originalPrice) : null,
+                        prices: []
+                    };
+                    newProducts++;
+                }
+
+                // Create a Set of existing dates (normalized to date-only)
+                const existingDates = new Set(
+                    currentData[productId].prices.map(p =>
+                        new Date(p.date).toISOString().split('T')[0]
+                    )
+                );
+
+                // Check if this date already exists
+                if (!existingDates.has(date)) {
+                    currentData[productId].prices.push({
+                        price: priceValue,
+                        date: new Date(date + 'T00:00:00.000Z').toISOString()
+                    });
+                    newPrices++;
+                }
+
+                // Update product info (keep the latest)
+                currentData[productId].name = name;
+                currentData[productId].url = url;
+                if (originalPrice) {
+                    currentData[productId].originalPrice = parseFloat(originalPrice);
+                }
+            });
+
+            // Sort all prices by date
+            Object.values(currentData).forEach(product => {
+                product.prices.sort((a, b) => new Date(a.date) - new Date(b.date));
+            });
+
+            saveData(currentData);
+            showNotification(
+                `✓ 导入成功\n新增 ${newProducts} 个产品\n新增 ${newPrices} 条价格记录`,
+                'success'
+            );
+
+            // Refresh dashboard if open
+            if (document.getElementById('priceTrackerDashboard')) {
+                showDashboard();
+            }
+        } catch (error) {
+            console.error('Import error:', error);
+            showNotification(`导入失败: ${error.message}`, 'error');
+        }
+    };
+
+    input.click();
+}
+
     // ==================== DASHBOARD WITH SEARCH ====================
 
     function showDashboard() {
@@ -613,6 +783,8 @@
             <div class="pt-actions">
                 <button class="pt-btn pt-btn-primary" id="ptExportJSON">导出 JSON</button>
                 <button class="pt-btn pt-btn-primary" id="ptExportCSV">导出 CSV</button>
+                <button class="pt-btn pt-btn-success" id="ptImportJSON">导入 JSON</button>
+                <button class="pt-btn pt-btn-success" id="ptImportCSV">导入 CSV</button>
                 <button class="pt-btn pt-btn-danger" id="ptClearAll">清空数据</button>
             </div>
             <div class="pt-products" id="ptProductList"></div>
@@ -646,6 +818,8 @@
         // Event listeners
         document.getElementById('ptExportJSON').addEventListener('click', downloadJSON);
         document.getElementById('ptExportCSV').addEventListener('click', downloadCSV);
+        document.getElementById('ptImportJSON').addEventListener('click', importJSON);
+        document.getElementById('ptImportCSV').addEventListener('click', importCSV);
         document.getElementById('ptClearAll').addEventListener('click', clearAllData);
     }
 
@@ -1225,6 +1399,15 @@ GM_addStyle(`
         background: #5568d3;
     }
 
+    .pt-btn-success {
+    background: #28a745;
+    color: white;
+    }
+
+    .pt-btn-success:hover {
+    background: #218838;
+    }
+
     .pt-btn-danger {
         background: #dc3545;
         color: white;
@@ -1509,6 +1692,8 @@ GM_registerMenuCommand('📋 批量追踪搜索结果', trackBulkProducts);
 GM_registerMenuCommand('📈 打开控制面板', showDashboard);
 GM_registerMenuCommand('💾 导出 JSON', downloadJSON);
 GM_registerMenuCommand('📄 导出 CSV', downloadCSV);
+GM_registerMenuCommand('📥 导入 JSON', importJSON);
+GM_registerMenuCommand('📋 导入 CSV', importCSV);
 GM_registerMenuCommand('🗑️ 清空所有数据', clearAllData);
 
 // Initialize on page load

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         CunyCrypt
-// @version      0.9.19
+// @version      0.9.22
 // @description  End-to-end encryption for Discord messages and files, but less obvious
 // @author       redcat (forked from NotTrueFalse)
 // @match        https://discord.com/*
@@ -1304,7 +1304,7 @@ restore_localstorage().then(() => {
             if (oldButton) oldButton.remove();
 
             const findToolBar = () => {
-                return document.querySelector('[class*="-toolbar"]');
+                return document.querySelector('[class*="trailing"]');
             };
 
             const ToolBar = findToolBar();
@@ -1804,7 +1804,7 @@ restore_localstorage().then(() => {
         }
 
         function observeMessages() {
-            const chatContainer = document.querySelector('[class*="-chatContent"]');
+            const chatContainer = document.querySelector('[class*="chatContent"]');
 
             if (!chatContainer) {
                 setTimeout(observeMessages, 500);
@@ -1849,7 +1849,7 @@ restore_localstorage().then(() => {
 
         function watchForChannelChanges() {
             let currentObserver = observeMessages();
-            let lastChatContainer = document.querySelector('[class*="-chatContent"]');
+            let lastChatContainer = document.querySelector('[class*="chatContent"]');
             let isCleanedUp = false;
 
             const appMount = document.querySelector('#app-mount');
@@ -1861,7 +1861,7 @@ restore_localstorage().then(() => {
             const containerWatcher = new MutationObserver(() => {
                 if (isCleanedUp) return;
 
-                const newChatContainer = document.querySelector('[class*="-chatContent"]');
+                const newChatContainer = document.querySelector('[class*="chatContent"]');
                 if (newChatContainer && newChatContainer !== lastChatContainer) {
                     log('Chat container changed, restarting observer...');
                     if (currentObserver) {

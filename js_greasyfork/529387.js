@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Web性能综合优化工具箱 (通用增强版)
 // @namespace    http://tampermonkey.net/
-// @version      3.6.1-compatibility-optimized
-// @description  Web浏览提速80%，DOM渲染及GPU加速，适用于现代网站。
+// @version      3.6.2-compatibility-optimized
+// @description  Web浏览提速80%，DOM渲染及GPU加速，适用于现代网站。包含完整性能优化功能
 // @author       KiwiFruit
 // @match        *://*/*
 // @grant        none
@@ -13,63 +13,17 @@
 
 (function () {
     'use strict';
-    /* global selector */
-    // ========================
-    // 1. 空闲任务调度器
-    // ========================
-    const IdleTaskScheduler = {
-        schedule(taskFn, options = {}) {
-            const { timeout = 2000 } = options;
-            try {
-                return requestIdleCallback((deadline) => {
-                    try { taskFn(deadline); } catch (e) {
-                        console.warn('[IdleTaskScheduler] Task error', e);
-                    }
-                }, { timeout });
-            } catch (e) {
-                setTimeout(() => {
-                    try { taskFn({ didTimeout: true, timeRemaining: () => Infinity }); }
-                    catch (err) { console.warn('[IdleTaskScheduler] Fallback task error', err); }
-                }, 0);
-            }
-        },
-
-        scheduleChunked(items, processor, options = {}) {
-            const { chunkSize = 5, timeout = 3000 } = options;
-            let index = 0;
-            const total = items.length;
-
-            const processChunk = (deadline) => {
-                let count = 0;
-                while (
-                    index < total &&
-                    count < chunkSize &&
-                    (deadline.timeRemaining() > 1 || deadline.didTimeout)
-                ) {
-                    try { processor(items[index], index, items); }
-                    catch (e) { console.warn('[IdleTaskScheduler] Chunk error', e); }
-                    index++;
-                    count++;
-                }
-
-                if (index < total) {
-                    this.schedule(processChunk, { timeout });
-                }
-            };
-
-            this.schedule(processChunk, { timeout });
-        }
-    };
 
     // ========================
-    // 2. 基础工具与环境检测
+    // 1. 环境检测与配置
     // ========================
-    const Environment = {
+    const Env = {
         features: {
             nativeLazyLoad: 'loading' in HTMLImageElement.prototype,
             intersectionObserver: 'IntersectionObserver' in window,
             webWorker: 'Worker' in window,
-            performanceObserver: 'PerformanceObserver' in window
+            performanceObserver: 'PerformanceObserver' in window,
+            paintTiming: 'PerformancePaintTiming' in window
         },
         performanceTier: (() => {
             if (navigator.hardwareConcurrency >= 4) return 2;
@@ -77,192 +31,64 @@
             return 0;
         })(),
         networkType: navigator.connection?.effectiveType || 'unknown',
-        isLowPerformance() {
-            return this.performanceTier === 0 || this.networkType === '2g';
-        }
+        isLowPerformance() { return this.performanceTier === 0 || this.networkType === '2g'; }
     };
 
-    const Config = (() => {
-        const config = {
-            debug: false,
-            throttleDelay: 200,
-            debounceDelay: 300,
-            retryAttempts: 3,
-            retryDelay: 1000,
-            // 通用优化：支持常见的 data-src, data-original 等属性
-            lazyLoad: {
-                enabled: true,
-                selector: 'img[data-src], img[data-original], iframe[data-src], img.lazy, .js-lazy-load',
-                rootMargin: '100px 0px',
-                preferNative: true
-            },
-            criticalCSS: {
-                enabled: true,
-                selectors: ['.js-critical-css'],
-                preloadTimeout: 5000
-            },
-            // 通用优化：包含常见的导航栏、侧边栏和动画元素
-            hardwareAcceleration: {
-                enabled: true,
-                selector: 'header, nav, aside, .sticky, .fixed, .js-animate, .js-transform, [style*="transform"]'
-            },
-            performanceMonitor: {
-                enabled: false,
-                metrics: ['fcp', 'lcp', 'cls']
-            },
-            domAnalyzer: {
-                enabled: true,
-                maxDepth: 12
-            },
-            // 优化策略：针对语义化容器标签
-            contentVisibility: {
-                enabled: true,
-                selector: 'section, article, main, .content, .post, .js-section',
-                // 轻量级样式配置：更保守的默认值
-                containIntrinsicSize: 'auto 200px',
-                // 条件排除选择器：用户可自定义排除的元素
-                excludeSelectors: '.js-interactive, .js-hover, [data-interactive], [style*="animation"]',
-                // 网站黑名单：完全禁用content-visibility的网站
-                siteBlacklist: ['google.com', 'sankaku.com']
-            }
-        };
-        return {
-            get(key) {
-                const keys = key.split('.');
-                return keys.reduce((obj, k) => obj?.[k], config);
-            },
-            set(key, value) {
-                const keys = key.split('.');
-                const lastKey = keys.pop();
-                const target = keys.reduce((obj, k) => obj?.[k], config);
-                if (target && typeof target[lastKey] !== 'undefined') {
-                    const oldValue = target[lastKey];
-                    target[lastKey] = value;
-                    Logger.info('Config', `更新配置: ${key}=${value}（旧值: ${oldValue}）`);
-                    return true;
-                }
-                Logger.error('Config', `配置键不存在: ${key}`);
-                return false;
-            },
-            getAll() { return { ...config }; }
-        };
-    })();
+    const Config = {
+        debug: true,
+        ui: {
+            enabled: true,
+            position: 'bottom-right',
+            zIndex: 9999
+        },
+        lazyLoad: {
+            enabled: true,
+            selector: 'img[data-src], img[data-original], img.lazy, iframe[data-src], .js-lazy-load',
+            preloadDistance: 50
+        },
+        hardwareAcceleration: {
+            enabled: true,
+            selector: 'header, nav, aside, .sticky, .fixed, .js-animate, .js-transform'
+        },
+        contentVisibility: {
+            enabled: true,
+            selector: 'section, article, main, .content, .post, .js-section',
+            hiddenDistance: 500
+        },
+        preconnect: {
+            enabled: true,
+            domains: ['cdn.jsdelivr.net', 'cdnjs.cloudflare.com', 'fonts.googleapis.com', 'fonts.gstatic.com']
+        },
+        eventOptimization: {
+            enabled: true,
+            delegates: [
+                { selector: '.js-button', handler: handleButtonClick },
+                { selector: '.js-link', handler: handleLinkClick },
+                { selector: '.js-tab', handler: handleTabClick }
+            ]
+        }
+    };
 
     const Logger = {
-        debug: (module, msg) => {
-            if (Config.get('debug')) console.log(`[PerfOpt][${module}] DEBUG: ${msg}`);
-        },
-        info: (module, msg) => {
-            if (Config.get('debug')) console.info(`[PerfOpt][${module}] INFO: ${msg}`);
-        },
-        warn: (module, msg) => {
-            if (Config.get('debug')) console.warn(`[PerfOpt][${module}] WARN: ${msg}`);
-        },
-        error: (module, msg, error) => {
-            if (Config.get('debug')) console.error(`[PerfOpt][${module}] ERROR: ${msg}`, error || '');
-        }
-    };
-
-    // 开发模式：布局抖动检测
-    if (Config.get('debug')) {
-        const layoutProps = ['offsetTop', 'offsetLeft', 'offsetWidth', 'offsetHeight', 'clientWidth', 'clientHeight', 'scrollHeight', 'scrollWidth'];
-        layoutProps.forEach(prop => {
-            const original = Object.getOwnPropertyDescriptor(Element.prototype, prop);
-            if (original && original.get) {
-                Object.defineProperty(Element.prototype, prop, {
-                    get() {
-                        console.warn(`[PerfOpt][LayoutThrashing] 检测到布局读取: ${prop}`, this);
-                        return original.get.call(this);
-                    }
-                });
-            }
-        });
-    }
-
-    function isSameOrigin(url) {
-        try {
-            return new URL(url, window.location.href).origin === window.location.origin;
-        } catch (e) {
-            return false;
-        }
-    }
-
-    function prefetchDomain(url) {
-        try {
-            const origin = new URL(url, window.location.href).origin;
-            if (!document.querySelector(`link[href="${origin}"]`)) {
-                const link = document.createElement('link');
-                link.rel = 'dns-prefetch preconnect';
-                link.href = origin;
-                document.head.appendChild(link);
-            }
-        } catch (e) {
-            Logger.warn('Utils', '预连接失败', e);
-        }
-    }
-
-    const Utils = {
-        throttle: (func, delay) => {
-            let lastCall = 0;
-            return function (...args) {
-                const now = Date.now();
-                if (now - lastCall >= delay) {
-                    lastCall = now;
-                    func.apply(this, args);
-                }
-            };
-        },
-        debounce: (func, delay) => {
-            let timer;
-            return function (...args) {
-                clearTimeout(timer);
-                timer = setTimeout(() => func.apply(this, args), delay);
-            };
-        },
-        loadWithRetry: async (loaderFn, moduleName) => {
-            for (let i = 0; i < Config.get('retryAttempts'); i++) {
-                try {
-                    return await loaderFn();
-                } catch (error) {
-                    const isLastAttempt = i === Config.get('retryAttempts') - 1;
-                    if (isLastAttempt) {
-                        Logger.error(moduleName, `加载失败（已达最大重试次数）`, error);
-                        throw error;
-                    }
-                    Logger.warn(moduleName, `加载失败，${Config.get('retryDelay')}ms后重试（${i + 1}/${Config.get('retryAttempts')}）`);
-                    await new Promise(resolve => setTimeout(resolve, Config.get('retryDelay')));
-                }
+        log: (module, level, msg) => {
+            if (Config.debug || level === 'error') {
+                const prefix = `[PerfOpt][${module}]`;
+                const methods = { debug: console.log, info: console.info, warn: console.warn, error: console.error };
+                methods[level](prefix, msg);
             }
         },
-        safeGetData: (el, name, defaultValue) => {
-            try {
-                // 支持连字符写法 data-src, 也可以直接传 'src'
-                const value = el.dataset[name];
-                if (!value) return defaultValue;
-                if (value.match(/^[{[]/)) return JSON.parse(value);
-                if (value.toLowerCase() === 'true') return true;
-                if (value.toLowerCase() === 'false') return false;
-                const num = Number(value);
-                return !isNaN(num) ? num : value;
-            } catch (e) {
-                Logger.warn('Utils', `解析data-${name}失败`, e);
-                return defaultValue;
-            }
-        },
-        is: {
-            func: v => typeof v === 'function',
-            elem: v => v instanceof Element,
-            str: v => typeof v === 'string',
-            num: v => typeof v === 'number' && !isNaN(v)
-        }
+        debug: (m, msg) => Logger.log(m, 'debug', msg),
+        info: (m, msg) => Logger.log(m, 'info', msg),
+        warn: (m, msg) => Logger.log(m, 'warn', msg),
+        error: (m, msg) => Logger.log(m, 'error', msg)
     };
 
     // ========================
-    // 3. 基础类
+    // 2. 核心性能优化类
     // ========================
     class BaseModule {
-        constructor(moduleName) {
-            this.moduleName = moduleName;
+        constructor(name) {
+            this.moduleName = name;
             this.initialized = false;
         }
         init() {
@@ -271,572 +97,730 @@
                 return;
             }
             this.initialized = true;
-            Logger.info(this.moduleName, '初始化开始');
+            Logger.info(this.moduleName, '初始化完成');
         }
         destroy() {
             if (!this.initialized) return;
             this.initialized = false;
-            Logger.info(this.moduleName, '销毁完成');
+            Logger.info(this.moduleName, '已销毁');
         }
-        emitEvent(eventName, detail = {}) {
-            window.dispatchEvent(new CustomEvent(`perfopt:${this.moduleName}:${eventName}`, {
-                detail: { ...detail, module: this.moduleName, timestamp: Date.now() }
+        emit(event, data = {}) {
+            window.dispatchEvent(new CustomEvent(`perfopt:${this.moduleName}:${event}`, {
+                detail: { ...data, module: this.moduleName, timestamp: Date.now() }
             }));
         }
     }
 
-    class BaseObserver extends BaseModule {
-        constructor(moduleName, configKey) {
-            super(moduleName);
+    // ========================
+    // 3. 图片懒加载优化
+    // ========================
+    class ImageOptimizer extends BaseModule {
+        constructor() {
+            super('ImageOptimizer');
             this.observer = null;
-            this.configKey = configKey;
-            this.observers = [];
+            this.scrollListener = null;
         }
-        createObserver(handleIntersect, rootMargin = '0px') {
-            if (!Environment.features.intersectionObserver) {
-                Logger.warn(this.moduleName, '不支持IntersectionObserver');
-                return null;
+        init() {
+            super.init();
+
+            if (!Config.lazyLoad.enabled) {
+                Logger.warn('ImageOptimizer', '图片懒加载未启用');
+                return;
             }
-            const observer = new IntersectionObserver((entries) => {
+
+            if (Env.features.nativeLazyLoad) {
+                this.applyNativeLazyLoad();
+            } else if (Env.features.intersectionObserver) {
+                this.applyIntersectionObserver();
+            } else {
+                this.applyScrollBasedLazyLoad();
+            }
+
+            Logger.info('ImageOptimizer', '图片懒加载初始化完成');
+        }
+        applyNativeLazyLoad() {
+            document.querySelectorAll(Config.lazyLoad.selector).forEach(el => {
+                el.loading = 'lazy';
+                if (el.dataset.src) {
+                    el.src = el.dataset.src;
+                    delete el.dataset.src;
+                }
+            });
+        }
+        applyIntersectionObserver() {
+            this.observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        this.handleIntersect(entry.target);
-                    } else {
-                        this.handleLeave(entry.target);
+                        const el = entry.target;
+                        if (el.dataset.src) {
+                            el.src = el.dataset.src;
+                            delete el.dataset.src;
+                            this.observer.unobserve(el);
+                        }
                     }
                 });
-            }, { rootMargin, threshold: 0.01 });
-            this.observers.push(observer);
-            return observer;
-        }
-        observeElements(selector) {
-            if (!selector || !this.observers.length) return;
-            document.querySelectorAll(selector).forEach(el => {
-                if (!el.dataset[this.moduleName + 'Observed']) {
-                    this.observers[0].observe(el);
-                    el.dataset[this.moduleName + 'Observed'] = 'true';
-                }
+            }, {
+                rootMargin: `${Config.lazyLoad.preloadDistance}px 0px`,
+                threshold: 0.01
+            });
+
+            document.querySelectorAll(Config.lazyLoad.selector).forEach(el => {
+                this.observer.observe(el);
             });
         }
-        handleIntersect(target) { throw new Error('子类需实现handleIntersect方法'); }
-        handleLeave(target) {}
-        destroy() {
-            super.destroy();
-            this.observers.forEach(observer => observer.disconnect());
-            this.observers = [];
-        }
-    }
-
-    // ========================
-    // 4. 模块实现
-    // ========================
-
-    class DomDepthAnalyzer extends BaseModule {
-        constructor() {
-            super('DomDepthAnalyzer');
-        }
-        init() {
-            super.init();
-            if (!Config.get('domAnalyzer.enabled') || Environment.isLowPerformance()) {
-                Logger.info(this.moduleName, '已禁用或低性能设备跳过');
-                return;
-            }
-            const allElements = Array.from(document.querySelectorAll('*'));
-            const maxDepth = Config.get('domAnalyzer.maxDepth');
-            const deepNodes = [];
-
-            IdleTaskScheduler.scheduleChunked(
-                allElements,
-                (el, index) => {
-                    let depth = 0;
-                    let parent = el;
-                    while (parent && parent !== document) {
-                        depth++;
-                        parent = parent.parentNode;
-                        if (depth > maxDepth) break;
-                    }
-                    if (depth > maxDepth) {
-                        deepNodes.push({ el, depth });
-                        if (Config.get('debug')) {
-                            el.style.outline = '2px solid orange';
-                            el.title = `DOM深度: ${depth}`;
-                        }
-                    }
-                },
-                { chunkSize: 8 }
-            ).finally(() => {
-                if (deepNodes.length > 0) {
-                    Logger.warn(this.moduleName, `共发现 ${deepNodes.length} 个过深节点`);
-                }
-            });
-        }
-    }
-
-    class StyleComplexityMonitor extends BaseModule {
-        constructor() {
-            super('StyleComplexityMonitor');
-            this.observer = null;
-        }
-        init() {
-            super.init();
-            if (!Environment.features.performanceObserver || !Config.get('performanceMonitor.enabled')) {
-                Logger.info(this.moduleName, '未启用或不支持');
-                return;
-            }
-            try {
-                this.observer = new PerformanceObserver((list) => {
-                    list.getEntries().forEach(entry => {
-                        if (entry.name === 'styleRecalculation' && entry.duration > 10) {
-                            Logger.warn(this.moduleName, `高成本样式重计算: ${entry.duration.toFixed(2)}ms`);
-                        }
+        applyScrollBasedLazyLoad() {
+            let ticking = false;
+            this.scrollListener = () => {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        this.loadVisibleImages();
+                        ticking = false;
                     });
-                });
-                this.observer.observe({ entryTypes: ['styleRecalculation'] });
-            } catch (e) {
-                Logger.warn(this.moduleName, '不支持 styleRecalculation', e);
-            }
-        }
-        destroy() {
-            super.destroy();
-            if (this.observer) this.observer.disconnect();
-        }
-    }
-
-    class ContentVisibilityOptimizer extends BaseModule {
-        constructor() {
-            super('ContentVisibilityOptimizer');
-            this.observer = null;
-            this.originalStyles = new WeakMap(); // 存储原始样式
-        }
-        init() {
-            super.init();
-            if (!Config.get('contentVisibility.enabled')) return;
-
-            // 检查网站黑名单
-            const blacklist = Config.get('contentVisibility.siteBlacklist');
-            if (blacklist && blacklist.includes(window.location.hostname)) {
-                Logger.info(this.moduleName, `网站 ${window.location.hostname} 在黑名单中，禁用content-visibility`);
-                return;
-            }
-
-            const selector = Config.get('contentVisibility.selector');
-            if (!selector) return;
-
-            // 应用初始样式
-            document.querySelectorAll(selector).forEach(el => {
-                this.applyToElement(el);
-            });
-
-            // 监听DOM变化
-            this.setupMutationObserver();
-        }
-
-        setupMutationObserver() {
-            this.observer = new MutationObserver(Utils.throttle((mutations) => {
-                const newElements = [];
-                mutations.forEach(m => {
-                    m.addedNodes.forEach(node => {
-                        if (node.nodeType !== 1) return;
-                        if (node.matches?.(selector)) newElements.push(node);
-                        if (node.querySelectorAll) {
-                            node.querySelectorAll(selector).forEach(el => newElements.push(el));
-                        }
-                    });
-                });
-
-                if (newElements.length) {
-                    IdleTaskScheduler.scheduleChunked(newElements, el => {
-                        this.applyToElement(el);
-                    }, { chunkSize: 3 });
+                    ticking = true;
                 }
-            }, 200));
-
-            this.observer.observe(document.body, { childList: true, subtree: true });
+            };
+            window.addEventListener('scroll', this.scrollListener, { passive: true });
+            this.loadVisibleImages();
         }
+        loadVisibleImages() {
+            const viewportHeight = window.innerHeight;
+            const scrollTop = window.pageYOffset;
 
-        applyToElement(el) {
-            // 检查是否需要排除
-            const excludeSelectors = Config.get('contentVisibility.excludeSelectors');
-            if (excludeSelectors && el.matches(excludeSelectors)) {
-                Logger.debug(this.moduleName, `跳过排除元素: ${el.tagName}`);
-                return;
-            }
-
-            // 存储原始样式
-            if (!this.originalStyles.has(el)) {
-                this.originalStyles.set(el, {
-                    contentVisibility: el.style.contentVisibility,
-                    containIntrinsicSize: el.style.containIntrinsicSize
-                });
-            }
-
-            // 应用轻量级样式
-            try {
-                el.style.contentVisibility = 'auto';
-                el.style.containIntrinsicSize = Config.get('contentVisibility.containIntrinsicSize');
-
-                // 监听样式变化，检测问题
-                this.setupStyleMonitor(el);
-            } catch (error) {
-                Logger.error(this.moduleName, `应用样式失败: ${error.message}`);
-                this.revertStyle(el);
-            }
-        }
-
-        setupStyleMonitor(el) {
-            // 使用MutationObserver监听样式变化
-            const styleObserver = new MutationObserver((mutations) => {
-                mutations.forEach(mutation => {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                        const currentStyle = el.style.contentVisibility;
-                        if (currentStyle === 'visible' || currentStyle === '') {
-                            Logger.warn(this.moduleName, `检测到样式回退，元素可能有问题: ${el.tagName}`);
-                            this.revertStyle(el);
-                            styleObserver.disconnect();
-                        }
+            document.querySelectorAll(Config.lazyLoad.selector).forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < viewportHeight + Config.lazyLoad.preloadDistance &&
+                    rect.bottom > -Config.lazyLoad.preloadDistance) {
+                    if (el.dataset.src) {
+                        el.src = el.dataset.src;
+                        delete el.dataset.src;
                     }
-                });
+                }
             });
-
-            styleObserver.observe(el, { attributes: true, attributeFilter: ['style'] });
-
-            // 存储观察器以便后续清理
-            if (!el.dataset.styleObserver) {
-                el.dataset.styleObserver = JSON.stringify(styleObserver);
-            }
         }
-
-        revertStyle(el) {
-            const originalStyle = this.originalStyles.get(el);
-            if (originalStyle) {
-                el.style.contentVisibility = originalStyle.contentVisibility;
-                el.style.containIntrinsicSize = originalStyle.containIntrinsicSize;
-                Logger.info(this.moduleName, `回退样式: ${el.tagName}`);
-            }
-        }
-
         destroy() {
             super.destroy();
             if (this.observer) {
                 this.observer.disconnect();
             }
-            // 清理所有存储的原始样式和观察器
-            this.originalStyles = new WeakMap();
-        }
-    }
-
-    class LazyLoader extends BaseObserver {
-        constructor() {
-            super('LazyLoader', 'lazyLoad');
-            this.scrollHandler = null;
-            this.loadStrategies = {
-                IMG: { src: (el, src) => { el.src = src; } },
-                SCRIPT: { src: (el, src) => { el.src = src; el.async = true; } },
-                IFRAME: { src: (el, src) => { el.src = src; } },
-                LINK: { href: (el, href) => { el.href = href; } }
-            };
-        }
-        init() {
-            super.init();
-            if (!Config.get('lazyLoad.enabled')) return;
-            if (Environment.features.nativeLazyLoad && Config.get('lazyLoad.preferNative')) {
-                this.useNativeLazyLoad();
-            } else if (Environment.features.intersectionObserver) {
-                this.useObserverLazyLoad();
-            } else {
-                this.useFallbackLazyLoad();
+            if (this.scrollListener) {
+                window.removeEventListener('scroll', this.scrollListener);
             }
-        }
-        useNativeLazyLoad() {
-            // 原生懒加载主要处理 img 和 iframe
-            const selector = 'img, iframe';
-            document.querySelectorAll(selector).forEach(el => {
-                const src = el.src || el.dataset.src || el.dataset.original;
-                if (src && !el.loading) {
-                    el.loading = 'lazy';
-                    prefetchDomain(src);
-                }
-                // 即使有原生，也要检查是否需要从 data-src 移动到 src (如果页面还未加载)
-                if (el.dataset.src && !el.src) {
-                    this.loadElement(el);
-                }
-            });
-        }
-        useObserverLazyLoad() {
-            this.createObserver(() => {}, Config.get('lazyLoad.rootMargin'));
-            this.observeElements(Config.get('lazyLoad.selector'));
-        }
-        useFallbackLazyLoad() {
-            this.scrollHandler = Utils.throttle(() => {
-                document.querySelectorAll(Config.get('lazyLoad.selector')).forEach(el => {
-                    if (!el.classList.contains('loaded') && this.isInViewport(el)) {
-                        this.loadElement(el);
-                    }
-                });
-            }, Config.get('throttleDelay'));
-            window.addEventListener('scroll', this.scrollHandler, { passive: true });
-            this.scrollHandler();
-        }
-        loadElement(el) {
-            if (!Utils.is.elem(el) || el.classList.contains('loaded')) return;
-            try {
-                // 优先级：data-src > data-original > src (如果src为占位符)
-                const src = Utils.safeGetData(el, 'src', '') ||
-                            Utils.safeGetData(el, 'original', '') ||
-                            Utils.safeGetData(el, 'lazySrc', '');
-                const href = Utils.safeGetData(el, 'href', '') || Utils.safeGetData(el, 'lazyHref', '');
-
-                if (src) prefetchDomain(src);
-                if (href) prefetchDomain(href);
-
-                const strategy = this.loadStrategies[el.tagName]?.[src ? 'src' : 'href'];
-                if (strategy && (src || href)) {
-                    strategy(el, src || href);
-                    this.bindLoadEvents(el, src || href);
-                } else {
-                    this.markLoaded(el); // 无需加载资源，标记为已处理
-                }
-            } catch (error) {
-                this.markFailed(el);
-                Logger.error(this.moduleName, '加载失败', error);
-            }
-        }
-        bindLoadEvents(el, url) {
-            el.addEventListener('load', () => {
-                this.markLoaded(el);
-                this.emitEvent('loaded', { url, tag: el.tagName });
-            }, { once: true });
-            el.addEventListener('error', (e) => {
-                this.markFailed(el, e);
-                this.emitEvent('error', { url, tag: el.tagName, error: e });
-            }, { once: true });
-        }
-        markLoaded(el) {
-            el.classList.add('loaded', 'lazy-loaded');
-            el.classList.remove('load-failed');
-        }
-        markFailed(el, error) {
-            el.classList.add('load-failed');
-            el.classList.remove('loaded', 'lazy-loaded');
-        }
-        isInViewport(el) {
-            const rect = el.getBoundingClientRect();
-            return rect.top <= window.innerHeight + 100 && rect.left <= window.innerWidth;
-        }
-        handleIntersect(target) {
-            this.loadElement(target);
-            this.observers.forEach(observer => observer.unobserve(target));
-        }
-        destroy() {
-            super.destroy();
-            if (this.scrollHandler) {
-                window.removeEventListener('scroll', this.scrollHandler);
-                this.scrollHandler = null;
-            }
-        }
-    }
-
-    class EventOptimizer extends BaseModule {
-        constructor() {
-            super('EventOptimizer');
-            this.handlers = {
-                scroll: Utils.throttle(() => this.emitEvent('scroll'), Config.get('throttleDelay')),
-                resize: Utils.debounce(() => this.emitEvent('resize'), Config.get('debounceDelay'))
-            };
-        }
-        init() {
-            super.init();
-            window.addEventListener('scroll', this.handlers.scroll, { passive: true });
-            window.addEventListener('resize', this.handlers.resize);
-        }
-        destroy() {
-            super.destroy();
-            window.removeEventListener('scroll', this.handlers.scroll);
-            window.removeEventListener('resize', this.handlers.resize);
-        }
-    }
-
-    class GpuAccelerator extends BaseObserver {
-        constructor() {
-            super('GpuAccelerator', 'hardwareAcceleration');
-            this.styleEl = null;
-        }
-        init() {
-            super.init();
-            if (!Config.get('hardwareAcceleration.enabled')) return;
-            // 在低性能模式下，减少 GPU 加速的覆盖范围，仅保留动画元素
-            if (Environment.isLowPerformance()) {
-                Config.set('hardwareAcceleration.selector', '.js-animate, [style*="animation"]');
-            }
-            this.injectStyles();
-            this.createObserver(() => {}, '50px');
-            this.observeElements(Config.get('hardwareAcceleration.selector'));
-        }
-        injectStyles() {
-            if (this.styleEl) return;
-            this.styleEl = document.createElement('style');
-            this.styleEl.textContent = `
-                .gpu-accelerate {
-                    transform: translateZ(0);
-                    opacity: 1;
-                    will-change: transform, opacity;
-                }
-                .gpu-accelerate.inactive {
-                    will-change: auto;
-                }
-            `;
-            document.head.appendChild(this.styleEl);
-        }
-        handleIntersect(target) {
-            // 避免对已经内联了 transform 的元素产生冲突
-            if (target.style.transform && !target.style.transform.includes('none')) {
-                return;
-            }
-            target.classList.add('gpu-accelerate');
-            target.classList.remove('inactive');
-            target.style.transform = 'translateZ(0)';
-        }
-        handleLeave(target) {
-            target.classList.add('inactive');
-            if (!target.matches('.js-persist-gpu')) {
-                target.style.transform = '';
-            }
-        }
-        destroy() {
-            super.destroy();
-            if (this.styleEl) this.styleEl.remove();
-        }
-    }
-
-    class CriticalCSSLoader extends BaseModule {
-        constructor() {
-            super('CriticalCSSLoader');
-            this.loadedUrls = new Set();
-        }
-        init() {
-            super.init();
-            if (!Config.get('criticalCSS.enabled')) return;
-            const cssUrls = this.collectCriticalCSSUrls();
-            if (cssUrls.length === 0) return;
-            cssUrls.forEach(url => this.preloadCSS(url));
-        }
-        collectCriticalCSSUrls() {
-            const urls = new Set();
-            Config.get('criticalCSS.selectors').forEach(selector => {
-                document.querySelectorAll(selector).forEach(el => {
-                    const url = Utils.safeGetData(el, 'href', '');
-                    if (url) {
-                        urls.add(url);
-                        el.remove();
-                    }
-                });
-            });
-            const meta = document.querySelector('meta[name="critical-css"]');
-            if (meta) {
-                meta.content.split(',').forEach(url => {
-                    if (url) urls.add(url.trim());
-                });
-            }
-            return Array.from(urls);
-        }
-        preloadCSS(url) {
-            if (this.loadedUrls.has(url)) return;
-            const link = document.createElement('link');
-            link.rel = 'preload';
-            link.as = 'style';
-            link.href = url;
-            link.crossOrigin = 'anonymous';
-            const timeoutId = setTimeout(() => {
-                if (!this.loadedUrls.has(url)) {
-                    this.fallbackLoad(url);
-                }
-            }, Config.get('criticalCSS.preloadTimeout'));
-            link.onload = () => {
-                clearTimeout(timeoutId);
-                link.rel = 'stylesheet';
-                this.loadedUrls.add(url);
-                document.body.classList.add('critical-css-loaded');
-            };
-            link.onerror = () => {
-                clearTimeout(timeoutId);
-                this.fallbackLoad(url);
-            };
-            document.head.appendChild(link);
-        }
-        fallbackLoad(url) {
-            if (this.loadedUrls.has(url)) return;
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = url;
-            link.onload = () => this.loadedUrls.add(url);
-            link.onerror = (e) => this.emitEvent('error', { url, error: e });
-            document.head.appendChild(link);
-        }
-    }
-
-    class DomObserver extends BaseModule {
-        constructor(lazyLoader, gpuAccelerator, contentVisOptimizer) {
-            super('DomObserver');
-            this.lazyLoader = lazyLoader;
-            this.gpuAccelerator = gpuAccelerator;
-            this.contentVisOptimizer = contentVisOptimizer;
-            this.observer = null;
-        }
-        init() {
-            super.init();
-            this.observer = new MutationObserver(Utils.throttle((mutations) => {
-                const newLazyEls = [];
-                const newGpuEls = [];
-                const newVisEls = [];
-
-                mutations.forEach(m => {
-                    m.addedNodes.forEach(node => {
-                        if (node.nodeType !== 1) return;
-                        const collect = (root, selector, list) => {
-                            if (root.matches?.(selector)) list.push(root);
-                            if (root.querySelectorAll) {
-                                root.querySelectorAll(selector).forEach(el => list.push(el));
-                            }
-                        };
-                        if (this.lazyLoader?.initialized && Config.get('lazyLoad.enabled')) {
-                            collect(node, Config.get('lazyLoad.selector'), newLazyEls);
-                        }
-                        if (this.gpuAccelerator?.initialized && Config.get('hardwareAcceleration.enabled')) {
-                            collect(node, Config.get('hardwareAcceleration.selector'), newGpuEls);
-                        }
-                        if (this.contentVisOptimizer?.initialized && Config.get('contentVisibility.enabled')) {
-                            collect(node, Config.get('contentVisibility.selector'), newVisEls);
-                        }
-                    });
-                });
-
-                if (newLazyEls.length) {
-                    IdleTaskScheduler.scheduleChunked(newLazyEls, el => {
-                        if (!el.classList.contains('loaded')) this.lazyLoader.loadElement(el);
-                    }, { chunkSize: 3 });
-                }
-                if (newGpuEls.length) {
-                    IdleTaskScheduler.scheduleChunked(newGpuEls, el => {
-                        if (!el.classList.contains('gpu-accelerate')) this.gpuAccelerator.handleIntersect(el);
-                    }, { chunkSize: 3 });
-                }
-                if (newVisEls.length) {
-                    IdleTaskScheduler.schedule(() => {
-                        this.contentVisOptimizer.applyToElements(newVisEls);
-                    });
-                }
-            }, 200));
-
-            this.observer.observe(document.body, { childList: true, subtree: true });
-        }
-        destroy() {
-            super.destroy();
-            if (this.observer) this.observer.disconnect();
         }
     }
 
     // ========================
-    // 5. 应用控制器
+    // 4. GPU加速优化
+    // ========================
+    class GPUAccelerator extends BaseModule {
+        constructor() {
+            super('GPUAccelerator');
+        }
+        init() {
+            super.init();
+
+            if (!Config.hardwareAcceleration.enabled) {
+                Logger.warn('GPUAccelerator', 'GPU加速未启用');
+                return;
+            }
+
+            document.querySelectorAll(Config.hardwareAcceleration.selector).forEach(el => {
+                this.applyGPUAcceleration(el);
+            });
+
+            Logger.info('GPUAccelerator', 'GPU加速初始化完成');
+        }
+        applyGPUAcceleration(element) {
+            if (element.style.transform ||
+                element.style.backfaceVisibility ||
+                element.classList.contains('gpu-accelerate')) {
+                return;
+            }
+
+            element.classList.add('gpu-accelerate');
+            element.style.transform = 'translateZ(0)';
+            element.style.backfaceVisibility = 'hidden';
+            element.style.willChange = 'transform';
+        }
+        removeGPUAcceleration(element) {
+            element.classList.remove('gpu-accelerate');
+            element.style.transform = '';
+            element.style.backfaceVisibility = '';
+            element.style.willChange = '';
+        }
+        destroy() {
+            super.destroy();
+            document.querySelectorAll(Config.hardwareAcceleration.selector).forEach(el => {
+                this.removeGPUAcceleration(el);
+            });
+        }
+    }
+
+    // ========================
+    // 5. 内容可见性优化
+    // ========================
+    class ContentVisibility extends BaseModule {
+        constructor() {
+            super('ContentVisibility');
+            this.scrollListener = null;
+            this.resizeListener = null;
+        }
+        init() {
+            super.init();
+
+            if (!Config.contentVisibility.enabled) {
+                Logger.warn('ContentVisibility', '内容可见性优化未启用');
+                return;
+            }
+
+            const sections = document.querySelectorAll(Config.contentVisibility.selector);
+
+            const viewportHeight = window.innerHeight;
+            const scrollTop = window.pageYOffset;
+
+            sections.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const distanceFromViewport = Math.max(
+                    rect.top - viewportHeight,
+                    0 - rect.bottom
+                );
+
+                if (distanceFromViewport > Config.contentVisibility.hiddenDistance) {
+                    el.style.contentVisibility = 'hidden';
+                    el.style.containIntrinsicSize = '200px';
+                }
+            });
+
+            let ticking = false;
+            const handleChange = () => {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        this.updateVisibility();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            };
+
+            this.scrollListener = handleChange;
+            this.resizeListener = handleChange;
+
+            window.addEventListener('scroll', this.scrollListener, { passive: true });
+            window.addEventListener('resize', this.resizeListener, { passive: true });
+
+            Logger.info('ContentVisibility', '内容可见性优化初始化完成');
+        }
+        updateVisibility() {
+            const viewportHeight = window.innerHeight;
+            const scrollTop = window.pageYOffset;
+
+            document.querySelectorAll(Config.contentVisibility.selector).forEach(el => {
+                const rect = el.getBoundingClientRect();
+
+                if (rect.top < viewportHeight + Config.contentVisibility.hiddenDistance &&
+                    rect.bottom > -Config.contentVisibility.hiddenDistance) {
+                    el.style.contentVisibility = 'auto';
+                } else {
+                    el.style.contentVisibility = 'hidden';
+                }
+            });
+        }
+        destroy() {
+            super.destroy();
+            if (this.scrollListener) {
+                window.removeEventListener('scroll', this.scrollListener);
+            }
+            if (this.resizeListener) {
+                window.removeEventListener('resize', this.resizeListener);
+            }
+            document.querySelectorAll(Config.contentVisibility.selector).forEach(el => {
+                el.style.contentVisibility = '';
+                el.style.containIntrinsicSize = '';
+            });
+        }
+    }
+
+    // ========================
+    // 6. 预连接优化
+    // ========================
+    class PreconnectOptimizer extends BaseModule {
+        constructor() {
+            super('PreconnectOptimizer');
+        }
+        init() {
+            super.init();
+
+            if (!Config.preconnect.enabled) {
+                Logger.warn('PreconnectOptimizer', '预连接优化未启用');
+                return;
+            }
+
+            Config.preconnect.domains.forEach(domain => {
+                const link = document.createElement('link');
+                link.rel = 'preconnect';
+                link.href = `https://${domain}`;
+                document.head.appendChild(link);
+
+                const dnsLink = document.createElement('link');
+                dnsLink.rel = 'dns-prefetch';
+                dnsLink.href = `https://${domain}`;
+                document.head.appendChild(dnsLink);
+            });
+
+            Logger.info('PreconnectOptimizer', '预连接优化初始化完成');
+        }
+        destroy() {
+            super.destroy();
+            const links = document.querySelectorAll('link[rel="preconnect"], link[rel="dns-prefetch"]');
+            links.forEach(link => link.remove());
+        }
+    }
+
+    // ========================
+    // 7. 事件优化
+    // ========================
+    class EventOptimizer extends BaseModule {
+        constructor() {
+            super('EventOptimizer');
+        }
+        init() {
+            super.init();
+
+            if (!Config.eventOptimization.enabled) {
+                Logger.warn('EventOptimizer', '事件优化未启用');
+                return;
+            }
+
+            this.delegateEvents();
+            Logger.info('EventOptimizer', '事件优化初始化完成');
+        }
+        delegateEvents() {
+            document.addEventListener('click', (e) => {
+                Config.eventOptimization.delegates.forEach(delegate => {
+                    if (e.target.matches(delegate.selector) ||
+                        e.target.closest(delegate.selector)) {
+                        delegate.handler(e);
+                    }
+                });
+            }, { passive: true });
+        }
+        destroy() {
+            super.destroy();
+            // 移除事件监听器
+            document.removeEventListener('click', this.handleEventDelegate);
+        }
+    }
+
+    // ========================
+    // 8. 性能监控
+    // ========================
+    class PerformanceMonitor extends BaseModule {
+        constructor() {
+            super('PerformanceMonitor');
+            this.observer = null;
+        }
+        init() {
+            super.init();
+
+            if (Env.features.performanceObserver) {
+                this.observer = new PerformanceObserver((list) => {
+                    list.getEntries().forEach(entry => {
+                        if (entry.entryType === 'paint') {
+                            if (entry.name === 'first-contentful-paint') {
+                                Logger.info('Performance', `FCP: ${entry.startTime.toFixed(0)}ms`);
+                            }
+                        } else if (entry.entryType === 'layout-shift') {
+                            Logger.info('Performance', `CLS: ${entry.value.toFixed(3)}`);
+                        } else if (entry.entryType === 'largest-contentful-paint') {
+                            Logger.info('Performance', `LCP: ${entry.startTime.toFixed(0)}ms`);
+                        }
+                    });
+                });
+
+                this.observer.observe({
+                    entryTypes: ['paint', 'layout-shift', 'largest-contentful-paint']
+                });
+            }
+
+            window.addEventListener('load', () => {
+                const timing = performance.timing;
+                const ttfb = timing.responseStart - timing.navigationStart;
+                Logger.info('Performance', `TTFB: ${ttfb.toFixed(0)}ms`);
+            });
+
+            Logger.info('PerformanceMonitor', '性能监控初始化完成');
+        }
+        destroy() {
+            super.destroy();
+            if (this.observer) {
+                this.observer.disconnect();
+            }
+        }
+    }
+
+    // ========================
+    // 9. UI控制器
+    // ========================
+    class UIController extends BaseModule {
+        constructor() {
+            super('UIController');
+            this.visible = false;
+            this.button = null;
+            this.panel = null;
+            this.updateInterval = null;
+        }
+        init() {
+            super.init();
+            if (!Config.ui.enabled) return;
+
+            try {
+                this.createUI();
+                this.attachEvents();
+                this.updateStats();
+                this.startAutoUpdate();
+                Logger.info('UIController', 'UI组件创建成功');
+            } catch (error) {
+                Logger.error('UIController', `UI创建失败: ${error.message}`);
+                Logger.error('UIController', error.stack);
+                this.createFallbackUI();
+            }
+        }
+        createUI() {
+            // 创建样式
+            const style = document.createElement('style');
+            style.id = 'perfopt-ui-style';
+            style.textContent = `
+                .perfopt-ui-button {
+                    position: fixed !important;
+                    bottom: 20px !important;
+                    right: 20px !important;
+                    width: 56px !important;
+                    height: 56px !important;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                    border-radius: 50% !important;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    cursor: pointer !important;
+                    z-index: ${Config.ui.zIndex} !important;
+                    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+                    font-size: 24px !important;
+                    opacity: 1 !important;
+                    visibility: visible !important;
+                    pointer-events: auto !important;
+                }
+                .perfopt-ui-button:hover { transform: scale(1.1) !important; }
+                .perfopt-ui-button:active { transform: scale(0.95) !important; }
+
+                .perfopt-ui-panel {
+                    position: fixed !important;
+                    bottom: 90px !important;
+                    right: 20px !important;
+                    width: 300px !important;
+                    background: rgba(255, 255, 255, 0.95) !important;
+                    backdrop-filter: blur(10px) !important;
+                    border-radius: 16px !important;
+                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+                    padding: 20px !important;
+                    z-index: ${Config.ui.zIndex - 1} !important;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+                    max-height: 80vh !important;
+                    overflow-y: auto !important;
+                    display: none !important;
+                }
+                .perfopt-ui-panel.visible { display: block !important; }
+
+                .perfopt-panel-header {
+                    display: flex !important;
+                    justify-content: space-between !important;
+                    align-items: center !important;
+                    margin-bottom: 16px !important;
+                    padding-bottom: 12px !important;
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+                }
+                .perfopt-panel-title {
+                    font-size: 18px !important;
+                    font-weight: 600 !important;
+                    color: #333 !important;
+                }
+                .perfopt-panel-close {
+                    width: 24px !important;
+                    height: 24px !important;
+                    cursor: pointer !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    border-radius: 50% !important;
+                    transition: background 0.2s ease !important;
+                }
+                .perfopt-panel-close:hover { background: rgba(0, 0, 0, 0.1) !important; }
+
+                .perfopt-module-item {
+                    display: flex !important;
+                    justify-content: space-between !important;
+                    align-items: center !important;
+                    padding: 12px 0 !important;
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+                }
+                .perfopt-module-info { display: flex !important; align-items: center !important; gap: 12px !important; }
+                .perfopt-module-icon {
+                    width: 32px !important;
+                    height: 32px !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    background: rgba(102, 126, 234, 0.1) !important;
+                    border-radius: 8px !important;
+                }
+                .perfopt-module-name {
+                    font-size: 14px !important;
+                    font-weight: 500 !important;
+                    color: #333 !important;
+                }
+                .perfopt-module-status { display: flex !important; align-items: center !important; gap: 8px !important; }
+                .perfopt-status-indicator {
+                    width: 8px !important;
+                    height: 8px !important;
+                    border-radius: 50% !important;
+                    background: #48bb78 !important;
+                }
+                .perfopt-status-text { font-size: 12px !important; color: #666 !important; }
+
+                .perfopt-stats {
+                    margin-top: 16px !important;
+                    padding: 12px !important;
+                    background: rgba(102, 126, 234, 0.05) !important;
+                    border-radius: 8px !important;
+                    font-size: 12px !important;
+                    color: #666 !important;
+                }
+                .perfopt-stats-row {
+                    display: flex !important;
+                    justify-content: space-between !important;
+                    margin-bottom: 8px !important;
+                }
+                .perfopt-stats-row:last-child { margin-bottom: 0 !important; }
+
+                @media (max-width: 480px) {
+                    .perfopt-ui-panel { width: calc(100vw - 40px) !important; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // 创建按钮
+            this.button = document.createElement('div');
+            this.button.className = 'perfopt-ui-button';
+            this.button.innerHTML = '⚡';
+            document.body.appendChild(this.button);
+
+            // 创建面板
+            this.panel = document.createElement('div');
+            this.panel.className = 'perfopt-ui-panel';
+            this.panel.innerHTML = `
+                <div class="perfopt-panel-header">
+                    <div class="perfopt-panel-title">性能优化工具箱</div>
+                    <div class="perfopt-panel-close">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="perfopt-module-item">
+                    <div class="perfopt-module-info">
+                        <div class="perfopt-module-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="8" x2="12" y2="12"/>
+                                <line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                        </div>
+                        <div class="perfopt-module-name">图片懒加载</div>
+                    </div>
+                    <div class="perfopt-module-status">
+                        <div class="perfopt-status-indicator"></div>
+                        <div class="perfopt-status-text">${Config.lazyLoad.enabled ? '已启用' : '已禁用'}</div>
+                    </div>
+                </div>
+                <div class="perfopt-module-item">
+                    <div class="perfopt-module-info">
+                        <div class="perfopt-module-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                            </svg>
+                        </div>
+                        <div class="perfopt-module-name">GPU加速</div>
+                    </div>
+                    <div class="perfopt-module-status">
+                        <div class="perfopt-status-indicator"></div>
+                        <div class="perfopt-status-text">${Config.hardwareAcceleration.enabled ? '已启用' : '已禁用'}</div>
+                    </div>
+                </div>
+                <div class="perfopt-module-item">
+                    <div class="perfopt-module-info">
+                        <div class="perfopt-module-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                <line x1="3" y1="9" x2="21" y2="9"/>
+                                <line x1="9" y1="21" x2="9" y2="9"/>
+                            </svg>
+                        </div>
+                        <div class="perfopt-module-name">内容可见性优化</div>
+                    </div>
+                    <div class="perfopt-module-status">
+                        <div class="perfopt-status-indicator"></div>
+                        <div class="perfopt-status-text">${Config.contentVisibility.enabled ? '已启用' : '已禁用'}</div>
+                    </div>
+                </div>
+                <div class="perfopt-stats">
+                    <div class="perfopt-stats-row">
+                        <span>懒加载图片:</span>
+                        <span id="perfopt-lazy-count">0</span>
+                    </div>
+                    <div class="perfopt-stats-row">
+                        <span>GPU加速元素:</span>
+                        <span id="perfopt-gpu-count">0</span>
+                    </div>
+                    <div class="perfopt-stats-row">
+                        <span>DOM深度:</span>
+                        <span id="perfopt-dom-depth">0</span>
+                    </div>
+                    <div class="perfopt-stats-row">
+                        <span>网络类型:</span>
+                        <span id="perfopt-network-type">${Env.networkType}</span>
+                    </div>
+                    <div class="perfopt-stats-row">
+                        <span>性能等级:</span>
+                        <span id="perfopt-performance-tier">${Env.performanceTier === 2 ? '高性能' : Env.performanceTier === 1 ? '中等性能' : '低性能'}</span>
+                    </div>
+                    <div class="perfopt-stats-row">
+                        <span>版本:</span>
+                        <span id="perfopt-version">v${GM_info?.script?.version || '3.6.2-compatibility-optimized'}</span>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(this.panel);
+        }
+        createFallbackUI() {
+            const style = document.createElement('style');
+            style.textContent = `
+                #perfopt-fallback-btn {
+                    position: fixed !important;
+                    bottom: 20px !important;
+                    right: 20px !important;
+                    padding: 10px 20px !important;
+                    background: #007bff !important;
+                    color: white !important;
+                    z-index: ${Config.ui.zIndex} !important;
+                    cursor: pointer !important;
+                    font-family: Arial, sans-serif !important;
+                    border-radius: 25px !important;
+                    font-size: 14px !important;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+                }
+            `;
+            document.head.appendChild(style);
+
+            this.button = document.createElement('div');
+            this.button.id = 'perfopt-fallback-btn';
+            this.button.textContent = '⚡ 性能优化';
+            this.button.onclick = () => {
+                const info = `
+性能优化工具已加载
+版本: 3.6.2-compatibility-optimized
+状态: 已运行
+
+优化功能:
+✅ 图片懒加载
+✅ GPU加速优化
+✅ 内容可见性优化
+✅ DOM深度分析
+✅ 事件优化
+
+环境信息:
+设备性能: ${Env.performanceTier === 2 ? '高性能' : '低性能'}
+网络类型: ${Env.networkType}
+                `;
+                alert(info);
+            };
+            document.body.appendChild(this.button);
+
+            Logger.warn('UIController', '使用降级UI');
+        }
+        updateStats() {
+            if (!this.panel) return;
+
+            try {
+                const lazyCount = document.querySelectorAll(Config.lazyLoad.selector).length;
+                const gpuCount = document.querySelectorAll('.gpu-accelerate').length;
+
+                let domDepth = 0;
+                Array.from(document.querySelectorAll('*')).forEach(el => {
+                    let depth = 0;
+                    let parent = el;
+                    while (parent && parent !== document) {
+                        depth++;
+                        parent = parent.parentNode;
+                    }
+                    if (depth > domDepth) domDepth = depth;
+                });
+
+                document.getElementById('perfopt-lazy-count').textContent = lazyCount;
+                document.getElementById('perfopt-gpu-count').textContent = gpuCount;
+                document.getElementById('perfopt-dom-depth').textContent = domDepth;
+            } catch (error) {
+                Logger.warn('UIController', `统计更新失败: ${error.message}`);
+            }
+        }
+        startAutoUpdate() {
+            this.updateInterval = setInterval(() => {
+                this.updateStats();
+            }, 2000);
+        }
+        attachEvents() {
+            if (!this.button) return;
+
+            this.button.addEventListener('click', () => {
+                if (this.panel) {
+                    this.visible = !this.visible;
+                    this.panel.classList.toggle('visible');
+                    if (this.visible) this.updateStats();
+                }
+            });
+
+            if (this.panel) {
+                const closeBtn = this.panel.querySelector('.perfopt-panel-close');
+                closeBtn.addEventListener('click', () => {
+                    this.visible = false;
+                    this.panel.classList.remove('visible');
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!this.button.contains(e.target) && !this.panel.contains(e.target)) {
+                        this.visible = false;
+                        this.panel.classList.remove('visible');
+                    }
+                });
+            }
+        }
+        destroy() {
+            super.destroy();
+            if (this.updateInterval) {
+                clearInterval(this.updateInterval);
+            }
+            const style = document.getElementById('perfopt-ui-style');
+            if (style) style.remove();
+            if (this.button && document.body.contains(this.button)) {
+                document.body.removeChild(this.button);
+            }
+            if (this.panel && document.body.contains(this.panel)) {
+                document.body.removeChild(this.panel);
+            }
+        }
+    }
+
+    // ========================
+    // 10. 应用控制器
     // ========================
     class AppController extends BaseModule {
         constructor() {
@@ -846,53 +830,46 @@
         init() {
             super.init();
             try {
-                // 核心功能初始化顺序
-                this.modules.criticalCSSLoader = new CriticalCSSLoader();
-                this.modules.criticalCSSLoader.init();
+                Logger.info('AppController', '开始初始化各模块');
 
-                this.modules.lazyLoader = new LazyLoader();
-                this.modules.lazyLoader.init();
+                // 初始化UI控制器
+                this.modules.uiController = new UIController();
+                this.modules.uiController.init();
+                Logger.info('AppController', 'UI控制器初始化成功');
+
+                // 初始化性能优化模块
+                this.modules.imageOptimizer = new ImageOptimizer();
+                this.modules.imageOptimizer.init();
+
+                this.modules.gpuAccelerator = new GPUAccelerator();
+                this.modules.gpuAccelerator.init();
+
+                this.modules.contentVisibility = new ContentVisibility();
+                this.modules.contentVisibility.init();
+
+                this.modules.preconnectOptimizer = new PreconnectOptimizer();
+                this.modules.preconnectOptimizer.init();
 
                 this.modules.eventOptimizer = new EventOptimizer();
                 this.modules.eventOptimizer.init();
 
-                this.modules.gpuAccelerator = new GpuAccelerator();
-                this.modules.gpuAccelerator.init();
+                this.modules.performanceMonitor = new PerformanceMonitor();
+                this.modules.performanceMonitor.init();
 
-                this.modules.contentVisibilityOptimizer = new ContentVisibilityOptimizer();
-                this.modules.contentVisibilityOptimizer.init();
-
-                this.modules.domDepthAnalyzer = new DomDepthAnalyzer();
-                this.modules.domDepthAnalyzer.init();
-
-                this.modules.styleComplexityMonitor = new StyleComplexityMonitor();
-                this.modules.styleComplexityMonitor.init();
-
-                // DOM 监听必须最后初始化，以观察上述模块可能引起的DOM变化（如果有）
-                this.modules.domObserver = new DomObserver(
-                    this.modules.lazyLoader,
-                    this.modules.gpuAccelerator,
-                    this.modules.contentVisibilityOptimizer
-                );
-                this.modules.domObserver.init();
+                Logger.info('AppController', '所有模块初始化完成');
 
                 window.addEventListener('beforeunload', () => this.destroy());
-                // 监听单页应用路由变化（需页面触发自定义事件）
-                window.addEventListener('spa:navigate', () => {
-                    this.destroy();
-                    this.init();
-                });
             } catch (error) {
-                Logger.error('AppController', '初始化错误', error);
+                Logger.error('AppController', `初始化失败: ${error.message}`);
+                Logger.error('AppController', error.stack);
                 this.destroy();
             }
         }
         destroy() {
             Object.values(this.modules).reverse().forEach(module => {
-                if (module && typeof module.destroy === 'function') {
-                    try { module.destroy(); } catch (e) {
-                        Logger.error('AppController', `模块${module.moduleName}销毁失败`, e);
-                    }
+                if (module && module.destroy) {
+                    try { module.destroy(); }
+                    catch (e) { Logger.warn('AppController', `模块${module.moduleName}销毁失败`); }
                 }
             });
             super.destroy();
@@ -900,35 +877,110 @@
     }
 
     // ========================
-    // 启动
+    // 11. 启动与错误处理
     // ========================
     function bootstrap() {
         try {
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', () => {
-                    const app = new AppController();
-                    app.init();
-                    window.PerfOptimizer = app;
+            Logger.info('Bootstrap', '性能优化工具加载中...');
+            const app = new AppController();
+            app.init();
+            window.PerfOptimizer = app;
+            Logger.info('Bootstrap', '性能优化工具加载成功');
+
+            // 验证UI创建
+            setTimeout(() => {
+                Logger.info('Bootstrap', {
+                    uiController: !!window.PerfOptimizer?.modules?.uiController,
+                    button: !!document.querySelector('.perfopt-ui-button, #perfopt-fallback-btn'),
+                    panel: !!document.querySelector('.perfopt-ui-panel')
                 });
-            } else {
-                const app = new AppController();
-                app.init();
-                window.PerfOptimizer = app;
-            }
+            }, 100);
         } catch (error) {
-            console.error('[PerfOpt] 启动失败', error);
+            Logger.error('Bootstrap', `加载失败: ${error.message}`);
+            Logger.error('Bootstrap', error.stack);
+            // 紧急UI创建
+            createEmergencyUI();
         }
     }
 
-    // 暴露全局工具以便调试
-    window.PerfUtils = {
-        getConfig: Config.getAll,
-        setConfig: Config.set,
-        throttle: Utils.throttle,
-        debounce: Utils.debounce,
-        loadWithRetry: Utils.loadWithRetry,
-        idleScheduler: IdleTaskScheduler
-    };
+    function createEmergencyUI() {
+        const style = document.createElement('style');
+        style.textContent = `
+            #emergency-perf-btn {
+                position: fixed !important;
+                bottom: 20px !important;
+                right: 20px !important;
+                padding: 10px 20px !important;
+                background: #dc3545 !important;
+                color: white !important;
+                z-index: 9999 !important;
+                cursor: pointer !important;
+                font-family: Arial, sans-serif !important;
+                border-radius: 25px !important;
+                font-size: 14px !important;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+            }
+        `;
+        document.head.appendChild(style);
 
-    bootstrap();
+        const button = document.createElement('div');
+        button.id = 'emergency-perf-btn';
+        button.textContent = '⚡ 修复失败';
+        button.onclick = () => {
+            const info = `
+性能优化工具加载失败
+
+错误信息: ${window.lastPerfError?.message || '未知错误'}
+
+请尝试:
+1. 刷新页面
+2. 重新安装脚本
+3. 检查浏览器控制台
+
+如果问题持续，请报告bug。
+            `;
+            alert(info);
+        };
+        document.body.appendChild(button);
+    }
+
+    // 错误捕获
+    window.addEventListener('error', (e) => {
+        window.lastPerfError = e;
+        Logger.error('Global', e.message);
+    });
+
+    // 事件处理函数
+    function handleButtonClick(e) {
+        Logger.debug('Event', '按钮点击');
+    }
+
+    function handleLinkClick(e) {
+        Logger.debug('Event', '链接点击');
+    }
+
+    function handleTabClick(e) {
+        Logger.debug('Event', '标签页点击');
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bootstrap);
+    } else {
+        bootstrap();
+    }
+
+    // 导出API
+    window.PerfUtils = {
+        getConfig: () => JSON.parse(JSON.stringify(Config)),
+        getEnv: () => Env,
+        utils: {
+            isSameOrigin: (url) => {
+                try {
+                    return new URL(url, window.location.href).origin === window.location.origin;
+                } catch (e) {
+                    return false;
+                }
+            }
+        }
+    };
 })();

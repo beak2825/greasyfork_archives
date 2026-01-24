@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Spotless for eBay
 // @namespace    https://github.com/OsborneLabs
-// @version      2.4.2
+// @version      2.5.0
 // @description  Hides sponsored listings, removes sponsored items, cleans links, & prevents tracking
 // @author       Osborne Labs
 // @license      GPL-3.0-only
@@ -40,6 +40,7 @@
     const APP_NAME_DEBUG_MODE = "SPOTLESS FOR EBAY";
     const APP_KEY_HIDE_SPONSORED_CONTENT = "hideSponsoredContent";
     const APP_KEY_MINIMIZE_PANEL = "panelMinimized";
+    const APP_SPONSORED_KEYWORDS = ['sponsored', 'anzeige', 'gesponsord', 'patrocinado', 'sponsorisé', 'sponsorizzato', 'sponsorowane', '助贊'];
     const APP_ICONS = {
         locked: `<svg class="lock-icon lock-icon-animation" id="lockedIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C9.79 2 8 3.79 8 6v4H7c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-8c0-1.1-.9-2-2-2h-1V6c0-2.21-1.79-4-4-4zm-2 8V6c0-1.1.9-2 2-2s2 .9 2 2v4h-4z"/></svg>`,
         unlocked: `<svg class="lock-icon lock-icon-animation" id="unlockedIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 8V6c0-2.76-2.24-5-5-5S7 3.24 7 6h2c0-1.66 1.34-3 3-3s3 1.34 3 3v2H7c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2h-1z"/></svg>`,
@@ -112,7 +113,7 @@
                 position: fixed;
                 bottom: 10px;
                 right: 5px;
-                z-index: 9999;
+                z-index: 99999;
                 width: 100%;
                 max-width: 320px;
                 padding: 0 16px;
@@ -310,10 +311,10 @@
             .error-page {
                 text-align: center;
                 font-size: var(--size-text-body-error);
-                padding: 9px 0;
+                padding: 6px 0;
             }
             .error-page p:first-child {
-                margin-bottom: 5px;
+                margin-bottom: 1px;
             }
             .error-page p:last-child {
                 margin-top: 0;
@@ -371,13 +372,14 @@
     function isValidSearchResultsPage() {
         const url = new URL(location.href);
         const params = url.searchParams;
-        const isSearchPage = /^https:\/\/([a-z0-9-]+\.)*ebay\.[a-z.]+\/(sch|shop)\//i.test(url.href);
         const isAdvancedSearchPage = url.href.includes("ebayadvsearch");
         const isSellerPage = params.has("_ssn");
         const isVisuallySimilarPage = params.get("_vss") === "1";
         const isCompletedPage = params.get("LH_Complete") === "1";
         const isSoldPage = params.get("LH_Sold") === "1";
-        return isSearchPage && !isAdvancedSearchPage && !isVisuallySimilarPage && !isSellerPage && !isCompletedPage && !isSoldPage;
+        return (
+            isSearchResultsPage() && !isAdvancedSearchPage && !isVisuallySimilarPage && !isSellerPage && !isCompletedPage && !isSoldPage
+        );
     }
 
     function isListingPage() {
@@ -389,7 +391,8 @@
     }
 
     function isSearchResultsPage() {
-        return /^https:\/\/([a-z0-9-]+\.)*ebay\.[a-z.]+\/sch\//i.test(location.href);
+        return /^https:\/\/([a-z0-9-]+\.)*ebay\.[a-z.]+\/(sch|shop)\//i.test(location.href) ||
+            /^https:\/\/([a-z0-9-]+\.)*ebay\.[a-z.]+\/b\/[^/]+\/\d+\/bn_\d+/i.test(location.href);
     }
 
     function determineCarouselDetection() {
@@ -732,6 +735,10 @@
                 ariaGroupMethod.forEach(li => detectedSponsoredElements.add(li));
             }
             if (detectedSponsoredElements.size === 0) {
+                const homoglyphLabelMethod = detectSponsoredListingByHomoglyphLabel();
+                homoglyphLabelMethod.forEach(li => detectedSponsoredElements.add(li));
+            }
+            if (detectedSponsoredElements.size === 0) {
                 const fontFamilyMethod = detectSponsoredListingByFontGroup();
                 fontFamilyMethod.forEach(li => detectedSponsoredElements.add(li));
             }
@@ -809,9 +816,16 @@
     }
 
     function getListingElements() {
-        return Array.from(document.querySelectorAll("li[class*='s-']")).filter(
-            (el) => el.className.split(/\s+/).some((cls) => /^s-[\w-]+$/.test(cls))
-        );
+        return Array.from(document.querySelectorAll("li")).filter((el) => {
+            const classes = el.className.split(/\s+/);
+            const isClassicListing = classes.some(
+                (cls) => /^s-[\w-]+$/.test(cls)
+            );
+            const isItemCardListing = classes.some(
+                (cls) => cls.includes("item-card")
+            );
+            return isClassicListing || isItemCardListing;
+        });
     }
 
     function detectSponsoredListingBySeparatorSize() {
@@ -868,6 +882,69 @@
             }
         }
         return sponsoredGroup ? groupMap[sponsoredGroup] : [];
+    }
+
+    function detectSponsoredListingByHomoglyphLabel() {
+        const HOMOGLYPH_LABEL = {
+            'Ѕ': 's',
+            'А': 'a',
+            'Е': 'e',
+            'О': 'o',
+            'Р': 'p',
+            'С': 'c',
+            'а': 'a',
+            'е': 'e',
+            'о': 'o',
+            'р': 'p',
+            'с': 'c',
+            'ѕ': 's'
+        };
+
+        function normalizeText(c) {
+            if (HOMOGLYPH_LABEL[c]) return HOMOGLYPH_LABEL[c];
+            return c
+                .normalize('NFKC')
+                .replace(/[\u200B-\u200D\u061C\uFEFF\u2063]/g, '')
+                .toLowerCase();
+        }
+
+        function extractText(el) {
+            if (!el || !el.innerText) return [];
+            return el.innerText
+                .split('')
+                .map(normalizeText)
+                .filter(c => /^[a-z]$/.test(c));
+        }
+
+        function isSubsequence(letters, word) {
+            let i = 0;
+            for (const c of letters) {
+                if (c === word[i]) {
+                    i++;
+                    if (i === word.length) return true;
+                }
+            }
+            return false;
+        }
+        const sponsoredListings = [];
+        document
+            .querySelectorAll('li[data-viewport]')
+            .forEach(li => {
+                const label = li.querySelector('.su-sponsored-label');
+                if (!label) return;
+
+                const letters = extractText(label);
+                if (!letters.length) return;
+
+                if (
+                    APP_SPONSORED_KEYWORDS.some(keyword =>
+                        isSubsequence(letters, keyword)
+                    )
+                ) {
+                    sponsoredListings.push(li);
+                }
+            });
+        return sponsoredListings;
     }
 
     function detectSponsoredListingByFontGroup() {
@@ -1145,12 +1222,13 @@
 
     function removeSponsoredCarousels() {
         if (!determineCarouselDetection()) return;
-        const SPONSORED_CAROUSEL_KEYWORDS = [
-            'sponsored', 'anzeige', 'gesponsord', 'patrocinado', 'sponsorisé', 'sponsorizzato', 'sponsorowane', '助贊'
-        ];
         const SPONSORED_CAROUSEL_MEDIA_BLOCKLIST = /^https:\/\/video\.ebaycdn\.net\//i;
         const normalizeText = text =>
-            text.trim().normalize("NFKC").replace(/[\u200B-\u200D\u061C\uFEFF]/g, '').toLowerCase();
+            text
+            .trim()
+            .normalize("NFKC")
+            .replace(/[\u200B-\u200D\u061C\uFEFF]/g, '')
+            .toLowerCase();
         const labelSponsored = carousel => {
             if (carousel.classList.contains('sponsored-hidden-carousel')) return;
             carousel.classList.add('sponsored-hidden-carousel');
@@ -1179,25 +1257,41 @@
                 subtree: true
             });
         };
-        document.querySelectorAll('[class*="x-atc-layer"][class*="--ads"]').forEach(el => el.remove());
+        document
+            .querySelectorAll('[class*="x-atc-layer"][class*="--ads"]')
+            .forEach(el => el.remove());
+
         const carousels = document.querySelectorAll('[data-viewport]');
         carousels.forEach(carousel => {
             if (carousel.classList.contains('sponsored-hidden-carousel')) return;
             if (carousel.closest('.lightbox-dialog, .ux-overlay, [role="dialog"]')) return;
             const title = carousel.querySelector('h2, h3, h4');
-            if (title && SPONSORED_CAROUSEL_KEYWORDS.some(kw => normalizeText(title.textContent).includes(kw))) {
+            if (
+                title &&
+                APP_SPONSORED_KEYWORDS.some(kw =>
+                    normalizeText(title.textContent).includes(kw)
+                )
+            ) {
                 labelSponsored(carousel);
                 return;
             }
             const textElements = Array.from(carousel.querySelectorAll('div, span'));
-            if (textElements.some(el => SPONSORED_CAROUSEL_KEYWORDS.some(kw => normalizeText(el.textContent).includes(kw)))) {
+            if (
+                textElements.some(el =>
+                    APP_SPONSORED_KEYWORDS.some(kw =>
+                        normalizeText(el.textContent).includes(kw)
+                    )
+                )
+            ) {
                 labelSponsored(carousel);
                 return;
             }
             const characters = textElements
                 .map(el => normalizeText(el.textContent))
                 .filter(t => t.length === 1 && /^\p{L}$/u.test(t));
-            if (SPONSORED_CAROUSEL_KEYWORDS.some(kw => {
+
+            if (
+                APP_SPONSORED_KEYWORDS.some(kw => {
                     let i = 0;
                     for (const char of characters) {
                         if (char === kw[i]) {
@@ -1205,7 +1299,8 @@
                         }
                     }
                     return false;
-                })) {
+                })
+            ) {
                 labelSponsored(carousel);
             }
         });
@@ -1242,9 +1337,10 @@
         const TELEMETRY_ATTRIBUTES_SELECTOR = '[trackableid], [trackablemoduleid]';
         const TELEMETRY_ATTRIBUTES_REGEXES = [/^data-atf/i, /^data-gr\d$/i, /^data-s-[a-z0-9]+$/i];
         const TELEMETRY_ATTRIBUTE_BLOCKLIST = new Set([
-            '_sp', 'data-click', 'data-clientpresentationmetadata', 'data-config', 'data-defertimer', 'data-view',
-            'data-ebayui', 'data-hscroll', 'data-listingid', 'data-operationid', 'data-testid', 'data-track', 'data-tracking',
-            'data-uvcc', 'data-uvccoptoutkey', 'data-vi-scrolltracking', 'data-vi-tracking', 'modulemeta', 'onload'
+            'data-hscroll', 'data-uvcc', 'data-click', 'data-clientpresentationmetadata', 'data-config', 'data-defertimer',
+            'data-ebayui', 'data-interactions', 'data-listingid', 'data-operationid', 'data-pulsardata', 'data-testid',
+            'data-track', 'data-tracking', 'data-uvccoptoutkey', 'data-vi-scrolltracking', 'data-vi-tracking', 'data-view',
+            'modulemeta', 'onload','_sp'
         ]);
         for (const el of context.querySelectorAll('*')) {
             if (el.hasAttribute('data-viewport')) {
@@ -1437,7 +1533,6 @@
                     link.href = cleanURL;
                 }
             }
-            link.removeAttribute("data-interactions");
         });
         disableSiteTelemetryAttributes();
     }
@@ -1446,9 +1541,9 @@
         const observer = state.observer.generalCleanupObserver;
         if (observer) observer.disconnect();
         const TRACKING_PARAM_BLOCKLIST = [
-            '_blrs', '_from', '_odkw', '_osacat', '_sacat', '_trksid', 'campaign', 'campid', 'cspheader',
-            'descgauge', 'domain', 'excSoj', 'excTrk', 'item', 'lsite', 'mkcid', 'mkevt', 'mkrid', 'oneClk',
-            'promoted_items', 'rt', 'sacat', 'secureDesc', 'siteid', 'source', 'sr', 'templateId', 'toolid'
+            '_blrs', '_from', '_odkw', '_osacat', '_sacat', '_trksid', 'campaign', 'campid', 'cspheader', 'descgauge',
+            'domain', 'excSoj', 'excTrk', 'iid', 'item', 'lsite', 'mkcid', 'mkevt', 'mkrid', 'oneClk', 'promoted_items',
+            'rt', 'sacat', 'secureDesc', 'siteid', 'source', 'sr', 'templateId', 'toolid'
         ];
         const cleanParam = key =>
             TRACKING_PARAM_BLOCKLIST.includes(key) ||
@@ -1522,9 +1617,9 @@
 
     function cleanGeneralClutter() {
         const GENERAL_CLUTTER_SELECTORS = [
-            '[class*="BOS_PLACEHOLDER"]', '[class*="EBAY_LIVE_ENTRY"]', '[class*="FAQ_KW_SRP_MODULE"]', '[class*="LIVE_EVENTS_CAROUSEL"]',
-            '[class*="START_LISTING_BANNER"]', '.bos-item-loader', '.d-sell-now--filmstrip-margin', '.dynamic-banner', '.madrona-banner',
-            '.s-faq-list', '.s-feedback', '.srp-river-answer--CAQ_PLACEHOLDER', '.su-faqs', '.x-goldin-module'
+            '.d-sell-now--filmstrip-margin', '.dynamic-banner', '.madrona-banner', '.s-faq-list', '.s-feedback',
+            '.srp-bos-items', '.srp-river-answer--CAQ_PLACEHOLDER', '.su-faqs', '.x-goldin-module', '[class*="EBAY_LIVE_ENTRY"]',
+            '[class*="FAQ_KW_SRP_MODULE"]', '[class*="LIVE_EVENTS_CAROUSEL"]', '[class*="START_LISTING_BANNER"]','[class*="BOS_PLACEHOLDER"]'
         ];
         const elements = document.querySelectorAll(GENERAL_CLUTTER_SELECTORS.join(','));
         elements.forEach(el => el.remove());
