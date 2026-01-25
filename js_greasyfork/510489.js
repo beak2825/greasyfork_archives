@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         expedition event rank all factions
 // @namespace    http://tampermonkey.net/
-// @version      0.6.1
+// @version      0.7.1
 // @description  Сканирует мясо у всех фракций и составляет рейтинг. Рейтинг на основе силы существ. Сила = хп * дефостаты + атакокоэф * урон * атакостаты * иня. 1 стат = 1.5% к урону (поменять в statCoef). Атакокоэф atkCoef, для рейтинга сугубо по хп поставить atkCoef = 0
 // @author       Something begins
 // @license      yo momma so fat she hangs off from both sides of the bed
@@ -14,6 +14,7 @@
 // @downloadURL https://update.greasyfork.org/scripts/510489/expedition%20event%20rank%20all%20factions.user.js
 // @updateURL https://update.greasyfork.org/scripts/510489/expedition%20event%20rank%20all%20factions.meta.js
 // ==/UserScript==
+const FOURTEEN_DAYS_MS = 14 * 24 * 60 * 60 * 1000;
 const statCoef = 0.015;
 const iniCoef = 0.05;
 const atkCoef = 3;
@@ -73,26 +74,26 @@ const allClassesDict = {
     "Фараон": [10, 0]
 };
 const classImageMap = {
-  "Рыцарь": "https://dcdn.heroeswm.ru/i/f/r1.png?v=1.1",
-  "Рыцарь света": "https://dcdn.heroeswm.ru/i/f/r101.png?v=1.1",
-  "Некромант": "https://dcdn.heroeswm.ru/i/f/r2.png?v=1.1",
-  "Некромант - повелитель смерти": "https://dcdn.heroeswm.ru/i/f/r102.png?v=1.1",
-  "Маг": "https://dcdn.heroeswm.ru/i/f/r3.png?v=1.1",
-  "Маг - разрушитель": "https://dcdn.heroeswm.ru/i/f/r103.png?v=1.1",
-  "Эльф": "https://dcdn.heroeswm.ru/i/f/r4.png?v=1.1",
-  "Эльф - заклинатель": "https://dcdn.heroeswm.ru/i/f/r104.png?v=1.1",
-  "Варвар": "https://dcdn.heroeswm.ru/i/f/r5.png?v=1.1",
-  "Варвар крови": "https://dcdn.heroeswm.ru/i/f/r105.png?v=1.1",
-  "Варвар - шаман": "https://dcdn.heroeswm.ru/i/f/r205.png?v=1.1",
-  "Темный эльф": "https://dcdn.heroeswm.ru/i/f/r6.png?v=1.1",
-  "Темный эльф - укротитель": "https://dcdn.heroeswm.ru/i/f/r106.png?v=1.1",
-  "Демон": "https://dcdn.heroeswm.ru/i/f/r7.png?v=1.1",
-  "Демон тьмы": "https://dcdn.heroeswm.ru/i/f/r107.png?v=1.1",
-  "Гном": "https://dcdn.heroeswm.ru/i/f/r8.png?v=1.1",
-  "Гном огня": "https://dcdn.heroeswm.ru/i/f/r108.png?v=1.1",
-  "Степной варвар": "https://dcdn.heroeswm.ru/i/f/r9.png?v=1.1",
-  "Степной варвар ярости": "https://dcdn.heroeswm.ru/i/f/r109.png?v=1.1",
-  "Фараон": "https://dcdn.heroeswm.ru/i/f/r10.png?v=1.1"
+    "Рыцарь": "https://dcdn.heroeswm.ru/i/f/r1.png?v=1.1",
+    "Рыцарь света": "https://dcdn.heroeswm.ru/i/f/r101.png?v=1.1",
+    "Некромант": "https://dcdn.heroeswm.ru/i/f/r2.png?v=1.1",
+    "Некромант - повелитель смерти": "https://dcdn.heroeswm.ru/i/f/r102.png?v=1.1",
+    "Маг": "https://dcdn.heroeswm.ru/i/f/r3.png?v=1.1",
+    "Маг - разрушитель": "https://dcdn.heroeswm.ru/i/f/r103.png?v=1.1",
+    "Эльф": "https://dcdn.heroeswm.ru/i/f/r4.png?v=1.1",
+    "Эльф - заклинатель": "https://dcdn.heroeswm.ru/i/f/r104.png?v=1.1",
+    "Варвар": "https://dcdn.heroeswm.ru/i/f/r5.png?v=1.1",
+    "Варвар крови": "https://dcdn.heroeswm.ru/i/f/r105.png?v=1.1",
+    "Варвар - шаман": "https://dcdn.heroeswm.ru/i/f/r205.png?v=1.1",
+    "Темный эльф": "https://dcdn.heroeswm.ru/i/f/r6.png?v=1.1",
+    "Темный эльф - укротитель": "https://dcdn.heroeswm.ru/i/f/r106.png?v=1.1",
+    "Демон": "https://dcdn.heroeswm.ru/i/f/r7.png?v=1.1",
+    "Демон тьмы": "https://dcdn.heroeswm.ru/i/f/r107.png?v=1.1",
+    "Гном": "https://dcdn.heroeswm.ru/i/f/r8.png?v=1.1",
+    "Гном огня": "https://dcdn.heroeswm.ru/i/f/r108.png?v=1.1",
+    "Степной варвар": "https://dcdn.heroeswm.ru/i/f/r9.png?v=1.1",
+    "Степной варвар ярости": "https://dcdn.heroeswm.ru/i/f/r109.png?v=1.1",
+    "Фараон": "https://dcdn.heroeswm.ru/i/f/r10.png?v=1.1"
 };
 
 let factionArr;
@@ -120,13 +121,13 @@ document.body.insertAdjacentHTML("beforeend", `
         <i id="popupMessage"></i>
     </div>`);
 
-function showPopup(message) {
+function showPopup(message, time = 3000) {
     const popup = document.getElementById('customPopup');
     popup.querySelector("i").textContent = message;
     popup.style.display = 'block';
     setTimeout(() => {
         popup.style.display = 'none';
-    }, 2000);
+    }, time);
 }
 //const prefix = `<div style = "margin: 10 0 0 0"><img src="https://dcdn.heroeswm.ru/i/icons/attr_attack.png?v=1" class="mwh100 attrs" > + <img src="https://dcdn.heroeswm.ru/i/icons/attr_defense.png?v=1" class="mwh100 attrs" > + <img src="https://dcdn.heroeswm.ru/i/icons/attr_initiative2.png?v=1" class="mwh100 attrs"></div>`;
 async function fetchStats(creURL){
@@ -184,7 +185,7 @@ async function calcMight(parentDiv) {
         if (countDiv) amount = parseInt(countDiv.textContent);
         else amount = 1;
         const name = nameImg.getAttribute("hint");
-        console.log(name, amount);
+        // console.log(name, amount);
         let creMap = getCreStats(name);
 
         if (!creMap) {
@@ -228,18 +229,29 @@ document.querySelector("#naym_event_all_factions").addEventListener("click", asy
     let curWave, aimText, kboText;
     const match = stageEl.textContent.match(/\d+/);
     if (match) curWave = match[0];
-    console.log("Wave", curWave, stageEl);
+    // console.log("Wave", curWave, stageEl);
     let foundCached = false;
     if (queryRes && curWave) {
         const storageCoefs = JSON.parse(queryRes);
-        const wave = storageCoefs.wave;
-        if (wave === curWave) {
-            foundCached = true;
-            aimText = storageCoefs.aim;
-            kboText = storageCoefs.kbo;
+        if (curWave in storageCoefs) {
+            if (storageCoefs[curWave].timestamp && Date.now() - Number(storageCoefs[curWave].timestamp) < FOURTEEN_DAYS_MS) {
+                foundCached = true;
+                aimText = storageCoefs[curWave].aim;
+                kboText = storageCoefs[curWave].kbo;
+            }
+            else {
+                delete storageCoefs[curWave];
+            }
+
         }
     }
     const previewButtons = document.querySelectorAll(`img[src$="btn_autoalignment.png"]`);
+    if (previewButtons.length < 1) {
+        showPopup("На сыгранных волнах скрипт работает только при пройденной на облегченке волне", 5000);
+        return;
+    }
+
+
     const firstParent = previewButtons[0].parentElement.parentElement.parentElement.parentElement;
     const secondParent = previewButtons[1].parentElement.parentElement.parentElement.parentElement;
     if (!foundCached) {
@@ -258,11 +270,11 @@ document.querySelector("#naym_event_all_factions").addEventListener("click", asy
             for (const alt of Object.keys(factions[fr])) {
                 const name = factions[fr][alt];
                 document.querySelector("#naym_event_all_factions").innerText = `Обработка: ${i++}/20`;
-                console.log(name);
+                // console.log(name);
                 await new Promise(requestAnimationFrame);
                 await send_get(`/castle.php?change_clr_to=${alt}0${fr}&sign=${sign}`);
 
-                const htmlText = await send_get("/map_hero_event.php");
+                const htmlText = await send_get(location.href);
                 const doc = parser.parseFromString(htmlText, "text/html");
                 const sections = doc.body.innerHTML.split(`i/combat/btn_autoalignment.png"`);
                 const previews = doc.querySelectorAll(`a[href*="show_enemy"]`);
@@ -270,9 +282,9 @@ document.querySelector("#naym_event_all_factions").addEventListener("click", asy
                 const secondChunk = sections[1];
                 const firstHTML = parser.parseFromString(firstChunk, "text/html");
                 const secondHTML = parser.parseFromString(secondChunk, "text/html");
-                console.log("first");
+                // console.log("first");
                 const firstCount = (await calcMight(firstHTML)).combinedDef_atk_ini;
-                console.log("second")
+                // console.log("second")
                 const secondCount = (await calcMight(secondHTML)).combinedDef_atk_ini;
                 aimCoefs[name] = {might: parseInt(firstCount), previewURL: previews[0].href};
                 KBOCoefs[name] = {might: parseInt(secondCount), previewURL: previews[1].href};
@@ -281,10 +293,14 @@ document.querySelector("#naym_event_all_factions").addEventListener("click", asy
         }
         aimText = processedDict(aimCoefs);
         kboText = processedDict(KBOCoefs);
-        const storageCoefs = {
-            wave: curWave,
+        let queryRes = localStorage.getItem("storageCoefs");
+        let storageCoefs;
+        if (queryRes) storageCoefs = JSON.parse(queryRes);
+        else storageCoefs = {};
+        storageCoefs[curWave] = {
             aim: aimText,
-            kbo: kboText
+            kbo: kboText,
+            timestamp: Date.now()
         }
         localStorage.setItem("storageCoefs", JSON.stringify(storageCoefs));
         document.querySelector("#naym_event_all_factions").innerText = "Рейтинг всех фракций";

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name             Neopets: itemdb info in Igloo Garage Sale
 // @namespace        kmtxcxjx
-// @version          1.0
+// @version          1.1
 // @description      Adds ItemDB info to the Igloo Garage Sale page
 // @match            *://www.neopets.com/winter/igloo.phtml*
 // @grant            GM.xmlHttpRequest
@@ -40,6 +40,18 @@
             } catch {
                 return;
             }
+            let maxKey = null;
+            let maxVal = -1;
+
+            for (const k in data) {
+                const v = data[k].price?.value;
+                if (v > maxVal) {
+                    maxVal = v;
+                    maxKey = k;
+                }
+            }
+
+            if (maxKey) data[maxKey].highest = true;
 
             divs.forEach(div => {
                 const id = parseInt(div.id);
@@ -90,13 +102,16 @@
                 if (originalCost && itemData.price.value != null && itemData.status !== "no trade") {
                     if (itemData.price.value > 100000) {
                         div.style.border = '4px solid green';
-                    } else if (itemData.price.value > 50000) {
+                    } else if (itemData.price.value > 40000) {
                         div.style.border = '3px solid green';
                     } else if (itemData.price.value > 20000) {
                         div.style.border = '2px solid green';
                     } else if (itemData.price.value > 10000) {
                         div.style.border = '1px solid green';
                     }
+                }
+                if (itemData.highest) {
+                    div.style.border = '4px solid blue';
                 }
             });
         }

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Torn Hire CR Merc [**]
 // @namespace    http://tampermonkey.net/
-// @version      2.0
-// @description  Hire a CR Merc Instantly
+// @version      2.1
+// @description  Hire a CR Merc Instantly (Desktop + PDA)
 // @author       ShAdOwCrEsT [3929345]
 // @match        https://www.torn.com/*
 // @grant        GM_setValue
@@ -18,7 +18,6 @@
     'use strict';
 
     const CLOUDFLARE_PROXY_URL = 'https://merc.shadowcrest96.workers.dev';
-
     const mercCooldowns = {};
 
     function isOnCooldown(targetId) {
@@ -132,6 +131,162 @@
         });
     }
 
+    function createMobileDropdown(apiKey) {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `;
+
+        const dropdownBox = document.createElement('div');
+        dropdownBox.style.cssText = `
+            background: #2a2a2a;
+            border: 2px solid #87CEEB;
+            border-radius: 8px;
+            padding: 20px;
+            width: 80%;
+            max-width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        `;
+
+        const selfMercOption = document.createElement('button');
+        selfMercOption.textContent = 'Self Merc';
+        selfMercOption.style.cssText = `
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            margin: 10px 0;
+            background: #87CEEB;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            color: #000;
+        `;
+
+        const otherOption = document.createElement('button');
+        otherOption.textContent = 'Merc Other';
+        otherOption.style.cssText = `
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            margin: 10px 0;
+            background: #87CEEB;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            color: #000;
+        `;
+
+        selfMercOption.onclick = function() {
+            overlay.remove();
+
+            getUserData(apiKey, function(userData) {
+                if (!userData || !userData.player_id) {
+                    alert('Failed to fetch user data. Please check your API key.');
+                    return;
+                }
+
+                const cooldownLeft = isOnCooldown(userData.player_id);
+                if (cooldownLeft) {
+                    alert(`Please wait ${cooldownLeft} minute(s) before requesting self merc again.`);
+                    return;
+                }
+
+                const finalTargetId = userData.player_id;
+                const requesterProfileUrl = `https://www.torn.com/profiles.php?XID=${userData.player_id}`;
+                const targetProfileUrl = `https://www.torn.com/profiles.php?XID=${finalTargetId}`;
+
+                sendToCloudflareProxy(
+                    userData.player_id,
+                    userData.name,
+                    requesterProfileUrl,
+                    finalTargetId,
+                    targetProfileUrl,
+                    userData.name,
+                    userData.level,
+                    'Self'
+                );
+                setCooldown(finalTargetId);
+                alert('Your request has been transferred, Please pay 4 xanax to the merc.');
+            });
+        };
+
+        otherOption.onclick = function() {
+            overlay.remove();
+            const targetId = prompt('Enter the User ID of the person you want merc\'d:\n\nCost: 4 Xanax');
+
+            if (!targetId || targetId.trim() === '') {
+                return;
+            }
+
+            if (!/^\d+$/.test(targetId.trim())) {
+                alert('Invalid User ID! Please enter numbers only.');
+                return;
+            }
+
+            getUserData(apiKey, function(userData) {
+                if (userData && userData.player_id && userData.name) {
+                    getTargetData(targetId.trim(), apiKey, function(targetData, error) {
+                        if (error || !targetData) {
+                            alert(`Invalid User ID: ${error || 'User not found'}`);
+                            return;
+                        }
+
+                        const cooldownLeft = isOnCooldown(targetId.trim());
+                        if (cooldownLeft) {
+                            alert(`Please wait ${cooldownLeft} minute(s) before requesting merc for this person again.`);
+                            return;
+                        }
+
+                        const finalTargetId = targetId.trim();
+                        const requesterProfileUrl = `https://www.torn.com/profiles.php?XID=${userData.player_id}`;
+                        const targetProfileUrl = `https://www.torn.com/profiles.php?XID=${finalTargetId}`;
+
+                        sendToCloudflareProxy(
+                            userData.player_id,
+                            userData.name,
+                            requesterProfileUrl,
+                            finalTargetId,
+                            targetProfileUrl,
+                            targetData.name,
+                            targetData.level,
+                            targetData.status?.description || 'Unknown'
+                        );
+                        setCooldown(finalTargetId);
+                        alert('Your request has been transferred, Please pay 4 xanax to the merc.');
+                    });
+                } else {
+                    alert('Failed to fetch user data. Please check your API key.');
+                    GM_setValue('torn_api_key', '');
+                }
+            });
+        };
+
+        dropdownBox.appendChild(selfMercOption);
+        dropdownBox.appendChild(otherOption);
+        overlay.appendChild(dropdownBox);
+
+        overlay.onclick = function(e) {
+            if (e.target === overlay) {
+                overlay.remove();
+            }
+        };
+
+        document.body.appendChild(overlay);
+    }
+
     function addProfileMercButton() {
         const urlParams = new URLSearchParams(window.location.search);
         const targetXID = urlParams.get('XID');
@@ -233,7 +388,67 @@
         setTimeout(() => clearInterval(checkInterval), 10000);
     }
 
-    function addHireMercButton() {
+    function addHireMercButtonPDA() {
+        const checkInterval = setInterval(() => {
+            const barsMobile = document.querySelector('.bars-mobile___PDyjE');
+
+            if (barsMobile) {
+                clearInterval(checkInterval);
+
+                if (document.getElementById('cr-merc-bar-pda')) {
+                    return;
+                }
+
+                const mercBar = document.createElement('a');
+                mercBar.id = 'cr-merc-bar-pda';
+                mercBar.className = 'bar___Bv5Ho bar-mobile___ptmyk';
+                mercBar.href = '#';
+                mercBar.tabIndex = 0;
+                mercBar.style.cssText = `
+                    background-color: #87CEEB;
+                    cursor: pointer;
+                `;
+
+                const barStats = document.createElement('div');
+                barStats.className = 'bar-stats____l994 bar-stats-flex___zntBu';
+                barStats.style.cssText = `
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 8px;
+                `;
+
+                const label = document.createElement('p');
+                label.textContent = 'CR';
+                label.style.cssText = `
+                    margin: 0;
+                    font-weight: bold;
+                    color: #000;
+                    font-size: 14px;
+                    font-family: 'Comic Sans MS', 'Brush Script MT', cursive;
+                `;
+
+                barStats.appendChild(label);
+                mercBar.appendChild(barStats);
+
+                mercBar.onclick = function(e) {
+                    e.preventDefault();
+                    const apiKey = getApiKey();
+                    if (!apiKey) {
+                        alert('API key is required!');
+                        return;
+                    }
+                    createMobileDropdown(apiKey);
+                };
+
+                barsMobile.appendChild(mercBar);
+            }
+        }, 500);
+
+        setTimeout(() => clearInterval(checkInterval), 10000);
+    }
+
+    function addHireMercButtonDesktop() {
         const checkInterval = setInterval(() => {
             const chainBar = document.querySelector('.chain-bar___vjdPL.bar-desktop___F8PEF');
 
@@ -342,27 +557,23 @@
                                 alert(`Please wait ${cooldownLeft} minute(s) before requesting self merc again.`);
                                 return;
                             }
-                            if (userData && userData.player_id && userData.name) {
-                                const finalTargetId = userData.player_id;
-                                const requesterProfileUrl = `https://www.torn.com/profiles.php?XID=${userData.player_id}`;
-                                const targetProfileUrl = `https://www.torn.com/profiles.php?XID=${finalTargetId}`;
 
-                                sendToCloudflareProxy(
-                                    userData.player_id,
-                                    userData.name,
-                                    requesterProfileUrl,
-                                    finalTargetId,
-                                    targetProfileUrl,
-                                    userData.name,
-                                    userData.level,
-                                    'Self'
-                                );
-                                setCooldown(finalTargetId);
-                                alert('Your request has been transferred, Please pay 4 xanax to the merc.');
-                            } else {
-                                alert('Failed to fetch user data. Please check your API key.');
-                                GM_setValue('torn_api_key', '');
-                            }
+                            const finalTargetId = userData.player_id;
+                            const requesterProfileUrl = `https://www.torn.com/profiles.php?XID=${userData.player_id}`;
+                            const targetProfileUrl = `https://www.torn.com/profiles.php?XID=${finalTargetId}`;
+
+                            sendToCloudflareProxy(
+                                userData.player_id,
+                                userData.name,
+                                requesterProfileUrl,
+                                finalTargetId,
+                                targetProfileUrl,
+                                userData.name,
+                                userData.level,
+                                'Self'
+                            );
+                            setCooldown(finalTargetId);
+                            alert('Your request has been transferred, Please pay 4 xanax to the merc.');
                         });
                     };
 
@@ -397,19 +608,15 @@
                                     const requesterProfileUrl = `https://www.torn.com/profiles.php?XID=${userData.player_id}`;
                                     const targetProfileUrl = `https://www.torn.com/profiles.php?XID=${finalTargetId}`;
 
-                                    const targetName = targetData.name;
-                                    const targetLevel = targetData.level;
-                                    const targetStatus = targetData.status?.description || 'Unknown';
-
                                     sendToCloudflareProxy(
                                         userData.player_id,
                                         userData.name,
                                         requesterProfileUrl,
                                         finalTargetId,
                                         targetProfileUrl,
-                                        targetName,
-                                        targetLevel,
-                                        targetStatus
+                                        targetData.name,
+                                        targetData.level,
+                                        targetData.status?.description || 'Unknown'
                                     );
                                     setCooldown(finalTargetId);
                                     alert('Your request has been transferred, Please pay 4 xanax to the merc.');
@@ -449,11 +656,13 @@
         setTimeout(() => clearInterval(checkInterval), 10000);
     }
 
-    addHireMercButton();
+    addHireMercButtonDesktop();
+    addHireMercButtonPDA();
     addProfileMercButton();
 
     const observer = new MutationObserver(function(mutations) {
-        addHireMercButton();
+        addHireMercButtonDesktop();
+        addHireMercButtonPDA();
         addProfileMercButton();
     });
 

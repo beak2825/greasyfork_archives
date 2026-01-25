@@ -2,7 +2,7 @@
 // @name         YouTube Middle Mouse Button Mute / Unmute
 // @description  Mutes / unmutes a YouTube video / Shorts by clicking the middle mouse button within the video player. For Shorts you can also middle mouse click the black side bars around the video. While performing the middle mouse button click, the scroll button gets disabled. Mute / unmute / scroll disabling won't work with any elements floating over the video player.
 // @namespace    https://greasyfork.org/users/877912
-// @version      0.5
+// @version      0.7
 // @license      MIT
 // @match        *://*.youtube.com/watch*?*v=*
 // @match        *://*.youtube.com/embed/*?*v=*
@@ -24,8 +24,11 @@
         videoAreaRegularBlackBars1: "div.ytp-player-content.ytp-iv-player-content[data-layer='4']",
         videoAreaRegularBlackBars2: "div#movie_player",
         videoAreaShortsBlackBars: "div#shorts-container",
-        muteButtonRegular: "button.ytp-mute-button",
-        muteButtonShorts: "button.YtdDesktopShortsVolumeControlsMuteIconButton",
+        videoAreaShortsMain: "ytd-shorts",
+        shortsActionsArea: "#actions",
+        shortsPivotButton: "#pivot-button", // Added pivot button for mute/unmute
+        muteButtonRegular: "button.ytp-volume-icon.ytp-button",
+        muteButtonShorts: "button.ytdVolumeControlsMuteIconButton",
         contentContainer: "div#contentContainer",
         endscreenPreviousButton: "button.ytp-button.ytp-endscreen-previous",
         endscreenNextButton: "button.ytp-button.ytp-endscreen-next",
@@ -36,31 +39,36 @@
     };
 
     const ignoredMuteUnmuteElements = {
-        ".branding-context-container-outer": "blue" // Branding container
+        ".branding-context-container-outer": "blue", // Branding container
+        ".ytp-chrome-controls": "green", // Regular video player controls
+        ".metadata-container": "green", // Shorts metadata/title/channel area
+        "#metapanel": "green", // Shorts metadata panel
+        "input": "green", // Input fields (like volume slider)
+        "ytd-menu-renderer": "green" // Menu renderers
     };
 
     const debugElements = {
-        ".ytp-cards-teaser": "red",                  // Cards teaser
-        ".ytp-pip-button": "red",                    // Picture-in-Picture button
-        ".ytp-ad-overlay-container": "red",          // Ad overlays
-        ".ytp-ad-player-overlay": "red",             // Ad overlays
-        ".ytp-endscreen-content": "red",             // Endscreen content
-        ".ytp-chrome-bottom": "red",                 // Bottom controls (progress bar, play button, etc.)
-        ".ytp-chrome-top": "red",                    // Top controls (settings, subtitles, etc.)
-        ".ytp-gradient-top": "red",                  // Gradient overlays at the top
-        ".ytp-gradient-bottom": "red",               // Gradient overlays at the bottom
-        ".ytp-ce-element": "red",                    // End screen elements
-        ".ytp-ce-element-shadow": "red",             // Shadows for end screen elements
-        ".ytp-subtitles-button": "red",              // Subtitles button
-        ".ytp-caption-window": "red",                // Caption window for subtitles
-        ".ytp-spinner": "red",                       // Loading spinner
-        ".ytp-fullscreen-button": "red",             // Fullscreen button
-        ".ytp-play-button": "red",                   // Play button
-        ".ytp-volume-panel": "red",                  // Volume panel
-        ".ytp-share-button": "red",                  // Share button
-        ".ytp-like-button-renderer": "red",          // Like button
-        ".picture-in-picture-toggle": "red",         // Firefox Picture-in-Picture toggle button
-        ".ytp-title": "red"                          // YouTube video title area
+        ".ytp-cards-teaser": "red",
+        ".ytp-pip-button": "red",
+        ".ytp-ad-overlay-container": "red",
+        ".ytp-ad-player-overlay": "red",
+        ".ytp-endscreen-content": "red",
+        ".ytp-chrome-bottom": "red",
+        ".ytp-chrome-top": "red",
+        ".ytp-gradient-top": "red",
+        ".ytp-gradient-bottom": "red",
+        ".ytp-ce-element": "red",
+        ".ytp-ce-element-shadow": "red",
+        ".ytp-subtitles-button": "red",
+        ".ytp-caption-window": "red",
+        ".ytp-spinner": "red",
+        ".ytp-fullscreen-button": "red",
+        ".ytp-play-button": "red",
+        ".ytp-volume-panel": "red",
+        ".ytp-share-button": "red",
+        ".ytp-like-button-renderer": "red",
+        ".picture-in-picture-toggle": "red",
+        ".ytp-title": "red"
     };
 
     let isClicked = false;
@@ -68,8 +76,11 @@
     function handleMiddleClick(event) {
         if (event.button !== 1 || isClicked) return;
 
+        // Check if clicking on ignored elements
         for (let selector of Object.keys(ignoredMuteUnmuteElements)) {
-            if (event.target.closest(selector) && !event.target.closest(muteUnmuteElements.ytpTitle) && !event.target.closest(muteUnmuteElements.contentContainer)) return;
+            if (event.target.matches(selector) || event.target.closest(selector)) {
+                return;
+            }
         }
 
         let muteButton = null;
@@ -91,11 +102,29 @@
             event.target.matches(muteUnmuteElements.endscreenContainerVariant2)
         ) {
             muteButton = document.querySelector(muteUnmuteElements.muteButtonRegular);
-        } else if (event.target.matches(muteUnmuteElements.videoAreaShortsBlackBars)) {
+        } else if (event.target.matches(muteUnmuteElements.videoAreaShortsBlackBars) ||
+                   event.target.matches(muteUnmuteElements.videoAreaShortsMain) ||
+                   event.target.closest(muteUnmuteElements.videoAreaShortsMain) ||
+                   event.target.matches(muteUnmuteElements.shortsActionsArea) ||
+                   event.target.closest(muteUnmuteElements.shortsActionsArea) ||
+                   event.target.matches(muteUnmuteElements.shortsPivotButton) ||
+                   event.target.closest(muteUnmuteElements.shortsPivotButton)) {
             muteButton = document.querySelector(muteUnmuteElements.muteButtonShorts);
         }
 
         if (muteButton) muteButton.click();
+    }
+
+    // Prevent default middle-click behavior on pivot button (but allow our mute function)
+    function preventPivotButtonMiddleClick(event) {
+        if (event.button === 1) {
+            if (event.target.closest('#pivot-button') ||
+                event.target.closest('pivot-button-view-model') ||
+                event.target.closest('.ytwPivotButtonViewModelHost')) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        }
     }
 
     function addBorderStyles(elements) {
@@ -115,6 +144,11 @@
         document.head.appendChild(style);
     }
 
+    // Prevent default middle-click on pivot button (opening in new tab)
+    document.addEventListener('mousedown', preventPivotButtonMiddleClick, true);
+    document.addEventListener('click', preventPivotButtonMiddleClick, true);
+    document.addEventListener('auxclick', preventPivotButtonMiddleClick, true);
+
     document.addEventListener('mousedown', (event) => {
         if (event.button === 1) {
             if (event.target.matches(muteUnmuteElements.videoAreaRegularAndShorts) ||
@@ -122,6 +156,12 @@
                 event.target.closest(muteUnmuteElements.videoAreaRegularBlackBars1) ||
                 event.target.matches(muteUnmuteElements.videoAreaRegularBlackBars2) ||
                 event.target.matches(muteUnmuteElements.videoAreaShortsBlackBars) ||
+                event.target.matches(muteUnmuteElements.videoAreaShortsMain) ||
+                event.target.closest(muteUnmuteElements.videoAreaShortsMain) ||
+                event.target.matches(muteUnmuteElements.shortsActionsArea) ||
+                event.target.closest(muteUnmuteElements.shortsActionsArea) ||
+                event.target.matches(muteUnmuteElements.shortsPivotButton) ||
+                event.target.closest(muteUnmuteElements.shortsPivotButton) ||
                 event.target.matches(muteUnmuteElements.contentContainer) ||
                 event.target.matches(muteUnmuteElements.endscreenPreviousButton) ||
                 event.target.matches(muteUnmuteElements.endscreenNextButton) ||
@@ -150,7 +190,11 @@
     }
 
     waitForKeyElements(Object.values(muteUnmuteElements).join(", "), (node) => {
-        if (node.closest(muteUnmuteElements.videoAreaRegularBlackBars2) || node.matches(muteUnmuteElements.videoAreaShortsBlackBars)) {
+        if (node.closest(muteUnmuteElements.videoAreaRegularBlackBars2) ||
+            node.matches(muteUnmuteElements.videoAreaShortsBlackBars) ||
+            node.matches(muteUnmuteElements.videoAreaShortsMain) ||
+            node.matches(muteUnmuteElements.shortsActionsArea) ||
+            node.matches(muteUnmuteElements.shortsPivotButton)) {
             node.addEventListener('mousedown', handleMiddleClick, true);
         }
     });

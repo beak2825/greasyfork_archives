@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NerdyTeachers Top200: Add PICO-8 cart download links
-// @namespace    https://austin.tools/tampermonkey
-// @version      1.0.2
+// @namespace    https://github.com/austinpresley/
+// @version      1.0.3
 // @description  Adds a "Download cart" action per game by scraping the Lexaloffle Cart File URL and downloading directly.
 // @match        https://nerdyteachers.com/PICO-8/Games/Top200/*
 // @grant        GM_xmlhttpRequest

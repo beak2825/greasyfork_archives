@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Amazon Dark Pattern Blocker
 // @namespace    August4067
-// @version      0.0.2-alpha
+// @version      0.0.3-alpha
 // @description  Remove dark patterns from Amazon: Prime upsells, credit card offers, and other manipulative UI across product pages, cart, and checkout
 // @author       August4067
 // @license      MIT
@@ -66,6 +66,7 @@
       creditCardUpsells: {
         cartCreditCardBanner: '#sc-new-upsell',
         productPageCreditCardBanner: '#issuancePriceblockAmabot_feature_div',
+        productPageCreditCardBannerMaple: '#maplePriceblockAmabot_feature_div',
         thankYouPageCreditCard: '[cel_widget_id="typ-mapleSlot"]',
       },
       aiUpsells: {
@@ -74,6 +75,11 @@
       },
       amazonMusicPromos: {
         productPageMusicShoveler: '[cel_widget_id^="kahuna-music"]',
+      },
+      protectionPlans: {
+        productPageProtectionPlan: '#mbb_feature_div',
+        warrantyFlyoutSidesheet: '#attach-desktop-sideSheet',
+        warrantyFlyoutBackdrop: '#attach-popover-lgtbox',
       },
     },
 
@@ -159,6 +165,10 @@
     },
     removeAmazonMusicPromos: {
       displayName: "Remove Amazon Music promos",
+      default: true,
+    },
+    removeProtectionPlans: {
+      displayName: "Remove protection plans",
       default: true,
     },
   };
@@ -336,6 +346,10 @@
       this.removeByCategory("amazonMusicPromos", "removeAmazonMusicPromos");
     },
 
+    processProtectionPlans() {
+      this.removeByCategory("protectionPlans", "removeProtectionPlans");
+    },
+
     /**
      * Handle the Prime interstitial page that hijacks checkout
      * Replaces content with a message and auto-clicks decline
@@ -412,6 +426,7 @@
       Declutterer.processAIUpsells();
       Declutterer.processCreditCardUpsells();
       Declutterer.processAmazonMusicPromos();
+      Declutterer.processProtectionPlans();
       Declutterer.processUrgencyTactics();
       Declutterer.processSubscribeNudges();
       Declutterer.processSubscribeUnchecks();

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            WME Color Errors
-// @version         2026.01.19
+// @version         2026.01.25.01
 // @icon            data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAALuSURBVHja7Jots6swEIb7x6qiUFVVUVEoVBSqKioqU8EfqKpCRaE6FShMo5gjUCiOYebOzTXnvaKlhR44LbS9vcyQmVWdbt5nd7P5GGbr/eFjvT98jtQ+Zuv9oVzvDxiplbMTyVgBPieACWACmADeD/Bn7ABfE8D77PfYAfBUgFCt4DEKZz7H/Js5oMzDSoXPBPh6GCBSHAvSJviGkQW4it4HECmvI9IncygYY2ALcgPGgTccpD9AkQRwf4g4cQPEWYnzsDHkXRlxESTFawFixUDOkxIwIeEvLiKojFFclKPIDOJwhWWX6AWHWF35VPFrAEJeKwXHw9aUsIm8TO6GyE7S80iA3bUuCGRiUZotPKeWRR4+F0DXxBMeIrNHoUaRhhAAKCJei+htI8ocnZUGG7c+j34OQF08FTvk5xLJELJKiEICAEixWfbsRuySOSDHTtA+ED8D5Jo3nF3EA4CBqkR4p98KDd63nc4VTMNv3gga1/lwALeahCoYi6tRA5hzhFmJPFr1Kp92AADWQNHqd3cYQORX7Y1D52gZObQ3YAO7Nu86s5X7Wjb9qD/AOboihkX7SDfLhwGWm7TDu0UsLlnqDbATVR1SKGO7CEAfAqDo0m+NOvsmYjdsDXByq4wsYkkGAxDZkd1cN+YevIgbPb11IV8vuB52lz8CHhWP7QNG1foyC5CULZMWMWQfCCoRFy1+ygQBq+07yjxnJ65vLnMqELWVk82gBbvRRh24MuroOhFELQi0u+6HnYViSRuLT+gUbclAmSEOFVYeOx6nGQPzJbY6Qdb+B6RaNJoBlfFrTqNZ6DfuAIQJ6LTE0FGmGoKRRob8MHv9haY56RxkwaG0QV7am6JtkSHRCvzqokOY+Lc3slR3HJkdCuatoIIAwdmOJUWdtosMg9Dp++7EpiWad+0Bp6z9V68S6/0BgfTBvr1MOKCMwZfBs59Vfs3G/CZUvczZ6XV6ApgAJoAJYAIYM8DoP/YY9ec2fwcAaebQXj6i79wAAAAASUVORK5CYII=
 // @description     Colorise les erreurs d’édition françaises, sur la carte.
 // @match           https://*.waze.com/*/editor*
@@ -248,7 +248,7 @@
             if (!wmeSDK.Events) { WMECE_log("wmeSDK.Events : NOK"); setTimeout(waitSDK, 1000); return; };
             if (!wmeSDK.State.getUserInfo()) { WMECE_log("wmeSDK.State.getUserInfo() : NOK"); setTimeout(waitSDK, 1000); return; };
 
-            wmeUserRank = wmeSDK.State.getUserInfo().rank;
+            wmeUserRank = wmeSDK.State.getUserInfo().rank + 1;
             WMECE_log("Utilisateur : " + wmeSDK.State.getUserInfo().userName + " | Niveau : " + wmeUserRank);
 
             // Gestion des évènements
@@ -958,10 +958,12 @@
 
                 function checkLock() {
                     if (seg.lockRank > 4) return; // Ignore Lock 6 and staff;
+                    //const lock = W.model.segments.getObjectById(seg.id).attributes.lockRank; // Activer pour détecter les segments auto
+                    const lock = seg.lockRank;
 
                     // Info SDK : https://www.waze.com/editor/sdk/variables/index.SDK.ROAD_TYPE.html
                     const fwdSC = seg.flagAttributes.fwdSpeedCamera, revSC = seg.flagAttributes.revSpeedCamera,
-                        lock = seg.lockRank, type = seg.roadType, speedCam = fwdSC || revSC, typeLock = [
+                        type = seg.roadType, speedCam = fwdSC || revSC, typeLock = [
                             { type: 1, lock: 0 }, { type: 2, lock: 2 }, { type: 3, lock: 4 },
                             { type: 4, lock: 4 }, { type: 5, lock: 0 }, { type: 6, lock: 4 },
                             { type: 7, lock: 3 }, { type: 8, lock: 0 }, { type: 9, lock: 0 },
@@ -970,8 +972,9 @@
                             { type: 20, lock: 0 }, { type: 22, lock: 0 }
                         ];
 
-                    if ((speedCam && lock < 4) || // Speedcam but not locked 5
-                        !fwdSC && !revSC && lock !== typeLock.find(i => i.type === type).lock) {
+                    const cond1 = (speedCam && lock < 4); // Speedcam but not locked 5
+                    const cond2 = !fwdSC && !revSC && lock !== typeLock.find(i => i.type === type).lock;
+                    if (cond1 || cond2) {
                         j++; newColor = colorWarn; newWidth = 3; newOpacity = 0.95;
                         newError(j, "_seg_LockValue", seg.geometry, seg.id);
 
@@ -1121,9 +1124,8 @@
 
                 function checkUselessNodes() {
                     if (!ls.nod_Useless_Nodes) return;
-                    if (wmeSDK.Map.getZoomLevel() < 17) return;
+                    if (wmeSDK.Map.getZoomLevel() < 18) return;
 
-                    const pedTypes = [5, 10, 16];
                     if (wmeSDK.DataModel.Nodes.isVirtual({ nodeId: node.id })) return;
 
                     const connectedSegmentIds = node.connectedSegmentIds;
@@ -1131,7 +1133,7 @@
 
                     const segmentInfos = connectedSegmentIds.map(id => {
                         const segment = wmeSDK.DataModel.Segments.getById({ segmentId: id });
-                        if (pedTypes.includes(segment.roadType)) return null;
+                        if ([5, 10, 16].includes(segment.roadType)) return null;
 
                         const address = wmeSDK.DataModel.Segments.getAddress({ segmentId: id });
 
@@ -1142,7 +1144,17 @@
                             country: alt.country.name
                         }));
 
+                        const turnInfo = wmeSDK.DataModel.Turns.getTurnsFromSegment({ segmentId: id });
+
+                        const turnsSimplified = (turnInfo || []).map(ti => ({
+                            hasCustomTTS: ti.hasCustomTTS,
+                            hasShieldsPopulated: ti.hasShieldsPopulated,
+                            hasTowardsGuidance: ti.hasTowardsGuidance,
+                            hasTurnGuidance: ti.hasTurnGuidance
+                        }));
+
                         return {
+                            turns: turnsSimplified,
                             altStreets: altStreetsSimplified,
                             beacons: segment.flagAttributes.beacons,
                             fwdLanesEnabled: segment.flagAttributes.fwdLanesEnabled,
@@ -1168,6 +1180,7 @@
                             elevationLevel: segment.elevationLevel
                         };
                     }).filter(Boolean);
+                    WMECE_log(segmentInfos);
 
                     function nodePartOfLoop(node) {
                         const [segA_id, segB_id] = node.connectedSegmentIds;
@@ -1435,21 +1448,23 @@
     }
 
     function formatTelGoogle(phone) {
-        const lpn = libphonenumber, pnu = lpn.PhoneNumberUtil.getInstance(), pnf = lpn.PhoneNumberFormat, pnt = lpn.PhoneNumberType
+        const lpn = libphonenumber, pnu = lpn.PhoneNumberUtil.getInstance(), pnf = lpn.PhoneNumberFormat, pnt = lpn.PhoneNumberType;
+        let newPhone;
         WMECE_log(`Formatage du numéro : ${phone}`);
 
         // Numéro à 4 chiffres
-        phone = phone.replaceAll(/\s+/g, '').replaceAll(/\D/g, '');
-        if (phone.length === 4) return `${phone.slice(0, 2)} ${phone.slice(2)}`;
+        newPhone = phone.replaceAll(/\s+/g, '').replaceAll(/\D/g, '');
+        if (newPhone.length === 4) return `${newPhone.slice(0, 2)} ${newPhone.slice(2)}`;
+        newPhone = phone;
 
         try {
-            const aPhone = pnu.parseAndKeepRawInput(phone, phone.startsWith("+") ? null : "FR");
-            WMECE_log(`Analyse du numéro : ${phone}   type: ${Object.keys(pnt).find(key => pnt[key] === pnu.getNumberType(aPhone))}, national: ${pnu.format(aPhone, pnf.NATIONAL)}, international: ${pnu.format(aPhone, pnf.INTERNATIONAL)}`);
+            const aPhone = pnu.parseAndKeepRawInput(newPhone, newPhone.startsWith("+") ? null : "FR");
+            WMECE_log(`Analyse du numéro : ${newPhone}   type: ${Object.keys(pnt).find(key => pnt[key] === pnu.getNumberType(aPhone))}, national: ${pnu.format(aPhone, pnf.NATIONAL)}, international: ${pnu.format(aPhone, pnf.INTERNATIONAL)}`);
             if (pnu.isValidNumber(aPhone)) {
                 if ([3, 4, 5, 9].includes(pnu.getNumberType(aPhone))) return pnu.format(aPhone, pnf.NATIONAL); // Numéro de services
                 else return pnu.format(aPhone, pnf.INTERNATIONAL);
-            } else { WMECE_log(`Numéro invalide : ${phone}`); return "Erreur"; }
-        } catch (e) { WMECE_log(`Erreur de parsing pour ${phone} :` + e.message); return "Erreur"; }
+            } else { WMECE_log(`Numéro invalide : ${newPhone}`); return "Erreur"; }
+        } catch (e) { WMECE_log(`Erreur de parsing pour ${newPhone} :` + e.message); return "Erreur"; }
     }
 
     function fixTel() {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Block-Retweet
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.4
 // @description  Block Retweet
 // @author       dsx137
 // @match        https://x.com/*
@@ -12,19 +12,16 @@
 // @updateURL https://update.greasyfork.org/scripts/492979/Block-Retweet.meta.js
 // ==/UserScript==
 
-function deleteRetweet() {
-    var articles = document.querySelectorAll("article");
-    for (article of articles) {
-        if (article.children[0].children[0].children[0].querySelectorAll("[dir]").length != 0) {
-            article.parentNode.parentNode.remove();
-        }
-    }
-}
-
-
 (function () {
-    'use strict';
-    new MutationObserver(function (mutations) {
-        deleteRetweet();
-    }).observe(document.body, { childList: true, subtree: true });
+  "use strict";
+
+  const style = `
+        div[data-testid="cellInnerDiv"]:has(article [data-testid="socialContext"]) {
+            display: none !important;
+        }
+    `;
+
+  const styleTag = document.createElement("style");
+  styleTag.innerHTML = style;
+  document.head.appendChild(styleTag);
 })();

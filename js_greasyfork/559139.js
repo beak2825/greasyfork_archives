@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Npm Userscript
-// @version      0.3.2
+// @version      0.3.3
 // @description  Various improvements and fixes for npmjs.com
 // @license      MIT
 // @author       Bjorn Lu
@@ -104,16 +104,27 @@
     prefix = CACHE_PREFIX + prefix;
     return Object.keys(localStorage).some((key) => key.startsWith(prefix));
   }
-  function inMemoryCache(key, fn) {
+  function cacheResult(key, duration, fn) {
     if (key in _inMemoryCache) {
       return _inMemoryCache[key];
+    }
+    if (duration > 0) {
+      const cached = cache.get(key);
+      if (cached !== null) return JSON.parse(cached);
     }
     const result = fn();
     _inMemoryCache[key] = result;
     if (result.then) {
       result.then((resolved) => {
         _inMemoryCache[key] = resolved;
+        if (duration > 0) {
+          cache.set(key, JSON.stringify(resolved), duration);
+        }
       });
+    } else {
+      if (duration > 0) {
+        cache.set(key, JSON.stringify(result), duration);
+      }
     }
     return result;
   }
@@ -245,7 +256,8 @@
     styles.length = 0;
   }
   async function waitForElement(selector, timeout = 1e3) {
-    if (document.querySelector(selector)) return;
+    const element = document.querySelector(selector);
+    if (element) return element;
     return new Promise((resolve, reject) => {
       const timeoutTimer = setTimeout(() => {
         clearInterval(queryTimer);
@@ -253,10 +265,11 @@
         reject(new Error(`Timeout waiting for element: ${selector}`));
       }, timeout);
       const queryTimer = setInterval(() => {
-        if (document.querySelector(selector)) {
+        const element2 = document.querySelector(selector);
+        if (element2) {
           clearInterval(queryTimer);
           clearTimeout(timeoutTimer);
-          resolve();
+          resolve(element2);
         }
       }, 100);
     });
@@ -285,6 +298,10 @@
     const previousPathname = new URL(previousUrl).pathname;
     const newPathname = location.pathname;
     return previousPathname === newPathname;
+  }
+  function getGitHubOwnerRepo() {
+    const repositoryLink = getNpmContext().context.packument.repository;
+    return /github\.com\/([^\/]+\/[^\/]+)/.exec(repositoryLink)?.[1];
   }
   function getNpmTarballUrl() {
     const packument = getNpmContext().context.packument;
@@ -334,20 +351,37 @@
   });
 
   // src/utils-fetch.ts
+  async function getFullRepositoryLink() {
+    const repositoryLink = getNpmContext().context.packument.repository;
+    if (!repositoryLink) return;
+    const packageJson = await fetchPackageJson();
+    const directory = packageJson?.repository?.directory;
+    if (!directory) return;
+    let fullRepositoryLink = repositoryLink;
+    if (!/\/tree\/.+$/.test(repositoryLink)) {
+      const repoData = await fetchGitHubRepoData();
+      if (!repoData) return;
+      fullRepositoryLink += `/tree/${repoData.default_branch}`;
+    }
+    fullRepositoryLink += `/${directory.replace(/^\/+/, "")}`;
+    return fullRepositoryLink;
+  }
   async function fetchPackageFilesData() {
     const packageName = getPackageName();
     const packageVersion = getPackageVersion();
     if (!packageName || !packageVersion) return void 0;
-    return inMemoryCache(
+    return cacheResult(
       `fetchPackageFiles:${packageName}@${packageVersion}`,
+      60,
       () => fetchJson(`https://www.npmjs.com/package/${packageName}/v/${packageVersion}/index`)
     );
   }
   async function fetchPackageFileContent(hex) {
     const packageName = getPackageName();
     if (!packageName) return void 0;
-    return inMemoryCache(
+    return cacheResult(
       `fetchPackageFiles:${packageName}-${hex}`,
+      0,
       () => fetchJson(`https://www.npmjs.com/package/${packageName}/file/${hex}`)
     );
   }
@@ -355,10 +389,31 @@
     const packageName = getPackageName();
     const packageVersion = getPackageVersion();
     if (!packageName || !packageVersion) return void 0;
-    return inMemoryCache(
+    return cacheResult(
       `fetchPackageJson:${packageName}@${packageVersion}`,
+      60,
       () => fetchJson(`https://registry.npmjs.org/${packageName}/${packageVersion}`)
     );
+  }
+  async function fetchGitHubRepoData() {
+    const ownerRepo = getGitHubOwnerRepo();
+    if (!ownerRepo) return void 0;
+    return cacheResult(
+      `fetchGitHubRepoData:${ownerRepo}`,
+      60,
+      () => fetchJson(`https://api.github.com/repos/${ownerRepo}`)
+    );
+  }
+  async function fetchGitHubPullRequestsCount() {
+    const ownerRepo = getGitHubOwnerRepo();
+    if (!ownerRepo) return void 0;
+    return cacheResult(`fetchPrCount:${ownerRepo}`, 60, async () => {
+      const headers = await fetchHeaders(`https://api.github.com/repos/${ownerRepo}/pulls?per_page=1`);
+      const match = /<https:\/\/api\.github\.com\/repositories\/\d+\/pulls\?per_page=1&page=(\d+)>;\s*rel="last"/.exec(
+        headers
+      );
+      return match ? Number(match[1]) : 0;
+    });
   }
   function fetchText(input, init) {
     return new Promise((resolve, reject) => {
@@ -411,6 +466,7 @@
   var init_utils_fetch = __esm({
     "src/utils-fetch.ts"() {
       init_utils_cache();
+      init_utils_npm_context();
       init_utils();
     }
   });
@@ -729,6 +785,895 @@ versions, and fix provenance icon alignment.
     }
   });
 
+  // node_modules/uhtml/dist/prod/dom.js
+  function v(e3) {
+    const t2 = u;
+    return u = e3, t2;
+  }
+  function b(e3) {
+    return T.bind({ previousValue: e3, value: e3, subs: void 0, subsTail: void 0, flags: 1 });
+  }
+  function x(e3) {
+    const t2 = { fn: e3, subs: void 0, subsTail: void 0, deps: void 0, depsTail: void 0, flags: 2 };
+    void 0 !== u ? s(t2, u) : void 0 !== d && s(t2, d);
+    const n2 = v(t2);
+    try {
+      t2.fn();
+    } finally {
+      v(n2);
+    }
+    return D.bind(t2);
+  }
+  function y(e3) {
+    const t2 = v(e3);
+    a(e3);
+    try {
+      const t3 = e3.value;
+      return t3 !== (e3.value = e3.getter(t3));
+    } finally {
+      v(t2), l(e3);
+    }
+  }
+  function w(e3, t2) {
+    return e3.flags = 1, e3.previousValue !== (e3.previousValue = t2);
+  }
+  function S(e3, t2) {
+    if (16 & t2 || 32 & t2 && o(e3.deps, e3)) {
+      const t3 = v(e3);
+      a(e3);
+      try {
+        e3.fn();
+      } finally {
+        v(t3), l(e3);
+      }
+      return;
+    }
+    32 & t2 && (e3.flags = -33 & t2);
+    let n2 = e3.deps;
+    for (; void 0 !== n2; ) {
+      const e4 = n2.dep, t3 = e4.flags;
+      64 & t3 && S(e4, e4.flags = -65 & t3), n2 = n2.nextDep;
+    }
+  }
+  function k() {
+    for (; p < h; ) {
+      const e3 = n[p];
+      n[p++] = void 0, S(e3, e3.flags &= -65);
+    }
+    p = 0, h = 0;
+  }
+  function T(...e3) {
+    if (!e3.length) {
+      const e4 = this.value;
+      if (16 & this.flags && w(this, e4)) {
+        const e5 = this.subs;
+        void 0 !== e5 && c(e5);
+      }
+      return void 0 !== u && s(this, u), e4;
+    }
+    {
+      const t2 = e3[0];
+      if (this.value !== (this.value = t2)) {
+        this.flags = 17;
+        const e4 = this.subs;
+        void 0 !== e4 && (r(e4), f || k());
+      }
+    }
+  }
+  function D() {
+    let e3 = this.deps;
+    for (; void 0 !== e3; ) e3 = i(e3, this);
+    const t2 = this.subs;
+    void 0 !== t2 && i(t2), this.flags = 0;
+  }
+  function L() {
+    return R.apply(null, arguments);
+  }
+  function Te(e3) {
+    const t2 = H("<>"), n2 = H("</>");
+    return e3.replaceChildren(t2, ...e3.childNodes, n2), be = true, P(e3, { [ye]: { writable: true, value: Q }, firstChild: { value: t2 }, lastChild: { value: n2 }, parentNode: we, valueOf: Ce, replaceWith: Se, remove: ke });
+  }
+  function at(e3, ...t2) {
+    const n2 = rt.apply(null, arguments);
+    return Ge() ? n2.valueOf(true) : n2;
+  }
+  var e, t, n, s, i, r, o, l, a, c, u, d, f, p, h, O, $, W, E, R, _, j, F, P, B, J, V, H, q, G, I, K, Q, U, X, Y, Z, ee, te, ne, se, ie, re, oe, le, ae, ce, ue, de, fe, pe, he, ve, ge, be, me, xe, ye, we, Se, ke, Ce, De, Oe, Ne, $e, We, Ae, Ee, Me, Re, Le, _e, je, Fe, Pe, Be, Je, Ve, ze, He, qe, Ge, Ie, Ke, Qe, Ue, Xe, Ye, Ze, et, tt, nt, st, it, rt, ot;
+  var init_dom = __esm({
+    "node_modules/uhtml/dist/prod/dom.js"() {
+      !(function(e3) {
+        e3[e3.None = 0] = "None", e3[e3.Mutable = 1] = "Mutable", e3[e3.Watching = 2] = "Watching", e3[e3.RecursedCheck = 4] = "RecursedCheck", e3[e3.Recursed = 8] = "Recursed", e3[e3.Dirty = 16] = "Dirty", e3[e3.Pending = 32] = "Pending";
+      })(e || (e = {}));
+      t = [];
+      n = [];
+      ({ link: s, unlink: i, propagate: r, checkDirty: o, endTracking: l, startTracking: a, shallowPropagate: c } = (function({ update: e3, notify: t2, unwatched: n2 }) {
+        let s2 = 0;
+        return { link: function(e4, t3) {
+          const n3 = t3.depsTail;
+          if (void 0 !== n3 && n3.dep === e4) return;
+          let i3;
+          if (4 & t3.flags && (i3 = void 0 !== n3 ? n3.nextDep : t3.deps, void 0 !== i3 && i3.dep === e4)) return i3.version = s2, void (t3.depsTail = i3);
+          const r3 = e4.subsTail;
+          if (void 0 !== r3 && r3.version === s2 && r3.sub === t3) return;
+          const o3 = t3.depsTail = e4.subsTail = { version: s2, dep: e4, sub: t3, prevDep: n3, nextDep: i3, prevSub: r3, nextSub: void 0 };
+          void 0 !== i3 && (i3.prevDep = o3);
+          void 0 !== n3 ? n3.nextDep = o3 : t3.deps = o3;
+          void 0 !== r3 ? r3.nextSub = o3 : e4.subs = o3;
+        }, unlink: i2, propagate: function(e4) {
+          let n3, s3 = e4.nextSub;
+          e: for (; ; ) {
+            const i3 = e4.sub;
+            let r3 = i3.flags;
+            if (3 & r3 && (60 & r3 ? 12 & r3 ? 4 & r3 ? 48 & r3 || !o2(e4, i3) ? r3 = 0 : (i3.flags = 40 | r3, r3 &= 1) : i3.flags = -9 & r3 | 32 : r3 = 0 : i3.flags = 32 | r3, 2 & r3 && t2(i3), 1 & r3)) {
+              const t3 = i3.subs;
+              if (void 0 !== t3) {
+                e4 = t3, void 0 !== t3.nextSub && (n3 = { value: s3, prev: n3 }, s3 = e4.nextSub);
+                continue;
+              }
+            }
+            if (void 0 === (e4 = s3)) {
+              for (; void 0 !== n3; ) if (e4 = n3.value, n3 = n3.prev, void 0 !== e4) {
+                s3 = e4.nextSub;
+                continue e;
+              }
+              break;
+            }
+            s3 = e4.nextSub;
+          }
+        }, checkDirty: function(t3, n3) {
+          let s3, i3 = 0;
+          e: for (; ; ) {
+            const o3 = t3.dep, l2 = o3.flags;
+            let a2 = false;
+            if (16 & n3.flags) a2 = true;
+            else if (17 & ~l2) {
+              if (!(33 & ~l2)) {
+                void 0 === t3.nextSub && void 0 === t3.prevSub || (s3 = { value: t3, prev: s3 }), t3 = o3.deps, n3 = o3, ++i3;
+                continue;
+              }
+            } else if (e3(o3)) {
+              const e4 = o3.subs;
+              void 0 !== e4.nextSub && r2(e4), a2 = true;
+            }
+            if (a2 || void 0 === t3.nextDep) {
+              for (; i3; ) {
+                --i3;
+                const o4 = n3.subs, l3 = void 0 !== o4.nextSub;
+                if (l3 ? (t3 = s3.value, s3 = s3.prev) : t3 = o4, a2) {
+                  if (e3(n3)) {
+                    l3 && r2(o4), n3 = t3.sub;
+                    continue;
+                  }
+                } else n3.flags &= -33;
+                if (n3 = t3.sub, void 0 !== t3.nextDep) {
+                  t3 = t3.nextDep;
+                  continue e;
+                }
+                a2 = false;
+              }
+              return a2;
+            }
+            t3 = t3.nextDep;
+          }
+        }, endTracking: function(e4) {
+          const t3 = e4.depsTail;
+          let n3 = void 0 !== t3 ? t3.nextDep : e4.deps;
+          for (; void 0 !== n3; ) n3 = i2(n3, e4);
+          e4.flags &= -5;
+        }, startTracking: function(e4) {
+          ++s2, e4.depsTail = void 0, e4.flags = -57 & e4.flags | 4;
+        }, shallowPropagate: r2 };
+        function i2(e4, t3 = e4.sub) {
+          const s3 = e4.dep, i3 = e4.prevDep, r3 = e4.nextDep, o3 = e4.nextSub, l2 = e4.prevSub;
+          return void 0 !== r3 ? r3.prevDep = i3 : t3.depsTail = i3, void 0 !== i3 ? i3.nextDep = r3 : t3.deps = r3, void 0 !== o3 ? o3.prevSub = l2 : s3.subsTail = l2, void 0 !== l2 ? l2.nextSub = o3 : void 0 === (s3.subs = o3) && n2(s3), r3;
+        }
+        function r2(e4) {
+          do {
+            const n3 = e4.sub, s3 = e4.nextSub, i3 = n3.flags;
+            32 == (48 & i3) && (n3.flags = 16 | i3, 2 & i3 && t2(n3)), e4 = s3;
+          } while (void 0 !== e4);
+        }
+        function o2(e4, t3) {
+          const n3 = t3.depsTail;
+          if (void 0 !== n3) {
+            let s3 = t3.deps;
+            do {
+              if (s3 === e4) return true;
+              if (s3 === n3) break;
+              s3 = s3.nextDep;
+            } while (void 0 !== s3);
+          }
+          return false;
+        }
+      })({ update: (e3) => "getter" in e3 ? y(e3) : w(e3, e3.value), notify: function e2(t2) {
+        const s2 = t2.flags;
+        if (!(64 & s2)) {
+          t2.flags = 64 | s2;
+          const i2 = t2.subs;
+          void 0 !== i2 ? e2(i2.sub) : n[h++] = t2;
+        }
+      }, unwatched(e3) {
+        if ("getter" in e3) {
+          let t2 = e3.deps;
+          if (void 0 !== t2) {
+            e3.flags = 17;
+            do {
+              t2 = i(t2, e3);
+            } while (void 0 !== t2);
+          }
+        } else "previousValue" in e3 || D.call(e3);
+      } }));
+      f = 0;
+      p = 0;
+      h = 0;
+      O = { greedy: false };
+      $ = (e3) => {
+        t.push(v(void 0));
+        try {
+          return e3();
+        } finally {
+          v(t.pop());
+        }
+      };
+      W = class {
+        constructor(e3, t2) {
+          this._ = e3(t2);
+        }
+        get value() {
+          return this._();
+        }
+        set value(e3) {
+          this._(e3);
+        }
+        peek() {
+          return $(this._);
+        }
+        valueOf() {
+          return this.value;
+        }
+      };
+      E = class extends W {
+        constructor(e3) {
+          super(b, [e3]);
+        }
+        get value() {
+          return super.value[0];
+        }
+        set value(e3) {
+          super.value = [e3];
+        }
+        peek() {
+          return super.peek()[0];
+        }
+      };
+      R = (e3, { greedy: t2 = false } = O) => t2 ? new E(e3) : new W(b, e3);
+      _ = (e3) => {
+        R = e3;
+      };
+      ({ isArray: j } = Array);
+      ({ assign: F, defineProperties: P, entries: B, freeze: J } = Object);
+      V = class {
+        #e;
+        constructor(e3) {
+          this.#e = e3;
+        }
+        valueOf() {
+          return this.#e;
+        }
+        toString() {
+          return String(this.#e);
+        }
+      };
+      H = (e3) => document.createComment(e3);
+      q = 42;
+      G = /* @__PURE__ */ new Set(["plaintext", "script", "style", "textarea", "title", "xmp"]);
+      I = /* @__PURE__ */ new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "keygen", "link", "menuitem", "meta", "param", "source", "track", "wbr"]);
+      K = J({});
+      Q = J([]);
+      U = (e3, t2) => (e3.children === Q && (e3.children = []), e3.children.push(t2), t2.parent = e3, t2);
+      X = (e3, t2, n2) => {
+        e3.props === K && (e3.props = {}), e3.props[t2] = n2;
+      };
+      Y = (e3, t2, n2) => {
+        e3 !== t2 && n2.push(e3);
+      };
+      Z = class {
+        constructor(e3) {
+          this.type = e3, this.parent = null;
+        }
+        toJSON() {
+          return [this.type, this.data];
+        }
+      };
+      ee = class extends Z {
+        constructor(e3) {
+          super(8), this.data = e3;
+        }
+        toString() {
+          return `<!--${this.data}-->`;
+        }
+      };
+      te = class extends Z {
+        constructor(e3) {
+          super(10), this.data = e3;
+        }
+        toString() {
+          return `<!${this.data}>`;
+        }
+      };
+      ne = class extends Z {
+        constructor(e3) {
+          super(3), this.data = e3;
+        }
+        toString() {
+          return this.data;
+        }
+      };
+      se = class extends Z {
+        constructor() {
+          super(q), this.name = "template", this.props = K, this.children = Q;
+        }
+        toJSON() {
+          const e3 = [q];
+          return Y(this.props, K, e3), Y(this.children, Q, e3), e3;
+        }
+        toString() {
+          let e3 = "";
+          for (const t2 in this.props) {
+            const n2 = this.props[t2];
+            null != n2 && ("boolean" == typeof n2 ? n2 && (e3 += ` ${t2}`) : e3 += ` ${t2}="${n2}"`);
+          }
+          return `<template${e3}>${this.children.join("")}</template>`;
+        }
+      };
+      ie = class extends Z {
+        constructor(e3, t2 = false) {
+          super(1), this.name = e3, this.xml = t2, this.props = K, this.children = Q;
+        }
+        toJSON() {
+          const e3 = [1, this.name, +this.xml];
+          return Y(this.props, K, e3), Y(this.children, Q, e3), e3;
+        }
+        toString() {
+          const { xml: e3, name: t2, props: n2, children: s2 } = this, { length: i2 } = s2;
+          let r2 = `<${t2}`;
+          for (const t3 in n2) {
+            const s3 = n2[t3];
+            null != s3 && ("boolean" == typeof s3 ? s3 && (r2 += e3 ? ` ${t3}=""` : ` ${t3}`) : r2 += ` ${t3}="${s3}"`);
+          }
+          if (i2) {
+            r2 += ">";
+            for (let n3 = !e3 && G.has(t2), o2 = 0; o2 < i2; o2++) r2 += n3 ? s2[o2].data : s2[o2];
+            r2 += `</${t2}>`;
+          } else r2 += e3 ? " />" : I.has(t2) ? ">" : `></${t2}>`;
+          return r2;
+        }
+      };
+      re = class extends Z {
+        constructor() {
+          super(11), this.name = "#fragment", this.children = Q;
+        }
+        toJSON() {
+          const e3 = [11];
+          return Y(this.children, Q, e3), e3;
+        }
+        toString() {
+          return this.children.join("");
+        }
+      };
+      oe = "\0";
+      le = `"${oe}"`;
+      ae = `'${oe}'`;
+      ce = /\x00|<[^><\s]+/g;
+      ue = /([^\s/>=]+)(?:=(\x00|(?:(['"])[\s\S]*?\3)))?/g;
+      de = (e3, t2, n2, s2, i2) => [t2, n2, s2];
+      fe = (e3) => {
+        const t2 = [];
+        for (; e3.parent; ) {
+          switch (e3.type) {
+            case q:
+            case 1:
+              "template" === e3.name && t2.push(-1);
+          }
+          t2.push(e3.parent.children.indexOf(e3)), e3 = e3.parent;
+        }
+        return t2;
+      };
+      pe = (e3, t2) => {
+        do {
+          e3 = e3.parent;
+        } while (t2.has(e3));
+        return e3;
+      };
+      he = (e3, t2) => t2 < 0 ? e3.content : e3.childNodes[t2];
+      ve = (e3, t2) => t2.reduceRight(he, e3);
+      be = false;
+      me = ({ firstChild: e3, lastChild: t2 }) => {
+        const n2 = ge || (ge = document.createRange());
+        return n2.setStartAfter(e3), n2.setEndAfter(t2), n2.deleteContents(), e3;
+      };
+      xe = (e3, t2) => be && 11 === e3.nodeType ? 1 / t2 < 0 ? t2 ? me(e3) : e3.lastChild : t2 ? e3.valueOf() : e3.firstChild : e3;
+      ye = /* @__PURE__ */ Symbol("nodes");
+      we = { get() {
+        return this.firstChild.parentNode;
+      } };
+      Se = { value(e3) {
+        me(this).replaceWith(e3);
+      } };
+      ke = { value() {
+        me(this).remove();
+      } };
+      Ce = { value() {
+        const { parentNode: e3 } = this;
+        if (e3 === this) this[ye] === Q && (this[ye] = [...this.childNodes]);
+        else {
+          if (e3) {
+            let { firstChild: e4, lastChild: t2 } = this;
+            for (this[ye] = [e4]; e4 !== t2; ) this[ye].push(e4 = e4.nextSibling);
+          }
+          this.replaceChildren(...this[ye]);
+        }
+        return this;
+      } };
+      Te.prototype = DocumentFragment.prototype;
+      De = 16;
+      Oe = 32768;
+      Ne = ((e3 = globalThis.document) => {
+        let t2, n2 = e3.createElement("template");
+        return (s2, i2 = false) => {
+          if (i2) return t2 || (t2 = e3.createRange(), t2.selectNodeContents(e3.createElementNS("http://www.w3.org/2000/svg", "svg"))), t2.createContextualFragment(s2);
+          n2.innerHTML = s2;
+          const r2 = n2.content;
+          return n2 = n2.cloneNode(false), r2;
+        };
+      })(document);
+      $e = /* @__PURE__ */ Symbol("ref");
+      We = (e3, t2) => {
+        for (const [n2, s2] of B(t2)) {
+          const t3 = "role" === n2 ? n2 : `aria-${n2.toLowerCase()}`;
+          null == s2 ? e3.removeAttribute(t3) : e3.setAttribute(t3, s2);
+        }
+      };
+      Ae = (e3) => (t2, n2) => {
+        null == n2 ? t2.removeAttribute(e3) : t2.setAttribute(e3, n2);
+      };
+      Ee = (e3, t2) => {
+        e3[ye] = ((e4, t3, n2, s2) => {
+          const i2 = s2.parentNode, r2 = t3.length;
+          let o2 = e4.length, l2 = r2, a2 = 0, c2 = 0, u2 = null;
+          for (; a2 < o2 || c2 < l2; ) if (o2 === a2) {
+            const e5 = l2 < r2 ? c2 ? n2(t3[c2 - 1], -0).nextSibling : n2(t3[l2], 0) : s2;
+            for (; c2 < l2; ) i2.insertBefore(n2(t3[c2++], 1), e5);
+          } else if (l2 === c2) for (; a2 < o2; ) u2 && u2.has(e4[a2]) || n2(e4[a2], -1).remove(), a2++;
+          else if (e4[a2] === t3[c2]) a2++, c2++;
+          else if (e4[o2 - 1] === t3[l2 - 1]) o2--, l2--;
+          else if (e4[a2] === t3[l2 - 1] && t3[c2] === e4[o2 - 1]) {
+            const s3 = n2(e4[--o2], -0).nextSibling;
+            i2.insertBefore(n2(t3[c2++], 1), n2(e4[a2++], -0).nextSibling), i2.insertBefore(n2(t3[--l2], 1), s3), e4[o2] = t3[l2];
+          } else {
+            if (!u2) {
+              u2 = /* @__PURE__ */ new Map();
+              let e5 = c2;
+              for (; e5 < l2; ) u2.set(t3[e5], e5++);
+            }
+            const s3 = u2.get(e4[a2]) ?? -1;
+            if (s3 < 0) n2(e4[a2++], -1).remove();
+            else if (c2 < s3 && s3 < l2) {
+              let r3 = a2, d2 = 1;
+              for (; ++r3 < o2 && r3 < l2 && u2.get(e4[r3]) === s3 + d2; ) d2++;
+              if (d2 > s3 - c2) {
+                const r4 = n2(e4[a2], 0);
+                for (; c2 < s3; ) i2.insertBefore(n2(t3[c2++], 1), r4);
+              } else i2.replaceChild(n2(t3[c2++], 1), n2(e4[a2++], -1));
+            } else a2++;
+          }
+          return t3;
+        })(e3[ye] || Q, t2, xe, e3);
+      };
+      Me = /* @__PURE__ */ new WeakMap();
+      Re = (e3, t2) => {
+        const n2 = "object" == typeof t2 ? t2 ?? e3 : ((e4, t3) => {
+          let n3 = Me.get(e4);
+          return n3 ? n3.data = t3 : Me.set(e4, n3 = document.createTextNode(t3)), n3;
+        })(e3, t2), s2 = e3[ye] ?? e3;
+        n2 !== s2 && s2.replaceWith(xe(e3[ye] = n2, 1));
+      };
+      Le = (e3, t2) => {
+        Re(e3, t2 instanceof W ? t2.value : t2);
+      };
+      _e = ({ dataset: e3 }, t2) => {
+        for (const [n2, s2] of B(t2)) null == s2 ? delete e3[n2] : e3[n2] = s2;
+      };
+      je = /* @__PURE__ */ new Map();
+      Fe = (e3) => {
+        let t2 = je.get(e3);
+        return t2 || je.set(e3, t2 = Pe(e3)), t2;
+      };
+      Pe = (e3) => (t2, n2) => {
+        t2[e3] = n2;
+      };
+      Be = (e3, t2) => {
+        for (const [n2, s2] of B(t2)) Ae(n2)(e3, s2);
+      };
+      Je = (e3, t2, n2) => n2 ? (n3, s2) => {
+        const i2 = n3[t2];
+        i2?.length && n3.removeEventListener(e3, ...i2), s2 && n3.addEventListener(e3, ...s2), n3[t2] = s2;
+      } : (n3, s2) => {
+        const i2 = n3[t2];
+        i2 && n3.removeEventListener(e3, i2), s2 && n3.addEventListener(e3, s2), n3[t2] = s2;
+      };
+      Ve = (e3) => (t2, n2) => {
+        t2.toggleAttribute(e3, !!n2);
+      };
+      ze = false;
+      He = true;
+      qe = (e3) => {
+        He = e3;
+      };
+      Ge = () => He;
+      Ie = (e3) => xe(e3.n ? e3.update(e3) : e3.valueOf(false), 1);
+      Ke = (e3, t2) => {
+        const n2 = [], s2 = e3.length, i2 = t2.length;
+        for (let r2, o2, l2 = 0, a2 = 0; a2 < i2; a2++) r2 = t2[a2], n2[a2] = l2 < s2 && (o2 = e3[l2++]).t === r2.t ? (t2[a2] = o2).update(r2) : r2.valueOf(false);
+        return n2;
+      };
+      Qe = (e3, t2, n2) => {
+        const s2 = R, i2 = n2.length;
+        let r2 = 0;
+        _((e4) => r2 < i2 ? n2[r2++] : n2[r2++] = e4 instanceof W ? e4 : s2(e4));
+        const o2 = Ge();
+        o2 && qe(!o2);
+        try {
+          return e3(t2, Ze);
+        } finally {
+          o2 && qe(o2), _(s2);
+        }
+      };
+      Ue = (e3, t2) => (e3.t === t2.t ? e3.update(t2) : (e3.n.replaceWith(Ie(t2)), e3 = t2), e3);
+      Xe = (e3, t2, n2) => {
+        let s2, i2 = [], r2 = [De, null, n2], o2 = true;
+        return x(() => {
+          if (o2) o2 = false, s2 = Qe(t2, n2, i2), i2.length || (i2 = Q), s2 ? (e3.replaceWith(Ie(s2)), r2[1] = s2) : e3.remove();
+          else {
+            const e4 = Qe(t2, n2, i2);
+            s2 && Ue(s2, e4) === e4 && (r2[2] = s2 = e4);
+          }
+        }), r2;
+      };
+      Ye = /* @__PURE__ */ Symbol();
+      Ze = {};
+      et = class _et {
+        constructor(e3, t2) {
+          this.t = e3, this.v = t2, this.n = null, this.k = -1;
+        }
+        valueOf(e3 = Ge()) {
+          const [t2, n2, s2] = this.t, i2 = document.importNode(t2, true), r2 = this.v;
+          let o2, l2, a2, c2 = r2.length, u2 = Q;
+          if (0 < c2) {
+            for (u2 = n2.slice(0); c2--; ) {
+              const [t3, s3, d3] = n2[c2], f3 = r2[c2];
+              if (l2 !== t3 && (o2 = ve(i2, t3), l2 = t3), d3 & De) {
+                const e4 = o2[Ye] || (o2[Ye] = {});
+                if (d3 === De) {
+                  for (const { name: t4, value: n3 } of o2.attributes) e4[t4] ??= n3;
+                  e4.children ??= [...o2.content.childNodes], u2[c2] = Xe(o2, f3, e4);
+                } else s3(e4, f3), u2[c2] = [d3, s3, e4];
+              } else {
+                let t4 = true;
+                e3 || !(8 & d3) || d3 & Oe || (1 & d3 ? (t4 = false, f3.length && s3(o2, f3[0] instanceof _et ? Ke(Q, f3) : f3)) : f3 instanceof _et && (t4 = false, s3(o2, Ie(f3)))), t4 && (512 === d3 ? this.k = c2 : (16384 === d3 && (a2 ??= /* @__PURE__ */ new Set()).add(o2), s3(o2, f3))), u2[c2] = [d3, s3, f3, o2], e3 && 8 & d3 && o2.remove();
+              }
+            }
+            a2 && ((e4) => {
+              for (const t3 of e4) {
+                const e5 = t3[$e];
+                "function" == typeof e5 ? e5(t3) : e5 instanceof W ? e5.value = t3 : e5 && (e5.current = t3);
+              }
+            })(a2);
+          }
+          const { childNodes: d2 } = i2, f2 = d2.length, p2 = 1 === f2 ? d2[0] : f2 ? Te(i2) : i2;
+          return this.v = u2, this.n = p2, -1 < this.k && s2.set(u2[this.k][2], p2, this), p2;
+        }
+        update(e3) {
+          const t2 = this.k, n2 = this.v, s2 = e3.v;
+          if (-1 < t2 && n2[t2][2] !== s2[t2]) return ((e4, t3) => e4.t[2].get(t3)?.update(e4) ?? e4.valueOf(false))(e3, s2[t2]);
+          let { length: i2 } = n2;
+          for (; i2--; ) {
+            const e4 = n2[i2], [t3, r2, o2] = e4;
+            if (512 === t3) continue;
+            let l2 = s2[i2];
+            if (t3 & De) if (t3 === De) {
+              const t4 = l2(o2, Ze);
+              r2 && Ue(r2, t4) === t4 && (e4[2] = t4);
+            } else r2(o2, l2);
+            else {
+              let n3 = l2;
+              if (1 & t3) {
+                if (8 & t3) l2.length && l2[0] instanceof _et && (n3 = Ke(o2, l2));
+                else if (256 & t3 && l2[0] === o2[0]) continue;
+              } else if (8 & t3) if (t3 & Oe) {
+                if (l2 === o2) {
+                  r2(e4[3], n3);
+                  continue;
+                }
+              } else o2 instanceof _et && (l2 = Ue(o2, l2), n3 = l2.n);
+              l2 !== o2 && (e4[2] = l2, r2(e4[3], n3));
+            }
+          }
+          return this.n;
+        }
+      };
+      tt = /* @__PURE__ */ new WeakMap();
+      nt = class extends Map {
+        constructor() {
+          super()._ = new FinalizationRegistry((e3) => this.delete(e3));
+        }
+        get(e3) {
+          const t2 = super.get(e3)?.deref();
+          return t2 && tt.get(t2);
+        }
+        set(e3, t2, n2) {
+          tt.set(t2, n2), this._.register(t2, e3), super.set(e3, new WeakRef(t2));
+        }
+      };
+      st = (({ Comment: e3 = ee, DocumentType: t2 = te, Text: n2 = ne, Fragment: s2 = re, Element: i2 = ie, Component: r2 = se, update: o2 = de }) => (l2, a2, c2) => {
+        const u2 = l2.join(oe).trim(), d2 = /* @__PURE__ */ new Set(), f2 = [];
+        let p2 = new s2(), h2 = 0, v2 = 0, g = 0, b2 = Q;
+        for (const s3 of u2.matchAll(ce)) {
+          if (0 < v2) {
+            v2--;
+            continue;
+          }
+          const l3 = s3[0], m = s3.index;
+          if (h2 < m && U(p2, new n2(u2.slice(h2, m))), l3 === oe) {
+            "table" === p2.name && (p2 = U(p2, new i2("tbody", c2)), d2.add(p2));
+            const t3 = U(p2, new e3("\u25E6"));
+            f2.push(o2(t3, 8, fe(t3), "", a2[g++])), h2 = m + 1;
+          } else if (l3.startsWith("<!")) {
+            const n3 = u2.indexOf(">", m + 2);
+            if ("-->" === u2.slice(n3 - 2, n3 + 1)) {
+              const t3 = u2.slice(m + 4, n3 - 2);
+              "!" === t3[0] && U(p2, new e3(t3.slice(1).replace(/!$/, "")));
+            } else U(p2, new t2(u2.slice(m + 2, n3)));
+            h2 = n3 + 1;
+          } else if (l3.startsWith("</")) {
+            const e4 = u2.indexOf(">", m + 2);
+            c2 && "svg" === p2.name && (c2 = false), p2 = pe(p2, d2), h2 = e4 + 1;
+          } else {
+            const e4 = m + l3.length, t3 = u2.indexOf(">", e4), s4 = l3.slice(1);
+            let x2 = s4;
+            if (s4 === oe ? (x2 = "template", p2 = U(p2, new r2()), b2 = fe(p2).slice(1), f2.push(o2(p2, q, b2, "", a2[g++]))) : (c2 || (x2 = x2.toLowerCase(), "table" !== p2.name || "tr" !== x2 && "td" !== x2 || (p2 = U(p2, new i2("tbody", c2)), d2.add(p2)), "tbody" === p2.name && "td" === x2 && (p2 = U(p2, new i2("tr", c2)), d2.add(p2))), p2 = U(p2, new i2(x2, !!c2 && "svg" !== x2)), b2 = Q), e4 < t3) {
+              let n3 = false;
+              for (const [s5, i3, r3] of u2.slice(e4, t3).matchAll(ue)) if (r3 === oe || r3 === le || r3 === ae || (n3 = i3.endsWith(oe))) {
+                const e5 = b2 === Q ? b2 = fe(p2) : b2;
+                f2.push(o2(p2, 2, e5, n3 ? i3.slice(0, -1) : i3, a2[g++])), n3 = false, v2++;
+              } else X(p2, i3, !r3 || r3.slice(1, -1));
+              b2 = Q;
+            }
+            h2 = t3 + 1;
+            const y2 = 0 < t3 && "/" === u2[t3 - 1];
+            if (c2) y2 && (p2 = p2.parent);
+            else if (y2 || I.has(x2)) p2 = y2 ? pe(p2, d2) : p2.parent;
+            else if ("svg" === x2) c2 = true;
+            else if (G.has(x2)) {
+              const e5 = u2.indexOf(`</${s4}>`, h2), t4 = u2.slice(h2, e5);
+              t4.trim() === oe ? (v2++, f2.push(o2(p2, 3, fe(p2), "", a2[g++]))) : U(p2, new n2(t4)), p2 = p2.parent, h2 = e5 + s4.length + 3, v2++;
+              continue;
+            }
+          }
+        }
+        return h2 < u2.length && U(p2, new n2(u2.slice(h2))), [p2, f2];
+      })({ Comment: ee, DocumentType: te, Text: ne, Fragment: re, Element: ie, Component: se, update: (e3, t2, n2, s2, i2) => {
+        switch (t2) {
+          case q:
+            return [n2, i2, De];
+          case 8:
+            return j(i2) ? [n2, Ee, 9] : i2 instanceof V ? [n2, (r2 = e3.xml, (e4, t3) => {
+              const n3 = e4[$e] ?? (e4[$e] = {});
+              n3.v !== t3 && (n3.f = Te(Ne(t3, r2)), n3.v = t3), Re(e4, n3.f);
+            }), 8192] : i2 instanceof W ? [n2, Le, 32776] : [n2, Re, 8];
+          case 3:
+            return [n2, Fe("textContent"), 2048];
+          case 2: {
+            const t3 = e3.type === q;
+            switch (s2.at(0)) {
+              case "@": {
+                const e4 = j(i2);
+                return [n2, Je(s2.slice(1), Symbol(s2), e4), e4 ? 257 : 256];
+              }
+              case "?":
+                return [n2, Ve(s2.slice(1)), 4096];
+              case ".":
+                return "..." === s2 ? [n2, t3 ? F : Be, t3 ? 144 : 128] : [n2, Pe(s2.slice(1)), t3 ? 80 : 64];
+              default:
+                return t3 ? [n2, Pe(s2), 1040] : "aria" === s2 ? [n2, We, 2] : "data" !== s2 || /^object$/i.test(e3.name) ? "key" === s2 ? [n2, ze = true, 512] : "ref" === s2 ? [n2, Fe($e), 16384] : s2.startsWith("on") ? [n2, Fe(s2.toLowerCase()), 64] : [n2, Ae(s2), 4] : [n2, _e, 32];
+            }
+          }
+        }
+        var r2;
+      } });
+      it = (e3, t2 = /* @__PURE__ */ new WeakMap()) => (n2, ...s2) => {
+        let i2 = t2.get(n2);
+        return i2 || (i2 = st(n2, s2, e3), i2.push((() => {
+          const e4 = ze;
+          return ze = false, e4;
+        })() ? new nt() : null), i2[0] = Ne(i2[0].toString(), e3), t2.set(n2, i2)), new et(i2, s2);
+      };
+      rt = it(false);
+      ot = it(true);
+    }
+  });
+
+  // src/settings.ts
+  var settings_exports = {};
+  __export(settings_exports, {
+    clearOutdatedSettings: () => clearOutdatedSettings,
+    featureSettings: () => featureSettings,
+    injectSettingsTrigger: () => injectSettingsTrigger
+  });
+  function localStorageStore(key, defaultValue) {
+    const store = {
+      get() {
+        const v2 = localStorage.getItem(key);
+        if (v2) return JSON.parse(v2);
+        if (defaultValue != null) {
+          store.reset();
+          return JSON.parse(JSON.stringify(defaultValue));
+        }
+      },
+      set(value) {
+        localStorage.setItem(key, JSON.stringify(value));
+      },
+      reset() {
+        if (defaultValue != null) {
+          store.set(defaultValue);
+        } else {
+          localStorage.removeItem(key);
+        }
+      }
+    };
+    return store;
+  }
+  function Settings() {
+    const featureStates = Object.fromEntries(
+      Object.entries(featureSettings).map(([name, setting]) => [name, L(setting.get())])
+    );
+    return at`
+    <div id="npm-userscript-settings" @click=${(e3) => e3.currentTarget.remove()}> }>
+      <style>
+        #npm-userscript-settings {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10000;
+          font-family: 'Source Sans Pro', 'Lucida Grande', sans-serif;
+        }
+        #npm-userscript-settings .dialog {
+          background-color: var(--background-color);
+          width: 700px;
+          max-width: 90vw;
+          max-height: 90vh;
+          padding: 16px;
+          border-radius: 4px;
+          overflow-y: auto;
+        }
+        #npm-userscript-settings h2 {
+          margin: 0;
+        }
+        #npm-userscript-settings .features {
+          font-size: 14px;
+          margin: 12px 0 4px 0;
+          color: var(--color-fg-muted);
+        }
+        #npm-userscript-settings .setting {
+          display: grid;
+          grid-template-columns: auto 1fr;
+          grid-template-rows: auto auto;
+          margin: 0 0 10px 0;
+        }
+        #npm-userscript-settings .setting > input {
+          grid-area: 1 / 1 / 3 / 2;
+          margin: 3px 6px 0 0;
+        }
+        #npm-userscript-settings .setting > span {
+          grid-area: 1 / 2 / 2 / 3;
+          font-weight: bold;
+        }
+        #npm-userscript-settings .setting > p {
+          grid-area: 2 / 2 / 3 / 3; 
+          margin: 4px 0 0 0;
+          opacity: 0.6;
+        }
+        #npm-userscript-settings .footer {
+          font-size: 12px;
+          margin-top: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        #npm-userscript-settings .footer p {
+          color: var(--color-fg-muted);
+          margin: 0
+        }
+      </style>
+      <div class="dialog" @click=${(e3) => e3.stopPropagation()}>
+        <h2>Npm Userscript Settings</h2>
+        <p class="features">Features</p>
+        ${Object.entries(featureStates).map(([name, state]) => {
+      return at`
+            <label class="setting" key=${name}>
+              <input
+                type="checkbox"
+                .checked=${state.value}
+                @change=${(e3) => {
+        const checked = e3.target.checked;
+        featureSettings[name].set(checked);
+        state.value = checked;
+      }}
+              />
+              <span>${name}</span>
+              <p>${allFeatures[name].description.trim().replace(/\n/g, " ")}</p>
+            </label>
+          `;
+    })}
+        <div class="footer">
+          <p class="note">(Refresh page to view changes)</p>
+          <button
+            @click=${() => {
+      Object.entries(featureStates).forEach(([name, state]) => {
+        featureSettings[name].reset();
+        state.value = featureSettings[name].get();
+      });
+    }}
+          >
+            Reset to defaults 
+          </button>
+        </button>
+      </div>
+    </div>
+  `;
+  }
+  function injectSettingsTrigger() {
+    if (document.querySelector(".npm-userscript-settings-trigger")) return;
+    const button = document.createElement("button");
+    button.classList.add("npm-userscript-settings-trigger");
+    button.innerHTML = "Open Npm Userscript Settings";
+    button.style.cssText = "font-size: 13px; border: 0px; background: none; cursor: pointer; padding: 0; opacity: 0.8;";
+    button.onclick = () => document.body.append(at`<${Settings} />`);
+    const sidebar = document.querySelector('[aria-label="Package sidebar"]');
+    sidebar?.insertAdjacentElement("beforeend", button);
+  }
+  function clearOutdatedSettings() {
+    const keys = Object.keys(localStorage);
+    for (const key of keys) {
+      if (key.startsWith("npm-userscript:settings:feature:")) {
+        const featureName = key.slice("npm-userscript:settings:feature:".length);
+        if (!(featureName in allFeatures)) {
+          localStorage.removeItem(key);
+        }
+      }
+    }
+  }
+  var featureSettings;
+  var init_settings = __esm({
+    "src/settings.ts"() {
+      init_dom();
+      init_all_features();
+      featureSettings = Object.fromEntries(
+        Object.entries(allFeatures).map(([name, feature]) => {
+          return [
+            name,
+            localStorageStore(`npm-userscript:settings:feature:${name}`, feature.disabled ? false : true)
+          ];
+        })
+      );
+    }
+  });
+
   // src/features/fix-issue-pr-count.ts
   var fix_issue_pr_count_exports = {};
   __export(fix_issue_pr_count_exports, {
@@ -741,8 +1686,9 @@ versions, and fix provenance icon alignment.
     if (isSamePackagePage(previousUrl)) return;
     document.querySelectorAll(".npm-userscript-issue-pr-count").forEach((el) => el.remove());
   }
-  function runPre4() {
+  async function runPre4() {
     if (!isValidPackagePage()) return;
+    if ((await getFeatureSettings())["repository-card"].get() === true) return;
     addStyle(`
     #issues + p,
     #pulls + p {
@@ -769,35 +1715,43 @@ versions, and fix provenance icon alignment.
   }
   async function run3() {
     if (!isValidPackagePage()) return;
+    if ((await getFeatureSettings())["repository-card"].get() === true) return;
     await new Promise((resolve) => setTimeout(resolve, 2e3));
-    if (document.getElementById("issues") || document.getElementById("pulls")) {
-      getTotalFilesColumn();
-      return;
-    }
+    if (document.getElementById("issues") || document.getElementById("pulls")) return;
     if (document.querySelector(".npm-userscript-issue-pr-count")) return;
-    const repositoryLink = document.getElementById("repository-link");
-    const repo = repositoryLink?.textContent?.match(/github\.com\/([^\/]+\/[^\/]+)/)?.[1];
-    if (!repo) return;
-    const counts = await getIssueAndPrCount(repo);
-    const ref = getTotalFilesColumn();
+    const ownerRepo = getGitHubOwnerRepo();
+    if (!ownerRepo) return;
+    const counts = await fetchIssueAndPrCount();
+    let ref;
+    if ((await getFeatureSettings())["stars"].get() === true) {
+      ref = await waitForElement(".npm-userscript-stars-column", 5e3);
+    } else {
+      ref = getTotalFilesColumn();
+    }
     if (!ref) return;
     if (document.getElementById("issues") || document.getElementById("pulls")) return;
-    insertCountNode(ref, "Pull Requests", counts.pulls, `https://github.com/${repo}/pulls`);
-    insertCountNode(ref, "Issues", counts.issues, `https://github.com/${repo}/issues`);
+    insertCountNode(ref, "Pull Requests", counts.pulls, `https://github.com/${ownerRepo}/pulls`);
+    const c2 = insertCountNode(ref, "Issues", counts.issues, `https://github.com/${ownerRepo}/issues`);
+    balanceColumn(c2);
   }
   function getTotalFilesColumn() {
     const sidebarColumns = document.querySelectorAll(
       '[aria-label="Package sidebar"] div.w-50:not(.w-100)'
     );
-    const refIndex = Array.from(sidebarColumns).findIndex(
+    return Array.from(sidebarColumns).find(
       (el) => el.querySelector("h3")?.textContent.includes("Total Files")
     );
-    if (refIndex === -1) return;
-    const ref = sidebarColumns[refIndex];
-    if (refIndex % 2 === 0) {
-      ref.classList.add("w-100");
+  }
+  function balanceColumn(column) {
+    const sidebarColumns = document.querySelectorAll(
+      '[aria-label="Package sidebar"] div.w-50:not(.w-100)'
+    );
+    const columnIndex = Array.from(sidebarColumns).indexOf(column);
+    if (columnIndex % 2 === 1) {
+      const previousColumn = sidebarColumns[columnIndex - 1];
+      if (!previousColumn) return;
+      previousColumn.classList.add("w-100");
     }
-    return ref;
   }
   function insertCountNode(ref, name, count, link) {
     const cloned = ref.cloneNode(true);
@@ -807,25 +1761,25 @@ versions, and fix provenance icon alignment.
     const linkHtml = `<a class="npm-userscript-issue-pr-link" href="${link}">${count}</a>`;
     cloned.querySelector("p").innerHTML = linkHtml;
     ref.insertAdjacentElement("afterend", cloned);
+    return cloned;
   }
-  async function getIssueAndPrCount(repo) {
-    const cached = cache.get(`issue-pr-count:${repo}`);
-    if (cached) return JSON.parse(cached);
-    const issues = fetchJson(
-      `https://api.github.com/search/issues?q=repo:${repo}+type:issue+state:open&per_page=0`
-    ).then((data) => data.total_count ?? 0).catch(() => 0);
-    const pulls = fetchJson(
-      `https://api.github.com/search/issues?q=repo:${repo}+type:pr+state:open&per_page=0`
-    ).then((data) => data.total_count ?? 0).catch(() => 0);
-    const promises = await Promise.all([issues, pulls]);
-    const result = { issues: promises[0], pulls: promises[1] };
-    cache.set(`issue-pr-count:${repo}`, JSON.stringify(result), 60);
-    return result;
+  async function fetchIssueAndPrCount() {
+    const data = await fetchGitHubRepoData();
+    if (!data) return { issues: 0, pulls: 0 };
+    const prCount = await fetchGitHubPullRequestsCount();
+    if (prCount === void 0) return { issues: 0, pulls: 0 };
+    const issueAndPrCount = data.open_issues_count;
+    const issues = issueAndPrCount - prCount;
+    const pulls = prCount;
+    return { issues, pulls };
+  }
+  async function getFeatureSettings() {
+    const settings = await Promise.resolve().then(() => (init_settings(), settings_exports));
+    return settings.featureSettings;
   }
   var description4;
   var init_fix_issue_pr_count = __esm({
     "src/features/fix-issue-pr-count.ts"() {
-      init_utils_cache();
       init_utils_fetch();
       init_utils();
       description4 = `Show "Issue" and "Pull Requests" counts in the package sidebar. At the time of writing, npm's own
@@ -886,6 +1840,23 @@ implementation is broken for large numbers for some reason. This temporarily fix
         display: flex;
       }
     `);
+      addStyle(`
+      aside[aria-label="Package sidebar"] > h3 + div {
+        margin-bottom: 0;
+      }
+    `);
+    }
+    if (/^\/settings\/.+?\/members/.test(location.pathname)) {
+      addStyle(`
+      #tabpanel-members h3 {
+        width: 300px;
+        flex-grow: 0;
+      }
+
+      #tabpanel-members [data-type="role"] {
+        text-align: left;
+      }
+    `);
     }
   }
   function run4() {
@@ -903,7 +1874,7 @@ implementation is broken for large numbers for some reason. This temporarily fix
   var init_fix_styles = __esm({
     "src/features/fix-styles.ts"() {
       init_utils();
-      description5 = `Fix various style issues on the npm site (mostly the package page at the moment).
+      description5 = `Fix various style issues on the npm site.
 `;
     }
   });
@@ -952,13 +1923,13 @@ implementation is broken for large numbers for some reason. This temporarily fix
     }
   `);
   }
-  function run5() {
+  async function run5() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-helpful-links")) return;
     const packageName = getPackageName();
     if (!packageName) return;
     const links = [
-      getRepoLinkData(),
+      await getRepoLinkData(),
       getHomepageLinkData(),
       getFundingLinkData(),
       getPublintLinkData(packageName),
@@ -987,42 +1958,35 @@ implementation is broken for large numbers for some reason. This temporarily fix
   <div>`;
     injectParent.appendChild(group);
   }
-  function getRepoLinkData() {
-    const repositoryLink = document.querySelector(
-      "a[aria-labelledby*=repository-link]"
-    );
+  async function getRepoLinkData() {
+    const useFullRepoLink = (await getFeatureSettings2())["repository-directory"].get() === true;
+    const repositoryLink = useFullRepoLink ? await getFullRepositoryLink() : getNpmContext().context.packument.repository;
     if (repositoryLink) {
       return {
         label: "Repository",
-        url: repositoryLink.href,
+        url: repositoryLink,
         iconSvg: `<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g fill="#F1502F" fill-rule="nonzero"><path d="M15.6981994,7.28744895 L8.71251571,0.3018063 C8.3102891,-0.1006021 7.65784619,-0.1006021 7.25527133,0.3018063 L5.80464367,1.75263572 L7.64478689,3.59281398 C8.07243561,3.44828825 8.56276901,3.5452772 8.90352982,3.88604451 C9.24638012,4.22907547 9.34249661,4.72359725 9.19431703,5.15282127 L10.9679448,6.92630874 C11.3971607,6.77830046 11.8918472,6.8738964 12.2346975,7.21727561 C12.7135387,7.69595181 12.7135387,8.47203759 12.2346975,8.95106204 C11.755508,9.43026062 10.9796112,9.43026062 10.5002476,8.95106204 C10.140159,8.59061834 10.0510075,8.06127108 10.2336636,7.61759448 L8.57948492,5.9635584 L8.57948492,10.3160467 C8.69614805,10.3738569 8.80636859,10.4509954 8.90352982,10.5479843 C9.38237103,11.0268347 9.38237103,11.8027463 8.90352982,12.2822931 C8.42468862,12.7609693 7.64826937,12.7609693 7.16977641,12.2822931 C6.69093521,11.8027463 6.69093521,11.0268347 7.16977641,10.5479843 C7.28818078,10.4297518 7.42521643,10.3402504 7.57148065,10.2803505 L7.57148065,5.88746473 C7.42521643,5.82773904 7.28852903,5.73893407 7.16977641,5.62000506 C6.80707597,5.25747183 6.71983981,4.72499027 6.90597844,4.27957241 L5.09195384,2.465165 L0.301800552,7.25506126 C-0.100600184,7.65781791 -0.100600184,8.31027324 0.301800552,8.71268164 L7.28783254,15.6983243 C7.69005915,16.1005586 8.34232793,16.1005586 8.74507691,15.6983243 L15.6981994,8.74506934 C16.1006002,8.34266094 16.1006002,7.68968322 15.6981994,7.28744895" id="Path"></path></g></svg>`
       };
     }
   }
   function getHomepageLinkData() {
-    const homepageLink = document.querySelector(
-      "a[aria-labelledby*=homePage-link]"
-    );
+    const homepageLink = getNpmContext().context.packument.homepage;
     if (homepageLink) {
       return {
         label: "Homepage",
-        url: homepageLink.href,
+        url: homepageLink,
         iconSvg: `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="#2679d8" d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"></path></svg>`
       };
     }
   }
   function getFundingLinkData() {
-    const sidebarLinks = document.querySelectorAll(
-      '[aria-label="Package sidebar"] a'
-    );
-    for (const a2 of sidebarLinks) {
-      if (a2.textContent === "Fund this package") {
-        return {
-          label: "Fund this package",
-          url: a2.href,
-          iconSvg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><path fill="#fa5b9b" d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"></path></svg>`
-        };
-      }
+    const fundingLink = getNpmContext().context.packument.funding?.url;
+    if (fundingLink) {
+      return {
+        label: "Fund this package",
+        url: fundingLink,
+        iconSvg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><path fill="#fa5b9b" d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"></path></svg>`
+      };
     }
   }
   function getPublintLinkData(packageName) {
@@ -1070,9 +2034,15 @@ implementation is broken for large numbers for some reason. This temporarily fix
   function scopeSvgId(svg, scope) {
     return svg.replace(/id="([^"]+)"/g, `id="${scope}-$1"`).replace(/url\(#([^ )]+)\)/g, `url(#${scope}-$1)`);
   }
+  async function getFeatureSettings2() {
+    const settings = await Promise.resolve().then(() => (init_settings(), settings_exports));
+    return settings.featureSettings;
+  }
   var description6;
   var init_helpful_links = __esm({
     "src/features/helpful-links.ts"() {
+      init_utils_fetch();
+      init_utils_npm_context();
       init_utils();
       description6 = "Add helpful links beside the package header for convenience.";
     }
@@ -2431,6 +3401,7 @@ implementation is broken for large numbers for some reason. This temporarily fix
   var no_code_beta_exports = {};
   __export(no_code_beta_exports, {
     description: () => description9,
+    disabled: () => disabled2,
     runPre: () => runPre8
   });
   function runPre8() {
@@ -2440,12 +3411,13 @@ implementation is broken for large numbers for some reason. This temporarily fix
     }
   `);
   }
-  var description9;
+  var description9, disabled2;
   var init_no_code_beta = __esm({
     "src/features/no-code-beta.ts"() {
       init_utils();
-      description9 = `Hide the "Beta" label in the package code tab because it has been working for around 3 years now.
+      description9 = `Hide the "Beta" label in the package code tab.
 `;
+      disabled2 = true;
     }
   });
 
@@ -2521,9 +3493,9 @@ implementation is broken for large numbers for some reason. This temporarily fix
     }
   });
 
-  // src/features/show-binary-label.ts
-  var show_binary_label_exports = {};
-  __export(show_binary_label_exports, {
+  // src/features/repository-card.ts
+  var repository_card_exports = {};
+  __export(repository_card_exports, {
     description: () => description12,
     run: () => run10,
     runPre: () => runPre10,
@@ -2531,12 +3503,187 @@ implementation is broken for large numbers for some reason. This temporarily fix
   });
   function teardown4(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
-    document.querySelectorAll(".npm-userscript-types-label").forEach((el) => el.remove());
+    document.querySelector(".npm-userscript-repository-card")?.remove();
   }
   function runPre10() {
-    addPackageLabelStyle();
+    if (!isValidPackagePage()) return;
+    addStyle(`
+    .npm-userscript-repository-card {
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin-top: 14px;
+      margin-right: -8px;
+      font-size: 18px;
+    }
+
+    .npm-userscript-repository-card-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0;
+    }
+    
+    .npm-userscript-card-title-separator,
+    .npm-userscript-card-title-separator + a {
+      color: #757575;
+    }
+
+    .npm-userscript-repository-card-description {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin: 0;
+      margin-top: 10px;
+    }
+
+    .npm-userscript-repository-card-entry {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .npm-userscript-repository-card a {
+      text-decoration: none;
+    }
+
+    .npm-userscript-repository-card a:focus,
+    .npm-userscript-repository-card a:hover {
+      text-decoration: underline;
+      color: #cb3837;
+    }
+  `);
+    addStyle(`
+    .npm-userscript-repository-card + p {
+      display: none;
+    }
+  `);
   }
   async function run10() {
+    if (!isValidPackagePage()) return;
+    if (document.querySelector(".npm-userscript-repository-card")) return;
+    const repositoryH3 = document.getElementById("repository");
+    if (!repositoryH3) return;
+    const repoData = await fetchGitHubRepoData();
+    if (!repoData) return;
+    const prCount = await fetchGitHubPullRequestsCount();
+    if (prCount === void 0) return;
+    const issueCount = repoData.open_issues_count - prCount;
+    const packageJson = await fetchPackageJson();
+    let directory = packageJson?.repository?.directory;
+    if (directory) {
+      directory = directory.replace(/^\/+/, "").replace(/\/+$/, "");
+    }
+    const fullRepoLink = repoData.html_url + (directory ? `/tree/${repoData.default_branch}/${directory}` : "");
+    const card = document.createElement("div");
+    card.className = "npm-userscript-repository-card";
+    card.innerHTML = `
+    <div class="npm-userscript-repository-card-title">
+      <img
+        src="${repoData.owner.avatar_url}"
+        alt="Repo logo"
+        width="24"
+        height="24"
+        style="border-radius: ${repoData.organization ? "3px" : "100%"}"
+      >
+      <a class="fw6" href="${repoData.html_url}" rel="noopener noreferrer nofollow">
+        ${repoData.full_name}
+      </a>
+      ${directory ? `
+            <span class="npm-userscript-card-title-separator">/</span>
+            <a class="fw6" href="${fullRepoLink}" rel="noopener noreferrer nofollow">
+              ${directory}
+            </a>
+            ` : ""}
+    </div>
+    <div class="npm-userscript-repository-card-description">
+      <a class="npm-userscript-repository-card-entry" href="${repoData.html_url}/stargazers" rel="noopener noreferrer nofollow">
+        ${starSvg}
+        ${repoData.stargazers_count.toLocaleString()}
+      </a>
+      <a class="npm-userscript-repository-card-entry" href="${repoData.html_url}/issues" rel="noopener noreferrer nofollow" style="gap: 7px;">
+        ${issueSvg}
+        ${issueCount.toLocaleString()}
+      </a>
+      <a class="npm-userscript-repository-card-entry" href="${repoData.html_url}/pulls" rel="noopener noreferrer nofollow">
+        ${pullSvg}
+        ${prCount.toLocaleString()}
+      </a>
+    </div>
+  `;
+    repositoryH3.insertAdjacentElement("afterend", card);
+    repositoryH3.parentElement?.classList.remove("bb");
+    const sidebarColumns = document.querySelectorAll('[aria-label="Package sidebar"] > div:has(> h3)');
+    for (const col of sidebarColumns) {
+      const h3Text = col.querySelector("h3")?.textContent;
+      if (h3Text === "Issues" || h3Text === "Pull Requests") {
+        col.remove();
+      }
+    }
+  }
+  var description12, starSvg, issueSvg, pullSvg;
+  var init_repository_card = __esm({
+    "src/features/repository-card.ts"() {
+      init_utils_fetch();
+      init_utils();
+      description12 = `Consolidates all repository information in a card-like view in the package sidebar.
+Enabling this would remove the "Stars", "Issues", and "Pull Requests" columns.
+`;
+      starSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"></path></svg>`;
+      issueSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"></path></svg>`;
+      pullSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M1.5 3.25a2.25 2.25 0 1 1 3 2.122v5.256a2.251 2.251 0 1 1-1.5 0V5.372A2.25 2.25 0 0 1 1.5 3.25Zm5.677-.177L9.573.677A.25.25 0 0 1 10 .854V2.5h1A2.5 2.5 0 0 1 13.5 5v5.628a2.251 2.251 0 1 1-1.5 0V5a1 1 0 0 0-1-1h-1v1.646a.25.25 0 0 1-.427.177L7.177 3.427a.25.25 0 0 1 0-.354ZM3.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm0 9.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm8.25.75a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Z"></path></svg>`;
+    }
+  });
+
+  // src/features/repository-directory.ts
+  var repository_directory_exports = {};
+  __export(repository_directory_exports, {
+    description: () => description13,
+    run: () => run11,
+    teardown: () => teardown5
+  });
+  function teardown5(previousUrl) {
+    if (isSamePackagePage(previousUrl)) return;
+    document.querySelector("a[aria-labelledby*=repository-link]")?.classList.remove("npm-userscript-repository-directory");
+  }
+  async function run11() {
+    if (!isValidPackagePage()) return;
+    if (!document.querySelector(".npm-userscript-repository-directory")) return;
+    const el = document.querySelector("a[aria-labelledby*=repository-link]");
+    const textEl = document.getElementById("repository-link");
+    if (!el || !textEl) return;
+    const fullRepositoryLink = await getFullRepositoryLink();
+    if (!fullRepositoryLink) return;
+    el.href = fullRepositoryLink;
+    textEl.textContent = fullRepositoryLink.replace(/^https?:\/\//, "");
+    el.classList.add("npm-userscript-repository-directory");
+  }
+  var description13;
+  var init_repository_directory = __esm({
+    "src/features/repository-directory.ts"() {
+      init_utils_fetch();
+      init_utils();
+      description13 = `Adds the repository directory to the repository link.
+`;
+    }
+  });
+
+  // src/features/show-binary-label.ts
+  var show_binary_label_exports = {};
+  __export(show_binary_label_exports, {
+    description: () => description14,
+    run: () => run12,
+    runPre: () => runPre11,
+    teardown: () => teardown6
+  });
+  function teardown6(previousUrl) {
+    if (isSamePackagePage(previousUrl)) return;
+    document.querySelectorAll(".npm-userscript-types-label").forEach((el) => el.remove());
+  }
+  function runPre11() {
+    addPackageLabelStyle();
+  }
+  async function run12() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-binary-label")) return;
     const packageJson = await fetchPackageJson();
@@ -2575,13 +3722,13 @@ implementation is broken for large numbers for some reason. This temporarily fix
     }
     return str;
   }
-  var description12, popularOs, popularArch;
+  var description14, popularOs, popularArch;
   var init_show_binary_label = __esm({
     "src/features/show-binary-label.ts"() {
       init_utils_fetch();
       init_utils_ui();
       init_utils();
-      description12 = `Adds a label for packages that ship prebuilt native binaries.
+      description14 = `Adds a label for packages that ship prebuilt native binaries.
 `;
       popularOs = ["linux", "darwin", "win32"];
       popularArch = ["x64", "arm64", "ia32"];
@@ -2591,19 +3738,19 @@ implementation is broken for large numbers for some reason. This temporarily fix
   // src/features/show-cli-label-and-command.ts
   var show_cli_label_and_command_exports = {};
   __export(show_cli_label_and_command_exports, {
-    description: () => description13,
-    run: () => run11,
-    runPre: () => runPre11,
-    teardown: () => teardown5
+    description: () => description15,
+    run: () => run13,
+    runPre: () => runPre12,
+    teardown: () => teardown7
   });
-  function teardown5(previousUrl) {
+  function teardown7(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector(".npm-userscript-types-label")?.remove();
   }
-  function runPre11() {
+  function runPre12() {
     addPackageLabelStyle();
   }
-  async function run11() {
+  async function run13() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-types-label")) return;
     const packageName = getPackageName();
@@ -2644,14 +3791,14 @@ implementation is broken for large numbers for some reason. This temporarily fix
     if (!codeBlock) return;
     codeBlock.textContent = command;
   }
-  var description13;
+  var description15;
   var init_show_cli_label_and_command = __esm({
     "src/features/show-cli-label-and-command.ts"() {
       init_utils_fetch();
       init_utils_npm_context();
       init_utils_ui();
       init_utils();
-      description13 = `Adds a label if the package ships a CLI via the package.json "bin" field, and update the install
+      description15 = `Adds a label if the package ships a CLI via the package.json "bin" field, and update the install
 command to "npm create" or "npx" accordingly.
 `;
     }
@@ -2660,19 +3807,19 @@ command to "npm create" or "npx" accordingly.
   // src/features/show-engine-label.ts
   var show_engine_label_exports = {};
   __export(show_engine_label_exports, {
-    description: () => description14,
-    run: () => run12,
-    runPre: () => runPre12,
-    teardown: () => teardown6
+    description: () => description16,
+    run: () => run14,
+    runPre: () => runPre13,
+    teardown: () => teardown8
   });
-  function teardown6(previousUrl) {
+  function teardown8(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector(".npm-userscript-engine-label")?.remove();
   }
-  function runPre12() {
+  function runPre13() {
     addPackageLabelStyle();
   }
-  async function run12() {
+  async function run14() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-engine-label")) return;
     const packageJson = await fetchPackageJson();
@@ -2685,13 +3832,13 @@ command to "npm create" or "npx" accordingly.
       label.title = `This package requires Node.js ${engines.node}`;
     }
   }
-  var description14;
+  var description16;
   var init_show_engine_label = __esm({
     "src/features/show-engine-label.ts"() {
       init_utils_fetch();
       init_utils_ui();
       init_utils();
-      description14 = `Adds a label of the engine versions (e.g. Node.js) that a package supports.
+      description16 = `Adds a label of the engine versions (e.g. Node.js) that a package supports.
 `;
     }
   });
@@ -2699,19 +3846,19 @@ command to "npm create" or "npx" accordingly.
   // src/features/show-file-types-label.ts
   var show_file_types_label_exports = {};
   __export(show_file_types_label_exports, {
-    description: () => description15,
-    run: () => run13,
-    runPre: () => runPre13,
-    teardown: () => teardown7
+    description: () => description17,
+    run: () => run15,
+    runPre: () => runPre14,
+    teardown: () => teardown9
   });
-  function teardown7(previousUrl) {
+  function teardown9(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelectorAll(".npm-userscript-file-types-label").forEach((el) => el.remove());
   }
-  function runPre13() {
+  function runPre14() {
     addPackageLabelStyle();
   }
-  async function run13() {
+  async function run15() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-file-types-label")) return;
     const data = await fetchPackageFilesData();
@@ -2765,19 +3912,18 @@ command to "npm create" or "npx" accordingly.
         if (candidatePath === "/package.json") {
           return rootPackageJson;
         } else if (files[candidatePath]) {
-          const content = await fetchPackageFileContent(files[candidatePath].hex);
-          if (content) return JSON.parse(content);
+          return await fetchPackageFileContent(files[candidatePath].hex);
         }
       }
     }
   }
-  var description15;
+  var description17;
   var init_show_file_types_label = __esm({
     "src/features/show-file-types-label.ts"() {
       init_utils_fetch();
       init_utils_ui();
       init_utils();
-      description15 = `Show ESM or CJS labels if the package ships them.
+      description17 = `Show ESM or CJS labels if the package ships them.
 `;
     }
   });
@@ -2785,19 +3931,19 @@ command to "npm create" or "npx" accordingly.
   // src/features/show-lifecycle-scripts-label.ts
   var show_lifecycle_scripts_label_exports = {};
   __export(show_lifecycle_scripts_label_exports, {
-    description: () => description16,
-    run: () => run14,
-    runPre: () => runPre14,
-    teardown: () => teardown8
+    description: () => description18,
+    run: () => run16,
+    runPre: () => runPre15,
+    teardown: () => teardown10
   });
-  function teardown8(previousUrl) {
+  function teardown10(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector(".npm-userscript-lifecycle-scripts-label")?.remove();
   }
-  function runPre14() {
+  function runPre15() {
     addPackageLabelStyle();
   }
-  async function run14() {
+  async function run16() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-lifecycle-scripts-label")) return;
     const packageJson = await fetchPackageJson();
@@ -2809,31 +3955,31 @@ command to "npm create" or "npx" accordingly.
     label.classList.add("npm-userscript-lifecycle-scripts-label");
     label.title = `This package defines lifecycle scripts that run on install: ${matchedScripts.map((s2) => `"${s2}"`).join(", ")}`;
   }
-  var description16, LIFECYCLE_SCRIPTS;
+  var description18, LIFECYCLE_SCRIPTS;
   var init_show_lifecycle_scripts_label = __esm({
     "src/features/show-lifecycle-scripts-label.ts"() {
       init_utils_fetch();
       init_utils_ui();
       init_utils();
-      description16 = `Adds a label if the package defines lifecycle scripts in its package.json.
+      description18 = `Adds a label if the package defines lifecycle scripts in its package.json.
 `;
-      LIFECYCLE_SCRIPTS = ["postinstall", "preinstall", "install", "prepublish", "prepare"];
+      LIFECYCLE_SCRIPTS = ["postinstall", "preinstall", "install"];
     }
   });
 
   // src/features/show-types-label.ts
   var show_types_label_exports = {};
   __export(show_types_label_exports, {
-    description: () => description17,
-    run: () => run15,
-    runPre: () => runPre15,
-    teardown: () => teardown9
+    description: () => description19,
+    run: () => run17,
+    runPre: () => runPre16,
+    teardown: () => teardown11
   });
-  function teardown9(previousUrl) {
+  function teardown11(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector(".npm-userscript-types-label")?.remove();
   }
-  function runPre15() {
+  function runPre16() {
     addPackageLabelStyle();
     addStyle(`
     h1 > div[data-nosnippet="true"] {
@@ -2841,7 +3987,7 @@ command to "npm create" or "npx" accordingly.
     }
   `);
   }
-  async function run15() {
+  async function run17() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-types-label")) return;
     const packageName = getPackageName();
@@ -2900,14 +4046,14 @@ command to "npm create" or "npx" accordingly.
     }
     return { type: "unknown" };
   }
-  var description17;
+  var description19;
   var init_show_types_label = __esm({
     "src/features/show-types-label.ts"() {
       init_utils_fetch();
       init_utils_npm_context();
       init_utils_ui();
       init_utils();
-      description17 = `Adds a label for packages that ship types. This is similar to npm's own DT / TS icon but
+      description19 = `Adds a label for packages that ship types. This is similar to npm's own DT / TS icon but
 with a more consistent UI. It is also more accurate if the package ship types but isn't detectable
 in the package.json.
 `;
@@ -4044,910 +5190,21 @@ in the package.json.
     }
   });
 
-  // node_modules/uhtml/dist/prod/dom.js
-  function v(e3) {
-    const t2 = u;
-    return u = e3, t2;
-  }
-  function b(e3) {
-    return T.bind({ previousValue: e3, value: e3, subs: void 0, subsTail: void 0, flags: 1 });
-  }
-  function x(e3) {
-    const t2 = { fn: e3, subs: void 0, subsTail: void 0, deps: void 0, depsTail: void 0, flags: 2 };
-    void 0 !== u ? s(t2, u) : void 0 !== d && s(t2, d);
-    const n2 = v(t2);
-    try {
-      t2.fn();
-    } finally {
-      v(n2);
-    }
-    return D.bind(t2);
-  }
-  function y(e3) {
-    const t2 = v(e3);
-    a(e3);
-    try {
-      const t3 = e3.value;
-      return t3 !== (e3.value = e3.getter(t3));
-    } finally {
-      v(t2), l(e3);
-    }
-  }
-  function w(e3, t2) {
-    return e3.flags = 1, e3.previousValue !== (e3.previousValue = t2);
-  }
-  function S(e3, t2) {
-    if (16 & t2 || 32 & t2 && o(e3.deps, e3)) {
-      const t3 = v(e3);
-      a(e3);
-      try {
-        e3.fn();
-      } finally {
-        v(t3), l(e3);
-      }
-      return;
-    }
-    32 & t2 && (e3.flags = -33 & t2);
-    let n2 = e3.deps;
-    for (; void 0 !== n2; ) {
-      const e4 = n2.dep, t3 = e4.flags;
-      64 & t3 && S(e4, e4.flags = -65 & t3), n2 = n2.nextDep;
-    }
-  }
-  function k() {
-    for (; p < h; ) {
-      const e3 = n[p];
-      n[p++] = void 0, S(e3, e3.flags &= -65);
-    }
-    p = 0, h = 0;
-  }
-  function T(...e3) {
-    if (!e3.length) {
-      const e4 = this.value;
-      if (16 & this.flags && w(this, e4)) {
-        const e5 = this.subs;
-        void 0 !== e5 && c(e5);
-      }
-      return void 0 !== u && s(this, u), e4;
-    }
-    {
-      const t2 = e3[0];
-      if (this.value !== (this.value = t2)) {
-        this.flags = 17;
-        const e4 = this.subs;
-        void 0 !== e4 && (r(e4), f || k());
-      }
-    }
-  }
-  function D() {
-    let e3 = this.deps;
-    for (; void 0 !== e3; ) e3 = i(e3, this);
-    const t2 = this.subs;
-    void 0 !== t2 && i(t2), this.flags = 0;
-  }
-  function L() {
-    return R.apply(null, arguments);
-  }
-  function Te(e3) {
-    const t2 = H("<>"), n2 = H("</>");
-    return e3.replaceChildren(t2, ...e3.childNodes, n2), be = true, P(e3, { [ye]: { writable: true, value: Q }, firstChild: { value: t2 }, lastChild: { value: n2 }, parentNode: we, valueOf: Ce, replaceWith: Se, remove: ke });
-  }
-  function at(e3, ...t2) {
-    const n2 = rt.apply(null, arguments);
-    return Ge() ? n2.valueOf(true) : n2;
-  }
-  var e, t, n, s, i, r, o, l, a, c, u, d, f, p, h, O, $, W, E, R, _, j, F, P, B, J, V, H, q, G, I, K, Q, U, X, Y, Z, ee, te, ne, se, ie, re, oe, le, ae, ce, ue, de, fe, pe, he, ve, ge, be, me, xe, ye, we, Se, ke, Ce, De, Oe, Ne, $e, We, Ae, Ee, Me, Re, Le, _e, je, Fe, Pe, Be, Je, Ve, ze, He, qe, Ge, Ie, Ke, Qe, Ue, Xe, Ye, Ze, et, tt, nt, st, it, rt, ot;
-  var init_dom = __esm({
-    "node_modules/uhtml/dist/prod/dom.js"() {
-      !(function(e3) {
-        e3[e3.None = 0] = "None", e3[e3.Mutable = 1] = "Mutable", e3[e3.Watching = 2] = "Watching", e3[e3.RecursedCheck = 4] = "RecursedCheck", e3[e3.Recursed = 8] = "Recursed", e3[e3.Dirty = 16] = "Dirty", e3[e3.Pending = 32] = "Pending";
-      })(e || (e = {}));
-      t = [];
-      n = [];
-      ({ link: s, unlink: i, propagate: r, checkDirty: o, endTracking: l, startTracking: a, shallowPropagate: c } = (function({ update: e3, notify: t2, unwatched: n2 }) {
-        let s2 = 0;
-        return { link: function(e4, t3) {
-          const n3 = t3.depsTail;
-          if (void 0 !== n3 && n3.dep === e4) return;
-          let i3;
-          if (4 & t3.flags && (i3 = void 0 !== n3 ? n3.nextDep : t3.deps, void 0 !== i3 && i3.dep === e4)) return i3.version = s2, void (t3.depsTail = i3);
-          const r3 = e4.subsTail;
-          if (void 0 !== r3 && r3.version === s2 && r3.sub === t3) return;
-          const o3 = t3.depsTail = e4.subsTail = { version: s2, dep: e4, sub: t3, prevDep: n3, nextDep: i3, prevSub: r3, nextSub: void 0 };
-          void 0 !== i3 && (i3.prevDep = o3);
-          void 0 !== n3 ? n3.nextDep = o3 : t3.deps = o3;
-          void 0 !== r3 ? r3.nextSub = o3 : e4.subs = o3;
-        }, unlink: i2, propagate: function(e4) {
-          let n3, s3 = e4.nextSub;
-          e: for (; ; ) {
-            const i3 = e4.sub;
-            let r3 = i3.flags;
-            if (3 & r3 && (60 & r3 ? 12 & r3 ? 4 & r3 ? 48 & r3 || !o2(e4, i3) ? r3 = 0 : (i3.flags = 40 | r3, r3 &= 1) : i3.flags = -9 & r3 | 32 : r3 = 0 : i3.flags = 32 | r3, 2 & r3 && t2(i3), 1 & r3)) {
-              const t3 = i3.subs;
-              if (void 0 !== t3) {
-                e4 = t3, void 0 !== t3.nextSub && (n3 = { value: s3, prev: n3 }, s3 = e4.nextSub);
-                continue;
-              }
-            }
-            if (void 0 === (e4 = s3)) {
-              for (; void 0 !== n3; ) if (e4 = n3.value, n3 = n3.prev, void 0 !== e4) {
-                s3 = e4.nextSub;
-                continue e;
-              }
-              break;
-            }
-            s3 = e4.nextSub;
-          }
-        }, checkDirty: function(t3, n3) {
-          let s3, i3 = 0;
-          e: for (; ; ) {
-            const o3 = t3.dep, l2 = o3.flags;
-            let a2 = false;
-            if (16 & n3.flags) a2 = true;
-            else if (17 & ~l2) {
-              if (!(33 & ~l2)) {
-                void 0 === t3.nextSub && void 0 === t3.prevSub || (s3 = { value: t3, prev: s3 }), t3 = o3.deps, n3 = o3, ++i3;
-                continue;
-              }
-            } else if (e3(o3)) {
-              const e4 = o3.subs;
-              void 0 !== e4.nextSub && r2(e4), a2 = true;
-            }
-            if (a2 || void 0 === t3.nextDep) {
-              for (; i3; ) {
-                --i3;
-                const o4 = n3.subs, l3 = void 0 !== o4.nextSub;
-                if (l3 ? (t3 = s3.value, s3 = s3.prev) : t3 = o4, a2) {
-                  if (e3(n3)) {
-                    l3 && r2(o4), n3 = t3.sub;
-                    continue;
-                  }
-                } else n3.flags &= -33;
-                if (n3 = t3.sub, void 0 !== t3.nextDep) {
-                  t3 = t3.nextDep;
-                  continue e;
-                }
-                a2 = false;
-              }
-              return a2;
-            }
-            t3 = t3.nextDep;
-          }
-        }, endTracking: function(e4) {
-          const t3 = e4.depsTail;
-          let n3 = void 0 !== t3 ? t3.nextDep : e4.deps;
-          for (; void 0 !== n3; ) n3 = i2(n3, e4);
-          e4.flags &= -5;
-        }, startTracking: function(e4) {
-          ++s2, e4.depsTail = void 0, e4.flags = -57 & e4.flags | 4;
-        }, shallowPropagate: r2 };
-        function i2(e4, t3 = e4.sub) {
-          const s3 = e4.dep, i3 = e4.prevDep, r3 = e4.nextDep, o3 = e4.nextSub, l2 = e4.prevSub;
-          return void 0 !== r3 ? r3.prevDep = i3 : t3.depsTail = i3, void 0 !== i3 ? i3.nextDep = r3 : t3.deps = r3, void 0 !== o3 ? o3.prevSub = l2 : s3.subsTail = l2, void 0 !== l2 ? l2.nextSub = o3 : void 0 === (s3.subs = o3) && n2(s3), r3;
-        }
-        function r2(e4) {
-          do {
-            const n3 = e4.sub, s3 = e4.nextSub, i3 = n3.flags;
-            32 == (48 & i3) && (n3.flags = 16 | i3, 2 & i3 && t2(n3)), e4 = s3;
-          } while (void 0 !== e4);
-        }
-        function o2(e4, t3) {
-          const n3 = t3.depsTail;
-          if (void 0 !== n3) {
-            let s3 = t3.deps;
-            do {
-              if (s3 === e4) return true;
-              if (s3 === n3) break;
-              s3 = s3.nextDep;
-            } while (void 0 !== s3);
-          }
-          return false;
-        }
-      })({ update: (e3) => "getter" in e3 ? y(e3) : w(e3, e3.value), notify: function e2(t2) {
-        const s2 = t2.flags;
-        if (!(64 & s2)) {
-          t2.flags = 64 | s2;
-          const i2 = t2.subs;
-          void 0 !== i2 ? e2(i2.sub) : n[h++] = t2;
-        }
-      }, unwatched(e3) {
-        if ("getter" in e3) {
-          let t2 = e3.deps;
-          if (void 0 !== t2) {
-            e3.flags = 17;
-            do {
-              t2 = i(t2, e3);
-            } while (void 0 !== t2);
-          }
-        } else "previousValue" in e3 || D.call(e3);
-      } }));
-      f = 0;
-      p = 0;
-      h = 0;
-      O = { greedy: false };
-      $ = (e3) => {
-        t.push(v(void 0));
-        try {
-          return e3();
-        } finally {
-          v(t.pop());
-        }
-      };
-      W = class {
-        constructor(e3, t2) {
-          this._ = e3(t2);
-        }
-        get value() {
-          return this._();
-        }
-        set value(e3) {
-          this._(e3);
-        }
-        peek() {
-          return $(this._);
-        }
-        valueOf() {
-          return this.value;
-        }
-      };
-      E = class extends W {
-        constructor(e3) {
-          super(b, [e3]);
-        }
-        get value() {
-          return super.value[0];
-        }
-        set value(e3) {
-          super.value = [e3];
-        }
-        peek() {
-          return super.peek()[0];
-        }
-      };
-      R = (e3, { greedy: t2 = false } = O) => t2 ? new E(e3) : new W(b, e3);
-      _ = (e3) => {
-        R = e3;
-      };
-      ({ isArray: j } = Array);
-      ({ assign: F, defineProperties: P, entries: B, freeze: J } = Object);
-      V = class {
-        #e;
-        constructor(e3) {
-          this.#e = e3;
-        }
-        valueOf() {
-          return this.#e;
-        }
-        toString() {
-          return String(this.#e);
-        }
-      };
-      H = (e3) => document.createComment(e3);
-      q = 42;
-      G = /* @__PURE__ */ new Set(["plaintext", "script", "style", "textarea", "title", "xmp"]);
-      I = /* @__PURE__ */ new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "keygen", "link", "menuitem", "meta", "param", "source", "track", "wbr"]);
-      K = J({});
-      Q = J([]);
-      U = (e3, t2) => (e3.children === Q && (e3.children = []), e3.children.push(t2), t2.parent = e3, t2);
-      X = (e3, t2, n2) => {
-        e3.props === K && (e3.props = {}), e3.props[t2] = n2;
-      };
-      Y = (e3, t2, n2) => {
-        e3 !== t2 && n2.push(e3);
-      };
-      Z = class {
-        constructor(e3) {
-          this.type = e3, this.parent = null;
-        }
-        toJSON() {
-          return [this.type, this.data];
-        }
-      };
-      ee = class extends Z {
-        constructor(e3) {
-          super(8), this.data = e3;
-        }
-        toString() {
-          return `<!--${this.data}-->`;
-        }
-      };
-      te = class extends Z {
-        constructor(e3) {
-          super(10), this.data = e3;
-        }
-        toString() {
-          return `<!${this.data}>`;
-        }
-      };
-      ne = class extends Z {
-        constructor(e3) {
-          super(3), this.data = e3;
-        }
-        toString() {
-          return this.data;
-        }
-      };
-      se = class extends Z {
-        constructor() {
-          super(q), this.name = "template", this.props = K, this.children = Q;
-        }
-        toJSON() {
-          const e3 = [q];
-          return Y(this.props, K, e3), Y(this.children, Q, e3), e3;
-        }
-        toString() {
-          let e3 = "";
-          for (const t2 in this.props) {
-            const n2 = this.props[t2];
-            null != n2 && ("boolean" == typeof n2 ? n2 && (e3 += ` ${t2}`) : e3 += ` ${t2}="${n2}"`);
-          }
-          return `<template${e3}>${this.children.join("")}</template>`;
-        }
-      };
-      ie = class extends Z {
-        constructor(e3, t2 = false) {
-          super(1), this.name = e3, this.xml = t2, this.props = K, this.children = Q;
-        }
-        toJSON() {
-          const e3 = [1, this.name, +this.xml];
-          return Y(this.props, K, e3), Y(this.children, Q, e3), e3;
-        }
-        toString() {
-          const { xml: e3, name: t2, props: n2, children: s2 } = this, { length: i2 } = s2;
-          let r2 = `<${t2}`;
-          for (const t3 in n2) {
-            const s3 = n2[t3];
-            null != s3 && ("boolean" == typeof s3 ? s3 && (r2 += e3 ? ` ${t3}=""` : ` ${t3}`) : r2 += ` ${t3}="${s3}"`);
-          }
-          if (i2) {
-            r2 += ">";
-            for (let n3 = !e3 && G.has(t2), o2 = 0; o2 < i2; o2++) r2 += n3 ? s2[o2].data : s2[o2];
-            r2 += `</${t2}>`;
-          } else r2 += e3 ? " />" : I.has(t2) ? ">" : `></${t2}>`;
-          return r2;
-        }
-      };
-      re = class extends Z {
-        constructor() {
-          super(11), this.name = "#fragment", this.children = Q;
-        }
-        toJSON() {
-          const e3 = [11];
-          return Y(this.children, Q, e3), e3;
-        }
-        toString() {
-          return this.children.join("");
-        }
-      };
-      oe = "\0";
-      le = `"${oe}"`;
-      ae = `'${oe}'`;
-      ce = /\x00|<[^><\s]+/g;
-      ue = /([^\s/>=]+)(?:=(\x00|(?:(['"])[\s\S]*?\3)))?/g;
-      de = (e3, t2, n2, s2, i2) => [t2, n2, s2];
-      fe = (e3) => {
-        const t2 = [];
-        for (; e3.parent; ) {
-          switch (e3.type) {
-            case q:
-            case 1:
-              "template" === e3.name && t2.push(-1);
-          }
-          t2.push(e3.parent.children.indexOf(e3)), e3 = e3.parent;
-        }
-        return t2;
-      };
-      pe = (e3, t2) => {
-        do {
-          e3 = e3.parent;
-        } while (t2.has(e3));
-        return e3;
-      };
-      he = (e3, t2) => t2 < 0 ? e3.content : e3.childNodes[t2];
-      ve = (e3, t2) => t2.reduceRight(he, e3);
-      be = false;
-      me = ({ firstChild: e3, lastChild: t2 }) => {
-        const n2 = ge || (ge = document.createRange());
-        return n2.setStartAfter(e3), n2.setEndAfter(t2), n2.deleteContents(), e3;
-      };
-      xe = (e3, t2) => be && 11 === e3.nodeType ? 1 / t2 < 0 ? t2 ? me(e3) : e3.lastChild : t2 ? e3.valueOf() : e3.firstChild : e3;
-      ye = /* @__PURE__ */ Symbol("nodes");
-      we = { get() {
-        return this.firstChild.parentNode;
-      } };
-      Se = { value(e3) {
-        me(this).replaceWith(e3);
-      } };
-      ke = { value() {
-        me(this).remove();
-      } };
-      Ce = { value() {
-        const { parentNode: e3 } = this;
-        if (e3 === this) this[ye] === Q && (this[ye] = [...this.childNodes]);
-        else {
-          if (e3) {
-            let { firstChild: e4, lastChild: t2 } = this;
-            for (this[ye] = [e4]; e4 !== t2; ) this[ye].push(e4 = e4.nextSibling);
-          }
-          this.replaceChildren(...this[ye]);
-        }
-        return this;
-      } };
-      Te.prototype = DocumentFragment.prototype;
-      De = 16;
-      Oe = 32768;
-      Ne = ((e3 = globalThis.document) => {
-        let t2, n2 = e3.createElement("template");
-        return (s2, i2 = false) => {
-          if (i2) return t2 || (t2 = e3.createRange(), t2.selectNodeContents(e3.createElementNS("http://www.w3.org/2000/svg", "svg"))), t2.createContextualFragment(s2);
-          n2.innerHTML = s2;
-          const r2 = n2.content;
-          return n2 = n2.cloneNode(false), r2;
-        };
-      })(document);
-      $e = /* @__PURE__ */ Symbol("ref");
-      We = (e3, t2) => {
-        for (const [n2, s2] of B(t2)) {
-          const t3 = "role" === n2 ? n2 : `aria-${n2.toLowerCase()}`;
-          null == s2 ? e3.removeAttribute(t3) : e3.setAttribute(t3, s2);
-        }
-      };
-      Ae = (e3) => (t2, n2) => {
-        null == n2 ? t2.removeAttribute(e3) : t2.setAttribute(e3, n2);
-      };
-      Ee = (e3, t2) => {
-        e3[ye] = ((e4, t3, n2, s2) => {
-          const i2 = s2.parentNode, r2 = t3.length;
-          let o2 = e4.length, l2 = r2, a2 = 0, c2 = 0, u2 = null;
-          for (; a2 < o2 || c2 < l2; ) if (o2 === a2) {
-            const e5 = l2 < r2 ? c2 ? n2(t3[c2 - 1], -0).nextSibling : n2(t3[l2], 0) : s2;
-            for (; c2 < l2; ) i2.insertBefore(n2(t3[c2++], 1), e5);
-          } else if (l2 === c2) for (; a2 < o2; ) u2 && u2.has(e4[a2]) || n2(e4[a2], -1).remove(), a2++;
-          else if (e4[a2] === t3[c2]) a2++, c2++;
-          else if (e4[o2 - 1] === t3[l2 - 1]) o2--, l2--;
-          else if (e4[a2] === t3[l2 - 1] && t3[c2] === e4[o2 - 1]) {
-            const s3 = n2(e4[--o2], -0).nextSibling;
-            i2.insertBefore(n2(t3[c2++], 1), n2(e4[a2++], -0).nextSibling), i2.insertBefore(n2(t3[--l2], 1), s3), e4[o2] = t3[l2];
-          } else {
-            if (!u2) {
-              u2 = /* @__PURE__ */ new Map();
-              let e5 = c2;
-              for (; e5 < l2; ) u2.set(t3[e5], e5++);
-            }
-            const s3 = u2.get(e4[a2]) ?? -1;
-            if (s3 < 0) n2(e4[a2++], -1).remove();
-            else if (c2 < s3 && s3 < l2) {
-              let r3 = a2, d2 = 1;
-              for (; ++r3 < o2 && r3 < l2 && u2.get(e4[r3]) === s3 + d2; ) d2++;
-              if (d2 > s3 - c2) {
-                const r4 = n2(e4[a2], 0);
-                for (; c2 < s3; ) i2.insertBefore(n2(t3[c2++], 1), r4);
-              } else i2.replaceChild(n2(t3[c2++], 1), n2(e4[a2++], -1));
-            } else a2++;
-          }
-          return t3;
-        })(e3[ye] || Q, t2, xe, e3);
-      };
-      Me = /* @__PURE__ */ new WeakMap();
-      Re = (e3, t2) => {
-        const n2 = "object" == typeof t2 ? t2 ?? e3 : ((e4, t3) => {
-          let n3 = Me.get(e4);
-          return n3 ? n3.data = t3 : Me.set(e4, n3 = document.createTextNode(t3)), n3;
-        })(e3, t2), s2 = e3[ye] ?? e3;
-        n2 !== s2 && s2.replaceWith(xe(e3[ye] = n2, 1));
-      };
-      Le = (e3, t2) => {
-        Re(e3, t2 instanceof W ? t2.value : t2);
-      };
-      _e = ({ dataset: e3 }, t2) => {
-        for (const [n2, s2] of B(t2)) null == s2 ? delete e3[n2] : e3[n2] = s2;
-      };
-      je = /* @__PURE__ */ new Map();
-      Fe = (e3) => {
-        let t2 = je.get(e3);
-        return t2 || je.set(e3, t2 = Pe(e3)), t2;
-      };
-      Pe = (e3) => (t2, n2) => {
-        t2[e3] = n2;
-      };
-      Be = (e3, t2) => {
-        for (const [n2, s2] of B(t2)) Ae(n2)(e3, s2);
-      };
-      Je = (e3, t2, n2) => n2 ? (n3, s2) => {
-        const i2 = n3[t2];
-        i2?.length && n3.removeEventListener(e3, ...i2), s2 && n3.addEventListener(e3, ...s2), n3[t2] = s2;
-      } : (n3, s2) => {
-        const i2 = n3[t2];
-        i2 && n3.removeEventListener(e3, i2), s2 && n3.addEventListener(e3, s2), n3[t2] = s2;
-      };
-      Ve = (e3) => (t2, n2) => {
-        t2.toggleAttribute(e3, !!n2);
-      };
-      ze = false;
-      He = true;
-      qe = (e3) => {
-        He = e3;
-      };
-      Ge = () => He;
-      Ie = (e3) => xe(e3.n ? e3.update(e3) : e3.valueOf(false), 1);
-      Ke = (e3, t2) => {
-        const n2 = [], s2 = e3.length, i2 = t2.length;
-        for (let r2, o2, l2 = 0, a2 = 0; a2 < i2; a2++) r2 = t2[a2], n2[a2] = l2 < s2 && (o2 = e3[l2++]).t === r2.t ? (t2[a2] = o2).update(r2) : r2.valueOf(false);
-        return n2;
-      };
-      Qe = (e3, t2, n2) => {
-        const s2 = R, i2 = n2.length;
-        let r2 = 0;
-        _((e4) => r2 < i2 ? n2[r2++] : n2[r2++] = e4 instanceof W ? e4 : s2(e4));
-        const o2 = Ge();
-        o2 && qe(!o2);
-        try {
-          return e3(t2, Ze);
-        } finally {
-          o2 && qe(o2), _(s2);
-        }
-      };
-      Ue = (e3, t2) => (e3.t === t2.t ? e3.update(t2) : (e3.n.replaceWith(Ie(t2)), e3 = t2), e3);
-      Xe = (e3, t2, n2) => {
-        let s2, i2 = [], r2 = [De, null, n2], o2 = true;
-        return x(() => {
-          if (o2) o2 = false, s2 = Qe(t2, n2, i2), i2.length || (i2 = Q), s2 ? (e3.replaceWith(Ie(s2)), r2[1] = s2) : e3.remove();
-          else {
-            const e4 = Qe(t2, n2, i2);
-            s2 && Ue(s2, e4) === e4 && (r2[2] = s2 = e4);
-          }
-        }), r2;
-      };
-      Ye = /* @__PURE__ */ Symbol();
-      Ze = {};
-      et = class _et {
-        constructor(e3, t2) {
-          this.t = e3, this.v = t2, this.n = null, this.k = -1;
-        }
-        valueOf(e3 = Ge()) {
-          const [t2, n2, s2] = this.t, i2 = document.importNode(t2, true), r2 = this.v;
-          let o2, l2, a2, c2 = r2.length, u2 = Q;
-          if (0 < c2) {
-            for (u2 = n2.slice(0); c2--; ) {
-              const [t3, s3, d3] = n2[c2], f3 = r2[c2];
-              if (l2 !== t3 && (o2 = ve(i2, t3), l2 = t3), d3 & De) {
-                const e4 = o2[Ye] || (o2[Ye] = {});
-                if (d3 === De) {
-                  for (const { name: t4, value: n3 } of o2.attributes) e4[t4] ??= n3;
-                  e4.children ??= [...o2.content.childNodes], u2[c2] = Xe(o2, f3, e4);
-                } else s3(e4, f3), u2[c2] = [d3, s3, e4];
-              } else {
-                let t4 = true;
-                e3 || !(8 & d3) || d3 & Oe || (1 & d3 ? (t4 = false, f3.length && s3(o2, f3[0] instanceof _et ? Ke(Q, f3) : f3)) : f3 instanceof _et && (t4 = false, s3(o2, Ie(f3)))), t4 && (512 === d3 ? this.k = c2 : (16384 === d3 && (a2 ??= /* @__PURE__ */ new Set()).add(o2), s3(o2, f3))), u2[c2] = [d3, s3, f3, o2], e3 && 8 & d3 && o2.remove();
-              }
-            }
-            a2 && ((e4) => {
-              for (const t3 of e4) {
-                const e5 = t3[$e];
-                "function" == typeof e5 ? e5(t3) : e5 instanceof W ? e5.value = t3 : e5 && (e5.current = t3);
-              }
-            })(a2);
-          }
-          const { childNodes: d2 } = i2, f2 = d2.length, p2 = 1 === f2 ? d2[0] : f2 ? Te(i2) : i2;
-          return this.v = u2, this.n = p2, -1 < this.k && s2.set(u2[this.k][2], p2, this), p2;
-        }
-        update(e3) {
-          const t2 = this.k, n2 = this.v, s2 = e3.v;
-          if (-1 < t2 && n2[t2][2] !== s2[t2]) return ((e4, t3) => e4.t[2].get(t3)?.update(e4) ?? e4.valueOf(false))(e3, s2[t2]);
-          let { length: i2 } = n2;
-          for (; i2--; ) {
-            const e4 = n2[i2], [t3, r2, o2] = e4;
-            if (512 === t3) continue;
-            let l2 = s2[i2];
-            if (t3 & De) if (t3 === De) {
-              const t4 = l2(o2, Ze);
-              r2 && Ue(r2, t4) === t4 && (e4[2] = t4);
-            } else r2(o2, l2);
-            else {
-              let n3 = l2;
-              if (1 & t3) {
-                if (8 & t3) l2.length && l2[0] instanceof _et && (n3 = Ke(o2, l2));
-                else if (256 & t3 && l2[0] === o2[0]) continue;
-              } else if (8 & t3) if (t3 & Oe) {
-                if (l2 === o2) {
-                  r2(e4[3], n3);
-                  continue;
-                }
-              } else o2 instanceof _et && (l2 = Ue(o2, l2), n3 = l2.n);
-              l2 !== o2 && (e4[2] = l2, r2(e4[3], n3));
-            }
-          }
-          return this.n;
-        }
-      };
-      tt = /* @__PURE__ */ new WeakMap();
-      nt = class extends Map {
-        constructor() {
-          super()._ = new FinalizationRegistry((e3) => this.delete(e3));
-        }
-        get(e3) {
-          const t2 = super.get(e3)?.deref();
-          return t2 && tt.get(t2);
-        }
-        set(e3, t2, n2) {
-          tt.set(t2, n2), this._.register(t2, e3), super.set(e3, new WeakRef(t2));
-        }
-      };
-      st = (({ Comment: e3 = ee, DocumentType: t2 = te, Text: n2 = ne, Fragment: s2 = re, Element: i2 = ie, Component: r2 = se, update: o2 = de }) => (l2, a2, c2) => {
-        const u2 = l2.join(oe).trim(), d2 = /* @__PURE__ */ new Set(), f2 = [];
-        let p2 = new s2(), h2 = 0, v2 = 0, g = 0, b2 = Q;
-        for (const s3 of u2.matchAll(ce)) {
-          if (0 < v2) {
-            v2--;
-            continue;
-          }
-          const l3 = s3[0], m = s3.index;
-          if (h2 < m && U(p2, new n2(u2.slice(h2, m))), l3 === oe) {
-            "table" === p2.name && (p2 = U(p2, new i2("tbody", c2)), d2.add(p2));
-            const t3 = U(p2, new e3("\u25E6"));
-            f2.push(o2(t3, 8, fe(t3), "", a2[g++])), h2 = m + 1;
-          } else if (l3.startsWith("<!")) {
-            const n3 = u2.indexOf(">", m + 2);
-            if ("-->" === u2.slice(n3 - 2, n3 + 1)) {
-              const t3 = u2.slice(m + 4, n3 - 2);
-              "!" === t3[0] && U(p2, new e3(t3.slice(1).replace(/!$/, "")));
-            } else U(p2, new t2(u2.slice(m + 2, n3)));
-            h2 = n3 + 1;
-          } else if (l3.startsWith("</")) {
-            const e4 = u2.indexOf(">", m + 2);
-            c2 && "svg" === p2.name && (c2 = false), p2 = pe(p2, d2), h2 = e4 + 1;
-          } else {
-            const e4 = m + l3.length, t3 = u2.indexOf(">", e4), s4 = l3.slice(1);
-            let x2 = s4;
-            if (s4 === oe ? (x2 = "template", p2 = U(p2, new r2()), b2 = fe(p2).slice(1), f2.push(o2(p2, q, b2, "", a2[g++]))) : (c2 || (x2 = x2.toLowerCase(), "table" !== p2.name || "tr" !== x2 && "td" !== x2 || (p2 = U(p2, new i2("tbody", c2)), d2.add(p2)), "tbody" === p2.name && "td" === x2 && (p2 = U(p2, new i2("tr", c2)), d2.add(p2))), p2 = U(p2, new i2(x2, !!c2 && "svg" !== x2)), b2 = Q), e4 < t3) {
-              let n3 = false;
-              for (const [s5, i3, r3] of u2.slice(e4, t3).matchAll(ue)) if (r3 === oe || r3 === le || r3 === ae || (n3 = i3.endsWith(oe))) {
-                const e5 = b2 === Q ? b2 = fe(p2) : b2;
-                f2.push(o2(p2, 2, e5, n3 ? i3.slice(0, -1) : i3, a2[g++])), n3 = false, v2++;
-              } else X(p2, i3, !r3 || r3.slice(1, -1));
-              b2 = Q;
-            }
-            h2 = t3 + 1;
-            const y2 = 0 < t3 && "/" === u2[t3 - 1];
-            if (c2) y2 && (p2 = p2.parent);
-            else if (y2 || I.has(x2)) p2 = y2 ? pe(p2, d2) : p2.parent;
-            else if ("svg" === x2) c2 = true;
-            else if (G.has(x2)) {
-              const e5 = u2.indexOf(`</${s4}>`, h2), t4 = u2.slice(h2, e5);
-              t4.trim() === oe ? (v2++, f2.push(o2(p2, 3, fe(p2), "", a2[g++]))) : U(p2, new n2(t4)), p2 = p2.parent, h2 = e5 + s4.length + 3, v2++;
-              continue;
-            }
-          }
-        }
-        return h2 < u2.length && U(p2, new n2(u2.slice(h2))), [p2, f2];
-      })({ Comment: ee, DocumentType: te, Text: ne, Fragment: re, Element: ie, Component: se, update: (e3, t2, n2, s2, i2) => {
-        switch (t2) {
-          case q:
-            return [n2, i2, De];
-          case 8:
-            return j(i2) ? [n2, Ee, 9] : i2 instanceof V ? [n2, (r2 = e3.xml, (e4, t3) => {
-              const n3 = e4[$e] ?? (e4[$e] = {});
-              n3.v !== t3 && (n3.f = Te(Ne(t3, r2)), n3.v = t3), Re(e4, n3.f);
-            }), 8192] : i2 instanceof W ? [n2, Le, 32776] : [n2, Re, 8];
-          case 3:
-            return [n2, Fe("textContent"), 2048];
-          case 2: {
-            const t3 = e3.type === q;
-            switch (s2.at(0)) {
-              case "@": {
-                const e4 = j(i2);
-                return [n2, Je(s2.slice(1), Symbol(s2), e4), e4 ? 257 : 256];
-              }
-              case "?":
-                return [n2, Ve(s2.slice(1)), 4096];
-              case ".":
-                return "..." === s2 ? [n2, t3 ? F : Be, t3 ? 144 : 128] : [n2, Pe(s2.slice(1)), t3 ? 80 : 64];
-              default:
-                return t3 ? [n2, Pe(s2), 1040] : "aria" === s2 ? [n2, We, 2] : "data" !== s2 || /^object$/i.test(e3.name) ? "key" === s2 ? [n2, ze = true, 512] : "ref" === s2 ? [n2, Fe($e), 16384] : s2.startsWith("on") ? [n2, Fe(s2.toLowerCase()), 64] : [n2, Ae(s2), 4] : [n2, _e, 32];
-            }
-          }
-        }
-        var r2;
-      } });
-      it = (e3, t2 = /* @__PURE__ */ new WeakMap()) => (n2, ...s2) => {
-        let i2 = t2.get(n2);
-        return i2 || (i2 = st(n2, s2, e3), i2.push((() => {
-          const e4 = ze;
-          return ze = false, e4;
-        })() ? new nt() : null), i2[0] = Ne(i2[0].toString(), e3), t2.set(n2, i2)), new et(i2, s2);
-      };
-      rt = it(false);
-      ot = it(true);
-    }
-  });
-
-  // src/settings.ts
-  var settings_exports = {};
-  __export(settings_exports, {
-    clearOutdatedSettings: () => clearOutdatedSettings,
-    featureSettings: () => featureSettings,
-    injectSettingsTrigger: () => injectSettingsTrigger
-  });
-  function localStorageStore(key, defaultValue) {
-    const store = {
-      get() {
-        const v2 = localStorage.getItem(key);
-        if (v2) return JSON.parse(v2);
-        if (defaultValue != null) {
-          store.reset();
-          return JSON.parse(JSON.stringify(defaultValue));
-        }
-      },
-      set(value) {
-        localStorage.setItem(key, JSON.stringify(value));
-      },
-      reset() {
-        if (defaultValue != null) {
-          store.set(defaultValue);
-        } else {
-          localStorage.removeItem(key);
-        }
-      }
-    };
-    return store;
-  }
-  function Settings() {
-    const featureStates = Object.fromEntries(
-      Object.entries(featureSettings).map(([name, setting]) => [name, L(setting.get())])
-    );
-    return at`
-    <div id="npm-userscript-settings" @click=${(e3) => e3.currentTarget.remove()}> }>
-      <style>
-        #npm-userscript-settings {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0, 0, 0, 0.5);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 10000;
-          font-family: 'Source Sans Pro', 'Lucida Grande', sans-serif;
-        }
-        #npm-userscript-settings .dialog {
-          background-color: var(--background-color);
-          width: 700px;
-          max-width: 90vw;
-          max-height: 90vh;
-          padding: 16px;
-          border-radius: 4px;
-          overflow-y: auto;
-        }
-        #npm-userscript-settings h2 {
-          margin: 0;
-        }
-        #npm-userscript-settings .features {
-          font-size: 14px;
-          margin: 12px 0 4px 0;
-          color: var(--color-fg-muted);
-        }
-        #npm-userscript-settings .setting {
-          display: grid;
-          grid-template-columns: auto 1fr;
-          grid-template-rows: auto auto;
-          margin: 0 0 10px 0;
-        }
-        #npm-userscript-settings .setting > input {
-          grid-area: 1 / 1 / 3 / 2;
-          margin: 3px 6px 0 0;
-        }
-        #npm-userscript-settings .setting > span {
-          grid-area: 1 / 2 / 2 / 3;
-          font-weight: bold;
-        }
-        #npm-userscript-settings .setting > p {
-          grid-area: 2 / 2 / 3 / 3; 
-          margin: 4px 0 0 0;
-          opacity: 0.6;
-        }
-        #npm-userscript-settings .footer {
-          font-size: 12px;
-          margin-top: 12px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-        #npm-userscript-settings .footer p {
-          color: var(--color-fg-muted);
-          margin: 0
-        }
-      </style>
-      <div class="dialog" @click=${(e3) => e3.stopPropagation()}>
-        <h2>Npm Userscript Settings</h2>
-        <p class="features">Features</p>
-        ${Object.entries(featureStates).map(([name, state]) => {
-      return at`
-            <label class="setting" key=${name}>
-              <input
-                type="checkbox"
-                .checked=${state.value}
-                @change=${(e3) => {
-        const checked = e3.target.checked;
-        featureSettings[name].set(checked);
-        state.value = checked;
-      }}
-              />
-              <span>${name}</span>
-              <p>${allFeatures[name].description.trim().replace(/\n/g, " ")}</p>
-            </label>
-          `;
-    })}
-        <div class="footer">
-          <p class="note">(Refresh page to view changes)</p>
-          <button
-            @click=${() => {
-      Object.entries(featureStates).forEach(([name, state]) => {
-        featureSettings[name].reset();
-        state.value = featureSettings[name].get();
-      });
-    }}
-          >
-            Reset to defaults 
-          </button>
-        </button>
-      </div>
-    </div>
-  `;
-  }
-  function injectSettingsTrigger() {
-    if (document.querySelector(".npm-userscript-settings-trigger")) return;
-    const button = document.createElement("button");
-    button.classList.add("npm-userscript-settings-trigger");
-    button.innerHTML = "Open Npm Userscript Settings";
-    button.style.cssText = "font-size: 13px; border: 0px; background: none; cursor: pointer; padding: 0; opacity: 0.8;";
-    button.onclick = () => document.body.append(at`<${Settings} />`);
-    const sidebar = document.querySelector('[aria-label="Package sidebar"]');
-    sidebar?.insertAdjacentElement("beforeend", button);
-  }
-  function clearOutdatedSettings() {
-    const keys = Object.keys(localStorage);
-    for (const key of keys) {
-      if (key.startsWith("npm-userscript:settings:feature:")) {
-        const featureName = key.slice("npm-userscript:settings:feature:".length);
-        if (!(featureName in allFeatures)) {
-          localStorage.removeItem(key);
-        }
-      }
-    }
-  }
-  var featureSettings;
-  var init_settings = __esm({
-    "src/settings.ts"() {
-      init_dom();
-      init_all_features();
-      featureSettings = Object.fromEntries(
-        Object.entries(allFeatures).map(([name, feature]) => {
-          return [
-            name,
-            localStorageStore(`npm-userscript:settings:feature:${name}`, feature.disabled ? false : true)
-          ];
-        })
-      );
-    }
-  });
-
   // src/features/show-vulnerabilities.ts
   var show_vulnerabilities_exports = {};
   __export(show_vulnerabilities_exports, {
-    description: () => description18,
-    run: () => run16,
-    runPre: () => runPre16,
-    teardown: () => teardown10
+    description: () => description20,
+    run: () => run18,
+    runPre: () => runPre17,
+    teardown: () => teardown12
   });
-  function teardown10(previousUrl) {
+  function teardown12(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector(".npm-userscript-vulnerability-label")?.remove();
     document.querySelectorAll(".npm-userscript-vulnerability-tag").forEach((el) => el.remove());
     document.querySelectorAll(".npm-userscript-vulnerability-popup").forEach((el) => el.remove());
   }
-  function runPre16() {
+  function runPre17() {
     addPackageLabelStyle();
     addStyle(`
     .npm-userscript-vulnerability-tag {
@@ -4982,7 +5239,7 @@ in the package.json.
     }
   `);
   }
-  async function run16() {
+  async function run18() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-vulnerability-label") && document.querySelector(".npm-userscript-vulnerability-tag"))
       return;
@@ -5014,7 +5271,7 @@ in the package.json.
   }
   async function addVulnerabilityTagToTable(vulns) {
     if (document.querySelector(".npm-userscript-vulnerability-tag")) return;
-    const featureSettings2 = await getFeatureSettings();
+    const featureSettings2 = await getFeatureSettings3();
     if (featureSettings2["better-versions"].get() === true) {
       await waitForElement('[aria-labelledby="cumulated-versions"]');
     }
@@ -5094,11 +5351,11 @@ in the package.json.
     if (score > 0) return "var(color-fg-accent)";
     return "var(--color-fg-subtle)";
   }
-  async function getFeatureSettings() {
+  async function getFeatureSettings3() {
     const settings = await Promise.resolve().then(() => (init_settings(), settings_exports));
     return settings.featureSettings;
   }
-  var import_gte, import_lt, import_max_satisfying, description18, warningSvg;
+  var import_gte, import_lt, import_max_satisfying, description20, warningSvg;
   var init_show_vulnerabilities = __esm({
     "src/features/show-vulnerabilities.ts"() {
       import_gte = __toESM(require_gte(), 1);
@@ -5108,25 +5365,87 @@ in the package.json.
       init_utils_npm_context();
       init_utils_ui();
       init_utils();
-      description18 = `Adds a label if a package is vulnerable in the header and versions table. The core vulnerability data
+      description20 = `Adds a label if a package is vulnerable in the header and versions table. The core vulnerability data
 is powered by https://osv.dev.
 `;
       warningSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>`;
     }
   });
 
+  // src/features/stars.ts
+  var stars_exports = {};
+  __export(stars_exports, {
+    description: () => description21,
+    run: () => run19,
+    runPre: () => runPre18,
+    teardown: () => teardown13
+  });
+  function teardown13(previousUrl) {
+    if (isSamePackagePage(previousUrl)) return;
+    document.querySelector(".npm-userscript-stars-column")?.remove();
+  }
+  async function runPre18() {
+    if (!isValidPackagePage()) return;
+    if ((await getFeatureSettings4())["repository-card"].get() === true) return;
+    addStyle(`
+    .npm-userscript-stars-link {
+      text-decoration: none;
+    }
+
+    .npm-userscript-stars-link:focus,
+    .npm-userscript-stars-link:hover {
+      text-decoration: underline;
+      color: #cb3837;
+    }
+  `);
+  }
+  async function run19() {
+    if (!isValidPackagePage()) return;
+    if ((await getFeatureSettings4())["repository-card"].get() === true) return;
+    if (document.querySelector(".npm-userscript-stars-column")) return;
+    const sidebarColumns = document.querySelectorAll('[aria-label="Package sidebar"] > div:has(> h3)');
+    const ref = Array.from(sidebarColumns).find(
+      (col) => col.querySelector("h3")?.textContent === "Total Files"
+    );
+    if (!ref) return;
+    const data = await fetchGitHubRepoData();
+    if (!data) return;
+    const link = `https://github.com/${data.full_name}/stargazers`;
+    const count = data.stargazers_count.toLocaleString();
+    const cloned = ref.cloneNode(true);
+    cloned.classList.add("npm-userscript-stars-column");
+    cloned.classList.remove("w-100");
+    cloned.querySelector("h3").textContent = "Stars";
+    const linkHtml = `<a class="npm-userscript-stars-link" href="${link}">${count}</a>`;
+    cloned.querySelector("p").innerHTML = linkHtml;
+    ref.insertAdjacentElement("afterend", cloned);
+  }
+  async function getFeatureSettings4() {
+    const settings = await Promise.resolve().then(() => (init_settings(), settings_exports));
+    return settings.featureSettings;
+  }
+  var description21;
+  var init_stars = __esm({
+    "src/features/stars.ts"() {
+      init_utils_fetch();
+      init_utils();
+      description21 = `Display a "Stars" column in the package sidebar for GitHub repos.
+`;
+    }
+  });
+
   // src/features/tarball-size.ts
   var tarball_size_exports = {};
   __export(tarball_size_exports, {
-    description: () => description19,
-    run: () => run17,
-    teardown: () => teardown11
+    description: () => description22,
+    run: () => run20,
+    teardown: () => teardown14
   });
-  function teardown11(previousUrl) {
+  function teardown14(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector(".npm-userscript-tarball-size-column")?.remove();
   }
-  async function run17() {
+  async function run20() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-tarball-size-column")) return;
     const tarballSize = await getTarballSize();
@@ -5150,7 +5469,7 @@ is powered by https://osv.dev.
   async function getColumnToInsertAfter() {
     const column = getColumnByName("Unpacked Size");
     if (column) return column;
-    const featureSettings2 = await getFeatureSettings2();
+    const featureSettings2 = await getFeatureSettings5();
     if (featureSettings2["unpacked-size-and-total-files"].get() === true) {
       let checks = 10;
       setInterval(() => {
@@ -5168,16 +5487,16 @@ is powered by https://osv.dev.
     const sidebarColumns = document.querySelectorAll('[aria-label="Package sidebar"] > div:has(> h3)');
     return Array.from(sidebarColumns).find((col) => col.querySelector("h3")?.textContent === name);
   }
-  async function getFeatureSettings2() {
+  async function getFeatureSettings5() {
     const settings = await Promise.resolve().then(() => (init_settings(), settings_exports));
     return settings.featureSettings;
   }
-  var description19;
+  var description22;
   var init_tarball_size = __esm({
     "src/features/tarball-size.ts"() {
       init_utils_fetch();
       init_utils();
-      description19 = `Display the tarball size of the package.
+      description22 = `Display the tarball size of the package.
 `;
     }
   });
@@ -5185,16 +5504,16 @@ is powered by https://osv.dev.
   // src/features/unpacked-size-and-total-files.ts
   var unpacked_size_and_total_files_exports = {};
   __export(unpacked_size_and_total_files_exports, {
-    description: () => description20,
-    run: () => run18,
-    teardown: () => teardown12
+    description: () => description23,
+    run: () => run21,
+    teardown: () => teardown15
   });
-  function teardown12(previousUrl) {
+  function teardown15(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector(".npm-userscript-unpacked-size-column")?.remove();
     document.querySelector(".npm-userscript-total-files-column")?.remove();
   }
-  async function run18() {
+  async function run21() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-unpacked-size-column") || document.querySelector(".npm-userscript-total-files-column"))
       return;
@@ -5227,12 +5546,12 @@ is powered by https://osv.dev.
       licenseColumn.insertAdjacentElement("afterend", newUnpackedSizeColumn);
     }
   }
-  var description20;
+  var description23;
   var init_unpacked_size_and_total_files = __esm({
     "src/features/unpacked-size-and-total-files.ts"() {
       init_utils_fetch();
       init_utils();
-      description20 = `Display the "Unpacked Size" and "Total Files" columns for older packages that lack the data.
+      description23 = `Display the "Unpacked Size" and "Total Files" columns for older packages that lack the data.
 `;
     }
   });
@@ -5252,6 +5571,8 @@ is powered by https://osv.dev.
       init_no_code_beta();
       init_remember_banner();
       init_remove_runkit();
+      init_repository_card();
+      init_repository_directory();
       init_show_binary_label();
       init_show_cli_label_and_command();
       init_show_engine_label();
@@ -5259,6 +5580,7 @@ is powered by https://osv.dev.
       init_show_lifecycle_scripts_label();
       init_show_types_label();
       init_show_vulnerabilities();
+      init_stars();
       init_tarball_size();
       init_unpacked_size_and_total_files();
       allFeatures = {
@@ -5273,6 +5595,8 @@ is powered by https://osv.dev.
         "no-code-beta": no_code_beta_exports,
         "remember-banner": remember_banner_exports,
         "remove-runkit": remove_runkit_exports,
+        "repository-card": repository_card_exports,
+        "repository-directory": repository_directory_exports,
         "show-binary-label": show_binary_label_exports,
         "show-cli-label": show_cli_label_and_command_exports,
         "show-engine-label": show_engine_label_exports,
@@ -5280,6 +5604,7 @@ is powered by https://osv.dev.
         "show-lifecycle-scripts-label": show_lifecycle_scripts_label_exports,
         "show-types-label": show_types_label_exports,
         "show-vulnerabilities": show_vulnerabilities_exports,
+        stars: stars_exports,
         "tarball-size": tarball_size_exports,
         "unpacked-size-and-total-files": unpacked_size_and_total_files_exports
       };
@@ -5293,6 +5618,20 @@ is powered by https://osv.dev.
 
   // src/utils-navigation.ts
   var HYDRATION_DELAY_MS = 50;
+  async function waitForDocumentPartiallyReady() {
+    if (!document.body) {
+      await new Promise((resolve, reject) => {
+        let max2 = 40;
+        setInterval(() => {
+          if (document.body) {
+            resolve();
+          } else if (max2-- <= 0) {
+            reject(new Error("[npm-userscript] Document took too long to be ready"));
+          }
+        }, 50);
+      });
+    }
+  }
   var pageAlreadyReady = false;
   async function waitForPageReady() {
     if (!pageAlreadyReady) {
@@ -5343,18 +5682,22 @@ is powered by https://osv.dev.
   // src/index.ts
   init_utils_npm_context();
   init_utils();
-  listenNpmContext();
-  var sequencePromise = runFeatures().then(() => runNotImportantStuff());
-  var teardownQueue = 0;
-  listenNavigate(async (previousUrl) => {
-    teardownQueue++;
-    sequencePromise = sequencePromise.then(async () => {
-      await runTeardown(previousUrl);
-      if (teardownQueue-- > 1) return;
-      await runFeatures();
-      if (teardownQueue === 0) sequencePromise = Promise.resolve();
+  main();
+  async function main() {
+    await waitForDocumentPartiallyReady();
+    listenNpmContext();
+    let sequencePromise = runFeatures().then(() => runNotImportantStuff());
+    let teardownQueue = 0;
+    listenNavigate(async (previousUrl) => {
+      teardownQueue++;
+      sequencePromise = sequencePromise.then(async () => {
+        await runTeardown(previousUrl);
+        if (teardownQueue-- > 1) return;
+        await runFeatures();
+        if (teardownQueue === 0) sequencePromise = Promise.resolve();
+      });
     });
-  });
+  }
   async function runTeardown(previousUrl) {
     const promises = [];
     for (const feature in allFeatures) {

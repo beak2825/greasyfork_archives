@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Disable YouTube Hotkeys with Modern Settings Page
 // @namespace    https://github.com/VKrishna04
-// @version      4.5.0
+// @version      4.5.1
 // @description  Disable various YouTube hotkeys with fine-grained control (Excludes Search/Comments)
 // @author       VKrishna04
 // @match        *://www.youtube.com/*
@@ -529,6 +529,7 @@
   // --- 4. OBSERVER LOGIC WITH PROPER TIMING ---
   let injectionAttempts = 0;
   let isInjecting = false;
+  let injectionTimeout = null;
 
   // Improved injection with better timing and waiting for specific elements
   async function tryInjectWithRetry() {
@@ -542,8 +543,8 @@
     }
 
     // Wait for the video player and actions container to be present
-    const maxAttempts = 20;
-    const baseDelay = 100;
+    const maxAttempts = 40; // Increased from 20
+    const baseDelay = 50; // Reduced from 100 for faster initial checks
 
     for (let i = 0; i < maxAttempts; i++) {
       // Check if we're on a watch page
@@ -571,8 +572,8 @@
         return;
       }
 
-      // Exponential backoff: wait longer each attempt
-      const delay = baseDelay * Math.pow(1.3, i);
+      // Exponential backoff: wait longer each attempt, but slower growth
+      const delay = baseDelay * Math.pow(1.15, i);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
 
@@ -581,49 +582,68 @@
 
   // Watch for YouTube's SPA navigation events
   function handlePageChange() {
+    // Clear any pending timeout
+    if (injectionTimeout) clearTimeout(injectionTimeout);
+
     // Reset injection state on navigation
     injectionAttempts = 0;
+    isInjecting = false;
 
     // Try injection after a short delay to let the page render
-    setTimeout(() => tryInjectWithRetry(), 200);
+    injectionTimeout = setTimeout(() => tryInjectWithRetry(), 100);
   }
 
   // Listen for YouTube's navigation events (SPA)
-  if (window.yt && window.yt.config_) {
-    // YouTube is loaded, set up listeners
-    document.addEventListener('yt-navigate-finish', handlePageChange);
-    document.addEventListener('yt-page-data-updated', handlePageChange);
-  } else {
-    // YouTube not loaded yet, wait for it
-    window.addEventListener('yt-navigate-finish', handlePageChange);
-    window.addEventListener('yt-page-data-updated', handlePageChange);
-  }
+  document.addEventListener('yt-navigate-finish', handlePageChange);
+  document.addEventListener('yt-page-data-updated', handlePageChange);
 
   // Backup: MutationObserver to catch when the actions container appears
   const observer = new MutationObserver((mutations) => {
     // Only observe if on a watch page and button doesn't exist
-    if (window.location.pathname.startsWith('/watch') && !document.getElementById("yt-hk-action-btn")) {
+    if (window.location.pathname.startsWith('/watch') && !document.getElementById("yt-hk-action-btn") && !isInjecting) {
       tryInjectWithRetry();
     }
   });
 
-  // Start observing once the body is available
-  if (document.body) {
-    observer.observe(document.body, { childList: true, subtree: true });
-  } else {
-    document.addEventListener('DOMContentLoaded', () => {
-      observer.observe(document.body, { childList: true, subtree: true });
-    });
+  // Start observing immediately once DOM is ready
+  function startObserver() {
+    if (document.body) {
+      observer.observe(document.body, { childList: true, subtree: true, attributes: false });
+    }
   }
 
-  // Initial injection attempts
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => tryInjectWithRetry(), 500);
-    });
+  // Start observing as early as possible
+  if (document.body) {
+    startObserver();
   } else {
-    // DOM already loaded
-    setTimeout(() => tryInjectWithRetry(), 500);
+    document.addEventListener('DOMContentLoaded', startObserver);
+  }
+
+  // Initial injection attempts - more aggressive on first load
+  function scheduleInitialInjection() {
+    // Try immediately
+    tryInjectWithRetry();
+
+    // Also try after a short delay
+    setTimeout(() => {
+      if (!document.getElementById("yt-hk-action-btn") && !isInjecting && window.location.pathname.startsWith('/watch')) {
+        tryInjectWithRetry();
+      }
+    }, 300);
+
+    // And again after a bit longer
+    setTimeout(() => {
+      if (!document.getElementById("yt-hk-action-btn") && !isInjecting && window.location.pathname.startsWith('/watch')) {
+        tryInjectWithRetry();
+      }
+    }, 800);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scheduleInitialInjection);
+  } else {
+    // DOM already loaded, schedule injection
+    scheduleInitialInjection();
   }
 
   // Fallback Tampermonkey Menu

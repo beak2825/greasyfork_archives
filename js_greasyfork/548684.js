@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         DBD-RawsBanHelper
 // @namespace    http://tampermonkey.net/
-// @version      3.2
+// @version      3.3
 // @description  过滤动漫花园、末日动漫、Nyaa和蜜柑计划中的DBD-Raws与731学院内容，并修复行颜色问题
-// @description:zh-CN  3.2更新内容：修复了直接进入蜜柑计划时没有过滤731学院的问题，并在将其删除后对相应的网页元素进行调整
+// @description:zh-CN  3.3更新内容：在控制面板中增加了手动触发过滤的按钮，并修复了没有初始化的问题
 // @author       Fuck DBD-Raws
 // @license      MIT
 // @match        *://*.dmhy.org/*
@@ -36,7 +36,7 @@
 
     // 全局关键词
     function getGlobalKeywords() {
-        return GM_getValue('globalKeywords', []);
+        return GM_getValue('globalKeywords', defaultKeywords);
     }
     function saveGlobalKeywords(keywords) {
         GM_setValue('globalKeywords', keywords);
@@ -81,7 +81,7 @@
         });
 
         // ✅ 新增功能：检查 ul.list-inline.an-ul 是否为空
-        const uls = document.querySelectorAll('ul.list-inline.an-ul');
+        const uls = document.querySelectorAll('#sk-body ul.list-inline.an-ul');
         uls.forEach(ul => {
             if (ul.children.length === 0) {
                 // 如果没有子元素，则删除父元素
@@ -91,6 +91,24 @@
             }
         });
     }
+
+    function getPanel() {
+        return document.getElementById('filter-config-panel');
+    }
+
+    // ✅ 兜底：如果面板被删了，尝试重建或重新挂载
+    function ensurePanelAlive(initFn) {
+        const panel = getPanel();
+        if (!panel) {
+            try {
+                // 如果你有 initControlPanel()，这里直接重建
+                if (typeof initFn === 'function') initFn();
+            } catch (e) {
+                console.log('⚠️控制面板缺失且重建失败：', e);
+            }
+        }
+    }
+
 
     // 过滤蜜柑计划展开的子组
     function filterMikanFrame(frame) {
@@ -560,8 +578,24 @@
         importBtn.className = 'btn-import';
         importBtn.style.flex = '1'; // 占满另一半
 
+        // ✅ 新增：手动触发过滤按钮
+        const manualFilterBtn = document.createElement('button');
+        manualFilterBtn.textContent = '手动触发过滤';
+        manualFilterBtn.className = 'btn-add';
+        manualFilterBtn.style.flex = '1';
+        manualFilterBtn.onclick = (e) => {
+            e.stopPropagation(); // 防止冒泡触发站点的全局点击逻辑
+
+            console.log('ℹ️手动触发过滤逻辑');
+            filterContent(); // 调用主过滤函数
+            filter731();
+            // 兜底：确保面板仍在
+            ensurePanelAlive(typeof initControlPanel === 'function' ? initControlPanel : null);
+        };
+
         ioContainer.appendChild(exportBtn);
         ioContainer.appendChild(importBtn);
+        ioContainer.appendChild(manualFilterBtn); // ✅ 添加到容器
         panel.appendChild(ioContainer);
 
         document.body.appendChild(panel);

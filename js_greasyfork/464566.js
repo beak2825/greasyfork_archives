@@ -5,7 +5,7 @@
 // @match https://www.geocaching.com/geocache/*
 // @match http://geocaching.com/geocache/*
 // @match https://geocaching.com/geocache/*
-// @version 1.81
+// @version 2.1
 // @namespace https://greasyfork.org/en/scripts/464566-geocaching-puzzle-helper
 // @homepage https://greasyfork.org/en/scripts/464566-geocaching-puzzle-helper
 // @license MIT
@@ -30,7 +30,9 @@
     descriptions.forEach(id => scanElemForStuff(document.getElementById(id)));
 
     showFinalLocation();
+    addCustomLink("Google Earth", buildGoogleEarthURL());
     addCustomLink("Ingress", buildIngressURL());
+    addCustomLink("ProjectGC", buildProjectGCURL());
     addCustomLink("HMDB", buildHMDBURL());
     addCustomLink("NowListenToMe", buildNowListenToMeURL());
     addCustomLink("Benchmarks", buildBenchmarkURL());
@@ -67,12 +69,25 @@
         }
     }
 
+      /**
+     * Builds the Google Earth link URL.
+     */
+    function buildGoogleEarthURL() {
+        return `https://earth.google.com/web/search/${mapLatLng.lat},${mapLatLng.lng}@${mapLatLng.lat+0.0001},${mapLatLng.lng},180a,20000d`;
+    }
 
     /**
      * Builds the Ingress link URL.
      */
     function buildIngressURL() {
         return `https://intel.ingress.com/intel?ll=${mapLatLng.lat},${mapLatLng.lng}&z=16`;
+    }
+
+           /**
+     * Builds the HMDB link URL.
+     */
+    function buildProjectGCURL() {
+        return `https://project-gc.com/Tools/MapCompare?player_prc_profileName=dumm123&player_prc_profileName2=dummy1001&geocache_mc_show%5B%5D=found-none&geocache_dae_archived=on&geocache_cr_centerLocation=${mapLatLng.lat}%2C+${mapLatLng.lng}&geocache_cr_radius=2&geocache_cr_units=mi&submit=Filter`;
     }
 
        /**

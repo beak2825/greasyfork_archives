@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         手机助手
 // @namespace    http://tampermonkey.net/
-// @version      10.0.0.97
+// @version      10.0.0.99
 // @description  自动滚动，嗅探图片、视频，字体放大，去除广告浮动
 // @author       You
 // @match        *://*/*
@@ -109,7 +109,7 @@
                 delete _data[keys[0]];
                 GM_setValue(gValName, _data);
             }
-            return [_data, _data[currentDomain] !== undefined ? _data[currentDomain] : _default];
+            return [_data, _data[currentDomain] ?? _default];
         }
 
         let [txtToCData, txtToC] = getDataValue("txtToCData", "");
@@ -947,7 +947,16 @@ overflow:hidden!important;}`;
 
                 let [offsetX, offsetY, thisHeight] = getTouchSite(event.target, event);
 
-                if (offsetY > 3 * thisHeight || offsetY < -3 * thisHeight || offsetX > 3 * thisHeight || offsetX < thisHeight * -3) {
+                if (offsetY > 3 * thisHeight || offsetX > 3 * thisHeight || offsetX < thisHeight * -3) {
+                    if(textSlt.length){
+                        document.querySelector(".JqMA-inner-word")?.remove();
+                        docSltAll("[JqMA-mark-word]").forEach(function(element) {
+                            element.removeAttribute("JqMA-mark-word");
+                        });
+                        event.target.style.setProperty("color", "green", "important");
+                        appendWord();
+                    }
+                }else if (offsetY < -3 * thisHeight) {
                     if (!document.querySelector(".JqMA-inner-word") && textSlt.length) {
                         event.target.style.setProperty("color", "green", "important");
                         appendWord();
@@ -1298,14 +1307,12 @@ opacity:.2!important;
             publicStyle.textContent += clearText;
 
             setTimeout(function() {
-                for (const _this of document.querySelectorAll(':not(.JqMA-btn-all)')) {
-
-                    const style = window.getComputedStyle(_this);
-
-                    if (/sticky|fixed/.test(style.position) && _this.offsetHeight < .5 * window.innerHeight) {
-                        _this.setAttribute("JqMA-css-fixed_hide", "1");
+                document.querySelectorAll(':not(.JqMA-btn-all)').forEach(el => {
+                    const style = getComputedStyle(el);
+                    if (/sticky|fixed/.test(style.position) && el.offsetHeight < window.innerHeight * 0.5) {
+                        el.setAttribute('JqMA-css-fixed_hide', '1');
                     }
-                }
+                });
             }, 400);
         }
 
@@ -1331,42 +1338,33 @@ opacity:.2!important;
         let [picRepData, picReplace] = getDataValue("picRepData", "");
 
         function visibleDiv(_zfs = [9, -9], _max = true) {
-
             const threshold = .6 * window.innerHeight;
-            let maxOne;
-
-            for (const element of document.querySelectorAll("*")) {
-                if (element.offsetHeight < threshold) continue;
-                const oldScrollTop = element.scrollTop;
-                for (const _zf of _zfs) {
-                    element.scrollTop += _zf;
-                    if (element.scrollTop == oldScrollTop) continue;
-                    element.scrollTop -= _zf;
-                    if (!_max) return element;
-                    if (!maxOne || element.scrollHeight > maxOne.scrollHeight) maxOne = element;
-                }
-            }
-            return maxOne || document.body;
+            const scrollableElements = [...document.querySelectorAll("*")]
+            .filter(el => el.offsetHeight >= threshold && [..._zfs].some(zf => {
+                const oldScroll = el.scrollTop;
+                el.scrollTop += zf;
+                const scrollable = el.scrollTop !== oldScroll;
+                el.scrollTop = oldScroll;
+                return scrollable;
+            }));
+            return _max ? scrollableElements.reduce((max, el) => !max || el.scrollHeight > max.scrollHeight ? el : max, null) || document.body :
+            scrollableElements[0] || document.body;
         }
 
         function xScrollDiv(_zfs = [9, -9]) {
-
             const threshold = .6 * window.innerHeight;
-            let scrollEles = [];
-
-            for (const element of document.querySelectorAll("*")) {
-
-                if (element.offsetWidth > threshold && window.getComputedStyle(element).overflowX !== "hidden") {
-                    const oldScrollLeft = element.scrollLeft;
-                    for (const _zf of _zfs) {
-                        element.scrollLeft += _zf;
-                        if (element.scrollLeft == oldScrollLeft) continue;
-                        element.scrollLeft -= _zf;
-                        scrollEles.push(element);
-                    }
+            return [...document.querySelectorAll("*")].filter(el => {
+                if (el.offsetWidth <= threshold || getComputedStyle(el).overflowX === "hidden") {
+                    return false;
                 }
-            }
-            return scrollEles;
+                return [..._zfs].some(zf => {
+                    const oldScroll = el.scrollLeft;
+                    el.scrollLeft += zf;
+                    const canScroll = el.scrollLeft !== oldScroll;
+                    el.scrollLeft = oldScroll;
+                    return canScroll;
+                });
+            });
         }
 
         function autoScrollBy(element, sJu, mood = "by", direction = "scrollTop") {
@@ -1497,20 +1495,8 @@ color:#FEFEFE!important;
 
                     innerWordAdd();
 
-                    if (index > wordParagraphs.length - 4) {
-                        const visDiv = visibleDiv([9]);
-                        pageX.unshift(visDiv.scrollTop);
-
-                        let maxOne;
-                        for (const dom of visDiv.querySelectorAll(":not(.JqMA-inner-all)")) {
-                            if (!maxOne || dom.offsetHeight > maxOne.offsetHeight) {
-                                maxOne = dom;
-                            }
-                        }
-                        maxOne.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'end'
-                        });
+                    if (index > wordParagraphs.length - 3) {
+                        scrollEnd();
                     }
                 };
                 utterThis.onend = () => {
@@ -1561,16 +1547,12 @@ color:#FEFEFE!important;
         function innerWordAdd() {
             const textParts = [];
 
-            docSltAll(textSlt).forEach(element => {
-                if (!element.hasAttribute('JqMA-mark-word')) {
-
-                    const clonedElement = element.cloneNode(true);
-
-                    clonedElement.querySelectorAll('style, script, noscript').forEach(el => el.remove());
-
-                    textParts.push(getText(clonedElement));
-
-                    element.setAttribute('JqMA-mark-word', true);
+            docSltAll(textSlt).forEach(el => {
+                if (!el.hasAttribute('JqMA-mark-word')) {
+                    const clone = el.cloneNode(true);
+                    clone.querySelectorAll('style, script, noscript').forEach(tag => tag.remove());
+                    textParts.push(getText(clone));
+                    el.setAttribute('JqMA-mark-word', true);
                 }
             });
             const processedStr = textParts.join('\n\u3000').replace(/(?:\u00A0|&nbsp;|\t)+|<img[^一-龟，。>]*>/g, ' ').replace(/(?:\n\u3000* *)+/g, '\n\u3000');
@@ -1591,62 +1573,49 @@ color:#FEFEFE!important;
         const htmlVisText = "html {overflow-y: visible!important;}";
 
         function appendWord() {
-            let pOuter = createElement('p', {
+            const pOuter = createElement('p', {
                 class: "JqMA-inner-word JqMA-inner-all"
             });
-            const pInner = createElement('p', {
-                class: "JqMA-mark-wordEnd"
-            }, "！阅读结束！");
 
             publicStyle.textContent += htmlVisText;
-            pOuter.appendChild(pInner);
+            pOuter.appendChild(createElement('p', {
+                class: "JqMA-mark-wordEnd"
+            }, "！阅读结束！"));
 
             document.documentElement.prepend(pOuter);
 
             innerWordAdd();
 
             document.querySelector(".JqMA-inner-word").addEventListener("click", function(event) {
-                if (event.target.tagName === "P" && getText(readbtn) != "朗读") {
-                    currentStr = 0;
-                    let prevElement = event.target.previousElementSibling;
-                    while (prevElement) {
-                        if (prevElement.tagName === "P") {
-                            currentStr++;
-                        }
-                        prevElement = prevElement.previousElementSibling;
-                    }
+                if (event.target.tagName === "P" && getText(document.querySelector(".JqMA-inner-word>a:nth-of-type(2)")) != "朗读") {
+                    currentStr = [...event.target.parentElement.children]
+                        .slice(0, [...event.target.parentElement.children].indexOf(event.target))
+                        .filter(el => el.tagName === "P").length;
                     readStr();
                 }
             });
-            let readbtn = createElement('a', null, '朗读');
-            let downbtn = createElement('a', null, '下载');
-            let ratebtn = createElement('a', null, `语速：${speakRate}`);
-
             const wordElement = document.querySelector(".JqMA-inner-word");
-            wordElement.insertBefore(downbtn, wordElement.firstChild);
-            wordElement.insertBefore(readbtn, wordElement.firstChild);
-            wordElement.insertBefore(ratebtn, wordElement.firstChild);
+            [['下载', downloadText], ['朗读', readPause], [`语速：${speakRate}`, changeRate]]
+                .forEach(([text, handler]) => {
+                const btn = createElement('a', null, text);
+                btn.addEventListener('click', handler === readPause ? handler : (e) => handler(e, btn));
+                wordElement.insertBefore(btn, wordElement.firstChild);
+            });
 
-            readbtn.addEventListener("click", readPause);
-
-            ratebtn.addEventListener("click", function() {
-                let inputNum = window.prompt("输入语速：", speakRate);
-                if (inputNum === null) return;
-                speakRate = inputNum;
-                this.textContent = "语速：" + speakRate;
+            function downloadText(event, btn) {
+                const text = [...document.querySelectorAll(".JqMA-inner-word > p")]
+                .map(p => p.textContent).join('');
+                const fileName = document.title.replace(/[\/:*?"<>|]/g, ' ').trim() + '.txt';
+                downloadTxt(fileName, text);
+            }
+            function changeRate(event, btn) {
+                const input = window.prompt("输入语速：", speakRate);
+                if (input === null) return;
+                speakRate = input;
+                btn.textContent = `语速：${speakRate}`;
                 GM_setValue("speakRate", speakRate);
-                if (getText(readbtn) == "朗读") return
-                readStr();
-            });
-            downbtn.addEventListener("click", function() {
-                let textContent = "";
-
-                document.querySelectorAll(".JqMA-inner-word > p").forEach(function(pDom) {
-                    textContent += pDom.textContent;
-                });
-                downloadTxt(document.title.replace(/[\/:*?""<>|]+/g, " ").replace(/^\s+|\s+$/g, "") + ".txt", textContent);
-            });
-            autoScrollBy(visibleDiv([9, -9]), 0, "to");
+                if(getText(document.querySelector(".JqMA-inner-word>a:nth-of-type(2)")) != "朗读")readStr();
+            }
         }
 
         let whProp = GM_getValue("whProp", 3.9);
@@ -1926,15 +1895,12 @@ white-space:nowrap!important;
                     let _target = event.target;
                     let _this = _target;
                     const srcArr = new Set();
-                    function getImgSrc(_this){
-                        if (_this.matches("img")) {
-                            srcArr.add(_this.currentSrc || _this.src);
-                        } else if (_this.matches("video")) {
-                            if (_this.poster) srcArr.add(_this.poster);
-                        }
-                        const bgUrls = window.getComputedStyle(_this).backgroundImage.matchAll(/url\(['"]?(.*?)['"]?\)/g);
+                    const getImgSrc = el => {
+                        if (el.matches('img')) srcArr.add(el.currentSrc || el.src);
+                        if (el.matches('video') && el.poster) srcArr.add(el.poster);
+                        const bgUrls = getComputedStyle(el).backgroundImage.matchAll(/url\(['"]?(.*?)['"]?\)/g);
                         [...bgUrls].forEach(match => match[1] && srcArr.add(match[1]));
-                    }
+                    };
                     getImgSrc(_this);
                     if(srcArr.size==0){
                         [..._this. querySelectorAll("*")].forEach(getImgSrc);
@@ -1983,6 +1949,15 @@ white-space:nowrap!important;
             btn.style.setProperty("color", picZ ? "green" : "white", "important");
             GM_setValue("picZData", picZData);
         }
+
+        function scrollEnd() {
+            const visDiv = visibleDiv([9]);
+            pageX.unshift(visDiv.scrollTop);
+            const maxDom = [...visDiv.querySelectorAll(":not(.JqMA-inner-all)")]
+            .reduce((max, dom) => !max || dom.offsetHeight > max.offsetHeight ? dom : max, null);
+            maxDom?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+
         let xScrDirect = true;
 
         function scrollPicLoad() {
@@ -1990,37 +1965,23 @@ white-space:nowrap!important;
             const _picZ = picZ;
             picZ = 0;
 
-            const visDiv = visibleDiv([9]);
-            pageX.unshift(visDiv.scrollTop);
+            scrollEnd();
 
-            let maxOne;
-            for (const dom of visDiv.querySelectorAll(":not(.JqMA-inner-all)")) {
-                if (!maxOne || dom.offsetHeight > maxOne.offsetHeight) {
-                    maxOne = dom;
-                }
-            }
-            maxOne.scrollIntoView({
-                behavior: 'smooth',
-                block: 'end'
-            });
-            xScrollDiv([9, -9]).forEach((elet) => {
-                let maxX;
-                for (const dom of elet.querySelectorAll("*")) {
-                    if (!maxX || dom.offsetWidth > maxX.offsetWidth) {
-                        maxX = dom;
-                    }
-                }
-                maxX.scrollIntoView({
+            xScrollDiv([9, -9]).forEach(elet => {
+                const maxDom = [...elet.querySelectorAll("*")]
+                .reduce((max, dom) => !max || dom.offsetWidth > max.offsetWidth ? dom : max, null);
+                maxDom?.scrollIntoView({
                     behavior: 'smooth',
                     inline: xScrDirect ? 'end' : 'start'
                 });
             });
+
             setTimeout(() => {
                 xScrDirect = xScrDirect == false;
                 if (_picZ) {
                     picZ = 1;
                 }
-            }, 1100);
+            }, 1200);
         }
 
         function removePicClass() {
@@ -2271,19 +2232,12 @@ white-space:nowrap!important;
             let minWH = Math.min(oldNatureW, oldNatureH);
 
             if (minWH < minPicHD) {
-                let thisSrcList = picHD(elet.currentSrc),
-                    promiseArray = [];
-
-                for (let i = 0; i < thisSrcList.length; i++) {
-                    promiseArray.push(checkImgExists(thisSrcList[i]).catch(err => console.log(err)));
-                }
-                Promise.all(promiseArray).then(function(data) {
-                    for (let i = 0; i < data.length; i++) {
-                        let resH = data[i];
-                        if (resH.naturalHeight > oldNatureH || resH.naturalWidth > oldNatureW) {
-                            elet.setAttribute("src", resH.src);
-                            return;
-                        }
+                const srcList = picHD(elet.currentSrc);
+                const promises = srcList.map(src => checkImgExists(src).catch(console.error));
+                Promise.all(promises).then(data => {
+                    const betterImg = data.find(img => img.naturalHeight > oldNatureH || img.naturalWidth > oldNatureW);
+                    if (betterImg) {
+                        elet.src = betterImg.src;
                     }
                 });
             }

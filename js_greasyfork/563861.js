@@ -1,16 +1,16 @@
 // ==UserScript==
 // @name         bilibili播放视频倍速自定义（原生按钮，支持快捷键自定义，支持0-16倍速）
 // @namespace    dzj0821
-// @version      1.2.1
+// @version      1.2.4
 // @icon         https://www.bilibili.com/favicon.ico
-// @description  （origin: dzj0821. bilibili播放视频倍速自定义）新增支持快捷键 [ ] \ 增减重置倍速，支持中英输入法及大小写兼容，并在视频中心弹出原生感提示。
+// @description  （origin: dzj0821. bilibili播放视频倍速自定义）新增支持快捷键 z x c 增减重置倍速，支持中英输入法及大小写兼容，并在视频中心弹出原生感提示。
 // @author       dzj0821 & float0108
 // @include      http*://*bilibili.com/video/*
 // @include      http*://*bilibili.com/list/*
 // @include      http*://*bilibili.com/bangumi/*
 // @grant        GM_registerMenuCommand
 // @grant        GM_unregisterMenuCommand
-// @license      MIT
+// @license      GNU/GPLv3
 // @homepage     https://github.com/float0108/UserScript_Unclassified/
 // @downloadURL https://update.greasyfork.org/scripts/563861/bilibili%E6%92%AD%E6%94%BE%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F%E8%87%AA%E5%AE%9A%E4%B9%89%EF%BC%88%E5%8E%9F%E7%94%9F%E6%8C%89%E9%92%AE%EF%BC%8C%E6%94%AF%E6%8C%81%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%87%AA%E5%AE%9A%E4%B9%89%EF%BC%8C%E6%94%AF%E6%8C%810-16%E5%80%8D%E9%80%9F%EF%BC%89.user.js
 // @updateURL https://update.greasyfork.org/scripts/563861/bilibili%E6%92%AD%E6%94%BE%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F%E8%87%AA%E5%AE%9A%E4%B9%89%EF%BC%88%E5%8E%9F%E7%94%9F%E6%8C%89%E9%92%AE%EF%BC%8C%E6%94%AF%E6%8C%81%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%87%AA%E5%AE%9A%E4%B9%89%EF%BC%8C%E6%94%AF%E6%8C%810-16%E5%80%8D%E9%80%9F%EF%BC%89.meta.js
@@ -80,7 +80,7 @@
     }
 
     function getShortcutKeys() {
-        return (localStorage.getItem("dz_bilibili_video_custom_speed_shortcuts") || "[,],\\").split(",");
+        return (localStorage.getItem("dz_bilibili_video_custom_speed_shortcuts") || "z x c").split(" ");
     }
 
     function getSetSpeedOnLoadSetting() {
@@ -113,7 +113,7 @@
         if (input !== null) {
             let keys = input.trim().split(/\s+/);
             if (keys.length === 3) {
-                localStorage.setItem("dz_bilibili_video_custom_speed_shortcuts", keys.join(","));
+                localStorage.setItem("dz_bilibili_video_custom_speed_shortcuts", keys.join(" "));
                 alert(`设置成功：${keys.join(" | ")}`);
             } else { alert("需输入三个按键"); }
         }

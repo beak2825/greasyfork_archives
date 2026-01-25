@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         J-Biblio2Dou
 // @namespace    http://tampermonkey.net/
-// @version      2.00
-// @description  Hanmoto: openBD + hanmoto sections(目次/著者プロフィール + cover); CiNii: RIS + 内容説明・目次 + cover; fill Douban new_subject; add shortcuts on Douban search pages
-// @author       千叶ゃ
+// @version      2.01
+// @description  Extracting bibliography data from Hanmoto + openBD or CiNii and fill Douban new_book subjects; add shortcuts on Douban search pages
+// @author       千叶ゃ(based on Good2Dou)
 // @match        *://*.hanmoto.com/bd/isbn/*
 // @match        *://ci.nii.ac.jp/ncid/*
 // @match        *://book.douban.com/new_subject*
@@ -121,16 +121,13 @@
         const hasCJK = /[\u3040-\u30FF\u31F0-\u31FF\u3400-\u4DBF\u4E00-\u9FFF]/.test(t);
 
         if (hasLatin) {
-            // 英文/混合：保留“-”，但规整成无空白连字符
-            t = t.replace(/[　]+/g, ' ');      // 全角空格 -> 半角
-            t = t.replace(/\s*-\s*/g, '-');    // 连字符两边空白去掉
-            t = t.replace(/\s+/g, ' ').trim(); // 其他空白压成单空格
+            t = t.replace(/[　]+/g, ' ');
+            t = t.replace(/\s*-\s*/g, '-');
+            t = t.replace(/\s+/g, ' ').trim();
         } else if (hasCJK) {
-            // 纯 CJK：去掉“-”和全部空白
             t = t.replace(/-/g, '');
             t = t.replace(/[\s　]+/g, '');
         } else {
-            // 既非拉丁也非 CJK：保守处理（不删“-”，只规整空白）
             t = t.replace(/[　]+/g, ' ');
             t = t.replace(/\s+/g, ' ').trim();
         }
@@ -191,7 +188,7 @@
     });
 
     // -----------------------------
-    // Hanmoto: sections + cover (LIVE DOM only)
+    // Hanmoto: sections + cover
     // -----------------------------
     const extractHanmotoSectionsFromDoc = (doc) => {
         let author_profile = cleanText(
@@ -296,7 +293,7 @@
         return { author: uniq(authors), translator: uniq(translators) };
     };
 
-    // price (PriceAmount) from onix.ProductSupply.SupplyDetail.Price[*].PriceAmount
+    // price
     const extractPriceAmount = (onix) => {
         const prices = onix?.ProductSupply?.SupplyDetail?.Price;
         if (!Array.isArray(prices) || prices.length === 0) return null;
@@ -359,18 +356,15 @@
         const pubdateRaw = summary.pubdate || onix?.PublishingDetail?.PublishingDate?.[0]?.Date || '';
         const pubParts = parsePubdate(pubdateRaw);
 
-        // binding：toji + hankeidokuji（中间空格）
         const toji = String(hanmoto?.toji || '').trim();
         const hankeidokuji = String(hanmoto?.hankeidokuji || '').trim();
         const binding = [toji, hankeidokuji].filter(Boolean).join(' ').trim();
 
-        // 紹介：末尾加 (Data from OpenBD)，但为空就不加
         const descriptionRaw = pickTextContent(onix, '03') || pickTextContent(onix, '02') || hanmoto?.maegakinado || '';
         const description = appendSourceNote(cleanText(descriptionRaw), 'Data from OpenBD');
 
         const price = extractPriceAmount(onix);
 
-        // 原題（genshomei）-> Original_title
         const Original_title = String(hanmoto?.genshomei || '').trim() || null;
 
         return {
@@ -383,7 +377,7 @@
             cover: extractCoverFromOpenBD(onix, summary) || '',
             pages: extractPages(onix),
             binding,
-            price, // numeric string
+            price,
             Original_title,
             publisher: summary.publisher || onix?.PublishingDetail?.Imprint?.ImprintName || '',
             isbn: normalizeIsbn(summary.isbn || summary.isbn13 || isbn),
@@ -667,7 +661,6 @@
 
         if (meta.price) setValue('#p_8', `${meta.price}円+税`);
 
-        // 原题
         if (meta.Original_title) setValue('#p_98', meta.Original_title);
 
         fillListInputs('p_5', meta.author);
@@ -701,7 +694,6 @@
         const links = buildSearchLinks(kw);
         if (!links) return;
 
-        // 找到右侧“添加书籍/杂志/丛书/作者”的那一块（.bd 里有多个 p.pl）
         const addBookA =
               document.querySelector('a[href*="book.douban.com/new_subject?cat=1001"]') ||
               document.querySelector('a[href*="book.douban.com/new_subject"]');
@@ -729,7 +721,6 @@
         wrap.appendChild(mkP(links.cinii, '在CiNii检索'));
         wrap.appendChild(mkP(links.google, '在Google检索'));
 
-        // 放到原有4个链接下面：直接 append 到 bd 的末尾
         bd.appendChild(wrap);
     }
 
@@ -765,7 +756,6 @@
         wrap.appendChild(mkLinkDiv(links.cinii, '在CiNii检索'));
         wrap.appendChild(mkLinkDiv(links.google, '在Google检索'));
 
-        // 放到原有4个链接下面：append 到 container 的末尾
         container.appendChild(wrap);
     }
 
@@ -836,7 +826,6 @@
 
         const observer = new MutationObserver(() => {
             if (!document.getElementById('douban-helper-toolbar')) ensureToolbar();
-            // 搜索页也可能是动态的
             injectDoubanSearchShortcuts();
         });
         observer.observe(document.documentElement || document.body, { childList: true, subtree: true });

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME AD to BS Converter
 // @namespace    https://greasyfork.org/users/1087400
-// @version      0.1.7
+// @version      0.1.8
 // @description  Converts AD dates to BS dates in WME closure panel
 // @author       https://greasyfork.org/en/users/1087400-kid4rm90s
 // @include 	   /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor.*$/
@@ -28,7 +28,7 @@
     const scriptName = GM_info.script.name;
     const scriptVersion = GM_info.script.version;
     const updateMessage = `<strong>Version ${scriptVersion} - 2026-01-25:</strong><br>
-    - Added support for various WME Locales<br>
+    - Added current Nepal time in script tab<br>
     - Added Nepali calendar display support<br>
     - Added an option to choose between Nepali and English calendar display in the script tab<br>
     - Fixed date conversion issues due to timezone discrepancies<br>
@@ -140,6 +140,8 @@
             <label style="font-weight:bold;">Nepali Calendar Display:</label><br>
             <label><input type="radio" name="wme-ad-bs-lang" value="ne" checked> नेपाली (Devanagari)</label><br>
             <label><input type="radio" name="wme-ad-bs-lang" value="en"> English</label>
+            <div id="wme-ad-bs-today" style="margin-top:10px; font-size:13px; font-weight:bold;"></div>
+            <br><br><h8> For feedback: <a href="${forumURL}" target="_blank" style="color:#1e88e5; text-decoration:underline;">${forumURL}</a></h8><br>
         `;
         tabContent.id = 'wme-ad-bs-tab';
         tabContent.addEventListener('change', (e) => {
@@ -148,6 +150,46 @@
             }
         });
         tabPane.appendChild(tabContent);
+
+        // --- Today date/time (NPL) display logic ---
+        function updateTodayNPL() {
+            const todayDiv = document.getElementById('wme-ad-bs-today');
+            if (!todayDiv) return;
+            let adNow = new Date();
+            // Nepal time is UTC+5:45
+            let nplNow = new Date(adNow.getTime() + (5 * 60 + 45) * 60000);
+            let adStr = `${nplNow.getUTCFullYear()}-${String(nplNow.getUTCMonth()+1).padStart(2,'0')}-${String(nplNow.getUTCDate()).padStart(2,'0')}`;
+            let timeStr = `${String(nplNow.getUTCHours()).padStart(2,'0')}:${String(nplNow.getUTCMinutes()).padStart(2,'0')}`;
+            let bsStr = '--';
+            let nepaliTime = '--';
+            let bsHtml = '<span style="color:#1e88e5">--</span>';
+            let timeHtml = '<span style="color:#1e88e5">--</span>';
+            if (unsafeWindow.NepaliDate && typeof unsafeWindow.NepaliDate.AD_TO_BS === 'function') {
+                bsStr = unsafeWindow.NepaliDate.AD_TO_BS(adStr);
+                // Convert time to Devanagari if Nepali selected
+                if (calendarLang === 'ne') {
+                    const toDev = s => s.replace(/\d/g, d => '०१२३४५६७८९'[d]);
+                    nepaliTime = toDev(timeStr);
+                    bsStr = bsStr ? toDev(bsStr) : '--';
+                    bsHtml = `<span style="color:#1e88e5; font-weight:bold;">${bsStr}</span>`;
+                    timeHtml = `<span style="color:#1e88e5; font-weight:bold;">${nepaliTime}</span>`;
+                } else {
+                    nepaliTime = timeStr;
+                    bsHtml = `<span style="color:#1e88e5">${bsStr}</span>`;
+                    timeHtml = `<span style="color:#1e88e5">${nepaliTime}</span>`;
+                }
+            }
+            todayDiv.innerHTML = `Current date and time (NPL): <br>${bsHtml} ${timeHtml}`;
+        }
+        // Update every 30s
+        updateTodayNPL();
+        setInterval(updateTodayNPL, 30000);
+        // Also update on language change
+        tabContent.addEventListener('change', (e) => {
+            if (e.target && e.target.name === 'wme-ad-bs-lang') {
+                setTimeout(updateTodayNPL, 100);
+            }
+        });
     }
 
     const WME_ADtoBS_bootstrap = () => {
@@ -583,6 +625,11 @@
 })();
 
 /******** Version changelog  ********
+Version 0.1.6-8 - 2026-01-25:
+    - Added Nepali calendar display support
+    - Added an option to choose between Nepali and English calendar display in the script tab
+    - Fixed date conversion issues due to timezone discrepancies
+    - Fixed various minor bugs and improved stability
 Version 0.1.6-7 - 2026-01-25:
     - Added support for various WME Locales
     - Added Nepali calendar display support

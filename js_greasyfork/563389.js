@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BotC homebrew script Prettyprinter
 // @namespace    http://tampermonkey.net/
-// @version      2025-12-06
+// @version      2026-01-25
 // @description  improves the print of scripts with much content
 // @author       You
 // @match        https://script.bloodontheclocktower.com/
@@ -17,15 +17,64 @@
 
     class CustomScript
     {
+        /** Swaps the Almanac URL for a list of character names*/
+        static addAlmanac(almanacUrl, listOfCharacterNames)
+        {
+            for (let characterName of listOfCharacterNames)
+            {
+                characterName = characterName.toLowerCase().replaceAll(/[^\d\w]/g, "");
+
+                let link = document.querySelector(`[id^="${characterName}"].item .character-name a`);
+                let [_, entryName] = link.href.split("#");
+                let [name] = entryName.split("_", 1);
+                let almanacName = /[^\/]+(?=\/almanac\.html$)/.exec(almanacUrl)[0]
+                almanacName = almanacName.replaceAll(/[^\d\w_]/g, "");
+
+                link.href = `${almanacUrl}#${name}_${almanacName}`;
+            }
+        }
+
+        static adjustCharacterImages(almanacNames)
+        {
+            for (let image of Array.from(document.querySelectorAll(`:is([id$=_${almanacNames.join("],[id$=_")}]) .icon-container img`)))
+            {
+                image.style.transform = "translateY(0.5lh)";
+            }
+        }
+
         static format(scriptName)
         {
             let alphanumName = scriptName.replace(/[^\w\d]/g, '');
-            CustomScript[alphanumName]?.();
+            CustomScript[alphanumName]();
         }
 
-        // example for script-specific custom settings. Use your script name without non-alphanumeric symbols as function name.
+        static DearDictator()
+        {
+            CustomScript.adjustCharacterImages(["trustmebro", "homebrew"]);
+
+            almanachLink.value = `https://www.bloodstar.xyz/p/Elmar/trust-me-bro/almanac.html`;
+
+            CustomScript.addAlmanac("https://www.bloodstar.xyz/p/Elmar/homebrew/almanac.html",
+                    ["pope", "dowser", "samurai", "traitor", "romantic", "sinisterfog", "shredder", "shopkeeper", "sleepwalker", "vice", "fantasist"]
+            );
+
+            homebrewJinxesInput.value =
+`  Pope / Shredder: The Pope-protected player cannot be chosen for assassination (except if a Demon assassinates the self-protected Pope).
+  Pope / Punk: The Punk cannot get the Pope token.
+  Anarchist / Samurai: A Samurai player can only kill an Anarchist when the Samurai has another character that only counts as Outsider this game.
+  Putin / Anarchist: If Putin chooses the Anarchist player, the Anarchist registers as good (otherwise evil).
+  Trump / Anarchist: The Anarchist *might* register as good to Trump.
+  Sectarian / Romantic: The Sectarian *might* learn that the Romantic is in play.`;
+
+            let page3 = (document.querySelector("page-three"));
+            if (page3) page3.style.breakBefore = "avoid";
+            if (page3) page3.style.breakAfter = "avoid";
+        }
+
         static TrustMeBro()
         {
+            CustomScript.adjustCharacterImages(["trustmebro"]);
+
             let demonSectionHeader = document.querySelector(`h3[data-for="demon"]`);
             demonSectionHeader.style.transform = "translateY(1lh)";
 
@@ -40,7 +89,7 @@
             almanachLink.value = `https://www.bloodstar.xyz/p/Elmar/trust-me-bro/almanac.html`;
 
             homebrewJinxesInput.value =
-`  Legionatic / Anarchist: The Anarchist *might* register as evil to Legion (instead of must).
+`  Legionatic / Anarchist: The Anarchist *might* register as good to Legion.
   Legionatic / Spy: If a Legionatic has a drunk spy ability, they see no Legionatic characters in the grimoire but the Legionatics' drunk abilities plus 1 demon.
   Spy / Poppy Snitch: If the Poppy Snitch has their ability, the Spy does not see the Grimoire.
   Spy / Wicked: Both cannot be in play together.
@@ -117,8 +166,8 @@
             return;
 
         playerCountTable.getElementsByTagName("table")[0].setAttribute("rules", "cols");
-        Array.from(playerCountTable.getElementsByTagName("th")).forEach(th => { th.style.paddingRight = ".5em" });
-        Array.from(playerCountTable.getElementsByTagName("td")).forEach(td => { td.style.minWidth = "1.2em" });
+        Array.from(playerCountTable.getElementsByTagName("th")).forEach(th => { th.style.paddingRight = ".5em"; th.setAttribute("contenteditable", true); });
+        Array.from(playerCountTable.getElementsByTagName("td")).forEach(td => { td.style.minWidth = "1.2em"; td.setAttribute("contenteditable", true); });
 
         let travellersSection = document.querySelector("div.recommended-travellers-container");
         //let playerCountTable2 = document.querySelector("body > #player-count-table");
@@ -149,10 +198,11 @@
 
         let page2 = (document.querySelector("page-two"));
         if (page2) page2.style.breakBefore = "avoid";
-        if (page2) page2.style.breakAfter = "page";
+        if (page2) page2.style.breakAfter = "avoid";
         let page3 = (document.querySelector("page-three"));
         let page4 = (document.querySelector("page-four"));
         if (page4) page4.style.breakBefore = "avoid";
+        if (page4) page4.style.breakAfter = "avoid";
     }
 
     let printButton = document.querySelector("#print-form button");

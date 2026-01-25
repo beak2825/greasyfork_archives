@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         哔哩哔哩过滤评论区
 // @description  根据关键词过滤评论区
-// @version      1.1.4
+// @version      2.0.0
 // @author       girl-dream
 // @license      The Unlicense
 // @namespace    https://github.com/girl-dream/
@@ -10,7 +10,8 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_registerMenuCommand
-// @run-at       document-start
+// @grant        unsafeWindow
+// @run-at       document-end
 // @downloadURL https://update.greasyfork.org/scripts/561016/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E8%BF%87%E6%BB%A4%E8%AF%84%E8%AE%BA%E5%8C%BA.user.js
 // @updateURL https://update.greasyfork.org/scripts/561016/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E8%BF%87%E6%BB%A4%E8%AF%84%E8%AE%BA%E5%8C%BA.meta.js
 // ==/UserScript==
@@ -94,74 +95,36 @@
             GM_setValue('filter_keywords', newKeywords)
             keyWords = newKeywords
             div.remove()
+            location.reload()
         }
         div.appendChild(content)
         document.body.appendChild(div)
     })
 
-    const isElementLoaded = async (selector, root = document) => {
-        const getElement = () => root.querySelector(selector)
-        return new Promise((resolve) => {
-            const element = getElement()
-            if (element) return resolve(element)
-            const observer = new MutationObserver(() => {
-                const element2 = getElement()
-                if (!element2) return
-                resolve(element2)
-                observer.disconnect()
-            })
-            observer.observe(root === document ? root.documentElement : root, {
-                childList: true,
-                subtree: true
-            })
-        })
-    }
+    const originalFetch = window.fetch
+    unsafeWindow.fetch = async (...args) => {
+        const response = await originalFetch.apply(this, args)
 
-    function f(selector, root = document) {
-        return new Promise((resolve) => {
-            let timer = setInterval(async () => {
-                let temp = await isElementLoaded(selector, root)
-                if (temp.shadowRoot) {
-                    clearInterval(timer)
-                    resolve(temp.shadowRoot)
-                }
-            }, 100)
-        })
-    }
+        const clonedResponse = response.clone()
 
-    // 检测评论并删除
-    const dom = async (node) => {
-        if (Boolean(node.shadowRoot)) {
-            let text = (await f('#comment', node.shadowRoot)).querySelector('#content bili-rich-text').shadowRoot.querySelector('span')
-            if (text) {
-                text = text.textContent
-                if (keyWords.some((item) => {
-                    if (item.startsWith('/') && item.lastIndexOf('/') > 0 && eval(item) instanceof RegExp) {
-                        return eval(item).test(text)
-                    } else {
-                        return text.includes(item)
-                    }
-                })) {
-                    node.remove()
-                }
+        if (args[0].includes('reply')) {
+
+            let data = await clonedResponse.json()
+
+            if (data.data?.replies) {
+                data.data.replies = data.data.replies.filter(e => {
+                    const msg = e.content?.message || ''
+                    return !keyWords.some(keyword => {
+                        if (keyword.startsWith('/') && keyword.lastIndexOf('/') > 0 && eval(item) instanceof RegExp) {
+                            return eval(item).test(msg)
+                        } else {
+                            return msg.includes(keyword)
+                        }
+                    })
+                })
+                return new Response(JSON.stringify(data), response)
             }
         }
+        return response
     }
-
-    // 初次加载
-    const feed = await isElementLoaded('#feed', await f('bili-comments'))
-    feed.children.forEach(async (node) => {
-        dom(node)
-    })
-
-    // 监听新评论
-    let observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach(async (node) => {
-                dom(node)
-            })
-        })
-    })
-
-    observer.observe(feed, { childList: true, subtree: true, characterData: true })
 })();

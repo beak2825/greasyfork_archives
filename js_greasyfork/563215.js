@@ -3,9 +3,26 @@
 // @namespace    https://github.com/snacks-yummy/Greasy-Fork
 // @supportURL   https://github.com/snacks-yummy/Greasy-Fork/issues
 // @homepageURL  https://github.com/snacks-yummy/Greasy-Fork
-// @version      1.5.399
+// @version      1.5.421
 // @author       零食怎么吃都不胖
-// @description  全站网页增强：新标签页打开｜直达/去重定向/短链还原｜文本裸链转链接｜网盘提取码识别/自动填充（历史/收藏）｜悬浮提示真实链接/完整URL｜已访问变色/统计｜自动展开｜置顶/置底｜通用登录遮挡｜百度搜索净化/布局/屏蔽AI/官网置顶｜CSDN 强力复制/净化/解锁｜QQ邮箱去广告｜设置面板/导入导出/审计/调试/黑名单/性能保护
+// @description  全站网页增强：新标签页打开/去重定向/短链还原/文本裸链转链接/网盘提取码识别填充/已访问变色统计/自动展开/通用登录遮挡/百度搜索净化布局/ CSDN 增强/ QQ邮箱净化/设置面板与备份
+// @note         引用与致谢（参考脚本清单）：
+// @note         （1）新标签页打开（X.I.U）
+// @note         （2）返回顶部和底部-美化版（bzw1204）
+// @note         （3）百度全页面样式优化-去广告，深色模式（Ai-Rcccccccc (Enhanced)）
+// @note         （4）CSDN优化（WhiteSevs）
+// @note         （5）Links Helper（🔗 链接助手）（Pipecraft）
+// @note         （6）知乎增强（XIU2）
+// @note         （7）跳转链接修复（移除重定向外链直达）（maomao1996）
+// @note         （8）网盘有效性检查（Leon406）
+// @note         （9）链接助手（一个北七）
+// @note         （10）AC-baidu-重定向优化百度搜狗谷歌必应搜索_favicon_双列（inDarkness）
+// @note         （11）网盘智能识别助手（🥇_🥇）
+// @note         （12）「CSDNGreener」CSDN广告完全过滤 / 免登录 / 个性化排版（adlered_）
+// @note         （13）去除链接重定向（Meriel Varen）
+// @note         （14）已浏览链接变色（dddddd）
+// @note         （15）自动展开（AutoUnfold）（厌学的骚年）
+// @note         （16）redirect 外链跳转（sakura-flutter）
 // @match        *://*/*
 // @compatible   chrome
 // @compatible   edge
@@ -32,24 +49,6 @@
 // @downloadURL https://update.greasyfork.org/scripts/563215/%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5Pro-%E5%85%A8%E7%AB%99%E7%BD%91%E9%A1%B5%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E7%AE%B1.user.js
 // @updateURL https://update.greasyfork.org/scripts/563215/%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5Pro-%E5%85%A8%E7%AB%99%E7%BD%91%E9%A1%B5%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E7%AE%B1.meta.js
 // ==/UserScript==
-
-// 引用与致谢（参考脚本清单）：
-// （1）新标签页打开（X.I.U）
-// （2）返回顶部和底部-美化版（bzw1204）
-// （3）百度全页面样式优化-去广告，深色模式（Ai-Rcccccccc (Enhanced)）
-// （4）CSDN优化（WhiteSevs）
-// （5）Links Helper（🔗 链接助手）（Pipecraft）
-// （6）知乎增强（XIU2）
-// （7）跳转链接修复（移除重定向外链直达）（maomao1996）
-// （8）网盘有效性检查（Leon406）
-// （9）链接助手（一个北七）
-// （10）AC-baidu-重定向优化百度搜狗谷歌必应搜索_favicon_双列（inDarkness）
-// （11）网盘智能识别助手（🥇_🥇）
-// （12）「CSDNGreener」CSDN广告完全过滤 / 免登录 / 个性化排版（adlered_）
-// （13）去除链接重定向（Meriel Varen）
-// （14）已浏览链接变色（dddddd）
-// （15）自动展开（AutoUnfold）（厌学的骚年）（通过 @resource 引入并封装为模块）
-// （16）redirect 外链跳转（sakura-flutter）
 
         (function() {
             'use strict';
@@ -340,6 +339,7 @@
                 baiduHideHotSearch: true,
                 baiduHideRightContent: true,
                 baiduLayoutMode: 'single',
+                baiduFloatHideMode: 'off',
                 baiduStyleOptimizeEnabled: true,
                 baiduCleanAdsEnabled: true,
                 baiduHideAiAnswerEnabled: true,
@@ -376,6 +376,8 @@
                 autoUnfoldInterval: '100',
                 autoUnfoldMaxTicks: '100',
                 loginPopupBypassEnabled: true,
+                loginPopupBypassMode: 'relaxed',
+                loginPopupBypassAllowHosts: '',
                 debugOverlay: false,
                 pinScrollEnabled: true,
                 onlyExternalNewTab: false,
@@ -386,6 +388,8 @@
                 debugLogLevel: 'INFO',
                 debugSyncInterval: '200',
                 excludeDomains: '',
+                newTabExcludeUrls: '',
+                newTabExcludeForceSelf: false,
                 keepOnclickSelf: true,
                 keepNonHttpSelf: true,
                 keepHashSelf: true,
@@ -449,6 +453,12 @@
                 ['double', '双列'],
             ];
 
+            const BAIDU_FLOAT_HIDE_MODE_OPTIONS = [
+                ['off', '关闭（默认）'],
+                ['edge', '靠边半隐藏'],
+                ['fade', '自动淡出'],
+            ];
+
             const PAN_CODE_HISTORY_LIMIT_OPTIONS = [
                 [30, '30 条'],
                 [50, '50 条'],
@@ -475,6 +485,11 @@
                 ['150', '约 15 秒'],
                 ['200', '约 20 秒'],
                 ['300', '约 30 秒'],
+            ];
+
+            const LOGIN_POPUP_BYPASS_MODE_OPTIONS = [
+                ['relaxed', '未知站点也尝试恢复滚动（默认）'],
+                ['knownOnly', '仅已适配站点生效（未知站点不处理）'],
             ];
 
             const UI_THEME_OPTIONS = [
@@ -573,6 +588,7 @@
                 rows: rowsFromTuples([
                     ['toggle', 'autoUnfoldEnabled', '自动展开内容', '自动展开多站点的“阅读全文/展开回答/移除遮挡”等隐藏内容。', { iconOn: '🔓', iconOff: '🔒' }],
                     ['toggle', 'loginPopupBypassEnabled', '隐藏登录弹窗遮挡（通用）', '尝试移除遮挡层、解除滚动锁，优先适配知乎；可能影响网站登录弹窗。', { icon: '🙈' }],
+                    ['select', 'loginPopupBypassMode', '隐藏登录遮挡策略', '控制未适配站点的行为：可选择仅对已适配站点生效，避免误伤未知站点。', LOGIN_POPUP_BYPASS_MODE_OPTIONS, { icon: '🧭' }],
                     ['select', 'autoUnfoldInterval', '自动展开执行间隔', '控制“自动展开内容”的执行频率。间隔越小越及时，但 DOM 扫描更频繁。', AUTO_UNFOLD_INTERVAL_OPTIONS, { icon: '⏱' }],
                     ['select', 'autoUnfoldMaxTicks', '自动展开持续时长', '控制最多执行轮数，到达后会自动停止（轮数 × 间隔）。', AUTO_UNFOLD_MAX_TICKS_OPTIONS, { icon: '⏳' }],
                 ]),
@@ -586,6 +602,14 @@
                     ['toggle', 'baiduHideHotSearch', '隐藏热搜/热点', '隐藏百度首页/搜索页常见热搜与热点模块。', { icon: '🔥' }],
                     ['toggle', 'baiduHideRightContent', '隐藏右侧相关内容', '隐藏右侧“相关内容/推荐/百科卡片”等区域，提升阅读专注。', { icon: '🧹' }],
                     ['select', 'baiduLayoutMode', '搜索结果布局', '切换搜索结果为单列或双列展示（仅 www.baidu.com 生效）。', BAIDU_LAYOUT_MODE_OPTIONS, { icon: '🧱' }],
+                    [
+                        'select',
+                        'baiduFloatHideMode',
+                        '百度悬浮按钮隐藏',
+                        '控制百度搜索增强右下角悬浮按钮的隐藏方式：关闭/靠边半隐藏/自动淡出。',
+                        BAIDU_FLOAT_HIDE_MODE_OPTIONS,
+                        { icon: '🫥' },
+                    ],
                     ['toggle', 'baiduStyleOptimizeEnabled', '居中布局与样式优化（参考脚本）', '使用参考脚本的居中/单双列布局与卡片样式；关闭后只保留净化类开关。', { icon: '🎛' }],
                     ['toggle', 'baiduCleanAdsEnabled', '去广告/净化', '隐藏常见推广、品牌广告与干扰模块（尽量只做样式隐藏）。', { icon: '🧼' }],
                     ['toggle', 'baiduHideAiAnswerEnabled', '屏蔽 AI 回答/AI 模块', '隐藏百度搜索中常见的 AI 回答/AI 概览等模块。', { icon: '🤖' }],
@@ -691,6 +715,13 @@
                     ['toggle', 'keepHashSelf', '# 锚点链接用当前页', '仅在当前页面内跳转位置（如目录/返回顶部），不适合作为新标签，开启后这类链接保持当前页。', { icon: '#' }],
                     ['toggle', 'keepEmptyHrefSelf', '无 href 链接用当前页', '用于按钮式 a 标签或仅绑定事件的元素（href 为空/缺失），避免被误当成普通链接新标签打开。', { icon: '∅' }],
                     ['toggle', 'keepFormSelf', 'form 默认用当前页', '表单提交通常依赖当前页刷新或跳转，开启后不受全局 base target=_blank 影响。', { icon: '🧾' }],
+                    [
+                        'toggle',
+                        'newTabExcludeForceSelf',
+                        '例外命中强制当前页打开',
+                        '当“新标签打开 URL 例外”命中当前页面时，尝试将页面内链接统一改为当前页打开（适合 GreasyFork 这类页面内跳转）。',
+                        { icon: '🧷' },
+                    ],
                 ]),
             };
 
@@ -926,6 +957,7 @@
             const BAIDU_FLOAT_BTN_ID = 'newtab-pro-baidu-float-btn';
             const BAIDU_FLOAT_PANEL_ID = 'newtab-pro-baidu-float-panel';
             const BAIDU_FLOAT_POSITION_KEY = 'baiduFloatingPanelPosition';
+            const BAIDU_AI_AUTO_EXPAND_MIGRATED_KEY = 'baiduAiAutoExpandMigratedOnce';
             let baiduFloatControlsStop = null;
             let baiduCompactResultsStop = null;
             let baiduHomeCleanupBound = false;
@@ -935,7 +967,7 @@
             let smartRedirectAutoJumpDone = false;
 
             const SCRIPT_LABEL = '新标签页Pro·全站网页增强工具箱';
-            const SCRIPT_VERSION = '1.5.399';
+            const SCRIPT_VERSION = '1.5.421';
             const SCRIPT_INSTALL_URL = 'https://update.greasyfork.org/scripts/563215/%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5Pro-%E5%85%A8%E7%AB%99%E7%BD%91%E9%A1%B5%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E7%AE%B1.user.js';
             const SCRIPT_INFO_URL = 'https://greasyfork.org/zh-CN/scripts/563215-%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5pro-%E5%85%A8%E7%AB%99%E7%BD%91%E9%A1%B5%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E7%AE%B1';
             const SCRIPT_UPDATE_URL = (function() {
@@ -972,6 +1004,8 @@
             const SmartShortLinkSessionCache = new Map();
             const HostListCompileCache = new Map();
             const HostListResultCache = new Map();
+            const UrlListCompileCache = new Map();
+            const UrlListResultCache = new Map();
             const TEXT_LINKIFY_PREFIXES = [
                 'http://',
                 'https://',
@@ -2299,7 +2333,7 @@
                             if (k) schemaKeys.add(k);
                         }
                     }
-                    const manualKeys = new Set(['excludeDomains', 'textLinkifyIncludeHosts', 'textLinkifyExcludeHosts']);
+                    const manualKeys = new Set(['excludeDomains', 'newTabExcludeUrls', 'textLinkifyIncludeHosts', 'textLinkifyExcludeHosts', 'loginPopupBypassAllowHosts']);
                     const missing = [];
                     for (let i = 0; i < defaultsKeys.length; i++) {
                         const k = defaultsKeys[i];
@@ -2824,6 +2858,25 @@
                 };
 
                 GM_registerMenuCommand('⚙ 打开设置面板', () => openSettingsPanel(defaults));
+                GM_registerMenuCommand('🧯 新标签打开URL例外：加入当前页规则（本页/本域名）', () => {
+                    const info = getSuggestedNewTabExcludeForLocation(location);
+                    const token = info && info.token ? String(info.token) : '';
+                    const label = info && info.label ? String(info.label) : token;
+                    if (!token) return safeShowMenuTip('添加失败：无法生成当前页规则');
+                    const raw = String(getValue('newTabExcludeUrls', defaults.newTabExcludeUrls || '') || '');
+                    const list = parseUrlListTokens(raw);
+                    if (list.includes(token)) return safeShowMenuTip('当前页规则已存在：' + label);
+                    list.push(token);
+                    try {
+                        setValue('newTabExcludeUrls', list.join('\n'));
+                    } catch (e) {
+                        return safeShowMenuTip('添加失败：写入失败');
+                    }
+                    safeShowMenuTip('已加入：' + label + '（刷新后生效）');
+                    try {
+                        location.reload();
+                    } catch (e2) {}
+                });
                 GM_registerMenuCommand(`📋 复制当前页链接（${current && current.copyChineseUrlEnabled ? '中文' : '原始'}）`, async () => {
                     const text = normalizeUrlForClipboard(location.href, Boolean(current && current.copyChineseUrlEnabled));
                     const ok = await copyTextToClipboard(text);
@@ -4047,9 +4100,16 @@
                     const sectionReading = buildSection(
                         'reading',
                         '📖 阅读增强',
-                        `${renderRowFromSchema('autoUnfoldEnabled')}${renderRowFromSchema('loginPopupBypassEnabled')}${renderRowFromSchema('autoUnfoldInterval')}${renderRowFromSchema(
-                            'autoUnfoldMaxTicks'
-                        )}`
+                        `${renderRowFromSchema('autoUnfoldEnabled')}${renderRowFromSchema('loginPopupBypassEnabled')}${renderRowFromSchema('loginPopupBypassMode')}
+                        <div class="field">
+                            <div class="label">隐藏登录遮挡允许列表（一行一个）</div>
+                            <div class="desc">留空表示对所有已适配站点生效；填写后仅在命中这些站点时启用（支持普通域名、*.example.com、/正则/）。</div>
+                            <textarea data-field="loginPopupBypassAllowHosts" spellcheck="false" placeholder="留空表示所有已适配站点均生效"></textarea>
+                            <div class="miniBtns">
+                                <button class="btn" type="button" data-action="addCurrentLoginBypassAllow">加入当前域名</button>
+                            </div>
+                        </div>
+                        ${renderRowFromSchema('autoUnfoldInterval')}${renderRowFromSchema('autoUnfoldMaxTicks')}`
                     );
                     const sectionSearch = buildSection(
                         'search',
@@ -4060,11 +4120,12 @@
                             <div class="subBody">
                                 ${renderRowFromSchema('baiduHideHotSearch')}
                                 ${renderRowFromSchema('baiduHideRightContent')}
-                                ${renderRowFromSchema('baiduLayoutMode')}
                                 ${renderRowFromSchema('baiduStyleOptimizeEnabled')}
                                 ${renderRowFromSchema('baiduCleanAdsEnabled')}
                                 ${renderRowFromSchema('baiduHideAiAnswerEnabled')}
                                 ${renderRowFromSchema('baiduPinOfficialEnabled')}
+                                ${renderRowFromSchema('baiduLayoutMode')}
+                                ${renderRowFromSchema('baiduFloatHideMode')}
                             </div>
                         </details>`
                     );
@@ -4146,6 +4207,21 @@
                                 ${renderRowFromSchema('keepHashSelf')}
                                 ${renderRowFromSchema('keepEmptyHrefSelf')}
                                 ${renderRowFromSchema('keepFormSelf')}
+                                ${renderRowFromSchema('newTabExcludeForceSelf')}
+                                <div class="field" data-wide="1">
+                                    <div class="label">新标签打开 URL 例外（一行一个）</div>
+                                    <div class="desc">匹配这些 URL 的页面将不强制新标签打开（不注入 base、不改链接 target、不启用点击拦截/动态链接观察）。支持 /正则/flags 形式。</div>
+                                    <div class="textareaWrap" data-role="newTabExcludeWrap">
+                                        <div class="textareaLines" data-role="newTabExcludeLines"></div>
+                                        <textarea data-field="newTabExcludeUrls" spellcheck="false" wrap="soft" placeholder="示例：https://greasyfork.org/zh-CN/scripts/563215-.../feedback"></textarea>
+                                    </div>
+                                    <div class="miniBtns">
+                                        <button class="btn" type="button" data-action="addCurrentNewTabExclude">加入当前页规则</button>
+                                        <button class="btn btnDanger" type="button" data-action="clearNewTabExcludeUrls">清空全部规则</button>
+                                    </div>
+                                    <div class="hint" data-role="newTabExcludeSuggestion"></div>
+                                    <div class="hint">支持换行/逗号/中文逗号批量粘贴。</div>
+                                </div>
                             </div>
                         </details>`
                     );
@@ -4186,6 +4262,13 @@
                         <div class="field">
                             <div class="label">导入 / 导出设置（JSON）</div>
                             <div class="desc">用于备份或在多设备之间同步本脚本设置。推荐流程：先点击“导出为 JSON 文件”保存当前配置，再视情况使用“复制配置为 JSON”或“从文件/剪贴板导入配置”。下方表格会记录最近的备份和恢复操作。</div>
+                            <div class="miniBtns">
+                                <span class="hint">附带数据：</span>
+                                <label class="btn" title="网盘链接与提取码历史记录"><input type="checkbox" data-role="backupIncludePanHistory" checked>网盘历史</label>
+                                <label class="btn" title="网盘收藏"><input type="checkbox" data-role="backupIncludePanFavorites" checked>网盘收藏</label>
+                                <label class="btn" title="已访问链接记录（可能包含站点/路径信息）"><input type="checkbox" data-role="backupIncludeVisitedHistory">已访问记录</label>
+                                <label class="btn" title="设置面板中的配置操作日志"><input type="checkbox" data-role="backupIncludeConfigAuditLog">配置操作日志</label>
+                            </div>
                             <div class="miniBtns">
                                 <button class="btn" type="button" data-action="exportSettings">导出为 JSON 文件</button>
                                 <label class="btn">
@@ -4383,6 +4466,41 @@
                     .navItem:hover { background: var(--hover-bg); }
                     .navItem[data-active=\"1\"] { border-color: rgba(99,102,241,.6); background: rgba(99,102,241,.12); }
                     .content { flex: 1 1 auto; padding: 12px; overflow: auto; }
+                    .textareaWrap {
+                        display: grid;
+                        grid-template-columns: 38px 1fr;
+                        border: 1px solid var(--control-border);
+                        background: var(--control-bg);
+                        border-radius: 10px;
+                        overflow: hidden;
+                    }
+                    .textareaLines {
+                        padding: 8px 6px;
+                        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", monospace;
+                        line-height: 1.35;
+                        font-size: 12px;
+                        text-align: right;
+                        color: rgba(100,116,139,.95);
+                        background: rgba(148,163,184,.10);
+                        user-select: none;
+                        white-space: pre;
+                        overflow: hidden;
+                    }
+                    textarea[data-field=\"newTabExcludeUrls\"] {
+                        min-height: 94px;
+                        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", monospace;
+                        line-height: 1.35;
+                        white-space: pre-wrap;
+                        overflow-wrap: anywhere;
+                        overflow-x: hidden;
+                        border: 0;
+                        border-left: 1px solid rgba(148,163,184,.22);
+                        background: transparent;
+                        padding-left: 10px;
+                        padding-right: 10px;
+                        resize: vertical;
+                    }
+                    .subDetails[data-submenu=\"exceptions\"] .subBody [data-wide=\"1\"] { grid-column: 1 / -1; }
                     [data-filter-hide=\"1\"] { display: none !important; }
                     @media (max-width: 980px) {
                         .panel { width: min(980px, 100%); }
@@ -5045,14 +5163,65 @@
                 };
 
                 const excludeEl = root.querySelector('textarea[data-field="excludeDomains"]');
+                const newTabExcludeUrlsEl = root.querySelector('textarea[data-field="newTabExcludeUrls"]');
+                const newTabExcludeSuggestionEl = root.querySelector('[data-role="newTabExcludeSuggestion"]');
+                const newTabExcludeLinesEl = root.querySelector('[data-role="newTabExcludeLines"]');
                 const textLinkIncludeEl = root.querySelector('textarea[data-field="textLinkifyIncludeHosts"]');
                 const textLinkExcludeEl = root.querySelector('textarea[data-field="textLinkifyExcludeHosts"]');
+                const loginBypassAllowEl = root.querySelector('textarea[data-field="loginPopupBypassAllowHosts"]');
                 if (excludeEl) excludeEl.value = hostListToTextarea(hostListParse(current.excludeDomains || ''));
+                if (newTabExcludeUrlsEl) newTabExcludeUrlsEl.value = String(current.newTabExcludeUrls || '');
                 if (textLinkIncludeEl) textLinkIncludeEl.value = hostListToTextarea(hostListParse(current.textLinkifyIncludeHosts || ''));
                 if (textLinkExcludeEl) textLinkExcludeEl.value = hostListToTextarea(hostListParse(current.textLinkifyExcludeHosts || ''));
+                if (loginBypassAllowEl) loginBypassAllowEl.value = hostListToTextarea(hostListParse(current.loginPopupBypassAllowHosts || ''));
                 hostListBindTextarea(excludeEl, panelAddListener);
                 hostListBindTextarea(textLinkIncludeEl, panelAddListener);
                 hostListBindTextarea(textLinkExcludeEl, panelAddListener);
+                hostListBindTextarea(loginBypassAllowEl, panelAddListener);
+
+                const parseNewTabExcludeTokens = parseUrlListTokens;
+                const getSuggestedNewTabExclude = () => getSuggestedNewTabExcludeForLocation(location);
+                const syncNewTabExcludeLines = () => {
+                    if (!newTabExcludeLinesEl || !newTabExcludeUrlsEl) return;
+                    const raw = String(newTabExcludeUrlsEl.value || '');
+                    const lines = raw.split(/\r?\n/g);
+                    const n = Math.max(1, lines.length);
+                    let out = '';
+                    for (let i = 1; i <= n; i++) out += String(i) + '\n';
+                    newTabExcludeLinesEl.textContent = out;
+                    try {
+                        newTabExcludeLinesEl.scrollTop = newTabExcludeUrlsEl.scrollTop;
+                    } catch (e) {}
+                };
+                const syncNewTabExcludeSuggestion = () => {
+                    if (!newTabExcludeSuggestionEl) return;
+                    const info = getSuggestedNewTabExclude();
+                    const count = parseNewTabExcludeTokens(newTabExcludeUrlsEl ? newTabExcludeUrlsEl.value : '').length;
+                    const parts = [];
+                    if (info && info.label) parts.push(`建议：${info.label}`);
+                    parts.push(`已配置：${count} 条`);
+                    newTabExcludeSuggestionEl.textContent = parts.join('；');
+                };
+                syncNewTabExcludeSuggestion();
+                syncNewTabExcludeLines();
+                if (newTabExcludeUrlsEl) {
+                    panelAddListener(newTabExcludeUrlsEl, 'input', () => {
+                        syncNewTabExcludeSuggestion();
+                        syncNewTabExcludeLines();
+                    }, { passive: true });
+                    panelAddListener(newTabExcludeUrlsEl, 'scroll', () => {
+                        try {
+                            if (newTabExcludeLinesEl) newTabExcludeLinesEl.scrollTop = newTabExcludeUrlsEl.scrollTop;
+                        } catch (e) {}
+                    }, { passive: true });
+                    panelAddListener(newTabExcludeUrlsEl, 'blur', () => {
+                        const tokens = parseNewTabExcludeTokens(newTabExcludeUrlsEl.value);
+                        newTabExcludeUrlsEl.value = tokens.join('\n');
+                        syncNewTabExcludeSuggestion();
+                        syncNewTabExcludeLines();
+                    }, { passive: true });
+                }
+
                 const themeEl = root.querySelector('select[data-field="uiTheme"]');
                 if (themeEl && backdrop) {
                     backdrop.setAttribute('data-theme', resolveUiTheme(themeEl.value));
@@ -5274,11 +5443,23 @@
 
                 const fileInput = root.querySelector('input[data-role="settingsFile"]');
                 const importModeEl = root.querySelector('select[data-role="importMode"]');
+                const backupIncludePanHistoryEl = root.querySelector('input[data-role="backupIncludePanHistory"]');
+                const backupIncludePanFavoritesEl = root.querySelector('input[data-role="backupIncludePanFavorites"]');
+                const backupIncludeVisitedHistoryEl = root.querySelector('input[data-role="backupIncludeVisitedHistory"]');
+                const backupIncludeConfigAuditLogEl = root.querySelector('input[data-role="backupIncludeConfigAuditLog"]');
                 const configAuditBody = root.querySelector('.configAuditBody');
                 const configAuditFilterEl = root.querySelector('select[data-role="configAuditFilter"]');
                 const configAuditSearchEl = root.querySelector('input[data-role="configAuditSearch"]');
                 let currentAuditFilter = 'all';
                 let currentAuditSearch = '';
+                const readBackupIncludeStores = () => {
+                    return {
+                        panHistory: backupIncludePanHistoryEl ? Boolean(backupIncludePanHistoryEl.checked) : false,
+                        panFavorites: backupIncludePanFavoritesEl ? Boolean(backupIncludePanFavoritesEl.checked) : false,
+                        visitedHistory: backupIncludeVisitedHistoryEl ? Boolean(backupIncludeVisitedHistoryEl.checked) : false,
+                        configAuditLog: backupIncludeConfigAuditLogEl ? Boolean(backupIncludeConfigAuditLogEl.checked) : false,
+                    };
+                };
                 if (configAuditFilterEl) {
                     currentAuditFilter = configAuditFilterEl.value || 'all';
                     panelAddListener(configAuditFilterEl, 'change', () => {
@@ -5865,7 +6046,7 @@
                 }
                 if (visitedStatsBody && !SettingsPanelCache.visitedStatsHtml) schedulePopulateOnVisible(visitedStatsBody, refreshVisitedStatsView, 'settingsVisitedPopulate');
 
-                const buildExportPayload = () => {
+                const buildExportPayload = (storeOpts) => {
                     const data = {};
                     const dataZh = {};
                     const keys = Object.keys(defaults);
@@ -5890,9 +6071,25 @@
                             当前值: String(display),
                         };
                     }
+                    const include = storeOpts && typeof storeOpts === 'object' ? storeOpts : {};
+                    const stores = {};
+                    const storesZh = {};
+                    const pickStore = (enabled, key, label) => {
+                        if (!enabled) return;
+                        try {
+                            const raw = getValue(key, null);
+                            if (raw == null) return;
+                            stores[label] = raw;
+                            storesZh[label] = { 存储键: String(key), 说明: String(label) };
+                        } catch (e) {}
+                    };
+                    pickStore(Boolean(include.panHistory), PAN_CODE_HISTORY_STORAGE_KEY, 'panHistory');
+                    pickStore(Boolean(include.panFavorites), PAN_CODE_FAVORITES_STORAGE_KEY, 'panFavorites');
+                    pickStore(Boolean(include.visitedHistory), VISITED_HISTORY_STORAGE_KEY, 'visitedHistory');
+                    pickStore(Boolean(include.configAuditLog), 'configAuditLog', 'configAuditLog');
                     const now = new Date();
                     const exportedAt = formatDateTimeForDisplay(now);
-                    return {
+                    const payload = {
                         meta: {
                             label: SCRIPT_LABEL,
                             version: SCRIPT_VERSION,
@@ -5909,6 +6106,12 @@
                     settings: data,
                     settings_zh: dataZh,
                     };
+                    if (Object.keys(stores).length) {
+                        payload.meta.stores = Object.keys(stores);
+                        payload.stores = stores;
+                        payload.stores_zh = storesZh;
+                    }
+                    return payload;
                 };
 
                 const toastRoot = (() => {
@@ -5951,7 +6154,7 @@
 
                 const exportSettingsToFile = () => {
                     try {
-                        const payload = buildExportPayload();
+                        const payload = buildExportPayload(readBackupIncludeStores());
                         const json = JSON.stringify(payload, null, 2);
                         const blob = new Blob([json], { type: 'application/json' });
                         const url = URL.createObjectURL(blob);
@@ -6133,6 +6336,142 @@
                         setValue(key, next[key]);
                         settings[key] = next[key];
                     }
+                    try {
+                        const stores = obj && obj.stores && typeof obj.stores === 'object' ? obj.stores : null;
+                        const includeStores = readBackupIncludeStores();
+                        if (stores && includeStores && typeof includeStores === 'object') {
+                            const applied = [];
+                            const now = Date.now();
+                            const normalizePanHistoryStore = (raw) => {
+                                const data = raw && typeof raw === 'object' ? raw : null;
+                                const items = data && Array.isArray(data.items) ? data.items : [];
+                                const out = [];
+                                for (let i = 0; i < items.length; i++) {
+                                    const it = normalizePanCodeEntryFromArray(items[i]);
+                                    if (!it) continue;
+                                    out.push(it);
+                                    if (out.length >= 2000) break;
+                                }
+                                return out;
+                            };
+                            const applyPanHistory = () => {
+                                if (!Object.prototype.hasOwnProperty.call(stores, 'panHistory')) return;
+                                const importedItems = normalizePanHistoryStore(stores.panHistory);
+                                if (!importedItems.length) return;
+                                const baseHist = mode === 'overwrite' ? { v: 1, t: now, items: [] } : readPanCodeHistory(next);
+                                const limit = Math.max(50, Math.min(5000, parseInt(next.panCodeHistoryLimit, 10) || 500));
+                                const map = new Map();
+                                const baseItems = baseHist && Array.isArray(baseHist.items) ? baseHist.items : [];
+                                for (let i = 0; i < baseItems.length; i++) {
+                                    const it = normalizePanCodeEntryFromArray(baseItems[i]);
+                                    if (!it) continue;
+                                    map.set(it[0], it);
+                                    if (map.size >= 4000) break;
+                                }
+                                for (let i = 0; i < importedItems.length; i++) {
+                                    const it = importedItems[i];
+                                    const key = it[0];
+                                    const t = typeof it[4] === 'number' ? it[4] : 0;
+                                    const prev = map.get(key);
+                                    const prevT = prev && typeof prev[4] === 'number' ? prev[4] : 0;
+                                    if (!prev || (t && t > prevT)) map.set(key, it);
+                                }
+                                const merged = Array.from(map.values());
+                                merged.sort((a, b) => (b[4] || 0) - (a[4] || 0));
+                                if (merged.length > limit) merged.length = limit;
+                                writePanCodeHistory({ v: 1, t: now, items: merged });
+                                applied.push(`网盘历史 ${merged.length} 条`);
+                            };
+                            const applyPanFavorites = () => {
+                                if (!Object.prototype.hasOwnProperty.call(stores, 'panFavorites')) return;
+                                const data = stores.panFavorites && typeof stores.panFavorites === 'object' ? stores.panFavorites : null;
+                                const items = data && Array.isArray(data.items) ? data.items : [];
+                                const inKeys = items.map((x) => String(x || '').trim()).filter(Boolean);
+                                if (!inKeys.length) return;
+                                const baseFav = mode === 'overwrite' ? { v: 1, t: now, items: [] } : readPanCodeFavorites();
+                                const baseItems = baseFav && Array.isArray(baseFav.items) ? baseFav.items : [];
+                                const set = new Set(baseItems.map((x) => String(x || '').trim()).filter(Boolean));
+                                for (let i = 0; i < inKeys.length; i++) set.add(inKeys[i]);
+                                const out = Array.from(set);
+                                if (out.length > 2000) out.length = 2000;
+                                setValue(PAN_CODE_FAVORITES_STORAGE_KEY, { v: 1, t: now, items: out });
+                                applied.push(`网盘收藏 ${out.length} 条`);
+                            };
+                            const applyVisitedHistory = () => {
+                                if (!Object.prototype.hasOwnProperty.call(stores, 'visitedHistory')) return;
+                                const data = stores.visitedHistory && typeof stores.visitedHistory === 'object' ? stores.visitedHistory : null;
+                                const items = data && Array.isArray(data.items) ? data.items : [];
+                                const map = new Map();
+                                if (mode !== 'overwrite') {
+                                    const cur = getValue(VISITED_HISTORY_STORAGE_KEY, null);
+                                    const curData = cur && typeof cur === 'object' ? cur : null;
+                                    const curItems = curData && Array.isArray(curData.items) ? curData.items : [];
+                                    for (let i = 0; i < curItems.length; i++) {
+                                        const it = curItems[i];
+                                        if (!it || !Array.isArray(it)) continue;
+                                        const key = String(it[0] || '').trim();
+                                        const t = typeof it[1] === 'number' ? it[1] : 0;
+                                        if (key && t) map.set(key, t);
+                                    }
+                                }
+                                for (let i = 0; i < items.length; i++) {
+                                    const it = items[i];
+                                    if (!it || !Array.isArray(it)) continue;
+                                    const key = String(it[0] || '').trim();
+                                    const t = typeof it[1] === 'number' ? it[1] : 0;
+                                    if (!key || !t) continue;
+                                    const prev = map.get(key) || 0;
+                                    if (t > prev) map.set(key, t);
+                                }
+                                const entries = Array.from(map.entries());
+                                entries.sort((a, b) => (b[1] || 0) - (a[1] || 0));
+                                if (entries.length > 3000) entries.length = 3000;
+                                const out = entries.map((it) => [it[0], it[1]]);
+                                setValue(VISITED_HISTORY_STORAGE_KEY, { v: 1, t: now, items: out });
+                                applied.push(`已访问记录 ${out.length} 条`);
+                            };
+                            const applyConfigAuditLog = () => {
+                                if (!Object.prototype.hasOwnProperty.call(stores, 'configAuditLog')) return;
+                                const raw = stores.configAuditLog;
+                                const list = [];
+                                const input = Array.isArray(raw) ? raw : (raw && typeof raw === 'object' && Array.isArray(raw.logs) ? raw.logs : []);
+                                for (let i = 0; i < input.length; i++) {
+                                    const item = input[i];
+                                    if (!item || typeof item !== 'object') continue;
+                                    const time = String(item.time || '').trim();
+                                    const action = String(item.action || '').trim();
+                                    if (!time || !action) continue;
+                                    list.push({
+                                        time,
+                                        action,
+                                        detail: item.detail == null ? '' : String(item.detail),
+                                        host: item.host == null ? '' : String(item.host),
+                                        version: item.version == null ? '' : String(item.version),
+                                    });
+                                    if (list.length >= 200) break;
+                                }
+                                const baseList = mode === 'overwrite' ? [] : readConfigAuditLog();
+                                const merged = baseList.concat(list);
+                                const seen = new Set();
+                                const out = [];
+                                for (let i = 0; i < merged.length; i++) {
+                                    const it = merged[i] || {};
+                                    const sig = `${it.time}|${it.action}|${it.host}|${it.detail}`;
+                                    if (seen.has(sig)) continue;
+                                    seen.add(sig);
+                                    out.push(it);
+                                    if (out.length >= 50) break;
+                                }
+                                writeConfigAuditLog(out);
+                                applied.push(`配置操作日志 ${out.length} 条`);
+                            };
+                            if (includeStores.panHistory) applyPanHistory();
+                            if (includeStores.panFavorites) applyPanFavorites();
+                            if (includeStores.visitedHistory) applyVisitedHistory();
+                            if (includeStores.configAuditLog) applyConfigAuditLog();
+                            if (applied.length) showToast('已导入附带数据：' + applied.join('；'), 'info');
+                        }
+                    } catch (e2) {}
                     location.reload();
                 };
 
@@ -6180,7 +6519,7 @@
 
                 const copySettingsToClipboard = async () => {
                     try {
-                        const payload = buildExportPayload();
+                        const payload = buildExportPayload(readBackupIncludeStores());
                         const json = JSON.stringify(payload, null, 2);
                         const ok = await copyTextToClipboard(json);
                         if (ok) {
@@ -6314,6 +6653,50 @@
                     showToast('已将当前域名加入文本链接黑名单：' + value, 'info');
                 };
 
+                const addCurrentLoginBypassAllow = () => {
+                    if (!loginBypassAllowEl) return;
+                    const check = validateDomainToken(hostname);
+                    if (!check.ok) {
+                        showToast('添加失败：' + check.reason, 'error');
+                        return;
+                    }
+                    const value = check.value;
+                    const list = parseDomainList(loginBypassAllowEl.value);
+                    if (list.includes(value)) {
+                        showToast('当前域名已在隐藏登录遮挡允许列表中：' + value, 'info');
+                        return;
+                    }
+                    list.push(value);
+                    loginBypassAllowEl.value = toTextareaValue(list);
+                    appendDraftConfigAudit('loginBypassAllowAdd', '加入隐藏登录遮挡允许列表：' + value);
+                    refreshConfigAuditView();
+                    showToast('已将当前域名加入隐藏登录遮挡允许列表：' + value, 'info');
+                };
+
+                const addCurrentNewTabExclude = () => {
+                    if (!newTabExcludeUrlsEl) return;
+                    const info = getSuggestedNewTabExclude();
+                    const token = info && info.token ? String(info.token) : '';
+                    const label = info && info.label ? String(info.label) : token;
+                    if (!token) {
+                        showToast('添加失败：无法生成当前页规则。', 'error');
+                        return;
+                    }
+                    const list = parseNewTabExcludeTokens(newTabExcludeUrlsEl.value);
+                    if (list.includes(token)) {
+                        showToast('当前页规则已存在：' + label, 'info');
+                        return;
+                    }
+                    list.push(token);
+                    newTabExcludeUrlsEl.value = list.join('\n');
+                    try {
+                        syncNewTabExcludeSuggestion();
+                    } catch (e) {}
+                    appendDraftConfigAudit('newTabExcludeAdd', '加入新标签打开 URL 例外：' + token);
+                    refreshConfigAuditView();
+                    showToast('已加入当前页规则：' + label, 'info');
+                };
+
                 const persistToStorage = () => {
                     for (const key of Object.keys(defaults)) {
                         const def = defaults[key];
@@ -6337,6 +6720,24 @@
                         setValue('excludeDomains', v);
                         settings.excludeDomains = v;
                     }
+                    if (newTabExcludeUrlsEl) {
+                        const tokens = String(newTabExcludeUrlsEl.value || '')
+                            .split(/[\r\n,，]+/g)
+                            .map((s) => String(s || '').trim())
+                            .filter(Boolean);
+                        const dedup = [];
+                        const seen = new Set();
+                        for (let i = 0; i < tokens.length; i++) {
+                            const t = tokens[i];
+                            if (!t || seen.has(t)) continue;
+                            seen.add(t);
+                            dedup.push(t);
+                        }
+                        const v = dedup.join('\n');
+                        newTabExcludeUrlsEl.value = v;
+                        setValue('newTabExcludeUrls', v);
+                        settings.newTabExcludeUrls = v;
+                    }
                     if (textLinkIncludeEl) {
                         hostListSyncTextarea(textLinkIncludeEl);
                         const v = hostListParse(textLinkIncludeEl.value).join(',');
@@ -6348,6 +6749,12 @@
                         const v = hostListParse(textLinkExcludeEl.value).join(',');
                         setValue('textLinkifyExcludeHosts', v);
                         settings.textLinkifyExcludeHosts = v;
+                    }
+                    if (loginBypassAllowEl) {
+                        hostListSyncTextarea(loginBypassAllowEl);
+                        const v = hostListParse(loginBypassAllowEl.value).join(',');
+                        setValue('loginPopupBypassAllowHosts', v);
+                        settings.loginPopupBypassAllowHosts = v;
                     }
                 };
 
@@ -6417,6 +6824,7 @@
                     const t = e && e.target;
                     if (!(t instanceof HTMLInputElement)) return;
                     if (t.type !== 'checkbox') return;
+                    if (closed) return;
                     const key = t.getAttribute('data-field');
                     if (!key) return;
                     const row = findSettingRow(key);
@@ -6479,6 +6887,7 @@
                 panelLifecycle.on(root, 'change', (e) => {
                     const t = e && e.target;
                     if (!(t instanceof HTMLSelectElement)) return;
+                    if (closed) return;
                     const key = t.getAttribute('data-field');
                     if (!key) return;
                     if (!contentEl) return;
@@ -6490,6 +6899,18 @@
                     if (key === 'settingsLayoutStyle') {
                         pendingLayoutStyle = t.value;
                         scheduleLayoutApply();
+                        return;
+                    }
+                    if (key === 'baiduFloatHideMode') {
+                        try {
+                            const normalized = normalizeSettingValue('baiduFloatHideMode', t.value, defaults.baiduFloatHideMode);
+                            setValue('baiduFloatHideMode', normalized);
+                            settings.baiduFloatHideMode = normalized;
+                        } catch (e2) {}
+                        try {
+                            if (document.getElementById(BAIDU_FLOAT_ROOT_ID)) ensureBaiduFloatControls();
+                        } catch (e3) {}
+                        return;
                     }
                 }, { capture: false });
                 panelLifecycle.on(root, 'focusin', (e) => {
@@ -6510,6 +6931,8 @@
                     } catch (e2) {}
                     const t = e.target;
                     if (!(t instanceof Element)) return;
+                    if (closed) return;
+                    try {
                     if (appearanceMenu && appearanceMenu.getAttribute('data-open') === '1') {
                         const inside = t.closest && t.closest('[data-role="appearanceMenuWrap"]');
                         if (!inside) setAppearanceMenuOpen(false);
@@ -6537,52 +6960,75 @@
                     const actionEl = t.closest && t.closest('[data-action]');
                     const action = actionEl && actionEl.getAttribute ? actionEl.getAttribute('data-action') : null;
                     if (!action) return;
-                    if (action === 'close' || action === 'cancel') return close();
-                    if (action === 'save') return save();
-                    if (action === 'reset') return reset();
-                    if (action === 'toggleSidebar') return toggleSidebar();
-                    if (action === 'toggleAppearanceMenu') return toggleAppearanceMenu();
-                    if (action === 'addCurrent') return addCurrentDomain();
-                    if (action === 'removeCurrent') return removeCurrentDomain();
-                    if (action === 'clearExclude') return clearExcludeDomains();
-                    if (action === 'addCurrentTextInclude') return addCurrentTextInclude();
-                    if (action === 'addCurrentTextExclude') return addCurrentTextExclude();
-                    if (action === 'exportSettings') return exportSettingsToFile();
-                    if (action === 'importSettings') return importSettingsFromFile();
-                    if (action === 'copySettings') return copySettingsToClipboard();
-                    if (action === 'pasteSettings') return importSettingsFromClipboard();
-                    if (action === 'exportConfigAuditLog') return exportConfigAuditToFile();
-                    if (action === 'copyConfigAuditLog') return copyConfigAuditToClipboard();
-                    if (action === 'checkUpdate') return openUpdatePage();
-                    if (action === 'nav') {
-                        if (typeof e.detail === 'number' && e.detail > 1) return;
-                        const now = Date.now();
-                        const delta = now - (lastNavClickAt || 0);
-                        lastNavClickAt = now;
-                        if (delta < 90) lastNavScrollAt = now;
-                        const key = actionEl.getAttribute('data-key') || '';
-                        const submenu = actionEl.getAttribute('data-submenu') || '';
-                        if (!key || !contentEl) return;
-                        navBatchKey = key;
-                        navBatchSubmenu = submenu;
-                        if (navBatchRaf) return;
-                        try {
-                            navBatchRaf = panelLifecycle.rafTracked(() => {
-                                navBatchRaf = 0;
-                                const k = navBatchKey;
-                                const s = navBatchSubmenu;
-                                navBatchKey = '';
-                                navBatchSubmenu = '';
-                                if (!k || !contentEl) return;
-                                scrollContentToTarget(k, s);
-                            });
-                        } catch (e3) {
-                            navBatchRaf = 0;
-                            scrollContentToTarget(key, submenu);
+                    try {
+                        if (action === 'close' || action === 'cancel') return close();
+                        if (action === 'save') return save();
+                        if (action === 'reset') return reset();
+                        if (action === 'toggleSidebar') return toggleSidebar();
+                        if (action === 'toggleAppearanceMenu') return toggleAppearanceMenu();
+                        if (action === 'addCurrent') return addCurrentDomain();
+                        if (action === 'removeCurrent') return removeCurrentDomain();
+                        if (action === 'clearExclude') return clearExcludeDomains();
+                        if (action === 'addCurrentTextInclude') return addCurrentTextInclude();
+                        if (action === 'addCurrentTextExclude') return addCurrentTextExclude();
+                        if (action === 'addCurrentLoginBypassAllow') return addCurrentLoginBypassAllow();
+                        if (action === 'addCurrentNewTabExclude') return addCurrentNewTabExclude();
+                        if (action === 'clearNewTabExcludeUrls') {
+                            if (!newTabExcludeUrlsEl) return;
+                            if (!String(newTabExcludeUrlsEl.value || '').trim()) return;
+                            newTabExcludeUrlsEl.value = '';
+                            try {
+                                syncNewTabExcludeSuggestion();
+                                syncNewTabExcludeLines();
+                            } catch (e2) {}
+                            appendDraftConfigAudit('newTabExcludeClear', '清空新标签打开 URL 例外');
+                            refreshConfigAuditView();
+                            showToast('已清空“新标签打开 URL 例外”。', 'warn');
+                            return;
                         }
+                        if (action === 'exportSettings') return exportSettingsToFile();
+                        if (action === 'importSettings') return importSettingsFromFile();
+                        if (action === 'copySettings') return copySettingsToClipboard();
+                        if (action === 'pasteSettings') return importSettingsFromClipboard();
+                        if (action === 'exportConfigAuditLog') return exportConfigAuditToFile();
+                        if (action === 'copyConfigAuditLog') return copyConfigAuditToClipboard();
+                        if (action === 'checkUpdate') return openUpdatePage();
+                        if (action === 'nav') {
+                            if (typeof e.detail === 'number' && e.detail > 1) return;
+                            const now = Date.now();
+                            const delta = now - (lastNavClickAt || 0);
+                            lastNavClickAt = now;
+                            if (delta < 90) lastNavScrollAt = now;
+                            const key = actionEl.getAttribute('data-key') || '';
+                            const submenu = actionEl.getAttribute('data-submenu') || '';
+                            if (!key || !contentEl) return;
+                            navBatchKey = key;
+                            navBatchSubmenu = submenu;
+                            if (navBatchRaf) return;
+                            try {
+                                navBatchRaf = panelLifecycle.rafTracked(() => {
+                                    navBatchRaf = 0;
+                                    const k = navBatchKey;
+                                    const s = navBatchSubmenu;
+                                    navBatchKey = '';
+                                    navBatchSubmenu = '';
+                                    if (!k || !contentEl) return;
+                                    scrollContentToTarget(k, s);
+                                });
+                            } catch (e3) {
+                                navBatchRaf = 0;
+                                scrollContentToTarget(key, submenu);
+                            }
+                            try {
+                                if (isNarrowUi()) setSidebarOpen(false);
+                            } catch (e2) {}
+                            return;
+                        }
+                    } catch (err) {
+                        showToast('设置面板操作异常：' + (err && err.message ? err.message : err), 'error');
                         try {
-                            if (isNarrowUi()) setSidebarOpen(false);
-                        } catch (e2) {}
+                            debugLog('settingsPanelActionError', { action, err: String(err && err.message ? err.message : err || '') }, 'ERROR');
+                        } catch (e3) {}
                         return;
                     }
                     if (action === 'panHistoryClear') {
@@ -6768,6 +7214,13 @@
                         };
                         const json = JSON.stringify(payload, null, 2);
                         copyTextToClipboard(json).then((ok) => showToast(ok ? '已复制为 JSON。' : '复制失败，请检查浏览器权限。', ok ? 'info' : 'error'));
+                        return;
+                    }
+                    } catch (err) {
+                        showToast('设置面板发生异常：' + (err && err.message ? err.message : err), 'error');
+                        try {
+                            debugLog('settingsPanelCrash', { err: String(err && err.message ? err.message : err || '') }, 'ERROR');
+                        } catch (e3) {}
                         return;
                     }
                 }, { capture: false });
@@ -10220,12 +10673,24 @@
                 const host = getCurrentHost();
                 const isZhihu = isZhihuHost(host);
                 const isTieba = isTiebaHost(host);
+                const allowRaw = normalizeHostListRaw(settings.loginPopupBypassAllowHosts || '');
+                if (allowRaw && !matchHostList(host, allowRaw)) {
+                    debugLog('loginBypass', { ok: false, reason: 'notInAllowList', host }, 'INFO');
+                    loginPopupBypassStop = () => {};
+                    return;
+                }
+                const bypassMode = String(settings.loginPopupBypassMode || 'relaxed').toLowerCase();
                 const styleId = 'newtab-open-links-login-bypass-style';
                 const rule = resolveLoginPopupBypassRule(host);
                 const cssOnly = Boolean(rule && rule.cssOnly);
                 const css = rule && rule.css ? String(rule.css || '').trim() : '';
                 if (css) upsertStyleText(styleId, css);
                 if (!rule && !isZhihu && !isTieba) {
+                    if (bypassMode === 'knownonly') {
+                        debugLog('loginBypass', { ok: false, reason: 'knownOnlySkip', host }, 'INFO');
+                        loginPopupBypassStop = () => {};
+                        return;
+                    }
                     try {
                         const cs = getComputedStyle(document.body);
                         const cs2 = getComputedStyle(document.documentElement);
@@ -11002,6 +11467,7 @@
                         '#asideAd{display:none !important;}',
                         '.blog-ad-box{display:none !important;}',
                         '.csdn-common-logo-ad{display:none !important;}',
+                        '.top_banner{display:none !important;}',
                     ].join('\n')
                 );
                 push(
@@ -11154,7 +11620,7 @@
                 };
 
                 const removeOnce = () => {
-                    const root = document.getElementById('content_left') || document.body;
+                    const root = document.getElementById('content_left');
                     if (!root) return;
                     let first = null;
                     try {
@@ -11205,8 +11671,25 @@
                 };
 
                 schedule();
-                const obsRoot = document.getElementById('content_left') || document.body;
-                const obs = obsRoot ? MutationRegistry.observe(obsRoot, { childList: true, subtree: true }, schedule) : null;
+                let obs = null;
+                let installTimer = 0;
+                let installAttempts = 0;
+                const tryInstall = () => {
+                    if (obs) return;
+                    const obsRoot = document.getElementById('content_left');
+                    if (obsRoot) {
+                        obs = MutationRegistry.observe(obsRoot, { childList: true, subtree: true }, schedule);
+                        schedule();
+                        return;
+                    }
+                    if (installAttempts >= 60) return;
+                    installAttempts++;
+                    installTimer = TimerRegistry.setTimeout(() => {
+                        installTimer = 0;
+                        tryInstall();
+                    }, 100);
+                };
+                tryInstall();
                 baiduRecommendListCleanupStop = () => {
                     try {
                         if (scheduled) clearTimeout(scheduled);
@@ -11215,6 +11698,9 @@
                     try {
                         if (obs) obs.disconnect();
                     } catch (e4) {}
+                    obs = null;
+                    try { if (installTimer) clearTimeout(installTimer); } catch (e5) {}
+                    installTimer = 0;
                 };
             }
 
@@ -11273,7 +11759,7 @@
                 };
 
                 const removeOnce = () => {
-                    const root = document.getElementById('content_left') || document.body;
+                    const root = document.getElementById('content_left');
                     if (!root) return;
                     let markers = null;
                     try {
@@ -11309,8 +11795,25 @@
                 };
 
                 schedule();
-                const obsRoot = document.getElementById('content_left') || document.body;
-                const obs = obsRoot ? MutationRegistry.observe(obsRoot, { childList: true, subtree: true }, schedule) : null;
+                let obs = null;
+                let installTimer = 0;
+                let installAttempts = 0;
+                const tryInstall = () => {
+                    if (obs) return;
+                    const obsRoot = document.getElementById('content_left');
+                    if (obsRoot) {
+                        obs = MutationRegistry.observe(obsRoot, { childList: true, subtree: true }, schedule);
+                        schedule();
+                        return;
+                    }
+                    if (installAttempts >= 60) return;
+                    installAttempts++;
+                    installTimer = TimerRegistry.setTimeout(() => {
+                        installTimer = 0;
+                        tryInstall();
+                    }, 100);
+                };
+                tryInstall();
                 baiduAdsCleanupStop = () => {
                     try {
                         if (scheduled) clearTimeout(scheduled);
@@ -11319,6 +11822,9 @@
                     try {
                         if (obs) obs.disconnect();
                     } catch (e4) {}
+                    obs = null;
+                    try { if (installTimer) clearTimeout(installTimer); } catch (e5) {}
+                    installTimer = 0;
                 };
             }
 
@@ -11366,6 +11872,12 @@
                     try {
                         const row = container.querySelector('.new-pmd .cos-row') || container.querySelector('.cos-row');
                         if (!row) return;
+                        try { container.classList.add('ntp-baidu-cos-card'); } catch (e0) {}
+                        try {
+                            const isHanyu =
+                                container.querySelector('[class*="pinyin-box-pc_"],[class*="accu-con-pc_"],[class*="pinyin-pc_"]') != null;
+                            if (isHanyu) container.classList.add('ntp-baidu-hanyu-card');
+                        } catch (e1) {}
                         const children = Array.from(row.children || []);
                         const cols = children.filter((el) =>
                             el instanceof Element && (el.classList.contains('cos-col') || /(^|\s)cos-col-\d+/.test(String(el.className || '')))
@@ -11400,17 +11912,33 @@
 
                 const removeTrulyEmptyBlocks = (root) => {
                     if (!root || !canPrune(root)) return;
+                    const sinceAttr = 'data-ntp-empty-since';
+                    const hiddenAttr = 'data-ntp-empty-hidden';
+                    const now = Date.now();
                     try {
-                        const nodes = root.querySelectorAll('#content_left > .c-container, #content_left > .result, #content_left > .result-op');
+                        const nodes = root.querySelectorAll(':scope > .c-container, :scope > .result, :scope > .result-op');
                         for (let i = 0; i < nodes.length; i++) {
                             const el = nodes[i];
                             if (!(el instanceof Element)) continue;
                             const rect = el.getBoundingClientRect();
                             const textLen = String(el.textContent || '').trim().length;
                             const hasImg = !!el.querySelector('img, .c-img, video, iframe');
-                            if (rect && rect.height < 16 && textLen === 0 && !hasImg) {
-                                try { el.remove(); } catch (e1) {}
+                            const empty = rect && rect.height < 16 && textLen === 0 && !hasImg;
+                            if (!empty) {
+                                try { el.removeAttribute(sinceAttr); } catch (e1) {}
+                                continue;
                             }
+                            let since = 0;
+                            try { since = Number(el.getAttribute(sinceAttr) || 0); } catch (e2) { since = 0; }
+                            if (!since) {
+                                try { el.setAttribute(sinceAttr, String(now)); } catch (e3) {}
+                                continue;
+                            }
+                            if (now - since < 1500) continue;
+                            try {
+                                el.style.setProperty('display', 'none', 'important');
+                                el.setAttribute(hiddenAttr, '1');
+                            } catch (e4) {}
                         }
                     } catch (e) {}
                 };
@@ -11436,8 +11964,26 @@
                     } catch (e) {}
                 };
 
+                let stopped = false;
+                let obs = null;
+                let installTimer = 0;
+                let installAttempts = 0;
+                const stopNow = (reason) => {
+                    if (stopped) return;
+                    stopped = true;
+                    try { if (timerId) clearTimeout(timerId); } catch (e1) {}
+                    timerId = 0;
+                    try { if (obs) obs.disconnect(); } catch (e2) {}
+                    obs = null;
+                    try { if (installTimer) clearTimeout(installTimer); } catch (e3) {}
+                    installTimer = 0;
+                    try {
+                        if (reason) showPassiveTip(String(reason));
+                    } catch (e4) {}
+                };
+
                 const patchOnce = () => {
-                    const root = document.getElementById('content_left') || document.body;
+                    const root = document.getElementById('content_left');
                     if (!root) return;
                     try {
                         const cards = root.querySelectorAll('.c-container.pc-fresh-wrapper-con, .c-container.c-group-wrapper, .c-container[tpl="baike"], .c-container.new-pmd');
@@ -11447,10 +11993,24 @@
                         }
                     } catch (e) {}
                     removeTrulyEmptyBlocks(root);
+                    try {
+                        const list = root.querySelectorAll(':scope > .c-container, :scope > .result, :scope > .result-op');
+                        let visible = 0;
+                        for (let i = 0; i < list.length; i++) {
+                            const el = list[i];
+                            if (!(el instanceof Element)) continue;
+                            const cs = window.getComputedStyle ? getComputedStyle(el) : null;
+                            if (cs && (cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0')) continue;
+                            const rect = el.getBoundingClientRect();
+                            if (rect && rect.height >= 30) { visible++; break; }
+                        }
+                        if (visible === 0 && canPrune(root)) stopNow('检测到百度结果区异常为空，已暂停净化以避免白屏');
+                    } catch (e2) {}
                 };
 
                 let timerId = 0;
                 const schedule = () => {
+                    if (stopped) return;
                     if (timerId) return;
                     timerId = TimerRegistry.setTimeout(() => {
                         timerId = 0;
@@ -11459,12 +12019,24 @@
                 };
 
                 schedule();
-                const obsRoot = document.getElementById('content_left') || document.body;
-                const obs = obsRoot ? MutationRegistry.observe(obsRoot, { childList: true, subtree: true }, schedule) : null;
+                const tryInstall = () => {
+                    if (stopped || obs) return;
+                    const obsRoot = document.getElementById('content_left');
+                    if (obsRoot) {
+                        obs = MutationRegistry.observe(obsRoot, { childList: true, subtree: true }, schedule);
+                        schedule();
+                        return;
+                    }
+                    if (installAttempts >= 60) return;
+                    installAttempts++;
+                    installTimer = TimerRegistry.setTimeout(() => {
+                        installTimer = 0;
+                        tryInstall();
+                    }, 100);
+                };
+                tryInstall();
                 baiduCompactResultsStop = () => {
-                    try { if (timerId) clearTimeout(timerId); } catch (e1) {}
-                    timerId = 0;
-                    try { if (obs) obs.disconnect(); } catch (e2) {}
+                    stopNow('');
                 };
             }
 
@@ -11516,6 +12088,12 @@
                 const host = getCurrentHost();
                 const isSearchPage = host === 'www.baidu.com' && location && String(location.pathname || '') === '/s';
                 const on = Boolean(active);
+                const state =
+                    applyBaiduAiAutoExpandRuntime._state ||
+                    (applyBaiduAiAutoExpandRuntime._state = {
+                        lastClickAtByCard: new WeakMap(),
+                        lastRunAt: 0,
+                    });
                 try {
                     const panel = document.getElementById(BAIDU_FLOAT_PANEL_ID);
                     if (panel) {
@@ -11531,7 +12109,31 @@
                 }
                 if (!isSearchPage) return;
                 let timerId = 0;
+                const isAiCardBusy = (card) => {
+                    if (!card) return false;
+                    try {
+                        if (card.querySelector && card.querySelector('[aria-busy="true"]')) return true;
+                    } catch (e0) {}
+                    try {
+                        if (
+                            card.querySelector &&
+                            card.querySelector(
+                                '.ac-loading-spinner,.cos-loading,[class*="skeleton"],[class*="Skeleton"],[class*="loading"],[class*="Loading"]'
+                            )
+                        )
+                            return true;
+                    } catch (e1) {}
+                    let text = '';
+                    try {
+                        text = String(card.textContent || '').replace(/\s+/g, '').slice(0, 1800);
+                    } catch (e2) {}
+                    if (!text) return false;
+                    return /分析中|正在分析|加载中|正在加载|请稍候|稍候|Loading/i.test(text);
+                };
                 const tryAutoToggle = (expand) => {
+                    const now = Date.now();
+                    if (state.lastRunAt && now - state.lastRunAt < 260) return;
+                    state.lastRunAt = now;
                     const list = document.querySelectorAll(
                         'div[tpl="wenda_generate"],div[tpl="ai_ask"],div[tpl="ai_index"],.result-op[tpl="wenda_generate"],.result-op[tpl="ai_ask"],.result-op[tpl="ai_index"],div[m-name^="mirror-san/app/wenda_generate"],div[m-name^="mirror-san/app/ai_ask"]'
                     );
@@ -11540,6 +12142,11 @@
                         const card = list[i];
                         if (!(card instanceof Element)) continue;
                         if (expand && card.getAttribute('data-ntp-ai-auto-expanded') === '1') continue;
+                        if (expand && isAiCardBusy(card)) continue;
+                        if (expand) {
+                            const last = state.lastClickAtByCard.get(card) || 0;
+                            if (last && now - last < 3500) continue;
+                        }
                         let clicked = false;
                         const foldTexts = card.querySelectorAll('.cos-fold-switch-text');
                         for (let j = 0; j < foldTexts.length; j++) {
@@ -11598,6 +12205,9 @@
                                 try {
                                     card.setAttribute('data-ntp-ai-auto-expanded', '1');
                                 } catch (e) {}
+                                try {
+                                    state.lastClickAtByCard.set(card, now);
+                                } catch (e2) {}
                             } else {
                                 try {
                                     card.removeAttribute('data-ntp-ai-auto-expanded');
@@ -11630,7 +12240,7 @@
                         try {
                             tryAutoToggle(true);
                         } catch (e) {}
-                    }, 120);
+                    }, 520);
                 };
                 schedule();
                 const obs = MutationRegistry.observe(root, { childList: true, subtree: true }, schedule, 60 * 1000);
@@ -11717,6 +12327,40 @@
                 if (!document.body) return;
                 try {
                     removeBaiduFloatControls();
+                } catch (e0) {}
+                try {
+                    if (!getValue(BAIDU_AI_AUTO_EXPAND_MIGRATED_KEY, false)) {
+                        const missing = '__newtab_pro_gm_missing__';
+                        let hasStored = false;
+                        let storedValue = missing;
+                        if (typeof GM_getValue === 'function') {
+                            try {
+                                const v = GM_getValue('baiduAiAutoExpandEnabled', missing);
+                                if (v !== missing) {
+                                    hasStored = true;
+                                    storedValue = v;
+                                }
+                            } catch (e1) {}
+                        }
+                        if (!hasStored) {
+                            try {
+                                const raw = localStorage.getItem(`${STORAGE_PREFIX}baiduAiAutoExpandEnabled`);
+                                if (raw != null) {
+                                    hasStored = true;
+                                    storedValue = safeJsonParse(raw, missing);
+                                }
+                            } catch (e2) {}
+                        }
+                        if (hasStored && storedValue === false) {
+                            try {
+                                setValue('baiduAiAutoExpandEnabled', true);
+                                settings.baiduAiAutoExpandEnabled = true;
+                            } catch (e3) {}
+                        }
+                        try {
+                            setValue(BAIDU_AI_AUTO_EXPAND_MIGRATED_KEY, true);
+                        } catch (e4) {}
+                    }
                 } catch (e0) {}
                 const root = document.createElement('div');
                 root.id = BAIDU_FLOAT_ROOT_ID;
@@ -11806,58 +12450,160 @@
                 applyStoredPosition();
 
                 let open = false;
+                const hideMode = String(settings.baiduFloatHideMode || 'off').toLowerCase();
+                let hovering = false;
+                let hideTimer = 0;
+                let dockSide = 'right';
                 const btn = document.getElementById(BAIDU_FLOAT_BTN_ID);
                 const panel = document.getElementById(BAIDU_FLOAT_PANEL_ID);
                 const darkToggle = panel && panel.querySelector('.ntp-baidu-toggle[data-role="dark"]');
                 const layoutToggle = panel && panel.querySelector('.ntp-baidu-toggle[data-role="layout"]');
                 const aiToggle = panel && panel.querySelector('.ntp-baidu-toggle[data-role="ai"]');
                 const autoExpandToggle = panel && panel.querySelector('.ntp-baidu-toggle[data-role="autoExpand"]');
+                let dragArmed = false;
                 let dragging = false;
+                let suppressBtnClick = false;
                 let dragOffsetX = 0;
                 let dragOffsetY = 0;
+                let dragStartClientX = 0;
+                let dragStartClientY = 0;
                 let lastX = 0;
                 let lastY = 0;
+
+                const clearHideTimer = () => {
+                    if (!hideTimer) return;
+                    try {
+                        clearTimeout(hideTimer);
+                    } catch (e) {}
+                    hideTimer = 0;
+                };
+                const syncDockSide = () => {
+                    if (!root) return;
+                    let rect = null;
+                    try {
+                        rect = root.getBoundingClientRect();
+                    } catch (e) {
+                        rect = null;
+                    }
+                    if (!rect) return;
+                    let vw = 0;
+                    try {
+                        vw = window.innerWidth || (document.documentElement && document.documentElement.clientWidth) || 0;
+                    } catch (e2) {
+                        vw = 0;
+                    }
+                    if (!vw) return;
+                    dockSide = rect.left + rect.width / 2 < vw / 2 ? 'left' : 'right';
+                    try {
+                        root.classList.toggle('ntp-dock-left', dockSide === 'left');
+                        root.classList.toggle('ntp-dock-right', dockSide === 'right');
+                    } catch (e3) {}
+                };
+                const applyEdgeDockSnap = () => {
+                    if (hideMode !== 'edge' || !root) return;
+                    let rect = null;
+                    try {
+                        rect = root.getBoundingClientRect();
+                    } catch (e) {
+                        rect = null;
+                    }
+                    if (!rect) return;
+                    let vw = 0;
+                    let vh = 0;
+                    try {
+                        vw = window.innerWidth || (document.documentElement && document.documentElement.clientWidth) || 0;
+                        vh = window.innerHeight || (document.documentElement && document.documentElement.clientHeight) || 0;
+                    } catch (e2) {}
+                    if (!vw || !vh) return;
+                    const margin = 8;
+                    const x = rect.left + rect.width / 2 < vw / 2 ? margin : Math.max(margin, vw - rect.width - margin);
+                    const maxY = Math.max(margin, vh - rect.height - margin);
+                    const y = Math.min(Math.max(rect.top, margin), maxY);
+                    try {
+                        root.style.left = x + 'px';
+                        root.style.top = y + 'px';
+                        root.style.right = 'auto';
+                        root.style.bottom = 'auto';
+                        lastX = x;
+                        lastY = y;
+                    } catch (e3) {}
+                    syncDockSide();
+                };
+                const syncAutoHide = () => {
+                    if (!root) return;
+                    const enabled = hideMode === 'edge' || hideMode === 'fade';
+                    try {
+                        root.classList.toggle('ntp-hide-edge', hideMode === 'edge');
+                        root.classList.toggle('ntp-hide-fade', hideMode === 'fade');
+                        root.classList.toggle('ntp-hidden', enabled && !open && !dragging && !hovering);
+                    } catch (e) {}
+                };
+                const scheduleHide = (delayMs) => {
+                    clearHideTimer();
+                    if (hideMode !== 'edge' && hideMode !== 'fade') return;
+                    const d = Number(delayMs);
+                    const ms = Number.isFinite(d) ? Math.max(0, d) : 0;
+                    hideTimer = setTimeout(() => {
+                        hideTimer = 0;
+                        syncAutoHide();
+                    }, ms);
+                };
 
                 const setOpen = (value) => {
                     open = Boolean(value);
                     try {
                         if (root) root.classList.toggle('ntp-open', open);
                     } catch (e2) {}
+                    try {
+                        hovering = open ? true : hovering;
+                    } catch (e3) {}
+                    syncDockSide();
+                    if (!open) applyEdgeDockSnap();
+                    clearHideTimer();
+                    syncAutoHide();
+                    if (!open) scheduleHide(hideMode === 'fade' ? 900 : 450);
                 };
+
+                syncDockSide();
+                if (!open) applyEdgeDockSnap();
+                syncAutoHide();
+                if (!open) scheduleHide(hideMode === 'fade' ? 900 : 450);
 
                 const handleDragStart = (event) => {
                     if (!event || typeof event.button === 'number' && event.button !== 0) return;
                     const target = event.target;
                     if (!root || !target) return;
-                    try {
-                        if (typeof target.closest === 'function') {
-                            const toggleEl = target.closest('.ntp-baidu-toggle');
-                            if (toggleEl) return;
-                        }
-                    } catch (e) {}
-                    try {
-                        if (event.stopPropagation) event.stopPropagation();
-                    } catch (e2) {}
-                    try {
-                        if (event.preventDefault) event.preventDefault();
-                    } catch (e3) {}
+                    dragArmed = true;
+                    dragging = false;
                     let rect = null;
                     try {
                         rect = root.getBoundingClientRect();
-                    } catch (e4) {}
+                    } catch (e1) {}
                     const startX = event.clientX || 0;
                     const startY = event.clientY || 0;
+                    dragStartClientX = startX;
+                    dragStartClientY = startY;
                     dragOffsetX = rect ? startX - rect.left : 0;
                     dragOffsetY = rect ? startY - rect.top : 0;
                     lastX = rect ? rect.left : 0;
                     lastY = rect ? rect.top : 0;
-                    dragging = true;
+                    hovering = true;
+                    clearHideTimer();
+                    syncAutoHide();
                 };
 
                 const handleDragMove = (event) => {
-                    if (!dragging || !root) return;
+                    if (!root) return;
+                    if (!dragArmed && !dragging) return;
                     const x = (event && event.clientX) || 0;
                     const y = (event && event.clientY) || 0;
+                    if (!dragging) {
+                        const dx = x - dragStartClientX;
+                        const dy = y - dragStartClientY;
+                        if (Math.abs(dx) + Math.abs(dy) < 4) return;
+                        dragging = true;
+                        suppressBtnClick = true;
+                    }
                     let nextX = x - dragOffsetX;
                     let nextY = y - dragOffsetY;
                     let vw = 0;
@@ -11893,24 +12639,47 @@
                 };
 
                 const handleDragEnd = () => {
+                    if (!dragArmed && !dragging) return;
+                    dragArmed = false;
                     if (!dragging) return;
                     dragging = false;
                     try {
+                        syncDockSide();
+                        applyEdgeDockSnap();
+                    } catch (e2) {}
+                    try {
                         setValue(BAIDU_FLOAT_POSITION_KEY, String(lastX || 0) + ',' + String(lastY || 0));
                     } catch (e) {}
+                    try {
+                        syncAutoHide();
+                        scheduleHide(hideMode === 'fade' ? 900 : 450);
+                    } catch (e3) {}
                 };
 
                 if (btn) {
+                    EventRegistry.add(btn, 'mousedown', handleDragStart);
                     EventRegistry.add(btn, 'click', (event) => {
                         try {
                             if (event && event.stopPropagation) event.stopPropagation();
                         } catch (e3) {}
+                        if (suppressBtnClick) {
+                            suppressBtnClick = false;
+                            return;
+                        }
                         setOpen(!open);
+                    });
+                    EventRegistry.add(btn, 'mouseenter', () => {
+                        hovering = true;
+                        clearHideTimer();
+                        syncAutoHide();
+                    });
+                    EventRegistry.add(btn, 'mouseleave', () => {
+                        hovering = false;
+                        scheduleHide(hideMode === 'fade' ? 900 : 450);
                     });
                 }
 
                 if (root) {
-                    EventRegistry.add(root, 'mousedown', handleDragStart);
                     EventRegistry.add(document, 'mousemove', handleDragMove);
                     EventRegistry.add(document, 'mouseup', handleDragEnd);
                 }
@@ -11986,6 +12755,10 @@
                     try {
                         setOpen(false);
                     } catch (e10) {}
+                    try {
+                        hovering = false;
+                        clearHideTimer();
+                    } catch (e11) {}
                 };
             }
 
@@ -11999,7 +12772,7 @@
                     try {
                         if (!location || String(location.pathname || '') !== '/s') return false;
                         const sp = new URLSearchParams(String(location.search || ''));
-                        return sp.get('rtt') === '1' && sp.get('bsst') === '1' && sp.get('cl') === '2' && sp.get('tn') === 'news';
+                        return sp.get('tn') === 'news';
                     } catch (e) {
                         return false;
                     }
@@ -12195,6 +12968,8 @@
                                 '#searchTag,#searchTag>div{width:100% !important;max-width:1200px !important;margin:0 auto !important;box-sizing:border-box !important;}',
                                 'body.single-column #container.sam_newgrid,body.single-column #content_left,body.single-column .wrapper_new #content_left,body.single-column #container.sam_newgrid #content_left{width:100% !important;max-width:1200px !important;margin:0 auto !important;padding:0 !important;display:flex !important;flex-direction:column !important;align-items:center !important;}',
                                 'body.single-column .c-container,body.single-column .result-op,body.single-column .result{width:100% !important;max-width:800px !important;margin:0 auto 25px auto !important;padding:25px !important;border-radius:10px !important;box-shadow:0 3px 10px rgba(0,0,0,0.08) !important;background-color:#fff !important;transition:all 0.3s ease !important;box-sizing:border-box !important;position:relative !important;}',
+                                'body.single-column .ntp-baidu-cos-card{padding:0 !important;background-color:transparent !important;overflow:hidden !important;}',
+                                'body.single-column .ntp-baidu-cos-card > div{width:100% !important;max-width:100% !important;margin:0 !important;}',
                                 'body.single-column #content_left > .c-container:first-child{margin-top:30px !important;}',
                                 'body.single-column div[class*=\"site-img\"],body.single-column div[class*=\"site-img\"] *{width:16px !important;height:16px !important;max-width:16px !important;min-width:16px !important;overflow:hidden !important;}',
                                 'body.single-column .c-showurl .c-img-s,body.single-column .c-showurl .c-img-s *{width:16px !important;height:16px !important;max-width:16px !important;min-width:16px !important;overflow:hidden !important;}',
@@ -12211,6 +12986,8 @@
                                 'body.single-column .detail-icon_3mni6,body.single-column .detail-icon_3mni6 i{display:inline-flex !important;align-items:center !important;visibility:visible !important;}',
                                 'body.double-column #container.sam_newgrid,body.double-column #content_left,body.double-column .wrapper_new #content_left,body.double-column #container.sam_newgrid #content_left{width:100% !important;max-width:1400px !important;margin:0 auto !important;padding:10px !important;display:flex !important;flex-wrap:wrap !important;gap:20px !important;align-items:stretch !important;justify-content:space-between !important;}',
                                 'body.double-column .c-container,body.double-column .result-op,body.double-column .result{width:calc(50% - 10px) !important;margin:0 !important;padding:20px !important;border-radius:10px !important;box-shadow:0 3px 10px rgba(0,0,0,0.08) !important;background-color:#fff !important;transition:all 0.3s ease !important;box-sizing:border-box !important;overflow:hidden !important;display:flex !important;flex-direction:column !important;max-height:none !important;position:relative !important;}',
+                                'body.double-column .ntp-baidu-cos-card{padding:0 !important;background-color:transparent !important;overflow:hidden !important;display:block !important;}',
+                                'body.double-column .ntp-baidu-cos-card > div{width:100% !important;max-width:100% !important;margin:0 !important;}',
                                 'body.double-column #content_left > .c-container:first-child:not(.ntp-baidu-official-span),body.double-column #content_left > .result:first-child:not(.ntp-baidu-official-span),body.double-column #content_left > .result-op:first-child:not(.ntp-baidu-official-span){width:calc(50% - 10px) !important;max-width:calc(50% - 10px) !important;flex:0 0 calc(50% - 10px) !important;margin:0 !important;}',
                                 'body.double-column #content_left > .ntp-baidu-official-span{width:100% !important;max-width:100% !important;flex:0 0 100% !important;}',
                                 'body.double-column #content_left > .c-container:first-child *,body.double-column #content_left > .result:first-child *,body.double-column #content_left > .result-op:first-child *{max-width:100% !important;}',
@@ -12219,16 +12996,18 @@
                                 'body.double-column .c-container *,body.double-column .result-op *,body.double-column .result *{max-width:100% !important;box-sizing:border-box !important;word-wrap:break-word !important;}',
                                 'body.double-column img,body.double-column video{max-width:100% !important;max-height:200px !important;height:auto !important;display:block !important;object-fit:cover !important;}',
                                 'body.double-column .c-img,body.double-column .c-img6{max-height:200px !important;overflow:hidden !important;}',
-                                'body.double-column #rs, body.double-column #page { display: block !important; width: 100% !important; max-width: 1400px !important; margin: 20px auto !important; margin-left: auto !important; margin-right: auto !important; padding: 0 20px !important; box-sizing: border-box !important; float: none !important; left: auto !important; right: auto !important; transform: none !important; }',
-                                'body.double-column #rs > div, body.double-column #page > div { margin-left: 0 !important; margin-right: auto !important; padding-left: 0 !important; padding-right: 0 !important; left: auto !important; right: auto !important; float: none !important; transform: none !important; }',
-                                'body.double-column #page > div[class*="page-inner_"]{display:flex !important;align-items:center !important;justify-content:center !important;flex-wrap:wrap !important;gap:8px !important;width:100% !important;max-width:100% !important;margin:0 auto !important;box-sizing:border-box !important;}',
-                                'body.double-column #page > div[class*="page-inner_"] > a,body.double-column #page > div[class*="page-inner_"] > strong,body.double-column #page > div[class*="page-inner_"] > span{display:inline-flex !important;align-items:center !important;justify-content:center !important;vertical-align:middle !important;margin:0 !important;}',
-                                'body.double-column #page a.n{display:inline-flex !important;align-items:center !important;justify-content:center !important;line-height:1 !important;vertical-align:middle !important;}',
-                                'body.double-column #rs > div > div, body.double-column #page > div > div { margin-left: 0 !important; margin-right: auto !important; }',
-                                'body.single-column #rs, body.single-column #rs_new, body.single-column #page { display: block !important; width: 100% !important; max-width: 1200px !important; margin: 20px auto !important; margin-left: auto !important; margin-right: auto !important; padding: 0 20px !important; box-sizing: border-box !important; float: none !important; left: auto !important; right: auto !important; transform: none !important; }',
-                                'body.single-column #rs > div, body.single-column #rs_new > div, body.single-column #page > div { margin-left: 0 !important; margin-right: auto !important; padding-left: 0 !important; padding-right: 0 !important; left: auto !important; right: auto !important; float: none !important; transform: none !important; }',
-                                'body.single-column #page > div[class*="page-inner_"]{display:flex !important;align-items:center !important;justify-content:center !important;flex-wrap:wrap !important;gap:8px !important;width:100% !important;max-width:100% !important;margin:0 auto !important;box-sizing:border-box !important;}',
-                                'body.single-column #rs > div > div, body.single-column #rs_new > div > div, body.single-column #page > div > div { margin-left: 0 !important; margin-right: auto !important; }',
+                                'body.double-column #rs,body.double-column #page,body.single-column #rs,body.single-column #rs_new,body.single-column #page{display:block !important;width:100% !important;max-width:1200px !important;margin:20px auto !important;padding:0 20px !important;box-sizing:border-box !important;float:none !important;left:auto !important;right:auto !important;transform:none !important;}',
+                                'body.double-column #rs > div,body.double-column #page > div,body.single-column #rs > div,body.single-column #rs_new > div,body.single-column #page > div{width:100% !important;margin:0 auto !important;padding-left:0 !important;padding-right:0 !important;left:auto !important;right:auto !important;float:none !important;transform:none !important;box-sizing:border-box !important;}',
+                                'body.double-column #page > div.page-inner,body.double-column #page > div[class*="page-inner_"],body.single-column #page > div.page-inner,body.single-column #page > div[class*="page-inner_"]{display:flex !important;align-items:center !important;justify-content:center !important;flex-wrap:wrap !important;gap:8px !important;width:100% !important;max-width:100% !important;margin:0 auto !important;box-sizing:border-box !important;float:none !important;left:auto !important;right:auto !important;padding-left:0 !important;padding-right:0 !important;transform:none !important;}',
+                                'body.double-column #page > div.page-inner > a,body.double-column #page > div.page-inner > strong,body.double-column #page > div.page-inner > span,body.double-column #page > div[class*="page-inner_"] > a,body.double-column #page > div[class*="page-inner_"] > strong,body.double-column #page > div[class*="page-inner_"] > span,body.single-column #page > div.page-inner > a,body.single-column #page > div.page-inner > strong,body.single-column #page > div.page-inner > span,body.single-column #page > div[class*="page-inner_"] > a,body.single-column #page > div[class*="page-inner_"] > strong,body.single-column #page > div[class*="page-inner_"] > span{display:inline-flex !important;align-items:center !important;justify-content:center !important;vertical-align:middle !important;margin:0 !important;min-height:32px !important;height:32px !important;padding:0 10px !important;box-sizing:border-box !important;min-width:32px !important;white-space:nowrap !important;line-height:1 !important;}',
+                                '#page a.n{display:inline-flex !important;align-items:center !important;justify-content:center !important;gap:6px !important;line-height:1 !important;vertical-align:middle !important;min-height:32px !important;height:32px !important;padding:0 10px !important;box-sizing:border-box !important;white-space:nowrap !important;}',
+                                '#page a.n img{width:15px !important;height:15px !important;max-height:15px !important;display:block !important;align-self:center !important;opacity:1 !important;visibility:visible !important;vertical-align:middle !important;object-fit:contain !important;margin:0 !important;padding:0 !important;transform:none !important;}',
+                                '#page a.n img[class*="leftArrow_"],#page a.n img[class*="rightArrow_"],#page a.n img[class*="Arrow_"]{transform:translateY(-1px) !important;}',
+                                'body.double-column #page a.n,body.single-column #page a.n{display:inline-flex !important;align-items:center !important;justify-content:center !important;gap:6px !important;line-height:1 !important;vertical-align:middle !important;min-height:32px !important;height:32px !important;white-space:nowrap !important;}',
+                                'body.double-column #page a.n img,body.single-column #page a.n img{width:15px !important;height:15px !important;max-height:15px !important;display:block !important;align-self:center !important;opacity:1 !important;visibility:visible !important;vertical-align:middle !important;object-fit:contain !important;}',
+                                'body.double-column #page .fk,body.double-column #page .pc,body.single-column #page .fk,body.single-column #page .pc{display:inline-flex !important;align-items:center !important;justify-content:center !important;line-height:1 !important;height:32px !important;}',
+                                'body.double-column #page .fk i,body.single-column #page .fk i{display:block !important;line-height:1 !important;}',
+                                'body.double-column #rs > div > div,body.double-column #page > div > div,body.single-column #rs > div > div,body.single-column #rs_new > div > div,body.single-column #page > div > div{margin:0 auto !important;left:auto !important;right:auto !important;float:none !important;transform:none !important;}',
                             ].join('\n')
                             );
                         }
@@ -12257,6 +13036,12 @@
                                     'body.single-column .ci-root #content_left .result-op[tpl="news-normal"] .c-span9,body.double-column .ci-root #content_left .result-op[tpl="news-normal"] .c-span9,body.single-column #content_left .result-op[tpl="news-normal"] .c-span9,body.double-column #content_left .result-op[tpl="news-normal"] .c-span9{flex:1 1 auto !important;min-width:0 !important;width:auto !important;float:none !important;margin-left:0 !important;padding-left:0 !important;}',
                                     '.ci-root #content_left .result-op[tpl="news-normal"] .c-span3 .c-img,.ci-root #content_left .result-op[tpl="news-normal"] .c-span3 img,#content_left .result-op[tpl="news-normal"] .c-span3 .c-img,#content_left .result-op[tpl="news-normal"] .c-span3 img{width:100% !important;height:auto !important;display:block !important;object-fit:cover !important;}',
                                     '@media (max-width:900px){.ci-root #content_left .result-op[tpl="news-normal"] .c-row,#content_left .result-op[tpl="news-normal"] .c-row{flex-direction:column !important;align-items:stretch !important;} .ci-root #content_left .result-op[tpl="news-normal"] .c-span3,#content_left .result-op[tpl="news-normal"] .c-span3{width:100% !important;max-width:100% !important;flex:0 0 auto !important;} .ci-root #content_left .result-op[tpl="news-normal"] .c-span9,#content_left .result-op[tpl="news-normal"] .c-span9{width:100% !important;}}',
+                                    'body.double-column #content_left .result.old-pmd{overflow:visible !important;}',
+                                    'body.double-column #content_left .result.old-pmd h3.c-title{max-height:none !important;overflow:visible !important;display:block !important;-webkit-line-clamp:unset !important;-webkit-box-orient:initial !important;}',
+                                    'body.double-column #content_left .result.old-pmd .c-summary,body.double-column #content_left .result.old-pmd .c-abstract,body.double-column #content_left .result.old-pmd .c-span-last{max-height:none !important;overflow:visible !important;display:block !important;-webkit-line-clamp:unset !important;-webkit-box-orient:initial !important;}',
+                                    `body.${BAIDU_DARK_BODY_CLASS} #content_left .result.old-pmd,body.${BAIDU_DARK_BODY_CLASS} #content_left .result.old-pmd *{text-shadow:none !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} #content_left .result.old-pmd,body.${BAIDU_DARK_BODY_CLASS} #content_left .result.old-pmd .c-summary,body.${BAIDU_DARK_BODY_CLASS} #content_left .result.old-pmd .c-summary *,body.${BAIDU_DARK_BODY_CLASS} #content_left .result.old-pmd .c-author,body.${BAIDU_DARK_BODY_CLASS} #content_left .result.old-pmd .c-author *{color:#e8e6e3 !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} #content_left .result.old-pmd a,body.${BAIDU_DARK_BODY_CLASS} #content_left .result.old-pmd a *{text-shadow:none !important;}`,
                                     `body.${BAIDU_DARK_BODY_CLASS}{background:#202124 !important;color:#e8e6e3 !important;}`,
                                     `body.${BAIDU_DARK_BODY_CLASS} .input-head-wrapper,body.${BAIDU_DARK_BODY_CLASS} .head_4gETA{background:#202124 !important;border-bottom:1px solid #303134 !important;}`,
                                     `body.${BAIDU_DARK_BODY_CLASS} .menu__ff4S a,body.${BAIDU_DARK_BODY_CLASS} #u a{color:#e8e6e3 !important;}`,
@@ -12269,16 +13054,20 @@
                                     `body.${BAIDU_DARK_BODY_CLASS} .ci-tool,body.${BAIDU_DARK_BODY_CLASS} .ci-tool *{color:#e8e6e3 !important;}`,
                                     `body.${BAIDU_DARK_BODY_CLASS} .ci-root,body.${BAIDU_DARK_BODY_CLASS} #ci-main,body.${BAIDU_DARK_BODY_CLASS} .ci-normal-wrapper,body.${BAIDU_DARK_BODY_CLASS} .ci-file-input-wrapper,body.${BAIDU_DARK_BODY_CLASS} #ci-area,body.${BAIDU_DARK_BODY_CLASS} .ci-op-anime,body.${BAIDU_DARK_BODY_CLASS} .tools-placeholder-wrapper,body.${BAIDU_DARK_BODY_CLASS} .right-tools-wrapper{background:#202124 !important;}`,
                                     `body.${BAIDU_DARK_BODY_CLASS} #ci-submit-button{background:#4e6ef2 !important;color:#fff !important;border:1px solid #4e6ef2 !important;}`,
-                                    `body.${BAIDU_DARK_BODY_CLASS} #page .page-inner a,body.${BAIDU_DARK_BODY_CLASS} #page .page-inner strong{background:#2b2d31 !important;border:1px solid #5f6368 !important;color:#e8e6e3 !important;}`,
-                                    `body.${BAIDU_DARK_BODY_CLASS} #page .page-inner a:hover{background:#4e6ef2 !important;border-color:#4e6ef2 !important;color:#fff !important;}`,
-                                    `body.${BAIDU_DARK_BODY_CLASS} #page .page-inner .fk i{color:#cbd5e1 !important;}`,
-                                    `body.${BAIDU_DARK_BODY_CLASS} #page,body.${BAIDU_DARK_BODY_CLASS} #page .page-inner{background:transparent !important;}`,
-                                    `body.${BAIDU_DARK_BODY_CLASS} #page .page-inner .pc,body.${BAIDU_DARK_BODY_CLASS} #page .page-inner .fk{color:#e8e6e3 !important;}`,
-                                    '#page{width:100% !important;max-width:100% !important;margin:20px auto !important;display:block !important;box-sizing:border-box !important;float:none !important;}',
-                                    '#page .page-inner{display:flex !important;align-items:center !important;justify-content:center !important;flex-wrap:wrap !important;gap:8px !important;width:100% !important;margin:0 auto !important;box-sizing:border-box !important;float:none !important;}',
-                                    '#page .page-inner a,#page .page-inner strong,#page .page-inner span{display:inline-flex !important;align-items:center !important;justify-content:center !important;vertical-align:middle !important;margin:0 !important;text-align:center !important;}',
-                                    '#page .page-inner .fk,#page .page-inner .pc{display:inline-flex !important;align-items:center !important;justify-content:center !important;line-height:1 !important;min-width:1.4em !important;}',
-                                    '#page .page-inner .fk i{line-height:1 !important;}',
+                                    '#page .page-inner a,#page .page-inner strong,#page [class*="page-inner_"] a,#page [class*="page-inner_"] strong{min-width:32px !important;height:32px !important;padding:0 10px !important;border-radius:4px !important;border:1px solid #d9d9d9 !important;background:#fff !important;color:#1f2328 !important;box-sizing:border-box !important;line-height:1 !important;}',
+                                    '#page .page-inner a:hover,#page [class*="page-inner_"] a:hover{background:#4e6ef2 !important;border-color:#4e6ef2 !important;color:#fff !important;}',
+                                    '#page .page-inner strong,#page [class*="page-inner_"] strong{background:#4e6ef2 !important;border-color:#4e6ef2 !important;color:#fff !important;}',
+                                    '#page .page-inner .fk i,#page [class*="page-inner_"] .fk i{color:#4e6ef2 !important;}',
+                                    '#page .page-inner a:hover .fk i,#page [class*="page-inner_"] a:hover .fk i{color:#fff !important;}',
+                                    `body.${BAIDU_DARK_BODY_CLASS} #page,body.${BAIDU_DARK_BODY_CLASS} #page .page-inner,body.${BAIDU_DARK_BODY_CLASS} #page [class*="page-inner_"]{background:transparent !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} #page .page-inner .fk i,body.${BAIDU_DARK_BODY_CLASS} #page [class*="page-inner_"] .fk i{color:#e8e3e3 !important;}`,
+                                    `body.${BAIDU_DARK_BODY_CLASS} #page .page-inner a:hover .fk i,body.${BAIDU_DARK_BODY_CLASS} #page [class*="page-inner_"] a:hover .fk i{color:#fff !important;}`,
+                                    '#page{width:100% !important;max-width:1200px !important;margin:20px auto !important;padding:0 20px !important;display:block !important;box-sizing:border-box !important;float:none !important;left:auto !important;right:auto !important;transform:none !important;}',
+                                    '#page .page-inner,#page [class*="page-inner_"]{display:flex !important;align-items:center !important;justify-content:center !important;flex-wrap:wrap !important;gap:8px !important;width:100% !important;margin:0 auto !important;padding-left:0 !important;padding-right:0 !important;box-sizing:border-box !important;float:none !important;left:auto !important;right:auto !important;transform:none !important;}',
+                                    '#page .page-inner a,#page .page-inner strong,#page .page-inner span,#page [class*="page-inner_"] a,#page [class*="page-inner_"] strong,#page [class*="page-inner_"] span{display:inline-flex !important;align-items:center !important;justify-content:center !important;vertical-align:middle !important;margin:0 !important;text-align:center !important;}',
+                                    '#page .page-inner .fk,#page [class*="page-inner_"] .fk,body.single-column #page .page-inner .fk,body.double-column #page .page-inner .fk,body.single-column #page [class*="page-inner_"] .fk,body.double-column #page [class*="page-inner_"] .fk{display:none !important;}',
+                                    '#page .page-inner .pc,#page [class*="page-inner_"] .pc{display:inline-flex !important;align-items:center !important;justify-content:center !important;line-height:1 !important;min-width:1.4em !important;height:32px !important;margin:0 !important;padding:0 !important;position:static !important;left:auto !important;right:auto !important;transform:none !important;text-indent:0 !important;letter-spacing:normal !important;}',
+                                    '#page .page-inner .fk i,#page [class*="page-inner_"] .fk i{line-height:1 !important;display:block !important;}',
                                 ].join('\n')
                             );
                         }
@@ -12356,6 +13145,8 @@
                                 'body.double-column div[class*="site-img"],body.double-column div[class*="site-img"] *{width:16px !important;height:16px !important;max-width:16px !important;min-width:16px !important;flex:0 0 16px !important;box-sizing:border-box !important;}',
                                 'body.double-column div[class*="site-img"]{margin-right:6px !important;overflow:hidden !important;display:flex !important;align-items:center !important;}',
                                 'body.double-column div[class*="site-img"] img{object-fit:contain !important;display:block !important;border:none !important;}',
+                                'body.double-column #content_left [tpl="ai_index"] div[class*="site-img"] img:not(:first-child),body.double-column #content_left [tpl="ai_index"] div[class*="site-img"] svg:not(:first-child),body.double-column #content_left [tpl="wenda_generate"] div[class*="site-img"] img:not(:first-child),body.double-column #content_left [tpl="wenda_generate"] div[class*="site-img"] svg:not(:first-child),body.double-column #content_left [tpl="ai_ask"] div[class*="site-img"] img:not(:first-child),body.double-column #content_left [tpl="ai_ask"] div[class*="site-img"] svg:not(:first-child){display:none !important;}',
+                                'body.double-column #content_left [tpl="ai_index"] div[class*="site-img"]::before,body.double-column #content_left [tpl="ai_index"] div[class*="site-img"]::after,body.double-column #content_left [tpl="wenda_generate"] div[class*="site-img"]::before,body.double-column #content_left [tpl="wenda_generate"] div[class*="site-img"]::after,body.double-column #content_left [tpl="ai_ask"] div[class*="site-img"]::before,body.double-column #content_left [tpl="ai_ask"] div[class*="site-img"]::after{display:none !important;}',
                                 'body.double-column .c-showurl .c-img-s,body.double-column .c-showurl .c-img-s *{width:16px !important;height:16px !important;max-width:16px !important;min-width:16px !important;overflow:hidden !important;}',
                                 'body.double-column a[class*="siteLink"]{display:flex !important;align-items:center !important;text-decoration:none !important;}'
                             ].join('\n')
@@ -12415,14 +13206,18 @@
                         `body.${BAIDU_HIDE_AI_BODY_CLASS} div[tpl="new_baikan_index"], body.${BAIDU_HIDE_AI_BODY_CLASS} [tpl="wenda_generate"], body.${BAIDU_HIDE_AI_BODY_CLASS} .ai-entry.cos-space-mb-xs, body.${BAIDU_HIDE_AI_BODY_CLASS} .result-op.c-container.new-pmd[tpl="ai_index"], body.${BAIDU_HIDE_AI_BODY_CLASS} .result-op[tpl="ai_index"], body.${BAIDU_HIDE_AI_BODY_CLASS} .result-op[tpl="wenda_generate"], body.${BAIDU_HIDE_AI_BODY_CLASS} div[m-name^="mirror-san/app/wenda_generate"], body.${BAIDU_HIDE_AI_BODY_CLASS} div[tpl="ai_ask"]{display:none !important;}`,
                         '#page + #help,#page ~ #help{display:none !important;}',
                         '#rs_new,[tpl="app/rs"],div[tpl="app/rs"],div[m-name^="molecules/app/rs/"]{display:none !important;}',
-                        `#${BAIDU_FLOAT_ROOT_ID}{position:fixed;right:20px;bottom:24px;z-index:2147483647;display:flex;flex-direction:column;align-items:flex-end;gap:8px;font-family:-apple-system,BlinkMacSystemFont,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;}`,
+                        `#${BAIDU_FLOAT_ROOT_ID}{position:fixed;right:20px;bottom:24px;z-index:2147483647;width:44px;height:44px;font-family:-apple-system,BlinkMacSystemFont,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;transition:transform .18s ease,opacity .18s ease;will-change:transform,opacity;}`,
+                        `#${BAIDU_FLOAT_ROOT_ID}.ntp-dock-left #${BAIDU_FLOAT_PANEL_ID}{left:0;right:auto;transform-origin:bottom left;}`,
+                        `#${BAIDU_FLOAT_ROOT_ID}.ntp-hide-edge.ntp-hidden.ntp-dock-left{transform:translateX(-26px);}`,
+                        `#${BAIDU_FLOAT_ROOT_ID}.ntp-hide-edge.ntp-hidden.ntp-dock-right{transform:translateX(26px);}`,
+                        `#${BAIDU_FLOAT_ROOT_ID}.ntp-hide-fade.ntp-hidden{opacity:.28;}`,
                         `#${BAIDU_FLOAT_BTN_ID}{position:relative;width:44px;height:44px;border-radius:999px;border:none;background:linear-gradient(135deg,#ff4d8d 0%,#ff7ac8 100%);display:flex;align-items:center;justify-content:center;color:#f9fafb;cursor:pointer;box-shadow:0 4px 12px rgba(255,77,141,.38);backdrop-filter:blur(10px);padding:0;overflow:hidden;transition:transform .25s cubic-bezier(.25,.8,.25,1),box-shadow .25s cubic-bezier(.25,.8,.25,1);}`,
                         `#${BAIDU_FLOAT_BTN_ID}::before{content:"";position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.35) 0,transparent 55%);opacity:0;transition:opacity .25s ease;}`,
                         `#${BAIDU_FLOAT_BTN_ID} svg{width:20px;height:20px;fill:currentColor;filter:drop-shadow(0 1px 2px rgba(15,23,42,.5));}`,
                         `#${BAIDU_FLOAT_BTN_ID}:hover{transform:scale(1.07) rotate(5deg);box-shadow:0 8px 20px rgba(255,77,141,.65);}`,
                         `#${BAIDU_FLOAT_BTN_ID}:hover::before{opacity:1;}`,
                         `#${BAIDU_FLOAT_BTN_ID}:active{transform:scale(.98);box-shadow:0 4px 12px rgba(255,77,141,.55);}`,
-                        `#${BAIDU_FLOAT_PANEL_ID}{min-width:200px;border-radius:16px;border:1px solid rgba(255,110,175,.35);background:linear-gradient(180deg,rgba(255,244,248,.94),rgba(255,236,246,.96));box-shadow:0 18px 45px rgba(255,110,175,.25);padding:12px 14px;box-sizing:border-box;opacity:0;transform:translateY(10px) scale(.98);transform-origin:bottom right;transition:opacity .2s ease,transform .2s cubic-bezier(0.68,-0.55,0.265,1.55);pointer-events:none;color:#3d3d3d;backdrop-filter:blur(12px);}`,
+                        `#${BAIDU_FLOAT_PANEL_ID}{position:absolute;right:0;bottom:52px;min-width:200px;border-radius:16px;border:1px solid rgba(255,110,175,.35);background:linear-gradient(180deg,rgba(255,244,248,.94),rgba(255,236,246,.96));box-shadow:0 18px 45px rgba(255,110,175,.25);padding:12px 14px;box-sizing:border-box;opacity:0;transform:translateY(10px) scale(.98);transform-origin:bottom right;transition:opacity .2s ease,transform .2s cubic-bezier(0.68,-0.55,0.265,1.55);pointer-events:none;color:#3d3d3d;backdrop-filter:blur(12px);}`,
                         `#${BAIDU_FLOAT_ROOT_ID}.ntp-open #${BAIDU_FLOAT_PANEL_ID}{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}`,
                         `.ntp-baidu-item{display:flex;align-items:center;justify-content:space-between;padding:4px 2px;}`,
                         `.ntp-baidu-label{display:flex;align-items:center;font-size:13px;gap:6px;color:#3d3d3d;}`,
@@ -12432,15 +13227,28 @@
                         `.ntp-baidu-toggle.ntp-on{background:linear-gradient(135deg,#ff4d8d 0%,#ff7ac8 100%);border-color:rgba(255,110,175,1);box-shadow:inset 0 1px 3px rgba(15,23,42,.35),0 0 0 1px rgba(255,110,175,.45);}`,
                         `.ntp-baidu-toggle.ntp-on::after{transform:translateX(16px);box-shadow:0 2px 6px rgba(15,23,42,.4);}`,
                         `.ntp-baidu-separator{height:1px;margin:6px 0;background:linear-gradient(to right,transparent,rgba(255,110,175,.45),transparent);}`,
+                        `#content_left div[class*="_content-border_"]{border:0 !important;box-shadow:none !important;outline:0 !important;}`,
+                        `#content_left div[class*="_border-layer_"]{display:none !important;}`,
+                        `#content_left .cosc-card-content-border{border:0 !important;box-shadow:none !important;background:transparent !important;}`,
+                        `#content_left .ntp-baidu-hanyu-card div[class*="_content-border_"],#content_left .ntp-baidu-hanyu-card .cu-border{border:0 !important;box-shadow:none !important;outline:0 !important;}`,
+                        `#content_left .ntp-baidu-hanyu-card div[class*="_border-layer_"]{display:none !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-hanyu-card{border:0 !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-hanyu-card .sc-cover-card,body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-hanyu-card .sc-cover-card *{color:#e8e6e3 !important;text-shadow:none !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-hanyu-card a,body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-hanyu-card .-v-color-primary{color:#8ab4f8 !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-hanyu-card svg,body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-hanyu-card svg *{fill:currentColor !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-hanyu-card [class*="_horizontal-gradient_"],body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-hanyu-card [class*="_radial-gradient-"]{opacity:.55 !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS}{background-color:#1a1a1a !important;color:#e8e6e3 !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} #head{background:#252525 !important;border-bottom:1px solid #333 !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} #wrapper_wrapper,body.${BAIDU_DARK_BODY_CLASS} #container{background:transparent !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} .gm-search-input{background:#333 !important;border-color:#555 !important;color:#e8e6e3 !important;}`,
-                        `body.${BAIDU_DARK_BODY_CLASS} .c-container,body.${BAIDU_DARK_BODY_CLASS} .result-op,body.${BAIDU_DARK_BODY_CLASS} .result[tpl="soft"],body.${BAIDU_DARK_BODY_CLASS} div[class*="_aladdin"]{background-color:#252525 !important;border:1px solid #333 !important;border-radius:8px !important;padding:15px !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left .c-container,body.${BAIDU_DARK_BODY_CLASS} #content_left .result-op,body.${BAIDU_DARK_BODY_CLASS} #content_left .result,body.${BAIDU_DARK_BODY_CLASS} #content_left div[class*="_aladdin"]{background-color:#252525 !important;border:0 !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-cos-card{background-color:#252525 !important;border:0 !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-cos-card .cos-row,body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-cos-card .cos-card,body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-cos-card .cos-tabs-header,body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-cos-card .cos-image-background,body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-cos-card .cos-image-body{background:none !important;background-color:transparent !important;background-image:none !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-cos-card .cos-col,body.${BAIDU_DARK_BODY_CLASS} #content_left .ntp-baidu-cos-card [class*="cos-col-"]{background:none !important;background-color:transparent !important;background-image:none !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} .c-container > .t.c-title,body.${BAIDU_DARK_BODY_CLASS} .tags_2yHYj,body.${BAIDU_DARK_BODY_CLASS} .cos-tabs.cos-tabs-bar .cos-tabs-header,body.${BAIDU_DARK_BODY_CLASS} .tag-container_ksKXH,body.${BAIDU_DARK_BODY_CLASS} .wrapper_l .tag-wrapper_1sGop{background-color:transparent !important;}`,
-                        `body.${BAIDU_DARK_BODY_CLASS} #content_left a,body.${BAIDU_DARK_BODY_CLASS} #content_left h3[class*="title"],body.${BAIDU_DARK_BODY_CLASS} #content_left h3[class*="title"] *,body.${BAIDU_DARK_BODY_CLASS} #content_left .op-soft-title,body.${BAIDU_DARK_BODY_CLASS} #content_left .op-soft-title *,body.${BAIDU_DARK_BODY_CLASS} .tag-container_ksKXH a,body.${BAIDU_DARK_BODY_CLASS} .wrapper_l .tag-wrapper_1sGop a{color:#8ab4f8 !important;text-decoration:none !important;background-color:transparent !important;text-shadow:0 0 2px rgba(0,0,0,0.5) !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left a,body.${BAIDU_DARK_BODY_CLASS} #content_left h3[class*="title"],body.${BAIDU_DARK_BODY_CLASS} #content_left h3[class*="title"] *,body.${BAIDU_DARK_BODY_CLASS} #content_left .op-soft-title,body.${BAIDU_DARK_BODY_CLASS} #content_left .op-soft-title *,body.${BAIDU_DARK_BODY_CLASS} .tag-container_ksKXH a,body.${BAIDU_DARK_BODY_CLASS} .wrapper_l .tag-wrapper_1sGop a{color:#8ab4f8 !important;text-decoration:none !important;background-color:transparent !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} #content_left a:hover{text-decoration:underline !important;}`,
-                        `body.${BAIDU_DARK_BODY_CLASS} .c-abstract,body.${BAIDU_DARK_BODY_CLASS} .c-abstract *,body.${BAIDU_DARK_BODY_CLASS} .c-span-last,body.${BAIDU_DARK_BODY_CLASS} .summary-text_560AW,body.${BAIDU_DARK_BODY_CLASS} .summary-text_560AW *,body.${BAIDU_DARK_BODY_CLASS} #content_left em,body.${BAIDU_DARK_BODY_CLASS} .new-pmd .c-color-text,body.${BAIDU_DARK_BODY_CLASS} .cu-color-text,body.${BAIDU_DARK_BODY_CLASS} .content-summary_2vT1Z .summary_7f0uR,body.${BAIDU_DARK_BODY_CLASS} .cos-text-body,body.${BAIDU_DARK_BODY_CLASS} .orientation-title-wrapper_YgpKw .orientation-title_50ct8,body.${BAIDU_DARK_BODY_CLASS} .pc_5KjyO .text_4wMIj,body.${BAIDU_DARK_BODY_CLASS} .pc_ZVQ8P .title_6sD3p,body.${BAIDU_DARK_BODY_CLASS} ._group-title_klgk1_34{color:#e8e6e3 !important;text-shadow:0 0 2px rgba(0,0,0,0.5) !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} .c-abstract,body.${BAIDU_DARK_BODY_CLASS} .c-abstract *,body.${BAIDU_DARK_BODY_CLASS} .c-span-last,body.${BAIDU_DARK_BODY_CLASS} .summary-text_560AW,body.${BAIDU_DARK_BODY_CLASS} .summary-text_560AW *,body.${BAIDU_DARK_BODY_CLASS} #content_left em,body.${BAIDU_DARK_BODY_CLASS} .new-pmd .c-color-text,body.${BAIDU_DARK_BODY_CLASS} .cu-color-text,body.${BAIDU_DARK_BODY_CLASS} .content-summary_2vT1Z .summary_7f0uR,body.${BAIDU_DARK_BODY_CLASS} .cos-text-body,body.${BAIDU_DARK_BODY_CLASS} .orientation-title-wrapper_YgpKw .orientation-title_50ct8,body.${BAIDU_DARK_BODY_CLASS} .pc_5KjyO .text_4wMIj,body.${BAIDU_DARK_BODY_CLASS} .pc_ZVQ8P .title_6sD3p,body.${BAIDU_DARK_BODY_CLASS} ._group-title_klgk1_34{color:#e8e6e3 !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} div[tpl="yl_ps_main"] .abstracts-normal-color_3gipx,body.${BAIDU_DARK_BODY_CLASS} div[tpl="yl_ps_main"] .abstracts-normal-color_DxxCb,body.${BAIDU_DARK_BODY_CLASS} div[tpl="yl_ps_main"] .sub-title_5pGrK span,body.${BAIDU_DARK_BODY_CLASS} div[tpl="yl_ps_main"] .attribute-item_3r4Kz span,body.${BAIDU_DARK_BODY_CLASS} div[m-name*="yl_ps_main"] .abstracts-normal-color_3gipx,body.${BAIDU_DARK_BODY_CLASS} div[m-name*="yl_ps_main"] .abstracts-normal-color_DxxCb,body.${BAIDU_DARK_BODY_CLASS} div[m-name*="yl_ps_main"] .sub-title_5pGrK span,body.${BAIDU_DARK_BODY_CLASS} div[m-name*="yl_ps_main"] .attribute-item_3r4Kz span{color:#e8e6e3 !important;text-shadow:none !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} div[tpl="yl_ps_main"] .sc-paragraph,body.${BAIDU_DARK_BODY_CLASS} div[tpl="yl_ps_main"] .sc-paragraph *,body.${BAIDU_DARK_BODY_CLASS} div[tpl="yl_ps_main"] .cu-color-text,body.${BAIDU_DARK_BODY_CLASS} div[tpl="yl_ps_main"] .cu-color-text *,body.${BAIDU_DARK_BODY_CLASS} div[m-name*="yl_ps_main"] .sc-paragraph,body.${BAIDU_DARK_BODY_CLASS} div[m-name*="yl_ps_main"] .sc-paragraph *,body.${BAIDU_DARK_BODY_CLASS} div[m-name*="yl_ps_main"] .cu-color-text,body.${BAIDU_DARK_BODY_CLASS} div[m-name*="yl_ps_main"] .cu-color-text *{color:#e8e6e3 !important;text-shadow:none !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} div[tpl="yl_ps_main"] .text_6Caen,body.${BAIDU_DARK_BODY_CLASS} div[tpl="yl_ps_main"] .text_6Caen *,body.${BAIDU_DARK_BODY_CLASS} div[m-name*="yl_ps_main"] .text_6Caen,body.${BAIDU_DARK_BODY_CLASS} div[m-name*="yl_ps_main"] .text_6Caen *{color:#e8e6e3 !important;text-shadow:none !important;}`,
@@ -12450,9 +13258,13 @@
                         `body.${BAIDU_DARK_BODY_CLASS} .yl-vd-basis_3H7DH .episode-btn_7KChm{background:#3c4043 !important;color:#e8e6e3 !important;border:1px solid #5f6368 !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} .yl-vd-basis_3H7DH .episode-btn_7KChm:hover{background:#4d5154 !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} .c-group-wrapper .sc-paragraph,body.${BAIDU_DARK_BODY_CLASS} .c-group-wrapper .sc-paragraph *,body.${BAIDU_DARK_BODY_CLASS} div[tpl*="baike"] .sc-paragraph,body.${BAIDU_DARK_BODY_CLASS} div[tpl*="baike"] .sc-paragraph *,body.${BAIDU_DARK_BODY_CLASS} .c-group-wrapper .cu-color-text,body.${BAIDU_DARK_BODY_CLASS} div[tpl*="baike"] .cu-color-text{color:#f3f4f6 !important;text-shadow:none !important;}`,
-                        `body.${BAIDU_DARK_BODY_CLASS} #content_left em{font-style:italic !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left em{font-style:normal !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} .op-soft-info-text,body.${BAIDU_DARK_BODY_CLASS} .c-showurl,body.${BAIDU_DARK_BODY_CLASS} .c-showurl *,body.${BAIDU_DARK_BODY_CLASS} .cosc-source-text,body.${BAIDU_DARK_BODY_CLASS} .cos-color-text-minor,body.${BAIDU_DARK_BODY_CLASS} .op_translation_usertip,body.${BAIDU_DARK_BODY_CLASS} .fy-dictwisenew-tip_79GW0,body.${BAIDU_DARK_BODY_CLASS} .cos-color-text-tiny,body.${BAIDU_DARK_BODY_CLASS} .stockStateContainer_bpzBK,body.${BAIDU_DARK_BODY_CLASS} .phrase-text_1u3Zc,body.${BAIDU_DARK_BODY_CLASS} .fy-dictwisenew-tip_1tVMp,body.${BAIDU_DARK_BODY_CLASS} .cos-item-desc_7mnJc{color:#999 !important;text-shadow:none !important;}`,
-                        `body.${BAIDU_DARK_BODY_CLASS} div[class*="stock-container"] *{color:#e8e6e3 !important;background:none !important;background-color:transparent !important;text-shadow:0 0 2px rgba(0,0,0,0.5) !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left .cosc-card-content-border{border:0 !important;box-shadow:none !important;background:transparent !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left div[tpl="jr_stock_pc"] svg text{fill:#cbd5e1 !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left div[tpl="jr_stock_pc"] .cos-tabs-header,body.${BAIDU_DARK_BODY_CLASS} #content_left div[tpl="jr_stock_pc"] .cos-tab{background:transparent !important;color:#e8e6e3 !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left div[tpl="jr_stock_pc"] .cos-tab.cos-tab-active{color:#8ab4f8 !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left div[tpl="jr_stock_pc"] .cos-icon{filter:invert(1) hue-rotate(180deg) brightness(1.2) contrast(1.05) !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} a{color:#8ab4f8 !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} a:visited{color:#a5b4fc !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} div[tpl="new_baikan_index"],body.${BAIDU_DARK_BODY_CLASS} [tpl="wenda_generate"],body.${BAIDU_DARK_BODY_CLASS} .ai-entry.cos-space-mb-xs,body.${BAIDU_DARK_BODY_CLASS} .result-op.c-container.new-pmd[tpl="ai_index"],body.${BAIDU_DARK_BODY_CLASS} .result-op[tpl="ai_index"],body.${BAIDU_DARK_BODY_CLASS} .result-op[tpl="wenda_generate"],body.${BAIDU_DARK_BODY_CLASS} div[m-name^="mirror-san/app/wenda_generate"],body.${BAIDU_DARK_BODY_CLASS} div[tpl="ai_ask"]{background-color:#252525 !important;color:#e8e6e3 !important;}`,
@@ -12468,9 +13280,12 @@
                         `body.${BAIDU_DARK_BODY_CLASS} #s_tab .s-tab-item.current{border-bottom-color:#4e6ef2 !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} #page a,body.${BAIDU_DARK_BODY_CLASS} #page strong{background-color:#333 !important;border:1px solid #555 !important;color:#e8e3e3 !important;text-shadow:none !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} #page strong,body.${BAIDU_DARK_BODY_CLASS} #page a.n:hover{background-color:#4e6ef2 !important;color:#fff !important;border-color:#4e6ef2 !important;}`,
-                        `body.${BAIDU_DARK_BODY_CLASS} .text-con_6ko8Y *,body.${BAIDU_DARK_BODY_CLASS} .common-content_6I4X7,body.${BAIDU_DARK_BODY_CLASS} .common-content_6I4X7 *,body.${BAIDU_DARK_BODY_CLASS} .common-text_4MwRe,body.${BAIDU_DARK_BODY_CLASS} .bg_75N1H,body.${BAIDU_DARK_BODY_CLASS} .marklang-paragraph,body.${BAIDU_DARK_BODY_CLASS} .item-text_1uePL,body.${BAIDU_DARK_BODY_CLASS} .detail-text_6bA6P,body.${BAIDU_DARK_BODY_CLASS} .item-num_13Q8D,body.${BAIDU_DARK_BODY_CLASS} .scroll-box_2RZdL .week-box_5twsY .week-item_4zjYh .value_1wQkq,body.${BAIDU_DARK_BODY_CLASS} .pc-sub-title_eKXM1{color:#e8e6e3 !important;text-shadow:0 0 2px rgba(0,0,0,0.5) !important;}`,
-                        `body.${BAIDU_DARK_BODY_CLASS} .words-text_5Ps7D,body.${BAIDU_DARK_BODY_CLASS} .words-text_5Ps7D span,body.${BAIDU_DARK_BODY_CLASS} .cos-search-link-text,body.${BAIDU_DARK_BODY_CLASS} .cos-icon-research,body.${BAIDU_DARK_BODY_CLASS} .cos-more-link-text,body.${BAIDU_DARK_BODY_CLASS} .cos-tabs-header .cos-tab,body.${BAIDU_DARK_BODY_CLASS} .detail-underline_7dWH2,body.${BAIDU_DARK_BODY_CLASS} .detail-icon_3mni6 i{color:#8ab4f8 !important;text-shadow:0 0 2px rgba(0,0,0,0.5) !important;}`,
-                        `body.${BAIDU_DARK_BODY_CLASS} .common-text_2R17p.cos-font-medium,body.${BAIDU_DARK_BODY_CLASS} object.cos-line-clamp-2 .mean-text_4MwRe{color:#e8e6e3 !important;text-shadow:0 0 2px rgba(0,0,0,0.5) !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #page a.n img{filter:invert(1) brightness(1.2) contrast(1.05) !important;opacity:1 !important;visibility:visible !important;mix-blend-mode:normal !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left .result .border,body.${BAIDU_DARK_BODY_CLASS} #content_left .c-container .border,body.${BAIDU_DARK_BODY_CLASS} #content_left .result-op .border{display:none !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left div[class*="_content-border_"]{border:0 !important;box-shadow:none !important;outline:0 !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} .text-con_6ko8Y *,body.${BAIDU_DARK_BODY_CLASS} .common-content_6I4X7,body.${BAIDU_DARK_BODY_CLASS} .common-content_6I4X7 *,body.${BAIDU_DARK_BODY_CLASS} .common-text_4MwRe,body.${BAIDU_DARK_BODY_CLASS} .bg_75N1H,body.${BAIDU_DARK_BODY_CLASS} .marklang-paragraph,body.${BAIDU_DARK_BODY_CLASS} .item-text_1uePL,body.${BAIDU_DARK_BODY_CLASS} .detail-text_6bA6P,body.${BAIDU_DARK_BODY_CLASS} .item-num_13Q8D,body.${BAIDU_DARK_BODY_CLASS} .scroll-box_2RZdL .week-box_5twsY .week-item_4zjYh .value_1wQkq,body.${BAIDU_DARK_BODY_CLASS} .pc-sub-title_eKXM1{color:#e8e6e3 !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} .words-text_5Ps7D,body.${BAIDU_DARK_BODY_CLASS} .words-text_5Ps7D span,body.${BAIDU_DARK_BODY_CLASS} .cos-search-link-text,body.${BAIDU_DARK_BODY_CLASS} .cos-icon-research,body.${BAIDU_DARK_BODY_CLASS} .cos-more-link-text,body.${BAIDU_DARK_BODY_CLASS} .cos-tabs-header .cos-tab,body.${BAIDU_DARK_BODY_CLASS} .detail-underline_7dWH2,body.${BAIDU_DARK_BODY_CLASS} .detail-icon_3mni6 i{color:#8ab4f8 !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} .common-text_2R17p.cos-font-medium,body.${BAIDU_DARK_BODY_CLASS} object.cos-line-clamp-2 .mean-text_4MwRe{color:#e8e6e3 !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} .marklang,body.${BAIDU_DARK_BODY_CLASS} .marklang *{color:#e8e6e3 !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} .marklang a{color:#8ab4f8 !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} .marklang code{background:rgba(255,255,255,0.08) !important;color:#e8e6e3 !important;border-radius:4px !important;padding:0 4px !important;}`,
@@ -12481,7 +13296,7 @@
                         `body.${BAIDU_DARK_BODY_CLASS} #content_left .pc-slink-button_5bqOU .cos-link-button,body.${BAIDU_DARK_BODY_CLASS} #content_left .cos-link-button[data-module="gp-peopleintro-tab"]{color:#e8e6e3 !important;background-color:#3c4043 !important;border:1px solid #5f6368 !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} #content_left .pc-slink-button_5bqOU .cos-link-button:hover,body.${BAIDU_DARK_BODY_CLASS} #content_left .cos-link-button[data-module="gp-peopleintro-tab"]:hover{background-color:#4d5154 !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} #content_left .pc-slink-button_5bqOU .cos-link-button .button-content_6Pdeu,body.${BAIDU_DARK_BODY_CLASS} #content_left .cos-link-button[data-module="gp-peopleintro-tab"] .button-content_6Pdeu{color:#e8e6e3 !important;}`,
-                        `body.${BAIDU_DARK_BODY_CLASS} #content_left .result-op[tpl="search_topic_video"] .content_3LO1E,body.${BAIDU_DARK_BODY_CLASS} #content_left .result-op[tpl="search_topic_video"] .content_3LO1E *{color:#e8e6e3 !important;text-shadow:0 0 2px rgba(0,0,0,0.5) !important;}`,
+                        `body.${BAIDU_DARK_BODY_CLASS} #content_left .result-op[tpl="search_topic_video"] .content_3LO1E,body.${BAIDU_DARK_BODY_CLASS} #content_left .result-op[tpl="search_topic_video"] .content_3LO1E *{color:#e8e6e3 !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} #content_left .result-op[tpl="search_topic_video"] .footer_1R38X,body.${BAIDU_DARK_BODY_CLASS} #content_left .result-op[tpl="search_topic_video"] .footer_1R38X *,body.${BAIDU_DARK_BODY_CLASS} #content_left .result-op[tpl="search_topic_video"] .interact__skny,body.${BAIDU_DARK_BODY_CLASS} #content_left .result-op[tpl="search_topic_video"] .interact__skny *{color:#cbd5e1 !important;text-shadow:none !important;}`,
                         `body.${BAIDU_DARK_BODY_CLASS} #content_left .result-op[tpl="search_topic_video"] .icon_2g_xA{color:#cbd5e1 !important;opacity:1 !important;filter:drop-shadow(0 0 1px rgba(0,0,0,0.6)) !important;}`,
                     ].join('\n')
@@ -12503,9 +13318,6 @@
                             } catch (e1) {}
                         }, 800);
                     } catch (e2) {}
-                    try {
-                        if (localStorage.getItem('placeholderData')) localStorage.removeItem('placeholderData');
-                    } catch (e) {}
                     baiduSearchEnhanceStop = () => {
                         removeElementById(styleId);
                         applyBaiduHideAiRuntime(false);
@@ -16826,7 +17638,10 @@
                         let tipMsg = '';
                         if (overlayBecameVisible) tipMsg = '调试：悬浮窗已开启';
                         else if (goTBInjected || goTBBecameVisible) tipMsg = '置顶/置底：按钮已显示';
-                        else if (runtimeBecameActive) tipMsg = '新标签页Pro：新标签页打开已生效';
+                        else if (runtimeBecameActive) {
+                            const bypassNewTabOpen = matchUrlList(location.href, settings.newTabExcludeUrls);
+                            tipMsg = bypassNewTabOpen ? '新标签页Pro：已启用（本页不强制新标签打开）' : '新标签页Pro：新标签页打开已生效';
+                        }
                         scheduleGenericActiveTip(tipMsg);
                     }
                 }
@@ -16835,12 +17650,23 @@
             function activateRuntime() {
                 applyDebugOverlay();
                 debugLog('activate', { url: location.href });
-                startClickInterceptor();
-                ensureBaseTargetBlank();
-                scheduleApplyAllTargets(settings);
+                const bypassNewTabOpen = matchUrlList(location.href, settings.newTabExcludeUrls);
+                const forceSelfOnBypass = bypassNewTabOpen && Boolean(settings.newTabExcludeForceSelf);
+                if (bypassNewTabOpen && !forceSelfOnBypass) {
+                    stopScheduledApplyAllTargets();
+                    stopObserver();
+                    stopClickInterceptor();
+                    removeBaseTargetBlank();
+                    restoreAllManagedTargets();
+                } else {
+                    stopClickInterceptor();
+                    removeBaseTargetBlank();
+                    scheduleApplyAllTargets(settings);
+                    if (settings.enableObserver) startObserver();
+                    else stopObserver();
+                    if (!forceSelfOnBypass) ensureBaseTargetBlank();
+                }
                 if (settings.enableDiscuz) targetDiscuz();
-                if (settings.enableObserver) startObserver();
-                else stopObserver();
                 if (settings.enableTextLinkify && shouldEnableTextLinkifyForPage(settings)) startTextLinkify();
                 else stopTextLinkify();
                 ensureShortLinkCacheCleanup();
@@ -16948,6 +17774,7 @@
 
             function resolveApplyAllTargetsSig(currentSettings) {
                 const s = currentSettings || settings;
+                const bypassNewTabOpen = matchUrlList(location.href, s.newTabExcludeUrls);
                 return [
                     location.href,
                     s.keepOnclickSelf ? 1 : 0,
@@ -16956,6 +17783,7 @@
                     s.keepEmptyHrefSelf ? 1 : 0,
                     s.keepFormSelf ? 1 : 0,
                     s.onlyExternalNewTab ? 1 : 0,
+                    bypassNewTabOpen && s.newTabExcludeForceSelf ? 1 : 0,
                     s.smartRedirectEnabled ? 1 : 0,
                     s.smartRedirectCleanLink ? 1 : 0,
                     s.visitedLinkColorEnabled ? 1 : 0,
@@ -17031,6 +17859,11 @@
                 if (currentSettings.keepEmptyHrefSelf && !hasHrefAttr) return true;
                 if (currentSettings.keepHashSelf && hasHrefAttr && hrefRaw.startsWith('#')) return true;
 
+                if (currentSettings.newTabExcludeForceSelf && currentSettings.newTabExcludeUrls) {
+                    const abs = String(anchor.href || '').trim();
+                    if (abs && matchUrlList(abs, currentSettings.newTabExcludeUrls)) return true;
+                }
+
                 if (currentSettings.keepOnclickSelf) {
                     const onclickAttr = anchor.getAttribute('onclick');
                     if (onclickAttr && /(return\s+false|preventDefault\s*\()/i.test(String(onclickAttr))) return true;
@@ -17103,6 +17936,12 @@
 
             function applyAnchorRules(anchor, currentSettings, pageHost) {
                 if (!anchor || anchor.tagName !== 'A') return;
+
+                if (currentSettings.newTabExcludeForceSelf && matchUrlList(location.href, currentSettings.newTabExcludeUrls)) {
+                    setManagedTarget(anchor, '_self');
+                    syncVisitedAttrForAnchor(anchor, currentSettings, pageHost, null);
+                    return;
+                }
 
                 if (shouldKeepSelfForAnchor(anchor, currentSettings, pageHost)) {
                     setManagedTarget(anchor, '_self');
@@ -18444,6 +19283,115 @@
                 }
                 HostListResultCache.set(key, ok);
                 return ok;
+            }
+
+            function matchUrlList(url, raw) {
+                const u = String(url || '');
+                const ul = u.toLowerCase();
+                if (!ul) return false;
+                const rawKey = String(raw || '').trim();
+                const key = `${ul}__${rawKey}`;
+                const cached = UrlListResultCache.get(key);
+                if (typeof cached === 'boolean') return cached;
+                const compiled = (() => {
+                    const k = rawKey;
+                    const hit = UrlListCompileCache.get(k);
+                    if (hit) return hit;
+                    const tokens = k
+                        .split(/[\r\n,，]+/g)
+                        .map((s) => s.trim())
+                        .filter(Boolean);
+                    if (!tokens.length) {
+                        const r = { plains: [], regexes: [] };
+                        UrlListCompileCache.set(k, r);
+                        return r;
+                    }
+                    const plains = [];
+                    const regexes = [];
+                    for (let i = 0; i < tokens.length; i++) {
+                        const t = tokens[i];
+                        if (!t) continue;
+                        if (t[0] === '/' && t.lastIndexOf('/') > 0) {
+                            const last = t.lastIndexOf('/');
+                            const body = t.slice(1, last);
+                            const flags = t.slice(last + 1) || 'i';
+                            try {
+                                regexes.push(new RegExp(body, flags));
+                            } catch (e) {}
+                            continue;
+                        }
+                        plains.push(t.toLowerCase());
+                    }
+                    const r = { plains, regexes };
+                    UrlListCompileCache.set(k, r);
+                    return r;
+                })();
+                let ok = false;
+                for (let i = 0; i < compiled.plains.length; i++) {
+                    const p = compiled.plains[i];
+                    if (p && ul.includes(p)) {
+                        ok = true;
+                        break;
+                    }
+                }
+                if (!ok) {
+                    for (let i = 0; i < compiled.regexes.length; i++) {
+                        const r = compiled.regexes[i];
+                        try {
+                            if (r.test(u)) {
+                                ok = true;
+                                break;
+                            }
+                        } catch (e) {}
+                    }
+                }
+                UrlListResultCache.set(key, ok);
+                return ok;
+            }
+
+            function parseUrlListTokens(raw) {
+                return String(raw || '')
+                    .split(/[\r\n,，]+/g)
+                    .map((s) => String(s || '').trim())
+                    .filter(Boolean);
+            }
+
+            function getSuggestedNewTabExcludeForLocation(loc) {
+                const host = String((loc && loc.hostname) || '').trim().toLowerCase();
+                if (!host) return { token: '', label: '' };
+                const pathname = String((loc && loc.pathname) || '');
+                if (host === 'greasyfork.org' || host.endsWith('.greasyfork.org')) {
+                    const hostEsc = escapeRegExpGlobal(host);
+                    if (/\/scripts(\/|$)/i.test(pathname)) {
+                        const token = `/${hostEsc}\\/[^#]*\\/scripts\\/[^#]*\\/(feedback|discussions)(?:\\/|\\?|#|$)/i`;
+                        const label = `${host}/scripts/*/(feedback|discussions)`;
+                        return { token, label };
+                    }
+                }
+                const segs = pathname
+                    .split('/')
+                    .map((s) => String(s || '').trim().toLowerCase())
+                    .filter(Boolean);
+                let seg = '';
+                if (segs.includes('feedback')) seg = 'feedback';
+                else if (segs.includes('discussions')) seg = 'discussions';
+                for (let i = segs.length - 1; i >= 0; i--) {
+                    if (seg) break;
+                    const s = segs[i];
+                    if (!s) continue;
+                    if (/^\d+$/.test(s)) continue;
+                    if (s.length > 80) continue;
+                    seg = s;
+                }
+                if (!seg) {
+                    const label = `${host}${pathname}`;
+                    return { token: `${host}${pathname.toLowerCase()}`, label };
+                }
+                const hostEsc = escapeRegExpGlobal(host);
+                const segEsc = escapeRegExpGlobal(seg);
+                const token = `/${hostEsc}\\/[^#]*\\/${segEsc}(?:\\/|\\?|#|$)/i`;
+                const label = `${host}/${seg}`;
+                return { token, label };
             }
 
             function shouldEnableTextLinkifyForPage(currentSettings) {

@@ -1,16 +1,17 @@
 // ==UserScript==
 // @name                Abdullah Abbas WME Tools
 // @namespace           https://greasyfork.org/users/abdullah-abbas
-// @description         [English] WME Suite: Inspector + Validator + Advanced Selection. [Copyright © 2026 Abdullah Abbas - All Rights Reserved. Unauthorized copying, modification, or redistribution is prohibited].
-// @description:ar      [العربية] مجموعة أدوات ويز: المستكشف + المدقق + التحديد المتقدم. [حقوق النشر © 2026 عبدالله عباس - جميع الحقوق محفوظة. يمنع النسخ أو التعديل أو إعادة النشر].
+// @description         [English] WME Suite: Inspector + Validator + Adv Selection + City Boundary Validator. [Copyright © 2026 Abdullah Abbas - All Rights Reserved].
+// @description:ar      [العربية] مجموعة أدوات ويز: المستكشف + المدقق + التحديد المتقدم + مدقق حدود المدن. [حقوق النشر © 2026 عبدالله عباس - جميع الحقوق محفوظة].
 // @include             https://www.waze.com/*/editor*
 // @include             https://www.waze.com/editor*
 // @include             https://beta.waze.com/*
 // @exclude             https://www.waze.com/user/editor*
-// @version             2026.01.24.07
+// @version             2026.01.25.02
 // @grant               GM_xmlhttpRequest
 // @grant               unsafeWindow
 // @connect             waze.com
+// @connect             nominatim.openstreetmap.org
 // @author              Abdullah Abbas
 // @copyright           2026, Abdullah Abbas. All Rights Reserved.
 // @license             Proprietary - No redistribution or modification allowed.
@@ -21,27 +22,16 @@
 
 /*
  * ===========================================================================
- * Abdullah Abbas WME Tools
+ * Abdullah Abbas WME Tools (Combined Suite)
  *
  * [English]
- * A comprehensive suite for Waze Map Editor including City/Place Inspector,
- * Map Validator, and Advanced Selection tools.
+ * A comprehensive suite for Waze Map Editor including:
+ * 1. City/Place Inspector
+ * 2. Map Validator
+ * 3. Advanced Selection
+ * 4. City Boundary Validator (Waze + OSM)
  *
  * © 2026 Abdullah Abbas. All Rights Reserved.
- * This script is the intellectual property of Abdullah Abbas.
- * Unauthorized copying, modification, distribution, or republication
- * of this script (or any part of it) is strictly prohibited.
- *
- * ---------------------------------------------------------------------------
- *
- * [العربية]
- * مجموعة أدوات شاملة لمحرر خرائط ويز تشمل مستكشف المدن والأماكن،
- * مدقق الخريطة، وأداة التحديد المتقدم.
- *
- * حقوق النشر © 2026 عبدالله عباس. جميع الحقوق محفوظة.
- * هذا السكربت هو ملكية فكرية خاصة للأستاذ عبدالله عباس.
- * يمنع منعاً باتاً نسخ أو تعديل أو توزيع أو إعادة نشر هذا السكربت
- * أو أي جزء منه بأي شكل من الأشكال دون إذن خطي مسبق.
  * ===========================================================================
  */
 
@@ -63,7 +53,7 @@
     }
 
     const SCRIPT_NAME = "Abdullah Abbas WME Tools";
-    const SCRIPT_VERSION = "2026.01.24.07";
+    const SCRIPT_VERSION = "2026.01.25.02";
     const DEFAULT_W = "340px";
     const DEFAULT_H = "480px";
 
@@ -76,8 +66,10 @@
             main_title: 'Abdullah Abbas WME Tools',
             btn_qa: 'Map Validator', btn_adv: 'Advanced Selection',
             btn_inspector: 'Comp. City/Place Explorer 📊',
+            btn_cities_check: 'City Boundary Validator ☑',
             win_adv: 'Advanced Selection',
             win_inspector: 'Comp. City/Place Explorer',
+            win_cities: 'City Boundary Validator',
             common_scan: 'Scan', common_clear: 'Clear', common_close: 'Close', common_ready: 'Ready', common_no_name: 'No Name', insp_hdr_editor: 'Editor', insp_hdr_crup: 'Cr / Up', adv_lock_level: 'Level',
             no_results: 'No results',
             insp_tab_seg: '🛣️ Roads', insp_tab_ven: '📍 Places', insp_tab_stats: '👥 Stats',
@@ -100,15 +92,22 @@
             adv_type_maj: 'Major Highway (MH)', adv_type_fw: 'Freeway (Fw)', adv_type_rmp: 'Ramp (Rmp)',
             adv_type_plr: 'Parking Lot (PLR)', adv_type_pw: 'Private Way (Pw)', adv_type_pr: 'Private (PR)',
             adv_type_or: 'Off-Road (OR)',
-            city_no_name: 'No City'
+            city_no_name: 'No City',
+            // Cities Checkbox
+            cc_refresh: 'Refresh List', cc_draw: 'Draw Selected', cc_clear: 'Clear All',
+            cc_waze_src: 'Waze', cc_osm_src: 'OSM', cc_search_ph: 'Search city name...',
+            cc_search_btn: 'Search', cc_status_ready: 'Ready', cc_status_scan: 'Scanning...',
+            cc_msg_empty: 'Click Refresh or Search...', cc_check_all: 'Select All'
         },
         'ar-IQ': {
             name: 'العربية',
             main_title: 'Abdullah Abbas WME Tools',
             btn_qa: 'مدقق الخريطة', btn_adv: 'تحديد متقدم',
             btn_inspector: 'مستكشف المدن والأماكن الشامل 📊',
+            btn_cities_check: 'مدقق حدود المدن ☑',
             win_adv: 'تحديد متقدم',
             win_inspector: 'مستكشف المدن والأماكن الشامل',
+            win_cities: 'مدقق حدود المدن',
             common_scan: 'بحث', common_clear: 'مسح', common_close: 'إغلاق', common_ready: 'جاهز للتعديل', common_no_name: 'بدون اسم', insp_hdr_editor: 'المحرر', insp_hdr_crup: 'إنشاء / تحديث', adv_lock_level: 'المستوى',
             no_results: 'لا توجد نتائج',
             insp_tab_seg: '🛣️ الطرق', insp_tab_ven: '📍 الأماكن', insp_tab_stats: '👥 إحصائيات',
@@ -131,15 +130,22 @@
             adv_type_maj: 'سريع رئيسي (MH)', adv_type_fw: 'طريق حرة (Fw)', adv_type_rmp: 'منحدر (Rmp)',
             adv_type_plr: 'موقف (PLR)', adv_type_pw: 'طريق ضيق (Pw)', adv_type_pr: 'طريق خاص (PR)',
             adv_type_or: 'طريق ترابي (OR)',
-            city_no_name: 'بدون مدينة'
+            city_no_name: 'بدون مدينة',
+            // Cities Checkbox
+            cc_refresh: 'تحديث القائمة', cc_draw: 'تلوين المحدد', cc_clear: 'مسح شامل',
+            cc_waze_src: 'ويز', cc_osm_src: 'OSM', cc_search_ph: 'اكتب اسم المدينة للبحث...',
+            cc_search_btn: 'بحث', cc_status_ready: 'جاهز', cc_status_scan: 'جاري البحث...',
+            cc_msg_empty: 'اضغط تحديث أو ابحث...', cc_check_all: 'تحديد الكل'
         },
         'ckb-IQ': {
             name: 'کوردی (Soranî)',
             main_title: 'Abdullah Abbas WME Tools',
             btn_qa: 'پشکنەری نەخشە', btn_adv: 'دیاریکردنی پێشکەوتوو',
             btn_inspector: 'پشکنەری شار و شوێن (بەرفراوان) 📊',
+            btn_cities_check: 'پشکنەری سنووری شار ☑',
             win_adv: 'دیاریکردنی پێشکەوتوو',
             win_inspector: 'پشکنەری شار و شوێن (بەرفراوان)',
+            win_cities: 'پشکنەری سنووری شار',
             common_scan: 'گەڕان', common_clear: 'پاککردنەوە', common_close: 'داخستن', common_ready: 'ئامادەیە',
             no_results: 'هیچ نەدۆزرایەوە',
             insp_tab_seg: '🛣️ ڕێگا', insp_tab_ven: '📍 شوێن', insp_tab_stats: '👥 ئامار',
@@ -162,15 +168,22 @@
             adv_type_maj: 'خێرایی سەرەکی (MH)', adv_type_fw: 'ڕێگای خێرا (Fw)', adv_type_rmp: 'ڕامپ (Rmp)',
             adv_type_plr: 'پارکینگ (PLR)', adv_type_pw: 'کۆڵان (Pw)', adv_type_pr: 'تایبەت (PR)',
             adv_type_or: 'ڕێگای خۆڵ (OR)',
-            city_no_name: 'بێ شار'
+            city_no_name: 'بێ شار',
+            // Cities Checkbox
+            cc_refresh: 'نوێکردنەوە', cc_draw: 'کێشان', cc_clear: 'پاککردنەوە',
+            cc_waze_src: 'Waze', cc_osm_src: 'OSM', cc_search_ph: 'گەڕان بۆ ناوی شار...',
+            cc_search_btn: 'گەڕان', cc_status_ready: 'ئامادەیە', cc_status_scan: 'گەڕان...',
+            cc_msg_empty: 'نوێکردنەوە بکە یان بگەڕێ...', cc_check_all: 'هەمووی'
         },
         'kmr': {
             name: 'Kurdî (Kurmancî)',
             main_title: 'Abdullah Abbas WME Tools',
             btn_qa: 'Kontrola Nexşeyê', btn_adv: 'Hilbijartina Pêşkeftî',
             btn_inspector: 'Gerokê Bajar/Cih (Berfireh) 📊',
+            btn_cities_check: 'Kontrola Sînorê Bajaran ☑',
             win_adv: 'Hilbijartina Pêşkeftî',
             win_inspector: 'Gerokê Bajar/Cih (Berfireh)',
+            win_cities: 'Kontrola Sînorê Bajaran',
             common_scan: 'Lêgerîn', common_clear: 'Paqijkirin', common_close: 'Girtin', common_ready: 'Amade ye',
             no_results: 'Ti encam nehat dîtin',
             insp_tab_seg: '🛣️ Rê', insp_tab_ven: '📍 Cih', insp_tab_stats: '👥 Statîstîk',
@@ -193,15 +206,22 @@
             adv_type_maj: 'Lezgeha Mezin (MH)', adv_type_fw: 'Rêya Bilez (Fw)', adv_type_rmp: 'Ramp (Rmp)',
             adv_type_plr: 'Parking (PLR)', adv_type_pw: 'Rêya Taybet (Pw)', adv_type_pr: 'Taybet (PR)',
             adv_type_or: 'Rêya Axê (OR)',
-            city_no_name: 'Bê Bajar'
+            city_no_name: 'Bê Bajar',
+            // Cities Checkbox
+            cc_refresh: 'Nûkirin', cc_draw: 'Xêzkirin', cc_clear: 'Paqijkirin',
+            cc_waze_src: 'Waze', cc_osm_src: 'OSM', cc_search_ph: 'Navê bajêr binivîse...',
+            cc_search_btn: 'Lêgerîn', cc_status_ready: 'Amade ye', cc_status_scan: 'Lêgerîn...',
+            cc_msg_empty: 'Nûkirin bike an bigere...', cc_check_all: 'Hemî'
         },
         'es-ES': {
             name: 'Español',
             main_title: 'Abdullah Abbas WME Tools',
             btn_qa: 'Validador de Mapa', btn_adv: 'Selección Avanzada',
             btn_inspector: 'Explorador Completo 📊',
+            btn_cities_check: 'Valid. Límites Ciudad ☑',
             win_adv: 'Selección Avanzada',
             win_inspector: 'Explorador Completo',
+            win_cities: 'Validador Límites Ciudad',
             common_scan: 'Escanear', common_clear: 'Limpiar', common_close: 'Cerrar', common_ready: 'Listo',
             no_results: 'Sin resultados',
             insp_tab_seg: '🛣️ Vías', insp_tab_ven: '📍 Lugares', insp_tab_stats: '👥 Estadísticas',
@@ -220,15 +240,22 @@
             adv_type_st: 'Calle', adv_type_ps: 'Calle Principal', adv_type_mh: 'Carretera Menor',
             adv_type_maj: 'Carretera Mayor', adv_type_fw: 'Autopista', adv_type_rmp: 'Rampa',
             adv_type_plr: 'Estacionamiento', adv_type_pw: 'Camino Privado', adv_type_pr: 'Privado', adv_type_or: 'Off-Road',
-            city_no_name: 'Sin Ciudad'
+            city_no_name: 'Sin Ciudad',
+            // Cities Checkbox
+            cc_refresh: 'Actualizar', cc_draw: 'Dibujar', cc_clear: 'Limpiar',
+            cc_waze_src: 'Waze', cc_osm_src: 'OSM', cc_search_ph: 'Buscar ciudad...',
+            cc_search_btn: 'Buscar', cc_status_ready: 'Listo', cc_status_scan: 'Escaneando...',
+            cc_msg_empty: 'Actualizar o Buscar...', cc_check_all: 'Todos'
         },
         'fr-FR': {
             name: 'Français',
             main_title: 'Abdullah Abbas WME Tools',
             btn_qa: 'Validateur de Carte', btn_adv: 'Sélection Avancée',
             btn_inspector: 'Explorateur Complet 📊',
+            btn_cities_check: 'Valid. Limites Ville ☑',
             win_adv: 'Sélection Avancée',
             win_inspector: 'Explorateur Complet',
+            win_cities: 'Validateur Limites Ville',
             common_scan: 'Scanner', common_clear: 'Effacer', common_close: 'Fermer', common_ready: 'Prêt',
             no_results: 'Aucun résultat',
             insp_tab_seg: '🛣️ Routes', insp_tab_ven: '📍 Lieux', insp_tab_stats: '👥 Stats',
@@ -247,15 +274,22 @@
             adv_type_st: 'Rue', adv_type_ps: 'Rue Principale', adv_type_mh: 'Autoroute Mineure',
             adv_type_maj: 'Autoroute Majeure', adv_type_fw: 'Autoroute', adv_type_rmp: 'Bretelle',
             adv_type_plr: 'Parking', adv_type_pw: 'Chemin Privé', adv_type_pr: 'Privé', adv_type_or: 'Tout-Terrain',
-            city_no_name: 'Sans Ville'
+            city_no_name: 'Sans Ville',
+            // Cities Checkbox
+            cc_refresh: 'Actualiser', cc_draw: 'Dessiner', cc_clear: 'Effacer',
+            cc_waze_src: 'Waze', cc_osm_src: 'OSM', cc_search_ph: 'Chercher ville...',
+            cc_search_btn: 'Chercher', cc_status_ready: 'Prêt', cc_status_scan: 'Recherche...',
+            cc_msg_empty: 'Actualiser ou Chercher...', cc_check_all: 'Tous'
         },
         'ru-RU': {
             name: 'Русский',
             main_title: 'Abdullah Abbas WME Tools',
             btn_qa: 'Валидатор Карты', btn_adv: 'Расширенный Выбор',
             btn_inspector: 'Полный Инспектор 📊',
+            btn_cities_check: 'Проверка Границ ☑',
             win_adv: 'Расширенный Выбор',
             win_inspector: 'Полный Инспектор',
+            win_cities: 'Проверка Границ Города',
             common_scan: 'Поиск', common_clear: 'Очистить', common_close: 'Закрыть', common_ready: 'Готово',
             no_results: 'Нет результатов',
             insp_tab_seg: '🛣️ Дороги', insp_tab_ven: '📍 Места', insp_tab_stats: '👥 Стат.',
@@ -274,15 +308,22 @@
             adv_type_st: 'Улица', adv_type_ps: 'Главная улица', adv_type_mh: 'Шоссе',
             adv_type_maj: 'Магистраль', adv_type_fw: 'Автострада', adv_type_rmp: 'Рампа',
             adv_type_plr: 'Парковка', adv_type_pw: 'Проезд', adv_type_pr: 'Частная', adv_type_or: 'Грунт',
-            city_no_name: 'Без Города'
+            city_no_name: 'Без Города',
+            // Cities Checkbox
+            cc_refresh: 'Обновить', cc_draw: 'Рисовать', cc_clear: 'Очистить',
+            cc_waze_src: 'Waze', cc_osm_src: 'OSM', cc_search_ph: 'Поиск города...',
+            cc_search_btn: 'Поиск', cc_status_ready: 'Готово', cc_status_scan: 'Поиск...',
+            cc_msg_empty: 'Обновите или Ищите...', cc_check_all: 'Все'
         },
         'pt-BR': {
             name: 'Português',
             main_title: 'Abdullah Abbas WME Tools',
             btn_qa: 'Validador de Mapa', btn_adv: 'Seleção Avançada',
             btn_inspector: 'Inspetor Completo 📊',
+            btn_cities_check: 'Valid. Limites Cid. ☑',
             win_adv: 'Seleção Avançada',
             win_inspector: 'Inspetor Completo',
+            win_cities: 'Validador Limites Cidade',
             common_scan: 'Escanear', common_clear: 'Limpar', common_close: 'Fechar', common_ready: 'Pronto',
             no_results: 'Sem resultados',
             insp_tab_seg: '🛣️ Ruas', insp_tab_ven: '📍 Locais', insp_tab_stats: '👥 Estatísticas',
@@ -301,15 +342,22 @@
             adv_type_st: 'Rua', adv_type_ps: 'Rua Principal', adv_type_mh: 'Rodovia Menor',
             adv_type_maj: 'Rodovia Maior', adv_type_fw: 'Autoestrada', adv_type_rmp: 'Rampa',
             adv_type_plr: 'Estacionamiento', adv_type_pw: 'Via Privada', adv_type_pr: 'Privado', adv_type_or: 'Off-Road',
-            city_no_name: 'Sem Cidade'
+            city_no_name: 'Sem Cidade',
+            // Cities Checkbox
+            cc_refresh: 'Atualizar', cc_draw: 'Desenhar', cc_clear: 'Limpar',
+            cc_waze_src: 'Waze', cc_osm_src: 'OSM', cc_search_ph: 'Buscar cidade...',
+            cc_search_btn: 'Buscar', cc_status_ready: 'Pronto', cc_status_scan: 'Buscando...',
+            cc_msg_empty: 'Atualizar ou Buscar...', cc_check_all: 'Todos'
         },
         'he-IL': {
             name: 'עברית',
             main_title: 'Abdullah Abbas WME Tools',
             btn_qa: 'בודק מפה', btn_adv: 'בחירה מתקדמת',
             btn_inspector: 'סייר מקיף 📊',
+            btn_cities_check: 'בודק גבולות ערים ☑',
             win_adv: 'בחירה מתקדמת',
             win_inspector: 'סייר מקיף',
+            win_cities: 'בודק גבולות ערים',
             common_scan: 'סרוק', common_clear: 'נקה', common_close: 'סגור', common_ready: 'מוכן',
             no_results: 'אין תוצאות',
             insp_tab_seg: '🛣️ כבישים', insp_tab_ven: '📍 מקומות', insp_tab_stats: '👥 סטט\'',
@@ -328,7 +376,12 @@
             adv_type_st: 'רחוב', adv_type_ps: 'רחוב ראשי', adv_type_mh: 'כביש מהיר משני',
             adv_type_maj: 'כביש מהיר ראשי', adv_type_fw: 'כביש מהיר', adv_type_rmp: 'רמפה',
             adv_type_plr: 'חניון', adv_type_pw: 'דרך פרטית', adv_type_pr: 'פרטי', adv_type_or: 'שטח',
-            city_no_name: 'ללא עיר'
+            city_no_name: 'ללא עיר',
+            // Cities Checkbox
+            cc_refresh: 'רענן', cc_draw: 'צייר', cc_clear: 'נקה הכל',
+            cc_waze_src: 'Waze', cc_osm_src: 'OSM', cc_search_ph: 'חפש עיר...',
+            cc_search_btn: 'חפש', cc_status_ready: 'מוכן', cc_status_scan: 'מחפש...',
+            cc_msg_empty: 'רענן או חפש...', cc_check_all: 'בחר הכל'
         }
     };
 
@@ -355,8 +408,6 @@
         if (repo.objects) return Object.values(repo.objects);
         return [];
     }
-
-    function fastClone(obj) { return JSON.parse(JSON.stringify(obj)); }
 
     class UIBuilder {
         static getSavedState(id) {
@@ -443,7 +494,6 @@
     // ===========================================================================
     const CityInspectorModule = {
         isPortrait: false, // Default to Landscape (Wide)
-
         init: () => {
             const html = `
                 <div id="nli-container">
@@ -562,7 +612,6 @@
                     let updater = CityInspectorModule.getUserName(obj.attributes.updatedBy);
                     let updatedDate = CityInspectorModule.formatDate(obj.attributes.updatedOn);
 
-                    // UPDATED ROW HTML: Single Line for Creator/Date
                     row.innerHTML = `
                         <div class="col-name" title="${name}">${name}</div>
                         <div class="col-user">
@@ -640,6 +689,317 @@
                 }
             });
             if (bounds) W.map.setCenter(bounds.getCenterLonLat());
+        }
+    };
+
+    // ===========================================================================
+    //  MODULE: CITIES CHECKBOX (Merged)
+    // ===========================================================================
+    const CitiesCheckboxModule = {
+        overlayLayer: null,
+        currentCities: [],
+        abortOperation: false,
+
+        init: () => {
+            const html = `
+                <div id="aa-cc-container">
+                    <div id="aa-controls" style="display:flex; gap:5px; margin-bottom:10px;">
+                        <button id="aa-refresh-btn" class="aa-btn aa-bg-cyan" style="flex:1;">${_t('cc_refresh')}</button>
+                        <button id="aa-draw-btn" class="aa-btn aa-bg-green" style="flex:1;">${_t('cc_draw')}</button>
+                        <button id="aa-clear-btn" class="aa-btn aa-bg-red" style="flex:1;">${_t('cc_clear')}</button>
+                    </div>
+
+                    <div id="aa-sources" style="padding:5px; background:#e3f2fd; border:1px solid #bbdefb; border-radius:4px; margin-bottom:10px; font-size:12px; font-weight:bold; color:#0d47a1; text-align:center;">
+                        <label style="margin-right:10px; cursor:pointer;"><input type="checkbox" id="aa-src-waze" checked> ${_t('cc_waze_src')}</label>
+                        <label style="cursor:pointer;"><input type="checkbox" id="aa-src-osm" checked> ${_t('cc_osm_src')}</label>
+                    </div>
+
+                    <div id="aa-search-area" style="display:flex; gap:5px; margin-bottom:10px;">
+                        <input type="text" id="aa-ext-input" class="aa-input" placeholder="${_t('cc_search_ph')}">
+                        <button id="aa-ext-search-btn" class="aa-btn aa-bg-indigo" style="flex:0 0 60px;">${_t('cc_search_btn')}</button>
+                    </div>
+
+                    <div id="aa-list-container" style="background:#fff; border:1px solid #ddd; height:250px; overflow-y:auto; padding:5px; border-radius:4px;">
+                        <div class="aa-empty-msg" style="text-align:center; color:#888; margin-top:20px;">${_t('cc_msg_empty')}</div>
+                    </div>
+
+                    <div id="aa-status" style="margin-top:5px; font-size:11px; font-weight:bold; color:#0056b3; text-align:center;">${_t('cc_status_ready')}</div>
+                </div>
+            `;
+            UIBuilder.createFloatingWindow('AA_CitiesWin', 'win_cities', 'aa-bg-teal', html, {w: '380px', h: '460px'});
+
+            CitiesCheckboxModule.getLayer(); // Ensure layer exists
+
+            // Bind Events
+            document.getElementById('aa-refresh-btn').onclick = CitiesCheckboxModule.updateLiveList;
+            document.getElementById('aa-draw-btn').onclick = CitiesCheckboxModule.drawSelected;
+            document.getElementById('aa-clear-btn').onclick = CitiesCheckboxModule.clearAll;
+            document.getElementById('aa-ext-search-btn').onclick = CitiesCheckboxModule.performSearch;
+        },
+
+        getLayer: () => {
+            const layerName = "AA_Checkbox_Layer";
+            let layer = W.map.getLayersBy("uniqueName", layerName)[0];
+            if (!layer) {
+                layer = new OpenLayers.Layer.Vector("City Checkbox (AA)", {
+                    uniqueName: layerName,
+                    displayInLayerSwitcher: true,
+                    styleMap: new OpenLayers.StyleMap({
+                        "default": new OpenLayers.Style({
+                            strokeColor: "${strokeColor}",
+                            strokeWidth: 2,
+                            strokeOpacity: 1,
+                            fillColor: "${fillColor}",
+                            fillOpacity: 0.5,
+                            label: "${label}",
+                            fontColor: "white",
+                            fontSize: "13px",
+                            fontWeight: "bold",
+                            labelOutlineColor: "black",
+                            labelOutlineWidth: 3,
+                            graphicZIndex: 999
+                        })
+                    })
+                });
+                W.map.addLayer(layer);
+            }
+            CitiesCheckboxModule.overlayLayer = layer;
+            return layer;
+        },
+
+        updateLiveList: () => {
+            CitiesCheckboxModule.abortOperation = false;
+            const segments = W.model.segments.objects;
+            const cityMap = new Map();
+
+            for (let id in segments) {
+                const seg = segments[id];
+                if (!seg || seg.state === 'Delete') continue;
+                const addr = seg.getAddress();
+                if (addr && !addr.isEmpty()) {
+                    const city = addr.getCity();
+                    if (city && city.attributes.name && city.attributes.name.trim() !== "") {
+                        if (!cityMap.has(city.attributes.name)) {
+                            cityMap.set(city.attributes.name, {
+                                id: city.attributes.name,
+                                name: city.attributes.name,
+                                source: 'waze'
+                            });
+                        }
+                    }
+                }
+            }
+
+            CitiesCheckboxModule.currentCities = Array.from(cityMap.values());
+            CitiesCheckboxModule.currentCities.sort((a, b) => a.name.localeCompare(b.name));
+            CitiesCheckboxModule.renderList();
+        },
+
+        performSearch: async () => {
+            const query = document.getElementById('aa-ext-input').value.trim();
+            if(!query) return;
+
+            CitiesCheckboxModule.abortOperation = false;
+            const status = document.getElementById('aa-status');
+            const listContainer = document.getElementById('aa-list-container');
+
+            status.innerText = _t('cc_status_scan');
+            listContainer.innerHTML = '<div style="text-align:center; padding:20px; color:#666;">...</div>';
+
+            const useWaze = document.getElementById('aa-src-waze').checked;
+            const useOSM = document.getElementById('aa-src-osm').checked;
+
+            let searchResults = [];
+
+            if (useWaze) {
+                const segments = W.model.segments.objects;
+                const foundNames = new Set();
+                for (let id in segments) {
+                    const seg = segments[id];
+                    if (!seg || seg.state === 'Delete') continue;
+                    const addr = seg.getAddress();
+                    if (addr && !addr.isEmpty()) {
+                        const city = addr.getCity();
+                        if (city && city.attributes.name && city.attributes.name.includes(query)) {
+                            if (!foundNames.has(city.attributes.name)) {
+                                foundNames.add(city.attributes.name);
+                                searchResults.push({ id: city.attributes.name, name: city.attributes.name, source: 'waze' });
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (useOSM) {
+                try {
+                    const osmData = await CitiesCheckboxModule.fetchOSMResults(query);
+                    osmData.forEach(item => {
+                        searchResults.push({
+                            id: 'osm_' + item.place_id,
+                            name: item.display_name.split(',')[0],
+                            fullName: item.display_name,
+                            source: 'osm',
+                            geojson: item.geojson
+                        });
+                    });
+                } catch(e) { console.error(e); }
+            }
+
+            CitiesCheckboxModule.currentCities = searchResults;
+            CitiesCheckboxModule.renderList();
+            status.innerText = `${_t('qa_msg_found')}: ${searchResults.length}`;
+        },
+
+        fetchOSMResults: (query) => {
+            return new Promise((resolve) => {
+                const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&polygon_geojson=1&limit=10&countrycodes=iq`;
+                GM_xmlhttpRequest({
+                    method: "GET", url: url,
+                    onload: function(response) {
+                        try {
+                            const data = JSON.parse(response.responseText);
+                            const polygons = data.filter(d => d.geojson && (d.geojson.type === 'Polygon' || d.geojson.type === 'MultiPolygon'));
+                            resolve(polygons);
+                        } catch (e) { resolve([]); }
+                    },
+                    onerror: function() { resolve([]); }
+                });
+            });
+        },
+
+        renderList: () => {
+            const container = document.getElementById('aa-list-container');
+            container.innerHTML = '';
+            if (CitiesCheckboxModule.currentCities.length === 0) {
+                container.innerHTML = `<div class="aa-empty-msg" style="text-align:center; padding:20px;">${_t('no_results')}</div>`;
+                return;
+            }
+
+            const allDiv = document.createElement('div');
+            allDiv.className = 'aa-list-item aa-all-item';
+            const allCheck = document.createElement('input');
+            allCheck.type = 'checkbox'; allCheck.className = 'aa-checkbox'; allCheck.id = 'aa-check-all';
+            allCheck.onchange = function() { document.querySelectorAll('.aa-city-check').forEach(cb => cb.checked = this.checked); };
+            const allLabel = document.createElement('span');
+            allLabel.className = 'aa-label-text';
+            allLabel.innerText = `${_t('cc_check_all')} (${CitiesCheckboxModule.currentCities.length})`;
+            allLabel.onclick = function() { allCheck.checked = !allCheck.checked; allCheck.onchange(); };
+            allDiv.appendChild(allCheck); allDiv.appendChild(allLabel); container.appendChild(allDiv);
+
+            CitiesCheckboxModule.currentCities.forEach((city, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'aa-list-item';
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox'; checkbox.className = 'aa-checkbox aa-city-check'; checkbox.value = index;
+                const label = document.createElement('span'); label.className = 'aa-label-text';
+                const badge = document.createElement('span');
+                badge.className = `aa-source-badge badge-${city.source}`;
+
+                // Translated Badge Text
+                badge.innerText = city.source === 'waze' ? _t('cc_waze_src') : _t('cc_osm_src');
+
+                const nameSpan = document.createElement('span'); nameSpan.innerText = city.name;
+                if(city.fullName) nameSpan.title = city.fullName;
+
+                label.appendChild(nameSpan); label.appendChild(badge);
+                label.onclick = function() { checkbox.checked = !checkbox.checked; };
+                itemDiv.appendChild(checkbox); itemDiv.appendChild(label); container.appendChild(itemDiv);
+            });
+        },
+
+        drawSelected: () => {
+            CitiesCheckboxModule.abortOperation = false;
+            const status = document.getElementById('aa-status');
+            CitiesCheckboxModule.getLayer().removeAllFeatures();
+            const checkboxes = document.querySelectorAll('.aa-city-check:checked');
+            if (checkboxes.length === 0) { status.innerText = _t('no_results'); return; }
+
+            checkboxes.forEach(cb => {
+                if (CitiesCheckboxModule.abortOperation) return;
+                const index = parseInt(cb.value);
+                const city = CitiesCheckboxModule.currentCities[index];
+                const color = CitiesCheckboxModule.getRandomColor();
+
+                if (city.source === 'waze') {
+                    const hullGeom = CitiesCheckboxModule.getHullByName(city.name);
+                    if (hullGeom) CitiesCheckboxModule.drawFeature(hullGeom, color, city.name);
+                } else if (city.source === 'osm' && city.geojson) {
+                    const features = CitiesCheckboxModule.transformGeoJSON(city.geojson);
+                    if (features && features.length) {
+                        features.forEach(feat => { feat.attributes = { strokeColor: color, fillColor: color, label: city.name }; });
+                        CitiesCheckboxModule.overlayLayer.addFeatures(features);
+                    }
+                }
+            });
+            status.innerText = _t('cc_status_ready');
+        },
+
+        getHullByName: (cityName) => {
+            const segments = W.model.segments.objects;
+            const points = [];
+            for (let id in segments) {
+                const seg = segments[id];
+                if (!seg || seg.state === 'Delete') continue;
+                const addr = seg.getAddress();
+                if (addr && !addr.isEmpty()) {
+                    const city = addr.getCity();
+                    if (city && city.attributes.name === cityName) {
+                        seg.geometry.components.forEach(pt => { points.push({x: pt.x, y: pt.y}); });
+                    }
+                }
+            }
+            if (points.length < 3) return null;
+            const hullPoints = CitiesCheckboxModule.convexHull(points);
+            const ringPoints = hullPoints.map(p => new OpenLayers.Geometry.Point(p.x, p.y));
+            ringPoints.push(ringPoints[0]);
+            return new OpenLayers.Geometry.Polygon([new OpenLayers.Geometry.LinearRing(ringPoints)]);
+        },
+
+        convexHull: (points) => {
+            points.sort((a, b) => a.x != b.x ? a.x - b.x : a.y - b.y);
+            const n = points.length;
+            const hull = [];
+            if (n <= 2) return points;
+            const crossProduct = (o, a, b) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+            for (let i = 0; i < n; i++) {
+                while (hull.length >= 2 && crossProduct(hull[hull.length - 2], hull[hull.length - 1], points[i]) <= 0) hull.pop();
+                hull.push(points[i]);
+            }
+            for (let i = n - 2, t = hull.length + 1; i >= 0; i--) {
+                while (hull.length >= t && crossProduct(hull[hull.length - 2], hull[hull.length - 1], points[i]) <= 0) hull.pop();
+                hull.push(points[i]);
+            }
+            hull.pop();
+            return hull;
+        },
+
+        transformGeoJSON: (geojson) => {
+            const format = new OpenLayers.Format.GeoJSON({
+                'internalProjection': W.map.getProjectionObject(),
+                'externalProjection': new OpenLayers.Projection("EPSG:4326")
+            });
+            return format.read(geojson);
+        },
+
+        drawFeature: (geometry, color, label) => {
+            const feature = new OpenLayers.Feature.Vector(geometry, {
+                strokeColor: color, fillColor: color, label: label
+            });
+            CitiesCheckboxModule.overlayLayer.addFeatures([feature]);
+        },
+
+        clearAll: () => {
+            CitiesCheckboxModule.abortOperation = true;
+            if (CitiesCheckboxModule.overlayLayer) CitiesCheckboxModule.overlayLayer.removeAllFeatures();
+            document.getElementById('aa-list-container').innerHTML = `<div class="aa-empty-msg" style="text-align:center; margin-top:20px; color:#888;">${_t('cc_msg_empty')}</div>`;
+            CitiesCheckboxModule.currentCities = [];
+            document.getElementById('aa-ext-input').value = "";
+            document.getElementById('aa-status').innerText = _t('cc_status_ready');
+        },
+
+        getRandomColor: () => {
+            const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A8', '#F5FF33', '#8C33FF', '#00FFFF', '#FF8C00', '#E91E63', '#9C27B0'];
+            return colors[Math.floor(Math.random() * colors.length)];
         }
     };
 
@@ -1228,6 +1588,16 @@
 
             .nli-editor-row { display: flex; justify-content: space-between; padding: 5px 10px; border-bottom: 1px solid #f0f0f0; font-size: 11px; }
 
+            /* CITIES CHECKBOX CSS (Merged) */
+            .aa-list-item { padding: 8px 10px; margin-bottom: 4px; background: #f1f3f5; border: 1px solid #e9ecef; border-radius: 4px; font-size: 13px; color: #333; display: flex; align-items: center; transition: background 0.2s; }
+            .aa-list-item:hover { background: #e2e6ea; }
+            .aa-checkbox { margin-left: 10px; width: 16px; height: 16px; cursor: pointer; }
+            .aa-label-text { cursor: pointer; flex-grow: 1; display:flex; justify-content: space-between; }
+            .aa-source-badge { font-size: 10px; padding: 2px 5px; border-radius: 3px; margin-right: 5px; color:white; min-width: 35px; text-align: center; }
+            .badge-waze { background: #00c6ff; } .badge-osm { background: #ff758c; }
+            .aa-all-item { background: #e3f2fd; border-color: #90caf9; font-weight: bold; }
+            .aa-empty-msg { text-align: center; color: #888; }
+
             /* Colors */
             .aa-bg-gold { background: #FFD700; color: #000; } .aa-gold { background: #FFC107; color:#000; } .aa-bg-blue { background: #00B0FF; } .aa-blue { background: #0091EA; } .aa-bg-teal { background: #00E5FF; color:#000; } .aa-teal { background: #00B8D4; } .aa-bg-purple { background: #D500F9; } .aa-purple { background: #AA00FF; } .aa-bg-green { background: #00E676; color:#000; } .aa-green { background: #00C853; } .aa-bg-cyan { background: #18FFFF; color:#000; } .aa-cyan { background: #00B8D4; } .aa-bg-red { background: #FF1744; } .aa-red { background: #D50000; } .aa-bg-orange { background: #FF9800; color:#000; } .aa-bg-darkblue { background: #1565C0; } .aa-bg-white { background: #ffffff; color: #333; text-shadow: none; } .aa-txt-dark { color: #333; } .aa-gray { background: #78909C; } .aa-bg-indigo { background: #3F51B5; } .aa-indigo { background: #303F9F; } .rtl { direction: rtl; } .ltr { direction: ltr; } .aa-big-icon { font-size: 24px; padding: 5px 0; font-weight: 900; } .aa-huge-icon { font-size: 32px; padding: 5px 0; font-weight: 900; }
         `;
@@ -1265,6 +1635,8 @@
                 <select id="aa_lang_sel" class="aa-input" style="margin-bottom:15px; text-align:center;">${langOptions}</select>
 
                 <button id="btn_open_inspector" class="aa-btn aa-bg-darkblue" style="border:1px solid white;"><i class="fa fa-search-plus"></i> ${_t('btn_inspector')}</button>
+                <button id="btn_open_cities" class="aa-btn aa-bg-teal" style="margin-top:5px;"><i class="fa fa-map-o"></i> ${_t('btn_cities_check')}</button>
+
                 <div style="height:2px; background:#ccc; margin:10px 0;"></div>
 
                 <button id="btn_open_qa" class="aa-btn aa-bg-orange"><i class="fa fa-bug"></i> ${_t('btn_qa')}</button>
@@ -1288,10 +1660,10 @@
             // Force modules to rebuild UI in the new language
             ValidatorCleanUI.isInitialized = false;
             ValidatorCleanUI.visualLayer = null;
-            // Keep qaLayer on map if it exists, but UI will be rebuilt.
-
         };
+
         document.getElementById('btn_open_inspector').onclick = CityInspectorModule.init;
+        document.getElementById('btn_open_cities').onclick = CitiesCheckboxModule.init;
         document.getElementById('btn_open_qa').onclick = ValidatorCleanUI.init;
         document.getElementById('btn_open_adv').onclick = AdvancedSelection.init;
     }

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         MoDuL's: Custom Race Filter
 // @namespace    modul.torn.racing
-// @version      2.1.7
-// @description  Custom Race filter. (OG Car Names & PDA compatible)
+// @version      2.1.8
+// @description  Custom Race filter. (OG Car Names & PDA Compatible)
 // @author       MoDuL
 // @match        https://www.torn.com/page.php?sid=racing*
 // @match        https://www.torn.com/loader.php?sid=racing*
@@ -18,9 +18,7 @@
 
   const SUPPORTER_PUBKEY_B64URL = "8YI-0Q7DT3xSsls2wIZ6QVBquxYhGTKz3DPww5OI2XE";
   const SUPPORTER_FEATURES = ["advanced", "persist", "pw", "urt", "car", "start", "bet"];
-
   const BECOME_SUPPORTER_URL = "https://www.torn.com/messages.php#/p=compose&XID=4022159";
-  const KOFI_URL = "https://ko-fi.com/modul";
 
   const STORE = {
     license: "modul_racefilter_license_v1",
@@ -147,12 +145,13 @@
     "Papani Colé": "Renault Clio",
     "Papani Cole": "Renault Clio"
   };
-const POPULARITY_MIN_OPTS = [
-  { v: "Any", label: "Any" },
-  { v: "30", label: "≥ 30%" },
-  { v: "50", label: "≥ 50%" },
-  { v: "70", label: "≥ 70%" }
-];
+
+  const POPULARITY_MIN_OPTS = [
+    { v: "Any", label: "Any" },
+    { v: "30", label: "≥ 30%" },
+    { v: "50", label: "≥ 50%" },
+    { v: "70", label: "≥ 70%" }
+  ];
 
   const START_MAX_OPTS = [
     { v: "Any", label: "Any" },
@@ -174,19 +173,28 @@ const POPULARITY_MIN_OPTS = [
     laps: "Any",
     lapsMode: "exact",
     useRealCarNames: false,
-    advOpen: false,
+    advOpen: true,
     pw: "Any",
     urt: "Any",
     carClass: "Any",
     startMax: "Any",
     popMin: "Any",
     bet: "Any",
-    showFull: false
+    showFull: true
   };
 
   const hasGM = (typeof GM_getValue === "function" && typeof GM_setValue === "function");
   function gmGet(key, def) { try { return hasGM ? GM_getValue(key, def) : def; } catch (_) { return def; } }
   function gmSet(key, val) { try { if (hasGM) GM_setValue(key, val); } catch (_) {} }
+
+  function addStyle(css) {
+    if (typeof GM_addStyle === "function") GM_addStyle(css);
+    else {
+      const s = document.createElement("style");
+      s.textContent = css;
+      document.head.appendChild(s);
+    }
+  }
 
   function b64urlToBytes(s) {
     s = String(s || "").replace(/-/g, "+").replace(/_/g, "/");
@@ -200,11 +208,19 @@ const POPULARITY_MIN_OPTS = [
   function nowSec() { return Math.floor(Date.now() / 1000); }
 
   function parseLicense(str) {
-    if (!str || typeof str !== "string") return null;
-    const parts = str.trim().split(".");
+    if (!str) return null;
+    let s = String(str);
+
+    const m = s.match(/([A-Za-z0-9_-]+\.[A-Za-z0-9_-]+)/);
+    if (m) s = m[1];
+
+    s = s.replace(/\s+/g, "").trim();
+    const parts = s.split(".");
     if (parts.length !== 2) return null;
+
     const payloadB64 = parts[0];
     const sigB64 = parts[1];
+
     let payloadBytes, sigBytes, payload;
     try {
       payloadBytes = b64urlToBytes(payloadB64);
@@ -239,7 +255,6 @@ const POPULARITY_MIN_OPTS = [
     for (const root of roots) {
       const links = Array.from(root.querySelectorAll('a[href*="profiles.php?XID="]'));
       for (const a of links) {
-        if (a.closest(".custom-events-wrap") || a.closest(".events-list")) continue;
         const href = a.getAttribute("href") || "";
         const m = href.match(/profiles\.php\?XID=(\d+)/i);
         if (!m) continue;
@@ -304,7 +319,7 @@ const POPULARITY_MIN_OPTS = [
     }
   }
 
-  const supporter = { unlocked: false, reason: "Locked" };
+  const supporter = { unlocked: false, reason: "Locked", exp: 0 };
   let state = Object.assign({}, DEFAULTS);
 
   function loadSupporterSettings() {
@@ -326,124 +341,134 @@ const POPULARITY_MIN_OPTS = [
     saveSupporterSettings();
   }
 
-  if (typeof GM_addStyle === "function") {
-    GM_addStyle(`
-      #modulRF {
-        margin:8px 0; padding:10px;
-        border:1px solid rgba(255,255,255,.12);
-        border-radius:10px;
-        background:rgba(20,20,20,.92);
-      }
-      #modulRF button, #modulRF select{
-        font-size:13px; color:#fff;
-        border-radius:8px;
-        border:1px solid rgba(255,255,255,.14);
-        background:rgba(45,45,45,.95);
-        padding:7px 10px;
-        width:100%;
-        box-sizing:border-box;
-      }
-      #modulRF .supportTop{
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:10px;
-        padding:8px 10px;
-        border:1px dashed rgba(255,255,255,.22);
-        border-radius:10px;
-        background:rgba(0,0,0,.18);
-        margin-bottom:10px;
-        font-size:13px;
-      }
-      #modulRF .supportTop .tag{
-        display:flex;
-        align-items:center;
-        gap:8px;
-        opacity:.95;
-        white-space:nowrap;
-      }
-      #modulRF .btnSmall{
-        width:auto !important;
-        padding:6px 10px !important;
-        font-size:12px !important;
-        border-radius:8px !important;
-        white-space:nowrap;
-      }
-      #modulRF .topBtns{
-        display:grid;
-        grid-template-columns: 1fr 1fr;
-        gap:10px;
-        margin-bottom:10px;
-      }
-      @media (max-width:420px){
-        #modulRF .topBtns{ grid-template-columns: 1fr; }
-      }
-      #modulRF .grid{
-        display:grid;
-        grid-template-columns: 1fr 1fr;
-        gap:10px;
-        align-items:start;
-      }
-      #modulRF .col{ display:flex; flex-direction:column; gap:8px; }
-      #modulRF .pair{
-        display:grid;
-        grid-template-columns: 126px 1fr;
-        gap:8px;
-        align-items:center;
-      }
-      #modulRF .lbl{
-        font-size:12px;
-        color:rgba(255,255,255,.88);
-        white-space:nowrap;
-      }
-      #modulRF .plainChk{
-        display:flex;
-        align-items:center;
-        gap:8px;
-        padding:4px 0;
-        color:#fff;
-        font-size:13px;
-      }
-      #modulRF input[type=checkbox]{ width:16px; height:16px; margin:0; }
-      #modulRF .rtLocked{
-        opacity:.55;
-        filter: grayscale(.15);
-      }
-      #modulRF .footer{
-        margin-top:10px;
-        padding-top:10px;
-        border-top:1px solid rgba(255,255,255,.10);
-      }
-      #modulRF .footerBtns{
-        display:grid;
-        grid-template-columns: 1fr 1fr;
-        gap:10px;
-      }
-      @media (max-width:420px){
-        #modulRF .footerBtns{ grid-template-columns: 1fr; }
-      }
-      @media (max-width:420px){
-        #modulRF .grid{ grid-template-columns: 1fr; }
-      }
-    `);
+  function fmtExp_(expSec) {
+    const n = Number(expSec || 0);
+    if (!n || n <= 0) return "";
+    const d = new Date(n * 1000);
+    const y = d.getUTCFullYear();
+    const m = String(d.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(d.getUTCDate()).padStart(2, "0");
+    const hh = String(d.getUTCHours()).padStart(2, "0");
+    const mm = String(d.getUTCMinutes()).padStart(2, "0");
+    return `${y}-${m}-${day} ${hh}:${mm} UTC`;
   }
 
+  addStyle(`
+    #modulRFOuter { margin: 8px 0; }
+    #modulRFOuter .rfPad { padding: 10px; }
+
+    #modulRFOuter .rfTopRow{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:8px 10px;
+      border:1px dashed rgba(255,255,255,.22);
+      border-radius:10px;
+      background:rgba(0,0,0,.10);
+      margin:10px;
+      font-size:13px;
+    }
+    #modulRFOuter .rfTopRow .rfTag{ display:flex; align-items:center; gap:8px; opacity:.95; white-space:nowrap; }
+
+    #modulRFOuter .rfBtns{
+      display:grid; grid-template-columns: 1fr 1fr;
+      gap:10px;
+      padding: 0 10px 10px 10px;
+    }
+    @media (max-width:420px){ #modulRFOuter .rfBtns{ grid-template-columns: 1fr; } }
+
+    #modulRFOuter .rfGrid{
+      display:grid; grid-template-columns: 1fr 1fr;
+      gap:10px;
+      padding: 0 10px 10px 10px;
+    }
+    @media (max-width:420px){ #modulRFOuter .rfGrid{ grid-template-columns: 1fr; } }
+
+    #modulRFOuter .rfCol{ display:flex; flex-direction:column; gap:10px; }
+    #modulRFOuter .rfPair{
+      display:grid; grid-template-columns: 126px 1fr;
+      gap:8px; align-items:center;
+    }
+    #modulRFOuter .rfLbl{ font-size:12px; color:rgba(255,255,255,.88); white-space:nowrap; }
+
+    #modulRFOuter select, #modulRFOuter button{
+      width:100%; box-sizing:border-box;
+    }
+
+    /* dropdown visibility fix */
+    #modulRFOuter select option{ color:#000 !important; background:#fff !important; }
+
+    /* nice selects */
+    #modulRFOuter select{
+      font-size:13px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(25,25,25,.75);
+      color:#fff;
+      padding:7px 10px;
+      outline:none;
+    }
+
+    /* buttons (we still apply torn classes too) */
+    #modulRFOuter button{
+      font-size:13px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(25,25,25,.75);
+      color:#fff;
+      padding:8px 12px;
+      cursor:pointer;
+    }
+    #modulRFOuter button:disabled{
+      opacity:.55; cursor:not-allowed;
+    }
+
+    /* Torn-like checkbox */
+    #modulRFOuter .rfChkWrap{ display:flex; align-items:center; gap:10px; }
+    #modulRFOuter .rfChk{ position:absolute; opacity:0; pointer-events:none; }
+    #modulRFOuter .rfChkLabel{
+      position:relative;
+      padding-left:28px;
+      cursor:pointer;
+      user-select:none;
+      font-size:13px;
+      color:#fff;
+    }
+    #modulRFOuter .rfChkLabel:before{
+      content:"";
+      position:absolute; left:0; top:50%;
+      transform:translateY(-50%);
+      width:18px; height:18px;
+      border-radius:3px;
+      border:1px solid rgba(255,255,255,.25);
+      background:rgba(0,0,0,.35);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    #modulRFOuter .rfChk:checked + .rfChkLabel:before{
+      background:#c51414;
+      border-color:#ff3b3b;
+    }
+    #modulRFOuter .rfChk:checked + .rfChkLabel:after{
+      content:"";
+      position:absolute; left:6px; top:50%;
+      transform:translateY(-55%) rotate(45deg);
+      width:6px; height:10px;
+      border-right:2px solid #fff;
+      border-bottom:2px solid #fff;
+    }
+
+    #modulRFOuter .rfLocked{ opacity:.55; filter:grayscale(.15); }
+    #modulRFOuter .rfFooter{ padding:10px; border-top:1px solid rgba(255,255,255,.10); }
+  `);
+
   function $(sel, root = document) { return root.querySelector(sel); }
-  function getList() { return $(".custom-events-wrap .events-list"); }
+
   function getItems() {
-    const list = getList();
+    const list = $(".custom-events-wrap .events-list");
     if (!list) return [];
     return Array.from(list.children).filter(li => li && li.tagName === "LI");
   }
 
-  function norm(s) {
-    return String(s || "").replace(/\s+/g, " ").trim().toLowerCase();
-  }
-
-  const toInt = (t) => {
-    const m = (t || "").match(/\d+/);
-    return m ? (m[0] | 0) : null;
-  };
+  function norm(s) { return String(s || "").replace(/\s+/g, " ").trim().toLowerCase(); }
+  const toInt = (t) => { const m = (t || "").match(/\d+/); return m ? (m[0] | 0) : null; };
 
   function getTrackName(li) {
     const trackLi = li.querySelector(".event-header li.track");
@@ -542,11 +567,7 @@ const POPULARITY_MIN_OPTS = [
   }
 
   function buildCarOptionsForMode() {
-    const fixed = [
-      "Any",
-      "A", "B", "C", "D", "E",
-      "Stock A", "Stock B", "Stock C", "Stock D", "Stock E"
-    ];
+    const fixed = ["Any", "A", "B", "C", "D", "E", "Stock A", "Stock B", "Stock C", "Stock D", "Stock E"];
     const carsFictional = CARCLASS_OPTIONS.filter(v => fixed.indexOf(v) === -1);
     const carsReal = carsFictional.map(f => CAR_FICTIONAL_TO_REAL[f] || f);
     return state.useRealCarNames ? fixed.concat(carsReal) : fixed.concat(carsFictional);
@@ -568,19 +589,19 @@ const POPULARITY_MIN_OPTS = [
 
   function pwOk(li) {
     if (!supporter.unlocked) return true;
-    if (state.pw === "any") return true;
+    if (state.pw === "Any") return true;
     const prot = isPasswordProtected(li);
-    if (state.pw === "hide") return !prot;
-    if (state.pw === "show") return prot;
+    if (state.pw === "Hide") return !prot;
+    if (state.pw === "Show") return prot;
     return true;
   }
 
   function urtOk(li) {
     if (!supporter.unlocked) return true;
-    if (state.urt === "any") return true;
+    if (state.urt === "Any") return true;
     const champ = isChampionshipURT(li);
-    if (state.urt === "only") return champ;
-    if (state.urt === "hide") return !champ;
+    if (state.urt === "Only") return champ;
+    if (state.urt === "Hide") return !champ;
     return true;
   }
 
@@ -590,10 +611,9 @@ const POPULARITY_MIN_OPTS = [
 
     const v = state.carClass;
     const vLow = norm(v);
-
     const rowText = norm(li.textContent);
 
-    if (vLow === "a" || vLow === "b" || vLow === "c" || vLow === "d" || vLow === "e") {
+    if (["a", "b", "c", "d", "e"].includes(vLow)) {
       const re = new RegExp(`\\bclass\\s*${vLow}\\b|\\b${vLow}\\s*class\\b`, "i");
       return re.test(rowText);
     }
@@ -606,7 +626,6 @@ const POPULARITY_MIN_OPTS = [
 
     const carInRow = norm(getCarNameForMode(li));
     if (!carInRow) return true;
-
     return carInRow === vLow || carInRow.indexOf(vLow) !== -1;
   }
 
@@ -619,19 +638,17 @@ const POPULARITY_MIN_OPTS = [
     if (mins == null) return true;
     return mins <= maxMins;
   }
-function popularityOk(li) {
-  if (!supporter.unlocked) return true;
-  if (!state.popMin || state.popMin === "Any") return true;
 
-  const minPct = parseInt(state.popMin, 10);
-  if (!Number.isFinite(minPct)) return true;
-
-  const { cur, max } = getDrivers(li);
-  if (cur == null || max == null || max <= 0) return true;
-
-  const pct = (cur / max) * 100;
-  return pct >= minPct;
-}
+  function popularityOk(li) {
+    if (!supporter.unlocked) return true;
+    if (!state.popMin || state.popMin === "Any") return true;
+    const minPct = parseInt(state.popMin, 10);
+    if (!Number.isFinite(minPct)) return true;
+    const { cur, max } = getDrivers(li);
+    if (cur == null || max == null || max <= 0) return true;
+    const pct = (cur / max) * 100;
+    return pct >= minPct;
+  }
 
   function showFullOk(li) {
     if (!supporter.unlocked) return true;
@@ -643,22 +660,22 @@ function popularityOk(li) {
 
   function betOk(li) {
     if (!supporter.unlocked) return true;
-    if (state.bet === "any") return true;
+    if (state.bet === "Any") return true;
     const fee = getFee(li);
     if (fee == null) return true;
-    return state.bet === "free" ? fee === 0 : fee > 0;
+    if (state.bet === "Free") return fee === 0;
+    if (state.bet === "Bet") return fee > 0;
+    return true;
   }
 
   function keep(li) {
     if (!state.enabled) return true;
-
     if (!trackOk(li)) return false;
     if (!lapsOk(li)) return false;
 
     if (!pwOk(li)) return false;
     if (!urtOk(li)) return false;
     if (!carClassOk(li)) return false;
-
     if (!startOk(li)) return false;
     if (!betOk(li)) return false;
     if (!popularityOk(li)) return false;
@@ -703,52 +720,97 @@ function popularityOk(li) {
 
   function makePair(labelText, controlEl) {
     const pair = document.createElement("div");
-    pair.className = "pair";
+    pair.className = "rfPair";
     const lab = document.createElement("div");
-    lab.className = "lbl";
+    lab.className = "rfLbl";
     lab.textContent = labelText;
     pair.append(lab, controlEl);
     return pair;
   }
 
-  function makePlainChkPair(labelText, checkboxEl, text) {
+  function makeChkPair(labelText, chkEl, labelEl) {
     const pair = document.createElement("div");
-    pair.className = "pair";
+    pair.className = "rfPair";
     const lab = document.createElement("div");
-    lab.className = "lbl";
+    lab.className = "rfLbl";
     lab.textContent = labelText;
-    const box = document.createElement("label");
-    box.className = "plainChk";
-    box.append(checkboxEl, document.createTextNode(" " + text));
-    pair.append(lab, box);
+
+    const wrap = document.createElement("div");
+    wrap.className = "rfChkWrap";
+    wrap.append(chkEl, labelEl);
+
+    pair.append(lab, wrap);
     return pair;
   }
 
   function lockEl(el, locked) {
     el.disabled = !!locked;
-    el.classList.toggle("rtLocked", !!locked);
+    el.classList.toggle("rfLocked", !!locked);
     if (locked) el.title = "Supporter feature";
     else el.title = "";
   }
 
-  function mountUI() {
+  function applyTornBtnClasses(btn) {
+    btn.classList.add("btn", "btn-action-tab", "btn-dark-bg");
+  }
+
+  function findInsertPoint() {
+    const startRace = document.querySelector(".messages-race-wrap.start-race");
+    const cont = startRace?.querySelector(".cont-black.bottom-round");
+    if (startRace && cont && startRace.parentNode) {
+      return { parent: startRace.parentNode, after: startRace };
+    }
+
     const wrap = document.querySelector(".custom-events-wrap");
-    if (!wrap || document.getElementById("modulRF")) return false;
+    if (wrap && wrap.parentNode) {
+      return { parent: wrap.parentNode, before: wrap };
+    }
+    return null;
+  }
 
-    const bar = document.createElement("div");
-    bar.id = "modulRF";
+  function mountUI() {
+    if (document.getElementById("modulRFOuter")) return true;
 
-    const supportTop = document.createElement("div");
-    supportTop.className = "supportTop";
+    const listExists = document.querySelector(".custom-events-wrap .events-list");
+    if (!listExists) return false;
+
+    const ip = findInsertPoint();
+    if (!ip) return false;
+
+    const outer = document.createElement("div");
+    outer.id = "modulRFOuter";
+    outer.className = "messages-race-wrap start-race";
+
+    const title = document.createElement("div");
+    title.className = "title-black top-round t-mtop10";
+    title.textContent = "MoDuL’s Custom Race Filter";
+
+    const cont = document.createElement("div");
+    cont.className = "cont-black bottom-round";
+
+    const sep = document.createElement("div");
+    sep.className = "sep";
+
+    const topRow = document.createElement("div");
+    topRow.className = "rfTopRow";
 
     const tag = document.createElement("div");
-    tag.className = "tag";
-    tag.textContent = supporter.unlocked ? "💎 Supporter: Verified ✅" : "💎 Supporter: Locked 🔒";
+    tag.className = "rfTag";
+    const expTxt = supporter.unlocked ? fmtExp_(supporter.exp) : "";
+    tag.textContent = supporter.unlocked
+      ? ("💎 Supporter: Verified ✅" + (expTxt ? ` • Expiry: ${expTxt}` : ""))
+      : "💎 Supporter: Locked 🔒";
 
     const btnVerify = document.createElement("button");
-    btnVerify.className = "btnSmall";
+    btnVerify.type = "button";
     btnVerify.textContent = supporter.unlocked ? "Manage" : "Verify";
-    btnVerify.onclick = async () => {
+    applyTornBtnClasses(btnVerify);
+    btnVerify.style.width = "auto";
+    btnVerify.style.padding = "6px 12px";
+    btnVerify.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
       if (supporter.unlocked) {
         const ok = confirm("Disable supporter and clear saved license?");
         if (!ok) return;
@@ -769,83 +831,76 @@ function popularityOk(li) {
         return;
       }
 
-      gmSet(STORE.license, lic.trim());
+      gmSet(STORE.license, String(lic).trim());
       alert("Supporter verified.");
       location.reload();
-    };
+    });
 
-    supportTop.append(tag, btnVerify);
+    topRow.append(tag, btnVerify);
 
-    const topBtns = document.createElement("div");
-    topBtns.className = "topBtns";
+    const btnRow = document.createElement("div");
+    btnRow.className = "rfBtns";
 
     const btnFilter = document.createElement("button");
+    btnFilter.type = "button";
     btnFilter.textContent = state.enabled ? "Filter: ON" : "Filter: OFF";
-    btnFilter.onclick = () => {
+    applyTornBtnClasses(btnFilter);
+    btnFilter.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       setState({ enabled: !state.enabled });
       btnFilter.textContent = state.enabled ? "Filter: ON" : "Filter: OFF";
       scheduleApply();
-    };
+    });
 
     const btnAdv = document.createElement("button");
+    btnAdv.type = "button";
     btnAdv.textContent = supporter.unlocked ? (state.advOpen ? "Advanced ▲" : "Advanced ▼") : "Advanced (Supporter)";
+    applyTornBtnClasses(btnAdv);
 
-    const advWrap = document.createElement("div");
-    advWrap.style.display = (!supporter.unlocked) ? "block" : (state.advOpen ? "block" : "none");
-
-    btnAdv.onclick = () => {
-      if (!supporter.unlocked) return;
-      setState({ advOpen: !state.advOpen });
-      btnAdv.textContent = state.advOpen ? "Advanced ▲" : "Advanced ▼";
-      advWrap.style.display = state.advOpen ? "block" : "none";
-    };
-
-    topBtns.append(btnFilter, btnAdv);
+    btnRow.append(btnFilter, btnAdv);
 
     const grid = document.createElement("div");
-    grid.className = "grid";
+    grid.className = "rfGrid";
 
     const col1 = document.createElement("div");
-    col1.className = "col";
-
+    col1.className = "rfCol";
     const col2 = document.createElement("div");
-    col2.className = "col";
+    col2.className = "rfCol";
 
     const selTrack = document.createElement("select");
     selTrack.innerHTML = TRACKS.map(t => `<option value="${t}">${t}</option>`).join("");
     selTrack.value = state.track;
-    selTrack.onchange = () => { setState({ track: selTrack.value }); scheduleApply(); };
+    selTrack.addEventListener("change", () => { setState({ track: selTrack.value }); scheduleApply(); });
 
     const selLaps = document.createElement("select");
     selLaps.innerHTML = buildLapOptions().map(v => `<option value="${v}">${v}</option>`).join("");
     selLaps.value = state.laps;
-    selLaps.onchange = () => { setState({ laps: selLaps.value }); scheduleApply(); };
+    selLaps.addEventListener("change", () => { setState({ laps: selLaps.value }); scheduleApply(); });
 
     const selMode = document.createElement("select");
     selMode.innerHTML = `<option value="exact">Exact</option><option value="min">Min</option>`;
     selMode.value = state.lapsMode;
-    selMode.onchange = () => { setState({ lapsMode: selMode.value }); scheduleApply(); };
+    selMode.addEventListener("change", () => { setState({ lapsMode: selMode.value }); scheduleApply(); });
 
     const selCarNames = document.createElement("select");
     selCarNames.innerHTML = `<option value="fictional">Fictional</option><option value="real">Real (OG)</option>`;
     selCarNames.value = state.useRealCarNames ? "real" : "fictional";
 
     const selCar = document.createElement("select");
-
     function refillCarSelect() {
       const opts = buildCarOptionsForMode();
       selCar.innerHTML = opts.map(v => `<option value="${v}">${v}</option>`).join("");
       if (opts.indexOf(state.carClass) === -1) setState({ carClass: "Any" });
       selCar.value = state.carClass;
     }
-
     refillCarSelect();
 
-    selCarNames.onchange = () => {
+    selCarNames.addEventListener("change", () => {
       setState({ useRealCarNames: selCarNames.value === "real", carClass: "Any" });
       refillCarSelect();
       scheduleApply();
-    };
+    });
 
     col1.append(
       makePair("🗺️ Track", selTrack),
@@ -854,43 +909,59 @@ function popularityOk(li) {
       makePair("🏷️ Car names", selCarNames)
     );
 
+    const advWrap = document.createElement("div");
+    advWrap.style.display = (!supporter.unlocked) ? "block" : (state.advOpen ? "block" : "none");
+
+    btnAdv.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!supporter.unlocked) return;
+      setState({ advOpen: !state.advOpen });
+      btnAdv.textContent = state.advOpen ? "Advanced ▲" : "Advanced ▼";
+      advWrap.style.display = state.advOpen ? "block" : "none";
+    });
+
     const selPw = document.createElement("select");
-    selPw.innerHTML = `<option value="any">Any</option><option value="show">Show</option><option value="hide">Hide</option>`;
+    selPw.innerHTML = `<option value="Any">Any</option><option value="Show">Show</option><option value="Hide">Hide</option>`;
     selPw.value = state.pw;
-    selPw.onchange = () => { setState({ pw: selPw.value }); scheduleApply(); };
+    selPw.addEventListener("change", () => { setState({ pw: selPw.value }); scheduleApply(); });
 
     const selURT = document.createElement("select");
-    selURT.innerHTML = `<option value="any">Any</option><option value="only">Only</option><option value="hide">Hide</option>`;
+    selURT.innerHTML = `<option value="Any">Any</option><option value="Only">Only</option><option value="Hide">Hide</option>`;
     selURT.value = state.urt;
-    selURT.onchange = () => { setState({ urt: selURT.value }); scheduleApply(); };
+    selURT.addEventListener("change", () => { setState({ urt: selURT.value }); scheduleApply(); });
 
-    selCar.onchange = () => { setState({ carClass: selCar.value }); scheduleApply(); };
+    selCar.addEventListener("change", () => { setState({ carClass: selCar.value }); scheduleApply(); });
 
     const selStart = document.createElement("select");
     selStart.innerHTML = START_MAX_OPTS.map(o => `<option value="${o.v}">${o.label}</option>`).join("");
     selStart.value = state.startMax;
-    selStart.onchange = () => { setState({ startMax: selStart.value }); scheduleApply(); };
+    selStart.addEventListener("change", () => { setState({ startMax: selStart.value }); scheduleApply(); });
 
     const selPop = document.createElement("select");
-    selPop.innerHTML = POPULARITY_MIN_OPTS
-        .map(o => `<option value="${o.v}">${o.label}</option>`)
-        .join("");
+    selPop.innerHTML = POPULARITY_MIN_OPTS.map(o => `<option value="${o.v}">${o.label}</option>`).join("");
     selPop.value = state.popMin;
-    selPop.onchange = () => { setState({ popMin: selPop.value }); scheduleApply(); };
+    selPop.addEventListener("change", () => { setState({ popMin: selPop.value }); scheduleApply(); });
 
     const selBet = document.createElement("select");
-    selBet.innerHTML = `<option value="any">Any</option><option value="free">Free</option><option value="bet">Bet</option>`;
+    selBet.innerHTML = `<option value="Any">Any</option><option value="Free">Free</option><option value="Bet">Bet</option>`;
     selBet.value = state.bet;
-    selBet.onchange = () => { setState({ bet: selBet.value }); scheduleApply(); };
+    selBet.addEventListener("change", () => { setState({ bet: selBet.value }); scheduleApply(); });
 
     const cbFull = document.createElement("input");
     cbFull.type = "checkbox";
+    cbFull.id = "rfShowFull";
+    cbFull.className = "rfChk";
     cbFull.checked = !!state.showFull;
-    cbFull.onchange = () => { setState({ showFull: cbFull.checked }); scheduleApply(); };
+    cbFull.addEventListener("change", () => { setState({ showFull: cbFull.checked }); scheduleApply(); });
+
+    const cbLab = document.createElement("label");
+    cbLab.className = "rfChkLabel";
+    cbLab.setAttribute("for", "rfShowFull");
+    cbLab.textContent = "Show full";
 
     const supporterControls = [btnAdv, selPw, selURT, selCar, selStart, selBet, selPop, cbFull];
     supporterControls.forEach(el => lockEl(el, !supporter.unlocked));
-
 
     advWrap.append(
       makePair("🔒 Password", selPw),
@@ -899,32 +970,38 @@ function popularityOk(li) {
       makePair("⏱️ Start", selStart),
       makePair("💰 Bet", selBet),
       makePair("📈 Popularity", selPop),
-      makePlainChkPair("👥 Status", cbFull, "Show full")
+      makeChkPair("👥 Status", cbFull, cbLab)
     );
 
     col2.append(advWrap);
     grid.append(col1, col2);
 
     const footer = document.createElement("div");
-    footer.className = "footer";
+    footer.className = "rfFooter";
 
-    const footerBtns = document.createElement("div");
-    footerBtns.className = "footerBtns";
+    if (!supporter.unlocked) {
+      const btnBecome = document.createElement("button");
+      btnBecome.type = "button";
+      btnBecome.textContent = "Become a supporter";
+      applyTornBtnClasses(btnBecome);
+      btnBecome.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        window.open(BECOME_SUPPORTER_URL, "_blank", "noopener,noreferrer");
+      });
+      footer.appendChild(btnBecome);
+    }
 
-    const btnBecome = document.createElement("button");
-    btnBecome.textContent = "Become a supporter";
-    btnBecome.onclick = () => window.open(BECOME_SUPPORTER_URL, "_blank", "noopener,noreferrer");
+    cont.append(sep, topRow, btnRow, grid, footer);
+    outer.append(title, cont);
 
-    const btnKofi = document.createElement("button");
-    btnKofi.textContent = "☕⭐ Buy me a Ko-fi";
-    btnKofi.onclick = () => window.open(KOFI_URL, "_blank", "noopener,noreferrer");
-
-    if (!supporter.unlocked) footerBtns.append(btnBecome);
-    footerBtns.append(btnKofi);
-    footer.append(footerBtns);
-
-    bar.append(supportTop, topBtns, grid, footer);
-    wrap.parentNode.insertBefore(bar, wrap);
+    if (ip.after && ip.parent) {
+      ip.parent.insertBefore(outer, ip.after.nextSibling);
+    } else if (ip.before && ip.parent) {
+      ip.parent.insertBefore(outer, ip.before);
+    } else {
+      return false;
+    }
 
     scheduleApply();
     return true;
@@ -938,6 +1015,7 @@ function popularityOk(li) {
       const res = await verifyLicenseAsync(savedLic);
       supporter.unlocked = !!res.ok;
       supporter.reason = res.ok ? "Verified" : res.reason;
+      supporter.exp = res.ok ? Number(res.payload?.exp || 0) : 0;
 
       if (supporter.unlocked) {
         state = loadSupporterSettings();
@@ -945,16 +1023,23 @@ function popularityOk(li) {
         gmSet(STORE.license, "");
         gmSet(STORE.settings, "");
         supporter.unlocked = false;
+        supporter.exp = 0;
       }
     }
 
     if (mountUI()) return;
 
     const obs = new MutationObserver(() => {
-      if (mountUI()) obs.disconnect();
+      mountUI();
     });
     obs.observe(document.body, { childList: true, subtree: true });
-    setTimeout(() => obs.disconnect(), 6000);
+
+    let tries = 0;
+    const tick = setInterval(() => {
+      tries++;
+      mountUI();
+      if (document.getElementById("modulRFOuter") || tries > 40) clearInterval(tick);
+    }, 250);
   }
 
   document.readyState === "loading"

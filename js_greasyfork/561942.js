@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Happymh Downloader
 // @namespace    happymh-downloader
-// @version      12.0
-// @description  Dùng lõi nén của script Asura để đảm bảo tải được file ZIP.
+// @version      12.1
+// @description  Tải truyện Happymh, tự động loại bỏ ảnh GIF quảng cáo.
 // @author       User
 // @match        https://m.happymh.com/mangaread/*
 // @grant        GM_xmlhttpRequest
@@ -58,12 +58,22 @@
     btn.onclick = async () => {
         const imgTags = document.querySelectorAll('img');
         let urls = [];
+
         imgTags.forEach(img => {
             const src = img.getAttribute('data-src') || img.getAttribute('v-lazy') || img.src;
-            if (src && (src.includes('ruicdn') || src.includes('happymh')) && !src.includes('logo')) {
+
+            // --- ĐOẠN CODE ĐÃ SỬA ---
+            // Thêm điều kiện: !src.toLowerCase().includes('.gif') để chặn ảnh GIF
+            if (src &&
+                (src.includes('ruicdn') || src.includes('happymh')) &&
+                !src.includes('logo') &&
+                !src.toLowerCase().includes('.gif')
+            ) {
                 urls.push(src);
             }
         });
+
+        // Xóa trùng lặp
         urls = [...new Set(urls)];
 
         if (urls.length === 0) {
@@ -73,9 +83,9 @@
 
         btn.disabled = true;
         btn.style.background = '#bdc3c7';
-        log("🚀 Đang tải ảnh...");
+        log(`🚀 Tìm thấy ${urls.length} ảnh (Đã lọc quảng cáo)...`);
 
-        // Khởi tạo zipWriter theo cách của Asura script (zip.js)
+        // Khởi tạo zipWriter
         const zipWriter = new zip.ZipWriter(new zip.BlobWriter("application/zip"));
         let completed = 0;
         let index = 0;
@@ -87,10 +97,10 @@
                 const url = urls[i];
                 try {
                     const data = await fetchImage(url);
+                    // Lấy đuôi file, bỏ phần query string (?token=...)
                     const ext = url.split('.').pop().split('?')[0] || 'jpg';
                     const name = `${String(i + 1).padStart(3, '0')}.${ext}`;
 
-                    // Thêm vào file zip ngay khi tải xong ảnh đó
                     await zipWriter.add(name, new zip.Uint8ArrayReader(new Uint8Array(data)));
 
                     completed++;
@@ -102,10 +112,10 @@
             }
         };
 
-        // Chạy 10 luồng tải song song
+        // Chạy tải song song
         await Promise.all(Array(PARALLEL_DOWNLOADS).fill(null).map(worker));
 
-        log("📦 Đang xuất file ZIP...");
+        log("📦 Đang nén & Xuất file...");
         try {
             const zipBlob = await zipWriter.close();
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Pokechill] EN-CN
 // @namespace    https://play-pokechill.github.io/
-// @version      2.7.0
+// @version      2.9.0
 // @description  Pokechill 全页面离线简体中文汉化
 // @author       GPT-DiamondMoo
 // @license      MIT
@@ -16,6 +16,10 @@
 
     const RAW_REGEX_RULES = [
         [/^Inflicts active status effects to the attacker aswell/i, '将自身的异常状态传染给敌方'], //ggggy实测无需敌方攻击直接触发
+        [/^Inflicts (.+), but increases enemy (.+) by (\d+)%/i, '施加$1，但敌方$2提升$3%'],
+        [/^, but increases enemy (.+) by (\d+)%/i, '但敌方$1提升$2%'],
+        [/^Inflicts (.+) on the user/i, '对使用者施加$1'],
+        [/^Inflicts (.+)/i, '施加$1'],
         [/^Copies the positive stat increases of the enemy/i, '复制敌方的能力提升效果'],
         [/^Prevents all stat decreases/i, '防止所有能力降低效果'],
         [/^Prevents negative stat changes/i, '防止负面能力变化'],
@@ -52,7 +56,9 @@
         [/^Increases (.+) by (\d+)% when defeating a Pokemon/i, '击败宝可梦后，自身$1提升$2%'],
         [/^Increases (.+), (.+) and (.+) by (\d+)%/i, '$1、$2和$3提升$4%'],
         [/^Increases (.+) by (\d+)% to the entire team/i, '我方全队$1提升$2%'],
+        [/^Increases (.+) by (\d+)% to the entire team. Attacks x(\d+\.?\d*) (\w+) than usual/i, '我方全队$1提升$2%。进攻速度变$4为原来的$3倍'],
         [/^Increases (.+) and (.+) by (\d+)% to the entire team/i, '我方全队$1和$2提升$3%'],
+        [/^Increases (.+) and (.+) by (\d+)% to the entire team. Attacks x(\d+\.?\d*) (\w+) than usual/i, '我方全队$1和$2提升$3%。进攻速度变$4为原来的$3倍'],
         [/^Increases (.+) by (\d+)%/i, '$1提升$2%'],
         [/^Increases (.+) by (\d+)%. Attacks x(\d+\.?\d*) (\w+) than usual/i, '$1提升$2%。进攻速度变$4为原来的$3倍'],
         [/^(\d+)% chance to increase All Stats by (\d+)%/i, '$1%概率使所有能力提升$2%'],
@@ -132,6 +138,7 @@
         [/^Perform the (\w+) move of the oponent. Attacks x(\d+\.?\d*) (\w+) than usual/i, '施放对手的$1个招式，进攻速度为变$3为原来的$2倍'],
         [/^Changes the weather to /i, '将天气变为'],
         [/^ when entering or switching into the battle/i, '当进入战斗或交替进入战斗时'],
+        [/^Changes the weather to (\w+) when entering or switching into the battle/i, '将天气变为$1当进入战斗或交替进入战斗时'],
         [/^(.+) against (\w+)-types/i, '对$2属性$1'],
         [/^Power doubles if the target is /i, '威力翻倍若目标状态效果处于'],
         [/^Grants immunity to /i, '免疫'],
@@ -175,7 +182,7 @@
         [/^Decreases enemy (.+) by (\d+)%. Power increases by x(\d+\.?\d*)-(\d+\.?\d*) if (.+)\/(.+) is risen/i, '敌人的$1降低$2%。若$5或$6能力提升100%则招式威力乘以$4，提升50%则招式威力乘以$3'],
         [/^Received damage from non-(.+) moves? are reduced by (\d+)%/i, '受到的非$1伤害降低$2%'],
         [/^Weather changed by the user is extended by (\d+) turns?/i, '引发的天气效果持续时间延长$1回合'],
-        [/^/i, ''],
+        [/^Moves? for (.+)/i, '$1 可学习的招式'],
 
         //遗传辅助道具
         [/^(.+): Multiplies by (\d+) the chance to inherit (.+) Iv's/i,
@@ -224,23 +231,25 @@
         // 百科全书
         [/^Obtained as a random reward in the (.+)/i, '在 $1 中作为随机奖励获得'],
         [/^This Pokemon cannot be caught on its current stage/i, '这只宝可梦现阶段无法直接捕获'],
-        [/^Found in the (.+) \((\w+) (\d+)\)/i, '在 $1($2 $3) 中获得'],
+        [/^Found in the (.+) \((\w+) (\d+)\)/i, '在$2-$3 $1中获得'],
         [/^Found randomly in the (.+)/i, '在 $1 随机获得'],
-        [/^Obtained in the (.+) \((\w+) (\d+)\)/i, '在 $1($2 $3) 中获得'],
+        [/^Obtained in the (.+) \((\w+) (\d+)\)/i, '在$2-$3 $1中获得'],
         [/^([\s\S]*?)Learnable by (.+) types([\s\S]*?)/i, '$1可由 $2 属性宝可梦学习$3'],
         [/^([\s\S]*?)Learnable by (.+) types \((\w+)\)([\s\S]*?)/i, '$1可由 $2 属性宝可梦学习($3)$4'],
         [/^([\s\S]*?)This (.+) can only appear as the (.+) of (.+)([\s\S]*?)/i, '$1仅会作为$3出现在 $4$5'],
         [/^([\s\S]*?)Additionally, appears as the (.+) of (.+)([\s\S]*?)/i, '$1还会作为$2出现在 $3$4'],
-        [/^([\s\S]*?)Can be dropped in the (.+) \((\w+) (\d+)\)([\s\S]*?)/i, '$1在 $2($3 $4) 中获得$5'],
+        [/^([\s\S]*?)Can be dropped in the (.+) \((\w+) (\d+)\)([\s\S]*?)/i, '$1在$3-$4 $2中获得$5'],
         [/^([\s\S]*?)Can be bought in the (.+)([\s\S]*?)/i, '$1在 $2 中购买$3'],
         [/^([\s\S]*?)Obtained via (.+)([\s\S]*?)/i, '$1通过 $2 获得$3'],
         [/^([\s\S]*?)This (.+) is currently unobtainable([\s\S]*?)/i, '$1这个$2现阶段无法获得$3'],
-        [/^Reward from the (.+) \((\w+) (\d+)\)/i, '在 $1($2 $3) 中获得'],
+        [/^Reward from the (.+) \((\w+) (\d+)\)/i, '在$2-$3 $1中获得'],
         [/^Reward from (.+)/i, '在 $1 中获得'],
+        [/^This Pokemon is unobtainable/i, '这只宝可梦无法获得'],
+
 
         //指南
         // 查看详情指南
-        [/^Right click\/long press on most elements can give further information\. You can furhter right click\/long press on information within information\.$/i,
+        [/^Right click\/long press on most elements can give further information. You can further right click\/long press on information within information.$/i,
          '右键单击/长按大多数元素可查看更多信息。还可以对信息中的内容进一步右键单击/长按查看。'],
         [/^Some elements that can be inspected include areas, trainers, moves, status effects, wild pokemon, team pokemon and items$/i,
          '可查看详情的元素包括区域、训练家、招式、状态效果、野生宝可梦、队伍宝可梦和道具'],
@@ -248,7 +257,7 @@
         // 能力值指南
         [/^Each species of Pokémon share the same base stats that determine the actual stats of a Pokémon at a given level$/i,
          '每一种宝可梦都有相同的种族值，这些种族值决定了宝可梦在特定等级下的实际能力值'],
-        [/^Stats determine how much damage they deal and receive \( see Battle: Moves\)\. The speed stat determines how fast a Pokemon executes a move$/i,
+        [/^Stats determine how much damage they deal and receive \(see Battle: Moves\). The speed stat determines how fast a Pokemon executes a move$/i,
          '能力值决定宝可梦造成和承受的伤害（见 对战：招式）。速度值决定宝可梦执行招式的快慢'],
         [/^Individual Values, or IV'?s, multiply base stats, and can be increased by getting multiple copies of Pokemon$/i,
          '个体值会加成种族值，可通过获取多只相同宝可梦来提升'],
@@ -363,6 +372,9 @@
          '对战开拓区包含多种挑战，设有特定分组限制，每$1轮换一次。此处遭遇的训练家每$2重置'],
 
         // 旷野地带指引
+
+        [/Pokemon in the (.+) rotate every (\d+) (.+)/i,
+         '$1中的宝可梦每 $2 $3轮换一次'],
         [/All Pokemon in Wild Areas might be caught by defeating them\. Wild Areas rotate every (.+), so be sure to check out what can be caught today!/i,
          '旷野地带内的所有宝可梦均可通过击败捕获。旷野地带每$1轮换，记得查看轮换后可捕获的宝可梦！'],
 
@@ -371,8 +383,8 @@
          '迷宫中的宝可梦无法捕获，但会掉落实用道具和经验值。迷宫同样每$1轮换'],
 
         // 活动指引
-        [/Events might house both items and Pokemon to get. Events marked with a skull signify powerful foes that usually require an item to catch \(The item wont be consumed if failed to defeat\) that can be adquired in the collection events. All Events rotate every(.+)\./i,
-         '活动中可获取道具与宝可梦。带有骷髅标记的活动代表强大敌方，通常需要特定道具才能捕获（若未击败敌方，道具不会消耗）。这些所需道具可以在收藏类事件中获得。所有活动每$1轮换一次'],
+        [/Events might house both items and Pokemon to get. Events marked with a skull signify powerful foes that usually require an item to catch \(The item wont be consumed if failed to defeat\) that can be acquired in the collection events. All Events rotate every (.+)./i,
+         '活动中可获取道具与宝可梦。带有骷髅标记的活动代表强大敌方，通常需要特定道具才能捕获（若未击败敌方，道具不会消耗）。这些所需道具可以在收藏类事件中获得。所有活动每 $1轮换一次'],
 
         // 遗传指引
         [/With genetics, you can modify the parameters of a level (\d+) Pokemon \(the host\) and influence them based on another Pokemon \(the sample\)/i,
@@ -390,12 +402,18 @@
         [/Failing a training will result in no gains/i,
          '训练失败将不会获得任何收益'],
 
-        // 宝可商店指引
+        // 宝可商店指引 已删除信息？
         [/^You can buy items here with Bottle Caps. Yeah/i, '可使用瓶盖在此处购买道具。就是这样～'],
 
         //宝可病毒指引
         [/^Every (\d+) (\w+), some of your Pokemon will contract Pokerus. This virus is entirely beneficial, and will add one level of compatibility to the Pokemon in genetics when used as a host/i,
          '每 $1 $2，你的一些宝可梦会感染宝可病毒。该病毒完全有益，在作为宿主宝可梦进行遗传操作时，会为该宝可梦额外增加一级兼容度。'],
+
+        //设置指引
+        [/^Automatically hides got Pokemon that are not new after a battle. Excluded from this setting are: New Pokemon, Iv's Ups and Shiny Pokemon/i,
+         '战斗结束后将自动隐藏已获得但并非新的宝可梦。不受此设置影响的包括：新宝可梦、个体值提升以及闪光宝可梦。'],
+        [/^Decreases the current (.+) rotation by -(\d+). Useful if you missed yesterday's rotation, or if your schedule doesnt line up with my game/i,
+         '将当前$1的轮换次数减少$2。适用于错过了昨天的轮换，或你的作息时间与游戏轮换时间不一致的情况。'],
 
         // 奖章
         [/^Awarded in special occasions/i, '在特殊场合授予'],
@@ -724,7 +742,7 @@
         "Pupitar": "沙基拉斯",
         "Tyranitar": "班基拉斯",
         "Lugia": "洛奇亚",
-        "Ho Oh": "凤王",
+        "HoOh": "凤王",
         "Celebi": "时拉比",
         "Treecko": "木守宫",
         "Grovyle": "森林蜥蜴",
@@ -1491,7 +1509,7 @@
         "Okidogi": "够赞狗",
         "Munkidori": "愿增猿",
         "Fezandipiti": "吉雉鸡",
-        "Ogerpon": "厄诡椪",
+        "Ogerpon": "厄鬼椪",
         "Archaludon": "铝钢桥龙",
         "Hydrapple": "蜜集大蛇",
         "Gouging Fire": "破空焰",
@@ -1525,17 +1543,30 @@
         "Unown Exclamation":"未知图腾 !",
         "Unown Question":"未知图腾 ?",
         //洛托姆
-        "Rotom Heat": "加热 洛托姆",
-        "Rotom Wash": "清洗 洛托姆",
-        "Rotom Frost": "结冰 洛托姆",
-        "Rotom Fan": "旋转 洛托姆",
-        "Rotom Mow": "切割 洛托姆",
-        //皮卡丘
-        "Pikachu PopStar": "偶像 皮卡丘",
-        "Pikachu PhD": "博士 皮卡丘",
-        "Pikachu Libre": "面罩摔角手 皮卡丘",
-        "Pikachu Belle": "贵妇 皮卡丘",
-        "Pikachu RockStar": "硬摇滚 皮卡丘",
+        "Rotom Heat": "加热洛托姆",
+        "Rotom Wash": "清洗洛托姆",
+        "Rotom Frost": "结冰洛托姆",
+        "Rotom Fan": "旋转洛托姆",
+        "Rotom Mow": "切割洛托姆",
+        //换装皮卡丘
+        "Pikachu Cosplay": "换装皮卡丘",
+        "Pikachu PopStar": "偶像皮卡丘",
+        "Pikachu PhD": "博士皮卡丘",
+        "Pikachu Libre": "面罩摔角手皮卡丘",
+        "Pikachu Belle": "贵妇皮卡丘",
+        "Pikachu RockStar": "硬摇滚皮卡丘",
+        //帽子皮卡丘
+        "Pikachu Original": "初始帽子皮卡丘",
+        "Pikachu Hoenn ": "丰缘帽子皮卡丘",
+        "Pikachu Sinnoh ": "神奥帽子皮卡丘",
+        "Pikachu Unova ": "合众帽子皮卡丘",
+        "Pikachu Kalos ": "卡洛斯帽子皮卡丘",
+        "Pikachu Alola ": "阿罗拉帽子皮卡丘",
+        "Pikachu Partner ": "就决定是你了之帽子皮卡丘",
+        "Pikachu World ": "世界帽子皮卡丘",
+        "Pikachu Ash": "小智帽子皮卡丘",
+        //皮丘
+        "Spiky Pichu": "刺刺耳皮丘",
         //鲤鱼王
         "Magikarp Koi": "锦鲤 鲤鱼王",
         "Magikarp Regal": "富豪 鲤鱼王",
@@ -1593,6 +1624,68 @@
         "Thundurus Therian": "雷电云 灵兽形态",
         "Landorus Therian": "土地云 灵兽形态",
         "Enamorus Therian": "眷恋云 灵兽形态",
+        //月月熊
+        "Ursaluna Bloodmoon": "月月熊 赫月",
+        //代欧奇希斯
+        "Deoxys Defense": "代欧奇希斯 防御形态",
+        "Deoxys Attack": "代欧奇希斯 攻击形态",
+        "Deoxys Speed": "代欧奇希斯 速度形态",
+        //结草儿 结草贵妇
+        "Burmy Plant": "结草儿 草木蓑衣",
+        "Wormadam Plant": "结草贵妇 草木蓑衣",
+        "Burmy Sandy": "结草儿 砂土蓑衣",
+        "Wormadam Sandy": "结草贵妇 砂土蓑衣",
+        "Burmy Trash": "结草儿 垃圾蓑衣",
+        "Wormadam Trash": "结草贵妇 垃圾蓑衣",
+        //无壳海兔 海兔兽
+        "Shellos West": "无壳海兔 西海",
+        "Gastrodon West": "海兔兽 西海",
+        "Shellos East": "无壳海兔 东海",
+        "Gastrodon East": "海兔兽 东海",
+        //谢米
+        "Shaymin Sky": "谢米 天空形态",
+        //幽尾玄鱼
+        "Basculegion M": "幽尾玄鱼 雄性",
+        "Basculegion F": "幽尾玄鱼 雌性",
+        //凯路迪欧
+        "Keldeo Resolute": "觉悟 凯路迪欧",
+        //美洛耶塔
+        "Meloetta Pirouette": "美洛耶塔 舞步形态",
+        //弱丁鱼
+        "Wishiwashi School": "弱丁鱼 鱼群的样子",
+        //玛机雅娜
+        "Magearna Original": "玛机雅娜 ５００年前的颜色",
+        //武道熊师
+        "Urshifu S.": "一击流武道熊师",
+        "Urshifu R.": "连击流武道熊师",
+        //米立龙
+        "Tatsugiri Curly": "米立龙 上弓姿势",
+        "Tatsugiri Droopy": "米立龙 下垂姿势",
+        "Tatsugiri Stretchy": "米立龙 平挺姿势",
+        //索财灵
+        "Gimmighoul Chest": "索财灵 宝箱形态",
+        "Gimmighoul Roaming": "索财灵 徒步形态",
+        //厄鬼椪
+        "Ogerpon Teal": "厄鬼椪 碧草面具",
+        "Ogerpon Wellspring": "厄鬼椪 水井面具",
+        "Ogerpon Hearthflame": "厄鬼椪 火灶面具",
+        "Ogerpon Cornerstone": "厄鬼椪 础石面具",
+        //太乐巴戈斯
+        "Terapagos Terastal": "太乐巴戈斯 太晶形态",
+        "Terapagos Stellar": "太乐巴戈斯 星晶形态",
+        //肯泰罗
+        "Tauros Combat": "肯泰罗 斗战种",
+        "Tauros Blaze": "肯泰罗 火炽种",
+        "Tauros Aqua": "肯泰罗 水澜种",
+        //土龙节节
+        "Dududunsparce": "土龙节节 三节形态",
+        //飘浮泡泡
+        "Castform Sunny": "飘浮泡泡 太阳的样子",
+        "Castform Rainy": "飘浮泡泡 雨水的样子",
+        "Castform Snowy": "飘浮泡泡 雪云的样子",
+        //樱花儿
+        "Cherrim Overcast": "樱花儿 阴天形态",
+        "Cherrim Sunshine": "樱花儿 晴天形态",
 
         //自创特性
         "Hydratation": "湿润之躯", // 拼写错误，官方正确拼写为 Hydration
@@ -2926,6 +3019,11 @@
         "Aurora Punch": "极光拳",
         "Ionise":"电离",
         "Razor Talons":"利爪",
+        "Gemstone Crush":"宝石粉碎",
+        "Foam Shot":"泡沫射击",
+        "Iron Slug":"铁弹冲击",
+        "Mirror Shrapnel":"镜面弹片",
+        "Scale Shot":"鳞片射击",
 
         // 野外区域
         "Verdant Forest":"翠绿森林",
@@ -3354,7 +3452,7 @@
         "Bottle Cap":"瓶盖",
         "Golden Bottle Cap":"金色瓶盖",
         // 遗传道具
-        "Neverstone":"不变之石",//改名？
+        "Neverstone":"改变之石",
         "Everstone":"不变之石",
         "Lock Capsule":"上锁的容器",
         "Power Anklet":"力量护踝-速度",
@@ -3650,6 +3748,7 @@
         "When held":"持有时",
         "Increase the power of":"提升",
         "-Type moves":"属性招式",
+        "All-Type moves":"全属性招式",
         "if afflicted with a status effect":"如果受到状态效果的影响",
         "Obtained in the Battle Frontier. Can be exchanged in the Poke-Mart":"在对战开拓区获得。可在宝可梦商店兑换。",
         "Obtained when acquiring an exceeding number of items. Can be exchanged in the Poke-Mart":"获得数量超过规定数量的物品后即可获得。可在宝可梦商店兑换。",
@@ -3877,6 +3976,13 @@
         "Battle Summary":"战斗总结",
         "Damage Dealt":"伤害总计",
         "NaN":" ",
+        "Check learnable moves":"检查可学习的招式",
+        "Check":"检查",
+        "learnable":"可学习",
+        "Same-Type":"同属性",
+        "Moveset Tag Matches":"标签匹配招式",
+        "Close":"关闭",
+        "A new update is available. Refresh to update.":"有新版本更新可用。刷新页面以更新。",
 
         // 数字
         "one": "一",
@@ -3935,9 +4041,12 @@
         "M.":"Mega",
         "Aln.":"阿罗拉",
         "Gal.":"迦勒尔",
+        "Galarian":"迦勒尔",
         "Hsn.":"洗翠",
         "Pal.":"帕底亚",
+        "Paldean":"帕底亚",
         "Clone":"克隆体",
+        "Gmax":"极巨化",
         //MissingNo.
         "MissingNo": "错误宝可梦",
         //四季鹿

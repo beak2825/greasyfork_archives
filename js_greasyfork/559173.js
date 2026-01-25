@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Torn City Based Travel Map
 // @namespace   http://tampermonkey.net/
-// @version     2026-01-19/2.0
+// @version     2026-01-24/2.1
 // @description Replaces the plane in Torn travel page with a live location map with curved paths(updated)
 // @author      Papanad[3928917]
 // @match       https://www.torn.com/page.php?sid=travel
@@ -34,11 +34,14 @@
 
 
     const normalize = (name) => {
-        name = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z\-]/g, '');
-        if (name === 'cayman') return 'cayman-islands';
-        if (name === 'southafrica') return 'south-africa';
-        return name;
-    };
+    name = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z\-]/g, '');
+    // Cayman variations
+    if (name === 'cayman' || name === 'caymanislands' || name === 'cay') return 'cayman-islands';
+    // South Africa fix
+    if (name === 'southafrica') return 'south-africa';
+    return name;
+};
+
 
     // -------------------------------
     // Render function

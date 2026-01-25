@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bangumi Wiki 终极增强套件
 // @namespace    https://tampermonkey.net/
-// @version      3.1.3
+// @version      3.1.3.2
 // @description  集成Wiki按钮、关联按钮、封面上传、批量关联、批量分集编辑、内容快捷填充、单行本快捷创建、编辑预览功能
 // @author       Bios (improved Claude & Gemini)
 // @include      /^https?:\/\/(bgm|bangumi|chii)\.tv\/(subject|character|person|new_subject)\/.*/
@@ -551,10 +551,12 @@
         align-items: center;
         animation: fadeIn 0.2s ease-in;
     }
+    
     @keyframes fadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
     }
+    
     .preview-container {
         background-color: white;
         padding: 25px;
@@ -566,6 +568,7 @@
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     }
+    
     .preview-header {
         font-size: 20px;
         font-weight: bold;
@@ -574,15 +577,18 @@
         padding-bottom: 12px;
         color: #333;
     }
+    
     .preview-content {
         margin-bottom: 20px;
     }
+    
     .preview-section {
         margin-bottom: 30px;
         border: 1px solid #e8e8e8;
         border-radius: 6px;
         overflow: hidden;
     }
+    
     .preview-section-title {
         font-weight: bold;
         padding: 12px 15px;
@@ -591,9 +597,11 @@
         color: #444;
         border-bottom: 1px solid #e0e0e0;
     }
+    
     .preview-diff-container {
         background-color: #fafafa;
     }
+    
     .preview-diff-header {
         background-color: #f5f5f5;
         padding: 10px 15px;
@@ -604,12 +612,15 @@
         display: flex;
         justify-content: space-around;
     }
+    
     .preview-diff-header .old-label {
         color: #c73232;
     }
+    
     .preview-diff-header .new-label {
         color: #28a745;
     }
+    
     .preview-diff-content {
         max-height: 400px;
         overflow-y: auto;
@@ -617,17 +628,21 @@
         font-size: 13px;
         line-height: 1.5;
     }
+    
     .preview-diff-line {
         display: flex;
         border-bottom: 1px solid #f0f0f0;
         transition: background-color 0.15s;
     }
+    
     .preview-diff-line:hover {
         background-color: #f9f9f9;
     }
+    
     .preview-diff-line:last-child {
         border-bottom: none;
     }
+    
     .preview-diff-old {
         background-color: #fff;
         color: #333;
@@ -637,6 +652,7 @@
         word-break: break-word;
         border-right: 1px solid #e8e8e8;
     }
+    
     .preview-diff-new {
         background-color: #fff;
         color: #333;
@@ -645,32 +661,38 @@
         white-space: pre-wrap;
         word-break: break-word;
     }
+    
     .preview-diff-old .del {
         background-color: #ffeef0;
         color: #c73232;
         text-decoration: line-through;
         padding: 2px 0;
     }
+    
     .empty-placeholder {
         color: #999;
         font-style: italic;
         font-size: 12px;
     }
+    
     .preview-diff-new .add {
         background-color: #e6ffed;
         color: #28a745;
         padding: 2px 0;
     }
+    
     .preview-diff-old .mod {
         background-color: #fff3cd;
         color: #856404;
         padding: 2px 0;
     }
+    
     .preview-diff-new .mod {
         background-color: #d1ecf1;
         color: #0c5460;
         padding: 2px 0;
     }
+    
     .preview-diff-line-number {
         color: #999;
         text-align: right;
@@ -681,12 +703,15 @@
         user-select: none;
         font-size: 12px;
     }
+    
     .preview-diff-line.unchanged {
         opacity: 0.6;
     }
+    
     .preview-diff-line.changed {
         background-color: #fffef7;
     }
+    
     .preview-buttons {
         display: flex;
         justify-content: center;
@@ -695,6 +720,7 @@
         padding-top: 20px;
         border-top: 2px solid #e8e8e8;
     }
+    
     .preview-button {
         padding: 8px 20px;
         cursor: pointer;
@@ -706,22 +732,28 @@
         transition: all 0.2s;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+    
     .preview-button:hover {
         transform: translateY(-1px);
         box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     }
+    
     .preview-button-cancel {
         background-color: #dc3545;
     }
+    
     .preview-button-cancel:hover {
         background-color: #c82333;
     }
+    
     .preview-button-confirm {
         background-color: #28a745;
     }
+    
     .preview-button-confirm:hover {
         background-color: #218838;
     }
+    
     .preview-close {
         position: absolute;
         top: 15px;
@@ -737,16 +769,19 @@
         border-radius: 50%;
         transition: all 0.2s;
     }
+    
     .preview-close:hover {
         background-color: #f0f0f0;
         color: #333;
     }
+    
     .no-changes-message {
         text-align: center;
         padding: 40px 20px;
         color: #666;
         font-size: 15px;
     }
+    
     .stats-info {
         font-size: 12px;
         color: #888;
@@ -755,10 +790,12 @@
         background-color: #f9f9f9;
         border-top: 1px solid #e8e8e8;
     }
+    
     .stats-add {
         color: #28a745;
         font-weight: 600;
     }
+    
     .stats-del {
         color: #dc3545;
         font-weight: 600;
@@ -774,6 +811,7 @@
 </style>
     `);
     }
+    
 
     /* =============
      Wiki、关联按钮
@@ -3931,458 +3969,643 @@
     ========= */
     function initBgmPreview() {
 
-        // 配置常量 
-        const CONFIG = {
-            INFOBOX_WAIT_MAX_ATTEMPTS: 30,
-            INFOBOX_WAIT_INTERVAL: 200,
-            DIFF_CACHE_MAX_SIZE: 100,
-            SIMILARITY_THRESHOLD: 0.8
-        };
+        // 标记预览功能是否已禁用
+        let previewDisabled = false;
 
-        // 全局状态管理 
-        const State = {
-            previewDisabled: false,
-            originalButtons: new Map(),
-            currentEscHandler: null,
-            diffCache: new Map(),
-            originalInfoboxContent: ''
-        };
+        // 保存原始按钮的引用，防止重复创建
+        let originalButtons = new Map();
 
-        // 工具函数模块 
-        const Utils = {
-            escapeHtml(str) {
-                if (!str) return '';
-                return String(str)
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;')
-                    .replace(/'/g, '&#39;')
-                    .replace(/\s/g, (match) => {
-                    if (match === ' ') return ' ';
-                    if (match === '\t') return '&nbsp;&nbsp;&nbsp;&nbsp;';
-                    return match;
+        // 拦截提交按钮，添加预览逻辑并确保漫画条目类型正确
+        function interceptSubmitButtons() {
+            const submitButtons = document.querySelectorAll('input.inputBtn[value="提交"][name="submit"][type="submit"]');
+            submitButtons.forEach(button => {
+                if (originalButtons.has(button)) return;
+                const originalForm = button.form;
+                const originalSubmitEvent = originalForm ? originalForm.onsubmit : null;
+                originalButtons.set(button, {
+                    originalOnClick: button.onclick,
+                    originalForm: originalForm,
+                    originalSubmitEvent: originalSubmitEvent,
+                    handled: true
                 });
-            },
-
-            cleanDiffCache() {
-                if (State.diffCache.size > CONFIG.DIFF_CACHE_MAX_SIZE) {
-                    const keysToDelete = Array.from(State.diffCache.keys()).slice(0, 50);
-                    keysToDelete.forEach(key => State.diffCache.delete(key));
-                }
-            },
-
-            levenshteinDistance(str1, str2) {
-                const len1 = str1.length;
-                const len2 = str2.length;
-                const matrix = Array(len1 + 1).fill(null).map(() => Array(len2 + 1).fill(0));
-                for (let i = 0; i <= len1; i++) matrix[i][0] = i;
-                for (let j = 0; j <= len2; j++) matrix[0][j] = j;
-                for (let i = 1; i <= len1; i++) {
-                    for (let j = 1; j <= len2; j++) {
-                        const cost = str1[i - 1] === str2[j - 1] ? 0 : 1;
-                        matrix[i][j] = Math.min(
-                            matrix[i - 1][j] + 1,
-                            matrix[i][j - 1] + 1,
-                            matrix[i - 1][j - 1] + cost
-                        );
-                    }
-                }
-                return matrix[len1][len2];
-            },
-
-            calculateSimilarity(str1, str2) {
-                if (!str1 && !str2) return 1.0;
-                if (!str1 || !str2) return 0.0;
-                const s1 = str1.trim();
-                const s2 = str2.trim();
-                if (s1 === s2) return 1.0;
-                const maxLen = Math.max(s1.length, s2.length);
-                if (maxLen === 0) return 1.0;
-                return 1 - (this.levenshteinDistance(s1, s2) / maxLen);
-            }
-        };
-
-        // Diff算法模块 (核心逻辑) 
-        const DiffEngine = {
-            myersDiff(text1, text2) {
-                const cacheKey = `${text1.length}-${text2.length}-${text1.slice(0, 30)}-${text2.slice(0, 30)}`;
-                if (State.diffCache.has(cacheKey)) return State.diffCache.get(cacheKey);
-
-                const n = text1.length;
-                const m = text2.length;
-                const max = n + m;
-                const v = {};
-                const trace = [];
-                v[1] = 0;
-
-                for (let d = 0; d <= max; d++) {
-                    trace.push({...v});
-                    for (let k = -d; k <= d; k += 2) {
-                        let x;
-                        if (k === -d || (k !== d && v[k - 1] < v[k + 1])) {
-                            x = v[k + 1];
-                        } else {
-                            x = v[k - 1] + 1;
+                button.onclick = function(event) {
+                    if (previewDisabled) return true;
+                    event.preventDefault();
+                    showPreview(button);
+                    return false;
+                };
+                if (originalForm) {
+                    originalForm.onsubmit = function(event) {
+                        if (previewDisabled) {
+                            return originalSubmitEvent ? originalSubmitEvent.call(this, event) : true;
                         }
-                        let y = x - k;
-                        while (x < n && y < m && text1[x] === text2[y]) {
-                            x++;
-                            y++;
-                        }
-                        v[k] = x;
-                        if (x >= n && y >= m) {
-                            const result = this.backtrack(trace, text1, text2, d);
-                            State.diffCache.set(cacheKey, result);
-                            Utils.cleanDiffCache();
-                            return result;
-                        }
-                    }
-                }
-                return [];
-            },
-
-            backtrack(trace, text1, text2, d) {
-                const diff = [];
-                let x = text1.length;
-                let y = text2.length;
-                for (let i = d; i >= 0; i--) {
-                    const v = trace[i];
-                    const k = x - y;
-                    let prevK;
-                    if (k === -i || (k !== i && v[k - 1] < v[k + 1])) {
-                        prevK = k + 1;
-                    } else {
-                        prevK = k - 1;
-                    }
-                    const prevX = v[prevK];
-                    const prevY = prevX - prevK;
-                    while (x > prevX && y > prevY) {
-                        diff.unshift({ type: 'equal', char: text1[x - 1] });
-                        x--; y--;
-                    }
-                    if (y > prevY) {
-                        diff.unshift({ type: 'add', char: text2[y - 1] });
-                        y--;
-                    } else if (x > prevX) {
-                        diff.unshift({ type: 'delete', char: text1[x - 1] });
-                        x--;
-                    }
-                }
-                return diff;
-            },
-
-            computeLCS(originalLines, newLines) {
-                const m = originalLines.length;
-                const n = newLines.length;
-                const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
-
-                for (let i = 1; i <= m; i++) {
-                    for (let j = 1; j <= n; j++) {
-                        const oldLine = originalLines[i - 1].trim();
-                        const newLine = newLines[j - 1].trim();
-                        if (oldLine === newLine) {
-                            dp[i][j] = dp[i - 1][j - 1] + 1;
-                        } else {
-                            const similarity = Utils.calculateSimilarity(oldLine, newLine);
-                            if (similarity > CONFIG.SIMILARITY_THRESHOLD) {
-                                dp[i][j] = dp[i - 1][j - 1] + 0.8;
-                            } else {
-                                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                        if (event && event.submittedViaPreview) {
+                            const infobox = document.querySelector('#subject_infobox');
+                            const isManga = infobox && infobox.value.includes('Infobox animanga/Manga');
+                            if (isManga) {
+                                let platformInput = document.querySelector('input[name="platform"][value="1001"]');
+                                if (platformInput && !platformInput.checked) {
+                                    platformInput.checked = true;
+                                    platformInput.click();
+                                    console.log('强制选择了漫画类型(platform=1001)');
+                                }
+                                if (!document.querySelector('input[name="platform"][type="hidden"]')) {
+                                    const hiddenPlatform = document.createElement('input');
+                                    hiddenPlatform.type = 'hidden';
+                                    hiddenPlatform.name = 'platform';
+                                    hiddenPlatform.value = '1001';
+                                    originalForm.appendChild(hiddenPlatform);
+                                    console.log('添加了隐藏的 platform 字段：value=1001');
+                                } else {
+                                    const existingHidden = document.querySelector('input[name="platform"][type="hidden"]');
+                                    if (existingHidden) {
+                                        existingHidden.value = '1001';
+                                        console.log('更新了隐藏的 platform 字段：value=1001');
+                                    }
+                                }
+                                const comicRadio = document.querySelector('#cat_comic');
+                                if (comicRadio && !comicRadio.checked) {
+                                    comicRadio.click();
+                                    console.log('重新选择了漫画单选框(cat_comic)');
+                                }
+                                if (typeof WikiTpl === 'function') {
+                                    WikiTpl('Manga');
+                                    console.log('手动调用了 WikiTpl("Manga")');
+                                }
                             }
+                            return originalSubmitEvent ? originalSubmitEvent.call(this, event) : true;
                         }
+                        event.preventDefault();
+                        showPreview(button);
+                        return false;
+                    };
+                }
+            });
+        }
+
+        // 保存表单数据
+        function saveFormData() {
+            const formData = {};
+            document.querySelectorAll('input, textarea, select').forEach(el => {
+                if (el.name) {
+                    formData[el.name] = el.value;
+                }
+            });
+            return formData;
+        }
+
+        // 恢复表单数据
+        function restoreFormData(formData) {
+            for (const name in formData) {
+                const el = document.querySelector(`[name="${name}"]`);
+                if (el) {
+                    el.value = formData[name];
+                }
+            }
+        }
+
+        // 阻止Enter键提交表单
+        function preventEnterSubmit() {
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' && !previewDisabled &&
+                    !(document.activeElement &&
+                      (document.activeElement.tagName === 'INPUT' ||
+                       document.activeElement.tagName === 'TEXTAREA'))) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        }
+
+        // 切换到WCODE模式并等待内容加载
+        function switchToWCODEMode(callback) {
+            const wikiModeLink = document.querySelector('a.l[onclick="NormaltoWCODE()"]');
+            if (!wikiModeLink) {
+                console.log('已在WCODE模式或无法切换');
+                callback();
+                return;
+            }
+            console.log('切换到WCODE模式');
+            wikiModeLink.click();
+            waitForInfobox(callback);
+        }
+
+        // 等待Infobox内容加载
+        function waitForInfobox(callback, maxAttempts = 30, interval = 200) {
+            let attempts = 0;
+            const checkInfobox = () => {
+                const infobox = document.querySelector('#subject_infobox');
+                if (infobox && infobox.value) {
+                    console.log('Infobox内容已加载');
+                    callback();
+                } else if (attempts >= maxAttempts) {
+                    console.error('Infobox加载超时');
+                    callback();
+                } else {
+                    attempts++;
+                    setTimeout(checkInfobox, interval);
+                }
+            };
+            checkInfobox();
+        }
+
+        // 收集所有表单字段数据并获取原始数据
+        function collectFormData() {
+            const formData = {};
+
+            // 收集标题
+            const titleInput = document.querySelector('input[name="subject_title"]');
+            if (titleInput) {
+                formData.title = {
+                    current: titleInput.value,
+                    original: titleInput.defaultValue || ""
+                };
+            }
+
+            // 收集Infobox
+            const infobox = document.querySelector('#subject_infobox');
+            if (infobox) {
+                formData.infobox = {
+                    current: infobox.value,
+                    original: window.originalInfoboxContent || ""
+                };
+            }
+
+            // 收集简介
+            const summary = document.querySelector('textarea[name="subject_summary"]');
+            if (summary) {
+                formData.summary = {
+                    current: summary.value,
+                    original: summary.defaultValue || ""
+                };
+            }
+
+            // 收集标签
+            const tags = document.querySelector('input[name="subject_meta_tags"]');
+            if (tags) {
+                formData.tags = {
+                    current: tags.value,
+                    original: tags.defaultValue || ""
+                };
+            }
+
+            // 收集编辑摘要
+            const editSummary = document.querySelector('input[name="editSummary"]');
+            if (editSummary) {
+                formData.editSummary = {
+                    current: editSummary.value,
+                    original: editSummary.defaultValue || ""
+                };
+            }
+
+            return formData;
+        }
+
+        // Myers差分算法 - 用于精确的字符级差异检测
+        function myersDiff(text1, text2) {
+            const n = text1.length;
+            const m = text2.length;
+            const max = n + m;
+            const v = {};
+            const trace = [];
+
+            v[1] = 0;
+
+            for (let d = 0; d <= max; d++) {
+                trace.push({...v});
+
+                for (let k = -d; k <= d; k += 2) {
+                    let x;
+                    if (k === -d || (k !== d && v[k - 1] < v[k + 1])) {
+                        x = v[k + 1];
+                    } else {
+                        x = v[k - 1] + 1;
+                    }
+
+                    let y = x - k;
+
+                    while (x < n && y < m && text1[x] === text2[y]) {
+                        x++;
+                        y++;
+                    }
+
+                    v[k] = x;
+
+                    if (x >= n && y >= m) {
+                        return backtrack(trace, text1, text2, d);
                     }
                 }
-                const lcs = [];
-                let i = m, j = n;
-                while (i > 0 && j > 0) {
+            }
+
+            return [];
+        }
+
+        // 回溯Myers算法结果
+        function backtrack(trace, text1, text2, d) {
+            const diff = [];
+            let x = text1.length;
+            let y = text2.length;
+
+            for (let i = d; i >= 0; i--) {
+                const v = trace[i];
+                const k = x - y;
+
+                let prevK;
+                if (k === -i || (k !== i && v[k - 1] < v[k + 1])) {
+                    prevK = k + 1;
+                } else {
+                    prevK = k - 1;
+                }
+
+                const prevX = v[prevK];
+                const prevY = prevX - prevK;
+
+                while (x > prevX && y > prevY) {
+                    diff.unshift({ type: 'equal', char: text1[x - 1] });
+                    x--;
+                    y--;
+                }
+
+                if (y > prevY) {
+                    diff.unshift({ type: 'add', char: text2[y - 1] });
+                    y--;
+                } else if (x > prevX) {
+                    diff.unshift({ type: 'delete', char: text1[x - 1] });
+                    x--;
+                }
+            }
+
+            return diff;
+        }
+
+        // 改进的行级差分算法
+        function diffLines(originalLines, newLines) {
+            if (originalLines.length === 0 && newLines.length === 0) {
+                return [];
+            }
+            if (originalLines.length === 0) {
+                return newLines.map(line => ({ old: '', new: line, type: 'add' }));
+            }
+            if (newLines.length === 0) {
+                return originalLines.map(line => ({ old: line, new: '', type: 'delete' }));
+            }
+
+            const lcs = computeLCS(originalLines, newLines);
+            const result = [];
+            let i = 0, j = 0;
+            let lcsIndex = 0;
+
+            while (i < originalLines.length || j < newLines.length) {
+                if (lcsIndex < lcs.length &&
+                    i === lcs[lcsIndex].oldIndex &&
+                    j === lcs[lcsIndex].newIndex) {
+                    const oldLine = originalLines[i];
+                    const newLine = newLines[j];
+
+                    if (oldLine === newLine) {
+                        result.push({ old: oldLine, new: newLine, type: 'equal' });
+                    } else {
+                        result.push({ old: oldLine, new: newLine, type: 'modify' });
+                    }
+
+                    i++;
+                    j++;
+                    lcsIndex++;
+                } else if (lcsIndex < lcs.length) {
+                    const nextOldIndex = lcs[lcsIndex].oldIndex;
+                    const nextNewIndex = lcs[lcsIndex].newIndex;
+
+                    if (i < nextOldIndex && j < nextNewIndex) {
+                        // 同时有删除和添加，配对处理
+                        result.push({
+                            old: originalLines[i],
+                            new: newLines[j],
+                            type: 'modify'
+                        });
+                        i++;
+                        j++;
+                    } else if (i < nextOldIndex) {
+                        result.push({ old: originalLines[i], new: '', type: 'delete' });
+                        i++;
+                    } else if (j < nextNewIndex) {
+                        result.push({ old: '', new: newLines[j], type: 'add' });
+                        j++;
+                    }
+                } else {
+                    if (i < originalLines.length && j < newLines.length) {
+                        result.push({
+                            old: originalLines[i],
+                            new: newLines[j],
+                            type: 'modify'
+                        });
+                        i++;
+                        j++;
+                    } else if (i < originalLines.length) {
+                        result.push({ old: originalLines[i], new: '', type: 'delete' });
+                        i++;
+                    } else if (j < newLines.length) {
+                        result.push({ old: '', new: newLines[j], type: 'add' });
+                        j++;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        // 计算最长公共子序列(LCS)
+        function computeLCS(originalLines, newLines) {
+            const m = originalLines.length;
+            const n = newLines.length;
+            const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+
+            for (let i = 1; i <= m; i++) {
+                for (let j = 1; j <= n; j++) {
                     const oldLine = originalLines[i - 1].trim();
                     const newLine = newLines[j - 1].trim();
-                    if (oldLine === newLine || Utils.calculateSimilarity(oldLine, newLine) > CONFIG.SIMILARITY_THRESHOLD) {
-                        lcs.unshift({ oldIndex: i - 1, newIndex: j - 1 });
-                        i--; j--;
-                    } else if (dp[i - 1][j] > dp[i][j - 1]) {
-                        i--;
+
+                    if (oldLine === newLine) {
+                        dp[i][j] = dp[i - 1][j - 1] + 1;
                     } else {
-                        j--;
-                    }
-                }
-                return lcs;
-            },
-
-            diffLines(originalLines, newLines) {
-                if (originalLines.length === 0 && newLines.length === 0) return [];
-                if (originalLines.length === 0) return newLines.map(line => ({ old: '', new: line, type: 'add' }));
-                if (newLines.length === 0) return originalLines.map(line => ({ old: line, new: '', type: 'delete' }));
-
-                const lcs = this.computeLCS(originalLines, newLines);
-                const result = [];
-                let i = 0, j = 0, lcsIndex = 0;
-
-                while (i < originalLines.length || j < newLines.length) {
-                    if (lcsIndex < lcs.length && i === lcs[lcsIndex].oldIndex && j === lcs[lcsIndex].newIndex) {
-                        const oldLine = originalLines[i];
-                        const newLine = newLines[j];
-                        result.push({ old: oldLine, new: newLine, type: oldLine === newLine ? 'equal' : 'modify' });
-                        i++; j++; lcsIndex++;
-                    } else if (lcsIndex < lcs.length) {
-                        const nextOld = lcs[lcsIndex].oldIndex;
-                        const nextNew = lcs[lcsIndex].newIndex;
-                        if (i < nextOld && j < nextNew) {
-                            result.push({ old: originalLines[i], new: newLines[j], type: 'modify' });
-                            i++; j++;
-                        } else if (i < nextOld) {
-                            result.push({ old: originalLines[i], new: '', type: 'delete' });
-                            i++;
-                        } else if (j < nextNew) {
-                            result.push({ old: '', new: newLines[j], type: 'add' });
-                            j++;
-                        }
-                    } else {
-                        if (i < originalLines.length && j < newLines.length) {
-                            result.push({ old: originalLines[i], new: newLines[j], type: 'modify' });
-                            i++; j++;
-                        } else if (i < originalLines.length) {
-                            result.push({ old: originalLines[i], new: '', type: 'delete' });
-                            i++;
-                        } else if (j < newLines.length) {
-                            result.push({ old: '', new: newLines[j], type: 'add' });
-                            j++;
-                        }
-                    }
-                }
-                return result;
-            },
-
-            highlightCharDifferences(oldStr, newStr) {
-                try {
-                    if (oldStr === newStr) return { old: Utils.escapeHtml(oldStr), new: Utils.escapeHtml(newStr) };
-                    if (!oldStr && newStr) return { old: '', new: `<span class="add">${Utils.escapeHtml(newStr)}</span>` };
-                    if (oldStr && !newStr) return { old: `<span class="del">${Utils.escapeHtml(oldStr)}</span>`, new: '<span class="empty-placeholder">(已删除)</span>' };
-
-                    const diff = this.myersDiff(oldStr, newStr);
-                    let oldHtml = '', newHtml = '', addBuffer = '', delBuffer = '';
-
-                    diff.forEach((item) => {
-                        const char = (item && typeof item.char !== 'undefined') ? String(item.char) : '';
-                        const type = (item && item.type) || 'equal';
-
-                        if (type === 'equal') {
-                            if (delBuffer) { oldHtml += `<span class="del">${Utils.escapeHtml(delBuffer)}</span>`; delBuffer = ''; }
-                            if (addBuffer) { newHtml += `<span class="add">${Utils.escapeHtml(addBuffer)}</span>`; addBuffer = ''; }
-                            oldHtml += Utils.escapeHtml(char);
-                            newHtml += Utils.escapeHtml(char);
-                        } else if (type === 'delete') {
-                            delBuffer += char;
-                        } else if (type === 'add') {
-                            addBuffer += char;
-                        }
-                    });
-                    if (delBuffer) oldHtml += `<span class="del">${Utils.escapeHtml(delBuffer)}</span>`;
-                    if (addBuffer) newHtml += `<span class="add">${Utils.escapeHtml(addBuffer)}</span>`;
-
-                    return { old: oldHtml, new: newHtml };
-                } catch (error) {
-                    console.error('Diff Error:', error);
-                    return { old: Utils.escapeHtml(oldStr || ''), new: Utils.escapeHtml(newStr || '') };
-                }
-            }
-        };
-
-        // 表单管理模块 
-        const FormManager = {
-            selectors: {
-                title: 'input[name="subject_title"]',
-                infobox: '#subject_infobox',
-                summary: 'textarea[name="subject_summary"]',
-                tags: 'input[name="subject_meta_tags"]',
-                editSummary: 'input[name="editSummary"]'
-            },
-
-            save() {
-                const formData = {};
-                document.querySelectorAll('input, textarea, select').forEach(el => {
-                    if (el.name) formData[el.name] = el.value;
-                });
-                return formData;
-            },
-
-            restore(formData) {
-                if (!formData) return;
-                for (const name in formData) {
-                    const el = document.querySelector(`[name="${name}"]`);
-                    if (el) el.value = formData[name];
-                }
-            },
-
-            collect() {
-                const formData = {};
-                for (const [key, selector] of Object.entries(this.selectors)) {
-                    const element = document.querySelector(selector);
-                    if (element) {
-                        formData[key] = {
-                            current: element.value || '',
-                            original: key === 'infobox'
-                            ? (State.originalInfoboxContent || element.defaultValue || '')
-                            : (element.defaultValue || '')
-                        };
-                    }
-                }
-                return formData;
-            }
-        };
-
-        // 编辑器模式切换模块 
-        const EditorMode = {
-            waitForInfobox(maxAttempts = CONFIG.INFOBOX_WAIT_MAX_ATTEMPTS, interval = CONFIG.INFOBOX_WAIT_INTERVAL) {
-                return new Promise((resolve, reject) => {
-                    let attempts = 0;
-                    const checkInfobox = () => {
-                        const infobox = document.querySelector('#subject_infobox');
-                        if (infobox && infobox.value) {
-                            resolve();
-                        } else if (attempts >= maxAttempts) {
-                            reject(new Error('Infobox Timeout'));
+                        const similarity = calculateSimilarity(oldLine, newLine);
+                        if (similarity > 0.8) {
+                            dp[i][j] = dp[i - 1][j - 1] + 0.8;
                         } else {
-                            attempts++;
-                            setTimeout(checkInfobox, interval);
+                            dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
                         }
-                    };
-                    checkInfobox();
-                });
-            },
-
-            async switchToWCODE() {
-                const wikiModeLink = document.querySelector('a.l[onclick="NormaltoWCODE()"]');
-                if (!wikiModeLink) return;
-                wikiModeLink.click();
-                await this.waitForInfobox();
-            },
-
-            async captureOriginalContent() {
-                try {
-                    await this.switchToWCODE();
-                    const infobox = document.querySelector('#subject_infobox');
-                    if (infobox) {
-                        State.originalInfoboxContent = infobox.defaultValue || infobox.value || '';
                     }
-                } catch (error) {
-                    console.error('Capture Failed:', error);
                 }
             }
-        };
 
-        // UI渲染模块 
-        const UIRenderer = {
-            // 创建差异对比视图
-            createDiffView(title, originalText, newText) {
-                const section = document.createElement('div');
-                section.className = 'preview-section';
+            const lcs = [];
+            let i = m, j = n;
 
-                const sectionTitle = document.createElement('div');
-                sectionTitle.className = 'preview-section-title';
-                sectionTitle.textContent = title;
-                section.appendChild(sectionTitle);
+            while (i > 0 && j > 0) {
+                const oldLine = originalLines[i - 1].trim();
+                const newLine = newLines[j - 1].trim();
 
-                const diffContainer = document.createElement('div');
-                diffContainer.className = 'preview-diff-container';
+                if (oldLine === newLine || calculateSimilarity(oldLine, newLine) > 0.8) {
+                    lcs.unshift({ oldIndex: i - 1, newIndex: j - 1 });
+                    i--;
+                    j--;
+                } else if (dp[i - 1][j] > dp[i][j - 1]) {
+                    i--;
+                } else {
+                    j--;
+                }
+            }
 
-                const header = document.createElement('div');
-                header.className = 'preview-diff-header';
-                header.innerHTML = '<span class="old-label">修改前</span><span class="new-label">修改后</span>';
-                diffContainer.appendChild(header);
+            return lcs;
+        }
 
-                const content = document.createElement('div');
-                content.className = 'preview-diff-content';
+        // 计算相似度函数（改进版）
+        function calculateSimilarity(str1, str2) {
+            if (!str1 && !str2) return 1.0;
+            if (!str1 || !str2) return 0.0;
 
-                const ori = (originalText || '').split('\n');
-                const neu = (newText || '').split('\n');
-                const lines = DiffEngine.diffLines(ori, neu);
+            const s1 = str1.trim();
+            const s2 = str2.trim();
 
-                let addCount = 0;
-                let delCount = 0;
-                let modCount = 0;
+            if (s1 === s2) return 1.0;
 
-                lines.forEach((pair, idx) => {
-                    const line = document.createElement('div');
-                    line.className = 'preview-diff-line';
+            const len1 = s1.length;
+            const len2 = s2.length;
+            const maxLen = Math.max(len1, len2);
 
-                    if (pair.type === 'equal') {
-                        line.classList.add('unchanged');
-                    } else {
-                        line.classList.add('changed');
-                        if (pair.type === 'add') addCount++;
-                        if (pair.type === 'delete') delCount++;
-                        if (pair.type === 'modify') modCount++;
+            if (maxLen === 0) return 1.0;
+
+            // 使用编辑距离算法
+            const distance = levenshteinDistance(s1, s2);
+            return 1 - (distance / maxLen);
+        }
+
+        // Levenshtein编辑距离
+        function levenshteinDistance(str1, str2) {
+            const len1 = str1.length;
+            const len2 = str2.length;
+            const matrix = Array(len1 + 1).fill(null).map(() => Array(len2 + 1).fill(0));
+
+            for (let i = 0; i <= len1; i++) matrix[i][0] = i;
+            for (let j = 0; j <= len2; j++) matrix[0][j] = j;
+
+            for (let i = 1; i <= len1; i++) {
+                for (let j = 1; j <= len2; j++) {
+                    const cost = str1[i - 1] === str2[j - 1] ? 0 : 1;
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j] + 1,
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j - 1] + cost
+                    );
+                }
+            }
+
+            return matrix[len1][len2];
+        }
+
+        // 精确标记字符级差异（修复 undefined 问题版）
+        function highlightCharDifferences(oldStr, newStr) {
+            if (oldStr === newStr) {
+                return { old: escapeHtml(oldStr), new: escapeHtml(newStr) };
+            }
+
+            if (!oldStr && newStr) {
+                return {
+                    old: '',
+                    new: `<span class="add">${escapeHtml(newStr)}</span>`
+                };
+            }
+
+            if (oldStr && !newStr) {
+                return {
+                    old: `<span class="del">${escapeHtml(oldStr)}</span>`,
+                    new: '<span class="empty-placeholder">（已删除）</span>'
+                };
+            }
+
+            const diff = myersDiff(oldStr, newStr);
+            let oldHtml = '';
+            let newHtml = '';
+            let addBuffer = '';
+            let delBuffer = '';
+
+            diff.forEach((item) => {
+                // 核心修复：确保 char 存在，如果是 undefined 则转换为空字符串
+                const char = item.char || '';
+
+                if (item.type === 'equal') {
+                    // 先输出缓存的差异
+                    if (delBuffer) {
+                        oldHtml += `<span class="del">${escapeHtml(delBuffer)}</span>`;
+                        delBuffer = '';
                     }
-
-                    const lineNumber = document.createElement('div');
-                    lineNumber.className = 'preview-diff-line-number';
-                    lineNumber.textContent = idx + 1;
-                    line.appendChild(lineNumber);
-
-                    const oldContent = document.createElement('div');
-                    oldContent.className = 'preview-diff-old';
-                    const newContent = document.createElement('div');
-                    newContent.className = 'preview-diff-new';
-
-                    if (pair.type === 'equal') {
-                        oldContent.innerHTML = Utils.escapeHtml(pair.old);
-                        newContent.innerHTML = Utils.escapeHtml(pair.new);
-                    } else if (pair.type === 'delete') {
-                        oldContent.innerHTML = `<span class="del">${Utils.escapeHtml(pair.old)}</span>`;
-                        newContent.innerHTML = '<span class="empty-placeholder">(已删除)</span>';
-                    } else if (pair.type === 'add') {
-                        oldContent.innerHTML = '<span class="empty-placeholder">(新增)</span>';
-                        newContent.innerHTML = `<span class="add">${Utils.escapeHtml(pair.new)}</span>`;
-                    } else if (pair.type === 'modify') {
-                        const diffs = DiffEngine.highlightCharDifferences(pair.old, pair.new);
-                        oldContent.innerHTML = diffs.old;
-                        newContent.innerHTML = diffs.new;
+                    if (addBuffer) {
+                        newHtml += `<span class="add">${escapeHtml(addBuffer)}</span>`;
+                        addBuffer = '';
                     }
+                    // 输出相同的字符
+                    oldHtml += escapeHtml(char);
+                    newHtml += escapeHtml(char);
+                } else if (item.type === 'delete') {
+                    delBuffer += char;
+                } else if (item.type === 'add') {
+                    addBuffer += char;
+                }
+            });
 
-                    line.appendChild(oldContent);
-                    line.appendChild(newContent);
-                    content.appendChild(line);
-                });
+            // 输出剩余的差异
+            if (delBuffer) {
+                oldHtml += `<span class="del">${escapeHtml(delBuffer)}</span>`;
+            }
+            if (addBuffer) {
+                newHtml += `<span class="add">${escapeHtml(addBuffer)}</span>`;
+            }
 
-                diffContainer.appendChild(content);
+            return { old: oldHtml, new: newHtml };
+        }
 
-                // 添加统计信息
-                if (addCount > 0 || delCount > 0 || modCount > 0) {
-                    const stats = document.createElement('div');
-                    stats.className = 'stats-info';
-                    stats.innerHTML = `变更统计: <span class="stats-add">${addCount} 行新增</span>, <span class="stats-del">${delCount} 行删除</span>, ${modCount} 行修改`;
-                    diffContainer.appendChild(stats);
+        // 创建差异对比视图的UI
+        function createDiffView(title, originalText, newText) {
+            const section = document.createElement('div');
+            section.className = 'preview-section';
+
+            const sectionTitle = document.createElement('div');
+            sectionTitle.className = 'preview-section-title';
+            sectionTitle.textContent = title;
+            section.appendChild(sectionTitle);
+
+            const diffContainer = document.createElement('div');
+            diffContainer.className = 'preview-diff-container';
+
+            const header = document.createElement('div');
+            header.className = 'preview-diff-header';
+            header.innerHTML = '<span class="old-label">修改前</span><span class="new-label">修改后</span>';
+            diffContainer.appendChild(header);
+
+            const content = document.createElement('div');
+            content.className = 'preview-diff-content';
+
+            const ori = originalText.split('\n');
+            const neu = newText.split('\n');
+            const lines = diffLines(ori, neu);
+
+            let addCount = 0;
+            let delCount = 0;
+            let modCount = 0;
+
+            lines.forEach((pair, idx) => {
+                const line = document.createElement('div');
+                line.className = 'preview-diff-line';
+
+                if (pair.type === 'equal') {
+                    line.classList.add('unchanged');
+                } else {
+                    line.classList.add('changed');
+                    if (pair.type === 'add') addCount++;
+                    if (pair.type === 'delete') delCount++;
+                    if (pair.type === 'modify') modCount++;
                 }
 
-                section.appendChild(diffContainer);
-                return section;
-            },
+                const lineNumber = document.createElement('div');
+                lineNumber.className = 'preview-diff-line-number';
+                lineNumber.textContent = idx + 1;
+                line.appendChild(lineNumber);
 
-            // 创建预览界面
-            createPreviewUI(formData, onConfirm, onCancel) {
+                const oldContent = document.createElement('div');
+                oldContent.className = 'preview-diff-old';
+                const newContent = document.createElement('div');
+                newContent.className = 'preview-diff-new';
+
+                if (pair.type === 'equal') {
+                    oldContent.innerHTML = escapeHtml(pair.old);
+                    newContent.innerHTML = escapeHtml(pair.new);
+                } else if (pair.type === 'delete') {
+                    oldContent.innerHTML = `<span class="del">${escapeHtml(pair.old)}</span>`;
+                    newContent.innerHTML = '<span class="empty-placeholder">（已删除）</span>';
+                } else if (pair.type === 'add') {
+                    oldContent.innerHTML = '<span class="empty-placeholder">（新增）</span>';
+                    newContent.innerHTML = `<span class="add">${escapeHtml(pair.new)}</span>`;
+                } else if (pair.type === 'modify') {
+                    const diffs = highlightCharDifferences(pair.old, pair.new);
+                    oldContent.innerHTML = diffs.old;
+                    newContent.innerHTML = diffs.new;
+                }
+
+                line.appendChild(oldContent);
+                line.appendChild(newContent);
+                content.appendChild(line);
+            });
+
+            diffContainer.appendChild(content);
+
+            // 添加统计信息
+            if (addCount > 0 || delCount > 0 || modCount > 0) {
+                const stats = document.createElement('div');
+                stats.className = 'stats-info';
+                stats.innerHTML = `变更统计: <span class="stats-add">${addCount} 行新增</span>, <span class="stats-del">${delCount} 行删除</span>, ${modCount} 行修改`;
+                diffContainer.appendChild(stats);
+            }
+
+            section.appendChild(diffContainer);
+            return section;
+        }
+
+        // HTML 转义函数
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;')
+                .replace(/\s/g, (match) => {
+                if (match === ' ') return ' ';
+                if (match === '\t') return '&nbsp;&nbsp;&nbsp;&nbsp;';
+                return match;
+            });
+        }
+
+        // 检查是否已存在预览界面
+        function isPreviewActive() {
+            return document.querySelector('.preview-overlay') !== null;
+        }
+
+        // 关闭预览界面
+        function closePreview() {
+            const overlay = document.querySelector('.preview-overlay');
+            if (overlay) {
+                document.body.removeChild(overlay);
+            }
+        }
+
+        // 显示预览界面
+        function showPreview(originalButton) {
+            if (isPreviewActive()) {
+                closePreview();
+            }
+
+            // 检查当前是否在Normal模式，如果是，则切换到WCODE模式
+            switchToWCODEMode(() => {
+                // 保存当前表单数据以便恢复
+                const savedFormData = saveFormData();
+                // 获取表单数据
+                const formData = collectFormData();
+
                 const overlay = document.createElement('div');
                 overlay.className = 'preview-overlay';
-
                 const container = document.createElement('div');
                 container.className = 'preview-container';
-
-                // 关闭按钮
                 const closeButton = document.createElement('div');
                 closeButton.className = 'preview-close';
                 closeButton.textContent = '×';
-                closeButton.onclick = onCancel;
-
-                // 标题
+                closeButton.onclick = function() {
+                    restoreFormData(savedFormData);
+                    closePreview();
+                };
                 const header = document.createElement('div');
                 header.className = 'preview-header';
                 header.textContent = '📋 提交预览 - 请仔细检查您的修改';
-
-                // 内容区域
                 const content = document.createElement('div');
                 content.className = 'preview-content';
-
                 const fieldNames = {
                     title: '📌 标题',
                     infobox: '📦 条目信息',
@@ -4390,227 +4613,105 @@
                     tags: '🏷️ 标签',
                     editSummary: '✏️ 编辑摘要'
                 };
-
                 let hasContent = false;
                 for (const key in formData) {
                     if (formData[key] && formData[key].current !== formData[key].original) {
                         const fieldTitle = fieldNames[key] || key;
-                        content.appendChild(this.createDiffView(fieldTitle, formData[key].original, formData[key].current));
+                        content.appendChild(createDiffView(fieldTitle, formData[key].original, formData[key].current));
                         hasContent = true;
                     }
                 }
-
                 if (!hasContent) {
                     const noChanges = document.createElement('div');
                     noChanges.className = 'no-changes-message';
                     noChanges.textContent = '✅ 没有检测到内容变化';
                     content.appendChild(noChanges);
                 }
-
-                // 按钮区域
                 const buttonsContainer = document.createElement('div');
                 buttonsContainer.className = 'preview-buttons';
-
                 const cancelButton = document.createElement('button');
                 cancelButton.className = 'preview-button preview-button-cancel';
                 cancelButton.textContent = '取消';
-                cancelButton.onclick = onCancel;
-
+                cancelButton.onclick = function() {
+                    restoreFormData(savedFormData);
+                    closePreview();
+                };
                 const confirmButton = document.createElement('button');
                 confirmButton.className = 'preview-button preview-button-confirm';
-                confirmButton.textContent = '确认提交';
-                confirmButton.onclick = onConfirm;
-
+                confirmButton.textContent = '确认';
+                const form = originalButton.form;
+                confirmButton.onclick = function() {
+                    closePreview();
+                    previewDisabled = true;
+                    if (form) {
+                        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+                        submitEvent.submittedViaPreview = true;
+                        form.dispatchEvent(submitEvent);
+                    } else {
+                        originalButton.click();
+                    }
+                };
                 buttonsContainer.appendChild(cancelButton);
                 buttonsContainer.appendChild(confirmButton);
-
                 container.appendChild(closeButton);
                 container.appendChild(header);
                 container.appendChild(content);
                 container.appendChild(buttonsContainer);
                 overlay.appendChild(container);
+                document.body.appendChild(overlay);
 
-                return overlay;
-            }
-        };
-
-        // 预览控制模块 
-        const PreviewController = {
-            isActive() {
-                return document.querySelector('.preview-overlay') !== null;
-            },
-
-            close() {
-                const overlay = document.querySelector('.preview-overlay');
-                if (overlay) document.body.removeChild(overlay);
-                if (State.currentEscHandler) {
-                    document.removeEventListener('keydown', State.currentEscHandler);
-                    State.currentEscHandler = null;
-                }
-            },
-
-            async show(originalButton) {
-                if (this.isActive()) this.close();
-
-                try {
-                    await EditorMode.switchToWCODE();
-                    const savedFormData = FormManager.save();
-                    const formData = FormManager.collect();
-                    const overlay = UIRenderer.createPreviewUI(
-                        formData,
-                        () => { this.close(); this.submitForm(originalButton); },
-                        () => { FormManager.restore(savedFormData); this.close(); }
-                    );
-                    document.body.appendChild(overlay);
-                    this.setupEscapeHandler(savedFormData);
-                } catch (error) {
-                    console.error('Preview Error:', error);
-                    alert('预览加载失败');
-                }
-            },
-
-            setupEscapeHandler(savedFormData) {
-                if (State.currentEscHandler) document.removeEventListener('keydown', State.currentEscHandler);
-                State.currentEscHandler = (e) => {
+                // 添加ESC键关闭功能
+                const escHandler = function(e) {
                     if (e.key === 'Escape') {
-                        FormManager.restore(savedFormData);
-                        this.close();
+                        restoreFormData(savedFormData);
+                        closePreview();
+                        document.removeEventListener('keydown', escHandler);
                     }
                 };
-                document.addEventListener('keydown', State.currentEscHandler);
-            },
-
-            submitForm(originalButton) {
-                State.previewDisabled = true;
-                const form = originalButton.form;
-                if (form) {
-                    this.handleMangaType(form);
-                    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
-                    submitEvent.submittedViaPreview = true;
-                    form.dispatchEvent(submitEvent);
-                } else {
-                    originalButton.click();
-                }
-            },
-
-            handleMangaType(form) {
-                const infobox = document.querySelector('#subject_infobox');
-                const isManga = infobox && infobox.value.includes('Infobox animanga/Manga');
-                if (isManga) {
-                    let platformInput = document.querySelector('input[name="platform"][value="1001"]');
-                    if (platformInput && !platformInput.checked) {
-                        platformInput.checked = true;
-                        platformInput.click();
-                    }
-                    const hiddenPlatformName = 'input[name="platform"][type="hidden"]';
-                    if (!document.querySelector(hiddenPlatformName)) {
-                        const hiddenPlatform = document.createElement('input');
-                        hiddenPlatform.type = 'hidden';
-                        hiddenPlatform.name = 'platform';
-                        hiddenPlatform.value = '1001';
-                        form.appendChild(hiddenPlatform);
-                    } else {
-                        document.querySelector(hiddenPlatformName).value = '1001';
-                    }
-                    const comicRadio = document.querySelector('#cat_comic');
-                    if (comicRadio && !comicRadio.checked) comicRadio.click();
-                    if (typeof WikiTpl === 'function') WikiTpl('Manga');
-                }
-            }
-        };
-
-        // 按钮拦截模块 
-        const ButtonInterceptor = {
-            cleanup() {
-                for (const [button] of State.originalButtons) {
-                    if (!document.body.contains(button)) State.originalButtons.delete(button);
-                }
-            },
-
-            intercept() {
-                const submitButtons = document.querySelectorAll('input.inputBtn[value="提交"][name="submit"][type="submit"]');
-                submitButtons.forEach(button => {
-                    if (State.originalButtons.has(button)) return;
-                    const originalForm = button.form;
-                    const originalSubmitEvent = originalForm ? originalForm.onsubmit : null;
-
-                    State.originalButtons.set(button, {
-                        originalOnClick: button.onclick,
-                        originalForm: originalForm,
-                        originalSubmitEvent: originalSubmitEvent,
-                        handled: true
-                    });
-
-                    button.onclick = (event) => {
-                        if (State.previewDisabled) return true;
-                        event.preventDefault();
-                        PreviewController.show(button);
-                        return false;
-                    };
-
-                    if (originalForm) {
-                        originalForm.onsubmit = (event) => {
-                            if (State.previewDisabled || (event && event.submittedViaPreview)) {
-                                return originalSubmitEvent ? originalSubmitEvent.call(originalForm, event) : true;
-                            }
-                            event.preventDefault();
-                            PreviewController.show(button);
-                            return false;
-                        };
-                    }
-                });
-            },
-
-            observeChanges() {
-                const observer = new MutationObserver((mutations) => {
-                    let needsIntercept = false;
-                    mutations.forEach((mutation) => {
-                        if (mutation.removedNodes.length > 0) {
-                            Array.from(mutation.removedNodes).forEach(node => {
-                                if (node.nodeType === 1 &&
-                                    (node.matches?.('input.inputBtn[value="提交"]') ||
-                                     node.querySelector?.('input.inputBtn[value="提交"]'))) {
-                                    needsIntercept = true;
-                                }
-                            });
-                        }
-                    });
-                    if (needsIntercept) {
-                        this.cleanup();
-                        setTimeout(() => this.intercept(), 0);
-                    }
-                });
-                observer.observe(document.body, { childList: true, subtree: true });
-            }
-        };
-
-        // Enter键拦截 
-        function preventEnterSubmit() {
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' &&
-                    !State.previewDisabled &&
-                    !(document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName))) {
-                    event.preventDefault();
-                    return false;
-                }
+                document.addEventListener('keydown', escHandler);
             });
         }
 
-        // 初始化 
-        function init() {
-            console.log('Bangumi表单提交预览(逻辑核心版)已加载');
-            // 样式注入已移除
-            setTimeout(() => EditorMode.captureOriginalContent(), 1000);
-            ButtonInterceptor.intercept();
-            ButtonInterceptor.observeChanges();
-            preventEnterSubmit();
+        // 捕获原始Infobox内容
+        function captureOriginalEditorContent() {
+            setTimeout(() => {
+                switchToWCODEMode(() => {
+                    const infobox = document.querySelector('#subject_infobox');
+                    if (infobox) {
+                        window.originalInfoboxContent = infobox.defaultValue || infobox.value;
+                        console.log('✅ 捕获原始Infobox内容成功');
+                    }
+                });
+            }, 1000);
         }
 
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
+        // 修复按钮消失问题
+        function fixButtonDisappearing() {
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.removedNodes.length > 0) {
+                        Array.from(mutation.removedNodes).forEach(node => {
+                            if (node.nodeType === 1 &&
+                                (node.matches && node.matches('input.inputBtn[value="提交"]') ||
+                                 node.querySelector && node.querySelector('input.inputBtn[value="提交"]'))) {
+                                setTimeout(interceptSubmitButtons, 0);
+                            }
+                        });
+                    }
+                });
+            });
+            const config = { childList: true, subtree: true };
+            observer.observe(document.body, config);
         }
+
+        // 页面加载完成后初始化
+        window.addEventListener('load', function() {
+            console.log('Bangumi表单提交预览脚本（增强版）已加载');
+            captureOriginalEditorContent();
+            interceptSubmitButtons();
+            fixButtonDisappearing();
+            preventEnterSubmit();
+        });
     }
 
 
@@ -4627,10 +4728,12 @@
         initBgmPreview();
         console.log("Bangumi Ultimate Enhancer 已启动");
     }
+    
     // 在DOM加载完成后启动脚本
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', startEnhancer);
     } else {
         startEnhancer();
     }
+    
 })();

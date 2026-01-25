@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KAAUH Lab - Robust Buttons & Highlighting + Barcode/MRN Dual Entry
 // @namespace    Violentmonkey Scripts
-// @version      3.2
+// @version      3.3
 // @description  Fixed barcode/MRN entry buttons to always appear reliably. Persistent filters, location badge, draggable dual-mode popup, and UI enhancements.
 // @match        *://his.kaauh.org/lab/*
 // @grant        GM_addStyle
@@ -12,18 +12,18 @@
 // @downloadURL https://update.greasyfork.org/scripts/555449/KAAUH%20Lab%20-%20Robust%20Buttons%20%20Highlighting%20%2B%20BarcodeMRN%20Dual%20Entry.user.js
 // @updateURL https://update.greasyfork.org/scripts/555449/KAAUH%20Lab%20-%20Robust%20Buttons%20%20Highlighting%20%2B%20BarcodeMRN%20Dual%20Entry.meta.js
 // ==/UserScript==
- 
+
 (async function () {
   'use strict';
- 
+
   console.log('KAAUH Lab - Robust Buttons & Highlighting + Dual Entry v3.0.9 Loading...');
- 
+
   //================================================================================
   // CONFIG & STATE
   //================================================================================
   const WORKBENCH_SELECTION_KEY = 'kaauh_last_workbench_selection';
   const FILTER_PERSISTENCE_KEY = 'kaauh_filter_persistence';
- 
+
   const SELECTORS = {
     workbenchDropdown: '#filterSec',
     statusDropdownTrigger: 'option[translateid="lab-test-analyzer.result-status.Ordered"]',
@@ -34,7 +34,7 @@
     resetButton: 'button[translateid="lab-order-list.Reset"]',
     referenceLabToggle: '.nova-toggle',
   };
- 
+
   let state = {
     lastUrl: location.href,
     hasAppliedInitialFilters: false,
@@ -48,9 +48,9 @@
     isProcessingReset: false,
     entryButtonsPlaced: false, // NEW: Track button placement state
   };
- 
+
   let scrollListenerAttached = false;
- 
+
   //================================================================================
   // STYLES
   //================================================================================
@@ -60,28 +60,28 @@
     .filter-btn-group::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
     .filter-btn-group::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
     .filter-btn-group::-webkit-scrollbar-thumb:hover { background: #555; }
- 
+
     .filter-btn-group .btn { padding: 6px 12px !important; font-size: 13px !important; font-weight: bold !important; border-radius: 6px !important; border: none !important; color: #fff !important; white-space: nowrap !important; cursor: pointer !important; flex-shrink: 0 !important; transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease; }
     .filter-btn-group .btn:not(.selected) { opacity: 0.1 !important; }
     .filter-btn-group .btn.selected { opacity: 1 !important; box-shadow: 0 0 0 3px rgba(255,255,255,0.8), 0 0 0 5px rgba(0,123,255,0.5) !important; transform: scale(1.02) !important; z-index: 10 !important; position: relative !important; }
     .filter-btn-group .btn:hover { opacity: 1 !important; transform: scale(1.05); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
- 
+
     .reset-button-container { display: flex !important; align-items: center !important; gap: 15px !important; margin-bottom: 10px !important; }
     .relocated-reset-button { order: -1 !important; margin-right: 15px !important; }
- 
+
     ${Array.from({ length: 20 }, (_, i) => {
       const colors = ['#28a745','#ffc107','#17a2b8','#dc3545','#6f42c1','#fd7e14','#20c997','#6610f2','#e83e8c','#343a40','#198754','#0d6efd','#d63384','#6c757d','#ff5733','#9c27b0','#00bcd4','#795548','#3f51b5','#009688'];
       return `.btn-color-${i} { background-color: ${colors[i % colors.length]} !important; }`;
     }).join('\n')}
- 
+
     .ag-row:hover .ag-cell { background-color: lightblue !important; }
- 
+
     /* Popup styles */
     #barcode-popup-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); display: none; z-index: 10000; }
     .barcode-popup-box { position: absolute; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: center; width: 350px; }
     .barcode-popup-title { margin: 0 0 15px 0; color: #333; cursor: move; user-select: none; }
     .barcode-popup-input { width: 100%; padding: 10px; font-size: 16px; border: 2px solid #ccc; border-radius: 4px; padding-right: 30px; }
- 
+
     /* Styles for the input wrapper and clear button */
     .barcode-popup-input-wrapper { position: relative; }
     .barcode-popup-clear-btn {
@@ -103,12 +103,12 @@
         padding: 0;
     }
     .barcode-popup-clear-btn:hover { background: #999; }
- 
+
     /* Hide Info toggle */
     .gm-hide-element { display: none !important; }
     #gm-toggle-button { color: white !important; }
   `);
- 
+
   //================================================================================
   // FILTER PERSISTENCE
   //================================================================================
@@ -129,7 +129,7 @@
     try { await GM_setValue(FILTER_PERSISTENCE_KEY, JSON.stringify({})); }
     catch (e) { console.error('Error clearing saved filters:', e); }
   }
- 
+
   function robustClearInput(inputElement) {
     if (!inputElement || inputElement.value === '') return;
     inputElement.value = '';
@@ -151,7 +151,7 @@
       cycles++;
     }, 100);
   }
- 
+
   async function performFullReset() {
     if (state.isProcessingReset) return;
     state.isProcessingReset = true;
@@ -171,7 +171,7 @@
       setTimeout(() => { state.isProcessingReset = false; }, 1000);
     }
   }
- 
+
   //================================================================================
   // DROPDOWN ENFORCER
   //================================================================================
@@ -179,11 +179,11 @@
     return new Promise((resolve) => {
       if (!dropdown) { console.error(`[Enforcer] Missing dropdown: ${description}`); return resolve(false); }
       if (dropdown.value === targetValue) return resolve(true);
- 
+
       dropdown.value = targetValue;
       dropdown.dispatchEvent(new Event('input', { bubbles: true }));
       dropdown.dispatchEvent(new Event('change', { bubbles: true }));
- 
+
       let cycles = 0;
       const intervalDuration = 100;
       const maxCycles = duration / intervalDuration;
@@ -202,7 +202,7 @@
       }, intervalDuration);
     });
   }
- 
+
   //================================================================================
   // COLUMN FILTERING & PERSISTENCE
   //================================================================================
@@ -212,16 +212,16 @@
     const allCols = Array.from(headerViewport.querySelectorAll('.ag-header-cell')).map(cell => cell.getAttribute('col-id'));
     const columnIndex = allCols.indexOf(columnName);
     if (columnIndex === -1) return false;
- 
+
     const filterInput = headerViewport.querySelector(`.ag-header-row[aria-rowindex="2"]`)?.children[columnIndex]?.querySelector('.ag-floating-filter-input');
     if (!filterInput) return false;
- 
+
     if (filterInput.value === value) return true;
- 
+
     filterInput.value = value;
     filterInput.dispatchEvent(new Event('input', { bubbles: true }));
     filterInput.dispatchEvent(new Event('change', { bubbles: true }));
- 
+
     let enforcementCycles = 0;
     const maxCycles = 10;
     const enforcementInterval = setInterval(() => {
@@ -234,7 +234,7 @@
       enforcementCycles++;
       if (enforcementCycles >= maxCycles) clearInterval(enforcementInterval);
     }, 200);
- 
+
     if (shouldPersist) {
       setTimeout(async () => {
         const currentFilters = await loadFilterValues();
@@ -244,7 +244,7 @@
     }
     return true;
   }
- 
+
   async function applySavedFilters() {
     if (state.isApplyingFilters) return true;
     const now = Date.now();
@@ -263,7 +263,7 @@
       setTimeout(() => { state.isApplyingFilters = false; }, 500);
     }
   }
- 
+
   async function applyFiltersWithRetry() {
     const headerViewport = document.querySelector(SELECTORS.agHeaderViewport);
     if (!headerViewport) return;
@@ -273,7 +273,7 @@
       setTimeout(() => applyFiltersWithRetry(), 1500);
     }
   }
- 
+
   //================================================================================
   // LOCATION LOGGER
   //================================================================================
@@ -312,14 +312,14 @@
     observer.observe(document.body, { childList: true, subtree: true });
     addLocationToHeader();
   })();
- 
+
   //================================================================================
   // HIDE INFO PANEL TOGGLE
   //================================================================================
   (function hideInfoPanel() {
     const elementToHideSelector = '.lo-view-detail-top';
     const buttonContainerSelector = '.btn-area';
- 
+
     const eyeIcon = `
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;">
         <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
@@ -328,13 +328,13 @@
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;">
         <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/>
       </svg>`;
- 
+
     const updateElementVisibility = (element) => {
       if (!element) return;
       const isHidden = GM_getValue('elementHidden', false);
       if (isHidden) element.classList.add('gm-hide-element'); else element.classList.remove('gm-hide-element');
     };
- 
+
     const createToggleButton = (container) => {
       const toggleButton = document.createElement('button');
       toggleButton.id = 'gm-toggle-button';
@@ -358,7 +358,7 @@
       container.prepend(wrapper);
       updateButtonState();
     };
- 
+
     const observer = new MutationObserver(() => {
       const buttonContainer = document.querySelector(buttonContainerSelector);
       if (buttonContainer && !document.getElementById('gm-toggle-button')) createToggleButton(buttonContainer);
@@ -367,7 +367,7 @@
     });
     observer.observe(document.documentElement, { childList: true, subtree: true });
   })();
- 
+
   //================================================================================
   // CONDITIONAL CELL STYLES + SCROLL LISTENER
   //================================================================================
@@ -404,7 +404,7 @@
       }
     }
   }
- 
+
   function setupGridScrollListener() {
     if (scrollListenerAttached) return;
     const gridViewport = document.querySelector(SELECTORS.agBodyViewport);
@@ -417,7 +417,7 @@
       scrollListenerAttached = true;
     }
   }
- 
+
   //================================================================================
   // BUTTONS: WORKBENCH, STATUS, RESET
   //================================================================================
@@ -427,13 +427,13 @@
       btn.classList.toggle('selected', btn.dataset.workbenchId === selectedId);
     });
   }
- 
+
   function insertFilterButtons() {
     if (document.querySelector(SELECTORS.buttonGroup)) return;
     const target = document.querySelector(SELECTORS.buttonGroupContainer);
     const select = document.getElementById(SELECTORS.workbenchDropdown.substring(1));
     if (!target || !select || select.options.length <= 1) return;
- 
+
     const workbenches = Array.from(select.options).reduce((acc, option) => {
       const id = option.value?.trim();
       let name = option.textContent?.trim();
@@ -444,11 +444,11 @@
       return acc;
     }, {});
     if (Object.keys(workbenches).length <= 1) return;
- 
+
     const group = document.createElement('div');
     group.className = 'filter-btn-group';
     let colorIndex = 0;
- 
+
     for (const [name, id] of Object.entries(workbenches)) {
       const btn = document.createElement('button');
       btn.className = `btn btn-color-${colorIndex++ % 20}`;
@@ -457,18 +457,18 @@
       let currentStatus = sessionStorage.getItem(sessionKey) || 'Ordered';
       btn.textContent = `${name} (${currentStatus})`;
       if (select.value === id) { btn.classList.add('selected'); state.selectedWorkbenchId = id; }
- 
+
       btn.addEventListener('click', async () => {
         currentStatus = (currentStatus === 'Ordered') ? 'Resulted' : 'Ordered';
         sessionStorage.setItem(sessionKey, currentStatus);
         btn.textContent = `${name} (${currentStatus})`;
- 
+
         updateButtonSelection(id);
         GM_setValue(WORKBENCH_SELECTION_KEY, JSON.stringify({ id, status: currentStatus }));
- 
+
         const workbenchSelect = document.getElementById(SELECTORS.workbenchDropdown.substring(1));
         await setAndVerifyDropdown(workbenchSelect, id, 'Workbench');
- 
+
         const statusDropdown = document.querySelector(SELECTORS.statusDropdownTrigger)?.closest('select');
         if (statusDropdown) {
           const optionToSelect = Array.from(statusDropdown.options).find(opt => opt.textContent.trim() === currentStatus);
@@ -480,11 +480,11 @@
     target.parentNode.insertBefore(group, target.nextSibling);
     if (!state.selectedWorkbenchId && select.value) { updateButtonSelection(select.value); }
   }
- 
+
   function addStatusDropdownListener() {
     const statusDropdown = document.querySelector(SELECTORS.statusDropdownTrigger)?.closest('select');
     if (!statusDropdown || statusDropdown.dataset.statusListenerAttached === 'true') return;
- 
+
     statusDropdown.addEventListener('change', async (event) => {
       try {
         const selectedOption = event.target.options[event.target.selectedIndex];
@@ -511,13 +511,13 @@
     });
     statusDropdown.dataset.statusListenerAttached = 'true';
   }
- 
+
   function relocateResetButton() {
     if (state.resetButtonRelocated) return;
     const resetButton = document.querySelector(SELECTORS.resetButton);
     const referenceLabToggle = document.querySelector(SELECTORS.referenceLabToggle);
     if (!resetButton || !referenceLabToggle || resetButton.classList.contains('relocated-reset-button')) return;
- 
+
     const container = document.createElement('div');
     container.className = 'reset-button-container';
     const relocatedResetButton = resetButton.cloneNode(true);
@@ -526,7 +526,7 @@
     container.appendChild(relocatedResetButton);
     container.appendChild(referenceLabToggle);
     resetButton.remove();
- 
+
     relocatedResetButton.addEventListener('click', async (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -534,7 +534,7 @@
     });
     state.resetButtonRelocated = true;
   }
- 
+
   //================================================================================
   // DUAL-MODE BARCODE/MRN POPUP - FIXED VERSION
   //================================================================================
@@ -544,7 +544,7 @@
     const TARGET_MRN_COLUMN_HEADER = 'Cluster MRN';
     const BARCODE_POPUP_POSITION_KEY = 'kaauh_barcode_popup_position';
     const POPUP_MODE_KEY = 'kaauh_barcode_popup_mode'; // 'BARCODE' | 'MRN'
- 
+
     function clearAllFiltersShallow() {
       const clearAndNotify = (inputElement) => {
         if (inputElement && inputElement.value !== '') {
@@ -556,16 +556,16 @@
       clearAndNotify(mainSearchInput);
       document.querySelectorAll('input.ag-floating-filter-input').forEach(clearAndNotify);
     }
- 
+
     document.addEventListener('keydown', (event) => {
       if (document.activeElement.id === 'barcode-popup-input') return;
       if (event.key === 'Delete') clearAllFiltersShallow();
     });
- 
+
     function findFloatingFilterInputByHeader(headerText) {
         const headerViewport = document.querySelector(SELECTORS.agHeaderViewport);
         if (!headerViewport) return null;
- 
+
         const allTitleCells = Array.from(headerViewport.querySelectorAll('.ag-header-row[aria-rowindex="1"] .ag-header-cell'));
         let targetHeaderCell = null;
         for (const cell of allTitleCells) {
@@ -575,42 +575,42 @@
                 break;
             }
         }
- 
+
         if (!targetHeaderCell) {
             console.error(`[KAAUH Script] Could not find header cell with text: "${headerText}"`);
             return null;
         }
- 
+
         const colId = targetHeaderCell.getAttribute('col-id');
         const columnIndex = allTitleCells.findIndex(cell => cell.getAttribute('col-id') === colId);
- 
+
         if (columnIndex === -1) {
             console.error(`[KAAUH Script] Could not determine column index for col-id: "${colId}"`);
             return null;
         }
- 
+
         const filterRow = headerViewport.querySelector('.ag-header-row[aria-rowindex="2"]');
         if (!filterRow) {
             console.error(`[KAAUH Script] Could not find the filter row.`);
             return null;
         }
- 
+
         const filterCell = filterRow.children[columnIndex];
         if (!filterCell) {
             console.error(`[KAAUH Script] Could not find filter cell at index: ${columnIndex}`);
             return null;
         }
- 
+
         return filterCell.querySelector('input.ag-floating-filter-input');
     }
- 
+
     function findBarcodeFilterInput() {
       return findFloatingFilterInputByHeader(TARGET_BARCODE_COLUMN_HEADER);
     }
     function findMrnFilterInput() {
       return findFloatingFilterInputByHeader(TARGET_MRN_COLUMN_HEADER);
     }
- 
+
     async function loadPopupMode() {
       try {
         const saved = await GM_getValue(POPUP_MODE_KEY, 'BARCODE');
@@ -620,17 +620,17 @@
     async function savePopupMode(mode) {
       try { await GM_setValue(POPUP_MODE_KEY, mode === 'MRN' ? 'MRN' : 'BARCODE'); } catch {}
     }
- 
+
     async function createBarcodePopup() {
       let popupContainer = document.getElementById('barcode-popup-container');
       if (popupContainer) return popupContainer;
- 
+
       const savedPositionJSON = await GM_getValue(BARCODE_POPUP_POSITION_KEY, null);
       const savedPosition = savedPositionJSON ? JSON.parse(savedPositionJSON) : null;
- 
+
       popupContainer = document.createElement('div');
       popupContainer.id = 'barcode-popup-container';
- 
+
       const popupBox = document.createElement('div');
       popupBox.className = 'barcode-popup-box';
       const initialStyle = {};
@@ -643,20 +643,20 @@
         initialStyle.transform = 'translate(-50%, -50%)';
       }
       Object.assign(popupBox.style, initialStyle);
- 
+
       const popupTitle = document.createElement('h3');
       popupTitle.className = 'barcode-popup-title';
       popupTitle.textContent = 'Rapid Entry';
- 
+
       const inputWrapper = document.createElement('div');
       inputWrapper.className = 'barcode-popup-input-wrapper';
- 
+
       const popupInput = document.createElement('input');
       popupInput.id = 'barcode-popup-input';
       popupInput.type = 'text';
       popupInput.placeholder = 'Scan or type and press Enter';
       popupInput.className = 'barcode-popup-input';
- 
+
       const clearInputBtn = document.createElement('button');
       clearInputBtn.type = 'button';
       clearInputBtn.className = 'barcode-popup-clear-btn';
@@ -666,15 +666,15 @@
           popupInput.value = '';
           popupInput.focus();
       });
- 
+
       inputWrapper.appendChild(popupInput);
       inputWrapper.appendChild(clearInputBtn);
- 
+
       popupContainer.appendChild(popupBox);
       popupBox.appendChild(popupTitle);
       popupBox.appendChild(inputWrapper);
       document.body.appendChild(popupContainer);
- 
+
       popupTitle.addEventListener('mousedown', (e) => {
         e.preventDefault();
         if (popupBox.style.transform && popupBox.style.transform !== 'none') {
@@ -702,31 +702,31 @@
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
       });
- 
+
       popupContainer.addEventListener('click', (e) => {
         if (e.target === popupContainer) {
             popupContainer.style.display = 'none';
         }
       });
- 
+
       popupInput.addEventListener('keydown', async (event) => {
         if (event.key !== 'Enter') return;
         event.preventDefault();
         const value = popupInput.value.trim();
         if (!value) return;
- 
+
         clearAllFiltersShallow();
- 
+
         // Load the current mode right when Enter is pressed
         const currentMode = await loadPopupMode();
- 
+
         let targetInput = null;
         if (currentMode === 'MRN') {
           targetInput = findMrnFilterInput();
         } else {
           targetInput = findBarcodeFilterInput();
         }
- 
+
         if (targetInput) {
           targetInput.value = value;
           targetInput.dispatchEvent(new Event('input', { bubbles: true }));
@@ -738,10 +738,10 @@
           setTimeout(() => popupInput.style.borderColor = '#ccc', 2000);
         }
       });
- 
+
       return popupContainer;
     }
- 
+
     // FIXED: Robust button placement with comprehensive checks
     async function addControls(container) {
       // Verify container is actually in the DOM
@@ -749,22 +749,22 @@
         console.log('[Entry Buttons] Container not in DOM yet, waiting...');
         return false;
       }
- 
+
       const popup = await createBarcodePopup();
- 
+
       // Check if buttons exist AND are attached to the correct container
       const barcodeBtn = document.getElementById('barcode-entry-btn');
       const mrnBtn = document.getElementById('mrn-entry-btn');
- 
+
       const barcodeBtnInContainer = barcodeBtn && container.contains(barcodeBtn);
       const mrnBtnInContainer = mrnBtn && container.contains(mrnBtn);
- 
+
       // If both buttons exist and are in the container, we're done
       if (barcodeBtnInContainer && mrnBtnInContainer) {
         console.log('[Entry Buttons] Buttons already placed correctly');
         return true;
       }
- 
+
       // Remove orphaned buttons if they exist elsewhere
       if (barcodeBtn && !barcodeBtnInContainer) {
         console.log('[Entry Buttons] Removing orphaned Barcode button');
@@ -774,7 +774,7 @@
         console.log('[Entry Buttons] Removing orphaned MRN button');
         mrnBtn.remove();
       }
- 
+
       // Create Barcode Entry button
       if (!barcodeBtnInContainer) {
           const barcodeButton = document.createElement('button');
@@ -795,7 +795,7 @@
           container.appendChild(barcodeButton);
           console.log('[Entry Buttons] Barcode button created and attached');
       }
- 
+
       // Create MRN Entry button
       if (!mrnBtnInContainer) {
           const mrnButton = document.createElement('button');
@@ -816,23 +816,23 @@
           container.appendChild(mrnButton);
           console.log('[Entry Buttons] MRN button created and attached');
       }
- 
+
       return true;
     }
- 
+
     // FIXED: Enhanced button placement logic with proper state tracking
     async function placeButton() {
       const buttonContainer = document.querySelector('.reset-button-container');
- 
+
       // If container doesn't exist yet, try again
       if (!buttonContainer) {
         state.entryButtonsPlaced = false;
         return;
       }
- 
+
       // Attempt to place buttons
       const success = await addControls(buttonContainer);
- 
+
       if (success) {
         state.entryButtonsPlaced = true;
         console.log('[Entry Buttons] Successfully placed and verified');
@@ -840,17 +840,17 @@
         state.entryButtonsPlaced = false;
       }
     }
- 
+
     // FIXED: Dedicated MutationObserver for button placement
     const buttonObserver = new MutationObserver(async (mutations) => {
       // Only run if we're on the correct page
       if (!location.href.includes('/lab-orders/lab-test-analyzer')) return;
- 
+
       // Check if buttons need to be placed
       for (const mutation of mutations) {
         if (mutation.type === 'childList') {
           const hasResetContainer = document.querySelector('.reset-button-container');
- 
+
           // If container exists but buttons aren't placed, place them
           if (hasResetContainer && !state.entryButtonsPlaced) {
             await placeButton();
@@ -859,20 +859,20 @@
         }
       }
     });
- 
+
     // Start observing
     buttonObserver.observe(document.body, {
       childList: true,
       subtree: true
     });
- 
+
     // FIXED: Backup polling mechanism with proper throttling
     let pollAttempts = 0;
     const maxPollAttempts = 50; // 50 attempts = 50 seconds max
- 
+
     const pollInterval = setInterval(async () => {
       pollAttempts++;
- 
+
       // Stop polling if buttons are placed or max attempts reached
       if (state.entryButtonsPlaced || pollAttempts >= maxPollAttempts) {
         clearInterval(pollInterval);
@@ -883,23 +883,23 @@
         }
         return;
       }
- 
+
       // Only attempt placement on the correct page
       if (!location.href.includes('/lab-orders/lab-test-analyzer')) {
         return;
       }
- 
+
       // Check if container exists and buttons aren't placed
       const container = document.querySelector('.reset-button-container');
       if (container && !state.entryButtonsPlaced) {
         await placeButton();
       }
     }, 1000); // Check every second
- 
+
     // Initial placement attempt
     setTimeout(placeButton, 500);
   })();
- 
+
   //================================================================================
   // NAV SHORTCUT + MASTER OBSERVER
   //================================================================================
@@ -914,7 +914,7 @@
     });
     labOrdersLink.dataset.shortcutAttached = 'true';
   }
- 
+
   async function applyPersistentWorkbenchFilter() {
     const workbenchSelect = document.getElementById(SELECTORS.workbenchDropdown.substring(1));
     const statusDropdown = document.querySelector(SELECTORS.statusDropdownTrigger)?.closest('select');
@@ -933,7 +933,7 @@
       }
     } catch (e) { console.error('Error applying persistent workbench filter:', e); }
   }
- 
+
   async function masterObserverCallback() {
     if (state.observerThrottle) clearTimeout(state.observerThrottle);
     state.observerThrottle = setTimeout(async () => {
@@ -948,12 +948,12 @@
       }
       setupNavigationShortcut();
       if (!location.href.includes('/lab-orders/lab-test-analyzer')) return;
- 
+
       relocateResetButton();
       insertFilterButtons();
       addStatusDropdownListener();
       setupGridScrollListener();
- 
+
       if (!state.hasAppliedInitialFilters) {
         await applyPersistentWorkbenchFilter();
         await applyFiltersWithRetry();
@@ -962,7 +962,7 @@
       applyConditionalCellStyles();
     }, 100);
   }
- 
+
   const observer = new MutationObserver(masterObserverCallback);
   observer.observe(document.body, { childList: true, subtree: true });
   masterObserverCallback();

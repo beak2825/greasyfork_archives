@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nexus Easy Collection Downloader
 // @license      CC BY-NC 4.0
-// @version      9.0.2
+// @version      9.0.3
 // @description  This script allows you to automatically download all collection mods in sequence with a single click.
 // @author       linik (Made with Gemini AI & Claude AI)
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=nexusmods.com
@@ -965,10 +965,6 @@ console.log('[NECD] ✅ Panel added');
 // 6. MOD LİSTESİNİ ÇEK (GELİŞTİRİLMİŞ)
 // ========================================
 const extractSlug = () => {
-    // Örnek URLler:
-    // /collections/xxsqm4
-    // /collections/xxsqm4/
-    // /collections/xxsqm4/revisions/123
 
     const match = window.location.pathname.match(/\/collections\/([^\/]+)/);
     if (match && match[1]) {

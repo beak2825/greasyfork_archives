@@ -1,19 +1,21 @@
 // ==UserScript==
-// @name         HDKylin/AGSVPT SeedBox Batch Registrar
+// @name         HDKylin/AGSVPT/13City SeedBox Batch Registrar
 // @namespace    https://www.hdkyl.in/
 // @namespace    https://www.agsvpt.com/
-// @version      0.1.0
-// @description  为 HDKylin/AGSVPT 用户面板添加 SeedBox 批量登记助手，支持一次性提交多条 IPv4/IPv6 记录。
+// @namespace    https://13city.org/
+// @version      0.1.1
+// @description  为 HDKylin/AGSVPT/13City 用户面板添加 SeedBox 批量登记助手，支持一次性提交多条 IPv4/IPv6 记录。
 // @author       ai
 // @match        https://www.hdkyl.in/usercp.php*
 // @match        https://hdkyl.in/usercp.php*
 // @match        https://www.agsvpt.com/usercp.php*
 // @match        https://agsvpt.com/usercp.php*
+// @match        https://13city.org/usercp.php*
+// @match        https://www.13city.org/usercp.php*
 // @icon         https://www.hdkyl.in/favicon.ico
 // @grant        none
-// @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/556535/HDKylinAGSVPT%20SeedBox%20Batch%20Registrar.user.js
-// @updateURL https://update.greasyfork.org/scripts/556535/HDKylinAGSVPT%20SeedBox%20Batch%20Registrar.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/556535/HDKylinAGSVPT13City%20SeedBox%20Batch%20Registrar.user.js
+// @updateURL https://update.greasyfork.org/scripts/556535/HDKylinAGSVPT13City%20SeedBox%20Batch%20Registrar.meta.js
 // ==/UserScript==
 
 (function () {
@@ -61,7 +63,7 @@
                 }
             })
 
-            observer.observe(document.documentElement, {childList: true, subtree: true})
+            observer.observe(document.documentElement, { childList: true, subtree: true })
 
             setTimeout(() => {
                 observer.disconnect()
@@ -313,34 +315,34 @@
         const rawEntries = state.form.entries.value.trim()
 
         if (!rawEntries) {
-            renderStatus([{type: 'error', text: '请至少填写一行 IP 数据。'}])
+            renderStatus([{ type: 'error', text: '请至少填写一行 IP 数据。' }])
             return
         }
 
-        const {validEntries, skippedLines} = parseEntries(rawEntries)
+        const { validEntries, skippedLines } = parseEntries(rawEntries)
 
         if (!validEntries.length) {
-            renderStatus([{type: 'error', text: '没有检测到有效的 IPv4/IPv6 地址。'}])
+            renderStatus([{ type: 'error', text: '没有检测到有效的 IPv4/IPv6 地址。' }])
             return
         }
 
         toggleFormDisabled(true)
-        renderStatus([{type: 'info', text: `准备登记 ${validEntries.length} 条记录...`}])
+        renderStatus([{ type: 'info', text: `准备登记 ${validEntries.length} 条记录...` }])
 
         const results = []
         for (const entry of validEntries) {
             updateLiveStatus(entry)
             try {
-                await submitSeedBox({operator, bandwidth, comment, ip: entry.ip})
-                results.push({type: 'success', text: `${entry.family} ${entry.ip} - 成功`})
+                await submitSeedBox({ operator, bandwidth, comment, ip: entry.ip })
+                results.push({ type: 'success', text: `${entry.family} ${entry.ip} - 成功` })
             } catch (err) {
                 console.warn('[SeedBoxBatch] 提交失败', entry, err)
-                results.push({type: 'error', text: `${entry.family} ${entry.ip} - ${err.message || '提交失败'}`})
+                results.push({ type: 'error', text: `${entry.family} ${entry.ip} - ${err.message || '提交失败'}` })
             }
         }
 
         skippedLines.forEach(item => {
-            results.push({type: 'skip', text: `第 ${item.line} 行已跳过：${item.value}`})
+            results.push({ type: 'skip', text: `第 ${item.line} 行已跳过：${item.value}` })
         })
 
         renderStatus(results)
@@ -351,7 +353,7 @@
         const shouldReload = document.getElementById(AUTO_RELOAD_ID)?.checked
 
         if (!hasError && successCount === validEntries.length && shouldReload) {
-            results.push({type: 'info', text: '全部成功，3 秒后刷新页面。'})
+            results.push({ type: 'info', text: '全部成功，3 秒后刷新页面。' })
             renderStatus(results)
             setTimeout(() => window.location.reload(), 3000)
         }
@@ -370,7 +372,7 @@
         state.statusBox.innerHTML = `<div>正在登记：${entry.family} ${entry.ip}</div>`
     }
 
-    async function submitSeedBox({operator, bandwidth, comment, ip}) {
+    async function submitSeedBox({ operator, bandwidth, comment, ip }) {
         const payload = new URLSearchParams()
         payload.append('action', 'addSeedBoxRecord')
         payload.append('params[operator]', operator)
@@ -422,29 +424,29 @@
 
             if (hasSlash) {
                 if (firstPart && isValidIPv4(firstPart)) {
-                    validEntries.push({ip: firstPart, family: 'IPv4', line: index + 1})
+                    validEntries.push({ ip: firstPart, family: 'IPv4', line: index + 1 })
                     found = true
                 }
                 if (secondPart && isValidIPv6(secondPart)) {
-                    validEntries.push({ip: secondPart, family: 'IPv6', line: index + 1})
+                    validEntries.push({ ip: secondPart, family: 'IPv6', line: index + 1 })
                     found = true
                 }
             } else {
                 if (isValidIPv4(firstPart)) {
-                    validEntries.push({ip: firstPart, family: 'IPv4', line: index + 1})
+                    validEntries.push({ ip: firstPart, family: 'IPv4', line: index + 1 })
                     found = true
                 } else if (isValidIPv6(firstPart)) {
-                    validEntries.push({ip: firstPart, family: 'IPv6', line: index + 1})
+                    validEntries.push({ ip: firstPart, family: 'IPv6', line: index + 1 })
                     found = true
                 }
             }
 
             if (!found) {
-                skippedLines.push({line: index + 1, value: trimmed})
+                skippedLines.push({ line: index + 1, value: trimmed })
             }
         })
 
-        return {validEntries, skippedLines}
+        return { validEntries, skippedLines }
     }
 
     function isValidIPv4(ip) {

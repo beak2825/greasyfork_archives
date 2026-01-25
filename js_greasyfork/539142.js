@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KOSTROMA | Script for staff
 // @namespace    https://greasyfork.org/ru/users/1288704-itsuki-liquid
-// @version      3.401
+// @version      3.402
 // @description  Basic script for staff GA/ZGA/Kurator
 // @author       I.Liquid
 // @match        https://forum.blackrussia.online/threads/*
@@ -105,10 +105,19 @@
             status: false,
         },
         {
-            title: `Обжалован (24 часа)`,
+            title: `Обжалован (24 часа -> нрп обман)`,
             content: `[url=https://postimages.org/][img]https://i.postimg.cc/k4v0KjRf/f3eabafac57241f0ac0dd6776a1c00ff.gif[/img][/url]<br>`+
 `[center][color=red][size=4][font=georgia]Здравствуйте, уважаемый[/color] ${user.mention}[/size]<br><br>`+
             `[b][i]Игровой аккаунт нарушителя был разблокирован<br>У нарушителя есть 24 часа на возврат имущества, иначе аккаунт будет снова заблокирован<br><br>[/CENTER]`+
+            `[CENTER][COLOR=orange]На рассмотрении.[/COLOR][/CENTER][/FONT][/b][/i]`,
+            prefix: PIN_PREFIX,
+            status: true,
+        },
+        {
+            title: `Обжалован (24 часа -> смена ника`,
+            content: `[url=https://postimages.org/][img]https://i.postimg.cc/k4v0KjRf/f3eabafac57241f0ac0dd6776a1c00ff.gif[/img][/url]<br>`+
+`[center][color=red][size=4][font=georgia]Здравствуйте, уважаемый[/color] ${user.mention}[/size]<br><br>`+
+            `[b][i]Ваш аккаунт был разблокирован.<br>В случае, если вы не смените никнейм за 24 часа, ваш игровой аккаунт будет заново заблокирован<br><br>[/CENTER]`+
             `[CENTER][COLOR=orange]На рассмотрении.[/COLOR][/CENTER][/FONT][/b][/i]`,
             prefix: PIN_PREFIX,
             status: true,

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MangaBuff Card Statistics
 // @namespace    http://tampermonkey.net/
-// @version      1.0.2
+// @version      1.0.4
 // @description  Показывает статистику владельцев/желающих, цены на лоты и число обменов пользователей
 // @author       zamoroz
 // @match        https://mangabuff.ru/cards*
@@ -284,6 +284,15 @@
             color: #a78bfa;
             font-weight: 500;
             vertical-align: middle;
+        }
+        .profile__trades-blocked {
+            display: inline-block;
+            margin-left: 4px;
+            color: #ef4444;
+            font-size: 16px;
+            font-weight: bold;
+            vertical-align: middle;
+            cursor: help;
         }
     `;
 
@@ -580,23 +589,26 @@
     }
 
     /**
-     * Парсит HTML страницы обмена и извлекает число обменов
+     * Парсит HTML страницы обмена и извлекает число обменов и статус блокировки
      */
     function parseTradesCount(html) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
         const tradeHeader = doc.querySelector('.trade__header-name span');
 
+        let count = null;
         if (tradeHeader) {
-            const count = tradeHeader.textContent.trim();
-            return count;
+            count = tradeHeader.textContent.trim();
         }
 
-        return null;
+        // Проверяем наличие блока trade__block (пользователь заблокирован)
+        const isBlocked = doc.querySelector('.trade__block') !== null;
+
+        return { count, isBlocked };
     }
 
     /**
-     * Загружает информацию о числе обменов пользователя
+     * Загружает информацию о числе обменов пользователя и статусе блокировки
      */
     async function fetchUserTradesCount(userId) {
         // Проверяем кеш
@@ -605,7 +617,7 @@
             const isNotExpired = cached.timestamp && (Date.now() - cached.timestamp) < TRADES_CACHE_EXPIRY_HOURS * 60 * 60 * 1000;
 
             if (isNotExpired && cached.count !== null) {
-                return cached.count;
+                return { count: cached.count, isBlocked: cached.isBlocked || false };
             }
         }
 
@@ -613,20 +625,21 @@
         return addToQueue(async () => {
             try {
                 const html = await fetchWithRetry(`https://mangabuff.ru/trades/offers/${userId}`);
-                const count = parseTradesCount(html);
+                const result = parseTradesCount(html);
 
                 // Сохраняем в кеш
-                if (count !== null) {
+                if (result.count !== null) {
                     userTradesCache[userId] = {
-                        count: count,
+                        count: result.count,
+                        isBlocked: result.isBlocked,
                         timestamp: Date.now()
                     };
                     saveTradesCache();
                 }
 
-                return count;
+                return result;
             } catch (error) {
-                return null;
+                return { count: null, isBlocked: false };
             }
         });
     }
@@ -642,23 +655,36 @@
         const userId = profileElement.getAttribute('data-user-id');
         if (!userId) return;
 
-        // Ищем элемент с именем пользователя
-        const nameElement = document.querySelector('.profile__name');
+        // Ищем элемент с именем пользователя (десктоп или мобильная версия)
+        const nameElement = document.querySelector('.profile__name') || document.querySelector('.mobile-profile__name');
         if (!nameElement) return;
 
         // Проверяем, не добавлен ли уже счетчик
         if (nameElement.querySelector('.profile__trades-count')) return;
 
-        // Получаем число обменов
-        const count = await fetchUserTradesCount(userId);
+        // Получаем число обменов и статус блокировки
+        const result = await fetchUserTradesCount(userId);
 
         // Если число получено - добавляем его
-        if (count !== null) {
+        if (result && result.count !== null) {
             const tradesSpan = document.createElement('span');
             tradesSpan.className = 'profile__trades-count';
-            tradesSpan.textContent = count;
+            tradesSpan.textContent = result.count;
             tradesSpan.title = 'Количество обменов';
             nameElement.appendChild(tradesSpan);
+
+            // Проверяем блокировку: либо из кеша страницы обмена, либо из кнопки на странице профиля
+            const ignoreButton = document.querySelector('.profile__info--ignore-btn');
+            const isBlockedFromProfile = ignoreButton && ignoreButton.textContent.includes('Удалить из черного списка');
+            const isBlocked = result.isBlocked || isBlockedFromProfile;
+
+            // Добавляем индикатор черного списка, если пользователь заблокирован
+            if (isBlocked) {
+                const blockedSpan = document.createElement('span');
+                blockedSpan.className = 'profile__trades-blocked';
+                blockedSpan.textContent = '✖';
+                nameElement.appendChild(blockedSpan);
+            }
         }
     }
 

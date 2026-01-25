@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         GeoGuessr Better Breakdown UI
+// @name         GeoGuessr Better Breakdown
 // @namespace    https://greasyfork.org/users/1179204
-// @version      1.2.0
+// @version      1.2.5
 // @description  built-in StreetView Window to view where you guessed and the correct location
 // @author       KaKa
+// @license      MIT
 // @match        https://www.geoguessr.com/*
 // @icon         https://www.google.com/s2/favicons?sz=32&domain=geoguessr.com
-// @require      https://cdn.jsdelivr.net/npm/sweetalert2@11
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -15,30 +15,102 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
 // @grant        unsafeWindow
-// @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/563091/GeoGuessr%20Better%20Breakdown%20UI.user.js
-// @updateURL https://update.greasyfork.org/scripts/563091/GeoGuessr%20Better%20Breakdown%20UI.meta.js
+// @require      https://cdn.jsdelivr.net/npm/sweetalert2@11
+// @require      https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js
+// @require      https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js
+// @downloadURL https://update.greasyfork.org/scripts/563091/GeoGuessr%20Better%20Breakdown.user.js
+// @updateURL https://update.greasyfork.org/scripts/563091/GeoGuessr%20Better%20Breakdown.meta.js
 // ==/UserScript==
 
 "use strict";
 
 const SEARCH_RADIUS = 250000;
 const STORAGE_CAP = 50;
-const committedRounds = new Set();
 const PEEK_STATE = defaultState();
+const MAP_TYPES = ["roadmap", "satellite", "hybrid", "terrain"];
 const MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const MONTHS_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-// WeakMap for storing marker data to avoid DOM dataset operations
+const MOVEMENT_STORAGE_PREFIX = "ggbbui_move_path_";
+const panoCache = new Map();
 const markerDataMap = new WeakMap();
+const panoListenerMap = new WeakMap();
 const markerHandlerMap = new WeakMap();
 const movementPathCache = new WeakMap();
 const mapPathOverlayMap = new WeakMap();
-const panoListenerMap = new WeakMap();
-const MOVEMENT_STORAGE_PREFIX = "ggbbui_move_path_";
 
 
-// DOM element cache to reduce repeated queries
+const SELECTORS = {
+    guessMarker: "[data-qa='guess-marker']",
+    answerMarker: "[data-qa='correct-location-marker']",
+    duelMarker: "[class*='result-map_roundPin']",
+    dcMarker: '[class^="map-pin_mapPin__"]:not([data-qa="correct-location-marker"])',
+    roundEnd: "[data-qa='close-round-result']",
+    gameEnd: "[data-qa='play-again-button']",
+    duelEnd: "[class*='game-summary']",
+    dcEnd: "[class^='results_positionContainer']",
+    roundNumber: "[data-qa='round-number']",
+    guessMap: "[class*='guess-map_canvas']",
+    resultMap: "[class*='coordinate-result-map_map']",
+    duelMap: "[class^='result-map_map']",
+    svContainer: "panorama-container",
+    moveButton: "[data-qa='undo-move']",
+    replay: "[class^='replay-footer_reportAndShare__']",
+};
+
+const SVG_SOURCE = {
+    COPY: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" fill="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>`,
+    LOADING: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M12,18A6,6 0 0,1 6,12C6,11 6.25,10.03 6.7,9.2L5.24,7.74C4.46,8.97 4,10.43 4,12A8,8 0 0,0 12,20V23L16,19L12,15M12,4V1L8,5L12,9V6A6,6 0 0,1 18,12C18,13 17.75,13.97 17.3,14.8L18.76,16.26C19.54,15.03 20,13.57 20,12A8,8 0 0,0 12,4Z" fill="currentColor"></path></svg>`,
+    SUCCESS: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" fill="currentColor"></path></svg>`,
+    ANALYSIS: `<svg width="24px" height="23px" viewBox="0 0 1024 1024" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill="#ffffff" d="m665.216 768 110.848 192h-73.856L591.36 768H433.024L322.176 960H248.32l110.848-192H160a32 32 0 0 1-32-32V192H64a32 32 0 0 1 0-64h896a32 32 0 1 1 0 64h-64v544a32 32 0 0 1-32 32H665.216zM832 192H192v512h640V192zM352 448a32 32 0 0 1 32 32v64a32 32 0 0 1-64 0v-64a32 32 0 0 1 32-32zm160-64a32 32 0 0 1 32 32v128a32 32 0 0 1-64 0V416a32 32 0 0 1 32-32zm160-64a32 32 0 0 1 32 32v192a32 32 0 1 1-64 0V352a32 32 0 0 1 32-32z"></path></g></svg>`,
+    LAYERS: `<svg height="20px" width="20px" viewBox="0 0 512 512" fill="currentColor"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css"> .st0{fill:currentColor;} </style> <g> <polygon class="st0" points="256,381.424 104.628,328.845 0,365.186 256,454.114 512,365.186 407.373,328.845 "></polygon> <polygon class="st0" points="256,272.235 104.628,219.655 0,255.996 256,344.924 512,255.996 407.373,219.655 "></polygon> <polygon class="st0" points="512,146.806 256,57.886 0,146.806 256,235.734 "></polygon> </g> </g></svg>`,
+    SAVE: `<svg viewBox="0 0 24 24" fill="none" width="24" height="24"> <path d="M9 6L12 3M12 3L15 6M12 3V13M7.00023 10C6.06835 10 5.60241 10 5.23486 10.1522C4.74481 10.3552 4.35523 10.7448 4.15224 11.2349C4 11.6024 4 12.0681 4 13V17.8C4 18.9201 4 19.4798 4.21799 19.9076C4.40973 20.2839 4.71547 20.5905 5.0918 20.7822C5.5192 21 6.07899 21 7.19691 21H16.8036C17.9215 21 18.4805 21 18.9079 20.7822C19.2842 20.5905 19.5905 20.2839 19.7822 19.9076C20 19.4802 20 18.921 20 17.8031V13C20 12.0681 19.9999 11.6024 19.8477 11.2349C19.6447 10.7448 19.2554 10.3552 18.7654 10.1522C18.3978 10 17.9319 10 17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    DOWNLOAD: `<svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M3 15C3 17.8284 3 19.2426 3.87868 20.1213C4.75736 21 6.17157 21 9 21H15C17.8284 21 19.2426 21 20.1213 20.1213C21 19.2426 21 17.8284 21 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3V16M12 16L16 11.625M12 16L8 11.625" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    SPAWN: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" fill="currentColor"></path></svg>`,
+    PANEL: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3,9H17V7H3V9M3,13H17V11H3V13M3,17H17V15H3V17M19,17H21V15H19V17M19,7V9H21V7H19M19,13H21V11H19V13Z" /></svg>`,
+    CAMERA: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" fill="currentColor"></path></svg>`,
+    PATH: `<svg viewBox="0 0 24 24" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.78 20H9.78C7.98 20 4.58 19.09 4.58 15.64C4.58 12.19 7.98 11.28 9.78 11.28H14.22C14.37 11.28 17.92 11.23 17.92 8.42C17.92 5.61 14.37 5.56 14.22 5.56H9.22C9.02109 5.56 8.83032 5.48098 8.68967 5.34033C8.54902 5.19968 8.47 5.00891 8.47 4.81C8.47 4.61109 8.54902 4.42032 8.68967 4.27967C8.83032 4.13902 9.02109 4.06 9.22 4.06H14.22C16.02 4.06 19.42 4.97 19.42 8.42C19.42 11.87 16.02 12.78 14.22 12.78H9.78C9.63 12.78 6.08 12.83 6.08 15.64C6.08 18.45 9.63 18.5 9.78 18.5H14.78C14.9789 18.5 15.1697 18.579 15.3103 18.7197C15.451 18.8603 15.53 19.0511 15.53 19.25C15.53 19.4489 15.451 19.6397 15.3103 19.7803C15.1697 19.921 14.9789 20 14.78 20Z" fill="currentColor"></path> <path d="M6.44 8.31C5.74314 8.30407 5.06363 8.09202 4.48708 7.70056C3.91054 7.30909 3.46276 6.75573 3.20018 6.11021C2.93759 5.46469 2.87195 4.75589 3.01153 4.07312C3.1511 3.39036 3.48965 2.76418 3.9845 2.2735C4.47935 1.78281 5.10837 1.44958 5.79229 1.31579C6.47622 1.182 7.18444 1.25363 7.82771 1.52167C8.47099 1.78971 9.02054 2.24215 9.40711 2.82199C9.79368 3.40182 9.99998 4.08311 10 4.78C10 5.2461 9.90773 5.70759 9.72846 6.13783C9.54919 6.56808 9.28648 6.95856 8.95551 7.28675C8.62453 7.61494 8.23184 7.87433 7.80009 8.04995C7.36834 8.22558 6.90609 8.31396 6.44 8.31ZM6.44 2.75C6.04444 2.75 5.65776 2.86729 5.32886 3.08706C4.99996 3.30682 4.74362 3.61918 4.59224 3.98463C4.44087 4.35008 4.40126 4.75221 4.47843 5.14018C4.5556 5.52814 4.74609 5.8845 5.02579 6.16421C5.3055 6.44391 5.66186 6.6344 6.04982 6.71157C6.43779 6.78874 6.83992 6.74913 7.20537 6.59776C7.57082 6.44638 7.88318 6.19003 8.10294 5.86114C8.32271 5.53224 8.44 5.14556 8.44 4.75C8.44 4.48735 8.38827 4.22728 8.28776 3.98463C8.18725 3.74198 8.03993 3.5215 7.85422 3.33578C7.6685 3.15007 7.44802 3.00275 7.20537 2.90224C6.96272 2.80173 6.70265 2.75 6.44 2.75Z" fill="currentColor"></path> <path d="M17.56 22.75C16.8614 22.752 16.1779 22.5466 15.5961 22.1599C15.0143 21.7733 14.5603 21.2227 14.2916 20.5778C14.0229 19.933 13.9515 19.2229 14.0866 18.5375C14.2217 17.8521 14.5571 17.2221 15.0504 16.7275C15.5437 16.2328 16.1726 15.8956 16.8577 15.7586C17.5427 15.6215 18.253 15.6909 18.8986 15.9577C19.5442 16.2246 20.0961 16.6771 20.4844 17.2578C20.8727 17.8385 21.08 18.5214 21.08 19.22C21.08 20.1545 20.7095 21.0508 20.0496 21.7125C19.3898 22.3743 18.4945 22.7473 17.56 22.75ZM17.56 17.19C17.1644 17.19 16.7778 17.3073 16.4489 17.5271C16.12 17.7468 15.8636 18.0592 15.7122 18.4246C15.5609 18.7901 15.5213 19.1922 15.5984 19.5802C15.6756 19.9681 15.8661 20.3245 16.1458 20.6042C16.4255 20.8839 16.7819 21.0744 17.1698 21.1516C17.5578 21.2287 17.9599 21.1891 18.3254 21.0377C18.6908 20.8864 19.0032 20.63 19.2229 20.3011C19.4427 19.9722 19.56 19.5856 19.56 19.19C19.56 18.6596 19.3493 18.1508 18.9742 17.7758C18.5991 17.4007 18.0904 17.19 17.56 17.19Z" fill="currentColor"></path> </g></svg>`,
+    PIN: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M11.9999 17V21M6.9999 12.6667V6C6.9999 4.89543 7.89533 4 8.9999 4H14.9999C16.1045 4 16.9999 4.89543 16.9999 6V12.6667L18.9135 15.4308C19.3727 16.094 18.898 17 18.0913 17H5.90847C5.1018 17 4.62711 16.094 5.08627 15.4308L6.9999 12.6667Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path> </g></svg>`,
+};
+
+let svs = null;
+let spawn = null;
+let viewer = null;
+let guessMap = null;
+let gameViewer = null;
+let cleanStyle = null;
+let peekMarker = null;
+let mapObserver = null;
+let panoSelector = null;
+let closeControl = null;
+let pathPolyline = null;
+let gameLoopTimer = null;
+let coverageLayer = null;
+let markerObserver = null;
+let viewerObserver = null;
+let currentGameToken = null;
+let currentMovementRound = null;
+let mapTypeIndex = 0;
+let movementPath = [];
+let currentMovementPath = [];
+
+
+let isPhotoMode = false;
+let isCoverageLayer = false;
+let isPathDisplayed = false;
+let gameLoopRunning = false;
+let clickListenerAttached = false;
+
+let MAP_MAKING_API_KEY = GM_getValue("MAP_MAKING_API_KEY", "PASTE_YOUR_KEY_HERE");
+let MAP_LIST;
+let LOCATION;
+let previousMapId = JSON.parse(GM_getValue('previousMapId', null));
+let previousTags = JSON.parse(GM_getValue('previousTags', '[]'));
+
+
+// ============================================================================
+// UTILITY FUNCTIONS - DOM & DATA ACCESS
+// ============================================================================
+
 const domCache = {
     _nextRoot: null,
     _lastNextRootCheck: 0,
@@ -50,13 +122,18 @@ const domCache = {
         }
         return this._nextRoot;
     },
+    queryOne(selector) {
+        return this.nextRoot?.querySelector(selector) || null;
+    },
+    queryAll(selector) {
+        return this.nextRoot?.querySelectorAll(selector) || [];
+    },
     clear() {
         this._nextRoot = null;
         this._lastNextRootCheck = 0;
     }
 };
 
-// Throttle utility function
 function throttle(fn, delay) {
     let lastCall = 0;
     let timeoutId = null;
@@ -80,98 +157,40 @@ function throttle(fn, delay) {
     };
 }
 
-const SELECTORS = {
-    guessMarker: "[data-qa='guess-marker']",
-    roundMarker: "[data-qa='correct-location-marker']",
-    duelMarker: "[class*='result-map_roundPin']",
-    roundEnd: "[data-qa='close-round-result']",
-    gameEnd: "[data-qa='play-again-button']",
-    duelEnd: "[class*='game-summary']",
-    roundNumber: "[data-qa='round-number']",
-    guessMap: "[class*='guess-map_canvas']",
-    resultMap: "[class*='coordinate-result-map_map']",
-    duelMap: "[class^='result-map_map']",
-    svContainer: "panorama-container",
-    moveButton: "[data-qa='undo-move']"
-};
-
-const SVG_SOURCE = {
-    COPY: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" fill="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>`,
-    LOADING: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M12,18A6,6 0 0,1 6,12C6,11 6.25,10.03 6.7,9.2L5.24,7.74C4.46,8.97 4,10.43 4,12A8,8 0 0,0 12,20V23L16,19L12,15M12,4V1L8,5L12,9V6A6,6 0 0,1 18,12C18,13 17.75,13.97 17.3,14.8L18.76,16.26C19.54,15.03 20,13.57 20,12A8,8 0 0,0 12,4Z" fill="currentColor"></path></svg>`,
-    SUCCESS: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" fill="currentColor"></path></svg>`,
-    SAVE: `<svg viewBox="0 0 24 24" fill="none" width="24" height="24"> <path d="M9 6L12 3M12 3L15 6M12 3V13M7.00023 10C6.06835 10 5.60241 10 5.23486 10.1522C4.74481 10.3552 4.35523 10.7448 4.15224 11.2349C4 11.6024 4 12.0681 4 13V17.8C4 18.9201 4 19.4798 4.21799 19.9076C4.40973 20.2839 4.71547 20.5905 5.0918 20.7822C5.5192 21 6.07899 21 7.19691 21H16.8036C17.9215 21 18.4805 21 18.9079 20.7822C19.2842 20.5905 19.5905 20.2839 19.7822 19.9076C20 19.4802 20 18.921 20 17.8031V13C20 12.0681 19.9999 11.6024 19.8477 11.2349C19.6447 10.7448 19.2554 10.3552 18.7654 10.1522C18.3978 10 17.9319 10 17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-    SPAWN: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" fill="currentColor"></path></svg>`,
-    PANEL: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3,9H17V7H3V9M3,13H17V11H3V13M3,17H17V15H3V17M19,17H21V15H19V17M19,7V9H21V7H19M19,13H21V11H19V13Z" /></svg>`,
-    CAMERA: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" fill="currentColor"></path></svg>`,
-    PATH: `<svg viewBox="0 0 24 24" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.78 20H9.78C7.98 20 4.58 19.09 4.58 15.64C4.58 12.19 7.98 11.28 9.78 11.28H14.22C14.37 11.28 17.92 11.23 17.92 8.42C17.92 5.61 14.37 5.56 14.22 5.56H9.22C9.02109 5.56 8.83032 5.48098 8.68967 5.34033C8.54902 5.19968 8.47 5.00891 8.47 4.81C8.47 4.61109 8.54902 4.42032 8.68967 4.27967C8.83032 4.13902 9.02109 4.06 9.22 4.06H14.22C16.02 4.06 19.42 4.97 19.42 8.42C19.42 11.87 16.02 12.78 14.22 12.78H9.78C9.63 12.78 6.08 12.83 6.08 15.64C6.08 18.45 9.63 18.5 9.78 18.5H14.78C14.9789 18.5 15.1697 18.579 15.3103 18.7197C15.451 18.8603 15.53 19.0511 15.53 19.25C15.53 19.4489 15.451 19.6397 15.3103 19.7803C15.1697 19.921 14.9789 20 14.78 20Z" fill="currentColor"></path> <path d="M6.44 8.31C5.74314 8.30407 5.06363 8.09202 4.48708 7.70056C3.91054 7.30909 3.46276 6.75573 3.20018 6.11021C2.93759 5.46469 2.87195 4.75589 3.01153 4.07312C3.1511 3.39036 3.48965 2.76418 3.9845 2.2735C4.47935 1.78281 5.10837 1.44958 5.79229 1.31579C6.47622 1.182 7.18444 1.25363 7.82771 1.52167C8.47099 1.78971 9.02054 2.24215 9.40711 2.82199C9.79368 3.40182 9.99998 4.08311 10 4.78C10 5.2461 9.90773 5.70759 9.72846 6.13783C9.54919 6.56808 9.28648 6.95856 8.95551 7.28675C8.62453 7.61494 8.23184 7.87433 7.80009 8.04995C7.36834 8.22558 6.90609 8.31396 6.44 8.31ZM6.44 2.75C6.04444 2.75 5.65776 2.86729 5.32886 3.08706C4.99996 3.30682 4.74362 3.61918 4.59224 3.98463C4.44087 4.35008 4.40126 4.75221 4.47843 5.14018C4.5556 5.52814 4.74609 5.8845 5.02579 6.16421C5.3055 6.44391 5.66186 6.6344 6.04982 6.71157C6.43779 6.78874 6.83992 6.74913 7.20537 6.59776C7.57082 6.44638 7.88318 6.19003 8.10294 5.86114C8.32271 5.53224 8.44 5.14556 8.44 4.75C8.44 4.48735 8.38827 4.22728 8.28776 3.98463C8.18725 3.74198 8.03993 3.5215 7.85422 3.33578C7.6685 3.15007 7.44802 3.00275 7.20537 2.90224C6.96272 2.80173 6.70265 2.75 6.44 2.75Z" fill="currentColor"></path> <path d="M17.56 22.75C16.8614 22.752 16.1779 22.5466 15.5961 22.1599C15.0143 21.7733 14.5603 21.2227 14.2916 20.5778C14.0229 19.933 13.9515 19.2229 14.0866 18.5375C14.2217 17.8521 14.5571 17.2221 15.0504 16.7275C15.5437 16.2328 16.1726 15.8956 16.8577 15.7586C17.5427 15.6215 18.253 15.6909 18.8986 15.9577C19.5442 16.2246 20.0961 16.6771 20.4844 17.2578C20.8727 17.8385 21.08 18.5214 21.08 19.22C21.08 20.1545 20.7095 21.0508 20.0496 21.7125C19.3898 22.3743 18.4945 22.7473 17.56 22.75ZM17.56 17.19C17.1644 17.19 16.7778 17.3073 16.4489 17.5271C16.12 17.7468 15.8636 18.0592 15.7122 18.4246C15.5609 18.7901 15.5213 19.1922 15.5984 19.5802C15.6756 19.9681 15.8661 20.3245 16.1458 20.6042C16.4255 20.8839 16.7819 21.0744 17.1698 21.1516C17.5578 21.2287 17.9599 21.1891 18.3254 21.0377C18.6908 20.8864 19.0032 20.63 19.2229 20.3011C19.4427 19.9722 19.56 19.5856 19.56 19.19C19.56 18.6596 19.3493 18.1508 18.9742 17.7758C18.5991 17.4007 18.0904 17.19 17.56 17.19Z" fill="currentColor"></path> </g></svg>`,
-    PINON:`<svg viewBox="0 0 24 24" width="18" height="18" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M11.9999 17V21M6.9999 12.6667V6C6.9999 4.89543 7.89533 4 8.9999 4H14.9999C16.1045 4 16.9999 4.89543 16.9999 6V12.6667L18.9135 15.4308C19.3727 16.094 18.898 17 18.0913 17H5.90847C5.1018 17 4.62711 16.094 5.08627 15.4308L6.9999 12.6667Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path> </g></svg>`};
-
-let svs = null;
-let spawn = null;
-let viewer = null;
-let guessMap = null;
-let gameViewer = null;
-let cleanStyle = null;
-let peekMarker = null;
-let mapObserver = null;
-let panoSelector = null;
-let closeControl = null;
-let gameLoopTimer = null;
-let coverageLayer = null;
-let markerObserver = null;
-let currentGameToken = null;
-let lastClickedCoords = null;
-let movementPath = [];
-let pathPolyline = null;
-let currentMovementPath = [];
-let currentMovementRound = null;
-
-let isPhotoMode = false;
-let isCoverageLayer = false;
-let isPathDisplayed = true;
-let gameLoopRunning = false;
-let clickListenerAttached = false;
-
-let MAP_MAKING_API_KEY = GM_getValue("MAP_MAKING_API_KEY", "PASTE_YOUR_KEY_HERE");
-let MAP_LIST;
-let LOCATION;
-let previousMapId = JSON.parse(GM_getValue('previousMapId', null));
-let previousTags = JSON.parse(GM_getValue('previousTags', '[]'));
-
 function getReactFiber(el) {
     if (!el) return null;
     const key = Object.keys(el).find(k => k.startsWith("__reactFiber"));
     return key ? el[key] : null;
 }
 
-function getGuessMapInstance(el) {
+function getGuessMap(el) {
     const fiber = getReactFiber(el);
     try {
         return fiber?.return?.memoizedState?.memoizedState?.current?.instance || fiber?.return?.updateQueue?.lastEffect?.deps?.[0] || null;
     } catch { return null; }
 }
 
-function getGameViewerInstance(el) {
+function getGameViewer(el) {
     const fiber = getReactFiber(el);
     try {
         return fiber?.return?.return?.return?.sibling?.memoizedProps?.panorama || null;
-    } catch { return null; }
-
-}
-
-function getRoundData() {
-    let el = document.querySelector(SELECTORS.roundMarker);
-    const fiber = getReactFiber(el);
-    try {
-        return fiber?.return?.return?.return?.return?.return?.memoizedProps?.rounds[0] || null;
     } catch { return null; }
 }
 
 function getMarkerCoords(marker) {
     const fiber = getReactFiber(marker);
     try {
-        const data= fiber?.return?.return?.return?.memoizedProps
-        return {lat: data.lat, lng: data.lng};
+        const data = fiber?.return?.return?.return?.memoizedProps
+        return { lat: data.lat, lng: data.lng };
+    } catch { return null; }
+}
+
+function extractGameData() {
+    const marker = domCache.queryOne(SELECTORS.answerMarker)
+    const fiber = getReactFiber(marker);
+    try {
+        const data = fiber?.return?.return?.return?.return?.return?.memoizedProps
+        return data;
     } catch { return null; }
 }
 
@@ -181,13 +200,88 @@ function getDuelData(marker) {
     return fiber.return?.return?.return?.return?.memoizedProps?.round || fiber.return?.return?.return?.return?.pendingProps || null;
 }
 
+function formatDistance(num) {
+    return num >= 1000 ? `${(num / 1000).toFixed(1)} km` : `${Math.floor(num)} m`;
+}
+
+function convertPanoId(panoId) {
+    if (!panoId) return null;
+    try {
+        const bytes = new Uint8Array(panoId.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+        return new TextDecoder("utf-8").decode(bytes);
+    } catch (e) {
+        console.error("Error:", e);
+        return panoId;
+    }
+}
+
+function getStreetViewThumbUrl(pano) {
+    if (pano.panoId) {
+        return `https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=${pano.panoId}&cb_client=maps_sv.tactile.gps&w=1024&h=768&yaw=${pano.heading || 0}&pitch=${pano.pitch || 0}&thumbfov=120`;
+    } else if (pano.location) {
+        return `https://maps.googleapis.com/maps/api/streetview?size=1024x768&location=${pano.location.lat},${pano.location.lng}&heading=${pano.heading || 0}&pitch=${pano.pitch || 0}&fov=120&key=AIzaSyDqRTXlnHXELLKn7645Q1L_5oc4CswKZK4`;
+    }
+    return null
+}
+
+function getRadius(coords1, coords2) {
+    return unsafeWindow.google.maps.geometry.spherical.computeDistanceBetween(
+        coords1,
+        coords2,
+    );
+}
+
+function getCurrentRound() {
+    const el = domCache.queryOne(SELECTORS.roundNumber);
+    if (!el) return null;
+    const m = el.textContent.match(/\d+/);
+    return m ? Number(m[0]) : null;
+}
+
+function extractDate(entry) {
+    for (const key in entry) {
+        const value = entry[key];
+        if (value instanceof Date) {
+            return value;
+        }
+        if (typeof value === 'string' && !isNaN(Date.parse(value))) {
+            return new Date(value);
+        }
+    }
+    return null;
+}
+
+function getGameToken(url) {
+    const m = url.match(/[0-9a-zA-Z]{16}/);
+    return m ? m[0] : null;
+}
+
+function applyStyles(element, styles) {
+    Object.assign(element.style, styles);
+}
+
+// ============================================================================
+// STREET VIEW SERVICE & PANORAMA CACHE
+// ============================================================================
+
 function initSVS() {
     if (!svs && unsafeWindow.google?.maps?.StreetViewService) {
         svs = new unsafeWindow.google.maps.StreetViewService();
     }
 }
 
+function createCoordCacheKey(coords) {
+    const lat = Number(coords.lat.toFixed(5));
+    const lng = Number(coords.lng.toFixed(5));
+    return `${lat},${lng}`;
+}
+
 async function getNearestPano(coords) {
+    const cacheKey = createCoordCacheKey(coords);
+    if (panoCache.has(cacheKey)) {
+        return panoCache.get(cacheKey);
+    }
+
     const nearestPano = { error: true };
     let radius = SEARCH_RADIUS;
     let oldRadius;
@@ -217,92 +311,138 @@ async function getNearestPano(coords) {
         }
     }
 
+    // Cache the result
+    panoCache.set(cacheKey, nearestPano);
+
+    // Limit cache size to prevent memory issues (keep last 100 entries)
+    if (panoCache.size > 100) {
+        const firstKey = panoCache.keys().next().value;
+        panoCache.delete(firstKey);
+    }
+
     return nearestPano;
 }
 
-function fetchAnswerPanoFromRoundData() {
-    const data = getRoundData();
-    if (!data) return null;
-    return {
-        panoId: convertPanoId(data.panoId),
-        heading: data.heading,
-        location: { lat: data.lat, lng: data.lng },
-        pitch: data.pitch,
-        radius: 0,
-        zoom: data.zoom,
-        error: false
-    }
-}
+// ============================================================================
+// INITIALIZATION FUNCTIONS
+// ============================================================================
 
-function offsetMapFocus(map, coords) {
-    if (!map || !coords) return;
+function startMapObserver() {
+    stopMapObserver();
 
-    map.setCenter(coords);
-
-    const mapDiv = map.getDiv();
-    const width = mapDiv.offsetWidth;
-
-    const offsetX = width / 4;
-
-    map.panBy(offsetX, 0);
-}
-
-function attachPanoChangeListener() {
-    if (!gameViewer) return;
-    if (panoListenerMap.has(gameViewer)) return;
-
-    const round = getCurrentRound();
-    if (!round) return;
-
-    const startPosition = gameViewer.getPosition();
-    if (startPosition) {
-        const startPoint = {
-            lat: Number(startPosition.lat().toFixed(5)),
-            lng: Number(startPosition.lng().toFixed(5))
-        };
-        currentMovementPath = [startPoint];
-        currentMovementRound = round;
-    }
-
-    const listener = gameViewer.addListener("position_changed", function () {
-        recordMovementPoint(gameViewer);
-    });
-
-    panoListenerMap.set(gameViewer, listener);
-}
-
-function attachClickListener(map) {
-    map.addListener("click", async (e) => {
-        lastClickedCoords = {
-            lat: e.latLng.lat(),
-            lng: e.latLng.lng()
-        };
-        if (document.querySelector(SELECTORS.roundEnd) ||
-            document.querySelector(SELECTORS.gameEnd) ||
-            (document.querySelector(SELECTORS.duelEnd))) {
-            if (!isCoverageLayer) return
-            const pano = await getNearestPano(lastClickedCoords);
-            if (!pano || pano.error) return
-            if (!peekMarker) {
-                peekMarker = new google.maps.Marker({
-                    position: pano.location,
-                    map,
-                    icon: {
-                        url: "https://www.geoguessr.com/_next/static/media/selected-pin-square.bcb5854f.webp",
-                        scaledSize: new google.maps.Size(28, 28),
-                        anchor: new google.maps.Point(14, 28)
-                    },
-                    zIndex: 10008
-                });
-            } else {
-                peekMarker.setPosition(pano.location);
-            }
-            openNativeStreetView(pano)
+    mapObserver = new MutationObserver((mutations) => {
+        if (!mutations.some(m => m.addedNodes.length > 0)) return;
+        const duelMap = domCache.queryOne(SELECTORS.duelMap)
+        const mapEl = domCache.queryOne(SELECTORS.guessMap) || domCache.queryOne(SELECTORS.resultMap) || duelMap;
+        if (!mapEl) return;
+        guessMap = getGuessMap(mapEl);
+        if (guessMap && !clickListenerAttached) {
+            startViewerObserver()
+            attachClickListener(guessMap);
+            clickListenerAttached = true;
+            if ((duelMap && window.location.href.includes('summary'))) makeMapResizable()
+            stopMapObserver();
         }
     });
 
+    mapObserver.observe(domCache.nextRoot, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+    });
 }
 
+function startMarkerObserver() {
+    stopMarkerObserver();
+
+    markerObserver = new MutationObserver((mutations) => {
+        const hasRelevantChange = mutations.some(m => {
+            if (m.addedNodes.length === 0 && m.removedNodes.length === 0) {
+                return false;
+            }
+
+            for (const node of m.addedNodes) {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    const dataQa = node.getAttribute?.('data-qa') || '';
+                    if (node.classList.contains('map-pin') ||
+                        dataQa.includes('marker') ||
+                        dataQa === 'guess-marker' ||
+                        dataQa === 'correct-location-marker' ||
+                        node.classList.contains('roundPin')) {
+                        return true;
+                    }
+                }
+            }
+
+            return m.addedNodes.length > 0 || m.removedNodes.length > 0;
+        });
+
+        if (hasRelevantChange) {
+            throttledScheduleGameLoop();
+        }
+    });
+
+    markerObserver.observe(domCache.nextRoot, {
+        childList: true,
+        subtree: true,
+    });
+}
+
+function startViewerObserver() {
+    stopViewerObserver();
+
+    viewerObserver = new MutationObserver((mutations) => {
+        if (!mutations.some(m => m.addedNodes.length > 0)) return;
+        const isMove = domCache.queryOne(SELECTORS.moveButton)
+        if (!isMove) return
+        gameViewer = getGameViewer(document.getElementById(SELECTORS.svContainer))
+        if (gameViewer) {
+            attachPanoChangeListener()
+            stopViewerObserver();
+        }
+    });
+
+    viewerObserver.observe(domCache.nextRoot, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+    });
+}
+
+// ============================================================================
+// OBSERVER CLEANUP FUNCTIONS
+// ============================================================================
+
+function stopMapObserver() {
+    if (mapObserver) {
+        mapObserver.disconnect();
+        mapObserver = null;
+    }
+    clickListenerAttached = false;
+}
+
+function stopMarkerObserver() {
+    if (markerObserver) {
+        markerObserver.disconnect();
+        markerObserver = null;
+    }
+
+    if (gameLoopTimer) {
+        clearTimeout(gameLoopTimer);
+        gameLoopTimer = null;
+    }
+}
+
+function stopViewerObserver() {
+    if (viewerObserver) {
+        viewerObserver.disconnect();
+        viewerObserver = null;
+    }
+}
+
+// ============================================================================
+// GAME LOOP & SCHEDULING
+// ============================================================================
 
 function scheduleGameLoop(delay = 200) {
     if (gameLoopTimer) {
@@ -323,141 +463,243 @@ function scheduleGameLoop(delay = 200) {
     }, delay);
 }
 
-
 // Throttled game loop scheduler to reduce callback frequency
 const throttledScheduleGameLoop = throttle(() => scheduleGameLoop(150), 100);
 
-function startMarkerObserver() {
-    stopMarkerObserver();
+async function gameLoop() {
+    if (!domCache.nextRoot) return;
 
-    markerObserver = new MutationObserver((mutations) => {
-        // More precise filtering: only trigger on relevant mutations
-        const hasRelevantChange = mutations.some(m =>
-                                                 m.addedNodes.length > 0 || m.removedNodes.length > 0
-                                                );
-        if (hasRelevantChange) {
-            throttledScheduleGameLoop();
+    const token = getGameToken(location.pathname);
+    if (token) {
+        if (currentGameToken && currentGameToken !== token) {
+            cleanupPanoCache();
+        }
+        if (!currentGameToken) currentGameToken = token
+    }
+
+    const round = getCurrentRound();
+    const dcEndEl = domCache.queryOne(SELECTORS.dcEnd);
+    const replayEl = domCache.queryOne(SELECTORS.replay);
+    const gameEndEl = domCache.queryOne(SELECTORS.gameEnd);
+    const duelEndEl = domCache.queryOne(SELECTORS.duelEnd);
+    const roundEndEl = domCache.queryOne(SELECTORS.roundEnd);
+    const resultMap = domCache.queryOne(SELECTORS.resultMap);
+    const duelMap = domCache.queryOne(SELECTORS.duelMap);
+    const reactionBtn = domCache.queryOne('[class*="styles_hudButton__"]')
+
+    const isDcEnd = !!dcEndEl;
+    const isReplay = !!replayEl;
+    const isGameEnd = !!gameEndEl;
+    const isDuelEnd = !!duelEndEl;
+    const isRoundEnd = !!roundEndEl;
+
+    if ((!token || !round) && !isDuelEnd && !dcEndEl && !isReplay) return;
+    if (isReplay) {
+        addAnalyzeControl(replayEl)
+        return
+    }
+
+    if (!isRoundEnd && !isGameEnd && !isDuelEnd && !isDcEnd) {
+        removePeekMarker();
+        clearMovementPaths()
+        toggleMapType(true)
+        if (isCoverageLayer) toggleCoverageLayer("off");
+        return
+    }
+
+    if (isRoundEnd || isGameEnd || isDuelEnd || isDcEnd) {
+        if (reactionBtn) reactionBtn.remove()
+        if (currentMovementRound && currentMovementPath.length > 0) {
+            const storageKey = `${MOVEMENT_STORAGE_PREFIX}${currentMovementRound}`;
+            try {
+                sessionStorage.setItem(storageKey, JSON.stringify(currentMovementPath));
+            } catch (err) {
+                console.error('[MovementPath] save failed', err);
+            }
+            currentMovementPath = [];
+            currentMovementRound = null;
+        }
+
+        if (!isRoundEnd) attachRoundElementInteractions();
+
+        setMapControls(resultMap || duelMap)
+        addCreditToPage(resultMap, duelMap)
+        renderMovementPaths()
+
+        if (isDuelEnd) {
+            const markers = domCache.queryAll(SELECTORS.duelMarker);
+            for (const marker of markers) {
+                const data = getDuelData(marker);
+                if (!data) continue
+                await applyPanoToDuelMarker(marker, data);
+            }
+            if (window.location.href.includes('summary')) addDuelRoundsPanel();
+        }
+        else await updateMarkers();
+    }
+}
+
+// ============================================================================
+// MAP INTERACTION & EVENT LISTENERS
+// ============================================================================
+
+function offsetMapFocus(map, coords) {
+    if (!map || !coords) return;
+
+    map.setCenter(coords);
+
+    const mapDiv = map.getDiv();
+    const width = mapDiv.offsetWidth;
+
+    const offsetX = width / 4;
+
+    map.panBy(offsetX, 0);
+}
+
+function attachPanoChangeListener() {
+    if (!gameViewer) return;
+    if (panoListenerMap.has(gameViewer)) return;
+
+    const round = getCurrentRound() || 1;
+
+    if (currentMovementRound && currentMovementRound !== round && currentMovementPath.length > 0) {
+        const storageKey = `${MOVEMENT_STORAGE_PREFIX}${currentMovementRound}`;
+        try {
+            sessionStorage.setItem(storageKey, JSON.stringify(currentMovementPath));
+        } catch (err) {
+            console.error('[MovementPath] save failed', err);
+        }
+    }
+    const startPosition = gameViewer.getPosition();
+    if (startPosition) {
+        const startPoint = {
+            lat: Number(startPosition.lat().toFixed(5)),
+            lng: Number(startPosition.lng().toFixed(5))
+        };
+        currentMovementPath = [startPoint];
+        currentMovementRound = round;
+    }
+
+    const listener = gameViewer.addListener("position_changed", function () {
+        recordMovementPoint(gameViewer);
+    });
+
+    panoListenerMap.set(gameViewer, listener);
+}
+
+function attachClickListener(map) {
+    map.addListener("click", async (e) => {
+        const coords = {
+            lat: e.latLng.lat(),
+            lng: e.latLng.lng()
+        };
+
+        if (domCache.queryOne(SELECTORS.roundEnd) ||
+            domCache.queryOne(SELECTORS.gameEnd) ||
+            domCache.queryOne(SELECTORS.dcEnd) ||
+            (domCache.queryOne(SELECTORS.duelEnd))) {
+            if (!isCoverageLayer) return
+            const pano = await getNearestPano(coords);
+            if (!pano || pano.error) return
+            if (!peekMarker) {
+                peekMarker = new google.maps.Marker({
+                    position: pano.location,
+                    map,
+                    icon: {
+                        url: "https://www.geoguessr.com/_next/static/media/selected-pin-square.bcb5854f.webp",
+                        scaledSize: new google.maps.Size(28, 28),
+                        anchor: new google.maps.Point(14, 28)
+                    },
+                    zIndex: 10008
+                });
+            } else {
+                peekMarker.setPosition(pano.location);
+            }
+            openNativeStreetView(pano)
         }
     });
-
-    markerObserver.observe(document.body, {
-        childList: true,
-        subtree: true,
-    });
-}
-
-function stopMarkerObserver() {
-    if (markerObserver) {
-        markerObserver.disconnect();
-        markerObserver = null;
-    }
-
-    if (gameLoopTimer) {
-        clearTimeout(gameLoopTimer);
-        gameLoopTimer = null;
-    }
-}
-
-
-function startMapObserver() {
-    stopMapObserver();
-
-    const targetNode = document.body;
-    mapObserver = new MutationObserver((mutations) => {
-        if (!mutations.some(m => m.addedNodes.length > 0)) return;
-        const duelMap = document.querySelector(SELECTORS.duelMap)
-        const mapEl = document.querySelector(SELECTORS.guessMap) || document.querySelector(SELECTORS.resultMap) || duelMap;
-        if (!mapEl) return;
-        const isMove = document.querySelector(SELECTORS.moveButton)
-        if (isMove) gameViewer = getGameViewerInstance(document.getElementById(SELECTORS.svContainer))
-
-        guessMap = getGuessMapInstance(mapEl);
-        if (guessMap && !clickListenerAttached) {
-            attachClickListener(guessMap);
-            if (gameViewer) attachPanoChangeListener()
-            clickListenerAttached = true;
-            if (duelMap && window.location.href.includes('summary')) makeMapResizable()
-            stopMapObserver();
-        }
-    });
-
-    mapObserver.observe(targetNode, {
-        childList: true,
-        subtree: true,
-        attributes: false,
-    });
-}
-
-function stopMapObserver() {
-    if (mapObserver) {
-        mapObserver.disconnect();
-        mapObserver = null;
-    }
-    clickListenerAttached = false;
 }
 
 function toggleCoverageLayer(action) {
     if (!guessMap) return;
     if (!coverageLayer) coverageLayer = new google.maps.StreetViewCoverageLayer();
 
-    if (isCoverageLayer && action !== "on") {
-        coverageLayer.setMap(null);
-        isCoverageLayer = false;
-    } else if (!isCoverageLayer && action !== "off") {
-        coverageLayer.setMap(guessMap);
-        isCoverageLayer = true;
-    }
+    const shouldShow = action === "on" || (action !== "off" && !isCoverageLayer);
+    const map = shouldShow ? guessMap : null;
+
+    coverageLayer.setMap(map);
+    isCoverageLayer = shouldShow;
 }
 
-function setMapControls() {
+// ============================================================================
+// MAP CONTROLS & UI
+// ============================================================================
+
+function setMapControls(container) {
+    let pathControl = document.getElementById('path-focus');
+    let mapTypeControl = document.getElementById('map-type-toggle');
     let coverageLayerControl = document.getElementById('layer-toggle');
-    let pathDisplayControl = document.getElementById('path-toggle');
-    if (coverageLayerControl && pathDisplayControl) return
-    const container = document.querySelector(SELECTORS.resultMap) || document.querySelector(SELECTORS.duelMap)
+
+    const isMove = domCache.queryOne(SELECTORS.moveButton)
+    if (coverageLayerControl && (pathControl || !isMove) && mapTypeControl) return
+
     if (!coverageLayerControl) {
         coverageLayerControl = document.createElement('button');
         coverageLayerControl.className = 'peek-map-control';
         coverageLayerControl.id = 'layer-toggle'
-        coverageLayerControl.title='Toggle Street View Coverage Overlay'
+        coverageLayerControl.title = 'Toggle Street View Coverage Overlay'
         coverageLayerControl.innerHTML = `
             <img alt="Coverage Layer Toggle" loading="lazy" width="24" height="24" decoding="async" data-nimg="1" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2023%2038%22%3E%3Cpath%20d%3D%22M16.6%2038.1h-5.5l-.2-2.9-.2%202.9h-5.5L5%2025.3l-.8%202a1.53%201.53%200%2001-1.9.9l-1.2-.4a1.58%201.58%200%2001-1-1.9v-.1c.3-.9%203.1-11.2%203.1-11.2a2.66%202.66%200%20012.3-2l.6-.5a6.93%206.93%200%20014.7-12%206.8%206.8%200%20014.9%202%207%207%200%20012%204.9%206.65%206.65%200%2001-2.2%205l.7.5a2.78%202.78%200%20012.4%202s2.9%2011.2%202.9%2011.3a1.53%201.53%200%2001-.9%201.9l-1.3.4a1.63%201.63%200%2001-1.9-.9l-.7-1.8-.1%2012.7zm-3.6-2h1.7L14.9%2020.3l1.9-.3%202.4%206.3.3-.1c-.2-.8-.8-3.2-2.8-10.9a.63.63%200%2000-.6-.5h-.6l-1.1-.9h-1.9l-.3-2a4.83%204.83%200%20003.5-4.7A4.78%204.78%200%200011%202.3H10.8a4.9%204.9%200%2000-1.4%209.6l-.3%202h-1.9l-1%20.9h-.6a.74.74%200%2000-.6.5c-2%207.5-2.7%2010-3%2010.9l.3.1L4.8%2020l1.9.3.2%2015.8h1.6l.6-8.4a1.52%201.52%200%20011.5-1.4%201.5%201.5%200%20011.5%201.4l.9%208.4zm-10.9-9.6zm17.5-.1z%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23333%22%20opacity%3D%22.7%22/%3E%3Cpath%20d%3D%22M5.9%2013.6l1.1-.9h7.8l1.2.9%22%20fill%3D%22%23ce592c%22/%3E%3Cellipse%20cx%3D%2210.9%22%20cy%3D%2213.1%22%20rx%3D%222.7%22%20ry%3D%22.3%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23ce592c%22%20opacity%3D%22.5%22/%3E%3Cpath%20d%3D%22M20.6%2026.1l-2.9-11.3a1.71%201.71%200%2000-1.6-1.2H5.699999999999999a1.69%201.69%200%2000-1.5%201.3l-3.1%2011.3a.61.61%200%2000.3.7l1.1.4a.61.61%200%2000.7-.3l2.7-6.7.2%2016.8h3.6l.6-9.3a.47.47%200%2001.44-.5h.06c.4%200%20.4.2.5.5l.6%209.3h3.6L15.7%2020.3l2.5%206.6a.52.52%200%2000.66.31l1.2-.4a.57.57%200%2000.5-.7z%22%20fill%3D%22%23fdbf2d%22/%3E%3Cpath%20d%3D%22M7%2013.6l3.9%206.7%203.9-6.7%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23cf572e%22%20opacity%3D%22.6%22/%3E%3Ccircle%20cx%3D%2210.9%22%20cy%3D%227%22%20r%3D%225.9%22%20fill%3D%22%23fdbf2d%22/%3E%3C/svg%3E" style="color: transparent;">
         `;
         container.appendChild(coverageLayerControl);
         coverageLayerControl.onclick = () => toggleCoverageLayer();
     }
-    if (!pathDisplayControl) {
-        pathDisplayControl = document.createElement('button');
-        pathDisplayControl.className = 'peek-map-control';
-        pathDisplayControl.id = 'path-toggle';
-        pathDisplayControl.title = 'Toggle Movement Path';
-        pathDisplayControl.innerHTML = SVG_SOURCE.PATH
-        container.appendChild(pathDisplayControl);
-        pathDisplayControl.onclick = () => togglePathDisplay();
+    if (!pathControl && isMove) {
+        pathControl = document.createElement('button');
+        pathControl.className = 'peek-map-control';
+        pathControl.id = 'path-focus';
+        pathControl.title = 'Toggle Movement Path';
+        pathControl.innerHTML = SVG_SOURCE.PATH
+        container.appendChild(pathControl);
+        pathControl.onclick = () => focusPath();
+    }
+    if (!mapTypeControl) {
+        mapTypeControl = document.createElement('button');
+        mapTypeControl.className = 'peek-map-control';
+        mapTypeControl.id = 'map-type-toggle';
+        mapTypeControl.innerHTML = SVG_SOURCE.LAYERS
+        container.appendChild(mapTypeControl);
+        mapTypeControl.title = `Toggle ${MAP_TYPES[(mapTypeIndex + 1) % MAP_TYPES.length].toUpperCase()} Map`;
+        mapTypeControl.onclick = () => toggleMapType();
     }
 }
 
-function togglePathDisplay(action) {
-    if (!guessMap) return;
+function toggleMapType(reset) {
+    const control = document.getElementById('map-type-toggle')
+    if (reset) mapTypeIndex = 0
+    else mapTypeIndex = (mapTypeIndex + 1) % MAP_TYPES.length;
 
-    const overlay = mapPathOverlayMap.get(guessMap);
-    if (!overlay) return;
+    const nextType = MAP_TYPES[mapTypeIndex];
+    guessMap.setMapTypeId(nextType);
+    control.title = `Toggle ${MAP_TYPES[(mapTypeIndex + 1) % MAP_TYPES.length].toUpperCase()} Map`;
+}
 
-    const polylines = Array.isArray(overlay) ? overlay : [overlay];
-
-    if (isPathDisplayed && action !== "on") {
-        polylines.forEach(item => item.polyline?.setMap(null));
-        isPathDisplayed = false;
-    } else if (!isPathDisplayed && action !== "off") {
-        polylines.forEach(item => item.polyline?.setMap(guessMap));
-        isPathDisplayed = true
+function focusPath() {
+    const roundMarkers = document.querySelectorAll(SELECTORS.answerMarker)
+    renderMovementPaths()
+    if (roundMarkers.length == 1) {
+        const coords = getMarkerCoords(roundMarkers[0])
+        const splitContainer = document.querySelector('.peek-split-container')
+        guessMap.setZoom(15)
+        if (splitContainer && splitContainer.classList.contains('active')) offsetMapFocus(guessMap, coords);
+        else guessMap.setCenter(coords)
     }
 }
-function addCreditToPage() {
-    const duelMap = document.querySelector(SELECTORS.duelMap)
-    let container = document.querySelector(`div[data-qa="result-view-top"]`);
-    if (!container && duelMap && window.location.href.includes('summary')) {
-        container = duelMap.parentElement;
-    }
+
+function addCreditToPage(container, duelMap) {
+    if ((!window.location.href.includes('summary') && duelMap)) return
+    container = container?.parentElement || duelMap?.parentElement || null;
+
     if (!container || document.getElementById('peek-credit-container')) return;
     const element = document.createElement('div');
     element.id = 'peek-credit-container';
@@ -471,76 +713,743 @@ function addCreditToPage() {
     else element.style.left = '1rem';
 }
 
-async function gameLoop() {
-    if (!domCache.nextRoot) return;
-    const token = getGameToken(location.pathname);
-    if(!currentGameToken) currentGameToken = token
-    const round = getCurrentRound();
-    const roundEndEl = document.querySelector(SELECTORS.roundEnd);
-    const gameEndEl = document.querySelector(SELECTORS.gameEnd);
-    const duelEndEl = document.querySelector(SELECTORS.duelEnd);
-    const isRoundEnd = !!roundEndEl;
-    const isGameEnd = !!gameEndEl;
-    const isDuelEnd = !!duelEndEl
-    const isRoundMarker = document.querySelector(SELECTORS.roundMarker);
-    const reactionBtn =document.querySelector('[class*="styles_hudButton__"]')
+function addAnalyzeControl(container) {
+    if (!container || document.getElementById('analyze-wrapper')) return;
 
-    if ((!token || !round) && !isDuelEnd) return;
-    if (!isRoundEnd && !isGameEnd && !isDuelEnd) {
-        removePeekMarker();
-        toggleCoverageLayer("off");
-        clearRenderedMovementPath();
-        if (isCoverageLayer) toggleCoverageLayer("off");
-    }
+    const analyzeSpan = document.createElement('span');
+    analyzeSpan.id = 'analyze-wrapper';
+    analyzeSpan.className = 'tooltip_reference__CwDbn';
 
-    if (isRoundEnd || isGameEnd || isDuelEnd) {
-        if(reactionBtn)reactionBtn.remove()
-        if (currentMovementRound && currentMovementPath.length > 0) {
-            const storageKey = `${MOVEMENT_STORAGE_PREFIX}${currentMovementRound}`;
-            try {
-                sessionStorage.setItem(storageKey, JSON.stringify(currentMovementPath));
-            } catch (err) {
-                console.error('[MovementPath] save failed', err);
-            }
-            currentMovementPath = [];
-            currentMovementRound = null;
+    const buttonDiv = document.createElement('div');
+    buttonDiv.id = 'analyze-button';
+    buttonDiv.className = 'report-user-replay_reportResultButton__cerrj';
+    buttonDiv.innerHTML = SVG_SOURCE.ANALYSIS;
+    applyStyles(buttonDiv, { color: '#FFFFFF', cursor: 'pointer' });
+
+    const tooltipDiv = document.createElement('div');
+    tooltipDiv.className = 'tooltip_tooltip__3D6bz tooltip_top__X4nYB tooltip_roundnessXS__BGhWu tooltip_variantDefault__7WTJ0';
+    applyStyles(tooltipDiv, {
+        left: '50%',
+        transform: 'translateX(-50%) scale(0)',
+        opacity: '0',
+        visibility: 'hidden',
+        transition: 'opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease'
+    });
+    tooltipDiv.textContent = 'Analyze Replay';
+
+    const arrowDiv = document.createElement('div');
+    arrowDiv.className = 'tooltip_arrow__LJ1of';
+    tooltipDiv.appendChild(arrowDiv);
+
+    analyzeSpan.appendChild(buttonDiv);
+    analyzeSpan.appendChild(tooltipDiv);
+
+    analyzeSpan.addEventListener('mouseenter', () => {
+        applyStyles(tooltipDiv, {
+            transform: 'translateX(-50%) scale(1)',
+            opacity: '1',
+            visibility: 'visible'
+        });
+    });
+
+    analyzeSpan.addEventListener('mouseleave', () => {
+        applyStyles(tooltipDiv, {
+            transform: 'translateX(-50%) scale(0)',
+            opacity: '0',
+            visibility: 'hidden'
+        });
+    });
+
+    buttonDiv.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const { gameId, round } = parseUrl()
+        const selectedRound = document.querySelector('[class*="selectedRound"]');
+        const roundTextElement = selectedRound.querySelector('[class*="roundText"], [class*="game-summary_text"]');
+        if (roundTextElement && roundTextElement.textContent.includes('Round')) {
+            const match = roundTextElement.textContent.match(/Round\s+(\d+)/);
+            await getReplayer(gameId, match[1])
+            analyze(match[1])
         }
+    });
 
-        if (isGameEnd || isDuelEnd) {
-            renderMovementPaths();
-            attachRoundElementInteractions();
-        } else {
-            renderMovementPaths(round);
-        }
+    container.appendChild(analyzeSpan);
+}
 
-        setMapControls()
-        addCreditToPage()
+// ============================================================================
+// REPLAY ANALYSIS
+// ============================================================================
+let replayData, playersList, selectedPlayer, rounds, currentGameId;
 
-        if (isDuelEnd) {
-            const markers = document.querySelectorAll(SELECTORS.duelMarker);
-            for (const marker of markers) {
-                const data = getDuelData(marker);
-                if (!data) continue
-                await applyPanoToDuelMarker(marker, data);
-            }
-            if (window.location.href.includes('summary')) addDuelRoundsPanel();
+async function getReplayer(gameId, round) {
+    let replayControls = document.querySelector('[class^="replay_main__"]');
+    const keys = Object.keys(replayControls)
+    const key = keys.find(key => key.startsWith("__reactProps"))
+    const props = replayControls[key]
+    playersList = props.children[4].props.players
+    if (playersList) rounds = Math.max(...playersList.map(player => player.guesses?.length || 0));
+    else rounds = document.querySelectorAll('[class*="playedRound"]').length - 3;
+    const selectedPlayerLabels = document.querySelectorAll('label[class*="switch_label"][aria-selected="true"]');
+    selectedPlayerLabels.forEach(label => {
+        const playerName = label.textContent.trim();
+        if (playersList) selectedPlayer = playersList.find(player => player.nick.trim() == playerName)
+        else selectedPlayer = props.children[4].props.selectedPlayer
+    });
+    currentGameId = gameId
+    replayData = await fetchReplayData(currentGameId, selectedPlayer.playerId, round)
+}
+
+async function fetchReplayData(gameId, userId, round) {
+    const url = `https://www.geoguessr.com/api/v4/replays/${userId}/${gameId}/${round}`;
+    try {
+        const response = await fetch(url, { method: "GET", credentials: "include" });
+
+        if (!response.ok) {
+            console.error(`HTTP error! Status: ${response.status}`);
+            return null
         }
-        else {
-            if (token !== currentGameToken) {
-                currentGameToken = token;
-                committedRounds.clear();
-                lastClickedCoords = null;
-            }
-            await commitRoundResult({
-                token,
-                round,
-                guessCoords: (isRoundEnd || isGameEnd) ? lastClickedCoords : null,
-                hasAnswerMarker: !!isRoundMarker
-            });
-            updateMarkersUI(token, round, isGameEnd);
-        }
+        return await response.json();
+
+    } catch (error) {
+        console.error('Error fetching replay data:', error);
+        return null;
     }
 }
+
+function parseUrl() {
+    const url = window.location.href;
+    const urlObj = new URL(url);
+
+    const pathSegments = urlObj.pathname.split('/');
+    const gameId = pathSegments.length > 2 ? pathSegments[2] : null;
+
+    const round = urlObj.searchParams.get("round");
+    return { gameId, round };
+}
+
+async function downloadPanoramaImage(panoId, fileName, w, h, zoom, d) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let canvas, ctx, tilesPerRow, tilesPerColumn, imageUrl;
+            const tileWidth = 512;
+            const tileHeight = 512;
+
+            let zoomTiles;
+            imageUrl = `https://streetviewpixels-pa.googleapis.com/v1/tile?cb_client=apiv3&panoid=${panoId}&output=tile&zoom=${zoom}&nbt=0&fover=2`;
+            zoomTiles = [2, 4, 8, 16, 32];
+            tilesPerRow = Math.min(Math.ceil(w / tileWidth), zoomTiles[zoom - 1]);
+            tilesPerColumn = Math.min(Math.ceil(h / tileHeight), zoomTiles[zoom - 1] / 2);
+
+            const canvasWidth = tilesPerRow * tileWidth;
+            const canvasHeight = tilesPerColumn * tileHeight;
+            canvas = document.createElement('canvas');
+            ctx = canvas.getContext('2d');
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            if (w === 13312) {
+                const sizeMap = {
+                    4: [6656, 3328],
+                    3: [3328, 1664],
+                    2: [1664, 832],
+                    1: [832, 416]
+                };
+                if (sizeMap[zoom]) {
+                    [canvas.width, canvas.height] = sizeMap[zoom];
+                }
+            }
+
+            const loadTile = (x, y) => {
+                return new Promise(async (resolveTile) => {
+                    let tile;
+                    let tileUrl = `${imageUrl}&x=${x}&y=${y}`;
+                    if (panoId.substring(0, 4) == 'CIHM' || panoId.length != 22) tileUrl = `https://lh3.ggpht.com/jsapi2/a/b/c/x${x}-y${y}-z${zoom}/${panoId}`
+                    try {
+                        tile = await loadImage(tileUrl);
+                        ctx.drawImage(tile, x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+                        resolveTile();
+                    } catch (error) {
+                        console.error(`Error loading tile at ${x},${y}:`, error);
+                        resolveTile();
+                    }
+                });
+            };
+
+            let tilePromises = [];
+            for (let y = 0; y < tilesPerColumn; y++) {
+                for (let x = 0; x < tilesPerRow; x++) {
+                    tilePromises.push(loadTile(x, y));
+                }
+            }
+
+            await Promise.all(tilePromises);
+            if (d) {
+                resolve(canvas.toDataURL('image/jpeg'));
+            }
+            else {
+                canvas.toBlob(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    resolve();
+                }, 'image/jpeg');
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: error.toString(),
+                icon: 'error',
+                backdrop: false
+            });
+            reject(error);
+        }
+    });
+}
+
+async function loadImage(url) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error(`Failed to load image from ${url}`));
+        img.src = url;
+    });
+}
+
+function analyze(round) {
+
+    Swal.fire({
+        title: 'Replay Analysis',
+        html: `
+<div style="text-align: center; font-family: sans-serif;">
+            <div style="margin-bottom: 10px;">
+                <select id="roundSelect" style="background: #db173e; color: white; font-size: 16px; padding: 8px 15px; border: none; border-radius: 6px; cursor: pointer; margin: 5px;"></select>
+                <select id="playerSelect" style="background: #007bff; color: white; font-size: 16px; padding: 8px 15px; border: none; border-radius: 6px; cursor: pointer; margin: 5px;"></select>
+                <button id="toggleEventBtn" style="background: #28a745; color: white; font-size: 14px; padding: 8px 15px; border: 2px solid grey; border-radius: 6px; cursor: pointer; margin: 5px;">Event Analysis</button>
+                <button id="toggleSVBtn" style="background: #ffc107; color: black; font-size: 14px; padding: 8px 15px; border: none; border-radius: 6px; cursor: pointer;">StreetView Analysis</button>
+            </div>
+            <canvas id="chartCanvas" width="300" height="150" style="background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"></canvas>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 5px;">
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); width: 300px; text-align: center;">
+                    <p><strong>Event Density:</strong> <span id="eventDensity">Loading...</span></p>
+                    <p><strong>Avgerage Gap Time:</strong> <span id="AvgGapTime">Loading...</span></p>
+                    <p><strong>Pano Event Ratio:</strong> <span id="streetViewRatio">Loading...</span></p>
+                    <p><strong>First PanoZoom:</strong> <span id="firstPanoZoomTime">Loading...</span></p>
+                    <p><strong>Longest Single Gap:</strong> <span id="longestGapTime">Loading...</span></p>
+                </div>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); width: 300px; text-align: center;">
+                    <p><strong>Switch Count:</strong> <span id="switchCount">Loading...</span></p>
+                    <p><strong>Total Gap Time:</strong> <span id="stagnationTime">Loading...</span></p>
+                    <p><strong>Map Event Ratio:</strong> <span id="mapEventRatio">Loading...</span></p>
+                    <p><strong>First Map Zoom:</strong> <span id="firstMapZoomTime">Loading...</span></p>
+                    <p><strong>Pano POV Speed:</strong> <span id="avgPovSpeed">Loading...</span></p>
+                </div>
+            </div>
+        </div>
+    `,
+        width: 800,
+        showCloseButton: true,
+        backdrop: null,
+        didOpen: () => {
+
+            const canvas = document.getElementById('chartCanvas')
+            const ctx = canvas.getContext('2d', { willReadFrequently: true })
+
+            const playerSelect = document.getElementById("playerSelect");
+            const roundSelect = document.getElementById("roundSelect");
+            if (playersList) {
+                playersList.forEach(player => {
+                    let option = document.createElement("option");
+                    option.value = player.playerId;
+                    option.textContent = player.nick;
+                    playerSelect.appendChild(option);
+                });
+                if (selectedPlayer) playerSelect.value = selectedPlayer.playerId;
+            }
+            else playerSelect.style.display = 'none'
+            if (rounds) {
+                for (let i = 1; i <= rounds; i++) {
+                    let option = document.createElement("option")
+                    option.value = i;
+                    option.textContent = `Round ${i}`
+                    roundSelect.appendChild(option);
+                }
+            }
+            if (round) roundSelect.value = parseInt(round)
+            const toggleSVBtn = document.getElementById('toggleSVBtn');
+            const toggleEventBtn = document.getElementById('toggleEventBtn');
+
+            function updateChartData(data, playerName) {
+                chart.resize()
+                const interval = 1000;
+                const eventTypes = [
+                    "PanoPov",
+                    "PanoZoom",
+                    "MapPosition",
+                    "MapZoom",
+                    "PinPosition",
+                    "MapDisplay",
+                    "PanoPosition",
+                    "Focus",
+                    "Timer",
+                    "KeyPress",
+                ];
+
+                const keyEventTypes = ["PinPosition", "MapDisplay", "GuessWithLatLng", "Timer", "Focus", "KeyPress"];
+                const eventColors = {
+                    "MapZoom": "#0000FF",
+                    "MapPosition": "#FFA500",
+                    "PanoPov": "#00FF00",
+                    "PinPosition": "#00FFFF",
+                    "MapDisplay": "#800080",
+                    "PanoZoom": "#FF69B4",
+                    "PanoPosition": "#1E90FF",
+                    "KeyPress": "lightgreen",
+                    "Timer": "red",
+                    "Focus": "#FFD700"
+                };
+
+                const eventBuckets = {};
+                const allEventTimes = {};
+
+                eventTypes.forEach(eventType => {
+                    eventBuckets[eventType] = {};
+
+                });
+                keyEventTypes.forEach(eventType => {
+                    allEventTimes[eventType] = [];
+                });
+
+                data.forEach(event => {
+                    const eventTime = event.time;
+                    const relativeTime = eventTime - data[0].time;
+                    if (eventBuckets[event.type]) {
+                        const bucket = Math.floor(relativeTime / interval);
+
+                        if (!eventBuckets[event.type][bucket]) {
+                            eventBuckets[event.type][bucket] = 0;
+                        }
+                        eventBuckets[event.type][bucket]++;
+                    }
+                    if (allEventTimes[event.type]) {
+                        allEventTimes[event.type].push(relativeTime);
+                    }
+                });
+
+                const labels = [];
+                const maxBucket = Math.max(
+                    ...Object.values(eventBuckets).flatMap(bucket => Object.keys(bucket).map(Number))
+                );
+
+                for (let i = 0; i <= maxBucket; i++) {
+                    const relativeSeconds = (i * interval + interval / 2) / 1000;
+                    const minutes = Math.floor(relativeSeconds / 60);
+                    const seconds = Math.floor(relativeSeconds % 60);
+                    const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                    labels.push(formattedTime);
+                }
+
+                const datasets = eventTypes.map(eventType => {
+                    const dataPoints = labels.map((label, index) => eventBuckets[eventType][index] || 0);
+                    return {
+                        label: eventType,
+                        data: dataPoints,
+                        fill: false,
+                        borderColor: eventColors[eventType],
+                        backgroundColor: eventColors[eventType],
+                        tension: 0.5,
+                        hidden: true
+                    };
+                });
+
+                const totalEventsData = labels.map((label, index) => {
+                    let total = 0;
+                    eventTypes.forEach(eventType => {
+                        total += eventBuckets[eventType][index] || 0;
+                    });
+                    return total;
+                });
+
+                datasets.push({
+                    label: 'Total Events',
+                    data: totalEventsData,
+                    fill: false,
+                    borderColor: 'rgba(0,0,0,0.6)',
+                    backgroundColor: 'rgba(0,0,0,0.6)',
+                    tension: 0.5
+                });
+
+                const annotations = [];
+                const hiddenKeyPoints = [];
+
+                Object.keys(allEventTimes).forEach(eventType => {
+                    allEventTimes[eventType].forEach((eventTime, idx) => {
+                        const xPosition = eventTime / 1000;
+
+                        const annotation = {
+                            type: 'line',
+                            xMin: xPosition,
+                            xMax: xPosition,
+                            borderColor: eventColors[eventType],
+                            borderWidth: 1.5,
+                            borderDash: [5, 5],
+                        };
+
+                        if (eventType === "KeyPress") {
+                            const keyPayload = data.find(
+                                ev => ev.type === "KeyPress" && (ev.time - data[0].time) === eventTime
+                            )?.payload?.key || "";
+
+                            annotations.push({
+                                type: 'line',
+                                xMin: xPosition,
+                                xMax: xPosition,
+                                borderColor: eventColors[eventType],
+                                borderWidth: 1.5,
+                                borderDash: [5, 5],
+
+                                hiddenPoint: {
+                                    x: xPosition,
+                                    key: keyPayload
+                                }
+                            });
+
+                            hiddenKeyPoints.push({
+                                x: xPosition,
+                                y: 0,
+                                key: keyPayload
+                            });
+                        }
+
+                        annotations.push(annotation);
+                    });
+                });
+                datasets.push({
+                    label: "KeyPressHidden",
+                    data: hiddenKeyPoints,
+                    parsing: false,
+                    pointRadius: 4,
+                    pointHoverRadius: 10,
+                    borderWidth: 0,
+                    borderColor: "rgba(0,0,0,0)",
+                    backgroundColor: "rgba(0,0,0,0)",
+                    showLine: false
+                });
+                chart.data.datasets = datasets;
+                chart.data.labels = labels;
+                chart.options.plugins.annotation.annotations = annotations;
+                chart.update();
+            }
+
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: []
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                boxWidth: 30,
+                                boxHeight: 15,
+                                padding: 30
+                            },
+                            position: 'top',
+                            align: 'center',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                pointStyle: 'rectRounded'
+                            },
+                        },
+                        tooltip: {
+                            enabled: true,
+                            intersect: false,
+                            mode: "nearest",
+
+                            callbacks: {
+                                title: () => "",
+                                label: (ctx) => {
+                                    if (ctx.dataset.label === "KeyPressHidden") {
+                                        return `Key: ${ctx.raw.key}`;
+                                    }
+                                    return null;
+                                }
+                            },
+                            backgroundColor: "rgba(0,0,0,0.75)",
+                            padding: 8,
+                            cornerRadius: 6
+                        },
+                        annotation: { annotations: {} },
+                        customTooltip: true
+                    },
+                    scales: {
+                        x: { title: { display: true } },
+                        y: { title: { display: true, text: 'Event Counts' }, beginAtZero: true }
+                    },
+
+                },
+
+            });
+
+            function updateEventAnalysisData(data) {
+                const { eventDensity, switchCount, stagnationTime, stagnationCount, AvgGapTime, streetViewRatio, mapEventRatio, firstMapZoomTime, firstPanoZoomTime, longestGapTime, avgPovSpeed } = updateEventAnalysis(data);
+                document.getElementById('eventDensity').textContent = eventDensity.toFixed(2) + " times/s";
+                document.getElementById('stagnationTime').textContent = stagnationTime.toFixed(2) + " s";
+                document.getElementById('longestGapTime').textContent = longestGapTime.toFixed(2) + " s";
+                document.getElementById('avgPovSpeed').textContent = avgPovSpeed.toFixed(2) + " °/s";
+                document.getElementById('switchCount').textContent = `${switchCount / 2} times`;
+                document.getElementById('AvgGapTime').textContent = !stagnationCount ? 'None' : `${(parseFloat(stagnationTime / stagnationCount)).toFixed(2)}s`;
+                document.getElementById('streetViewRatio').textContent = (streetViewRatio * 100).toFixed(2) + "%";
+                document.getElementById('mapEventRatio').textContent = (mapEventRatio * 100).toFixed(2) + "%";
+                document.getElementById('firstMapZoomTime').textContent = firstMapZoomTime === null ? "None" : "At " + firstMapZoomTime + " s";
+                document.getElementById('firstPanoZoomTime').textContent = firstPanoZoomTime === null ? "None" : "At " + firstPanoZoomTime + " s";
+            }
+
+            updateChartData(replayData);
+            updateEventAnalysisData(replayData);
+            playerSelect.onchange = async () => {
+                canvas.style.pointerEvents = 'auto';
+                try {
+                    replayData = await fetchReplayData(currentGameId, playerSelect.value, roundSelect.value)
+                    selectedPlayer = playersList.find(player => player.playerId == playerSelect.value)
+                }
+                catch (e) {
+                    console.error("Error fetching replay data")
+                    return
+                }
+                updateChartData(replayData);
+                updateEventAnalysisData(replayData);
+            };
+
+            roundSelect.onchange = async () => {
+                canvas.style.pointerEvents = 'auto';
+                try {
+                    replayData = await fetchReplayData(currentGameId, playerSelect.value || selectedPlayer.playerId, roundSelect.value)
+                }
+                catch (e) {
+                    console.error("Error fetching replay data")
+                    return
+                }
+                updateChartData(replayData);
+                updateEventAnalysisData(replayData);
+            };
+
+            toggleEventBtn.addEventListener('click', () => {
+                toggleSVBtn.style.border = 'none'
+                toggleEventBtn.style.border = '2px solid grey'
+                canvas.style.pointerEvents = 'auto';
+                updateChartData(replayData);
+                updateEventAnalysisData(replayData);
+            })
+            toggleSVBtn.addEventListener('click', async () => {
+                toggleEventBtn.style.border = 'none'
+                toggleSVBtn.style.border = '2px solid grey'
+                canvas.style.pointerEvents = 'none'
+                var centerHeading;
+                const panoIds = replayData
+                    .filter(item => item.type === 'PanoPosition' && item.payload?.panoId)
+                    .map(item => item.payload.panoId);
+                if (panoIds.length > 1) {
+                    var panoId = panoIds[Math.floor(Math.random() * panoIds.length)]
+                }
+                else {
+                    panoId = panoIds[0]
+                }
+                const metaData = await getLOCATION('GetMetadata', panoId);
+
+                var w = metaData.worldWidth;
+                var h = metaData.worldHeight;
+
+                centerHeading = metaData.heading;
+
+
+                try {
+                    const imageUrl = await downloadPanoramaImage(panoId, panoId, w, h, w == 13312 ? 5 : 3, true);
+                    const img = await loadImage(imageUrl);
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+
+                    let lastPanoPov = { heading: 0, pitch: 0 };
+                    let stagnationPoints = [];
+                    const heatData = replayData.filter(event => ["PanoZoom", "PanoPov"].includes(event.type)).map((event, index, events) => {
+                        let heading, pitch, type;
+                        let time = event.time;
+
+                        if (event.type === "PanoPov") {
+                            [heading, pitch] = [event.payload.heading, event.payload.pitch]
+                            lastPanoPov = { heading, pitch };
+                            type = "PanoPov";
+                        } else if (event.type === "PanoZoom") {
+                            heading = lastPanoPov.heading;
+                            pitch = lastPanoPov.pitch;
+                            type = "PanoZoom";
+                        }
+
+                        if (index > 0) {
+                            const prevEvent = events[index - 1];
+                            const timeDiff = Math.abs(time - prevEvent.time);
+                            if (timeDiff > 3000) {
+                                stagnationPoints.push(index);
+                            }
+                        }
+
+                        return { heading, pitch, type };
+                    });
+
+                    drawHeatMapOnImage(canvas, heatData, centerHeading, stagnationPoints);
+                } catch (error) {
+                    console.error('Error downloading panorama image:', error);
+                }
+
+            })
+        }
+
+    });
+}
+
+function drawHeatMapOnImage(canvas, heatData, centerHeading, points) {
+    const ctx = canvas.getContext('2d');
+    heatData.forEach((point, index) => {
+        let headingDifference = point.heading - centerHeading;
+        if (headingDifference > 180) {
+            headingDifference -= 360;
+        } else if (headingDifference < -180) {
+            headingDifference += 360;
+        }
+        const x = (headingDifference + 180) / 360 * canvas.width;
+        const y = (90 - point.pitch) / 180 * canvas.height;
+
+        ctx.beginPath();
+        if (canvas.width === 13312) ctx.arc(x, y, (points.includes(index)) ? 80 : 40, 0, 2 * Math.PI);
+        else ctx.arc(x, y, (points.includes(index)) ? 30 : 15, 0, 2 * Math.PI);
+
+        if (points.includes(index)) {
+            ctx.fillStyle = 'yellow';
+        } else if (point.type === "PanoZoom") {
+            ctx.fillStyle = '#FF0000';
+        } else if (point.type === "PanoPov") {
+            ctx.fillStyle = '#00FF00';
+        }
+
+        ctx.fill();
+    });
+}
+
+function updateEventAnalysis(data) {
+    let totalEvents = 0;
+    let totalTime = 0;
+    let stagnationTime = 0;
+    let stagnationCount = 0;
+    let switchCount = 0;
+    let streetViewEvents = 0;
+    let mapEvents = 0;
+    let lastEventTime = null;
+    let longestGapTime = 0;
+
+    let totalHeadingDifference = 0;
+    let totalTimeGap = 0;
+
+    let lastPanoPovEventTime = null;
+    let lastHeading = null;
+
+    data.forEach(event => {
+        const eventTime = event.time;
+        const relativeTime = Math.floor((eventTime - data[0].time) / 1000);
+
+        totalEvents++;
+        totalTime = relativeTime;
+
+        if (event.type.includes("Pano")) {
+            streetViewEvents++;
+        } else if (event.type.includes("Map")) {
+            mapEvents++;
+        }
+
+        if (lastEventTime !== null) {
+            const timeGap = (eventTime - lastEventTime) / 1000;
+
+            if (timeGap >= 3) {
+                if (timeGap > longestGapTime) longestGapTime = timeGap;
+                stagnationTime += timeGap;
+                stagnationCount++;
+            }
+        }
+
+        if (event.type === "PanoPov" && lastPanoPovEventTime !== null) {
+            const headingDifference = Math.abs(event.payload.heading - lastHeading);
+            const timeGap = (eventTime - lastPanoPovEventTime) / 1000;
+
+            totalHeadingDifference += headingDifference;
+            totalTimeGap += timeGap;
+        }
+
+        lastEventTime = eventTime;
+
+        if (event.type === "PanoPov") {
+            lastPanoPovEventTime = eventTime;
+            lastHeading = event.payload.heading;
+        }
+
+        if (event.type === "Focus" && !event.payload.focus) {
+            switchCount++;
+        }
+    });
+
+    const eventDensity = totalEvents / totalTime;
+
+    const streetViewRatio = streetViewEvents / totalEvents;
+    const mapEventRatio = mapEvents / totalEvents;
+
+    let firstMapZoomTime = null;
+    let firstMapZoomTime_ = null;
+    let firstPanoZoomTime_ = null;
+    let firstPanoZoomTime = null;
+    data.forEach(event => {
+        if (event.type === "MapZoom" && !firstMapZoomTime) {
+            if (firstMapZoomTime_ === null) firstMapZoomTime_ = 1;
+            else {
+                firstMapZoomTime = Math.floor((event.time - data[0].time) / 1000);
+            }
+        }
+        if (event.type === "PanoZoom" && !firstPanoZoomTime) {
+            if (firstPanoZoomTime_ === null) firstPanoZoomTime_ = 1;
+            else {
+                firstPanoZoomTime = Math.floor((event.time - data[0].time) / 1000);
+            }
+        }
+    });
+
+    let avgPovSpeed = 0;
+    if (totalTimeGap > 0) {
+        avgPovSpeed = totalHeadingDifference / totalTimeGap;
+    }
+
+    return {
+        eventDensity,
+        stagnationTime,
+        switchCount,
+        stagnationCount,
+        streetViewRatio,
+        mapEventRatio,
+        firstPanoZoomTime,
+        firstMapZoomTime,
+        longestGapTime,
+        avgPovSpeed
+    };
+}
+
+// ============================================================================
+// MARKER CLEANUP
+// ============================================================================
 
 function removePeekMarker() {
     if (peekMarker) {
@@ -549,101 +1458,79 @@ function removePeekMarker() {
     }
 }
 
-function updateMarkersUI(token, currentRound, isFinal) {
-    const data = GM_getValue(token);
-    if (!data) return;
-    const markers = document.querySelectorAll(SELECTORS.guessMarker);
-    const answerMarkers = document.querySelectorAll(SELECTORS.roundMarker);
-    if (markers.length === 0) return;
-    if (isFinal) {
-        let rNum = 1;
-        for (const marker of markers) {
-            if (data.guess?.[rNum]) {
-                applyPanoToGuessMarker(marker, data.guess[rNum], rNum);
-            }
-            rNum++;
-        }
-        if (answerMarkers && data.answer) {
-            let answerNum = 1;
-            for (const marker of answerMarkers) {
-                if (data.answer?.[answerNum]) {
-                    applyPanoToAnswerMarker(marker, data.answer[answerNum], answerNum);
-                }
-                answerNum++;
-            }
-        }
-    } else {
-        const pano = data.guess?.[currentRound];
-        if (pano) {
-            applyPanoToGuessMarker(markers[0], pano, currentRound);
-        }
-        const answer = data.answer?.[currentRound];
-        if (answer) {
-            applyPanoToAnswerMarker(answerMarkers[0], answer, currentRound);
-        }
-    }
+function cleanupPanoCache() {
+    panoCache.clear();
 }
 
-function positionTooltip(marker, tooltip) {
-    const mapContainer = document.querySelector(SELECTORS.guessMap);
-    if (!mapContainer) return;
+// ============================================================================
+// MARKER PROCESSING & UPDATES
+// ============================================================================
 
-    const markerRect = marker.getBoundingClientRect();
-    const mapRect = mapContainer.getBoundingClientRect();
+async function updateMarkers() {
+    let guessMarkers = [...domCache.queryAll(SELECTORS.guessMarker)];
+    if (guessMarkers.length < 1) guessMarkers = [...domCache.queryAll(SELECTORS.dcMarker)];
+    const answerMarkers = [...domCache.queryAll(SELECTORS.answerMarker)];
+    const gameData = extractGameData();
 
-    const TOOLTIP_WIDTH = 300;
-    const BUFFER = 10;
+    for (const [index, marker] of answerMarkers.entries()) {
+        const data = gameData.rounds?.[index];
+        if (!data) continue;
 
-    if (markerRect.top >= mapRect.height / 2) {
+        const markerData = markerDataMap.get(marker) || {};
+        const bindKey = `answer_${index + 1}`;
+        if (markerData.peekBound === bindKey && markerData.cachedPano) {
+            continue;
+        }
 
-        tooltip.style.bottom = "100%";
-        tooltip.style.top = "auto";
-        tooltip.style.marginBottom = "15px";
-        tooltip.style.marginTop = "0";
-    } else {
-        tooltip.style.top = "100%";
-        tooltip.style.bottom = "auto";
-        tooltip.style.marginTop = "5px";
-        tooltip.style.marginBottom = "0";
+        applyPanoToAnswerMarker(marker, {
+            panoId: convertPanoId(data.panoId),
+            heading: data.heading,
+            location: { lat: data.lat, lng: data.lng },
+            pitch: data.pitch,
+            radius: 0,
+            zoom: data.zoom,
+            error: false
+        }, index + 1);
     }
 
-    const markerCenterX = markerRect.left + markerRect.width / 2;
+    await Promise.all(
+        guessMarkers.map(async (marker, index) => {
+            const coords = gameData.guesses?.[index]?.coordinate;
+            if (!coords) return;
 
-    const overflowLeft =
-          markerCenterX - TOOLTIP_WIDTH / 2 < mapRect.left + BUFFER;
+            const markerData = markerDataMap.get(marker) || {};
+            const bindKey = `bound_${index + 1}`;
+            if (markerData.peekBound === bindKey && markerData.cachedPano) {
+                return;
+            }
 
-    const overflowRight =
-          markerCenterX + TOOLTIP_WIDTH / 2 > mapRect.right - BUFFER;
-
-    if (overflowLeft) {
-        tooltip.style.left = "0";
-        tooltip.style.right = "auto";
-        tooltip.style.transform = "translateX(0)";
-    } else if (overflowRight) {
-        tooltip.style.left = "auto";
-        tooltip.style.right = "0";
-        tooltip.style.transform = "translateX(0)";
-    } else {
-        tooltip.style.left = "50%";
-        tooltip.style.right = "auto";
-        tooltip.style.transform = "translateX(-50%)";
-    }
+            try {
+                const pano = await getNearestPano(coords);
+                if (pano) {
+                    applyPanoToGuessMarker(marker, pano, index + 1);
+                }
+            } catch { }
+        })
+    );
 }
 
 function applyPanoToGuessMarker(marker, pano, roundId) {
     const bindKey = `bound_${roundId}`;
     const markerData = markerDataMap.get(marker) || {};
-    if (markerData.peekBound === bindKey) return;
+
+    if (markerData.peekBound === bindKey && markerData.cachedPano) {
+        return;
+    }
 
     markerData.peekBound = bindKey;
     markerData.pano = pano.error ? "false" : "true";
+    markerData.cachedPano = pano;
     markerDataMap.set(marker, markerData);
 
     marker.style.cursor = "pointer";
     marker.style.pointerEvents = "auto";
-    marker.dataset.pano = markerData.pano; // Keep for CSS selectors
+    marker.dataset.pano = markerData.pano;
 
-    // Remove existing tooltips
     const existingTooltips = marker.querySelectorAll(".peek-tooltip");
     for (const t of existingTooltips) t.remove();
 
@@ -661,38 +1548,120 @@ function applyPanoToGuessMarker(marker, pano, roundId) {
             </div>
             <div class="peek-note">Click pin to view Street View</div>
         `;
-
-        const clickHandler = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            removePeekMarker();
-            openNativeStreetView(pano);
-        };
-
-        // Use WeakMap for event handler cleanup
-        const oldHandler = markerHandlerMap.get(marker);
-        if (oldHandler) {
-            marker.removeEventListener("click", oldHandler);
-        }
-        markerHandlerMap.set(marker, clickHandler);
-        marker.addEventListener("click", clickHandler);
+        attachMarkerClickListener(marker, pano);
     }
 
     marker.appendChild(tooltip);
 }
 
-// WeakMap to track initialized containers
+function applyPanoToAnswerMarker(marker, pano, roundId) {
+    const bindKey = `answer_${roundId}`;
+    const markerData = markerDataMap.get(marker) || {};
+
+    if (markerData.peekBound === bindKey && markerData.cachedPano) {
+        return;
+    }
+
+    markerData.peekBound = bindKey;
+    markerData.cachedPano = pano;
+    markerDataMap.set(marker, markerData);
+
+    marker.style.cursor = "pointer";
+    marker.style.pointerEvents = "auto";
+
+    const existingTooltips = marker.querySelectorAll(".peek-answer-tooltip");
+    for (const t of existingTooltips) t.remove();
+
+    const tooltip = document.createElement("div");
+    tooltip.className = "peek-answer-tooltip";
+    tooltip.innerHTML = `
+            <div class="peek-note">Click pin to view Street View</div>
+            <div class="peek-body">
+                <img src="${getStreetViewThumbUrl(pano)}" class="peek-thumb">
+            </div>
+        `;
+    marker.appendChild(tooltip);
+    attachMarkerClickListener(marker, pano);
+}
+
+async function applyPanoToDuelMarker(marker, data) {
+    if (!data) return;
+
+    const markerData = markerDataMap.get(marker) || {};
+    let pano;
+
+    if (markerData.cachedPano) {
+        pano = markerData.cachedPano;
+    } else if (data.panorama) {
+        pano = {
+            panoId: convertPanoId(data.panorama.panoId),
+            location: { lat: data.panorama.lat, lng: data.panorama.lng },
+            heading: data.panorama.heading,
+            pitch: data.panorama.pitch,
+            zoom: data.panorama.zoom
+        };
+        markerData.cachedPano = pano;
+        markerDataMap.set(marker, markerData);
+    }
+    else {
+        pano = await getNearestPano({ lat: data.lat, lng: data.lng });
+        markerData.cachedPano = pano;
+        markerDataMap.set(marker, markerData);
+    }
+    marker.style.cursor = "pointer";
+    marker.style.pointerEvents = "auto";
+    if (!data.panorama) marker.dataset.pano = pano.error ? "false" : "true";
+
+    if (marker.querySelector(".peek-duel-tooltip") || marker.querySelector(".peek-duel-answer-tooltip")) return;
+
+    const tooltip = document.createElement("div");
+    tooltip.className = "peek-duel-tooltip";
+    if (pano.error) {
+        tooltip.innerHTML = `<div class="peek-error">No Street View found within 250km</div>`;
+    }
+    else if (data.panorama) {
+        tooltip.className = "peek-duel-answer-tooltip";
+        tooltip.innerHTML = `
+            <div class="peek-note">Click pin to view Street View</div>
+            <div class="peek-body">
+                <img src="${getStreetViewThumbUrl(pano)}" class="peek-thumb">
+            </div>
+        `;
+    }
+    else {
+        tooltip.innerHTML = `
+            <div class="peek-header">
+                <span class="peek-dist">${formatDistance(pano.radius)}</span> away from the nearest street view
+            </div>
+            <div class="peek-body">
+                <img src="${getStreetViewThumbUrl(pano)}" class="peek-thumb" alt="Preview">
+            </div>
+            <div class="peek-note">Click pin to view Street View</div>
+        `;
+    }
+
+    if (!pano.error) {
+        attachMarkerClickListener(marker, pano);
+    }
+
+    marker.appendChild(tooltip);
+}
+
+// ============================================================================
+// DUEL ROUNDS PANEL
+// ============================================================================
+
 const initializedContainers = new WeakMap();
 
 function addDuelRoundsPanel() {
-    const mapContainer = document.querySelector('[class*="game-summary_mapContainer"]');
+    const mapContainer = domCache.queryOne('[class*="game-summary_mapContainer"]');
     if (!mapContainer || initializedContainers.get(mapContainer)?.duelPanel) return;
 
     initializedContainers.set(mapContainer, { ...initializedContainers.get(mapContainer), duelPanel: true });
     mapContainer.style.position = 'relative';
     mapContainer.style.overflow = 'hidden';
 
-    const playedRounds = document.querySelectorAll('[class*="game-summary_playedRounds"]');
+    const playedRounds = domCache.queryAll('[class*="game-summary_playedRounds"]');
 
     if (!playedRounds.length) {
         console.error('Duel rounds elements not found', { playedRounds });
@@ -717,12 +1686,12 @@ function addDuelRoundsPanel() {
         const clonedRound = round.cloneNode(true);
         roundsContainer.appendChild(clonedRound);
     }
-    const summaryTitle = document.querySelector('[class*="game-summary_summaryTitle"]');
+    const summaryTitle = domCache.queryOne('[class*="game-summary_summaryTitle"]');
     if (summaryTitle) summaryTitle.style.display = "none";
 
-    const gameModeBrand = document.querySelector('[class*="game-mode-brand_root"]');
-    const gameMode = document.querySelector('[class*="game-mode-brand_selected"]');
-    const mapName = document.querySelector('[class*="game-mode-brand_mapName"]');
+    const gameModeBrand = domCache.queryOne('[class*="game-mode-brand_root"]');
+    const gameMode = gameModeBrand.querySelector('[class*="game-mode-brand_selected"]');
+    const mapName = gameModeBrand.querySelector('[class*="game-mode-brand_mapName"]');
     gameModeBrand.style.display = "none";
 
     const gameModeHeader = document.createElement('div');
@@ -733,25 +1702,27 @@ function addDuelRoundsPanel() {
 
     if (gameMode) {
         const clonedGameMode = gameMode.cloneNode(true);
-        // Reset positioning styles that might cause misalignment
-        clonedGameMode.style.position = 'static';
-        clonedGameMode.style.transform = 'none';
-        clonedGameMode.style.left = 'auto';
-        clonedGameMode.style.top = 'auto';
-        clonedGameMode.style.right = 'auto';
-        clonedGameMode.style.bottom = 'auto';
+        applyStyles(clonedGameMode, {
+            position: 'static',
+            transform: 'none',
+            left: 'auto',
+            top: 'auto',
+            right: 'auto',
+            bottom: 'auto'
+        });
         gameModeContainer.appendChild(clonedGameMode);
     }
 
     if (mapName) {
         const clonedMapName = mapName.cloneNode(true);
-        // Reset positioning styles that might cause misalignment
-        clonedMapName.style.position = 'static';
-        clonedMapName.style.transform = 'none';
-        clonedMapName.style.left = 'auto';
-        clonedMapName.style.top = 'auto';
-        clonedMapName.style.right = 'auto';
-        clonedMapName.style.bottom = 'auto';
+        applyStyles(clonedMapName, {
+            position: 'static',
+            transform: 'none',
+            left: 'auto',
+            top: 'auto',
+            right: 'auto',
+            bottom: 'auto'
+        });
         gameModeContainer.appendChild(clonedMapName);
     }
 
@@ -760,7 +1731,7 @@ function addDuelRoundsPanel() {
         panelContent.appendChild(gameModeHeader);
     }
     const clonedRoundElements = roundsContainer.querySelectorAll('[class*="game-summary_playedRound"]');
-    const originalRoundElements = document.querySelectorAll('[class*="game-summary_playedRounds"]:not(.peek-duel-rounds-list) [class*="game-summary_playedRound"]');
+    const originalRoundElements = domCache.queryAll('[class*="game-summary_playedRounds"]:not(.peek-duel-rounds-list) [class*="game-summary_playedRound"]');
 
     const getSelectedClass = (element) => {
         return Array.from(element.classList).find(cls => cls.includes('game-summary_selectedRound'));
@@ -795,13 +1766,11 @@ function addDuelRoundsPanel() {
                 return;
             }
 
-            // Remove selected class from all cloned elements
             for (const el of clonedRoundElements) {
                 const selectedClass = getSelectedClass(el);
                 if (selectedClass) el.classList.remove(selectedClass);
             }
 
-            // Remove selected class from all original elements
             for (const el of originalRoundElements) {
                 const selectedClass = getSelectedClass(el);
                 if (selectedClass) el.classList.remove(selectedClass);
@@ -809,14 +1778,11 @@ function addDuelRoundsPanel() {
 
             const originalElement = originalRoundElements[index - 2];
             if (originalElement && typeof originalElement.click === 'function') {
-                // Trigger the original element click
                 originalElement.click();
 
-                // Wait for the original element to be processed, then sync both elements
                 setTimeout(() => {
                     const selectedClass = getSelectedClass(originalElement);
                     if (selectedClass) {
-                        // Keep both original and cloned elements selected
                         if (!originalElement.classList.contains(selectedClass)) {
                             originalElement.classList.add(selectedClass);
                         }
@@ -825,7 +1791,7 @@ function addDuelRoundsPanel() {
                         }
                     }
                     updateRoundIndicator();
-                }, 50); // Increase timeout to ensure proper state synchronization
+                }, 50);
             }
 
             if (closeControl) closeControl.click();
@@ -868,7 +1834,7 @@ function addDuelRoundsPanel() {
 
     const pinButton = document.createElement('button')
     pinButton.className = 'peek-duel-rounds-pin';
-    pinButton.innerHTML = SVG_SOURCE.PINON;
+    pinButton.innerHTML = SVG_SOURCE.PIN;
     pinButton.title = 'Stick panel';
     panel.appendChild(pinButton);
 
@@ -886,36 +1852,34 @@ function addDuelRoundsPanel() {
     const closePanel = () => {
         panel.classList.remove('active');
         toggleButton.classList.remove('active');
-        toggleButton.style.opacity = '1';
-        toggleButton.style.pointerEvents = 'auto';
+        applyStyles(toggleButton, { opacity: '1', pointerEvents: 'auto' });
     };
 
     pinButton.addEventListener('click', stickPanel);
     toggleButton.addEventListener('click', togglePanel);
     closeButton.addEventListener('click', closePanel);
 
-    panel.addEventListener('click', (e) => {
-        if (e.target === panel) {
-            togglePanel();
-        }
-    });
     mapContainer.addEventListener('click', (e) => {
-        if(panel.classList.contains('active')&&
-           !pinButton.classList.contains('active')&&
-           !toggleButton.contains(e.target)&&
-           !closeButton.contains(e.target)&&
-           !panel.contains(e.target)){
+        if (panel.classList.contains('active') &&
+            !pinButton.classList.contains('active') &&
+            !toggleButton.contains(e.target) &&
+            !closeButton.contains(e.target) &&
+            !panel.contains(e.target)) {
             closePanel();
         }
     });
 }
 
+// ============================================================================
+// MAP RESIZING
+// ============================================================================
+
 function makeMapResizable() {
-    const summaryContainer = document.querySelector('[class^="game-summary_innerContainer"]');
-    const summaryBottom = document.querySelector('[class^="game-summary_bottom"]');
+    const summaryContainer = domCache.queryOne('[class^="game-summary_innerContainer"]');
+    const summaryBottom = domCache.queryOne('[class^="game-summary_bottom"]');
     if (summaryContainer) summaryContainer.style.paddingBottom = '0'
     if (summaryBottom) summaryBottom.style.minHeight = '4rem'
-    const mapContainer = document.querySelector('[class*="game-summary_mapContainer"]');
+    const mapContainer = summaryContainer.querySelector('[class*="game-summary_mapContainer"]');
     if (!mapContainer) return;
 
     const containerData = initializedContainers.get(mapContainer) || {};
@@ -955,17 +1919,17 @@ function makeMapResizable() {
     let startWidth = 0, startHeight = 0;
     let startLeft = 0, startTop = 0;
 
+    const baseResizerStyle = `position: absolute; z-index: ${resizerStyle.zIndex}; background: ${resizerStyle.background};`;
+
     for (const config of resizers) {
         const resizer = document.createElement('div');
         resizer.className = `map-resizer-${config.name}`;
-        resizer.style.cssText = `${config.style} position: absolute; cursor: ${config.cursor}; z-index: ${resizerStyle.zIndex}; background: ${resizerStyle.background};`;
+        resizer.style.cssText = `${config.style} ${baseResizerStyle} cursor: ${config.cursor};`;
 
-        resizer.addEventListener('mouseenter', () => {
-            resizer.style.background = 'rgba(100, 100, 255, 0.6)';
-        });
-
+        const updateResizerBg = (bg) => resizer.style.background = bg;
+        resizer.addEventListener('mouseenter', () => updateResizerBg('rgba(100, 100, 255, 0.6)'));
         resizer.addEventListener('mouseleave', () => {
-            if (!isResizing) resizer.style.background = resizerStyle.background;
+            if (!isResizing) updateResizerBg(resizerStyle.background);
         });
 
         resizer.addEventListener('mousedown', (e) => {
@@ -980,8 +1944,7 @@ function makeMapResizable() {
             startLeft = rect.left;
             startTop = rect.top;
 
-            document.body.style.cursor = config.cursor;
-            document.body.style.userSelect = 'none';
+            applyStyles(document.body, { cursor: config.cursor, userSelect: 'none' });
             e.preventDefault();
             e.stopPropagation();
         });
@@ -1018,16 +1981,14 @@ function makeMapResizable() {
         newWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
         newHeight = Math.max(minHeight, Math.min(maxHeight, newHeight));
 
-        mapContainer.style.width = `${newWidth}px`;
-        mapContainer.style.height = `${newHeight}px`;
+        applyStyles(mapContainer, { width: `${newWidth}px`, height: `${newHeight}px` });
     });
 
     document.addEventListener('mouseup', () => {
         if (isResizing) {
             isResizing = false;
             currentResizer = null;
-            document.body.style.cursor = '';
-            document.body.style.userSelect = '';
+            applyStyles(document.body, { cursor: '', userSelect: '' });
 
             GM_setValue('mapContainerSize', {
                 width: mapContainer.offsetWidth,
@@ -1042,109 +2003,10 @@ function makeMapResizable() {
     });
 }
 
-async function applyPanoToDuelMarker(marker, data) {
-    if (!data) return;
-    let pano;
-    if (data.panorama) {
-        pano = {
-            panoId: convertPanoId(data.panorama.panoId),
-            location: { lat: data.panorama.lat, lng: data.panorama.lng },
-            heading: data.panorama.heading,
-            pitch: data.panorama.pitch,
-            zoom: data.panorama.zoom
-        };
-    }
-    else {
-        pano = await getNearestPano({ lat: data.lat, lng: data.lng });
-    }
-    marker.style.cursor = "pointer";
-    marker.style.pointerEvents = "auto";
-    if (!data.panorama) marker.dataset.pano = pano.error ? "false" : "true";
+// ============================================================================
+// PANORAMA DATA & METADATA
+// ============================================================================
 
-    if (marker.querySelector(".peek-duel-tooltip") || marker.querySelector(".peek-duel-answer-tooltip")) return;
-
-    const tooltip = document.createElement("div");
-    tooltip.className = "peek-duel-tooltip";
-    if (pano.error) {
-        tooltip.innerHTML = `<div class="peek-error">No Street View found within 250km</div>`;
-    }
-    else if (data.panorama) {
-        tooltip.className = "peek-duel-answer-tooltip";
-        tooltip.innerHTML = `
-            <div class="peek-note">Click pin to view Street View</div>
-            <div class="peek-body">
-                <img src="${getStreetViewThumbUrl(pano)}" class="peek-thumb">
-            </div>
-        `;
-    }
-    else {
-        tooltip.innerHTML = `
-            <div class="peek-header">
-                <span class="peek-dist">${formatDistance(pano.radius)}</span> away from the nearest street view
-            </div>
-            <div class="peek-body">
-                <img src="${getStreetViewThumbUrl(pano)}" class="peek-thumb" alt="Preview">
-            </div>
-            <div class="peek-note">Click pin to view Street View</div>
-        `;
-    }
-    const clickHandler = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        removePeekMarker();
-        openNativeStreetView(pano);
-    };
-
-    // Use WeakMap for event handler cleanup
-    const oldHandler = markerHandlerMap.get(marker);
-    if (oldHandler) {
-        marker.removeEventListener("click", oldHandler);
-    }
-    markerHandlerMap.set(marker, clickHandler);
-    marker.addEventListener("click", clickHandler);
-
-    marker.appendChild(tooltip);
-}
-
-function applyPanoToAnswerMarker(marker, pano, roundId) {
-    const bindKey = `answer_${roundId}`;
-    const markerData = markerDataMap.get(marker) || {};
-    if (markerData.peekBound === bindKey) return;
-
-    markerData.peekBound = bindKey;
-    markerDataMap.set(marker, markerData);
-
-    marker.style.cursor = "pointer";
-    marker.style.pointerEvents = "auto";
-
-    // Remove existing tooltips
-    const existingTooltips = marker.querySelectorAll(".peek-answer-tooltip");
-    for (const t of existingTooltips) t.remove();
-
-    const tooltip = document.createElement("div");
-    tooltip.className = "peek-answer-tooltip";
-    tooltip.innerHTML = `
-            <div class="peek-note">Click pin to view Street View</div>
-            <div class="peek-body">
-                <img src="${getStreetViewThumbUrl(pano)}" class="peek-thumb">
-            </div>
-        `;
-    marker.appendChild(tooltip);
-    const clickHandler = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        removePeekMarker();
-        openNativeStreetView(pano);
-    };
-
-    // Use WeakMap for event handler cleanup
-    const oldHandler = markerHandlerMap.get(marker);
-    if (oldHandler) {
-        marker.removeEventListener("click", oldHandler);
-    }
-    markerHandlerMap.set(marker, clickHandler);
-    marker.addEventListener("click", clickHandler);
-}
 function getGeneration(worldsize, country, lat, date) {
     if (!worldsize) return 'Ari';
     if (worldsize === 1664) return 'Gen1';
@@ -1152,8 +2014,8 @@ function getGeneration(worldsize, country, lat, date) {
     if (worldsize === 6656) {
         const dateStr = date.toISOString().slice(0, 7);
         const gen2Countries = new Set(['AU', 'BR', 'CA', 'CL', 'JP', 'GB', 'IE', 'NZ', 'MX', 'RU', 'US', 'IT', 'DK', 'GR', 'RO',
-                                       'PL', 'CZ', 'CH', 'SE', 'FI', 'BE', 'LU', 'NL', 'ZA', 'SG', 'TW', 'HK', 'MO', 'MC', 'NO',
-                                       'SM', 'AD', 'IM', 'JE', 'FR', 'DE', 'ES', 'PT', 'SJ']);
+            'PL', 'CZ', 'CH', 'SE', 'FI', 'BE', 'LU', 'NL', 'ZA', 'SG', 'TW', 'HK', 'MO', 'MC', 'NO',
+            'SM', 'AD', 'IM', 'JE', 'FR', 'DE', 'ES', 'PT', 'SJ']);
         const gen3Dates = {
             'BD': '2021-04', 'EC': '2022-03', 'FI': '2020-09', 'IN': '2021-10', 'LK': '2021-02', 'KH': '2022-10',
             'LB': '2021-05', 'NG': '2021-06', 'ST': '2024-02', 'US': '2019-01', 'VN': '2021-01', 'ES': '2023-01'
@@ -1183,7 +2045,8 @@ function parseMeta(data) {
     const worldsize = data[1][0][2][2][0];
     const history = data[1][0][5][0][8];
     const links = data[1][0][5][0][3][0]
-
+    const worldHeight = data[1][0][2][2][0];
+    const worldWidth = data[1][0][2][2][1];
 
     const date = new Date(year, month - 1);
     const formattedDate = date.toLocaleString('default', { month: 'short', year: 'numeric' });
@@ -1255,6 +2118,8 @@ function parseMeta(data) {
         lng,
         altitude,
         panoId,
+        worldHeight,
+        worldWidth,
         year,
         month,
         country,
@@ -1271,7 +2136,12 @@ function parseMeta(data) {
         tagFields
     }
 }
-async function UE(t, e, s, d, r) {
+
+// ============================================================================
+// API REQUESTS & DATA
+// ============================================================================
+
+async function fetchGooglePano(t, e, s, d, r) {
     try {
         const url = `https://maps.googleapis.com/$rpc/google.internal.maps.mapsjs.v1.MapsJsInternalService/${t}`;
         let payload = createPayload(t, e, s, d, r);
@@ -1293,7 +2163,7 @@ async function UE(t, e, s, d, r) {
             return await response.json();
         }
     } catch (error) {
-        console.error(`There was a problem with the UE function: ${error.message}`);
+        console.error(`Error fetching google pano: ${error.message}`);
     }
 }
 
@@ -1307,8 +2177,8 @@ function createPayload(mode, coorData, s, d, r) {
     }
     else if (mode === 'SingleImageSearch') {
         payload = [["apiv3"],
-                   [[null, null, parseFloat(coorData.lat), parseFloat(coorData.lng)], r],
-                   [[null, null, null, null, null, null, null, null, null, null, [s, d]], null, null, null, null, null, null, null, [2], null, [[[type, true, 2]]]], [[1, 2, 3, 4, 8, 6]]]
+        [[null, null, parseFloat(coorData.lat), parseFloat(coorData.lng)], r],
+        [[null, null, null, null, null, null, null, null, null, null, [s, d]], null, null, null, null, null, null, null, [2], null, [[[type, true, 2]]]], [[1, 2, 3, 4, 8, 6]]]
     }
     else {
         throw new Error("Invalid mode!");
@@ -1316,13 +2186,14 @@ function createPayload(mode, coorData, s, d, r) {
     return JSON.stringify(payload);
 }
 
-async function getLOCATION() {
-    const metaData = await UE('GetMetadata', viewer.getPano());
+async function getLOCATION(panoId) {
+    const metaData = await fetchGooglePano('GetMetadata', panoId ? panoId : viewer.getPano());
     if (metaData) {
         LOCATION = parseMeta(metaData)
         LOCATION.heading = viewer.getPov().heading;
         LOCATION.pitch = viewer.getPov().pitch;
         LOCATION.zoom = viewer.getZoom();
+        return LOCATION
     }
 }
 
@@ -1334,13 +2205,17 @@ function calculateFOV(zoom) {
     return degrees;
 }
 
+// ============================================================================
+// STREET VIEW LINK & SHARING
+// ============================================================================
+
 async function getShortLink() {
     const url = 'https://www.google.com/maps/rpc/shorturl';
     if (!viewer) {
         return fallbackLink();
     }
 
-    const aElements = document.querySelectorAll('[rel="noopener"]');
+    const aElements = domCache.queryAll('[rel="noopener"]');
     if (!aElements || aElements.length < 2) {
         return fallbackLink();
     }
@@ -1431,6 +2306,10 @@ async function updatePanoSelector(pano, selector) {
     selector.replaceChildren(frag);
 }
 
+// ============================================================================
+// FULLSCREEN CONTROLS
+// ============================================================================
+
 function enterFullscreen(panoDiv) {
     if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
         if (panoDiv.requestFullscreen) {
@@ -1443,18 +2322,20 @@ function enterFullscreen(panoDiv) {
     }
 }
 
-function renderMovementPaths(round) {
-    if (!guessMap) return;
-
-    const existing = mapPathOverlayMap.get(guessMap);
-    if (existing) {
-        if (Array.isArray(existing)) {
-            existing.forEach(item => item.polyline?.setMap(null));
-        } else if (existing.polyline) {
-            existing.polyline.setMap(null);
-        }
+function exitFullscreen() {
+    if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+        document.exitFullscreen?.();
+        document.webkitExitFullscreen?.();
+        document.msExitFullscreen?.();
     }
+}
 
+// ============================================================================
+// MOVEMENT PATH TRACKING & RENDERING
+// ============================================================================
+
+function renderMovementPaths(round) {
+    clearMovementPaths()
     const roundsToRender = round ? [round] : [1, 2, 3, 4, 5];
     const polylines = [];
 
@@ -1478,7 +2359,7 @@ function renderMovementPaths(round) {
             strokeColor: 'rgb(131, 18, 223)',
             strokeOpacity: 0.85,
             strokeWeight: 3,
-            map: isPathDisplayed ? guessMap : null,
+            map: guessMap,
             zIndex: 99999
         });
         polylines.push({ polyline, round: roundNum });
@@ -1493,81 +2374,7 @@ function renderMovementPaths(round) {
     }
 }
 
-function attachRoundElementInteractions() {
-    const roundContainer = document.querySelector('[class^="result-list_listWrapper"]');
-    if (!roundContainer) return;
-
-    const roundElements = roundContainer.querySelectorAll('[class^="result-list_listItemWrapper__"]');
-
-    roundElements.forEach((element, index) => {
-        if (element.dataset.snakeBound === 'true') return;
-        element.dataset.snakeBound = 'true';
-
-        ['top', 'right', 'bottom', 'left'].forEach(side => {
-            const border = document.createElement('div');
-            border.className = `snake-border-${side}`;
-            element.appendChild(border);
-        });
-
-        element.addEventListener('mouseenter', () =>
-                                 element.classList.add('show-border')
-                                );
-
-        element.addEventListener('mouseleave', () =>
-                                 element.classList.remove('show-border')
-                                );
-
-        element.addEventListener(
-            'click',
-            (e) => {
-                e.stopPropagation();
-                handleRoundElementClick(index + 1);
-            },
-            true
-        );
-    });
-}
-
-
-function handleRoundElementClick(num) {
-    const guessMarkers = document.querySelectorAll(SELECTORS.guessMarker);
-    const roundMarkers = document.querySelectorAll(SELECTORS.roundMarker);
-    if (num > roundMarkers.length) {
-        [...guessMarkers, ...roundMarkers].forEach(marker => {
-            marker.style.display = 'block';
-        });
-        guessMap.panTo({ lat: 0, lng: 0 });
-        guessMap.setZoom(2)
-        return
-    }
-
-    const bounds = new google.maps.LatLngBounds();
-    roundMarkers.forEach((marker, index) => {
-        if (index+1 != num) {
-            marker.style.display = 'none';
-        } else {
-            const coords = getMarkerCoords(marker)
-            if(coords)bounds.extend(new google.maps.LatLng(coords));
-            marker.style.display = 'block';
-        }
-    })
-    guessMarkers.forEach((marker, index) => {
-        if (index+1 != num) {
-            marker.style.display = 'none';
-        } else {
-            const coords = getMarkerCoords(marker)
-            if(coords)bounds.extend(new google.maps.LatLng(coords));
-            marker.style.display = 'block';
-        }
-    })
-    if (!bounds.isEmpty()) {
-        guessMap.fitBounds(bounds);
-    }
-}
-
-function clearRenderedMovementPath() {
-    if (!guessMap) return;
-
+function clearMovementPaths() {
     const overlay = mapPathOverlayMap.get(guessMap);
     if (overlay) {
         if (Array.isArray(overlay)) {
@@ -1610,7 +2417,6 @@ function recordMovementPoint(panorama) {
     }
 }
 
-
 function trackMovement() {
     if (!viewer || !guessMap) return;
 
@@ -1652,16 +2458,81 @@ function clearMovementPath() {
     movementPath = [];
 }
 
+// ============================================================================
+// ROUND SELECTION & RESULT DISPLAY
+// ============================================================================
+
+function attachRoundElementInteractions() {
+    const roundContainer = domCache.queryOne('[class^="result-list_listWrapper"]');
+    if (!roundContainer) return;
+
+    const roundElements = roundContainer.querySelectorAll('[class^="result-list_listItemWrapper__"]');
+
+    roundElements.forEach((element, index) => {
+        if (element.dataset.snakeBound === 'true') return;
+        element.dataset.snakeBound = 'true';
+
+        ['top', 'right', 'bottom', 'left'].forEach(side => {
+            const border = document.createElement('div');
+            border.className = `snake-border-${side}`;
+            element.appendChild(border);
+        });
+
+        element.addEventListener('mouseenter', () => element.classList.add('show-border'));
+
+        element.addEventListener('mouseleave', () => element.classList.remove('show-border'));
+
+        element.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleRoundElementClick(index + 1);
+        }, true);
+    });
+}
+
+function handleRoundElementClick(num) {
+    closeControl?.click();
+
+    const guessMarkers = [...domCache.queryAll(SELECTORS.guessMarker)];
+    const answerMarkers = [...domCache.queryAll(SELECTORS.answerMarker)];
+    const bounds = new google.maps.LatLngBounds();
+
+    const showAll = num > answerMarkers.length;
+
+    const processMarker = (marker, index) => {
+        const visible = showAll || index + 1 === num;
+        marker.style.display = visible ? 'block' : 'none';
+
+        if (visible) {
+            const coords = getMarkerCoords(marker);
+            if (coords) bounds.extend(new google.maps.LatLng(coords));
+        }
+    };
+
+    answerMarkers.forEach(processMarker);
+    guessMarkers.forEach(processMarker);
+
+    if (showAll) {
+        guessMap.setCenter({ lat: 0, lng: 0 });
+        guessMap.setZoom(2);
+    } else if (!bounds.isEmpty()) {
+        guessMap.fitBounds(bounds);
+    }
+}
+
+// ============================================================================
+// PHOTO MODE & STREET VIEW CONTROLS
+// ============================================================================
+
 function togglePhotoMode(photoControl, viewer) {
     isPhotoMode = !isPhotoMode;
-    const panoDiv = document.querySelector('.peek-split-pano');
-    const controls = document.querySelectorAll('.peek-control');
+    const panoDiv = document.getElementById('peek-pano');
+    const controls = panoDiv.querySelectorAll('.pano-control');
     const panoSelect = document.getElementById('pano-select');
 
     if (isPhotoMode) {
         enterFullscreen(panoDiv);
 
-        const footer = document.querySelectorAll('.gmnoprint');
+        const footer = domCache.queryAll('.gmnoprint');
         for (const el of footer) {
             el.style.display = 'none';
         }
@@ -1678,7 +2549,7 @@ function togglePhotoMode(photoControl, viewer) {
             clickToGo: false,
         });
 
-        photoControl.style.opacity = '0.1';
+        applyStyles(photoControl, { opacity: '0.1' });
         photoControl.title = 'Exit Photo Mode';
 
         cleanStyle = GM_addStyle(`
@@ -1705,28 +2576,37 @@ function togglePhotoMode(photoControl, viewer) {
             cleanStyle = null;
         }
 
-        photoControl.style.opacity = '1';
+        applyStyles(photoControl, { opacity: '1' });
         photoControl.title = 'Photo Mode (Hide UI)';
     }
 }
 
-function openNativeStreetView(pano) {
-    if (!pano || pano.error) return;
-    if (!guessMap) guessMap = getGuessMapInstance();
-    if (!guessMap) {
-        console.error("[Guess Peek] Could not find Google Maps instance");
-        return;
-    }
-    toggleCoverageLayer("on")
-    const shareDiv = document.querySelector("[class*='standard-final-result_challengeFriendButton']")
-    if (shareDiv) shareDiv.style.display = 'none'
-    const xpDiv = document.querySelector("[class*='level-up-xp-button']")
-    if (xpDiv) xpDiv.style.opacity = '0'
-    const mapContainer = document.querySelector(SELECTORS.resultMap) || document.querySelector(SELECTORS.duelMap);
-    const isDuelMode = !!document.querySelector(SELECTORS.duelMap);
-    const actualContainer = isDuelMode ? mapContainer.parentElement : mapContainer;
+// ============================================================================
+// STREET VIEW INITIALIZATION & DISPLAY
+// ============================================================================
 
-    //offsetMapFocus(guessMap, pano.location);
+function buildMapHTML(m) {
+    return `<div class="map">
+        <a href="https://map-making.app/maps/${m.id}" class="map-link">
+            <span class="map-name">${m.name}</span>
+        </a>
+        <span class="map-buttons">
+            <span class="map-add" data-id="${m.id}">ADD</span>
+            <span class="map-added">ADDED</span>
+        </span>
+    </div>`;
+}
+
+function openNativeStreetView(pano) {
+    if (!guessMap || !pano || pano.error) return;
+    toggleCoverageLayer("on")
+    const shareDiv = domCache.queryOne("[class*='standard-final-result_challengeFriendButton']")
+    if (shareDiv) shareDiv.style.display = 'none'
+    const xpDiv = domCache.queryOne("[class*='level-up-xp-button']")
+    if (xpDiv) xpDiv.style.display = 'none'
+    const mapContainer = domCache.queryOne(SELECTORS.dcEND) || domCache.queryOne(SELECTORS.resultMap) || domCache.queryOne(SELECTORS.duelMap);
+    const isDuelMode = !!domCache.queryOne(SELECTORS.duelMap);
+    const actualContainer = isDuelMode ? mapContainer.parentElement : mapContainer;
 
     let splitContainer = actualContainer.querySelector('.peek-split-container');
 
@@ -1752,8 +2632,7 @@ function openNativeStreetView(pano) {
             isResizing = true;
             startX = e.clientX;
             startWidth = splitContainer.offsetWidth;
-            document.body.style.cursor = 'ew-resize';
-            document.body.style.userSelect = 'none';
+            applyStyles(document.body, { cursor: 'ew-resize', userSelect: 'none' });
             e.preventDefault();
         });
 
@@ -1776,8 +2655,7 @@ function openNativeStreetView(pano) {
         document.addEventListener('mouseup', () => {
             if (isResizing) {
                 isResizing = false;
-                document.body.style.cursor = '';
-                document.body.style.userSelect = '';
+                applyStyles(document.body, { cursor: '', userSelect: '' });
             }
         });
 
@@ -1807,13 +2685,14 @@ function openNativeStreetView(pano) {
         });
 
         closeControl = document.createElement('button')
-        closeControl.className = 'peek-control'
+        closeControl.className = 'pano-control'
         closeControl.id = 'peek-split-close'
         closeControl.textContent = '×'
         closeControl.onclick = (e) => {
             e.stopPropagation();
             if (shareDiv) shareDiv.style.display = 'block';
-            if (xpDiv) xpDiv.style.opacity = '1.0';
+            if (xpDiv) xpDiv.style.display = 'inline-flex';
+            exitFullscreen();
             splitContainer.classList.remove('active');
             removePeekMarker();
             clearMovementPath();
@@ -1822,7 +2701,7 @@ function openNativeStreetView(pano) {
         viewer.controls[google.maps.ControlPosition.RIGHT_TOP].push(closeControl);
 
         const saveControl = document.createElement('button')
-        saveControl.className = 'peek-control'
+        saveControl.className = 'pano-control'
         saveControl.id = 'peek-save'
         saveControl.title = 'Save to MapMaking'
         saveControl.innerHTML = SVG_SOURCE.SAVE
@@ -1871,17 +2750,58 @@ function openNativeStreetView(pano) {
         });
         viewer.controls[google.maps.ControlPosition.RIGHT_TOP].push(saveControl);
 
+        const downloadControl = document.createElement('button')
+        downloadControl.className = 'pano-control'
+        downloadControl.id = 'pano-download'
+        downloadControl.title = 'Download Panorama Image'
+        downloadControl.innerHTML = SVG_SOURCE.DOWNLOAD
+        downloadControl.addEventListener('click', async () => {
+            try {
+                downloadControl.innerHTML = SVG_SOURCE.LOADING;
+                downloadControl.title = 'Downloading...';
+                downloadControl.classList.add('loading');
+
+                const metadata = await getLOCATION();
+
+                await downloadPanoramaImage(metadata.panoId, `${metadata.panoId}.jpg`, metadata.worldWidth, metadata.worldHeight, 5);
+
+                downloadControl.classList.remove('loading');
+                downloadControl.innerHTML = SVG_SOURCE.SUCCESS;
+                downloadControl.title = 'Download Complete!';
+
+                setTimeout(() => {
+                    downloadControl.innerHTML = SVG_SOURCE.DOWNLOAD;
+                    downloadControl.title = 'Download Panorama Image';
+                }, 1500);
+
+            } catch (error) {
+                console.error('Download failed:', error);
+                downloadControl.classList.remove('loading');
+                downloadControl.innerHTML = SVG_SOURCE.DOWNLOAD;
+                downloadControl.title = 'Download Panorama Image';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Download Failed',
+                    text: 'Failed to download panorama image. Please try again.',
+                    confirmButtonText: 'OK',
+                    backdrop: null
+                });
+            }
+        });
+        viewer.controls[google.maps.ControlPosition.RIGHT_TOP].push(downloadControl);
+
         const copyControl = document.createElement('button')
-        copyControl.className = 'peek-control'
+        copyControl.className = 'pano-control'
         copyControl.id = 'peek-copy'
         copyControl.title = 'Copy Link'
         copyControl.innerHTML = SVG_SOURCE.COPY
         copyControl.addEventListener("click", async () => {
             copyControl.innerHTML = SVG_SOURCE.LOADING;
+            copyControl.classList.toggle('loading');
             const shortUrl = await getShortLink();
             copyControl.innerHTML = SVG_SOURCE.SUCCESS;
+            copyControl.classList.toggle('loading');
             await GM_setClipboard(shortUrl);
-
             setTimeout(() => {
                 copyControl.innerHTML = SVG_SOURCE.COPY;
             }, 1500);
@@ -1889,7 +2809,7 @@ function openNativeStreetView(pano) {
         viewer.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(copyControl);
 
         const spawnControl = document.createElement('button')
-        spawnControl.className = 'peek-control'
+        spawnControl.className = 'pano-control'
         spawnControl.id = 'peek-spawn'
         spawnControl.title = 'Back to Spawn'
         spawnControl.innerHTML = SVG_SOURCE.SPAWN
@@ -1903,7 +2823,7 @@ function openNativeStreetView(pano) {
         viewer.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(spawnControl);
 
         const photoControl = document.createElement('button')
-        photoControl.className = 'peek-control'
+        photoControl.className = 'pano-control'
         photoControl.id = 'peek-photo'
         photoControl.title = 'Photo Mode (Hide UI)'
         photoControl.innerHTML = SVG_SOURCE.CAMERA
@@ -1928,14 +2848,13 @@ function openNativeStreetView(pano) {
         pano.panoId ? viewer.setPano(pano.panoId) : viewer.setPosition(pano.location)
         if (pano.heading && pano.pitch) viewer.setPov({ heading: pano.heading || 0, pitch: pano.pitch || 0 })
         if (pano.zoom) viewer.setZoom(pano.zoom);
-
     }
 
     requestAnimationFrame(() => {
         spawn = pano;
         updatePanoSelector(pano, document.getElementById('pano-select'));
         clearMovementPath();
-        splitContainer.classList.add('active');
+        splitContainer.classList.toggle('active');
     });
 }
 
@@ -1949,32 +2868,20 @@ function showMapList() {
     // Use array join for better string concatenation performance
     let recentMapsSection = '';
     if (PEEK_STATE.recentMaps.length > 0) {
-        const recentMapsArr = [];
-        for (const m of PEEK_STATE.recentMaps) {
-            if (m.archivedAt) continue;
-            recentMapsArr.push(`<div class="map">
-                <a href="https://map-making.app/maps/${m.id}" class="map-link">
-				    <span class="map-name">${m.name}</span>
-                </a>
-				<span class="map-buttons">
-					<span class="map-add" data-id="${m.id}">ADD</span>
-					<span class="map-added">ADDED</span>
-				</span>
-			</div>`);
+        const recentMapsArr = PEEK_STATE.recentMaps.filter(m => !m.archivedAt).map(buildMapHTML);
+        if (recentMapsArr.length > 0) {
+            recentMapsSection = `
+                <h3>Recent Maps</h3>
+                <div class="maps">
+                    ${recentMapsArr.join('')}
+                </div>
+                <br>
+            `;
         }
-
-        recentMapsSection = `
-			<h3>Recent Maps</h3>
-
-			<div class="maps">
-				${recentMapsArr.join('')}
-			</div>
-
-			<br>
-		`;
     }
 
-    const mapsArr = [];
+    const mapsArr = MAP_LIST.filter(m => !m.archivedAt).map(buildMapHTML);
+
     const tagButtonsArr = [];
     if (LOCATION) {
         for (const tag of LOCATION.tagFields) {
@@ -1986,51 +2893,40 @@ function showMapList() {
             tagButtonsArr.push(`<button class="tag-button" data-tag="${tag}">${tag}</button>`);
         }
     }
-    for (const m of MAP_LIST) {
-        if (m.archivedAt) continue;
-        mapsArr.push(`<div class="map">
-            <a href="https://map-making.app/maps/${m.id}" class="map-link">
-			    <span class="map-name">${m.name}</span>
-            </a>
-			<span class="map-buttons">
-				<span class="map-add" data-id="${m.id}">ADD</span>
-				<span class="map-added">ADDED</span>
-			</span>
-		</div>`);
-    }
 
     element.innerHTML = `
-	<div class="inner">
-		<h3>Tags (comma separated)</h3>
+    <div class="inner">
+        <h3>Tags (comma separated)</h3>
 
-		<input type="text" class="tag-input" id="peek-map-tags" />
+        <input type="text" class="tag-input" id="peek-map-tags" />
 
         <div class="tag-buttons">
             ${tagButtonsArr.join('')}
         </div>
 
-		<br><br>
+        <br><br>
 
-		${recentMapsSection}
+        ${recentMapsSection}
 
-		<h3>All Maps</h3>
+        <h3>All Maps</h3>
 
-		<div class="maps">
-			${mapsArr.join('')}
-		</div>
-	</div>
+        <div class="maps">
+            ${mapsArr.join('')}
+        </div>
+    </div>
 
-	<div class="dim"></div>
-	`;
+    <div class="dim"></div>
+    `;
 
     document.body.appendChild(element);
 
     element.querySelector('.dim').addEventListener('click', closeMapList);
 
     const tagInput = document.getElementById('peek-map-tags');
-    tagInput.addEventListener('keyup', e => e.stopPropagation());
-    tagInput.addEventListener('keydown', e => e.stopPropagation());
-    tagInput.addEventListener('keypress', e => e.stopPropagation());
+    const stopPropagation = e => e.stopPropagation();
+    tagInput.addEventListener('keyup', stopPropagation);
+    tagInput.addEventListener('keydown', stopPropagation);
+    tagInput.addEventListener('keypress', stopPropagation);
     tagInput.focus();
 
     for (const map of element.querySelectorAll('.maps .map-add')) {
@@ -2043,8 +2939,8 @@ function showMapList() {
             const input = document.getElementById('peek-map-tags');
 
             let currentTags = input.value.split(',')
-            .map(t => t.trim())
-            .filter(t => t.length > 0);
+                .map(t => t.trim())
+                .filter(t => t.length > 0);
 
             if (this.classList.contains('active')) {
                 currentTags = currentTags.filter(t => t !== tag);
@@ -2073,13 +2969,10 @@ function addLocationToMap(e) {
     previousMapId = id;
     GM_setValue('previousMapId', JSON.stringify(id));
 
-
-    PEEK_STATE.recentMaps = PEEK_STATE.recentMaps.filter(e => e.id !== id).slice(0, 2);
-    for (const map of MAP_LIST) {
-        if (map.id === id) {
-            PEEK_STATE.recentMaps.unshift(map);
-            break;
-        }
+    PEEK_STATE.recentMaps = PEEK_STATE.recentMaps.filter(m => m.id !== id).slice(0, 2);
+    const map = MAP_LIST.find(m => m.id === id);
+    if (map) {
+        PEEK_STATE.recentMaps.unshift(map);
     }
 
     saveState();
@@ -2101,6 +2994,10 @@ function addLocationToMap(e) {
         flags: LOCATION.panoId ? 1 : 0
     }]);
 }
+
+// ============================================================================
+// STATE MANAGEMENT & PERSISTENCE
+// ============================================================================
 
 function defaultState() {
     return {
@@ -2187,58 +3084,9 @@ async function importLocations(mapId, locations) {
     await response.json();
 }
 
-async function commitRoundResult({
-    token,
-    round,
-    guessCoords = null,
-    hasAnswerMarker = false
-}) {
-    if (!token || round == null) return;
-
-    const commitKey = `${token}_${round}`;
-    if (committedRounds.has(commitKey)) return;
-    const pending = {};
-    if (guessCoords) {
-        try {
-            pending.guess = await getNearestPano(guessCoords);
-            pending.guess.location = guessCoords
-        } catch (err) {
-            console.error("[commitRoundResult] getNearestPano failed", err);
-        }
-    }
-
-    if (hasAnswerMarker) {
-        try {
-            pending.answer = fetchAnswerPanoFromRoundData();
-        } catch (err) {
-            console.error("[commitRoundResult] fetchAnswer failed", err);
-        }
-    }
-
-    if (!pending.guess && !pending.answer) return;
-
-    const data = GM_getValue(token, { guess: {}, answer: {} });
-
-    if (pending.guess) {
-        data.guess[round] = pending.guess;
-    }
-
-    if (pending.answer) {
-        data.answer[round] = pending.answer;
-    }
-
-    GM_setValue(token, data);
-
-    if (pending.guess) {
-        updateHistory(`${token}_guess`, "guess");
-    }
-
-    if (pending.answer) {
-        updateHistory(`${token}_answer`, "answer");
-    }
-
-    committedRounds.add(commitKey);
-}
+// ============================================================================
+// HISTORY TRACKING & MARKER HANDLERS
+// ============================================================================
 
 function updateHistory(token, listKey) {
     let list = GM_getValue(listKey, []);
@@ -2250,74 +3098,37 @@ function updateHistory(token, listKey) {
     GM_setValue(listKey, list);
 }
 
-function getGameToken(url) {
-    const m = url.match(/[0-9a-zA-Z]{16}/);
-    return m ? m[0] : null;
+function createMarkerClickHandler(pano) {
+    return (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        removePeekMarker();
+        openNativeStreetView(pano);
+    };
 }
 
-function getCurrentRound() {
-    const el = document.querySelector(SELECTORS.roundNumber);
-    if (!el) return null;
-    const m = el.textContent.match(/\d+/);
-    return m ? Number(m[0]) : null;
-}
-
-function formatDistance(num) {
-    return num >= 1000 ? `${(num / 1000).toFixed(1)} km` : `${Math.floor(num)} m`;
-}
-
-function extractDate(entry) {
-    for (const key in entry) {
-        const value = entry[key];
-        if (value instanceof Date) {
-            return value;
-        }
-        if (typeof value === 'string' && !isNaN(Date.parse(value))) {
-            return new Date(value);
-        }
+function attachMarkerClickListener(marker, pano) {
+    const oldHandler = markerHandlerMap.get(marker);
+    if (oldHandler) {
+        marker.removeEventListener("click", oldHandler);
     }
-    return null;
+    const clickHandler = createMarkerClickHandler(pano);
+    markerHandlerMap.set(marker, clickHandler);
+    marker.addEventListener("click", clickHandler);
 }
 
-function convertPanoId(panoId) {
-    if (!panoId) return null;
-    try {
-        const bytes = new Uint8Array(panoId.match(/.{1,2}/g).map(b => parseInt(b, 16)));
-        return new TextDecoder("utf-8").decode(bytes);
-    } catch (e) {
-        console.error("Error:", e);
-        return panoId;
-    }
-}
 
-function getStreetViewThumbUrl(pano) {
-    if (pano.panoId) {
-        return `https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=${pano.panoId}&cb_client=maps_sv.tactile.gps&w=1024&h=768&yaw=${pano.heading || 0}&pitch=${pano.pitch || 0}&thumbfov=120`;
-    } else if (pano.location) {
-        return `https://maps.googleapis.com/maps/api/streetview?size=1024x768&location=${pano.location.lat},${pano.location.lng}&heading=${pano.heading || 0}&pitch=${pano.pitch || 0}&fov=120&key=AIzaSyDqRTXlnHXELLKn7645Q1L_5oc4CswKZK4`;
-    }
-    return null
-}
-
-function getRadius(coords1, coords2) {
-    return unsafeWindow.google.maps.geometry.spherical.computeDistanceBetween(
-        coords1,
-        coords2,
-    );
-}
-
-function inResults() {
-    return location.pathname.includes("/results/");
-}
-
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
 
 function main() {
-    startMarkerObserver();
     startMapObserver();
+    startMarkerObserver();
     loadState();
     window.addEventListener("urlchange", () => {
-        startMarkerObserver();
         startMapObserver();
+        startMarkerObserver();
         loadState();
     });
 
@@ -2430,19 +3241,18 @@ function main() {
     .peek-split-container {
         position: absolute;
         top: 0;
-        right: 0;
+        right: -100%;
         width: 50%;
         height: 100%;
         background: #000;
         z-index: 10006;
-        transform: translateX(100%);
-        transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        transition: right 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
         overflow: hidden;
         box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
     }
 
     .peek-split-container.active {
-        transform: translateX(0);
+        right: 0;
     }
 
     .peek-split-resizer {
@@ -2461,7 +3271,7 @@ function main() {
         height: 100%;
     }
 
-    .peek-control {
+    .pano-control {
         background: none rgb(68, 68, 68);
         border: 0px;
         color: #b3b3b3;
@@ -2481,13 +3291,28 @@ function main() {
         z-index: 10008;
     }
 
-    .peek-control:hover {
+    .pano-control:hover {
         color: #e6e6e6;
+    }
+
+    .pano-control.loading svg {
+        animation: rotate 2s linear infinite;
+    }
+
+    @keyframes rotate {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
     }
 
     .peek-map-control {
         background: rgb(0, 0, 0, 0.8);
+        color: white;
         border: 0px;
+        top: 80px;
         padding: 8px;
         text-transform: none;
         appearance: none;
@@ -2505,17 +3330,19 @@ function main() {
 
     .peek-map-control:hover {
         opacity: 1.0;
+        color:#ffcf4a;
     }
 
     #layer-toggle {
-        top: 80px;
         left: 1rem;
     }
 
-    #path-toggle {
-        color: rgb(131, 18, 223);
-        top: 80px;
+    #map-type-toggle {
         left: 4.5rem;
+    }
+
+    #path-focus {
+        left: 8rem;
     }
 
     .peek-modal {
@@ -2722,7 +3549,7 @@ function main() {
         font-size: 14px;
         color: #FFFFFF;
         position: absolute;
-        bottom: 4px !important;
+        bottom: 8px !important;
         border-radius: 5px;
         box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
         border: none;
@@ -3156,7 +3983,5 @@ function main() {
         [class*="result-list_listItemWrapper"]:hover [class*="result-list_points"],
     `)
 }
-
-
 
 main();

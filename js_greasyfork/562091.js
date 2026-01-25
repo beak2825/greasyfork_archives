@@ -2,7 +2,7 @@
 // @name         Discuz! 论坛助手 (Discuz! Forum Assistant)
 // @name:en      Discuz! Forum Assistant
 // @namespace    http://tampermonkey.net/
-// @version      13.36.0
+// @version      13.36.1
 // @description  Discuz! 论坛全能助手：智能抓取模式（Alt+键只抓作者前3页）、全量抓取模式（Ctrl+Alt+键抓所有）；一键提取图片（自动修复文件名/格式/并发下载）；沉浸式阅读；自定义下载路径。
 // @description:en Discuz! Forum Assistant: Smart scraping (Alt+keys for author's first 3 pages), full scraping (Ctrl+Alt+keys); One-click image download (auto-fix filenames/extensions/concurrent); Immersive reading; Custom download path.
 // @license      GPL-3.0
@@ -760,12 +760,20 @@
             // 强力去重逻辑：优先使用 文件名，其次使用 URL
             var uniqueItems = [];
             var seenKeys = new Set();
-            mediaList.forEach(function(item) { 
-                var key = item.fileName ? (item.fileName + '_' + item.floor) : item.url;
-                if (!seenKeys.has(key)) { 
-                    seenKeys.add(key); 
-                    uniqueItems.push(item); 
-                } 
+            mediaList.forEach(function(item) {
+                // 文本类型总是保留（因为是 Blob URL，且每个帖子只有一个文本汇总）
+                if (item.type === 'text') {
+                    uniqueItems.push(item);
+                    return;
+                }
+
+                // 图片/视频去重：基于 URL + 楼层
+                // 之前的逻辑如果 fileName 为空会导致和有 fileName 的同一资源被视为不同
+                var uniqueId = item.url + '_' + item.floor;
+                if (!seenKeys.has(uniqueId)) {
+                    seenKeys.add(uniqueId);
+                    uniqueItems.push(item);
+                }
             });
             var active = 0; 
             var max = parseInt(App.userConfig.maxConcurrency) || 5; 
@@ -965,7 +973,7 @@
                             walk(child);
                             child = child.nextSibling;
                         }
-                        if (regexBlockTags.test(tag)) chunks.push('\n');
+                        if (REGEX_BLOCK_TAGS.test(tag)) chunks.push('\n');
                     }
                 } else if (node.nodeType === 3) { // Text
                     chunks.push(node.nodeValue);
@@ -1046,6 +1054,7 @@
                          if (['.jpg','.png','.gif','.jpeg','.webp','.bmp'].some(function(e){ return fn.toLowerCase().endsWith(e); })) {
                              var src = link.href;
                              if (src.indexOf('mod=attachment') !== -1) src = src.replace(REGEX_AMP, '&');
+                             if (src.indexOf('http://') === 0) src = src.replace('http://', 'https://');
                              if (src.indexOf('http') !== 0) { try { src = new URL(src, window.location.href).href;
                              } catch(e) { src = window.location.origin + '/' + src;
                              } }
@@ -1068,6 +1077,7 @@
                              if (!src) return;
                              
                              if (src.indexOf('mod=attachment') !== -1) src = src.replace(REGEX_AMP, '&');
+                             if (src.indexOf('http://') === 0) src = src.replace('http://', 'https://');
                              if (src.indexOf('http') !== 0) { try { src = new URL(src, window.location.href).href; } catch(e) { src = window.location.origin + '/' + src; } }
 
                              // 获取文件名
@@ -1101,6 +1111,7 @@
                     if (src.indexOf('mod=attachment') !== -1) {
                          src = src.replace('&noupdate=yes', '').replace(REGEX_AMP, '&');
                     }
+                    if (src.indexOf('http://') === 0) src = src.replace('http://', 'https://');
                     
                     if (src.indexOf('http') !== 0) { try { src = new URL(src, window.location.href).href; } catch(e) { src = window.location.origin + '/' + src; } }
 
@@ -1129,6 +1140,7 @@
                     var source = v.querySelector('source');
                     var src = v.src || (source ? source.src : null);
                     if (src) {
+                        if (src.indexOf('http://') === 0) src = src.replace('http://', 'https://');
                         if (src.indexOf('http') !== 0) src = window.location.origin + '/' + src;
                         videos.push({ url: src, floor: floor, date: date, ext: '.mp4' });
                     }
@@ -1136,6 +1148,7 @@
                 var aTags = div.querySelectorAll('a[href*=".mp4"], a[href*=".mov"], a[href*=".avi"]');
                 aTags.forEach(function(a) {
                     var src = a.href;
+                    if (src.indexOf('http://') === 0) src = src.replace('http://', 'https://');
                     var ext = src.substring(src.lastIndexOf('.'));
                     if (ext.length > 5) ext = '.mp4';
                     videos.push({ url: src, floor: floor, date: date, ext: ext });

@@ -3,7 +3,7 @@
 // @namespace   Violentmonkey Scripts
 // @match       https://notebooklm.google.com/*
 // @run-at      document-start
-// @version     1.0
+// @version     1.1
 // @author      Bui Quoc Dung
 // @description Close the source & studio panels after navigating to notebooklm
 // @license     MIT
@@ -12,57 +12,88 @@
 // ==/UserScript==
 
 (function () {
-  'use strict';
+    'use strict';
 
-  const DELAY_MS = 2000;
-  const SELECTORS = [
-    'button.toggle-source-panel-button',
-    'button.toggle-studio-panel-button'
-  ];
+    let lastUrl = null;
+    let panelStates = {
+        'Source': { userInteracted: false },
+        'Studio': { userInteracted: false }
+    };
 
-  let lastHandledUrl = null;
+    const CONFIG = {
+        checkInterval: 1000,
+        maxDuration: 5000,
+        panels: [
+            {
+                name: 'Source',
+                btn: 'button.toggle-source-panel-button',
+                section: 'section.source-panel'
+            },
+            {
+                name: 'Studio',
+                btn: 'button.toggle-studio-panel-button',
+                section: 'section.studio-panel'
+            }
+        ]
+    };
 
-  function closePanelsOnceForCurrentUrl() {
-    if (!location.pathname.startsWith('/notebook/')) return;
-    if (lastHandledUrl === location.href) return;
-    lastHandledUrl = location.href;
+    document.addEventListener('click', (e) => {
+        CONFIG.panels.forEach(p => {
+            if (e.target.closest(p.btn)) {
+                if (e.isTrusted) {
+                    panelStates[p.name].userInteracted = true;
+                }
+            }
+        });
+    }, true);
 
-    setTimeout(() => {
-      for (const sel of SELECTORS) {
-        try {
-          const btn = document.querySelector(sel);
-          if (btn) btn.click();
-        } catch (e) {
+    function initAutoClose() {
+        if (!location.pathname.startsWith('/notebook/')) return;
+
+        const currentUrl = location.href;
+        if (currentUrl !== lastUrl) {
+            lastUrl = currentUrl;
+            panelStates.Source.userInteracted = false;
+            panelStates.Studio.userInteracted = false;
+            startLoop();
         }
-      }
-    }, DELAY_MS);
-  }
+    }
 
+    function startLoop() {
+        let elapsed = 0;
+        const timer = setInterval(() => {
+            CONFIG.panels.forEach(p => {
+                const section = document.querySelector(p.section);
+                const button = document.querySelector(p.btn);
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', closePanelsOnceForCurrentUrl);
-  } else {
-    closePanelsOnceForCurrentUrl();
-  }
+                if (!panelStates[p.name].userInteracted && section && button) {
+                    if (!section.classList.contains('panel-collapsed')) {
+                        button.click();
+                    }
+                }
+            });
 
-  (function patchHistory() {
-    const _push = history.pushState;
-    const _replace = history.replaceState;
+            elapsed += CONFIG.checkInterval;
+            if (elapsed >= CONFIG.maxDuration) clearInterval(timer);
+        }, CONFIG.checkInterval);
+    }
 
-    history.pushState = function (...args) {
-      const res = _push.apply(this, args);
-      window.dispatchEvent(new Event('locationchange'));
-      return res;
+    const observer = new MutationObserver(() => {
+        if (location.href !== lastUrl) initAutoClose();
+    });
+    observer.observe(document, { childList: true, subtree: true });
+
+    const patch = (type) => {
+        const orig = history[type];
+        return function() {
+            const rv = orig.apply(this, arguments);
+            initAutoClose();
+            return rv;
+        };
     };
-
-    history.replaceState = function (...args) {
-      const res = _replace.apply(this, args);
-      window.dispatchEvent(new Event('locationchange'));
-      return res;
-    };
-
-    window.addEventListener('popstate', () => window.dispatchEvent(new Event('locationchange')));
-    window.addEventListener('locationchange', closePanelsOnceForCurrentUrl);
-  })();
+    history.pushState = patch('pushState');
+    history.replaceState = patch('replaceState');
+    window.addEventListener('popstate', initAutoClose);
+    window.addEventListener('load', initAutoClose);
 
 })();

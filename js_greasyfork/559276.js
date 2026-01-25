@@ -3,7 +3,7 @@
 // @namespace    https://fanis.dev/userscripts
 // @author       Fanis Hatzidakis
 // @license      PolyForm-Internal-Use-1.0.0; https://polyformproject.org/licenses/internal-use/1.0.0/
-// @version      1.6.0
+// @version      1.6.1
 // @description  Summarize web articles via OpenAI API. Modular architecture with configurable selectors and inspection mode.
 // @match        *://*/*
 // @exclude      about:*
@@ -2682,16 +2682,23 @@
         }
 
         .digest-summary-content {
-            padding: 20px 24px !important;
-            font: 16px/1.7 system-ui, -apple-system, sans-serif !important;
+            padding: 28px 40px !important;
+            font: 17px/1.8 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
             color: #2d3748 !important;
             max-height: calc(90vh - 180px) !important;
             overflow-y: auto !important;
         }
 
+        .digest-summary-content-inner {
+            max-width: 680px !important;
+            margin: 0 auto !important;
+        }
+
         .digest-summary-content p {
-            margin: 0 0 16px 0 !important;
+            margin: 0 0 1.25em 0 !important;
             text-align: left !important;
+            word-spacing: 0.05em !important;
+            letter-spacing: 0.01em !important;
         }
 
         .digest-summary-content p:last-child {
@@ -2959,7 +2966,9 @@
                 <button class="digest-summary-close" title="Close">✕</button>
             </div>
             <div class="digest-summary-content">
-                ${summaryText.split('\n\n').map(p => `<p>${escapeHtml(p)}</p>`).join('')}
+                <div class="digest-summary-content-inner">
+                    ${summaryText.split('\n\n').map(p => `<p>${escapeHtml(p)}</p>`).join('')}
+                </div>
             </div>
             <div class="digest-summary-footer">
                 <div class="digest-summary-footer-text">Summarize The Web</div>

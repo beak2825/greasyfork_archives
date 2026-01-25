@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Bypass Paywalls Clean - de/at/ch
-// @version         4.2.8.1
+// @version         4.2.9.0
 // @description     Bypass Paywalls of news sites
 // @author          magnolia1234
 // @homepageURL     https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters
@@ -10,6 +10,7 @@
 // @match           *://*.de/*
 // @match           *://*.beobachter.ch/*
 // @match           *://*.blick.ch/*
+// @match           *://*.diepresse.com/*
 // @match           *://*.faz.net/*
 // @match           *://*.handelsblatt.com/*
 // @match           *://*.handelszeitung.ch/*
@@ -517,7 +518,7 @@ function readMediumLink(url, text_fail = 'BPC > Try for full article text:\r\n')
 function externalLink(domains, ext_url_templ, url, text_fail = 'BPC > Full article text:\r\n') {
   let text_fail_div = document.createElement('div');
   text_fail_div.id = 'bpc_archive';
-  text_fail_div.setAttribute('style', 'margin: 20px; font-size: 20px; font-weight: bold; color: red;');
+  text_fail_div.setAttribute('style', 'margin: 20px; font-size: 20px; font-weight: bold; color: red; line-height: normal;');
   let parser = new DOMParser();
   text_fail = text_fail.replace(/\[(?<url>[^\]]+)\]/g, function (match, url) {
     return "<a href='" + url + "' target='_blank' style='color: red'>" + new URL(url).hostname + "</a>";
@@ -1139,6 +1140,14 @@ else if (matchDomain('cicero.de')) {
     getArchive(url, 'div.plenigo-paywall', '', 'article > div:has(> div.ad-container)', '', 'article > div:has(h3)');
   } else if (document.querySelector('div.paywall-fadeout'))
     ampToHtml();
+}
+
+else if (matchDomain('diepresse.com')) {
+  let paywall = document.querySelector('div.premium-content.hide');
+  if (paywall)
+    paywall.removeAttribute('class');
+  let fade = 'div.paywall-container--locked';
+  hideDOMStyle(fade);
 }
 
 else if (matchDomain('faz.net')) {

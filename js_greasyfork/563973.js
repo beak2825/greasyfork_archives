@@ -1,14 +1,16 @@
 // ==UserScript==
 // @name         Twitch Auto Theater
+// @name:ja      Twitch 自動シアターモード
 // @namespace    https://greasyfork.org/users/1564283
-// @version      1.0.0
+// @version      1.2.0
 // @description  Automatically enables Theater Mode on Twitch.
-// @author       YourName
-// @match        twitch.tv/*
-// @match        *.twitch.tv/*
+// @description:ja  Twitchで自動的にシアターモードを有効化します。
+// @author       homma
+// @match        https://www.twitch.tv/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=twitch.tv
 // @grant        none
 // @run-at       document-idle
+// @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/563973/Twitch%20Auto%20Theater.user.js
 // @updateURL https://update.greasyfork.org/scripts/563973/Twitch%20Auto%20Theater.meta.js
 // ==/UserScript==
@@ -18,13 +20,8 @@
 
     const DEBUG = false;
 
-    const enterSelector =
-        '[aria-label*="Theatre Mode"]:not([aria-label*="Exit"]), ' +
-        '[aria-label*="シアターモード"]:not([aria-label*="終了"])';
-
-    const exitSelector =
-        '[aria-label*="Exit"][aria-label*="Theatre Mode"], ' +
-        '[aria-label*="シアターモード"][aria-label*="終了"]';
+    // SVG path signature for theater mode button detection
+    const ENTER_THEATER_PATH = 'M2 5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5Zm14 0h4v14h-4V5Zm-2 0H4v14h10V5Z';
 
     let checkInterval = null;
     let navigationTimeout = null;
@@ -32,10 +29,21 @@
 
     /**
      * Check if current page is a video/stream page.
+     * @returns {boolean} True if on a video page
      */
     const isVideoPage = () => {
         const path = location.pathname;
         return /^\/[^\/]+$|^\/videos\/|^\/[^\/]+\/clip\//.test(path) && path !== '/';
+    };
+
+    /**
+     * Find button by SVG path d attribute.
+     * @param {string} pathString - SVG path d attribute value
+     * @returns {HTMLElement|null} Button element or null
+     */
+    const findButtonByPath = (pathString) => {
+        const path = document.querySelector(`path[d="${pathString}"]`);
+        return path ? path.closest('button') : null;
     };
 
     /**
@@ -53,13 +61,12 @@
         }
 
         let tries = 0;
-        const MAX_TRIES = 50; // 10sec
+        const MAX_TRIES = 50; // Approximately 10 seconds
 
         checkInterval = setInterval(() => {
             tries++;
 
-            const enterButton = document.querySelector(enterSelector);
-            const exitButton = document.querySelector(exitSelector);
+            const enterButton = findButtonByPath(ENTER_THEATER_PATH);
 
             if (enterButton) {
                 try {
@@ -73,15 +80,8 @@
                 return;
             }
 
-            if (exitButton) {
-                DEBUG && console.log('Twitch Auto Theater: Already active');
-                clearInterval(checkInterval);
-                checkInterval = null;
-                return;
-            }
-
             if (tries >= MAX_TRIES) {
-                DEBUG && console.log('Twitch Auto Theater: Gave up');
+                DEBUG && console.log('Twitch Auto Theater: Gave up or already active');
                 clearInterval(checkInterval);
                 checkInterval = null;
             }

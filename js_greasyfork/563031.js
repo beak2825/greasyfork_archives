@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Joybuy.nl Price Tracker
 // @namespace    http://tampermonkey.net/
-// @version      2.5.1
+// @version      2.5.4
 // @description  Track product prices with search, filter, and hover preview
 // @author       Keon
 // @match        https://www.joybuy.nl/*

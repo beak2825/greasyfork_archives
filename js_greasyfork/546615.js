@@ -1,16 +1,20 @@
 // ==UserScript==
-// @name         B站缓冲解限
+// @name         Bilibili Buffer Unlocker(B站缓冲解限)
+// @name:zh      B站缓冲解限
+// @name:en      Bilibili Buffer Unlocker
 // @namespace    http://tampermonkey.net/
-// @version      2.0
-// @description  解限B站播放器缓冲时长，智能防止内存溢出，播放器统计信息UI集成
+// @version      2.1
+// @description  Increase Bilibili player video buffer duration, intelligently prevent memory overflow, and integrate with player statistics UI\n解限B站播放器缓冲时长，智能防止内存溢出，播放器统计信息UI集成
+// @description:zh 解限B站播放器缓冲时长，智能防止内存溢出，播放器统计信息UI集成
+// @description:en Increase Bilibili player video buffer duration, intelligently prevent memory overflow, and integrate with player statistics UI
 // @author       \7. with Gemini 3 Pro
 // @match        *://*.bilibili.com/*
 // @match        *://bilibili.com/*
 // @grant        none
 // @run-at       document-end
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/546615/B%E7%AB%99%E7%BC%93%E5%86%B2%E8%A7%A3%E9%99%90.user.js
-// @updateURL https://update.greasyfork.org/scripts/546615/B%E7%AB%99%E7%BC%93%E5%86%B2%E8%A7%A3%E9%99%90.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/546615/Bilibili%20Buffer%20Unlocker%28B%E7%AB%99%E7%BC%93%E5%86%B2%E8%A7%A3%E9%99%90%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/546615/Bilibili%20Buffer%20Unlocker%28B%E7%AB%99%E7%BC%93%E5%86%B2%E8%A7%A3%E9%99%90%29.meta.js
 // ==/UserScript==
 
 (function () {
@@ -75,33 +79,47 @@
                 const video = document.querySelector('video');
                 const bps = CoreManager.getCurrentBytesPerSecond();
 
-                let targetTime = CONFIG.MAX_TIME_LIMIT;
-
+                // 1. 基础目标计算 (基于内存和时间上限)
+                let baseTargetTime = CONFIG.MAX_TIME_LIMIT;
                 if (core && core.getStableBufferTime) {
-                    targetTime = CoreManager.calculateSafeDuration();
-                    if (core.getStableBufferTime() !== targetTime) {
+                    baseTargetTime = CoreManager.calculateSafeDuration();
+
+                    // 顺手修正一下设置 (注意：设置给内核的值不需要被剩余时间截断，内核自己会处理 EOF)
+                    if (core.getStableBufferTime() !== baseTargetTime) {
                         CoreManager.applyOptimization();
                     }
                 }
 
+                // 2. 获取实际缓冲时间与剩余时间
                 let bufferedTime = 0;
-                if (core && typeof core.getBufferLength === 'function') {
-                    bufferedTime = core.getBufferLength('video');
+                let remainingTime = 9999;
+
+                if (video) {
+                    if (Number.isFinite(video.duration) && Number.isFinite(video.currentTime)) {
+                        remainingTime = Math.max(0, video.duration - video.currentTime);
+                    }
+
+                    if (video.buffered.length > 0) {
+                        const end = video.buffered.end(video.buffered.length - 1);
+                        bufferedTime = Math.max(0, end - video.currentTime);
+                    } else if (core && typeof core.getBufferLength === 'function') {
+                        bufferedTime = core.getBufferLength('video');
+                    }
                 }
-                if (!bufferedTime && video && video.buffered.length > 0) {
-                    const end = video.buffered.end(video.buffered.length - 1);
-                    bufferedTime = Math.max(0, end - video.currentTime);
-                }
+
+                // 如果剩余时间小于目标时间，则以剩余时间为准，避免误导
+                const finalTargetTime = Math.min(baseTargetTime, remainingTime);
 
                 return {
                     time: {
                         current: bufferedTime || 0,
-                        target: targetTime,
-                        percent: targetTime > 0 ? (bufferedTime / targetTime) * 100 : 0
+                        target: finalTargetTime,
+                        percent: finalTargetTime > 1 ? (bufferedTime / finalTargetTime) * 100 : 100
                     },
                     memory: {
                         current: bufferedTime * bps,
-                        limit: CONFIG.SAFE_BYTE_LIMIT
+                        // 显存上限显示也跟随实际目标动态变化
+                        limit: finalTargetTime * bps
                     }
                 };
             } catch (e) {
@@ -131,7 +149,6 @@
                 const isTimeHealthy = stats.time.current > 10 && stats.time.percent > 30;
                 const timeColor = isTimeHealthy ? '#52c41a' : '#faad14';
                 const memColor = '#bae637';
-                // 紧凑型单行布局 - 修复间距过大问题
                 myPanel.innerHTML = `
                     <div class="info-line" style="display:flex; align-items:center;">
                         <span class="info-title" style="color:#999; margin-right:8px;">缓冲</span>

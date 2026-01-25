@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MWI Command Palette (Item/Wiki/Market)
 // @namespace    mwi_command_palette
-// @version      4.1.0
+// @version      4.1.1
 // @description  Command palette for quick item lookup (Cmd+K / Ctrl+K) with autocomplete and fuzzy matching.
 // @author       Mists
 // @license      MIT
@@ -147,51 +147,6 @@
             console.error('[Game Commands] Failed to load item data:', error);
             return null;
         }
-    }
-
-    /**
-     * Normalize item name for wiki URL (not currently used but kept for future)
-     * @param {string} itemName - The raw item name from user input
-     * @param {Object|null} itemData - Item data mappings (can be null)
-     * @returns {string|null} Normalized item name for URL, or null if multiple matches
-     */
-    function normalizeItemNameForWiki(itemName, itemData) {
-        // Step 1: Try exact match (case-insensitive)
-        const lowerName = itemName.toLowerCase();
-
-        if (itemData && itemData.itemNameToHrid[lowerName]) {
-            // Found exact match - use the canonical name
-            const hrid = itemData.itemNameToHrid[lowerName];
-            const canonicalName = itemData.itemHridToName[hrid];
-            return canonicalName.replace(/ /g, '_');
-        }
-
-        // Step 2: Fuzzy match (find closest match)
-        if (itemData) {
-            const allNames = Object.keys(itemData.itemNameToHrid);
-            const matches = allNames.filter(name => name.includes(lowerName));
-
-            if (matches.length === 1) {
-                // Single match found
-                const hrid = itemData.itemNameToHrid[matches[0]];
-                const canonicalName = itemData.itemHridToName[hrid];
-                return canonicalName.replace(/ /g, '_');
-            }
-
-            if (matches.length > 1) {
-                // Multiple matches - show user
-                console.warn('[Wiki Command] Multiple matches found:', matches);
-                showMultipleMatchesWarning(matches);
-                return null;
-            }
-        }
-
-        // Step 3: No match found - do best effort normalization
-        // Capitalize first letter of each word, replace spaces with underscores
-        return itemName
-            .split(' ')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-            .join('_');
     }
 
     /**
@@ -605,10 +560,13 @@
                 break;
 
             case 'wiki':
-                // Open Wiki
+                // Open Wiki (50ms delay breaks Cmd+Enter shortcut chain)
                 const wikiName = itemName.replace(/ /g, '_');
                 const wikiUrl = getWikiUrl(wikiName);
-                window.open(wikiUrl, '_blank');
+                setTimeout(() => {
+                    const newWindow = window.open(wikiUrl, '_blank');
+                    if (newWindow) newWindow.focus();
+                }, 50);
                 break;
         }
 
@@ -687,16 +645,29 @@
                 if (paletteState.selectedIndex >= 0 && paletteState.suggestions.length > 0) {
                     const selected = paletteState.suggestions[paletteState.selectedIndex];
 
-                    // Determine action based on modifier keys
+                    // Determine action based on CONFIG modifier keys
                     const wikiModifier = isMac ? CONFIG.ACTION_WIKI_MAC : CONFIG.ACTION_WIKI_WIN;
 
-                    if (event[wikiModifier]) {
-                        executeAction('wiki', selected);
-                    } else if (event.shiftKey) {
-                        executeAction('market', selected);
-                    } else {
-                        executeAction('item', selected);
+                    // Build action map from CONFIG
+                    const actionMap = [
+                        { action: 'item', modifier: CONFIG.ACTION_ITEM },
+                        { action: 'market', modifier: CONFIG.ACTION_MARKET },
+                        { action: 'wiki', modifier: wikiModifier }
+                    ];
+
+                    // Find matching action (null modifier = default/no modifier pressed)
+                    let matchedAction = 'item'; // fallback
+                    for (const { action, modifier } of actionMap) {
+                        if (modifier === null && !event.shiftKey && !event[wikiModifier]) {
+                            matchedAction = action;
+                            break;
+                        } else if (modifier && event[modifier]) {
+                            matchedAction = action;
+                            break;
+                        }
                     }
+
+                    executeAction(matchedAction, selected);
                 }
                 break;
         }

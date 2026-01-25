@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Geoguessr duel round analysis
 // @namespace    http://tampermonkey.net/
-// @version      0.3.0
+// @version      0.3.1
 // @description  Analyse duel round data on a map
 // @author       irrational
 // @match        https://www.geoguessr.com/*
@@ -107,6 +107,33 @@ const makeCheckbox = (text, checkboxId, labelId = null) => {
     return [div, checkbox, label];
 };
 
+const makeMinimisableDiv = (titleText, contentDisplayStyle = null) => {
+    const div = document.createElement('div');
+    const header = document.createElement('div');
+    header.style.display = 'flex';
+    header.style.gap = '1em';
+    header.style.width = '100%';
+    const title = document.createElement('div');
+    title.style.flex = 1;
+    title.style.color = 'rgba(255, 255, 255, 0.6)';
+    title.innerHTML = titleText;
+    const minimise = document.createElement('div');
+    minimise.style.flex = 2;
+    minimise.style.textAlign = 'right';
+    minimise.style.cursor = 'pointer';
+    minimise.innerHTML = '➖';
+    header.append(title, minimise);
+    const content = document.createElement('div');
+    content.style.display = contentDisplayStyle;
+    content.style.marginTop = '1em';
+    div.append(header, content);
+    minimise.addEventListener('click', () => {
+        content.style.display = content.style.display == 'none' ? contentDisplayStyle : 'none';
+        minimise.innerHTML = content.style.display == 'none' ? '➕' : '➖';
+    });
+    return [div, content];
+};
+
 const radiusToExtent = (lon, lat, radius) => {
     const degPerMetre = 360/(2*Math.PI * 6371000);
     const dLat = radius * degPerMetre;
@@ -150,18 +177,19 @@ const openMap = (userId) => {
         modal.remove();
     });
 
-    const controlsContainer = makeStyledElement('div', {
+    const [controlsDiv, controlsContainer] = makeMinimisableDiv('Controls', 'flex');
+    Object.assign(controlsDiv.style, {
         position: 'absolute',
         left: 'calc(0.5em + 18.5px + 1vw)',
         top: '2vh',
         padding: '2ex',
-        color: 'rgba(255, 255, 255, 0.6)',
         backgroundColor: 'rgba(0, 0, 0, 0.6)',
         borderRadius: '1vh',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.5em',
         zIndex: 9999
+    });
+    Object.assign(controlsContainer.style, {
+        flexDirection: 'column',
+        gap: '0.5em'
     });
     controlsContainer.className = ANALYSIS_CONTROLS_CLASS;
 
@@ -230,16 +258,17 @@ const openMap = (userId) => {
     const [keepDiv, keepCheckbox] = makeCheckbox('Keep these settings for next time', KEEP_INPUT_ID);
     controlsContainer.append(keepDiv);
 
-    const chartContainer = makeStyledElement('div', {
+    const [chartDiv, chartContainer] = makeMinimisableDiv('Statistics');
+    Object.assign(chartDiv.style, {
         position: 'absolute',
         right: '2vh',
         bottom: 'calc(17px + 2vh)',
-        width: '50vh',
         padding: '1vh',
         backgroundColor: 'rgba(0, 0, 0, 0.6)',
         borderRadius: '1vh',
         zIndex: 9999
     });
+    chartContainer.style.width = '50vh';
     const chartCanvas = document.createElement('canvas');
     const countsDiv = makeStyledElement('div', {color: 'white', textAlign: 'right'});
     chartContainer.append(chartCanvas);
@@ -257,8 +286,8 @@ const openMap = (userId) => {
 
     modal.append(olStyleSheet);
     modal.append(closeButton);
-    modal.append(controlsContainer);
-    modal.append(chartContainer);
+    modal.append(controlsDiv);
+    modal.append(chartDiv);
     document.body.append(modal);
 
 

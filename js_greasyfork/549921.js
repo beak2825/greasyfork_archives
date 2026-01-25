@@ -40,47 +40,47 @@
 // @name:ug             مېنىڭ پرومپتۇم
 // @name:vi             Lời nhắc của tôi
 // @namespace           https://github.com/0H4S
-// @version             4.0
-// @description         Save and use custom prompts in your own library. Use Dynamic Prompt mode for interactive input. Attach and use files anytime. Compatible with: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI and Copilot.
-// @description:pt-BR   Salve e use prompts personalizados em sua biblioteca. Use o modo Prompt Dinâmico para comandos interativos. Anexe e use arquivos sempre que quiser. Compatível com: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google Modo IA e Copilot.
-// @description:zh-CN   在个人库中保存并使用自定义提示词。利用动态提示词模式进行交互。随时附加并使用文件。兼容：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, 豆包, Claude, Kimi, 通义千问, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, 腾讯元宝, ChatGLM, Google AI 模式 和 Copilot。
-// @description:zh-TW   在個人庫中儲存並使用自定義提示詞。利用動態提示詞模式進行互動。隨時附加並使用檔案。相容：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, 豆包, Claude, Kimi, 通義千問, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, 騰訊元寶, ChatGLM, Google AI 模式 和 Copilot。
-// @description:fr-CA   Enregistrez vos invites personnalisées. Utilisez le mode Prompt Dynamique pour des commandes interactives. Joignez des fichiers sans re-sélection. Compatible avec: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google IA et Copilot.
-// @description:ckb     پڕۆمپتە تایبەتەکانت پاشەکەوت بکە. مۆدی داینامیکی بەکاربهێنە بۆ فەرمانی کارلێکەر. پەڕگەکان هاوپێچ بکە. گونجاوە لەگەڵ: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:ar      حفظ واستخدام قوالب الأوامر الخاصة بك. استخدم وضع المطالبة الديناميكية للأوامر التفاعلية. أرفق الملفات واستخدمها في أي وقت. متوافق مع: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:be      Захоўвайце ўласныя падказкі. Выкарыстоўвайце рэжым дынамічных падказак для каманд. Далучайце файлы ў любы час. Сумяшчальны з: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:bg      Запазвайте персонализирани подкани. Използвайте динамичен режим за интерактивни команди. Прикачвайте файлове по всяко време. Съвместим с: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:cs      Ukládejte vlastní prompty. Používejte režim dynamických promptů pro interaktivní příkazy. Připojujte soubory kdykoli. Kompatibilní s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:da      Gem brugerdefinerede prompts. Brug Dynamisk Prompt-tilstand til interaktive kommandoer. Vedhæft filer når som helst. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:de      Eigene Prompts speichern. Nutzen Sie den dynamischen Prompt-Modus für interaktive Befehle. Dateien jederzeit anhängen. Kompatibel mit: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:el      Αποθηκεύστε προσαρμοσμένα prompts. Χρησιμοποιήστε τη λειτουργία Δυναμικού Prompt για διαδραστικές εντολές. Συμβατό με: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:en      Save and use custom prompts in your own library. Use Dynamic Prompt mode for interactive input. Attach and use files anytime. Compatible with: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI and Copilot.
-// @description:eo      Konservu proprajn komandojn. Uzu dinamikan reĝimon por interagaj ordonoj. Alonĝu dosierojn iam ajn. Kongrua kun: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:es      Guarde prompts personalizados. Use el modo de Prompt Dinámico para comandos interactivos. Adjunte archivos en cualquier momento. Compatible con: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI y Copilot.
-// @description:fi      Tallenna mukautetut kehotteet. Käytä dynaamista tilaa vuorovaikutteisiin komentoihin. Liitä tiedostoja milloin tahansa. Yhteensopiva: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:fr      Enregistrez vos propres invites. Utilisez le mode Invite Dynamique pour des commandes interactives. Joignez des fichiers à tout moment. Compatible avec: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI et Copilot.
-// @description:he      שמור פרומפטים מותאמים אישית. השתמש במצב פרומפט דינמי לפקודות אינטראקטיביות. צרף קבצים בכל עת. תואם ל: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:hr      Spremite prilagođene upute. Koristite način rada Dinamički upit za interaktivne naredbe. Priložite datoteke bilo kada. Kompatibilno s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:hu      Saját promptok mentése. Használja a Dinamikus Prompt módot interaktív parancsokhoz. Fájlok csatolása bármikor. Kompatibilis: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:id      Simpan prompt khusus. Gunakan mode Prompt Dinamis untuk perintah interaktif. Lampirkan file kapan saja. Kompatibel dengan: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:it      Salva prompt personalizzati. Usa la modalità Prompt Dinamico per comandi interattivi. Allega file in qualsiasi momento. Compatibile con: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI e Copilot.
-// @description:ja      カスタムプロンプトを保存。動的プロンプトモードで対話的な入力を実現。いつでもファイルを添付可能。対応: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI, Copilot.
-// @description:ka      შეინახეთ პრომპტები. გამოიყენეთ დინამიური პრომპტის რეჟიმი ინტერაქტიული ბრძანებებისთვის. მიამაგრეთ ფაილები. თავსებადია: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:ko      커스텀 프롬프트 저장. 대화형 명령을 위해 동적 프롬프트 모드 사용. 언제든지 파일 첨부 가능. 호환: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI, Copilot.
-// @description:mr      सानुकूल प्रॉम्प्ट जतन करा. परस्परसंवादी कमांडसाठी डायनॅमिक प्रॉम्प्ट मोड वापरा. कधीही फाइल्स जोडा. सुसंगत: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:nb      Lagre egne ledetekster. Bruk Dynamisk ledetekst-modus for interaktive kommandoer. Legg ved filer når som helst. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:nl      Sla aangepaste prompts op. Gebruik de Dynamische Prompt-modus voor interactieve commando's. Voeg bestanden toe wanneer u maar wilt. Compatibel met: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI en Copilot.
-// @description:pl      Zapisuj własne prompty. Używaj trybu dynamicznych promptów dla interaktywnych poleceń. Załączaj pliki w dowolnym momencie. Kompatybilny z: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI i Copilot.
-// @description:ro      Salvați prompturi personalizate. Utilizați modul Prompt Dinamic pentru comenzi interactive. Atașați fișiere oricând. Compatibil cu: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI și Copilot.
-// @description:ru      Сохраняйте свои подсказки. Используйте режим динамических подсказок для интерактивных команд. Прикрепляйте файлы в любое время. Совместим с: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI и Copilot.
-// @description:sk      Ukladajte vlastné prompty. Používajte režim dynamických promptov pre interaktívne príkazy. Pripájajte súbory kedykoľvek. Kompatibilné s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:sr      Sačuvajte sopstvene upite. Koristite režim dinamičkog upita za interaktivne komande. Priložite datoteke u bilo kom trenutku. Kompatibilno sa: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:sv      Spara anpassade prompts. Använd Dynamisk Prompt-läge för interaktiva kommandon. Bifoga filer när som helst. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:th      บันทึกพรอมต์ส่วนตัว ใช้โหมดพรอมต์ไดนามิกสำหรับคำสั่งโต้ตอบ แนบไฟล์ได้ทุกเมื่อ รองรับ: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI และ Copilot.
-// @description:tr      Özel istemleri saklayın. Etkileşimli komutlar için Dinamik İstem modunu kullanın. İstediğiniz zaman dosya ekleyin. Uyumluluk: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI ve Copilot.
-// @description:uk      Зберігайте власні підказки. Використовуйте режим динамічних підказок для інтерактивних команд. Додавайте файли будь-коли. Сумісність: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI та Copilot.
-// @description:ug      ئۆزىڭىزنىڭ ئەسكەرتىشلىرىنى ساقلاڭ. ھەرىكەتچان ئەسكەرتىش ھالىتىنى ئىشلىتىڭ. ھۆججەت قوشۇڭ. ماسلىشىشچانلىقى: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
-// @description:vi      Lưu các lời nhắc tùy chỉnh. Sử dụng chế độ Lời nhắc động cho các lệnh tương tác. Đính kèm tệp bất cứ lúc nào. Tương thích với: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI và Copilot.
+// @version             4.1
+// @description         Save and use custom prompts in your personal library. Use Dynamic Prompt mode for interactive commands. Attach and use files whenever you want. Compatible with: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image, and Whisk.
+// @description:pt-BR   Salve e use prompts personalizados em sua biblioteca pessoal. Use o modo Prompt Dinâmico para comandos interativos. Anexe e use arquivos sempre que quiser. Compatível com: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google Modo IA, Copilot, GLM-Image e Whisk.
+// @description:zh-CN   在个人库中保存并使用自定义提示词。使用动态提示词模式进行交互式命令。随时随地附加并使用文件。兼容：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, 豆包, Claude, Kimi, 通义千问, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, 腾讯元宝, ChatGLM, Google AI 模式, Copilot, GLM-Image 和 Whisk。
+// @description:zh-TW   在個人庫中儲存並使用自定義提示詞。使用動態提示詞模式進行互動式命令。隨時隨地附加並使用檔案。相容於：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, 豆包, Claude, Kimi, 通義千問, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, 騰訊元寶, ChatGLM, Google AI 模式, Copilot, GLM-Image 和 Whisk。
+// @description:fr-CA   Enregistrez et utilisez des invites personnalisées dans votre bibliothèque personnelle. Utilisez le mode Invite dynamique pour des commandes interactives. Joignez et utilisez des fichiers à tout moment. Compatible avec : ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Mode Google IA, Copilot, GLM-Image et Whisk.
+// @description:ckb     پڕۆمپتە تایبەتەکانت لە کتێبخانەی کەسی خۆتدا پاشەکەوت بکە و بەکاریان بهێنە. مۆدی پڕۆمپتی داینامیکی بۆ فەرمانە کارلێکەرەکان بەکاربهێنە. فایلەکان هاوپێچ بکە و هەر کاتێک ویستت بەکاریان بهێنە. گونجاوە لەگەڵ: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image و Whisk.
+// @description:ar      احفظ واستخدم مطالبات مخصصة في مكتبتك الشخصية. استخدم وضع المطالبة الديناميكية للأوامر التفاعلية. قم بإرفاق واستخدام الملفات في أي وقت. متوافق مع: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image و Whisk.
+// @description:be      Захоўвайце і выкарыстоўвайце ўласныя падказкі ў асабістай бібліятэцы. Выкарыстоўвайце рэжым дынамічных падказак для інтэрактыўных каманд. Далучайце і выкарыстоўвайце файлы ў любы час. Сумяшчальны з: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image і Whisk.
+// @description:bg      Запазвайте и използвайте персонализирани подкани в личната си библиотека. Използвайте режим "Динамична подкана" за интерактивни команди. Прикачвайте и използвайте файлове по всяко време. Съвместим с: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image и Whisk.
+// @description:cs      Ukládejte a používejte vlastní prompty ve své osobní knihovně. Pro interaktivní příkazy použijte režim dynamického promptu. Připojujte a používejte soubory, kdykoli chcete. Kompatibilní s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image a Whisk.
+// @description:da      Gem og brug brugerdefinerede prompts i dit personlige bibliotek. Brug Dynamic Prompt-tilstand til interaktive kommandoer. Vedhæft og brug filer, når du vil. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI-tilstand, Copilot, GLM-Image og Whisk.
+// @description:de      Speichern und verwenden Sie benutzerdefinierte Prompts in Ihrer persönlichen Bibliothek. Nutzen Sie den Dynamic Prompt-Modus für interaktive Befehle. Dateien jederzeit anhängen und verwenden. Kompatibel mit: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI-Modus, Copilot, GLM-Image und Whisk.
+// @description:el      Αποθηκεύστε και χρησιμοποιήστε προσαρμοσμένα prompts στην προσωπική σας βιβλιοθήκη. Χρησιμοποιήστε τη λειτουργία Dynamic Prompt για διαδραστικές εντολές. Επισυνάψτε και χρησιμοποιήστε αρχεία ανά πάσα στιγμή. Συμβατό με: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image και Whisk.
+// @description:en      Save and use custom prompts in your personal library. Use Dynamic Prompt mode for interactive commands. Attach and use files whenever you want. Compatible with: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image, and Whisk.
+// @description:eo      Konservu kaj uzu proprajn instigojn en via persona biblioteko. Uzu la reĝimon Dinamika Instigo por interagaj komandoj. Alonĝu kaj uzu dosierojn kiam ajn vi volas. Kongrua kun: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image kaj Whisk.
+// @description:es      Guarde y use prompts personalizados en su biblioteca personal. Use el modo de Prompt Dinámico para comandos interactivos. Adjunte y use archivos en cualquier momento. Compatible con: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google Modo IA, Copilot, GLM-Image y Whisk.
+// @description:fi      Tallenna ja käytä mukautettuja kehotteita henkilökohtaisessa kirjastossasi. Käytä Dynaaminen kehote -tilaa vuorovaikutteisiin komentoihin. Liitä ja käytä tiedostoja milloin tahansa. Yhteensopiva: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI -tila, Copilot, GLM-Image ja Whisk.
+// @description:fr      Enregistrez et utilisez des invites personnalisées dans votre bibliothèque personnelle. Utilisez le mode Invite dynamique pour des commandes interactives. Joignez et utilisez des fichiers à tout moment. Compatible avec : ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Mode Google IA, Copilot, GLM-Image et Whisk.
+// @description:he      שמור והשתמש בפרומפטים מותאמים אישית בספרייה האישית שלך. השתמש במצב 'פרומפט דינמי' עבור פקודות אינטראקטיביות. צרף והשתמש בקבצים בכל עת. תואם ל: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image ו-Whisk.
+// @description:hr      Spremite i koristite prilagođene upute u svojoj osobnoj knjižnici. Koristite način rada dinamičkog upita za interaktivne naredbe. Priložite i koristite datoteke bilo kada. Kompatibilno s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image i Whisk.
+// @description:hu      Mentse és használja az egyéni promptokat személyes könyvtárában. Használja a Dinamikus Prompt módot az interaktív parancsokhoz. Csatoljon és használjon fájlokat bármikor. Kompatibilis: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI mód, Copilot, GLM-Image és Whisk.
+// @description:id      Simpan dan gunakan perintah (prompt) khusus di perpustakaan pribadi Anda. Gunakan mode Prompt Dinamis para perintah interaktif. Lampirkan dan gunakan file kapan saja. Kompatibel dengan: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image, dan Whisk.
+// @description:it      Salva e utilizza prompt personalizzati nella tua libreria personale. Usa la modalità Prompt Dinamico per comandi interattivi. Allega e usa i file in qualsiasi momento. Compatibile con: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image e Whisk.
+// @description:ja      カスタムプロンプトを個人ライブラリに保存して使用します。対話型コマンドには動的プロンプトモードを使用してください。いつでもファイルを添付して使用できます。対応：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, 豆包, Claude, Kimi, 通義千問, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, 騰訊元宝, ChatGLM, Google AI モード, Copilot, GLM-Image, Whisk。
+// @description:ka      შეინახეთ და გამოიყენეთ პერსონალური პრომპტები თქვენს პირად ბიბლიოთეკაში. გამოიყენეთ დინამიური პრომპტის რეჟიმი ინტერაქტიული ბრძანებებისთვის. მიამაგრეთ და გამოიყენეთ ფაილები ნებისმიერ დროს. თავსებადია: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image და Whisk.
+// @description:ko      사용자 정의 프롬프트를 개인 라이브러리에 저장하고 사용하세요. 대화형 명령을 위해 동적 프롬프트 모드를 사용하십시오. 언제든지 파일을 첨부하고 사용하십시오. 호환: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI 모드, Copilot, GLM-Image, Whisk.
+// @description:mr      तुमच्या वैयक्तिक लायब्ररीमध्ये सानुकूल प्रॉम्प्ट्स जतन करा आणि वापरा. परस्परसंवादी कमांडसाठी डायनॅमिक प्रॉम्प्ट मोड वापरा. कधीही फाइल्स जोडा आणि वापरा. सुसंगत: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image आणि Whisk.
+// @description:nb      Lagre og bruk egendefinerte ledetekster i ditt personlige bibliotek. Bruk Dynamisk ledetekst-modus for interaktive kommandoer. Legg ved og bruk filer når som helst. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI-modus, Copilot, GLM-Image og Whisk.
+// @description:nl      Bewaar en gebruik aangepaste prompts in uw persoonlijke bibliotheek. Gebruik de Dynamische Prompt-modus voor interactieve commando's. Voeg bestanden toe en gebruik ze wanneer u maar wilt. Compatibel met: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI-modus, Copilot, GLM-Image en Whisk.
+// @description:pl      Zapisuj i używaj niestandardowych promptów w swojej osobistej bibliotece. Używaj trybu dynamicznego promptu dla interaktywnych poleceń. Załączaj i używaj plików w dowolnym momencie. Kompatybilny z: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, tryb Google AI, Copilot, GLM-Image i Whisk.
+// @description:ro      Salvați și utilizați prompturi personalizate în biblioteca personală. Utilizați modul Prompt Dinamic pentru comenzi interactive. Atașați și utilizați fișiere oricând. Compatibil cu: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image și Whisk.
+// @description:ru      Сохраняйте и используйте собственные подсказки (промпты) в личной библиотеке. Используйте режим динамических подсказок для интерактивных команд. Прикрепляйте и используйте файлы в любое время. Совместимость с: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image и Whisk.
+// @description:sk      Ukladajte a používajte vlastné prompty vo svojej osobnej knižnici. Pre interaktívne príkazy použite režim dynamického promptu. Pripájajte a používajte súbory kedykoľvek. Kompatibilné s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image a Whisk.
+// @description:sr      Сачувајте и користите прилагођене упите у својој личној библиотеци. Користите режим динамичког упита за интерактивне команде. Приложите и користите датотеке било када. Компатибилно са: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image и Whisk.
+// @description:sv      Spara och använd anpassade prompts i ditt personlige bibliotek. Använd Dynamic Prompt-läget för interaktiva kommandon. Bifoga och använd filer när som helst. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI-läge, Copilot, GLM-Image och Whisk.
+// @description:th      บันทึกและใช้พรอมต์ที่กำหนดเองในคลังส่วนตัวของคุณ ใช้โหมด Dynamic Prompt สำหรับคำสั่งโต้ตอบ แนบและใช้ไฟล์ได้ทุกเมื่อ เข้ากันได้กับ: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image และ Whisk.
+// @description:tr      Özel istemleri (prompt) kişisel kitaplığınıza kaydedin ve kullanın. Etkileşimli komutlar için Dinamik İstem modunu kullanın. Dosyaları istediğiniz zaman ekleyin ve kullanın. Şunlarla uyumludur: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Modu, Copilot, GLM-Image ve Whisk.
+// @description:uk      Зберігайте та використовуйте власні підказки (промпти) в особистій бібліотеці. Використовуйте режим динамічних підказок для інтерактивних команд. Додавайте та використовуйте файли в будь-який час. Сумісність з: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image та Whisk.
+// @description:ug      شەخسىي ئامبىرىڭىزغا ئىختىيارى ئەسكەرتمىلەرنى ساقلاڭ ۋە ئىشلىتىڭ. ئۆز-ئارا تەسىر كۆرسىتىدىغان بۇيرۇقلار ئۈچۈن ھەرىكەتچان ئەسكەرتمە ھالىتىنى ئىشلىتىڭ. خالىغان ۋاقىتتا ھۆججەت قوشۇڭ ۋە ئىشلىتىڭ. ماس كېلىدىغانلار: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode, Copilot, GLM-Image ۋە Whisk.
+// @description:vi      Lưu và sử dụng các câu lệnh (prompt) tùy chỉnh trong thư viện cá nhân của bạn. Sử dụng chế độ Prompt Năng động cho các lệnh tương tác. Đính kèm và sử dụng tệp bất cứ lúc nào. Tương thích với: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Chế độ Google AI, Copilot, GLM-Image và Whisk.
 // @author              OHAS
 // @homepage            https://github.com/0H4S
 // @icon                https://files.catbox.moe/1nriwc.svg
@@ -90,8 +90,10 @@
 // @match               *://grok.com/*
 // @match               *://claude.ai/*
 // @match               *://chat.z.ai/*
+// @match               *://image.z.ai/*
 // @match               *://chatglm.cn/*
 // @match               *://lmarena.ai/*
+// @match               *://labs.google/*
 // @match               *://chatgpt.com/*
 // @match               *://longcat.chat/*
 // @match               *://chat.qwen.ai/*
@@ -144,11 +146,14 @@
     const THEME_STORAGE_KEY         = 'Theme';
     const IMPORTED_THEMES_KEY       = 'ImportedThemes';
     const PREDICTION_STORAGE_KEY    = 'Prediction';
+    const SHORTCUTS_STORAGE_KEY     = 'ShortcutsConfig';
     const DEFAULT_PREDICTION_CONFIG = { enabled: true };
     const DEFAULT_THEME_CONFIG      = { themeId: 'default', mode: 'auto' };
+    const DEFAULT_SHORTCUTS         = { newPrompt: { keys: 'Alt+N', descKey: 'altN' }, listPrompts: { keys: 'Alt+P', descKey: 'altP' }, saveSend: { keys: 'Ctrl+Enter', descKey: 'ctrlEnter' }, lineBreak: { keys: 'Shift+Enter', descKey: 'shiftEnter' } };
     let currentThemeConfig          = DEFAULT_THEME_CONFIG;
     let currentPredictionConfig     = DEFAULT_PREDICTION_CONFIG;
     let mediaQueryList              = window.matchMedia('(prefers-color-scheme: dark)');
+    let currentShortcuts            = JSON.parse(JSON.stringify(DEFAULT_SHORTCUTS));
     let importedThemes              = {};
     let currentLang                 = 'en';
     let isInitialized               = false;
@@ -181,7 +186,7 @@
     }
 
     // --- NOTIFICADOR ---
-    const SCRIPT_CONFIG = {notificationsUrl:'https://gist.github.com/0H4S/b2f9a9f92259deadc35bdccb11cd9a75', scriptVersion: '4.0',};
+    const SCRIPT_CONFIG = {notificationsUrl:'https://gist.github.com/0H4S/b2f9a9f92259deadc35bdccb11cd9a75', scriptVersion: '4.1',};
     const notifier      = new ScriptNotifier(SCRIPT_CONFIG);
     notifier.run();
 
@@ -207,6 +212,8 @@
         notebooklm:     'textarea.query-box-input',
         doubao:         'textarea[data-testid="chat_input_input"]',
         copilot:        '#userInput, textarea[data-testid="composer-input"]',
+        glmimage:       'textarea.flex.w-full',
+        whisk:          'textarea.sc-18deeb1d-8, textarea.DwQls, textarea',
     };
 
     // =================
@@ -283,7 +290,18 @@
             editorSettings:     'Configurações do Editor',
             smartPredict:       'Previsão de Texto Inteligente',
             smartPredictDesc:   'Fecha parênteses, expande macros #start e sugere variáveis.',
-            getMorePrompts:     'Obtenha Novos Prompts'
+            getMorePrompts:     'Obtenha Novos Prompts',
+            pin:                'Fixar',
+            unpin:              'Desafixar',
+            move:               'Mover',
+            saveAndExit:        'Salvar e Sair',
+            shortcutsSettings:  'Atalhos de Teclado',
+            restoreShortcuts:   'Restaurar Padrão',
+            pressKeyToRecord:   'Pressione uma tecla...',
+            altN:               'Abre a janela de criação de Novo Prompt',
+            altP:               'Abre a Lista de Prompts',
+            ctrlEnter:          'Salvar e Enviar o prompt atual',
+            shiftEnter:         'Adiciona Quebra de Linha no modal de Prompt Dinâmico'
 
         },
     'en': {
@@ -354,7 +372,18 @@
             editorSettings:     'Editor Settings',
             smartPredict:       'Smart Text Prediction',
             smartPredictDesc:   'Closes parentheses, expands #start macros, and suggests variables.',
-            getMorePrompts:     'Get More Prompts'
+            getMorePrompts:     'Get More Prompts',
+            pin:                'Pin',
+            unpin:              'Unpin',
+            move:               'Move',
+            saveAndExit:        'Save and Exit',
+            shortcutsSettings:  'Keyboard Shortcuts',
+            restoreShortcuts:   'Restore Defaults',
+            pressKeyToRecord:   'Press a key...',
+            altN:               'Opens the New Prompt creation window',
+            altP:               'Opens the Prompt List',
+            ctrlEnter:          'Save and Send current prompt',
+            shiftEnter:         'Adds a Line Break in the Dynamic Prompt modal'
         },
     'zh-CN': {
             langName:           '简体中文',
@@ -424,7 +453,18 @@
             editorSettings:     '编辑器设置',
             smartPredict:       '智能文本预测',
             smartPredictDesc:   '自动闭合括号，展开 #start 宏并建议变量。',
-            getMorePrompts:     '获取更多提示词'
+            getMorePrompts:     '获取更多提示词',
+            pin:                '固定',
+            unpin:              '取消固定',
+            move:               '移动',
+            saveAndExit:        '保存并退出',
+            shortcutsSettings:  '键盘快捷键',
+            restoreShortcuts:   '恢复默认值',
+            pressKeyToRecord:   '按下一个键...',
+            altN:               '打开新建提示词窗口',
+            altP:               '打开提示词列表',
+            ctrlEnter:          '保存并发送当前提示词',
+            shiftEnter:         '在动态提示词模态框中添加换行'
         },
     'es': {
             langName:           'Español',
@@ -494,7 +534,18 @@
             editorSettings:     'Configuraciones del Editor',
             smartPredict:       'Predicción de Texto Inteligente',
             smartPredictDesc:   'Cierra paréntesis, expande macros #start y sugiere variables.',
-            getMorePrompts:     'Obtener más prompts'
+            getMorePrompts:     'Obtener más prompts',
+            pin:                'Fijar',
+            unpin:              'Desfijar',
+            move:               'Mover',
+            saveAndExit:        'Guardar y salir',
+            shortcutsSettings:  'Atajos de Teclado',
+            restoreShortcuts:   'Restaurar Valores Predeterminados',
+            pressKeyToRecord:   'Presiona una tecla...',
+            altN:               'Abre la ventana de creación de Nuevo Prompt',
+            altP:               'Abre la Lista de Prompts',
+            ctrlEnter:          'Guardar y Enviar el prompt actual',
+            shiftEnter:         'Añade un Salto de Línea en el modal de Prompt Dinámico'
         },
     'fr': {
             langName:           'Français',
@@ -564,7 +615,18 @@
             editorSettings:     'Paramètres de l’éditeur',
             smartPredict:       'Prédiction de texte intelligente',
             smartPredictDesc:   'Ferme les parenthèses, développe les macros #start et suggère des variables.',
-            getMorePrompts:     'Obtenir plus de prompts'
+            getMorePrompts:     'Obtenir plus de prompts',
+            pin:                'Épingler',
+            unpin:              'Désépingler',
+            move:               'Déplacer',
+            saveAndExit:        'Enregistrer et quitter',
+            shortcutsSettings:  'Raccourcis Clavier',
+            restoreShortcuts:   'Restaurer les Valeurs par Défaut',
+            pressKeyToRecord:   'Appuyez sur une touche...',
+            altN:               'Ouvre la fenêtre de création de Nouveau Prompt',
+            altP:               'Ouvre la Liste des Prompts',
+            ctrlEnter:          'Enregistrer et Envoyer le prompt actuel',
+            shiftEnter:         'Ajoute um Saut de Ligne dans le modal de Prompt Dynamique'
         },
     'ru': {
             langName:           'Русский',
@@ -634,7 +696,18 @@
             editorSettings:     'Настройки редактора',
             smartPredict:       'Интеллектуальное предсказание текста',
             smartPredictDesc:   'Закрывает скобки, разворачивает макросы #start и предлагает переменные.',
-            getMorePrompts:     'Получить больше промптов'
+            getMorePrompts:     'Получить больше промптов',
+            pin:                'Закрепить',
+            unpin:              'Открепить',
+            move:               'Переместить',
+            saveAndExit:        'Сохранить и выйти',
+            shortcutsSettings:  'Горячие клавиши',
+            restoreShortcuts:   'Восстановить настройки',
+            pressKeyToRecord:   'Нажмите клавишу...',
+            altN:               'Открыть окно создания нового промпта',
+            altP:               'Открыть список промптов',
+            ctrlEnter:          'Сохранить и отправить текущий промпт',
+            shiftEnter:         'Добавить перенос строки в модальном окне промпта',
         },
     'ja': {
             langName:           '日本語',
@@ -704,7 +777,18 @@
             editorSettings:     'エディター設定',
             smartPredict:       'スマートテキスト予測',
             smartPredictDesc:   '括弧を閉じ、#start マクロを展開し、変数を提案します。',
-            getMorePrompts:     'もっとプロンプトを取得'
+            getMorePrompts:     'もっとプロンプトを取得',
+            pin:                '固定する',
+            unpin:              '固定を解除',
+            move:               '移動',
+            saveAndExit:        '保存して終了',
+            shortcutsSettings:  'キーボードショートカット',
+            restoreShortcuts:   'デフォルトに戻す',
+            pressKeyToRecord:   'キーを押してください...',
+            altN:               '新規プロンプト作成ウィンドウを開く',
+            altP:               'プロンプト一覧を開く',
+            ctrlEnter:          '現在のプロンプトを保存して送信',
+            shiftEnter:         'ダイナミックプロンプトのモーダルで改行を追加'
         },
     'ko': {
             langName:           '한국어',
@@ -774,7 +858,18 @@
             editorSettings:     '편집기 설정',
             smartPredict:       '스마트 텍스트 예측',
             smartPredictDesc:   '괄호를 닫고, #start 매크로를 확장하며, 변수를 제안합니다.',
-            getMorePrompts:     '프롬프트 더 가져오기'
+            getMorePrompts:     '프롬프트 더 가져오기',
+            pin:                '고정',
+            unpin:              '고정 해제',
+            move:               '이동',
+            saveAndExit:        '저장 및 종료',
+            shortcutsSettings:  '키보드 단축키',
+            restoreShortcuts:   '기본값 복원',
+            pressKeyToRecord:   '키를 누르세요...',
+            altN:               '새 프롬프트 생성 창 열기',
+            altP:               '프롬프트 목록 열기',
+            ctrlEnter:          '현재 프롬프트 저장 및 전송',
+            shiftEnter:         '동적 프롬프트 모달에서 줄 바꿈 추가'
         },
     };
 
@@ -881,9 +976,23 @@
 
     // --- ADICIONAR ---
     async function addItem(item) {
-        const prompts = await getAll();
-        prompts.unshift(item);
-        await GM_setValue(PROMPT_STORAGE_KEY, prompts);
+        let prompts = await getAll();
+        let nonFixedItems = prompts.filter(p => !p.isFixed);
+        nonFixedItems.unshift(item);
+        let newPrompts = [];
+        let nonFixedIndex = 0;
+        const totalSize = prompts.length + 1;
+        for (let i = 0; i < totalSize; i++) {
+            if (prompts[i] && prompts[i].isFixed) {
+                newPrompts[i] = prompts[i];
+            } else {
+                if (nonFixedIndex < nonFixedItems.length) {
+                    newPrompts[i] = nonFixedItems[nonFixedIndex];
+                    nonFixedIndex++;
+                }
+            }
+        }
+        await GM_setValue(PROMPT_STORAGE_KEY, newPrompts);
     }
 
     // --- ATUALIZAR ---
@@ -1184,7 +1293,7 @@
                 '--mp-btn-add-color': '#22c55e',
                 '--mp-btn-import-background': 'rgba(249, 115, 22, 0.2)',
                 '--mp-btn-import-color': '#f97316',
-                '--mp-switch-knob': '#ffffff',
+                '--mp-switch-knob': '#000000',
                 '--mp-shadow-sm': 'none',
                 '--mp-shadow-md': '0 0 0 1px #333333'
             }
@@ -1345,7 +1454,7 @@
             /* ===================== */
             /*   VARIÁVEIS E TEMAS   */
             /* ===================== */
-
+            @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;600;700&display=swap');
             :root {
                 /* --- STACK UNIVERSAL --- */
                 --mp-font-stack-i18n: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Apple SD Gothic Neo", "Noto Sans CJK SC", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -1541,7 +1650,7 @@
                 border: none !important;
                 box-shadow: none !important;
                 background-color: transparent !important;
-                padding: 18px;
+                padding: 10px;
                 width: 100%;
                 height: 100%;
                 font-family: var(--mp-font-family-editor) !important;
@@ -2124,20 +2233,36 @@
             .prompt-menu-list {
                 max-height: 220px;
                 padding: 4px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                position: relative;
             }
 
             .prompt-item-row {
+                position: relative;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 8px 12px;
+                padding: 10px 12px;
                 border-radius: var(--mp-border-radius-md);
                 cursor: pointer;
                 transition: background-color 0.15s ease-in-out;
+                overflow: hidden;
             }
 
             .prompt-item-row:hover {
                 background-color: var(--mp-bg-tertiary);
+            }
+
+            /* MODO ARRASTE ATIVO */
+            .prompt-item-row.drag-mode {
+                background-color: var(--mp-bg-tertiary);
+                border: 1px dashed var(--mp-accent-primary);
+                cursor: move;
+            }
+
+            .prompt-item-row.drag-mode:active {
+                cursor: grabbing;
             }
 
             .prompt-title {
@@ -2150,10 +2275,13 @@
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 color: var(--mp-text-secondary);
+                transition: opacity 0.2s;
             }
 
             .prompt-item-row:hover .prompt-title {
                 color: var(--mp-text-primary);
+                mask-image: linear-gradient(to right, black 60%, transparent 100%);
+                -webkit-mask-image: linear-gradient(to right, black 60%, transparent 100%);
             }
 
             .prompt-item-row.nav-selected {
@@ -2161,18 +2289,34 @@
             }
 
             .prompt-actions {
+                position: absolute;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                padding-left: 20px;
+                padding-right: 8px;
                 display: flex;
                 align-items: center;
                 gap: 4px;
+                background: linear-gradient(to right, transparent 0%, var(--mp-bg-tertiary) 20%, var(--mp-bg-tertiary) 100%);
+                transform: translateX(110%);
+                transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+                z-index: 2;
+            }
+
+            .prompt-item-row:hover .prompt-actions,
+            .prompt-item-row.drag-mode .prompt-actions {
+                transform: translateX(0);
             }
 
             .action-btn {
                 background: transparent;
                 border: none;
                 cursor: pointer;
-                padding: 6px;
+                width: 28px;
+                height: 28px;
                 border-radius: var(--mp-border-radius-sm);
-                transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+                transition: all 0.15s ease;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -2187,14 +2331,33 @@
                 display: block;
             }
 
+            .action-btn:hover {
+                background-color: rgba(0, 0, 0, 0.05);
+                transform: scale(1.1);
+            }
+
             .action-btn.edit:hover {
-                background-color: var(--mp-bg-tertiary);
                 color: var(--mp-accent-edit);
             }
 
             .action-btn.delete:hover {
-                background-color: var(--mp-bg-tertiary);
                 color: var(--mp-accent-close);
+            }
+
+            .action-btn.pin:hover {
+                color: var(--mp-accent-edit);
+            }
+
+            .action-btn.restore:hover {
+                color: var(--mp-btn-add-color);
+            }
+
+            .action-btn.unpin {
+                color: var(--mp-accent-primary);
+            }
+
+            .action-btn.drag:hover {
+                color: var(--mp-btn-export-color);
             }
 
             .menu-footer-grid {
@@ -2285,11 +2448,6 @@
                 outline: 0 !important;
                 font-family: var(--mp-font-family-editor) !important;
                 font-size: 14px !important;
-            }
-
-            .form-input {
-                padding-left: 18px;
-                padding-right: 18px;
             }
 
             .form-textarea {
@@ -3026,14 +3184,18 @@
                 color: var(--mp-accent-primary);
             }
 
-            .mp-theme-scroll-container {
+            .mp-theme-scroll-container,
+            .mp-shortcut-scroll-container {
                 padding: 4px !important;
                 border: none !important;
                 margin: 0 !important;
                 background: transparent !important;
+                box-sizing: border-box !important;
+                width: 100% !important;
             }
 
-            .mp-theme-wrapper-fixed {
+            .mp-theme-wrapper-fixed,
+            .mp-shortcut-wrapper-fixed {
                 flex: none !important;
                 height: auto !important;
                 max-height: 165px !important;
@@ -3042,9 +3204,13 @@
                 margin-top: 12px !important;
                 border: 1px solid var(--mp-border-primary);
                 background-color: var(--mp-bg-secondary);
+                border-radius: var(--mp-border-radius-md);
+                overflow: hidden;
+                position: relative;
             }
 
-            .mp-theme-option {
+            .mp-theme-option,
+            .mp-shortcut-option {
                 flex-shrink: 0;
                 padding: 12px;
                 border-radius: var(--mp-border-radius-md);
@@ -3059,22 +3225,56 @@
                 transition: all 0.2s ease;
                 border: 1px solid var(--mp-border-primary);
                 background-color: var(--mp-bg-secondary);
-                margin: 5px;
+                box-sizing: border-box;
             }
 
-            .mp-theme-option:hover {
+            @keyframes mp-pulse-recording {
+                0% { box-shadow: 0 0 0 0px color-mix(in srgb, var(--mp-accent-edit) 40%, transparent); }
+                100% { box-shadow: 0 0 0 6px transparent; }
+            }
+
+            .mp-shortcut-option.recording {
+                border-color: var(--mp-accent-edit) !important;
+                color: var(--mp-accent-edit) !important;
+                background-color: color-mix(in srgb, var(--mp-accent-edit) 10%, var(--mp-bg-primary)) !important;
+                font-weight: 700 !important;
+                animation: mp-pulse-recording 1.5s infinite;
+            }
+
+            .mp-theme-option:last-child,
+            .mp-shortcut-option:last-child {
+                margin-bottom: 0;
+            }
+
+            .mp-theme-option:hover,
+            .mp-shortcut-option:hover {
                 background-color: var(--mp-bg-tertiary);
                 color: var(--mp-text-primary);
                 transform: translateY(-1px);
                 box-shadow: var(--mp-shadow-sm);
             }
 
-            .mp-theme-option.selected {
+            .mp-theme-option.selected,
+            .mp-shortcut-option.selected {
                 background-color: color-mix(in srgb, var(--mp-accent-primary) 10%, var(--mp-bg-primary));
                 color: var(--mp-accent-primary);
                 border-color: var(--mp-accent-primary);
                 font-weight: 700;
                 box-shadow: var(--mp-shadow-md);
+            }
+
+            .mp-theme-option {
+                margin: 5px;
+                width: auto;
+            }
+
+            .mp-shortcut-option {
+                margin: 0 0 5px 0;
+                width: 100%;
+            }
+
+            .mp-shortcut-option:last-child {
+                margin-bottom: 0;
             }
 
             .mp-settings-footer {
@@ -3219,7 +3419,11 @@
         setaCima:   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16"><path fill="currentColor" fill-rule="evenodd" d="M15.81 9.9a1 1 0 0 1-.65-.2L8.93 5.54 2.9 9.74a1.2 1.2 0 0 1-1.63-.33 1.17 1.17 0 0 1 .32-1.63l6.69-4.63a1.2 1.2 0 0 1 1.3 0l6.88 4.59a1.18 1.18 0 0 1-.65 2.16"/></svg>`,
         setaBaixo:  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17"><path fill="currentColor" fill-rule="evenodd" d="M2.16 6.246c.225 0 .45.062.65.196l6.229 4.156 6.037-4.197a1.175 1.175 0 0 1 1.304 1.958l-6.688 4.63a1.17 1.17 0 0 1-1.304.002l-6.88-4.589a1.178 1.178 0 0 1 .652-2.156"/></svg>`,
         shop:       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.0" d="m21.05 11.5.28-1.66c.18-1.09.27-1.63-.02-1.98s-.82-.36-1.9-.36H4.6c-1.07 0-1.61 0-1.9.36-.3.35-.2.9-.02 1.98l1.2 7.18c.4 2.38.6 3.57 1.42 4.28.81.7 1.98.7 4.33.7H12m2-4h8m-4 4v-8m-.5-6.5a5.5 5.5 0 1 0-11 0" color="currentColor"/></svg>`,
-        cart:       `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>`
+        cart:       `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>`,
+        drag:       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M278.6 9.4a32 32 0 0 0-45.3 0l-64 64A32 32 0 0 0 192 128h32v96h-96v-32a32.1 32.1 0 0 0-54.7-22.7l-64 64a32 32 0 0 0 0 45.3l64 64A32 32 0 0 0 128 320v-32h96v96h-32a32.1 32.1 0 0 0-22.7 54.7l64 64a32 32 0 0 0 45.3 0l64-64A32 32 0 0 0 320 384h-32v-96h96v32a32.1 32.1 0 0 0 54.7 22.7l64-64a32 32 0 0 0 0-45.3l-64-64A32 32 0 0 0 384 192v32h-96v-96h32a32.1 32.1 0 0 0 22.7-54.7l-64-64z"/></svg>`,
+        pin:        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>`,
+        saveExit:   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M11.5 12A2.5 2.5 0 0 1 9 9.5V3H7.5A4.5 4.5 0 0 0 3 7.5v17a4.5 4.5 0 0 0 4 4.47V18.5A2.5 2.5 0 0 1 9.5 16h13a2.5 2.5 0 0 1 2.5 2.5v10.47a4.5 4.5 0 0 0 4-4.47V10.45a4.5 4.5 0 0 0-1.32-3.18l-2.95-2.95A4.5 4.5 0 0 0 22 3.02V9.5a2.5 2.5 0 0 1-2.5 2.5zM20 3h-9v6.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5zm3 26H9V18.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5z"/></svg>`,
+        restore:    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" fill-rule="evenodd" d="M256 448A192 192 0 0 1 65.5 279.8l42.3-5.3a149.4 149.4 0 1 0 25.6-103.8h80v42.6H64V64h42.7v71.3A192 192 0 1 1 256 448" clip-rule="evenodd"/></svg>`
     };
     const DEFAULT_ICONS = { ...ICONS };
 
@@ -3651,6 +3855,63 @@
         return btn;
     }
 
+    // --- GLM IMAGE ---
+    function createGlmImageButton() {
+        const styleId = 'uni-icon-btn-GLMIMAGE';
+        if (!document.getElementById(styleId)) {
+            const style = document.createElement('style');
+            style.id = styleId;
+            style.textContent = `.uni-icon-btn-GLMIMAGE {display: inline-flex;align-items: center;justify-content: center;box-sizing: border-box; width: 40px; height: 40px;border-radius: 8px;background: #fff !important;cursor: pointer;transition: all 0.2s ease;color: inherit;}.uni-icon-btn-GLMIMAGE svg { display: block; }`;
+            document.head.appendChild(style);
+        }
+        const btn = document.createElement('button');
+        btn.className = 'uni-icon-btn-GLMIMAGE h-10 w-10 rounded-lg border border-input bg-white text-gray-900 hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-ring';
+        btn.setAttribute('data-testid', 'composer-button-prompts');
+        btn.setAttribute('aria-label', getTranslation('prompts'));
+        const span = document.createElement('span');
+        span.style.display = 'flex';
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', '24'); svg.setAttribute('height', '24');
+        svg.setAttribute('viewBox', '0 0 20 20'); svg.setAttribute('fill', 'none');
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', 'M4 5h12M4 10h12M4 15h12');
+        path.setAttribute('stroke', 'currentColor'); path.setAttribute('stroke-width', '2');
+        svg.appendChild(path);
+        span.appendChild(svg);
+        btn.appendChild(span);
+        createCustomTooltip(btn, getTranslation('prompts'));
+        return btn;
+    }
+
+    // --- WHISK ---
+    function createWhiskButton() {
+        const styleId = 'uni-icon-btn-whisk';
+        if (!document.getElementById(styleId)) {
+            const style = document.createElement('style');
+            style.id = styleId;
+            style.textContent = `.uni-icon-btn-whisk {display: inline-flex;align-items: center;justify-content: center;box-sizing: border-box;width: 32px;height: 32px;border-radius: 50%;border: none;background: transparent;cursor: pointer;transition: background-color 0.2s ease, color 0.2s ease;flex-shrink: 0;}.uni-icon-btn-whisk:hover {background-color: rgba(0, 0, 0, 0.05);}.uni-icon-btn-whisk svg {display: block;width: 20px;height: 20px;}`;
+            document.head.appendChild(style);
+        }
+        const btn = document.createElement('button');
+        btn.className = 'uni-icon-btn-whisk sc-8b6c1c1e-1 gyhlCg';
+        btn.setAttribute('data-testid', 'composer-button-prompts');
+        btn.setAttribute('aria-label', getTranslation('prompts'));
+        const span = document.createElement('span');
+        span.style.display = 'flex';
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', '24'); svg.setAttribute('height', '24');
+        svg.setAttribute('viewBox', '0 0 20 20'); svg.setAttribute('fill', 'none');
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', 'M4 5h12M4 10h12M4 15h12');
+        path.setAttribute('stroke', 'currentColor'); path.setAttribute('stroke-width', '2');
+        path.setAttribute('stroke-linecap', 'round');
+        svg.appendChild(path);
+        span.appendChild(svg);
+        btn.appendChild(span);
+        createCustomTooltip(btn, getTranslation('prompts'));
+        return btn;
+    }
+
     // ================
     // #endregion BOTÕES DE PROMPT
     // ================
@@ -3682,51 +3943,91 @@
         const htmlContent = `
             <div class="mp-settings-container">
 
-                <!-- CABEÇALHO -->
-                <div class="mp-tabs-header"><button class="mp-tab-btn active" data-tab="basic">${getTranslation('basic')}</button><button class="mp-tab-btn" data-tab="advanced">${getTranslation('advanced')}</button></div>
+            <!-- CABEÇALHO -->
+            <div class="mp-tabs-header">
+                <button class="mp-tab-btn active" data-tab="basic">${getTranslation('basic')}</button>
+                <button class="mp-tab-btn" data-tab="advanced">${getTranslation('advanced')}</button>
+            </div>
 
-                <!-- CONTEÚDO PRINCIPAL -->
-                <div class="mp-scroll-wrapper" style="flex:1; overflow:hidden;">
-                    <div id="mp-settings-scroll-area" style="padding: 0 4px 12px 4px; overflow-y: auto;">
+            <!-- CONTEÚDO PRINCIPAL -->
+            <div class="mp-scroll-wrapper" style="flex:1; overflow:hidden;">
+            <div id="mp-settings-scroll-area" style="padding: 0 4px 12px 4px; overflow-y: auto;">
 
-                        <!-- ABA BÁSICO -->
-                        <div class="mp-tab-content active" id="tab-basic">
+            <!-- ============ -->
+            <!--  ABA BÁSICO  -->
+            <!-- ============ -->
+            <div class="mp-tab-content active" id="tab-basic" style="margin-bottom: 16px; margin-top: 16px;">
 
-                            <!-- IDIOMA -->
-                            <div class="mp-form-group"><label class="mp-label">${getTranslation('languageSettings')}</label><button id="mp-btn-open-lang" class="mp-action-btn-full"><span id="mp-current-lang-display" style="font-weight:600;">${translations[currentLang]?.langName || currentLang}</span><span class="mp-btn-icon">${ICONS.globo}</span></button></div>
+                <!-- IDIOMA -->
+                <div class="mp-form-group">
+                    <label class="mp-label">${getTranslation('languageSettings')}</label>
+                    <button id="mp-btn-open-lang" class="mp-action-btn-full">
+                        <span id="mp-current-lang-display" style="font-weight:600;">${translations[currentLang]?.langName || currentLang}</span>
+                        <span class="mp-btn-icon">${ICONS.globo}</span>
+                    </button>
+                </div>
 
-                            <!-- MODO DE COR -->
-                            <div class="mp-form-group"><label class="mp-label">${getTranslation('colorMode')}</label>
-                                <div class="mp-segmented-control">
-                                    <div class="mp-segment-opt" data-val="auto">${ICONS.monitor} <span>${getTranslation('auto')}</span></div>
-                                    <div class="mp-segment-opt" data-val="light">${ICONS.sol} <span>${getTranslation('light')}</span></div>
-                                    <div class="mp-segment-opt" data-val="dark">${ICONS.lua} <span>${getTranslation('dark')}</span></div>
-                                </div>
-                            </div>
-
-                            <!-- LISTA DE TEMAS -->
-                            <div class="mp-form-group"><label class="mp-label">${getTranslation('theme')}</label>
-                                <div class="mp-theme-scroll-container" id="mp-theme-list-container"></div>
-                            </div>
-                        </div>
-
-                        <!-- ABA AVANÇADO -->
-                        <div class="mp-tab-content" id="tab-advanced">
-                            <!-- CONFIGURAÇÃO DE EDITOR INTELIGENTE -->
-                            <div class="mp-form-group" style="margin-top: 10px;"><label class="mp-label">${getTranslation('editorSettings')}</label>
-                                <div class="mp-switch-container" style="background: var(--mp-bg-secondary); border: 1px solid var(--mp-border-primary); padding: 12px; border-radius: var(--mp-border-radius-md); margin:0;">
-                                    <div style="display:flex; flex-direction:column; gap:4px;"><span style="font-size:14px; font-weight:600; color:var(--mp-text-primary);">${getTranslation('smartPredict')}</span><span style="font-size:12px; color:var(--mp-text-tertiary);">${getTranslation('smartPredictDesc')}</span></div>
-                                    <div class="mp-switch"><input type="checkbox" id="mp_setting_prediction" /><label for="mp_setting_prediction">Toggle</label></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- RODAPÉ -->
-                        <div class="mp-settings-footer"><button class="save-button" id="mp-settings-save">${getTranslation('save')}</button></div>
+                <!-- MODO DE COR -->
+                <div class="mp-form-group">
+                    <label class="mp-label">${getTranslation('colorMode')}</label>
+                    <div class="mp-segmented-control">
+                        <div class="mp-segment-opt" data-val="auto">${ICONS.monitor} <span>${getTranslation('auto')}</span></div>
+                        <div class="mp-segment-opt" data-val="light">${ICONS.sol} <span>${getTranslation('light')}</span></div>
+                        <div class="mp-segment-opt" data-val="dark">${ICONS.lua} <span>${getTranslation('dark')}</span></div>
                     </div>
+                </div>
+
+                <!-- LISTA DE TEMAS -->
+                <div class="mp-form-group style=" style="margin-bottom: 0px;">
+                    <label class="mp-label">${getTranslation('theme')}</label>
+                    <div class="mp-theme-scroll-container" id="mp-theme-list-container"></div>
+                </div>
+
+            </div>
+
+            <!-- ============ -->
+            <!-- ABA AVANÇADO -->
+            <!-- ============ -->
+            <div class="mp-tab-content" id="tab-advanced" style="margin-bottom: 16px; margin-top: 16px;">
+
+                <!-- EDITOR INTELIGENTE -->
+                <div class="mp-form-group">
+                    <label class="mp-label">${getTranslation('editorSettings')}</label>
+                    <div class="mp-switch-container" style="display: flex; justify-content: space-between; align-items: center; background: var(--mp-bg-secondary); border: 1px solid var(--mp-border-primary); padding: 12px; border-radius: var(--mp-border-radius-md); margin:0;">
+                        <span id="mp-smart-predict-lbl" style="font-size:14px; font-weight:600; color:var(--mp-text-primary); cursor: default;">
+                            ${getTranslation('smartPredict')}
+                        </span>
+                        <div class="mp-switch"><input type="checkbox" id="mp_setting_prediction" /><label for="mp_setting_prediction">Toggle</label></div>
+                    </div>
+                </div>
+
+                <!-- LISTA DE ATALHOS -->
+                <div class="mp-form-group" style="margin-bottom: 0px;">
+                    <label class="mp-label">Atalhos de Teclado</label>
+                    <div class="mp-shortcut-scroll-container" id="mp-shortcuts-list-container"></div>
+                </div>
+
+            </div>
+
+            </div> <!-- Fim Scroll Area -->
+            </div> <!-- Fim Scroll Wrapper -->
+
+            <!-- ============ -->
+            <!--    RODAPÉ    -->
+            <!-- ============ -->
+            <div class="mp-settings-footer">
+                <button class="save-button" id="mp-settings-save">${getTranslation('save')}</button>
+            </div>
+
+            </div> <!-- Fim Settings Container -->
         `;
+
         setSafeInnerHTML(box, htmlContent);
         overlay.appendChild(box);
+
+        // =================
+        // #region TEMAS
+        // =================
         const themeListContainer = box.querySelector('#mp-theme-list-container');
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
@@ -3750,25 +4051,24 @@
         const renderThemeList = () => {
             setSafeInnerHTML(themeListContainer, '');
 
+            // --- BOTÕES DE AÇÃO (LOJA/ADD) ---
             const actionRow = document.createElement('div');
             actionRow.className = 'mp-theme-action-row';
-
             const shopBtn = document.createElement('div');
             shopBtn.className = 'mp-theme-split-btn';
             setSafeInnerHTML(shopBtn, ICONS.cart);
             shopBtn.onclick = () => window.open('https://ohas.gumroad.com/', '_blank');
             createCustomTooltip(shopBtn, getTranslation('getMoreThemes'), 'bottom');
-
             const addBtn = document.createElement('div');
             addBtn.className = 'mp-theme-split-btn';
             setSafeInnerHTML(addBtn, ICONS.plus);
             addBtn.onclick = () => fileInput.click();
             createCustomTooltip(addBtn, getTranslation('addTheme'), 'bottom');
-
             actionRow.appendChild(shopBtn);
             actionRow.appendChild(addBtn);
             themeListContainer.appendChild(actionRow);
 
+            // --- LISTA DE OPÇÕES ---
             const createThemeEl = (id, def, isImported) => {
                 const item = document.createElement('div');
                 item.className = 'mp-theme-option';
@@ -3793,12 +4093,8 @@
                 }
                 themeListContainer.appendChild(item);
             };
-            Object.keys(themeDefinitions).forEach(key => {
-                createThemeEl(key, themeDefinitions[key], false);
-            });
-            Object.keys(importedThemes).forEach(key => {
-                createThemeEl(key, importedThemes[key], true);
-            });
+            Object.keys(themeDefinitions).forEach(key => createThemeEl(key, themeDefinitions[key], false));
+            Object.keys(importedThemes).forEach(key => createThemeEl(key, importedThemes[key], true));
         };
         renderThemeList();
         const themeWrapper = setupEnhancedScroll(
@@ -3806,9 +4102,119 @@
             'var(--mp-bg-secondary)',
             'var(--mp-border-radius-md)'
         );
-        if (themeWrapper) {
-            themeWrapper.classList.add('mp-theme-wrapper-fixed');
+        if (themeWrapper) themeWrapper.classList.add('mp-theme-wrapper-fixed');
+
+        // =================
+        // #endregion TEMAS
+        // =================
+
+        // =================
+        // #region ATALHOS
+        // =================
+        const shortcutContainer = box.querySelector('#mp-shortcuts-list-container');
+        const shortcutLabel = shortcutContainer.parentElement.querySelector('.mp-label');
+        if(shortcutLabel) shortcutLabel.textContent = getTranslation('shortcutsSettings');
+        const renderShortcuts = () => {
+            setSafeInnerHTML(shortcutContainer, '');
+
+            // --- BOTÃO RESTAURAR ---
+            const restoreBtn = document.createElement('div');
+            restoreBtn.className = 'mp-shortcut-option';
+            setSafeInnerHTML(restoreBtn, ICONS.restore);
+            restoreBtn.style.border = '1px dashed var(--mp-border-primary)';
+            restoreBtn.style.color = 'var(--mp-accent-close)';
+            restoreBtn.style.backgroundColor = 'transparent';
+            const restoreIcon = restoreBtn.querySelector('svg');
+            if(restoreIcon) {
+                restoreIcon.style.width = '20px';
+                restoreIcon.style.height = '20px';
+                restoreIcon.style.display = 'block';
+            }
+            restoreBtn.onmouseenter = () => restoreBtn.style.borderColor = 'var(--mp-accent-close)';
+            restoreBtn.onmouseleave = () => restoreBtn.style.borderColor = 'var(--mp-border-primary)';
+            restoreBtn.onclick = () => {
+                if(confirm(getTranslation('restoreShortcuts') + '?')) {
+                    currentShortcuts = JSON.parse(JSON.stringify(DEFAULT_SHORTCUTS));
+                    renderShortcuts();
+                }
+            };
+            createCustomTooltip(restoreBtn, getTranslation('restoreShortcuts'), 'right');
+            shortcutContainer.appendChild(restoreBtn);
+
+            // --- BOTÕES DE ATALHOS ---
+            Object.keys(currentShortcuts).forEach(key => {
+                const item = currentShortcuts[key];
+                const btn = document.createElement('div');
+                btn.className = 'mp-shortcut-option';
+                btn.textContent = item.keys;
+                createCustomTooltip(btn, getTranslation(item.descKey), 'right');
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    const originalText = btn.textContent;
+                    btn.textContent = getTranslation('pressKeyToRecord');
+                    btn.classList.add('recording');
+                    shortcutContainer.querySelectorAll('.recording').forEach(el => {
+                        if(el !== btn) el.classList.remove('recording');
+                    });
+                    const handleRecord = (ev) => {
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        if (['Control', 'Alt', 'Shift', 'Meta'].includes(ev.key)) return;
+                        const parts = [];
+                        if (ev.ctrlKey) parts.push('Ctrl');
+                        if (ev.altKey) parts.push('Alt');
+                        if (ev.shiftKey) parts.push('Shift');
+                        let mainKey = ev.key.toUpperCase();
+                        if (ev.code === 'Space') mainKey = 'Space';
+                        if (mainKey === ' ') mainKey = 'Space';
+                        parts.push(mainKey);
+                        const newShortcut = parts.join('+');
+                        currentShortcuts[key].keys = newShortcut;
+                        cleanup();
+                        renderShortcuts();
+                    };
+                    const cleanup = () => {
+                        document.removeEventListener('keydown', handleRecord, true);
+                        document.removeEventListener('mousedown', cancelClick, true);
+                        btn.classList.remove('recording');
+                    };
+                    const cancelClick = (ev) => {
+                        if (ev.target !== btn) {
+                            cleanup();
+                            btn.textContent = originalText;
+                        }
+                    };
+                    document.addEventListener('keydown', handleRecord, true);
+                    document.addEventListener('mousedown', cancelClick, true);
+                };
+                shortcutContainer.appendChild(btn);
+            });
+        };
+        renderShortcuts();
+        if (shortcutContainer && !shortcutContainer.parentElement.classList.contains('mp-shortcut-wrapper-fixed')) {
+            const shortcutWrapper = setupEnhancedScroll(
+                shortcutContainer,
+                'var(--mp-bg-secondary)',
+                'var(--mp-border-radius-md)'
+            );
+            if (shortcutWrapper) {
+                shortcutWrapper.classList.add('mp-shortcut-wrapper-fixed');
+                shortcutContainer.style.border = 'none';
+                shortcutContainer.style.background = 'transparent';
+                shortcutContainer.style.boxShadow = 'none';
+                shortcutContainer.style.width = '100%';
+            }
         }
+
+        // =================
+        // #endregion ATALHOS
+        // =================
+
+        // =================
+        // #region LÓGICA UI GERAL
+        // =================
+
+        // --- ABAS ---
         const tabs = box.querySelectorAll('.mp-tab-btn');
         tabs.forEach(btn => {
             btn.onclick = () => {
@@ -3819,6 +4225,8 @@
                 if(box.querySelector(`#${targetId}`)) box.querySelector(`#${targetId}`).classList.add('active');
             };
         });
+
+        // --- MODOS DE COR ---
         const modeOpts = box.querySelectorAll('.mp-segment-opt');
         const updateModeUI = () => {
             modeOpts.forEach(opt => opt.classList.toggle('selected', opt.getAttribute('data-val') === tempConfig.mode));
@@ -3831,10 +4239,20 @@
                 applyTheme(tempConfig);
             };
         });
+
+        // --- MODAL DE IDIOMA ---
         box.querySelector('#mp-btn-open-lang').onclick = () => {
             if (!languageModal) { languageModal = createLanguageModal(); document.body.appendChild(languageModal); }
             showModal(languageModal);
         };
+
+        // TOOLTIP DO SMART PREDICT
+        const smartLabel = box.querySelector('#mp-smart-predict-lbl');
+        if(smartLabel) {
+            createCustomTooltip(smartLabel, getTranslation('smartPredictDesc'), 'left');
+        }
+
+        // --- CHECKBOX PREDIÇÃO ---
         const predictionCheckbox = box.querySelector('#mp_setting_prediction');
         if (predictionCheckbox) {
             predictionCheckbox.checked = currentPredictionConfig.enabled;
@@ -3842,17 +4260,33 @@
                 currentPredictionConfig.enabled = predictionCheckbox.checked;
             };
         }
+
+        // =================
+        // #endregion LÓGICA UI GERAL
+        // =================
+
+        // =================
+        // #region SALVAR E FECHAR
+        // =================
+
         box.querySelector('#mp-settings-save').onclick = async () => {
             await saveThemeConfig(tempConfig);
             if (predictionCheckbox) {
                 savePredictionConfig({ enabled: predictionCheckbox.checked });
             }
+            saveShortcutsConfig();
             hideModal(overlay);
         };
+        // =================
+        // #endregion SALVAR
+        // =================
+
+        // --- SCROLL PRINCIPAL ---
         setupEnhancedScroll(box.querySelector('#mp-settings-scroll-area'));
         overlay.resetToCurrent = () => {
             tempConfig = { ...currentThemeConfig };
             renderThemeList();
+            renderShortcuts();
             updateModeUI();
             const langDisplay = box.querySelector('#mp-current-lang-display');
             if(langDisplay) langDisplay.textContent = translations[currentLang]?.langName || currentLang;
@@ -4041,7 +4475,6 @@
         box.id = '__ap_modal_box_el';
         box.style.cssText = 'overflow-y: auto; padding-bottom: 24px;';
         box.onclick = e => e.stopPropagation();
-
         setSafeInnerHTML(box, `
             <!-- BOTÕES (EXPANDIR/RECOLHER, SHOP, INFO, FECHAR) -->
             <button id="__ap_expand_btn" class="mp-modal-expand-btn" title="${getTranslation('expand')}">${ICONS.expand}</button>
@@ -4056,21 +4489,18 @@
 
             <!-- ARQUIVOS/ANEXOS -->
             <div class="mp-files-accordion" id="__ap_accordion">
-                <div class="mp-accordion-header" id="__ap_files_header">
-                    <div style="display:flex;align-items:center;">${ICONS.folder}<span id="__ap_files_label">${getTranslation('filesLabel')}</span></div>${ICONS.chevron}
-                </div>
-                <div class="mp-accordion-content" id="__ap_files_content">
-                    <div id="__ap_file_scroll_wrapper" class="mp-file-scroll-wrapper">
-                        <div id="__ap_file_grid" class="mp-file-grid"></div>
-                    </div><input type="file" id="__ap_file_input" multiple style="display:none">
-                </div>
-            </div>
+            <div class="mp-accordion-header" id="__ap_files_header">
+            <div style="display:flex;align-items:center;">${ICONS.folder}<span id="__ap_files_label">${getTranslation('filesLabel')}</span></div>${ICONS.chevron}</div>
+            <div class="mp-accordion-content" id="__ap_files_content">
+            <div id="__ap_file_scroll_wrapper" class="mp-file-scroll-wrapper">
+            <div id="__ap_file_grid" class="mp-file-grid"></div>
+            </div><input type="file" id="__ap_file_input" multiple style="display:none"></div></div>
 
             <!-- INTERRUPTORES DE CONFIGURAÇÃO (PROMPT DINÂMICO, EXECUÇÃO AUTOMÁTICA E SALVAR) -->
-                <div class="mp-switch-container" style="flex-shrink:0;">
-                    <div class="mp-switch"><input type="checkbox" id="__ap_use_placeholders" /><label for="__ap_use_placeholders">Toggle</label><span class="switch-text" onclick="document.getElementById('__ap_use_placeholders').click()">${getTranslation('enablePlaceholders')}</span></div>
-                    <div class="mp-switch"><input type="checkbox" id="__ap_auto_execute" /><label for="__ap_auto_execute">Toggle</label><span class="switch-text" onclick="document.getElementById('__ap_auto_execute').click()">${getTranslation('autoExecute')}</span></div></div>
-                <div class="modal-footer" style="flex-shrink:0; margin-top: auto;"><button id="__ap_save" class="save-button">${getTranslation('save')}</button></div>
+            <div class="mp-switch-container" style="flex-shrink:0;">
+            <div class="mp-switch"><input type="checkbox" id="__ap_use_placeholders" /><label for="__ap_use_placeholders">Toggle</label><span class="switch-text" onclick="document.getElementById('__ap_use_placeholders').click()">${getTranslation('enablePlaceholders')}</span></div>
+            <div class="mp-switch"><input type="checkbox" id="__ap_auto_execute" /><label for="__ap_auto_execute">Toggle</label><span class="switch-text" onclick="document.getElementById('__ap_auto_execute').click()">${getTranslation('autoExecute')}</span></div></div>
+            <div class="modal-footer" style="flex-shrink:0; margin-top: auto;"><button id="__ap_save" class="save-button">${getTranslation('save')}</button></div>
         `);
         overlay.appendChild(box);
         const shopBtn = box.querySelector('#__ap_shop_btn');
@@ -4237,7 +4667,7 @@
         return overlay;
     }
 
-    // ---ABRIR MODAL DE EDITAR/CRIAR PROMPT---
+    // --- ABRIR MODAL DE EDITAR/CRIAR PROMPT ---
     function openPromptModal(item = null, index = -1) {
         if (!currentModal) return;
         const isEditing = !!item;
@@ -4249,7 +4679,9 @@
         document.getElementById('__ap_auto_execute').checked = item?.autoExecute || false;
         currentActiveFileIds = new Set(item?.activeFileIds || []);
         const box = currentModal.querySelector('.mp-modal-box');
-        if (box && box.renderGlobalFiles) {box.renderGlobalFiles();}
+        if (box && box.renderGlobalFiles) {
+            box.renderGlobalFiles();
+        }
         showModal(currentModal);
         setTimeout(() => document.getElementById('__ap_title').focus(), 100);
     }
@@ -4493,8 +4925,10 @@
     }
 
     // --- ATUALIZAR LISTA ---
-    async function refreshMenu() {
+    async function refreshMenu(maintainDragIndex = -1) {
         if (!currentMenu) return;
+        const existingList = currentMenu.querySelector('#prompt-menu-list-el');
+        const previousScrollTop = existingList ? existingList.scrollTop : 0;
         setSafeInnerHTML(currentMenu, '');
         let selectedIndex = -1;
         const searchContainer = document.createElement('div');
@@ -4525,6 +4959,14 @@
                 selectedRow.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             }
         };
+        const handleReorder = async (fromIndex, toIndex) => {
+            if (fromIndex === toIndex) return;
+            const currentPrompts = await getAll();
+            const [moved] = currentPrompts.splice(fromIndex, 1);
+            currentPrompts.splice(toIndex, 0, moved);
+            await GM_setValue(PROMPT_STORAGE_KEY, currentPrompts);
+            refreshMenu(toIndex);
+        };
         if (items.length === 0) {
             listContainer.appendChild(emptyState);
         } else {
@@ -4535,23 +4977,66 @@
                 const row = document.createElement('div');
                 row.className = 'prompt-item-row';
                 row.dataset.searchText = (p.title + ' ' + p.text).toLowerCase();
+                row.dataset.index = index;
+                const isDragMode = (index === maintainDragIndex);
+                if (isDragMode) {
+                    row.classList.add('drag-mode');
+                    row.draggable = true;
+                } else {
+                    row.draggable = false;
+                }
+                row.addEventListener('dragstart', (e) => {
+                    e.stopPropagation();
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', index.toString());
+                    row.style.opacity = '0.5';
+                });
+                row.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.dataTransfer.dropEffect = 'move';
+                    row.classList.add('nav-selected');
+                    const rect = listContainer.getBoundingClientRect();
+                    const relY = e.clientY - rect.top;
+                    if (relY < 40) listContainer.scrollTop -= 10;
+                    else if (relY > rect.height - 40) listContainer.scrollTop += 10;
+                });
+                row.addEventListener('dragleave', (e) => {
+                    e.stopPropagation();
+                    row.classList.remove('nav-selected');
+                });
+                row.addEventListener('dragend', (e) => {
+                    e.stopPropagation();
+                    row.style.opacity = '1';
+                    listContainer.querySelectorAll('.prompt-item-row').forEach(r => r.classList.remove('nav-selected'));
+                });
+                row.addEventListener('drop', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    row.classList.remove('nav-selected');
+                    const rawIndex = e.dataTransfer.getData('text/plain');
+                    if (rawIndex) {
+                        const fromIdx = parseInt(rawIndex, 10);
+                        if (!isNaN(fromIdx)) handleReorder(fromIdx, index);
+                    }
+                });
                 row.onmouseenter = () => {
-                    selectedIndex = -1;
-                    updateSelection();
+                    if (maintainDragIndex === -1) {
+                        selectedIndex = -1;
+                        updateSelection();
+                    }
                 };
                 const titleDiv = document.createElement('div');
                 titleDiv.className = 'prompt-title';
                 titleDiv.textContent = p.title;
                 const executePrompt = () => {
+                    if (isDragMode) return;
                     if (currentPlaceholderModal) currentPlaceholderModal.dataset.fromInline = "false";
                     if (p.usePlaceholders) openPlaceholderModal(p, index);
                     else insertPrompt(p, index);
                     closeMenu();
                 };
-                titleDiv.onclick = (e) => {
-                    e.stopPropagation();
-                    executePrompt();
-                };
+                titleDiv.onclick = (e) => { e.stopPropagation(); executePrompt(); };
                 row.executeItem = executePrompt;
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = 'prompt-actions';
@@ -4560,13 +5045,37 @@
                     b.className = `action-btn ${cls}`;
                     b.title = title;
                     setSafeInnerHTML(b, icon);
-                    b.onclick = clickFn;
+                    b.onclick = (e) => { e.stopPropagation(); clickFn(e); };
                     return b;
                 };
-                const btnE = createBtn('edit',   `${ICONS.edit}`, getTranslation('edit'), (e) => { e.stopPropagation(); openPromptModal(p, index); });
-                const btnD = createBtn('delete', `${ICONS.delete}`, getTranslation('delete'), (e) => { e.stopPropagation(); if (confirm(getTranslation('confirmDelete', { title: p.title }))) remove(index).then(refreshMenu); });
-                actionsDiv.appendChild(btnE);
-                actionsDiv.appendChild(btnD);
+                if (isDragMode) {
+                    const fixTitle = p.isFixed ? getTranslation('unpin') : getTranslation('pin');
+                    const fixClass = p.isFixed ? 'unpin' : 'pin';
+                    actionsDiv.appendChild(createBtn(fixClass, ICONS.pin, fixTitle, async () => {
+                        p.isFixed = !p.isFixed;
+                        await update(index, p);
+                        refreshMenu(index);
+                    }));
+                    actionsDiv.appendChild(createBtn('restore', ICONS.saveExit, getTranslation('saveAndExit'), () => {
+                        refreshMenu();
+                    }));
+                }
+                else {
+                    actionsDiv.appendChild(createBtn('edit', ICONS.edit, getTranslation('edit'), () => openPromptModal(p, index)));
+                    actionsDiv.appendChild(createBtn('delete', ICONS.delete, getTranslation('delete'), () => {
+                        if (confirm(getTranslation('confirmDelete', { title: p.title }))) remove(index).then(() => refreshMenu());
+                    }));
+                    actionsDiv.appendChild(createBtn('drag', ICONS.drag, getTranslation('move'), () => {
+                        refreshMenu(index);
+                    }));
+                    if (p.isFixed) {
+                        actionsDiv.appendChild(createBtn('unpin', ICONS.pin, getTranslation('unpin'), async () => {
+                            p.isFixed = false;
+                            await update(index, p);
+                            refreshMenu();
+                        }));
+                    }
+                }
                 row.appendChild(titleDiv);
                 row.appendChild(actionsDiv);
                 listContainer.appendChild(row);
@@ -4574,64 +5083,40 @@
         }
         currentMenu.appendChild(listContainer);
         setupEnhancedScroll(listContainer);
-
-        // --- LÓGICA DE TECLADO ---
-        searchInput.onkeydown = (e) => {
-            if (e.key === 'Escape') {
-                e.preventDefault();
-                e.stopPropagation();
-                closeMenu();
-                return;
+        if (maintainDragIndex !== -1) {
+            if (previousScrollTop > 0) {
+                listContainer.scrollTop = previousScrollTop;
+            } else {
+                setTimeout(() => {
+                    const el = listContainer.children[maintainDragIndex];
+                    if (el) el.scrollIntoView({ block: 'nearest' });
+                }, 50);
             }
-            e.stopPropagation();
-            const visibleRows = Array.from(listContainer.querySelectorAll('.prompt-item-row'))
-                .filter(row => row.style.display !== 'none');
-            if (visibleRows.length === 0) return;
-            if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                selectedIndex++;
-                if (selectedIndex >= visibleRows.length) selectedIndex = 0;
-                updateSelection();
+        } else {
+            if (previousScrollTop > 0) {
+                listContainer.scrollTop = previousScrollTop;
             }
-            else if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                selectedIndex--;
-                if (selectedIndex < 0) selectedIndex = visibleRows.length - 1;
-                updateSelection();
-            }
-            else if (e.key === 'Enter') {
-                e.preventDefault();
-                if (selectedIndex >= 0 && selectedIndex < visibleRows.length) {
-                    if (visibleRows[selectedIndex].executeItem) {
-                        visibleRows[selectedIndex].executeItem();
-                    }
-                }
-            }
-        };
-
-        // FILTRO DE BUSCA
+            setTimeout(() => searchInput.focus(), 50);
+        }
         searchInput.oninput = (e) => {
             const term = e.target.value.toLowerCase();
             const rows = listContainer.querySelectorAll('.prompt-item-row');
             let visibleCount = 0;
             selectedIndex = -1;
             rows.forEach(row => {
-                if (row.dataset.searchText && row.dataset.searchText.includes(term)) {
-                    row.style.display = 'flex';
-                    visibleCount++;
-                } else {
-                    row.style.display = 'none';
-                }
+                if (row.dataset.searchText && row.dataset.searchText.includes(term)) { row.style.display = 'flex'; visibleCount++; }
+                else { row.style.display = 'none'; }
             });
             updateSelection();
-            if (items.length > 0) {
-                if (visibleCount === 0) {
-                    emptyState.style.display = 'block';
-                    emptyState.textContent = getTranslation('noSearchResults');
-                } else {
-                    emptyState.style.display = 'none';
-                }
-            }
+            emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+        };
+        searchInput.onkeydown = (e) => {
+            if (e.key === 'Escape') { closeMenu(); return; }
+            const visibleRows = Array.from(listContainer.querySelectorAll('.prompt-item-row')).filter(r => r.style.display !== 'none');
+            if (visibleRows.length === 0) return;
+            if (e.key === 'ArrowDown') { selectedIndex++; if (selectedIndex >= visibleRows.length) selectedIndex = 0; updateSelection(); }
+            else if (e.key === 'ArrowUp') { selectedIndex--; if (selectedIndex < 0) selectedIndex = visibleRows.length - 1; updateSelection(); }
+            else if (e.key === 'Enter' && selectedIndex >= 0 && visibleRows[selectedIndex].executeItem) visibleRows[selectedIndex].executeItem();
         };
         const footerGrid = document.createElement('div');
         footerGrid.className = 'menu-footer-grid';
@@ -4643,11 +5128,10 @@
             b.onclick = clickFn;
             return b;
         };
-        footerGrid.appendChild(createFooterBtn('btn-export', `${ICONS.export}`, getTranslation('export'), (e) => { e.stopPropagation(); exportPrompts(); }));
-        footerGrid.appendChild(createFooterBtn('btn-add',    `${ICONS.add}`, getTranslation('addPrompt'), (e) => { e.stopPropagation(); openPromptModal(); }));
-        footerGrid.appendChild(createFooterBtn('btn-import', `${ICONS.import}`, getTranslation('import'), (e) => { e.stopPropagation(); importPrompts(); }));
+        footerGrid.appendChild(createFooterBtn('btn-export', ICONS.export, getTranslation('export'), (e) => { e.stopPropagation(); exportPrompts(); }));
+        footerGrid.appendChild(createFooterBtn('btn-add',    ICONS.add, getTranslation('addPrompt'), (e) => { e.stopPropagation(); openPromptModal(); }));
+        footerGrid.appendChild(createFooterBtn('btn-import', ICONS.import, getTranslation('import'), (e) => { e.stopPropagation(); importPrompts(); }));
         currentMenu.appendChild(footerGrid);
-        setTimeout(() => searchInput.focus(), 50);
     }
 
     // --- FECHAR LISTA ---
@@ -4739,15 +5223,27 @@
             textarea.style.resize = 'vertical';
             textarea.style.height = 'auto';
             textarea.placeholder = data.varName ? data.varName : '';
-
-            // --- CTRL+ENTER (adiciona quebra de linha) ENTER (envia o formulário) ---
             textarea.addEventListener('keydown', (event) => {
-                if (event.isComposing || event.keyCode === 229) {
+                if (event.isComposing || event.keyCode === 229) return;
+                if (isShortcutPressed(event, 'lineBreak')) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    const start = textarea.selectionStart;
+                    const end = textarea.selectionEnd;
+                    const val = textarea.value;
+                    textarea.value = val.substring(0, start) + "\n" + val.substring(end);
+                    textarea.selectionStart = textarea.selectionEnd = start + 1;
+                    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+                    return;
+                }
+                if (isShortcutPressed(event, 'saveSend')) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    document.getElementById('__ap_insert_prompt').click();
                     return;
                 }
                 if (event.key === 'Enter') {
                     if (event.ctrlKey || event.altKey || event.shiftKey || event.metaKey) {
-                        event.stopPropagation();
                         return;
                     }
                     event.preventDefault();
@@ -4755,7 +5251,6 @@
                     document.getElementById('__ap_insert_prompt').click();
                 }
             });
-
             formGroup.appendChild(textarea);
             container.appendChild(formGroup);
         });
@@ -5398,6 +5893,51 @@
     // #endregion EDITOR INTELIGENTE
     // =================
 
+    // =================
+    // #region CONFIGURAÇÃO DE ATALHO
+    // =================
+
+    function loadShortcuts() {
+        const saved = GM_getValue(SHORTCUTS_STORAGE_KEY);
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                currentShortcuts = { ...DEFAULT_SHORTCUTS, ...parsed };
+                Object.keys(DEFAULT_SHORTCUTS).forEach(k => {
+                    if(currentShortcuts[k]) {
+                        currentShortcuts[k].descKey = DEFAULT_SHORTCUTS[k].descKey;
+                    }
+                });
+            } catch (e) { console.error(e); }
+        }
+    }
+
+    function saveShortcutsConfig() {
+        GM_setValue(SHORTCUTS_STORAGE_KEY, JSON.stringify(currentShortcuts));
+    }
+
+    function isShortcutPressed(event, id) {
+        if (!currentShortcuts[id]) return false;
+        const config = currentShortcuts[id].keys.toUpperCase().split('+');
+        const key = config[config.length - 1];
+        const reqCtrl  = config.includes('CTRL');
+        const reqAlt   = config.includes('ALT');
+        const reqShift = config.includes('SHIFT');
+        if (event.ctrlKey !== reqCtrl) return false;
+        if (event.altKey !== reqAlt) return false;
+        if (event.shiftKey !== reqShift) return false;
+        const code = event.code ? event.code.toUpperCase() : '';
+        const eventKey = event.key ? event.key.toUpperCase() : '';
+        if (key.length === 1) {
+            return eventKey === key || code === `KEY${key}` || code === `DIGIT${key}`;
+        } else {
+            return eventKey === key || code === key;
+        }
+    }
+    // =================
+    // #endregion CONFIGURAÇÃO DE ATALHO
+    // =================
+
     // ================
     // #endregion FUNÇÕES AUXILIARES
     // ================
@@ -5428,6 +5968,8 @@
         if (hostname.includes('notebooklm.google.com')) return 'notebooklm';
         if (hostname.includes('doubao.com'))            return 'doubao';
         if (hostname.includes('copilot.microsoft.com')) return 'copilot';
+        if (hostname.includes('image.z.ai'))            return 'glmimage';
+        if (hostname.includes('labs.google') && window.location.pathname.includes('/tools/whisk/')) return 'whisk';
         if (hostname.includes('google.com') && window.location.pathname.includes('/search') && window.location.search.includes('udm=50')) return 'googleModoIA';
         return null;
     }
@@ -5454,6 +5996,8 @@
             case 'notebooklm':      return document.querySelector('button.submit-button');
             case 'doubao':          return document.querySelector('button[data-testid="chat_input_send_button"], button#flow-end-msg-send');
             case 'copilot':         return document.querySelector('[data-testid="submit-button"]');
+            case 'glmimage':        return document.querySelector('button:has(img[src*="generate-icon"])');
+            case 'whisk':           return document.querySelector('button:has(path[d^="M12 4l-1.41 1.41L16.17 11H4v2"])');
             default:                return null;
         }
     }
@@ -5728,6 +6272,27 @@
                                 if (sendBtn) { sendBtn.click(); sent = true; }
                             } catch (e) {}
                         }
+                        if (currentPlatform === 'glmimage') {
+                            try {
+                                const iconImg = document.querySelector('button img[src*="generate-icon"]') || document.querySelector('button img[alt="generate"]');
+                                if (iconImg) {
+                                    const sendBtn = iconImg.closest('button');
+                                    if (sendBtn && !sendBtn.disabled) {
+                                        sendBtn.click();
+                                        sent = true;
+                                    }
+                                }
+                            } catch (e) {}
+                        }
+                        if (currentPlatform === 'whisk') {
+                            try {
+                                const sendBtn = document.querySelector('button[type="submit"]');
+                                if (sendBtn) {
+                                     sendBtn.click();
+                                     sent = true;
+                                }
+                            } catch (e) {}
+                        }
                         if (!sent) {
                             try {
                                 const enterEvent = new KeyboardEvent('keydown', {key: 'Enter', code: 'Enter', which: 13, keyCode: 13, bubbles: true, cancelable: true});
@@ -5738,12 +6303,36 @@
                 }
             }
         }, 100);
-        // --- ATUALIZAR LISTA ---
-        let prompts = await getAll();
+        // --- ATUALIZAR LISTA DE PROMPTS ---
         if (index > -1) {
-            const item = prompts.splice(index, 1)[0];
-            prompts.unshift(item);
-            await GM_setValue(PROMPT_STORAGE_KEY, prompts);
+            let prompts = await getAll();
+            const originalSavedItem = prompts[index];
+            if (originalSavedItem && !originalSavedItem.isFixed) {
+                const fixedMap = {};
+                const floating = [];
+                prompts.forEach((p, i) => {
+                    if (i === index) return;
+                    if (p.isFixed) {
+                        fixedMap[i] = p;
+                    } else {
+                        floating.push(p);
+                    }
+                });
+                floating.unshift(originalSavedItem);
+                const newList = [];
+                let floatPtr = 0;
+                const total = Object.keys(fixedMap).length + floating.length;
+                for (let i = 0; i < total; i++) {
+                    if (fixedMap[i]) {
+                        newList.push(fixedMap[i]);
+                    } else {
+                        if (floatPtr < floating.length) {
+                            newList.push(floating[floatPtr++]);
+                        }
+                    }
+                }
+                await GM_setValue(PROMPT_STORAGE_KEY, newList);
+            }
         }
     }
 
@@ -5860,9 +6449,14 @@
         document.getElementById('__ap_do_export_json').onclick = () => {
             const selected = getSelectedPrompts();
             if (selected.length === 0) { alert(getTranslation('noPromptsToExport')); return; }
-
+            const exportedPrompts = selected.map(p => ({
+                title: p.title,
+                text: p.text,
+                usePlaceholders: p.usePlaceholders,
+                autoExecute: p.autoExecute
+            }));
             const a = document.createElement('a');
-            a.href = URL.createObjectURL(new Blob([JSON.stringify(selected, null, 2)], { type: 'application/json' }));
+            a.href = URL.createObjectURL(new Blob([JSON.stringify(exportedPrompts, null, 2)], { type: 'application/json' }));
             a.download = 'Prompts.json';
             a.click();
             URL.revokeObjectURL(a.href);
@@ -6476,6 +7070,80 @@
                 insertionMethod = 'handled_manually';
             }
 
+            // --- GLM IMAGE ---
+            else if (currentPlatform === 'glmimage') {
+                const findAnchor = () => {
+                    const ANCHORICONPATH = "m6 9 6 6 6-6";
+                    const candidates = Array.from(document.querySelectorAll('button, [role="combobox"]'));
+                    const target = candidates.find(btn => {
+                        const path = btn.querySelector('path');
+                        return path && path.getAttribute('d')?.startsWith(ANCHORICONPATH);
+                    });
+                    if (target) return { element: target, type: 'icon-fingerprint' };
+                    return null;
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 1000));
+                    anchorData = findAnchor();
+                }
+                if (!anchorData) return;
+                let container = anchorData.element.parentElement;
+                if (container && !container.classList.contains('flex')) {
+                    container = container.closest('.flex.items-center.gap-4');
+                }
+                if (!container) return;
+                let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createGlmImageButton();
+                    container.prepend(btn);
+                }
+                elementToInsert = btn;
+                insertionPoint = container;
+                insertionMethod = 'handled_manually';
+            }
+
+            // --- WHISK ---
+            else if (currentPlatform === 'whisk') {
+                const findAnchor = () => {
+                    const ANCHORICONPATH = "M19 12h-2v2h2v-2";
+                    const candidates = Array.from(document.querySelectorAll('button, [role="button"]'));
+                    const target = candidates.find(btn => {
+                        const path = btn.querySelector('path');
+                        return path && path.getAttribute('d')?.includes(ANCHORICONPATH);
+                    });
+                    if (target) return { element: target, type: 'icon-fingerprint' };
+                    const classEl = document.querySelector('button.sc-8b6c1c1e-1.gyhlCg');
+                    if (classEl) return { element: classEl, type: 'class' };
+                    return null;
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 1000));
+                    anchorData = findAnchor();
+                }
+                if (!anchorData) return;
+                let container = anchorData.element.closest('.sc-18deeb1d-4');
+                if (!container) container = anchorData.element.parentElement;
+                if (!container) return;
+                let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createWhiskButton();
+                    if (anchorData.element.nextSibling) {
+                        container.insertBefore(btn, anchorData.element.nextSibling);
+                    } else {
+                        container.appendChild(btn);
+                    }
+                }
+                elementToInsert = btn;
+                insertionPoint = container;
+                insertionMethod = 'handled_manually';
+            }
+
             // --- VERIFICAÇÃO FINAL ---
             if (!btn || !insertionPoint) return;
             const editorEl = document.querySelector(platformSelectors[currentPlatform]);
@@ -6541,11 +7209,17 @@
                 const usePlaceholders = document.getElementById('__ap_use_placeholders').checked;
                 const autoExecute = document.getElementById('__ap_auto_execute').checked;
                 if (!title || !text) { alert(getTranslation('requiredFields')); return; }
+                const allPrompts = await getAll();
+                let preservedFixed = false;
+                if (index > -1 && allPrompts[index]) {
+                    preservedFixed = allPrompts[index].isFixed || false;
+                }
                 const newItem = {
                     title,
                     text,
                     usePlaceholders,
                     autoExecute,
+                    isFixed: preservedFixed,
                     activeFileIds: Array.from(currentActiveFileIds)
                 };
                 const op = index > -1 ? update(index, newItem) : addItem(newItem);
@@ -6558,7 +7232,7 @@
 
             // --- LÓGICA CTRL+ENTER (SALVAR E USAR) ---
             const handleSaveAndExecute = async (e) => {
-                if (!((e.ctrlKey || e.metaKey) && e.key === 'Enter')) return;
+                if (!isShortcutPressed(e, 'saveSend')) return;
                 e.preventDefault();
                 e.stopPropagation();
                 const index = parseInt(currentModal.dataset.index, 10);
@@ -6586,6 +7260,10 @@
                 hideModal(currentModal);
             };
 
+    // ================
+    // #region PROMPT DINÂMICO PT3
+    // ================
+
             // --- LÓGICA DE INSERIR O PROMPT DINÂMICO ---
             currentPlaceholderModal.querySelector('#__ap_insert_prompt').onclick = async (e) => {
                 e.stopPropagation();
@@ -6599,6 +7277,8 @@
                 const inputMap = new Map(parseData.inputMap);
                 const variablesToApply = [];
                 const container = document.getElementById('__ap_placeholders_container');
+
+                // --- PROCESSAR INPUTS E COLETAR VARIÁVEIS ---
                 inputMap.forEach((data, key) => {
                     const inputEl = container.querySelector(`textarea[data-key="${key}"]`);
                     const val = inputEl ? inputEl.value : '';
@@ -6607,6 +7287,7 @@
                         variablesToApply.push({ name: data.varName, value: val });
                     }
                 });
+
                 // --- PROCESSAR SELECTS ---
                 selectMap.forEach((_data, key) => {
                     const group = container.querySelector(`div[data-select-key="${key}"]`);
@@ -6614,16 +7295,33 @@
                     const selectedText = checked.map(cb => cb.value).join('\n');
                     finalText = finalText.replace(key, selectedText);
                 });
-                // --- PROCESSAR VARIÁVEIS ---
-                variablesToApply.forEach(v => {
-                    const escapedVar = v.name.replace(/\$/g, '\\$');
-                    const varRegex = new RegExp(escapedVar, 'g');
-                    finalText = finalText.replace(varRegex, v.value);
-                });
-                // --- REINSERIR ITENS IGNORADOS ---
+
+                // --- FUNÇÃO AUXILIAR PARA APLICAR VARIÁVEIS ---
+                const applyVariables = (text) => {
+                    if (!text) return text;
+                    let t = text;
+                    variablesToApply.forEach(v => {
+                        const escapedVar = v.name.replace(/\$/g, '\\$');
+                        const varRegex = new RegExp(escapedVar, 'g');
+                        t = t.replace(varRegex, v.value);
+                    });
+                    return t;
+                };
+
+                // --- APLICAR VARIÁVEIS NO TEXTO PRINCIPAL ---
+                finalText = applyVariables(finalText);
+
+                // --- REINSERIR ITENS IGNORADOS COM FILTRO ---
                 ignoreMap.forEach((content, key) => {
-                    finalText = finalText.replace(key, content);
+                    if (key.startsWith('__QUOTE_')) {
+                        const contentWithVars = applyVariables(content);
+                        finalText = finalText.replace(key, contentWithVars);
+                    }
+                    else {
+                        finalText = finalText.replace(key, content);
+                    }
                 });
+
                 // --- INSERIR NO EDITOR ---
                 if (isFromInline && currentPlaceholderModal._savedCursor) {
                     const saved = currentPlaceholderModal._savedCursor;
@@ -6646,23 +7344,31 @@
                         } catch(err) {}
                     }
                 }
-                // --- FINALIZAR INSERÇÃO ---
+
+                // FINALIZAR
                 const finalPrompt = { ...originalItem, text: finalText };
                 await insertPrompt(finalPrompt, index, isFromInline, isFromInline);
                 currentPlaceholderModal.dataset.fromInline = "false";
                 currentPlaceholderModal._savedCursor = null;
                 hideModal(currentPlaceholderModal);
             };
+
+    // ================
+    // #endregion PROMPT DINÂMICO PT3
+    // ================
+
             // --- FECHAR MODAL DINÂMICO ---
             currentPlaceholderModal.querySelector('#__ap_close_placeholder').onclick = (e) => {
                 e.stopPropagation();
                 hideModal(currentPlaceholderModal);
             };
+
             // --- LÓGICA DO MODAL DE INFORMAÇÕES ---
             currentModal.querySelector('#__ap_info_btn').onclick = (e) => {
                 e.stopPropagation();
                 showModal(infoModal);
             };
+
             // -- FECHAR MODAL DE INFORMAÇÕES ---
             infoModal.querySelector('#__ap_close_info').onclick = (e) => {
                 e.stopPropagation();
@@ -6706,7 +7412,7 @@
             }
 
             // --- ATALHO ALT+N (NOVO PROMPT) ---
-            if (ev.altKey && (ev.code === 'KeyN' || ev.key === 'n' || ev.key === 'N')) {
+            if (isShortcutPressed(ev, 'newPrompt')) {
                 ev.preventDefault();
                 ev.stopPropagation();
                 closeMenu();
@@ -6714,7 +7420,7 @@
             }
 
             // --- ATALHO ALT+P (ABRIR/FECHAR MENU) ---
-            if (ev.altKey && (ev.code === 'KeyP' || ev.key === 'p' || ev.key === 'P')) {
+            if (isShortcutPressed(ev, 'listPrompts')) {
                 ev.preventDefault();
                 ev.stopPropagation();
                 if (currentMenu && currentMenu.classList.contains('visible')) {
@@ -6746,6 +7452,7 @@
     // --- INICIAR TUDO ---
     async function start() {
         await determineLanguage();
+        loadShortcuts()
         loadPredictionConfig();
         GM_registerMenuCommand(`⚙️ ${getTranslation('settings')}`, () => {
             if (!settingsModal) {

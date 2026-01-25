@@ -3,7 +3,7 @@
 // ==UserScript==
 // @name         WME GIS Layers
 // @namespace    https://greasyfork.org/users/45389
-// @version      2025.12.16.000
+// @version      2026.01.25.01
 // @description  Adds GIS layers in WME
 // @author       MapOMatic / JS55CT
 // @match         *://*.waze.com/*editor*
@@ -14,7 +14,7 @@
 // @require      https://update.greasyfork.org/scripts/506614/1441195/ESTreeProcessor.js
 // @require      https://update.greasyfork.org/scripts/509664/WME%20Utils%20-%20Bootstrap.js
 // @require      https://update.greasyfork.org/scripts/516445/1480246/Make%20GM%20xhr%20more%20parallel%20again.js
-// @require      https://update.greasyfork.org/scripts/542477/1623802/wmeGisLBBOX.js
+// @require      https://update.greasyfork.org/scripts/542477/1742119/wmeGisLBBOX.js
 // @connect      greasyfork.org
 // @connect      github.io
 // @grant        GM_xmlhttpRequest
@@ -155,7 +155,7 @@
 // @connect crgis.cedar-rapids.org
 // @connect cteco.uconn.edu
 // @connect cty-gis-web.co.humboldt.ca.us
-// @connect cw.townofclaytonnc.org
+// @connect cw2.townofclaytonnc.org
 // @connect dadegis.integritygis.com
 // @connect dallasgis.integritygis.com
 // @connect data.calgary.ca
@@ -168,6 +168,7 @@
 // @connect data1.digitaldataservices.com
 // @connect dc-web-2.co.douglas.mn.us
 // @connect dcgis.dekalbcountyga.gov
+// @connect dcgis.org
 // @connect dcimapapps.countyofdane.com
 // @connect dekalbgis.integritygis.com
 // @connect delivery.maps.gov.bc.ca
@@ -214,7 +215,6 @@
 // @connect geo.vbgov.com
 // @connect geo2.co.dodge.wi.us
 // @connect geodata.hawaii.gov
-// @connect geodata.md.gov
 // @connect geodata.sarpy.com
 // @connect geodataportal.net
 // @connect geonb.snb.ca
@@ -241,6 +241,7 @@
 // @connect gis.arkansas.gov
 // @connect gis.ashecountygov.com
 // @connect gis.ashevillenc.gov
+// @connect gis.ashland-ohio.com
 // @connect gis.atlantaga.gov
 // @connect gis.auburnalabama.org
 // @connect gis.auglaizecounty.org
@@ -249,11 +250,12 @@
 // @connect gis.baycountyfl.gov
 // @connect gis.beaufortcountysc.gov
 // @connect gis.beaumonttexas.gov
+// @connect gis.belcogis.com
 // @connect gis.bentoncountyar.gov
 // @connect gis.berkeleycountysc.gov
 // @connect gis.bigstonecounty.gov
 // @connect gis.bladenco.org
-// @connect gis.blairco.org
+// @connect gis.blaircountypa.gov
 // @connect gis.blm.gov
 // @connect gis.blueearthcountymn.gov
 // @connect gis.bransonmo.gov
@@ -340,6 +342,7 @@
 // @connect gis.columbiasc.gov
 // @connect gis.columbusga.org
 // @connect gis.concordnh.gov
+// @connect gis.cookcountyil.gov
 // @connect gis.cookeville-tn.org
 // @connect gis.corvallisoregon.gov
 // @connect gis.cosb.us
@@ -354,19 +357,19 @@
 // @connect gis.cuyahogacounty.us
 // @connect gis.danville-va.gov
 // @connect gis.dauphincounty.org
+// @connect gis.daviecountync.gov
 // @connect gis.deerparktx.gov
 // @connect gis.dekalbcountyga.gov
 // @connect gis.delcopa.gov
 // @connect gis.dentoncounty.gov
 // @connect gis.dgcoks.gov
 // @connect gis.districtiii.org
-// @connect gis.dogis.org
 // @connect gis.donaanacounty.org
 // @connect gis.dot.nv.gov
 // @connect gis.dot.state.oh.us
 // @connect gis.dubuquecounty.us
 // @connect gis.dupageco.org
-// @connect gis.duplincountync.com
+// @connect gis.duplinnc.gov
 // @connect gis.dutchessny.gov
 // @connect gis.eastgreenwichri.com
 // @connect gis.edgecombecountync.gov
@@ -384,7 +387,7 @@
 // @connect gis.gallatin.mt.gov
 // @connect gis.gallupnm.us
 // @connect gis.garrettcounty.org
-// @connect gis.gastongov.com
+// @connect gis.gastoncountync.gov
 // @connect gis.gcgovny.com
 // @connect gis.gcrc.org
 // @connect gis.gilacountyaz.gov
@@ -405,6 +408,7 @@
 // @connect gis.iberiagov.net
 // @connect gis.idwr.idaho.gov
 // @connect gis.indot.in.gov
+// @connect gis.indy.gov
 // @connect gis.interdev.com
 // @connect gis.iowadot.gov
 // @connect gis.itd.idaho.gov
@@ -453,7 +457,6 @@
 // @connect gis.mcgtn.org
 // @connect gis.mckeancountypa.gov
 // @connect gis.mcohio.org
-// @connect gis.mendocinocounty.org
 // @connect gis.mercercountypa.gov
 // @connect gis.mesaaz.gov
 // @connect gis.mifflincountypa.gov
@@ -522,14 +525,12 @@
 // @connect gis.rtcsnv.com
 // @connect gis.rutherfordcountync.gov
 // @connect gis.sanjuanco.com
-// @connect gis.santa-clarita.com
 // @connect gis.santacruzcounty.us
 // @connect gis.santamonica.gov
 // @connect gis.saskatchewan.ca
 // @connect gis.sawyerwi.org
 // @connect gis.sccwi.gov
 // @connect gis.shastacounty.gov
-// @connect gis.sheboygancounty.com
 // @connect gis.shelbycountytn.gov
 // @connect gis.showmeboone.com
 // @connect gis.siouxfalls.gov
@@ -538,6 +539,7 @@
 // @connect gis.southkingstownri.com
 // @connect gis.steele.mn
 // @connect gis.stlouiscountymn.gov
+// @connect gis.stmaryscountymd.gov
 // @connect gis.sullivanny.us
 // @connect gis.sumtercountyfl.gov
 // @connect gis.surryinfo.net
@@ -549,7 +551,6 @@
 // @connect gis.transportation.wv.gov
 // @connect gis.transylvaniacounty.org
 // @connect gis.traviscountytx.gov
-// @connect gis.tularecounty.ca.gov
 // @connect gis.ucdavis.edu
 // @connect gis.ulstercountyny.gov
 // @connect gis.vernon-ct.gov
@@ -585,7 +586,6 @@
 // @connect gis1.hamiltoncounty.in.gov
 // @connect gis11.cama.io
 // @connect gis11.services.ncdot.gov
-// @connect gis12.cookcountyil.gov
 // @connect gis2.arlingtontx.gov
 // @connect gis2.co.dakota.mn.us
 // @connect gis2.co.marathon.wi.us
@@ -595,6 +595,7 @@
 // @connect gis2.lawrenceks.org
 // @connect gis2.orangeburgcounty.org
 // @connect gis2.sandyspringsga.gov
+// @connect gis2.sheboygancounty.com
 // @connect gis2.totaland.com
 // @connect gis21svweb.lincolnparish.org
 // @connect gis3.cdmsmithgis.com
@@ -670,7 +671,6 @@
 // @connect gisportal.nct911.org
 // @connect gisportal.ontarioca.gov
 // @connect gisportal.stocktonca.gov
-// @connect gisportal.stpgov.org
 // @connect gisportal.whitehorse.ca
 // @connect gispro.porterco.org
 // @connect gisprod10.co.fresno.ca.us
@@ -707,6 +707,7 @@
 // @connect gisweb.co.wilkin.mn.us
 // @connect gisweb.fdlco.wi.gov
 // @connect gisweb.fortbendcountytx.gov
+// @connect gisweb.hendersoncountync.gov
 // @connect gisweb.jeffcowa.us
 // @connect gisweb.miamidade.gov
 // @connect gisweb.pwcva.gov
@@ -714,7 +715,6 @@
 // @connect gisweb2014.gordoncounty.org
 // @connect giswebservices.countygp.ab.ca
 // @connect giswww.westchestergov.com
-// @connect gmdnags.colliercountyfl.gov
 // @connect gweb01.co.olmsted.mn.us
 // @connect haslet.halff.com
 // @connect hazards.fema.gov
@@ -744,7 +744,7 @@
 // @connect lafayettegis.integritygis.com
 // @connect landrecords.greencountywi.org
 // @connect lawrencegis.integritygis.com
-// @connect lcapps.co.lucas.oh.us
+// @connect lcenggis.co.lucas.oh.us
 // @connect lcmaps.lanecounty.org
 // @connect lee-arcgis.leecountync.gov
 // @connect lincolngis.integritygis.com
@@ -758,6 +758,7 @@
 // @connect madison.rexburg.org
 // @connect madisongis.cityofalbany.net
 // @connect manitowocmaps.info
+// @connect map.cariboord.bc.ca
 // @connect map.claycountymn.gov
 // @connect map.co.clear-creek.co.us
 // @connect map.co.clearwater.mn.us
@@ -788,7 +789,7 @@
 // @connect mapping.burlington.ca
 // @connect mapping.chilliwack.com
 // @connect mapping.kenoshacountywi.gov
-// @connect mapping.mitchellcounty.org
+// @connect mapping.mitchellcountync.gov
 // @connect mapping.modot.org
 // @connect mappmycity.ca
 // @connect maps.abbotsford.ca
@@ -868,7 +869,6 @@
 // @connect maps.dsm.city
 // @connect maps.durham.ca
 // @connect maps.elbertcounty-co.gov
-// @connect maps.escpa.org
 // @connect maps.etcog.org
 // @connect maps.evansvillegis.com
 // @connect maps.fayetteville-ar.gov
@@ -884,7 +884,7 @@
 // @connect maps.grundyco.org
 // @connect maps.haldimandcounty.on.ca
 // @connect maps.hayward-ca.gov
-// @connect maps.haywoodnc.net
+// @connect maps.haywoodcountync.gov
 // @connect maps.highlandvillage.org
 // @connect maps.hokecounty.org
 // @connect maps.huerfano.us
@@ -978,6 +978,7 @@
 // @connect mapsdev.hamiltontn.gov
 // @connect mapserv.cityofloveland.org
 // @connect mapserv.mesquitenv.gov
+// @connect mapservice.gov.in
 // @connect mapservice.nmstatelands.org
 // @connect mapservices.crd.bc.ca
 // @connect mapservices.gis.saccounty.net
@@ -998,13 +999,16 @@
 // @connect mcmap.montrosecounty.net
 // @connect mcogis.co.marion.oh.us
 // @connect mde.geodata.md.gov
+// @connect mdgeodata.md.gov
 // @connect millergis.integritygis.com
 // @connect mms.hursttx.gov
 // @connect moberlygis.integritygis.com
 // @connect mobile.alamedaca.gov
 // @connect moniteaugis.integritygis.com
 // @connect morgangis.integritygis.com
+// @connect mw1.delta.ca
 // @connect mycity2.houstontx.gov
+// @connect nanmap.nanaimo.ca
 // @connect navigator.state.or.us
 // @connect newtongis.integritygis.com
 // @connect nhgeodata.unh.edu
@@ -1033,6 +1037,7 @@
 // @connect portal.elmoreco.org
 // @connect portal.henrico.gov
 // @connect portal.niagarafalls.ca
+// @connect portal.oakridgetn.gov
 // @connect programs.iowadnr.gov
 // @connect propertyviewer.andersoncountysc.org
 // @connect proxy2.roktech.net
@@ -1096,7 +1101,6 @@
 // @connect spatial.jacksoncountyor.gov
 // @connect spatialags.vhb.com
 // @connect stclairgis.integritygis.com
-// @connect stmgis.stmarysmd.com
 // @connect stokescountygis.com
 // @connect stonegis.integritygis.com
 // @connect svr4.sumtercountysc.org
@@ -1114,6 +1118,7 @@
 // @connect vginmaps.vdem.virginia.gov
 // @connect wallawallagis.com
 // @connect warrengis.integritygis.com
+// @connect washingtongis.integritygis.com
 // @connect wcg-gisweb.co.worcester.md.us
 // @connect wcgis3.co.winnebago.wi.us
 // @connect wcgisweb.washoecounty.us
@@ -1131,9 +1136,9 @@
 // @connect webgis.dot.state.mn.us
 // @connect webgis.durhamnc.gov
 // @connect webgis.lafayetteassessor.com
-// @connect webgis.providenceri.gov
 // @connect webgis.waterburyct.org
 // @connect webgis.yorbalindaca.gov
+// @connect webgis1.nic.in
 // @connect webmap.co.jackson.ms.us
 // @connect webmap.jeffparish.net
 // @connect webmap.trueautomation.com
@@ -1170,7 +1175,6 @@
 // @connect www.gismidwest.com
 // @connect www.gisonline.ms.gov
 // @connect www.greenwoodsc.gov
-// @connect www.hernandocountygis-florida.us
 // @connect www.hogarcmaps.org
 // @connect www.horrycountysc.gov
 // @connect www.jfksgis.us
@@ -1189,7 +1193,6 @@
 // @connect www.sgrcmaps.com
 // @connect www.sjmap.org
 // @connect www.smithcountymapsite.org
-// @connect www.tgisites.com
 // @connect www.valorgis.com
 // @connect www.waynecounty.com
 // @connect www.webgis.net
@@ -1200,7 +1203,6 @@
 // @connect www3.multco.us
 // @connect www7.co.union.oh.us
 // @connect xara1-4.cityofpetaluma.net
-// @connect xmaps.indy.gov
 // @downloadURL https://update.greasyfork.org/scripts/369632/WME%20GIS%20Layers.user.js
 // @updateURL https://update.greasyfork.org/scripts/369632/WME%20GIS%20Layers.meta.js
 // ==/UserScript==
@@ -1241,10 +1243,7 @@
   // IMPORTANT: Update this when releasing a new version of script
   // **************************************************************************************************************
   const SHOW_UPDATE_MESSAGE = true;
-  const SCRIPT_VERSION_CHANGES = [
-    '✨ Update:',
-    'Improve API error handling in fetchFeatures for non-HTTP errors',
-  ];
+  const SCRIPT_VERSION_CHANGES = ['✨ Update:', 'Performance improvements to reduce loading time!'];
 
   const GF_URL = 'https://greasyfork.org/scripts/369632-wme-gis-layers';
   // Used in tooltips to tell people who to report issues to.  Update if a new author takes ownership of this script.
@@ -1677,7 +1676,7 @@
   const sdk = await bootstrap(
     /** @type {BootstrapArgs} */ ({
       scriptUpdateMonitor: { downloadUrl },
-    })
+    }),
   );
 
   /**
@@ -1924,9 +1923,9 @@
                 $('<table>', { style: 'table-layout:fixed; width:70px; height:84px; margin:auto;' }).append(
                   $('<tr>').append($('<td>', { align: 'center', style: 'width:20px;height:28px;' }), $('<td>', { align: 'center', style: 'width:20px;' }).append(shiftUpButton), $('<td>')),
                   $('<tr>').append($('<td>', { align: 'center' }).append(shiftLeftButton), $('<td>', { align: 'center' }), $('<td>', { align: 'center' }).append(shiftRightButton)),
-                  $('<tr>').append($('<td>', { align: 'center' }), $('<td>', { align: 'center' }).append(shiftDownButton), $('<td>', { align: 'center' }))
-                )
-              )
+                  $('<tr>').append($('<td>', { align: 'center' }), $('<td>', { align: 'center' }).append(shiftDownButton), $('<td>', { align: 'center' })),
+                ),
+              ),
             ),
             this.#offsetDisplayDiv,
             $('<div>', {
@@ -1938,7 +1937,7 @@
                   style: 'height: 26px; width:auto;padding: 2px 12px 2px 12px; background:#4d6a88;color:#eaf6ff;border:1px solid #4d6a88;font-weight:bold;border-radius:5px;',
                 })
                   .text('Reset')
-                  .on('click', this.#onResetVisibleAtZoomClick.bind(this))
+                  .on('click', this.#onResetVisibleAtZoomClick.bind(this)),
               ),
               $('<div>').append(
                 $('<label>', { for: 'visible-at-zoom-input', style: 'font-size:14px;font-weight:bold;color:#4d6a88;' }).text('Visible at zoom:'),
@@ -1948,14 +1947,14 @@
                   min: this.#minVisibleAtZoom,
                   max: this.#maxVisibleAtZoom,
                   style: 'margin-left: 6px; width:46px;font-size:13px;border-radius:3px;',
-                }).change((v) => this.#onVisibleAtZoomChange(v)))
+                }).change((v) => this.#onVisibleAtZoomChange(v))),
               ),
               $('<div>', { style: 'font-size: 12.5px; color: #4d6a88; margin-top:5px;white-space:pre-line;text-align:left;' }).text(
-                'Pan or zoom the map to refresh after changing.\n\nSetting this value too low may cause performance issues.'
-              )
-            )
-          )
-        )
+                'Pan or zoom the map to refresh after changing.\n\nSetting this value too low may cause performance issues.',
+              ),
+            ),
+          ),
+        ),
       );
 
       this.hide();
@@ -2484,7 +2483,7 @@
         const raw = comboToRawKeycodes(shortcut.shortcutKeys);
         const combo = shortcutKeycodesToCombo(raw);
         settings.shortcuts[shortcut.shortcutId] = { raw, combo };
-      }
+      },
     );
 
     settings.lastVersion = scriptVersion;
@@ -3550,8 +3549,8 @@
           group
             .map(({ feature }) => feature.properties && feature.properties.label)
             .filter(Boolean)
-            .map((label) => label.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim())
-        )
+            .map((label) => label.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim()),
+        ),
       ).sort();
 
       let finalLabel = labels.slice(0, MAX_LABELS).join('\n');
@@ -3617,7 +3616,7 @@
         }
         return acc;
       },
-      { featureIdsToRemove: [], remainingFeatures: [] }
+      { featureIdsToRemove: [], remainingFeatures: [] },
     );
 
     // Add new features to the layer
@@ -5412,7 +5411,7 @@
           .css({ 'padding-top': '0px' })
           .append(
             $('<input>', { type: 'checkbox', id: 'only-show-applicable-gis-layers' }).on('change', onOnlyShowApplicableLayersChanged).prop('checked', settings?.onlyShowApplicableLayers),
-            $('<label>', { for: 'only-show-applicable-gis-layers' }).css({ 'white-space': 'pre-line' }).text('Only show applicable layers for Region')
+            $('<label>', { for: 'only-show-applicable-gis-layers' }).css({ 'white-space': 'pre-line' }).text('Only show applicable layers for Region'),
           ),
         $('<div>', { class: 'controls-container' })
           .css({ 'padding-top': '0px' })
@@ -5420,7 +5419,7 @@
             $('<input>', { type: 'checkbox', id: 'only-show-applicable-gis-layers-for-zoom-level' })
               .on('change', onOnlyShowApplicableLayersZoomChanged)
               .prop('checked', settings?.onlyShowApplicableLayersZoom),
-            $('<label>', { for: 'only-show-applicable-gis-layers-for-zoom-level' }).css({ 'white-space': 'pre-line' }).text('Include Zoom Level in filter')
+            $('<label>', { for: 'only-show-applicable-gis-layers-for-zoom-level' }).css({ 'white-space': 'pre-line' }).text('Include Zoom Level in filter'),
           ),
         $('.gis-layers-subL1-checkbox:checked').length === 0
           ? $('<div>').text('Turn on layer categories in the Settings tab.')
@@ -5438,7 +5437,7 @@
                     }),
                     $('<span>', {
                       style: 'font-size:14px;font-weight:600;text-transform: uppercase; cursor: pointer',
-                    }).text(NameMapper.toFullName(sub))
+                    }).text(NameMapper.toFullName(sub)),
                   ),
                 $('<div>', {
                   id: `${sub}_body`,
@@ -5447,7 +5446,7 @@
                   $('<div>')
                     .css({ 'font-size': '11px' })
                     .append(
-                      $('<span>').append('Select ', $('<a>', { href: '#' }).text('All').on('click', onSelectAllClick), ' / ', $('<a>', { href: '#' }).text('None').on('click', onSelectNoneClick))
+                      $('<span>').append('Select ', $('<a>', { href: '#' }).text('All').on('click', onSelectAllClick), ' / ', $('<a>', { href: '#' }).text('None').on('click', onSelectNoneClick)),
                     ),
                   $('<div>', { class: 'controls-container', style: 'padding-top:0px;' }).append(
                     _gisLayers
@@ -5466,13 +5465,13 @@
                                 evt.preventDefault();
                                 _layerSettingsDialog.gisLayer = gisLayer;
                                 _layerSettingsDialog.show();
-                              })
+                              }),
                           );
-                      })
-                  )
-                )
-              )
-            )
+                      }),
+                  ),
+                ),
+              ),
+            ),
       );
   }
 
@@ -5548,7 +5547,7 @@
           }).append(
             $('<span>', {
               style: 'font-size:14px;font-weight:600;text-transform: uppercase;',
-            }).text('Labels')
+            }).text('Labels'),
           ),
           $('<div>', { id: 'labelSettings' }).append(
             $('<div>', { class: 'controls-container' })
@@ -5571,10 +5570,10 @@
                 $('<br>'),
                 $('<label>', { style: 'font-weight:normal; margin-left:4px; margin-top: 4px;' }).text('Label Popup:'),
                 createRadioBtn('popupVisibility', 'show', 'Show', isPopupVisible),
-                createRadioBtn('popupVisibility', 'hide', 'Hide', !isPopupVisible)
-              )
-          )
-        )
+                createRadioBtn('popupVisibility', 'hide', 'Hide', !isPopupVisible),
+              ),
+          ),
+        ),
       );
 
     // Font Input section.......
@@ -5625,9 +5624,9 @@
             $('<option>', {
               value: opt.value,
               text: opt.label,
-            }).prop('selected', settings.fontFamily === opt.value)
-          )
-        )
+            }).prop('selected', settings.fontFamily === opt.value),
+          ),
+        ),
       ),
       // Font Size Section
       $('<div>', {
@@ -5644,8 +5643,8 @@
           max: 48,
           value: settings.fontSize || 20,
           style: ['font-size:12px', 'padding:2px 6px', 'border:1px solid #b9b9b9', 'border-radius:3px', 'width:60px', 'text-align:center'].join(';'),
-        })
-      )
+        }),
+      ),
     );
 
     // Font Family change handler
@@ -5700,7 +5699,7 @@
               .on('click', onChevronClick)
               .append(
                 $('<i>', { class: 'fa fa-fw fa-chevron-down', style: 'cursor: pointer;font-size: 12px;margin-right: 4px' }),
-                $('<span>', { style: 'font-size:14px;font-weight:600;text-transform:uppercase;' }).text(NameMapper.toFullName(country))
+                $('<span>', { style: 'font-size:14px;font-weight:600;text-transform:uppercase;' }).text(NameMapper.toFullName(country)),
               ),
             $('<div>', { id: countryContainerId }).append(
               // One Select All/None row per COUNTRY
@@ -5708,7 +5707,7 @@
                 'Select ',
                 $('<a>', { href: '#', 'data-country': country, class: 'gis-select-all-country' }).text('All'),
                 ' / ',
-                $('<a>', { href: '#', 'data-country': country, class: 'gis-select-none-country' }).text('None')
+                $('<a>', { href: '#', 'data-country': country, class: 'gis-select-none-country' }).text('None'),
               ),
               // All the subregion checkboxes
               subRegions.map((countrySubL1) => {
@@ -5726,26 +5725,26 @@
                     })
                       .on('change', (evt) => onSub1CheckChanged(countrySubL1, evt)) // <--- pass subL1
                       .prop('checked', settings.selectedSubL1.includes(countrySubL1)),
-                    $('<label>', { for: id }).css({ 'white-space': 'pre-line' }).text(fullName)
+                    $('<label>', { for: id }).css({ 'white-space': 'pre-line' }).text(fullName),
                   );
-              })
-            )
-          )
+              }),
+            ),
+          ),
         );
       });
 
     $('#panel-gis-layers-settings').append(
       $('<fieldset>', { style: 'border:1px solid silver;padding:8px;border-radius:4px;-webkit-padding-before:0;' }).append(
         $('<legend>', { style: 'margin-bottom:0px;border-bottom-style:none;width:auto;' }).append(
-          $('<span>', { style: 'font-size:14px;font-weight:600;text-transform:uppercase;' }).text('Appearance')
+          $('<span>', { style: 'font-size:14px;font-weight:600;text-transform:uppercase;' }).text('Appearance'),
         ),
         $('<div>', { class: 'controls-container' })
           .css({ 'padding-top': '2px' })
           .append(
             $('<input>', { type: 'checkbox', id: 'fill-parcels' }).change(onFillParcelsCheckedChanged).prop('checked', settings.fillParcels),
-            $('<label>', { for: 'fill-parcels' }).css({ 'white-space': 'pre-line' }).text('Fill parcels')
-          )
-      )
+            $('<label>', { for: 'fill-parcels' }).css({ 'white-space': 'pre-line' }).text('Fill parcels'),
+          ),
+      ),
     );
 
     // ---- SOCRATA APP TOKEN SECTION ----
@@ -5769,7 +5768,7 @@
         }).append(
           $('<span>', {
             style: 'font-size:14px;font-weight:600;text-transform:uppercase;',
-          }).text('Tyler/Socrata App Token')
+          }).text('Tyler/Socrata App Token'),
         ),
         $('<div>', {
           style: ['display:flex', 'gap:8px', 'align-items:center', 'border:1px solid #b9b9b9', 'border-radius:4px', 'padding:4px 8px'].join(';'),
@@ -5785,7 +5784,7 @@
             id: 'save-socrata-app-token-btn',
             style: ['border:none', 'background:transparent', 'color:#335', 'margin:0 2px', 'padding:2px 10px', 'border-radius:3px', 'font-size:13px', 'cursor:pointer'].join(';'),
             text: btnLabel,
-          })
+          }),
         ),
         $('<div>', {
           style: 'margin:6px 2px 0 2px;',
@@ -5793,8 +5792,8 @@
           $('<span>', {
             style: 'color:#777;font-size:11px;',
             html: 'Recommended for all Tyler/Socrata layers<br><span style="color:#b00;">Required for V3 API</span>',
-          })
-        )
+          }),
+        ),
       );
 
       if (!hasToken) {
@@ -5809,7 +5808,7 @@
               rel: 'noopener noreferrer',
               style: 'color:#357ab8;text-decoration:underline;',
               text: 'How to Sign Up for a Tyler Data & Insights ID',
-            })
+            }),
           ),
           $('<div>').append(
             $('<a>', {
@@ -5818,8 +5817,8 @@
               rel: 'noopener noreferrer',
               style: 'color:#357ab8;text-decoration:underline;',
               text: 'How to Generating App Tokens',
-            })
-          )
+            }),
+          ),
         );
         $fieldset.append($helpDiv);
       }
@@ -5865,7 +5864,7 @@
     $('#panel-gis-layers-settings').append(
       $('<fieldset>', { style: 'border:1px solid #8ea0b7;margin-top:6px;padding:8px;border-radius:4px;' }).append(
         $('<legend>', { style: 'margin-bottom:0px;border-bottom-style:none;width:auto;' }).append(
-          $('<span>', { style: 'font-size:14px;font-weight:600;text-transform:uppercase;' }).text('Layer Groupings')
+          $('<span>', { style: 'font-size:14px;font-weight:600;text-transform:uppercase;' }).text('Layer Groupings'),
         ),
         $('<div>').append(
           $('<button>', {
@@ -5878,9 +5877,9 @@
             class: 'form-control',
             style: 'display:inline-block;padding:2px 8px;margin-top:3px;background:#548342;color:#fff;border:1px solid #406927;',
             title: 'Load ALL country/state/region layers for custom grouping (slower)',
-          }).text('Load All Layers')
-        )
-      )
+          }).text('Load All Layers'),
+        ),
+      ),
     );
 
     $('#gis-manager-launch-btn').off('click').on('click', openLayerGroupManagerDialog);
@@ -5966,8 +5965,8 @@
           // Tab panels for layers and settings.
           $('<div>', { class: 'tab-content', style: 'padding:8px;padding-top:2px' }).append(
             $('<div>', { class: 'tab-pane active', id: 'panel-gis-subL1-layers', style: 'padding: 4px 0px 0px 0px; width: auto' }),
-            $('<div>', { class: 'tab-pane', id: 'panel-gis-layers-settings', style: 'padding: 4px 0px 0px 0px; width: auto' })
-          )
+            $('<div>', { class: 'tab-pane', id: 'panel-gis-layers-settings', style: 'padding: 4px 0px 0px 0px; width: auto' }),
+          ),
         )
         .html();
 
@@ -5981,7 +5980,7 @@
             style: `margin-right: 5px;cursor: pointer;color: ${powerButtonColor};font-size: 13px;`,
             title: 'Toggle GIS Layers',
           }),
-          $('<span>', { title: 'GIS Layers' }).text('GIS-L')
+          $('<span>', { title: 'GIS Layers' }).text('GIS-L'),
         )
         .html();
 
@@ -6092,7 +6091,7 @@
     $dlg.append(
       $('<div>', {
         style: 'border-radius:14px 14px 0px 0px; padding: 7px 14px; color: #fff; background:#4d6a88; font-weight:bold; text-align:left; font-size:17px;',
-      }).append($title, $close)
+      }).append($title, $close),
     );
 
     // --- Section: Current Selection ---
@@ -6122,7 +6121,7 @@
                 loadSettingsFromStorage();
                 initGui(false);
                 $dlg.remove();
-              }
+              },
             );
           }),
         $('<button>', {
@@ -6169,8 +6168,8 @@
                 }, 150);
               }
             });
-          })
-      )
+          }),
+      ),
     );
 
     // --- Section: My Saved Groups ---
@@ -6269,10 +6268,10 @@
                     alert('Group "' + group + '" deleted.');
                   }
                 }, 150);
-              }
+              },
             );
-          })
-      )
+          }),
+      ),
     );
 
     // Build and insert dialog
@@ -6709,7 +6708,10 @@
       installPathFollowingLabels();
       window.addEventListener('beforeunload', saveSettingsToStorage, false);
       _layerSettingsDialog = new LayerSettingsDialog();
+
+      const tBuildMap0 = performance.now();
       await buildCountrySubdivisionMapping();
+      logDebug('buildCountrySubdivisionMapping took ' + Math.round(performance.now() - tBuildMap0) + 'ms');
     } else {
       // Refresh - clear everything for complete reload
       _gisLayers = [];
@@ -6721,8 +6723,17 @@
     try {
       await loadVisibleCountryData();
       logDebug(`Loaded ${_gisLayers.length} layer definitions in ${Math.round(performance.now() - t0)} ms.`);
-      if (firstCall) initGui(firstCall); // Only need to do this at startup, and initGui(false) is called at the end of loadVisibleCountryData()
+
+      if (firstCall) {
+        const tGui = performance.now();
+        initGui(firstCall); // Only need to do this at startup
+        logDebug(`initGui: ${Math.round(performance.now() - tGui)} ms`);
+      }
+
+      const t2 = performance.now();
       await fetchFeatures();
+      logDebug(`fetchFeatures: ${Math.round(performance.now() - t2)} ms`);
+
       $('#gis-layers-refresh').removeClass('fa-spin').css({ cursor: 'pointer' });
       logDebug('Initialized.');
     } catch (err) {

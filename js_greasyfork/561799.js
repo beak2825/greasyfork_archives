@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Pokechill] CN-SEARCH
 // @namespace    https://play-pokechill.github.io/
-// @version      2.7.0
+// @version      2.9.0
 // @description  Pokechill搜索框 中文模糊匹配 + 提示条 + Enter / ↑↓ / 数字键 / 鼠标 选择 + 输入框左键点击清空
 // @author       GPT-DiamondMoo
 // @license      MIT
@@ -267,7 +267,7 @@
         "Pupitar": "沙基拉斯",
         "Tyranitar": "班基拉斯",
         "Lugia": "洛奇亚",
-        "Ho Oh": "凤王",
+        "HoOh": "凤王",
         "Celebi": "时拉比",
         "Treecko": "木守宫",
         "Grovyle": "森林蜥蜴",
@@ -1034,7 +1034,7 @@
         "Okidogi": "够赞狗",
         "Munkidori": "愿增猿",
         "Fezandipiti": "吉雉鸡",
-        "Ogerpon": "厄诡椪",
+        "Ogerpon": "厄鬼椪",
         "Archaludon": "铝钢桥龙",
         "Hydrapple": "蜜集大蛇",
         "Gouging Fire": "破空焰",
@@ -1068,17 +1068,30 @@
         "Unown Exclamation":"未知图腾 !",
         "Unown Question":"未知图腾 ?",
         //洛托姆
-        "Rotom Heat": "加热 洛托姆",
-        "Rotom Wash": "清洗 洛托姆",
-        "Rotom Frost": "结冰 洛托姆",
-        "Rotom Fan": "旋转 洛托姆",
-        "Rotom Mow": "切割 洛托姆",
-        //皮卡丘
-        "Pikachu PopStar": "偶像 皮卡丘",
-        "Pikachu PhD": "博士 皮卡丘",
-        "Pikachu Libre": "面罩摔角手 皮卡丘",
-        "Pikachu Belle": "贵妇 皮卡丘",
-        "Pikachu RockStar": "硬摇滚 皮卡丘",
+        "Rotom Heat": "加热洛托姆",
+        "Rotom Wash": "清洗洛托姆",
+        "Rotom Frost": "结冰洛托姆",
+        "Rotom Fan": "旋转洛托姆",
+        "Rotom Mow": "切割洛托姆",
+        //换装皮卡丘
+        "Pikachu Cosplay": "换装皮卡丘",
+        "Pikachu PopStar": "偶像皮卡丘",
+        "Pikachu PhD": "博士皮卡丘",
+        "Pikachu Libre": "面罩摔角手皮卡丘",
+        "Pikachu Belle": "贵妇皮卡丘",
+        "Pikachu RockStar": "硬摇滚皮卡丘",
+        //帽子皮卡丘
+        "Pikachu Original": "初始帽子皮卡丘",
+        "Pikachu Hoenn ": "丰缘帽子皮卡丘",
+        "Pikachu Sinnoh ": "神奥帽子皮卡丘",
+        "Pikachu Unova ": "合众帽子皮卡丘",
+        "Pikachu Kalos ": "卡洛斯帽子皮卡丘",
+        "Pikachu Alola ": "阿罗拉帽子皮卡丘",
+        "Pikachu Partner ": "就决定是你了之帽子皮卡丘",
+        "Pikachu World ": "世界帽子皮卡丘",
+        "Pikachu Ash": "小智帽子皮卡丘",
+        //皮丘
+        "Spiky Pichu": "刺刺耳皮丘",
         //鲤鱼王
         "Magikarp Koi": "锦鲤 鲤鱼王",
         "Magikarp Regal": "富豪 鲤鱼王",
@@ -1136,6 +1149,68 @@
         "Thundurus Therian": "雷电云 灵兽形态",
         "Landorus Therian": "土地云 灵兽形态",
         "Enamorus Therian": "眷恋云 灵兽形态",
+        //月月熊
+        "Ursaluna Bloodmoon": "月月熊 赫月",
+        //代欧奇希斯
+        "Deoxys Defense": "代欧奇希斯 防御形态",
+        "Deoxys Attack": "代欧奇希斯 攻击形态",
+        "Deoxys Speed": "代欧奇希斯 速度形态",
+        //结草儿 结草贵妇
+        "Burmy Plant": "结草儿 草木蓑衣",
+        "Wormadam Plant": "结草贵妇 草木蓑衣",
+        "Burmy Sandy": "结草儿 砂土蓑衣",
+        "Wormadam Sandy": "结草贵妇 砂土蓑衣",
+        "Burmy Trash": "结草儿 垃圾蓑衣",
+        "Wormadam Trash": "结草贵妇 垃圾蓑衣",
+        //无壳海兔 海兔兽
+        "Shellos West": "无壳海兔 西海",
+        "Gastrodon West": "海兔兽 西海",
+        "Shellos East": "无壳海兔 东海",
+        "Gastrodon East": "海兔兽 东海",
+        //谢米
+        "Shaymin Sky": "谢米 天空形态",
+        //幽尾玄鱼
+        "Basculegion M": "幽尾玄鱼 雄性",
+        "Basculegion F": "幽尾玄鱼 雌性",
+        //凯路迪欧
+        "Keldeo Resolute": "觉悟 凯路迪欧",
+        //美洛耶塔
+        "Meloetta Pirouette": "美洛耶塔 舞步形态",
+        //弱丁鱼
+        "Wishiwashi School": "弱丁鱼 鱼群的样子",
+        //玛机雅娜
+        "Magearna Original": "玛机雅娜 ５００年前的颜色",
+        //武道熊师
+        "Urshifu S.": "一击流武道熊师",
+        "Urshifu R.": "连击流武道熊师",
+        //米立龙
+        "Tatsugiri Curly": "米立龙 上弓姿势",
+        "Tatsugiri Droopy": "米立龙 下垂姿势",
+        "Tatsugiri Stretchy": "米立龙 平挺姿势",
+        //索财灵
+        "Gimmighoul Chest": "索财灵 宝箱形态",
+        "Gimmighoul Roaming": "索财灵 徒步形态",
+        //厄鬼椪
+        "Ogerpon Teal": "厄鬼椪 碧草面具",
+        "Ogerpon Wellspring": "厄鬼椪 水井面具",
+        "Ogerpon Hearthflame": "厄鬼椪 火灶面具",
+        "Ogerpon Cornerstone": "厄鬼椪 础石面具",
+        //太乐巴戈斯
+        "Terapagos Terastal": "太乐巴戈斯 太晶形态",
+        "Terapagos Stellar": "太乐巴戈斯 星晶形态",
+        //肯泰罗
+        "Tauros Combat": "肯泰罗 斗战种",
+        "Tauros Blaze": "肯泰罗 火炽种",
+        "Tauros Aqua": "肯泰罗 水澜种",
+        //土龙节节
+        "Dududunsparce": "土龙节节 三节形态",
+        //飘浮泡泡
+        "Castform Sunny": "飘浮泡泡 太阳的样子",
+        "Castform Rainy": "飘浮泡泡 雨水的样子",
+        "Castform Snowy": "飘浮泡泡 雪云的样子",
+        //樱花儿
+        "Cherrim Overcast": "樱花儿 阴天形态",
+        "Cherrim Sunshine": "樱花儿 晴天形态",
 
         //自创特性
         "Hydratation": "湿润之躯", // 拼写错误，官方正确拼写为 Hydration
@@ -1208,7 +1283,6 @@
         "Flash Cryo": "冰寒引擎",
         "Flash Psycha": "超能引擎",
         "Flash Fae": "妖精引擎",
-        "Flash Herba": "青草引擎",
         "Flash Herba": "青草引擎",
         "Clima Tact": "气候战术" ,
         "Intangible": "无形体" ,
@@ -2470,7 +2544,12 @@
         "Aurora Punch": "极光拳",
         "Ionise":"电离",
         "Razor Talons":"利爪",
-    };
+        "Gemstone Crush":"宝石粉碎",
+        "Foam Shot":"泡沫射击",
+        "Iron Slug":"铁弹冲击",
+        "Mirror Shrapnel":"镜面弹片",
+        "Scale Shot":"鳞片射击",
+};
 
     const KEYWORD_DICT = {
         "Fire":"火",

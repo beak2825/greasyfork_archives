@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Logseq Twitter Clipper
 // @namespace    https://github.com/26d0/userscripts
-// @version      1.1.0
+// @version      1.1.1
 // @description  Clip tweets to Logseq via HTTP API
 // @match        https://x.com/*/status/*
 // @match        https://twitter.com/*/status/*
@@ -289,16 +289,7 @@
     };
   }
 
-  function extractTweetContent() {
-    // Find the main tweet article
-    const articles = document.querySelectorAll('article[data-testid="tweet"]');
-    if (articles.length === 0) return null;
-
-    // The first article is usually the main tweet (not replies)
-    const mainTweet = articles[0];
-
-    // Find the tweet text container
-    const tweetTextEl = mainTweet.querySelector('[data-testid="tweetText"]');
+  function extractTextFromTweetElement(tweetTextEl) {
     if (!tweetTextEl) return "";
 
     // Extract text content, preserving line breaks
@@ -319,6 +310,30 @@
     }
 
     return content.trim();
+  }
+
+  function extractTweetContent(tweetId) {
+    const articles = document.querySelectorAll('article[data-testid="tweet"]');
+    if (articles.length === 0) return null;
+
+    // Find the article that matches the tweet ID from URL
+    for (const article of articles) {
+      // Look for timestamp link which contains the tweet's permalink
+      const timeElement = article.querySelector("time");
+      if (timeElement) {
+        const link = timeElement.closest("a");
+        if (link) {
+          const match = link.href.match(/\/status\/(\d+)/);
+          if (match && match[1] === tweetId) {
+            const tweetTextEl = article.querySelector('[data-testid="tweetText"]');
+            return extractTextFromTweetElement(tweetTextEl);
+          }
+        }
+      }
+    }
+
+    // Fallback: return null if matching tweet not found
+    return null;
   }
 
   function toLogseqPageName(username, tweetId) {
@@ -359,7 +374,7 @@
     }
 
     // Extract content
-    const content = extractTweetContent();
+    const content = extractTweetContent(tweetInfo.tweetId);
     const pageName = toLogseqPageName(tweetInfo.username, tweetInfo.tweetId);
     const tweetUrl = `https://x.com/${tweetInfo.username}/status/${tweetInfo.tweetId}`;
 

@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         B站一键拉黑UP主
-// @description  在B站首页、视频页和搜索页添加拉黑按钮，一键拉黑UP主。完整支持BewlyBewly插件首页布局适配。新增首页隐藏直播卡片、屏蔽广告卡片功能。
+// @description  在B站首页、视频页和搜索页添加拉黑按钮，一键拉黑UP主。新增首页隐藏直播卡片、屏蔽广告卡片功能。
 // @match        https://bilibili.com/
 // @match        https://www.bilibili.com/*
 // @match        https://www.bilibili.com/video/*
 // @match        https://search.bilibili.com/*
 // @icon         https://www.bilibili.com/favicon.ico
-// @version      1.2.2
+// @version      1.2.4
 // @grant        GM_registerMenuCommand
 // @grant        GM_unregisterMenuCommand
 // @grant        GM_getValue
@@ -27,21 +27,21 @@
 
     // --- 样式定义 ---
     const BILI_BLACKLIST_STYLES = `
-        /* 通用按钮样式 */
+        /* 通用按钮样式 - 亮色主题默认 */
         .bilibili-blacklist-btn {
-          color: #fb7299 !important;
+          color: #9499a0 !important;
           cursor: pointer !important;
           font-weight: normal !important;
           display: inline-flex !important;
           align-items: center !important;
           justify-content: center !important;
           padding: 1px 5px !important;
-          border: 1px solid #fb7299 !important;
+          border: 1px solid #c9ccd0 !important;
           border-radius: 4px !important;
-          font-size: 11px !important; /* 统一基础字号 */
+          font-size: 11px !important;
           transition: all 0.2s ease !important;
-          background-color: white !important;
-          box-shadow: 0 0 2px rgba(251, 114, 153, 0.2) !important;
+          background-color: transparent !important;
+          box-shadow: none !important;
           width: auto !important;
           min-width: unset !important;
           max-width: none !important;
@@ -49,14 +49,15 @@
           text-align: center !important;
           white-space: nowrap !important;
           gap: 1px !important;
-          vertical-align: middle; /* 垂直对齐 */
-          line-height: normal; /* 正常行高 */
-          margin: 0 5px 0 0 !important; /* 默认右边距，给后面元素空间 */
+          vertical-align: middle;
+          line-height: normal;
+          margin: 0 5px 0 0 !important;
         }
         .bilibili-blacklist-btn:hover {
-          background-color: #fb7299 !important;
-          color: white !important;
-          box-shadow: 0 0 4px rgba(251, 114, 153, 0.4) !important;
+          background-color: rgba(226, 93, 93, 0.1) !important;
+          color: #e25d5d !important;
+          border-color: #e25d5d !important;
+          box-shadow: none !important;
         }
         .bilibili-blacklist-btn:active {
           transform: scale(0.95) !important;
@@ -67,7 +68,34 @@
         /* 按钮动画 */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .bilibili-blacklist-btn { animation: fadeIn 0.3s ease-out !important; }
+        
+        /* 已拉黑状态 - 亮色 */
+        .bilibili-blacklist-btn:disabled,
+        .bilibili-blacklist-btn[disabled] {
+          color: #b8bcc0 !important;
+          background-color: rgba(0, 0, 0, 0.02) !important;
+          border-color: #d9dce0 !important;
+          cursor: not-allowed !important;
+          opacity: 1 !important;
+        }
 
+        /* === 暗色主题覆盖 (B站使用 html.night-mode 类名) === */
+        html.night-mode .bilibili-blacklist-btn {
+          color: rgba(255, 255, 255, 0.5) !important;
+          border-color: rgba(255, 255, 255, 0.2) !important;
+          background-color: transparent !important;
+        }
+        html.night-mode .bilibili-blacklist-btn:hover {
+          color: #ff6b6b !important;
+          border-color: #ff6b6b !important;
+          background-color: rgba(255, 107, 107, 0.12) !important;
+        }
+        html.night-mode .bilibili-blacklist-btn:disabled,
+        html.night-mode .bilibili-blacklist-btn[disabled] {
+          color: rgba(255, 255, 255, 0.25) !important;
+          background-color: rgba(255, 255, 255, 0.03) !important;
+          border-color: rgba(255, 255, 255, 0.08) !important;
+        }
         /* --- 首页特定调整 --- */
         /* 将按钮添加到 info--bottom 前面时 */
         .bili-video-card__info--bottom > .bilibili-blacklist-btn {
@@ -474,7 +502,7 @@
                     registerBlockAdMenu();
                     showToast(blockAdCards ? '已开启广告屏蔽，刷新页面生效' : '已关闭广告屏蔽');
                     if (blockAdCards) {
-                       removeAdCards(); // 立即尝试移除
+                        removeAdCards(); // 立即尝试移除
                     }
                 });
                 log('注册广告菜单成功:', menuText);
@@ -520,7 +548,7 @@
                     const $button = $(this);
                     if ($button.is(':visible')) {
                         log('找到按钮并更新为已拉黑:', $button[0]);
-                        $button.text('已拉黑').css({ 'opacity': '0.6', 'cursor': 'not-allowed', 'background-color': '#eee', 'border-color': '#ddd', 'color': '#aaa' }).prop('disabled', true).off('click');
+                        $button.text('已拉黑').prop('disabled', true).off('click');
                     }
                 });
             };
@@ -589,27 +617,29 @@
         // === 新增：移除广告卡片函数 ===
         function removeAdCards() {
             if (!blockAdCards) return;
-            // 查找包含“广告”文本的 stats 标记
-            // 目标选择器：.bili-video-card__stats--text 且内容为 "广告"
-            // 或者 .bili-video-card__info--text-ad
-            
+
+            // 1. 查找包含“广告”文本的 stats 标记 (首页常见)
             const adTexts = findInShadowDOM('.bili-video-card__stats--text, .bili-video-card__info--text-ad');
-            
-            adTexts.each(function() {
+            adTexts.each(function () {
                 const $text = $(this);
                 if ($text.text().trim() === '广告') {
-                    // 找到了广告标记，向上寻找卡片容器
                     const $card = $text.closest('.feed-card, .bili-video-card, .video-card, .floor-single-card');
                     if ($card.length > 0) {
-                       log('检测到广告卡片，准备移除:', $card[0]);
-                       $card.remove();
-                       // $card.css('border', '5px solid red'); // 调试用
+                        log('检测到广告卡片 (文本匹配)，准备移除:', $card[0]);
+                        $card.remove();
                     }
                 }
             });
-            
-            // 针对特定结构的额外检查 (如 user request 中的 HTML)
-            // <div class="bili-video-card__stats"><span class="bili-video-card__stats--text">广告</span></div>
+
+            // 2. 移除特定的广告元素 (视频页右上角等)
+            const specificAdSelectors = '#slide_ad, .video-card-ad-small';
+            const specificAds = findInShadowDOM(specificAdSelectors);
+            if (specificAds.length > 0) {
+                specificAds.each(function () {
+                    log('检测到特定广告元素 (Selector匹配)，准备移除:', this);
+                    $(this).remove();
+                });
+            }
         }
 
         // --- 新增：Shadow DOM 搜索函数 ---
@@ -654,12 +684,12 @@
 
             // 调试：检查页面中存在哪些可能的容器
             log('=== 首页调试信息 ===');
-            
+
             // 执行广告移除
             if (blockAdCards) {
                 removeAdCards();
             }
-            
+
             possibleContainers.forEach(selector => {
                 const allElements = $(selector);
                 const unprocessedElements = $(`${selector}:not([data-toblack-processed="true"])`);
@@ -855,6 +885,11 @@
         // === 处理视频页面 (保持不变, 使用 v1.0.7 的逻辑) ===
         function processVideoPage() {
             log('处理视频页面');
+
+            // 执行广告移除
+            if (blockAdCards) {
+                removeAdCards();
+            }
 
             function findAndProcessUpInfo() {
                 // Target the container div first, ensure it's not already processed

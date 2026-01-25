@@ -2,7 +2,7 @@
 // @name         FastPic Upload
 // @name:en      FastPic Upload
 // @namespace    http://tampermonkey.net/
-// @version      6.2.1
+// @version      6.3.0
 // @license MIT
 // @description  Загрузка изображений на FastPic
 // @description:en  Image uploading to FastPic
@@ -16,7 +16,6 @@
 // @match        https://tapochek.net/viewtopic.php?*
 // @match        https://tapochek.net/posting.php*
 // @match        https://tapochek.net/privmsg.php?*
-// @match        https://4pda.to/forum/index.php*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -31,7 +30,8 @@
     // Настройки по умолчанию
     const DEFAULT_SETTINGS = {
         uploadService: 'newfastpic',
-        fastpic: {
+        lastViewedService: '',
+        newfastpic: {
             codeFormat: 'bb_thumb',  // direct, bb_thumb, bb_full, html_thumb, markdown_thumb
             thumb: {
                 checkThumb: 'size',  // 'size', 'text', 'filename', 'no'
@@ -42,8 +42,7 @@
             image: {
                 origResize: {
                     enabled: false,
-                    resSelect: '500',  // '150', '320', '500', '640', '800'
-                    customSize: '500'
+                    customSize: '1200'
                 },
                 origRotate: {
                     enabled: false,
@@ -51,27 +50,7 @@
                 },
                 optimization: {
                     enabled: false,
-                    jpegQuality: '75'  // 0-99
-                },
-                poster: false
-            }
-        },
-        newfastpic: {
-            codeFormat: 'bb_thumb',
-            thumb: {
-                checkThumb: 'size',
-                thumbText: 'Увеличить',
-                thumbSize: '150',
-                thumbSizeVertical: false
-            },
-            image: {
-                origResize: {
-                    enabled: false,
-                    customSize: '1200'
-                },
-                optimization: {
-                    enabled: false,
-                    jpegQuality: '80'
+                    jpegQuality: '80'  // 0-99
                 },
                 poster: false
             },
@@ -99,7 +78,7 @@
         },
         uploadHistory: {
             enabled: true,
-            maxItems: 50,
+            maxItems: 100,
             items: []  // [{url, service, imageCount, date, timestamp}]
         }
     };
@@ -320,7 +299,6 @@
         if (hostname.includes('rutracker')) return 'rutracker';
         if (hostname.includes('nnmclub')) return 'nnmclub';
         if (hostname.includes('tapochek')) return 'tapochek';
-        if (hostname.includes('4pda')) return '4pda';
         return null;
     }
 
@@ -335,8 +313,6 @@
                 return document.querySelector('textarea.editor[name="message"]');
             case 'nnmclub':
                 return document.querySelector('#post_body');
-            case '4pda':
-                return document.querySelector('#ed-0_textarea') || document.querySelector('.ed-textarea');
             default:
                 return null;
         }
@@ -441,19 +417,16 @@
         const serviceSettings = settings[settings.uploadService];
 
         // Форматы FastPic и New.FastPic
-        if (settings.uploadService === 'fastpic' || settings.uploadService === 'newfastpic') {
+        if (settings.uploadService === 'newfastpic') {
             const formats = {
                 direct: image.imagePath,
                 bb_thumb: `[URL=${image.viewUrl}][IMG]${image.thumbPath}[/IMG][/URL]`,
                 bb_full: `[URL=${image.viewUrl}][IMG]${image.imagePath}[/IMG][/URL]`,
                 html_thumb: `<a href="${image.viewUrl}" target="_blank"><img src="${image.thumbPath}" border="0"></a>`,
-                markdown_thumb: `[![FastPic.Ru](${image.thumbPath})](${image.viewUrl})`
+                markdown_thumb: `[![FastPic.Org](${image.thumbPath})](${image.viewUrl})`
             };
 
-            return formats[serviceSettings.codeFormat]
-                .replace('{viewUrl}', image.viewUrl)
-                .replace('{imagePath}', image.imagePath)
-                .replace('{thumbPath}', image.thumbPath);
+            return formats[serviceSettings.codeFormat];
         }
 
         // Форматы ImgBB
@@ -495,105 +468,6 @@
         }
     }
 
-    // Функция для парсинга ответа FastPic
-    function parseFastPicResponse(responseText) {
-        // Ищем все блоки UploadSettings в ответе
-        const uploadSettingsRegex = /<UploadSettings[^>]*>([\s\S]*?)<\/UploadSettings>/g;
-        const results = [];
-        let match;
-
-        while ((match = uploadSettingsRegex.exec(responseText)) !== null) {
-            const settingsXml = match[0];
-
-            // Извлекаем нужные значения из каждого блока
-            const status = settingsXml.match(/<status>([^<]+)<\/status>/)?.[1];
-
-            if (status === 'ok') {
-                const imagePath = settingsXml.match(/<imagepath>([^<]+)<\/imagepath>/)?.[1];
-                const thumbPath = settingsXml.match(/<thumbpath>([^<]+)<\/thumbpath>/)?.[1];
-                const viewUrl = settingsXml.match(/<viewurl>([^<]+)<\/viewurl>/)?.[1];
-                const sessionUrl = settingsXml.match(/<sessionurl>([^<]+)<\/sessionurl>/)?.[1];
-
-                if (imagePath && thumbPath && viewUrl) {
-                    results.push({
-                        imagePath,
-                        thumbPath,
-                        viewUrl,
-                        sessionUrl
-                    });
-                }
-            } else {
-                const error = settingsXml.match(/<error>([^<]+)<\/error>/)?.[1] || 'Неизвестная ошибка';
-                throw new Error(error);
-            }
-        }
-
-        // Извлекаем URL сессии из XML ответа FastPic
-        const sessionUrl = responseText.match(/<viewurl>([^<]+)<\/viewurl>/)?.[1] || '';
-
-        return { results, sessionUrl };
-    }
-
-    // Функция для загрузки на FastPic
-    async function uploadToFastPic(files) {
-        const formData = new FormData();
-        for (let i = 0; i < files.length; i++) {
-            formData.append(`file${i + 1}`, files[i]);
-        }
-
-        // Добавляем параметры FastPic
-        formData.append('uploading', files.length.toString());
-
-        // Добавляем настройки превью
-        formData.append('check_thumb', settings.fastpic.thumb.checkThumb);
-        formData.append('thumb_text', settings.fastpic.thumb.thumbText);
-
-        formData.append('thumb_size', settings.fastpic.thumb.thumbSize);
-        if (settings.fastpic.thumb.thumbSizeVertical) {
-            formData.append('check_thumb_size_vertical', '1');
-        }
-
-        // Добавляем настройки изображения
-        if (settings.fastpic.image.origResize.enabled) {
-            formData.append('check_orig_resize', '1');
-            formData.append('res_select', settings.fastpic.image.origResize.resSelect);
-            formData.append('orig_resize', settings.fastpic.image.origResize.customSize);
-        } else {
-            // Явно отключаем изменение размера
-            formData.append('check_orig_resize', '0');
-            formData.append('res_select', '0');
-            formData.append('orig_resize', '0');
-        }
-
-        if (settings.fastpic.image.origRotate.enabled) {
-            formData.append('check_orig_rotate', '1');
-            formData.append('orig_rotate', settings.fastpic.image.origRotate.value);
-        }
-
-        if (settings.fastpic.image.optimization.enabled) {
-            formData.append('check_optimization', 'on');
-            formData.append('jpeg_quality', settings.fastpic.image.optimization.jpegQuality);
-        }
-
-        if (settings.fastpic.image.poster) {
-            formData.append('check_poster', 'on');
-        }
-
-        formData.append('submit', 'Загрузить');
-
-        const response = await new Promise((resolve, reject) => {
-            GM_xmlhttpRequest({
-                method: 'POST',
-                url: 'https://fastpic.org/upload?api=1',
-                data: formData,
-                onload: (response) => resolve(response),
-                onerror: (error) => reject(error)
-            });
-        });
-
-        return parseFastPicResponse(response.responseText);
-    }
-
     // Функция для загрузки на New.FastPic
     async function uploadToNewFastPic(files) {
         const formData = new FormData();
@@ -627,6 +501,12 @@
         if (settings.newfastpic.image.origResize.enabled) {
             formData.append('orig_resize', settings.newfastpic.image.origResize.customSize);
         }
+
+        if (settings.newfastpic.image.origRotate.enabled) {
+            formData.append('check_orig_rotate', '1');
+            formData.append('orig_rotate', settings.newfastpic.image.origRotate.value);
+        }
+
         formData.append('check_optimization', settings.newfastpic.image.optimization.enabled.toString());
         if (settings.newfastpic.image.optimization.enabled) {
             formData.append('jpeg_quality', settings.newfastpic.image.optimization.jpegQuality);
@@ -653,9 +533,12 @@
         const BASE_URL = 'https://new.fastpic.org';
         const makeAbsolute = url => url ? (url.startsWith('http') ? url : new URL(url, BASE_URL).href) : url;
 
+        // Формируем direct_link из thumb_link (заменяем /thumb/ на /big/) - исправляет direct и bb_full
+        const directLink = data.thumb_link ? data.thumb_link.replace('/thumb/', '/big/') : '';
+
         // Применяем преобразование ко всем URL
         const links = {
-            direct: makeAbsolute(data.direct_link),
+            direct: directLink,
             thumb: makeAbsolute(data.thumb_link),
             view: makeAbsolute(data.view_link),
             album: makeAbsolute(data.album_link)
@@ -845,9 +728,6 @@
     // Функция для загрузки изображений
     async function uploadImages(files) {
         switch (settings.uploadService) {
-            case 'fastpic':
-                return await uploadToFastPic(files);
-
             case 'newfastpic':
                 return await uploadToNewFastPic(files);
 
@@ -879,13 +759,11 @@
         // Проверка форматов и размера
         const allowedFormats = ['image/gif', 'image/jpeg', 'image/png', 'image/webp', 'image/bmp'];
         const maxFileSizes = {
-            'fastpic': 25 * 1024 * 1024,  // 25MB
             'newfastpic': 25 * 1024 * 1024,  // 25MB
             'imgbb': 32 * 1024 * 1024,    // 32MB
             'imagebam': 16 * 1024 * 1024,
         };
         const maxFiles = {
-            'fastpic': 30,
             'newfastpic': 30,
             'imgbb': 30,
             'imagebam': 30,
@@ -937,13 +815,8 @@
             // Получаем sessionUrl в зависимости от сервиса
             let sessionUrl = null;
 
-            // Для FastPic берем sessionUrl из ответа
-            if (settings.uploadService === 'fastpic') {
-                sessionUrl = images[0]?.sessionUrl;
-            }
-
             // Для ImageBam формируем ссылку на сессию
-            else if (settings.uploadService === 'imagebam') {
+            if (settings.uploadService === 'imagebam') {
                 sessionUrl = `https://www.imagebam.com/upload/complete?session=${images[0]?.session}`;
             }
 
@@ -990,9 +863,7 @@
         menuButton.style.cssText = 'margin: 0 5px;';
 
         // стили
-        if (site === '4pda') {
-            menuButton.className = 'zbtn zbtn-default';
-        } else if (site === 'nnmclub') {
+        if (site === 'nnmclub') {
             menuButton.className = 'input mainoption';
         }
 
@@ -1018,13 +889,6 @@
                     nnmNav.appendChild(menuButton);
                 }
                 break;
-
-            case '4pda':
-                const pdaNav = document.querySelector('.dfrms.text-center') || document.querySelector('div[style*="margin-top:3px"]');
-                if (pdaNav) {
-                    pdaNav.appendChild(menuButton);
-                }
-                break;
         }
 
         menuButton.addEventListener('click', showSettingsDialog);
@@ -1041,7 +905,6 @@
 
         // Добавляем опции
         switcher.innerHTML = `
-            <option value="fastpic">FastPic</option>
             <option value="newfastpic">New FastPic</option>
             <option value="imgbb">ImgBB</option>
             <option value="imagebam">ImageBam</option>
@@ -1051,9 +914,7 @@
         switcher.value = settings.uploadService;
 
         // Стили в зависимости от сайта
-        if (site === '4pda') {
-            switcher.className = 'zbtn zbtn-default';
-        } else if (site === 'nnmclub') {
+        if (site === 'nnmclub') {
             switcher.className = 'input mainoption';
         }
 
@@ -1177,107 +1038,14 @@
                     <div class="setting-group">
                         <label>Сервис загрузки:</label>
                         <select id="uploadService">
-                            <option value="fastpic">FastPic</option>
                             <option value="newfastpic">New FastPic</option>
                             <option value="imgbb">ImgBB</option>
                             <option value="imagebam">ImageBam</option>
                         </select>
                     </div>
 
-                    <!-- Настройки FastPic -->
-                    <div id="fastpic-settings" class="service-settings setting-group">
-                        <h4>Настройки FastPic</h4>
-
-                        <!-- Existing code format setting -->
-                        <label>Формат кода:</label>
-                        <select id="fastpic-codeFormat">
-                            <option value="direct">Прямая ссылка</option>
-                            <option value="bb_thumb">BB-код (превью)</option>
-                            <option value="bb_full">BB-код (большое изображение)</option>
-                            <option value="html_thumb">HTML</option>
-                            <option value="markdown_thumb">Markdown</option>
-                        </select>
-
-                        <!-- Настройки превью -->
-                        <div class="setting-group">
-                            <h5>Настройки превью</h5>
-                            <label>Тип превью:</label>
-                            <select id="fastpic-checkThumb">
-                                <option value="size">Размер</option>
-                                <option value="text">Текст</option>
-                                <option value="filename">Имя файла</option>
-                                <option value="no">Без надписи</option>
-                            </select>
-                            <div id="fastpic-thumbText-container">
-                                <label>Текст превью:</label>
-                                <input type="text" id="fastpic-thumbText" value="Увеличить">
-                            </div>
-                            <label>Размер превью (px):</label>
-                            <input type="number" id="fastpic-thumbSize" min="1" max="999" value="150">
-                            <label>
-                                <input type="checkbox" id="fastpic-thumbSizeVertical">
-                                по высоте
-                            </label>
-                        </div>
-
-                        <!-- Настройки изображения -->
-                        <div class="setting-group">
-                            <h5>Настройки изображения</h5>
-
-                            <!-- Изменение размера -->
-                            <label>
-                                <input type="checkbox" id="fastpic-origResizeEnabled">
-                                Уменьшить
-                            </label>
-                            <div id="fastpic-resizeOptions" style="margin-left: 20px;">
-                                <label>Предустановленный размер:</label>
-                                <select id="fastpic-resSelect">
-                                    <option value="150">150px</option>
-                                    <option value="320">320px</option>
-                                    <option value="500">500px</option>
-                                    <option value="640">640px</option>
-                                    <option value="800">800px</option>
-                                </select>
-                                <label>Размер по вертикали (px):</label>
-                                <input type="number" id="fastpic-customSize" value="500">
-                            </div>
-
-                            <!-- Настройки поворота -->
-                            <label>
-                                <input type="checkbox" id="fastpic-origRotateEnabled">
-                                Повернуть
-                            </label>
-                            <div id="fastpic-rotateOptions" style="margin-left: 20px;">
-                                <select id="fastpic-origRotate">
-                                    <option value="0">0°</option>
-                                    <option value="90">90° по часовой</option>
-                                    <option value="180">180°</option>
-                                    <option value="270">90° против часовой</option>
-                                </select>
-                            </div>
-
-                            <!-- Оптимизация -->
-                            <label>
-                                <input type="checkbox" id="fastpic-optimizationEnabled">
-                                Оптимизировать в JPEG
-                            </label>
-                            <div id="fastpic-optimizationOptions" style="margin-left: 20px;">
-                                <label>Качество JPEG (0-99):</label>
-                                <input type="number" id="fastpic-jpegQuality" min="0" max="99" value="85">
-                            </div>
-
-                            <!-- Настройки постера -->
-                            <label>
-                                <input type="checkbox" id="fastpic-poster">
-                                Постер
-                            </label>
-                        </div>
-                    </div>
-
                     <!-- Настройки New.FastPic -->
                     <div id="newfastpic-settings" class="service-settings setting-group">
-                        <h4>Настройки New FastPic</h4>
-
                         <!-- Existing code format setting -->
                         <label>Формат кода:</label>
                         <select id="newfastpic-codeFormat">
@@ -1322,6 +1090,20 @@
                             <div id="newfastpic-resizeOptions" style="margin-left: 20px;">
                                 <label>Размер (px):</label>
                                 <input type="number" id="newfastpic-customSize" value="1200">
+                            </div>
+
+                            <!-- Настройки поворота -->
+                            <label>
+                                <input type="checkbox" id="newfastpic-origRotateEnabled">
+                                Повернуть
+                            </label>
+                            <div id="newfastpic-rotateOptions" style="margin-left: 20px;">
+                                <select id="newfastpic-origRotate">
+                                    <option value="0">0°</option>
+                                    <option value="90">90° по часовой</option>
+                                    <option value="180">180°</option>
+                                    <option value="270">90° против часовой</option>
+                                </select>
                             </div>
 
                             <!-- Оптимизация -->
@@ -1389,7 +1171,6 @@
 
                     <!-- Настройки ImgBB -->
                     <div id="imgbb-settings" class="service-settings setting-group">
-                        <h4>Настройки ImgBB</h4>
                         <label><a href="https://api.imgbb.com/" target="_blank">API ключ ImgBB</a>:</label>
                         <input type="text" id="imgbb-apiKey" placeholder="Введите API ключ ImgBB">
                         <label>Формат кода:</label>
@@ -1439,7 +1220,6 @@
 
                     <!-- Настройки ImageBam -->
                     <div id="imagebam-settings" class="service-settings setting-group">
-                        <h4>Настройки ImageBam</h4>
                         <label>Формат кода:</label>
                         <select id="imagebam-codeFormat">
                             <option value="direct">Прямая ссылка</option>
@@ -1538,7 +1318,7 @@
         });
 
         // Заполняем текущими настройками
-        dialog.querySelector('#uploadService').value = settings.uploadService;
+        dialog.querySelector('#uploadService').value = settings.lastViewedService || settings.uploadService;
 
         // Обработчик кнопки сброса
         dialog.querySelector('#resetSettings').addEventListener('click', () => {
@@ -1574,74 +1354,6 @@
             showNotification('Настройки сброшены до значений по умолчанию');
         });
 
-        // <-- Настройки FastPic -->
-        const fastpicSettings = settings.fastpic;
-        // codeFormat
-        dialog.querySelector('#fastpic-codeFormat').value = fastpicSettings.codeFormat;
-
-        // Настройки thumb
-        dialog.querySelector('#fastpic-checkThumb').value = fastpicSettings.thumb.checkThumb;
-        dialog.querySelector('#fastpic-thumbText').value = fastpicSettings.thumb.thumbText;
-        dialog.querySelector('#fastpic-thumbSize').value = fastpicSettings.thumb.thumbSize;
-        dialog.querySelector('#fastpic-thumbSizeVertical').checked = fastpicSettings.thumb.thumbSizeVertical;
-
-        // Настройки image.origResize
-        dialog.querySelector('#fastpic-origResizeEnabled').checked = fastpicSettings.image.origResize.enabled;
-        dialog.querySelector('#fastpic-resSelect').value = fastpicSettings.image.origResize.resSelect;
-        dialog.querySelector('#fastpic-customSize').value = fastpicSettings.image.origResize.customSize;
-
-        // Настройки origRotate
-        dialog.querySelector('#fastpic-origRotateEnabled').checked = fastpicSettings.image.origRotate.enabled;
-        dialog.querySelector('#fastpic-origRotate').value = fastpicSettings.image.origRotate.value;
-
-        // Настройки image.optimization
-        dialog.querySelector('#fastpic-optimizationEnabled').checked = fastpicSettings.image.optimization.enabled;
-        dialog.querySelector('#fastpic-jpegQuality').value = fastpicSettings.image.optimization.jpegQuality;
-
-        // Настройки постера
-        dialog.querySelector('#fastpic-poster').checked = fastpicSettings.image.poster;
-
-        // Управление видимостью опций изменения размера
-        const resizeOptions = dialog.querySelector('#fastpic-resizeOptions');
-        resizeOptions.style.display = fastpicSettings.image.origResize.enabled ? 'block' : 'none';
-        dialog.querySelector('#fastpic-origResizeEnabled').addEventListener('change', (e) => {
-            resizeOptions.style.display = e.target.checked ? 'block' : 'none';
-        });
-
-        // Управление видимостью опций поворота
-        const rotateOptions = dialog.querySelector('#fastpic-rotateOptions');
-        rotateOptions.style.display = fastpicSettings.image.origRotate.enabled ? 'block' : 'none';
-        dialog.querySelector('#fastpic-origRotateEnabled').addEventListener('change', (e) => {
-            rotateOptions.style.display = e.target.checked ? 'block' : 'none';
-        });
-
-        // Управление видимостью опций оптимизации
-        const optimizationOptions = dialog.querySelector('#fastpic-optimizationOptions');
-        optimizationOptions.style.display = fastpicSettings.image.optimization.enabled ? 'block' : 'none';
-        dialog.querySelector('#fastpic-optimizationEnabled').addEventListener('change', (e) => {
-            optimizationOptions.style.display = e.target.checked ? 'block' : 'none';
-        });
-
-        // Обработчик видимости типа превью
-        const thumbTypeSelect = dialog.querySelector('#fastpic-checkThumb');
-        const thumbTextContainer = dialog.querySelector('#fastpic-thumbText-container');
-        function updateThumbTextVisibility() {
-            thumbTextContainer.style.display = thumbTypeSelect.value === 'text' ? 'block' : 'none';
-        }
-        thumbTypeSelect.addEventListener('change', updateThumbTextVisibility);
-        updateThumbTextVisibility(); // Устанавливаем начальное состояние
-
-        // Синхронизация предустановленного и пользовательского размера
-        const resSelect = dialog.querySelector('#fastpic-resSelect');
-        const customSize = dialog.querySelector('#fastpic-customSize');
-        // Обработчик изменения предустановленного размера
-        resSelect.addEventListener('change', (e) => {
-            customSize.value = e.target.value;
-        });
-        // Начальная синхронизация при открытии диалога
-        customSize.value = resSelect.value;
-
-
         // <-- Настройки New.FastPic -->
         const newfastpicSettings = settings.newfastpic;
         dialog.querySelector('#newfastpic-codeFormat').value = newfastpicSettings.codeFormat;
@@ -1655,6 +1367,10 @@
         // Настройки image.origResize
         dialog.querySelector('#newfastpic-origResizeEnabled').checked = newfastpicSettings.image.origResize.enabled;
         dialog.querySelector('#newfastpic-customSize').value = newfastpicSettings.image.origResize.customSize;
+
+        // Настройки origRotate
+        dialog.querySelector('#newfastpic-origRotateEnabled').checked = newfastpicSettings.image.origRotate.enabled;
+        dialog.querySelector('#newfastpic-origRotate').value = newfastpicSettings.image.origRotate.value;
 
         // Настройки image.optimization
         dialog.querySelector('#newfastpic-optimizationEnabled').checked = newfastpicSettings.image.optimization.enabled;
@@ -1738,9 +1454,11 @@
         // Обработчики видимости опций
         const updateNewFastpicOptionsVisibility = () => {
             const resizeOptions = dialog.querySelector('#newfastpic-resizeOptions');
+            const rotateOptions = dialog.querySelector('#newfastpic-rotateOptions');
             const optimizationOptions = dialog.querySelector('#newfastpic-optimizationOptions');
 
             resizeOptions.style.display = dialog.querySelector('#newfastpic-origResizeEnabled').checked ? 'block' : 'none';
+            rotateOptions.style.display = dialog.querySelector('#newfastpic-origRotateEnabled').checked ? 'block' : 'none';
             optimizationOptions.style.display = dialog.querySelector('#newfastpic-optimizationEnabled').checked ? 'block' : 'none';
         };
 
@@ -1754,6 +1472,7 @@
         updateNewFastpicThumbTextVisibility(); // Устанавливаем начальное состояние
 
         dialog.querySelector('#newfastpic-origResizeEnabled').addEventListener('change', updateNewFastpicOptionsVisibility);
+        dialog.querySelector('#newfastpic-origRotateEnabled').addEventListener('change', updateNewFastpicOptionsVisibility);
         dialog.querySelector('#newfastpic-optimizationEnabled').addEventListener('change', updateNewFastpicOptionsVisibility);
         updateNewFastpicOptionsVisibility();
 
@@ -1895,6 +1614,10 @@
                 el.classList.remove('active');
             });
             dialog.querySelector(`#${service}-settings`).classList.add('active');
+
+            // Сохраняем последний просмотренный сервис
+            settings.lastViewedService = service;
+            saveSettings();
         };
 
         dialog.querySelector('#uploadService').addEventListener('change', updateServiceSettings);
@@ -1909,34 +1632,7 @@
 
         // <-- Настройки сохранения -->
         dialog.querySelector('#saveSettings').addEventListener('click', () => {
-            settings.uploadService = dialog.querySelector('#uploadService').value;
-
-            // Сохраняем настройки FastPic
-            settings.fastpic = {
-                codeFormat: dialog.querySelector('#fastpic-codeFormat').value,
-                thumb: {
-                    checkThumb: dialog.querySelector('#fastpic-checkThumb').value,
-                    thumbText: dialog.querySelector('#fastpic-thumbText').value,
-                    thumbSize: dialog.querySelector('#fastpic-thumbSize').value,
-                    thumbSizeVertical: dialog.querySelector('#fastpic-thumbSizeVertical').checked
-                },
-                image: {
-                    origResize: {
-                        enabled: dialog.querySelector('#fastpic-origResizeEnabled').checked,
-                        resSelect: dialog.querySelector('#fastpic-resSelect').value,
-                        customSize: dialog.querySelector('#fastpic-customSize').value
-                    },
-                    origRotate: {
-                        enabled: dialog.querySelector('#fastpic-origRotateEnabled').checked,
-                        value: dialog.querySelector('#fastpic-origRotate').value
-                    },
-                    optimization: {
-                        enabled: dialog.querySelector('#fastpic-optimizationEnabled').checked,
-                        jpegQuality: dialog.querySelector('#fastpic-jpegQuality').value
-                    },
-                    poster: dialog.querySelector('#fastpic-poster').checked
-                }
-            };
+            // settings.uploadService = dialog.querySelector('#uploadService').value;
 
             // Сохраняем настройки New FastPic
             settings.newfastpic = {
@@ -1951,6 +1647,10 @@
                     origResize: {
                         enabled: dialog.querySelector('#newfastpic-origResizeEnabled').checked,
                         customSize: dialog.querySelector('#newfastpic-customSize').value
+                    },
+                    origRotate: {
+                        enabled: dialog.querySelector('#newfastpic-origRotateEnabled').checked,
+                        value: dialog.querySelector('#newfastpic-origRotate').value
                     },
                     optimization: {
                         enabled: dialog.querySelector('#newfastpic-optimizationEnabled').checked,
@@ -2039,20 +1739,6 @@
                 if (nnmNav) {
                     // Вставляем в начало
                     nnmNav.insertBefore(uploadButton, nnmNav.firstChild);
-                }
-                break;
-
-            case '4pda':
-                // Создаем новую кнопку для 4pda
-                uploadButton = document.createElement('input');
-                uploadButton.type = 'button';
-                uploadButton.value = 'Загрузить картинку';
-                uploadButton.className = 'zbtn zbtn-default';  // Используем стили 4pda
-                uploadButton.style.cssText = 'margin: 0 5px;';
-                const pdaNav = document.querySelector('.dfrms.text-center') || document.querySelector('div[style*="margin-top:3px"]');
-                if (pdaNav) {
-                    // Вставляем в начало
-                    pdaNav.insertBefore(uploadButton, pdaNav.firstChild);
                 }
                 break;
         }

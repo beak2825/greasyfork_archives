@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube 2 columns fix
 // @namespace    http://tampermonkey.net/
-// @version      1.09
+// @version      1.10
 // @description  Youtube watch page with 1 column videos
 // @author       You
 // @match        *://www.youtube.com/*
@@ -16,12 +16,12 @@
     'use strict';
 let style = document.createElement('style');
 let cssOutput = `
-ytd-watch-next-secondary-results-renderer {
-display: block !important;
-}
 ytd-watch-next-secondary-results-renderer * {
 grid-template-columns: unset !important;
 grid-auto-flow: unset !important;
+}
+ytd-watch-flexy .ytd-watch-next-secondary-results-renderer {
+display: block !important;
 }
 .style-scope .ytd-watch-flexy #secondary {
 width: 400px !important;
@@ -34,12 +34,13 @@ flex-direction: row !important;
 align-items: flex-start !important;
 margin: 0 !important;
 padding: 0 !important;
-margin-bottom: 3px !important;
+margin-bottom: 8px !important;
 }
 ytd-watch-flexy #secondary-inner .yt-lockup-view-model__content-image {
 flex-shrink: 0 !important;
 width: 170px !important;
 height: auto !important;
+padding: 0 !important;
 }
 ytd-watch-flexy #secondary-inner .yt-lockup-view-model--wrapper.lockup {
 margin: 0 !important;
@@ -47,7 +48,6 @@ margin-bottom: 0 !important;
 min-height: 0 !important;
 }
 ytd-watch-flexy #secondary-inner .yt-lockup-view-model--vertical {
-margin: 0 !important;
 padding: 0 !important;
 }
 ytd-watch-flexy #secondary-inner .yt-lockup-view-model--rich-grid-legacy-margin {
@@ -56,12 +56,12 @@ padding: 0 !important;
 }
 ytd-watch-flexy #secondary-inner .yt-lockup-metadata-view-model__text-container {
 margin-left: 6px !important;
-margin-top: -4px !important;
+margin-top: -3px !important;
 line-height: normal !important;
 max-width: 260px !important;
 }
 ytd-watch-flexy #secondary-inner .yt-lockup-metadata-view-model__menu-button {
-margin-top: -4px !important;
+margin-top: -2px !important;
 }
 ytd-watch-flexy #secondary-inner ytd-compact-video-renderer {
 display: none !important;

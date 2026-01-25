@@ -1,16 +1,21 @@
 // ==UserScript==
 // @name         Y2K Image Uploader
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      2.5
 // @description  Paste or Drag images to upload to your Y2K VPS and get Markdown links immediately.
 // @author       You
-// @match        *://*/*
+// @match        *://www.nodeseek.com/*
+// @match        *://nodeseek.com/*
+// @match        *://y2k.zrn.qzz.io/*
+// @match        *://*.y2k.zrn.qzz.io/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setClipboard
 // @grant        GM_notification
 // @grant        GM_getValue
 // @grant        GM_setValue
-// @connect      *
+// @grant        GM_deleteValue
+// @connect      y2k.zrn.qzz.io
+// @connect      api.y2k.zrn.qzz.io
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/563865/Y2K%20Image%20Uploader.user.js
 // @updateURL https://update.greasyfork.org/scripts/563865/Y2K%20Image%20Uploader.meta.js
@@ -18,37 +23,262 @@
 (function () {
     'use strict';
 
-    // Config - Change this to your VPS Domain
-    const SERVER_URL = 'https://y2k.zrn.qzz.io';
-    const UPLOAD_API = `${SERVER_URL}/api/images`;
-    const BATCH_UPLOAD_API = `${SERVER_URL}/api/images/batch`;
+    // ===== 全局配置 (Global Configuration) =====
+    const APP = {
+        api: {
+            key: GM_getValue('y2k_apiKey', ''),
+            setKey: key => {
+                GM_setValue('y2k_apiKey', key);
+                APP.api.key = key;
+                UI.updateState();
+            },
+            clearKey: () => {
+                GM_deleteValue('y2k_apiKey');
+                APP.api.key = '';
+                UI.updateState();
+            },
+            endpoints: {
+                upload: 'https://y2k.zrn.qzz.io/api/images',
+                batchUpload: 'https://y2k.zrn.qzz.io/api/images/batch',
+                apiKey: 'https://y2k.zrn.qzz.io/api/auth/user/api-key'
+            }
+        },
+        site: {
+            url: 'https://y2k.zrn.qzz.io'
+        },
+        storage: {
+            keys: {
+                loginCheck: 'y2k_login_check',
+                loginStatus: 'y2k_login_status',
+                logout: 'y2k_logout'
+            },
+            get: key => localStorage.getItem(APP.storage.keys[key]),
+            set: (key, value) => localStorage.setItem(APP.storage.keys[key], value),
+            remove: key => localStorage.removeItem(APP.storage.keys[key])
+        },
+        retry: {
+            max: 2,
+            delay: 1000
+        },
+        statusTimeout: 2000,
+        auth: {
+            recentLoginGracePeriod: 30000,
+            loginCheckInterval: 3000,
+            loginCheckTimeout: 300000
+        }
+    };
 
     // State
-    let uploadMode = false;
-    let dragCounter = 0; // To handle dragenter/dragleave bubbling
+    let uploadMode = true;
+    let dragCounter = 0;
     let autoCloseTimer;
-    let pendingFiles = []; // Track files being uploaded
+    let pendingFiles = [];
     let uploadResults = [];
 
-    // --- AUTH HELPERS ---
-    function getStoredToken() {
-        return GM_getValue('y2k_token', '');
-    }
+    // ===== 工具函数 (Utility Functions) =====
+    const Utils = {
+        isY2KSite: () => /y2k\.zrn\.qzz\.io$/.test(window.location.hostname),
+        delay: ms => new Promise(r => setTimeout(r, ms))
+    };
 
-    function setStoredToken(token) {
-        GM_setValue('y2k_token', token.trim());
-    }
+    // ===== API通信 (API Communication) =====
+    const API = {
+        request: ({ url, method = 'GET', data = null, headers = {}, withAuth = false }) => {
+            console.log(`[Y2K] [API] Request: ${method} ${url}`);
+            return new Promise((resolve, reject) => {
+                GM_xmlhttpRequest({
+                    method,
+                    url,
+                    headers: {
+                        'Accept': 'application/json',
+                        ...(withAuth && APP.api.key ? { 'X-API-Key': APP.api.key } : {}),
+                        ...headers
+                    },
+                    data,
+                    withCredentials: true,
+                    // 不使用 json 类型，手动解析以防万一
+                    onload: response => {
+                        console.log(`[Y2K] [API] Response ${response.status} for ${url}`);
+                        try {
+                            const resData = JSON.parse(response.responseText);
+                            if (response.status >= 200 && response.status < 300) {
+                                resolve(resData);
+                            } else {
+                                console.error(`[Y2K] [API] Error status ${response.status}:`, resData);
+                                reject(resData);
+                            }
+                        } catch (e) {
+                            console.error(`[Y2K] [API] Parse error for ${url}:`, response.responseText);
+                            reject({ error: 'Invalid JSON response' });
+                        }
+                    },
+                    onerror: err => {
+                        console.error(`[Y2K] [API] Network Error for ${url}:`, err);
+                        reject(err);
+                    }
+                });
+            });
+        },
 
-    function promptToken() {
-        const currentToken = getStoredToken();
-        const newToken = prompt('Please enter your Supabase Auth Token (sb-access-token from your site storage):', currentToken);
-        if (newToken !== null) {
-            setStoredToken(newToken);
-            if (newToken) {
-                GM_notification({ text: 'Token saved!', title: 'Y2K Uploader', timeout: 2000 });
+        checkLoginAndGetKey: async () => {
+            try {
+                // 从 localStorage 获取 Supabase Token
+                const projectRef = 'imldlbilfdrorglhpwnh';
+                const storageKey = `sb-${projectRef}-auth-token`;
+                const fallbackKey = 'sb-access-token';
+                const tokenData = localStorage.getItem(storageKey) || localStorage.getItem(fallbackKey);
+
+                if (!tokenData) {
+                    return false;
+                }
+
+                let token = '';
+                try {
+                    // Supabase 存储可能是 JSON 字符串
+                    const parsed = JSON.parse(tokenData);
+                    token = parsed.access_token || parsed;
+                } catch (e) {
+                    token = tokenData; // 可能是原始字符串
+                }
+
+                if (!token) {
+                    console.error('[Y2K] Sync Attempt: Extracted token is empty.');
+                    return false;
+                }
+
+                console.log('[Y2K] Sync Attempt: Requesting API Key...');
+                const response = await API.request({
+                    url: APP.api.endpoints.apiKey,
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response && response.api_key) {
+                    console.log('[Y2K] Sync Attempt: Success! API Key obtained.');
+                    APP.api.setKey(response.api_key);
+                    return true;
+                }
+
+                console.warn('[Y2K] Sync Attempt: API returned success but no key:', response);
+                return false;
+            } catch (error) {
+                console.error('[Y2K] Sync Attempt: Critical error:', error);
+                APP.api.clearKey();
+                return false;
             }
         }
-    }
+    };
+
+    // ===== UI与状态管理 (UI & Status Management) =====
+    const STATUS = {
+        SUCCESS: { class: 'success', color: '#4ade80' },
+        ERROR: { class: 'error', color: '#ef4444' },
+        WARNING: { class: 'warning', color: '#e6a23c' },
+        INFO: { class: 'info', color: '#1890ff' }
+    };
+
+    const MESSAGE = {
+        READY: 'Y2K已就绪',
+        UPLOADING: '正在上传...',
+        UPLOAD_SUCCESS: '上传成功！',
+        LOGIN_EXPIRED: '登录已失效',
+        LOGOUT: '已退出登录',
+        RETRY: (current, max) => `重试上传 (${current}/${max})`
+    };
+
+    // ===== 认证管理 (Authentication Management) =====
+    const Auth = {
+        checkLoginIfNeeded: async (forceCheck = false) => {
+            if (APP.api.key && !forceCheck) {
+                return true;
+            }
+
+            const isLoggedIn = await API.checkLoginAndGetKey();
+
+            if (!isLoggedIn && APP.api.key) {
+                setStatus(STATUS.WARNING.class, MESSAGE.LOGIN_EXPIRED);
+            }
+
+            UI.updateState();
+
+            return isLoggedIn;
+        },
+
+        checkLogoutFlag: () => {
+            if (APP.storage.get('logout') === 'true') {
+                APP.api.clearKey();
+                APP.storage.remove('logout');
+                setStatus(STATUS.WARNING.class, MESSAGE.LOGOUT);
+            }
+        },
+
+        checkRecentLogin: async () => {
+            const lastLoginCheck = APP.storage.get('loginCheck');
+            if (lastLoginCheck && (Date.now() - parseInt(lastLoginCheck) < APP.auth.recentLoginGracePeriod)) {
+                await API.checkLoginAndGetKey();
+                APP.storage.remove('loginCheck');
+            }
+        },
+
+        setupStorageListener: () => {
+            window.addEventListener('storage', event => {
+                const { loginStatus, logout } = APP.storage.keys;
+
+                if (event.key === loginStatus && event.newValue === 'login_success') {
+                    API.checkLoginAndGetKey();
+                    localStorage.removeItem(loginStatus);
+                } else if (event.key === logout && event.newValue === 'true') {
+                    APP.api.clearKey();
+                    localStorage.removeItem(logout);
+                }
+            });
+        },
+
+        monitorLogout: () => {
+            document.addEventListener('click', e => {
+                const logoutButton = e.target.closest('#logoutBtn, .logout-btn');
+                if (logoutButton || e.target.textContent?.match(/登出|注销|退出|logout|sign out/i)) {
+                    APP.storage.set('logout', 'true');
+                }
+            });
+        },
+
+        startLoginStatusCheck: () => {
+            const checkLoginInterval = setInterval(async () => {
+                try {
+                    const isLoggedIn = await API.checkLoginAndGetKey();
+
+                    if (isLoggedIn) {
+                        clearInterval(checkLoginInterval);
+
+                        APP.storage.remove('loginStatus');
+                        APP.storage.set('loginStatus', 'login_success');
+                        APP.storage.set('loginCheck', Date.now().toString());
+                    }
+                } catch (error) { }
+            }, APP.auth.loginCheckInterval);
+
+            setTimeout(() => clearInterval(checkLoginInterval), APP.auth.loginCheckTimeout);
+        },
+
+        handleY2KSite: () => {
+            console.log('[Y2K] Running on Y2K native site, forcing credentials sync...');
+            Auth.checkLoginIfNeeded(true); // Force sync on Y2K site
+
+            // 定期重试，以防 SPA 登录后延迟写入 localStorage
+            const syncTimer = setInterval(async () => {
+                if (!APP.api.key) {
+                    console.log('[Y2K] Retrying credentials sync...');
+                    await Auth.checkLoginIfNeeded(true);
+                } else {
+                    clearInterval(syncTimer);
+                }
+            }, 5000);
+
+            setTimeout(() => clearInterval(syncTimer), 60000); // 1分钟后停止检查
+
+            Auth.monitorLogout();
+        }
+    };
 
     // --- UI & STYLES ---
     const STYLES = `
@@ -133,25 +363,104 @@
             position: fixed;
             bottom: 20px;
             left: 20px;
-            background: rgba(0,0,0,0.8);
+            background: rgba(20,20,20,0.9);
             color: #fff;
-            padding: 6px 12px;
+            padding: 8px 16px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 12px;
             z-index: 999999;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            display: none;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .y2k-mini-stat.visible {
-            display: block;
-        }
-        .y2k-mini-stat.active {
             opacity: 1;
-            border-color: #52c41a;
-            color: #52c41a;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(8px);
+            animation: y2k-float 4s ease-in-out infinite;
+        }
+        @keyframes y2k-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        .y2k-mini-stat.success {
+            border-color: rgba(74, 222, 128, 0.4);
+            color: #4ade80;
+        }
+        .y2k-mini-stat.error {
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #ef4444;
+        }
+        .y2k-mini-stat.warning {
+            border-color: rgba(230, 162, 60, 0.4);
+            color: #e6a23c;
+        }
+        .y2k-mini-stat-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 8px currentColor;
+            animation: y2k-breathe 2s ease-in-out infinite;
+        }
+        @keyframes y2k-breathe {
+            0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 8px currentColor; }
+            50% { opacity: 0.6; transform: scale(1.2); box-shadow: 0 0 12px currentColor; }
+        }
+        /* Scanline Effect via Pseudo-element */
+        .y2k-mini-stat::after,
+        .y2k-modal::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent,
+                rgba(255, 255, 255, 0.05) 50%,
+                transparent 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            opacity: 0.15;
+            z-index: 1000;
+            border-radius: inherit;
+            animation: y2k-scan 8s linear infinite;
+        }
+        @keyframes y2k-scan {
+            from { background-position: 0 0; }
+            to { background-position: 0 100%; }
+        }
+        /* Login Button */
+        .y2k-login-btn {
+            position: fixed;
+            bottom: 65px;
+            left: 20px;
+            cursor: pointer;
+            color: #e6a23c;
+            font-size: 12px;
+            background: rgba(230, 162, 60, 0.1);
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(230, 162, 60, 0.4);
+            backdrop-filter: blur(8px);
+            z-index: 999999;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .y2k-login-btn:hover {
+            background: rgba(230, 162, 60, 0.2);
+            transform: translateY(-2px);
+        }
+        .y2k-login-btn::before {
+            content: '🔑';
+            font-size: 10px;
         }
         /* BATCH UPLOAD LIST */
         .y2k-file-list {
@@ -227,16 +536,65 @@
     let modalBackdrop, modal, previewImg, modalTitle, modalText, progressBar, progressWrapper, fileListContainer, summaryText;
     let miniStat;
 
+    const DOM = {
+        statusElements: new Set(),
+        loginButtons: new Set()
+    };
+
+    function setStatus(cls, msg, ttl = 0) {
+        DOM.statusElements.forEach(el => {
+            el.className = `y2k-mini-stat ${cls}`;
+            el.innerHTML = `<div class="y2k-mini-stat-dot"></div><span>${msg}</span>`;
+        });
+        if (ttl && miniStat) return Utils.delay(ttl).then(UI.updateState);
+    }
+
+    const UI = {
+        updateState: () => {
+            const isLoggedIn = Boolean(APP.api.key);
+
+            DOM.loginButtons.forEach(btn => {
+                btn.style.display = isLoggedIn ? 'none' : 'inline-block';
+            });
+
+            DOM.statusElements.forEach(el => {
+                if (isLoggedIn) {
+                    el.className = `y2k-mini-stat ${STATUS.SUCCESS.class}`;
+                    el.innerHTML = `<div class="y2k-mini-stat-dot"></div><span>${MESSAGE.READY}</span>`;
+                } else {
+                    el.className = 'y2k-mini-stat';
+                    el.innerHTML = `<div class="y2k-mini-stat-dot" style="background:#666"></div><span>未录入凭据</span>`;
+                }
+            });
+        },
+
+        openLogin: () => {
+            APP.storage.set('loginStatus', 'login_pending');
+            window.open(APP.site.url, '_blank');
+        }
+    };
+
     function initUI() {
+        console.log('[Y2K] Initializing UI elements...');
         injectStyles();
 
         // 1. Mini Status Indicator
         miniStat = document.createElement('div');
         miniStat.className = 'y2k-mini-stat';
-        miniStat.innerHTML = '&#9679; Y2K Ready'; // Dot symbol
+        miniStat.innerHTML = '<div class="y2k-mini-stat-dot"></div><span>Initializing...</span>';
         document.body.appendChild(miniStat);
+        DOM.statusElements.add(miniStat);
 
-        // 2. Modal Structure
+        // 2. Login Button (for toolbar injection)
+        const loginBtn = document.createElement('div');
+        loginBtn.className = 'y2k-login-btn';
+        loginBtn.textContent = '点击登录Y2K';
+        loginBtn.addEventListener('click', UI.openLogin);
+        loginBtn.style.display = 'none';
+        document.body.appendChild(loginBtn);
+        DOM.loginButtons.add(loginBtn);
+
+        // 3. Modal Structure
         modalBackdrop = document.createElement('div');
         modalBackdrop.className = 'y2k-modal-backdrop';
 
@@ -324,8 +682,8 @@
 
             item.innerHTML = `
                 ${statusHtml}
-                <div class="y2k-file-name" title="${file.name}">${file.name}</div>
-                <div class="y2k-file-size">${formatFileSize(file.size)}</div>
+                <div class="y2k-file-name" title="${file.file.name}">${file.file.name}</div>
+                <div class="y2k-file-size">${formatFileSize(file.file.size)}</div>
             `;
             fileListContainer.appendChild(item);
         });
@@ -365,33 +723,15 @@
     // --- LOGIC ---
 
     function toggleMode() {
+        console.log('[Y2K] Toggling mode. Previous state:', uploadMode);
         uploadMode = !uploadMode;
         if (uploadMode) {
-            miniStat.classList.add('visible', 'active');
-            miniStat.innerHTML = '&#9679; Y2K Upload ON'; // Greenish
-            showModal('Y2K Upload Mode', 'Activated<br>Paste or Drop images', false, null);
-            hideModalDelayed(1000);
+            setStatus(STATUS.SUCCESS.class, 'Y2K已就绪');
         } else {
-            miniStat.classList.remove('active');
-            miniStat.innerHTML = '&#9675; Y2K Upload OFF';
-            setTimeout(() => miniStat.classList.remove('visible'), 2000);
+            UI.updateState();
             hideModal();
         }
     }
-
-    initUI();
-
-    // Key Listener
-    document.addEventListener('keydown', (e) => {
-        // Alt + U: Toggle Upload Mode
-        if (e.altKey && e.code === 'KeyU') {
-            toggleMode();
-        }
-        // Alt + T: Set Token
-        if (e.altKey && e.code === 'KeyT') {
-            promptToken();
-        }
-    });
 
     // Validates files and calls upload
     function handleFiles(files) {
@@ -414,40 +754,10 @@
         uploadBatchImages(pendingFiles);
     }
 
-    // Paste
-    document.addEventListener('paste', (event) => {
-        if (!uploadMode) return;
-        const items = (event.clipboardData || event.originalEvent.clipboardData).items;
-        const files = [];
-        for (let i = 0; i < items.length; i++) {
-            if (items[i].type.indexOf('image') !== -1) {
-                event.preventDefault();
-                const file = items[i].getAsFile();
-                if (file) files.push(file);
-            }
-        }
-        if (files.length > 0) {
-            handleFiles(files);
-        }
-    });
-
-    // Drag Drop
-    // We don't use a full overlay anymore, just the bubbling check
-    document.addEventListener('dragover', (e) => {
-        if (uploadMode) e.preventDefault();
-    });
-    document.addEventListener('drop', (e) => {
-        if (!uploadMode) return;
-        e.preventDefault();
-        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-            handleFiles(e.dataTransfer.files);
-        }
-    });
-
-    function uploadBatchImages(files) {
-        const token = getStoredToken();
-        if (!token) {
-            showModal('需要认证', '请先设置 Token (Alt + T)', false, null, false);
+    async function uploadBatchImages(files) {
+        // 检查 API Key
+        if (!APP.api.key || !(await Auth.checkLoginIfNeeded())) {
+            showModal('需要认证', '请先登录 Y2K (点击页面左下角按钮)', false, null, false);
             return;
         }
 
@@ -462,9 +772,9 @@
 
         GM_xmlhttpRequest({
             method: 'POST',
-            url: BATCH_UPLOAD_API,
+            url: APP.api.endpoints.batchUpload,
             headers: {
-                'Authorization': `Bearer ${token}`
+                'X-API-Key': APP.api.key
             },
             data: formData,
             upload: {
@@ -493,7 +803,7 @@
                                 f.status = 'error';
                             } else if (result) {
                                 f.status = 'success';
-                                f.url = SERVER_URL + result.data.url;
+                                f.url = APP.site.url + result.data.url;
                             } else {
                                 f.status = 'error';
                             }
@@ -522,14 +832,18 @@
                         hideModalDelayed(4000);
                     } else {
                         if (response.status === 401) {
-                            showModal('认证失败', 'Token 无效或已过期。按 Alt+T 重置。', false, null, false);
+                            showModal('认证失败', 'API Key 无效或已过期。请重新登录 Y2K。', false, null, false);
+                            APP.api.clearKey();
+                            UI.updateState();
                         } else {
                             showModal('错误', res.error || '批量上传失败', false, null, false);
                         }
                     }
                 } catch (e) {
                     if (response.status === 401) {
-                        showModal('认证失败', '请设置 Token。按 Alt+T。', false, null, false);
+                        showModal('认证失败', 'API Key 无效。请重新登录 Y2K。', false, null, false);
+                        APP.api.clearKey();
+                        UI.updateState();
                     } else {
                         showModal('错误', '服务器响应无效', false, null, false);
                     }
@@ -560,6 +874,87 @@
                 document.execCommand('insertText', false, `\n${md}\n`);
             }
         }
+    }
+
+    // ===== 初始化 (Initialization) =====
+    const init = async () => {
+        // 初始化 UI（确保 DOM 已准备好）
+        console.log('[Y2K] Initializing...');
+        initUI();
+
+        // （已取消 Alt+U 切换，默认有凭证即开启）
+
+        // 如果在 Y2K 网站，则执行特定的登录/登出辅助逻辑
+        if (Utils.isY2KSite()) {
+            Auth.handleY2KSite();
+        } else {
+            // 在其他网站上的核心初始化流程
+            // 页面重新获得焦点时，检查登录状态
+            window.addEventListener('focus', () => Auth.checkLoginIfNeeded());
+
+            // 监听粘贴和拖拽事件
+            // Paste
+            document.addEventListener('paste', (event) => {
+                if (!uploadMode) return;
+                const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                const files = [];
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        event.preventDefault();
+                        const file = items[i].getAsFile();
+                        if (file) files.push(file);
+                    }
+                }
+                if (files.length > 0) {
+                    handleFiles(files);
+                }
+            });
+
+            // Drag Drop
+            const handleDragEvent = (e) => {
+                if (!uploadMode) return;
+
+                // Check if it's a file drag
+                const isFile = e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files');
+                if (!isFile) return;
+
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                if (e.type === 'dragover') {
+                    e.dataTransfer.dropEffect = 'copy';
+                }
+
+                if (e.type === 'drop') {
+                    console.log('[Y2K] File dropped successfully.');
+                    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                        handleFiles(e.dataTransfer.files);
+                    }
+                }
+            };
+
+            document.addEventListener('dragenter', handleDragEvent, true);
+            document.addEventListener('dragover', handleDragEvent, true);
+            document.addEventListener('drop', handleDragEvent, true);
+        }
+
+        // 启动时执行认证状态检查（所有网站都执行）
+        Auth.checkLogoutFlag();
+        Auth.setupStorageListener();
+        await Auth.checkRecentLogin();
+        await Auth.checkLoginIfNeeded();
+
+        // 更新 UI 状态
+        UI.updateState();
+        console.log('[Y2K] Initialization complete.');
+    };
+
+    // 使用 DOMContentLoaded 而不是 load，确保更早执行
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        // DOM 已经加载完成，直接执行
+        init();
     }
 
 })();

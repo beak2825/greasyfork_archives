@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Reddit - Restore subscribers counter
 // @namespace       https://greasyfork.org/users/821661
-// @version         1.0.6
+// @version         1.0.7
 // @description     restore subscribers counter on reddit
 // @author          hdyzen
 // @grant           GM_registerMenuCommand
@@ -65,22 +65,6 @@ function formatNumber(number) {
 }
 
 async function setCountersDesktop() {
-    const isOldReddit = window.location.hostname.startsWith("old.");
-
-    if (isOldReddit) {
-        const subscribeButton = document.querySelector(".subscribe-button");
-        const { subscribers, online } = await getCountNumbers();
-
-        const html = `
-            <span class="subscribers"><span class="number">${formatNumber(subscribers)}</span> <span class="word">readers</span></span>
-            <p class="users-online"><span class="number">${formatNumber(online)}</span> <span class="word">users here now</span></p>    
-        `;
-
-        subscribeButton.insertAdjacentHTML("afterend", html);
-
-        return;
-    }
-
     const observer = new MutationObserver(() => {
         const node = document.querySelector("shreddit-subreddit-header:not([subscribers])");
         if (!node) return;
@@ -148,15 +132,10 @@ async function getCountNumbers() {
             },
             onload(event) {
                 try {
-                    console.log("Load", event);
-
                     const doc = event.response;
                     const counters = doc.querySelectorAll("#subgrid-container div.xs\\:hidden faceplate-number");
                     const subscribers = counters[0].getAttribute("number");
                     const online = counters[1].getAttribute("number");
-
-                    console.log("Counters", counters);
-                    console.log(`Subscribers: ${subscribers}, Online: ${online}`);
 
                     if (counters) {
                         resolve({ subscribers, online });
@@ -164,19 +143,44 @@ async function getCountNumbers() {
                         reject("Counters not found");
                     }
                 } catch (err) {
+                    console.error("Error on get count numbers:", err);
                     reject(err);
                 }
             },
             onerror(err) {
+                console.error("Error on get count numbers:", err);
+                reject(err);
+            },
+            ontimeout(err) {
+                console.error("Timeout on get count numbers:", err);
+                reject(err);
+            },
+            onabort(err) {
+                console.error("Abort on get count numbers:", err);
                 reject(err);
             },
         });
     });
 }
 
-const isMobile = GM_info?.platform?.mobile || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+async function setCountersOldReddit() {
+    const subscribeButton = document.querySelector(".subscribe-button");
+    const { subscribers, online } = await getCountNumbers();
 
-if (isMobile) {
+    const html = `
+            <span class="subscribers"><span class="number">${formatNumber(subscribers)}</span> <span class="word">readers</span></span>
+            <p class="users-online"><span class="number">${formatNumber(online)}</span> <span class="word">users here now</span></p>    
+        `;
+
+    subscribeButton.insertAdjacentHTML("afterend", html);
+}
+
+const isMobile = GM_info?.platform?.mobile || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+const isOldReddit = window.location.hostname.startsWith("old.");
+
+if (isOldReddit) {
+    setCountersOldReddit();
+} else if (isMobile) {
     setCounterMobile();
 } else {
     setCountersDesktop();

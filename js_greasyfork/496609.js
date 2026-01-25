@@ -2,9 +2,9 @@
 // @name         ✨微信公众号后台快捷工具✨
 // @icon         https://res.wx.qq.com/a/fed_upload/9300e7ac-cec5-4454-b75c-f92260dd5b47/logo-mp.ico
 // @namespace    https://greasyfork.org/zh-CN/users/1299634-weidingyi
-// @version      1.3.1
+// @version      1.3.2
 // @description  在草稿箱文章列表标题后边追加醒目提示,快捷生成草稿文章~
-// @author       weidingyi
+// @author       weidingyi@aliyun.com
 // @match        https://mp.weixin.qq.com/cgi-bin/appmsg*action=list_card*
 // @match        https://mp.weixin.qq.com/cgi-bin/appmsg*action=list*
 // @grant        unsafeWindow
@@ -307,7 +307,7 @@ const window = unsafeWindow;
                             var errDataList = JSON.parse(data.msg);
                             if (Array.isArray(errDataList)) {
                                 errDataList.forEach((item, key) => {
-                                    msgTips += 'url: ' + item.url + "<br> msg: " + item.msg + '<br><br>';
+                                    msgTips += 'name: '+ item.name + '<br>url: ' + item.url + "<br>msg: " + item.msg + '<br><br>';
                                 });
                             } else {
                                 msgTips = errDataList;

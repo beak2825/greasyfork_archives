@@ -2,7 +2,7 @@
 // @license MIT
 // @name         Youtube Save/Resume Progress
 // @namespace    http://tampermonkey.net/
-// @version      1.8.0
+// @version      1.9.0
 // @description  Have you ever closed a YouTube video by accident, or have you gone to another one and when you come back the video starts from 0? With this extension it won't happen anymore
 // @author       Costin Alexandru Sandu
 // @match        https://www.youtube.com/watch*
@@ -25,6 +25,8 @@
     dependenciesURLs: {
       fontAwesomeIcons:
         "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css",
+      interFont:
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap",
     },
     userSettings: {
       minDuration: 0,
@@ -51,7 +53,7 @@
   const CSS_STYLES = `
     .last-save-info-container {
       all: initial;
-      font-family: inherit;
+      font-family: 'Inter', sans-serif;
       font-size: 1.3rem;
       margin-left: 0.5rem;
       display: flex;
@@ -74,7 +76,7 @@
     .dashboard-container {
       all: initial;
       position: absolute;
-      font-family: inherit;
+      font-family: 'Inter', sans-serif;
       box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
       border: 1px solid #d5d5d5;
       width: 50rem;
@@ -142,6 +144,7 @@
     .ysrp-videos-list-container {
       flex: 1;
       overflow: auto;
+      overscroll-behavior: contain;
     }
     .ysrp-videos-list {
       display: flex;
@@ -194,6 +197,7 @@
     .ysrp-config-container {
       flex: 1;
       overflow: auto;
+      overscroll-behavior: contain;
       display: flex;
       flex-direction: column;
       gap: 1rem;
@@ -1085,10 +1089,21 @@
       icon.classList.add("fa-gear");
     });
   }
+  
+  function addInterFont() {
+    const head = document.getElementsByTagName("HEAD")[0];
+    const fontLink = document.createElement("link");
+    Object.assign(fontLink, {
+      rel: "stylesheet",
+      href: configData.dependenciesURLs.interFont,
+    });
+    head.appendChild(fontLink);
+  }
 
   function initializeDependencies() {
     injectStyles();
     addFontawesomeIcons();
+    addInterFont();
     setFloatingDashboardUi();
   }
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        AI语言学习专家
 // @namespace   http://tampermonkey.net/
-// @version     1.39
+// @version     1.4
 // @license     MIT
 // @description 全DeepSeek驱动的英语学习专家。双击Alt查词(0.5s)，Alt+1高亮，Alt+2开关侧边栏(自动吸附查词)，Alt+3开关阅读模式。支持自定义跳转AI网站与生词本。
 // @author      杨俊贤 & Gemini & 豆包编程助手
@@ -131,7 +131,13 @@ const UI = {
             defStartIndex = 2;
         }
         const headRow = UI.el('div', { className: 'ds-head-row' }, [
-            UI.el('span', { className: 'ds-headword' }, headword),
+            UI.el('span', {
+                className: 'ds-headword',
+                title: '点击强制刷新 (重新联网获取)',
+                style: { cursor: 'pointer', transition: 'color 0.2s' },
+                onmouseover: (e) => e.target.style.setProperty('color', 'var(--ds-accent)', 'important'),
+                onmouseout: (e) => e.target.style.setProperty('color', '#1E90FF', 'important')
+            }, headword),
             ipa ? UI.el('span', { className: 'ds-clickable-ipa' }, ipa) : null
         ]);
         container.appendChild(headRow);
@@ -182,10 +188,10 @@ const UI = {
 
 // ==================== 1. 配置与状态管理 ====================
 const DEFAULT_PROMPTS = [
-    "同义词=请作为语言专家，列出与查询词【同语种】的至少5个同义词，并进行简要辨析。",
-    "反义词=请作为语言专家，列出与查询词【同语种】的至少5个反义词，并进行简要说明。",
-    "同根词=请作为语言专家，列出与查询词【同语种】的至少5个同根词或派生词。",
-    "词源词根=请详细分析该词的词源和词根，字数控制在50字到200字之间。"
+    "同义词=请作为语言专家，列出与查询词【同语种】的至少5个同义词，不要废话。",
+    "反义词=请作为语言专家，列出与查询词【同语种】的至少5个反义词，不要废话。",
+    "同根词=请作为语言专家，列出与查询词【同语种】的至少5个同根词或派生词，不要废话。",
+    "词源词根=先给我词根，再给我词源；关于词源内容一定要有趣，字数控制在50字到150字之间。"
 ];
 
 const DEFAULT_SITES = [
@@ -236,7 +242,7 @@ const DS_CONFIG = {
         disabledSites: GM_getValue('ds_disabled_sites', []),
         lastAiSite: GM_getValue('ds_last_ai_site', DEFAULT_SITES[0].split('=')[1]),
         historySort: GM_getValue('ds_history_sort', 'time_desc'),
-        hiddenIcons: GM_getValue('ds_hidden_icons', []) // 新增：存储隐藏的图标ID
+        hiddenIcons: GM_getValue('ds_hidden_icons', [])
     },
     runtime: {
         activeTab: 'history',
@@ -280,7 +286,13 @@ const DS_CONFIG = {
         GLOBAL_STORAGE_KEY: 'ds_global_history_v1',
         VOCAB_CACHE_KEY: 'v3_vocab_ds_cache',
         GLOBAL_DICT_CACHE_KEY: 'ds_dict_cache_global', // Cache for dictionaries
-        STORAGE_KEY: 'v3_pos_highlights_' + btoa(encodeURIComponent(window.location.host + window.location.pathname)).substring(0, 50)
+        STORAGE_KEY: 'v3_pos_highlights_' + btoa(encodeURIComponent(window.location.host + window.location.pathname)).substring(0, 50),
+        PROMPTS: {
+            DICT_CN: "你是一个专业的汉语词典接口。请严格按照词典格式输出，150字内。",
+            DICT_EN: "你是一个专业的英语词典接口。请严格按照以下 ECDICT 数据结构输出信息，不要提供例句，150字内，禁止循环。\n\n格式要求：\n单词原型\n/音标/\n词性. 中文释义\n特殊的变体",
+            CHAT: "你是一位专业的英语学习助手。",
+            SUMMARY: "你是一位专业的文本分析师，需要对提供的文章内容进行结构化总结，要求：1. 分点呈现核心观点；2. 提炼文章关键信息、逻辑框架；3. 语言简洁专业，符合分析师报告风格；4. 忽略无关细节，聚焦文章主旨；5. 全部使用中文输出。"
+        }
     }
 };
 
@@ -288,7 +300,11 @@ const DOM = { sidebar: null, popup: null, highlightContent: null, readerWrapper:
 
 // ==================== 2. 样式定义 ====================
 function injectStyles() {
-    const css = `:root{--ds-bg:#202328;--ds-text:#c0c4c9;--ds-msg-bg:#25282e;--ds-border:#3a3f47;--ds-user-bg:#c0c4c9;--ds-user-text:#1a1d21;--ds-header-bg:#2b3038;--ds-accent:#3a7bd5;--ds-highlight-bg:#8B0000;--ds-highlight-text:#ffffff;--ds-menu-bg:#202328;--ds-menu-active-bg:#353b45;--ds-tab-inactive-bg:#2a2f36;--ds-tab-active-bg:#4a5059;--ds-tab-inactive-text:#888;--ds-popup-bg:#202328;--ds-popup-border:#444;--ds-hover-bg:rgba(255,255,255,0.06);--ds-continue-color:#6db3f2;--ds-slider-off:#444;--ds-slider-on:#3a7bd5;--ds-modal-bg:rgba(32,35,40,0.98);--ds-scrollbar-thumb:#4a5059}.ds-scrollable::-webkit-scrollbar,#ds-chat-log::-webkit-scrollbar,#ds-highlight-log::-webkit-scrollbar,#ds-input::-webkit-scrollbar,#ds-popup-left-content::-webkit-scrollbar,#ds-popup-right-content::-webkit-scrollbar,.ds-docked-scroll::-webkit-scrollbar{width:6px;height:6px}.ds-scrollable::-webkit-scrollbar-thumb,#ds-chat-log::-webkit-scrollbar-thumb,#ds-highlight-log::-webkit-scrollbar-thumb,#ds-input::-webkit-scrollbar-thumb,#ds-popup-left-content::-webkit-scrollbar-thumb,#ds-popup-right-content::-webkit-scrollbar-thumb,.ds-docked-scroll::-webkit-scrollbar-thumb{background:var(--ds-scrollbar-thumb);border-radius:3px}.ds-scrollable::-webkit-scrollbar-track,#ds-chat-log::-webkit-scrollbar-track,#ds-highlight-log::-webkit-scrollbar-track,#ds-input::-webkit-scrollbar-track,#ds-popup-left-content::-webkit-scrollbar-track,#ds-popup-right-content::-webkit-scrollbar-track,.ds-docked-scroll::-webkit-scrollbar-track{background:0 0}
+    const css = `:root{--ds-bg:#202328;--ds-text:#c0c4c9;--ds-msg-bg:#25282e;--ds-border:#3a3f47;--ds-user-bg:#c0c4c9;--ds-user-text:#1a1d21;--ds-header-bg:#2b3038;--ds-accent:#3a7bd5;--ds-highlight-bg:#8B0000;--ds-highlight-text:#ffffff;--ds-menu-bg:#202328;--ds-menu-active-bg:#353b45;--ds-tab-inactive-bg:#2a2f36;--ds-tab-active-bg:#4a5059;--ds-tab-inactive-text:#888;--ds-popup-bg:#202328;--ds-popup-border:#444;--ds-hover-bg:rgba(255,255,255,0.06);--ds-continue-color:#6db3f2;--ds-slider-off:#444;--ds-slider-on:#3a7bd5;--ds-modal-bg:rgba(32,35,40,0.98);--ds-scrollbar-thumb:#4a5059}
+
+    .ds-scrollable::-webkit-scrollbar,#ds-chat-log::-webkit-scrollbar,#ds-highlight-log::-webkit-scrollbar,#ds-input::-webkit-scrollbar,.ds-cfg-textarea::-webkit-scrollbar,#ds-popup-left-content::-webkit-scrollbar,#ds-popup-right-content::-webkit-scrollbar,.ds-docked-scroll::-webkit-scrollbar{width:6px;height:6px}
+    .ds-scrollable::-webkit-scrollbar-thumb,#ds-chat-log::-webkit-scrollbar-thumb,#ds-highlight-log::-webkit-scrollbar-thumb,#ds-input::-webkit-scrollbar-thumb,.ds-cfg-textarea::-webkit-scrollbar-thumb,#ds-popup-left-content::-webkit-scrollbar-thumb,#ds-popup-right-content::-webkit-scrollbar-thumb,.ds-docked-scroll::-webkit-scrollbar-thumb{background:var(--ds-scrollbar-thumb);border-radius:3px}
+    .ds-scrollable::-webkit-scrollbar-track,#ds-chat-log::-webkit-scrollbar-track,#ds-highlight-log::-webkit-scrollbar-track,#ds-input::-webkit-scrollbar-track,.ds-cfg-textarea::-webkit-scrollbar-track,#ds-popup-left-content::-webkit-scrollbar-track,#ds-popup-right-content::-webkit-scrollbar-track,.ds-docked-scroll::-webkit-scrollbar-track{background:0 0}
 
     #ds-sidebar{position:fixed;top:0;width:${DS_CONFIG.settings.sidebarWidth}px;height:100vh;background:var(--ds-bg)!important;z-index:2147483647;transition:right .3s cubic-bezier(.4,0,.2,1),left .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:row;color:var(--ds-text)!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;box-sizing:border-box!important;padding:0!important;box-shadow:0 0 20px rgba(0,0,0,.4)}
 
@@ -373,7 +389,10 @@ function injectStyles() {
     .ds-site-item:hover { background: var(--ds-hover-bg); border-color: #666; }
     .ds-site-item.active { border-color: var(--ds-accent); color: var(--ds-accent); }
 
-    #ds-config-panel,#ds-help-panel{position:absolute;top:0;left:0;width:100%;height:100%;background:var(--ds-bg);z-index:1001;padding:20px;box-sizing:border-box;display:none;flex-direction:column;overflow-y:auto}.cfg-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;font-size:14px}#cfg-api-key{width:100%;margin-top:5px;padding:8px;border-radius:4px;border:1px solid var(--ds-border);background:var(--ds-msg-bg);color:var(--ds-text);font-size:13px}.ds-cfg-textarea{width:100%;height:120px;padding:8px;border-radius:4px;border:1px solid var(--ds-border);background:var(--ds-msg-bg);color:var(--ds-text);font-family:monospace;font-size:12px;resize:vertical;margin-top:5px;white-space:pre-wrap;overflow-x:hidden;word-wrap:break-word}.ds-panel-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--ds-border);padding-bottom:10px;margin-bottom:20px}.ds-panel-title{font-size:18px;font-weight:700;color:var(--ds-accent)}.ds-panel-top-btn{padding:4px 12px;background:var(--ds-accent);color:#fff;border-radius:4px;font-size:12px;cursor:pointer;border:none}.ds-panel-top-btn:hover{opacity:0.9}.ds-help-item{margin-bottom:15px;display:flex;flex-direction:column;gap:5px}.ds-help-key{font-weight:700;color:var(--ds-text);font-family:monospace;background:var(--ds-msg-bg);padding:2px 6px;border-radius:4px;display:inline-block;width:fit-content}.ds-help-desc{font-size:13px;color:var(--ds-text);opacity:.8;line-height:1.4;white-space:pre-wrap}.ds-primary-btn{width:100%;padding:8px;background:var(--ds-accent);color:#fff;border:0;border-radius:4px;cursor:pointer;font-size:14px;transition:opacity .2s;text-align:center}.ds-primary-btn:hover{opacity:.9}#ds-highlight-content{flex:1}#ds-highlight-log,#ds-history-log{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:0;margin:0}.${DS_CONFIG.consts.HIGHLIGHT_CLASS}{background-color:var(--ds-highlight-bg)!important;color:var(--ds-highlight-text)!important;padding:0 2px!important;border-radius:2px;cursor:pointer;display:inline}.web-inline-trans{color:#1E90FF!important;font-size:.95em!important;font-weight:400!important;margin-left:0!important;display:block!important;background:0 0!important;box-shadow:none!important;border:0!important;padding:4px 0 8px!important}.web-inline-trans::before{content:""}.ds-inline-loading{animation:pulse 1.5s infinite}.ds-full-page-trans{color:#1E90FF!important;font-size:14px!important;font-weight:400!important;display:block!important;margin-top:4px!important;padding:2px 0 6px!important;line-height:1.5!important}.web-menu-item{display:flex!important;flex-direction:column!important;align-items:flex-start!important;padding:8px 12px!important;margin:0!important;background:var(--ds-menu-bg)!important;border-radius:0!important;cursor:default!important;transition:background-color .1s ease!important;border-bottom:1px solid rgba(255,255,255,.05)}.web-menu-item:hover{background:#353b45!important}.web-menu-header{display:flex;justify-content:space-between;width:100%;align-items:center;gap:8px;cursor:pointer}.web-menu-word{font-weight:700!important;color:#1E90FF!important;font-size:15px!important;}.web-menu-word:hover{text-decoration:none!important;color:var(--ds-accent)!important}.web-menu-jump{cursor:pointer;opacity:0.5;font-size:14px;padding:2px 6px}.web-menu-jump:hover{opacity:1;background:var(--ds-hover-bg);border-radius:4px}.web-menu-trans{display:none;margin-top:2px!important;color:#aaa!important;opacity:1;font-size:13px!important;line-height:1.4!important;white-space:pre-wrap!important;word-break:break-all!important;width:100%!important}#ds-confirm-modal{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);z-index:2000;display:none;align-items:center;justify-content:center;animation:fadeIn .2s ease}.ds-confirm-box{background:var(--ds-modal-bg);padding:25px 20px;border-radius:12px;width:75%;text-align:center;border:1px solid var(--ds-border);box-shadow:0 10px 30px rgba(0,0,0,.5);color:var(--ds-text)}.ds-confirm-text{font-size:15px;margin-bottom:20px;font-weight:500}.ds-confirm-btns{display:flex;gap:12px;justify-content:center}.ds-btn{padding:8px 20px;border-radius:6px;border:0;cursor:pointer;font-size:14px;font-weight:700;transition:transform .1s}.ds-btn:active{transform:scale(.95)}.ds-btn-yes{background:#ff3b30;color:#fff}.ds-btn-no{background:var(--ds-msg-bg);color:var(--ds-text);border:1px solid var(--ds-border)}@keyframes fadeIn{from{opacity:0}to{opacity:1}}#ds-popup{position:fixed;background:var(--ds-popup-bg);color:var(--ds-text);border:1px solid var(--ds-popup-border);border-radius:8px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.6);z-index:2147483660;display:none;flex-direction:column;min-width:400px;min-height:250px;max-width:90vw;max-height:80vh}.ds-resize-handle{position:absolute;z-index:100;opacity:0}.ds-resize-handle:hover{background:rgba(30,144,255,.2);opacity:1}.ds-rh-n{top:0;left:10px;right:10px;height:5px;cursor:ns-resize}.ds-rh-s{bottom:0;left:10px;right:10px;height:5px;cursor:ns-resize}.ds-rh-w{left:0;top:10px;bottom:10px;width:5px;cursor:ew-resize}.ds-rh-e{right:0;top:10px;bottom:10px;width:5px;cursor:ew-resize}.ds-rh-nw{top:0;left:0;width:10px;height:10px;cursor:nwse-resize;z-index:101}.ds-rh-ne{top:0;right:0;width:10px;height:10px;cursor:nesw-resize;z-index:101}.ds-rh-sw{bottom:0;left:0;width:10px;height:10px;cursor:nesw-resize;z-index:101}.ds-rh-se{bottom:0;right:0;width:10px;height:10px;cursor:nwse-resize;z-index:101}#ds-popup-header-bar{height:36px;width:100%;cursor:move;flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;padding-right:18px;gap:6px;background:var(--ds-header-bg);border-bottom:1px solid var(--ds-border)}.ds-popup-icon{cursor:pointer;font-size:15px;opacity:.6;transition:opacity .2s;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:var(--ds-text)}.ds-popup-icon:hover{opacity:1;background:var(--ds-hover-bg)}#ds-popup-close-float{font-size:16px}#ds-popup-body{display:flex;flex:1;overflow:hidden;position:relative;padding:0;width:100%;height:100%;cursor:default}.ds-split-view{width:100%;height:100%;display:flex}.ds-split-left{flex:1;border-right:1px solid var(--ds-border);padding:16px;overflow-y:auto;background:var(--ds-popup-bg)}.ds-split-right{flex:1;padding:16px;overflow-y:auto;background:var(--ds-popup-bg)}#ds-docked-panel{flex-direction:column;background:var(--ds-bg)}.ds-docked-toolbar{padding:8px;border-bottom:1px solid var(--ds-border);display:flex;justify-content:center;align-items:center;background:#2f343c}.ds-docked-title{font-size:13px;font-weight:700;color:#aaa}#ds-undock-btn{padding:4px 12px;border:1px solid var(--ds-border);background:var(--ds-menu-bg);color:var(--ds-text);border-radius:4px;font-size:12px;cursor:pointer}#ds-undock-btn:hover{background:var(--ds-hover-bg);border-color:#666}.ds-docked-content{flex:1;overflow-y:auto;display:flex;flex-direction:column}.ds-docked-section{padding:15px;border-bottom:1px solid var(--ds-border)}.ds-docked-scroll{overflow-y:auto;max-height:50%}.ds-popup-title{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--ds-accent);opacity:.9;letter-spacing:.5px;display:flex;align-items:center;gap:6px}.ds-popup-text{font-size:14px;line-height:1.6;white-space:pre-wrap;color:#ccc}.ds-popup-loading{color:#888;font-style:italic;animation:pulse 1.5s infinite}@keyframes pulse{0%{opacity:.5}50%{opacity:1}100%{opacity:.5}}.ds-target-italic{color:#1E90FF!important;font-weight:700;font-style:italic}.ds-head-row{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;flex-wrap:wrap}.ds-headword{color:#1E90FF!important;font-weight:700;font-size:15px!important;display:inline-block}.ds-dict-grid{display:grid;grid-template-columns:45px 1fr;gap:4px 0;align-items:baseline}.ds-pos-label{text-align:right;color:#98c379;font-style:italic;font-weight:700;font-size:12px;user-select:none;white-space:nowrap;overflow:visible;padding-right:8px}.ds-def-split{cursor:pointer;border-bottom:1px dashed transparent;transition:all .1s}.ds-def-split:hover{color:var(--ds-accent)}#ds-fab{display:none!important;}.ds-is-streaming .ds-def-split{pointer-events:none!important;cursor:wait}.ds-is-streaming{cursor:wait}#ds-input::placeholder{color:rgba(255,255,255,0.15)!important;opacity:1}#ds-tab-docked{padding:0 8px!important}.ds-dock-lock{cursor:default}.ds-dock-restore{cursor:pointer;opacity:.6;transition:opacity .2s,background-color .2s;border-radius:4px;padding:0 4px;width:20px;text-align:center}.ds-dock-restore:hover{opacity:1;background:var(--ds-hover-bg)}.ds-clickable-ipa{color:#98c379;font-family:'Lucida Sans Unicode','Arial Unicode MS',sans-serif}
+    #ds-config-panel,#ds-help-panel{position:absolute;top:0;left:0;width:100%;height:100%;background:var(--ds-bg);z-index:1001;padding:20px;box-sizing:border-box;display:none;flex-direction:column;overflow-y:auto}.cfg-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;font-size:14px}#cfg-api-key{width:100%;margin-top:5px;padding:8px;border-radius:4px;border:1px solid var(--ds-border);background:var(--ds-msg-bg);color:var(--ds-text);font-size:13px}.ds-cfg-textarea{width:100%;height:120px;padding:8px;border-radius:4px;border:1px solid var(--ds-border);background:var(--ds-msg-bg);color:var(--ds-text);font-family:monospace;font-size:12px;resize:vertical;margin-top:5px;white-space:pre-wrap;overflow-x:hidden;word-wrap:break-word}.ds-panel-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--ds-border);padding-bottom:10px;margin-bottom:20px}.ds-panel-title{font-size:18px;font-weight:700;color:var(--ds-accent)}.ds-panel-top-btn{padding:4px 12px;background:var(--ds-accent);color:#fff;border-radius:4px;font-size:12px;cursor:pointer;border:none}.ds-panel-top-btn:hover{opacity:0.9}.ds-help-item{margin-bottom:15px;display:flex;flex-direction:column;gap:5px}.ds-help-key{font-weight:700;color:var(--ds-text);font-family:monospace;background:var(--ds-msg-bg);padding:2px 6px;border-radius:4px;display:inline-block;width:fit-content}.ds-help-desc{font-size:13px;color:var(--ds-text);opacity:.8;line-height:1.4;white-space:pre-wrap}.ds-primary-btn{width:100%;padding:8px;background:var(--ds-accent);color:#fff;border:0;border-radius:4px;cursor:pointer;font-size:14px;transition:opacity .2s;text-align:center}.ds-primary-btn:hover{opacity:.9}
+
+    #ds-highlight-content{flex:1}#ds-highlight-log,#ds-history-log{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:0;margin:0}.${DS_CONFIG.consts.HIGHLIGHT_CLASS}{background-color:var(--ds-highlight-bg)!important;color:var(--ds-highlight-text)!important;padding:0 2px!important;border-radius:2px;cursor:pointer;display:inline}.web-inline-trans{color:#1E90FF!important;font-size:14px!important;font-weight:400!important;display:block!important;margin-top:4px!important;padding:2px 0 6px!important;line-height:1.5!important;background:0 0!important;box-shadow:none!important;border:0!important}.web-inline-trans::before{content:""}.ds-inline-loading{animation:pulse 1.5s infinite}.ds-full-page-trans{color:#1E90FF!important;font-size:14px!important;font-weight:400!important;display:block!important;margin-top:4px!important;padding:2px 0 6px!important;line-height:1.5!important}.web-menu-item{display:flex!important;flex-direction:column!important;align-items:flex-start!important;padding:8px 12px!important;margin:0!important;background:var(--ds-menu-bg)!important;border-radius:0!important;cursor:default!important;transition:background-color .1s ease!important;border-bottom:1px solid rgba(255,255,255,.05)}.web-menu-item:hover{background:#353b45!important}.web-menu-header{display:flex;justify-content:space-between;width:100%;align-items:center;gap:8px;cursor:pointer}.web-menu-word{font-weight:700!important;color:#1E90FF!important;font-size:15px!important;}.web-menu-word:hover{text-decoration:none!important;color:var(--ds-accent)!important}.web-menu-jump{cursor:pointer;opacity:0.5;font-size:14px;padding:2px 6px}.web-menu-jump:hover{opacity:1;background:var(--ds-hover-bg);border-radius:4px}.web-menu-trans{display:none;margin-top:2px!important;color:#aaa!important;opacity:1;font-size:13px!important;line-height:1.4!important;white-space:pre-wrap!important;word-break:break-all!important;width:100%!important}#ds-confirm-modal{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);z-index:2000;display:none;align-items:center;justify-content:center;animation:fadeIn .2s ease}.ds-confirm-box{background:var(--ds-modal-bg);padding:25px 20px;border-radius:12px;width:75%;text-align:center;border:1px solid var(--ds-border);box-shadow:0 10px 30px rgba(0,0,0,.5);color:var(--ds-text)}.ds-confirm-text{font-size:15px;margin-bottom:20px;font-weight:500}.ds-confirm-btns{display:flex;gap:12px;justify-content:center}.ds-btn{padding:8px 20px;border-radius:6px;border:0;cursor:pointer;font-size:14px;font-weight:700;transition:transform .1s}.ds-btn:active{transform:scale(.95)}.ds-btn-yes{background:#ff3b30;color:#fff}.ds-btn-no{background:var(--ds-msg-bg);color:var(--ds-text);border:1px solid var(--ds-border)}@keyframes fadeIn{from{opacity:0}to{opacity:1}}#ds-popup{position:fixed;background:var(--ds-popup-bg);color:var(--ds-text);border:1px solid var(--ds-popup-border);border-radius:8px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.6);z-index:2147483660;display:none;flex-direction:column;min-width:400px;min-height:250px;max-width:90vw;max-height:80vh}.ds-resize-handle{position:absolute;z-index:100;opacity:0}.ds-resize-handle:hover{background:rgba(30,144,255,.2);opacity:1}.ds-rh-n{top:0;left:10px;right:10px;height:5px;cursor:ns-resize}.ds-rh-s{bottom:0;left:10px;right:10px;height:5px;cursor:ns-resize}.ds-rh-w{left:0;top:10px;bottom:10px;width:5px;cursor:ew-resize}.ds-rh-e{right:0;top:10px;bottom:10px;width:5px;cursor:ew-resize}.ds-rh-nw{top:0;left:0;width:10px;height:10px;cursor:nwse-resize;z-index:101}.ds-rh-ne{top:0;right:0;width:10px;height:10px;cursor:nesw-resize;z-index:101}.ds-rh-sw{bottom:0;left:0;width:10px;height:10px;cursor:nesw-resize;z-index:101}.ds-rh-se{bottom:0;right:0;width:10px;height:10px;cursor:nwse-resize;z-index:101}#ds-popup-header-bar{height:36px;width:100%;cursor:move;flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;padding-right:18px;gap:6px;background:var(--ds-header-bg);border-bottom:1px solid var(--ds-border)}.ds-popup-icon{cursor:pointer;font-size:15px;opacity:.6;transition:opacity .2s;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:var(--ds-text)}.ds-popup-icon:hover{opacity:1;background:var(--ds-hover-bg)}#ds-popup-close-float{font-size:16px}#ds-popup-body{display:flex;flex:1;overflow:hidden;position:relative;padding:0;width:100%;height:100%;cursor:default}.ds-split-view{width:100%;height:100%;display:flex}.ds-split-left{flex:1;border-right:1px solid var(--ds-border);padding:16px;overflow-y:auto;background:var(--ds-popup-bg)}.ds-split-right{flex:1;padding:16px;overflow-y:auto;background:var(--ds-popup-bg)}#ds-docked-panel{flex-direction:column;background:var(--ds-bg)}.ds-docked-toolbar{padding:8px;border-bottom:1px solid var(--ds-border);display:flex;justify-content:center;align-items:center;background:#2f343c}.ds-docked-title{font-size:13px;font-weight:700;color:#aaa}#ds-undock-btn{padding:4px 12px;border:1px solid var(--ds-border);background:var(--ds-menu-bg);color:var(--ds-text);border-radius:4px;font-size:12px;cursor:pointer}#ds-undock-btn:hover{background:var(--ds-hover-bg);border-color:#666}.ds-docked-content{flex:1;overflow-y:auto;display:flex;flex-direction:column}.ds-docked-section{padding:15px;border-bottom:1px solid var(--ds-border)}.ds-docked-scroll{overflow-y:auto;max-height:50%}.ds-popup-title{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--ds-accent);opacity:.9;letter-spacing:.5px;display:flex;align-items:center;gap:6px}.ds-popup-text{font-size:14px;line-height:1.6;white-space:pre-wrap;color:#ccc}.ds-popup-loading{color:#888;font-style:italic;animation:pulse 1.5s infinite}@keyframes pulse{0%{opacity:.5}50%{opacity:1}100%{opacity:.5}}.ds-target-italic{color:#1E90FF!important;font-weight:700;font-style:italic}.ds-head-row{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;flex-wrap:wrap}.ds-headword{color:#1E90FF!important;font-weight:700;font-size:15px!important;display:inline-block}.ds-dict-grid{display:grid;grid-template-columns:45px 1fr;gap:4px 0;align-items:baseline}.ds-pos-label{text-align:right;color:#98c379;font-style:italic;font-weight:700;font-size:12px;user-select:none;white-space:nowrap;overflow:visible;padding-right:8px}.ds-def-split{cursor:pointer;border-bottom:1px dashed transparent;transition:all .1s}.ds-def-split:hover{color:var(--ds-accent)}.ds-is-streaming .ds-def-split{pointer-events:none!important;cursor:wait}.ds-is-streaming{cursor:wait}#ds-input::placeholder{color:rgba(255,255,255,0.15)!important;opacity:1}#ds-tab-docked{padding:0 8px!important}.ds-dock-lock{cursor:default}.ds-dock-restore{cursor:pointer;opacity:.6;transition:opacity .2s,background-color .2s;border-radius:4px;padding:0 4px;width:20px;text-align:center}.ds-dock-restore:hover{opacity:1;background:var(--ds-hover-bg)}.ds-clickable-ipa{color:#98c379;font-family:'Lucida Sans Unicode','Arial Unicode MS',sans-serif}
+
     #ds-config-panel input, #ds-config-panel textarea {font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif!important;color:var(--ds-text)!important;background:var(--ds-msg-bg)!important;border:1px solid var(--ds-border)!important;font-size:13px!important}
     .web-menu-item.active .ds-history-date { display: none; }
     .ds-undo-mode { background: transparent !important; cursor: default !important; justify-content: center; align-items: center; display: flex; }
@@ -821,7 +840,7 @@ function fetchVocabDefinition(word, container) {
     UI.clear(container);
     container.appendChild(UI.el('span', { className: 'ds-popup-loading' }, 'DeepSeek 查询中...'));
 
-    const prompt = isChinese(word) ? "你是一个专业的汉语词典接口。请严格按照词典格式输出，不要废话。" : "你是一个基于 ECDICT (Collins + Oxford) 数据库的词典接口。请严格按照以下 ECDICT 数据结构输出信息，不要提供例句。请严格控制输出在150字以内，避免重复循环。\n\n格式要求：\n单词原型\n/音标/\n词性. 中文释义\nExchange: ...\nTags: ...\n...";
+    const prompt = isChinese(word) ? DS_CONFIG.consts.PROMPTS.DICT_CN : DS_CONFIG.consts.PROMPTS.DICT_EN;
 
     requestAI({
         messages: [{role:"system",content:prompt},{role:"user",content:word}],
@@ -853,11 +872,17 @@ async function streamDeepSeekInline(text, targetElement, signal = null) {
         messages: [{role:"system", content:"你是一个翻译引擎。直接输出以下内容的中文翻译，不要任何解释或前缀。"},{role:"user", content: text}],
         signal: signal,
         onUpdate: (delta, fullText) => {
-            if (isFirstChunk) { targetElement.textContent = ""; targetElement.classList.remove('ds-inline-loading'); isFirstChunk = false; isFirstChunk = false; }
+            if (isFirstChunk) { targetElement.textContent = ""; targetElement.classList.remove('ds-inline-loading'); isFirstChunk = false; }
             targetElement.textContent = fullText;
         },
-        onFinish: (fullText) => { if (fullText) DS_CONFIG.runtime.translationCache[text] = fullText; },
-        onError: (e) => { if (e.name !== 'AbortError') { targetElement.textContent = "DeepSeek Error: " + e.message; targetElement.classList.remove('ds-inline-loading'); } }
+        onFinish: (fullText) => {
+            targetElement.classList.remove('ds-is-streaming');
+            if (fullText) { DS_CONFIG.runtime.translationCache[text] = fullText; }
+        },
+        onError: (e) => {
+            targetElement.classList.remove('ds-is-streaming');
+            if(e.name !== 'AbortError') { targetElement.innerText = "Error: " + e.message; }
+        }
     });
 }
 
@@ -903,19 +928,7 @@ async function streamToElement(sysPrompt, userPrompt, targetElement, cacheCatego
         },
         onError: (e) => {
             targetElement.classList.remove('ds-is-streaming');
-            if(e.name === 'AbortError') {
-                if (!DS_CONFIG.runtime.isSwitchingContext && !isStreamFinished) {
-                    let sideKey = null;
-                    if (targetElement.closest('#ds-popup-left-content') || targetElement.closest('#ds-docked-left-content')) sideKey = 'left';
-                    if (targetElement.closest('#ds-popup-right-content') || targetElement.closest('#ds-docked-right-content')) sideKey = 'right';
-
-                    if (sideKey && !targetElement.querySelector('.ds-continue-text')) {
-                         const wrapper = UI.el('div', { className: 'ds-continue-text', 'data-side': sideKey }, '▶️ 继续');
-                         targetElement.appendChild(wrapper);
-                    }
-                }
-            }
-            else { targetElement.innerText = "Error: " + e.message; }
+            if(e.name !== 'AbortError') { targetElement.innerText = "Error: " + e.message; }
         }
     });
 }
@@ -962,82 +975,70 @@ window.updateRightPanelExamples = function(defText, word) {
 
 function copyToClip(text) { if (!text) return; GM_setClipboard(text); }
 
-async function askAI(query, targetWord = "", mode = "chat", continueMessages = null, customSystemPrompt = null) {
+async function askAI(query, targetWord = "", mode = "chat", customSystemPrompt = null) {
     if (!DS_CONFIG.settings.apiKey || DS_CONFIG.settings.apiKey.length < 10) {alert("请配置有效的 DeepSeek API Key");return;}
     if (!isSidebarVisible()) showSidebar();
-    if (DS_CONFIG.runtime.activeTab !== 'ai') switchTab('ai');
-    if (!continueMessages && DS_CONFIG.runtime.abortCtrl) { DS_CONFIG.runtime.abortCtrl.abort(); }
+
+    if (DS_CONFIG.runtime.activeTab !== 'docked') switchTab('docked');
+
+    const rightContainer = document.querySelector('#ds-docked-right-content');
+    const rightBody = rightContainer.querySelector('.ds-popup-text');
+    const rightHeader = rightContainer.querySelector('.ds-popup-title');
+
+    let title = "✨ 智能问答";
+    if (mode === "summary") title = "🎯 全文概述";
+    else if (mode === "explain") title = "🧠 文中解析";
+    else if (mode === "custom") title = "✨ 智能问答";
+
+    rightHeader.innerText = title;
+
+    if (DS_CONFIG.runtime.popupAbortCtrl) { DS_CONFIG.runtime.popupAbortCtrl.abort(); }
+    if (DS_CONFIG.runtime.abortCtrl) { DS_CONFIG.runtime.abortCtrl.abort(); }
     DS_CONFIG.runtime.abortCtrl = new AbortController();
-    const log = document.getElementById('ds-chat-log');
-    if (!log) return;
+
+    UI.clear(rightBody);
+    rightBody.appendChild(UI.el('span', { className: 'ds-popup-loading' }, 'DeepSeek 思考中...'));
+
     let messages = [];
-    let uMsg, aiMsg;
-    if (continueMessages) {
-       messages = continueMessages; aiMsg = DS_CONFIG.runtime.currentAiContext.element;
-       aiMsg.appendChild(document.createElement('br'));
-       aiMsg.appendChild(document.createElement('br'));
-       aiMsg.appendChild(UI.el('i', {}, '[Continuing...]'));
-       aiMsg.appendChild(document.createElement('br'));
-    } else {
-        uMsg = UI.el('div', { className: 'ds-msg user-msg' });
-        let display = mode==="dict"?`📖 词典: ${targetWord}`:mode==="explain"?`🔍 沉浸: ${targetWord}`:mode==="summary"?"🎯 全文总结":mode==="custom"?"✨ "+query.substring(0,40):query.substring(0,40);
-        uMsg.innerText = display; log.appendChild(uMsg);
-        aiMsg = UI.el('div', { className: 'ds-msg ai-msg' }, '...');
-        log.appendChild(aiMsg); log.scrollTop = log.scrollHeight;
-        let sysPrompt = "你是一位专业的英语教育专家。";
-        if (mode==="dict") sysPrompt += "请提供单词的词典释义。包含音标、词性、精准中文含义、不规则形式。严禁提供例句。";
-        else if (mode==="explain") sysPrompt += "请引用原文，使用'#'分隔，解析该词在当前语境下的特定含义及作者意图，200字以内。";
-        else if (mode==="summary") sysPrompt += "你是一位专业的文本分析师，需要对提供的文章内容进行结构化总结，要求：1. 分点呈现核心观点；2. 提炼文章关键信息、逻辑框架；3. 语言简洁专业，符合分析师报告风格；4. 忽略无关细节，聚焦文章主旨；5. 全部使用中文输出。";
-        else if (mode==="custom" && customSystemPrompt) sysPrompt = customSystemPrompt;
-        messages = [{role:"system",content:sysPrompt},{role:"user",content:query}];
-    }
-    DS_CONFIG.runtime.currentAiContext = { messages: messages, generatedText: continueMessages ? DS_CONFIG.runtime.currentAiContext.generatedText : "", element: aiMsg };
+    let sysPrompt = DS_CONFIG.consts.PROMPTS.CHAT;
+    if (mode==="summary") sysPrompt = DS_CONFIG.consts.PROMPTS.SUMMARY;
+    else if (mode==="custom" && customSystemPrompt) sysPrompt = customSystemPrompt;
+    messages = [{role:"system",content:sysPrompt},{role:"user",content:query}];
+
+    DS_CONFIG.runtime.currentAiContext = { messages: messages, generatedText: "", element: rightBody };
+
     await requestAI({
         messages: messages, signal: DS_CONFIG.runtime.abortCtrl.signal,
         onUpdate: (delta, fullText) => {
             DS_CONFIG.runtime.currentAiContext.generatedText = fullText;
-            if (!continueMessages && aiMsg.innerText === "...") aiMsg.innerText = "";
+            UI.renderMarkdown(rightBody, fullText, targetWord);
 
-            UI.renderMarkdown(aiMsg, fullText, (mode !== "summary" && mode !== "custom") ? targetWord : null);
-
-            const threshold = 150;
-            const isNearBottom = log.scrollHeight - log.scrollTop - log.clientHeight < threshold;
-            if (isNearBottom) { log.scrollTo({ top: log.scrollHeight, behavior: 'smooth' }); }
+            const scrollParent = rightContainer;
+            if(scrollParent) scrollParent.scrollTop = scrollParent.scrollHeight;
         },
         onError: (e) => {
-            if (e.name === 'AbortError') {
-                const continueElem = UI.el('div', {
-                    className: 'ds-continue-text',
-                    onclick: function() {
-                        this.remove();
-                        const newMessages = [...DS_CONFIG.runtime.currentAiContext.messages];
-                        if (newMessages[newMessages.length - 1].role !== 'assistant') { newMessages.push({role: "assistant", content: DS_CONFIG.runtime.currentAiContext.generatedText}); }
-                        else { newMessages[newMessages.length - 1].content = DS_CONFIG.runtime.currentAiContext.generatedText; }
-                        newMessages.push({role: "user", content: "请继续（Continue）"});
-                        askAI("", targetWord, mode, newMessages);
-                    }
-                }, '▶️ 继续');
-                aiMsg.appendChild(continueElem);
-                log.scrollTop = log.scrollHeight;
-            } else { aiMsg.appendChild(document.createTextNode("\n[请求失败: " + e.message + "]")); }
+            if (e.name !== 'AbortError') { rightBody.appendChild(document.createTextNode("\n[请求失败: " + e.message + "]")); }
         }
     });
 }
-
 // Undo Helper
 function softDelete(element, onConfirm) {
     if (!element) return;
-    const originalHTML = element.innerHTML;
-    const originalClass = element.className;
+    const header = element.querySelector('.web-menu-header');
+    if (!header) return;
 
-    // 获取当前条目绑定的单词 (防止undefined，给个空字符串兜底)
-    const word = element.dataset.word || "";
+    // 临时禁用该行交互，防止误触查词，但允许点击取消按钮
+    element.style.pointerEvents = 'none';
 
-    element.className = 'web-menu-item ds-undo-mode';
+    // 隐藏跳转图标（如果存在）
+    const jumpBtn = header.querySelector('.web-menu-jump');
+    if (jumpBtn) jumpBtn.style.display = 'none';
 
-    // 修改：将 word 包裹在 span 中，并设置 color:#1E90FF (这是DeepSeek查词/高亮的标准蓝色)
-    // 外层文字保持 #6db3f2 (浅蓝)，中间单词变为 #1E90FF (亮蓝)
-    element.innerHTML = `<span style="color:#6db3f2;cursor:pointer;font-weight:bold">🔄 取消对 <span style="color:#1E90FF">“${word}”</span> 的删除</span>`;
+    // 创建右侧取消按钮
+    const undoBtn = UI.el('span', {
+        style: { marginLeft: 'auto', marginRight: '4px', color: '#6db3f2', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px', pointerEvents: 'auto', whiteSpace: 'nowrap' }}, '🔄 取消删除');
+
+    header.appendChild(undoBtn);
 
     let isRestored = false;
     const timer = setTimeout(() => {
@@ -1045,16 +1046,18 @@ function softDelete(element, onConfirm) {
             element.remove();
             if (onConfirm) onConfirm();
         }
-    }, 3000); // 保持3秒撤回时间
+    }, 3000);
 
-    element.onclick = (e) => {
+    undoBtn.onclick = (e) => {
         e.stopPropagation();
         e.preventDefault();
         clearTimeout(timer);
         isRestored = true;
-        element.className = originalClass;
-        element.innerHTML = originalHTML;
-        element.onclick = null; // Remove temp handler
+
+        // 恢复 UI 状态
+        undoBtn.remove();
+        if (jumpBtn) jumpBtn.style.display = '';
+        element.style.pointerEvents = '';
     };
 }
 
@@ -1071,7 +1074,6 @@ function saveHighlights() {
         }
     });
     localStorage.setItem(DS_CONFIG.consts.STORAGE_KEY, JSON.stringify(h));
-    // 修改处：如果当前在 history 标签页，则刷新 history 菜单以更新📍状态
     if (DS_CONFIG.runtime.activeTab === 'history') renderHistoryMenu();
     setTimeout(() => { DS_CONFIG.runtime.isRestoring = false; }, 100);
 }
@@ -1079,12 +1081,8 @@ function saveHighlights() {
 function removeHighlight(el) {
     DS_CONFIG.runtime.isRestoring = true;
 
-    // --- 新增逻辑开始 ---
-    // 1. 获取当前高亮文本
     const text = el.textContent.trim();
-    // 2. 调用历史记录删除函数（从全局历史中移除该词）
     if(text) deleteFromHistory(text);
-    // --- 新增逻辑结束 ---
 
     const p = el.parentNode;
     if (p) {
@@ -1111,7 +1109,6 @@ function deleteWord(word, elementRef = null) {
             const saved = JSON.parse(localStorage.getItem(DS_CONFIG.consts.STORAGE_KEY) || '[]');
             const newSaved = saved.filter(h => h.text !== word);
             localStorage.setItem(DS_CONFIG.consts.STORAGE_KEY, JSON.stringify(newSaved));
-            refreshHighlightMenu();
         }
     };
 
@@ -1150,34 +1147,6 @@ function applySavedHighlights() {
     setTimeout(() => { DS_CONFIG.runtime.isRestoring = false; }, 200);
 }
 
-function refreshHighlightMenu() {
-    if (!DOM.highlightContent) return;
-    const words = [...new Set(JSON.parse(localStorage.getItem(DS_CONFIG.consts.STORAGE_KEY) || '[]').map(h => h.text))];
-
-    UI.clear(DOM.highlightContent);
-    const logEl = UI.el('div', { id: 'ds-highlight-log' });
-
-    if (words.length === 0) {
-        logEl.appendChild(UI.el('div', { style: { textAlign: 'center', color: '#666', marginTop: '20px', fontSize: '13px' } }, [
-            "暂无生词记录", document.createElement('br')
-        ]));
-        DOM.highlightContent.appendChild(logEl);
-        return;
-    }
-
-    words.forEach(word => {
-        const item = UI.el('div', { className: 'web-menu-item', 'data-word': word }, [
-            UI.el('div', { className: 'web-menu-header' }, [
-                UI.el('span', { className: 'web-menu-word' }, word),
-                UI.el('span', { className: 'web-menu-jump', title: '跳转到文中位置' }, '📍')
-            ]),
-            UI.el('div', { className: 'web-menu-trans', style: { display: 'none' } })
-        ]);
-        logEl.appendChild(item);
-    });
-    DOM.highlightContent.appendChild(logEl);
-}
-
 const isSidebarVisible = () => {
     if (!DOM.sidebar) return false;
     if (DS_CONFIG.settings.sidebarSide === 'right') return DOM.sidebar.style.right === '0px';
@@ -1206,16 +1175,12 @@ const hideSidebar = () => {
 };
 
 const switchTab = (tabName) => {
-    // 移除了 'highlight' 的判断
-    if (tabName !== 'ai' && tabName !== 'docked' && tabName !== 'history') return;
+    if (tabName !== 'docked' && tabName !== 'history') return;
     DS_CONFIG.runtime.activeTab = tabName;
     document.querySelectorAll('.ds-tab').forEach(tab => { tab.classList.remove('active'); if (tab.dataset.tab === tabName) tab.classList.add('active'); });
     document.querySelectorAll('.tab-panel').forEach(panel => { panel.classList.remove('active'); if (panel.dataset.panel === tabName) panel.classList.add('active'); });
 
-// 原 highlight 的 applySavedHighlights 现在由定时器或初始化自动调用
-    // history tab 承担渲染职责
     if (tabName === 'history') {
-        // 修改：每次打开历史Tab，强制按最新时间排序，无需保存
         DS_CONFIG.settings.historySort = 'time_desc';
         DS_CONFIG.runtime.historyLimit = 50; // 重置显示数量
         renderHistoryMenu();
@@ -1229,15 +1194,12 @@ function toggleDockingMode(enable, isInit = false) {
     const dockedTab = document.getElementById('ds-tab-docked');
     const popup = document.getElementById('ds-popup');
 
-    if (enable) {
+   if (enable) {
         popup.style.display = 'none';
-        if (dockedTab) dockedTab.style.display = 'flex';
         if (!isInit) {
             switchTab('docked');
         }
-} else {
-        if (dockedTab) dockedTab.style.display = 'none';
-        if (DS_CONFIG.runtime.activeTab === 'docked') switchTab('history'); // 改为回退到 history
+    } else {
     }
 }
 
@@ -1284,7 +1246,6 @@ function enterReaderMode() {
     `;
     document.body.appendChild(DOM.readerWrapper);
 
-    // 【新增修复】：将浮窗元素重新移动到 Body 末尾，确保它位于阅读模式遮罩层之上
     if (DOM.popup && DOM.popup.parentNode) {
         document.body.appendChild(DOM.popup);
     }
@@ -1363,33 +1324,33 @@ function updateReaderStyle(type, delta) {
 }
 
 function showSmartPopup(text, targetHighlight, context = "", isSelection = false) {
-    // NEW: 强制关闭可能遮挡的面板
     const cp = document.getElementById('ds-config-panel');
     const hp = document.getElementById('ds-help-panel');
     if (cp) cp.style.display = 'none';
     if (hp) hp.style.display = 'none';
 
     DS_CONFIG.runtime.isSwitchingContext = true;
-    if (DS_CONFIG.runtime.popupAbortCtrl) DS_CONFIG.runtime.popupAbortCtrl.abort();
-    setTimeout(() => { DS_CONFIG.runtime.isSwitchingContext = false; }, 0);
+if (DS_CONFIG.runtime.popupAbortCtrl) DS_CONFIG.runtime.popupAbortCtrl.abort();
+if (DS_CONFIG.runtime.abortCtrl) DS_CONFIG.runtime.abortCtrl.abort();
+setTimeout(() => { DS_CONFIG.runtime.isSwitchingContext = false; }, 0);
 
-    DS_CONFIG.runtime.popupAbortCtrl = new AbortController();
+DS_CONFIG.runtime.popupAbortCtrl = new AbortController();
     const signal = DS_CONFIG.runtime.popupAbortCtrl.signal;
-
-    // Modified Prompt: Added strict word limit
-    const dictPrompt = isChinese(text) ? "你是一个专业的汉语词典接口。请严格按照词典格式输出，不要废话。" : "你是一个基于 ECDICT (Collins + Oxford) 数据库的词典接口。请严格按照以下 ECDICT 数据结构输出信息，不要提供例句。请严格控制输出在150字以内，避免重复循环。\n\n格式要求：\n单词原型\n/音标/\n词性. 中文释义\nExchange: ...\nTags: ...\n...";
+    const dictPrompt = isChinese(text) ? DS_CONFIG.consts.PROMPTS.DICT_CN : DS_CONFIG.consts.PROMPTS.DICT_EN;
     const dictKey = text;
+    let dictUserContent = text;
+    if (context && context.trim().length > text.length) {
+        dictUserContent = `Context: "${context}"\nTarget: "${text}"\nInstruction: Identify the lemma (prototype) of the Target word based on the Context (e.g., 'found' -> 'find'). Then define the prototype strictly following the dictionary format.`;
+    }
     const contextKey = text + "_" + context.substring(0, 20);
     const contextPrompt = `你是一个语言专家。请分析"${text}"在以下句子中的用法：\n\n"${context}"\n\n请模仿以下风格进行解析：\n"在句子 '...' 中，'${text}' 是...词性...形式，与...构成...搭配，表示...。这里的固定搭配是...，意思是...。"`;
 
     let leftEl, rightEl;
-    if (DS_CONFIG.settings.isDocked) {
-        showSidebar(); // 确保侧边栏打开
+    if (isSidebarVisible() || DS_CONFIG.settings.isDocked) {
+        if (!isSidebarVisible()) showSidebar();
         switchTab('docked');
         leftEl = document.querySelector('#ds-docked-left-content .ds-popup-text');
         rightEl = document.querySelector('#ds-docked-right-content .ds-popup-text');
-
-        // Update Title to "🧠 文中解析"
         const rightTitle = document.querySelector('#ds-docked-right-content .ds-popup-title');
         if (rightTitle) rightTitle.innerText = '🧠 文中解析';
     } else {
@@ -1440,10 +1401,10 @@ function showSmartPopup(text, targetHighlight, context = "", isSelection = false
     }
 
     if (!leftEl || !rightEl) return;
-    DS_CONFIG.runtime.lastPopupParams.left = { sys: dictPrompt, user: text, el: leftEl, cat: 'dict', key: dictKey, hw: text, mode: 'dict' };
+    DS_CONFIG.runtime.lastPopupParams.left = { sys: dictPrompt, user: dictUserContent, el: leftEl, cat: 'dict', key: dictKey, hw: text, mode: 'dict' };
     DS_CONFIG.runtime.lastPopupParams.right = { sys: contextPrompt, user: context, el: rightEl, cat: 'context', key: contextKey, hw: text, mode: 'normal' };
 
-    streamToElement(dictPrompt, text, leftEl, 'dict', dictKey, text, 'dict', signal);
+    streamToElement(dictPrompt, dictUserContent, leftEl, 'dict', dictKey, text, 'dict', signal);
     streamToElement(contextPrompt, context, rightEl, 'context', contextKey, text, 'normal', signal);
 }
 
@@ -1516,7 +1477,6 @@ function buildUI() {
     const hiddenSet = new Set(DS_CONFIG.settings.hiddenIcons);
     allIconsData.forEach(data => {
         const btn = createSidebarIcon(data.id, data.icon, data.title, data.label);
-        // 强制 设置按钮 和 关闭按钮 始终显示（防止用户把自己锁死）
         if (data.id === 'ds-cfg-toggle' || data.id === 'ds-close') {
             activeZone.appendChild(btn);
         } else if (hiddenSet.has(data.id)) {
@@ -1558,13 +1518,10 @@ function buildUI() {
     const handleDragOver = (e, container) => {
         e.preventDefault();
 
-        // 1. 只有在编辑模式下，或者 目标是活跃区 时才允许拖动 (允许从隐藏区拖回活跃区)
         const isEditMode = verticalToolbar.classList.contains('ds-edit-mode');
 
-        // 如果不在编辑模式，严禁拖入隐藏区
         if (!isEditMode && container.id === 'ds-toolbar-hidden') return;
 
-        // 2. 保护机制：强制 设置按钮 和 关闭按钮 不能被拖入隐藏区
         if (draggedItem && (draggedItem.id === 'ds-cfg-toggle' || draggedItem.id === 'ds-close') && container.id === 'ds-toolbar-hidden') {
             return;
         }
@@ -1578,7 +1535,6 @@ function buildUI() {
     };
 
     function getDragAfterElement(container, y) {
-        // 排除正在拖动的元素自身
         const draggableElements = [...container.querySelectorAll('.ds-v-icon:not(.dragging)')];
         return draggableElements.reduce((closest, child) => {
             const box = child.getBoundingClientRect();
@@ -1611,12 +1567,10 @@ function buildUI() {
 
 const tabHeader = UI.el('div', { id: 'ds-tab-header' }, [
         UI.el('div', { id: 'ds-tabs-wrapper' }, [
-            // 合并后的Tab：使用🕒图标，名字改为历史，默认active
-            createTab('history', '🕒', '历史', '历史与高亮', true),
-            createTab('ai', '💬', '对话', 'AI 助手'),
-            UI.el('div', { className: 'ds-tab', id: 'ds-tab-docked', 'data-tab': 'docked', title: '固定模式', style: { display: 'none' }, draggable: true }, [
-                document.createTextNode('📖'),
-                UI.el('span', { className: 'ds-tab-label' }, '词典')
+            createTab('history', '🕒', '历史', '历史与高亮', false),
+            UI.el('div', { className: 'ds-tab active', id: 'ds-tab-docked', 'data-tab': 'docked', title: '智能助手', draggable: true }, [
+                document.createTextNode('💬'),
+                UI.el('span', { className: 'ds-tab-label' }, '助手')
             ])
         ])
     ]);
@@ -1728,29 +1682,15 @@ UI.el('div', { className: 'cfg-row' }, [
         createHelpItem('Alt + 1', '对鼠标所指文本切换高亮状态。'),
         createHelpItem('Alt + 2', '开关侧边栏（开启时自动吸附查词）。'),
         createHelpItem('Alt + 3', '开关沉浸式阅读模式。'),
+        createHelpItem('Alt + `', '切换侧边栏标签页。'),
         createHelpItem('Alt + 左键', '可对鼠标所指文本段落进行翻译。'),
+
     ]);
 
 // Tab Content
     const tabContent = UI.el('div', { id: 'ds-tab-content' }, [
-        // 删除了 ds-highlight-content，将 history 设为 active
-        UI.el('div', { className: 'tab-panel active', 'data-panel': 'history', id: 'ds-history-content' }),
-        UI.el('div', { className: 'tab-panel', 'data-panel': 'ai', id: 'ds-ai-content' }, [
-            UI.el('div', { id: 'ds-chat-log' })
-        ]),
-        UI.el('div', { className: 'tab-panel', 'data-panel': 'docked', id: 'ds-docked-panel' }, [
-            UI.el('div', { className: 'ds-docked-content' }, [
-                UI.el('div', { className: 'ds-docked-section ds-docked-scroll', id: 'ds-docked-left-content', style: { flex: 1, borderBottom: '1px solid #444' } }, [
-                    UI.el('div', { className: 'ds-popup-title' }, '🔍 词典解析'),
-                    UI.el('div', { className: 'ds-popup-text' })
-                ]),
-                UI.el('div', { className: 'ds-docked-section ds-docked-scroll', id: 'ds-docked-right-content', style: { flex: 1 } }, [
-                    UI.el('div', { className: 'ds-popup-title' }, '🧠 文中解析'),
-                    UI.el('div', { className: 'ds-popup-text' })
-                ])
-            ])
-        ])
-    ]);
+        UI.el('div', { className: 'tab-panel', 'data-panel': 'history', id: 'ds-history-content' }),
+        UI.el('div', { className: 'tab-panel active', 'data-panel': 'docked', id: 'ds-docked-panel' }, [ UI.el('div', { className: 'ds-docked-content' }, [ UI.el('div', { className: 'ds-docked-section', id: 'ds-docked-left-content', style: { flex: '0 1 auto', maxHeight: '60%', overflowY: 'auto', borderBottom: '1px solid #444' } }, [ UI.el('div', { className: 'ds-popup-title' }, '🔍 词典解析'), UI.el('div', { className: 'ds-popup-text' }) ]), UI.el('div', { className: 'ds-docked-section', id: 'ds-docked-right-content', style: { flex: '1 1 auto', overflowY: 'auto' } }, [ UI.el('div', { className: 'ds-popup-title' }, '🧠 文中解析'), UI.el('div', { className: 'ds-popup-text' }) ]) ]) ]) ]);
 
     // NEW: Jump Button Panel Implementation (No more Select)
     const currentSiteName = DS_CONFIG.settings.customSites.find(s => s.value === DS_CONFIG.settings.lastAiSite)?.name || "DeepSeek";
@@ -1828,14 +1768,12 @@ UI.el('div', { className: 'cfg-row' }, [
 
     DOM.sidebar = container;
     DOM.popup = popupEl;
-    DOM.highlightContent = document.getElementById('ds-highlight-content');
 
 const autoCopySwitch = document.getElementById('cfg-auto-copy');
     if (autoCopySwitch) {
         autoCopySwitch.addEventListener('change', (e) => {
              const isChecked = e.target.checked;
              DS_CONFIG.settings.autoCopy = isChecked;
-             // 同时更新两个值以保持兼容性，或者后续逻辑只用 autoCopy
              GM_setValue('ds_auto_copy', isChecked);
              GM_setValue('ds_jump_copy', isChecked);
              DS_CONFIG.settings.jumpCopy = isChecked;
@@ -1855,7 +1793,6 @@ function renderCustomButtons() {
     const bar = document.getElementById('ds-fn-bar'); if (!bar) return;
     UI.clear(bar);
 
-    // Add Custom Prompts ONLY (Summary removed from here)
     DS_CONFIG.settings.customPrompts.forEach(item => {
         if (!item.name || !item.template) return;
         const btn = UI.el('div', {
@@ -1866,12 +1803,12 @@ function renderCustomButtons() {
                 if (input) {
                     const val = input.value.trim();
                     if (!val) {
-                        // Optional: Flash input placeholder or similar if needed
                          input.placeholder = "请输入内容后点击...";
                          setTimeout(() => input.placeholder = "DeepSeek AI 等待您的指令...", 2000);
                          return;
                     }
-                    askAI(val, "", "custom", null, item.template);
+                    const combinedQuery = `【${val}】\n\n${item.template}`;
+                    askAI(combinedQuery, "", "custom");
                 }
             }
         }, item.name);
@@ -1882,16 +1819,26 @@ function renderCustomButtons() {
 function stopAllStreams() {
     if (DS_CONFIG.runtime.abortCtrl) { DS_CONFIG.runtime.abortCtrl.abort(); DS_CONFIG.runtime.abortCtrl = null; }
     if (DS_CONFIG.runtime.rightPanelAbortCtrl) { DS_CONFIG.runtime.rightPanelAbortCtrl.abort(); DS_CONFIG.runtime.rightPanelAbortCtrl = null; }
-    if (DS_CONFIG.runtime.inlineAbortCtrl) { DS_CONFIG.runtime.inlineAbortCtrl.abort(); DS_CONFIG.runtime.inlineAbortCtrl = null; }
-    if (DS_CONFIG.runtime.popupAbortCtrl) {
-        DS_CONFIG.runtime.popupAbortCtrl.abort();
-        DS_CONFIG.runtime.popupAbortCtrl = null;
-    }
 }
 
 // ==================== 5. 事件绑定 ====================
 function bindEvents() {
     document.addEventListener('click', (e) => {
+             if (e.target.classList.contains('ds-headword')) {
+                 const word = e.target.textContent.trim();
+                 const container = e.target.closest('.web-menu-trans') || e.target.closest('.ds-popup-text');
+                 if (word && container) {
+                     e.stopPropagation();
+                     try { let gCache = JSON.parse(GM_getValue(DS_CONFIG.consts.GLOBAL_DICT_CACHE_KEY, '{}')); if (gCache[word]) { delete gCache[word]; GM_setValue(DS_CONFIG.consts.GLOBAL_DICT_CACHE_KEY, JSON.stringify(gCache)); } } catch(err) {}
+                     if (DS_CONFIG.runtime.popupCache.dict[word]) delete DS_CONFIG.runtime.popupCache.dict[word];
+                     UI.clear(container);
+                     container.appendChild(UI.el('span', { className: 'ds-popup-loading' }, 'DeepSeek 强制刷新中...'));
+                     if (container.classList.contains('web-menu-trans')) { fetchVocabDefinition(word, container); }
+                     else { const dictPrompt = isChinese(word) ? DS_CONFIG.consts.PROMPTS.DICT_CN : DS_CONFIG.consts.PROMPTS.DICT_EN; streamToElement(dictPrompt, word, container, 'dict', word, word, 'dict'); }
+                 }
+                 return;
+             }
+
          if (e.target && e.target.classList.contains('ds-def-split')) {
              if (e.target.closest('#ds-highlight-content')) return;
              const defText = e.target.dataset.def;
@@ -1916,51 +1863,26 @@ function bindEvents() {
          }
     }, true);
 
-    const handleContinueClick = (e) => {
-        if (e.target.classList.contains('ds-continue-text')) {
-            const side = e.target.dataset.side;
-            e.target.remove();
-            if (!DS_CONFIG.runtime.popupAbortCtrl) {
-                DS_CONFIG.runtime.popupAbortCtrl = new AbortController();
-            }
-            const signal = DS_CONFIG.runtime.popupAbortCtrl.signal;
-            const params = DS_CONFIG.runtime.lastPopupParams[side];
-
-            if (params) {
-                streamToElement(params.sys, params.user, params.el, params.cat, params.key, params.hw, params.mode, signal);
-            }
-        }
-    };
-    if(DOM.popup) DOM.popup.addEventListener('click', handleContinueClick);
-    const dockedPanel = document.getElementById('ds-docked-panel');
-    if(dockedPanel) dockedPanel.addEventListener('click', handleContinueClick);
-
-    // FIX START: 拦截右键菜单 & 全局右键清除翻译
     document.addEventListener('contextmenu', (e) => {
-        // 1. 如果点击的是侧边栏或浮窗内部，不进行拦截（允许复制等默认行为）
         const inSidebar = DOM.sidebar && DOM.sidebar.contains(e.target);
         const inPopup = DOM.popup && DOM.popup.contains(e.target);
         if (inSidebar || inPopup) return;
 
-        // 2. 优先检查：是否点击了【高亮词】（删除高亮优先）
         const targetHighlight = e.target.closest(`.${DS_CONFIG.consts.HIGHLIGHT_CLASS}`);
         if (targetHighlight) {
             e.preventDefault();
             e.stopPropagation();
-            removeHighlight(targetHighlight); // 执行删除高亮
-            // 设置标志位，防止冲突
+            removeHighlight(targetHighlight);
             DS_CONFIG.runtime.preventContextMenuOnce = true;
             setTimeout(() => { DS_CONFIG.runtime.preventContextMenuOnce = false; }, 300);
             stopAllStreams();
             return;
         }
 
-        // 3. 次级检查：是否有可见的翻译元素 (插入式或全文)
         const hasInlineTrans = document.querySelector('.web-inline-trans');
         const hasPageTrans = document.querySelector('.ds-full-page-trans');
         const hasSourceHighlight = document.querySelector('.web-trans-source-highlight');
 
-        // 如果存在翻译内容，右键动作执行“清除翻译”，并拦截菜单
         if (hasInlineTrans || hasPageTrans || hasSourceHighlight) {
             e.preventDefault();
             e.stopPropagation();
@@ -2021,7 +1943,23 @@ function bindEvents() {
         if (e.key !== 'Alt') { DS_CONFIG.runtime.lastAltUpTime = 0; }
 
         if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName) || document.activeElement.isContentEditable) return;
+        if (e.altKey && (e.key === '`' || e.code === 'Backquote')) {
+            e.preventDefault();
+            DS_CONFIG.runtime.sidebarLockUntil = Date.now() + 600;
 
+            if (!isSidebarVisible()) {
+                showSidebar(); // 如果没打开，先打开
+            } else {
+                const tabs = ['history', 'docked'];
+                const currentTab = DS_CONFIG.runtime.activeTab;
+                let currentIndex = tabs.indexOf(currentTab);
+                if (currentIndex === -1) currentIndex = 1; // 默认视为 docked
+
+                const nextIndex = (currentIndex + 1) % tabs.length;
+                switchTab(tabs[nextIndex]);
+            }
+            return;
+        }
         // Alt + 3: Toggle Reader Mode
         if (e.altKey && (e.key === '3' || e.code === 'Digit3')) {
             e.preventDefault();
@@ -2062,8 +2000,6 @@ function bindEvents() {
                         addToGlobalHistory(text, range.commonAncestorContainer.textContent);
                         sel.removeAllRanges();
 
-                        // ADDED: Sync to AI Input for Alt + 1
-                        // 修改：移除可见性判断，确保高亮时无论侧边栏是否打开，输入框都会同步
                         if (window.self === window.top) {
                              const input = document.getElementById('ds-input');
                              if(input) input.value = text;
@@ -2100,7 +2036,6 @@ function bindEvents() {
                         }
                         let context = ""; try { context = window.getSelection().getRangeAt(0).commonAncestorContainer.parentElement.innerText; } catch(e){}
 
-                        // 修改：移除可见性判断，浮窗选词时同步输入框
                         if (isTopWindow) {
                             const input = document.getElementById('ds-input');
                             if(input) input.value = selText;
@@ -2116,7 +2051,6 @@ function bindEvents() {
                             }
                             const context = wordObj.node.parentElement ? wordObj.node.parentElement.innerText : wordObj.text;
 
-                            // 修改：移除可见性判断，浮窗取词时同步输入框
                             if (isTopWindow) {
                                 const input = document.getElementById('ds-input');
                                 if(input) input.value = wordObj.text;
@@ -2319,7 +2253,7 @@ function bindEvents() {
             }
             else if (targetId === 'ds-send') {
                 const el = document.getElementById('ds-input'); if (!el) return; const val = el.value.trim();
-                if (val) { if (DS_CONFIG.runtime.activeTab !== 'ai') switchTab('ai'); askAI(val,"","chat"); el.value = ""; }
+                if (val) { if (DS_CONFIG.runtime.activeTab !== 'docked') switchTab('docked'); askAI(val,"","chat"); el.value = ""; }
             }
             else if (targetId === 'ds-jump-btn') {
                 // New Jump Logic: No Auto-Fill Transfer
@@ -2369,12 +2303,7 @@ function bindEvents() {
 
     document.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
-        const targetHighlight = e.target.closest(`.${DS_CONFIG.consts.HIGHLIGHT_CLASS}`);
-        if (targetHighlight) {
-            e.preventDefault();
-            e.stopPropagation();
-            return;
-        }
+
 
         const inSidebar = DOM.sidebar && DOM.sidebar.contains(e.target); const inPopup = DOM.popup && DOM.popup.style.display !== 'none' && DOM.popup.contains(e.target);
         if (!inSidebar && !inPopup) { if (DOM.popup && DOM.popup.style.display !== 'none' && isTopWindow) { DOM.popup.style.display = 'none'; DS_CONFIG.runtime.currentPopupTrigger = null; clearAllInlineTranslations(); } }
@@ -2442,7 +2371,6 @@ function bindEvents() {
 
 function addToGlobalHistory(word, context) {
     if (!word) return;
-    // 使用 GM_getValue 读取全局历史
     let history = [];
     try {
         history = JSON.parse(GM_getValue(DS_CONFIG.consts.GLOBAL_STORAGE_KEY, '[]'));
@@ -2453,20 +2381,39 @@ function addToGlobalHistory(word, context) {
         history.splice(existingIndex, 1);
     }
     history.push({ word, context: "", date: Date.now() });
-    // 使用 GM_setValue 保存全局历史
-    GM_setValue(DS_CONFIG.consts.GLOBAL_STORAGE_KEY, JSON.stringify(history));
+   GM_setValue(DS_CONFIG.consts.GLOBAL_STORAGE_KEY, JSON.stringify(history));
     if (DS_CONFIG.runtime.activeTab === 'history') renderHistoryMenu();
 }
 
 function deleteFromHistory(word, elementRef = null) {
     const doDelete = () => {
+        // 1. 移除全局历史记录
         let history = [];
-        try {
-            history = JSON.parse(GM_getValue(DS_CONFIG.consts.GLOBAL_STORAGE_KEY, '[]'));
-        } catch(e) { history = []; }
-
+        try { history = JSON.parse(GM_getValue(DS_CONFIG.consts.GLOBAL_STORAGE_KEY, '[]')); } catch(e) { history = []; }
         const newHistory = history.filter(i => i.word !== word);
         GM_setValue(DS_CONFIG.consts.GLOBAL_STORAGE_KEY, JSON.stringify(newHistory));
+
+        // 2. 实时移除当前网页上的高亮 (新增逻辑)
+        let removedFromDom = false;
+        document.querySelectorAll(`.${DS_CONFIG.consts.HIGHLIGHT_CLASS}`).forEach(el => {
+            if (el.textContent.trim() === word) {
+                const p = el.parentNode;
+                while (el.firstChild) p.insertBefore(el.firstChild, el);
+                el.remove();
+                removedFromDom = true;
+            }
+        });
+
+        // 3. 更新当前页面的本地存储缓存
+        if (removedFromDom) {
+            saveHighlights();
+        } else {
+            // 即使当前DOM没找到（可能不在当前视口或页面），也要确保从Local Storage移除
+            const saved = JSON.parse(localStorage.getItem(DS_CONFIG.consts.STORAGE_KEY) || '[]');
+            const newSaved = saved.filter(h => h.text !== word);
+            localStorage.setItem(DS_CONFIG.consts.STORAGE_KEY, JSON.stringify(newSaved));
+        }
+
         renderHistoryMenu();
     };
 
@@ -2489,7 +2436,6 @@ function exportHistoryToTxt() {
         return;
     }
 
-    // 根据当前的排序设置对数据进行排序
     history.sort((a, b) => {
         if (DS_CONFIG.settings.historySort === 'time_desc') return b.date - a.date;
         if (DS_CONFIG.settings.historySort === 'time_asc') return a.date - b.date;
@@ -2513,12 +2459,10 @@ function renderHistoryMenu() {
     const container = document.getElementById('ds-history-content');
     if (!container) return;
 
-    // 记录当前的滚动位置 (如果存在)
     const currentScroll = document.getElementById('ds-history-log')?.scrollTop || 0;
 
     UI.clear(container);
 
-    // Modified control bar with split layout
     const controls = UI.el('div', { style: { padding: '10px', borderBottom: '1px solid var(--ds-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--ds-menu-bg)' } }, [
         // Left side: Sort icons
         UI.el('div', { style: { display: 'flex', gap: '10px' } }, [
@@ -2665,8 +2609,7 @@ async function init() {
     buildUI();
     bindEvents();
     initTimedTasks();
-    refreshHighlightMenu();
-    // AutoFill logic removed as requested
+
 }
 init();
 })();

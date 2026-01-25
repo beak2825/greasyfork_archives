@@ -1,18 +1,18 @@
 // ==UserScript==
-// @name        Mistral PWA
-// @description Mistral PWA app
-// @namespace   https://gitlab.com/breatfr
+// @name        Mistral Chat PWA
+// @description Install Mistral Chat as a standalone app
+// @version     1.0.1
 // @match       https://chat.mistral.ai/chat*
-// @version     1.0.0
-// @homepageURL https://gitlab.com/breatfr/mistral
+// @namespace   https://breat.fr
+// @homepageURL https://usercssjs.breat.fr/m/mistral-chat
 // @supportURL  https://discord.gg/Q8KSHzdBxs
 // @author      BreatFR
 // @copyright   2025, BreatFR (https://breat.fr)
-// @grant       none
-// @icon        https://gitlab.com/uploads/-/system/project/avatar/65782442/mistral.png
+// @icon        https://breat.fr/static/images/userscripts-et-userstyles/m/mistral-chat/icon.png
 // @license     AGPL-3.0-or-later; https://www.gnu.org/licenses/agpl-3.0.txt
-// @downloadURL https://update.greasyfork.org/scripts/562207/Mistral%20PWA.user.js
-// @updateURL https://update.greasyfork.org/scripts/562207/Mistral%20PWA.meta.js
+// @grant       none
+// @downloadURL https://update.greasyfork.org/scripts/562207/Mistral%20Chat%20PWA.user.js
+// @updateURL https://update.greasyfork.org/scripts/562207/Mistral%20Chat%20PWA.meta.js
 // ==/UserScript==
 
 (function() {
@@ -28,7 +28,7 @@
     // Add manifest
     const manifestLink = document.createElement('link');
     manifestLink.crossorigin = 'anonymous';
-    manifestLink.href = 'https://corsproxy.io/?url=https://gitlab.com/breatfr/mistral/-/raw/main/json/manifest.json';
+    manifestLink.href = 'https://code.breat.fr/m/mistral-chat/json/manifest.json';
     manifestLink.rel = 'manifest';
 
     manifestLink.onerror = function() {

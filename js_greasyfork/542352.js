@@ -559,7 +559,7 @@ function readMediumLink(url, text_fail = 'BPC > Try for full article text:\r\n')
 function externalLink(domains, ext_url_templ, url, text_fail = 'BPC > Full article text:\r\n') {
   let text_fail_div = document.createElement('div');
   text_fail_div.id = 'bpc_archive';
-  text_fail_div.setAttribute('style', 'margin: 20px; font-size: 20px; font-weight: bold; color: red;');
+  text_fail_div.setAttribute('style', 'margin: 20px; font-size: 20px; font-weight: bold; color: red; line-height: normal;');
   let parser = new DOMParser();
   text_fail = text_fail.replace(/\[(?<url>[^\]]+)\]/g, function (match, url) {
     return "<a href='" + url + "' target='_blank' style='color: red'>" + new URL(url).hostname + "</a>";

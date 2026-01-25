@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         网页自动展开（迭代增强版）
-// @version      2.2.0
-// @description  智能展开折叠内容；策略分级、SPA支持、防冲突、防误杀、高性能
-// @namespace    KiwiFruit
+// @version      2.2.3
+// @description  智能展开折叠内容；策略分级、SPA支持、防冲突、防误杀、高性能；UI面板自动隐藏
+// @namespace    kiwifruit13
 // @match        *://*/*
 // @run-at       document-idle
 // @grant        GM_setValue
@@ -43,6 +43,30 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(10px);
             user-select: none;
+            /* 新增：添加过渡动画 */
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s ease;
+            transform-origin: top right;
+        }
+
+        /* 新增：面板隐藏状态 */
+        .ae-panel.ae-panel-hidden {
+            opacity: 0.1;
+            /* 向右位移，留出一点边缘以便鼠标悬停唤起 */
+            transform: translateX(calc(100% - 20px));
+            pointer-events: none; /* 隐藏时不阻挡下方点击 */
+        }
+
+        /* 为了让隐藏状态下鼠标能移上去触发显示，我们需要一个不可见的“触发区”或者特殊处理。
+           这里使用CSS trick：当面板处于隐藏状态时，虽然pointer-events: none，
+           但我们在JS里通过监听特定区域的mouseenter，或者依靠残留的20px边缘来触发。
+           这里保留 pointer-events: none 以确保不遮挡，
+           但是我们需要一个额外的机制来唤起它。
+           简单方案：不使用 pointer-events: none，而是让用户把鼠标移到那个边缘。
+        */
+        .ae-panel.ae-panel-hidden {
+            opacity: 0.05; /* 几乎不可见 */
+            transform: translateX(250px); /* 移出大部分，留边缘 */
+            pointer-events: auto; /* 允许鼠标移到边缘触发 */
         }
 
         .ae-btn {
@@ -90,10 +114,10 @@
         values: {
             enabled: true,
             strategyLevel: 'standard', // conservative, standard, aggressive
-            maxMutationsBeforeDisconnect: 200, // 参考expand-everything，达到此数量后断开Observer
+            maxMutationsBeforeDisconnect: 200,
             maxRetries: 3,
             excludeHosts: [],
-            siteOverrides: {}, // 站点独立设置 { 'example.com': { strategy: 'conservative' } }
+            siteOverrides: {},
             expandSelectors: [
                 '[class*="expand"]',
                 '[class*="more"]',
@@ -141,7 +165,6 @@
         },
 
         getSiteStrategy(hostname) {
-            // 检查是否有站点覆盖
             if (this.values.siteOverrides[hostname] && this.values.siteOverrides[hostname].strategy) {
                 return this.values.siteOverrides[hostname].strategy;
             }
@@ -162,8 +185,8 @@
         observers: [],
         isActive: true,
         retryCount: 0,
-        mutationCount: 0, // 新增：Mutation计数器
-        lastUrl: location.href, // 新增：用于检测SPA跳转
+        mutationCount: 0,
+        lastUrl: location.href,
         stats: {
             totalExpanded: 0,
             lastExpanded: 0
@@ -248,14 +271,12 @@
                 return true;
             }
 
-            // 检查元素是否在排除选择器中
             for (const selector of Config.values.excludeSelectors) {
                 if (element.matches(selector) || element.closest(selector)) {
                     return true;
                 }
             }
 
-            // 检查自定义属性
             if (element.hasAttribute(`${AE_DATA_PREFIX}exclude`)) {
                 return true;
             }
@@ -266,34 +287,35 @@
 
     // 核心逻辑
     const Core = {
-        mainObserver: null, // 保存主Observer引用以便断开
+        mainObserver: null,
 
         init() {
-            // 初始化配置
             Config.init();
 
-            // 检查是否被排除的域名
             if (Config.isExcludedHost()) {
                 console.log('当前域名在排除列表中，脚本已禁用');
                 return;
             }
 
-            // 检测冲突
             if (this.detectConflicts()) {
                 console.warn('检测到可能的冲突，脚本已禁用');
                 return;
             }
 
-            // 初始化观察者
             this.initObservers();
-
-            // 初始扫描
             this.initialScan();
-
-            // 添加控制面板
             UI.createControlPanel();
 
             console.log('自动展开脚本已启用');
+
+            // 修复后的全局变量暴露
+            window.AE_AutoExpand = {
+                config: Config,
+                core: Core,
+                ui: UI,
+                utils: Utils,
+                state: State
+            };
         },
 
         detectConflicts() {
@@ -319,7 +341,6 @@
         },
 
         initObservers() {
-            // 1. 主DOM变化观察器 (增加断开机制)
             if (this.mainObserver) {
                 this.mainObserver.disconnect();
             }
@@ -329,7 +350,6 @@
 
                 State.mutationCount += mutations.length;
 
-                // 借鉴expand-everything：达到阈值后断开，避免长期拖慢页面
                 if (State.mutationCount > Config.values.maxMutationsBeforeDisconnect) {
                     this.disconnectObserver();
                     return;
@@ -353,7 +373,6 @@
 
             State.observers.push(this.mainObserver);
 
-            // 2. SPA路由变化监听 (监听document.title变化是检测SPA跳转的轻量方案)
             const titleObserver = new MutationObserver(() => {
                 if (location.href !== State.lastUrl) {
                     this.handleUrlChange();
@@ -362,11 +381,8 @@
 
             titleObserver.observe(document.querySelector('title'), { subtree: true, characterData: true, childList: true });
 
-            // 同时也监听popstate
             window.addEventListener('popstate', () => this.handleUrlChange());
-            // 拦截pushState和replaceState (可选，较为hack，这里主要依靠title变化)
 
-            // 3. 滚动时扫描可视区域
             const scrollHandler = Utils.throttle(() => {
                 if (State.isActive) {
                     this.scanVisibleArea();
@@ -403,13 +419,11 @@
             console.log(`URL changed from ${State.lastUrl} to ${currentUrl}`);
             State.lastUrl = currentUrl;
 
-            // SPA跳转后重置状态并重新激活
             State.mutationCount = 0;
             this.reconnectObserver();
 
-            // 延迟一点等待新DOM渲染
             setTimeout(() => {
-                this.reset(); // 清空处理记录
+                this.reset();
                 this.scanElement(document.body);
             }, 500);
         },
@@ -502,25 +516,16 @@
 
             let expanded = false;
 
-            // 策略分级逻辑
-            // 保守: 仅点击按钮和展开details
-            // 标准: 点击 + details + 移除隐藏类
-            // 激进: 上述所有 + 强制修改样式 + 更多文本匹配
-
-            // 方法1: 尝试点击展开按钮 (所有策略均尝试)
             expanded = this.clickExpandButtons(element, strategy);
 
-            // 方法2: 尝试展开details元素 (所有策略均尝试)
             if (!expanded && element.tagName.toLowerCase() === 'details') {
                 expanded = this.expandDetailsElement(element);
             }
 
-            // 方法3: 尝试移除隐藏类/属性 (保守模式不执行)
             if (!expanded && strategy !== 'conservative') {
                 expanded = this.removeHiddenAttributes(element, strategy);
             }
 
-            // 方法4: 尝试修改显示样式 (仅激进模式执行)
             if (!expanded && strategy === 'aggressive') {
                 expanded = this.modifyDisplayStyle(element);
             }
@@ -532,7 +537,6 @@
 
                 element.setAttribute(`${AE_DATA_PREFIX}expanded`, 'true');
                 this.dispatchExpandedEvent(element);
-                // console.log('已展开元素:', element);
             }
 
             return expanded;
@@ -550,7 +554,6 @@
 
             let clicked = false;
 
-            // 检查元素本身
             for (const selector of buttonSelectors) {
                 if (element.matches(selector)) {
                     const text = element.textContent.toLowerCase();
@@ -561,7 +564,6 @@
                 }
             }
 
-            // 检查子元素
             for (const selector of buttonSelectors) {
                 const buttons = Utils.safeQuerySelectorAll(selector, element);
                 for (const button of buttons) {
@@ -585,7 +587,6 @@
                 '»', '›', '▶', '▸'
             ];
 
-            // 激进模式下增加更多模糊匹配符号
             if (strategy === 'aggressive') {
                 keywords.push('+', 'more', '...', 'v');
             }
@@ -605,7 +606,6 @@
                 element.click();
                 State.clickedElements.add(element);
 
-                // 视觉反馈 (仅当元素可见时)
                 if (element.offsetParent !== null) {
                     const originalBackground = element.style.backgroundColor;
                     element.style.backgroundColor = '#e8f5e8';
@@ -639,7 +639,6 @@
                 'hidden', 'collapse', 'collapsed', 'hide'
             ];
 
-            // 激进模式下增加更多类名
             if (strategy === 'aggressive') {
                 hiddenClasses.push('fold', 'folded', 'truncate', 'ellipsis', 'line-clamp');
             }
@@ -715,6 +714,8 @@
 
     // 用户界面
     const UI = {
+        hideTimer: null,
+
         createControlPanel() {
             const existingPanel = document.getElementById('ae-control-panel');
             if (existingPanel) {
@@ -755,6 +756,9 @@
                 this.showConfigDialog();
             });
 
+            // 自动隐藏逻辑
+            this.setupAutoHide(panel);
+
             this.makeDraggable(panel);
 
             this.updateStats();
@@ -764,28 +768,67 @@
             }, 2000);
         },
 
+        setupAutoHide(panel) {
+            // 鼠标移入：取消隐藏
+            panel.addEventListener('mouseenter', () => {
+                this.showPanel(panel);
+            });
+
+            // 鼠标移出：延迟隐藏
+            panel.addEventListener('mouseleave', () => {
+                this.scheduleHide(panel, 1000);
+            });
+
+            // 初始化：2秒后自动隐藏
+            this.scheduleHide(panel, 2000);
+        },
+
+        scheduleHide(panel, delay) {
+            if (this.hideTimer) clearTimeout(this.hideTimer);
+            this.hideTimer = setTimeout(() => {
+                // 如果正在拖拽，不隐藏
+                if (panel.dataset.isDragging === 'true') return;
+
+                panel.classList.add('ae-panel-hidden');
+            }, delay);
+        },
+
+        showPanel(panel) {
+            if (this.hideTimer) clearTimeout(this.hideTimer);
+            panel.classList.remove('ae-panel-hidden');
+        },
+
         makeDraggable(element) {
             let isDragging = false;
             let offset = { x: 0, y: 0 };
 
             const startDrag = (e) => {
                 isDragging = true;
+                element.dataset.isDragging = 'true'; // 标记拖拽状态
                 offset = {
                     x: element.offsetLeft - e.clientX,
                     y: element.offsetTop - e.clientY
                 };
                 element.style.cursor = 'grabbing';
+                this.showPanel(element); // 拖拽开始时显示
             };
 
             const stopDrag = () => {
-                isDragging = false;
-                element.style.cursor = 'grab';
+                if (isDragging) {
+                    isDragging = false;
+                    element.dataset.isDragging = 'false'; // 结束拖拽
+                    element.style.cursor = 'grab';
+                    // 拖拽结束后，延迟隐藏
+                    this.scheduleHide(element, 1000);
+                }
             };
 
             const doDrag = (e) => {
                 if (isDragging) {
                     element.style.left = `${e.clientX + offset.x}px`;
                     element.style.top = `${e.clientY + offset.y}px`;
+                    // 拖拽时移除right定位，改为left/top定位，防止冲突
+                    element.style.right = 'auto';
                 }
             };
 
@@ -923,15 +966,12 @@
             dialog.querySelector('#ae-config-save').addEventListener('click', () => {
                 Config.set('enabled', dialog.querySelector('#ae-config-enabled').checked);
 
-                // 保存全局策略
                 const globalStrategy = dialog.querySelector('#ae-config-strategy').value;
                 Config.set('strategyLevel', globalStrategy);
 
-                // 保存断开阈值
                 const mutationLimit = parseInt(dialog.querySelector('#ae-config-mutations').value, 10);
                 Config.set('maxMutationsBeforeDisconnect', mutationLimit);
 
-                // 保存站点特定策略
                 const siteRadios = document.getElementsByName('ae-site-strategy');
                 let siteStrategy = null;
                 for (const radio of siteRadios) {
@@ -958,7 +998,7 @@
                 Config.init();
                 closeDialog();
                 UI.showNotification('配置已保存');
-                UI.updateStats(); // 更新面板上的策略显示
+                UI.updateStats();
             });
 
             dialog.querySelector('#ae-config-cancel').addEventListener('click', closeDialog);
@@ -998,13 +1038,4 @@
     } else {
         setTimeout(() => Core.init(), 100);
     }
-
-    // 导出到全局对象（用于调试）
-    window.AE_AutoExpand = {
-        config: Config,
-        core: Core,
-        ui: UI,
-        utils: Utils,
-        state: State
-    };
 })();

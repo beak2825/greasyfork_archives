@@ -1,13 +1,16 @@
 // ==UserScript==
 // @name         福利吧百家姓磁力链接自动转换
 // @namespace    http://tampermonkey.net/
-// @version      0.14
+// @version      0.15
 // @description  自动替换百家姓内容并高亮显示
 // @author       silviode
 // @match        https://fuliba2023.net/*
 // @match        *://f.uliba.net/*
 // @match        *://fuliba66.net/*
 // @match        *://fuliba23.net/*
+// @match        *://fuliba25.net/*
+// @match        *://f.uliba.net/*
+// @match        *://fulibus.net/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=fuliba2023.net
 // @license      GPLv3
 // @grant        none

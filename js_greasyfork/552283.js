@@ -9,7 +9,7 @@
 // @run-at      document-start
 // @license     MIT
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @version     1.8.2
+// @version     1.9.0
 // @grant       GM_info
 // @grant       GM_addStyle
 // @grant       GM_setValue
@@ -38,7 +38,7 @@
     };
     const RX_NUMERIC = /([\d.]+)\s*([kmb千萬万億亿])?/i;
     const RX_TIME_AGO_CHECK = /(ago|前|hour|minute|day|week|month|year|秒|分|時|天|週|月|年)/i;
-    const RX_TIME_AGO_PARSE = /(\d+)\s*(second|minute|min|hour|hr|day|week|month|year|秒|分|小時|時|天|日|週|周|月|年)/i;
+    const RX_TIME_AGO_PARSE = /([\d.]+)\s*(second|minute|min|hour|hr|day|week|month|year|秒|分|小時|時|天|日|週|周|月|年)/i;
     const RX_ZERO_TIME = /second|秒/i;
     const TIME_UNIT_KEYS = {
         'minute': TIME_UNITS.MINUTE, 'min': TIME_UNITS.MINUTE, '分': TIME_UNITS.MINUTE,
@@ -54,6 +54,17 @@
         debounce: (func, delay) => {
             let t;
             return (...args) => { clearTimeout(t); t = setTimeout(() => func(...args), delay); };
+        },
+        throttle: (func, limit) => {
+            let inThrottle;
+            return function(...args) {
+                const context = this;
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            };
         },
         parseNumeric: (text, type = 'any') => {
             if (!text) return null;
@@ -72,9 +83,10 @@
             if (!text) return null;
             const parts = text.trim().split(':').map(Number);
             if (parts.some(isNaN)) return null;
-            return parts.length === 3
-                ? parts[0] * 3600 + parts[1] * 60 + parts[2]
-                : (parts.length === 2 ? parts[0] * 60 + parts[1] : null);
+            if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+            if (parts.length === 2) return parts[0] * 60 + parts[1];
+            if (parts.length === 1) return parts[0];
+            return null;
         },
         parseTimeAgo: (text) => {
             if (!text) return null;
@@ -136,16 +148,25 @@
         }
     };
 
+    let instance = null;
     class ConfigManager {
         constructor() {
+            if (instance) return instance;
+            instance = this;
             this.defaults = {
+                OPEN_IN_NEW_TAB: true,
+                OPEN_NOTIFICATIONS_IN_NEW_TAB: true,
+                ENABLE_LOW_VIEW_FILTER: true,
+                LOW_VIEW_THRESHOLD: 1000,
+                DEBUG_MODE: true,
+                ENABLE_REGION_CONVERT: true,
                 ENABLE_KEYWORD_FILTER: true,
                 KEYWORD_BLACKLIST: ['預告', 'Teaser', 'Trailer', 'PV', 'CM', 'MV', 'Cover', '翻唱'],
-                ENABLE_CHANNEL_FILTER: false,
+                ENABLE_CHANNEL_FILTER: true,
                 CHANNEL_BLACKLIST: [],
                 ENABLE_SECTION_FILTER: true,
                 SECTION_TITLE_BLACKLIST: ['耳目一新', '重溫舊愛', '合輯', 'Mixes', 'Latest posts', '最新貼文'],
-                ENABLE_DURATION_FILTER: false,
+                ENABLE_DURATION_FILTER: true,
                 DURATION_MIN: 0,
                 DURATION_MAX: 0,
                 GRACE_PERIOD_HOURS: 4,
@@ -297,20 +318,23 @@
             this.observer = null;
         }
         start() {
-            this.observer = new MutationObserver(() => this.checkAndClean());
+            this.checkAndCleanThrottled = Utils.throttle(() => this.checkAndClean(), 250);
+            this.observer = new MutationObserver(() => this.checkAndCleanThrottled());
             this.observer.observe(document.body, {
                 childList: true,
                 subtree: false
             });
-            const setupPopupObserver = () => {
+            const tryConnect = (attempts = 0) => {
                 const popupContainer = document.querySelector('ytd-popup-container');
                 if (popupContainer && !popupContainer._adGuardObserved) {
                     popupContainer._adGuardObserved = true;
                     this.observer.observe(popupContainer, { childList: true, subtree: true });
+                    Logger.info('🛡️ AdBlockGuard attached to popup container');
+                } else if (attempts < 10) {
+                    setTimeout(() => tryConnect(attempts + 1), 500);
                 }
             };
-            setupPopupObserver();
-            setTimeout(setupPopupObserver, 2000);
+            tryConnect();
             this.checkAndClean();
         }
         isWhitelisted(dialog) {
@@ -395,7 +419,9 @@
         ],
         BADGES: {
             MEMBERS: '.badge-style-type-members-only, [aria-label*="會員專屬"], [aria-label*="Members only"]',
-            SHORTS: 'a[href*="/shorts/"]'},
+            SHORTS: 'a[href*="/shorts/"]',
+            MIX: 'a[aria-label*="合輯"], a[aria-label*="Mix"]'
+        },
         INTERACTION_EXCLUDE: 'button, yt-icon-button, #menu, ytd-menu-renderer, ytd-toggle-button-renderer, yt-chip-cloud-chip-renderer, .yt-spec-button-shape-next, .yt-core-attributed-string__link, #subscribe-button, .ytp-progress-bar, .ytp-chrome-bottom',
         CLICKABLE: [
             'ytd-rich-item-renderer', 'ytd-video-renderer', 'ytd-compact-video-renderer',
@@ -435,7 +461,7 @@
             this.config = config;
             this.definitions = [
                 { key: 'members_only', rules: [/頻道會員專屬|Members only/i] },
-                { key: 'mix_only', rules: [/^(合輯|Mix)[\s\-–]/i] },
+                { key: 'mix_only', rules: [/(^|\s)(合輯|Mix)([\s\-–]|$)/i] },
                 { key: 'news_block', rules: [/新聞快報|Breaking News|ニュース/i] },
                 { key: 'posts_block', rules: [/貼文|Posts|投稿|Publicaciones|最新 YouTube 貼文/i] },
                 { key: 'playables_block', rules: [/Playables|遊戲角落/i] },
@@ -535,7 +561,12 @@
                 /會員專屬|Members only/.test(this.el.innerText);
         }
         get isPlaylist() {
-            return !!this.el.querySelector('a[href^="/playlist?list="], [content-id^="PL"]');
+            const link = this.el.querySelector('a[href*="list="], [content-id^="PL"]');
+            if (link) return true;
+            if (this.el.querySelector(SELECTORS.BADGES.MIX)) return true;
+            const title = this.title;
+            if (title && /^(合輯|Mix)/i.test(title)) return true;
+            return false;
         }
     }
     class VideoFilter {
@@ -584,7 +615,7 @@
             if (element.hidden || element.hasAttribute('hidden')) {
                 return this._hide(element, 'native_hidden');
             }
-            const textRule = this.customRules.check(element, element.innerText);
+            const textRule = this.customRules.check(element, element.textContent);
             if (textRule) return this._hide(element, textRule);
             if (this._checkSectionFilter(element)) return;
             const isVideoElement = /VIDEO|LOCKUP|RICH-ITEM/.test(element.tagName);
@@ -721,10 +752,10 @@
             document.addEventListener('click', (e) => {
                 if (e.target.closest('[data-yp-hidden]')) return;
                 if (this.config.get('OPEN_NOTIFICATIONS_IN_NEW_TAB')) {
-                    const notification = e.target.closest('ytd-notification-renderer');
-                    if (notification) {
-                        const link = e.target.closest('a.yt-simple-endpoint');
-                        if (link && link.href && !e.target.closest('yt-icon-button')) {
+                    const notificationPanel = e.target.closest('ytd-notification-renderer, ytd-comment-video-thumbnail-header-renderer, #sections.ytd-multi-page-menu-renderer');
+                    if (notificationPanel) {
+                        const link = e.target.closest('a.yt-simple-endpoint, a[href*="/watch?"]');
+                        if (link && link.href && !e.target.closest('yt-icon-button, button')) {
                             e.preventDefault();
                             e.stopImmediatePropagation();
                             window.open(link.href, '_blank');
@@ -767,6 +798,7 @@
                 menu_rules: '📂 設定過濾規則',
                 menu_low_view: '低觀看數過濾 (含直播)',
                 menu_threshold: '🔢 設定閾值',
+                menu_grace: '⏳ 設定豁免期',
                 menu_advanced: '🚫 進階過濾',
                 menu_new_tab: '強制新分頁 (影片)',
                 menu_notification_new_tab: '強制新分頁 (通知)',
@@ -789,7 +821,8 @@
                 import_fail: '❌ 匯入失敗: ',
                 rules_title: '【 過濾規則 】',
                 rules_back: '(0 返回)',
-                threshold_prompt: '閾值:',
+                threshold_prompt: '請輸入「觀看數閾值」 (低於此數將被過濾):',
+                grace_prompt: '請輸入「豁免時間 (小時)」 (設為 0 則不豁免):',
                 reset_confirm: '重設?',
                 lang_title: '【 選擇語言 】',
                 back: '返回',
@@ -813,6 +846,7 @@
                 menu_rules: '📂 设置过滤规则',
                 menu_low_view: '低观看数过滤 (含直播)',
                 menu_threshold: '🔢 设置阈值',
+                menu_grace: '⏳ 设置豁免期',
                 menu_advanced: '🚫 高级过滤',
                 menu_new_tab: '强制新标签页 (视频)',
                 menu_notification_new_tab: '强制新标签页 (通知)',
@@ -835,7 +869,8 @@
                 import_fail: '❌ 导入失败: ',
                 rules_title: '【 过滤规则 】',
                 rules_back: '(0 返回)',
-                threshold_prompt: '阈值:',
+                threshold_prompt: '请输入「观看数阈值」 (低于此数将被过滤):',
+                grace_prompt: '请输入「豁免时间 (小时)」 (设为 0 则不豁免):',
                 reset_confirm: '重置?',
                 lang_title: '【 选择语言 】',
                 back: '返回',
@@ -857,10 +892,11 @@
             'en': {
                 title: 'YouTube Cleaner',
                 menu_rules: '📂 Filter Rules',
-                menu_low_view: 'Low View Filter (incl. Live)',
-                menu_threshold: '🔢 Set Threshold',
-                menu_advanced: '🚫 Advanced Filters',
-                menu_new_tab: 'Force New Tab (Video)',
+                menu_low_view: '低觀看數過濾 (含直播)',
+                menu_threshold: '🔢 設定閾值',
+                menu_grace: '⏳ 設定豁免期',
+                menu_advanced: '🚫 進階過濾',
+                menu_new_tab: '強制新分頁 (影片)',
                 menu_notification_new_tab: 'Force New Tab (Notif)',
                 menu_debug: 'Debug',
                 menu_reset: '🔄 Reset to Default',
@@ -881,7 +917,8 @@
                 import_fail: '❌ Import failed: ',
                 rules_title: '【 Filter Rules 】',
                 rules_back: '(0 Back)',
-                threshold_prompt: 'Threshold:',
+                threshold_prompt: 'Enter View Threshold:',
+                grace_prompt: 'Enter Grace Period (Hours) (0 to disable):',
                 reset_confirm: 'Reset?',
                 lang_title: '【 Select Language 】',
                 back: 'Back',
@@ -1015,18 +1052,19 @@
             const statsInfo = FilterStats.session.total > 0 ? ` (${FilterStats.session.total})` : '';
             const langName = I18N.availableLanguages[I18N.lang];
             const choice = prompt(
-                `【 ${this.t('title')} v1.6.5 】\n\n` +
+                `【 ${this.t('title')} v${GM_info.script.version} 】\n\n` +
                 `1. ${this.t('menu_rules')}\n` +
                 `2. ${i('ENABLE_LOW_VIEW_FILTER')} ${this.t('menu_low_view')}\n` +
                 `3. ${this.t('menu_threshold')} (${this.config.get('LOW_VIEW_THRESHOLD')})\n` +
-                `4. ${this.t('menu_advanced')}\n` +
-                `5. ${i('OPEN_IN_NEW_TAB')} ${this.t('menu_new_tab')}\n` +
-                `6. ${i('OPEN_NOTIFICATIONS_IN_NEW_TAB')} ${this.t('menu_notification_new_tab')}\n` +
-                `7. ${i('DEBUG_MODE')} ${this.t('menu_debug')}\n` +
-                `8. ${this.t('menu_reset')}\n` +
-                `9. ${this.t('menu_stats')}${statsInfo}\n` +
-                `10. ${this.t('menu_export')}\n` +
-                `11. ${this.t('menu_lang')} [${langName}]\n\n` +
+                `4. ${this.t('menu_grace')} (${this.config.get('GRACE_PERIOD_HOURS')}h)\n` +
+                `5. ${this.t('menu_advanced')}\n` +
+                `6. ${i('OPEN_IN_NEW_TAB')} ${this.t('menu_new_tab')}\n` +
+                `7. ${i('OPEN_NOTIFICATIONS_IN_NEW_TAB')} ${this.t('menu_notification_new_tab')}\n` +
+                `8. ${i('DEBUG_MODE')} ${this.t('menu_debug')}\n` +
+                `9. ${this.t('menu_reset')}\n` +
+                `10. ${this.t('menu_stats')}${statsInfo}\n` +
+                `11. ${this.t('menu_export')}\n` +
+                `12. ${this.t('menu_lang')} [${langName}]\n\n` +
                 this.t('menu_input')
             );
             if (choice) this.handleMenu(choice);
@@ -1035,15 +1073,30 @@
             switch (c.trim()) {
                 case '1': this.showRuleMenu(); break;
                 case '2': this.toggle('ENABLE_LOW_VIEW_FILTER'); break;
-                case '3': { const v = prompt(this.t('threshold_prompt')); if (v) this.update('LOW_VIEW_THRESHOLD', Number(v)); break; }
-                case '4': this.showAdvancedMenu(); break;
-                case '5': this.toggle('OPEN_IN_NEW_TAB'); break;
-                case '6': this.toggle('OPEN_NOTIFICATIONS_IN_NEW_TAB'); break;
-                case '7': this.toggle('DEBUG_MODE'); break;
-                case '8': if (confirm(this.t('reset_confirm'))) { Object.keys(this.config.defaults).forEach(k => this.config.set(k, this.config.defaults[k])); this.update('', null); } break;
-                case '9': this.showStats(); break;
-                case '10': this.showExportImportMenu(); break;
-                case '11': this.showLanguageMenu(); break;
+                case '3': {
+                    const v = prompt(this.t('threshold_prompt'), this.config.get('LOW_VIEW_THRESHOLD'));
+                    const num = Number(v);
+                    if (v !== null && !isNaN(num)) this.update('LOW_VIEW_THRESHOLD', num);
+                    else if (v !== null) alert('❌ 請輸入有效的數字');
+                    this.showMainMenu();
+                    break;
+                }
+                case '4': {
+                    const v = prompt(this.t('grace_prompt'), this.config.get('GRACE_PERIOD_HOURS'));
+                    const num = Number(v);
+                    if (v !== null && !isNaN(num)) this.update('GRACE_PERIOD_HOURS', num);
+                    else if (v !== null) alert('❌ 請輸入有效的數字');
+                    this.showMainMenu();
+                    break;
+                }
+                case '5': this.showAdvancedMenu(); break;
+                case '6': this.toggle('OPEN_IN_NEW_TAB'); break;
+                case '7': this.toggle('OPEN_NOTIFICATIONS_IN_NEW_TAB'); break;
+                case '8': this.toggle('DEBUG_MODE'); break;
+                case '9': if (confirm(this.t('reset_confirm'))) { Object.keys(this.config.defaults).forEach(k => this.config.set(k, this.config.defaults[k])); this.update('', null); } break;
+                case '10': this.showStats(); break;
+                case '11': this.showExportImportMenu(); break;
+                case '12': this.showLanguageMenu(); break;
             }
         }
         showStats() {
@@ -1074,7 +1127,7 @@
         }
         exportSettings() {
             const exportData = {
-                version: '1.6.5',
+                version: GM_info.script.version,
                 timestamp: new Date().toISOString(),
                 settings: this.config.state,
                 language: I18N.lang
@@ -1133,9 +1186,16 @@
             else if (c === '6') this.manage('SECTION_TITLE_BLACKLIST');
             else if (c === '7') this.toggle('ENABLE_DURATION_FILTER', true);
             else if (c === '8') {
-                const min = prompt(this.t('adv_min')); const max = prompt(this.t('adv_max'));
-                if (min) this.config.set('DURATION_MIN', min * 60);
-                if (max) this.config.set('DURATION_MAX', max * 60);
+                const min = prompt(this.t('adv_min'), this.config.get('DURATION_MIN') / 60);
+                const max = prompt(this.t('adv_max'), this.config.get('DURATION_MAX') / 60);
+                if (min !== null) {
+                    const m = Number(min);
+                    if (!isNaN(m)) this.config.set('DURATION_MIN', m * 60);
+                }
+                if (max !== null) {
+                    const m = Number(max);
+                    if (!isNaN(m)) this.config.set('DURATION_MAX', m * 60);
+                }
                 this.onRefresh(); this.showAdvancedMenu();
             }
             else if (c === '9') this.toggle('ENABLE_REGION_CONVERT', true);

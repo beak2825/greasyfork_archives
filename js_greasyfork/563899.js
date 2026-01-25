@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         AniList: Color airing dots on anime lists orange if the user is behind on episodes
 // @namespace    plennhar-anilist-color-airing-dots-on-anime-lists-orange-if-the-user-is-behind-on-episodes
-// @version      1.0
+// @version      1.0.1
 // @description  On AniList anime list pages, turns the "Releasing" dot orange (Watching section only) when the user is behind the aired episode count.
 // @author       Plennhar
-// @match        https://anilist.co/user/*/animelist*
+// @match        https://anilist.co/*
 // @run-at       document-idle
 // @grant        GM_getValue
 // @grant        GM_setValue

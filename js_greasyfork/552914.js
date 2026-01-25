@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         ChatFold
 // @namespace    https://example.com
-// @version      1.0.1
-// @description  Provide collapse/expand controls for ChatGPT conversations along with a top toolbar, supporting dark mode and bilingual switching (Chinese and English). | 用于 ChatGPT 网页增强的 Tampermonkey 用户脚本。给每条消息添加折叠/展开按钮，提供顶部工具条/迷你浮窗用于批量折叠、按长度自动折叠。工具兼容多语言切换（中/英）、暗色模式自适配。
-// @author       Marai
+// @version      1.0.2
+// @description  Provide collapse/expand controls for ChatGPT conversations along with a top toolbar, supporting dark mode and bilingual switching (Chinese and English).
+// @author       Zhaoyang-Song
 // @match        https://chatgpt.com/*
 // @match        https://chat.openai.com/*
 // @grant        GM_addStyle
@@ -38,6 +38,10 @@
       langEn: 'English',
       compact: '折叠工具条',
       expandToolbar: '展开工具条',
+
+      // NEW
+      floatingToggleShow: '显示工具条',
+      floatingToggleHide: '隐藏工具条',
     },
     en: {
       appName: 'ChatFold',
@@ -60,10 +64,15 @@
       langEn: 'English',
       compact: 'Collapse Toolbar',
       expandToolbar: 'Expand Toolbar',
+
+      // NEW
+      floatingToggleShow: 'Show Toolbar',
+      floatingToggleHide: 'Hide Toolbar',
     }
   };
   const LANG_KEY = 'cgpt_i18n_lang';
   const TOOLBAR_MINI_KEY = 'cgpt_toolbar_mini';
+  const TOOLBAR_FLOAT_OPEN_KEY = 'cgpt_toolbar_float_open'; // NEW
 
   function detectDefaultLang(){
     const saved = localStorage.getItem(LANG_KEY);
@@ -93,10 +102,14 @@
   const UI = {
     toolbarId: 'cgpt-collapse-toolbar',
     toolbarCompactId: 'cgpt-collapse-toolbar-compact',
+    toolbarFloatToggleId: 'cgpt-collapse-toolbar-float-toggle', // NEW（右下角第二个按钮）
+    toolbarFloatingClass: 'cgpt-toolbar-floating',               // NEW（浮动工具条样式类）
+
     btnClass: 'cgpt-btn',
     iconClass: 'cgpt-icon',
     collapsedClass: 'cgpt-collapsed',
     controlBtnClass: 'cgpt-collapse-toggle',
+    controlBtnBottomClass: 'cgpt-collapse-toggle-bottom',
     summaryClass: 'cgpt-summary-line',
     gradientClass: 'cgpt-fade-gradient',
     defaultPreviewLen: 60,
@@ -119,7 +132,7 @@
       --cg-btn-bg-active:#efefef;
       --cg-text:#111827;
       --cg-muted:#6b7280;
-      --cg-focus:#10a37f; /* OpenAI 绿 */
+      --cg-focus:#10a37f;
       --cg-chip:#f3f4f6;
 
       --cg-fade-from: rgba(255,255,255,0);
@@ -166,7 +179,19 @@
       box-shadow: var(--cg-shadow);
       color: var(--cg-text); font-size: 12px; line-height: 1.2;
     }
-    /* 迷你胶囊（右下角） */
+
+    /* NEW：浮动工具条（显示在当前位置：右下角上方） */
+    #${UI.toolbarId}.${UI.toolbarFloatingClass}{
+      position: fixed !important;
+      right: 16px !important;
+      bottom: 62px !important;  /* 给右下角按钮留空间 */
+      top: auto !important;
+      margin: 0 !important;
+      max-width: min(92vw, 980px);
+      z-index: 9999 !important;
+    }
+
+    /* 迷你胶囊（右下角：展开工具条） */
     #${UI.toolbarCompactId}{
       position: fixed; right: 16px; bottom: 16px; z-index: 9999;
       display: flex; align-items: center; gap: 8px;
@@ -180,21 +205,32 @@
     #${UI.toolbarCompactId}:hover{ transform: translateY(-1px); }
     #${UI.toolbarCompactId}:active{ transform: translateY(0); }
 
-    /* 统一控件高度与对齐 */
-    :root{
-      --cg-control-h: 32px;   /* 所有控件统一高度 */
+    /* NEW：右下角“显示/隐藏工具条”按钮（与迷你胶囊外观一致） */
+    #${UI.toolbarFloatToggleId}{
+      position: fixed; right: 16px; bottom: 16px; z-index: 9999;
+      display: none; align-items: center; gap: 8px;
+      padding: 8px 10px;
+      background: var(--cg-bg); backdrop-filter: blur(var(--cg-blur));
+      border: 1px solid var(--cg-border); border-radius: 999px;
+      box-shadow: var(--cg-shadow-strong);
+      color: var(--cg-text); font-size: 12px; cursor: pointer;
+      user-select: none;
     }
+    #${UI.toolbarFloatToggleId}:hover{ transform: translateY(-1px); }
+    #${UI.toolbarFloatToggleId}:active{ transform: translateY(0); }
 
-    /* 标准按钮（统一高度） */
+    /* 统一控件高度与对齐 */
+    :root{ --cg-control-h: 32px; }
+
     .${UI.btnClass}{
       border: 1px solid var(--cg-border);
       height: var(--cg-control-h);
-      padding: 0 10px;                /* 用固定高度，移除上下 padding 差异 */
+      padding: 0 10px;
       border-radius: var(--cg-radius-lg);
       cursor: pointer; background: var(--cg-btn-bg);
       color: var(--cg-text);
       display: inline-flex; align-items: center; gap: 6px;
-      line-height: 1;                 /* 防止不同浏览器默认行高不一致 */
+      line-height: 1;
       box-sizing: border-box;
       transition: background .15s ease, transform .05s ease, box-shadow .15s ease;
     }
@@ -205,13 +241,11 @@
       outline-offset: 2px;
     }
 
-    /* 图标（采用内联 SVG） */
     .${UI.iconClass}{
       width: 14px; height: 14px; display: inline-block;
       line-height: 0; vertical-align: middle;
     }
 
-    /* logo 区域（应用名） */
     .cgpt-brand{
       display: inline-flex; align-items: center; gap: 8px;
       padding: 6px 10px; border-radius: 999px;
@@ -223,37 +257,42 @@
       box-shadow: 0 0 0 3px rgba(16,163,127,.15);
     }
 
-    /* 每条消息右上角按钮（圆形） */
-    .${UI.controlBtnClass}{
-      position: absolute; right: 8px; top: 8px;
+    /* 消息按钮：移出内容区域，避免遮挡文字 */
+    .${UI.controlBtnClass},
+    .${UI.controlBtnBottomClass}{
+      position: absolute;
       width: 26px; height: 26px; border-radius: 999px;
       border: 1px solid var(--cg-border);
       background: var(--cg-btn-bg); color: var(--cg-text);
-      cursor: pointer; opacity: .9; z-index: 5;
+      cursor: pointer; opacity: .92; z-index: 6;
       display: inline-flex; align-items: center; justify-content: center;
       transition: background .15s ease, transform .05s ease;
+      box-shadow: var(--cg-shadow);
     }
-    .${UI.controlBtnClass}:hover{ background: var(--cg-btn-bg-hover); }
-    .${UI.controlBtnClass}:active{ background: var(--cg-btn-bg-active); transform: scale(.98); }
-    .${UI.controlBtnClass}:focus-visible{
+    .${UI.controlBtnClass}{ right: -10px; top: -10px; }
+    .${UI.controlBtnBottomClass}{ right: -10px; bottom: -10px; }
+
+    .${UI.controlBtnClass}:hover,
+    .${UI.controlBtnBottomClass}:hover{ background: var(--cg-btn-bg-hover); }
+    .${UI.controlBtnClass}:active,
+    .${UI.controlBtnBottomClass}:active{ background: var(--cg-btn-bg-active); transform: scale(.98); }
+    .${UI.controlBtnClass}:focus-visible,
+    .${UI.controlBtnBottomClass}:focus-visible{
       outline: 2px solid var(--cg-focus);
       outline-offset: 2px;
     }
 
-    /* 折叠态容器样式 */
     .${UI.collapsedClass}{
       position: relative;
       max-height: 48px !important; overflow: hidden !important;
       border-radius: 12px; border: 1px dashed var(--cg-border);
-      padding-top: 26px; /* 留出圆形按钮空间 */
+      padding-top: 26px;
     }
-    /* 渐变遮罩（不拦截点击） */
     .${UI.gradientClass}{
       content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 28px;
       background: linear-gradient(to bottom, var(--cg-fade-from), var(--cg-fade-to));
       pointer-events: none; z-index: 3;
     }
-    /* 摘要条（不拦截点击） */
     .${UI.summaryClass}{
       position: absolute; left: 12px; top: 8px; right: 56px;
       color: var(--cg-muted); font-size: 12px; white-space: nowrap;
@@ -261,7 +300,6 @@
       pointer-events: none; z-index: 2;
     }
 
-    /* 输入与语言选择（统一高度） */
     .cgpt-input,
     #cgpt-lang-select{
       border: 1px solid var(--cg-border);
@@ -269,17 +307,14 @@
       color: var(--cg-text);
       border-radius: var(--cg-radius-lg);
       height: var(--cg-control-h);
-      padding: 0 8px;                 /* 与按钮风格匹配 */
+      padding: 0 8px;
       line-height: 1;
       display: inline-flex; align-items: center;
       box-sizing: border-box;
     }
-
-    /* 某些浏览器里的 number/select 元素对齐 */
-    #cgpt-lang-select { padding-right: 26px; }  /* 为空间留出下拉箭头 */
+    #cgpt-lang-select { padding-right: 26px; }
     input[type="number"].cgpt-input{ text-align: left; }
 
-    /* 工具条内通用水平对齐容器（新类） */
     .cgpt-group{
       display: inline-flex;
       align-items: center;
@@ -287,43 +322,31 @@
       height: var(--cg-control-h);
     }
 
-
     .cgpt-input:focus-visible, #cgpt-lang-select:focus-visible{
       outline: 2px solid var(--cg-focus);
       outline-offset: 2px;
     }
 
-    /* 减少动效偏好 */
     @media (prefers-reduced-motion: reduce){
-      .${UI.btnClass}, .${UI.controlBtnClass}, #${UI.toolbarCompactId}{
+      .${UI.btnClass}, .${UI.controlBtnClass}, .${UI.controlBtnBottomClass}, #${UI.toolbarCompactId}, #${UI.toolbarFloatToggleId}{
         transition: none !important;
       }
     }
 
-    /* === 统一字体大小，避免 select / number 变大 === */
-    :root{
-      --cg-font-size: 14px;           /* 你想要的基准字号，可改 13/15 等 */
-    }
-
-    #cgpt-toolbar, .cgpt-toolbar{     /* 你的工具栏容器选择器，二选一/都保留更保险 */
+    :root{ --cg-font-size: 14px; }
+    #cgpt-toolbar, .cgpt-toolbar{
       font-size: var(--cg-font-size);
-      line-height: 1;                 /* 避免行高放大 */
+      line-height: 1;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
     }
-
-    /* 子元素继承容器字体 */
-    #cgpt-toolbar *, .cgpt-toolbar *{
-      font-size: inherit;
-    }
-
-    /* 表单控件显式继承字体，防止 UA 默认放大 */
+    #cgpt-toolbar *, .cgpt-toolbar *{ font-size: inherit; }
     #cgpt-lang-select,
     #cgpt-lang-select option,
-    .cgpt-input,                      /* 你的 number 输入已加这个类 */
+    .cgpt-input,
     input[type="number"].cgpt-input{
       font-size: inherit;
-      line-height: 1;                 /* 与 32px 高度的垂直对齐更稳 */
+      line-height: 1;
     }
   `);
 
@@ -382,6 +405,14 @@
     },
     setToolbarMini(v){
       localStorage.setItem(TOOLBAR_MINI_KEY, v?'1':'0');
+    },
+
+    // NEW：浮动工具条开关（右下角按钮控制）
+    getToolbarFloatOpen(){
+      return localStorage.getItem(TOOLBAR_FLOAT_OPEN_KEY) === '1';
+    },
+    setToolbarFloatOpen(v){
+      localStorage.setItem(TOOLBAR_FLOAT_OPEN_KEY, v?'1':'0');
     }
   };
 
@@ -406,17 +437,24 @@
     if (!el.__cgpt_inited){
       el.__cgpt_inited = true;
 
-      const btn = document.createElement('button');
-      btn.className = UI.controlBtnClass;
-      btn.setAttribute('aria-label', t('btnTitleToggle'));
-      btn.innerHTML = icons.chevronUp;
-
-      btn.addEventListener('click', ()=>{
+      const toggle = ()=>{
         const id = getMsgId(el);
         const collapsed = !state.getCollapsed(id);
         state.setCollapsed(id, collapsed);
         updateMessageUI(el);
-      });
+      };
+
+      const btnTop = document.createElement('button');
+      btnTop.className = UI.controlBtnClass;
+      btnTop.setAttribute('aria-label', t('btnTitleToggle'));
+      btnTop.innerHTML = icons.chevronUp;
+      btnTop.addEventListener('click', toggle);
+
+      const btnBottom = document.createElement('button');
+      btnBottom.className = UI.controlBtnBottomClass;
+      btnBottom.setAttribute('aria-label', t('btnTitleToggle'));
+      btnBottom.innerHTML = icons.chevronUp;
+      btnBottom.addEventListener('click', toggle);
 
       const summary = document.createElement('div');
       summary.className = UI.summaryClass;
@@ -426,14 +464,17 @@
       fade.className = UI.gradientClass;
       fade.style.display = 'none';
 
-      if (getComputedStyle(el).position === 'static'){
+      if (!el.style.position || el.style.position === 'static'){
         el.style.position = 'relative';
       }
-      el.appendChild(btn);
+
+      el.appendChild(btnTop);
+      el.appendChild(btnBottom);
       el.appendChild(summary);
       el.appendChild(fade);
 
-      el.__cgpt_btn = btn;
+      el.__cgpt_btn = btnTop;
+      el.__cgpt_btnBottom = btnBottom;
       el.__cgpt_summary = summary;
       el.__cgpt_fade = fade;
     }
@@ -459,7 +500,8 @@
     const role = localizedRole(roleRaw);
     const preview = `${role}｜${text.replace(/\s+/g,' ').slice(0, UI.defaultPreviewLen)}${text.length>UI.defaultPreviewLen?'…':''}`;
 
-    const btn = el.__cgpt_btn || el.querySelector(`.${UI.controlBtnClass}`);
+    const btnTop = el.__cgpt_btn || el.querySelector(`.${UI.controlBtnClass}`);
+    const btnBottom = el.__cgpt_btnBottom || el.querySelector(`.${UI.controlBtnBottomClass}`);
     const summary = el.__cgpt_summary || el.querySelector(`.${UI.summaryClass}`);
     const fade = el.__cgpt_fade || el.querySelector(`.${UI.gradientClass}`);
 
@@ -467,12 +509,18 @@
 
     if (collapsed){
       el.classList.add(UI.collapsedClass);
-      if (btn){ btn.innerHTML = icons.chevronDown; btn.setAttribute('title', t('btnTitleExpand')); }
+      if (btnTop){ btnTop.innerHTML = icons.chevronDown; btnTop.setAttribute('title', t('btnTitleExpand')); }
+      if (btnBottom){ btnBottom.style.display = 'none'; }
       if (summary) summary.style.display = 'block';
       if (fade) fade.style.display = 'block';
     }else{
       el.classList.remove(UI.collapsedClass);
-      if (btn){ btn.innerHTML = icons.chevronUp; btn.setAttribute('title', t('btnTitleCollapse')); }
+      if (btnTop){ btnTop.innerHTML = icons.chevronUp; btnTop.setAttribute('title', t('btnTitleCollapse')); }
+      if (btnBottom){
+        btnBottom.style.display = 'inline-flex';
+        btnBottom.innerHTML = icons.chevronUp;
+        btnBottom.setAttribute('title', t('btnTitleCollapse'));
+      }
       if (summary) summary.style.display = 'none';
       if (fade) fade.style.display = 'none';
     }
@@ -497,12 +545,13 @@
 
   const initPerMessageControls = throttle(()=>{
     queryAllMessageBlocks().forEach(el=>renderMessage(el));
-  }, 300);
+  }, 350);
 
   /*************** 顶栏工具条 ***************/
   let toolbarRefs = {
     bar: null,
     mini: null,
+    floatToggle: null, // NEW
     brand: null,
     btnCollapseAssistant: null,
     btnCollapseUser: null,
@@ -542,10 +591,78 @@
     });
   }
 
-  function mountToolbar(){
-    if (document.getElementById(UI.toolbarId) || document.getElementById(UI.toolbarCompactId)) return;
+  // ===== NEW：检测顶部工具条是否可见 + 右下角按钮控制“当前位置显示/隐藏工具条” =====
+  let barInView = true;
 
-    // 主挂靠点
+  function isElementInViewport(el){
+    if (!el) return false;
+    const rect = el.getBoundingClientRect();
+    const vw = window.innerWidth || document.documentElement.clientWidth;
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    // 与视口有交集即认为可见（简单且稳健）
+    return rect.bottom > 0 && rect.right > 0 && rect.left < vw && rect.top < vh;
+  }
+
+  const updateBarInView = throttle(()=>{
+    const bar = toolbarRefs.bar;
+    if (!bar) return;
+    barInView = isElementInViewport(bar);
+    refreshFloatingToggleVisibility();
+  }, 120);
+
+  function applyFloatingMode(open){
+    const bar = toolbarRefs.bar;
+    if (!bar) return;
+
+    // mini 模式优先：如果已经 mini，就不允许浮动显示
+    if (state.getToolbarMini()){
+      state.setToolbarFloatOpen(false);
+      bar.classList.remove(UI.toolbarFloatingClass);
+      return;
+    }
+
+    if (open){
+      bar.classList.add(UI.toolbarFloatingClass);
+      bar.style.display = 'flex';
+    } else {
+      bar.classList.remove(UI.toolbarFloatingClass);
+      bar.style.display = 'flex'; // 仍回到原位置显示（是否能看到取决于滚动）
+    }
+    refreshFloatingToggleText();
+    refreshFloatingToggleVisibility();
+  }
+
+  function refreshFloatingToggleText(){
+    const btn = toolbarRefs.floatToggle;
+    if (!btn) return;
+    const open = state.getToolbarFloatOpen();
+    btn.innerHTML = `${icons.panel}<span>${open ? t('floatingToggleHide') : t('floatingToggleShow')}</span>`;
+    btn.setAttribute('aria-label', open ? t('floatingToggleHide') : t('floatingToggleShow'));
+  }
+
+  function refreshFloatingToggleVisibility(){
+    const btn = toolbarRefs.floatToggle;
+    if (!btn) return;
+
+    // 不干扰你原有“迷你胶囊”：mini 显示时，本按钮完全隐藏
+    if (state.getToolbarMini()){
+      btn.style.display = 'none';
+      return;
+    }
+
+    // 规则：
+    // - 顶部工具条在视口内：隐藏（因为不需要）
+    // - 顶部工具条不在视口内：显示按钮
+    // - 如果浮动工具条已打开：按钮也必须显示（用于关闭）
+    const open = state.getToolbarFloatOpen();
+    const shouldShow = open || !barInView;
+    btn.style.display = shouldShow ? 'flex' : 'none';
+  }
+  // ===== NEW 结束 =====
+
+  function mountToolbar(){
+    if (document.getElementById(UI.toolbarId) || document.getElementById(UI.toolbarCompactId) || document.getElementById(UI.toolbarFloatToggleId)) return;
+
     let mount = null;
     for (const sel of SELECTORS.topMounts){
       const el = document.querySelector(sel);
@@ -553,7 +670,7 @@
     }
     if (!mount) return;
 
-    // 迷你泡泡（可切换回完整工具条）
+    // 迷你泡泡（原有功能：用于“折叠工具条”后的展开）
     const mini = document.createElement('div');
     mini.id = UI.toolbarCompactId;
     mini.setAttribute('role', 'button');
@@ -563,23 +680,35 @@
     mini.addEventListener('click', ()=>{
       state.setToolbarMini(false);
       refreshToolbarVisibility();
+      updateBarInView(); // NEW：状态刷新
     });
     document.body.appendChild(mini);
+
+    // NEW：右下角“显示/隐藏工具条”按钮（仅当顶部工具条滚出视口时出现）
+    const floatToggle = document.createElement('div');
+    floatToggle.id = UI.toolbarFloatToggleId;
+    floatToggle.setAttribute('role', 'button');
+    floatToggle.style.display = 'none';
+    floatToggle.addEventListener('click', ()=>{
+      const next = !state.getToolbarFloatOpen();
+      state.setToolbarFloatOpen(next);
+      applyFloatingMode(next);
+    });
+    document.body.appendChild(floatToggle);
 
     // 完整工具条
     const bar = document.createElement('div');
     bar.id = UI.toolbarId;
 
-    // 品牌区
     const brand = document.createElement('div');
     brand.className = 'cgpt-brand';
     brand.innerHTML = `${icons.chip}<span class="cgpt-brand-name">${t('appName')}</span>`;
 
-    // 语言选择
     const langLabel = document.createElement('span');
     langLabel.id = 'cgpt-lang-label';
     langLabel.style.margin = '0 2px 0 6px';
     langLabel.style.opacity = '.75';
+
     const langSelect = document.createElement('select');
     langSelect.id = 'cgpt-lang-select';
     const optZh = document.createElement('option');
@@ -590,13 +719,11 @@
     langSelect.value = currentLang;
     langSelect.addEventListener('change', ()=>setLang(langSelect.value));
 
-    // 功能按钮
     const btnCollapseAssistant = mkBtn(t('collapseAssistant'), icons.bot, ()=>bulkCollapseByRole('assistant', true));
     const btnCollapseUser = mkBtn(t('collapseUser'), icons.user, ()=>bulkCollapseByRole('user', true));
     const btnCollapseAll = mkBtn(t('collapseAll'), icons.collapseAll, ()=>bulkCollapseAll(true));
     const btnExpandAll = mkBtn(t('expandAll'), icons.expandAll, ()=>bulkCollapseAll(false));
 
-    // 阈值与自动折叠
     const thresholdLabelNode = document.createElement('span');
     thresholdLabelNode.style.marginLeft = '8px';
     const thresholdInput = document.createElement('input');
@@ -614,22 +741,22 @@
       autoCollapseByLength(n);
     });
 
-    // 折叠工具条按钮
     const compactBtn = mkBtn(t('compact'), icons.minus, ()=>{
       state.setToolbarMini(true);
+      // NEW：mini 时关闭浮动显示，避免冲突
+      state.setToolbarFloatOpen(false);
+      applyFloatingMode(false);
       refreshToolbarVisibility();
     });
 
-    // 提示
     const hint = document.createElement('span');
     hint.style.marginLeft = '6px';
     hint.style.opacity = '.65';
 
-    // 组装
     bar.appendChild(brand);
 
     const langWrap = document.createElement('span');
-    langWrap.className = UI.btnClass; // 让语言组也有同样背景与圆角
+    langWrap.className = UI.btnClass;
     langWrap.style.display = 'inline-flex';
     langWrap.style.alignItems = 'center';
     langWrap.style.gap = '6px';
@@ -648,7 +775,6 @@
     bar.appendChild(btnExpandAll);
 
     const threshWrap = document.createElement('span');
-    // 用无样式容器，避免把整块当按钮导致高度/边距异常
     threshWrap.className = 'cgpt-group';
 
     const knobMinus = document.createElement('button');
@@ -676,17 +802,20 @@
     bar.appendChild(compactBtn);
     bar.appendChild(hint);
 
-    // 保存引用并写入文案
     toolbarRefs = {
-      bar, mini, brand,
+      bar, mini, floatToggle, brand,
       btnCollapseAssistant, btnCollapseUser, btnCollapseAll, btnExpandAll,
       thresholdLabelNode, thresholdInput, btnAuto, hint, langLabel, langSelect, compactBtn
     };
     refreshToolbarTexts();
 
-    // 插入
     mount.insertBefore(bar, mount.firstChild);
+
+    // NEW：根据持久化状态恢复浮动模式（不改变你原有功能，只是恢复新增功能的状态）
+    applyFloatingMode(state.getToolbarFloatOpen());
+
     refreshToolbarVisibility();
+    updateBarInView();
   }
 
   function refreshToolbarTexts(){
@@ -709,12 +838,20 @@
       toolbarRefs.mini.innerHTML = `${icons.panel}<span>${t('expandToolbar')}</span>`;
       toolbarRefs.mini.setAttribute('aria-label', t('expandToolbar'));
     }
+
+    // NEW：右下角“显示/隐藏工具条”按钮文字随语言变化
+    refreshFloatingToggleText();
   }
 
   function refreshToolbarVisibility(){
     const mini = state.getToolbarMini();
+
+    // mini 模式：顶部工具条隐藏，右下角“展开工具条”显示
     if (toolbarRefs.bar) toolbarRefs.bar.style.display = mini ? 'none' : 'flex';
     if (toolbarRefs.mini) toolbarRefs.mini.style.display = mini ? 'flex' : 'none';
+
+    // NEW：mini 模式下，隐藏“显示/隐藏工具条”按钮
+    refreshFloatingToggleVisibility();
   }
 
   function refreshAllUILabels(){
@@ -722,13 +859,63 @@
     queryAllMessageBlocks().forEach(el=>updateMessageUI(el));
   }
 
-  /*************** 监听 DOM 变动 ***************/
-  function observe(){
-    const obs = new MutationObserver(()=>{
+  /*************** 性能优化版 DOM 监听 ***************/
+  const pendingNodes = new Set();
+  let flushScheduled = false;
+
+  function scheduleFlush(){
+    if (flushScheduled) return;
+    flushScheduled = true;
+
+    const runner = ()=>{
+      flushScheduled = false;
+
       mountToolbar();
-      initPerMessageControls();
+
+      if (pendingNodes.size){
+        for (const n of pendingNodes){
+          if (!n || n.nodeType !== 1) continue;
+
+          if (n.matches?.(SELECTORS.messageBlocks)) renderMessage(n);
+          n.querySelectorAll?.(SELECTORS.messageBlocks)?.forEach(el=>renderMessage(el));
+
+          if (!document.querySelector(SELECTORS.messageBlocks)){
+            n.querySelectorAll?.(SELECTORS.fallbackBlocks)?.forEach(el=>{
+              const tt = (el.innerText||'').trim();
+              if (tt.length>0 && el.offsetHeight>20) renderMessage(el);
+            });
+          }
+        }
+        pendingNodes.clear();
+      } else {
+        initPerMessageControls();
+      }
+
+      // NEW：DOM 更新后刷新顶部工具条可见性判断
+      updateBarInView();
+    };
+
+    if (window.requestIdleCallback){
+      window.requestIdleCallback(runner, {timeout: 800});
+    } else {
+      setTimeout(runner, 120);
+    }
+  }
+
+  function observe(){
+    const obs = new MutationObserver((muts)=>{
+      for (const m of muts){
+        if (m.addedNodes && m.addedNodes.length){
+          m.addedNodes.forEach(n=>pendingNodes.add(n));
+        }
+      }
+      scheduleFlush();
     });
     obs.observe(document.documentElement, {childList:true, subtree:true});
+
+    // NEW：捕获所有滚动（包括内部可滚动容器），让“顶部消失检测”稳定工作
+    document.addEventListener('scroll', updateBarInView, {capture:true, passive:true});
+    window.addEventListener('resize', updateBarInView, {passive:true});
   }
 
   /*************** 启动 ***************/
@@ -736,6 +923,7 @@
     for (let i=0;i<30;i++){
       mountToolbar();
       initPerMessageControls();
+      updateBarInView(); // NEW
       if (document.querySelector('main')) break;
       await sleep(200);
     }

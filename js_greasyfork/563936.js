@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Скрипт для КФ/ЗГСФ/ГСФ || Blue версия 2.0
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Скрипт для КФ/ЗГСФ/ГСФ
 // @author       David Rabadanov
 // @match https://forum.blackrussia.online/threads/*
@@ -214,15 +214,6 @@ title: '| Не относится к Жалобам на игроков (Доб�
 	  status: false,
 },
 {
-	  title: '| Ошиблись сервером|',
-	  content:
-                  "[CENTER][url=https://yapx.ru/image/cuoGJ][img]https://i.yapx.ru/cuoGJ.png[/img][/url][/CENTER]"+
-                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][FONT=courier new][SIZE=5]Здравствуйте, {{ user.name }} [/SIZE][/FONT][/COLOR][/CENTER][/HEADING]"+
-                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][FONT=book antiqua][SIZE=5]Ваша жалоба - [/SIZE][/FONT][/COLOR][COLOR=rgb(255, 0, 255)][FONT=book antiqua][SIZE=5]Отказана[/SIZE][/FONT][/COLOR][COLOR=rgb(255, 222, 173)][FONT=book antiqua][SIZE=5]. Вы ошиблись сервером.[/SIZE][/FONT][/COLOR][/CENTER][/HEADING]",
-     prefix: UNACCСEPT_PREFIX,
-	  status: false,
-},
-{
 title: '| Дублирование темы |',
 	  content:
                   "[CENTER][url=https://yapx.ru/image/cuoGJ][img]https://i.yapx.ru/cuoGJ.png[/img][/url][/CENTER]"+
@@ -390,6 +381,81 @@ title: '| Оск в названии док-в |',
                   "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][FONT=courier new][SIZE=5]Здравствуйте, {{ user.name }} [/SIZE][/FONT][/COLOR][/CENTER][/HEADING]"+
                   "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][FONT=book antiqua][SIZE=5]Ваша жалоба -[/SIZE][/FONT][/COLOR][COLOR=rgb(255, 0, 255)][FONT=book antiqua][SIZE=5] Отказана[/SIZE][/FONT][/COLOR][COLOR=rgb(255, 222, 173)][FONT=book antiqua][SIZE=5]. В названии доказательств присутствуют оскорбления.[/SIZE][/FONT][/COLOR][/CENTER][/HEADING]",
       prefix: UNACCСEPT_PREFIX,
+	  status: false,
+},
+{
+                 	  title: ' >╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴Перенаправить╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴<-)-)-)-|'
+},
+{
+ title: '| Жалоба на Адм |',
+	  content:
+                  "[CENTER][url=https://yapx.ru/image/cuoGJ][img]https://i.yapx.ru/cuoGJ.png[/img][/url][/CENTER]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][FONT=courier new][SIZE=5]Здравствуйте, {{ user.name }} [/SIZE][/FONT][/COLOR][/CENTER][/HEADING]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][SIZE=5][FONT=book antiqua]Вы ошиблись разделом. Подайте жалобу в раздел - [/FONT][/SIZE][/COLOR][COLOR=rgb(255, 0, 255)][SIZE=5][FONT=book antiqua]Жалобы на администрацию.[/FONT][/SIZE][/COLOR][/CENTER][/HEADING]",
+        prefix: CLOSE_PREFIX,
+	  status: true,
+},
+{
+ title: '| Жалоба на ЛД |',
+	  content:
+                  "[CENTER][url=https://yapx.ru/image/cuoGJ][img]https://i.yapx.ru/cuoGJ.png[/img][/url][/CENTER]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][FONT=courier new][SIZE=5]Здравствуйте, {{ user.name }} [/SIZE][/FONT][/COLOR][/CENTER][/HEADING]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][SIZE=5][FONT=book antiqua]Вы ошиблись разделом. Подайте жалобу в раздел - [/FONT][/SIZE][/COLOR][COLOR=rgb(255, 0, 255)][SIZE=5][FONT=book antiqua]Жалобы на лидеров.[/FONT][/SIZE][/COLOR][/CENTER][/HEADING]",
+        prefix: CLOSE_PREFIX,
+	  status: true,
+},
+{
+ title: '| Жалоба на игроков |',
+	  content:
+                  "[CENTER][url=https://yapx.ru/image/cuoGJ][img]https://i.yapx.ru/cuoGJ.png[/img][/url][/CENTER]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][FONT=courier new][SIZE=5]Здравствуйте, {{ user.name }} [/SIZE][/FONT][/COLOR][/CENTER][/HEADING]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][SIZE=5][FONT=book antiqua]Вы ошиблись разделом. Подайте жалобу в раздел - [/FONT][COLOR=rgb(255, 0, 255)][FONT=book antiqua]Жалобы на игроков[/FONT][/COLOR][FONT=book antiqua].[/FONT][/SIZE][/COLOR][/CENTER][/HEADING]",
+        prefix: CLOSE_PREFIX,
+	  status: true,
+},
+{
+ title: '| Раздел обжалований |',
+	  content:
+                  "[CENTER][url=https://yapx.ru/image/cuoGJ][img]https://i.yapx.ru/cuoGJ.png[/img][/url][/CENTER]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][FONT=courier new][SIZE=5]Здравствуйте, {{ user.name }} [/SIZE][/FONT][/COLOR][/CENTER][/HEADING]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][SIZE=5][FONT=book antiqua]Вы ошиблись разделом. Подайте обжалование в раздел - [/FONT][COLOR=rgb(255, 0, 255)][FONT=book antiqua]Обжалование наказаний[/FONT][/COLOR][FONT=book antiqua].[/FONT][/SIZE][/COLOR][/CENTER][/HEADING]",
+        prefix: CLOSE_PREFIX,
+	  status: true,
+},
+{
+ title: '| Жалоба на С-ГОСС |',
+	  content:
+                  "[CENTER][url=https://yapx.ru/image/cuoGJ][img]https://i.yapx.ru/cuoGJ.png[/img][/url][/CENTER]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][FONT=courier new][SIZE=5]Здравствуйте, {{ user.name }} [/SIZE][/FONT][/COLOR][/CENTER][/HEADING]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][SIZE=5][FONT=book antiqua]Вы ошиблись разделом. Подайте жалобу в раздел - [/FONT][COLOR=rgb(255, 0, 255)][FONT=book antiqua]Жалобы на сотрудников/Старший состав[/FONT][/COLOR][FONT=book antiqua].[/FONT][/SIZE][/COLOR][/CENTER][/HEADING]",
+        prefix: CLOSE_PREFIX,
+	  status: true,
+},
+{
+	  title: '| Жалоба на АП |',
+	  content:
+                  "[CENTER][url=https://yapx.ru/image/cuoGJ][img]https://i.yapx.ru/cuoGJ.png[/img][/url][/CENTER]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][FONT=courier new][SIZE=5]Здравствуйте, {{ user.name }} [/SIZE][/FONT][/COLOR][/CENTER][/HEADING]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][SIZE=5][FONT=book antiqua]Вы ошиблись разделом. Подайте жалобу в раздел - [/FONT][COLOR=rgb(255, 0, 255)][FONT=book antiqua]Жалобы на Агентов Поддержки[/FONT][/COLOR][FONT=book antiqua].[/FONT][/SIZE][/COLOR][/CENTER][/HEADING]",
+     prefix: CLOSE_PREFIX,
+	  status: false,
+      },
+{
+	  title: '| Раздел РП биографии |',
+	  content:
+                  "[CENTER][url=https://yapx.ru/image/cuoGJ][img]https://i.yapx.ru/cuoGJ.png[/img][/url][/CENTER]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][FONT=courier new][SIZE=5]Здравствуйте, {{ user.name }} [/SIZE][/FONT][/COLOR][/CENTER][/HEADING]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][SIZE=5][FONT=book antiqua]Вы ошиблись разделом. Подайте биографию в раздел - [/FONT][COLOR=rgb(255, 0, 255)][FONT=book antiqua]РП биографии[/FONT][/COLOR][FONT=book antiqua].[/FONT][/SIZE][/COLOR][/CENTER][/HEADING]",
+     prefix: CLOSE_PREFIX,
+	  status: false,
+},
+{
+	  title: '| Ошиблись сервером |',
+	  content:
+                  "[CENTER][url=https://yapx.ru/image/cuoGJ][img]https://i.yapx.ru/cuoGJ.png[/img][/url][/CENTER]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][FONT=courier new][SIZE=5]Здравствуйте, {{ user.name }} [/SIZE][/FONT][/COLOR][/CENTER][/HEADING]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][FONT=book antiqua][SIZE=5]Ваша жалоба - [/SIZE][/FONT][/COLOR][COLOR=rgb(255, 0, 255)][FONT=book antiqua][SIZE=5]Отказана[/SIZE][/FONT][/COLOR][COLOR=rgb(255, 222, 173)][FONT=book antiqua][SIZE=5]. Вы ошиблись сервером.[/SIZE][/FONT][/COLOR][/CENTER][/HEADING]",
+     prefix: CLOSE_PREFIX,
 	  status: false,
 },
 {
@@ -571,7 +637,7 @@ title: '| Неофициальная Орг. Отказ |',
                   "[CENTER][url=https://yapx.ru/image/cuoGJ][img]https://i.yapx.ru/cuoGJ.png[/img][/url][/CENTER]"+
                   "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][FONT=courier new][SIZE=5]Здравствуйте, {{ user.name }} [/SIZE][/FONT][/COLOR][/CENTER][/HEADING]"+
                   "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][SIZE=5][FONT=book antiqua]Ваша ошиблись разделом [/FONT][/SIZE][/COLOR]-[COLOR=rgb(255, 222, 173)][FONT=book antiqua][SIZE=5]- [/SIZE][COLOR=rgb(255, 0, 255)][SIZE=5]Закрыто[/SIZE][/COLOR][SIZE=5].[/SIZE][/FONT][/COLOR][/CENTER][/HEADING]",
-     prefix: UNACCСEPT_PREFIX,
+     prefix: CLOSE_PREFIX,
 	  status: false,
       },
   {
@@ -580,7 +646,7 @@ title: '| Неофициальная Орг. Отказ |',
                   "[CENTER][url=https://yapx.ru/image/cuoGJ][img]https://i.yapx.ru/cuoGJ.png[/img][/url][/CENTER]"+
                   "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][FONT=courier new][SIZE=5]Здравствуйте, {{ user.name }} [/SIZE][/FONT][/COLOR][/CENTER][/HEADING]"+
                   "[HEADING=3][CENTER][COLOR=rgb(255, 222, 173)][SIZE=5][FONT=book antiqua]Не по теме [/FONT][/SIZE][/COLOR]-[COLOR=rgb(255, 222, 173)][FONT=book antiqua][SIZE=5]- [/SIZE][COLOR=rgb(255, 0, 255)][SIZE=5]Закрыто[/SIZE][/COLOR][SIZE=5].[/SIZE][/FONT][/COLOR][/CENTER][/HEADING]",
-     prefix: UNACCСEPT_PREFIX,
+     prefix: CLOSE_PREFIX,
 	  status: false,
 },
   {

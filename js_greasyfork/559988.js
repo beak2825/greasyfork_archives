@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bonk.io AI Auto-Reply
 // @namespace    https://greasyfork.org/en/users/1551631-greninja9257
-// @version      10.0
+// @version      11.0
 // @description  AI replies uh do /key (key) to set openrouter api key do /ai to toggle on/off its saved in localStorage
 // @author       Greninja9257
 // @match        https://bonk.io/*
@@ -29,7 +29,7 @@
   ========================= */
 
   const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
-  const MODEL = "mistralai/devstral-2512:free";
+  const MODEL = "qwen/qwen3-next-80b-a3b-instruct:free";
 
   /* =========================
      STATE

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google Slides: Open/Download selected images
-// @namespace    https://github.com/austinpresley/scripts
-// @version      1.8.0
+// @namespace    https://github.com/austinpresley/
+// @version      1.8.1
 // @description  Adds Open/Download items to the image right-click menu in Google Slides (multi-select, cached before right-click).
 // @match        https://docs.google.com/*
 // @grant        GM_openInTab

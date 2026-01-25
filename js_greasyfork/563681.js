@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GeoGuessr Playtime Tracker
 // @namespace    Noahtrix
-// @version      5.0
+// @version      5.1
 // @description  Tracks active GeoGuessr playtime and shows it on the profile page.
 // @author       Noahtrix
 // @match        https://www.geoguessr.com/*
@@ -305,5 +305,5 @@
         }
     }, 1000);
 
-    setInterval(checkUI, 100);
+    setInterval(checkUI, 500);
 })();

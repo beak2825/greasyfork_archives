@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LAPLACE 弹幕助手 - 哔哩哔哩直播间独轮车、弹幕发送
 // @namespace    https://greasyfork.org/users/1524935
-// @version      2.2.1
+// @version      2.3.1
 // @description  这是 bilibili 直播间简易版独轮车，基于 quiet/thusiant cmd 版本 https://greasyfork.org/scripts/421507 继续维护而来
 // @author       laplace-live
 // @license      AGPL-3.0
@@ -389,7 +389,7 @@ const MsgTemplates = GM_getValue('MsgTemplates', [])
 /** @type {number} */
 let activeTemplateIndex = GM_getValue('activeTemplateIndex', 0)
 
-/** @type {Object.<string, number|boolean>} */
+/** @type {Object.<string, number|boolean|string|string[]>} */
 const scriptInitVal = {
   msgSendInterval: 1,
   maxLength: 20,
@@ -399,6 +399,14 @@ const scriptInitVal = {
   randomChar: false,
   aiEvasion: false,
   forceScrollDanmaku: false,
+  // Soniox 同传 settings
+  sonioxApiKey: '',
+  sonioxLanguageHints: ['zh'],
+  sonioxAutoSend: true,
+  sonioxMaxLength: 40,
+  // Soniox 同传 translation settings
+  sonioxTranslationEnabled: false,
+  sonioxTranslationTarget: 'en',
 }
 
 for (const initVal in scriptInitVal) {
@@ -450,6 +458,18 @@ function trimText(text, maxLength) {
   }
 
   return parts
+}
+
+/**
+ * Strips trailing punctuation marks from text (for live captions)
+ * Removes common Chinese, Japanese, and English punctuation from the end
+ * @param {string} text - The text to process
+ * @returns {string} The text with trailing punctuation removed
+ */
+function stripTrailingPunctuation(text) {
+  if (!text) return text
+  // Common punctuation: English (.,!?;:) Chinese/Japanese (。，、！？；：…)
+  return text.replace(/[.,!?;:。，、！？；：…]+$/, '')
 }
 
 /**
@@ -569,6 +589,7 @@ let replacementMap = null
       <div style="display: flex; margin-block: -5px .75em; margin-inline: -10px; padding: 0 10px; gap: .25em; border-bottom: 1px solid var(--Ga2, #ddd);">
         <button id="tab-dulunche" class="tab-btn" style="padding: .25em .75em; margin-bottom: -1px; border: none; background: none; cursor: pointer; border-bottom: 1px solid transparent;">独轮车</button>
         <button id="tab-fasong" class="tab-btn" style="padding: .25em .75em; margin-bottom: -1px; border: none; background: none; cursor: pointer; border-bottom: 1px solid transparent;">常规发送</button>
+        <button id="tab-tongchuan" class="tab-btn" style="padding: .25em .75em; margin-bottom: -1px; border: none; background: none; cursor: pointer; border-bottom: 1px solid transparent;">同传</button>
         <button id="tab-settings" class="tab-btn" style="padding: .25em .75em; margin-bottom: -1px; border: none; background: none; cursor: pointer; border-bottom: 1px solid transparent;">设置</button>
       </div>
 
@@ -613,6 +634,86 @@ let replacementMap = null
             <input id="aiEvasion" type="checkbox" ${GM_getValue('aiEvasion') ? 'checked' : ''} />
             <label for="aiEvasion">AI规避（发送失败时自动检测敏感词并重试）</label>
           </span>
+        </div>
+      </div>
+
+      <!-- Tab Content: 同传 -->
+      <div id="content-tongchuan" class="tab-content" style="display: none;">
+        <div style="margin: .5em 0; padding-bottom: .5em; border-bottom: 1px solid var(--Ga2, #eee);">
+          <div style="font-weight: bold; margin-bottom: .5em;">Soniox API 设置</div>
+          <div style="display: flex; gap: .5em; align-items: center; flex-wrap: wrap; margin-bottom: .5em;">
+            <input id="sonioxApiKey" type="password" placeholder="输入 Soniox API Key" style="flex: 1; min-width: 150px;" value="${GM_getValue('sonioxApiKey')}" />
+            <button id="sonioxApiKeyToggle" style="cursor: pointer;">显示</button>
+          </div>
+          <div style="margin-block: .5em; color: #666; font-size: 0.9em;">
+            前往 <a href="https://soniox.com/" target="_blank" style="color: #288bb8;">Soniox</a> 注册账号并获取 API Key
+          </div>
+        </div>
+
+        <div style="margin: .5em 0; padding-bottom: .5em; border-bottom: 1px solid var(--Ga2, #eee);">
+          <div style="font-weight: bold; margin-bottom: .5em;">语音识别设置</div>
+          <div style="display: flex; gap: .5em; align-items: center; flex-wrap: wrap; margin-bottom: .5em;">
+            <span>语言提示：</span>
+            <span style="display: inline-flex; align-items: center; gap: .25em;">
+              <input id="sonioxLangZh" type="checkbox" value="zh" ${(GM_getValue('sonioxLanguageHints') || ['zh']).includes('zh') ? 'checked' : ''} />
+              <label for="sonioxLangZh">中文</label>
+            </span>
+            <span style="display: inline-flex; align-items: center; gap: .25em;">
+              <input id="sonioxLangEn" type="checkbox" value="en" ${(GM_getValue('sonioxLanguageHints') || ['zh']).includes('en') ? 'checked' : ''} />
+              <label for="sonioxLangEn">English</label>
+            </span>
+            <span style="display: inline-flex; align-items: center; gap: .25em;">
+              <input id="sonioxLangJa" type="checkbox" value="ja" ${(GM_getValue('sonioxLanguageHints') || ['zh']).includes('ja') ? 'checked' : ''} />
+              <label for="sonioxLangJa">日本語</label>
+            </span>
+            <span style="display: inline-flex; align-items: center; gap: .25em;">
+              <input id="sonioxLangKo" type="checkbox" value="ko" ${(GM_getValue('sonioxLanguageHints') || ['zh']).includes('ko') ? 'checked' : ''} />
+              <label for="sonioxLangKo">한국어</label>
+            </span>
+            <label for="sonioxMaxLength">超过</label>
+            <input id="sonioxMaxLength" type="number" min="1" style="width: 40px;" value="${GM_getValue('sonioxMaxLength')}" />
+            <span>字自动分段</span>
+          </div>
+          <div style="display: flex; gap: .5em; align-items: center; flex-wrap: wrap;">
+            <span style="display: inline-flex; align-items: center; gap: .25em;">
+              <input id="sonioxAutoSend" type="checkbox" ${GM_getValue('sonioxAutoSend') ? 'checked' : ''} />
+              <label for="sonioxAutoSend">识别完成后自动发送弹幕</label>
+            </span>
+          </div>
+        </div>
+
+        <div style="margin: .5em 0; padding-bottom: .5em; border-bottom: 1px solid var(--Ga2, #eee);">
+          <div style="font-weight: bold; margin-bottom: .5em;">实时翻译设置</div>
+          <div style="display: flex; gap: .5em; align-items: center; flex-wrap: wrap; margin-bottom: .5em;">
+            <span style="display: inline-flex; align-items: center; gap: .25em;">
+              <input id="sonioxTranslationEnabled" type="checkbox" ${GM_getValue('sonioxTranslationEnabled') ? 'checked' : ''} />
+              <label for="sonioxTranslationEnabled">启用实时翻译</label>
+            </span>
+          </div>
+          <div style="display: flex; gap: .5em; align-items: center; flex-wrap: wrap;">
+            <label for="sonioxTranslationTarget">翻译目标语言：</label>
+            <select id="sonioxTranslationTarget" style="min-width: 80px;">
+              <option value="en" ${GM_getValue('sonioxTranslationTarget') === 'en' ? 'selected' : ''}>English</option>
+              <option value="zh" ${GM_getValue('sonioxTranslationTarget') === 'zh' ? 'selected' : ''}>中文</option>
+              <option value="ja" ${GM_getValue('sonioxTranslationTarget') === 'ja' ? 'selected' : ''}>日本語</option>
+            </select>
+          </div>
+          <div style="margin-top: .5em; color: #666; font-size: 0.9em;">
+            启用后将发送翻译结果而非原始识别文字
+          </div>
+        </div>
+
+        <div style="margin: .5em 0;">
+          <div style="display: flex; gap: .5em; align-items: center; flex-wrap: wrap; margin-bottom: .5em;">
+            <button id="sonioxStartBtn">开始同传</button>
+            <span id="sonioxStatus" style="color: #666;">未启动</span>
+          </div>
+          <div style="margin-block: .5em;">
+            <div style="font-weight: bold; margin-bottom: .25em;">实时识别结果：</div>
+            <div id="sonioxTranscript" style="padding: .5em; background: var(--bg2, #f5f5f5); border-radius: 4px; min-height: 40px; max-height: 100px; overflow-y: auto; word-break: break-all;">
+              <span id="sonioxFinalText"></span><span id="sonioxNonFinalText" style="color: #999;"></span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -727,6 +828,10 @@ let replacementMap = null
 
     document.getElementById('tab-fasong')?.addEventListener('click', () => {
       switchTab('fasong')
+    })
+
+    document.getElementById('tab-tongchuan')?.addEventListener('click', () => {
+      switchTab('tongchuan')
     })
 
     document.getElementById('tab-settings')?.addEventListener('click', () => {
@@ -1028,6 +1133,47 @@ let replacementMap = null
       return result
     }
 
+    /**
+     * Attempts AI evasion for a failed message by detecting and replacing sensitive words
+     * @param {string} message - The message that failed to send
+     * @param {number} roomId - The room ID
+     * @param {string} csrfToken - The CSRF token
+     * @param {string} logPrefix - Prefix for log messages (e.g., '手动', '同传')
+     * @returns {Promise<{success: boolean, evadedMessage?: string, error?: string}>}
+     */
+    async function tryAiEvasion(message, roomId, csrfToken, logPrefix) {
+      const aiEvasionEnabled = GM_getValue('aiEvasion', false)
+      if (!aiEvasionEnabled) {
+        return { success: false }
+      }
+
+      appendToLimitedLog(msgLogs, `🤖 ${logPrefix}AI规避：正在检测敏感词…`, maxLogLines)
+
+      const detection = await detectSensitiveWords(message)
+
+      if (detection.hasSensitiveContent && detection.sensitiveWords && detection.sensitiveWords.length > 0) {
+        appendToLimitedLog(
+          msgLogs,
+          `🤖 ${logPrefix}检测到敏感词：${detection.sensitiveWords.join(', ')}，正在尝试规避…`,
+          maxLogLines
+        )
+
+        const evadedMessage = replaceSensitiveWords(message, detection.sensitiveWords)
+        const retryResult = await sendDanmaku(evadedMessage, roomId, csrfToken)
+
+        if (retryResult.success) {
+          appendToLimitedLog(msgLogs, `✅ ${logPrefix}AI规避成功: ${evadedMessage}`, maxLogLines)
+          return { success: true, evadedMessage }
+        } else {
+          appendToLimitedLog(msgLogs, `❌ ${logPrefix}AI规避失败: ${evadedMessage}，原因：${retryResult.error}`, maxLogLines)
+          return { success: false, evadedMessage, error: retryResult.error }
+        }
+      } else {
+        appendToLimitedLog(msgLogs, `⚠️ ${logPrefix}无法检测到敏感词，请手动检查`, maxLogLines)
+        return { success: false }
+      }
+    }
+
     // Send message functionality
     async function sendMessage() {
       const originalMessage = fasongInput.value.trim()
@@ -1078,31 +1224,7 @@ let replacementMap = null
           appendToLimitedLog(msgLogs, `❌ 手动: ${displayMsg}，原因：${errorMsg}`, maxLogLines)
 
           // Try AI evasion if enabled
-          const aiEvasionEnabled = GM_getValue('aiEvasion', false)
-          if (aiEvasionEnabled) {
-            appendToLimitedLog(msgLogs, `🤖 AI规避已启用，正在检测敏感词…`, maxLogLines)
-
-            const detection = await detectSensitiveWords(processedMessage)
-
-            if (detection.hasSensitiveContent && detection.sensitiveWords && detection.sensitiveWords.length > 0) {
-              appendToLimitedLog(
-                msgLogs,
-                `🤖 检测到敏感词：${detection.sensitiveWords.join(', ')}，正在尝试规避…`,
-                maxLogLines
-              )
-
-              const evadedMessage = replaceSensitiveWords(processedMessage, detection.sensitiveWords)
-              const retryResult = await sendDanmaku(evadedMessage, roomId, csrfToken)
-
-              if (retryResult.success) {
-                appendToLimitedLog(msgLogs, `✅ AI规避成功: ${evadedMessage}`, maxLogLines)
-              } else {
-                appendToLimitedLog(msgLogs, `❌ AI规避失败: ${evadedMessage}，原因：${retryResult.error}`, maxLogLines)
-              }
-            } else {
-              appendToLimitedLog(msgLogs, `⚠️ 无法检测到敏感词，请手动检查`, maxLogLines)
-            }
-          }
+          await tryAiEvasion(processedMessage, roomId, csrfToken, '')
         }
       } catch (error) {
         appendToLimitedLog(msgLogs, `🔴 发送出错：${error.message}`, maxLogLines)
@@ -1124,6 +1246,454 @@ let replacementMap = null
 
     // Initialize replacement rules display
     updateReplacementRulesDisplay()
+
+    // ===== 同传 Tab Features (Soniox Integration) =====
+
+    /** @type {HTMLInputElement} */
+    const sonioxApiKeyInput = document.getElementById('sonioxApiKey')
+    /** @type {HTMLButtonElement} */
+    const sonioxApiKeyToggle = document.getElementById('sonioxApiKeyToggle')
+    /** @type {HTMLInputElement} */
+    const sonioxLangZhInput = document.getElementById('sonioxLangZh')
+    /** @type {HTMLInputElement} */
+    const sonioxLangEnInput = document.getElementById('sonioxLangEn')
+    /** @type {HTMLInputElement} */
+    const sonioxLangJaInput = document.getElementById('sonioxLangJa')
+    /** @type {HTMLInputElement} */
+    const sonioxLangKoInput = document.getElementById('sonioxLangKo')
+    /** @type {HTMLInputElement} */
+    const sonioxMaxLengthInput = document.getElementById('sonioxMaxLength')
+    /** @type {HTMLInputElement} */
+    const sonioxAutoSendInput = document.getElementById('sonioxAutoSend')
+    /** @type {HTMLInputElement} */
+    const sonioxTranslationEnabledInput = document.getElementById('sonioxTranslationEnabled')
+    /** @type {HTMLSelectElement} */
+    const sonioxTranslationTargetSelect = document.getElementById('sonioxTranslationTarget')
+    /** @type {HTMLButtonElement} */
+    const sonioxStartBtn = document.getElementById('sonioxStartBtn')
+    /** @type {HTMLSpanElement} */
+    const sonioxStatus = document.getElementById('sonioxStatus')
+    /** @type {HTMLSpanElement} */
+    const sonioxFinalText = document.getElementById('sonioxFinalText')
+    /** @type {HTMLSpanElement} */
+    const sonioxNonFinalText = document.getElementById('sonioxNonFinalText')
+
+    /** @type {any} */
+    let sonioxRecordTranscribe = null
+    /** @type {'stopped'|'starting'|'running'|'stopping'} */
+    let sonioxState = 'stopped'
+    /** @type {string} */
+    let sonioxAccumulatedFinalText = ''
+    /** @type {string} */
+    let sonioxAccumulatedTranslatedText = ''
+    /** @type {string} */
+    let sonioxSendBuffer = ''
+    /** @type {number|null} */
+    let sonioxFlushTimeout = null
+    /** @type {boolean} */
+    let sonioxIsFlushing = false
+    /** @type {number} */
+    let sonioxLastSendTime = 0
+
+    // Minimum interval between danmaku sends (Bilibili rate limit is ~1 msg/sec)
+    const SONIOX_SEND_INTERVAL_MS = 1100
+    // Safety fallback flush delay (endpoint detection usually triggers before this)
+    const SONIOX_FLUSH_DELAY_MS = 5000
+
+    // API Key visibility toggle
+    sonioxApiKeyToggle.addEventListener('click', () => {
+      if (sonioxApiKeyInput.type === 'password') {
+        sonioxApiKeyInput.type = 'text'
+        sonioxApiKeyToggle.textContent = '隐藏'
+      } else {
+        sonioxApiKeyInput.type = 'password'
+        sonioxApiKeyToggle.textContent = '显示'
+      }
+    })
+
+    // Save settings on change
+    sonioxApiKeyInput.addEventListener('input', () => {
+      GM_setValue('sonioxApiKey', sonioxApiKeyInput.value)
+    })
+
+    // Helper to update language hints from checkboxes
+    const updateLanguageHints = () => {
+      const hints = []
+      if (sonioxLangZhInput.checked) hints.push('zh')
+      if (sonioxLangEnInput.checked) hints.push('en')
+      if (sonioxLangJaInput.checked) hints.push('ja')
+      if (sonioxLangKoInput.checked) hints.push('ko')
+      // Ensure at least one language is selected
+      if (hints.length === 0) {
+        hints.push('zh')
+        sonioxLangZhInput.checked = true
+      }
+      GM_setValue('sonioxLanguageHints', hints)
+    }
+
+    sonioxLangZhInput.addEventListener('change', updateLanguageHints)
+    sonioxLangEnInput.addEventListener('change', updateLanguageHints)
+    sonioxLangJaInput.addEventListener('change', updateLanguageHints)
+    sonioxLangKoInput.addEventListener('change', updateLanguageHints)
+
+    sonioxMaxLengthInput.addEventListener('input', () => {
+      const value = parseInt(sonioxMaxLengthInput.value, 10) || 1
+      const correctedValue = Math.max(1, value)
+      sonioxMaxLengthInput.value = String(correctedValue)
+      GM_setValue('sonioxMaxLength', correctedValue)
+    })
+
+    sonioxAutoSendInput.addEventListener('input', () => {
+      GM_setValue('sonioxAutoSend', sonioxAutoSendInput.checked)
+    })
+
+    sonioxTranslationEnabledInput.addEventListener('input', () => {
+      GM_setValue('sonioxTranslationEnabled', sonioxTranslationEnabledInput.checked)
+    })
+
+    sonioxTranslationTargetSelect.addEventListener('change', () => {
+      GM_setValue('sonioxTranslationTarget', sonioxTranslationTargetSelect.value)
+    })
+
+    /**
+     * Resets the Soniox transcription state to stopped
+     * @returns {void}
+     */
+    function resetSonioxState() {
+      sonioxStartBtn.textContent = '开始同传'
+      sonioxStatus.textContent = '未启动'
+      sonioxStatus.style.color = '#666'
+      sonioxState = 'stopped'
+      sonioxRecordTranscribe = null
+      sonioxSendBuffer = ''
+      sonioxIsFlushing = false
+      sonioxLastSendTime = 0
+      sonioxAccumulatedFinalText = ''
+      sonioxAccumulatedTranslatedText = ''
+      sonioxFinalText.textContent = ''
+      sonioxNonFinalText.textContent = ''
+      if (sonioxFlushTimeout) {
+        clearTimeout(sonioxFlushTimeout)
+        sonioxFlushTimeout = null
+      }
+    }
+
+    /**
+     * Sends a single segment as danmaku with rate limiting and error handling
+     * @param {string} segment - The text segment to send
+     * @returns {Promise<void>}
+     */
+    async function sendSegmentAsDanmaku(segment) {
+      if (!segment.trim()) return
+
+      // Enforce rate limit - wait if sending too fast
+      const now = Date.now()
+      const timeSinceLastSend = now - sonioxLastSendTime
+      if (timeSinceLastSend < SONIOX_SEND_INTERVAL_MS) {
+        const waitTime = SONIOX_SEND_INTERVAL_MS - timeSinceLastSend
+        await new Promise(r => setTimeout(r, waitTime))
+      }
+
+      try {
+        if (cachedRoomId === null) {
+          cachedRoomId = await getRoomId()
+        }
+        const roomId = cachedRoomId
+        const csrfToken = getCsrfToken()
+
+        if (!csrfToken) {
+          appendToLimitedLog(msgLogs, '❌ 同传：未找到登录信息', maxLogLines)
+          return
+        }
+
+        sonioxLastSendTime = Date.now() // Update before request to ensure rate limit from send initiation
+        const result = await sendDanmaku(segment, roomId, csrfToken)
+        if (result.success) {
+          appendToLimitedLog(msgLogs, `✅ 同传: ${segment}`, maxLogLines)
+        } else {
+          appendToLimitedLog(msgLogs, `❌ 同传: ${segment}，原因：${result.error}`, maxLogLines)
+
+          // Try AI evasion if enabled
+          const evasionResult = await tryAiEvasion(segment, roomId, csrfToken, '同传')
+          if (evasionResult.success) {
+            sonioxLastSendTime = Date.now() // Update after successful retry
+          }
+        }
+      } catch (error) {
+        appendToLimitedLog(msgLogs, `🔴 同传发送出错：${error.message}`, maxLogLines)
+      }
+    }
+
+    /**
+     * Flushes the send buffer - sends whatever is accumulated
+     * @returns {Promise<void>}
+     */
+    async function flushSonioxBuffer() {
+      // Prevent concurrent flushes
+      if (sonioxIsFlushing) return
+      sonioxIsFlushing = true
+
+      try {
+        if (sonioxFlushTimeout) {
+          clearTimeout(sonioxFlushTimeout)
+          sonioxFlushTimeout = null
+        }
+
+        if (!sonioxSendBuffer.trim()) return
+
+        const maxLen = parseInt(GM_getValue('sonioxMaxLength'), 10) || 40
+        const processedText = applyReplacements(sonioxSendBuffer.trim())
+        sonioxSendBuffer = ''
+
+        // Split into segments if too long, then send each
+        // Strip trailing punctuation from each segment (live CC style)
+        const segments = trimText(processedText, maxLen)
+        for (const segment of segments) {
+          const cleanSegment = stripTrailingPunctuation(segment)
+          if (cleanSegment) {
+            await sendSegmentAsDanmaku(cleanSegment)
+          }
+        }
+      } finally {
+        sonioxIsFlushing = false
+      }
+    }
+
+    /**
+     * Adds text to the send buffer and schedules a safety fallback flush
+     * @param {string} text - The text to add
+     * @returns {void}
+     */
+    function addToSendBuffer(text) {
+      if (!text) return
+
+      sonioxSendBuffer += text
+
+      // Reset safety fallback timeout (endpoint detection usually flushes before this)
+      if (sonioxFlushTimeout) {
+        clearTimeout(sonioxFlushTimeout)
+      }
+      if (sonioxState === 'running') {
+        sonioxFlushTimeout = setTimeout(() => {
+          flushSonioxBuffer()
+        }, SONIOX_FLUSH_DELAY_MS)
+      }
+    }
+
+    /**
+     * Starts or stops Soniox transcription
+     * @returns {Promise<void>}
+     */
+    async function toggleSonioxTranscription() {
+      if (sonioxState === 'stopped') {
+        // Validate API key
+        const apiKey = GM_getValue('sonioxApiKey', '')
+        if (!apiKey.trim()) {
+          appendToLimitedLog(msgLogs, '⚠️ 请先输入 Soniox API Key', maxLogLines)
+          sonioxStatus.textContent = '请输入 API Key'
+          sonioxStatus.style.color = '#f44'
+          return
+        }
+
+        // Reset display and tracking
+        sonioxFinalText.textContent = ''
+        sonioxNonFinalText.textContent = ''
+        sonioxAccumulatedFinalText = ''
+        sonioxAccumulatedTranslatedText = ''
+
+        sonioxStartBtn.textContent = '启动中…'
+        sonioxStatus.textContent = '正在连接…'
+        sonioxStatus.style.color = '#666'
+        sonioxState = 'starting'
+
+        try {
+          // Dynamically import Soniox Web SDK
+          const { RecordTranscribe } = await import('https://unpkg.com/@soniox/speech-to-text-web?module')
+
+          // Create RecordTranscribe instance
+          sonioxRecordTranscribe = new RecordTranscribe({
+            apiKey: apiKey.trim(),
+          })
+
+          const languageHints = GM_getValue('sonioxLanguageHints', ['zh'])
+          const autoSend = GM_getValue('sonioxAutoSend', true)
+          const translationEnabled = GM_getValue('sonioxTranslationEnabled', false)
+          const translationTarget = GM_getValue('sonioxTranslationTarget', 'en')
+
+          // Build start config
+          /** @type {Object} */
+          const startConfig = {
+            model: 'stt-rt-v3',
+            languageHints: languageHints,
+            enableEndpointDetection: true,
+            onStarted: () => {
+              sonioxState = 'running'
+              sonioxStartBtn.textContent = '停止同传'
+              if (translationEnabled) {
+                const langNames = { en: 'English', zh: '中文', ja: '日本語' }
+                sonioxStatus.textContent = `正在识别并翻译为${langNames[translationTarget] || translationTarget}…`
+              } else {
+                sonioxStatus.textContent = '正在识别…'
+              }
+              sonioxStatus.style.color = '#36a185'
+              appendToLimitedLog(msgLogs, translationEnabled ? `🎤 同传已启动（翻译模式：${translationTarget}）` : '🎤 同传已启动', maxLogLines)
+            },
+            onPartialResult: result => {
+              // Soniox sends each token ONCE with is_final: true (per official docs).
+              // We simply accumulate final tokens and enqueue them for sending.
+              // translation_status: "none" (not translated), "original" (spoken text), "translation" (translated text)
+              // With enableEndpointDetection, a special <end> token signals utterance end for immediate flush.
+
+              let newFinalText = ''
+              let nonFinalText = ''
+              let newTranslatedFinalText = ''
+              let translatedNonFinalText = ''
+              let endpointDetected = false
+
+              for (const token of result.tokens) {
+                // Check for endpoint detection <end> token (always final)
+                if (token.text === '<end>' && token.is_final) {
+                  endpointDetected = true
+                  continue // Skip adding <end> to text buffers
+                }
+
+                if (translationEnabled) {
+                  // When translation is enabled, collect translated tokens for sending
+                  if (token.translation_status === 'translation') {
+                    if (token.is_final) {
+                      newTranslatedFinalText += token.text
+                    } else {
+                      translatedNonFinalText += token.text
+                    }
+                  }
+                  // Original tokens are ignored when translation is enabled (we send translations)
+                } else {
+                  // Without translation, collect all tokens
+                  if (token.is_final) {
+                    newFinalText += token.text
+                  } else {
+                    nonFinalText += token.text
+                  }
+                }
+              }
+
+              if (translationEnabled) {
+                // Add new translated final text to buffer
+                if (newTranslatedFinalText && autoSend) {
+                  addToSendBuffer(newTranslatedFinalText)
+                }
+
+                // Accumulate for display
+                sonioxAccumulatedTranslatedText += newTranslatedFinalText
+
+                // Update display
+                const maxDisplayLen = 500
+                let displayText = sonioxAccumulatedTranslatedText
+                if (displayText.length > maxDisplayLen) {
+                  displayText = '…' + displayText.slice(-maxDisplayLen)
+                }
+                sonioxFinalText.textContent = displayText
+                sonioxNonFinalText.textContent = translatedNonFinalText
+              } else {
+                // Add new final text to buffer
+                if (newFinalText && autoSend) {
+                  addToSendBuffer(newFinalText)
+                }
+
+                // Accumulate for display
+                sonioxAccumulatedFinalText += newFinalText
+
+                // Update display
+                const maxDisplayLen = 500
+                let displayText = sonioxAccumulatedFinalText
+                if (displayText.length > maxDisplayLen) {
+                  displayText = '…' + displayText.slice(-maxDisplayLen)
+                }
+                sonioxFinalText.textContent = displayText
+                sonioxNonFinalText.textContent = nonFinalText
+              }
+
+              // If endpoint detected, schedule flush (sonioxIsFlushing flag prevents concurrent execution)
+              // In translation mode, delay briefly to allow translation tokens to arrive
+              if (endpointDetected && autoSend) {
+                setTimeout(() => flushSonioxBuffer(), translationEnabled ? 300 : 0)
+              }
+
+              // Auto-scroll to bottom
+              const transcriptEl = document.getElementById('sonioxTranscript')
+              if (transcriptEl) {
+                transcriptEl.scrollTop = transcriptEl.scrollHeight
+              }
+            },
+            onFinished: async () => {
+              // Wait for any ongoing flush to complete (max 10s)
+              let waitCount = 0
+              const maxWait = 100 // 100 * 100ms = 10 seconds
+              while (sonioxIsFlushing && waitCount < maxWait) {
+                await new Promise(r => setTimeout(r, 100))
+                waitCount++
+              }
+              // Final flush of any remaining buffer
+              await flushSonioxBuffer()
+              appendToLimitedLog(msgLogs, '🎤 同传已停止', maxLogLines)
+              resetSonioxState()
+            },
+            onError: (status, message) => {
+              console.error('Soniox error:', status, message)
+              appendToLimitedLog(msgLogs, `🔴 Soniox 错误：${message}`, maxLogLines)
+              sonioxStatus.textContent = `错误: ${message}`
+              sonioxStatus.style.color = '#f44'
+              // Only reset if not already stopping/stopped (onFinished handles cleanup during stop)
+              if (sonioxState !== 'stopping' && sonioxState !== 'stopped') {
+                resetSonioxState()
+              }
+            },
+          }
+
+          // Add translation config if enabled
+          if (translationEnabled) {
+            startConfig.translation = {
+              type: 'one_way',
+              target_language: translationTarget,
+            }
+          }
+
+          // Start transcription with the config
+          sonioxRecordTranscribe.start(startConfig)
+        } catch (error) {
+          console.error('Soniox startup error:', error)
+
+          // Handle specific permission errors
+          if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+            appendToLimitedLog(msgLogs, '❌ 麦克风权限被拒绝，请在浏览器设置中允许使用麦克风', maxLogLines)
+            sonioxStatus.textContent = '麦克风权限被拒绝'
+          } else if (error.name === 'NotFoundError') {
+            appendToLimitedLog(msgLogs, '❌ 未找到麦克风设备', maxLogLines)
+            sonioxStatus.textContent = '未找到麦克风'
+          } else {
+            appendToLimitedLog(msgLogs, `🔴 启动同传失败：${error.message}`, maxLogLines)
+            sonioxStatus.textContent = `启动失败: ${error.message}`
+          }
+
+          sonioxStatus.style.color = '#f44'
+          resetSonioxState()
+        }
+      } else if (sonioxState === 'running') {
+        // Stop transcription
+        sonioxStartBtn.textContent = '停止中…'
+        sonioxStatus.textContent = '正在停止…'
+        sonioxState = 'stopping'
+
+        if (sonioxRecordTranscribe) {
+          sonioxRecordTranscribe.stop()
+        }
+      }
+    }
+
+    // Start/Stop button click handler
+    sonioxStartBtn.addEventListener('click', () => {
+      toggleSonioxTranscription()
+    })
 
     // ===== Remote Keywords Sync =====
 

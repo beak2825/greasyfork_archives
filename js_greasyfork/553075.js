@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         百合会论坛阅读增强
 // @namespace    http://tampermonkey.net/
-// @version      2.2.1
+// @version      2.2.2
 // @description  为百合会论坛提供漫画/小说的沉浸式阅读体验，支持多种阅读模式、暗色模式、Material Design风格
 // @author       bluelightgit
 // @match        https://bbs.yamibo.com/thread-*
-// @match        https://bbs.yamibo.com/forum.php?mod=viewthread*
+// @match        https://bbs.yamibo.com/forum.php*
 // @match        https://bbs.yamibo.com/forum-*-*.html
+
 // @icon         https://bbs.yamibo.com/favicon.ico
 // @grant        GM_addStyle
 // @grant        GM_getValue
@@ -21,6 +22,124 @@
 // ==/UserScript==
 (function() {
     'use strict';
+
+        const DEBUG_LOG = false;
+        const debugLog = (...args) => {
+            if (DEBUG_LOG) {
+                console.log(...args);
+            }
+        };
+
+        const FAVORITES_FORUM_FILTER_ALL = '__all__';
+        const FAVORITES_FORUM_KEY_UNKNOWN = 'unknown';
+
+        function extractFidFromUrl(rawUrl) {
+            if (!rawUrl) {
+                return '';
+            }
+            try {
+                const base = typeof window !== 'undefined' && window.location ? window.location.href : undefined;
+                const url = new URL(rawUrl, base);
+                const fid = url.searchParams.get('fid');
+                if (fid && /^\d+$/.test(fid)) {
+                    return fid;
+                }
+                const match = (url.pathname || '').match(/\/forum-(\d+)-\d+\.html$/i);
+                return match ? match[1] : '';
+            } catch (e) {
+                return '';
+            }
+        }
+
+        function formatForumKeyLabel(forumKey) {
+            if (!forumKey) {
+                return '';
+            }
+            if (forumKey === FAVORITES_FORUM_KEY_UNKNOWN) {
+                return '未分类';
+            }
+            const parts = forumKey.split(':');
+            if (parts.length >= 2 && /^\d+$/.test(parts[parts.length - 1])) {
+                const fid = parts[parts.length - 1];
+                const host = parts.slice(0, -1).join(':');
+                return `${host} (fid ${fid})`;
+            }
+            return forumKey;
+        }
+
+        function getForumKeyHostPart(forumKey) {
+            if (!forumKey) {
+                return '';
+            }
+            const match = forumKey.match(/^(.*):(\d+)$/);
+            return match ? match[1] : forumKey;
+        }
+
+        function getForumKeyFromUrl(rawUrl) {
+            if (!rawUrl) {
+                return '';
+            }
+            try {
+                const base = typeof window !== 'undefined' && window.location ? window.location.href : undefined;
+                const url = new URL(rawUrl, base);
+                const host = (url.host || '').toLowerCase();
+                const fid = extractFidFromUrl(rawUrl);
+                return host && fid ? `${host}:${fid}` : host;
+            } catch (e) {
+                return '';
+            }
+        }
+
+        function getCurrentForumKey() {
+            if (typeof window === 'undefined' || !window.location) {
+                return '';
+            }
+            const host = (window.location.host || '').toLowerCase();
+            const fidFromUrl = extractFidFromUrl(window.location.href);
+            if (fidFromUrl) {
+                return `${host}:${fidFromUrl}`;
+            }
+
+            const breadcrumbLinks = document.querySelectorAll('#pt a[href*="fid="], #pt a[href*="forum-"]');
+            const fidLink = breadcrumbLinks && breadcrumbLinks.length
+                ? breadcrumbLinks[breadcrumbLinks.length - 1]
+                : document.querySelector('a[href*="fid="], a[href*="forum-"]');
+            const fidFromDom = fidLink ? extractFidFromUrl(fidLink.getAttribute('href') || fidLink.href || '') : '';
+            if (fidFromDom) {
+                return `${host}:${fidFromDom}`;
+            }
+
+            return host;
+        }
+
+        function inferForumKeyFromFavoriteSeries(series) {
+            if (!series || typeof series !== 'object') {
+                return '';
+            }
+
+            const urlCandidates = [];
+            if (typeof series.latestUrl === 'string' && series.latestUrl) {
+                urlCandidates.push(series.latestUrl);
+            }
+
+            if (series.chapters && typeof series.chapters === 'object') {
+                for (const chapter of Object.values(series.chapters)) {
+                    if (chapter && typeof chapter.url === 'string' && chapter.url) {
+                        urlCandidates.push(chapter.url);
+                        break;
+                    }
+                }
+            }
+
+            for (const url of urlCandidates) {
+                const forumKey = getForumKeyFromUrl(url);
+                if (forumKey) {
+                    return forumKey;
+                }
+            }
+
+            return '';
+        }
 
         function normalizeSeriesTitle(rawTitle) {
             if (!rawTitle) return '';
@@ -64,6 +183,10 @@
                 return false;
             }
             if (/\/forum-\d+-\d+\.html$/i.test(window.location.pathname || '')) {
+                return true;
+            }
+            if (/\/forum\.php$/i.test(window.location.pathname || '') &&
+                /(?:\?|&)mod=forumdisplay(?:&|$)/i.test(window.location.search || '')) {
                 return true;
             }
             return !!document.getElementById('threadlisttableid');
@@ -272,6 +395,7 @@
             list: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h2v2H4zm4 0h12v2H8zm-4 5h2v2H4zm4 0h12v2H8zm-4 5h2v2H4zm4 0h12v2H8z"/></svg>',
             bookmark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>',
             bookmarkFilled: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>',
+            caretDown: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>',
             settings: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>',
             close: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>',
             search: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>',
@@ -341,6 +465,32 @@
     // =========================
     // 数据存储管理
     // =========================
+    function createDefaultSettings() {
+        return {
+            darkMode: false,
+            viewMode: CONFIG.VIEW_MODES.SCROLL_DOWN,
+            floatingButtonPosition: null,
+            searchResultsPerPage: CONFIG.SEARCH_RESULTS_PER_PAGE_DEFAULT,
+            sidebarCollapsed: false,
+            layoutMode: 'auto',
+            favoritesForumFilter: ''
+        };
+    }
+
+    function createDefaultStoreData(now = Date.now()) {
+        return {
+            meta: {
+                schemaVersion: 1,
+                createdAt: now,
+                updatedAt: now
+            },
+            favorites: {},
+            readingProgress: {},
+            settings: createDefaultSettings(),
+            seriesNameOverrides: {}
+        };
+    }
+
     class DataStore {
          constructor() {
              this._changeListeners = new Set();
@@ -356,23 +506,7 @@
                  return data;
              } catch (e) {
                  console.error('Failed to parse storage data:', e);
-                 const now = Date.now();
-                 return {
-                     meta: {
-                         schemaVersion: 1,
-                         createdAt: now,
-                         updatedAt: now
-                     },
-                     favorites: {},
-                     readingProgress: {},
-                     settings: {
-                         darkMode: false,
-                         viewMode: CONFIG.VIEW_MODES.SCROLL_DOWN,
-                         floatingButtonPosition: null,
-                         searchResultsPerPage: CONFIG.SEARCH_RESULTS_PER_PAGE_DEFAULT,
-                         sidebarCollapsed: false
-                     }
-                 };
+                 return createDefaultStoreData(Date.now());
              }
          }
 
@@ -459,13 +593,7 @@
                  }
              }
              if (!this.data.settings) {
-                 this.data.settings = {
-                     darkMode: false,
-                     viewMode: CONFIG.VIEW_MODES.SCROLL_DOWN,
-                    floatingButtonPosition: null,
-                    searchResultsPerPage: CONFIG.SEARCH_RESULTS_PER_PAGE_DEFAULT,
-                    sidebarCollapsed: false
-                };
+                 this.data.settings = createDefaultSettings();
                 settingsUpdated = true;
             }
             if (!this.data.favorites || typeof this.data.favorites !== 'object') {
@@ -504,10 +632,10 @@
                 this.data.settings.sidebarCollapsed = !!this.data.settings.sidebarCollapsed;
                 settingsUpdated = true;
             }
-            if (!Object.prototype.hasOwnProperty.call(this.data.settings, 'layoutMode')) {
-                this.data.settings.layoutMode = 'auto';
-                settingsUpdated = true;
-            } else {
+             if (!Object.prototype.hasOwnProperty.call(this.data.settings, 'layoutMode')) {
+                 this.data.settings.layoutMode = 'auto';
+                 settingsUpdated = true;
+             } else {
                 const rawMode = typeof this.data.settings.layoutMode === 'string'
                     ? this.data.settings.layoutMode.trim().toLowerCase()
                     : '';
@@ -516,8 +644,18 @@
                     settingsUpdated = true;
                 } else if (this.data.settings.layoutMode !== rawMode) {
                     this.data.settings.layoutMode = rawMode;
-                    settingsUpdated = true;
-                }
+                     settingsUpdated = true;
+                 }
+             }
+            if (!Object.prototype.hasOwnProperty.call(this.data.settings, 'favoritesForumFilter')) {
+                this.data.settings.favoritesForumFilter = '';
+                settingsUpdated = true;
+            } else if (typeof this.data.settings.favoritesForumFilter !== 'string') {
+                this.data.settings.favoritesForumFilter = String(this.data.settings.favoritesForumFilter || '');
+                settingsUpdated = true;
+            } else if (this.data.settings.favoritesForumFilter !== this.data.settings.favoritesForumFilter.trim()) {
+                this.data.settings.favoritesForumFilter = this.data.settings.favoritesForumFilter.trim();
+                settingsUpdated = true;
             }
             this.migrateLegacyFavorites();
 
@@ -533,15 +671,26 @@
                             : 0;
                         series.directoryCount = storedChapters;
                         favoritesUpdated = true;
-                    } else {
-                        const numericCount = Number(series.directoryCount);
-                        const normalized = Number.isFinite(numericCount) && numericCount >= 0
-                            ? Math.floor(numericCount)
-                            : 0;
-                        if (series.directoryCount !== normalized) {
-                            series.directoryCount = normalized;
-                            favoritesUpdated = true;
-                        }
+                     } else {
+                         const numericCount = Number(series.directoryCount);
+                         const normalized = Number.isFinite(numericCount) && numericCount >= 0
+                             ? Math.floor(numericCount)
+                             : 0;
+                         if (series.directoryCount !== normalized) {
+                             series.directoryCount = normalized;
+                             favoritesUpdated = true;
+                         }
+                     }
+
+                    if (!Object.prototype.hasOwnProperty.call(series, 'forumKey') ||
+                        (typeof series.forumKey !== 'string') ||
+                        !series.forumKey.trim()) {
+                        const inferred = inferForumKeyFromFavoriteSeries(series);
+                        series.forumKey = inferred || FAVORITES_FORUM_KEY_UNKNOWN;
+                        favoritesUpdated = true;
+                    } else if (series.forumKey !== series.forumKey.trim().toLowerCase()) {
+                        series.forumKey = series.forumKey.trim().toLowerCase();
+                        favoritesUpdated = true;
                     }
                 });
             }
@@ -627,15 +776,18 @@
             const now = Date.now();
             if (!this.data.favorites[seriesKey]) {
                 const seriesTitle = payload?.seriesTitle || normalizeSeriesTitle(payload?.chapterTitle || '') || seriesKey;
-                this.data.favorites[seriesKey] = {
-                    seriesKey,
-                    seriesTitle,
-                    author: payload?.author || '',
-                    chapters: {},
-                    latestThreadId: '',
-                    latestTitle: '',
-                    latestUrl: '',
-                    latestFloor: 0,
+                 this.data.favorites[seriesKey] = {
+                     seriesKey,
+                     seriesTitle,
+                     author: payload?.author || '',
+                    forumKey: typeof payload?.forumKey === 'string' && payload.forumKey.trim()
+                        ? payload.forumKey.trim().toLowerCase()
+                        : (getForumKeyFromUrl(payload?.url) || FAVORITES_FORUM_KEY_UNKNOWN),
+                     chapters: {},
+                     latestThreadId: '',
+                     latestTitle: '',
+                     latestUrl: '',
+                     latestFloor: 0,
                     latestTotalFloors: 0,
                     directoryCount: Number.isFinite(payload?.directoryCount) && payload.directoryCount >= 0
                         ? Math.floor(payload.directoryCount)
@@ -646,6 +798,14 @@
             }
 
             const series = this.data.favorites[seriesKey];
+            if (typeof payload?.forumKey === 'string' && payload.forumKey.trim()) {
+                const forumKey = payload.forumKey.trim().toLowerCase();
+                if (series.forumKey !== forumKey) {
+                    series.forumKey = forumKey;
+                }
+            } else if (!series.forumKey || typeof series.forumKey !== 'string') {
+                series.forumKey = inferForumKeyFromFavoriteSeries(series) || FAVORITES_FORUM_KEY_UNKNOWN;
+            }
             if (!Object.prototype.hasOwnProperty.call(series, 'directoryCount') ||
                 !Number.isFinite(Number(series.directoryCount)) || series.directoryCount < 0) {
                 series.directoryCount = 0;
@@ -667,6 +827,9 @@
             const series = this.data.favorites && this.data.favorites[seriesKey];
             if (!series) return;
 
+            if (typeof payload.forumKey === 'string' && payload.forumKey.trim()) {
+                series.forumKey = payload.forumKey.trim().toLowerCase();
+            }
             if (payload.seriesTitle) {
                 series.seriesTitle = payload.seriesTitle;
             }
@@ -1312,12 +1475,67 @@
     // =========================
     class ContentParser {
         constructor() {
+            this.viewMode = this.detectViewMode();
             this.threadId = this.getThreadId();
             this.threadTitle = this.getThreadTitle();
             this.authorUid = this.getAuthorUid();
             this.authorName = this.getAuthorName();
             this.seriesTitle = normalizeSeriesTitle(this.threadTitle);
             this.seriesKey = buildSeriesKey(this.threadTitle);
+        }
+
+        detectViewMode() {
+            if (typeof document === 'undefined') {
+                return 'unknown';
+            }
+            if (document.querySelector('#postlist > div[id^="post_"]')) {
+                return 'desktop';
+            }
+            if (document.querySelector('.postlist .plc[id^="pid"]') ||
+                document.querySelector('.viewthread .plc[id^="pid"]') ||
+                document.querySelector('.plc[id^="pid"] > .display.pi')) {
+                return 'touch';
+            }
+            if (document.querySelector('div[id^="post_"].bm_c') || document.querySelector('.vt a#thread_subject')) {
+                return 'mobile';
+            }
+            if (document.querySelector('div[id^="post_"]') && document.querySelector('#thread_subject')) {
+                return 'mobile';
+            }
+            return 'unknown';
+        }
+
+        parseUidFromHref(href) {
+            const raw = typeof href === 'string' ? href : '';
+            if (!raw) {
+                return null;
+            }
+            let match = raw.match(/uid=(\d+)/);
+            if (!match) {
+                match = raw.match(/uid-(\d+)/);
+            }
+            if (!match) {
+                match = raw.match(/space-uid-(\d+)/);
+            }
+            if (!match) {
+                match = raw.match(/\/space\/(?:[^/?#]+)?\?[^#]*\buid=(\d+)/);
+            }
+            return match ? match[1] : null;
+        }
+
+        buildAbsoluteUrl(rawUrl) {
+            const raw = typeof rawUrl === 'string' ? rawUrl.trim() : '';
+            if (!raw) {
+                return '';
+            }
+            if (/^data:/i.test(raw)) {
+                return '';
+            }
+            try {
+                return new URL(raw, window.location.href).toString();
+            } catch (e) {
+                return raw;
+            }
         }
 
         getThreadId() {
@@ -1343,81 +1561,195 @@
 
         getThreadTitle() {
             const titleElement = document.querySelector('#thread_subject');
-            return titleElement ? titleElement.textContent.trim() : '';
+            if (titleElement) {
+                return titleElement.textContent.trim();
+            }
+
+            const touchTitle = document.querySelector('.postlist > h2');
+            if (touchTitle) {
+                const clone = touchTitle.cloneNode(true);
+                clone.querySelectorAll('a').forEach((anchor) => anchor.remove());
+                return clone.textContent.trim();
+            }
+
+            const touchViewTitle = document.querySelector('.view_tit');
+            if (touchViewTitle) {
+                return touchViewTitle.textContent.trim();
+            }
+
+            const ogTitle = document.querySelector('meta[property="og:title"]');
+            if (ogTitle && typeof ogTitle.getAttribute === 'function') {
+                const content = ogTitle.getAttribute('content');
+                if (typeof content === 'string' && content.trim()) {
+                    return content.trim();
+                }
+            }
+
+            return (document.title || '').trim();
+        }
+
+        getFirstPostElement() {
+            if (this.viewMode === 'desktop') {
+                return document.querySelector('#postlist > div[id^="post_"]');
+            }
+            if (this.viewMode === 'touch') {
+                return document.querySelector('.postlist .plc[id^="pid"]') ||
+                    document.querySelector('.viewthread .plc[id^="pid"]') ||
+                    document.querySelector('.plc[id^="pid"]');
+            }
+            if (this.viewMode === 'mobile') {
+                return document.querySelector('div[id^="post_"].bm_c') || document.querySelector('div[id^="post_"]');
+            }
+            return document.querySelector('#postlist > div[id^="post_"]') ||
+                document.querySelector('.postlist .plc[id^="pid"]') ||
+                document.querySelector('.viewthread .plc[id^="pid"]') ||
+                document.querySelector('.plc[id^="pid"]') ||
+                document.querySelector('div[id^="post_"]');
+        }
+
+        getAuthorLinkFromPost(postEl) {
+            if (!postEl) {
+                return null;
+            }
+            if (this.viewMode === 'desktop') {
+                return postEl.querySelector('.favatar .authi a');
+            }
+            if (this.viewMode === 'touch') {
+                return postEl.querySelector('.authi a[href*="uid="], .authi a[href*="uid-"]');
+            }
+            if (this.viewMode === 'mobile') {
+                return postEl.querySelector('.bm_user a[href*="uid="], .bm_user a[href*="uid-"]') ||
+                    postEl.querySelector('a[href*="uid="], a[href*="uid-"]');
+            }
+            return postEl.querySelector('a[href*="uid="], a[href*="uid-"]');
         }
 
         getAuthorUid() {
-            const firstPost = document.querySelector('#postlist > div[id^="post_"]');
-            if (firstPost) {
-                const authorLink = firstPost.querySelector('.favatar .authi a');
-                if (authorLink) {
-                    const href = authorLink.getAttribute('href');
-                    let match = href.match(/uid=(\d+)/);
-                    if (!match) {
-                        match = href.match(/uid-(\d+)/);
-                    }
-                    return match ? match[1] : null;
-                }
-            }
-            return null;
+            const firstPost = this.getFirstPostElement();
+            const authorLink = firstPost ? this.getAuthorLinkFromPost(firstPost) : null;
+            const href = authorLink ? authorLink.getAttribute('href') : '';
+            return this.parseUidFromHref(href);
         }
 
         getAuthorName() {
-            const firstPost = document.querySelector('#postlist > div[id^="post_"]');
-            if (firstPost) {
-                const authorLink = firstPost.querySelector('.favatar .authi a');
-                if (authorLink) {
-                    return authorLink.textContent.trim();
-                }
+            const firstPost = this.getFirstPostElement();
+            const authorLink = firstPost ? this.getAuthorLinkFromPost(firstPost) : null;
+            return authorLink ? authorLink.textContent.trim() : '';
+        }
+
+        getAllPostElements() {
+            if (this.viewMode === 'desktop') {
+                return Array.from(document.querySelectorAll('#postlist > div[id^="post_"]'));
             }
-            return '';
+            if (this.viewMode === 'touch') {
+                const list = Array.from(document.querySelectorAll('.postlist .plc[id^="pid"]'));
+                if (list.length) {
+                    return list;
+                }
+                const viewThreadList = Array.from(document.querySelectorAll('.viewthread .plc[id^="pid"]'));
+                if (viewThreadList.length) {
+                    return viewThreadList;
+                }
+                return Array.from(document.querySelectorAll('.plc[id^="pid"]'));
+            }
+            if (this.viewMode === 'mobile') {
+                return Array.from(document.querySelectorAll('div[id^="post_"].bm_c, div[id^="post_"][class*="bm_c"], div[id^="post_"]'));
+            }
+            return Array.from(document.querySelectorAll('#postlist > div[id^="post_"], .postlist .plc[id^="pid"], div[id^="post_"]'));
+        }
+
+        getPostId(postEl, index) {
+            const rawId = postEl && typeof postEl.id === 'string' ? postEl.id : '';
+            if (rawId.startsWith('post_')) {
+                return rawId.slice('post_'.length) || String(index + 1);
+            }
+            if (rawId.startsWith('pid')) {
+                return rawId.slice('pid'.length) || String(index + 1);
+            }
+            return rawId || String(index + 1);
+        }
+
+        getPostContentRoots(postEl) {
+            if (!postEl) {
+                return [];
+            }
+            const roots = [];
+            const add = (el) => {
+                if (!el) return;
+                if (roots.includes(el)) return;
+                roots.push(el);
+            };
+
+            add(postEl.querySelector('.t_f, .pcb, .postmessage, .message'));
+            postEl.querySelectorAll('ul.img_one, ul.img_list, .img_one, .img_list').forEach(add);
+            return roots;
+        }
+
+        extractImageUrls(postEl) {
+            const roots = this.getPostContentRoots(postEl);
+            const urls = [];
+            const seen = new Set();
+            const isIgnored = (value) => {
+                const v = typeof value === 'string' ? value : '';
+                return !v ||
+                    /static\/image/i.test(v) ||
+                    /uc_server\/avatar|avatar\.php/i.test(v);
+            };
+            const addUrl = (raw) => {
+                const abs = this.buildAbsoluteUrl(raw);
+                if (isIgnored(abs)) return;
+                if (seen.has(abs)) return;
+                seen.add(abs);
+                urls.push(abs);
+            };
+
+            roots.forEach((root) => {
+                root.querySelectorAll('img').forEach((img) => {
+                    addUrl(
+                        img.getAttribute('file') ||
+                        img.getAttribute('zoomfile') ||
+                        img.getAttribute('data-original') ||
+                        img.getAttribute('data-src') ||
+                        img.getAttribute('src') ||
+                        ''
+                    );
+                });
+            });
+
+            return urls;
         }
 
         // 获取楼主的所有帖子
         getAuthorPosts() {
             const posts = [];
-            const postElements = document.querySelectorAll('#postlist > div[id^="post_"]');
+            const postElements = this.getAllPostElements();
 
-            postElements.forEach((postEl) => {
-                const authorLink = postEl.querySelector('.favatar .authi a');
-                if (authorLink) {
-                    const href = authorLink.getAttribute('href');
-                    let match = href.match(/uid=(\d+)/);
-                    if (!match) {
-                        match = href.match(/uid-(\d+)/);
-                    }
-
-                    if (match && match[1] === this.authorUid) {
-                        const postId = postEl.id.replace('post_', '');
-                        const floorNum = this.getFloorNumber(postEl);
-                        const content = postEl.querySelector('.t_f, .pcb');
-                        const images = content ? Array.from(content.querySelectorAll('img.zoom, img[id^="aimg_"]')) : [];
-
-                        // 统计图片总数（包括未加载的）
-                        const imageUrls = images.map(img => {
-                            return img.getAttribute('file') ||
-                                   img.getAttribute('zoomfile') ||
-                                   img.getAttribute('src') ||
-                                   img.getAttribute('data-original') ||
-                                   '';
-                        }).filter(url => url && !url.includes('static/image'));
-
-                        posts.push({
-                            postId,
-                            floor: floorNum,
-                            element: postEl,
-                            content: content,
-                            images: imageUrls,
-                            imageCount: imageUrls.length
-                        });
-                    }
+            postElements.forEach((postEl, index) => {
+                const authorLink = this.getAuthorLinkFromPost(postEl);
+                const uid = this.parseUidFromHref(authorLink ? authorLink.getAttribute('href') : '');
+                if (!uid || uid !== this.authorUid) {
+                    return;
                 }
+
+                const postId = this.getPostId(postEl, index);
+                const floorNum = this.getFloorNumber(postEl, index);
+                const content = postEl.querySelector('.t_f, .pcb, .postmessage, .message') || postEl;
+                const imageUrls = this.extractImageUrls(postEl);
+
+                posts.push({
+                    postId,
+                    floor: floorNum,
+                    element: postEl,
+                    content: content,
+                    images: imageUrls,
+                    imageCount: imageUrls.length
+                });
             });
 
             return posts;
         }
 
-        getFloorNumber(postEl) {
+        getFloorNumber(postEl, index = 0) {
             const floorElement = postEl.querySelector('.pi strong a em');
             if (floorElement) {
                 const text = floorElement.textContent;
@@ -1434,6 +1766,23 @@
                 }
             }
 
+            const mobileCandidate = postEl.querySelector('.authi em, .bm_user em');
+            if (mobileCandidate) {
+                const match = mobileCandidate.textContent.match(/(\d+)/);
+                if (match) {
+                    return parseInt(match[1]);
+                }
+            }
+
+            const text = postEl.textContent || '';
+            const match = text.match(/(\d+)\s*(?:楼|#)/);
+            if (match) {
+                return parseInt(match[1]);
+            }
+
+            if (Number.isInteger(index) && index >= 0) {
+                return index + 1;
+            }
             return 1;
         }
 
@@ -2100,35 +2449,44 @@
                             <div class="sidebar-tabs">
                             <button class="tab-btn active" data-tab="directory">目录</button>
                             <button class="tab-btn" data-tab="comments">评论</button>
-                            <button class="tab-btn" data-tab="favorites">收藏</button>
-                        </div>
-                    </div>
-                    <div class="sidebar-content">
-                        <div class="tab-panel active" id="directory-panel">
-                            <div class="directory-search">
-                                <input type="text" placeholder="搜索系列..." id="series-search">
-                                <button id="search-btn" class="icon-btn">${ICONS.search}</button>
+                            <div class="tab-btn-split" id="favorites-tab-split" role="group" aria-label="收藏与论坛筛选">
+                                <button class="tab-btn tab-btn-split-main" data-tab="favorites" type="button">收藏</button>
+                                <button id="favorites-tab-filter-btn" class="tab-btn-split-dropdown" type="button" title="选择论坛收藏">
+                                    ${ICONS.caretDown}
+                                </button>
+                            </div>
+                         </div>
+                     </div>
+                     <div class="sidebar-content">
+                         <div class="tab-panel active" id="directory-panel">
+                             <div class="directory-search">
+                                 <input type="text" placeholder="搜索系列..." id="series-search">
+                                 <button id="search-btn" class="icon-btn">${ICONS.search}</button>
                                 <button id="favorite-btn" class="icon-btn" title="收藏本系列">
                                     ${this.dataStore.isSeriesFavorited(this.seriesKey) ? ICONS.bookmarkFilled : ICONS.bookmark}
                                 </button>
-                            </div>
-                            <div class="directory-list" id="directory-list">
-                                <div class="loading">正在加载目录...</div>
-                            </div>
-                        </div>
+                             </div>
+                             <div class="directory-list" id="directory-list">
+                                 <div class="loading">正在加载目录...</div>
+                             </div>
+                         </div>
                         <div class="tab-panel" id="comments-panel">
                             <div class="comments-list" id="comments-list">
                                 <div class="loading">加载评论中...</div>
                             </div>
                         </div>
                         <div class="tab-panel" id="favorites-panel">
+                            <div class="directory-search favorites-search">
+                                <input type="text" placeholder="搜索收藏..." id="favorites-search-input">
+                                <button id="favorites-search-btn" class="icon-btn" title="搜索收藏">${ICONS.search}</button>
+                            </div>
                             <div class="favorites-list" id="favorites-list">
                                 <div class="empty-message">暂无收藏</div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div id="view-mode-menu" class="popup-menu" style="display: none;">
+                 <div id="view-mode-menu" class="popup-menu" style="display: none;">
                     <div class="menu-header">
                         <span class="menu-title">阅读菜单</span>
                         <button id="menu-close-btn" class="icon-btn menu-close-btn" title="关闭">
@@ -2210,7 +2568,8 @@
                          </div>
                      </div>
                  </div>
-            `;
+                <div id="favorites-forum-menu" class="popup-menu favorites-forum-menu" style="display: none;"></div>
+             `;
 
             document.body.appendChild(container);
             this.readerContainer = container;
@@ -2302,6 +2661,47 @@
             });
 
             document.getElementById('favorite-btn').addEventListener('click', () => this.toggleFavorite());
+            const favoritesTabFilterBtn = document.getElementById('favorites-tab-filter-btn');
+            if (favoritesTabFilterBtn) {
+                favoritesTabFilterBtn.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    const rect = event.currentTarget.getBoundingClientRect();
+                    this.toggleFavoritesForumMenu(rect);
+                });
+            }
+
+            const favoritesSearchInput = document.getElementById('favorites-search-input');
+            const favoritesSearchBtn = document.getElementById('favorites-search-btn');
+            if (favoritesSearchBtn) {
+                favoritesSearchBtn.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    this.switchTab('favorites');
+                });
+            }
+            if (favoritesSearchInput) {
+                let timer = null;
+                const schedule = () => {
+                    if (timer) {
+                        clearTimeout(timer);
+                    }
+                    timer = window.setTimeout(() => {
+                        timer = null;
+                        const favPanel = document.getElementById('favorites-panel');
+                        if (favPanel && favPanel.classList.contains('active')) {
+                            this.loadFavorites();
+                        }
+                    }, 180);
+                };
+                favoritesSearchInput.addEventListener('input', schedule);
+                favoritesSearchInput.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        this.switchTab('favorites');
+                    }
+                });
+            }
             document.getElementById('close-reader-top').addEventListener('click', () => this.exitReaderMode());
             const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn');
             if (toggleSidebarBtn) {
@@ -2398,6 +2798,15 @@
                     const menuOpen = menu.style.display && menu.style.display !== 'none';
                     if (menuOpen && !menu.contains(e.target) && !btn.contains(e.target)) {
                         this.closeViewModeMenu();
+                    }
+                }
+
+                const forumMenu = document.getElementById('favorites-forum-menu');
+                const forumBtn = document.getElementById('favorites-tab-filter-btn');
+                if (forumMenu && forumBtn) {
+                    const forumMenuOpen = forumMenu.style.display && forumMenu.style.display !== 'none';
+                    if (forumMenuOpen && !forumMenu.contains(e.target) && !forumBtn.contains(e.target)) {
+                        this.closeFavoritesForumMenu();
                     }
                 }
 
@@ -2504,27 +2913,8 @@
         }
 
         ensureDesktopLayoutForParsing() {
-            if (!this.isTouchDevice()) {
-                return true;
-            }
-            let url;
-            try {
-                url = new URL(window.location.href);
-            } catch (error) {
-                return true;
-            }
-            const mobileParam = (url.searchParams.get('mobile') || '').toLowerCase();
-            if (mobileParam === 'no' || mobileParam === '0') {
-                return true;
-            }
-            this.setForumModeRestoreInfo({
-                prevMobileParam: url.searchParams.has('mobile') ? url.searchParams.get('mobile') : null
-            });
-            document.cookie = 'mobile=no; path=/';
-            this.scheduleAutoOpen(this.parser.threadId);
-            url.searchParams.set('mobile', 'no');
-            window.location.replace(url.toString());
-            return false;
+            // 兼容 Discuz 移动端模板：优先直接在当前 DOM 解析，不再强制切换到桌面版。
+            return true;
         }
 
         updateMobileLayout(options = {}) {
@@ -2700,6 +3090,178 @@
                 return;
             }
             this.openViewModeMenu(anchorRect);
+        }
+
+        getFavoritesForumFilterKey() {
+            const stored = this.dataStore ? this.dataStore.getSetting('favoritesForumFilter', '') : '';
+            const key = typeof stored === 'string' ? stored.trim().toLowerCase() : '';
+            const current = getCurrentForumKey();
+            if (!key) {
+                return current;
+            }
+            if (key === FAVORITES_FORUM_FILTER_ALL || key === FAVORITES_FORUM_KEY_UNKNOWN) {
+                return key;
+            }
+            const currentHost = getForumKeyHostPart(current);
+            const keyHost = getForumKeyHostPart(key);
+            if (currentHost && keyHost && currentHost !== keyHost) {
+                return current;
+            }
+            return key;
+        }
+
+        setFavoritesForumFilterKey(nextKey) {
+            const normalized = typeof nextKey === 'string' ? nextKey.trim().toLowerCase() : '';
+            this.dataStore.setSetting('favoritesForumFilter', normalized);
+        }
+
+        buildFavoritesForumSummary() {
+            const favorites = this.dataStore.getAllFavorites();
+            const byForum = new Map();
+
+            favorites.forEach((fav) => {
+                const key = (typeof fav?.forumKey === 'string' && fav.forumKey.trim())
+                    ? fav.forumKey.trim().toLowerCase()
+                    : FAVORITES_FORUM_KEY_UNKNOWN;
+                const current = byForum.get(key);
+                if (current) {
+                    current.count += 1;
+                    current.lastVisited = Math.max(current.lastVisited, Number(fav.lastVisited) || 0);
+                } else {
+                    byForum.set(key, {
+                        forumKey: key,
+                        count: 1,
+                        lastVisited: Number(fav.lastVisited) || 0
+                    });
+                }
+            });
+
+            return Array.from(byForum.values()).sort((a, b) => (b.lastVisited || 0) - (a.lastVisited || 0));
+        }
+
+        renderFavoritesForumMenu(menu) {
+            if (!menu) {
+                return;
+            }
+            menu.innerHTML = '';
+
+            const currentFilter = this.getFavoritesForumFilterKey();
+            const currentForum = getCurrentForumKey();
+
+            const forums = this.buildFavoritesForumSummary();
+            const currentForumSummary = forums.find((item) => item.forumKey === currentForum);
+            const currentHost = getForumKeyHostPart(currentForum);
+            const hasForumFid = !!(currentHost && currentHost !== currentForum);
+            const currentHostSummary = hasForumFid ? forums.find((item) => item.forumKey === currentHost) : null;
+            const currentForumCount = (currentForumSummary ? currentForumSummary.count : 0) +
+                (currentHostSummary ? currentHostSummary.count : 0);
+            const siteCount = hasForumFid
+                ? forums.reduce((sum, item) => {
+                    if (item && typeof item.forumKey === 'string' &&
+                        (item.forumKey === currentHost || item.forumKey.startsWith(`${currentHost}:`))) {
+                        return sum + (Number(item.count) || 0);
+                    }
+                    return sum;
+                }, 0)
+                : 0;
+            const isHostFilterRedundant = hasForumFid && siteCount <= currentForumCount;
+
+            const allItem = document.createElement('div');
+            allItem.className = 'menu-item';
+            allItem.dataset.forumKey = FAVORITES_FORUM_FILTER_ALL;
+            allItem.textContent = '全部论坛';
+            if (currentFilter === FAVORITES_FORUM_FILTER_ALL) {
+                allItem.classList.add('selected');
+            }
+            menu.appendChild(allItem);
+
+            const currentItem = document.createElement('div');
+            currentItem.className = 'menu-item';
+            currentItem.dataset.forumKey = currentForum;
+            currentItem.textContent = `当前论坛：${formatForumKeyLabel(currentForum)}${currentForumCount > 0 ? ` (${currentForumCount})` : ''}`;
+            if (currentFilter !== FAVORITES_FORUM_FILTER_ALL &&
+                (currentFilter === currentForum || (isHostFilterRedundant && currentFilter === currentHost))) {
+                currentItem.classList.add('selected');
+            }
+            menu.appendChild(currentItem);
+
+            if (hasForumFid && !isHostFilterRedundant) {
+                const siteItem = document.createElement('div');
+                siteItem.className = 'menu-item';
+                siteItem.dataset.forumKey = currentHost;
+                siteItem.textContent = `当前站点(全部版块)：${currentHost}${siteCount > 0 ? ` (${siteCount})` : ''}`;
+                if (currentFilter !== FAVORITES_FORUM_FILTER_ALL && currentFilter === currentHost) {
+                    siteItem.classList.add('selected');
+                }
+                menu.appendChild(siteItem);
+            }
+
+            const divider = document.createElement('div');
+            divider.className = 'menu-divider';
+            menu.appendChild(divider);
+
+            forums.forEach((forum) => {
+                if (forum.forumKey === currentForum) {
+                    return;
+                }
+                if (currentHost && forum.forumKey === currentHost) {
+                    return;
+                }
+                const item = document.createElement('div');
+                item.className = 'menu-item';
+                item.dataset.forumKey = forum.forumKey;
+                item.textContent = `${formatForumKeyLabel(forum.forumKey)} (${forum.count})`;
+                if (currentFilter !== FAVORITES_FORUM_FILTER_ALL && currentFilter === forum.forumKey) {
+                    item.classList.add('selected');
+                }
+                menu.appendChild(item);
+            });
+
+            if (!menu.dataset.bound) {
+                menu.dataset.bound = 'true';
+                menu.addEventListener('click', (event) => {
+                    const item = event.target.closest('.menu-item');
+                    if (!item) {
+                        return;
+                    }
+                    const selectedKey = item.dataset.forumKey || '';
+                    if (selectedKey) {
+                        this.setFavoritesForumFilterKey(selectedKey);
+                    }
+                    this.closeFavoritesForumMenu();
+                    this.switchTab('favorites');
+                });
+            }
+        }
+
+        openFavoritesForumMenu(anchorRect) {
+            const menu = document.getElementById('favorites-forum-menu');
+            if (!menu) {
+                return;
+            }
+            this.renderFavoritesForumMenu(menu);
+            this.positionPopupMenu(menu, anchorRect);
+        }
+
+        closeFavoritesForumMenu() {
+            const menu = document.getElementById('favorites-forum-menu');
+            if (menu) {
+                menu.style.display = 'none';
+                menu.style.visibility = '';
+            }
+        }
+
+        toggleFavoritesForumMenu(anchorRect) {
+            const menu = document.getElementById('favorites-forum-menu');
+            if (!menu) {
+                return;
+            }
+            const isOpen = menu.style.display && menu.style.display !== 'none';
+            if (isOpen) {
+                this.closeFavoritesForumMenu();
+                return;
+            }
+            this.openFavoritesForumMenu(anchorRect);
         }
 
         applyLayoutSizing() {
@@ -3350,6 +3912,11 @@
                 btn.classList.toggle('active', btn.dataset.tab === tabName);
             });
 
+            const favoritesTabSplit = document.getElementById('favorites-tab-split');
+            if (favoritesTabSplit) {
+                favoritesTabSplit.classList.toggle('active', tabName === 'favorites');
+            }
+
             document.querySelectorAll('.tab-panel').forEach(panel => {
                 panel.classList.toggle('active', panel.id === `${tabName}-panel`);
             });
@@ -3429,6 +3996,7 @@
                 this.dataStore.addOrUpdateFavorite(this.seriesKey, {
                     seriesTitle: this.seriesTitle,
                     author: this.parser.authorName || '未知作者',
+                    forumKey: getCurrentForumKey(),
                     threadId: this.parser.threadId,
                     chapterTitle: this.parser.threadTitle,
                     url: window.location.href,
@@ -4191,7 +4759,7 @@
         }
 
         searchDirectory(options = {}) {
-            console.log('[搜索] ===== 开始搜索合集 =====');
+            debugLog('[搜索] ===== 开始搜索合集 =====');
             const searchInput = document.getElementById('series-search');
             const isRetry = !!options.isRetry;
 
@@ -4206,10 +4774,10 @@
             const rawQuery = typeof options.queryOverride === 'string'
                 ? options.queryOverride.trim()
                 : (isRetry && this.lastSearchQuery ? this.lastSearchQuery : (searchInput ? searchInput.value.trim() : ''));
-            console.log('[搜索] 搜索关键词:', rawQuery);
+            debugLog('[搜索] 搜索关键词:', rawQuery);
 
             if (!rawQuery) {
-                console.log('[搜索] 错误: 搜索关键词为空');
+                debugLog('[搜索] 错误: 搜索关键词为空');
                 this.showDirectoryError('请输入搜索关键词');
                 return;
             }
@@ -4233,18 +4801,18 @@
             this.setDirectoryLoadingMessage(`搜索中... (每页${perPageSetting}条)`);
 
             // Discuz 搜索需要先GET获取formhash
-            console.log('[搜索] 第一步: 获取搜索页面formhash');
-            const searchPageUrl = 'https://bbs.yamibo.com/search.php?mod=forum';
+            debugLog('[搜索] 第一步: 获取搜索页面formhash');
+            const searchPageUrl = new URL('search.php?mod=forum', window.location.href).toString();
 
             GM_xmlhttpRequest({
                 method: 'GET',
                 url: searchPageUrl,
                 onload: (response) => {
-                    console.log('[搜索] 获取搜索页面成功，状态码:', response.status);
+                    debugLog('[搜索] 获取搜索页面成功，状态码:', response.status);
 
                     const status = Number(response.status) || 0;
                     if (status < 200 || status >= 300) {
-                        console.log('[搜索] 获取搜索页面返回非成功状态码，准备重试');
+                        debugLog('[搜索] 获取搜索页面返回非成功状态码，准备重试');
                         this.scheduleRetry(`获取搜索页面失败(HTTP ${status || '0'})`);
                         return;
                     }
@@ -4253,11 +4821,11 @@
                     const doc = new DOMParser().parseFromString(response.responseText, 'text/html');
                     const formhashInput = doc.querySelector('input[name="formhash"]');
                     const formhash = formhashInput ? formhashInput.value : '';
-                    console.log('[搜索] 提取到formhash:', formhash);
+                    debugLog('[搜索] 提取到formhash:', formhash);
 
                     if (!formhash) {
                         if (this.isSearchRateLimitedHtml(response.responseText) || /System Error/i.test(response.responseText || '')) {
-                            console.log('[搜索] 搜索页面可能受限，准备重试');
+                            debugLog('[搜索] 搜索页面可能受限，准备重试');
                             this.scheduleRetry('搜索受限');
                             return;
                         }
@@ -4266,21 +4834,25 @@
                     }
 
                     // 直接使用GET方式搜索（更可靠）
-                    const finalSearchUrl = `https://bbs.yamibo.com/search.php?mod=forum&srchtxt=${encodeURIComponent(query)}&formhash=${formhash}&searchsubmit=yes`;
-                    console.log('[搜索] 第二步: 执行搜索请求');
-                    console.log('[搜索] 请求URL:', finalSearchUrl);
+                    const searchUrl = new URL('search.php?mod=forum', window.location.href);
+                    searchUrl.searchParams.set('srchtxt', query);
+                    searchUrl.searchParams.set('formhash', formhash);
+                    searchUrl.searchParams.set('searchsubmit', 'yes');
+                    const finalSearchUrl = searchUrl.toString();
+                    debugLog('[搜索] 第二步: 执行搜索请求');
+                    debugLog('[搜索] 请求URL:', finalSearchUrl);
 
                     GM_xmlhttpRequest({
                         method: 'GET',
                         url: finalSearchUrl,
                         onload: (searchResponse) => {
-                            console.log('[搜索] 搜索请求完成! 状态码:', searchResponse.status);
-                            console.log('[搜索] 最终URL:', searchResponse.finalUrl);
-                            console.log('[搜索] 响应内容长度:', searchResponse.responseText.length);
+                            debugLog('[搜索] 搜索请求完成! 状态码:', searchResponse.status);
+                            debugLog('[搜索] 最终URL:', searchResponse.finalUrl);
+                            debugLog('[搜索] 响应内容长度:', searchResponse.responseText.length);
 
                             // 检查是否是错误页面
                             if (searchResponse.responseText.includes('搜索无结果')) {
-                                console.log('[搜索] 搜索无结果');
+                                debugLog('[搜索] 搜索无结果');
                                 this.searchRetryRemaining = 0;
                                 this.showDirectoryError('搜索无结果');
                                 return;
@@ -4289,17 +4861,17 @@
                             const finalUrl = typeof searchResponse.finalUrl === 'string' ? searchResponse.finalUrl : '';
                             if (!/searchid=\d+/i.test(finalUrl)) {
                                 if (this.shouldRetrySearchResponse(searchResponse)) {
-                                    console.log('[搜索] 搜索受限/失败，准备重试');
+                                    debugLog('[搜索] 搜索受限/失败，准备重试');
                                     this.scheduleRetry('搜索间隔限制或请求失败');
                                 } else {
-                                    console.log('[搜索] 搜索失败: 未获取到有效 searchid');
+                                    debugLog('[搜索] 搜索失败: 未获取到有效 searchid');
                                     this.showDirectoryError('搜索失败，请稍后再试');
                                 }
                                 return;
                             }
 
                             if (this.shouldRetrySearchResponse(searchResponse)) {
-                                console.log('[搜索] 搜索受限/失败，准备重试');
+                                debugLog('[搜索] 搜索受限/失败，准备重试');
                                 this.scheduleRetry('搜索间隔限制或请求失败');
                                 return;
                             }
@@ -4334,7 +4906,7 @@
                 return;
             }
 
-            console.log('[搜索] 未能构造分页URL，直接使用初始响应渲染');
+            debugLog('[搜索] 未能构造分页URL，直接使用初始响应渲染');
             this.processSearchPageHtml(searchResponse.responseText, normalizedUrl, perPageSetting, aggregatedEntries, seenKeys);
         }
 
@@ -4344,7 +4916,7 @@
                 method: 'GET',
                 url,
                 onload: (resp) => {
-                    console.log('[搜索] 第 1 页重新获取成功，状态码:', resp.status);
+                    debugLog('[搜索] 第 1 页重新获取成功，状态码:', resp.status);
                     this.processSearchPageHtml(resp.responseText, url, perPage, aggregatedEntries, seenKeys);
                 },
                 onerror: (error) => {
@@ -4357,10 +4929,10 @@
         processSearchPageHtml(html, baseUrl, perPage, aggregatedEntries, seenKeys) {
             const firstPageEntries = this.extractSearchEntriesFromHtml(html);
             const firstPageCount = this.appendDirectoryEntries(firstPageEntries, aggregatedEntries, seenKeys);
-            console.log(`[搜索] 第 1 页解析完成，条目数: ${firstPageCount}`);
+            debugLog(`[搜索] 第 1 页解析完成，条目数: ${firstPageCount}`);
 
             if (!baseUrl) {
-                console.log('[搜索] 未能构造有效的分页URL，直接渲染当前结果');
+                debugLog('[搜索] 未能构造有效的分页URL，直接渲染当前结果');
                 this.renderDirectoryEntries(aggregatedEntries);
                 return;
             }
@@ -4381,14 +4953,14 @@
 
         fetchAdditionalSearchPages({ baseUrl, nextPage, perPage, aggregatedEntries, seenKeys }) {
             if (nextPage > CONFIG.MAX_SEARCH_PAGES) {
-                console.log(`[搜索] 已达到最大翻页数量 ${CONFIG.MAX_SEARCH_PAGES}，停止继续请求`);
+                debugLog(`[搜索] 已达到最大翻页数量 ${CONFIG.MAX_SEARCH_PAGES}，停止继续请求`);
                 this.renderDirectoryEntries(aggregatedEntries);
                 return;
             }
 
             const nextUrl = this.buildSearchPageUrl(baseUrl, nextPage, perPage);
             if (!nextUrl) {
-                console.log('[搜索] 无法构造下一页URL，停止继续请求');
+                debugLog('[搜索] 无法构造下一页URL，停止继续请求');
                 this.renderDirectoryEntries(aggregatedEntries);
                 return;
             }
@@ -4399,7 +4971,7 @@
                 method: 'GET',
                 url: nextUrl,
                 onload: (resp) => {
-                    console.log(`[搜索] 第 ${nextPage} 页请求完成，状态码:`, resp.status);
+                    debugLog(`[搜索] 第 ${nextPage} 页请求完成，状态码:`, resp.status);
                     const pageEntries = this.extractSearchEntriesFromHtml(resp.responseText);
                     const pageCount = this.appendDirectoryEntries(pageEntries, aggregatedEntries, seenKeys);
                     if (pageCount < perPage) {
@@ -4430,7 +5002,7 @@
                 urlObj = new URL(baseUrl);
             } catch (err) {
                 try {
-                    urlObj = new URL(baseUrl, 'https://bbs.yamibo.com/');
+                    urlObj = new URL(baseUrl, window.location.href);
                 } catch (error) {
                     console.error('[搜索] 无法解析搜索URL:', baseUrl, error);
                     return '';
@@ -4464,7 +5036,7 @@
         }
 
         extractSearchEntriesFromHtml(html) {
-            console.log('[解析] ===== 开始解析搜索结果 =====');
+            debugLog('[解析] ===== 开始解析搜索结果 =====');
             const entries = [];
             if (!html) {
                 return entries;
@@ -4491,7 +5063,7 @@
                 results = doc.querySelectorAll(selector);
                 if (results.length > 0) {
                     usedSelector = selector;
-                    console.log(`[解析] 使用选择器 "${selector}" 找到 ${results.length} 个结果`);
+                    debugLog(`[解析] 使用选择器 "${selector}" 找到 ${results.length} 个结果`);
                     break;
                 }
             }
@@ -4499,7 +5071,7 @@
             if (results.length === 0) {
                 results = doc.querySelectorAll('a.s.xst, a.xst');
                 usedSelector = 'a.s.xst, a.xst';
-                console.log(`[解析] 使用兜底选择器 "${usedSelector}" 找到 ${results.length} 个链接`);
+                debugLog(`[解析] 使用兜底选择器 "${usedSelector}" 找到 ${results.length} 个链接`);
             }
 
             const linkSelector = 'a.s.xst, a.xst, a[href*="thread-"], a[href*="viewthread"]';
@@ -4521,12 +5093,11 @@
                 const isThreadLink = !!href && (/thread-\d+-/.test(href) || href.includes('mod=viewthread'));
 
                 if (!href || !title || !isThreadLink) {
-                    console.log(`[解析] 跳过第 ${index + 1} 个结果: href=${href}, title=${title}`);
+                    debugLog(`[解析] 跳过第 ${index + 1} 个结果: href=${href}, title=${title}`);
                     return;
                 }
 
-                const sanitizedHref = href.replace(/^\/+/, '');
-                const fullUrl = href.startsWith('http') ? href : `https://bbs.yamibo.com/${sanitizedHref}`;
+                const fullUrl = href.startsWith('http') ? href : new URL(href, window.location.href).toString();
                 const threadId = this.extractThreadIdFromUrl(fullUrl);
 
                 entries.push({
@@ -4536,7 +5107,7 @@
                 });
             });
 
-            console.log(`[解析] 原始页面共解析到 ${entries.length} 个项目`);
+            debugLog(`[解析] 原始页面共解析到 ${entries.length} 个项目`);
             return entries;
         }
 
@@ -4547,7 +5118,7 @@
             }
 
             if (!entries || entries.length === 0) {
-                console.log('[解析] 未找到任何有效搜索结果');
+                debugLog('[解析] 未找到任何有效搜索结果');
                 this.showDirectoryError('未找到相关内容');
                 return;
             }
@@ -4575,7 +5146,7 @@
                 foundCount++;
             });
 
-            console.log(`[解析] 解析完成，共找到 ${foundCount} 个有效结果`);
+            debugLog(`[解析] 解析完成，共找到 ${foundCount} 个有效结果`);
             this.currentDirectoryCount = foundCount;
             this.updateFavoriteDirectoryCountDisplay();
             if (this.dataStore.isSeriesFavorited(this.seriesKey)) {
@@ -4708,19 +5279,56 @@
 
         loadFavorites() {
             const favoritesDiv = document.getElementById('favorites-list');
-            const favorites = this.dataStore.getAllFavorites();
+            const allFavorites = this.dataStore.getAllFavorites();
+            const filterKey = this.getFavoritesForumFilterKey();
+            const filterHost = filterKey !== FAVORITES_FORUM_FILTER_ALL ? getForumKeyHostPart(filterKey) : '';
+            const filterHasFid = filterKey !== FAVORITES_FORUM_FILTER_ALL && filterHost && filterHost !== filterKey;
+            const favorites = filterKey === FAVORITES_FORUM_FILTER_ALL
+                ? allFavorites
+                : allFavorites.filter((fav) => {
+                    const forumKey = (typeof fav?.forumKey === 'string' && fav.forumKey.trim())
+                        ? fav.forumKey.trim().toLowerCase()
+                        : FAVORITES_FORUM_KEY_UNKNOWN;
+                    if (filterKey === FAVORITES_FORUM_KEY_UNKNOWN) {
+                        return forumKey === FAVORITES_FORUM_KEY_UNKNOWN;
+                    }
+                    if (filterHasFid) {
+                        return forumKey === filterKey || forumKey === filterHost;
+                    }
+                    return forumKey === filterKey || (filterKey && forumKey.startsWith(`${filterKey}:`));
+                });
+            const queryRaw = (document.getElementById('favorites-search-input')?.value || '').trim();
+            const queryNorm = normalizeTitleForFavoriteMatch(queryRaw);
+            const displayFavorites = queryNorm
+                ? favorites.filter((fav) => {
+                    const seriesTitle = typeof fav?.seriesTitle === 'string' ? fav.seriesTitle : '';
+                    const latestTitle = typeof fav?.latestTitle === 'string' ? fav.latestTitle : '';
+                    const seriesNorm = normalizeTitleForFavoriteMatch(seriesTitle);
+                    const latestNorm = normalizeTitleForFavoriteMatch(latestTitle);
+                    return (seriesNorm && seriesNorm.includes(queryNorm)) ||
+                        (latestNorm && latestNorm.includes(queryNorm));
+                })
+                : favorites;
 
             favoritesDiv.innerHTML = '';
 
-            if (favorites.length === 0) {
-                favoritesDiv.innerHTML = '<div class="empty-message">暂无收藏</div>';
+            if (displayFavorites.length === 0) {
+                if (allFavorites.length > 0 && filterKey !== FAVORITES_FORUM_FILTER_ALL) {
+                    const label = formatForumKeyLabel(filterKey);
+                    const queryHint = queryRaw ? `<br>搜索：${queryRaw}` : '';
+                    favoritesDiv.innerHTML = `<div class="empty-message">当前筛选无收藏：${label}${queryHint}<br>可点上方“收藏”右侧下拉切换论坛</div>`;
+                } else {
+                    favoritesDiv.innerHTML = queryRaw
+                        ? '<div class="empty-message">未找到匹配的收藏</div>'
+                        : '<div class="empty-message">暂无收藏</div>';
+                }
                 return;
             }
 
             // 按最后访问时间排序
-            favorites.sort((a, b) => (b.lastVisited || 0) - (a.lastVisited || 0));
+            displayFavorites.sort((a, b) => (b.lastVisited || 0) - (a.lastVisited || 0));
 
-            favorites.forEach(fav => {
+            displayFavorites.forEach(fav => {
                 const favItem = document.createElement('div');
                 favItem.className = 'favorite-item';
 
@@ -4820,7 +5428,7 @@
                     const targetUrl = btn.dataset.url;
 
                     if (action === 'continue') {
-                        const fav = favorites.find(f => f.seriesKey === seriesKey);
+                        const fav = displayFavorites.find(f => f.seriesKey === seriesKey);
                         if (fav) {
                             if (threadId && threadId === this.parser.threadId) {
                                 if (floor > 0) {
@@ -5078,14 +5686,17 @@
             height: 18px;
         }
 
-        body.pg_forumdisplay .yamibo-forum-fav-icon {
-            display: inline-block;
+        .yamibo-forum-fav-icon {
+            display: inline-flex;
+            align-items: center;
             line-height: 1;
             vertical-align: middle;
             color: #4caf50;
+            margin-right: 4px;
+            pointer-events: none;
         }
 
-        body.pg_forumdisplay .yamibo-forum-fav-icon svg {
+        .yamibo-forum-fav-icon svg {
             display: block;
             width: 1.6em;
             height: 1.6em;
@@ -5482,6 +6093,70 @@
             box-shadow: var(--shadow-2);
         }
 
+        .tab-btn-split {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-1);
+            background: var(--surface);
+        }
+
+        .tab-btn-split .tab-btn {
+            flex: 3 1 0;
+            height: 100%;
+            border-radius: 0;
+            box-shadow: none;
+            background: transparent;
+        }
+
+        .tab-btn-split .tab-btn:hover {
+            background: var(--divider);
+            box-shadow: none;
+        }
+
+        .tab-btn-split .tab-btn.active {
+            background: transparent;
+            box-shadow: none;
+            color: inherit;
+        }
+
+        .tab-btn-split-dropdown {
+            flex: 1 0 0;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-left: 1px solid var(--divider);
+        }
+
+        .tab-btn-split-dropdown:hover {
+            background: var(--divider);
+            box-shadow: none;
+        }
+
+        .tab-btn-split-dropdown svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .tab-btn-split.active {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow-2);
+        }
+
+        .tab-btn-split.active .tab-btn-split-dropdown {
+            color: white;
+            border-left-color: rgba(255,255,255,0.35);
+        }
+
         .sidebar-content {
             flex: 1;
             overflow: hidden;
@@ -5851,6 +6526,11 @@
 
         .menu-item:hover {
             background: var(--divider);
+        }
+
+        .favorites-forum-menu .menu-item.selected {
+            background: var(--divider);
+            font-weight: 600;
         }
 
         .menu-divider {
@@ -6436,6 +7116,11 @@
             font-size: 15px;
         }
 
+        #yamibo-reader-container.mobile-layout .tab-btn-split-dropdown svg {
+            width: 20px;
+            height: 20px;
+        }
+
         #yamibo-reader-container.mobile-layout .menu-item {
             padding: 14px 18px;
             font-size: 16px;
@@ -6512,24 +7197,142 @@
             });
         }
 
-        async function initForumFavoriteMarkers(dataStore) {
-            const threadListTable = document.getElementById('threadlisttableid');
-            if (!threadListTable) {
-                return;
+        function collectForumThreadTitleLinks() {
+            const roots = [
+                document.getElementById('threadlisttableid'),
+                document.getElementById('threadlist'),
+                document.querySelector('.threadlist'),
+                document.body,
+                document
+            ].filter(Boolean);
+
+            const selectors = [
+                'tbody[id^="normalthread_"] a.s.xst',
+                'a.s.xst',
+                'a.xst',
+                'a[href*="mod=viewthread"][href*="tid="]',
+                'a[href*="/thread-"]',
+                'a[href^="thread-"]'
+            ];
+
+            const links = [];
+            const seen = new Set();
+            const normalizeKey = (href, text) => `${href || ''}@@${text || ''}`;
+
+            for (const root of roots) {
+                let candidates = [];
+                try {
+                    candidates = Array.from(root.querySelectorAll(selectors.join(',')));
+                } catch (e) {
+                    continue;
+                }
+
+                for (const a of candidates) {
+                    if (!a || typeof a.getAttribute !== 'function') continue;
+                    const rawTitle = typeof a.textContent === 'string' ? a.textContent.trim() : '';
+                    if (!rawTitle || rawTitle.length < 2) continue;
+
+                    const rawHref = a.getAttribute('href') || '';
+                    const href = rawHref.trim();
+                    if (!href) continue;
+
+                    const isThreadLink = /(?:\?|&)mod=viewthread(?:&|$)/i.test(href) ||
+                        /(?:\?|&)tid=\d+(?:&|$)/i.test(href) ||
+                        /thread-\d+-/i.test(href) ||
+                        /\/thread-\d+-/i.test(href);
+                    if (!isThreadLink) continue;
+
+                    const key = normalizeKey(href, rawTitle);
+                    if (seen.has(key)) continue;
+                    seen.add(key);
+                    links.push(a);
+                }
+
+                if (links.length) {
+                    return links;
+                }
             }
 
+            return links;
+        }
+
+        function ensureMobileForumFavoriteMarker(titleContainer, markerTemplate, shouldExist) {
+            if (!titleContainer || !markerTemplate) {
+                return false;
+            }
+            const existing = titleContainer.querySelector('.yamibo-forum-fav-icon');
+            if (!shouldExist) {
+                if (existing) {
+                    existing.remove();
+                }
+                return false;
+            }
+
+            const marker = existing || markerTemplate.cloneNode(true);
+            const insertBefore = titleContainer.querySelector('em') || titleContainer.firstChild || null;
+
+            if (marker.parentNode && marker.parentNode !== titleContainer) {
+                marker.remove();
+            }
+            if (!marker.parentNode) {
+                titleContainer.insertBefore(marker, insertBefore);
+                return true;
+            }
+            if (insertBefore && marker.nextSibling !== insertBefore) {
+                titleContainer.insertBefore(marker, insertBefore);
+            }
+            return true;
+        }
+
+        function ensureDesktopForumFavoriteMarker(titleLink, markerTemplate, shouldExist) {
+            if (!titleLink || !markerTemplate) {
+                return false;
+            }
+            const parent = titleLink.parentNode;
+            if (!parent) {
+                return false;
+            }
+
+            const existing = parent.querySelector('.yamibo-forum-fav-icon');
+            if (!shouldExist) {
+                if (existing) {
+                    existing.remove();
+                }
+                return false;
+            }
+
+            const marker = existing || markerTemplate.cloneNode(true);
+            if (marker.parentNode && marker.parentNode !== parent) {
+                marker.remove();
+            }
+            if (!marker.parentNode) {
+                parent.insertBefore(marker, titleLink);
+                return true;
+            }
+            if (marker.nextSibling !== titleLink) {
+                parent.insertBefore(marker, titleLink);
+            }
+            return true;
+        }
+
+        async function initForumFavoriteMarkers(dataStore) {
             const favorites = dataStore.getAllFavorites();
+            const currentForumKey = getCurrentForumKey();
+            const currentForumHost = getForumKeyHostPart(currentForumKey);
             const favoriteTitles = (favorites || [])
+                .filter((fav) => {
+                    const forumKey = (typeof fav?.forumKey === 'string' && fav.forumKey.trim())
+                        ? fav.forumKey.trim().toLowerCase()
+                        : FAVORITES_FORUM_KEY_UNKNOWN;
+                    return forumKey === currentForumKey ||
+                        (currentForumHost && forumKey === currentForumHost) ||
+                        forumKey === FAVORITES_FORUM_KEY_UNKNOWN;
+                })
                 .map(fav => (fav && typeof fav.seriesTitle === 'string' ? fav.seriesTitle : ''))
                 .filter(Boolean);
 
             const matcher = createFavoriteTitleMatcher(favoriteTitles);
             if (!matcher) {
-                return;
-            }
-
-            const titleLinks = Array.from(threadListTable.querySelectorAll('a.s.xst'));
-            if (titleLinks.length === 0) {
                 return;
             }
 
@@ -6539,23 +7342,40 @@
 
             const CHUNK_SIZE = 80;
 
+            const mobileTitleContainers = Array.from(document.querySelectorAll('.threadlist_tit.cl'));
+            const isMobileTemplate = mobileTitleContainers.length > 0 &&
+                !document.getElementById('threadlisttableid') &&
+                (document.body?.classList?.contains('pg_forumdisplay') || document.body?.id === 'forum');
+
+            if (isMobileTemplate) {
+                for (let i = 0; i < mobileTitleContainers.length; i++) {
+                    const container = mobileTitleContainers[i];
+                    const em = container ? container.querySelector('em') : null;
+                    const rawTitle = ((em && typeof em.textContent === 'string' ? em.textContent : container?.textContent) || '').trim();
+                    const shouldExist = !!(rawTitle && matcher(rawTitle));
+                    ensureMobileForumFavoriteMarker(container, markerTemplate, shouldExist);
+
+                    if ((i + 1) % CHUNK_SIZE === 0) {
+                        await yieldToMainThread();
+                    }
+                }
+                return;
+            }
+
+            const titleLinks = collectForumThreadTitleLinks();
+            if (titleLinks.length === 0) {
+                return;
+            }
+
             for (let i = 0; i < titleLinks.length; i++) {
                 const link = titleLinks[i];
-                if (!link || link.dataset.yamiboFavChecked === '1') {
-                    continue;
-                }
-                link.dataset.yamiboFavChecked = '1';
-
-                if (link.previousElementSibling && link.previousElementSibling.classList &&
-                    link.previousElementSibling.classList.contains('yamibo-forum-fav-icon')) {
+                if (!link) {
                     continue;
                 }
 
                 const rawTitle = typeof link.textContent === 'string' ? link.textContent.trim() : '';
-                if (rawTitle && matcher(rawTitle)) {
-                    const marker = markerTemplate.cloneNode(true);
-                    link.parentNode.insertBefore(marker, link);
-                }
+                const shouldExist = !!(rawTitle && matcher(rawTitle));
+                ensureDesktopForumFavoriteMarker(link, markerTemplate, shouldExist);
 
                 if ((i + 1) % CHUNK_SIZE === 0) {
                     await yieldToMainThread();
@@ -6571,6 +7391,39 @@
 
         if (isForumListPage()) {
             initForumFavoriteMarkers(dataStore);
+
+            let scheduled = null;
+            let inFlight = false;
+            const schedule = () => {
+                if (scheduled) {
+                    clearTimeout(scheduled);
+                }
+                scheduled = window.setTimeout(async () => {
+                    scheduled = null;
+                    if (inFlight) return;
+                    inFlight = true;
+                    try {
+                        await initForumFavoriteMarkers(dataStore);
+                    } finally {
+                        inFlight = false;
+                    }
+                }, 250);
+            };
+
+            const observerRoot = document.getElementById('threadlisttableid') ||
+                document.getElementById('threadlist') ||
+                document.body;
+            if (observerRoot && typeof MutationObserver === 'function') {
+                const observer = new MutationObserver((mutations) => {
+                    for (const m of mutations) {
+                        if (m.type === 'childList' && (m.addedNodes?.length || m.removedNodes?.length)) {
+                            schedule();
+                            return;
+                        }
+                    }
+                });
+                observer.observe(observerRoot, { childList: true, subtree: true });
+            }
             return;
         }
 

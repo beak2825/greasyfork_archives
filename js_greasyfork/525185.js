@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Full_Black_List
 // @namespace    Full_Black_List
-// @version      0.55.2
+// @version      0.55.5
 // @description  Supprime totalement les sujets des pseudo blacklistés depuis la blacklist JVC.
 // @author       Atlantis
 // @match        *://www.jeuxvideo.com/recherche/forums/0-*
@@ -66,10 +66,10 @@ async function getBLListMP() {
 
     const mpBlacklistHashIndex = {};
     listItems.forEach(user => {
-        const idAlias = user.dataset.id; 
+        const idAlias = user.dataset.id;
         const hashTempo = user.dataset.hash;
         mpBlacklistHashIndex[idAlias] = hashTempo; // { [idAlias] : hashTempo }
-    }); 
+    });
     return mpBlacklistHashIndex;
 }
 
@@ -211,14 +211,14 @@ if (location.href.includes('jeuxvideo.com/forums/1-') || location.href.includes(
 
     /* Hide Quote*/
     .bloc-message-forum .blockquote-jv--blacklist { background: rgba(155, 155, 155, .1) !important; }
-    .bloc-message-forum .blockquote-jv--blacklist > * { 
-        display:none; 
+    .bloc-message-forum .blockquote-jv--blacklist > * {
+        display:none;
     }
 
     /* Force Show block and Quotes*/
     .conteneur-messages-pagi.show-blacklist .msg-pseudo-blacklist { display: block; }
     .conteneur-messages-pagi.show-blacklist .bloc-message-forum .blockquote-jv--blacklist > * {
-        display: block; 
+        display: block;
     }`;
     document.head.appendChild(style);
 
@@ -227,13 +227,13 @@ if (location.href.includes('jeuxvideo.com/forums/1-') || location.href.includes(
         block.insertAdjacentHTML("afterend", `<div class="msg-ghost-block" style="display:none;"></div>`)
     );
 
-    //Masquage_Citations
+    //Class_for_Hides_Quotes
     function hidePseudoQuotes() {
         const blacklistStorage = JSON.parse(localStorage.getItem("fullBlacklistJVC") || "[]");
         document.querySelectorAll(".blockquote-jv > p:first-of-type").forEach(p => {
-            const txtQuot = p.textContent;
-            const pseudoIRC = txtQuot.startsWith("[") && txtQuot.split("<")[1]?.split(">")[0]?.toLowerCase(); //IRC
-            const pseudo = txtQuot.replace(/\s+/g, ' ').split(" a écrit")[0]?.split(" ").pop()?.trim().toLowerCase(); //FOFO
+            const txtQuotClean = p.textContent.replace(/\s+/g, ' ');
+            const pseudoIRC = txtQuotClean.startsWith("[") && txtQuotClean.split("<")[1]?.split(">")[0]?.toLowerCase(); //IRC
+            const pseudo = txtQuotClean.split(" a écrit")[0]?.split(" ").pop()?.trim().toLowerCase(); //FOFO
             if (blacklistStorage.includes(pseudo) || blacklistStorage.includes(pseudoIRC)) {
                 p.closest(".blockquote-jv").classList.add("blockquote-jv--blacklist");
             }
@@ -297,7 +297,6 @@ if (location.href.includes('jeuxvideo.com/messages-prives/message.php')) {
       })();
     }
 
-
     // [4] Cacher les messages déjà blacklistés
     document.querySelectorAll('.msg-pseudo-blacklist').forEach(block => block.remove());
 
@@ -360,7 +359,7 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
             await fetch(`/sso/ajax_delete_blacklist.php?id_alias_unblacklist=${idAlias}`);
             document.querySelector('#bl-clear').textContent = `Loading (${count})`;
             count++;
-        } 
+        }
 
         // Nettoyage de TOUT pseudo blacklistes en MP
         let countMP = 1
@@ -383,8 +382,7 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
             // Lecture + parsing du fichier JSON
             blacklistjson = JSON.parse(await fileJson.text());
         } catch {
-            alert("Fichier JSON invalide.");
-            return;
+             return alert("Fichier JSON invalide.");
         }
 
         document.querySelector('#bl-import').textContent = 'Load...';
@@ -421,7 +419,7 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
     }
 
     // CREATION_HTML_BOUTON
-    let container = document.querySelector('.layout__row.layout__content.layout__row--gutter.mb-5');
+    let container = document.querySelector('#page-compte .layout__content');
     container.insertAdjacentHTML('beforeend', `
         <ul>
             <button id="bl-import" title="Importer BlackList depuis un Fichier" class="btn btn-secondary" style="border-radius:6px;">

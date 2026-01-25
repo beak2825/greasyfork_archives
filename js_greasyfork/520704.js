@@ -5,10 +5,10 @@
 // @description:pl Ciemny motyw i tryb mobilny dla mobileread.com!
 // @author         juliazero
 // @license        GPL-3.0-only
-// @version        5.1.1
+// @version        5.1.2
 // @match          https://www.mobileread.com/*
 // @namespace      mobileread.com
-// @resource       IMPORTED_CSS https://userstyles.world/api/style/13484.user.css?v=5.1.1
+// @resource       IMPORTED_CSS https://userstyles.world/api/style/13484.user.css?v=5.1.2
 // @grant          GM_getResourceText
 // @grant          GM_addStyle
 // @run-at         document-body

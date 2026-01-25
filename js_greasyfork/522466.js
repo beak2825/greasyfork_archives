@@ -6,7 +6,7 @@
 // @icon                https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @author              ElectroKnight22
 // @namespace           electroknight22_youtube_better_theater_mode_namespace
-// @version             3.2.3
+// @version             3.2.4
 // @match               *://www.youtube.com/*
 // @match               *://www.youtube-nocookie.com/*
 // @require             https://update.greasyfork.org/scripts/549881/1733676/YouTube%20Helper%20API.js
@@ -51,6 +51,7 @@
         DEFAULT_SETTINGS: {
             setLowMasthead: false,
             fullHeightVideo: false,
+            tuckRecommendation: false,
             get theaterChatWidth() {
                 return `${CONFIG.MIN_CHAT_SIZE.width}px`;
             },
@@ -69,8 +70,14 @@
             fullHeightVideo: {
                 'en-US': 'Full Height Video',
                 'zh-TW': '延伸影片至視窗高度',
-                'zh-CN': '延伸视频至窗口高度',
+                'zh-CN': '下移推荐视频',
                 ja: '動画をブラウザの高さに広げる',
+            },
+            tuckRecommendation: {
+                'en-US': 'Shift Recommendations Down',
+                'zh-TW': '下移推薦影片',
+                'zh-CN': '下移推荐视频列表',
+                ja: 'おすすめの動画を下にずらす',
             },
         };
 
@@ -365,6 +372,18 @@
                         }
                     `,
                 },
+                staticTuckRecommendationWidthClampStyle: {
+                    id: 'betterTheater-staticTuckRecommendationWidthClampStyle',
+                    getRule: () => `
+                        #id.ytd-watch-metadata, #top-row.ytd-watch-metadata {
+                            max-width: calc(var(--ytd-watch-flexy-max-player-width-wide-screen)
+                                + var(--ytd-watch-flexy-sidebar-width)
+                                + var(--ytd-watch-flexy-horizontal-page-margin) * 3
+                                - 2 * var(--ytd-watch-flexy-horizontal-page-margin))
+                            !important;
+                        }
+                    `,
+                },
             },
             chatStyle: {
                 id: 'betterTheater-chatStyle',
@@ -384,9 +403,8 @@
             fullHeightPlayerStyle: {
                 id: 'betterTheater-fullHeightPlayerStyle',
                 getRule: () => {
-                    const viewportHeight = state.userSettings.setLowMasthead
-                        ? '100vh'
-                        : 'calc(100vh - var(--ytd-watch-flexy-masthead-height))';
+                    const viewportHeight =
+                        state.userSettings.setLowMasthead ? '100vh' : 'calc(100vh - var(--ytd-watch-flexy-masthead-height))';
 
                     return `
                         ytd-watch-flexy[full-bleed-player] #full-bleed-container.ytd-watch-flexy {
@@ -550,6 +568,7 @@
             condition ? this.apply(styleDef) : this.remove(styleDef);
         },
     };
+
     const StorageManager = {
         getValue: async (key) => {
             try {
@@ -577,6 +596,7 @@
             return filteredList;
         },
     };
+
     const SettingsManager = {
         async update(key, value) {
             try {
@@ -618,6 +638,7 @@
             }
         },
     };
+
     const MenuManager = {
         clear() {
             while (state.menuItems.length) GM.unregisterMenuCommand(state.menuItems.pop());
@@ -641,6 +662,14 @@
                             GhostManager.update();
                         }),
                 },
+                {
+                    label: () => `${state.userSettings.tuckRecommendation ? '✅' : '❌'} ${MENU_LABELS.tuckRecommendation}`,
+                    id: 'toggleTuckRecommendation',
+                    action: () =>
+                        SettingsManager.update('tuckRecommendation', !state.userSettings.tuckRecommendation).then(() => {
+                            App.updateRecommendationTuckStyle();
+                        }),
+                },
             ];
             menuConfig.forEach((item) => {
                 const commandId = GM.registerMenuCommand(
@@ -655,6 +684,7 @@
             });
         },
     };
+
     const ChatInteractionManager = {
         addChatWidthResizeHandle() {
             if (window.innerWidth / 3 <= CONFIG.MIN_CHAT_SIZE.width) return;
@@ -728,6 +758,7 @@
             }
         },
     };
+
     const App = {
         init() {
             try {
@@ -785,11 +816,12 @@
             const styles = StyleManager.styleDefinitions.tuckRecommendationStyles;
             Object.values(styles).forEach(style => StyleManager.toggle(style, false));
 
+            if (!state.userSettings.tuckRecommendation) return;
             if (!api.player.isTheater || api.player.isFullscreen || api.page.type !== 'watch') return;
 
             const isVod = api.video.wasStreamedOrPremiered;
             const canHaveChat = api.video.isLiveOrVodContent || isVod;
-            const isCollapsed = api.chat.isCollapsed;
+            const isCollapsed = !api.chat.container || !api.chat.iFrame || api.chat.isCollapsed; // TODO: Patch helper lib. YouTube can return chat state even when chat elements are missing.
 
             if (!canHaveChat || (isVod && isCollapsed)) return StyleManager.toggle(styles.videoStyle, true);
             if (!isCollapsed) return StyleManager.toggle(isVod ? styles.vodStyle : styles.liveStyle, true);

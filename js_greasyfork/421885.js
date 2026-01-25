@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Bilibili Download Pictures
-// @name:zh-CN   下载Bilibili动态页面图片
-// @version      1.1.12
-// @description  Download pictures from bilibili timeline and 720P videos.
-// @description:zh-CN 下载“Bilibili动态”时间线页面的图片，也可下载视频（720P单文件）
+// @name         Bilibili Download Pictures and Videos
+// @name:zh-CN   下载Bilibili动态页面图片和视频
+// @version      1.2.1
+// @description  Download pictures from bilibili timeline and highest-quality videos.
+// @description:zh-CN 下载“Bilibili动态”时间线页面的图片，也可下载最高质量视频
 // @author       OWENDSWANG
 // @icon         https://avatars.githubusercontent.com/u/9076865?s=40&v=4
 // @license      MIT
@@ -29,48 +29,21 @@
 // @grant        GM_cookie
 // @grant        GM_registerMenuCommand
 // @require      https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js
-// @require      https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.15/dist/umd/ffmpeg.min.js
 // @namespace https://greasyfork.org/users/738244
-// @downloadURL https://update.greasyfork.org/scripts/421885/Bilibili%20Download%20Pictures.user.js
-// @updateURL https://update.greasyfork.org/scripts/421885/Bilibili%20Download%20Pictures.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/421885/Bilibili%20Download%20Pictures%20and%20Videos.user.js
+// @updateURL https://update.greasyfork.org/scripts/421885/Bilibili%20Download%20Pictures%20and%20Videos.meta.js
 // ==/UserScript==
 
-(function() {
+(async function() {
     'use strict';
 
     // Your code here...
-    const FFMPEG_CORE = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core-mt@0.12.10/dist/umd/ffmpeg-core.min.js';
-    const FFMPEG_WASM = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core-mt@0.12.10/dist/umd/ffmpeg-core.wasm';
-    const FFMPEG_WORKER = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core-mt@0.12.10/dist/umd/ffmpeg-core.worker.min.js';
-
-    const settingVersion = 4;
+    const settingVersion = 5;
     const downloadIcon = 'url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNui8sowAAAHpSURBVDiNndS7a1RREMfxz9XVrI8UIkjwLxCipYVp9A+wEQsV8dFksLCwUATxAYqNIAhWO4UPsAqCCGqTQkRQULEMgojYCSK+X4nhWty7uCZ3k5gfnObMOd8zM2dmirIs9SozV+IxNmCJZk3jObZGxFSvodVweD024TMm+wDb2Iy1eDsfcCkKHMSdPsB9uFKf/UdNwK4mI+J3kyEzp5r26Z8jTa8v5N5cwEWpCdgYZh/NOtuCzGyrQiwx+B/Awcz8ovrE6Yj42crMcYyoSqRdr/nULd6X+IFfWJaZYy1cwhA24j5u1t4+mAN4D0cwhb21Q89wtSjLUmauxm1sw56IGFtIvJm5H9dxFzsj4lfR23qZeQ0HcDEijs4Du4zD6ETEoe5+0el0zuNnURTnRkdHZeYpnMUt7JrZq5k5oErLdhyPiAuZuQyn8XEJTuBMWZbLISLOqVprB55k5roe2BCe1rDdEXGhNq3CSRxrqX73U68XEXEjM99gHBOZuUVVs4+wAiMR8bjnSolv+NC3UyLiIYZVU+cFJvARwzNg/6gLLDVUfUS8UpXTw3ptjIjXDZzpmlF2p02BdmbOmn8R8V1VTiAzmybUQM0oik6n81WVl/f9wvC3M4o+9kI1bD+08A5r6rVYlapcf/0DW06ifC1dVCUAAAAASUVORK5CYII=\')';
 
     let notLoaded = true;
     let cardsTotal = 0;
     let skeletonsTotal = 0;
-
-    let ffmpegInstance = null;
-    let ffmpegInitializing = false;
-
-    async function getFFmpeg() {
-        if (ffmpegInstance) return ffmpegInstance;
-        if (ffmpegInitializing) throw new Error('FFmpeg initializing...');
-        console.log('initializing ffmpeg...');
-        ffmpegInitializing = true;
-        const ffmpegClass = FFmpegWASM.FFmpeg;
-        const ffmpeg = new ffmpegClass();
-        ffmpeg.on('log', ({ message }) => console.log(message));
-        await ffmpeg.load({
-            coreURL: await gmXMLHttpRequest(FFMPEG_CORE, 'blob'),
-            wasmURL: await gmXMLHttpRequest(FFMPEG_WASM, 'blob'),
-            workerURL: await gmXMLHttpRequest(FFMPEG_WORKER, 'blob')
-        });
-        ffmpegInstance = ffmpeg;
-        ffmpegInitializing = false;
-        console.log('ffmpeg initialized!');
-        return ffmpegInstance;
-    }
 
     let downloadQueueCard = document.createElement('div');
     downloadQueueCard.style.position = 'fixed';
@@ -138,6 +111,86 @@
         });
     }
 
+/*
+  Third-party libraries used in this script:
+
+  1) @ffmpeg/ffmpeg (MIT License)
+     https://github.com/ffmpegwasm/ffmpeg.wasm
+     License: MIT
+
+  2) @ffmpeg/core (FFmpeg WebAssembly core, compiled from FFmpeg C code)
+     https://github.com/ffmpegwasm/ffmpeg.wasm
+     License: GPL-2.0-or-later
+
+  Notes:
+    - The core WebAssembly binaries and related worker code derive from FFmpeg
+      and follow the GPL-2.0-or-later licence. See https://www.ffmpeg.org/legal.html
+      for original FFmpeg licensing details.
+    - This script does not modify upstream code; redistribution obligations are
+      met by preserving these notices.
+*/
+    const { FFmpeg } = await import('https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.15/dist/esm/classes.js');
+
+    const FFMPEG_CORE = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm/ffmpeg-core.js';
+    const FFMPEG_WASM = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm/ffmpeg-core.wasm';
+
+    // const FFMPEG_CLASS_WORKER = 'https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.15/dist/esm/worker.js';
+    // Bundled worker code derived from @ffmpeg/ffmpeg dist/esm/worker.js (MIT).
+    // npx esbuild node_modules/@ffmpeg/ffmpeg/dist/esm/worker.js --bundle --format=esm --platform=browser --minify --outfile=ffmpeg_worker_bundle.js
+    const FFMPEG_WORKER_BUNDLE = 'var u="0.12.9",R=`https://unpkg.com/@ffmpeg/core@${u}/dist/umd/ffmpeg-core.js`,s;(function(t){t.LOAD="LOAD",t.EXEC="EXEC",t.FFPROBE="FFPROBE",t.WRITE_FILE="WRITE_FILE",t.READ_FILE="READ_FILE",t.DELETE_FILE="DELETE_FILE",t.RENAME="RENAME",t.CREATE_DIR="CREATE_DIR",t.LIST_DIR="LIST_DIR",t.DELETE_DIR="DELETE_DIR",t.ERROR="ERROR",t.DOWNLOAD="DOWNLOAD",t.PROGRESS="PROGRESS",t.LOG="LOG",t.MOUNT="MOUNT",t.UNMOUNT="UNMOUNT"})(s||(s={}));var a=new Error("unknown message type"),f=new Error("ffmpeg is not loaded, call `await ffmpeg.load()` first"),F=new Error("called FFmpeg.terminate()"),O=new Error("failed to import ffmpeg-core.js");var r,l=async({coreURL:t,wasmURL:o,workerURL:e})=>{let n=!r;try{t||(t=R),importScripts(t)}catch{if((!t||t===R)&&(t=R.replace("/umd/","/esm/")),self.createFFmpegCore=(await import(t)).default,!self.createFFmpegCore)throw O}let E=t,c=o||t.replace(/.js$/g,".wasm"),m=e||t.replace(/.js$/g,".worker.js");return r=await self.createFFmpegCore({mainScriptUrlOrBlob:`${E}#${btoa(JSON.stringify({wasmURL:c,workerURL:m}))}`}),r.setLogger(i=>self.postMessage({type:s.LOG,data:i})),r.setProgress(i=>self.postMessage({type:s.PROGRESS,data:i})),n},D=({args:t,timeout:o=-1})=>{r.setTimeout(o),r.exec(...t);let e=r.ret;return r.reset(),e},I=({args:t,timeout:o=-1})=>{r.setTimeout(o),r.ffprobe(...t);let e=r.ret;return r.reset(),e},S=({path:t,data:o})=>(r.FS.writeFile(t,o),!0),p=({path:t,encoding:o})=>r.FS.readFile(t,{encoding:o}),L=({path:t})=>(r.FS.unlink(t),!0),A=({oldPath:t,newPath:o})=>(r.FS.rename(t,o),!0),N=({path:t})=>(r.FS.mkdir(t),!0),T=({path:t})=>{let o=r.FS.readdir(t),e=[];for(let n of o){let E=r.FS.stat(`${t}/${n}`),c=r.FS.isDir(E.mode);e.push({name:n,isDir:c})}return e},w=({path:t})=>(r.FS.rmdir(t),!0),k=({fsType:t,options:o,mountPoint:e})=>{let n=t,E=r.FS.filesystems[n];return E?(r.FS.mount(E,o,e),!0):!1},_=({mountPoint:t})=>(r.FS.unmount(t),!0);self.onmessage=async({data:{id:t,type:o,data:e}})=>{let n=[],E;try{if(o!==s.LOAD&&!r)throw f;switch(o){case s.LOAD:E=await l(e);break;case s.EXEC:E=D(e);break;case s.FFPROBE:E=I(e);break;case s.WRITE_FILE:E=S(e);break;case s.READ_FILE:E=p(e);break;case s.DELETE_FILE:E=L(e);break;case s.RENAME:E=A(e);break;case s.CREATE_DIR:E=N(e);break;case s.LIST_DIR:E=T(e);break;case s.DELETE_DIR:E=w(e);break;case s.MOUNT:E=k(e);break;case s.UNMOUNT:E=_(e);break;default:throw a}}catch(c){self.postMessage({id:t,type:s.ERROR,data:c.toString()});return}E instanceof Uint8Array&&n.push(E.buffer),self.postMessage({id:t,type:o,data:E},n)};';
+
+    let ffmpegInstance = null;
+    let ffmpegInitializing = false;
+
+    async function toBlobURL(url, mime, progress, progressName, progressMin = 0, progressMax = 100) {
+        const ab = await gmXMLHttpRequest(url, 'arraybuffer', progress, progressName, progressMin, progressMax);
+        if (!(ab instanceof ArrayBuffer)) { throw new Error('Error to download: ' + url); }
+        return URL.createObjectURL(new Blob([ab], { type: mime }));
+    }
+
+    async function getFFmpeg() {
+        if (ffmpegInstance) return ffmpegInstance;
+        if (ffmpegInitializing) throw new Error('FFmpeg initializing...');
+        // console.log('initializing ffmpeg...');
+        downloadQueueTitle.style.display = 'block';
+        const progress = downloadQueueCard.appendChild(progressBar.cloneNode(true));
+        progress.lastChild.remove();
+        const progressName = 'FFmpeg initializing ...';
+        progress.firstChild.textContent = progressName + ' [0%]';
+        ffmpegInitializing = true;
+        // const FFmpeg = FFmpegWASM.FFmpeg;
+        const ffmpeg = new FFmpeg();
+        // ffmpeg.on('log', ({ message }) => console.log(message));
+        const coreURL = await toBlobURL(FFMPEG_CORE, 'text/javascript', progress, progressName, 0, 30);
+        // console.log('coreURL: ', coreURL);
+        progress.style.background = 'linear-gradient(to right, green 30%, transparent 30%)';
+        progress.firstChild.textContent = progressName + ' [30%]';
+        const wasmURL = await toBlobURL(FFMPEG_WASM, 'application/wasm', progress, progressName, 30, 60);
+        // console.log('wasmURL: ', wasmURL);
+        progress.style.background = 'linear-gradient(to right, green 60%, transparent 60%)';
+        progress.firstChild.textContent = progressName + ' [60%]';
+        // const classWorkerURL = await bundleESMToBlob(FFMPEG_CLASS_WORKER);
+        const classWorkerURL = URL.createObjectURL(new Blob([FFMPEG_WORKER_BUNDLE], { type: 'text/javascript' }));
+        // console.log('classWorkerURL: ', classWorkerURL);
+        progress.style.background = 'linear-gradient(to right, green 90%, transparent 90%)';
+        progress.firstChild.textContent = progressName + ' [90%]';
+        await ffmpeg.load({
+            coreURL,
+            wasmURL,
+            classWorkerURL,
+        });
+        ffmpegInstance = ffmpeg;
+        ffmpegInitializing = false;
+        // console.log('ffmpeg initialized!');
+        progress.style.background = 'linear-gradient(to right, green 100%, transparent 100%)';
+        progress.firstChild.textContent = progressName + ' [100%]';
+        setTimeout(() => {
+            progress.remove();
+            if(downloadQueueCard.childElementCount == 1) downloadQueueTitle.style.display = 'none';
+        }, 1000);
+        return ffmpegInstance;
+    }
+
     function oXMLHttpRequest(url, type) {
         // console.log('oXMLHttpRequest started: ' + url);
         return new Promise(function(resolve, reject) {
@@ -158,17 +211,40 @@
         });
     }
 
-    function gmXMLHttpRequest(url, responseType) {
+    function gmXMLHttpRequest(url, responseType, progress, progressName, progressMin = 0, progressMax = 100) {
         // console.log('gmXMLHttpRequest started: ' + url);
+        const urlObj = new URL(url);
         return new Promise(function(resolve, reject) {
             GM_xmlhttpRequest({
                 method: 'GET',
                 url,
-                responseType,
-                onload: function({ response }) {
+                responseType: ((responseType === 'text') ? undefined : responseType),
+                headers: {
+                    'Referer': urlObj.protocol + '//' + urlObj.host,
+                    'Origin': urlObj.protocol + '//' + urlObj.host,
+                },
+                onprogress: (e) => {
+                    // e = { int done, finalUrl, bool lengthComputable, int loaded, int position, int readyState, response, str responseHeaders, responseText, responseXML, int status, statusText, int total, int totalSize }
+                    const percent = e.done / e.total * (progressMax - progressMin) + progressMin;
+                    progress.style.background = 'linear-gradient(to right, green ' + percent + '%, transparent ' + percent + '%)';
+                    progress.firstChild.textContent = progressName + ' [' + percent.toFixed(0) + '%]';
+                },
+                onload: function({ response, responseText }) {
                     // console.log(response);
-                    console.log('gmXMLHttpRequest finished: (' + response.size.toString() + 'B) ' + url);
-                    resolve(response);
+                    let size = 'unknown size';
+                    if (responseType === 'blob') {
+                        size = response.size.toString() + 'B';
+                    } else if (responseType === 'arraybuffer') {
+                        size = response.byteLength.toString() + 'B';
+                    } else if (responseType === 'text') {
+                        size = new TextEncoder().encode(responseText).length.toString() + 'B';
+                    }
+                    // console.log('gmXMLHttpRequest finished: (' + size + ') ' + url);
+                    if (responseType === 'text') {
+                        resolve(responseText);
+                    } else {
+                        resolve(response);
+                    }
                 },
                 onabort: function(e) { console.log(e); alert('请求失败！'); resolve(null); },
                 onerror: function(e) { console.log(e); alert('请求被中断！'); resolve(null); },
@@ -246,8 +322,8 @@
     function downloadWrapper(url, name, responseType = 'blob') {
         // console.log('downloadWrapper: ', url, name);
         downloadQueueTitle.style.display = 'block';
-        let progress = downloadQueueCard.appendChild(progressBar.cloneNode(true));
-        const progressName = name.length > 10 ? (name.substring(0,10) + '...') : name;
+        const progress = downloadQueueCard.appendChild(progressBar.cloneNode(true));
+        const progressName = name.length > 17 ? (name.substring(0,17) + '...') : name;
         progress.firstChild.textContent = progressName + ' [0%]';
         if (url.startsWith('http://')) url = url.replace(/^http\:/, 'https:');
         return new Promise(function(resolve, reject) {
@@ -294,7 +370,7 @@
             };*/
             const oReq = new XMLHttpRequest();
             oReq.open("GET", url);
-            oReq.responseType = 'blob';
+            oReq.responseType = responseType;
             oReq.onprogress = (e) => {
                 // console.log(e);
                 const percent = e.loaded / e.total * 100;
@@ -545,19 +621,41 @@
     }
 
     async function muxDashToMp4(vidUrl, audUrl, vidName) {
-        const [vidBuf, audBuf] = await Promise.all([downloadWrapper(vidUrl, '', 'arraybuffer'), downloadWrapper(audUrl, '', 'arraybuffer')]);
+        const [vidBuf, audBuf] = await Promise.all([downloadWrapper(vidUrl, 'Video - ' + vidName, 'arraybuffer'), downloadWrapper(audUrl, 'Audio - ' + vidName, 'arraybuffer')]);
+        // console.log('vidBuf: ', vidBuf);
+        // console.log('audBuf: ', audBuf);
+        if ((vidBuf === null) || (audBuf === null)) return false;
         const ffmpeg = await getFFmpeg();
-        ffmpeg.writeFile('v.m4s', new Uint8Array(vidBuf));
-        ffmpeg.writeFile('a.m4s', new Uint8Array(audBuf));
-        await ffmpeg.exec(['-i', 'v.m4s', '-i', 'a.m4s', '-c', 'copy', '-map', '0:v:0', '-map', '1:a:0', '-movflags', '+faststart', 'out.mp4']);
-        const out = ffmpeg.readFile('out.mp4');
+        downloadQueueTitle.style.display = 'block';
+        const progress = downloadQueueCard.appendChild(progressBar.cloneNode(true));
+        progress.lastChild.remove();
+        const progressName = 'Muxing - ' + vidName.slice(0, 17);
+        progress.firstChild.textContent = progressName + ' [0%]';
+        ffmpeg.on('progress', ({ ratio }) => {
+            if ((ratio >= 0) && (ratio <= 100)) {
+                const percent = ratio * 100;
+                progress.style.background = 'linear-gradient(to right, green ' + percent + '%, transparent ' + percent + '%)';
+                progress.firstChild.textContent = progressName + ' [' + percent.toFixed(0) + '%]';
+            }
+        });
+        const id = crypto.randomUUID();
+        await Promise.all([ffmpeg.writeFile(`v_${id}.m4s`, new Uint8Array(vidBuf)), ffmpeg.writeFile(`a_${id}.m4s`, new Uint8Array(audBuf))]);
+        await ffmpeg.exec(['-i', `v_${id}.m4s`, '-i', `a_${id}.m4s`, '-c', 'copy', '-map', '0:v:0', '-map', '1:a:0', '-movflags', '+faststart', `out_${id}.mp4`]);
+        const out = await ffmpeg.readFile(`out_${id}.mp4`);
+        await Promise.all([ffmpeg.deleteFile(`v_${id}.m4s`), ffmpeg.deleteFile(`a_${id}.m4s`), ffmpeg.deleteFile(`out_${id}.mp4`)]);
         saveAs(new Blob([out.buffer], { type: 'video/mp4' }), vidName);
+        progress.style.background = 'linear-gradient(to right, green 100%, transparent 100%)';
+        progress.firstChild.textContent = progressName + ' [100%]';
+        setTimeout(() => {
+            progress.remove();
+            if(downloadQueueCard.childElementCount == 1) downloadQueueTitle.style.display = 'none';
+        }, 1000);
         return true;
     }
 
     async function downloadVideo(data) {
         let vidRes;
-        if (GM_getValue('enableDownloadDashVideo', false)) {
+        if (GM_getValue('enableDownloadDashVideo', true)) {
             await getFFmpeg();
             vidRes = await getVideoDetail(data.aid, data.cid/*, cookies*/, '4048');
             // console.log(vidRes);
@@ -869,7 +967,7 @@
                     }*/
                 });
                 card.addEventListener('mouseenter', checkDynDownloadedHandler);
-            } else if(GM_getValue('enableVideoDownload', false) && card.getElementsByClassName('bili-tabs__nav__items').length > 0) {
+            } else if(GM_getValue('enableVideoDownload', true) && card.getElementsByClassName('bili-tabs__nav__items').length > 0) {
                 // console.log('add video dynamic download button');
                 const buttonBar = card.getElementsByClassName('bili-tabs__nav__items')[0];
                 let downloadButton = document.createElement('div');
@@ -959,7 +1057,7 @@
 
     function handleOpusCard(card) {
         // console.log('handleOpusCard');
-         if (card.getElementsByClassName('bili-album').length > 0 || card.getElementsByClassName('horizontal-scroll-album').length > 0 || (GM_getValue('enableVideoDownload', false) && card.getElementsByClassName('bili-dyn-card-video').length > 0)) {
+         if (card.getElementsByClassName('bili-album').length > 0 || card.getElementsByClassName('horizontal-scroll-album').length > 0 || (GM_getValue('enableVideoDownload', true) && card.getElementsByClassName('bili-dyn-card-video').length > 0)) {
              addOpusDownloadButton(card);
          }
     }
@@ -974,7 +1072,7 @@
                 });
             });
             addDownloadButton(card);
-        } else if (GM_getValue('enableVideoDownload', false) && card.getElementsByClassName('bili-dyn-card-video').length > 0 && card.getElementsByClassName('bili-dyn-action like disabled').length === 0) {
+        } else if (GM_getValue('enableVideoDownload', true) && card.getElementsByClassName('bili-dyn-card-video').length > 0 && card.getElementsByClassName('bili-dyn-action like disabled').length === 0) {
             addDownloadButton(card);
         }
     }
@@ -1034,7 +1132,7 @@
                     notLoaded = false;
                     // document.body.removeEventListener('mouseover', bodyMouseOver);
                 }
-            } /* else if (GM_getValue('enableVideoDownload', false) && document.body.querySelector('div.video-toolbar-left-main')) {
+            } /* else if (GM_getValue('enableVideoDownload', true) && document.body.querySelector('div.video-toolbar-left-main')) {
                 const buttonBar = document.body.querySelector('div.video-toolbar-left-main');
                 if (buttonBar) {
                     addPlayPageDownloadButton(buttonBar);
@@ -1139,7 +1237,7 @@
         inputVideoDownload.type = 'checkbox';
         inputVideoDownload.id = 'enableVideoDownload';
         inputVideoDownload.name = 'enableVideoDownload';
-        inputVideoDownload.checked = GM_getValue('enableVideoDownload', false);
+        inputVideoDownload.checked = GM_getValue('enableVideoDownload', true);
         question2.appendChild(inputVideoDownload);
         let videoDownloadExplain = document.createElement('p');
         videoDownloadExplain.textContent = '目前Bilibili视频单文件下载最高只支持720P MP4格式。';
@@ -1153,7 +1251,7 @@
         labelVidName.setAttribute('for', 'dlVidName');
         labelVidName.style.display = 'block';
         labelVidName.style.marginTop = '0.5rem';
-        labelVidName.style.color = GM_getValue('enableVideoDownload', false) ? null : 'gray';
+        labelVidName.style.color = GM_getValue('enableVideoDownload', true) ? null : 'gray';
         question2.appendChild(labelVidName);
         let inputVidName = document.createElement('input');
         inputVidName.type = 'text';
@@ -1165,9 +1263,9 @@
         inputVidName.style.borderStyle = 'solid';
         inputVidName.style.borderWidth = '0.14rem';
         inputVidName.style.borderRadius = '0.2rem';
-        inputVidName.disabled = GM_getValue('enableVideoDownload', false) ? false : true;
-        inputVidName.style.borderColor = GM_getValue('enableVideoDownload', false) ? 'gray' : 'lightgray';
-        inputVidName.defaultValue = GM_getValue('dlVidName', '{original}.{ext}');
+        inputVidName.disabled = GM_getValue('enableVideoDownload', true) ? false : true;
+        inputVidName.style.borderColor = GM_getValue('enableVideoDownload', true) ? 'gray' : 'lightgray';
+        inputVidName.defaultValue = GM_getValue('dlVidName', '{username}-{title}-[{bvid}].{ext}');
         question2.appendChild(inputVidName);
         let vidNameExplain1 = document.createElement('p');
         vidNameExplain1.innerHTML = '{original} - 原文件名\n{username} - UP主名称\n{userid} - UP主ID\n{bvid} - 视频BVID\n{aid} - 视频AID\n{cid} - 视频CID\n{title} - 视频标题\n{ext} - 文件后缀\n{YYYY} {MM} {DD} {HH} {mm} {ss} - 原博发布时\n间的年份、月份、日期、小时、分钟、秒，可\n分开独立使用\n{content} - 视频简介（最多前25个字符）';
@@ -1177,7 +1275,7 @@
         vidNameExplain1.style.color = 'gray';
         vidNameExplain1.style.lineHeight = '1.1rem';
         question2.appendChild(vidNameExplain1);
-        /*let labelEnableDownloadDashVideo = document.createElement('label');
+        let labelEnableDownloadDashVideo = document.createElement('label');
         labelEnableDownloadDashVideo.setAttribute('for', 'enableDownloadDashVideo');
         labelEnableDownloadDashVideo.textContent = '启用下载DASH形式视频（耗费性能）';
         labelEnableDownloadDashVideo.style.display = 'inline-block';
@@ -1189,8 +1287,8 @@
         inputEnableDownloadDashVideo.id = 'enableDownloadDashVideo';
         inputEnableDownloadDashVideo.name = 'enableDownloadDashVideo';
         inputEnableDownloadDashVideo.style.marginTop = '0.5rem';
-        inputEnableDownloadDashVideo.defaultValue = GM_getValue('enableDownloadDashVideo', false);
-        question2.appendChild(inputEnableDownloadDashVideo);*/
+        inputEnableDownloadDashVideo.checked = GM_getValue('enableDownloadDashVideo', true);
+        question2.appendChild(inputEnableDownloadDashVideo);
         modal.appendChild(question2);
 
         /*let question3 = document.createElement('p');
@@ -1611,6 +1709,8 @@
                 inputVidName.disabled = false;
                 labelVidName.style.color = null;
                 inputVidName.style.borderColor = 'gray';
+                labelEnableDownloadDashVideo.style.color = null;
+                inputEnableDownloadDashVideo.disabled = false;
             } else {
                 // labelRetweetFileName.style.display = 'none';
                 // inputRetweetFileName.style.display = 'none';
@@ -1618,6 +1718,8 @@
                 inputVidName.disabled = true;
                 labelVidName.style.color = 'gray';
                 inputVidName.style.borderColor = 'lightgray';
+                labelEnableDownloadDashVideo.style.color = 'gray';
+                inputEnableDownloadDashVideo.disabled = true;
             }
         });
 
@@ -1675,7 +1777,7 @@
                 return;
             }*/
             let refreshFlag = false;
-            if (document.getElementById('enableVideoDownload').checked !== GM_getValue('enableVideoDownload', false)) {
+            if (document.getElementById('enableVideoDownload').checked !== GM_getValue('enableVideoDownload', true)) {
                 refreshFlag = true;
             }
             GM_setValue('dlPicName', document.getElementById('dlPicName').value);
@@ -1697,7 +1799,7 @@
             GM_setValue('listDownloadEnableSkipVidLength', document.getElementById('listDownloadEnableSkipVidLength').checked);
             const listDownloadSkipVidLengthValue = document.getElementById('listDownloadSkipVidLength').value;
             GM_setValue('listDownloadSkipVidLength', isNaN(Math.round(listDownloadSkipVidLengthValue)) ? 60 : Math.round(listDownloadSkipVidLengthValue));
-            // GM_setValue('enableDownloadDashVideo', document.getElementById('enableDownloadDashVideo').checked);
+            GM_setValue('enableDownloadDashVideo', document.getElementById('enableDownloadDashVideo').checked);
             GM_setValue('isSet', settingVersion);
             if (refreshFlag) {
                 alert('已' + (document.getElementById('enableVideoDownload').checked ? '开启' : '关闭') + '视频下载功能，将在页面刷新后生效。');
@@ -1749,7 +1851,7 @@
                         // console.log(node);
                         handleCard(node);
                     }
-                } else if (GM_getValue('enableVideoDownload', false) && mutation.target.tagName === 'BODY') {
+                } else if (GM_getValue('enableVideoDownload', true) && mutation.target.tagName === 'BODY') {
                     for (const node of mutation.addedNodes) {
                         if (node.nodeType === 1 && node.tagName === 'DIV'/* && node.classList.contains('lt-row')*/) {
                             // console.log(mutation);

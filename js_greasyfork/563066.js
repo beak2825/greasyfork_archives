@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Rem4rk's Locked Items Manager
 // @namespace    https://www.torn.com/
-// @version      2.0.1
+// @version      2.0.4
 // @description  This userscript allows you to lock items in your inventory to prevent accidentally trading, selling, donating, or trashing them. Perfect for protecting high-value items, collections, or anything you want to keep safe!- Now with Unique ID's, fallback protection, and a settings panel!
 // @author       rem4rk [2375926] - https://www.torn.com/profiles.php?XID=2375926
 // @match        https://www.torn.com/item.php*
@@ -72,6 +72,19 @@
 
             opacity: 0.6;
             transition: transform 0.4s ease, opacity 0.3s ease;
+       }
+
+       .selectAll___PTOHO {
+            position: relative !important;
+            visibility: hidden !important;
+       }
+
+       .selectAll___PTOHO::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0);
+            z-index: 9999;
        }
 
        #torn-unlock-all-btn:hover {
@@ -199,6 +212,9 @@
 
         document.body.classList.toggle('torn-locks-transparent', settings.padlockTransparent);
         document.body.classList.toggle('torn-hide-unlock-btn', !settings.showUnlockButton);
+
+        removeSelectAll();
+
         const uBtn = document.getElementById('torn-unlock-all-btn');
         if (uBtn) uBtn.textContent = `Unlock All (${Object.keys(locked).length})`;
     }
@@ -253,4 +269,10 @@
     });
     obs.observe(document.body, { childList: true, subtree: true });
     updateHidingCSS(); runLogic();
+
+    function removeSelectAll() {
+        document.querySelectorAll(
+        '#itemRow-incognitoCheckbox-select-all, #_r_80_'
+    ).forEach(el => el.remove());
+    }
 })();

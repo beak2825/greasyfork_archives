@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fortnite.gg Locker Importer
 // @namespace    https://fortnite.gg/
-// @version      2.2
+// @version      2.3
 // @description  Import your Fortnite locker to Fortnite.gg
 // @author       Reepze
 // @match        https://fortnite.gg/*
@@ -174,9 +174,6 @@
         .fngg-m.show{opacity:1;visibility:visible}
         .mbox{background:#1a1a1d;border:1px solid #2a2a2d;border-radius:12px;padding:24px;width:360px;text-align:center}
         .mtitle{font-size:18px;font-weight:700;color:#fff;margin-bottom:20px}
-        .codebox{background:#222225;border:2px solid #f0db4f;border-radius:8px;padding:20px;margin:20px 0}
-        .codebox .lbl{font-size:11px;color:#888;margin-bottom:8px;text-transform:uppercase}
-        .codebox .val{font-size:32px;font-weight:700;font-family:monospace;color:#f0db4f;letter-spacing:6px}
         .spin{width:28px;height:28px;border:3px solid #333;border-top-color:#f0db4f;border-radius:50%;animation:spin .8s linear infinite;margin:16px auto}
         @keyframes spin{to{transform:rotate(360deg)}}
         .mhint{font-size:12px;color:#666}
@@ -245,13 +242,13 @@
         var lm = document.createElement('div');
         lm.id = 'lmodal';
         lm.className = 'fngg-m';
-        lm.innerHTML = '<div class="mbox"><div class="mtitle">Epic Games Login</div><div class="codebox"><div class="lbl">Enter this code</div><div class="val" id="lcode">--------</div></div><button class="btn btn-y" id="openbtn">Open Epic Games</button><div class="spin"></div><div class="mhint">Waiting for login...</div><button class="btn btn-x" id="cbtn">Cancel</button></div>';
+        lm.innerHTML = '<div class="mbox"><div class="mtitle">Epic Games Login</div><div class="mhint" style="margin:20px 0">Click the button below to login with your Epic Games account.</div><button class="btn btn-y" id="openbtn">Login with Epic Games</button><div class="spin"></div><div class="mhint">Waiting for login...</div><button class="btn btn-x" id="cbtn">Cancel</button></div>';
         document.body.appendChild(lm);
 
         var im = document.createElement('div');
         im.id = 'imodal';
         im.className = 'fngg-m';
-        im.innerHTML = '<div class="mbox"><div class="mtitle">Info</div><div class="isec"><h3>What does this do?</h3><p>This script connects to your Epic Games account and reads all your Fortnite cosmetics (skins, pickaxes, emotes, etc). It then generates a link for fortnite.gg that shows your entire locker. Everything gets sorted automatically by type and rarity so it looks nice.</p></div><div class="isec"><h3>Is this safe?</h3><p>Yep! The login uses Epic\'s official Device Code flow (same method apps like Discord use). Your password is never entered here or sent anywhere. The script only gets a temporary token that lets it read your locker, nothing else. Token expires after about 2 hours, then you\'d need to login again.</p></div><div class="isec"><h3>Settings</h3><div class="srow"><div><div class="slbl">Support Creator</div><div class="sdesc">Sets code "'+SAC+'" in Fortnite</div></div><div class="tog'+(getSettings().supportCreator?' on':'')+'" id="stog"></div></div></div><div class="isec"><p style="color:#888">Made with ❤️ by <a href="https://fortnite.gg/@reepze" target="_blank">Reepze</a></p></div><div class="ver">v2.2</div><button class="btn btn-x" id="cibtn">Close</button></div>';
+        im.innerHTML = '<div class="mbox"><div class="mtitle">Info</div><div class="isec"><h3>What does this do?</h3><p>This script connects to your Epic Games account and reads all your Fortnite cosmetics (skins, pickaxes, emotes, etc). It then generates a link for fortnite.gg that shows your entire locker. Everything gets sorted automatically by type and rarity so it looks nice.</p></div><div class="isec"><h3>Is this safe?</h3><p>Yep! The login uses Epic\'s official Device Code flow (same method apps like Discord use). Your password is never entered here or sent anywhere. The script only gets a temporary token that lets it read your locker, nothing else. Token expires after about 2 hours, then you\'d need to login again.</p></div><div class="isec"><h3>Settings</h3><div class="srow"><div><div class="slbl">Support Creator</div><div class="sdesc">Sets code "'+SAC+'" in Fortnite</div></div><div class="tog'+(getSettings().supportCreator?' on':'')+'" id="stog"></div></div></div><div class="isec"><p style="color:#888">Made with ❤️ by <a href="https://fortnite.gg/@reepze" target="_blank">Reepze</a></p></div><div class="ver">v2.3</div><button class="btn btn-x" id="cibtn">Close</button></div>';
         document.body.appendChild(im);
 
         var sm = document.createElement('div');
@@ -367,7 +364,6 @@
 
             deviceCode = a2.data.device_code;
             verifyUri = a2.data.verification_uri_complete;
-            document.getElementById('lcode').textContent = a2.data.user_code;
 
             modal('lmodal', true);
             setStatus('Waiting...');

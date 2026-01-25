@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         智能整合复制面板
 // @namespace    https://greasyfork.org/users/1564293
-// @version      1.0.1
+// @version      1.0.5
 // @description  强大的全局复制工具，支持拖动和搜索首尾文字复制。个人使用免费，基于MIT许可证。商业使用需要购买商业许可证。
 // @author       琪琪
 // @match        *://*/*
@@ -33,6 +33,7 @@
     3. 首尾文字定位复制
     4. 智能导航(上一个/下一个)
     5. 基础复制功能
+    6. 匹配文本实时预览
     
     商业授权请联系: 通过GreasyFork页面联系
     ============================================
@@ -43,7 +44,7 @@
         /* 主面板 */
         #smart-copy-panel {
             position: fixed !important;
-            width: 200px !important;
+            width: 220px !important; /* 稍微加宽以容纳显示框 */
             background: #2c3e50 !important;
             color: white !important;
             border-radius: 8px !important;
@@ -234,9 +235,51 @@
             font-size: 12px !important;
         }
         
-        /* 匹配索引标记 */
-        .match-index {
-            display: none !important;
+        /* 匹配文本展示框样式 */
+        .match-display-container {
+            margin: 10px 0 !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border-radius: 6px !important;
+            padding: 8px !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        .match-display-title {
+            font-size: 10px !important;
+            color: rgba(255, 255, 255, 0.6) !important;
+            margin-bottom: 4px !important;
+        }
+        
+        .match-display-box {
+            background: rgba(0, 0, 0, 0.3) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-radius: 4px !important;
+            padding: 8px !important;
+            font-size: 11px !important;
+            color: rgba(255, 255, 255, 0.9) !important;
+            max-height: 100px !important;
+            overflow-y: auto !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            line-height: 1.4 !important;
+            user-select: text !important;
+            cursor: text !important;
+        }
+        
+        .match-display-box::-webkit-scrollbar {
+            width: 6px !important;
+        }
+        
+        .match-display-box::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border-radius: 3px !important;
+        }
+        
+        .match-display-info {
+            font-size: 9px !important;
+            color: rgba(255, 255, 255, 0.5) !important;
+            text-align: right !important;
+            margin-top: 4px !important;
         }
         
         /* 商业授权按钮 */
@@ -343,6 +386,17 @@
                         <button class="btn nav-btn" id="next-btn">下一个</button>
                     </div>
                     
+                    <!-- 新增：匹配文本展示框 -->
+                    <div class="match-display-container">
+                        <div class="match-display-title">当前匹配文本：</div>
+                        <div class="match-display-box" id="match-display-box">
+                            搜索后匹配文本将在这里完整显示...
+                        </div>
+                        <div class="match-display-info">
+                            字符数: <span id="match-char-count">0</span>
+                        </div>
+                    </div>
+                    
                     <button class="btn" id="copy-match-btn">复制匹配</button>
                     <button class="btn" id="clear-btn">清除搜索</button>
                     
@@ -355,7 +409,7 @@
                 <!-- 关于选项卡 -->
                 <div class="tab-content" id="about-tab">
                     <div style="font-size: 10px; color: rgba(255,255,255,0.8); margin-bottom: 10px; line-height: 1.4;">
-                        <p><strong>智能整合复制面板 v1.0.0</strong></p>
+                        <p><strong>智能整合复制面板 v1.0.1</strong></p>
                         <p>作者: 琪琪 (雨落倾城梦之夏)</p>
                         <p>许可证: MIT (个人使用免费)</p>
                         
@@ -367,6 +421,7 @@
                                 <li>首尾文字定位复制</li>
                                 <li>智能导航(上一个/下一个)</li>
                                 <li>基础复制功能</li>
+                                <li>匹配文本实时预览</li>
                             </ul>
                         </div>
                         
@@ -726,18 +781,24 @@
         showNotice(`已复制全文 (${text.length} 字符)`);
     }
     
-    // 12. 搜索功能
+    // 12. 搜索功能 - 修复：保持当前选项卡 (已修复多区间匹配问题)
     function performSearch() {
         const startText = document.getElementById('start-text').value.trim();
         const endText = document.getElementById('end-text').value.trim();
         
+        // 清理之前的搜索结果
         clearSearchResults();
         
+        // 保存原始HTML
         originalHTML = document.body.innerHTML;
         
+        // 获取页面文本
         const pageText = document.body.innerText || document.body.textContent;
         allMatches = [];
         currentMatchIndex = -1;
+        
+        // 用于文本内容去重的Set
+        const uniqueTexts = new Set();
         
         let searchText = '';
         if (startText) {
@@ -749,45 +810,69 @@
             return;
         }
         
+        // ========== 情况1：仅搜索单个词 (开头或结尾) ==========
         if ((startText && !endText) || (!startText && endText)) {
             let searchPos = 0;
             while (searchPos < pageText.length) {
                 const startIndex = pageText.indexOf(searchText, searchPos);
                 if (startIndex === -1) break;
                 
-                allMatches.push({
-                    text: searchText,
-                    start: startIndex,
-                    end: startIndex + searchText.length,
-                    exactMatch: true,
-                    index: allMatches.length
-                });
+                // 去重检查：如果这个文本还没出现过
+                if (!uniqueTexts.has(searchText)) {
+                    uniqueTexts.add(searchText);
+                    allMatches.push({
+                        text: searchText,
+                        start: startIndex,
+                        end: startIndex + searchText.length,
+                        exactMatch: true,
+                        index: allMatches.length
+                    });
+                }
                 
                 searchPos = startIndex + searchText.length;
             }
         }
+        // ========== 情况2：搜索"开头词"到"结尾词"的区间 ==========
         else if (startText && endText) {
             let searchPos = 0;
+            
+            // 第一层循环：查找所有的"开头词"
             while (searchPos < pageText.length) {
                 const startIndex = pageText.indexOf(startText, searchPos);
                 if (startIndex === -1) break;
                 
-                const endIndex = pageText.indexOf(endText, startIndex + startText.length);
-                if (endIndex === -1) break;
+                let matchSearchPos = startIndex + startText.length;
+                let matchFoundInThisSegment = false;
                 
-                const matchText = pageText.substring(startIndex, endIndex + endText.length);
-                allMatches.push({
-                    text: matchText,
-                    start: startIndex,
-                    end: endIndex + endText.length,
-                    exactMatch: false,
-                    index: allMatches.length
-                });
+                // 第二层循环：从当前"开头词"后面查找所有的"结尾词"
+                while (true) {
+                    const endIndex = pageText.indexOf(endText, matchSearchPos);
+                    if (endIndex === -1) break;
+                    
+                    // 获取匹配文本
+                    const matchText = pageText.substring(startIndex, endIndex + endText.length);
+                    
+                    // 关键去重：检查是否已存在相同文本内容
+                    if (!uniqueTexts.has(matchText)) {
+                        uniqueTexts.add(matchText); // 记录这个文本
+                        allMatches.push({
+                            text: matchText,
+                            start: startIndex,
+                            end: endIndex + endText.length,
+                            exactMatch: false,
+                            index: allMatches.length
+                        });
+                    }
+                    
+                    matchFoundInThisSegment = true;
+                    matchSearchPos = endIndex + endText.length;
+                }
                 
-                searchPos = endIndex + endText.length;
+                searchPos = startIndex + startText.length;
             }
         }
         
+        // ========== 后续通用处理 ==========
         updateResultDisplay();
         
         if (allMatches.length === 0) {
@@ -795,17 +880,23 @@
             return;
         }
         
+        // 高亮匹配
         highlightExactMatches(searchText);
         
         currentMatchIndex = 0;
         highlightCurrentResult();
         
-        showNotice(`找到 ${allMatches.length} 个结果`);
+        showNotice(`找到 ${allMatches.length} 个不重复结果`);
         
+        // 更新匹配文本显示框
+        updateMatchDisplay();
+        
+        // 修复：确保保持在搜索选项卡
         if (currentTab !== 'search') {
             switchTab('search');
         }
         
+        // 重新设置全局事件
         setTimeout(setupGlobalEvents, 100);
         setTimeout(setupToggleButtonDrag, 200);
     }
@@ -860,6 +951,9 @@
         const matchText = match.text;
         const displayText = matchText.length > 50 ? matchText.substring(0, 47) + '...' : matchText;
         showNotice(`第 ${currentMatchIndex + 1} / ${allMatches.length} 个结果: ${displayText}`);
+        
+        // 更新匹配文本显示框
+        updateMatchDisplay();
     }
     
     function highlightCurrentResult() {
@@ -867,23 +961,28 @@
             return;
         }
         
+        // 找到当前索引的匹配
         const currentSpan = document.querySelector(`[data-match-id="${currentMatchIndex}"]`);
         if (currentSpan) {
+            // 移除所有current-match
             document.querySelectorAll('.current-match').forEach(span => {
                 span.classList.remove('current-match');
                 span.classList.add('search-match');
             });
             
+            // 高亮当前
             currentSpan.classList.remove('search-match');
             currentSpan.classList.add('current-match');
             
+            // 滚动到可见区域
             currentSpan.scrollIntoView({ behavior: 'smooth', block: 'center' });
             
-            placeCursorAtExactText(currentSpan);
+            // 自动选中整个匹配文本
+            selectMatchText(currentSpan);
         }
     }
     
-    // 15. 光标位置
+    // 15. 光标位置函数
     function placeCursorAtExactText(element) {
         try {
             const selection = window.getSelection();
@@ -901,6 +1000,66 @@
         }
     }
     
+    // 16. 选中匹配文本函数
+    function selectMatchText(element) {
+        try {
+            const selection = window.getSelection();
+            const range = document.createRange();
+            
+            // 设置范围：选中这个元素内的所有文本
+            range.selectNodeContents(element);
+            
+            // 清除旧的选择并应用新选择
+            selection.removeAllRanges();
+            selection.addRange(range);
+            
+            // 可选：提供视觉反馈
+            showNotice(`已选中匹配文本，可直接复制 (${selection.toString().length} 字符)`);
+            
+        } catch (e) {
+            console.error('文本选择失败:', e);
+            // 如果自动选中失败，至少把光标放过去
+            placeCursorAtExactText(element);
+        }
+    }
+    
+    // 17. 更新匹配文本显示框
+    function updateMatchDisplay() {
+        const displayBox = document.getElementById('match-display-box');
+        const charCountSpan = document.getElementById('match-char-count');
+        
+        if (currentMatchIndex >= 0 && currentMatchIndex < allMatches.length) {
+            const match = allMatches[currentMatchIndex];
+            const matchText = match.text;
+            
+            // 更新显示框内容
+            if (displayBox) {
+                // 如果文本太长，添加提示并适当截断
+                if (matchText.length > 10000) {
+                    displayBox.title = `文本过长，已截断显示前10000字符。完整文本长度：${matchText.length} 字符`;
+                    displayBox.textContent = matchText.substring(0, 10000) + '...【文本过长，已截断】';
+                } else {
+                    displayBox.textContent = matchText;
+                    displayBox.title = `完整匹配文本 (${matchText.length} 字符)`;
+                }
+            }
+            
+            // 更新字符数
+            if (charCountSpan) {
+                charCountSpan.textContent = matchText.length;
+            }
+        } else {
+            // 没有匹配时的显示
+            if (displayBox) {
+                displayBox.textContent = '无匹配文本或尚未搜索...';
+                displayBox.title = '';
+            }
+            if (charCountSpan) {
+                charCountSpan.textContent = '0';
+            }
+        }
+    }
+    
     function clearSearchResults() {
         if (originalHTML) {
             document.body.innerHTML = originalHTML;
@@ -913,9 +1072,11 @@
         allMatches = [];
         currentMatchIndex = -1;
         updateResultDisplay();
+        // 清除显示框
+        updateMatchDisplay();
     }
     
-    // 16. 复制当前结果
+    // 18. 复制当前结果
     function copyCurrentMatch() {
         if (currentMatchIndex < 0 || currentMatchIndex >= allMatches.length) {
             showNotice('请先搜索文字');
@@ -925,7 +1086,7 @@
         const match = allMatches[currentMatchIndex];
         const textToCopy = match.text;
         copyText(textToCopy);
-        showNotice(`已复制: "${textToCopy}"`);
+        showNotice(`已复制: "${textToCopy.substring(0, 50)}${textToCopy.length > 50 ? '...' : ''}"`);
     }
     
     function clearSearch() {
@@ -935,7 +1096,7 @@
         showNotice('已清除搜索');
     }
     
-    // 17. 工具函数
+    // 19. 工具函数
     function copyText(text) {
         const textarea = document.createElement('textarea');
         textarea.value = text;
@@ -972,14 +1133,14 @@
         if (currentIndex) currentIndex.textContent = allMatches.length > 0 ? currentMatchIndex + 1 : 0;
     }
     
-    // 18. 解锁复制
+    // 20. 解锁复制
     function unlockCopy() {
         document.addEventListener('copy', e => e.stopPropagation(), true);
         document.oncontextmenu = null;
         document.body.style.userSelect = 'text';
     }
     
-    // 19. 创建切换按钮
+    // 21. 创建切换按钮
     function createToggleButton() {
         let toggle = document.getElementById('toggle-panel');
         if (toggle) toggle.remove();
@@ -992,7 +1153,7 @@
         document.body.appendChild(toggle);
     }
     
-    // 20. 切换按钮拖动功能
+    // 22. 切换按钮拖动功能
     function setupToggleButtonDrag() {
         const toggle = document.getElementById('toggle-panel');
         if (!toggle) return;
@@ -1118,7 +1279,7 @@
         };
     }
     
-    // 21. 启动
+    // 23. 启动
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(init, 100);
@@ -1129,8 +1290,9 @@
         setTimeout(setupGlobalEvents, 200);
     }
     
-    console.log('🎯 智能整合复制面板加载完成');
+    console.log('🎯 智能整合复制面板 v1.0.1 加载完成');
     console.log('👤 作者: 琪琪 (雨落倾城梦之夏)');
     console.log('🌐 GreasyFork: https://greasyfork.org/zh-CN/users/1564293');
+    console.log('🔧 功能: 文本搜索+匹配预览+自动选中');
     
 })();

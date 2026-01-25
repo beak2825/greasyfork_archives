@@ -1,33 +1,25 @@
 // ==UserScript==
-// @name         Abroad Items Info (YATA) - Overlay
+// @name         Abroad Items Info (YATA) - Overlay (Start Minimized)
 // @namespace    hardy.yata.abroad.robust
-// @version      4.4.2
-// @description  Shows a movable, resizable YATA abroad prices overlay on the Travel Agency page and during in-flight travel
+// @version      4.4.3
+// @description  Shows a movable, resizable YATA abroad prices overlay. Starts minimized by default.
 // @author       R4G3RUNN3R[3877028] - (based on Hardy script)
 // @license      MIT
 // @match        https://www.torn.com/*
 // @grant        GM_addStyle
 // @grant        GM_xmlhttpRequest
 // @connect      yata.yt
-// @downloadURL https://update.greasyfork.org/scripts/563684/Abroad%20Items%20Info%20%28YATA%29%20-%20Overlay.user.js
-// @updateURL https://update.greasyfork.org/scripts/563684/Abroad%20Items%20Info%20%28YATA%29%20-%20Overlay.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563684/Abroad%20Items%20Info%20%28YATA%29%20-%20Overlay%20%28Start%20Minimized%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563684/Abroad%20Items%20Info%20%28YATA%29%20-%20Overlay%20%28Start%20Minimized%29.meta.js
 // ==/UserScript==
 
 (function () {
     "use strict";
 
     const COUNTRY_MAP = {
-        mex: "Mexico",
-        cay: "Cayman Islands",
-        can: "Canada",
-        haw: "Hawaii",
-        uni: "United Kingdom",
-        arg: "Argentina",
-        swi: "Switzerland",
-        jap: "Japan",
-        chi: "China",
-        uae: "UAE",
-        sou: "South Africa"
+        mex: "Mexico", cay: "Cayman Islands", can: "Canada", haw: "Hawaii",
+        uni: "United Kingdom", arg: "Argentina", swi: "Switzerland",
+        jap: "Japan", chi: "China", uae: "UAE", sou: "South Africa"
     };
 
     const STORAGE_KEY = "yata_overlay_state_v442";
@@ -87,6 +79,7 @@
 
         const overlay = document.createElement("div");
         overlay.id = "yata-overlay";
+        overlay.style.display = "none"; // START HIDDEN
 
         const header = document.createElement("div");
         header.id = "yata-header";
@@ -108,7 +101,7 @@
         const miniToggle = document.createElement("div");
         miniToggle.id = "yata-mini-toggle";
         miniToggle.textContent = "YATA – ABROAD PRICES";
-        miniToggle.style.display = "none";
+        miniToggle.style.display = "block"; // START VISIBLE
 
         overlay.append(header, content, resizeGrip);
         document.body.append(overlay, miniToggle);

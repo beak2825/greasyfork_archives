@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Promiedos-Simulator
 // @namespace    http://tampermonkey.net/
-// @version      2
+// @version      2.1
 // @description  Simulador de partidos de Promiedos.
 // @author       Duszafir
 // @match        https://www.promiedos.com.ar/league/*
@@ -138,28 +138,30 @@
                         perdidos: perdidos,
                         positionOriginal: row.num
                     };
+                    if (zona.nombre.includes("Promedios") || zona.nombre.includes("Relegation")) {
+                        equipo.puntos = parseInt(row.values[0].value);
+                        equipo.partidos = parseInt(row.values[1].value);
 
-                    if (zona.nombre.includes("Promedios") ||zona.nombre.includes("Relegation")) {
-                        equipo.puntos = parseInt(row.values[0].value)
-                        equipo.partidos = parseInt(row.values[1].value)
-                        let v3 = parseInt(row.values[3].value)
-                        let v4 = parseInt(row.values[4].value)
-                        let v5 = parseInt(row.values[5].value)
-
-                        let invertido = v3 > v5;
+                        let v3 = parseInt(row.values[3].value);
+                        let v4 = parseInt(row.values[4].value);
+                        let v5 = parseInt(row.values[5].value);
+                        const cols = table.table.columns.map(c => parseInt(c.title)).filter(n => !isNaN(n));
+                        const invertido = cols.length >= 2 && cols[0] > cols[cols.length - 1];
 
                         equipo.x1 = invertido ? v5 : v3;
                         equipo.x2 = v4;
                         equipo.x3 = invertido ? v3 : v5;
+                        equipo.invertido = invertido;
 
-                        equipo.promedio = equipo.partidos > 0 ? (equipo.puntos / equipo.partidos).toFixed(3): 0;
+                        equipo.promedio = equipo.partidos > 0
+                            ? (equipo.puntos / equipo.partidos).toFixed(3)
+                            : 0;
 
                         delete equipo.goles;
                         delete equipo.difGoles;
                         delete equipo.ganados;
                         delete equipo.empates;
                         delete equipo.perdidos;
-
                     } else if (zona.nombre.includes("Anual")) {
                         equipo.nombre = row.entity.object.name;
                         equipo.shortName = row.entity.object.short_name;
@@ -405,49 +407,6 @@
         }
     }
 
-    function ordenarColumnasPorAño(tablas) {
-        const table = tablas.closest("table");
-        if (!table) return;
-
-        const thead = table.querySelector("thead tr");
-        const tbody = table.querySelector("tbody");
-        if (!thead || !tbody) return;
-
-        const ths = Array.from(thead.children);
-
-        const yearCols = ths
-            .map((th, i) => ({
-                index: i,
-                year: parseInt(th.textContent.trim())
-            }))
-            .filter(c => !isNaN(c.year));
-
-        if (yearCols.length < 2) return;
-
-        const ordenadas = [...yearCols].sort((a, b) => a.year - b.year);
-
-        if (ordenadas.every((c, i) => c.index === yearCols[i].index)) return;
-
-        ordenadas.forEach((col, i) => {
-            thead.insertBefore(
-                ths[col.index],
-                thead.children[yearCols[i].index]
-            );
-        });
-
-        Array.from(tbody.children).forEach(tr => {
-            const tds = Array.from(tr.children);
-
-            ordenadas.forEach((col, i) => {
-                tr.insertBefore(
-                    tds[col.index],
-                    tr.children[yearCols[i].index]
-                );
-            });
-        });
-    }
-
-
     function ordenarTablas(indiceZona, tabla) {
         const tablaContainer = document.querySelector('div[class^=page-layout_dashboard__layout_left__]');
         const zonaContainer = tablaContainer.children[tabla];
@@ -481,7 +440,6 @@
                 return a.nombre.localeCompare(b.nombre);
             });
         } else {
-            ordenarColumnasPorAño(tablas);
             zona.equipos.sort((a, b) => {
                 if (b.promedio !== a.promedio) return b.promedio - a.promedio;
                 if (b.puntos !== a.puntos) return b.puntos - a.puntos;
@@ -542,12 +500,18 @@
                 fila.children[7].textContent = eq.empates;
                 fila.children[8].textContent = eq.perdidos;
             } else {
-                fila.children[2].textContent = eq.promedio;
-                fila.children[3].textContent = eq.puntos;
-                fila.children[4].textContent = eq.partidos;
-                fila.children[5].textContent = eq.x1;
-                fila.children[6].textContent = eq.x2;
-                fila.children[7].textContent = eq.x3;
+                    fila.children[2].textContent = eq.promedio;
+                    fila.children[3].textContent = eq.puntos;
+                    fila.children[4].textContent = eq.partidos;
+                if (!eq.invertido) {
+                    fila.children[5].textContent = eq.x1;
+                    fila.children[6].textContent = eq.x2;
+                    fila.children[7].textContent = eq.x3;
+                } else {
+                    fila.children[7].textContent = eq.x1;
+                    fila.children[6].textContent = eq.x2;
+                    fila.children[5].textContent = eq.x3;
+                }
             }
 
             tablas.appendChild(fila);
@@ -986,7 +950,7 @@
     });
 
     function verDatos() {
-        console.clear();
+        // console.clear();
         console.log("Equipos:", equipos);
         console.log("Fechas Info: ", fechasInfo);
     }

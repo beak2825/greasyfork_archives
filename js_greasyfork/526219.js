@@ -2,7 +2,7 @@
 // @name         Shell Shockers Model Injector: Barclay's
 // @namespace    https://github.com/onlypuppy7/BarclaysShellShockers/
 // @license      GPL-3.0
-// @version      2.1.4
+// @version      2.1.5
 // @author       onlypuppy7
 // @description  Import whatever model URLs you need - template and example code
 // @match        https://shellshock.io/*
@@ -29,11 +29,11 @@ BARCLAYS.modelURLs = [
     //please refer to the library's documentation for more information
 
     //examples:
-    // "https://cdn.onlypuppy7.online/hattestWide2.glb", //makes the top hat WIDE
-    // "https://cdn.onlypuppy7.online/blendertest7.glb", //replaces castle brick with the blender default cube because why not (screws up lightmap)
-    "https://cdn.onlypuppy7.online/eggmodeltest.glb", //replaces the egg with the blender default cube
-    // "https://cdn.onlypuppy7.online/classicguns7.glb", //imports the classic guns (cluck9mm, soldier (brokenish), dozengauge, free ranger)
-    "https://cdn.onlypuppy7.online/animtest3.glb", //replaces crackshot with legacy crackshot, and replaces the 
+    // "https://cdn.onlypuppy7.org/hattestWide2.glb", //makes the top hat WIDE
+    // "https://cdn.onlypuppy7.org/blendertest7.glb", //replaces castle brick with the blender default cube because why not (screws up lightmap)
+    "https://cdn.onlypuppy7.org/eggmodeltest.glb", //replaces the egg with the blender default cube
+    // "https://cdn.onlypuppy7.org/classicguns7.glb", //imports the classic guns (cluck9mm, soldier (brokenish), dozengauge, free ranger)
+    "https://cdn.onlypuppy7.org/animtest3.glb", //replaces crackshot with legacy crackshot, and replaces the 
 
     // "/models/full/egg.glb", //replaces the replaced egg with the default egg, useful for reverting changes
 ];
