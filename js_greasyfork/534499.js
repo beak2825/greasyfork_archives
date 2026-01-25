@@ -1,13 +1,17 @@
 // ==UserScript==
 // @name         Block Sites and Redirect
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  自动屏蔽微博、联合早报等指定网站，跳转至百度
+// @version      1.1
+// @description  自动屏蔽某博、某乎、某早报等指定网站，跳转百度
 // @author       YourName
-// @match        *://*/*
+// @match        *://*.weibo.com/*
+// @match        *://*.zhihu.com/*
+// @match        *://*.tophub.today/*
+// @match        *://*.zaobao.com.sg/*
+// @match        *://*.zaobao.com/*
 // @run-at       document-start
 // @grant        none
-// @license     GPL version 3
+// @license      GPL version 3
 // @downloadURL https://update.greasyfork.org/scripts/534499/Block%20Sites%20and%20Redirect.user.js
 // @updateURL https://update.greasyfork.org/scripts/534499/Block%20Sites%20and%20Redirect.meta.js
 // ==/UserScript==
@@ -15,23 +19,25 @@
 (function() {
     'use strict';
 
-    // 正则表达式黑名单（支持多级子域名）
-    const blockedRegex = [
-        /(^|\.)weibo\.com$/,          // 匹配 weibo.com 及所有子域
-        /(^|\.)zaobao\.com(\.|$)/,    // 匹配 zaobao.com 及其多级子域（如zaobao.com.sg）
-        /(^|\.)tophub\.today$/        // 匹配 tophub.today 及所有子域
+    // 简化的匹配列表（直接检查域名关键词更高效）
+    const blockedHosts = [
+        'weibo.com',
+        'zaobao.com',
+        'zaobao.com.sg',
+        'tophub.today',
+        'zhihu.com'
     ];
 
-    // 获取当前域名（转换为小写避免大小写问题）
     const currentHost = window.location.hostname.toLowerCase();
 
-    // 执行正则匹配检测
-    const shouldBlock = blockedRegex.some(regex => regex.test(currentHost));
+    // 检查当前域名是否包含在黑名单中
+    const shouldBlock = blockedHosts.some(domain =>
+        currentHost === domain || currentHost.endsWith('.' + domain)
+    );
 
-    // 执行屏蔽逻辑
     if (shouldBlock) {
-        // 跳转前验证是否已经在目标网站（防止循环跳转）
-        if (!/^www\.baidu\.com$/i.test(currentHost)) {
+        // 防止在百度搜素时无限循环（虽然百度不在名单里，但这是个好习惯）
+        if (currentHost !== 'www.baidu.com') {
             window.location.replace('https://www.baidu.com/');
         }
     }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini批量去水印下载图片
 // @namespace    https://okjk.co/VJQF62
-// @version      0.1
+// @version      0.2
 // @description  Batch download images from Gemini with watermark removal
 // @author       moyuguy
 // @homepage     https://github.com/moyuguy
@@ -15,6 +15,7 @@
 // @downloadURL https://update.greasyfork.org/scripts/563873/Gemini%E6%89%B9%E9%87%8F%E5%8E%BB%E6%B0%B4%E5%8D%B0%E4%B8%8B%E8%BD%BD%E5%9B%BE%E7%89%87.user.js
 // @updateURL https://update.greasyfork.org/scripts/563873/Gemini%E6%89%B9%E9%87%8F%E5%8E%BB%E6%B0%B4%E5%8D%B0%E4%B8%8B%E8%BD%BD%E5%9B%BE%E7%89%87.meta.js
 // ==/UserScript==
+
 
 (function() {
     'use strict';
@@ -327,6 +328,19 @@
         updateUI(); // Initial check
     }
 
+    // --- Helper for Native Download ---
+    const downloadBlob = (blob, filename) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+    };
+
     async function handleBatchDownload() {
         const images = findGeminiImages();
         if (images.length === 0) return;
@@ -364,26 +378,52 @@
                     }
                 }
 
-                // 6. Generate Filename
-                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-                const filename = `gemini_${timestamp}_${index + 1}.png`;
-
-                // 7. Save using GM_download
-                await new Promise((resolve, reject) => {
-                    const url = URL.createObjectURL(finalBlob);
-                    GM_download({
-                        url: url,
-                        name: filename,
-                        onload: () => {
-                            URL.revokeObjectURL(url);
-                            resolve();
-                        },
-                        onerror: (err) => {
-                            URL.revokeObjectURL(url);
-                            reject(err);
+                // 6. Generate Filename with Robust Title Extraction
+                const getChatTitle = () => {
+                    try {
+                        // Strategy 1: Explicit Chat Header Class (Most reliable based on user feedback)
+                        // The main chat header seems to use specific typography classes like gds-title-m
+                        // while sidebar uses gds-label-l
+                        const headerTitle = document.querySelector('.conversation-title.gds-title-m');
+                        if (headerTitle && headerTitle.textContent.trim()) {
+                            return headerTitle.textContent.trim();
                         }
-                    });
-                });
+
+                        // Strategy 2: Document Title (Final fallback)
+                        let docTitle = document.title;
+                        docTitle = docTitle.replace(/ ?-? ?Gemini$/, '');
+                        if (docTitle.trim().length > 0 && docTitle !== 'Gemini') {
+                            return docTitle.trim();
+                        }
+                        
+                        return null;
+
+                    } catch (e) {
+                        console.error("Error extracting title:", e);
+                        return null;
+                    }
+                };
+                
+                let title = getChatTitle() || 'Gemini_Chat';
+                // Sanitize: Allow CJK, alphanumeric, spaces, underscores, hyphens. Remove others.
+                title = title.replace(/[^\w\u4e00-\u9fa5\s\-_]/g, '');
+                // Replace spaces with underscores
+                title = title.trim().replace(/\s+/g, '_');
+                
+                console.log(`Gemini Batch Downloader: Title extracted: "${title}"`);
+                
+                if (!title) title = 'Gemini_Chat';
+
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                // Format: Title_Timestamp_Index.png
+                // Limit title length to avoid filesystem issues
+                const safeTitle = title.substring(0, 50); 
+                const filename = `${safeTitle}_${timestamp}_${index + 1}.png`;
+                
+                console.log(`Gemini Batch Downloader: Saving ${filename}`);
+                
+                // 7. Save using Native Anchor (Bypasses some Tampermonkey overwrite issues)
+                downloadBlob(finalBlob, filename);
 
                 completed++;
                 showToast(`Downloading... ${completed}/${total}`, 0);

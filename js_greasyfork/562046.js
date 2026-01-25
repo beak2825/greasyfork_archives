@@ -3,8 +3,8 @@
 // @namespace     https://github.com/mikoto710/esj-novel-downloader
 // @homepageURL   https://github.com/mikoto710/esj-novel-downloader
 // @supportURL    https://github.com/mikoto710/esj-novel-downloader/issues
-// @version       1.4.3
-// @description   在 ESJZone 小说详情页/论坛页注入下载按钮，支持 TXT/EPUB 全本导出，支持阅读页单章节下载
+// @version       1.4.4
+// @description   在 ESJZone 小说详情页/论坛页注入下载按钮，支持 TXT/EPUB/HTML 全本导出，支持单章节导出，支持插图嵌入
 // @author        Shigure Sora
 // @license       MIT
 // @match         https://www.esjzone.cc/detail/*
@@ -47,18 +47,24 @@
     }
 
     function getGlobalVar(name) {
-      if (window && window[name]) {
-        return window[name];
+      const win = window;
+      if (name in win && win[name]) {
+        return win[name];
       }
-      if (typeof unsafeWindow !== "undefined" && unsafeWindow[name]) {
-        return unsafeWindow[name];
+      if (typeof unsafeWindow !== "undefined") {
+        const uw = unsafeWindow;
+        if (name in uw && uw[name]) {
+          return uw[name];
+        }
       }
       return void 0;
     }
     function loadSingleScript(src, globalName) {
       return new Promise((resolve, reject) => {
         const existing = getGlobalVar(globalName);
-        if (existing) return resolve(existing);
+        if (existing) {
+          return resolve(existing);
+        }
         const s = document.createElement("script");
         s.src = src;
         s.async = true;
@@ -67,12 +73,12 @@
           if (loaded) {
             resolve(loaded);
           } else {
-            reject(new Error(`\u811A\u672C\u52A0\u8F7D\u6210\u529F\u4F46\u5168\u5C40\u53D8\u91CF\u672A\u627E\u5230: ${globalName}`));
+            reject(new Error(`Script loaded but global variable not found: ${globalName}`));
           }
         };
         s.onerror = () => {
           s.remove();
-          reject(new Error(`\u7F51\u7EDC\u9519\u8BEF: ${src}`));
+          reject(new Error(`Network Error: ${src}`));
         };
         document.head.appendChild(s);
       });
@@ -84,18 +90,20 @@
         try {
           return await loadSingleScript(url, globalName);
         } catch (e) {
-          console.warn(`[esj-novel-downloader] CDN \u52A0\u8F7D\u5931\u8D25 (${url}):`, e.message);
+          console.warn(`failed to load script (${url}):`, e.message);
           lastError = e;
         }
       }
-      throw new Error(`\u6240\u6709 CDN \u5747\u52A0\u8F7D\u5931\u8D25\u3002\u6700\u540E\u4E00\u6B21\u9519\u8BEF: ${lastError?.message}`);
+      throw new Error(`All scripts failed: ${lastError?.message}`);
     }
     function sleep(ms) {
       return new Promise((r) => setTimeout(r, ms));
     }
     function sleepWithAbort(ms, signal) {
       return new Promise((resolve) => {
-        if (signal?.aborted) return resolve();
+        if (signal?.aborted) {
+          return resolve();
+        }
         const onAbort = () => {
           clearTimeout(timer);
           signal?.removeEventListener("abort", onAbort);
@@ -154,7 +162,9 @@
           responseType: "blob",
           anonymous: options.credentials === "omit",
           onload: (res) => {
-            if (cancelSignal) cancelSignal.removeEventListener("abort", onAbort);
+            if (cancelSignal) {
+              cancelSignal.removeEventListener("abort", onAbort);
+            }
             if (res.status >= 200 && res.status < 300) {
               const response = new Response(res.response, {
                 status: res.status,
@@ -163,24 +173,38 @@
               Object.defineProperty(response, "url", { value: res.finalUrl });
               resolve(response);
             } else {
-              reject(new Error(`Status ${res.status}`));
+              reject(new Error(`HTTP Error Status ${res.status}`));
             }
           },
           ontimeout: () => {
-            if (cancelSignal) cancelSignal.removeEventListener("abort", onAbort);
+            if (cancelSignal) {
+              cancelSignal.removeEventListener("abort", onAbort);
+            }
             reject(new Error("Timeout"));
           },
-          onerror: (err) => {
-            if (cancelSignal) cancelSignal.removeEventListener("abort", onAbort);
+          onerror: () => {
+            if (cancelSignal) {
+              cancelSignal.removeEventListener("abort", onAbort);
+            }
             reject(new Error("Network Error"));
           }
         });
       });
     }
+    function blobToBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
 
     function enableDrag(popup, headerSelector) {
       const header = popup.querySelector(headerSelector);
-      if (!header) return;
+      if (!header) {
+        return;
+      }
       let dragging = false;
       let offsetX = 0;
       let offsetY = 0;
@@ -193,7 +217,9 @@
         document.addEventListener("mouseup", onUp, { once: true });
       });
       function onMove(e) {
-        if (!dragging) return;
+        if (!dragging) {
+          return;
+        }
         popup.style.left = e.clientX - offsetX + "px";
         popup.style.top = e.clientY - offsetY + "px";
         popup.style.transform = "none";
@@ -204,13 +230,7 @@
       }
     }
     function fullCleanup(originalTitle) {
-      const selectors = [
-        "#esj-popup",
-        "#esj-min-tray",
-        "#esj-confirm",
-        "#esj-format",
-        "#esj-settings"
-      ];
+      const selectors = ["#esj-popup", "#esj-min-tray", "#esj-confirm", "#esj-format", "#esj-settings"];
       selectors.forEach((sel) => {
         document.querySelector(sel)?.remove();
       });
@@ -247,21 +267,24 @@
 
     function createMinimizedTray(progressText) {
       const old = document.querySelector("#esj-min-tray");
-      if (old) old.remove();
-      const tray = el("div", {
-        id: "esj-min-tray",
-        title: "\u70B9\u51FB\u6062\u590D\u4E0B\u8F7D\u7A97\u53E3",
-        onclick: () => {
-          const popup = document.querySelector("#esj-popup");
-          if (popup) {
-            popup.style.display = "flex";
-            tray.remove();
+      if (old) {
+        old.remove();
+      }
+      const tray = el(
+        "div",
+        {
+          id: "esj-min-tray",
+          title: "\u70B9\u51FB\u6062\u590D\u4E0B\u8F7D\u7A97\u53E3",
+          onclick: () => {
+            const popup = document.querySelector("#esj-popup");
+            if (popup) {
+              popup.style.display = "flex";
+              tray.remove();
+            }
           }
-        }
-      }, [
-        el("span", {}, ["\u{1F4D8}"]),
-        el("span", { id: "esj-tray-text" }, [progressText])
-      ]);
+        },
+        [el("span", {}, ["\u{1F4D8}"]), el("span", { id: "esj-tray-text" }, [progressText])]
+      );
       document.body.appendChild(tray);
       return tray;
     }
@@ -273,15 +296,19 @@
     }
 
     function escapeXml(s) {
-      if (!s) return "";
+      if (!s) {
+        return "";
+      }
       return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
     }
     function convertToXhtml(htmlString) {
-      if (!htmlString) return "";
+      if (!htmlString) {
+        return "";
+      }
       const parser = new DOMParser();
       const doc = parser.parseFromString(htmlString, "text/html");
       const allElements = doc.body.querySelectorAll("*");
-      const validXmlNameRegex = /^[a-zA-Z_:][a-zA-Z0-9_\-\.\:]*$/;
+      const validXmlNameRegex = /^[a-zA-Z_:][a-zA-Z0-9_\-.:]*$/;
       allElements.forEach((el) => {
         const attrs = Array.from(el.attributes);
         for (const attr of attrs) {
@@ -324,7 +351,7 @@
       try {
         ZipClass = await loadScript(JSZIP_URLS, "JSZip");
       } catch (e) {
-        throw new Error("JSZip \u6838\u5FC3\u5E93\u52A0\u8F7D\u5931\u8D25: " + e.message);
+        throw new Error("Failed to load JSZip: " + e.message);
       }
       const zip = new ZipClass();
       zip.file("mimetype", "application/epub+zip", { binary: true, compression: "STORE" });
@@ -338,7 +365,9 @@
             </container>`
       );
       const oebps = zip.folder("OEBPS");
-      if (!oebps) throw new Error("\u65E0\u6CD5\u521B\u5EFA OEBPS \u6587\u4EF6\u5939");
+      if (!oebps) {
+        throw new Error("Cannot create OEBPS folder in EPUB structure.");
+      }
       const manifestItems = [];
       const spineItems = [];
       let coverMeta = "";
@@ -346,7 +375,9 @@
         const coverFilename = "cover." + metadata.coverExt;
         const coverMime = metadata.coverExt === "png" ? "image/png" : "image/jpeg";
         oebps.file(coverFilename, metadata.coverBlob);
-        manifestItems.push(`<item id="cover-image" href="${coverFilename}" media-type="${coverMime}" properties="cover-image"/>`);
+        manifestItems.push(
+          `<item id="cover-image" href="${coverFilename}" media-type="${coverMime}" properties="cover-image"/>`
+        );
         coverMeta = `<meta name="cover" content="cover-image" />`;
       }
       let navHtml = `<?xml version="1.0" encoding="utf-8"?>
@@ -409,7 +440,7 @@
           </spine>
         </package>`;
       oebps.file("content.opf", contentOpf);
-      log("\u6B63\u5728\u538B\u7F29\u751F\u6210 EPUB\uFF08\u53EF\u80FD\u9700\u8981\u51E0\u79D2\uFF09...");
+      log("\u6B63\u5728\u538B\u7F29\u751F\u6210 EPUB (\u53EF\u80FD\u9700\u8981\u51E0\u79D2) ...");
       const blob = await zip.generateAsync({ type: "blob", compression: "DEFLATE" });
       return blob;
     }
@@ -426,8 +457,12 @@
       return val;
     }
     function setConcurrency(num) {
-      if (num > 10) num = 10;
-      if (num < 1) num = 1;
+      if (num > 10) {
+        num = 10;
+      }
+      if (num < 1) {
+        num = 1;
+      }
       GM_setValue("concurrency", num);
       log(`\u5E76\u53D1\u6570\u5DF2\u66F4\u65B0\u4E3A: ${num}`);
     }
@@ -535,7 +570,9 @@
       const key = CACHE_PREFIX + bookId;
       try {
         const data = await get(key);
-        if (!data) return { size: 0, map: null };
+        if (!data) {
+          return { size: 0, map: null };
+        }
         if (Date.now() - data.ts > CACHE_EXPIRE_TIME) {
           console.warn("\u26A0 \u672C\u5730\u7F13\u5B58\u5DF2\u8FC7\u671F\uFF0C\u81EA\u52A8\u6E05\u7406");
           await del(key);
@@ -578,11 +615,102 @@
         const promises = targetKeys.map((k) => del(k));
         await Promise.all(promises);
         resetGlobalState();
-        console.log("Cache cleared:", targetKeys);
+        console.log("\u5DF2\u6E05\u7406\u7F13\u5B58:", targetKeys);
       } catch (e) {
         console.error("\u6E05\u7406\u7F13\u5B58\u5931\u8D25", e);
         alert("\u6E05\u7406\u5931\u8D25: " + e.message);
       }
+    }
+
+    async function buildHtml(chapters, metadata) {
+      log("\u6B63\u5728\u6784\u5EFA HTML \u6587\u4EF6...");
+      const imgMap = /* @__PURE__ */ new Map();
+      if (metadata.coverBlob) {
+        const b64 = await blobToBase64(metadata.coverBlob);
+        imgMap.set("cover", b64);
+      }
+      for (const chap of chapters) {
+        if (chap.images && chap.images.length > 0) {
+          for (const img of chap.images) {
+            const b64 = await blobToBase64(img.blob);
+            imgMap.set(img.id, b64);
+          }
+        }
+      }
+      const style = `
+        <style>
+            body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; color: #333; background: #f9f9f9; }
+            img { max-width: 100%; height: auto; display: block; margin: 10px auto; }
+            h1, h2, h3 { color: #2c3e50; }
+            
+            /* \u7AE0\u8282\u5361\u7247\u6837\u5F0F */
+            .chapter { 
+                margin-bottom: 50px; 
+                background: #fff; 
+                padding: 20px; 
+                border-radius: 8px; 
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+                page-break-after: always; /* \u5F3A\u5236\u5206\u9875\uFF0C\u6709\u52A9\u4E8E\u9605\u8BFB\u5668\u8BC6\u522B\u7AE0\u8282\u8FB9\u754C */
+            }
+            
+            /* \u76EE\u5F55\u6837\u5F0F */
+            .toc { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+            .toc ul { list-style-type: none; padding: 0; margin: 0; }
+            .toc li { margin: 5px 0; border-bottom: 1px dashed #eee; }
+            .toc a { text-decoration: none; color: #0366d6; display: block; padding: 5px 0; }
+            .toc a:hover { text-decoration: underline; background-color: #f0f8ff; }
+            
+            .cover-img { text-align: center; margin-bottom: 20px; }
+            .meta-info { font-size: 0.9em; color: #666; margin-bottom: 20px; white-space: pre-wrap; }
+        </style>
+    `;
+      let tocHtml = `<div class="toc"><h2>\u76EE\u5F55</h2><ul>`;
+      chapters.forEach((chap, i) => {
+        tocHtml += `<li><a href="#chap${i}">${chap.title}</a></li>`;
+      });
+      tocHtml += `</ul></div>`;
+      let metaHtml = "";
+      metaHtml += `<h1>${metadata.title}</h1>`;
+      metaHtml += `<div class="meta-info">${metadata.author ? "\u4F5C\u8005: " + metadata.author : ""}</div>`;
+      if (imgMap.has("cover")) {
+        metaHtml += `<div class="cover-img"><img src="${imgMap.get("cover")}" alt="Cover" /></div>`;
+      }
+      let contentHtml = "";
+      for (let i = 0; i < chapters.length; i++) {
+        const chap = chapters[i];
+        let body = chap.content;
+        if (chap.images && chap.images.length > 0) {
+          chap.images.forEach((img) => {
+            const base64 = imgMap.get(img.id);
+            if (base64) {
+              body = body.split(`src="${img.id}"`).join(`src="${base64}"`);
+            }
+          });
+        }
+        contentHtml += `
+            <div id="chap${i}" class="chapter">
+                <h2>${chap.title}</h2>
+                <div class="content">${body}</div>
+            </div>
+        `;
+      }
+      const fullHtml = `
+        <!DOCTYPE html>
+        <html lang="zh-CN">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>${metadata.title}</title>
+            ${style}
+        </head>
+        <body>
+            ${metaHtml}
+            ${tocHtml}
+            ${contentHtml}
+        </body>
+        </html>
+    `;
+      return new Blob([fullHtml], { type: "text/html;charset=utf-8" });
     }
 
     function toggleSettingsLock(locked) {
@@ -596,26 +724,35 @@
     function createCommonHeader(title, onClose, onMinimize) {
       const btnGroup = [];
       if (onMinimize) {
-        const btnMin = el("button", {
-          title: "\u6700\u5C0F\u5316",
-          style: "border:none;background:#81d4fa;color:#000;padding:2px 10px;border-radius:4px;cursor:pointer;font-weight:bold;line-height:1.2;margin-right:5px;",
-          onclick: onMinimize
-        }, ["_"]);
+        const btnMin = el(
+          "button",
+          {
+            title: "\u6700\u5C0F\u5316",
+            style: "border:none;background:#81d4fa;color:#000;padding:4px 10px;border-radius:6px;cursor:pointer;font-weight:bold;margin-right:5px;",
+            onclick: onMinimize
+          },
+          ["__"]
+        );
         btnGroup.push(btnMin);
       }
-      const btnClose = el("button", {
-        title: "\u5173\u95ED",
-        style: "border:none;background:#ef5350;color:#fff;padding:4px 10px;border-radius:6px;cursor:pointer;font-weight:bold;",
-        onclick: onClose
-      }, ["\u2715"]);
+      const btnClose = el(
+        "button",
+        {
+          title: "\u5173\u95ED",
+          style: "border:none;background:#ef5350;color:#fff;padding:4px 10px;border-radius:6px;cursor:pointer;font-weight:bold;",
+          onclick: onClose
+        },
+        ["\u2715"]
+      );
       btnGroup.push(btnClose);
-      return el("div", {
-        className: "esj-common-header",
-        style: "padding:10px;background:#2b9bd7;color:#fff;display:flex;justify-content:space-between;align-items:center;cursor:move;border-radius:8px 8px 0 0;"
-      }, [
-        el("span", { style: "font-weight:bold;" }, [title]),
-        el("div", { style: "display:flex;" }, btnGroup)
-      ]);
+      return el(
+        "div",
+        {
+          className: "esj-common-header",
+          style: "padding:10px;background:#2b9bd7;color:#fff;display:flex;justify-content:space-between;align-items:center;cursor:move;border-radius:8px 8px 0 0;"
+        },
+        [el("span", { style: "font-weight:bold;" }, [title]), el("div", { style: "display:flex;" }, btnGroup)]
+      );
     }
     function createDownloadPopup() {
       fullCleanup(state.originalTitle);
@@ -636,36 +773,53 @@
       }
       function onMinimize() {
         const popup2 = document.querySelector("#esj-popup");
-        if (popup2) popup2.style.display = "none";
+        if (popup2) {
+          popup2.style.display = "none";
+        }
         const headerTitle = popup2?.querySelector(".esj-common-header span")?.textContent || "";
         const statusText = headerTitle.replace(/^📘\s*/, "").trim() || "\u4E0B\u8F7D\u4E2D...";
         createMinimizedTray(statusText);
       }
       const header = createCommonHeader("\u{1F4D8} \u5168\u672C\u4E0B\u8F7D\u4EFB\u52A1", onClose, onMinimize);
       const span = header.querySelector("span");
-      if (span) span.id = "esj-title";
-      const progressBar = el("div", { id: "esj-progress", style: "width:0%;height:100%;background:#2b9bd7;transition:width .2s;" });
+      if (span) {
+        span.id = "esj-title";
+      }
+      const progressBar = el("div", {
+        id: "esj-progress",
+        style: "width:0%;height:100%;background:#2b9bd7;transition:width .2s;"
+      });
       const logBox = el("div", {
         id: "esj-log",
         style: "flex:1;margin:12px;background:#fafafa;border:1px solid #e6e6e6;padding:8px;border-radius:6px;overflow:auto;font-family:Consolas,monospace;font-size:13px;white-space:pre-wrap;"
       });
-      const btnCancel = el("button", {
-        id: "esj-cancel",
-        style: "padding:8px 12px;background:#d9534f;color:#fff;border:none;border-radius:6px;cursor:pointer;",
-        onclick: onCancel
-      }, ["\u53D6\u6D88\u4EFB\u52A1"]);
-      const popup = el("div", {
-        id: "esj-popup",
-        style: "position: fixed; top: 18%; left: 50%; transform: translateX(-50%); width: 520px; height: 460px; background: #fff; border-radius: 8px; border: 1px solid #aaa; box-shadow: 0 0 18px rgba(0,0,0,0.28); z-index: 999999; display:flex;flex-direction:column;"
-      }, [
-        header,
-        el("div", { style: "padding:12px;" }, [
-          el("div", { style: "font-size:13px;margin-bottom:8px;" }, ["\u8FDB\u5EA6\uFF1A"]),
-          el("div", { style: "width:100%;height:14px;background:#eee;border-radius:8px;overflow:hidden;" }, [progressBar])
-        ]),
-        logBox,
-        el("div", { style: "padding:10px;display:flex;gap:8px;justify-content:flex-end;" }, [btnCancel])
-      ]);
+      const btnCancel = el(
+        "button",
+        {
+          id: "esj-cancel",
+          style: "padding:8px 12px;background:#d9534f;color:#fff;border:none;border-radius:6px;cursor:pointer;",
+          onclick: onCancel
+        },
+        ["\u53D6\u6D88\u4EFB\u52A1"]
+      );
+      const popup = el(
+        "div",
+        {
+          id: "esj-popup",
+          style: "position: fixed; top: 18%; left: 50%; transform: translateX(-50%); width: 520px; height: 460px; background: #fff; border-radius: 8px; border: 1px solid #aaa; box-shadow: 0 0 18px rgba(0,0,0,0.28); z-index: 999999; display:flex;flex-direction:column;"
+        },
+        [
+          header,
+          el("div", { style: "padding:12px;" }, [
+            el("div", { style: "font-size:13px;margin-bottom:8px;" }, ["\u8FDB\u5EA6\uFF1A"]),
+            el("div", { style: "width:100%;height:14px;background:#eee;border-radius:8px;overflow:hidden;" }, [
+              progressBar
+            ])
+          ]),
+          logBox,
+          el("div", { style: "padding:10px;display:flex;gap:8px;justify-content:flex-end;" }, [btnCancel])
+        ]
+      );
       document.body.appendChild(popup);
       enableDrag(popup, ".esj-common-header");
       return popup;
@@ -678,36 +832,54 @@
       const closeAction = () => {
         document.querySelector("#esj-confirm")?.remove();
         toggleSettingsLock(false);
-        if (onCancel) onCancel();
+        if (onCancel) {
+          onCancel();
+        }
       };
       const header = createCommonHeader("\u2714\uFE0F \u786E\u8BA4\u4E0B\u8F7D", closeAction);
       const body = el("div", { style: "padding:16px;font-size:14px;" }, [hintText]);
-      const btnCancel = el("button", {
-        id: "esj-confirm-cancel",
-        style: "padding:8px 12px;background:#eee;border:1px solid #ccc;border-radius:6px;cursor:pointer;",
-        onclick: () => {
-          popup.remove();
-          if (onCancel) {
-            toggleSettingsLock(false);
-            onCancel();
+      const btnCancel = el(
+        "button",
+        {
+          id: "esj-confirm-cancel",
+          style: "padding:8px 12px;background:#eee;border:1px solid #ccc;border-radius:6px;cursor:pointer;",
+          onclick: () => {
+            popup.remove();
+            if (onCancel) {
+              toggleSettingsLock(false);
+              onCancel();
+            }
           }
-        }
-      }, ["\u53D6\u6D88"]);
-      const btnOk = el("button", {
-        id: "esj-confirm-ok",
-        style: "padding:8px 12px;background:#2b9bd7;color:#fff;border:none;border-radius:6px;cursor:pointer;",
-        onclick: () => {
-          popup.remove();
-          onOk();
-        }
-      }, ["\u786E\u5B9A"]);
-      const footer = el("div", {
-        style: "padding:12px;display:flex;justify-content:flex-end;gap:8px;"
-      }, [btnCancel, btnOk]);
-      const popup = el("div", {
-        id: "esj-confirm",
-        style: "position: fixed; top: 30%; left: 50%; transform: translateX(-50%); width: 380px; background:#fff;border:1px solid #aaa;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.15);z-index:999999;padding:0;display:flex;flex-direction:column;"
-      }, [header, body, footer]);
+        },
+        ["\u53D6\u6D88"]
+      );
+      const btnOk = el(
+        "button",
+        {
+          id: "esj-confirm-ok",
+          style: "padding:8px 12px;background:#2b9bd7;color:#fff;border:none;border-radius:6px;cursor:pointer;",
+          onclick: () => {
+            popup.remove();
+            onOk();
+          }
+        },
+        ["\u786E\u5B9A"]
+      );
+      const footer = el(
+        "div",
+        {
+          style: "padding:12px;display:flex;justify-content:flex-end;gap:8px;"
+        },
+        [btnCancel, btnOk]
+      );
+      const popup = el(
+        "div",
+        {
+          id: "esj-confirm",
+          style: "position: fixed; top: 30%; left: 50%; transform: translateX(-50%); width: 380px; background:#fff;border:1px solid #aaa;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.15);z-index:999999;padding:0;display:flex;flex-direction:column;"
+        },
+        [header, body, footer]
+      );
       document.body.appendChild(popup);
       enableDrag(popup, ".esj-common-header");
     }
@@ -733,24 +905,24 @@
         let successCount = 0;
         let failCount = 0;
         data.chapters.forEach((chap) => {
-          if (chap.images) successCount += chap.images.length;
-          if (chap.imageErrors) failCount += chap.imageErrors;
+          if (chap.images) {
+            successCount += chap.images.length;
+          }
+          if (chap.imageErrors) {
+            failCount += chap.imageErrors;
+          }
         });
         const totalCount = successCount + failCount;
         if (totalCount > 0) {
           const color = failCount > 0 ? "#e6a23c" : "#2b9bd7";
           const errorHint = failCount > 0 ? ` (\u5931\u8D25 ${failCount} \u5F20\uFF0C\u539F\u56E0\u89C1 F12)` : "";
-          imageStatus = el(
-            "div",
-            { style: `color:${color}; font-size:12px; margin-top:4px;` },
-            [`\u{1F5BC}\uFE0F \u6B63\u6587\u63D2\u56FE: ${successCount} / ${totalCount} \u5F20${errorHint}`]
-          );
+          imageStatus = el("div", { style: `color:${color}; font-size:12px; margin-top:4px;` }, [
+            `\u{1F5BC}\uFE0F \u6B63\u6587\u63D2\u56FE: ${successCount} / ${totalCount} \u5F20${errorHint}`
+          ]);
         } else {
-          imageStatus = el(
-            "div",
-            { style: "color:#999; font-size:12px; margin-top:4px;" },
-            ["\u{1F5BC}\uFE0F \u6B63\u6587\u63D2\u56FE: \u672A\u68C0\u6D4B\u5230\u56FE\u7247"]
-          );
+          imageStatus = el("div", { style: "color:#999; font-size:12px; margin-top:4px;" }, [
+            "\u{1F5BC}\uFE0F \u6B63\u6587\u63D2\u56FE: \u672A\u68C0\u6D4B\u5230\u56FE\u7247"
+          ]);
         }
       }
       const infoBody = el("div", { style: "padding:20px;font-size:14px;line-height:1.5;" }, [
@@ -759,30 +931,56 @@
         coverStatus,
         imageStatus
       ]);
-      const btnTxt = el("button", {
-        id: "esj-txt",
-        style: "flex:1;padding:10px 0;border:1px solid #ccc;background:#f0f0f0;border-radius:6px;cursor:pointer;font-weight:bold;color:#333;",
-        onclick: () => {
-          const filename = (data.metadata.title || "book") + ".txt";
-          const blob = new Blob([data.txt], { type: "text/plain;charset=utf-8" });
-          triggerDownload(blob, filename);
-        }
-      }, ["\u2B07 TXT \u4E0B\u8F7D"]);
-      const btnEpub = el("button", {
-        id: "esj-epub",
-        style: "flex:1;padding:10px 0;border:none;background:#2b9bd7;color:#fff;border-radius:6px;cursor:pointer;font-weight:bold;",
-        onclick: async () => handleEpubDownload(btnEpub)
-      }, ["\u2B07 EPUB \u4E0B\u8F7D"]);
-      const footer = el("div", {
-        style: "display:flex;gap:15px;justify-content:center;padding:0 20px 20px 20px;"
-      }, [btnTxt, btnEpub]);
-      const popup = el("div", {
-        id: "esj-format",
-        style: "position:fixed;top:30%;left:50%;transform:translateX(-50%);width:420px;background:#fff;border:1px solid #aaa;border-radius:8px;box-shadow:0 0 18px rgba(0,0,0,.28);z-index:999999;padding:0;display:flex;flex-direction:column;"
-      }, [header, infoBody, footer]);
+      const btnTxt = el(
+        "button",
+        {
+          id: "esj-txt",
+          style: "flex:1;padding:10px 0;border:1px solid #ccc;background:#f0f0f0;border-radius:6px;cursor:pointer;font-weight:bold;color:#333;",
+          onclick: () => {
+            const filename = (data.metadata.title || "book") + ".txt";
+            const blob = new Blob([data.txt], { type: "text/plain;charset=utf-8" });
+            triggerDownload(blob, filename);
+          }
+        },
+        ["\u2B07 TXT \u4E0B\u8F7D"]
+      );
+      const btnEpub = el(
+        "button",
+        {
+          id: "esj-epub",
+          style: "flex:1;padding:10px 0;border:none;background:#2b9bd7;color:#fff;border-radius:6px;cursor:pointer;font-weight:bold;",
+          onclick: async () => handleEpubDownload()
+        },
+        ["\u2B07 EPUB \u4E0B\u8F7D"]
+      );
+      const btnHtml = el(
+        "button",
+        {
+          id: "esj-html",
+          style: "flex:1;padding:10px 0;border:none;background:#999;color:#fff;border-radius:6px;cursor:pointer;font-weight:bold;",
+          onclick: async () => handleHtmlDownload()
+        },
+        ["\u2B07 HTML \u4E0B\u8F7D"]
+      );
+      const footer = el(
+        "div",
+        {
+          style: "display:flex;gap:15px;justify-content:center;padding:0 20px 20px 20px;"
+        },
+        [btnTxt, btnEpub, btnHtml]
+      );
+      const popup = el(
+        "div",
+        {
+          id: "esj-format",
+          style: "position:fixed;top:30%;left:50%;transform:translateX(-50%);width:420px;background:#fff;border:1px solid #aaa;border-radius:8px;box-shadow:0 0 18px rgba(0,0,0,.28);z-index:999999;padding:0;display:flex;flex-direction:column;"
+        },
+        [header, infoBody, footer]
+      );
       document.body.appendChild(popup);
       enableDrag(popup, ".esj-common-header");
-      async function handleEpubDownload(btn) {
+      async function handleEpubDownload() {
+        const btn = document.querySelector("#esj-epub");
         const currentData = state.cachedData;
         if (currentData.epubBlob) {
           const filename = (currentData.metadata.title || "book") + ".epub";
@@ -812,6 +1010,23 @@
           document.title = oldTitle;
         }
       }
+      async function handleHtmlDownload() {
+        const btn = document.querySelector("#esj-html");
+        const originalText = btn.innerText;
+        try {
+          btn.innerText = "\u751F\u6210\u4E2D...";
+          btn.disabled = true;
+          const blob = await buildHtml(data.chapters, data.metadata);
+          const filename = (data.metadata.title || "book") + ".html";
+          triggerDownload(blob, filename);
+        } catch (e) {
+          console.error(e);
+          alert("HTML \u751F\u6210\u5931\u8D25: " + e.message);
+        } finally {
+          btn.innerText = originalText;
+          btn.disabled = false;
+        }
+      }
     }
     function createSettingsPanel() {
       fullCleanup();
@@ -830,9 +1045,13 @@
         style: "width: 60px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; text-align: center;",
         oninput: (e) => {
           const target = e.target;
-          if (target.value === "") return;
+          if (target.value === "") {
+            return;
+          }
           let val = parseInt(target.value, 10);
-          if (isNaN(val)) return;
+          if (isNaN(val)) {
+            return;
+          }
           if (val > 10) {
             val = 10;
             target.value = "10";
@@ -844,7 +1063,7 @@
         },
         onblur: (e) => {
           const target = e.target;
-          let val = parseInt(target.value, 10);
+          const val = parseInt(target.value, 10);
           if (isNaN(val) || target.value === "") {
             target.value = currentConcurrency.toString();
             setConcurrency(currentConcurrency);
@@ -853,44 +1072,48 @@
       });
       let confirmTimer;
       let isConfirming = false;
-      const btnClear = el("button", {
-        className: "btn btn-danger btn-sm",
-        style: "color: white; min-width: 110px; transition: all 0.2s;",
-        onclick: async (e) => {
-          const btn = e.target;
-          if (!isConfirming) {
-            isConfirming = true;
-            btn.textContent = "\u786E\u5B9A\u5220\u9664?";
-            confirmTimer = window.setTimeout(() => {
-              isConfirming = false;
-              btn.textContent = "\u6E05\u7A7A\u7F13\u5B58";
-            }, 3e3);
-            return;
+      const btnClear = el(
+        "button",
+        {
+          className: "btn btn-danger btn-sm",
+          style: "color: white; min-width: 110px; transition: all 0.2s;",
+          onclick: async (e) => {
+            const btn = e.target;
+            if (!isConfirming) {
+              isConfirming = true;
+              btn.textContent = "\u786E\u5B9A\u5220\u9664?";
+              confirmTimer = window.setTimeout(() => {
+                isConfirming = false;
+                btn.textContent = "\u6E05\u7A7A\u7F13\u5B58";
+              }, 3e3);
+              return;
+            }
+            clearTimeout(confirmTimer);
+            isConfirming = false;
+            btn.disabled = true;
+            btn.textContent = "\u6E05\u7406\u4E2D...";
+            try {
+              await clearAllCaches();
+              btn.classList.remove("btn-danger");
+              btn.classList.add("btn-success");
+              btn.style.backgroundColor = "#28a745";
+              btn.textContent = "\u5DF2\u6E05\u7406";
+            } catch (err) {
+              btn.textContent = "\u274C \u5931\u8D25";
+              console.error(err);
+            } finally {
+              setTimeout(() => {
+                btn.disabled = false;
+                btn.classList.remove("btn-success");
+                btn.classList.add("btn-danger");
+                btn.style.backgroundColor = "";
+                btn.textContent = "\u6E05\u7A7A\u7F13\u5B58";
+              }, 2e3);
+            }
           }
-          clearTimeout(confirmTimer);
-          isConfirming = false;
-          btn.disabled = true;
-          btn.textContent = "\u6E05\u7406\u4E2D...";
-          try {
-            await clearAllCaches();
-            btn.classList.remove("btn-danger");
-            btn.classList.add("btn-success");
-            btn.style.backgroundColor = "#28a745";
-            btn.textContent = "\u5DF2\u6E05\u7406";
-          } catch (err) {
-            btn.textContent = "\u274C \u5931\u8D25";
-            console.error(err);
-          } finally {
-            setTimeout(() => {
-              btn.disabled = false;
-              btn.classList.remove("btn-success");
-              btn.classList.add("btn-danger");
-              btn.style.backgroundColor = "";
-              btn.textContent = "\u6E05\u7A7A\u7F13\u5B58";
-            }, 2e3);
-          }
-        }
-      }, [" \u6E05\u7A7A\u7F13\u5B58"]);
+        },
+        [" \u6E05\u7A7A\u7F13\u5B58"]
+      );
       const isImageEnabled = getImageDownloadSetting();
       const checkboxInput = el("input", {
         type: "checkbox",
@@ -913,14 +1136,11 @@
         el("label", { style: "color: #333;" }, ["\u4E0B\u8F7D\u7EBF\u7A0B\u6570 (1-10):"]),
         inputConcurrency
       ]);
-      const rowCache = el("div", { style: rowStyle }, [
-        el("label", { style: "color: #333;" }, ["\u4E0B\u8F7D\u7F13\u5B58:"]),
-        btnClear
-      ]);
+      const rowCache = el("div", { style: rowStyle }, [el("label", { style: "color: #333;" }, ["\u4E0B\u8F7D\u7F13\u5B58:"]), btnClear]);
       const rowImage = el("div", { style: rowStyle }, [
         el("div", {}, [
           el("label", { style: "color: #333;" }, ["\u4E0B\u8F7D\u6B63\u6587\u63D2\u56FE: "]),
-          el("div", { style: "font-size:12px; color:#999; margin-top: 2px;" }, ["(\u5728epub\u4E2D\u63D2\u5165\uFF0C\u4F1A\u8BA9\u901F\u5EA6\u53D8\u6162\uFF0C\u4F53\u79EF\u53D8\u5927)"])
+          el("div", { style: "font-size:12px; color:#999; margin-top: 2px;" }, ["(\u4F1A\u8BA9\u901F\u5EA6\u53D8\u6162\u3001\u4F53\u79EF\u53D8\u5927)"])
         ]),
         switchToggleImage
       ]);
@@ -931,13 +1151,14 @@
         createDivider(),
         rowCache
       ]);
-      const popup = el("div", {
-        id: "esj-settings",
-        style: "position:fixed;top:30%;left:50%;transform:translateX(-50%);width:320px;background:#fff;border:1px solid #ccc;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.15);z-index:999999;display:flex;flex-direction:column;"
-      }, [
-        header,
-        body
-      ]);
+      const popup = el(
+        "div",
+        {
+          id: "esj-settings",
+          style: "position:fixed;top:30%;left:50%;transform:translateX(-50%);width:320px;background:#fff;border:1px solid #ccc;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.15);z-index:999999;display:flex;flex-direction:column;"
+        },
+        [header, body]
+      );
       document.body.appendChild(popup);
       enableDrag(popup, ".esj-common-header");
     }
@@ -950,7 +1171,20 @@
       } else {
         bookName = doc.title.split(" - ")[0].trim();
       }
-      const symbolMap = { "\\": "-", "/": "- ", ":": "\uFF1A", "*": "\u2606", "?": "\uFF1F", '"': " ", "<": "\u300A", ">": "\u300B", "|": "-", ".": "\u3002", "	": " ", "\n": " " };
+      const symbolMap = {
+        "\\": "-",
+        "/": "- ",
+        ":": "\uFF1A",
+        "*": "\u2606",
+        "?": "\uFF1F",
+        '"': " ",
+        "<": "\u300A",
+        ">": "\u300B",
+        "|": "-",
+        ".": "\u3002",
+        "	": " ",
+        "\n": " "
+      };
       const safeBookName = bookName.split("").map((c) => symbolMap[c] || c).join("");
       let author = "\u672A\u77E5\u4F5C\u8005";
       let infoBlock = "";
@@ -961,8 +1195,10 @@
           if (li.classList.contains("hidden-md-up") || li.querySelector(".rating-stars")) {
             return;
           }
-          let text = li.innerText.replace(/[ \t]+/g, " ").trim();
-          if (!text) return;
+          const text = li.innerText.replace(/[ \t]+/g, " ").trim();
+          if (!text) {
+            return;
+          }
           if (text.includes("\u4F5C\u8005")) {
             const authorLink = li.querySelector("a");
             author = authorLink ? authorLink.innerText.trim() : text.replace(/作者[:：]/g, "").trim();
@@ -1015,9 +1251,8 @@ ${descText}
       const h2 = doc.querySelector("h2")?.innerText || defaultTitle;
       const bookName = document.title.split(" - ")[0].trim();
       const author = doc.querySelector(".single-post-meta div")?.innerText.trim() || "";
-      doc.querySelector(".forum-content")?.innerText || "";
       const contentEl = doc.querySelector(".forum-content");
-      let contentHtml = contentEl ? contentEl.innerHTML : "";
+      const contentHtml = contentEl ? contentEl.innerHTML : "";
       let contentText = contentEl ? contentEl.innerText : "";
       if (contentEl) {
         const safeTitle = h2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -1065,14 +1300,23 @@ ${descText}
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext("2d");
-          if (!ctx) return resolve(blob);
+          if (!ctx) {
+            return resolve(blob);
+          }
           ctx.fillStyle = "#FFFFFF";
           ctx.fillRect(0, 0, width, height);
           ctx.drawImage(img, 0, 0, width, height);
-          canvas.toBlob((b) => {
-            if (b) resolve(b);
-            else resolve(blob);
-          }, "image/jpeg", quality);
+          canvas.toBlob(
+            (b) => {
+              if (b) {
+                resolve(b);
+              } else {
+                resolve(blob);
+              }
+            },
+            "image/jpeg",
+            quality
+          );
         };
         img.onerror = () => {
           URL.revokeObjectURL(url);
@@ -1093,7 +1337,9 @@ ${descText}
       for (let i = 0; i < imgs.length; i++) {
         const img = imgs[i];
         let src = img.getAttribute("src");
-        if (!src) continue;
+        if (!src) {
+          continue;
+        }
         let downloadSuccess = false;
         let errorMsg = "\u672A\u77E5\u9519\u8BEF";
         try {
@@ -1111,13 +1357,20 @@ ${descText}
         if (src.startsWith("http")) {
           const MAX_RETRIES = 3;
           for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-            if (signal?.aborted) break;
+            if (signal?.aborted) {
+              break;
+            }
             try {
-              const response = await fetchWithTimeout(src, {
-                method: "GET",
-                referrerPolicy: "no-referrer",
-                credentials: "omit"
-              }, 1e3, signal);
+              const response = await fetchWithTimeout(
+                src,
+                {
+                  method: "GET",
+                  referrerPolicy: "no-referrer",
+                  credentials: "omit"
+                },
+                1e3,
+                signal
+              );
               let blob = await response.blob();
               let mimeType = blob.type;
               let extension = getExtensionFromMime(mimeType);
@@ -1156,7 +1409,7 @@ ${descText}
         }
         if (!downloadSuccess && !signal?.aborted) {
           failCount++;
-          log(`\u274C [\u63D2\u56FE\u83B7\u53D6\u5931\u8D25] \u5E8F\u5217${chapterIndex + 1}: ${src} 
+          log(`\u274C \u63D2\u56FE\u83B7\u53D6\u5931\u8D25\uFF0C\u5E8F\u5217${chapterIndex + 1}: ${src} 
 \u5931\u8D25\u539F\u56E0\uFF1A ${errorMsg}`);
           img.removeAttribute("srcset");
           img.removeAttribute("loading");
@@ -1177,19 +1430,26 @@ ${descText}
     async function fetchCoverImage(url) {
       try {
         log("\u542F\u52A8\u5C01\u9762\u4E0B\u8F7D...");
-        const response = await fetchWithTimeout(url, {
-          method: "GET",
-          referrerPolicy: "no-referrer",
-          credentials: "omit"
-        }, 15e3);
+        const response = await fetchWithTimeout(
+          url,
+          {
+            method: "GET",
+            referrerPolicy: "no-referrer",
+            credentials: "omit"
+          },
+          15e3
+        );
         const blob = await response.blob();
         if (blob.size < 1e3) {
           log("\u26A0 \u5C01\u9762\u6587\u4EF6\u8FC7\u5C0F\uFF0C\u5DF2\u5FFD\u7565");
           return null;
         }
         let ext = "jpg";
-        if (blob.type.includes("png")) ext = "png";
-        else if (blob.type.includes("jpeg") || blob.type.includes("jpg")) ext = "jpg";
+        if (blob.type.includes("png")) {
+          ext = "png";
+        } else if (blob.type.includes("jpeg") || blob.type.includes("jpg")) {
+          ext = "jpg";
+        }
         log("\u2714 \u5C01\u9762\u4E0B\u8F7D\u5B8C\u6210");
         return { blob, ext };
       } catch (e) {
@@ -1200,12 +1460,16 @@ ${descText}
     async function downloadChapterHtml(url, title) {
       const MAX_RETRIES = 3;
       for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-        if (state.abortFlag) return null;
+        if (state.abortFlag) {
+          return null;
+        }
         try {
           const res = await fetchWithTimeout(url, { credentials: "include" }, 15e3);
           return await res.text();
         } catch (e) {
-          if (e.name === "AbortError" || state.abortFlag) return null;
+          if (e.name === "AbortError" || state.abortFlag) {
+            return null;
+          }
           if (attempt === MAX_RETRIES) {
             log(`\u274C \u7AE0\u8282\u83B7\u53D6\u5931\u8D25 (${title}): ${e.message}`);
           } else {
@@ -1224,11 +1488,7 @@ ${descText}
       let imageErrors = 0;
       if (enableImage) {
         try {
-          const processed = await processHtmlImages(
-            result.contentHtml,
-            index,
-            state.abortController?.signal
-          );
+          const processed = await processHtmlImages(result.contentHtml, index, state.abortController?.signal);
           finalHtml = processed.processedHtml;
           chapterImages = processed.images;
           imageErrors = processed.failCount;
@@ -1255,7 +1515,9 @@ ${result.contentText}
       });
     }
     async function processChapterTask(task, ctx, isRetry = false) {
-      if (state.abortFlag) return;
+      if (state.abortFlag) {
+        return;
+      }
       const { index, url, title } = task;
       const { total, options } = ctx;
       if (!isRetry && state.globalChaptersMap.has(index)) {
@@ -1284,7 +1546,9 @@ ${msg}
         return;
       }
       const html = await downloadChapterHtml(url, title);
-      if (!html || state.abortFlag) return;
+      if (!html || state.abortFlag) {
+        return;
+      }
       await handleChapterContent(html, task, ctx);
       if (!isRetry) {
         ctx.runtime.completedCount++;
@@ -1304,13 +1568,15 @@ ${msg}
       const imageCount = chapter?.images?.length || 0;
       const prefix = isRetry ? "\u267B\uFE0F \u8865\u6293" : "\u2714 \u6293\u53D6";
       if (imageErrors > 0) {
-        log(`${prefix} (${ctx.runtime.completedCount}/${total})\uFF1A${title} (${imageErrors}/${imageCount + imageErrors} \u5F20\u56FE\u7247\u83B7\u53D6\u5931\u8D25)
-URL: ${url}`);
+        log(
+          `${prefix} (${ctx.runtime.completedCount}/${total}): ${title} (${imageErrors}/${imageCount + imageErrors} \u5F20\u56FE\u7247\u83B7\u53D6\u5931\u8D25)
+URL: ${url}`
+        );
       } else if (imageCount > 0) {
-        log(`${prefix} (${ctx.runtime.completedCount}/${total})\uFF1A${title} (${imageCount} \u5F20\u56FE\u7247)
+        log(`${prefix} (${ctx.runtime.completedCount}/${total}): ${title} (${imageCount} \u5F20\u56FE\u7247)
 URL: ${url}`);
       } else {
-        log(`${prefix} (${ctx.runtime.completedCount}/${total})\uFF1A${title}
+        log(`${prefix} (${ctx.runtime.completedCount}/${total}): ${title}
 URL: ${url}`);
       }
       if (!state.abortFlag) {
@@ -1323,8 +1589,12 @@ URL: ${url}`);
       log("\u6B63\u5728\u8FDB\u884C\u7AE0\u8282\u5B8C\u6574\u6027\u68C0\u67E5...");
       const missingTasks = tasks.filter((t) => {
         const chap = state.globalChaptersMap.get(t.index);
-        if (!chap) return true;
-        if (enableImage && chap.imageErrors && chap.imageErrors > 0) return true;
+        if (!chap) {
+          return true;
+        }
+        if (enableImage && chap.imageErrors && chap.imageErrors > 0) {
+          return true;
+        }
         return false;
       });
       if (missingTasks.length > 0) {
@@ -1349,7 +1619,9 @@ URL: ${url}`);
       const { bookId, bookName, author, introTxt, coverUrl, tasks } = options;
       const total = tasks.length;
       let popup = document.querySelector("#esj-popup");
-      if (!popup) popup = createDownloadPopup();
+      if (!popup) {
+        popup = createDownloadPopup();
+      }
       const progressEl = document.querySelector("#esj-progress");
       const titleEl = document.querySelector("#esj-title");
       setAbortFlag(false);
@@ -1371,13 +1643,19 @@ URL: ${url}`);
         ui: { progressEl, titleEl },
         runtime: { completedCount: 0 },
         updateProgress: () => {
-          if (state.abortFlag) return;
+          if (state.abortFlag) {
+            return;
+          }
           const count = ctx.runtime.completedCount;
-          const statusStr = `\u5168\u672C\u4E0B\u8F7D\uFF08${count}/${total}\uFF09`;
-          if (titleEl) titleEl.textContent = "\u{1F4D8} " + statusStr;
+          const statusStr = `\u5168\u672C\u4E0B\u8F7D (${count}/${total}) `;
+          if (titleEl) {
+            titleEl.textContent = "\u{1F4D8} " + statusStr;
+          }
           document.title = `[${count}/${total}] ${state.originalTitle}`;
           updateTrayText(statusStr);
-          if (progressEl) progressEl.style.width = count / total * 100 + "%";
+          if (progressEl) {
+            progressEl.style.width = count / total * 100 + "%";
+          }
         }
       };
       const concurrency = getConcurrency();
@@ -1385,7 +1663,9 @@ URL: ${url}`);
       async function worker() {
         while (queue.length > 0 && !state.abortFlag) {
           const task = queue.shift();
-          if (task) await processChapterTask(task, ctx, false);
+          if (task) {
+            await processChapterTask(task, ctx, false);
+          }
         }
       }
       log(`\u542F\u52A8 ${concurrency} \u4E2A\u5E76\u53D1\u7EBF\u7A0B...`);
@@ -1450,127 +1730,137 @@ URL: ${url}`);
         }
       }
       return new Promise((resolveMain) => {
-        createConfirmPopup(async () => {
-          try {
-            const chaptersNodes = Array.from(document.querySelectorAll("#chapterList a"));
-            if (chaptersNodes.length === 0) {
-              alert("\u672A\u627E\u5230\u7AE0\u8282\u5217\u8868 #chapterList");
-              fullCleanup(state.originalTitle);
-              return resolveMain();
+        createConfirmPopup(
+          async () => {
+            try {
+              const chaptersNodes = Array.from(
+                document.querySelectorAll("#chapterList a")
+              );
+              if (chaptersNodes.length === 0) {
+                alert("\u672A\u627E\u5230\u7AE0\u8282\u5217\u8868 #chapterList");
+                fullCleanup(state.originalTitle);
+                return resolveMain();
+              }
+              const tasks = chaptersNodes.map((node, index) => ({
+                index,
+                url: node.href,
+                title: (node.getAttribute("data-title") || node.innerText || "").trim()
+              }));
+              const meta = parseBookMetadata(document, location.href);
+              if (state.abortFlag) {
+                log("\u7528\u6237\u53D6\u6D88\uFF0C\u8DF3\u8FC7\u4E0B\u8F7D");
+                return;
+              }
+              await batchDownload({
+                bookId: getBookId(),
+                bookName: meta.bookName,
+                author: meta.author,
+                introTxt: meta.introTxt,
+                coverUrl: meta.coverUrl,
+                tasks
+              });
+            } catch (e) {
+              console.error(e);
+              log("\u274C \u6293\u53D6\u6D41\u7A0B\u5F02\u5E38: " + e.message);
+            } finally {
+              resolveMain();
             }
-            const tasks = chaptersNodes.map((node, index) => ({
-              index,
-              url: node.href,
-              title: (node.getAttribute("data-title") || node.innerText || "").trim()
-            }));
-            const meta = parseBookMetadata(document, location.href);
-            const imgNode = document.querySelector(".product-gallery img");
-            const coverUrl = imgNode ? imgNode.src : void 0;
-            if (state.abortFlag) {
-              log("\u7528\u6237\u53D6\u6D88\uFF0C\u8DF3\u8FC7\u4E0B\u8F7D");
-              return;
-            }
-            await batchDownload({
-              bookId: getBookId(),
-              bookName: meta.bookName,
-              author: meta.author,
-              introTxt: meta.introTxt,
-              coverUrl: meta.coverUrl,
-              tasks
-            });
-          } catch (e) {
-            console.error(e);
-            log("\u274C \u6293\u53D6\u6D41\u7A0B\u5F02\u5E38: " + e.message);
-          } finally {
-            return resolveMain();
+          },
+          () => {
+            log("\u7528\u6237\u53D6\u6D88\u786E\u8BA4");
+            resolveMain();
           }
-        }, () => {
-          log("\u7528\u6237\u53D6\u6D88\u786E\u8BA4");
-          return resolveMain();
-        });
+        );
       });
     }
 
     function createSettingButton(customClass = "") {
-      return el("button", {
-        className: `btn btn-primary esj-settings-trigger ${customClass}`,
-        style: "color: white; cursor: pointer;",
-        onclick: (e) => {
-          e.preventDefault();
-          if (e.target.disabled) return;
-          if (document.querySelector("#esj-popup") || document.querySelector("#esj-min-tray")) {
-            return;
+      return el(
+        "button",
+        {
+          className: `btn btn-primary esj-settings-trigger ${customClass}`,
+          style: "color: white; cursor: pointer; margin-left: 10px",
+          onclick: (e) => {
+            e.preventDefault();
+            if (e.target.disabled) {
+              return;
+            }
+            if (document.querySelector("#esj-popup") || document.querySelector("#esj-min-tray")) {
+              return;
+            }
+            createSettingsPanel();
           }
-          createSettingsPanel();
-        }
-      }, [
-        el("i", { className: "icon-settings" })
-      ]);
+        },
+        [el("i", { className: "icon-settings" })]
+      );
     }
     function createDownloadButton(id, text = "\u5168\u672C\u4E0B\u8F7D", scrapeFn, customClass = "") {
-      const btn = el("button", {
-        id,
-        className: `btn btn-info esj-download-trigger ${customClass}`,
-        style: "color: white; cursor: pointer;",
-        onclick: async () => {
-          const runningPopup = document.querySelector("#esj-popup");
-          if (runningPopup) {
-            runningPopup.style.display = "flex";
-            document.querySelector("#esj-min-tray")?.remove();
-            return;
-          }
-          if (document.querySelector("#esj-confirm") || document.querySelector("#esj-format")) {
-            return;
-          }
-          if (state.cachedData) {
-            showFormatChoice();
-            return;
-          }
-          if (btn.disabled) return;
-          const originalHtml = btn.innerHTML;
-          btn.disabled = true;
-          btn.innerHTML = '<i class="icon-refresh fa-spin"></i> \u51C6\u5907\u4E2D...';
-          try {
-            await scrapeFn();
-          } catch (err) {
-            console.error("Scrape Error: " + err.message);
-          } finally {
-            if (!state.cachedData) {
-              btn.disabled = false;
-              btn.innerHTML = originalHtml;
-            } else {
-              btn.innerHTML = originalHtml;
+      const btn = el(
+        "button",
+        {
+          id,
+          className: `btn btn-info esj-download-trigger ${customClass}`,
+          style: "color: white; cursor: pointer; margin-left: 5px;",
+          onclick: async () => {
+            const runningPopup = document.querySelector("#esj-popup");
+            if (runningPopup) {
+              runningPopup.style.display = "flex";
+              document.querySelector("#esj-min-tray")?.remove();
+              return;
+            }
+            if (document.querySelector("#esj-confirm") || document.querySelector("#esj-format")) {
+              return;
+            }
+            if (state.cachedData) {
+              showFormatChoice();
+              return;
+            }
+            if (btn.disabled) {
+              return;
+            }
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="icon-refresh fa-spin"></i> \u51C6\u5907\u4E2D...';
+            try {
+              await scrapeFn();
+            } catch (err) {
+              console.error("Scrape Error: " + err.message);
+            } finally {
+              if (!state.cachedData) {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+              } else {
+                btn.innerHTML = originalHtml;
+              }
             }
           }
-        }
-      }, [
-        el("i", { className: "icon-download" }),
-        " " + text
-      ]);
+        },
+        [el("i", { className: "icon-download" }), " " + text]
+      );
       return btn;
     }
 
     function injectDetailButton() {
       const btnGroup = document.querySelector(".sp-buttons");
-      if (!btnGroup) return;
-      if (document.querySelector("#btn-download-book")) return;
-      const downloadBtn = createDownloadButton(
-        "btn-download-book",
-        "\u5168\u672C\u4E0B\u8F7D",
-        scrapeDetail,
-        "m-b-10"
-      );
+      if (!btnGroup) {
+        return;
+      }
+      if (document.querySelector("#btn-download-book")) {
+        return;
+      }
+      const downloadBtn = createDownloadButton("btn-download-book", "\u5168\u672C\u4E0B\u8F7D", scrapeDetail, "m-b-10");
       const settingBtn = createSettingButton("m-b-10");
       btnGroup.appendChild(downloadBtn);
       btnGroup.appendChild(settingBtn);
     }
 
-    async function downloadCurrentPage() {
+    async function downloadCurrentPage(format = "txt") {
       try {
-        log("\u5F00\u59CB\u6293\u53D6\u5F53\u524D\u5355\u7AE0...");
+        log(`\u5F00\u59CB\u6293\u53D6\u5F53\u524D\u5355\u7AE0 (${format.toUpperCase()})...`);
         const viewAllBtn = document.querySelector(".entry-navigation .view-all");
         let metaHeader = "";
         let bookNamePrefix = "";
+        const htmlMeta = { intro: "", bookName: "" };
         if (viewAllBtn && viewAllBtn.href) {
           try {
             log("\u6B63\u5728\u83B7\u53D6\u4E66\u7C4D\u4FE1\u606F...");
@@ -1580,32 +1870,97 @@ URL: ${url}`);
             const meta = parseBookMetadata(doc, viewAllBtn.href);
             metaHeader = meta.introTxt + "====================================\n\n";
             bookNamePrefix = `[${meta.bookName}] `;
+            htmlMeta.intro = meta.introTxt;
+            htmlMeta.bookName = meta.bookName;
           } catch (e) {
             console.warn("\u4E66\u7C4D\u5143\u6570\u636E\u83B7\u53D6\u5931\u8D25\uFF0C\u4EC5\u4E0B\u8F7D\u6B63\u6587");
           }
         }
         const html = document.documentElement.outerHTML;
         const defaultTitle = document.title.split(" - ")[0] || "\u672A\u547D\u540D\u7AE0\u8282";
-        const { title, author, contentText } = parseChapterHtml(html, defaultTitle);
-        if (!contentText) {
+        const parsed = parseChapterHtml(html, defaultTitle);
+        const title = parsed.title;
+        const author = parsed.author;
+        const contentText = parsed.contentText;
+        let contentHtml = parsed.contentHtml;
+        if (format === "txt" && !contentText) {
           alert("\u672A\u627E\u5230\u6B63\u6587\u5185\u5BB9");
           return;
-        }
-        const finalTxt = `${metaHeader}${title}
+        } else {
+          if (getImageDownloadSetting()) {
+            log("\u6B63\u5728\u4E0B\u8F7D\u5E76\u5904\u7406\u63D2\u56FE...");
+            try {
+              const processed = await processHtmlImages(contentHtml, 0);
+              let tempHtml = processed.processedHtml;
+              for (const img of processed.images) {
+                const b64 = await blobToBase64(img.blob);
+                tempHtml = tempHtml.split(`src="${img.id}"`).join(`src="${b64}"`);
+              }
+              contentHtml = tempHtml;
+              log(`\u5DF2\u5D4C\u5165 ${processed.images.length} \u5F20\u56FE\u7247`);
+            } catch (imgErr) {
+              console.error(imgErr);
+              log(`\u26A0\uFE0F \u56FE\u7247\u5904\u7406\u5931\u8D25\uFF0C\u5C06\u4FDD\u7559\u539F\u94FE\u63A5`);
+            }
+          }
+          const safeTitle = title.replace(/[\\/:*?"<>|]/g, "_").trim();
+          let blob;
+          let downloadFilename = "";
+          if (format === "txt") {
+            const finalTxt = `${metaHeader}${title}
 ${author}
 \u672C\u7AE0URL: ${location.href}
 
 ${contentText}`;
-        const blob = new Blob([finalTxt], { type: "text/plain;charset=utf-8" });
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        const safeTitle = title.replace(/[\\/:*?"<>|]/g, "_").trim();
-        a.download = `${bookNamePrefix}${safeTitle}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(a.href);
-        log(`\u2714 \u5355\u7AE0\u4E0B\u8F7D\u5B8C\u6210`);
+            blob = new Blob([finalTxt], { type: "text/plain;charset=utf-8" });
+            downloadFilename = `${bookNamePrefix}${safeTitle}.txt`;
+          } else {
+            const style = `
+                <style>
+                    body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; color: #333; background: #f9f9f9; }
+                    .chapter-card { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+                    h1 { color: #2c3e50; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+                    .meta { color: #666; font-size: 0.9em; margin-bottom: 20px; white-space: pre-wrap; background: #f0f0f0; padding: 10px; border-radius: 4px; }
+                    .content { font-size: 1.1em; }
+                    img { max-width: 100%; height: auto; display: block; margin: 10px auto; }
+                </style>
+            `;
+            const metaBlock = htmlMeta.intro ? `<div class="meta">${htmlMeta.intro}</div>` : "";
+            const finalHtml = `
+                <!DOCTYPE html>
+                <html lang="zh-CN">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>${title}</title>
+                    ${style}
+                </head>
+                <body>
+                    <div class="chapter-card">
+                        <h1>${title}</h1>
+                        <p>${author}</p>
+                        <p>\u672C\u7AE0URL: <a href="${location.href}">${location.href}</a></p>
+                        ${metaBlock}
+                        <hr/>
+                        <div class="content">
+                            ${contentHtml}
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `;
+            blob = new Blob([finalHtml], { type: "text/html;charset=utf-8" });
+            downloadFilename = `${bookNamePrefix}${safeTitle}.html`;
+          }
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = downloadFilename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(a.href);
+          log(`\u2714 \u5355\u7AE0\u4E0B\u8F7D\u5B8C\u6210 (${format.toUpperCase()})`);
+        }
       } catch (e) {
         console.error(e);
         alert("\u4E0B\u8F7D\u51FA\u9519: " + e.message);
@@ -1614,22 +1969,43 @@ ${contentText}`;
 
     function injectSinglePageButton() {
       const viewAllBtn = document.querySelector(".entry-navigation .view-all");
-      if (!viewAllBtn || !viewAllBtn.parentElement) return;
+      if (!viewAllBtn || !viewAllBtn.parentElement) {
+        return;
+      }
       const container = viewAllBtn.parentElement;
-      if (document.querySelector("#btn-download-single")) return;
-      const btn = el("a", {
-        id: "btn-download-single",
-        className: "btn btn-outline-secondary view-all",
-        style: "margin-left: 5px; cursor: pointer;",
-        title: "\u4E0B\u8F7D\u672C\u7AE0 (TXT)",
-        onclick: (e) => {
-          e.preventDefault();
-          downloadCurrentPage();
-        }
-      }, [
-        el("i", { className: "icon-download" })
-      ]);
-      container.appendChild(btn);
+      if (document.querySelector("#btn-download-single")) {
+        return;
+      }
+      const btnTxt = el(
+        "a",
+        {
+          id: "btn-download-single",
+          className: "btn btn-outline-secondary view-all",
+          style: "margin-left: 5px; cursor: pointer;",
+          title: "\u4E0B\u8F7D\u672C\u7AE0 (TXT)",
+          onclick: (e) => {
+            e.preventDefault();
+            downloadCurrentPage("txt");
+          }
+        },
+        [el("i", { className: "icon-download" })]
+      );
+      const btnHtml = el(
+        "a",
+        {
+          id: "btn-download-single-html",
+          className: "btn btn-outline-secondary view-all",
+          style: "margin-left: 10px; cursor: pointer;",
+          title: "\u4E0B\u8F7D\u672C\u7AE0 (HTML)",
+          onclick: (e) => {
+            e.preventDefault();
+            downloadCurrentPage("html");
+          }
+        },
+        [el("i", { className: "icon-code" })]
+      );
+      container.appendChild(btnTxt);
+      container.appendChild(btnHtml);
     }
 
     async function scrapeForum() {
@@ -1653,84 +2029,91 @@ ${contentText}`;
         }
       }
       return new Promise((resolveMain) => {
-        createConfirmPopup(async () => {
-          createDownloadPopup();
-          try {
-            log("\u6B63\u5728\u5206\u6790\u8BBA\u575B\u9875\u9762...");
-            if (!bid) {
-              alert("\u65E0\u6CD5\u89E3\u6790\u7248\u5757 ID\uFF0C\u8BF7\u786E\u4FDD\u5F53\u524D\u662F\u6709\u6548\u7684\u4E66\u7C4D\u8BBA\u575B\u9875\u3002");
-              return;
-            }
-            const detailUrl = `${location.origin}/detail/${bid}.html`;
-            log(`\u6B63\u5728\u83B7\u53D6\u4E66\u7C4D\u8BE6\u60C5\u6570\u636E: ${detailUrl}`);
-            let doc;
+        createConfirmPopup(
+          async () => {
+            createDownloadPopup();
             try {
-              const resp = await fetch(detailUrl, {
-                signal: state.abortController?.signal
-              });
-              if (!resp.ok) throw new Error(`HTTP Error ${resp.status}`);
-              const html = await resp.text();
-              doc = new DOMParser().parseFromString(html, "text/html");
-            } catch (e) {
-              if (e.name === "AbortError" || e.message === "User Aborted") {
+              log("\u6B63\u5728\u5206\u6790\u8BBA\u575B\u9875\u9762...");
+              if (!bid) {
+                alert("\u65E0\u6CD5\u89E3\u6790\u7248\u5757 ID\uFF0C\u8BF7\u786E\u4FDD\u5F53\u524D\u662F\u6709\u6548\u7684\u4E66\u7C4D\u8BBA\u575B\u9875\u3002");
+                return;
+              }
+              const detailUrl = `${location.origin}/detail/${bid}.html`;
+              log(`\u6B63\u5728\u83B7\u53D6\u4E66\u7C4D\u8BE6\u60C5\u6570\u636E: ${detailUrl}`);
+              let doc;
+              try {
+                const resp = await fetch(detailUrl, {
+                  signal: state.abortController?.signal
+                });
+                if (!resp.ok) {
+                  throw new Error(`HTTP Error ${resp.status}`);
+                }
+                const html = await resp.text();
+                doc = new DOMParser().parseFromString(html, "text/html");
+              } catch (e) {
+                if (e.name === "AbortError" || e.message === "User Aborted") {
+                  fullCleanup(state.originalTitle);
+                  return;
+                }
+                console.error(e);
+                alert("\u65E0\u6CD5\u83B7\u53D6\u4E66\u7C4D\u8BE6\u60C5\u9875\u6570\u636E\uFF01");
+                return;
+              }
+              if (state.abortFlag) {
                 fullCleanup(state.originalTitle);
                 return;
               }
-              console.error(e);
-              alert("\u65E0\u6CD5\u83B7\u53D6\u4E66\u7C4D\u8BE6\u60C5\u9875\u6570\u636E\uFF01");
-              return;
-            }
-            if (state.abortFlag) {
-              fullCleanup(state.originalTitle);
-              return;
-            }
-            const meta = parseBookMetadata(doc, detailUrl);
-            log(`\u5143\u6570\u636E\u89E3\u6790\u6210\u529F: \u300A${meta.rawBookName}\u300B`);
-            let tasks = [];
-            const chapterLinks = Array.from(doc.querySelectorAll("#chapterList a"));
-            if (chapterLinks.length > 0) {
-              log(`\u53D1\u73B0 ${chapterLinks.length} \u4E2A\u7AE0\u8282\u3002`);
-              tasks = chapterLinks.map((node, index) => ({
-                index,
-                url: node.href,
-                title: (node.getAttribute("data-title") || node.innerText || "").trim()
-              }));
-            } else {
-              alert("\u672A\u627E\u5230\u4EFB\u4F55\u7AE0\u8282\u94FE\u63A5\uFF01");
-              return;
-            }
-            tasks.forEach((t) => {
-              if (t.url.startsWith("/")) {
-                t.url = location.origin + t.url;
+              const meta = parseBookMetadata(doc, detailUrl);
+              log(`\u5143\u6570\u636E\u89E3\u6790\u6210\u529F: \u300A${meta.rawBookName}\u300B`);
+              let tasks = [];
+              const chapterLinks = Array.from(doc.querySelectorAll("#chapterList a"));
+              if (chapterLinks.length > 0) {
+                log(`\u53D1\u73B0 ${chapterLinks.length} \u4E2A\u7AE0\u8282\u3002`);
+                tasks = chapterLinks.map((node, index) => ({
+                  index,
+                  url: node.href,
+                  title: (node.getAttribute("data-title") || node.innerText || "").trim()
+                }));
+              } else {
+                alert("\u672A\u627E\u5230\u4EFB\u4F55\u7AE0\u8282\u94FE\u63A5\uFF01");
+                return;
               }
-            });
-            if (state.abortFlag) {
-              fullCleanup(state.originalTitle);
-              return;
+              tasks.forEach((t) => {
+                if (t.url.startsWith("/")) {
+                  t.url = location.origin + t.url;
+                }
+              });
+              if (state.abortFlag) {
+                fullCleanup(state.originalTitle);
+                return;
+              }
+              await batchDownload({
+                bookId: bid,
+                bookName: meta.bookName,
+                author: meta.author,
+                introTxt: meta.introTxt,
+                coverUrl: meta.coverUrl,
+                tasks
+              });
+            } catch (e) {
+              console.error(e);
+              log("\u274C \u6293\u53D6\u6D41\u7A0B\u5F02\u5E38: " + e.message);
+            } finally {
+              resolveMain();
             }
-            await batchDownload({
-              bookId: bid,
-              bookName: meta.bookName,
-              author: meta.author,
-              introTxt: meta.introTxt,
-              coverUrl: meta.coverUrl,
-              tasks
-            });
-          } catch (e) {
-            console.error(e);
-            log("\u274C \u6293\u53D6\u6D41\u7A0B\u5F02\u5E38: " + e.message);
-          } finally {
-            return resolveMain();
+          },
+          () => {
+            log("\u7528\u6237\u53D6\u6D88\u786E\u8BA4");
+            resolveMain();
           }
-        }, () => {
-          log("\u7528\u6237\u53D6\u6D88\u786E\u8BA4");
-          return resolveMain();
-        });
+        );
       });
     }
 
     function injectForumButton() {
-      if (document.querySelector("#btn-download-forum")) return;
+      if (document.querySelector("#btn-download-forum")) {
+        return;
+      }
       let container = document.querySelector(".forum-list-page .column");
       if (!container) {
         const tableEl = document.querySelector(".table-responsive");
@@ -1743,13 +2126,10 @@ ${contentText}`;
           tableEl.parentElement.insertBefore(wrapper, tableEl);
         }
       }
-      if (!container) return;
-      const downloadBtn = createDownloadButton(
-        "btn-download-forum",
-        "\u5168\u672C\u4E0B\u8F7D",
-        scrapeForum,
-        ""
-      );
+      if (!container) {
+        return;
+      }
+      const downloadBtn = createDownloadButton("btn-download-forum", "\u5168\u672C\u4E0B\u8F7D", scrapeForum, "");
       const settingBtn = createSettingButton();
       container.appendChild(downloadBtn);
       container.appendChild(settingBtn);
@@ -1867,11 +2247,17 @@ ${contentText}`;
       const isSinglePage = url.includes("/forum/") && url.endsWith(".html");
       const tryInject = () => {
         if (isDetailPage) {
-          if (document.querySelector(".sp-buttons")) injectDetailButton();
+          if (document.querySelector(".sp-buttons")) {
+            injectDetailButton();
+          }
         } else if (isSinglePage) {
-          if (document.querySelector(".entry-navigation")) injectSinglePageButton();
+          if (document.querySelector(".entry-navigation")) {
+            injectSinglePageButton();
+          }
         } else if (isForumPage) {
-          if (document.querySelector(".forum-list-page")) injectForumButton();
+          if (document.querySelector(".forum-list-page")) {
+            injectForumButton();
+          }
         }
       };
       tryInject();
@@ -1920,8 +2306,12 @@ ${contentText}`;
         }
       }, 1e3);
       setTimeout(() => {
-        if (observer) observer.disconnect();
-        if (timer) clearInterval(timer);
+        if (observer) {
+          observer.disconnect();
+        }
+        if (timer) {
+          clearInterval(timer);
+        }
       }, 3e4);
     })();
 

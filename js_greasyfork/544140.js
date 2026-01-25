@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Artwork Uploader Turbo
 // @namespace    https://musicbrainz.org/user/chaban
-// @version      3.1.1
+// @version      3.1.2
 // @tag          ai-created
 // @description  Allows for multiple artwork images to be uploaded simultaneously and recursively upload directories.
 // @author       chaban
@@ -280,10 +280,12 @@
                 }
 
                 async start() {
+                    const workerCount = Math.min(this.allFiles.length, ArtworkUploaderTurbo.UPLOAD_WORKER_LIMIT);
+
                     const promises = [
                         this._signerThread(),
                         this._submitterThread(),
-                        ...Array(ArtworkUploaderTurbo.UPLOAD_WORKER_LIMIT).fill(null).map(() => this._uploaderWorker())
+                        ...Array(workerCount).fill(null).map(() => this._uploaderWorker())
                     ];
                     await Promise.all(promises);
                 }

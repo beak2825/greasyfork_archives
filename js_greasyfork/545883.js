@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AI Conversation Navigator
 // @namespace    https://greasyfork.org
-// @version      8.9
+// @version      9.0
 // @description  Floating navigator for your prompts in conversations. Applied for ChatGPT, Gemini, Aistudio, NotebookLM, Grok, Claude, Mistral, Perplexity, Meta, Poe, Deepai, Huggingface, Deepseek, Kimi, Qwen, Manus, Z.ai, Longcat, Chatglm, Chatboxai, Lmarena, Quillbot, Canva, Genspark, Character, Spacefrontiers, Scienceos, Evidencehunt, Playground (allen), Paperfigureqa (allen), Scira, Scispace, Exa.ai, Consensus, Openevidence, Pathway, Math-gpt.
 // @author       Bui Quoc Dung
 // @match        https://chatgpt.com/*
@@ -93,7 +93,7 @@
         },
         gemini: {
             domain: 'gemini.google.com',
-            includePath: ['gemini.google.com/app/','gemini.google.com/gem/'],
+            includePath: ['gemini.google.com/app/','gemini.google.com/gem/', 'gemini.google.com/u/1/app/', 'gemini.google.com/u/2/app/'],
             userMessage: '.query-text',
             shiftTarget: 'chat-app, .boqOnegoogleliteOgbOneGoogleBar, top-bar-actions',
             shiftHeader: '.boqOnegoogleliteOgbOneGoogleBar, top-bar-actions',
@@ -123,6 +123,8 @@
             includePath: 'grok.com/c/',
             userMessage: '.relative.group.flex.flex-col.justify-center.items-end',
             shiftTarget: 'main',
+            shiftHeader: '.ms-auto.end-3',
+            collapsedTop: '7px'
         },
         claude: {
             domain: 'claude.ai',
@@ -136,19 +138,25 @@
             domain: 'chat.mistral.ai',
             includePath: 'chat.mistral.ai/chat/',
             userMessage: 'div[data-message-author-role="user"] div[dir="auto"]',
-            shiftTarget: 'main.bg-sidebar-subtle'
+            shiftTarget: 'main.bg-sidebar-subtle',
+            shiftHeader: '.items-center.p-3',
+            collapsedTop: '7px'
         },
         perplexity: {
             domain: 'perplexity.ai',
             includePath: 'www.perplexity.ai/search/',
             userMessage: 'div.group\\/title',
-            shiftTarget: '#root'
+            shiftTarget: '#root',
+            shiftHeader: '.pr-md',
+            collapsedTop: '5px'
         },
         meta: {
             domain: 'meta.ai',
             includePath: 'www.meta.ai/prompt/',
             userMessage: '.x78zum5.x15zctf7',
-            shiftTarget: '.xph554m.x73z65k'
+            shiftTarget: '.xph554m.x73z65k',
+            shiftHeader: '.x78zum5.xfex06f',
+            collapsedTop: '10px'
         },
         poe: {
             domain: 'poe.com',
@@ -180,19 +188,25 @@
             domain: 'www.kimi.com',
             includePath: 'www.kimi.com/chat/',
             userMessage: '.user-content',
-            shiftTarget: '.has-sidebar'
+            shiftTarget: '.has-sidebar',
+            shiftHeader: '[class="chat-header-actions"]',
+            collapsedTop: '10px'
         },
         glm: {
             domain: 'chat.z.ai',
             includePath: 'chat.z.ai/c/',
             userMessage: '.chat-user',
-            shiftTarget:'#chat-container'
+            shiftTarget:'#chat-container',
+            shiftHeader: '.flex.px-1',
+            collapsedTop: '0'
         },
         qwen: {
             domain: 'chat.qwen.ai',
             includePath: 'chat.qwen.ai/c/',
             userMessage: '.chat-user-message',
-            shiftTarget: '.desktop-layout-content'
+            shiftTarget: '.desktop-layout-content',
+            shiftHeader: '.header-right',
+            collapsedTop: '5px'
         },
         manus: {
             domain: 'manus.im',

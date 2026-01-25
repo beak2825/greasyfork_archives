@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AnMe
 // @author       zjw
-// @version      9.8.0
+// @version      9.8.2
 // @namespace    https://github.com/Zhu-junwei/AnMe
 // @description  通用多网站多账号切换器
 // @description:zh  通用多网站多账号切换器
@@ -123,7 +123,7 @@
         .acc-about-label { color: #888 !important; font-weight: bold !important; }
 
         /* Custom Dialog UI */
-        .acc-dialog-mask { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); z-index: 2000005; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+        .acc-dialog-mask { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 2000005; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
         .acc-dialog-box { background: white; width: 280px; border-radius: 12px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: accPop 0.05s ease-out; display: flex; flex-direction: column; }
         @keyframes accPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .acc-dialog-msg { font-size: 14px; color: #333; margin-bottom: 20px; line-height: 1.5; text-align: center; white-space: pre-wrap; font-weight: 500; }
@@ -155,7 +155,7 @@
         .acc-btn-del { color: #ccc; cursor: pointer; padding: 0 12px; font-size: 20px; font-weight: 300; user-select: none; }
         .acc-btn-del:hover { color: #f44336; }
         .acc-action-fixed { border-top: 1px solid #eee; padding-top: 1px; flex-shrink: 0; background-color: #fcfcfc;}
-        .acc-row-btn { display: flex; gap: 8px; align-items: center; }
+        .acc-row-btn { display: flex; gap: 8px; align-items: center; margin-bottom:3px}
         .acc-input-text { flex: 1; width:100%; padding: 8px; margin-bottom:8px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; box-sizing: border-box; background: #fff; color: #333; outline: none; transition: all 0.2s; }
         .acc-input-text:focus,.acc-mgr-input:focus { border-color: #2196F3; box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2); }
         .acc-btn { border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 5px; transition: 0.2s; }
@@ -305,9 +305,82 @@
             if (content) {
                 const win = window.open("", "_blank");
                 if (win) {
-                    win.document.write(`<html><head><title>AnMe Inspector</title><style>body{font-family:monospace;padding:20px;background:#f5f5f5}pre{white-space:pre-wrap;word-wrap:break-word;background:#fff;padding:15px;border:1px solid #ddd;border-radius:5px}</style></head>
-                                            <body><h3>${Utils.extractName(key)} - ${type}</h3><pre>${JSON.stringify(content, null, 2)}</pre></body></html>`);
-                    win.document.close();
+                    win.document.head.innerHTML = `<link rel="icon" href="data:image/svg+xml,${encodeURIComponent(CONST.ICONS.LOGO)}">`;
+                    let inspectorHtml;
+                    const noDataHtml = '<p>No data to display.</p>';
+                    const escapeHtml = (str) => {
+                        if (str === null || str === undefined) return '';
+                        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+                    };
+
+                    const createTable = (headers, dataRows, rowClasses = []) => {
+                        const wrap = (content) => `<div class="cell-content">${content}</div>`;
+                        const extraClass = headers.length === 2 ? ' kv-table' : '';
+                        let table = `<div class="table-container${extraClass}"><table>`;
+                        table += `<thead><tr>${headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr></thead>`;
+                        table += '<tbody>';
+                        table += dataRows.map((row, i) => {
+                            const trClass = rowClasses[i] ? ` class="${rowClasses[i]}"` : '';
+                            return `<tr${trClass}>${row.map(cell => `<td>${wrap(escapeHtml(cell))}</td>`).join('')}</tr>`;
+                        }).join('');
+                        table += '</tbody></table></div>';
+                        return table;
+                    };
+
+                    if (type === 'cookies') {
+                        if (Array.isArray(content) && content.length > 0) {
+                            const originalHeaders = Object.keys(content[0]);
+                            const preferredOrder = ['name', 'value', 'expirationDate'];
+                            const headers = [...preferredOrder, ...originalHeaders.filter(h => !preferredOrder.includes(h) && h !== 'partitionKey')];
+                            const rowClasses = content.map(c => c.httpOnly ? 'http-only' : '');
+                            const dataRows = content.map(cookie =>
+                                headers.map(header => {
+                                    let value = cookie[header];
+                                    if (value === undefined || value === null) return '';
+                                    if (header === 'expirationDate' && typeof value === 'number') {
+                                         return new Date(value * 1000).toLocaleString();
+                                     }
+                                    return (typeof value === 'object') ? JSON.stringify(value) : value;
+                                })
+                            );
+                            inspectorHtml = createTable(headers, dataRows, rowClasses);
+                        } else {
+                            inspectorHtml = noDataHtml;
+                        }
+                    } else {
+                        if (typeof content === 'object' && content !== null && Object.keys(content).length > 0) {
+                            const headers = ['Key', 'Value'];
+                            const dataRows = Object.entries(content);
+                            inspectorHtml = createTable(headers, dataRows);
+                        } else {
+                            inspectorHtml = noDataHtml;
+                        }
+                    }
+
+                    // Use DOM manipulation instead of document.write to avoid deprecation warnings
+                    win.document.title = "AnMe Inspector";
+
+                    const style = win.document.createElement('style');
+                    style.textContent = `
+                        body { font-family: system-ui, -apple-system, sans-serif; padding: 20px; background: #f8f9fa; color: #212529; margin: 0; }
+                        h3 { color: #212529; border-bottom: 1px solid #dee2e6; padding-bottom: 10px; margin-top: 0; }
+                        .table-container { border: 1px solid #dee2e6; border-radius: 8px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); overflow-y: auto; max-height: 90vh; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { border: 1px solid #e9ecef; text-align: left; font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 13px; padding: 0; }
+                        .cell-content { padding: 12px 15px; white-space: nowrap; overflow-x: auto; max-width: 350px; }
+                        .kv-table td:nth-child(1) .cell-content { max-width: 300px; }
+                        .kv-table td:nth-child(2) .cell-content { max-width: 75vw; }
+                        th { background-color: #f1f3f5; font-weight: 600; position: sticky; top: 0; z-index: 10; text-align: center; padding: 12px 15px; white-space: nowrap; }
+                        tr:nth-child(even) { background-color: #f8f9fa; }
+                        tr.http-only { background-color: #e2e6ea; border-bottom: 1px solid #d6d8db; }
+                        p { margin-top: 20px; }
+                    `;
+                    win.document.head.appendChild(style);
+
+                    win.document.body.innerHTML = `
+                        <h3>${Utils.extractName(key)} - ${type}</h3>
+                        ${inspectorHtml}
+                    `;
                 }
             }
         },
@@ -527,8 +600,9 @@
         showDialog(msg, isConfirm) {
             return new Promise(resolve => {
                 if (!dialogMask) {
+                    const panel = this.qs('.acc-panel');
                     dialogMask = document.createElement('div'); dialogMask.className = 'acc-dialog-mask';
-                    uiRoot.appendChild(dialogMask); // Append to Shadow Root
+                    panel.appendChild(dialogMask); // Append to Panel
                 }
                 dialogMask.innerHTML = `
                     <div class="acc-dialog-box">

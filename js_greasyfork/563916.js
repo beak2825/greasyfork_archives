@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME AD to BS Converter
 // @namespace    https://greasyfork.org/users/1087400
-// @version      0.1.5
+// @version      0.1.7
 // @description  Converts AD dates to BS dates in WME closure panel
 // @author       https://greasyfork.org/en/users/1087400-kid4rm90s
 // @include 	   /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor.*$/
@@ -25,14 +25,19 @@
 (function main() {
     'use strict';
 
-  const updateMessage = `<strong>Version 0.1.5 - 2026-01-24:</strong><br>
-    - Currently supports for native UI for closure segment<br>
-    - Fixed issue where calender was showing wrong dates for BS <br>- Will add support for more date inputs in future updates<br>`;
     const scriptName = GM_info.script.name;
     const scriptVersion = GM_info.script.version;
+    const updateMessage = `<strong>Version ${scriptVersion} - 2026-01-25:</strong><br>
+    - Added support for various WME Locales<br>
+    - Added Nepali calendar display support<br>
+    - Added an option to choose between Nepali and English calendar display in the script tab<br>
+    - Fixed date conversion issues due to timezone discrepancies<br>
+    - Fixed various minor bugs and improved stability`;
     const downloadUrl = 'https://greasyfork.org/en/scripts/563916-wme-ad-to-bs-converter/code/WME-AD-to-BS-Converter.user.js';
     const forumURL = 'https://greasyfork.org/en/scripts/563916-wme-ad-to-bs-converter/feedback';
     let wmeSDK;
+    // Calendar language state: 'ne' (Nepali) or 'en' (English)
+    let calendarLang = 'ne';
 
     const log = (message) => console.log('WME_ADtoBS: ' + message);
 
@@ -117,15 +122,47 @@
         });
     }
 
+    // Add a script tab to the WME UI for language selection
+    async function addScriptTab() {
+        if (!wmeSDK || !wmeSDK.Sidebar || typeof wmeSDK.Sidebar.registerScriptTab !== 'function') return;
+        // Only add once
+        if (document.getElementById('wme-ad-bs-tab')) return;
+
+        const { tabLabel, tabPane } = await wmeSDK.Sidebar.registerScriptTab();
+
+        tabLabel.textContent = "AD↔BS";
+
+        const tabContent = document.createElement('div');
+        tabContent.style.padding = '12px';
+        tabContent.innerHTML = `
+            <h3 style="margin-top:0">WME AD↔BS Converter</h3>
+            <h7> Version ${scriptVersion}</h7><br><br>
+            <label style="font-weight:bold;">Nepali Calendar Display:</label><br>
+            <label><input type="radio" name="wme-ad-bs-lang" value="ne" checked> नेपाली (Devanagari)</label><br>
+            <label><input type="radio" name="wme-ad-bs-lang" value="en"> English</label>
+        `;
+        tabContent.id = 'wme-ad-bs-tab';
+        tabContent.addEventListener('change', (e) => {
+            if (e.target && e.target.name === 'wme-ad-bs-lang') {
+                calendarLang = e.target.value;
+            }
+        });
+        tabPane.appendChild(tabContent);
+    }
+
     const WME_ADtoBS_bootstrap = () => {
         if (!document.getElementById('edit-panel') || !wmeSDK.DataModel.Countries.getTopCountry()) {
             setTimeout(WME_ADtoBS_bootstrap, 250);
             return;
         }
         if (wmeSDK.State.isReady) {
+            addScriptTab();
             WME_ADtoBS_init();
         } else {
-            wmeSDK.Events.once({ eventName: 'wme-ready' }).then(WME_ADtoBS_init);
+            wmeSDK.Events.once({ eventName: 'wme-ready' }).then(() => {
+                addScriptTab();
+                WME_ADtoBS_init();
+            });
         }
     };
 
@@ -252,19 +289,35 @@
                 return d-1;
             }
 
+            // Helper: convert number to Devanagari
+            function toDevanagari(num) {
+                return String(num).replace(/\d/g, d => '०१२३४५६७८९'[d]);
+            }
+            // Nepali month names
+            const nepaliMonths = ['बैशाख','जेठ','असार','श्रावण','भदौ','आश्विन','कार्तिक','मंसिर','पुष','माघ','फाल्गुण','चैत्र'];
+            const englishMonths = ['Baisakh','Jestha','Ashar','Shrawan','Bhadau','Ashwin','Kartik','Mangsir','Poush','Magh','Falgun','Chaitra'];
             // Helper: render calendar
             function renderCalendar(year, month, selectedDay) {
-                ymLabel.textContent = `${year}-${String(month).padStart(2,'0')}`;
+                // Use selected language for month and numerals
+                let monthName, weekdayLabels, numFn;
+                if (calendarLang === 'ne') {
+                    monthName = nepaliMonths[month-1] || '';
+                    weekdayLabels = ['आ','सो','मं','बु','बि','शु','श'];
+                    numFn = toDevanagari;
+                } else {
+                    monthName = englishMonths[month-1] || '';
+                    weekdayLabels = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+                    numFn = n => n;
+                }
+                ymLabel.textContent = `${numFn(year)} ${monthName}`;
                 // Clear grid
                 grid.innerHTML = '';
-                // Weekdays
-                const weekdays = ['Su','Mo','Tu','We','Th','Fr','Sa'];
                 const thead = document.createElement('thead');
                 const trh = document.createElement('tr');
-                weekdays.forEach(wd => {
+                weekdayLabels.forEach(wd => {
                     const th = document.createElement('th');
                     th.textContent = wd;
-                    th.style = 'padding:2px 4px; color:#888;';
+                    th.style = 'padding:2px 4px; color: #000000;';
                     trh.appendChild(th);
                 });
                 thead.appendChild(trh);
@@ -290,7 +343,7 @@
                         tr = document.createElement('tr');
                     }
                     const td = document.createElement('td');
-                    td.textContent = day;
+                    td.textContent = numFn(day);
                     td.style = 'padding:3px 5px; text-align:center; cursor:pointer; border-radius:3px;';
                     if (day === selectedDay) {
                         td.style.background = '#1e88e5';
@@ -389,8 +442,62 @@
         /**
      * Logic to convert AD value from input to BS and update the label
      */
+
+    // --- Locale-aware AD to BS update logic ---
+    let _wmeLocale = null;
+    let _wmeRegion = null;
+    // Get locale and region from WME SDK
+    function getWmeLocaleAndRegion() {
+        try {
+            if (wmeSDK && wmeSDK.Settings) {
+                const localeInfo = wmeSDK.Settings.getLocale && wmeSDK.Settings.getLocale();
+                if (localeInfo && localeInfo.localeCode) _wmeLocale = localeInfo.localeCode;
+                if (localeInfo && localeInfo.localeName) _wmeRegion = localeInfo.localeName;
+                // Try region code as well
+                if (wmeSDK.Settings.getRegionCode) {
+                    const regionInfo = wmeSDK.Settings.getRegionCode();
+                    if (regionInfo && regionInfo.regionCode) _wmeRegion = regionInfo.regionCode;
+                }
+            }
+        } catch (e) {
+            log('Error getting WME locale/region: ' + e.message);
+        }
+    }
+
+    // Call once at script init
+    getWmeLocaleAndRegion();
+
+    // Helper: get date format for locale
+    function getDateFormatForLocale(locale, region) {
+        // en-US, en-CA, etc: MM/DD/YYYY
+        // en-GB, en-AU, hi, ne, etc: DD/MM/YYYY
+        // Default: MM/DD/YYYY
+        if (!locale) return 'MM/DD/YYYY';
+        const l = locale.toLowerCase();
+        // Add Hindi and Nepali (hi, ne) to DD/MM/YYYY
+        if (
+            l === 'en-gb' || l === 'en-au' || l === 'en-nz' || l === 'en-ie' || l === 'en-za' ||
+            l.startsWith('hi') || l.startsWith('ne')
+        ) return 'DD/MM/YYYY';
+        if (l === 'en-us' || l === 'en-ca') return 'MM/DD/YYYY';
+        // Try region code fallback
+        if (region && typeof region === 'string') {
+            const r = region.toUpperCase();
+            if (r === 'GB' || r === 'AU' || r === 'NZ' || r === 'IE' || r === 'ZA') return 'DD/MM/YYYY';
+            if (r === 'US' || r === 'CA') return 'MM/DD/YYYY';
+        }
+        return 'MM/DD/YYYY';
+    }
+
+    // Helper: convert Devanagari numerals to standard digits
+    function normalizeDevanagariNumerals(str) {
+        // ०१२३४५६७८९ (U+0966 - U+096F)
+        return str.replace(/[\u0966-\u096F]/g, c => String(c.charCodeAt(0) - 0x0966));
+    }
+
     function updateBSValue(inputElem, displayElem) {
-        const adValue = inputElem.value; // Expected: "MM/DD/YYYY"
+        let adValue = inputElem.value; // Could be in Devanagari
+        adValue = normalizeDevanagariNumerals(adValue);
         log(`Input value: ${adValue}`);
         if (!adValue || adValue.length < 8) {
             displayElem.innerText = 'BS Date: --';
@@ -407,13 +514,21 @@
                 return;
             }
 
+            // Get locale/region and date format
+            getWmeLocaleAndRegion();
+            const dateFormat = getDateFormatForLocale(_wmeLocale, _wmeRegion);
+            let mm, dd, yyyy;
             const dateParts = adValue.split('/');
             if (dateParts.length === 3) {
-                const mm = parseInt(dateParts[0], 10);
-                const dd = parseInt(dateParts[1], 10);
-                const yyyy = parseInt(dateParts[2], 10);
-
-                // Validate parsed numbers
+                if (dateFormat === 'DD/MM/YYYY') {
+                    dd = parseInt(dateParts[0], 10);
+                    mm = parseInt(dateParts[1], 10);
+                    yyyy = parseInt(dateParts[2], 10);
+                } else {
+                    mm = parseInt(dateParts[0], 10);
+                    dd = parseInt(dateParts[1], 10);
+                    yyyy = parseInt(dateParts[2], 10);
+                }
                 if (isNaN(mm) || isNaN(dd) || isNaN(yyyy)) {
                     displayElem.innerText = 'BS Date: Invalid date';
                     log('Invalid date parts: mm=' + mm + ', dd=' + dd + ', yyyy=' + yyyy);
@@ -429,9 +544,14 @@
                 // Using NepaliDate.AD_TO_BS() to convert AD to BS
                 const bsDateStr = unsafeWindow.NepaliDate.AD_TO_BS(adDateStr);
                 log(`Result: ${bsDateStr}`);
-                
                 if (bsDateStr && !bsDateStr.includes('Error') && !bsDateStr.includes('Invalid')) {
-                    displayElem.innerText = `🇳🇵 BS: ${bsDateStr}`;
+                    if (calendarLang === 'ne') {
+                        // Convert all numbers to Devanagari and label to Nepali
+                        const devanagari = (str) => str.replace(/\d/g, d => '०१२३४५६७८९'[d]);
+                        displayElem.innerText = `🇳🇵 बि.सं.: ${devanagari(bsDateStr)}`;
+                    } else {
+                        displayElem.innerText = `🇳🇵 BS: ${bsDateStr}`;
+                    }
                 } else {
                     displayElem.innerText = `BS Date: ${bsDateStr}`;
                     log('Conversion returned error: ' + bsDateStr);
@@ -463,6 +583,12 @@
 })();
 
 /******** Version changelog  ********
+Version 0.1.6-7 - 2026-01-25:
+    - Added support for various WME Locales
+    - Added Nepali calendar display support
+    - Added an option to choose between Nepali and English calendar display in the script tab
+    - Fixed date conversion issues due to timezone discrepancies
+    - Fixed various minor bugs and improved stability
 Version 0.1.5 - 2026-01-24
     - Fixed issue where calender was showing wrong dates for BS
     - Will add support for more date inputs in future updates
