@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name         Multiplayer Piano Optimizations [Drawing]
 // @namespace    https://tampermonkey.net/
-// @version      2.5.2
+// @version      2.5.3
 // @description  Draw on the screen!
 // @author       zackiboiz
 // @match        *://*.multiplayerpiano.com/*
 // @match        *://*.multiplayerpiano.net/*
-// @match        *://dev.multiplayerpiano.net/*
 // @match        *://*.multiplayerpiano.org/*
 // @match        *://*.multiplayerpiano.dev/*
 // @match        *://piano.mpp.community/*
@@ -42,6 +41,18 @@
 // ==/UserScript==
 
 /*
+    MPP `custom` packet format:
+    {
+        m: "custom",
+        data: {
+            drawboard: btoa(<uleb128 count*> <<uint8 op> ...>*) // base64 encoded string
+        },
+        target: {
+            mode: "subscribed"
+        }
+    }
+
+
     ### OP 0: Clear user
     - <uint8 op>
     1. Tells clients to clear this user's
@@ -88,21 +99,21 @@
 
     ### OP 8: Text
     - <uint8 op> <uint24 color> <uint8 transparency> <uleb128 fontSize> <uleb128 lifeMs> <uleb128 fadeMs> <uint16 x> <uint16 y> <string text> <bitfield8 options> <uint32 uuid>
-      <bitfield8 options>:
-        <uint2 align>:
-          0 - left
-          1 - right
-          2 - center
-          3 - [none]
-        <boolean styleBold>
-        <boolean styleItalic>
-        <boolean styleUnderline>
-        <boolean styleLineThrough> (strikethrough)
-        <uint2 font>:
-          0 - Verdana, DejaVu Sans, sans-serif (MPP)
-          1 - "Times New Roman", Times, Georgia, Garamond, serif
-          2 - "Lucida Console", "Courier New", Monaco, monospace
-          3 - "Brush Script MT", "Lucida Handwriting", cursive
+    - <bitfield8 options>:
+        - <uint2 align>:
+            0 - left
+            1 - right
+            2 - center
+            3 - [none]
+        - <boolean styleBold>
+        - <boolean styleItalic>
+        - <boolean styleUnderline>
+        - <boolean styleLineThrough> (strikethrough)
+        - <uint2 font>:
+            0 - Verdana, "DejaVu Sans", sans-serif (MPP)
+            1 - "Times New Roman", Times, Georgia, Garamond, serif
+            2 - "Lucida Console", "Courier New", Monaco, monospace
+            3 - "Brush Script MT", "Lucida Handwriting", cursive
     1. Tells clients to draw a stroked text
     area at (x, y) with options
 
@@ -245,7 +256,7 @@
             return this.#ctx;
         }
         static get connected() {
-            return MPP && MPP.client && MPP.client.isConnected() && MPP.client.channel && MPP.client.user && MPP.client.ppl
+            return !!(MPP && MPP.client && MPP.client.isConnected() && MPP.client.channel && MPP.client.user && MPP.client.ppl);
         }
         get enabled() {
             return this.#enabled;

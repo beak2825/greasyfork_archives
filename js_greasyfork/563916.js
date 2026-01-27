@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME AD to BS Converter
 // @namespace    https://greasyfork.org/users/1087400
-// @version      0.1.8
+// @version      0.2.0
 // @description  Converts AD dates to BS dates in WME closure panel
 // @author       https://greasyfork.org/en/users/1087400-kid4rm90s
 // @include 	   /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor.*$/
@@ -27,11 +27,9 @@
 
     const scriptName = GM_info.script.name;
     const scriptVersion = GM_info.script.version;
-    const updateMessage = `<strong>Version ${scriptVersion} - 2026-01-25:</strong><br>
-    - Added current Nepal time in script tab<br>
-    - Added Nepali calendar display support<br>
-    - Added an option to choose between Nepali and English calendar display in the script tab<br>
-    - Fixed date conversion issues due to timezone discrepancies<br>
+    const updateMessage = `<strong>Version ${scriptVersion} - 2026-01-26:</strong><br>
+    - Now it will able to convert all the native WME calenders into BS calenders<br>
+    - Fixed date conversion format issue<br>
     - Fixed various minor bugs and improved stability`;
     const downloadUrl = 'https://greasyfork.org/en/scripts/563916-wme-ad-to-bs-converter/code/WME-AD-to-BS-Converter.user.js';
     const forumURL = 'https://greasyfork.org/en/scripts/563916-wme-ad-to-bs-converter/feedback';
@@ -171,15 +169,15 @@
                     const toDev = s => s.replace(/\d/g, d => '०१२३४५६७८९'[d]);
                     nepaliTime = toDev(timeStr);
                     bsStr = bsStr ? toDev(bsStr) : '--';
-                    bsHtml = `<span style="color:#1e88e5; font-weight:bold;">${bsStr}</span>`;
-                    timeHtml = `<span style="color:#1e88e5; font-weight:bold;">${nepaliTime}</span>`;
+                    bsHtml = `<span style="color: #1e88e5; font-weight:bold;">${bsStr}</span>`;
+                    timeHtml = `<span style="color: #1e88e5; font-weight:bold;">${nepaliTime}</span>`;
                 } else {
                     nepaliTime = timeStr;
-                    bsHtml = `<span style="color:#1e88e5">${bsStr}</span>`;
-                    timeHtml = `<span style="color:#1e88e5">${nepaliTime}</span>`;
+                    bsHtml = `<span style="color: #1e88e5">${bsStr}</span>`;
+                    timeHtml = `<span style="color: #1e88e5">${nepaliTime}</span>`;
                 }
             }
-            todayDiv.innerHTML = `Current date and time (NPL): <br>${bsHtml} ${timeHtml}`;
+            todayDiv.innerHTML = `Current date and time (NPL): <br>${bsHtml}&nbsp;&nbsp;&nbsp;&nbsp;${timeHtml}`;
         }
         // Update every 30s
         updateTodayNPL();
@@ -188,6 +186,17 @@
         tabContent.addEventListener('change', (e) => {
             if (e.target && e.target.name === 'wme-ad-bs-lang') {
                 setTimeout(updateTodayNPL, 100);
+                // Update advanced closure BS displays on language change
+                const advStartInput = document.getElementById('wmeac-advanced-closure-dialog-rangestartdate');
+                const advEndInput = document.getElementById('wmeac-advanced-closure-dialog-rangeenddate');
+                if (advStartInput) {
+                    const advStartDisplay = document.getElementById('wmeac-advanced-closure-dialog-rangestartdate-bs-val');
+                    if (advStartDisplay) updateBSValue(advStartInput, advStartDisplay);
+                }
+                if (advEndInput) {
+                    const advEndDisplay = document.getElementById('wmeac-advanced-closure-dialog-rangeenddate-bs-val');
+                    if (advEndDisplay) updateBSValue(advEndInput, advEndDisplay);
+                }
             }
         });
     }
@@ -220,12 +229,15 @@
             mutations.forEach((mutation) => {
                 mutation.addedNodes.forEach((node) => {
                     if (node.nodeType === Node.ELEMENT_NODE) {
-                        // Look for Closure Date Inputs
-                        const startInput = node.querySelector('#closure_startDate');
-                        const endInput = node.querySelector('#closure_endDate');
-
-                        if (startInput) setupDateDisplay(startInput);
-                        if (endInput) setupDateDisplay(endInput);
+                        // Native WME UI: all date-picker-inputs (by class)
+                        node.querySelectorAll && node.querySelectorAll('.date-picker-input').forEach(inputElem => {
+                            if (inputElem instanceof HTMLElement) setupDateDisplay(inputElem);
+                        });
+                        // Advanced Closures (by ID)
+                        const advStartInput = node.querySelector && node.querySelector('#wmeac-advanced-closure-dialog-rangestartdate');
+                        const advEndInput = node.querySelector && node.querySelector('#wmeac-advanced-closure-dialog-rangeenddate');
+                        if (advStartInput) setupDateDisplay(advStartInput);
+                        if (advEndInput) setupDateDisplay(advEndInput);
                     }
                 });
             });
@@ -234,7 +246,28 @@
         observer.observe(document.getElementById('edit-panel'), {
             childList: true,
             subtree: true,
+            attributes: true
         });
+
+        // Fallback: periodically check for advanced closure inputs and inject if missing
+        setInterval(() => {
+            // Advanced Closures (by ID)
+            const advStartInput = document.getElementById('wmeac-advanced-closure-dialog-rangestartdate');
+            if (advStartInput && !document.getElementById('wmeac-advanced-closure-dialog-rangestartdate-bs-val')) {
+                setupDateDisplay(advStartInput);
+            }
+            const advEndInput = document.getElementById('wmeac-advanced-closure-dialog-rangeenddate');
+            if (advEndInput && !document.getElementById('wmeac-advanced-closure-dialog-rangeenddate-bs-val')) {
+                setupDateDisplay(advEndInput);
+            }
+
+            // Native WME UI: all date-picker-inputs (by class)
+            document.querySelectorAll('.date-picker-input').forEach(inputElem => {
+                if (inputElem instanceof HTMLElement && !document.getElementById(inputElem.id + '-bs-val')) {
+                    setupDateDisplay(inputElem);
+                }
+            });
+        }, 1500);
 
         log('Observer started on edit-panel');
     };
@@ -250,7 +283,7 @@
         // Create display element
         const bsDisplay = document.createElement('div');
         bsDisplay.id = containerId;
-        bsDisplay.style = 'color: #1e88e5; font-size: 13px; margin-top: 4px; font-weight: bold; padding-left: 5px; cursor: pointer; user-select: text;';
+        bsDisplay.style = 'color: #1e88e5; font-size: 13px; margin-top: 4px; font-weight: bold; padding-left: 5px; cursor: pointer; user-select: text;  z-index: 1000; border-radius: 3px;';
         bsDisplay.innerText = 'BS Date: --';
 
         // Add hover effect
@@ -271,7 +304,7 @@
             document.querySelectorAll('.bs-calendar-popup').forEach(el => el.remove());
 
             // Get current BS value or today
-            let currentBS = bsDisplay.innerText.replace(/^🇳🇵 BS:\s*/, '').trim();
+            let currentBS = bsDisplay.innerText.replace(/^BS:\s*/, '').trim();
             if (!/^\d{4}-\d{2}-\d{2}$/.test(currentBS)) {
                 // fallback: use today's AD and convert to BS
                 const today = new Date();
@@ -405,10 +438,36 @@
                         }
                         const adParts = adDateStr.split('-');
                         if (adParts.length === 3) {
+                            const yyyy = adParts[0];
                             const mm = adParts[1].padStart(2, '0');
                             const dd = adParts[2].padStart(2, '0');
-                            const yyyy = adParts[0];
-                            const adInputVal = `${mm}/${dd}/${yyyy}`;
+                            let adInputVal;
+                            // For advanced closure inputs, use yyyy-mm-dd format
+                            if (inputElem.id === 'wmeac-advanced-closure-dialog-rangestartdate' || inputElem.id === 'wmeac-advanced-closure-dialog-rangeenddate') {
+                                adInputVal = `${yyyy}-${mm}-${dd}`;
+                            } else {
+                                // Try to match the current input's format
+                                const curVal = inputElem.value.trim();
+                                if (/^\d{4}-\d{2}-\d{2}$/.test(curVal)) {
+                                    adInputVal = `${yyyy}-${mm}-${dd}`;
+                                } else if (/^\d{2}\/\d{2}\/\d{4}$/.test(curVal)) {
+                                    // Detect if DD/MM/YYYY or MM/DD/YYYY by locale
+                                    const dateFormat = getDateFormatForLocale(_wmeLocale, _wmeRegion);
+                                    if (dateFormat === 'DD/MM/YYYY') {
+                                        adInputVal = `${dd}/${mm}/${yyyy}`;
+                                    } else {
+                                        adInputVal = `${mm}/${dd}/${yyyy}`;
+                                    }
+                                } else {
+                                    // Fallback to locale
+                                    const dateFormat = getDateFormatForLocale(_wmeLocale, _wmeRegion);
+                                    if (dateFormat === 'DD/MM/YYYY') {
+                                        adInputVal = `${dd}/${mm}/${yyyy}`;
+                                    } else {
+                                        adInputVal = `${mm}/${dd}/${yyyy}`;
+                                    }
+                                }
+                            }
                             inputElem.value = adInputVal;
                             inputElem.dispatchEvent(new Event('input', { bubbles: true }));
                             // Remove popup
@@ -454,18 +513,23 @@
             renderCalendar(bsYear, bsMonth, bsDay);
         });
 
-        // Insert after the .date-time-picker container
-        let dateTimePicker = inputElem.closest('.date-time-picker');
-        if (dateTimePicker && dateTimePicker.parentNode) {
-            dateTimePicker.parentNode.insertBefore(bsDisplay, dateTimePicker.nextSibling);
+        // Always insert directly after the input for advanced closure inputs
+        if (inputElem.id === 'wmeac-advanced-closure-dialog-rangestartdate' || inputElem.id === 'wmeac-advanced-closure-dialog-rangeenddate') {
+            inputElem.parentNode.insertBefore(bsDisplay, inputElem.nextSibling);
         } else {
-            // fallback: insert after the wz-text-input
-            let wzTextInput = inputElem.closest('wz-text-input');
-            if (wzTextInput && wzTextInput.parentNode) {
-                wzTextInput.parentNode.insertBefore(bsDisplay, wzTextInput.nextSibling);
+            // Insert after the .date-time-picker container
+            let dateTimePicker = inputElem.closest('.date-time-picker');
+            if (dateTimePicker && dateTimePicker.parentNode) {
+                dateTimePicker.parentNode.insertBefore(bsDisplay, dateTimePicker.nextSibling);
             } else {
-                // fallback: insert after the inputElem
-                inputElem.parentNode.insertBefore(bsDisplay, inputElem.nextSibling);
+                // fallback: insert after the wz-text-input
+                let wzTextInput = inputElem.closest('wz-text-input');
+                if (wzTextInput && wzTextInput.parentNode) {
+                    wzTextInput.parentNode.insertBefore(bsDisplay, wzTextInput.nextSibling);
+                } else {
+                    // fallback: insert after the inputElem
+                    inputElem.parentNode.insertBefore(bsDisplay, inputElem.nextSibling);
+                }
             }
         }
 
@@ -474,6 +538,18 @@
 
         // Listen for changes (WME updates values dynamically)
         inputElem.addEventListener('input', () => updateBSValue(inputElem, bsDisplay));
+        inputElem.addEventListener('change', () => updateBSValue(inputElem, bsDisplay));
+
+        // For advanced closure inputs, poll for value changes to catch programmatic updates
+        if (inputElem.id === 'wmeac-advanced-closure-dialog-rangestartdate' || inputElem.id === 'wmeac-advanced-closure-dialog-rangeenddate') {
+            let lastValue = inputElem.value;
+            setInterval(() => {
+                if (inputElem.value !== lastValue) {
+                    lastValue = inputElem.value;
+                    updateBSValue(inputElem, bsDisplay);
+                }
+            }, 500);
+        }
 
         // Waze custom elements sometimes don't fire standard input events on programmatic change
         // We use a small interval or observer if necessary, but 'input' usually catches manual changes
@@ -558,49 +634,61 @@
 
             // Get locale/region and date format
             getWmeLocaleAndRegion();
-            const dateFormat = getDateFormatForLocale(_wmeLocale, _wmeRegion);
-            let mm, dd, yyyy;
-            const dateParts = adValue.split('/');
-            if (dateParts.length === 3) {
-                if (dateFormat === 'DD/MM/YYYY') {
-                    dd = parseInt(dateParts[0], 10);
-                    mm = parseInt(dateParts[1], 10);
-                    yyyy = parseInt(dateParts[2], 10);
-                } else {
-                    mm = parseInt(dateParts[0], 10);
-                    dd = parseInt(dateParts[1], 10);
-                    yyyy = parseInt(dateParts[2], 10);
-                }
+            let mm, dd, yyyy, adDateStr;
+            // Support yyyy-mm-dd format for advanced closure
+            if (/^\d{4}-\d{2}-\d{2}$/.test(adValue)) {
+                [yyyy, mm, dd] = adValue.split('-').map(Number);
                 if (isNaN(mm) || isNaN(dd) || isNaN(yyyy)) {
                     displayElem.innerText = 'BS Date: Invalid date';
                     log('Invalid date parts: mm=' + mm + ', dd=' + dd + ', yyyy=' + yyyy);
                     return;
                 }
-
-                // Construct a UTC date string to avoid timezone issues
-                // Use Date.UTC to ensure the date is not shifted by local timezone
-                const utcDate = new Date(Date.UTC(yyyy, mm - 1, dd));
-                const adDateStr = `${utcDate.getUTCFullYear()}-${String(utcDate.getUTCMonth() + 1).padStart(2, '0')}-${String(utcDate.getUTCDate()).padStart(2, '0')}`;
-                log(`Converting (UTC): ${adDateStr}`);
-
-                // Using NepaliDate.AD_TO_BS() to convert AD to BS
-                const bsDateStr = unsafeWindow.NepaliDate.AD_TO_BS(adDateStr);
-                log(`Result: ${bsDateStr}`);
-                if (bsDateStr && !bsDateStr.includes('Error') && !bsDateStr.includes('Invalid')) {
-                    if (calendarLang === 'ne') {
-                        // Convert all numbers to Devanagari and label to Nepali
-                        const devanagari = (str) => str.replace(/\d/g, d => '०१२३४५६७८९'[d]);
-                        displayElem.innerText = `🇳🇵 बि.सं.: ${devanagari(bsDateStr)}`;
+                adDateStr = `${yyyy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}`;
+                log(`Detected yyyy-mm-dd format, using: ${adDateStr}`);
+            } else {
+                const dateFormat = getDateFormatForLocale(_wmeLocale, _wmeRegion);
+                const dateParts = adValue.split('/');
+                if (dateParts.length === 3) {
+                    if (dateFormat === 'DD/MM/YYYY') {
+                        dd = parseInt(dateParts[0], 10);
+                        mm = parseInt(dateParts[1], 10);
+                        yyyy = parseInt(dateParts[2], 10);
                     } else {
-                        displayElem.innerText = `🇳🇵 BS: ${bsDateStr}`;
+                        mm = parseInt(dateParts[0], 10);
+                        dd = parseInt(dateParts[1], 10);
+                        yyyy = parseInt(dateParts[2], 10);
                     }
+                    if (isNaN(mm) || isNaN(dd) || isNaN(yyyy)) {
+                        displayElem.innerText = 'BS Date: Invalid date';
+                        log('Invalid date parts: mm=' + mm + ', dd=' + dd + ', yyyy=' + yyyy);
+                        return;
+                    }
+                    // Construct a UTC date string to avoid timezone issues
+                    // Use Date.UTC to ensure the date is not shifted by local timezone
+                    const utcDate = new Date(Date.UTC(yyyy, mm - 1, dd));
+                    adDateStr = `${utcDate.getUTCFullYear()}-${String(utcDate.getUTCMonth() + 1).padStart(2, '0')}-${String(utcDate.getUTCDate()).padStart(2, '0')}`;
+                    log(`Converting (UTC): ${adDateStr}`);
                 } else {
-                    displayElem.innerText = `BS Date: ${bsDateStr}`;
-                    log('Conversion returned error: ' + bsDateStr);
+                    displayElem.innerText = 'BS Date: Invalid format';
+                    log('Invalid date format: ' + adValue);
+                    return;
+                }
+            }
+
+            // Using NepaliDate.AD_TO_BS() to convert AD to BS
+            const bsDateStr = unsafeWindow.NepaliDate.AD_TO_BS(adDateStr);
+            log(`Result: ${bsDateStr}`);
+            if (bsDateStr && !bsDateStr.includes('Error') && !bsDateStr.includes('Invalid')) {
+                if (calendarLang === 'ne') {
+                    // Convert all numbers to Devanagari and label to Nepali
+                    const devanagari = (str) => str.replace(/\d/g, d => '०१२३४५६७८९'[d]);
+                    displayElem.innerText = `बि.सं.: ${devanagari(bsDateStr)}`;
+                } else {
+                    displayElem.innerText = `BS: ${bsDateStr}`;
                 }
             } else {
-                displayElem.innerText = 'BS Date: Invalid format';
-                log('Invalid date format: ' + adValue);
+                displayElem.innerText = `BS Date: ${bsDateStr}`;
+                log('Conversion returned error: ' + bsDateStr);
             }
         } catch (e) {
             displayElem.innerText = 'BS Date: Error';
@@ -625,6 +713,14 @@
 })();
 
 /******** Version changelog  ********
+Version 0.2.0 - 2026-01-26:
+    - Now it will able to convert all the native WME calenders into BS calenders<br>
+    - Fixed date conversion format issue<br>
+    - Fixed various minor bugs and improved stability
+Version 0.1.9 - 2026-01-26:
+    - Added support for WME Advanced Closures script's calender date to BS conversion<br>
+    - Fixed date conversion format issue<br>
+    - Fixed various minor bugs and improved stability
 Version 0.1.6-8 - 2026-01-25:
     - Added Nepali calendar display support
     - Added an option to choose between Nepali and English calendar display in the script tab

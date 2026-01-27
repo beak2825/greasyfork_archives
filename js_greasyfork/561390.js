@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         Torn Stock Vault (API) v5.1 (Smart Shares)
+// @name         Stock Manager & Advisor v5.2
 // @namespace    TheALFA.torn.stocks
-// @version      5.1
+// @version      5.2
 // @description  Secure stock vault using the Torn API. Mobile optimized. Smart ROI Advisor included.
 // @author       TheALFA [2869953]
 // @match        https://www.torn.com/page.php?sid=stocks*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/561390/Torn%20Stock%20Vault%20%28API%29%20v51%20%28Smart%20Shares%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561390/Torn%20Stock%20Vault%20%28API%29%20v51%20%28Smart%20Shares%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561390/Stock%20Manager%20%20Advisor%20v52.user.js
+// @updateURL https://update.greasyfork.org/scripts/561390/Stock%20Manager%20%20Advisor%20v52.meta.js
 // ==/UserScript==
 
 // --- CONFIGURATION ---
@@ -364,6 +364,7 @@ async function runAdvisorLogic(skipApiSync = false) {
         let liquidCash = nwData.liquid; let pureCash = nwData.pureCash; let dailyBank = nwData.dailyBank; let bankPrincipal = nwData.bankPrincipal;
         let currentDailyIncome = 0; let liquidAssets = []; let ownedBlocks = []; let candidates = []; let symbols = Object.keys(STOCK_DATA);
 
+        // --- 1. PROCESS STOCKS ---
         for (let sym of symbols) {
             let stockData = STOCK_DATA[sym]; let sharePrice = getPrice(sym); if (sharePrice === 0) continue;
             let owned = getOwnedShares(sym); let increment = stockData.base; let dailyYield = getDailyYield(sym);
@@ -375,7 +376,7 @@ async function runAdvisorLogic(skipApiSync = false) {
             let currentYieldTotal = (currentLevel * dailyYield);
             let currentRoi = (currentTotalValue > 0) ? ((currentYieldTotal * 365) / currentTotalValue) * 100 : 0;
 
-            // --- LIQUIDITY TRACKING ---
+            // Liquidity Tracking
             if (owned > 0) {
                 let lockedShares = 0;
                 if(currentLevel > 0) {
@@ -387,68 +388,90 @@ async function runAdvisorLogic(skipApiSync = false) {
                 let looseVal = looseShares * sharePrice;
                 let lockedVal = lockedShares * sharePrice;
 
-                // 1. Loose Shares (0% ROI - Always Liquid)
-                if (looseVal > 0) {
-                    liquidAssets.push({ name: sym, sym: sym, val: looseVal, price: sharePrice, currentRoi: 0 });
-                }
-                // 2. Locked Blocks (Real ROI - Liquid only if Target is better)
-                if (lockedVal > 0) {
-                    liquidAssets.push({ name: sym + " (Block)", sym: sym, val: lockedVal, price: sharePrice, currentRoi: currentRoi, isBlock: true });
-                }
+                if (looseVal > 0) liquidAssets.push({ name: sym, sym: sym, val: looseVal, price: sharePrice, currentRoi: 0 });
+                if (lockedVal > 0) liquidAssets.push({ name: sym + " (Block)", sym: sym, val: lockedVal, price: sharePrice, currentRoi: currentRoi, isBlock: true });
             }
 
-            // Owned Blocks Tracking
+            // Owned Blocks
             if (currentYieldTotal > 0) {
                 currentDailyIncome += currentYieldTotal;
                 ownedBlocks.push({ name: sym, tier: currentLevel, totalIncome: currentYieldTotal, invested: currentTotalValue, currentRoi: currentRoi });
             }
 
-            // Candidates (FIXED LOGIC)
+            // Stock Candidates
             let benefitData = ADVISOR_DATA[sym];
             if (benefitData && benefitData.type !== "passive") {
                 let candName = sym; let targetTotalShares = 0;
-
-                // Determine Target
                 if (owned >= increment) {
-                    // Targeting Tier 2, 3, etc.
                     targetTotalShares = increment * (Math.pow(2, currentLevel + 1) - 1);
                     candName = sym + ` (Tier ${currentLevel+1})`;
                 } else {
-                    // Targeting Tier 1 (Base)
                     targetTotalShares = increment;
                     candName = sym;
                 }
-
-                // Calculate COST based on what is MISSING
                 let sharesNeeded = Math.max(0, targetTotalShares - owned);
                 let costToUpgrade = sharesNeeded * sharePrice;
 
                 candidates.push({
-                    name: candName,
-                    sym: sym,
-                    roi: marginalRoi,
-                    cost: costToUpgrade,
-                    sharesNeeded: sharesNeeded,
-                    dailyYield: dailyYield,
-                    totalVal: targetTotalShares * sharePrice
+                    name: candName, sym: sym, roi: marginalRoi, cost: costToUpgrade,
+                    sharesNeeded: sharesNeeded, dailyYield: dailyYield, totalVal: targetTotalShares * sharePrice
                 });
             }
         }
 
-        // Logic
+        // --- 2. PROCESS BANK (NEW) ---
+        // Only if Bank is NOT active and we have rates
+        if (!nwData.bankActive) {
+            ["1w", "2w", "1m", "2m", "3m"].forEach(term => {
+                let rate = bankSettings["roi_"+term];
+                if (rate > 0) {
+                    // Cost is technically "Up to 2B", but for sorting we treat it as a valid target
+                    // We set cost to 2B to represent the "Max Potential"
+                    candidates.push({
+                        name: `City Bank (${term})`,
+                        sym: "BANK",
+                        roi: rate,
+                        cost: 2_000_000_000, // Max Cap
+                        isBank: true,
+                        totalVal: 2_000_000_000
+                    });
+                }
+            });
+        }
+
+        // --- 3. FILTER & SORT ---
         let floorROI = 0; if (ownedBlocks.length > 0) floorROI = Math.min(...ownedBlocks.map(b => b.currentRoi));
-        let validCandidates = candidates.filter(c => c.roi > floorROI); validCandidates.sort((a, b) => b.roi - a.roi);
+
+        // Include Bank in valid candidates even if ROI is lower than stock floor?
+        // No, keep the floor logic. If stocks pay 100%, ignore 50% bank.
+        let validCandidates = candidates.filter(c => c.roi > floorROI);
+        validCandidates.sort((a, b) => b.roi - a.roi);
 
         let totalDaily = currentDailyIncome + dailyBank;
         $("#adv-daily-income").text(formatMoney(Math.floor(totalDaily)) + " / day");
         $("#adv-daily-detail").text(`Stocks: ${formatMoney(Math.floor(currentDailyIncome))} | Bank: ${formatMoney(Math.floor(dailyBank))}`);
-        $("#adv-debug-log").html(`Free Cash: ${formatMoney(pureCash)}<br><span style='color:#fff; font-size:12px;/span>`);
+        $("#adv-debug-log").html(`Liquid Networth: ${formatMoney(liquidCash)}<br><span style='color:#fff; font-size:12px;'>Free Cash: ${formatMoney(pureCash)}</span>`);
 
         function calculateLiquidity(target) {
-            let owned = getOwnedShares(target.sym);
-            let price = getPrice(target.sym);
-            let alreadyOwnedValue = owned * price;
+            let owned = 0; let alreadyOwnedValue = 0;
+            // Stocks have "Owned", Bank has 0 (since it's not active)
+            if (!target.isBank) {
+                owned = getOwnedShares(target.sym);
+                let price = getPrice(target.sym);
+                alreadyOwnedValue = owned * price;
+            }
+
+            // For Bank, the "Goal" is flexible.
+            // If target is Bank, we cap the goal at our TOTAL Liquid Power (capped at 2B).
+            // This prevents it from showing "Missing $1.9B" if you only have $100m.
             let goal = target.totalVal;
+            if (target.isBank) {
+                // Goal is what we HAVE, up to 2B
+                let totalPower = pureCash + liquidAssets.reduce((acc, a) => acc + a.val, 0);
+                goal = Math.min(totalPower, 2_000_000_000);
+                // Ensure goal is at least 0
+                goal = Math.max(goal, 0);
+            }
 
             let startingAssets = pureCash + alreadyOwnedValue;
             let gap = goal - startingAssets;
@@ -460,7 +483,7 @@ async function runAdvisorLogic(skipApiSync = false) {
             liquidAssets.sort((a,b) => a.currentRoi - b.currentRoi);
 
             for (let asset of liquidAssets) {
-                if (asset.sym === target.sym) continue;
+                if (!target.isBank && asset.sym === target.sym) continue;
 
                 totalLiquid += asset.val;
 
@@ -472,30 +495,52 @@ async function runAdvisorLogic(skipApiSync = false) {
             }
 
             let totalResources = pureCash + alreadyOwnedValue + sources.reduce((acc, s) => acc + s.val, 0);
-            let finalMissing = Math.max(0, goal - totalResources);
+            let finalMissing = Math.max(0, target.isBank ? 0 : (target.totalVal - totalResources));
 
             return { available: available, missing: finalMissing, sources, totalLiquid };
         }
 
         function buildLiquidityHtml(target, plan) {
-            let html = `<div class="alfa-detail-row"><span>Target Price:</span> <span>${formatMoney(target.totalVal)}</span></div>`;
+            let html = "";
 
-            let owned = getOwnedShares(target.sym);
-            let price = getPrice(target.sym);
-            let ownedVal = owned * price;
-            if (owned > 0) {
-                 html += `<div class="alfa-detail-row alfa-detail-sub"><span>- Already Owned</span> <span>${formatMoney(ownedVal)}</span></div>`;
+            // Header for Bank vs Stock
+            if (target.isBank) {
+                 html += `<div class="alfa-detail-row"><span>Investment Cap:</span> <span>$2,000,000,000</span></div>`;
+            } else {
+                 html += `<div class="alfa-detail-row"><span>Target Price:</span> <span>${formatMoney(target.totalVal)}</span></div>`;
             }
 
+            // 1. Already Owned (Stock Only)
+            let ownedVal = 0;
+            if (!target.isBank) {
+                let owned = getOwnedShares(target.sym);
+                let price = getPrice(target.sym);
+                ownedVal = owned * price;
+                if (owned > 0) html += `<div class="alfa-detail-row alfa-detail-sub"><span>- Already Owned</span> <span>${formatMoney(ownedVal)}</span></div>`;
+            }
+
+            // 2. Free Cash
             if (pureCash > 0) html += `<div class="alfa-detail-row alfa-detail-sub"><span>- Free Cash</span> <span>${formatMoney(pureCash)}</span></div>`;
 
+            // 3. Sell List
             if (plan.sources.length > 0) {
-                 let gap = target.totalVal - (pureCash + ownedVal);
+                 // Recalculate GAP logic for display
+                 let currentTotal = pureCash + ownedVal;
+                 let displayGap = 0;
+
+                 if (target.isBank) {
+                     // For Bank: We sell EVERYTHING in the plan to maximize the investment up to 2B
+                     // The plan.sources already filtered for < ROI and <= 2B cap in calculateLiquidity
+                     displayGap = 2_000_000_000 - currentTotal;
+                 } else {
+                     displayGap = target.totalVal - currentTotal;
+                 }
+
                  for (let src of plan.sources) {
-                    let sellVal = (gap > 0) ? Math.min(src.val, gap) : 0;
+                    let sellVal = (displayGap > 0) ? Math.min(src.val, displayGap) : 0;
                     if (sellVal <= 0) continue;
 
-                    gap -= sellVal;
+                    displayGap -= sellVal;
                     let sellShares = Math.ceil(sellVal / src.price);
 
                     html += `<div class="alfa-detail-row alfa-detail-sub" style="align-items:center;">
@@ -508,29 +553,49 @@ async function runAdvisorLogic(skipApiSync = false) {
                 }
             }
 
-            if (plan.missing > 0) {
+            // 4. Status / Invest
+            if (plan.missing > 0 && !target.isBank) {
                  html += `<div class="alfa-detail-row alfa-detail-miss"><span>Still Missing:</span> <span>${formatMoney(plan.missing)}</span></div>`;
             } else {
-                 html += `<div class="alfa-detail-row alfa-detail-total"><span>Ready to Buy</span></div>`;
+                 let amountToInvest = plan.available;
+                 if (target.isBank) amountToInvest = Math.min(plan.available, 2_000_000_000);
+
+                 html += `<div class="alfa-detail-row alfa-detail-total"><span>Ready to Invest:</span> <span style="color:#fff">${formatMoney(amountToInvest)}</span></div>`;
             }
 
-            if (pureCash > 0) {
-                 html += `<button class="alfa-invest-btn alfa-action-buy" data-sym="${target.sym}" data-shares="${target.sharesNeeded}">Invest Now</button>`;
+            // 5. Button
+            if (pureCash > 0 || plan.sources.length > 0) { // Allow button even if just selling
+                if (target.isBank) {
+                     // Bank Link Button
+                     html += `<a href="https://www.torn.com/bank.php" target="_blank" class="alfa-invest-btn" style="display:block; text-align:center; text-decoration:none; line-height:20px; margin-top:8px; background:#4a6ea9; border-color:#64b5f6;">Open Bank</a>`;
+                } else if (pureCash > 0) {
+                     html += `<button class="alfa-invest-btn alfa-action-buy" data-sym="${target.sym}" data-shares="${target.sharesNeeded}">Invest Now</button>`;
+                }
             }
 
             return html;
         }
 
-        // Box 1: Target
+        // --- RENDER BOXES ---
+        let totalLiquidPower = pureCash + liquidAssets.reduce((acc, asset) => acc + asset.val, 0);
+
+        // Box 1: Target (Best ROI)
         let nextBest = null;
         if (validCandidates.length > 0) {
             nextBest = validCandidates[0];
             $("#adv-next-roi").text(nextBest.roi.toFixed(2) + "%"); $("#adv-next-name").text(nextBest.name);
             let targetLiq = calculateLiquidity(nextBest);
             $("#adv-target-details").html(buildLiquidityHtml(nextBest, targetLiq));
+
             if (targetLiq.missing <= 0) {
-                if (targetLiq.sources.length === 0) { $("#adv-next-cost").text(formatMoney(nextBest.cost)); $("#adv-next-gain").text("Buy with Cash"); }
-                else { $("#adv-next-cost").text("Sell " + targetLiq.sources.length + " lower ROI"); $("#adv-next-gain").text("to buy this"); }
+                // If Bank, custom text
+                if (nextBest.isBank) {
+                    $("#adv-next-cost").text("Invest Max Cap");
+                    $("#adv-next-gain").text("Active Banking");
+                } else {
+                    if (targetLiq.sources.length === 0) { $("#adv-next-cost").text(formatMoney(nextBest.cost)); $("#adv-next-gain").text("Buy with Cash"); }
+                    else { $("#adv-next-cost").text("Sell " + targetLiq.sources.length + " lower ROI"); $("#adv-next-gain").text("to buy this"); }
+                }
             } else {
                 $("#adv-next-cost").html(`<span class="alfa-shortage">Missing ${formatMoney(targetLiq.missing)}</span>`);
                 $("#adv-next-gain").text(`Cost: ${formatMoney(nextBest.cost)}`);
@@ -539,9 +604,12 @@ async function runAdvisorLogic(skipApiSync = false) {
 
         // Box 2: Best Affordable / Parking
         let bestOption = null; let bestOptionLiq = null;
-        let totalLiquidPower = pureCash + liquidAssets.reduce((acc, asset) => acc + asset.val, 0);
 
+        // Filter: Affordable AND not self-funding
+        // SPECIAL: Bank is ALWAYS considered affordable if we have > 0 liquid, up to its cap
         let affordableCandidates = validCandidates.filter(c => {
+            if (c.isBank) return true; // Bank is always a valid "Parking" spot
+
             let selfLiquidity = liquidAssets.filter(a => a.sym === c.sym).reduce((acc, a) => acc + a.val, 0);
             return c.cost <= (totalLiquidPower - selfLiquidity);
         });
@@ -552,7 +620,9 @@ async function runAdvisorLogic(skipApiSync = false) {
             bestOption = affordableCandidates[0];
             bestOptionLiq = calculateLiquidity(bestOption);
         } else {
+            // Fallback (same as before)
             let cheapCandidates = candidates.filter(c => {
+                if (c.isBank) return true;
                 let selfLiquidity = liquidAssets.filter(a => a.sym === c.sym).reduce((acc, a) => acc + a.val, 0);
                 return c.cost <= (totalLiquidPower - selfLiquidity);
             });
@@ -567,19 +637,26 @@ async function runAdvisorLogic(skipApiSync = false) {
             let color = "#609b9b"; if (nextBest && bestOption.roi < nextBest.roi) color = "#eebb44";
             $("#adv-afford-roi").text(bestOption.roi.toFixed(2) + "%").css("color", color);
             $("#adv-afford-name").text(bestOption.name);
-            let rawGap = bestOption.cost - pureCash;
-            if (bestOptionLiq.missing > 0) $("#adv-afford-cost").html(`<span class="alfa-shortage">Missing: ${formatMoney(bestOptionLiq.missing)}</span>`);
-            else if (rawGap > 0) $("#adv-afford-cost").text("Sell " + bestOptionLiq.sources.length + " items");
-            else $("#adv-afford-cost").text("Ready to Buy").css("color", "#8bc34a");
 
-            $("#adv-afford-gain").text("Cost: " + formatMoney(bestOption.totalVal));
+            if (bestOption.isBank) {
+                // Custom text for Bank Parking
+                let investAmount = Math.min(totalLiquidPower, 2_000_000_000);
+                $("#adv-afford-cost").text("Park Liquid Cash");
+                $("#adv-afford-gain").text("Inv: " + formatMoney(investAmount));
+            } else {
+                let rawGap = bestOption.cost - pureCash;
+                if (bestOptionLiq.missing > 0) $("#adv-afford-cost").html(`<span class="alfa-shortage">Missing: ${formatMoney(bestOptionLiq.missing)}</span>`);
+                else if (rawGap > 0) $("#adv-afford-cost").text("Sell " + bestOptionLiq.sources.length + " items");
+                else $("#adv-afford-cost").text("Ready to Buy").css("color", "#8bc34a");
+                $("#adv-afford-gain").text("Cost: " + formatMoney(bestOption.totalVal));
+            }
 
             let html = buildLiquidityHtml(bestOption, bestOptionLiq);
             if (color === "#eebb44") html += `<div style="margin-top:5px; font-style:italic; color:#888;">ROI better than wallet (0%).</div>`;
             $("#adv-afford-details").html(html);
         } else { $("#adv-afford-name").text("Portfolio Optimized"); $("#adv-afford-roi").text("-"); $("#adv-afford-cost").text("-"); $("#adv-afford-gain").text("-"); }
 
-        // Breakdown (Unchanged)
+        // Breakdown logic (unchanged)
         let breakdownHtml = "";
         if (dailyBank > 0) {
             let bankAnnual = (dailyBank * 365); let bankRoi = (bankPrincipal > 0) ? (bankAnnual / bankPrincipal) * 100 : 0;
@@ -759,25 +836,51 @@ function openItemSettings() {
     let rows = `<tr><td style="color:#8bc34a">Points</td><td><input id="item-input-points" class="alfa-tbl-input" value="${(itemPrices["points"]||0).toLocaleString()}"></td></tr>`;
     rows += `<tr><td style="color:#609b9b">HRG Avg</td><td><input id="item-input-HRG_AVG" class="alfa-tbl-input" value="${(itemPrices["HRG_AVG"]||0).toLocaleString()}"></td></tr>`;
     for(let [id,n] of Object.entries(ADVISOR_ITEMS)) rows+=`<tr><td>${n}</td><td><input class="alfa-tbl-input item-price-input" data-id="${id}" value="${(itemPrices[id]||0).toLocaleString()}"></td></tr>`;
-    createModal("Item Values", `<button id="adv-fetch-api" class="alfa-btn-main" style="width:100%; margin-bottom:10px;">Fetch Prices (API)</button><div style="height:300px; overflow-y:auto"><table class="alfa-table">${rows}</table></div><button id="adv-save-items" class="alfa-btn-main" style="width:100%; margin-top:10px;">Save</button><div id="adv-fetch-status" style="text-align:center; font-size:10px; margin-top:5px;"></div>`);
-    $("#adv-save-items").click(()=>{
-        itemPrices["points"]=parseTornNumber($("#item-input-points").val()); itemPrices["HRG_AVG"]=parseTornNumber($("#item-input-HRG_AVG").val());
-        $(".item-price-input").each(function(){ itemPrices[$(this).data("id")]=parseTornNumber($(this).val()); });
-        localStorage.setItem("alfa_advisor_prices", JSON.stringify(itemPrices)); $("#alfa-modal-overlay").remove(); openAdvisorMain();
-    });
+
+    let html = `
+    <button id="adv-fetch-api" class="alfa-btn-main" style="width:100%; margin-bottom:10px;">Fetch Prices (API)</button>
+    <div style="height:300px; overflow-y:auto; border-top:1px solid #333; border-bottom:1px solid #333;">
+        <table class="alfa-table">${rows}</table>
+    </div>
+    <div id="adv-fetch-status" style="text-align:center; font-size:10px; margin:5px 0;"></div>
+    <button id="adv-back-items" class="alfa-btn-main" style="width:100%; margin-top:5px; background:#444;">Back</button>`;
+
+    createModal("Item Values", html);
+
+    // --- AUTO-SAVE LOGIC ---
+    const autoSaveItems = () => {
+        itemPrices["points"] = parseTornNumber($("#item-input-points").val());
+        itemPrices["HRG_AVG"] = parseTornNumber($("#item-input-HRG_AVG").val());
+        $(".item-price-input").each(function(){
+            itemPrices[$(this).data("id")] = parseTornNumber($(this).val());
+        });
+        localStorage.setItem("alfa_advisor_prices", JSON.stringify(itemPrices));
+    };
+
+    // Attach Listeners
+    $(".alfa-modal-body").on("keyup change", "input", autoSaveItems);
+
+    // Back Button
+    $("#adv-back-items").click(() => { $("#alfa-modal-overlay").remove(); openAdvisorMain(); });
+
+    // Fetch Button
     $("#adv-fetch-api").click(fetchMarketPrices);
 }
+
 async function fetchMarketPrices() {
     let key = localStorage.getItem("alfa_vault_apikey"); if(!key) return;
     $("#adv-fetch-status").text("Fetching...");
     try {
         let r = await fetch(`https://api.torn.com/market/?selections=pointsmarket&key=${key}`); let d = await r.json();
-        if(d.pointsmarket) { let v = Object.values(d.pointsmarket).sort((a,b)=>a.cost-b.cost)[0].cost; $("#item-input-points").val(v.toLocaleString()); }
+        if(d.pointsmarket) {
+            let v = Object.values(d.pointsmarket).sort((a,b)=>a.cost-b.cost)[0].cost;
+            $("#item-input-points").val(v.toLocaleString()).trigger("change");
+        }
         for(let id of Object.keys(ADVISOR_ITEMS)) {
             let r2=await fetch(`https://api.torn.com/v2/torn/${id}/items?sort=ASC&key=${key}`); let d2=await r2.json();
             let p=0; if(d2.value) p=d2.value.market_price; else if(d2.items && d2.items[0]) p=d2.items[0].value.market_price;
-            if(p>0) $(`.item-price-input[data-id="${id}"]`).val(p.toLocaleString());
-            await new Promise(r=>setTimeout(r,100));
+            if(p>0) $(`.item-price-input[data-id="${id}"]`).val(p.toLocaleString()).trigger("change");
+            await new Promise(r=>setTimeout(r,100)); // Rate limit safety
         }
         $("#adv-fetch-status").text("Done!");
     } catch(e) { $("#adv-fetch-status").text("Error"); }
@@ -792,18 +895,13 @@ async function fetchBankRates() {
     $("#adv-fetch-bank").text("Fetching...");
 
     try {
-        // 1. Get Base Rates (Torn v2 - Accurate APRs)
         const resRates = await fetch(`https://api.torn.com/v2/torn?selections=bank&key=${key}`);
         const dataRates = await resRates.json();
-
-        // 2. Get User Perks (User v1 - Array of Strings)
         const resPerks = await fetch(`https://api.torn.com/user/?selections=perks&key=${key}`);
         const dataPerks = await resPerks.json();
 
         if (dataRates.error) throw new Error(dataRates.error.error);
-        if (dataPerks.error) throw new Error(dataPerks.error.error);
 
-        // Helper function to parse strings like "+ 50% bank interest rate"
         const parseInterest = (list) => {
             if (!list || !Array.isArray(list)) return 0;
             let bonus = 0;
@@ -816,10 +914,7 @@ async function fetchBankRates() {
             return bonus;
         };
 
-        // --- Calculate Bonuses ---
         let totalBonus = 0;
-
-        // Sum up all perks
         totalBonus += parseInterest(dataPerks.merit_perks);
         totalBonus += parseInterest(dataPerks.faction_perks);
         totalBonus += parseInterest(dataPerks.job_perks);
@@ -828,17 +923,16 @@ async function fetchBankRates() {
         totalBonus += parseInterest(dataPerks.education_perks);
         totalBonus += parseInterest(dataPerks.book_perks);
 
-        // Calculate Multiplier (e.g. 1 + 0.50 + 0.10 = 1.6)
         let multi = 1 + (totalBonus / 100);
-
-        // --- Update UI ---
         let bankData = dataRates.bank;
+
         if(bankData) {
             ["1w", "2w", "1m", "2m", "3m"].forEach(term => {
                 if(bankData[term]) {
                     let baseApr = parseFloat(bankData[term]);
                     let finalApr = baseApr * multi;
-                    $(`#bank-${term}`).val(finalApr.toFixed(2));
+                    // FIX: Trigger change so auto-save works
+                    $(`#bank-${term}`).val(finalApr.toFixed(2)).trigger("change");
                 }
             });
              $("#adv-fetch-bank").text("Updated!");
@@ -857,12 +951,11 @@ async function fetchBankRates() {
 function openNetworthSettings() {
     let s = networthSettings.sources;
 
-    // 1. General Settings (Top Left)
+    // 1. General Settings
     let generalHtml = `
     <div class="alfa-card">
         <div class="alfa-card-head"><span class="alfa-card-title">General Settings</span></div>
         <div style="padding:10px; display:flex; flex-direction:column; gap:10px;">
-
             <div>
                 <div style="font-size:10px; color:#888; margin-bottom:5px; text-transform:uppercase; font-weight:bold;">Networth Sources</div>
                 <div style="display:flex; gap:10px;">
@@ -871,23 +964,19 @@ function openNetworthSettings() {
                     <label style="font-size:11px; cursor:pointer;"><input type="checkbox" id="nw-src-stocks" ${s.stocks?"checked":""}> Stocks</label>
                 </div>
             </div>
-
             <div style="border-top:1px dashed #444; margin:5px 0;"></div>
-
             <div>
                 <div style="font-size:10px; color:#888; margin-bottom:5px; text-transform:uppercase; font-weight:bold;">Stock Value Logic</div>
                 <select id="nw-exclude-mode" class="alfa-select" style="width:100%; margin-bottom:5px;">
                     <option value="all" ${networthSettings.excludeMode==="all"?"selected":""}>Count Entire Value</option>
                     <option value="active" ${networthSettings.excludeMode==="active"?"selected":""}>Exclude Active Blocks</option>
                 </select>
-                <div style="font-size:10px; color:#666; line-height:1.2;">
-                    "Exclude Active Blocks" removes the value of completed benefit tiers from your liquid networth.
-                </div>
+                <div style="font-size:10px; color:#666; line-height:1.2;">"Exclude Active Blocks" removes value of completed tiers.</div>
             </div>
         </div>
     </div>`;
 
-    // 2. Bank ROI Card (Top Right)
+    // 2. Bank ROI Card
     let bankInputs = ["1w","2w","1m","2m","3m"].map(t =>
         `<div style="display:flex; justify-content:space-between; align-items:center;">
             <span style="font-size:11px; color:#aaa; font-weight:bold; width:25px;">${t}</span>
@@ -899,14 +988,12 @@ function openNetworthSettings() {
     <div class="alfa-card">
         <div class="alfa-card-head"><span class="alfa-card-title">Bank ROI % (APR)</span></div>
         <div style="padding:12px;">
-            <div style="display:flex; flex-direction:column; gap:6px;">
-                ${bankInputs}
-            </div>
+            <div style="display:flex; flex-direction:column; gap:6px;">${bankInputs}</div>
             <button id="adv-fetch-bank" class="alfa-mini-btn" style="width:100%; margin:12px 0 0 0; padding:6px; border-color:#609b9b; color:#609b9b;">Fetch Rates (API)</button>
         </div>
     </div>`;
 
-    // 3. Excluded Stocks List (Bottom Full Width)
+    // 3. Excluded Stocks
     let excludedHtml = `
     <div class="alfa-card" style="grid-column: span 2;">
         <div class="alfa-card-head"><span class="alfa-card-title">Manually Excluded Stocks</span></div>
@@ -919,15 +1006,15 @@ function openNetworthSettings() {
 
     let html = `
     <div class="alfa-settings-grid" style="grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
-        ${generalHtml}
-        ${bankHtml}
-        ${excludedHtml}
+        ${generalHtml} ${bankHtml} ${excludedHtml}
     </div>
-    <button id="adv-save-nw" class="alfa-btn-main" style="width:100%; padding:10px;">Save Configuration</button>`;
+    <button id="adv-back-nw" class="alfa-btn-main" style="width:100%; padding:10px; background:#444;">Back</button>`;
 
     createModal("Networth Settings", html);
 
-    $("#adv-save-nw").click(()=>{
+    // --- AUTO-SAVE LOGIC ---
+    const autoSave = () => {
+        // Update Networth Settings Object
         networthSettings.sources.inventory = $("#nw-src-inv").is(":checked");
         networthSettings.sources.points = $("#nw-src-pts").is(":checked");
         networthSettings.sources.stocks = $("#nw-src-stocks").is(":checked");
@@ -936,15 +1023,21 @@ function openNetworthSettings() {
         let ex = []; $(".nw-exclude-stock:checked").each(function(){ ex.push($(this).val()) });
         networthSettings.excludedStocks = ex;
 
+        // Update Bank Settings Object
         ["1w", "2w", "1m", "2m", "3m"].forEach(t => { bankSettings["roi_"+t] = parseFloat($(`#bank-${t}`).val()) || 0; });
 
+        // Write to Storage
         localStorage.setItem("alfa_advisor_networth", JSON.stringify(networthSettings));
         localStorage.setItem("alfa_advisor_bank", JSON.stringify(bankSettings));
+    };
 
-        $("#alfa-modal-overlay").remove();
-        openAdvisorMain();
-    });
+    // Attach Listeners to everything
+    $(".alfa-modal-body").on("change keyup", "input, select", autoSave);
 
+    // Back Button
+    $("#adv-back-nw").click(() => { $("#alfa-modal-overlay").remove(); openAdvisorMain(); });
+
+    // Fetch Button
     $("#adv-fetch-bank").click(fetchBankRates);
 }
 insert();
@@ -1021,6 +1114,19 @@ const style = `
 .alfa-mini-btn:hover { background: #ef5350; color: #fff; }
 .alfa-invest-btn { width: 100%; background: #2a4040; border: 1px solid #609b9b; color: #fff; padding: 6px; margin-top: 8px; font-size: 11px; font-weight: bold; cursor: pointer; border-radius: 4px; }
 .alfa-invest-btn:hover { background: #609b9b; }
+
+/* --- CUSTOM BUTTON COLORS --- */
+#vaultall { border-color: #66bb6a !important; color: #66bb6a !important; }
+#vaultall:hover { background: #66bb6a !important; color: #111 !important; }
+
+#vaultexcept { border-color: #26a69a !important; color: #26a69a !important; }
+#vaultexcept:hover { background: #26a69a !important; color: #111 !important; }
+
+#sellamt { border-color: #ef5350 !important; color: #ef5350 !important; }
+#sellamt:hover { background: #ef5350 !important; color: #fff !important; }
+
+#sellall-init { border-color: #c62828 !important; color: #c62828 !important; }
+#sellall-init:hover { background: #c62828 !important; color: #fff !important; }
 `;
 const styleSheet = document.createElement("style");
 styleSheet.textContent = style;

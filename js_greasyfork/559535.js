@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         I'm not a robot neal.fun cheats
 // @namespace    http://tampermonkey.net/
-// @version      12.6
+// @version      13.7
 // @description  Adds features to help with certain levels.
 // @author       Suomynona589
 // @match        https://neal.fun/not-a-robot/*
@@ -212,13 +212,7 @@ async function runIntersectionCheat() {
     }
 
     function clickElement(el) {
-        if (!el) return;
-        const opts = { bubbles: true, cancelable: true };
-        el.dispatchEvent(new PointerEvent("pointerdown", opts));
-        el.dispatchEvent(new MouseEvent("mousedown", opts));
-        el.dispatchEvent(new PointerEvent("pointerup", opts));
-        el.dispatchEvent(new MouseEvent("mouseup", opts));
-        el.dispatchEvent(new MouseEvent("click", opts));
+        simulateClick(el);
     }
 
     function getRotationDeg(el) {
@@ -255,6 +249,116 @@ async function runIntersectionCheat() {
     console.log("intersection cheat: total clicks", totalClicks);
 }
 
+//----Stop & Bike Cheat----
+
+async function runStopBikeCheat() {
+  log("runStopBikeCheat: starting");
+
+  function clickAtCenter(el) {
+    const rect = el.getBoundingClientRect();
+    const x = Math.floor(rect.left + rect.width / 2);
+    const y = Math.floor(rect.top + rect.height / 2);
+    const opts = { bubbles: true, cancelable: true, view: window, clientX: x, clientY: y };
+    simulateClick(el);
+  }
+
+  const ready = await waitFor(".grid-inner .grid-item.letter");
+  if (!ready) {
+    log("stopbike: grid not found");
+    return;
+  }
+
+  const items = [...document.querySelectorAll(".grid-inner .grid-item.letter")];
+
+  const grid = [];
+  for (let r = 0; r < 10; r++) {
+    grid[r] = [];
+    for (let c = 0; c < 10; c++) {
+      const idx = r * 10 + c;
+      const el = items[idx];
+      const span = el.querySelector("span");
+      const char = span ? span.textContent.trim().toUpperCase() : "";
+      grid[r][c] = { el, char, r, c };
+    }
+  }
+
+  const dirs = [
+    [-1, 0], [1, 0], [0, -1], [0, 1],
+    [-1, -1], [-1, 1], [1, -1], [1, 1]
+  ];
+
+  function findWord(word) {
+    const W = word.split("");
+
+    function dfs(r, c, idx, path, visited) {
+      if (grid[r][c].char !== W[idx]) return null;
+      const key = r + "," + c;
+      if (visited.has(key)) return null;
+
+      const newPath = [...path, grid[r][c]];
+      if (idx === W.length - 1) return newPath;
+
+      const newVisited = new Set(visited);
+      newVisited.add(key);
+
+      for (const [dr, dc] of dirs) {
+        const nr = r + dr, nc = c + dc;
+        if (nr >= 0 && nr < 10 && nc >= 0 && nc < 10) {
+          const res = dfs(nr, nc, idx + 1, newPath, newVisited);
+          if (res) return res;
+        }
+      }
+      return null;
+    }
+
+    for (let r = 0; r < 10; r++) {
+      for (let c = 0; c < 10; c++) {
+        const res = dfs(r, c, 0, [], new Set());
+        if (res) return res;
+      }
+    }
+    return null;
+  }
+
+  const stopSignPath = findWord("STOPSIGN");
+  if (!stopSignPath) {
+    log("stopbike: STOPSIGN not found");
+    return;
+  }
+
+  let bikePath = findWord("BIKE");
+
+  if (!bikePath) {
+    log("stopbike: BIKE not found");
+    return;
+  }
+
+  const finalSet = new Set();
+  const finalList = [];
+
+  function addPath(path) {
+    for (const cell of path) {
+      const key = cell.r + "," + cell.c;
+      if (!finalSet.has(key)) {
+        finalSet.add(key);
+        finalList.push(cell);
+      }
+    }
+  }
+
+  addPath(stopSignPath);
+  addPath(bikePath);
+
+  let clicks = 0;
+  for (const cell of finalList) {
+    clickAtCenter(cell.el);
+    clicks++;
+    log("stopbike: clicked", cell.char, cell.r, cell.c);
+  }
+
+  log("stopbike: total clicked =", clicks);
+}
+
 //----License Plate Cheat----
 
 async function runLicensePlateCheat() {
@@ -276,7 +380,7 @@ async function runLicensePlateCheat() {
 
   input.focus();
   input.value = "";
-  const perCharDelay = 150;
+  const perCharDelay = 75;
   [...answer].forEach((ch, i) => {
     setTimeout(() => {
       input.value += ch;
@@ -326,6 +430,53 @@ async function runBoxInBox2Cheat() {
   }
 
   log("runBoxInBox2Cheat: finished");
+}
+
+//----Whack-a-Mole Cheat----
+
+async function runMoleCheat() {
+  log("runMoleCheat: starting");
+
+  function clickAtCenter(el) {
+    const rect = el.getBoundingClientRect();
+    const x = Math.floor(rect.left + rect.width / 2);
+    const y = Math.floor(rect.top + rect.height / 2);
+    const opts = { bubbles: true, cancelable: true, view: window, clientX: x, clientY: y };
+    el.dispatchEvent(new PointerEvent("pointerdown", opts));
+    el.dispatchEvent(new MouseEvent("mousedown", opts));
+    el.dispatchEvent(new MouseEvent("click", opts));
+    el.dispatchEvent(new MouseEvent("mouseup", opts));
+  }
+
+  const ready = await waitFor(".mole-wrapper");
+  if (!ready) {
+    log("mole: wrappers not found");
+    return;
+  }
+
+  let hits = 0;
+  const needed = 5;
+
+  return new Promise(resolve => {
+    const poll = setInterval(() => {
+      if (hits >= needed) {
+        clearInterval(poll);
+        log("runMoleCheat: finished, total hits =", hits);
+        resolve();
+        return;
+      }
+
+      const active = document.querySelector(".mole.active");
+      if (!active) return;
+
+      const wrapper = active.closest(".mole-wrapper");
+      if (!wrapper) return;
+
+      clickAtCenter(wrapper);
+      hits++;
+      log("mole: hit", hits, "/", needed);
+    }, 25);
+  });
 }
 
 //----Waldo Cheat----
@@ -569,8 +720,12 @@ function runHydrantCheat() {
 
 //----In Dark Cheat----
 
-function runInDarkCheat() {
+async function runInDarkCheat() {
   log("runInDarkCheat: starting");
+
+  const ok1 = await waitFor(".captcha-words");
+  const ok2 = await waitFor(".captcha-input-text");
+  if (!ok1 || !ok2) return;
 
   let letters = [...document.querySelectorAll(".letter")].map(el => el.textContent.trim());
   let answer = letters.join("");
@@ -578,10 +733,7 @@ function runInDarkCheat() {
   console.log("Answer is:", answer);
 
   let input = document.querySelector(".captcha-input-text");
-  if (!input) {
-    log("runInDarkCheat: captcha input not found");
-    return;
-  }
+  if (!input) return;
 
   input.value = "";
   letters.forEach((ch, i) => {
@@ -589,7 +741,7 @@ function runInDarkCheat() {
       input.value += ch;
       input.dispatchEvent(new Event("input", { bubbles: true }));
       console.log("Typed:", ch);
-    }, i * 150);
+    }, i * 75);
   });
 }
 
@@ -608,10 +760,17 @@ async function runWhatYouSeeCheat() {
     }
 
     if (input) {
-        input.value = randomWord;
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.dispatchEvent(new Event('change', { bubbles: true }));
-        log('what-you-see: filled with "' + randomWord + '"');
+        input.value = "";
+        [...randomWord].forEach((ch, i) => {
+            setTimeout(() => {
+                input.value += ch;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                if (i === randomWord.length - 1) {
+                    log('what-you-see: filled with "' + randomWord + '"');
+                }
+            }, i * 75);
+        });
     }
 }
 
@@ -700,14 +859,14 @@ async function runCatchDucksCheat() {
 
     function clickElement(el) {
         const opts = { bubbles: true, cancelable: true };
-        el.dispatchEvent(new PointerEvent('pointerdown', opts));
-        el.dispatchEvent(new MouseEvent('mousedown', opts));
-        el.dispatchEvent(new PointerEvent('pointerup', opts));
-        el.dispatchEvent(new MouseEvent('mouseup', opts));
-        el.dispatchEvent(new MouseEvent('click', opts));
+        el.dispatchEvent(new PointerEvent("pointerdown", opts));
+        el.dispatchEvent(new MouseEvent("mousedown", opts));
+        el.dispatchEvent(new PointerEvent("pointerup", opts));
+        el.dispatchEvent(new MouseEvent("mouseup", opts));
+        el.dispatchEvent(new MouseEvent("click", opts));
     }
 
-    const ducks = await waitForSelector('.duck.roaming');
+    const ducks = await waitForSelector(".duck.roaming");
     if (!ducks.length) {
         console.warn("duck cheat: no ducks found");
         return;
@@ -715,12 +874,50 @@ async function runCatchDucksCheat() {
 
     ducks.forEach(el => clickElement(el));
     console.log("duck cheat: clicked", ducks.length, "ducks");
+
+    const container = document.querySelector(".duck-container");
+    if (container) {
+        const msg = document.createElement("div");
+        msg.textContent = "They got clicked by the way";
+        msg.style.position = "absolute";
+        msg.style.left = (container.getBoundingClientRect().left - 250) + "px";
+        msg.style.top = container.getBoundingClientRect().top + "px";
+        msg.style.fontSize = "20px";
+        msg.style.fontWeight = "bold";
+        msg.style.color = "yellow";
+        msg.style.textShadow = "2px 2px 4px black";
+        msg.style.zIndex = "999999";
+        document.body.appendChild(msg);
+
+        function removeMsg() {
+            msg.remove();
+            clearInterval(levelCheck);
+        }
+
+        const levelCheck = setInterval(() => {
+            const lvl = localStorage.getItem("not-a-robot-level");
+            if (lvl !== "21") removeMsg();
+        }, 200);
+    }
 }
 
 //----Eye Exam Cheat----
 
 async function runEyeExamCheat() {
   console.log("eye exam cheat: starting");
+
+  let stage = 0;
+
+  function typeIntoInput(el, text) {
+    el.focus();
+    el.value = "";
+    [...text].forEach((ch, i) => {
+      setTimeout(() => {
+        el.value += ch;
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+      }, i * 75);
+    });
+  }
 
   function clickAtCenter(el) {
     if (!el) return;
@@ -736,19 +933,91 @@ async function runEyeExamCheat() {
   }
 
   const interval = setInterval(() => {
-    const squares = document.querySelectorAll(".color-square");
-    let target = null;
-    squares.forEach(sq => {
-      const style = sq.getAttribute("style") || "";
-      if (style.includes("rgb(84, 255, 41)")) {
-        target = sq;
+    const labelEl = document.querySelector(".eye-exam-input-label");
+    const label = labelEl?.textContent?.toLowerCase() || "";
+
+    if (stage === 0 && label.includes("letters")) {
+      const input = document.querySelector("input[type='text']");
+      if (input) {
+        typeIntoInput(input, "EDFCZP");
+        stage = 1;
       }
-    });
-    if (target) {
-      clickAtCenter(target);
-      console.log("eye exam cheat: clicked odd color square");
-      clearInterval(interval);
+      return;
     }
+
+    if (stage === 1 && label.includes("number")) {
+      const input = document.querySelector("input[type='text']");
+      if (input) {
+        typeIntoInput(input, "8");
+        stage = 2;
+      }
+      return;
+    }
+
+    if (stage === 2 && label.includes("dots")) {
+      const input = document.querySelector("input[type='text']");
+      if (input) {
+        typeIntoInput(input, "34");
+        stage = 3;
+      }
+      return;
+    }
+
+    if (stage === 3) {
+      const squares = document.querySelectorAll(".color-square");
+      if (squares.length > 0) {
+        let target = null;
+        squares.forEach(sq => {
+          const style = sq.getAttribute("style") || "";
+          if (style.includes("rgb(84, 255, 41)")) target = sq;
+        });
+        if (target) {
+          clickAtCenter(target);
+          clearInterval(interval);
+          console.log("eye exam cheat: finished");
+        }
+      }
+    }
+  }, 200);
+}
+
+//----Networking Cheat----
+
+async function runNetworkCheat() {
+  function waitFor(sel) {
+    return new Promise(resolve => {
+      const check = setInterval(() => {
+        const el = document.querySelector(sel);
+        if (el) {
+          clearInterval(check);
+          resolve(el);
+        }
+      }, 100);
+    });
+  }
+
+  const wrapper = await waitFor(".captcha-content-wrapper");
+
+  const img = document.createElement("img");
+  img.src = "https://suomynona589.github.io/images/networking.png";
+  img.style.position = "absolute";
+  img.style.width = "300px";
+  img.style.zIndex = 999999;
+
+  const rect = wrapper.getBoundingClientRect();
+  img.style.left = rect.left - 350 + "px";
+  img.style.top = rect.top + 75 + "px";
+
+  document.body.appendChild(img);
+
+  function removeImg() {
+    img.remove();
+    clearInterval(levelCheck);
+  }
+
+  const levelCheck = setInterval(() => {
+    const lvl = localStorage.getItem("not-a-robot-level");
+    if (lvl !== "26") removeImg();
   }, 200);
 }
 
@@ -885,6 +1154,83 @@ async function runBrandsCheat() {
   });
 }
 
+//----Math Cheat----
+
+async function runMathCheat() {
+  log("runMathCheat: starting");
+
+  function clickAtCenter(el) {
+    const rect = el.getBoundingClientRect();
+    const x = Math.floor(rect.left + rect.width / 2);
+    const y = Math.floor(rect.top + rect.height / 2);
+    const opts = { bubbles: true, cancelable: true, view: window, clientX: x, clientY: y };
+    el.dispatchEvent(new PointerEvent("pointerdown", opts));
+    el.dispatchEvent(new MouseEvent("mousedown", opts));
+    el.dispatchEvent(new MouseEvent("click", opts));
+    el.dispatchEvent(new MouseEvent("mouseup", opts));
+  }
+
+  const ready = await waitFor(".math-grid-item");
+  if (!ready) {
+    log("math-cheat: tiles not found");
+    return;
+  }
+
+  const tiles = [...document.querySelectorAll(".math-grid-item")];
+
+  const tileData = tiles.map(tile => {
+    const valEl = tile.querySelector(".math-grid-term-actual");
+    if (!valEl) return { tile, value: Infinity };
+
+    let raw = valEl.textContent.trim();
+
+    let value = raw === "Infinity" ? Infinity : parseFloat(raw);
+
+    return { tile, value };
+  });
+
+  tileData.sort((a, b) => a.value - b.value);
+
+  let clicks = 0;
+  for (const entry of tileData) {
+    clickAtCenter(entry.tile);
+    clicks++;
+    log("math-cheat: clicked", entry.value);
+  }
+
+  log("math-cheat: total clicked =", clicks);
+}
+
+//----Cup Shuffle Cheat----
+
+async function runCupCheat() {
+    log("runCupCheat: starting");
+
+    const ok = await waitFor(".cup");
+    if (!ok) return;
+
+    let cup = null;
+    while (!cup) {
+        cup = document.querySelector(".cup.has-ball");
+        if (!cup) await new Promise(r => setTimeout(r, 75));
+    }
+
+    cup.style.outline = "4px solid #4da3ff";
+    cup.style.outlineOffset = "3px";
+    cup.style.borderRadius = "6px";
+
+    let clicks = 0;
+    function handler() {
+        clicks++;
+        if (clicks >= 3) {
+            cup.removeEventListener("click", handler);
+            log("cup-cheat: done");
+        }
+    }
+
+    cup.addEventListener("click", handler);
+}
+
 //----Impostor Cheat----
 
 async function runImpostorCheat() {
@@ -992,9 +1338,9 @@ async function runJessicaCheat() {
   input.focus();
   console.log("jessica: input focused");
 
-  input.value = 'START AT "END"';
+  input.value = 'Start at "End"';
   input.dispatchEvent(new Event("input", { bubbles: true }));
-  console.log('jessica: input set to START AT "END"');
+  console.log('jessica: input set to Start at "End"');
 }
 
 //----Empire State Building Cheat----
@@ -1033,6 +1379,95 @@ async function runEmpSteCheat() {
   log('empire: clicked', clicks, 'tiles');
 }
 
+//----DDR Cheat----
+
+async function runDDRCheat() {
+  log("runDDRCheat: waiting for start click");
+
+  let starter = null;
+
+  // poll for the .start div with the correct <img>
+  while (!starter) {
+    starter = [...document.querySelectorAll(".start")].find(div => {
+      const img = div.querySelector("img");
+      return img && img.src.includes("/not-a-robot/play.svg");
+    });
+    if (!starter) await new Promise(r => setTimeout(r, 75));
+  }
+
+  let clicked = false;
+  starter.addEventListener("click", () => clicked = true, { once: true });
+
+  // wait until user actually clicks it
+  while (!clicked) {
+    await new Promise(r => setTimeout(r, 75));
+  }
+
+  log("runDDRCheat: starting");
+
+  const keyDir = {
+    Up: "ArrowUp",
+    Down: "ArrowDown",
+    Left: "ArrowLeft",
+    Right: "ArrowRight"
+  };
+
+  function fireKey(k) {
+    if (!k) return;
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: k }));
+    requestAnimationFrame(() => {
+      document.dispatchEvent(new KeyboardEvent("keyup", { key: k }));
+    });
+  }
+
+  const ok1 = await waitFor(".arrows-container");
+  if (!ok1) return;
+
+  let video = null;
+  while (!video) {
+    video = [...document.querySelectorAll("video")].find(v =>
+      v.src.includes("dance.mp4")
+    );
+    if (!video) await new Promise(r => setTimeout(r, 75));
+  }
+
+  const target = document.querySelector(".arrows-container");
+  const hitbox = target.getBoundingClientRect();
+  const top = hitbox.top;
+  const bottom = hitbox.bottom;
+
+  function readDirection(note) {
+    const arrow = note.querySelector(".note-arrow");
+    if (!arrow) return null;
+    for (const c of arrow.classList) {
+      if (keyDir[c]) return c;
+    }
+    return null;
+  }
+
+  function cycle() {
+    const pending = [...document.querySelectorAll("div.note:not(.note-played):not(.note-missed)")];
+
+    for (const node of pending) {
+      const y = node.getBoundingClientRect().top;
+
+      if (y >= top && y <= bottom) {
+        const dir = readDirection(node);
+        if (dir) {
+          fireKey(keyDir[dir]);
+          node.classList.add("note-played");
+          log("ddr: hit", dir);
+        }
+      }
+    }
+
+    requestAnimationFrame(cycle);
+  }
+
+  cycle();
+  log("runDDRCheat: active");
+}
+
     //----Orchestrator----
 
     function runCheatsForLevel(level) {
@@ -1050,8 +1485,10 @@ async function runEmpSteCheat() {
     if (level === 1) runStopSignCheat();
     if (level === 3) runVegetableCheat();
     if (level === 4) runIntersectionCheat();
+    if (level === 6) runStopBikeCheat();
     if (level === 7) runLicensePlateCheat();
     if (level === 8) runBoxInBoxCheat();
+    if (level === 9) runMoleCheat();
     if (level === 10) runWaldoCheat();
     if (level === 11) runChihuahuaCheat();
     if (level === 12) runWithoutCheat();
@@ -1062,13 +1499,17 @@ async function runEmpSteCheat() {
     if (level === 20) runMinecraftCheat();
     if (level === 21) runCatchDucksCheat();
     if (level === 23) runEyeExamCheat();
+    if (level === 26) runNetworkCheat();
     if (level === 28) runSoulCheat();
     if (level === 30) runTrafficTreeCheat();
     if (level === 32) runBrandsCheat();
+    if (level === 33) runMathCheat();
+    if (level === 34) runCupCheat();
     if (level === 36) runImpostorCheat();
     if (level === 41) runConvoCheat();
     if (level === 44) runJessicaCheat();
     if (level === 45) runEmpSteCheat();
+    if (level === 46) runDDRCheat();
 }
 
     let lastLevel = -1;

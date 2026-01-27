@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name         Multiplayer Piano Optimizations [Input/Output]
 // @namespace    https://tampermonkey.net/
-// @version      1.0.5
+// @version      1.0.6
 // @description  Saves and persists MIDI input/output options for you
 // @author       zackiboiz
 // @match        *://*.multiplayerpiano.com/*
 // @match        *://*.multiplayerpiano.net/*
-// @match        *://dev.multiplayerpiano.net/*
 // @match        *://*.multiplayerpiano.org/*
 // @match        *://*.multiplayerpiano.dev/*
 // @match        *://piano.mpp.community/*

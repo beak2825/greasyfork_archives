@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Bypass Paywalls Clean - en
-// @version         4.2.9.0
+// @version         4.2.9.2
 // @description     Bypass Paywalls of news sites
 // @author          magnolia1234
 // @homepageURL     https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters
@@ -58,6 +58,7 @@
 // @exclude         *://*.centrefrance.com/*
 // @exclude         *://*.criteo.com/*
 // @exclude         *://*.dailymotion.com/*
+// @exclude         *://*.diepresse.com/*
 // @exclude         *://*.doubleclick.net/*
 // @exclude         *://*.dwcdn.net/*
 // @exclude         *://*.facebook.com/*
@@ -630,7 +631,7 @@ function readMediumLink(url, text_fail = 'BPC > Try for full article text:\r\n')
 function externalLink(domains, ext_url_templ, url, text_fail = 'BPC > Full article text:\r\n') {
   let text_fail_div = document.createElement('div');
   text_fail_div.id = 'bpc_archive';
-  text_fail_div.setAttribute('style', 'margin: 20px; font-size: 20px; font-weight: bold; color: red;');
+  text_fail_div.setAttribute('style', 'margin: 20px; font-size: 20px; font-weight: bold; color: red; line-height: normal;');
   let parser = new DOMParser();
   text_fail = text_fail.replace(/\[(?<url>[^\]]+)\]/g, function (match, url) {
     return "<a href='" + url + "' target='_blank' style='color: red'>" + new URL(url).hostname + "</a>";
@@ -2795,14 +2796,8 @@ else if (matchDomain('dailyherald.com')) {
 }
 
 else if (matchDomain('dailywire.com')) {
-  let paywall = document.querySelector('div#payed-article-paywall');
-  if (paywall) {
-    removeDOMElement(paywall);
-    let div_hidden = document.querySelector('#post-body-text > div > div[class]');
-    if (div_hidden)
-      div_hidden.removeAttribute('class');
-  }
-  let ads = 'div.ad-wrapper';
+  window.localStorage.removeItem('article-gate-data');
+  let ads = 'div.ad-wrapper, div.css-1d84fd8';
   hideDOMStyle(ads);
 }
 
@@ -4250,9 +4245,30 @@ else if (matchDomain('project-syndicate.org')) {
         elem.src = elem.getAttribute('new-cursrc');
       elem.style = 'width: 95%;';
     }
+    let art_bodies = document.querySelectorAll('[itemprop="articleBody"]');
+    let first = true;
+    for (let elem of art_bodies) {
+      if (mobile) {
+        let mobile_style = 'width: 90%; margin: 20px;';
+        elem.parentNode.style = mobile_style;
+        if (first) {
+          let intro = document.querySelector('[itemprop="abstract"]');
+          if (intro)
+            intro.parentNode.parentNode.style = mobile_style;
+          document.querySelectorAll('h1').forEach(e => e.style = mobile_style + ' font-size: 40px;');
+          first = false;
+        }
+      }
+      let pars = elem.querySelectorAll('div');
+      if (pars.length) {
+        if (pars.length < 3)
+          header_nofix(article_sel, '', 'BPC > no archive-fix');
+      }
+    }
   }
   let url = window.location.href;
-  getArchive(url, 'div.paywall--base', '', 'main > article');
+  let article_sel = 'main > article';
+  getArchive(url, 'div.paywall--base', '', article_sel);
 }
 
 else if (matchDomain('puck.news')) {
@@ -4782,8 +4798,8 @@ else if (matchDomain('theatlantic.com')) {
   hideDOMStyle(banners);
 }
 
-else if (matchDomain('thebaltimorebanner.com')) {
-  let ads = 'div.article-body__inline-ad';
+else if (matchDomain('thebanner.com')) {
+  let ads = 'div.article-body__inline-ad, div#leaderboard-ad';
   hideDOMStyle(ads);
 }
 

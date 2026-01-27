@@ -1,7 +1,8 @@
 // ==UserScript==
-// @version 5.3
+// @version 5.8
 // @name Bandcamp upload helper
 // @description Bandcamp helper for getting info to RED uploads - improved version
+// @license      MIT
 // @include http*://*.bandcamp.com/album/*
 // @include http*://*.bandcamp.com/track/*
 // @include http*://*redacted.sh/upload.php*_buh*
@@ -13,7 +14,6 @@
 // @require https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @require http://code.jquery.com/jquery-latest.js
 // @namespace https://greasyfork.org/users/195861
-// @license MIT
 // @downloadURL https://update.greasyfork.org/scripts/564017/Bandcamp%20upload%20helper.user.js
 // @updateURL https://update.greasyfork.org/scripts/564017/Bandcamp%20upload%20helper.meta.js
 // ==/UserScript==
@@ -28,48 +28,82 @@
 
     var trackArtists = new Set();
 
-    // Bandcamp-style button CSS
+    // Dynamic button styles - will be updated based on page theme
     var buttonStyles = `
         .buh-container {
             display: flex;
-            gap: 10px;
-            margin: 10px 0;
+            gap: 8px;
+            margin: 12px 0;
             flex-wrap: wrap;
         }
         .buh-button {
             display: inline-block;
-            padding: 10px 18px;
-            background: linear-gradient(to bottom, #63b3f3 0%, #2b83d4 100%);
-            border: 1px solid #2171b7;
-            border-radius: 3px;
-            color: #fff !important;
+            padding: 7px 14px;
+            border: 1px solid;
+            border-radius: 2px;
             font-size: 13px;
-            font-weight: bold;
+            font-weight: normal;
             text-decoration: none;
             cursor: pointer;
-            text-shadow: 0 -1px 0 rgba(0,0,0,0.2);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2);
-            transition: all 0.15s ease;
+            transition: opacity 0.15s ease;
+            font-family: inherit;
+            line-height: 1.2;
         }
         .buh-button:hover {
-            background: linear-gradient(to bottom, #72c0ff 0%, #3a92e5 100%);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.3);
+            opacity: 0.75;
         }
         .buh-button:active {
-            background: linear-gradient(to bottom, #2171b7 0%, #2b83d4 100%);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .buh-button.request {
-            background: linear-gradient(to bottom, #f5a623 0%, #e08e0b 100%);
-            border-color: #c77d0a;
-        }
-        .buh-button.request:hover {
-            background: linear-gradient(to bottom, #ffb84d 0%, #f5a623 100%);
-        }
-        .buh-button.request:active {
-            background: linear-gradient(to bottom, #c77d0a 0%, #e08e0b 100%);
+            opacity: 0.6;
         }
     `;
+
+    // Get theme colors from the page's Follow button or page styles
+    function getThemeColors() {
+        // Try to find the Follow button
+        var followBtn = document.querySelector('.follow-unfollow button, #follow-unfollow button, .follow-button button');
+        
+        if (followBtn) {
+            var styles = window.getComputedStyle(followBtn);
+            return {
+                border: styles.borderColor,
+                text: styles.color,
+                background: styles.backgroundColor
+            };
+        }
+        
+        // Fallback: try to get colors from page CSS variables or link colors
+        var pageBody = document.body;
+        var bodyStyles = window.getComputedStyle(pageBody);
+        
+        // Try to find any styled link for color reference
+        var styledLink = document.querySelector('.tralbumData a, .inline_player a, a.artist-name');
+        var linkColor = '#0687f5';
+        if (styledLink) {
+            linkColor = window.getComputedStyle(styledLink).color;
+        }
+        
+        // Get background - usually the page has a themed background
+        var bgColor = bodyStyles.backgroundColor || 'transparent';
+        
+        return {
+            border: linkColor,
+            text: linkColor,
+            background: bgColor === 'rgba(0, 0, 0, 0)' ? 'transparent' : bgColor
+        };
+    }
+
+    // Apply theme colors to buttons
+    function applyThemeToButtons() {
+        var colors = getThemeColors();
+        var buttons = document.querySelectorAll('.buh-button');
+        
+        buttons.forEach(function(btn) {
+            btn.style.borderColor = colors.border;
+            btn.style.color = colors.text;
+            // Use same background as page or transparent
+            btn.style.backgroundColor = 'transparent';
+        });
+    }
 
     // Generate the description from the Bandcamp description and tracklist
     function yadgTrack(track) {
@@ -225,23 +259,77 @@
 
     // Get label name from the page
     function getLabelName() {
-        var metadata = JSON.parse(document.querySelector('script[type="application/ld+json"]').innerText);
-        
-        // Try to get publisher/label info
-        if (metadata.publisher && metadata.publisher.name) {
-            return metadata.publisher.name;
+        // Method 1: Find the "more from [Label]" link (back-to-label-link class)
+        // This appears when release is hosted on artist page but belongs to a label
+        var btlLink = document.querySelector('a.back-to-label-link');
+        if (btlLink) {
+            var textSpan = btlLink.querySelector('.back-link-text');
+            if (textSpan) {
+                var text = textSpan.textContent || textSpan.innerText || '';
+                var cleaned = text.replace(/more\s*from\s*/i, '').trim();
+                if (cleaned) {
+                    return cleaned;
+                }
+            }
+            var fullText = btlLink.textContent || btlLink.innerText || '';
+            var match = fullText.replace(/[\s\n]+/g, ' ').match(/more\s*from\s+(.+)/i);
+            if (match && match[1]) {
+                return match[1].trim();
+            }
         }
         
-        // Fall back to the artist/band page name (which is often the label for compilations)
-        if (metadata.byArtist && metadata.byArtist.name) {
-            // Check if this is the actual subdomain name
-            var hostname = window.location.hostname;
-            var subdomain = hostname.split('.')[0];
-            
-            // Return the artist name as it appears on the page
-            return metadata.byArtist.name;
+        // Method 2: Search for any link with from=btl parameter
+        var btlLinks = document.querySelectorAll('a[href*="from=btl"]');
+        for (var i = 0; i < btlLinks.length; i++) {
+            var link = btlLinks[i];
+            var text = (link.textContent || link.innerText || '').replace(/[\s\n]+/g, ' ');
+            var match = text.match(/more\s*from\s+(.+)/i);
+            if (match && match[1]) {
+                return match[1].trim();
+            }
         }
         
+        // Method 3: Check JSON-LD - if publisher differs from byArtist, publisher is the label
+        // This handles cases where release is on a label's Bandcamp page
+        try {
+            var metadataScript = document.querySelector('script[type="application/ld+json"]');
+            if (metadataScript) {
+                var metadata = JSON.parse(metadataScript.innerText);
+                
+                // If recordLabel exists, use it (most explicit)
+                if (metadata.recordLabel && metadata.recordLabel.name) {
+                    return metadata.recordLabel.name;
+                }
+                
+                // If publisher differs from byArtist, publisher is the label
+                var publisherName = metadata.publisher && metadata.publisher.name;
+                var artistName = metadata.byArtist && metadata.byArtist.name;
+                
+                if (publisherName && artistName && publisherName !== artistName) {
+                    return publisherName;
+                }
+            }
+        } catch (e) {
+            // Ignore parsing errors
+        }
+        
+        // Method 4: Check og:site_name meta tag vs artist name
+        try {
+            var siteName = document.querySelector('meta[property="og:site_name"]');
+            var artistElem = document.querySelector('#name-section h3 span a, #name-section h3 a');
+            if (siteName && artistElem) {
+                var siteNameText = siteName.content || '';
+                var artistText = artistElem.textContent || '';
+                // If site name differs from artist, site name is the label
+                if (siteNameText && artistText && siteNameText.trim().toLowerCase() !== artistText.trim().toLowerCase()) {
+                    return siteNameText.trim();
+                }
+            }
+        } catch (e) {
+            // Ignore errors
+        }
+        
+        // Return empty - don't guess
         return '';
     }
 
@@ -475,7 +563,7 @@
         var uploadBtn = document.createElement('button');
         uploadBtn.type = 'button';
         uploadBtn.id = 'buh-upload-btn';
-        uploadBtn.textContent = '⬆ RED Upload';
+        uploadBtn.textContent = 'RED Upload';
         uploadBtn.className = 'buh-button';
         uploadBtn.onclick = function() { generateInfo(false); };
         
@@ -483,8 +571,8 @@
         var requestBtn = document.createElement('button');
         requestBtn.type = 'button';
         requestBtn.id = 'buh-request-btn';
-        requestBtn.textContent = '📋 RED Request';
-        requestBtn.className = 'buh-button request';
+        requestBtn.textContent = 'RED Request';
+        requestBtn.className = 'buh-button';
         requestBtn.onclick = function() { generateInfo(true); };
         
         container.appendChild(uploadBtn);
@@ -499,6 +587,7 @@
             targetContainer = trackTable.parentElement;
             if (targetContainer) {
                 targetContainer.insertBefore(container, trackTable.nextSibling);
+                applyThemeToButtons();
                 return;
             }
         }
@@ -507,6 +596,7 @@
         var trackInfo = document.querySelector('.trackView');
         if (trackInfo) {
             trackInfo.appendChild(container);
+            applyThemeToButtons();
             return;
         }
         
@@ -514,11 +604,13 @@
         var tralbumData = document.querySelector('.tralbumData');
         if (tralbumData) {
             tralbumData.parentElement.insertBefore(container, tralbumData);
+            applyThemeToButtons();
             return;
         }
         
         // Last resort: append to body
         document.body.appendChild(container);
+        applyThemeToButtons();
     }
 
     // Get release type dropdown value
@@ -706,15 +798,7 @@
                 $('#description, textarea[name="description"]').first().prop('value', desc);
             }
             
-            // Set allowed formats - check FLAC
-            $('input[name="formats[]"][value="FLAC"]').prop('checked', true);
-            
-            // Set allowed bitrates - check Lossless and 24bit Lossless
-            $('input[name="bitrates[]"][value="Lossless"]').prop('checked', true);
-            $('input[name="bitrates[]"][value="24bit Lossless"]').prop('checked', true);
-            
-            // Set allowed media - check WEB
-            $('input[name="media[]"][value="WEB"]').prop('checked', true);
+            // Note: Allowed formats, bitrates, and media are left for manual selection
         });
     }
 

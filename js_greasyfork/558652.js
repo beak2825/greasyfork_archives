@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ASMR音频声道反转
 // @namespace    https://github.com/shangxueink
-// @version      1.1
+// @version      1.2
 // @description  在ASMR网站上添加音频声道反转功能，支持一键切换左右声道
 // @author       shangxueink
 // @license      MIT

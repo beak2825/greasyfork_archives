@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         SoundCloud Media Feed Tracker
-// @version      1.0.1
+// @version      1.0.2
 // @author       LucasTavaresA
-// @namespace    https://gist.github.com/LucasTavaresA/51b9a4b36dd7070f96abddf7948dae94
 // @license      GPL-3.0-or-later
+// @namespace    https://gist.github.com/LucasTavaresA/51b9a4b36dd7070f96abddf7948dae94
 // @description  Track titles and artists of songs played on your soundcloud feed, and shows links as played, with exportSongs() feature.
 // @grant        unsafeWindow
 // @match        https://soundcloud.com/feed
@@ -14,6 +14,15 @@
 
 (function () {
     'use strict';
+
+    const STORAGE_KEY = 'soundcloud_track_history';
+    const MARK_CLASS = 'sc-played-track';
+    const DEBOUNCE_DELAY = 200;
+
+    let lastTrackUrl = null;
+    let trackHistory = [];
+    let playedUrlsSet = new Set();
+    let markTimeout = null;
 
     function normalizeUrl(url) {
         try {
@@ -26,7 +35,7 @@
     }
 
     function exportSongs() {
-        const tracks = localStorage.getItem(STORAGE_KEY) || JSON.stringify([], null, 2);
+        const tracks = JSON.stringify(trackHistory, null, 2);
         const blob = new Blob([tracks], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -45,31 +54,44 @@
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
                 trackHistory = JSON.parse(saved);
+                playedUrlsSet = new Set(trackHistory.map(t => normalizeUrl(t.url)));
                 console.log(`📚 Loaded ${trackHistory.length} tracks from history`);
             }
         } catch (e) {
             console.error('Error loading history:', e);
             trackHistory = [];
+            playedUrlsSet = new Set();
         }
     }
 
     function saveHistory() {
         try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(trackHistory, null, 2));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(trackHistory));
         } catch (e) {
             console.error('Error saving history:', e);
         }
     }
 
     function markPlayedTracks() {
-        const playedUrls = new Set(trackHistory.map(t => normalizeUrl(t.url)));
+        const feedContainer = document.querySelector('.lazyLoadingList__list');
+        if (!feedContainer) return;
 
-        document.querySelectorAll('a[href*="/"]').forEach(link => {
+        const links = feedContainer.querySelectorAll('a[href*="/"]');
+
+        links.forEach(link => {
             const normalizedUrl = normalizeUrl(link.href);
-            if (playedUrls.has(normalizedUrl)) {
-                link.classList.add('sc-played-track');
+
+            if (playedUrlsSet.has(normalizedUrl)) {
+                link.classList.add(MARK_CLASS);
             }
         });
+    }
+
+    function scheduleMarkPlayedTracks() {
+        if (markTimeout) {
+            clearTimeout(markTimeout);
+        }
+        markTimeout = setTimeout(markPlayedTracks, DEBOUNCE_DELAY);
     }
 
     function getTrackInfo() {
@@ -94,12 +116,11 @@
         if (info.url !== lastTrackUrl) {
             lastTrackUrl = info.url;
 
-            const existingIndex = trackHistory.findIndex(t => normalizeUrl(t.url) === info.url);
-
-            if (existingIndex === -1) {
+            if (!playedUrlsSet.has(info.url)) {
                 trackHistory.push(info);
+                playedUrlsSet.add(info.url);
                 saveHistory();
-                setTimeout(markPlayedTracks, 200);
+                scheduleMarkPlayedTracks();
             }
         }
     }
@@ -115,11 +136,9 @@
         loadHistory();
         markPlayedTracks();
 
-        let markTimeout;
         const observer = new MutationObserver(() => {
             trackChanged();
-            clearTimeout(markTimeout);
-            markTimeout = setTimeout(markPlayedTracks, 100);
+            scheduleMarkPlayedTracks();
         });
 
         observer.observe(playbackBar, {
@@ -129,12 +148,7 @@
             attributeFilter: ['href', 'title']
         });
 
-        let feedMarkTimeout;
-        const feedObserver = new MutationObserver(() => {
-            clearTimeout(feedMarkTimeout);
-            feedMarkTimeout = setTimeout(markPlayedTracks, 100);
-        });
-
+        const feedObserver = new MutationObserver(scheduleMarkPlayedTracks);
         const feed = document.querySelector('.lazyLoadingList__list') || document.body;
 
         feedObserver.observe(feed, {
@@ -143,18 +157,14 @@
         });
     }
 
-    const STORAGE_KEY = 'soundcloud_track_history';
-    let lastTrackUrl = null;
-    let trackHistory = [];
-
     if (window.location.href === "https://soundcloud.com/feed") {
         const style = document.createElement('style');
         style.textContent = `
-        a.sc-played-track {
-            color: #f70 !important;
-            text-decoration: underline !important;
-        }
-    `;
+            a.${MARK_CLASS} {
+                color: #f70 !important;
+                text-decoration: underline !important;
+            }
+        `;
         document.head.appendChild(style);
 
         if (document.readyState === 'loading') {

@@ -3,7 +3,7 @@
 // @name:zh-CN   Google AI Studio | 界面汉化 - Dae
 // @name:en      Google AI Studio | Chinese Interface - Dae
 // @namespace    https://space.bilibili.com/261168982
-// @version      1.0.1
+// @version      1.0.3
 // @description  Google AI Studio 界面全汉化，提供更符合中文用户习惯的操作体验。
 // @description:en  Full Chinese localization for Google AI Studio interface, providing a more user-friendly experience for Chinese users. Shortcut key (Alt+A) toggles the localization on/off.
 // @author       Dae & Gemini
@@ -30,6 +30,7 @@
     const SELECTORS = {
         TURN: 'ms-chat-turn',
         EDIT_BUTTON: '.toggle-edit-button',
+        // 移除了 .prompt-type
         NO_TRANSLATE: '[data-no-translate], [notranslate], [contenteditable="true"], .monaco-editor, .message-text, .chat-content, .message, .material-symbols-outlined, .tooltip-overflow, .dae-settings-panel',
         HISTORY_LINK: 'td.cdk-column-name a.name-btn'
     };
@@ -94,8 +95,9 @@
         "Chat prompt": "null",
         "Untitled prompt": "null",
         "Edit title and description": "编辑标题和描述",
-        "System instructions": "系统指令",
+        "System instructions": "系统提示词",
         "Get code": "获取代码",
+        "Include prompt history in generated code": "在生成的代码中包含提示词历史",
         "Get SDK code to chat with Gemini": "获取与 Gemini 聊天的 SDK 代码",
         "Get SDK code to interact with Gemini Live": "获取与 Gemini 实时对话的 SDK 代码",
         "Get SDK code to generate an image": "获取生成图像的 SDK 代码",
@@ -295,7 +297,7 @@
         "Run settings - Left": "运行设置 - 左侧",
         "Run settings - Right": "运行设置 - 右侧",
         "Sync": "同步",
-        "Sync system instructions on both sides": "同步两侧的系统指令",
+        "Sync system instructions on both sides": "同步两侧的系统提示词",
         "Reset settings": "恢复默认设置",
         "Closing the chat will lose the data. Do you want to continue?": "关闭聊天将丢失数据。要继续吗？",
         "Input/Output API Pricing": "输入/输出 API 定价",
@@ -636,7 +638,7 @@
         "Please tell us more about the reason for your feedback (optional)": "请详细说明您的反馈原因（可选）",
         "Not factually correct": "事实不正确",
         "Not helpful": "没有帮助",
-        "Not following instructions": "未遵循指令",
+        "Not following instructions": "未遵循提示词",
         "Harmful or offensive": "有害或冒犯性",
         "Answer took too long": "回答耗时过长",
         "What's wrong? How can the response be improved?": "哪里出错了？如何改进这个回复？",
@@ -757,8 +759,9 @@
         "audio": "音频",
         "text": "文本",
         "application/pdf": "PDF 文档",
-        "Gemini 2.5 Flash Image": "Gemini 2.5 Flash Image",
+        "Gemini 2.5 Flash Image": "null",
         "gemini-2.5-flash-image": "null",
+        "gemini-2.5-flash-native-audio-preview-12-2025": "null",
         "gemini-3-pro-image-preview": "null",
         "Gemini 3 Pro Image Preview": "Gemini 3 Pro Image Preview",
         "Gemini 2.5 Flash Native Audio Preview 12-2025": "Gemini 2.5 Flash Native Audio Preview 12-2025",
@@ -1036,14 +1039,14 @@
         "Add file": "添加文件",
         "Save changes": "保存更改",
         "Reset to default": "重置为默认",
-        "System instructions template": "系统指令模板",
+        "System instructions template": "系统提示词模板",
         "The configuration is for working with Angular + TypeScript application. The Code Assistant is instructed to work with Angular components, services, and modules. It follows strict guidelines for using the Gemini API.": "此配置适用于 Angular + TypeScript 应用。代码助手已被配置为使用 Angular 的组件、服务和模块，并将严格遵循 Gemini API 的使用准则。",
         "The configuration is for working with React + TypeScript application. Assumes a basic structure with index.html and index.tsx. Code Assistant follows strict guidelines for using the Gemini API.": "此配置适用于 React + TypeScript 应用，并假定项目具有包含 index.html 和 index.tsx 的基本结构。代码助手将严格遵循 Gemini API 的使用准则。",
         "No devices found": "未找到设备",
         "Learn": "学习",
         "Build apps with Gemini": "使用 Gemini 构建应用",
         "Start building with Gemini, try “Build me an AI photo editing app using Nano Banana”": "开始使用 Gemini 构建，试试: “帮我用 Nano Banana 构建一个 AI 图片编辑应用”",
-        "Choose a system instructions configuration to use with the applet": "为应用选择一个要使用的系统指令配置",
+        "Choose a system instructions configuration to use with the applet": "为应用选择一个要使用的系统提示词配置",
         "Start from a template": "从模板开始",
         "Choose a template": "选择模板",
         "Empty": "空模板",
@@ -1147,14 +1150,14 @@
         "Gemini API Additional Terms of Service": "Gemini API 附加服务条款",
         // 2025.10.20新增
         "View all history": "查看所有聊天",
-        "Create new instruction": "创建新指令",
+        "Create new instruction": "创建新提示词",
         "Title": "标题",
-        "Delete system instruction": "删除系统指令",
-        "Delete system instruction?": "删除系统指令？",
+        "Delete system instruction": "删除系统提示词",
+        "Delete system instruction?": "删除系统提示词？",
         "This action cannot be undone.": "此操作无法撤销。",
-        "System instruction deleted": "系统指令已删除",
+        "System instruction deleted": "系统提示词已删除",
         "Saved": "已保存",
-        "Instructions are saved in local storage.": "指令已保存至本地存储。",
+        "Instructions are saved in local storage.": "提示词已保存至本地存储。",
         "Stream, Imagen and Veo have moved to the model picker in chat!": "实时对话、Imagen 和 Veo 现已整合至聊天页面的模型选择器！",
         "Stream, Imagen and Veo have moved into these categories!": "实时对话、Imagen 和 Veo 现已移入这些类别！",
         "The fastest way from prompt to production with Gemini": "使用 Gemini : 从创意到产品的最快途径",
@@ -1174,6 +1177,7 @@
         "Explore documentation": "浏览文档",
         "Case studies": "案例研究",
         "Start creating with media in Google AI Studio": "在 Google AI Studio 中使用媒体进行创作",
+        "Media is processing...": "媒体加载中...",
         "Acknowledge": "我已知晓",
         "Unknown": "未知",
         "Search for a model": "搜索模型",
@@ -1197,10 +1201,11 @@
         "Our state-of-the-art image generation model, available to developers on the paid tier of the Gemini API.": "我们最先进的图像生成模型，面向使用 Gemini API 付费层级的开发者提供。",
         "Our state-of-the-art video generation model, available to developers on the paid tier of the Gemini API.": "我们最先进的视频生成模型，面向使用 Gemini API 付费层级的开发者提供。",
         "Our state-of-the-art video generation model": "我们最先进的视频生成模型。",
+        "Our second generation video generation model, available to developers on the paid tier of the Gemini API.": "我们的第二代视频生成模型，面向使用 Gemini API 付费层级的开发者提供。",
         "Gemini Robotics-ER, short for Gemini Robotics-Embodied Reasoning, is a thinking model that enhances robots' abilities to understand and interact with the physical world.": "Gemini Robotics-ER，即 Gemini Robotics-Embodied Reasoning (具身推理) 的缩写，是一个“思考”模型，旨在增强机器人理解物理世界并与之互动的能力。",
 
         "Switch model?": "切换模型？",
-        "Switching to this model will remove the system instructions from your prompt": "切换模型将移除您当前聊天中的系统指令。",
+        "Switching to this model will remove the system instructions from your prompt": "切换模型将移除您当前聊天中的系统提示词。",
         "Switching to this model will start a new chat. Content in current chat will be lost.": "切换到此模型将开启新的聊天，当前聊天内容将会丢失。",
         "Do you want to continue?": "要继续吗？",
 
@@ -1390,7 +1395,7 @@
         "Failed to save prompt. Internal error encountered.": "保存聊天失败，遇到内部错误。",
         "Internal error encountered.": "遇到内部错误。",
         "Error counting tokens.": "令牌计数出错。",
-        "System instruction deleted": "系统指令已删除。",
+        "System instruction deleted": "系统提示词已删除。",
         "Failed to generate content: service is unavailable. Please try again later.": "内容生成失败：服务当前不可用，请稍后重试。",
         "Fetching prompt details. Please wait...": "正在获取聊天详情，请稍候...",
         "Model isn't available right now. Please wait a minute and try again.": "模型当前不可用，请稍等片刻后重试。",
@@ -1416,7 +1421,7 @@
         "Create an orthographic blueprint that describes this building in plan.": "创建一个描述该建筑平面图的正投影蓝图。",
         "Create an illustrated explainer, detailing the physics of the fluid dynamics.": "创建一个图解说明，详细解释流体动力学的物理原理。",
 
-        "Drop files here": "拖放文件到此处",
+        "Drop files here": "将文件拖放到此处",
         "Insert images, videos, audio, or files": "插入图片、视频、音频或文件",
         "Upload a file": "上传文件",
         "Drive": "云端硬盘",
@@ -1559,6 +1564,11 @@
                     from { transform: translateX(100%); opacity: 0; }
                     to { transform: translateX(0); opacity: 1; }
                 }
+                /* 原地消失动画：缩小并变透明 */
+                @keyframes gemini-hanhua-notif-fadeOutInPlace {
+                    from { transform: scale(1); opacity: 1; }
+                    to { transform: scale(0.9); opacity: 0; }
+                }
             `;
             document.head.appendChild(style);
         }
@@ -1571,8 +1581,8 @@
         // 3. 挂载与销毁
         document.body.appendChild(notification);
         setTimeout(() => {
-            notification.style.animation = 'slideIn 0.3s ease-out reverse';
-            setTimeout(() => notification.remove(), 300);
+            notification.style.animation = 'gemini-hanhua-notif-fadeOutInPlace 0.15s cubic-bezier(0.4, 0, 1, 1) forwards';
+            setTimeout(() => notification.remove(), 150);
         }, duration);
     }
 
@@ -2039,8 +2049,8 @@
             'Cut',      // Cut
             'Paste',    // Paste
             'Command',  // Command Palette
-            'Select',   // Select All (预防性添加)
-            'Find'      // Find (预防性添加)
+            'Select',   // Select All
+            'Find'      // Find
         ];
 
         function isHoveringRestrictedArea() {
@@ -2671,26 +2681,37 @@
                 return ALLOWED_SYSTEM_TEXTS.some(key => text.includes(key));
             };
 
-            // 规则 I (更新): 智能屏蔽顶部文件名输入框
+            // 规则 I: 智能屏蔽顶部文件名输入框及音频设备选择器
             root.querySelectorAll('.mdc-text-field--no-label').forEach(wrapper => {
                 const select = wrapper.querySelector('mat-select');
+                
+                // 检测是否为音频设备选择器 (根据 aria-label 特征)
+                // 兼容英文原文 "audio" 和可能已被部分汉化的 "音频"
+                const ariaLabel = select?.getAttribute('aria-label') || '';
+                const isAudioDeviceSelector = /Select.*(audio|microphone|音频).*input device/i.test(ariaLabel);
+
                 // 逻辑：
                 // 1. 必须是 mat-select
-                // 2. 没有 aria-label (如果有 label，如分辨率，本来就允许翻译)
-                // 3. 内容不包含系统关键词 (如 Create new instruction)
-                // 满足以上 3 点，才认为是“用户自定义文件名”，进行屏蔽
-                if (select && !select.hasAttribute('aria-label') && !isSystemText(select)) {
+                // 2. 情况A: 没有 aria-label (判定为自定义文件名框)
+                // 3. 情况B: 是音频设备选择器 (判定为硬件名称，即使有 label 也要屏蔽)
+                // 4. 内容不包含系统关键词
+                if (select && (!select.hasAttribute('aria-label') || isAudioDeviceSelector) && !isSystemText(select)) {
                     if (!wrapper.hasAttribute('data-no-translate')) {
                         wrapper.setAttribute('data-no-translate', '1');
                     }
                 }
             });
 
-            // 规则 J (更新): 智能屏蔽无标签的下拉菜单选项
+            // 规则 J: 智能屏蔽无标签的下拉菜单选项及音频设备选项
             root.querySelectorAll('.mat-mdc-option').forEach(option => {
                 const panel = option.closest('[role="listbox"]');
-                // 逻辑同上：无 label 且 不是系统关键词 -> 屏蔽
-                if (panel && !panel.hasAttribute('aria-label') && !isSystemText(option)) {
+                
+                // 检测父级面板是否为音频设备列表
+                const panelLabel = panel?.getAttribute('aria-label') || '';
+                const isAudioDevicePanel = /Select.*(audio|microphone|音频).*input device/i.test(panelLabel);
+
+                // 逻辑同上：无 label 或是音频面板 -> 屏蔽内部选项
+                if (panel && (!panel.hasAttribute('aria-label') || isAudioDevicePanel) && !isSystemText(option)) {
                     const textSpan = option.querySelector('.mdc-list-item__primary-text');
                     if (textSpan && !textSpan.hasAttribute('data-no-translate')) {
                         textSpan.setAttribute('data-no-translate', '1');
@@ -3404,7 +3425,7 @@
                 if (thinkingTrigger && (thinkingTrigger.classList.contains('thinking') || thinkingTrigger.querySelector('mat-spinner'))) {
                     if (globalState.thinkingIndicatorLeaveTimer) clearTimeout(globalState.thinkingIndicatorLeaveTimer);
                     globalState.isHoveringThinkingIndicator = true;
-                    markActiveTooltipIfNeeded(); // [关键] 立即执行标记，防止气泡弹出瞬间被翻译
+                    markActiveTooltipIfNeeded(); // 立即执行标记，防止气泡弹出瞬间被翻译
                 }
             });
 

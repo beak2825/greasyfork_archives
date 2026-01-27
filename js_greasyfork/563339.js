@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         百度新版贴吧优化
 // @namespace    http://tampermonkey.net/
-// @version      1.1
-// @description  1.侧栏当前页打开 2.隐藏头图开关 3.开启沉浸模式(隐藏侧栏+宽屏) 4.默认进入最新回复页
+// @version      1.2
+// @description  1.侧栏当前页打开 2.隐藏头图开关 3.开启沉浸模式(隐藏侧栏+宽屏) 4.帖子页默认热门或最新开关；5、帖子内回复默认热门/正序/倒序开关
 // @author       User
 // @match        https://tieba.baidu.com/*
 // @grant        GM_addStyle
@@ -17,18 +17,23 @@
 (function() {
     'use strict';
 
+    // ==========================================
     // 配置键名
+    // ==========================================
     const KEY_HIDE_HEADER = 'tieba_opt_hide_header';
     const KEY_FULL_WIDTH = 'tieba_opt_full_width';
-    const KEY_DEFAULT_NEW = 'tieba_opt_default_new'; // 新增
+    const KEY_FORUM_SORT = 'tieba_opt_forum_sort';
+    const KEY_THREAD_SORT = 'tieba_opt_thread_sort';
 
     // ==========================================
     // 样式注入
     // ==========================================
     GM_addStyle(`
-        /* --- 1. 沉浸宽屏模式 (V6.0 零宽策略) --- */
+        /* --- 1. 沉浸宽屏模式 (V13.0 侧栏父容器清理版) --- */
 
-        /* 核心：将左侧栏宽度强制设为0，消除留白，让主内容左移 */
+        /* A. 核心：将侧栏的所有层级容器彻底归零 */
+        /* 新增 .left-content (最外层容器) */
+        body.opt-full-width .left-content,
         body.opt-full-width .left-nav-wrapper,
         body.opt-full-width .drawer-body,
         body.opt-full-width .frs-page-container > div:first-child {
@@ -37,34 +42,50 @@
             flex-basis: 0 !important;
             margin: 0 !important;
             padding: 0 !important;
-            overflow: visible !important;
+            border: none !important;
+            overflow: hidden !important; /* 强制裁剪，不留任何余地 */
         }
 
-        /* 隐藏左侧内容，防止重叠 */
+        /* B. 隐藏侧栏内的所有具体内容 */
         body.opt-full-width .left-nav-wrapper .main,
-        body.opt-full-width .left-nav-wrapper .list-container-wrapper {
+        body.opt-full-width .left-nav-wrapper .list-container-wrapper,
+        body.opt-full-width .tb-home,
+        body.opt-full-width .home-icon,
+        body.opt-full-width .home-icon-min {
             display: none !important;
         }
 
-        /* 强制主容器变宽，填满屏幕 */
+        /* C. 菜单键容器 (.home-left) 处理 */
+        /* 强制固定在左上角，从文档流中脱离 */
+        body.opt-full-width .home-left {
+            position: fixed !important;
+            top: 65px !important;
+            left: 10px !important;
+            z-index: 99999 !important;
+            width: 40px !important;
+            height: 40px !important;
+            background: transparent !important;
+            border: none !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* D. 强制显示"三道杠"图标 */
+        body.opt-full-width .home-left .left-bar {
+            display: block !important;
+            width: 24px !important;
+            height: 24px !important;
+            cursor: pointer !important;
+        }
+
+        /* --- 布局调整：主容器填满屏幕 --- */
         body.opt-full-width .frs-container,
         body.opt-full-width .frs-page-container,
         body.opt-full-width .content-wrapper {
             width: 96% !important;
             max-width: none !important;
             display: flex !important;
-        }
-
-        /* 修复菜单键：沉浸模式下强制显示左上角菜单按钮 */
-        body.opt-full-width .home-left {
-            display: flex !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            position: fixed !important;
-            top: 65px !important;
-            left: 10px !important;
-            z-index: 99999 !important;
-            background: rgba(255,255,255,0.0) !important;
         }
 
         /* 右侧栏收缩贴边 */
@@ -74,14 +95,12 @@
             margin-left: 15px !important;
             margin-right: 0 !important;
         }
-
-        /* 主内容自适应 */
         .main-content, .frs-content {
             flex-grow: 1 !important;
             width: auto !important;
         }
 
-        /* --- 2. 头图控制 (修复缝隙) --- */
+        /* --- 2. 头图控制 --- */
         body.opt-hide-header .head-pic-area,
         body.opt-hide-header .forum-head-container {
             display: none !important;
@@ -98,7 +117,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            align-items: flex-end; /* 靠右对齐 */
+            align-items: flex-end;
         }
         .tieba-opt-btn {
             padding: 8px 12px;
@@ -112,182 +131,199 @@
             text-align: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             font-family: sans-serif;
-            min-width: 70px; /* 统一宽度 */
+            min-width: 70px;
             backdrop-filter: blur(4px);
+            display: block;
         }
+        .tieba-opt-btn.hidden { display: none !important; }
         .tieba-opt-btn:hover {
             background-color: rgba(0,0,0,0.8);
             transform: scale(1.05);
         }
-        /* 激活状态 (蓝色) */
         .tieba-opt-btn.active {
             background-color: #4e6ef2;
             font-weight: bold;
         }
+        .tieba-opt-btn.sort-asc { border-left: 3px solid #00ff00; }
+        .tieba-opt-btn.sort-desc { border-left: 3px solid #ff0000; }
+        .tieba-opt-btn.sort-hot { border-left: 3px solid #ffa500; }
     `);
 
     // ==========================================
-    // 功能: 侧栏点击拦截
+    // 核心: SPA 路由监听
     // ==========================================
-    document.addEventListener('click', function(e) {
-        let target = e.target.closest('.forum-card-wrapper');
-        if (!target || e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) return;
+    const _historyPushState = history.pushState;
+    const _historyReplaceState = history.replaceState;
+    history.pushState = function(state, title, url) { _historyPushState.apply(this, arguments); onUrlChange(); };
+    history.replaceState = function(state, title, url) { _historyReplaceState.apply(this, arguments); onUrlChange(); };
+    window.addEventListener('popstate', onUrlChange);
 
-        let nameEl = target.querySelector('.forum-name');
-        if (nameEl) {
-            let forumName = nameEl.textContent.trim();
-            if (forumName) {
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                window.location.href = 'https://tieba.baidu.com/f?kw=' + encodeURIComponent(forumName);
-            }
-        }
-    }, true);
+    function getPageType() {
+        const path = window.location.pathname;
+        const search = window.location.search;
+        if (path.startsWith('/p/')) return 'thread';
+        if (path.indexOf('/f') !== -1 || search.indexOf('kw=') !== -1) return 'forum';
+        return 'other';
+    }
+
+    function onUrlChange() {
+        updateButtonsUI();
+        const type = getPageType();
+        if (type === 'forum') trySwitchForumSort();
+        if (type === 'thread') trySwitchThreadSort();
+    }
 
     // ==========================================
-    // 功能: 自动切换到"最新"
+    // 逻辑功能模块
     // ==========================================
-    function trySwitchToNewest() {
-        // 1. 检查开关是否开启
-        if (!GM_getValue(KEY_DEFAULT_NEW, false)) return;
 
-        // 2. 轮询查找 DOM 元素 (Vue 动态加载需要等待)
-        // 设置一个计时器，每300ms检查一次，最多检查 15次 (约4.5秒)
+    // 1. 吧列表自动最新
+    let forumSortTimer = null;
+    function trySwitchForumSort() {
+        if (!GM_getValue(KEY_FORUM_SORT, false)) return;
+        if (forumSortTimer) clearInterval(forumSortTimer);
         let checkCount = 0;
-        const maxChecks = 15;
-
-        const timer = setInterval(() => {
+        forumSortTimer = setInterval(() => {
             checkCount++;
-            if (checkCount > maxChecks) {
-                clearInterval(timer);
-                return;
-            }
-
-            // 查找所有 Tab
+            if (checkCount > 20) { clearInterval(forumSortTimer); return; }
             const tabs = document.querySelectorAll('.card-tab .tab-item');
             if (!tabs || tabs.length === 0) return;
-
-            let newestTab = null;
-            let currentActiveTab = null;
-
-            // 遍历找到 "最新" 和 "当前激活的Tab"
+            let newestTab = null, activeTab = null;
             tabs.forEach(tab => {
-                const text = tab.textContent.trim();
-                if (text === '最新') {
-                    newestTab = tab;
-                }
-                if (tab.classList.contains('active')) {
-                    currentActiveTab = tab;
-                }
+                if (tab.textContent.trim() === '最新') newestTab = tab;
+                if (tab.classList.contains('active')) activeTab = tab;
             });
-
-            // 逻辑判断
             if (newestTab) {
-                // 如果当前已经是最新，停止
-                if (currentActiveTab === newestTab) {
-                    clearInterval(timer);
-                    return;
-                }
-
-                // 否则点击它
-                newestTab.click();
-                console.log('UserScript: 已自动切换到[最新]');
-                clearInterval(timer);
+                if (activeTab !== newestTab) { newestTab.click(); console.log('UserScript: 已切换为[最新]'); }
+                clearInterval(forumSortTimer);
             }
         }, 300);
     }
 
+    // 2. 帖子内自动排序
+    let threadSortTimer = null;
+    function trySwitchThreadSort() {
+        const targetMode = GM_getValue(KEY_THREAD_SORT, 'hot');
+        const textMap = { 'hot': '热门', 'asc': '正序', 'desc': '倒序' };
+        const targetText = textMap[targetMode];
+        if (threadSortTimer) clearInterval(threadSortTimer);
+        let checkCount = 0;
+        threadSortTimer = setInterval(() => {
+            checkCount++;
+            if (checkCount > 25) { clearInterval(threadSortTimer); return; }
+            const container = document.querySelector('.sub-tab-container');
+            if (!container) return;
+            const items = container.querySelectorAll('.sub-tab-item');
+            let targetItem = null, activeItem = null;
+            items.forEach(item => {
+                const t = item.textContent.trim();
+                if (t === targetText) targetItem = item;
+                if (item.classList.contains('sub-tab-item-active')) activeItem = item;
+            });
+            if (targetItem) {
+                if (activeItem !== targetItem) { targetItem.click(); console.log(`UserScript: 已切换为[${targetText}]`); }
+                clearInterval(threadSortTimer);
+            }
+        }, 300);
+    }
+
+    // 3. 侧栏点击拦截
+    document.addEventListener('click', function(e) {
+        let target = e.target.closest('.forum-card-wrapper');
+        if (!target || e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) return;
+        let nameEl = target.querySelector('.forum-name');
+        if (nameEl && nameEl.textContent.trim()) {
+            e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+            window.location.href = 'https://tieba.baidu.com/f?kw=' + encodeURIComponent(nameEl.textContent.trim());
+        }
+    }, true);
+
     // ==========================================
-    // 功能: 初始化逻辑
+    // UI 初始化
     // ==========================================
-    function initOptions() {
+    let btnForumSort, btnThreadSort;
+    function updateButtonsUI() {
+        const pageType = getPageType();
+        if (btnForumSort) btnForumSort.classList.toggle('hidden', pageType !== 'forum');
+        if (btnThreadSort) btnThreadSort.classList.toggle('hidden', pageType !== 'thread');
+    }
+
+    function initUI() {
         let isHideHeader = GM_getValue(KEY_HIDE_HEADER, false);
         let isFullWidth = GM_getValue(KEY_FULL_WIDTH, false);
-        let isDefaultNew = GM_getValue(KEY_DEFAULT_NEW, false);
+        let isForumNew = GM_getValue(KEY_FORUM_SORT, false);
+        let currentThreadMode = GM_getValue(KEY_THREAD_SORT, 'hot');
 
-        // 1. 尽早应用 Class (防止闪烁)
+        // 静态样式应用
         if (isHideHeader) document.documentElement.classList.add('opt-hide-header');
         if (isFullWidth) document.documentElement.classList.add('opt-full-width');
 
-        // 2. 页面加载完成后
         window.addEventListener('load', () => {
-            // 确保 Body 也加上 Class
             if (isHideHeader) document.body.classList.add('opt-hide-header');
             if (isFullWidth) document.body.classList.add('opt-full-width');
+            onUrlChange();
 
-            // 尝试执行自动跳转最新
-            trySwitchToNewest();
-
-            // 创建按钮容器
             if (document.getElementById('tieba-opt-container')) return;
             const btnContainer = document.createElement('div');
             btnContainer.id = 'tieba-opt-container';
             btnContainer.className = 'tieba-opt-btns';
 
-            // --- 按钮 1: 头图开关 ---
-            const btnHeader = document.createElement('div');
-            btnHeader.className = `tieba-opt-btn ${isHideHeader ? 'active' : ''}`;
-            btnHeader.textContent = isHideHeader ? '显示头图' : '隐藏头图';
-            btnHeader.onclick = () => {
-                isHideHeader = !isHideHeader;
-                GM_setValue(KEY_HIDE_HEADER, isHideHeader);
-                if (isHideHeader) {
-                    document.body.classList.add('opt-hide-header');
-                    btnHeader.textContent = '显示头图';
-                    btnHeader.classList.add('active');
-                } else {
-                    document.body.classList.remove('opt-hide-header');
-                    btnHeader.textContent = '隐藏头图';
-                    btnHeader.classList.remove('active');
-                }
+            // 吧列表按钮
+            btnForumSort = document.createElement('div');
+            btnForumSort.className = `tieba-opt-btn ${isForumNew ? 'active' : ''}`;
+            btnForumSort.textContent = isForumNew ? '默认最新' : '默认热门';
+            btnForumSort.onclick = () => {
+                isForumNew = !isForumNew;
+                GM_setValue(KEY_FORUM_SORT, isForumNew);
+                btnForumSort.textContent = isForumNew ? '默认最新' : '默认热门';
+                btnForumSort.classList.toggle('active', isForumNew);
+                if(isForumNew) trySwitchForumSort();
             };
 
-            // --- 按钮 2: 沉浸模式 (宽屏+隐侧栏) ---
+            // 帖子排序按钮
+            const threadModes = ['hot', 'asc', 'desc'];
+            const threadNames = {'hot': '回复:热门', 'asc': '回复:正序', 'desc': '回复:倒序'};
+            btnThreadSort = document.createElement('div');
+            btnThreadSort.className = `tieba-opt-btn active sort-${currentThreadMode}`;
+            btnThreadSort.textContent = threadNames[currentThreadMode];
+            btnThreadSort.onclick = () => {
+                let idx = threadModes.indexOf(currentThreadMode);
+                currentThreadMode = threadModes[(idx + 1) % 3];
+                GM_setValue(KEY_THREAD_SORT, currentThreadMode);
+                btnThreadSort.textContent = threadNames[currentThreadMode];
+                btnThreadSort.className = `tieba-opt-btn active sort-${currentThreadMode}`;
+                trySwitchThreadSort();
+            };
+
+            // 沉浸模式按钮
             const btnSidebar = document.createElement('div');
             btnSidebar.className = `tieba-opt-btn ${isFullWidth ? 'active' : ''}`;
             btnSidebar.textContent = isFullWidth ? '显示侧栏' : '沉浸模式';
             btnSidebar.onclick = () => {
                 isFullWidth = !isFullWidth;
                 GM_setValue(KEY_FULL_WIDTH, isFullWidth);
-                if (isFullWidth) {
-                    document.body.classList.add('opt-full-width');
-                    btnSidebar.textContent = '显示侧栏';
-                    btnSidebar.classList.add('active');
-                } else {
-                    document.body.classList.remove('opt-full-width');
-                    btnSidebar.textContent = '沉浸模式';
-                    btnSidebar.classList.remove('active');
-                }
+                document.body.classList.toggle('opt-full-width', isFullWidth);
+                btnSidebar.textContent = isFullWidth ? '显示侧栏' : '沉浸模式';
+                btnSidebar.classList.toggle('active', isFullWidth);
             };
 
-            // --- 按钮 3: 默认最新 (新增) ---
-            const btnDefaultNew = document.createElement('div');
-            btnDefaultNew.className = `tieba-opt-btn ${isDefaultNew ? 'active' : ''}`;
-            btnDefaultNew.textContent = isDefaultNew ? '默认最新' : '默认热门';
-            btnDefaultNew.title = '开启后，进入吧内自动点击[最新]';
-            btnDefaultNew.onclick = () => {
-                isDefaultNew = !isDefaultNew;
-                GM_setValue(KEY_DEFAULT_NEW, isDefaultNew);
-                if (isDefaultNew) {
-                    btnDefaultNew.textContent = '默认最新';
-                    btnDefaultNew.classList.add('active');
-                    // 立即试一下
-                    trySwitchToNewest();
-                } else {
-                    btnDefaultNew.textContent = '默认热门';
-                    btnDefaultNew.classList.remove('active');
-                }
+            // 头图按钮
+            const btnHeader = document.createElement('div');
+            btnHeader.className = `tieba-opt-btn ${isHideHeader ? 'active' : ''}`;
+            btnHeader.textContent = isHideHeader ? '显示头图' : '隐藏头图';
+            btnHeader.onclick = () => {
+                isHideHeader = !isHideHeader;
+                GM_setValue(KEY_HIDE_HEADER, isHideHeader);
+                document.body.classList.toggle('opt-hide-header', isHideHeader);
+                btnHeader.textContent = isHideHeader ? '显示头图' : '隐藏头图';
+                btnHeader.classList.toggle('active', isHideHeader);
             };
 
-            // 添加顺序：默认最新(最上) -> 沉浸模式 -> 头图(最下)
-            btnContainer.appendChild(btnDefaultNew);
-            btnContainer.appendChild(btnSidebar);
-            btnContainer.appendChild(btnHeader);
+            btnContainer.append(btnForumSort, btnThreadSort, btnSidebar, btnHeader);
             document.body.appendChild(btnContainer);
+            updateButtonsUI();
         });
     }
 
-    initOptions();
-
+    initUI();
 })();

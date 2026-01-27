@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name Mozilla Addon Widescreen NEW design (USw)v.170
+// @name Mozilla Addon Widescreen NEW design (USw)v.171
 // @namespace https://addons.mozilla.org
-// @version 170.00.0
+// @version 171.00.0
 // @description Mozilla Addon wide, compact and reorganized
 // @author decembre
 // @license unlicense
@@ -12,16 +12,15 @@
 // @match *://*.addons.mozilla.org./*
 // @match *://*.blog.mozilla.org/*
 // @include /^(?:https://web.archive.org/web/.*/https://addons.mozilla.org/.*)$/
-// @downloadURL https://update.greasyfork.org/scripts/432080/Mozilla%20Addon%20Widescreen%20NEW%20design%20%28USw%29v170.user.js
-// @updateURL https://update.greasyfork.org/scripts/432080/Mozilla%20Addon%20Widescreen%20NEW%20design%20%28USw%29v170.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/432080/Mozilla%20Addon%20Widescreen%20NEW%20design%20%28USw%29v171.user.js
+// @updateURL https://update.greasyfork.org/scripts/432080/Mozilla%20Addon%20Widescreen%20NEW%20design%20%28USw%29v171.meta.js
 // ==/UserScript==
 
 (function() {
 let css = "";
 if ((location.hostname === "addons.mozilla.org" || location.hostname.endsWith(".addons.mozilla.org")) || (location.hostname === "addons-dev.allizom.org" || location.hostname.endsWith(".addons-dev.allizom.org")) || location.href.startsWith("https://addons.mozilla.org./") || new RegExp("^(?:https://web.archive.org/web/.*/https://addons.mozilla.org/.*)\$").test(location.href)) {
   css += `
-
-  /* ==== MOZ - Mozilla Addon Widescreen NEW Design 2n Desing v.170 (USw) (new170) - TEST addons-dev.allizom.org - OK DEV HERE in FIREFOX ==== */
+  /* ==== MOZ - Mozilla Addon Widescreen NEW Design 2n Desing v.171 (USw) (new171) - TEST addons-dev.allizom.org - OK DEV HERE in FIREFOX ==== */
 
   /* ==============
   (new169) TEST - ADD (need more tweaks... Work in Progress):
@@ -158,14 +157,15 @@ if ((location.hostname === "addons.mozilla.org" || location.hostname.endsWith(".
       background: #737373!important;
   }
 
-  /* (new150) TEST - NEW NOTICE "Not Recommanded Addon" - === */
+  /* (new171) TEST - NEW NOTICE "Not Recommanded Addon" - === */
   .Notice-genericWarning {
       position: absolute !important;
       width: 100%;
-      max-width: 28px !important;
+      max-width: 24px !important;
       max-height: 28px !important;
       left: 0 !important;
       top: 5px !important;
+      margin: 0 !important;
       white-space: nowrap;
       overflow: hidden !important;
       z-index: 50000 !important;
@@ -175,9 +175,11 @@ if ((location.hostname === "addons.mozilla.org" || location.hostname.endsWith(".
   .Notice-genericWarning:hover {
       position: absolute !important;
       width: 100%;
-      max-width: 290px !important;
+      max-width: 360px !important;
+      min-height: 9vh !important;
       max-height: 100% !important;
       background-repeat: repeat !important;
+      white-space: pre-wrap !important;
   color: white !important;
   background-color: brown !important;
   }
@@ -187,9 +189,10 @@ if ((location.hostname === "addons.mozilla.org" || location.hostname.endsWith(".
       width: 22px;
       margin: -1px 0 0 -1px !important;
   }
+
   .Notice-genericWarning p.Notice-text {
       float: left;
-      width: 170px !important;
+      width: 200px !important;
       white-space: normal;
   }
 
@@ -2846,12 +2849,17 @@ if ((location.hostname === "addons.mozilla.org" || location.hostname.endsWith(".
 
 
 
-  /* (new168) PAGINATION */
+  /* (new171) NOT PAGINATION ( FOOTER OF RATING / DESRIPTION) ) -  */
+  .Addon.Addon-extension .Card-contents + footer.Card-footer {
+     display: none !important;
+  }
+
+  /* (new171) PAGINATION - footer.Card-footer */
   .Card-contents + footer.Card-footer.undefined:has(.Paginate) {
       width: 100% !important;
       margin-top: 0px !important;
       padding:  0 20px !important;
-  /*ckground: brown !important;*/
+  /*background: brown !important;*/
   }
   .UserProfile-addons-and-reviews .Card-contents + footer.Card-footer {
       margin-top: 0px !important;
@@ -5450,7 +5458,7 @@ if ((location.hostname === "addons.mozilla.org" || location.hostname.endsWith(".
       height: 2.2vh !important;
       line-height: 1.5vh !important;
       left: 0.1% !important;
-      bottom: 6vh !important;
+      top: 90vh !important;
       margin: 0 0 0 0 !important;
       padding: 0 2px 0 40px !important;
       border-radius: 9px;
@@ -5849,28 +5857,66 @@ if ((location.hostname === "addons.mozilla.org" || location.hostname.endsWith(".
       object-fit: contain !important;
   }
 
-  /* LEFT - TOP HEADER INFO - TOP SHORT INFO  */
+  /* (new171) LEFT - TOP HEADER INFO - TOP SHORT INFO  */
   .Addon.Addon-extension .Card-contents .Addon-header .Addon-info {
       position: relative !important;
       display: inline-block !important;
       grid-area: unset !important;
       width: 100% !important;
       min-height: 28.6vh !important;
-      max-height: 28.1vh !important;
+      max-height: 28.6vh !important;
       border-radius: 9px 9px 0 0  !important;
   background: rgb(30, 36, 52) !important;
   /*border: 1px dashed yellow !important;*/
   }
   .Addon.Addon-extension .Card-contents .Addon-header .Addon-info .AddonTitle {
       position: relative !important;
-      display: inline-block !important;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
       grid-column: unset !important;
-      width: 84% !important;
+      width: 100% !important;
+      min-height: 5vh !important;
+      max-height: 5vh !important;
+      line-height: 2.2vh !important;
       margin: 0;
       padding: 0 0 2px 15% !important;
-      font-size: 20px;
+      font-size: 21px;
+      overflow: hidden !important;
   color: white !important;
-  /*border: 1px dashed yellow !important;*/
+  }
+
+  .Addon.Addon-extension .Card-contents .Addon-header .Addon-info .AddonTitle span.AddonTitle-author{
+      position: fixed !important;
+      display: inline-block !important;
+      width: 19.7% !important;
+      height: 2vh !important;
+      line-height: 2vh !important;
+      left:  1.5% !important;
+      top: 14.5vh !important;
+      text-align: right !important;
+      padding: 0 30px 0 0px !important;
+  }
+
+  /* (new171) LEFT - TOP HEADER INFO - BADGE FIREFOX =
+  https://addons.mozilla.org/fr/firefox/addon/multi-account-containers/
+  */
+  .Addon.Addon-extension .Card-contents .Addon-header .AddonBadges .Badge.Badge--has-link:has(.Badge-link .Icon-line){
+      position: absolute !important;
+      display: inline-block !important;
+      height: 2.2vh !important;
+      line-height: 2.2vh !important;
+      left:  0% !important;
+      top: -2vh !important;
+      padding: 0 5px 0 5px !important;
+      font-size: 15px !important;
+      transform: scale(0.8) !important;
+  }
+  .Addon.Addon-extension .Card-contents .Addon-header .AddonBadges .Badge.Badge--has-link:has(.Badge-link .Icon-line) a {
+      height: 2vh !important;
+      line-height: 2vh !important;
+      padding: 0 0px 0 0px !important;
+      font-size: 15px !important;
   }
 
   /* SUMMARY */
@@ -7097,34 +7143,6 @@ if ((location.hostname === "addons.mozilla.org" || location.hostname.endsWith(".
   }
   .PermissionsCard-subhead--optional {
       margin-top: -5px;
-  }
-  /* (new165) */
-  .PermissionsCard-list--required {
-      float: left;
-      width: 99.2% !important;
-      margin: 0 0 0 10px !important;
-      border-radius: 9px;
-      overflow-wrap: break-word;
-  }
-  .PermissionsCard-list--optional {
-      float: left;
-      width: 99.2% !important;
-      max-height: 70px;
-      margin: 0 0 0 10px !important;
-      padding: 3px !important;
-      border-radius: 9px;
-      overflow-wrap: break-word;
-  }
-  .PermissionsCard-list--optional li,
-  .PermissionsCard-list--required li {
-      margin-top: -3px !important;
-  }
-
-  .PermissionsCard-list--optional li .Icon,
-  .PermissionsCard-list--required li .Icon {
-      background-position: 50% center !important;
-      background-size: 70%;
-      filter: invert(0.5);
   }
 
 
@@ -8541,7 +8559,7 @@ if ((location.hostname === "addons-dev.allizom.org" || location.hostname.endsWit
   /*background: #111 !important;*/
   }
 
-  /* (new168) WITH DESCR */
+  /* (new171) WITH DESCR */
   .Addon-description-and-ratings:has(.Card.ShowMoreCard.AddonDescription) {
       position: absolute !important;
       display: inline-block !important;
@@ -8550,6 +8568,7 @@ if ((location.hostname === "addons-dev.allizom.org" || location.hostname.endsWit
       width: 31.2% !important;
       height: 45vh !important;
       top: 9vh !important;
+      left: 22.6% !important;
       margin: 0px !important;
       padding: 0px !important;
       border-radius: 9px !important;

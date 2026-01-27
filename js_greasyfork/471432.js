@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         手机助手
 // @namespace    http://tampermonkey.net/
-// @version      10.0.0.99
+// @version      10.0.1.2
 // @description  自动滚动，嗅探图片、视频，字体放大，去除广告浮动
 // @author       You
 // @match        *://*/*
@@ -123,61 +123,44 @@
         const scalable = ",user-scalable=1,maximum-scale=10.0";
 
         function autoChangeScale() {
-
             if (!scriptEnabled) return;
 
-            const metaNode = document.querySelector('meta[name=viewport]');
-            if (!metaNode) return;
+            const meta = document.querySelector('meta[name=viewport]');
+            if (!meta) return;
 
-            const metaContent = metaNode.getAttribute('content');
-
-            if (!metaContent.includes(scalable)) {
-
-                metaNode.setAttribute('content', (metaContent + scalable).replace(/, ?,/, ","));
+            const content = meta.getAttribute('content');
+            if (!content.includes('scalable')) {
+                meta.setAttribute('content', (content + scalable).replace(/, ?,/, ','));
             }
         }
 
         let clickNextTime = GM_getValue("clickNextTime", new Date().getTime() - 2000);
-
-        let cleanLocation = location.href.split('#')[0];
 
         function clickElsByTextSel(_tToC, _cToC) {
 
             if (new Date().getTime() - clickNextTime >= 2000) {
                 if (_tToC.length) {
                     const regex = new RegExp('^\s*(' + _tToC + ')');
-                    const elements = document.body.getElementsByTagName('*');
-                    for (let j = 0; j < elements.length; j++) {
-                        const element = elements[j];
-                        if (regex.test(element.textContent)) {
-                            for (let k = 0; k < clickNum; k++) {
-                                simulateClick(element);
-                            }
+                    [...document.querySelectorAll('*')].forEach(el => {
+                        if (regex.test(el.textContent)) {
+                            for (let i = 0; i < clickNum; i++) simulateClick(el);
                         }
-                    }
+                    });
                 }
                 if (_cToC.length) {
-                    const elements = document.querySelectorAll(_cToC);
-                    for (let j = 0; j < elements.length; j++) {
-                        const element = elements[j];
-                        for (let k = 0; k < clickNum; k++) {
-                            simulateClick(element);
-                        }
-                    }
+                    document.querySelectorAll(_cToC).forEach(el => {
+                        for (let i = 0; i < clickNum; i++) simulateClick(el);
+                    });
                 }
                 GM_setValue("clickNextTime", new Date().getTime());
             }
         }
 
         function removeShadowRoot() {
-            let hasShadowRoot = false;
-            for (const div of document.querySelectorAll('div')) {
-                if (div.shadowRoot) {
-                    div.replaceWith(...div.shadowRoot.childNodes);
-                    hasShadowRoot = true;
-                }
-            }
-            alert(`#shadow-root ${hasShadowRoot ? '已移除' : '不存在'}`); // 模板字符串优化
+            const hasShadowRoot = [...document.querySelectorAll('div')].some(div =>
+                div.shadowRoot && (div.replaceWith(...div.shadowRoot.childNodes) || true)
+            );
+            alert(`#shadow-root ${hasShadowRoot ? '已移除' : '不存在'}`);
         }
 
         function checkImgExists(imgurl, timeout = 8000) {
@@ -212,40 +195,27 @@
             });
         }
 
-        function getTouchSite(_element, event) {
-            const rect = _element.getBoundingClientRect();
-            const touch = event.touches[0];
+        const getTouchSite = (el, e) => {
+            const r = el.getBoundingClientRect();
+            const t = e.touches[0];
+            const h = el.offsetHeight;
+            return [t.clientX - r.left - h / 2, t.clientY - r.top - h / 2, h];
+        };
 
-            const offsetY = touch.clientY - rect.top - _element.offsetHeight / 2;
-            const offsetX = touch.clientX - rect.left - _element.offsetHeight / 2;
-
-            return [offsetX, offsetY, _element.offsetHeight];
-        }
-
-        function getSelector(element, maxIndex = 3) {
-            const pathParts = [];
-            let currentElement = element;
-            let index = 0;
-            while (index < maxIndex && currentElement && currentElement.nodeType == Node.ELEMENT_NODE) {
-                let selector = currentElement.nodeName.toLowerCase();
-                if (selector == "body") break;
-
-                const id = currentElement.id;
-                if (id) {
-                    selector += `#${id}`;
-                } else if (currentElement.classList.length > 0) {
-                    let classPart = '';
-                    for (let i = 0; i < 2 && i < currentElement.classList.length; i++) {
-                        classPart += '.' + currentElement.classList[i];
-                    }
-                    if (classPart) selector += classPart;
+        const getSelector = (el, max = 3) => {
+            const parts = [];
+            for (let i = 0, cur = el; i < max && cur && cur.nodeType === 1; i++, cur = cur.parentNode) {
+                if (cur.nodeName === 'BODY') break;
+                let sel = cur.nodeName.toLowerCase();
+                if (cur.id) sel += `#${cur.id}`;
+                else if (cur.classList.length) {
+                    const cls = [...cur.classList].slice(0, 2).map(c => `.${c}`).join('');
+                    if (cls) sel += cls;
                 }
-                pathParts.unshift(selector);
-                currentElement = currentElement.parentNode;
-                index++;
+                parts.unshift(sel);
             }
-            return pathParts.join(' > ');
-        }
+            return parts.join(' > ');
+        };
 
         let addCss = GM_getValue("addCss", "");
 
@@ -258,97 +228,92 @@
         let btnPosition = GM_getValue("btnPosition", 1);
 
         GM_registerMenuCommand("显示菜单", function() {
-
-            let inputNum = window.prompt(`1、显隐按钮 2、${hidePagetual ? "显" : "隐"} 东方组件
-3、${Dtransform?"关":"开"} 去浮动 4、${nextpage?"关":"开"} 点击翻页
-5、按钮位置 6、添加css ${addCss}
-7、${scriptEnabled ? '禁' : '启'} 双指缩放 8、加载时模拟点击 ${clickNum}次 ${txtToC} ${cssToC}`, 1);
-            if (inputNum === "1") {
-                const element = document.querySelector(".JqMA-btn-del");
-                const isHide = window.getComputedStyle(element).display === "none";
-                if (isHide) {
-                    document.head.removeChild(hideAllBtn);
-                } else {
-                    document.head.appendChild(hideAllBtn);
-                }
-            } else if (inputNum === "2") {
-                hidePagetual = hidePagetual ? 0 : 1;
-                GM_setValue("hidePagetual", hidePagetual);
-                location.reload(false);
-            } else if (inputNum === "3") {
-                btnTransfClick();
-            } else if (inputNum === "4") {
-                if (nextpage) {
-                    nextpage = 0;
-                    nextpageData[currentDomain] = nextpage;
-                } else {
-                    nextpage = 1;
-                    delete nextpageData[currentDomain];
-                }
-                GM_setValue("nextpageData", nextpageData);
-            } else if (inputNum === "5") {
-                btnPosition = btnPosition ? 0 : 1;
-                GM_setValue("btnPosition", btnPosition);
-                location.reload(false);
-            } else if (inputNum === "6") {
-                inputNum = window.prompt("输入css内容：", addCss);
-                if (inputNum !== null) {
-                    GM_setValue("addCss", inputNum);
+            const options = [
+                `1、显隐按钮`,
+                `2、${hidePagetual ? "显" : "隐"} 东方组件`,
+                `3、${Dtransform ? "关" : "开"} 去浮动`,
+                `4、${nextpage ? "关" : "开"} 点击翻页`,
+                `5、按钮位置`,
+                `6、添加css ${addCss}`,
+                `7、${scriptEnabled ? '禁' : '启'} 双指缩放`,
+                `8、加载时模拟点击 ${clickNum}次 ${txtToC} ${cssToC}`
+            ];
+            const inputNum = window.prompt(options.join('\n'), 1);
+            const actions = {
+                "1": () => {
+                    const el = document.querySelector(".JqMA-btn-del");
+                    const isHide = getComputedStyle(el).display === "none";
+                    document.head[isHide ? 'removeChild' : 'appendChild'](hideAllBtn);
+                },
+                "2": () => {
+                    hidePagetual ^= 1;
+                    GM_setValue("hidePagetual", hidePagetual);
                     location.reload(false);
-                }
-            } else if (inputNum === "7") {
-                scriptEnabled = !scriptEnabled;
-                scriptEnabledData[currentDomain] = scriptEnabled;
+                },
+                "3": btnTransfClick,
+                "4": () => {
+                    if (nextpage) {
+                        nextpage = 0;
+                        nextpageData[currentDomain] = nextpage;
+                    } else {
+                        nextpage = 1;
+                        delete nextpageData[currentDomain];
+                    }
+                    GM_setValue("nextpageData", nextpageData);
+                },
+                "5": () => {
+                    btnPosition ^= 1;
+                    GM_setValue("btnPosition", btnPosition);
+                    location.reload(false);
+                },
+                "6": () => {
+                    const css = prompt("输入css内容：", addCss);
+                    css !== null && (GM_setValue("addCss", css), location.reload(false));
+                },
+                "7": () => {
+                    scriptEnabledData[currentDomain] = scriptEnabled = !scriptEnabled;
+                    GM_setValue('scriptEnabledData', scriptEnabledData);
+                    scriptEnabled ? autoChangeScale() : location.reload();
+                },
+                "8": () => {
+                    const menu = prompt(`1、输入起始文本 ${txtToC}\n2、输入css选择器 ${cssToC}\n3、点击次数 ${clickNum}次`, 1);
 
-                GM_setValue('scriptEnabledData', scriptEnabledData);
+                    const handleOption = (key, promptText, dataStore, defaultValue, dataKey, transform = v => v) => {
+                        const input = prompt(promptText, defaultValue);
+                        if (input === "") {
+                            defaultValue = key === "clickNum" ? 1 : "";
+                            delete dataStore[currentDomain];
+                        } else if (input !== null) {
+                            defaultValue = transform(input);
+                            dataStore[currentDomain] = input;
+                        }
+                        GM_setValue(`${dataKey}Data`, dataStore);
+                    };
 
-                scriptEnabled ? autoChangeScale() : location.reload();
-            } else if (inputNum === "8") {
-                const _menu = prompt(`1、输入起始文本 ${txtToC}\n2、输入css选择器 ${cssToC}\n3、点击次数 ${clickNum}次`, 1);
-                if (_menu == "1") {
-                    const _prot = prompt('加载点击 输入起始文本 分隔|（正则特殊字符转义）', txtToC);
-                    if (_prot === "") {
-                        txtToC = "";
-                        delete txtToCData[currentDomain];
-                    } else if (_prot !== null) {
-                        txtToC = _prot;
-                        txtToCData[currentDomain] = _prot;
+                    if (menu === "1") {
+                        handleOption("txt", '加载点击 输入起始文本 分隔|（正则特殊字符转义）', txtToCData, txtToC, "txtToC");
+                    } else if (menu === "2") {
+                        handleOption("css", '加载点击 输入css选择器 分隔 ,(半角)', cssToCData, cssToC, "cssToC");
+                    } else if (menu === "3") {
+                        handleOption("clickNum", '页面加载点击 输入点击次数', clickNumData, clickNum, "clickNum", Number);
                     }
-                    GM_setValue("txtToCData", txtToCData);
-                } else if (_menu == "2") {
-                    const _prot = prompt('加载点击 输入css选择器 分隔 ,(半角)', cssToC);
-                    if (_prot === "") {
-                        cssToC = "";
-                        delete cssToCData[currentDomain];
-                    } else if (_prot !== null) {
-                        cssToC = _prot;
-                        cssToCData[currentDomain] = _prot;
-                    }
-                    GM_setValue("cssToCData", cssToCData);
-                } else if (_menu == "3") {
-                    const _prot = prompt('页面加载点击 输入点击次数', clickNum);
-                    if (_prot === "") {
-                        clickNum = 1;
-                        delete clickNumData[currentDomain];
-                    } else if (_prot !== null) {
-                        clickNum = Number(_prot);
-                        clickNumData[currentDomain] = _prot;
-                    }
-                    GM_setValue("clickNumData", clickNumData);
                 }
-            }
+            };
+            actions[inputNum]?.();
         });
+        const changeDataFunc = (data, def) => {
+            const input = prompt("请修改：", JSON.stringify(data));
+            if (!input) return false;
 
-        function changeDataFunc(_data, _default) {
-            let changeData = window.prompt("请修改：", JSON.stringify(_data));
-            if (typeof JSON.parse(changeData) == "object") {
-                changeData && alert(changeData);
-                changeData = JSON.parse(changeData)
-                return [changeData, changeData.hasOwnProperty(currentDomain) ? changeData[currentDomain] : _default]
-            } else {
-                return false;
-            }
-        }
+            try {
+                const parsed = JSON.parse(input);
+                if (typeof parsed === "object") {
+                    alert(input);
+                    return [parsed, currentDomain in parsed ? parsed[currentDomain] : def];
+                }
+            } catch { }
+            return false;
+        };
 
         const html_style = `
 body{
@@ -525,11 +490,9 @@ overflow:hidden!important;}`;
         let direction = 1;
 
         function addInput(class1, value1, style1) {
-
             document.documentElement.appendChild(createElement('p', {
                 class: "JqMA-btn-all " + class1
             }, value1));
-
             inner_style += `.JqMA-btn-all.${class1} {${style1}!important;${btnPosition ? "left" : "right"}:0!important;}`;
         }
 
@@ -573,12 +536,11 @@ overflow:hidden!important;}`;
 
             autoChangeScale();
 
-            document.addEventListener('touchstart', (e) => {
-                e.touches.length > 1 && autoChangeScale();
-            });
-            document.addEventListener('touchend', function handler(event) {
+            document.addEventListener('touchstart', e => e.touches.length > 1 && autoChangeScale());
+
+            document.addEventListener('touchend', function handler(e) {
                 Dscroll && (Dscroll = 0, scrollRun());
-                event.currentTarget.removeEventListener(event.type, handler);
+                e.currentTarget.removeEventListener(e.type, handler);
             });
             document.head.appendChild(publicStyle);
         }, 800);
@@ -592,22 +554,17 @@ overflow:hidden!important;}`;
             }
         }
 
-        function htmlTouch(event) {
+        const htmlTouch = e => {
+            if (!Dscroll || pauseScroll) return;
 
-            if (Dscroll && !pauseScroll) {
-                const _target = event.target;
+            const target = e.target;
+            if (target.matches(".JqMA-btn-Ju")) return;
 
-                if (!_target.matches(".JqMA-btn-Ju")) {
-
-                    scrollRun();
-
-                    if (!_target.matches(".JqMA-btn-down")) {
-
-                        pauseScroll = true;
-                    }
-                }
+            scrollRun();
+            if (!target.matches(".JqMA-btn-down")) {
+                pauseScroll = true;
             }
-        }
+        };
 
         let oNextScroll;
 
@@ -666,15 +623,11 @@ overflow:hidden!important;}`;
                                 pauseScroll = true;
                             }
                         }, 210);
-                    } else if (
-                        nextpage &&
-                        !this.matches("html *") &&
-                        _target.matches("picture,img,.JqMA-inner-pic") &&
-                        _target.offsetWidth > .45 * window.innerWidth
-                    ) {
-                        direction = event.clientY < window.innerHeight * .15 ? -1 : 1;
+                    } else if (nextpage && !this.matches("html *") && _target.matches("picture,img,.JqMA-inner-pic") &&
+                        _target.offsetWidth > window.innerWidth * 0.45) {
 
-                        autoScrollBy(visibleDiv(direction > 0 ? [9] : [-9], false), direction * .45 * window.innerHeight);
+                        direction = event.clientY < window.innerHeight * 0.15 ? -1 : 1;
+                        autoScrollBy(visibleDiv(direction > 0 ? [9] : [-9], false), direction * window.innerHeight * 0.45);
                     }
                     if (nextScrollTop) {
                         autoScrollBy(visibleDiv([9, -9]), nextScrollTop, "to");
@@ -695,54 +648,37 @@ overflow:hidden!important;}`;
 
         let pauseScroll;
 
-        function stopPause() {
+        const stopPause = () => setTimeout(() => {
+            if (!pauseScroll) return;
+            pauseScroll = false;
+            !Dscroll && scrollRun();
+        }, 200);
 
-            setTimeout(function() {
-                if (pauseScroll) {
-                    pauseScroll = false;
-
-                    Dscroll || scrollRun();
-                }
-            }, 200);
-        }
-
-        function onLongPress(element, callback, timeout = 600) {
+        const onLongPress = (el, callback, timeout = 600) => {
             let timer;
-            let touchLen = true;
+            let canTrigger = true;
 
-            element.addEventListener('touchstart', function(event) {
-                timer = setTimeout(function() {
-                    if (touchLen) {
-                        callback(event);
-                    }
-                }, timeout);
-
-                setTimeout(function() {
-                    touchLen = true;
-                }, timeout);
+            el.addEventListener('touchstart', e => {
+                timer = setTimeout(() => canTrigger && callback(e), timeout);
+                setTimeout(() => {canTrigger = true}, timeout);
             });
-            element.addEventListener('touchend', function() {
+            el.addEventListener('touchend', () => clearTimeout(timer));
+
+            el.addEventListener('touchmove', e => {
                 clearTimeout(timer);
-            });
-            element.addEventListener('touchmove', function(event) {
-                timer && clearTimeout(timer);
-                if (touchLen && event.touches.length > 1) {
-                    touchLen = false;
+                if (canTrigger && e.touches.length > 1) {
+                    canTrigger = false;
                 }
             });
-        }
+        };
 
-        function onSlideScreen(element, callback, timeout = 600) {
+        const onSlideScreen = (el, callback, timeout = 600) => {
             let timer;
-
-            element.addEventListener('touchmove', function(event) {
-                timer && clearTimeout(timer);
-
-                timer = setTimeout(function() {
-                    callback(event);
-                }, timeout);
+            el.addEventListener('touchmove', e => {
+                clearTimeout(timer);
+                timer = setTimeout(() => callback(e), timeout);
             });
-        }
+        };
 
         function btnScrollDivClick() {
             let width = prompt("页面宽度：", Drotate_W);
@@ -1040,15 +976,14 @@ overflow:hidden!important;}`;
             } else if (eventClass.contains('JqMA-btn-del')) {
 
                 let newHref = [];
-                let hrefSplit = location.href.split(/(?<=[^a-z]page)([=/])(?=\d)/);
-                hrefSplit.length > 1 && newHref.push(getNextPage(hrefSplit));
-
-                hrefSplit = location.href.split(/([^\d])(?=\d+(?:\.html|\/)?$)/);
-                hrefSplit.length > 1 && newHref.push(getNextPage(hrefSplit));
-
-                hrefSplit = location.href.split(/([/_\-])(?=\d+\/\?)/);
-                hrefSplit.length > 1 && newHref.push(getNextPage(hrefSplit));
-
+                [
+                    /(?<=[^a-z]page)([=/])(?=\d)/,
+                    /([^\d])(?=\d+(?:\.html|\/)?$)/,
+                    /([/_\-])(?=\d+\/\?)/
+                ].forEach(pattern => {
+                    let split = location.href.split(pattern);
+                    split.length > 1 && newHref.push(getNextPage(split));
+                });
                 !newHref.length && newHref.push(location.href.replace(/\/?$/i, "/2/"));
 
                 let pageEnter, twoHref;
@@ -1377,10 +1312,10 @@ opacity:.2!important;
         }
 
         function downloadTxt(filename, textContent) {
-            let objectURL = URL.createObjectURL(new Blob([textContent], {
+            const objectURL = URL.createObjectURL(new Blob([textContent], {
                 type: "text/plain;charset=utf-8"
             }));
-            let a = createElement('a', {
+            const a = createElement('a', {
                 href: objectURL,
                 download: filename,
                 style: "display:none!important;"
@@ -1802,8 +1737,8 @@ white-space:nowrap!important;
             document.head.appendChild(hideAllBtn);
 
             setTimeout(function() {
-                docSltAll("body:not(body *)").forEach(function(_this) {
-                    _this.addEventListener('touchstart', tempClickFunc);
+                docSltAll("body:not(body *)").forEach(_this =>{
+                    _this.addEventListener('touchstart', tempClickFunc, {passive: false});
                 });
 
                 function tempClickFunc(event) {

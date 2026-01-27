@@ -84,13 +84,15 @@
      * 写入缓存
      * @param {string} doubanId
      * @param {{contentRatingZh: string|null, certifications: Array}} data
+     * @param {boolean} fromImdb 是否来自 IMDb 
      */
-    function setCachedRating(doubanId, data) {
+    function setCachedRating(doubanId, data, fromImdb = false) {
         if (!data) return;
         const cache = loadCache();
         cache[doubanId] = {
             contentRatingZh: data.contentRatingZh || null,
             certifications: data.certifications || [],
+            fromImdb: fromImdb,
             timestamp: Date.now(),
         };
         saveCache(cache);
@@ -542,6 +544,11 @@
             return;
         }
 
+        const imdbId = getImdbIdFromPage();
+        if (!imdbId) {
+            return;
+        }
+
         // 避免重复执行
         if (isRatingAlreadyInserted()) {
             return;
@@ -552,7 +559,11 @@
         if (cached) {
             const cachedDisplay = extractPriorityRating(cached.certifications) || cached.contentRatingZh;
             if (cachedDisplay) {
-                insertContentRating(cachedDisplay, doubanId);
+                if(cached.fromImdb) {
+                    insertContentRating(cachedDisplay, null, imdbId);
+                } else {
+                    insertContentRating(cachedDisplay, doubanId, null);
+                }
                 return;
             }
         }
@@ -568,7 +579,7 @@
                     setCachedRating(doubanId, {
                         contentRatingZh: displayRating,
                         certifications: data.certifications || [],
-                    });
+                    }, false);
                     insertContentRating(displayRating, data.doubanId);
                     return;
                 }
@@ -577,10 +588,6 @@
         }
 
         // 3) 回退：直接调用 IMDb GraphQL
-        const imdbId = getImdbIdFromPage();
-        if (!imdbId) {
-            return;
-        }
 
         let imdbData = await fetchImdbCertificates(imdbId);
 
@@ -595,7 +602,7 @@
                 setCachedRating(doubanId, {
                     contentRatingZh: imdbDisplay,
                     certifications: imdbData.certifications,
-                });
+                }, true);
                 insertContentRating(imdbDisplay, null, imdbId);
             }
         }

@@ -2,7 +2,7 @@
 // @name         Site Redirector Pro
 // @name:zh-CN   网站重定向助手
 // @namespace    https://github.com/Jsaeron/site-redirector
-// @version      1.5.0
+// @version      1.6.5
 // @description  Block distracting websites with a cooldown timer and redirect to productive sites
 // @description:zh-CN  拦截分心网站，冷静倒计时后重定向到指定网站，帮助你保持专注
 // @author       Daniel
@@ -15,6 +15,7 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_xmlhttpRequest
 // @connect      v1.hitokoto.cn
+// @connect      emojihub.yurace.pro
 // @run-at       document-start
 // @downloadURL https://update.greasyfork.org/scripts/563551/Site%20Redirector%20Pro.user.js
 // @updateURL https://update.greasyfork.org/scripts/563551/Site%20Redirector%20Pro.meta.js
@@ -29,6 +30,8 @@
     const CONFIG = {
         target: GM_getValue('redirectTarget', DEFAULT_TARGET),  // 重定向目标（可通过菜单修改）
         cooldown: 30,                  // 冷静期秒数
+        dailyQuotaMinutes: GM_getValue('dailyQuotaMinutes', 0), // 每日可访问分钟数（0=禁用）
+        dailyQuotaVisits: GM_getValue('dailyQuotaVisits', 0)    // 每日可访问次数（0=禁用）
     };
 
     // 主题配置
@@ -98,19 +101,90 @@
     ];
     const randomTitle = TITLES[Math.floor(Math.random() * TITLES.length)];
 
+    function normalizeDomain(value) {
+        return String(value || '')
+            .trim()
+            .toLowerCase()
+            .replace(/^(https?:\/\/)?(www\.)?/, '')
+            .replace(/\/.*$/, '')
+            .replace(/^\.+/, '')
+            .replace(/\.+$/, '');
+    }
+
     // 获取黑名单
     function getBlacklist() {
-        return GM_getValue('blacklist', DEFAULT_BLACKLIST);
+        const stored = GM_getValue('blacklist', DEFAULT_BLACKLIST);
+        const list = Array.isArray(stored)
+            ? stored
+            : String(stored).split(/[,\n，；;]+/);
+        const normalized = list.map(normalizeDomain).filter(s => s.length > 0);
+        if (!Array.isArray(stored) || normalized.length !== stored.length) {
+            GM_setValue('blacklist', normalized);
+        }
+        return normalized;
+    }
+
+    function getTodayStr() {
+        return new Date().toISOString().slice(0, 10);
     }
 
     // 检查当前网站是否在黑名单中
     function isBlocked(hostname) {
         const blacklist = getBlacklist();
-        return blacklist.some(site => hostname === site || hostname.endsWith('.' + site));
+        const normalizedHostname = normalizeDomain(hostname);
+        return blacklist.some(site => normalizedHostname === site || normalizedHostname.endsWith('.' + site));
     }
 
+    function getQuotaUsageKey(dateStr, domain) {
+        return `quotaUsage_${dateStr}_${domain}`;
+    }
+
+    function getQuotaVisitKey(dateStr, domain) {
+        return `quotaVisits_${dateStr}_${domain}`;
+    }
+
+    function isQuotaEnabled() {
+        return CONFIG.dailyQuotaMinutes > 0 || CONFIG.dailyQuotaVisits > 0;
+    }
+
+    function canAccessWithinQuota(domain) {
+        if (!isQuotaEnabled()) {
+            return false;
+        }
+        const todayStr = getTodayStr();
+        const usedMinutes = GM_getValue(getQuotaUsageKey(todayStr, domain), 0);
+        const usedVisits = GM_getValue(getQuotaVisitKey(todayStr, domain), 0);
+        const minutesOk = CONFIG.dailyQuotaMinutes === 0 || usedMinutes < CONFIG.dailyQuotaMinutes;
+        const visitsOk = CONFIG.dailyQuotaVisits === 0 || usedVisits < CONFIG.dailyQuotaVisits;
+        return minutesOk && visitsOk;
+    }
+
+    function startQuotaSession(domain) {
+        const todayStr = getTodayStr();
+        const visitKey = getQuotaVisitKey(todayStr, domain);
+        GM_setValue(visitKey, GM_getValue(visitKey, 0) + 1);
+
+        let sessionMinutes = 0;
+        const intervalId = setInterval(() => {
+            sessionMinutes += 1;
+            const usageKey = getQuotaUsageKey(todayStr, domain);
+            GM_setValue(usageKey, GM_getValue(usageKey, 0) + 1);
+        }, 60 * 1000);
+
+        window.addEventListener('beforeunload', () => {
+            clearInterval(intervalId);
+        });
+    }
+
+    // ============ 早期退出检查 ============
     // 如果不在黑名单中，直接退出
     if (!isBlocked(location.hostname)) {
+        return;
+    }
+
+    const normalizedDomain = normalizeDomain(location.hostname);
+    if (canAccessWithinQuota(normalizedDomain)) {
+        startQuotaSession(normalizedDomain);
         return;
     }
 
@@ -120,7 +194,7 @@
     if (Date.now() < bypassExpire) {
         return;  // 在绕过期内，不拦截
     }
-    // =================================
+    // =====================================
 
     // 注册菜单命令：设置重定向目标
     GM_registerMenuCommand('🎯 设置重定向目标', () => {
@@ -147,7 +221,7 @@
     GM_registerMenuCommand('➕ 添加网站到黑名单', () => {
         const site = prompt('请输入要拦截的域名（如 example.com）：', '');
         if (site && site.trim()) {
-            const domain = site.trim().toLowerCase().replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/.*$/, '');
+            const domain = normalizeDomain(site);
             const blacklist = getBlacklist();
             if (blacklist.includes(domain)) {
                 alert(`${domain} 已在黑名单中`);
@@ -168,7 +242,7 @@
         }
         const site = prompt(`当前黑名单：\n${blacklist.join('\n')}\n\n请输入要移除的域名：`, '');
         if (site && site.trim()) {
-            const domain = site.trim().toLowerCase();
+            const domain = normalizeDomain(site);
             const index = blacklist.indexOf(domain);
             if (index > -1) {
                 blacklist.splice(index, 1);
@@ -185,10 +259,29 @@
         const blacklist = getBlacklist();
         const input = prompt('编辑黑名单（每行一个域名，用换行或逗号分隔）：', blacklist.join(', '));
         if (input !== null) {
-            const newList = input.split(/[,\n]/).map(s => s.trim().toLowerCase().replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/.*$/, '')).filter(s => s.length > 0);
+            const newList = input.split(/[,\n]/).map(normalizeDomain).filter(s => s.length > 0);
             GM_setValue('blacklist', newList);
             alert(`黑名单已更新，共 ${newList.length} 个网站`);
         }
+    });
+
+    // 注册菜单命令：设置每日配额
+    GM_registerMenuCommand('⏱️ 设置每日配额', () => {
+        const currentMinutes = GM_getValue('dailyQuotaMinutes', 0);
+        const currentVisits = GM_getValue('dailyQuotaVisits', 0);
+        const minutesInput = prompt('请输入每日可访问分钟数（0 表示禁用）：', currentMinutes);
+        if (minutesInput === null) {
+            return;
+        }
+        const visitsInput = prompt('请输入每日可访问次数（0 表示禁用）：', currentVisits);
+        if (visitsInput === null) {
+            return;
+        }
+        const minutesValue = Math.max(0, parseInt(minutesInput, 10) || 0);
+        const visitsValue = Math.max(0, parseInt(visitsInput, 10) || 0);
+        GM_setValue('dailyQuotaMinutes', minutesValue);
+        GM_setValue('dailyQuotaVisits', visitsValue);
+        alert(`每日配额已更新：分钟数 ${minutesValue} / 次数 ${visitsValue}`);
     });
 
     // 注册菜单命令：重置黑名单
@@ -208,13 +301,48 @@
     // 注册菜单命令：查看统计
     GM_registerMenuCommand('📊 查看拦截统计', () => {
         const total = GM_getValue('blockCount', 0);
-        const todayStr = new Date().toISOString().slice(0, 10);
+        const todayStr = getTodayStr();
         const todayTotal = GM_getValue('blockCount_' + todayStr, 0);
         const target = GM_getValue('redirectTarget', DEFAULT_TARGET);
         const blacklist = getBlacklist();
         const themeMode = getThemeMode();
         const themeModeText = { auto: '跟随系统', light: '明亮模式', dark: '暗黑模式' }[themeMode];
-        alert(`今日拦截次数：${todayTotal}\n累计拦截次数：${total}\n当前重定向目标：${target}\n黑名单网站数：${blacklist.length}\n当前主题：${themeModeText}`);
+        const quotaMinutes = GM_getValue('dailyQuotaMinutes', 0);
+        const quotaVisits = GM_getValue('dailyQuotaVisits', 0);
+        const quotaText = quotaMinutes || quotaVisits ? `${quotaMinutes} 分钟 / ${quotaVisits} 次` : '未启用';
+        alert(`今日拦截次数：${todayTotal}\n累计拦截次数：${total}\n当前重定向目标：${target}\n黑名单网站数：${blacklist.length}\n每日配额：${quotaText}\n当前主题：${themeModeText}`);
+    });
+
+    // 注册菜单命令：查看本周趋势
+    GM_registerMenuCommand('📈 查看本周趋势', () => {
+        const days = [];
+        const hourlyTotals = Array(24).fill(0);
+        for (let i = 6; i >= 0; i--) {
+            const date = new Date();
+            date.setDate(date.getDate() - i);
+            const dateStr = date.toISOString().slice(0, 10);
+            const count = GM_getValue('blockCount_' + dateStr, 0);
+            days.push(`${dateStr}: ${count}`);
+            const hourlyKey = 'blockHours_' + dateStr;
+            const hourlyCounts = GM_getValue(hourlyKey, []);
+            for (let h = 0; h < 24; h++) {
+                hourlyTotals[h] += hourlyCounts[h] || 0;
+            }
+        }
+        const peakHour = hourlyTotals.indexOf(Math.max(...hourlyTotals));
+        alert(`近7天拦截趋势：\n${days.join('\n')}\n\n高峰时段：${peakHour}:00 - ${peakHour + 1}:00`);
+    });
+
+    // 注册菜单命令：站点排行
+    GM_registerMenuCommand('🏆 查看站点排行', () => {
+        const siteCounts = GM_getValue('blockCountBySite', {});
+        const entries = Object.entries(siteCounts).sort((a, b) => b[1] - a[1]);
+        if (entries.length === 0) {
+            alert('暂无站点拦截排行数据');
+            return;
+        }
+        const topList = entries.slice(0, 10).map(([site, count], index) => `${index + 1}. ${site} - ${count} 次`);
+        alert(`被拦截最多的站点排行：\n${topList.join('\n')}`);
     });
 
     // 注册菜单命令：切换主题
@@ -243,10 +371,22 @@
     GM_setValue('blockCount', totalCount);
 
     // 更新今日计数
-    const today = new Date().toISOString().slice(0, 10);  // YYYY-MM-DD
+    const today = getTodayStr();  // YYYY-MM-DD
     const todayKey = 'blockCount_' + today;
     const todayCount = GM_getValue(todayKey, 0) + 1;
     GM_setValue(todayKey, todayCount);
+
+    // 更新每小时计数
+    const hour = new Date().getHours();
+    const hourKey = 'blockHours_' + today;
+    const hourCounts = GM_getValue(hourKey, Array(24).fill(0));
+    hourCounts[hour] = (hourCounts[hour] || 0) + 1;
+    GM_setValue(hourKey, hourCounts);
+
+    // 更新站点计数
+    const siteCounts = GM_getValue('blockCountBySite', {});
+    siteCounts[normalizedDomain] = (siteCounts[normalizedDomain] || 0) + 1;
+    GM_setValue('blockCountBySite', siteCounts);
 
     // 阻止原页面加载
     document.documentElement.innerHTML = '';
@@ -329,7 +469,7 @@
 
     document.body.innerHTML = `
         <div class="container">
-            <div class="icon">🛑</div>
+            <div class="icon" id="random-emoji"></div>
             <div class="title">${randomTitle}</div>
             <div class="subtitle">${location.hostname}</div>
             <div class="count">今日第 <strong>${todayCount}</strong> 次 / 累计第 <strong>${totalCount}</strong> 次被拦截</div>
@@ -357,6 +497,35 @@
             </div>
         </div>
     `;
+
+    GM_xmlhttpRequest({
+        method: 'GET',
+        url: 'https://emojihub.yurace.pro/api/random',
+        onload: function(response) {
+            const emojiEl = document.getElementById('random-emoji');
+            if (!emojiEl) {
+                return;
+            }
+            try {
+                const data = JSON.parse(response.responseText);
+                if (data && Array.isArray(data.htmlCode) && data.htmlCode[0]) {
+                    emojiEl.innerHTML = data.htmlCode[0];
+                } else if (data && typeof data.emoji === 'string') {
+                    emojiEl.textContent = data.emoji;
+                } else {
+                    emojiEl.textContent = '🛑';
+                }
+            } catch (e) {
+                emojiEl.textContent = '🛑';
+            }
+        },
+        onerror: function() {
+            const emojiEl = document.getElementById('random-emoji');
+            if (emojiEl) {
+                emojiEl.textContent = '🛑';
+            }
+        }
+    });
 
     // 获取一言语录
     GM_xmlhttpRequest({

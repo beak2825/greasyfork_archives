@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name               Ophel
+// @name               Ophel - AI Chat Page Enhancer
 // @name:zh-CN         Ophel - AI 对话增强工具
 // @name:zh-TW         Ophel - AI 對話增強工具
 // @name:en            Ophel - AI Chat Enhancement Toolkit
@@ -13,7 +13,7 @@
 // @namespace          https://github.com/urzeye/ophel
 // @version            1.0.1
 // @author             urzeye
-// @description        AI conversation enhancement tool for Gemini/ChatGPT/Claude/Grok/AI Studio
+// @description        Ophel is an AI chat page enhancer that supports Gemini, ChatGPT, Claude, Grok, and AI Studio. Features: Smart Outline, Conversation Manager (Folders, Tags, Search), Prompt Library (Variables, Markdown), Theme Customization (20+ themes), UI Optimization (Widescreen, Layout Control), Reading Experience (Scroll Lock, History Restore), Productivity (Shortcuts, Model Lock, Tab Auto-rename), and Privacy First (Local Storage, WebDAV Sync).
 // @description:zh-CN  为 Gemini/ChatGPT/Claude/Grok/AI Studio 等提供智能大纲、会话管理、提示词库、快捷键、完成通知、主题布局定制、阅读记录恢复、WebDAV 同步等增强功能，全面提升您的交互体验！
 // @description:zh-TW  為 Gemini/ChatGPT/Claude/Grok/AI Studio 等提供智能大綱、會話管理、提示詞庫、快捷鍵、完成通知、主題佈局定制、閱讀記錄恢復、WebDAV 同步等增強功能，全面提升您的交互體驗！
 // @description:en     Enhance Gemini/ChatGPT/Claude/Grok/AI Studio with smart outlines, conversation management, prompts, WebDAV sync and more.
@@ -27,6 +27,7 @@
 // @license            CC-BY-NC-SA-4.0
 // @icon               https://raw.githubusercontent.com/urzeye/ophel/main/assets/icon.png
 // @homepageURL        https://github.com/urzeye/ophel
+// @source             https://github.com/urzeye/ophel.git
 // @supportURL         https://github.com/urzeye/ophel/issues
 // @match              https://gemini.google.com/*
 // @match              https://business.gemini.google/*
@@ -39,7 +40,6 @@
 // @require            https://cdn.jsdelivr.net/npm/systemjs@6.15.1/dist/extras/named-register.min.js
 // @require            data:application/javascript,%3B(typeof%20System!%3D'undefined')%26%26(System%3Dnew%20System.constructor())%3B
 // @connect            *
-// @connect            api.claude.ai
 // @grant              GM_addStyle
 // @grant              GM_addValueChangeListener
 // @grant              GM_cookie

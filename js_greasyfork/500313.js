@@ -4,7 +4,7 @@
 // @match       https://oszimt.xschool.de/Marks/StudentHeadMark*
 // @grant       none
 // @license     GNU GPLv3
-// @version     250718
+// @version     260126
 // @author      Pfannkuchen, Trutz
 // @description Fügt ein Textfeld für eine Importfunktion für Fehlzeiten in XSchool hinzu.
 // @downloadURL https://update.greasyfork.org/scripts/500313/Fehlzeiten%20xschoolde.user.js
@@ -79,6 +79,7 @@ function delay(ms) {
             const student_save = document.getElementById('fehlzeiten_save').checked;
 
             var fehlzeiten = [];
+            var fehlzeiten_namen = [];
             // Finde Noten
             var value =  document.getElementById('fehlzeiten_import_txt').value.trim();
              // Teile den Inhalt in Zeilen auf
@@ -100,11 +101,12 @@ function delay(ms) {
                 }
 
                 if (modus == 'untis') {
-                  var numbers = line.trim().split(/\t/).map(Number);
+                  var numbers = line.trim().split(/\t/);
                   if (numbers.length != 21) throw "21 Einträge erwartet. "+numbers.length+" Einträge in der Zeile "+lineNr+" erhalten.";
 
                   // Füge das Array der Zahlen zum Hauptarray hinzu
-                  fehlzeiten.push([numbers[14], numbers[15], numbers[6], numbers[7], numbers[20]]);
+                  fehlzeiten.push([numbers[14], numbers[15], numbers[6], numbers[7], numbers[20], numbers[3]]);
+                  fehlzeiten_namen.push(numbers[1]);
                 }
 
                 lineNr++;
@@ -113,12 +115,40 @@ function delay(ms) {
             // Select the ul element with the data-bind attribute
             var studentList = document.querySelector('ul[data-bind="foreach: Students"]');
             var studentItems = studentList.querySelectorAll('li.select-item.student-item');
+            var meldungen = [];
 
             // Count the number of li elements within the ul
-            if (document.getElementById('check_student_count').checked && (studentList.querySelectorAll('li').length != fehlzeiten.length))
-              throw "Anzahl Schüler ("+studentList.querySelectorAll('li').length+") stimmt nicht mit der Anzahl der Zeilen ("+fehlzeiten.length+") überein.";
-            var count = 0;
-            for (var fehlzeiten_elemnt of fehlzeiten) {
+            var studentSize = studentList.querySelectorAll('li').length;
+            if (document.getElementById('check_student_count').checked && (studentSize != fehlzeiten.length))
+              throw "Anzahl Schüler ("+studentSize+") stimmt nicht mit der Anzahl der Zeilen ("+fehlzeiten.length+") überein.";
+            if (modus == 'untis') // fix for missing data
+              studentSize = studentItems.length;
+            else
+              studentSize = fehlzeiten.length;
+
+            for (var i = 0; i < studentSize; i++) {
+              notenspaltenImportShowMessage("Parse und sende Anfrage. Bitte warten " + (i+1) + "/" + studentSize + " - " + studentItems[i].querySelector('label').textContent , 'orange');
+              var fehlzeiten_elemnt = fehlzeiten[i];
+              // search for students?
+              if (modus == 'untis') {
+                var studentName = studentItems[i].querySelector('label').textContent.replace(",", "");
+                var id = -1;
+                for (var j = 0; j < fehlzeiten_namen.length; j++) {
+                  // prüfe, ob WebUntis Name in XSchool oder umgedreht
+                  if (studentName.includes(fehlzeiten_namen[j]) || fehlzeiten_namen[j].includes(studentName)){
+                    id = j;
+                    break;
+                  }
+                }
+                //found?
+                if (id >= 0){
+                    fehlzeiten_elemnt = fehlzeiten[id];
+                } else {
+                    notenspaltenImportShowMessage("Keine Fehlzeiten für " + studentName + " gefunden. ", 'red');
+                    meldungen.push(" Keine Fehlzeiten für " + studentName + " gefunden");
+                    fehlzeiten_elemnt = [0,0,0,0,0,""];
+                }
+              }
               var containers = document.querySelectorAll('.headmark-container');
               containers.forEach(function(container, index) {
                 // Selektiere das Textfeld innerhalb des Containers
@@ -132,9 +162,7 @@ function delay(ms) {
                 // Ereignisse auslösen, um die Änderung zu erfassen
                 triggerInputChangeEvent(textarea);
               });
-               notenspaltenImportShowMessage("Parse und sende Anfrage. Bitte warten " + count + "/" + fehlzeiten.length + " - " + studentItems[count].querySelector('label').textContent , 'orange');
               await delay(0); // Browser-Zeit zum Aktualisieren geben
-              count++;
 
               if (student_save) {
                 var Speicher_button = document.querySelector('button.xschool-btn.primary[title="Speichern"]');
@@ -143,7 +171,7 @@ function delay(ms) {
               var next_Student_Button = document.querySelector('.xschool-btn.col-xs-6.primary[data-bind="click: NextStudent"]');
               next_Student_Button.click();
             }
-            notenspaltenImportShowMessage("Fertig", 'green');
+            notenspaltenImportShowMessage("Fertig"+meldungen, 'green');
         } catch (error) {
             notenspaltenImportShowMessage('Es gab ein Problem beim Eintragen: ' + error);
             throw error;

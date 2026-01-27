@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Ext.to | Restore Download Buttons with Magnet Links
-// @description  Reverts to the old way download buttons (from e.g. search results) work, by redirecting to the respective magnet link on click (instead of the torrent summary page). Also works with middle and right click and prevents the buttons from being hidden on mobile layout.
-// @version      1.0.3
+// @description  Resolves download buttons (from e.g. search results) by setting the respective magnet link as href/url (like it used to be) on middle and right click, to allow for opening it in a background tab and copying it more easily. Also prevents the download buttons from being hidden on mobile layout.
+// @version      1.1.0
 // @namespace    https://github.com/Fenn3c401
 // @author       Fenn3c401
 // @license      GPL-3.0-or-later
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=ext.to
+// @icon         https://icons.duckduckgo.com/ip3/ext.to.ico
 // @match        https://ext.to/*
 // @run-at       document-start
 // @grant        unsafeWindow
@@ -21,21 +21,22 @@
 let $;
 
 
-addStyles()
+addStyles();
 
-document.addEventListener('DOMContentLoaded', () => {
+((fn) => document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', fn) : fn())(() => {
   $ ??= unsafeWindow.jQuery;
   if (!$) return;
 
-  $('body').on('click auxclick', '.table .btn-blocks .dwn-btn:has(> .file_download):not([href^="magnet:"], [href^="javascript:"])', async function(evt) {
+  $('body').on('click auxclick', '.dwn-btn:not([href^="magnet:"])', async function(evt) {
     evt.preventDefault();
+    evt.stopPropagation();
 
-    const itemDoc = await fetch($(this).attr('href')).then((r) => r.text()).then((r) => $(new DOMParser().parseFromString(r, 'text/html'))),
+    const itemDoc = await fetch($(this).closest('tr').find('a').attr('href')).then((r) => r.text()).then((r) => $(new DOMParser().parseFromString(r, 'text/html'))),
           csrfToken = $(itemDoc).find('script:contains("csrfToken =")').text().match(/csrfToken = '([^']+)/)[1],
           pageToken = $(itemDoc).find('script:contains("pageToken =")').text().match(/pageToken = '([^']+)/)[1];
 
     const data = {
-      torrent_id: $(this).attr('href').match(/(\d+)\/$/)[1],
+      torrent_id: $(this).attr('data-id'),
       download_type: 'magnet',
       timestamp: Math.floor(Date.now() / 1000).toString(),
       sessid: csrfToken,
@@ -51,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         $(this).attr('href', resp.url);
 
         if (evt.type === 'click') location.href = resp.url;
-        else if (evt.originalEvent.button === 1) GM_openInTab(resp.url, { insert: true, setParent: true });
+        else if (evt.originalEvent.button === 1) GM_openInTab(resp.url, { setParent: true });
       } else {
         alert(resp.error || 'Error loading download link. Please try again.');
       }
@@ -75,7 +76,7 @@ async function computeHmac(torrentId, timestamp, token) {
 
 function addStyles() {
   GM_addStyle(`
-@media (max-width: 940px) {
+@media (width <= 940px) {
   .main-block .table .btn-blocks :is(.dwn-btn, .vide-watch-btn) {
     display: inline-block;
   }

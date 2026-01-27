@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         yt-dlp Python-Downloader
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      9.12
+// @version      9.29
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Unified yt-dlp downloader - generates cross-platform Python scripts for video, audio, subtitles
@@ -9,6 +9,76 @@
 // ═══════════════════════════════════════════════════════════════
 // CHANGELOG
 // ═══════════════════════════════════════════════════════════════
+// v9.29
+// - Added: Ko-Fi support button in context menu
+//
+// v9.28
+// - Fixed: Vimeo now works reliably by using player URL + referer bypass
+//
+// v9.27
+// - Improved: Output naming now uses yt-dlp metadata (title + id) for better filenames (Instagram, etc.)
+// - Keeps current page-title fallback if metadata lookup fails
+//
+// v9.26
+// - Fixed: Dailymotion now works (requires --impersonate to bypass Cloudflare)
+// - Added IMPERSONATE_SITES config for sites needing browser impersonation
+//
+// v9.25
+// - Fixed: Audio codec filter quotes no longer break Python syntax
+// - Uses escaped quotes in generated format strings
+//
+// v9.24
+// - Added: More video quality options (4K, 1440p, 240p, 144p)
+// - Added: Medium audio quality option
+// - Added: Audio codec preference (AAC for H.264, Opus for VP9/AV1)
+// - Improved codec matching for better compatibility
+//
+// v9.23
+// - Added: "Formats" button to list all available formats for current video
+// - Shows yt-dlp --list-formats output in terminal
+//
+// v9.22
+// - Fixed: Format string now includes /best fallback for combined-stream sites
+// - TikTok, Twitter etc. no longer fail with "format not available"
+//
+// v9.21
+// - Fixed: Combined-stream detection now works in merge+separate mode (CASE 4)
+// - Splits combined stream before merge phase, so merge gets proper inputs
+//
+// v9.20
+// - Fixed: Combined-stream sites now strip audio from video when both are separate
+// - Detection: if we requested 2 formats but got 1 file, it's a combined stream
+// - Uses ffmpeg remux (no re-encoding) to strip audio track from video
+// - Sites with separate streams (YouTube) are unaffected
+//
+// v9.19
+// - Fixed: Video+Audio separate mode now extracts audio when site has combined streams
+// - TikTok, Twitter, etc. now correctly produce both video and audio files
+// - Uses ffmpeg stream copy (no re-encoding) when extracting audio from video
+//
+// v9.18
+// - Fixed: Audio-only mode now uses --extract-audio for sites without separate streams
+// - Uses yt-dlp's native post-processor (ffmpeg) - no re-encoding, stream copy
+// - Works reliably on TikTok, Twitter, and other video-only sites
+//
+// v9.17
+// - Fixed: Right-click menu now works on TikTok and other sites with aggressive event handling
+// - Fixed: Uses window-level capture to bypass shadow DOM event routing issues
+//
+// v9.16
+// - Fixed: Subtitle check now handles empty output (not just "has no subtitles" message)
+//
+// v9.15
+// - Fixed: Single-component merge no longer creates duplicate when Separate also selected
+// - Fixed: Both mkvmerge and FFmpeg paths check for duplicate output in Phase 4
+//
+// v9.14
+// - Fixed: FFmpeg fallback now merges already-downloaded temp files (no double download)
+// - Fixed: Added ffmpeg availability check when mkvmerge not found
+//
+// v9.13
+// - Fixed: wait_for_exit() now accepts optional error parameter (was causing crashes)
+//
 // v9.12
 // - Fixed: Audio-only .mp4 files (Twitter/X HLS) now correctly identified
 // - Fixed: Uses format_id hint ("audio" in filename) for stream detection
@@ -181,6 +251,7 @@
 // @match        *://www.twitch.tv/*
 // @match        *://twitter.com/*
 // @match        *://vimeo.com/*
+// @match        *://player.vimeo.com/*
 // @match        *://www.youtube.com/*
 // @match        *://x.com/*
 //
@@ -231,6 +302,33 @@
         // 'some-hls-only-site.com',
     ];
 
+    // ═══════════════════════════════════════════════════════════════
+    // IMPERSONATE SITES - Sites that need --impersonate to bypass Cloudflare
+    // These sites block requests without browser TLS fingerprinting
+    // Requires curl_cffi: pip install "yt-dlp[curl-cffi]"
+    // ═══════════════════════════════════════════════════════════════
+    const IMPERSONATE_SITES = [
+        'www.dailymotion.com',
+        'dailymotion.com',
+        // Add more sites here as needed
+    ];
+
+    // Helper to check if current site needs impersonation
+    const needsImpersonation = () => IMPERSONATE_SITES.some(site =>
+        window.location.hostname === site ||
+        window.location.hostname.endsWith('.' + site)
+    );
+
+    // Sites that need a referer header to bypass anti-bot protection
+    const REFERER_SITES = {
+        'vimeo.com': 'https://vimeo.com/',
+        'www.vimeo.com': 'https://vimeo.com/',
+        'player.vimeo.com': 'https://vimeo.com/',
+    };
+
+    // Helper to get referer for current site
+    const getReferer = () => REFERER_SITES[window.location.hostname] || '';
+
     // Helper to check if current site has combined streams only
     const isCombinedStreamSite = () => COMBINED_STREAM_SITES.some(site =>
         window.location.hostname === site ||
@@ -262,10 +360,14 @@
     // ═══════════════════════════════════════════════════════════════
     const VIDEO_QUALITIES = [
         { id: 'best', label: 'Best', format: 'bestvideo' },
+        { id: '2160p', label: '4K', format: 'bestvideo[height<=2160]/bestvideo' },
+        { id: '1440p', label: '1440p', format: 'bestvideo[height<=1440]/bestvideo' },
         { id: '1080p', label: '1080p', format: 'bestvideo[height<=1080]/bestvideo' },
         { id: '720p', label: '720p', format: 'bestvideo[height<=720]/bestvideo' },
         { id: '480p', label: '480p', format: 'bestvideo[height<=480]/bestvideo' },
         { id: '360p', label: '360p', format: 'bestvideo[height<=360]/bestvideo' },
+        { id: '240p', label: '240p', format: 'bestvideo[height<=240]/bestvideo' },
+        { id: '144p', label: '144p', format: 'bestvideo[height<=144]/bestvideo' },
     ];
 
     const VIDEO_CODECS = [
@@ -279,8 +381,17 @@
     // AUDIO OPTIONS
     // ═══════════════════════════════════════════════════════════════
     const AUDIO_QUALITIES = [
-        { id: 'best', label: 'Best', format: 'bestaudio/best' },
-        { id: 'worst', label: 'Smallest', format: 'worstaudio/bestaudio' },
+        { id: 'best', label: 'Best', format: 'bestaudio' },
+        { id: 'medium', label: 'Medium', format: 'bestaudio[abr<=128]/bestaudio' },
+        { id: 'worst', label: 'Smallest', format: 'worstaudio' },
+    ];
+
+    // Audio codec preference - matches audio codec to video codec for compatibility
+    // Note: formatFilter uses single quotes to avoid breaking Python string literals
+    const AUDIO_CODECS = [
+        { id: 'auto', label: 'Auto', desc: 'Match video codec (AAC for H.264, Opus for VP9/AV1)' },
+        { id: 'aac', label: 'AAC', desc: 'Best compatibility (.m4a)', formatFilter: "[acodec~='^mp4a']" },
+        { id: 'opus', label: 'Opus', desc: 'Smaller files (.webm)', formatFilter: "[acodec='opus']" },
     ];
 
     // ═══════════════════════════════════════════════════════════════
@@ -301,6 +412,7 @@
         VIDEO_CODEC: 'ytdlp_video_codec',
         VIDEO_OUTPUT: 'ytdlp_video_output',
         AUDIO_QUALITY: 'ytdlp_audio_quality',
+        AUDIO_CODEC: 'ytdlp_audio_codec',
         AUDIO_OUTPUT: 'ytdlp_audio_output',
         SUBS_FORMAT: 'ytdlp_subs_format',
         SUBS_OUTPUT: 'ytdlp_subs_output',
@@ -314,6 +426,7 @@
         VIDEO_CODEC: 'default',
         VIDEO_OUTPUT: 'merge',
         AUDIO_QUALITY: 'best',
+        AUDIO_CODEC: 'auto',
         AUDIO_OUTPUT: 'merge',
         SUBS_FORMAT: 'original',
         SUBS_OUTPUT: 'none',
@@ -353,6 +466,7 @@
     const getVideoCodec = () => getStoredValue(STORAGE_KEYS.VIDEO_CODEC, DEFAULTS.VIDEO_CODEC, VIDEO_CODECS);
     const getVideoOutput = () => getStoredValue(STORAGE_KEYS.VIDEO_OUTPUT, DEFAULTS.VIDEO_OUTPUT, OUTPUT_MODES);
     const getAudioQuality = () => getStoredValue(STORAGE_KEYS.AUDIO_QUALITY, DEFAULTS.AUDIO_QUALITY, AUDIO_QUALITIES);
+    const getAudioCodec = () => getStoredValue(STORAGE_KEYS.AUDIO_CODEC, DEFAULTS.AUDIO_CODEC, AUDIO_CODECS);
     const getAudioOutput = () => getStoredValue(STORAGE_KEYS.AUDIO_OUTPUT, DEFAULTS.AUDIO_OUTPUT, OUTPUT_MODES);
     const getSubsFormat = () => getStoredValue(STORAGE_KEYS.SUBS_FORMAT, DEFAULTS.SUBS_FORMAT, SUBTITLE_FORMATS);
     const getSubsOutput = () => getStoredValue(STORAGE_KEYS.SUBS_OUTPUT, DEFAULTS.SUBS_OUTPUT, OUTPUT_MODES);
@@ -362,6 +476,7 @@
     const setVideoCodec = (v) => setStoredValue(STORAGE_KEYS.VIDEO_CODEC, v);
     const setVideoOutput = (v) => setStoredValue(STORAGE_KEYS.VIDEO_OUTPUT, v);
     const setAudioQuality = (v) => setStoredValue(STORAGE_KEYS.AUDIO_QUALITY, v);
+    const setAudioCodec = (v) => setStoredValue(STORAGE_KEYS.AUDIO_CODEC, v);
     const setAudioOutput = (v) => setStoredValue(STORAGE_KEYS.AUDIO_OUTPUT, v);
     const setSubsFormat = (v) => setStoredValue(STORAGE_KEYS.SUBS_FORMAT, v);
     const setSubsOutput = (v) => setStoredValue(STORAGE_KEYS.SUBS_OUTPUT, v);
@@ -749,6 +864,29 @@
                     cursor: not-allowed;
                     opacity: 0.6;
                 }
+
+                /* Support button */
+                .ytdlp-support-btn {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 8px 12px;
+                    margin-top: 6px;
+                    background: transparent;
+                    border: 1px solid #444;
+                    color: #888;
+                    font-size: 12px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    transition: all 0.15s;
+                    text-decoration: none;
+                }
+
+                .ytdlp-support-btn:hover {
+                    background: #3a3a3a;
+                    border-color: #4CAF50;
+                    color: #4CAF50;
+                }
             `;
         },
 
@@ -991,6 +1129,9 @@
             // ─────────────────────────────────────────────────────────────
             const audioRow = buildComponentRow('AUDIO', 'audio', getAudioOutput, setAudioOutput, (submenu) => {
                 buildDetailSection(submenu, 'Quality', AUDIO_QUALITIES, getAudioQuality, setAudioQuality);
+                if (showCodecOption) {
+                    buildDetailSection(submenu, 'Codec', AUDIO_CODECS, getAudioCodec, setAudioCodec);
+                }
             });
             this.element.appendChild(audioRow);
 
@@ -1029,6 +1170,19 @@
             this.element.appendChild(thumbnailsRow);
 
             // ─────────────────────────────────────────────────────────────
+            // FORMATS ROW
+            // ─────────────────────────────────────────────────────────────
+            const formatsRow = document.createElement('div');
+            formatsRow.className = 'ytdlp-menu-row';
+            formatsRow.textContent = '📋 List Formats';
+            formatsRow.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onDownload('formats');
+            };
+            this.element.appendChild(formatsRow);
+
+            // ─────────────────────────────────────────────────────────────
             // DOWNLOAD BUTTON
             // ─────────────────────────────────────────────────────────────
             downloadBtn = document.createElement('div');
@@ -1045,6 +1199,22 @@
 
             this.element.appendChild(downloadBtn);
             updateDownloadState();
+
+            // ─────────────────────────────────────────────────────────────
+            // SUPPORT BUTTON
+            // ─────────────────────────────────────────────────────────────
+            const supportBtn = document.createElement('a');
+            supportBtn.className = 'ytdlp-support-btn';
+            supportBtn.href = 'https://ko-fi.com/piknockyou';
+            supportBtn.target = '_blank';
+            supportBtn.rel = 'noopener noreferrer';
+            supportBtn.textContent = '☕ Support';
+            supportBtn.title = 'Support this script on Ko-Fi';
+            supportBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
+            this.element.appendChild(supportBtn);
 
             // Initial update of all states
             updateAllStates();
@@ -1150,12 +1320,20 @@
         (str || 'video').replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_').substring(0, max);
 
     function getVideoInfo() {
+        let url = window.location.href;
+
+        // Vimeo: convert main page URL to player URL for reliable extraction
+        const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+        if (vimeoMatch && !url.includes('player.vimeo.com')) {
+            url = `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+        }
+
         if (complex?.extractUrl) {
             const result = complex.extractUrl();
             if (result.error) return result;
             return { url: result.url, filename: sanitize(document.title), cookieFile: COOKIE_FILE };
         }
-        return { url: window.location.href, filename: sanitize(document.title), cookieFile: COOKIE_FILE };
+        return { url: url, filename: sanitize(document.title), cookieFile: COOKIE_FILE };
     }
 
     const getOverwriteFlag = () => FORCE_OVERWRITE ? '--force-overwrites' : '';
@@ -1183,6 +1361,7 @@ import shutil
 import random
 from pathlib import Path
 from glob import glob
+import re
 
 # ════════════════════════════════════════════════════════════════════════════════
 # HELPER FUNCTIONS
@@ -1204,7 +1383,61 @@ def check_command(cmd):
     """Check if a command is available in PATH."""
     return shutil.which(cmd) is not None
 
-def wait_for_exit():
+def sanitize_filename(name, max_len=120):
+    """
+    Make a filename safe across Windows/macOS/Linux while keeping it readable.
+    Replaces forbidden characters, collapses whitespace, trims trailing dots/spaces, and limits length.
+    """
+    if not name:
+        return "video"
+
+    # Windows-forbidden + control chars
+    name = re.sub(r'[<>:"/\\\\|?*\\x00-\\x1f]', "_", name)
+
+    # Collapse whitespace
+    name = re.sub(r'\\s+', " ", name).strip()
+
+    # Windows doesn't like trailing dots/spaces
+    name = name.rstrip(". ")
+
+    if not name:
+        return "video"
+
+    if len(name) > max_len:
+        name = name[:max_len].rstrip(". ")
+
+    return name or "video"
+
+def resolve_output_name(url, cookies_arg, fallback, needs_impersonate=False, impersonate_target="chrome", referer=""):
+    """
+    Resolve a better output base name using yt-dlp metadata (title + id).
+    Falls back to the provided fallback name if anything fails.
+    """
+    try:
+        cmd = ["yt-dlp", "--no-playlist", "--print", "%(title)s [%(id)s]"]
+
+        if referer:
+            cmd.extend(["--referer", referer])
+
+        if needs_impersonate:
+            cmd.extend(["--impersonate", impersonate_target])
+
+        cmd.extend(cookies_arg)
+        cmd.append(url)
+
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        out = (result.stdout or "").strip()
+
+        # Use last non-empty line (some extractors print extra stuff)
+        lines = [l.strip() for l in out.splitlines() if l.strip()]
+        if result.returncode == 0 and lines:
+            return sanitize_filename(lines[-1])
+    except Exception:
+        pass
+
+    return fallback
+
+def wait_for_exit(error=False):
     """Wait for user to press Enter before exiting."""
     print()
     print("Press Enter to exit...")
@@ -1282,7 +1515,13 @@ def check_subtitles_available(url, cookies_arg):
     combined_output = (result.stdout + result.stderr).lower()
 
     # Check if no subtitles available
+    # yt-dlp may say "has no subtitles" OR just show nothing
     if "has no subtitles" in combined_output:
+        print("[INFO] No subtitles available for this video")
+        return None, False, []
+
+    # Check if subtitles are actually listed (look for table indicator)
+    if "available subtitles" not in combined_output:
         print("[INFO] No subtitles available for this video")
         return None, False, []
 
@@ -1391,6 +1630,69 @@ def main():
     else:
         print_status("SUCCESS", "Comments downloaded!")
         wait_for_exit()
+
+if __name__ == "__main__":
+    main()
+`;
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // FORMATS MODE
+        // ═══════════════════════════════════════════════════════════════
+        if (mode === 'formats') {
+            return `${getPythonHeader()}
+# ════════════════════════════════════════════════════════════════════════════════
+# CONFIGURATION
+# ════════════════════════════════════════════════════════════════════════════════
+
+URL = "${url}"
+COOKIE_FILE = "${cookieFile}"
+
+# ════════════════════════════════════════════════════════════════════════════════
+# MAIN - List Formats
+# ════════════════════════════════════════════════════════════════════════════════
+
+def main():
+    # Change to script directory
+    os.chdir(Path(__file__).parent)
+
+    print_header("yt-dlp Format Listing")
+
+    # Check for yt-dlp
+    if not check_command("yt-dlp"):
+        print_status("ERROR", "yt-dlp not found")
+        print("Install: pip install yt-dlp")
+        print("     or: brew install yt-dlp (Mac)")
+        print("     or: winget install yt-dlp (Windows)")
+        wait_for_exit()
+        sys.exit(1)
+
+    print_status("OK", "yt-dlp found")
+
+    # Build command
+    cmd = ["yt-dlp", "--list-formats"]
+
+    # Add cookies if file exists
+    if Path(COOKIE_FILE).exists():
+        print_status("OK", "Cookie file found")
+        cmd.extend(["--cookies", COOKIE_FILE])
+    else:
+        print_status("INFO", "No cookie file")
+
+    cmd.append(URL)
+
+    print()
+    print(f"URL: {URL}")
+    print()
+    print("=" * 80)
+    print()
+
+    # Run yt-dlp
+    result = subprocess.run(cmd)
+
+    print()
+    print("=" * 80)
+    wait_for_exit()
 
 if __name__ == "__main__":
     main()
@@ -1514,7 +1816,6 @@ if __name__ == "__main__":
 
         // Build format string
         const videoFormat = findOption(VIDEO_QUALITIES, videoQuality)?.format || 'bestvideo';
-        const audioFormat = findOption(AUDIO_QUALITIES, audioQuality)?.format || 'bestaudio';
         const codecArg = (hasVideo && isYouTubeDomain() && videoCodec !== 'default')
             ? findOption(VIDEO_CODECS, videoCodec)?.sortArg || ''
             : '';
@@ -1523,7 +1824,35 @@ if __name__ == "__main__":
         // Generate summary labels (codec only shown on YouTube)
         const showCodecInLabel = isYouTubeDomain() && videoCodec !== 'default';
         const videoLabel = hasVideo ? `${getLabel(VIDEO_QUALITIES, videoQuality)}${showCodecInLabel ? ` [${getLabel(VIDEO_CODECS, videoCodec)}]` : ''}` : 'None';
-        const audioLabel = hasAudio ? getLabel(AUDIO_QUALITIES, audioQuality) : 'None';
+        const audioCodec = getAudioCodec();
+
+        // Build audio format with codec filter
+        // Note: Uses single quotes inside yt-dlp filter syntax to avoid breaking Python strings
+        const buildAudioFormat = () => {
+            const baseFormat = findOption(AUDIO_QUALITIES, audioQuality)?.format || 'bestaudio';
+            if (!isYouTubeDomain() || audioCodec === 'auto') {
+                // Auto mode on YouTube: match to video codec
+                if (isYouTubeDomain() && hasVideo && videoCodec !== 'default') {
+                    // H.264 pairs with AAC, VP9/AV1 pair with Opus
+                    if (videoCodec === 'h264') {
+                        return baseFormat.replace('bestaudio', "bestaudio[acodec~='^mp4a']") + '/' + baseFormat;
+                    } else {
+                        return baseFormat.replace('bestaudio', "bestaudio[acodec='opus']") + '/' + baseFormat;
+                    }
+                }
+                return baseFormat;
+            }
+            // Explicit codec selection
+            const codecFilter = findOption(AUDIO_CODECS, audioCodec)?.formatFilter || '';
+            if (codecFilter && baseFormat.includes('bestaudio')) {
+                return baseFormat.replace('bestaudio', 'bestaudio' + codecFilter) + '/' + baseFormat;
+            }
+            return baseFormat;
+        };
+
+        const audioFormat = buildAudioFormat();
+        const showAudioCodecInLabel = isYouTubeDomain() && audioCodec !== 'auto';
+        const audioLabel = hasAudio ? `${getLabel(AUDIO_QUALITIES, audioQuality)}${showAudioCodecInLabel ? ` [${getLabel(AUDIO_CODECS, audioCodec)}]` : ''}` : 'None';
         const subsLabel = hasSubs ? getLabel(SUBTITLE_FORMATS, subsFormat) : 'None';
         const getOutputLabel = (output) => getLabel(OUTPUT_MODES, output);
 
@@ -1532,6 +1861,12 @@ if __name__ == "__main__":
 
         // Check if combined stream site
         const isCombined = isCombinedStreamSite();
+
+        // Check if site needs impersonation
+        const needsImpersonate = needsImpersonation();
+
+        // Get referer for sites that need it (Vimeo, etc.)
+        const referer = getReferer();
 
         return `${getPythonHeader()}
 # ════════════════════════════════════════════════════════════════════════════════
@@ -1564,6 +1899,12 @@ CODEC_ARG = "${codecArg}"
 SUBS_CONVERT_ARG = "${subsConvertArg}"
 
 IS_COMBINED_STREAM_SITE = ${pyBool(isCombined)}
+
+# Impersonation for Cloudflare bypass (Dailymotion, etc.)
+NEEDS_IMPERSONATE = ${pyBool(needsImpersonate)}
+
+# Referer bypass (Vimeo, etc.)
+REFERER = "${referer}"
 
 # Display labels
 VIDEO_LABEL = "${videoLabel}"
@@ -1721,6 +2062,11 @@ def main():
     else:
         print_status("INFO", "No cookie file")
 
+    # Resolve better base filename from yt-dlp metadata (helps on Instagram etc.)
+    global FILENAME
+    FILENAME = resolve_output_name(URL, cookies_arg, FILENAME, NEEDS_IMPERSONATE, "chrome", REFERER)
+    print_status("INFO", f"Output name: {FILENAME}")
+
     # Handle subtitles
     sub_args = []
     do_subs = False
@@ -1738,6 +2084,14 @@ def main():
     cmd = ["yt-dlp"]
     if OVERWRITE_FLAG:
         cmd.append(OVERWRITE_FLAG)
+
+    if REFERER:
+        cmd.extend(["--referer", REFERER])
+
+    # Add impersonation for sites that need it (Dailymotion, etc.)
+    if NEEDS_IMPERSONATE:
+        cmd.extend(["--impersonate", "chrome"])
+
     cmd.extend(cookies_arg)
     cmd.extend([URL, "-f", "${formatStr}"])
 
@@ -1765,11 +2119,11 @@ def main():
 `;
         }
 
-        // Build format list for non-combined sites
+        // Build format list with /best fallback for combined-stream sites
         const formats = [];
         if (hasVideo) formats.push(videoFormat);
         if (hasAudio) formats.push(audioFormat);
-        const formatStr = formats.join(',');
+        const formatStr = formats.length > 0 ? formats.join(',') + '/best' : 'best';
 
         // ═══════════════════════════════════════════════════════════════
         // CASE 3: No merging needed - direct download
@@ -1815,6 +2169,11 @@ def main():
     else:
         print_status("INFO", "No cookie file")
 
+    # Resolve better base filename from yt-dlp metadata
+    global FILENAME
+    FILENAME = resolve_output_name(URL, cookies_arg, FILENAME, NEEDS_IMPERSONATE, "chrome", REFERER)
+    print_status("INFO", f"Output name: {FILENAME}")
+
     # Handle subtitles
     sub_args = []
     do_subs = False
@@ -1845,6 +2204,14 @@ def main():
     cmd = ["yt-dlp"]
     if OVERWRITE_FLAG:
         cmd.append(OVERWRITE_FLAG)
+
+    if REFERER:
+        cmd.extend(["--referer", REFERER])
+
+    # Add impersonation for sites that need it (Dailymotion, etc.)
+    if NEEDS_IMPERSONATE:
+        cmd.extend(["--impersonate", "chrome"])
+
     cmd.extend(cookies_arg)
     cmd.extend([URL, "-f", "${formatStr}"])
 
@@ -1903,21 +2270,73 @@ def main():
                 audio_file = filepath
                 print(f"  [AUDIO] {basename} (assumed)")
 
-    # Copy to final names
+    # Detect combined stream: we requested both video+audio but only got one file
+    is_combined_stream = HAS_VIDEO and HAS_AUDIO and video_file and not audio_file
+
+    # Copy/process to final names
     print()
     print("Creating output files...")
 
-    if video_file:
-        ext = Path(video_file).suffix
-        dest = f"{FILENAME}.video{ext}"
-        shutil.copy(video_file, dest)
-        print_status("OK", f"Created: {dest}")
+    if is_combined_stream:
+        # Combined stream site (TikTok, Twitter, etc.)
+        # Need to split the single file into separate video and audio
+        print()
+        print("[INFO] Site provided combined stream - splitting video and audio...")
 
-    if audio_file:
-        ext = Path(audio_file).suffix
-        dest = f"{FILENAME}.audio{ext}"
-        shutil.copy(audio_file, dest)
-        print_status("OK", f"Created: {dest}")
+        if not check_command("ffmpeg"):
+            print_status("WARNING", "ffmpeg not found - cannot split streams")
+            print("  Install ffmpeg to properly separate video and audio")
+            # Fallback: just copy the combined file as video
+            ext = Path(video_file).suffix
+            dest = f"{FILENAME}.video{ext}"
+            shutil.copy(video_file, dest)
+            print_status("OK", f"Created: {dest} (contains audio)")
+        else:
+            video_ext = Path(video_file).suffix.lower()
+
+            # Extract audio (no video, copy audio codec)
+            audio_ext = "m4a" if video_ext == ".mp4" else "ogg" if video_ext == ".webm" else "m4a"
+            audio_dest = f"{FILENAME}.audio.{audio_ext}"
+            extract_audio = subprocess.run([
+                "ffmpeg", "-y", "-i", video_file,
+                "-vn", "-acodec", "copy",
+                audio_dest
+            ], capture_output=True, text=True)
+
+            if extract_audio.returncode == 0:
+                print_status("OK", f"Created: {audio_dest}")
+            else:
+                print_status("ERROR", "Audio extraction failed")
+
+            # Strip audio from video (no audio, copy video codec)
+            video_dest = f"{FILENAME}.video{video_ext}"
+            strip_audio = subprocess.run([
+                "ffmpeg", "-y", "-i", video_file,
+                "-an", "-vcodec", "copy",
+                video_dest
+            ], capture_output=True, text=True)
+
+            if strip_audio.returncode == 0:
+                print_status("OK", f"Created: {video_dest}")
+            else:
+                print_status("ERROR", "Video extraction failed")
+                # Fallback: copy original (with audio)
+                shutil.copy(video_file, video_dest)
+                print_status("OK", f"Created: {video_dest} (contains audio)")
+
+    else:
+        # Normal case: separate streams available (YouTube, etc.)
+        if video_file:
+            ext = Path(video_file).suffix
+            dest = f"{FILENAME}.video{ext}"
+            shutil.copy(video_file, dest)
+            print_status("OK", f"Created: {dest}")
+
+        if audio_file:
+            ext = Path(audio_file).suffix
+            dest = f"{FILENAME}.audio{ext}"
+            shutil.copy(audio_file, dest)
+            print_status("OK", f"Created: {dest}")
 
     for sub_file in subtitle_files:
         basename = os.path.basename(sub_file)
@@ -1947,12 +2366,25 @@ def main():
     cmd = ["yt-dlp"]
     if OVERWRITE_FLAG:
         cmd.append(OVERWRITE_FLAG)
+
+    if REFERER:
+        cmd.extend(["--referer", REFERER])
+
+    # Add impersonation for sites that need it (Dailymotion, etc.)
+    if NEEDS_IMPERSONATE:
+        cmd.extend(["--impersonate", "chrome"])
+
     cmd.extend(cookies_arg)
     cmd.extend([URL, "-f", "${formatStr}"])
 
     # Add codec sorting if specified
     if CODEC_ARG:
         cmd.extend(CODEC_ARG.split())
+
+    # Audio-only: use --extract-audio for sites without separate audio streams
+    # This uses ffmpeg stream copy (no re-encoding) - fast and lossless
+    if not HAS_VIDEO and HAS_AUDIO:
+        cmd.extend(["--extract-audio", "--audio-quality", "0"])
 
     cmd.extend(["-o", f"{FILENAME}.%(ext)s"])
 
@@ -2018,6 +2450,11 @@ def main():
     else:
         print_status("INFO", "No cookie file")
 
+    # Resolve better base filename from yt-dlp metadata (helps on Instagram etc.)
+    global FILENAME
+    FILENAME = resolve_output_name(URL, cookies_arg, FILENAME, NEEDS_IMPERSONATE, "chrome", REFERER)
+    print_status("INFO", f"Output name: {FILENAME}")
+
     # Check for mkvmerge
     has_mkvmerge = check_command("mkvmerge")
     if has_mkvmerge:
@@ -2053,6 +2490,14 @@ def main():
     cmd = ["yt-dlp"]
     if OVERWRITE_FLAG:
         cmd.append(OVERWRITE_FLAG)
+
+    if REFERER:
+        cmd.extend(["--referer", REFERER])
+
+    # Add impersonation for sites that need it (Dailymotion, etc.)
+    if NEEDS_IMPERSONATE:
+        cmd.extend(["--impersonate", "chrome"])
+
     cmd.extend(cookies_arg)
     cmd.extend([URL, "-f", "${formatStr}"])
 
@@ -2114,15 +2559,62 @@ def main():
                 audio_file = filepath
                 print(f"  [AUDIO] {basename} (assumed)")
 
-    # Verify we found expected files
-    ${hasVideo ? `
-    if not video_file:
-        print_status("WARNING", "Expected video file not found")
-    ` : ''}
-    ${hasAudio ? `
-    if not audio_file:
-        print_status("WARNING", "Expected audio file not found")
-    ` : ''}
+    # Detect combined stream: we requested both video+audio but only got one file
+    is_combined_stream = HAS_VIDEO and HAS_AUDIO and video_file and not audio_file
+
+    if is_combined_stream:
+        print()
+        print("[INFO] Site provided combined stream - splitting before merge...")
+
+        if not check_command("ffmpeg"):
+            print_status("WARNING", "ffmpeg not found - cannot split streams")
+            print("  Merge will only contain video track")
+        else:
+            video_ext = Path(video_file).suffix.lower()
+
+            # Extract audio to separate file
+            audio_ext = "m4a" if video_ext == ".mp4" else "ogg" if video_ext == ".webm" else "m4a"
+            audio_file = f"{temp_base}.extracted_audio.{audio_ext}"
+            extract_audio = subprocess.run([
+                "ffmpeg", "-y", "-i", video_file,
+                "-vn", "-acodec", "copy",
+                audio_file
+            ], capture_output=True, text=True)
+
+            if extract_audio.returncode == 0:
+                print_status("OK", f"Extracted audio: {os.path.basename(audio_file)}")
+            else:
+                print_status("ERROR", "Audio extraction failed")
+                audio_file = None
+
+            # Strip audio from video file (replace in place)
+            video_only = f"{temp_base}.video_only{video_ext}"
+            strip_audio = subprocess.run([
+                "ffmpeg", "-y", "-i", video_file,
+                "-an", "-vcodec", "copy",
+                video_only
+            ], capture_output=True, text=True)
+
+            if strip_audio.returncode == 0:
+                # Replace original with stripped version
+                try:
+                    os.remove(video_file)
+                    video_file = video_only
+                    print_status("OK", f"Stripped audio from video")
+                except:
+                    video_file = video_only
+            else:
+                print_status("WARNING", "Could not strip audio from video")
+    else:
+        # Normal case - verify we found expected files
+        ${hasVideo ? `
+        if not video_file:
+            print_status("WARNING", "Expected video file not found")
+        ` : ''}
+        ${hasAudio ? `
+        if not audio_file:
+            print_status("WARNING", "Expected audio file not found")
+        ` : ''}
 
     # ════════════════════════════════════════════════════════════════════════════
     # PHASE 3: Merge files (only components with Merge flag)
@@ -2132,16 +2624,20 @@ def main():
 
     if has_mkvmerge:
         mkv_inputs = []
+        merge_has_video = False
+        merge_has_audio = False
 
         ${videoMerge && hasVideo ? `
         if video_file:
             mkv_inputs.append(video_file)
+            merge_has_video = True
             print("  Adding to merge: VIDEO")
         ` : '# Video not included in merge'}
 
         ${audioMerge && hasAudio ? `
         if audio_file:
             mkv_inputs.append(audio_file)
+            merge_has_audio = True
             print("  Adding to merge: AUDIO")
         ` : '# Audio not included in merge'}
 
@@ -2172,55 +2668,116 @@ def main():
                 print_status("OK", f"Created: {FILENAME}.{actual_ext}")
 
         elif len(mkv_inputs) == 1:
-            # Single component - just copy with appropriate extension
-            src_ext = Path(mkv_inputs[0]).suffix
-            dest_file = f"{FILENAME}{src_ext}"
-            print_status("INFO", "Only 1 component available - saving directly")
-            shutil.copy(mkv_inputs[0], dest_file)
-            print_status("OK", f"Created: {dest_file}")
+            # Only one component for merge - check if Phase 4 will create it as separate
+            skip_direct_save = False
+            if merge_has_video and VIDEO_SEPARATE:
+                skip_direct_save = True
+                print_status("INFO", "Only video for merge - will be saved as separate copy")
+            elif merge_has_audio and AUDIO_SEPARATE:
+                skip_direct_save = True
+                print_status("INFO", "Only audio for merge - will be saved as separate copy")
+
+            if not skip_direct_save:
+                src_ext = Path(mkv_inputs[0]).suffix
+                dest_file = f"{FILENAME}{src_ext}"
+                print_status("INFO", "Only 1 component available - saving directly")
+                shutil.copy(mkv_inputs[0], dest_file)
+                print_status("OK", f"Created: {dest_file}")
 
         else:
             print_status("WARNING", "No components to merge")
             dl_error = True
 
     else:
-        # FFmpeg fallback
-        print("  mkvmerge not found - using FFmpeg fallback...")
-        ${(videoMerge && hasVideo && audioMerge && hasAudio) ? `
-        # Re-download with FFmpeg merge
-        ffmpeg_cmd = ["yt-dlp"]
-        if OVERWRITE_FLAG:
-            ffmpeg_cmd.append(OVERWRITE_FLAG)
-        ffmpeg_cmd.extend(cookies_arg)
-        ffmpeg_cmd.extend([
-            URL,
-            "-f", "${videoFormat}+${audioFormat}",
-            "--merge-output-format", "mkv"
-        ])
+        # FFmpeg fallback - merge already-downloaded temp files directly
+        print("  mkvmerge not found - using FFmpeg to merge temp files...")
 
-        if CODEC_ARG:
-            ffmpeg_cmd.extend(CODEC_ARG.split())
-
-        ${subsMerge && hasSubs ? `
-        if do_subs:
-            ffmpeg_cmd.extend(sub_args)
-            ffmpeg_cmd.append("--embed-subs")
-        ` : ''}
-
-        ffmpeg_cmd.extend(["-o", f"{FILENAME}.%(ext)s"])
-
-        ffmpeg_result = subprocess.run(ffmpeg_cmd)
-
-        if ffmpeg_result.returncode != 0:
-            print_status("ERROR", "FFmpeg merge failed")
+        if not check_command("ffmpeg"):
+            print_status("ERROR", "Neither mkvmerge nor ffmpeg found!")
+            print("  Install mkvmerge: https://mkvtoolnix.download/")
+            print("  Or install ffmpeg: https://ffmpeg.org/download.html")
             dl_error = True
         else:
-            print_status("OK", f"Created: {FILENAME}.mkv")
-        ` : `
-        print_status("WARNING", "Complex merge not supported without mkvmerge")
-        print("  Please install mkvmerge: https://mkvtoolnix.download/")
-        dl_error = True
-        `}
+            # Build FFmpeg command to merge the temp files we already downloaded
+            ffmpeg_cmd = ["ffmpeg", "-y"]  # -y to overwrite without prompting
+
+            input_idx = 0
+            map_args = []
+            merge_has_video = False
+            merge_has_audio = False
+
+            ${videoMerge && hasVideo ? `
+            if video_file:
+                ffmpeg_cmd.extend(["-i", video_file])
+                map_args.extend(["-map", f"{input_idx}:v"])
+                input_idx += 1
+                merge_has_video = True
+            ` : '# Video not included in merge'}
+
+            ${audioMerge && hasAudio ? `
+            if audio_file:
+                ffmpeg_cmd.extend(["-i", audio_file])
+                map_args.extend(["-map", f"{input_idx}:a"])
+                input_idx += 1
+                merge_has_audio = True
+            ` : '# Audio not included in merge'}
+
+            ${subsMerge && hasSubs ? `
+            if do_subs:
+                for sub_file in subtitle_files:
+                    ffmpeg_cmd.extend(["-i", sub_file])
+                    map_args.extend(["-map", f"{input_idx}:s"])
+                    input_idx += 1
+            ` : '# Subtitles not included in merge'}
+
+            if input_idx >= 2:
+                ffmpeg_cmd.extend(["-c", "copy"])  # Copy streams without re-encoding
+                ffmpeg_cmd.extend(map_args)
+
+                # Determine output extension
+                actual_ext = MERGED_EXT
+                if not video_file and audio_file:
+                    actual_ext = Path(audio_file).suffix.lstrip('.') or 'mka'
+
+                output_file = f"{FILENAME}.{actual_ext}"
+                ffmpeg_cmd.append(output_file)
+
+                print()
+                print(f"  Running FFmpeg merge...")
+                ffmpeg_result = subprocess.run(ffmpeg_cmd, capture_output=True, text=True)
+
+                if ffmpeg_result.returncode != 0:
+                    print_status("ERROR", "FFmpeg merge failed")
+                    if ffmpeg_result.stderr:
+                        print(f"  {ffmpeg_result.stderr[:200]}")
+                    dl_error = True
+                else:
+                    print_status("OK", f"Created: {output_file}")
+
+            elif input_idx == 1:
+                # Only one component for merge - check if Phase 4 will create it as separate
+                skip_direct_save = False
+                if merge_has_video and VIDEO_SEPARATE:
+                    skip_direct_save = True
+                    print_status("INFO", "Only video for merge - will be saved as separate copy")
+                elif merge_has_audio and AUDIO_SEPARATE:
+                    skip_direct_save = True
+                    print_status("INFO", "Only audio for merge - will be saved as separate copy")
+
+                if not skip_direct_save:
+                    src_file = video_file if merge_has_video else audio_file
+                    if src_file:
+                        src_ext = Path(src_file).suffix
+                        dest_file = f"{FILENAME}{src_ext}"
+                        print_status("INFO", "Only 1 component - saving directly")
+                        shutil.copy(src_file, dest_file)
+                        print_status("OK", f"Created: {dest_file}")
+                    else:
+                        print_status("WARNING", "No components to merge")
+                        dl_error = True
+            else:
+                print_status("WARNING", "No components to merge")
+                dl_error = True
 
     # ════════════════════════════════════════════════════════════════════════════
     # PHASE 4: Copy files that need to be kept separately
@@ -2539,7 +3096,10 @@ def main():
                     parts.push(`Video: ${getLabel(VIDEO_QUALITIES, getVideoQuality())}${codecSuffix} [${getLabel(OUTPUT_MODES, videoOut)}]`);
                 }
                 if (audioOut !== 'none') {
-                    parts.push(`Audio: ${getLabel(AUDIO_QUALITIES, getAudioQuality())} [${getLabel(OUTPUT_MODES, audioOut)}]`);
+                    const audioCodecSuffix = (isYouTubeDomain() && getAudioCodec() !== 'auto')
+                        ? ` [${getLabel(AUDIO_CODECS, getAudioCodec())}]`
+                        : '';
+                    parts.push(`Audio: ${getLabel(AUDIO_QUALITIES, getAudioQuality())}${audioCodecSuffix} [${getLabel(OUTPUT_MODES, audioOut)}]`);
                 }
                 if (subsOut !== 'none') {
                     parts.push(`Subs: ${getLabel(SUBTITLE_FORMATS, getSubsFormat())} [${getLabel(OUTPUT_MODES, subsOut)}]`);
@@ -2655,6 +3215,25 @@ def main():
                 e.stopPropagation();
                 ContextMenu.show(e.clientX, e.clientY, (mode) => executeDownload(mode));
             });
+
+            // Window-level contextmenu interceptor (capture phase)
+            // This bypasses shadow DOM event routing issues on sites like TikTok
+            window.addEventListener('contextmenu', (e) => {
+                try {
+                    const btnRect = btn.getBoundingClientRect();
+                    // Check if right-click is within our button bounds (with small padding)
+                    if (e.clientX >= btnRect.left - 2 && e.clientX <= btnRect.right + 2 &&
+                        e.clientY >= btnRect.top - 2 && e.clientY <= btnRect.bottom + 2) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        ContextMenu.show(e.clientX, e.clientY, (mode) => executeDownload(mode));
+                        return false;
+                    }
+                } catch (err) {
+                    // Ignore - button may not be ready
+                }
+            }, { capture: true });
 
             window.addEventListener('beforeunload', stopHoverTracking);
 

@@ -3,7 +3,7 @@
 // @namespace    https://fanis.dev/userscripts
 // @author       Fanis Hatzidakis
 // @license      PolyForm-Internal-Use-1.0.0; https://polyformproject.org/licenses/internal-use/1.0.0/
-// @version      1.6.1
+// @version      2.0.0
 // @description  Summarize web articles via OpenAI API. Modular architecture with configurable selectors and inspection mode.
 // @match        *://*/*
 // @exclude      about:*
@@ -119,6 +119,31 @@
         DOMAIN_SELECTORS: 'digest_domain_selectors_v1',
         DOMAIN_EXCLUDES: 'digest_domain_excludes_v1',
         MIN_TEXT_LENGTH: 'digest_min_text_length_v1',
+        // Display settings
+        SUMMARY_FONT_SIZE: 'digest_summary_font_size_v1',
+        SUMMARY_LINE_HEIGHT: 'digest_summary_line_height_v1',
+        THEME: 'digest_theme_v1',
+        SHORTCUT_LARGE: 'digest_shortcut_large_v1',
+        SHORTCUT_SMALL: 'digest_shortcut_small_v1',
+    };
+
+    // Default keyboard shortcuts
+    const DEFAULT_SHORTCUTS = {
+        large: { key: 'L', alt: true, shift: true, ctrl: false },
+        small: { key: 'S', alt: true, shift: true, ctrl: false }
+    };
+
+    // Summary display settings
+    const SUMMARY_FONT_SIZES = {
+        small: 15,
+        default: 17,
+        large: 20
+    };
+
+    const SUMMARY_LINE_HEIGHTS = {
+        compact: 1.5,
+        default: 1.8,
+        comfortable: 2.1
     };
 
     // Minimum text length for extraction (in characters)
@@ -2443,8 +2468,93 @@
     let dragOffset = { x: 0, y: 0 };
     let autoCollapsedOverlay = false;
     let autoCollapsedState = null;
+    let currentTheme = 'auto';
+    let mediaQueryList = null;
+    let shortcuts = { ...DEFAULT_SHORTCUTS };
+    let keyboardHandler = null;
 
     const BADGE_WIDTH = 150;
+
+    /**
+     * Format shortcut for display
+     */
+    function formatShortcut(shortcut) {
+        if (!shortcut) return '';
+        const parts = [];
+        if (shortcut.ctrl) parts.push('Ctrl');
+        if (shortcut.alt) parts.push('Alt');
+        if (shortcut.shift) parts.push('Shift');
+        parts.push(shortcut.key.toUpperCase());
+        return parts.join('+');
+    }
+
+    /**
+     * Check if a keyboard event matches a shortcut
+     */
+    function matchesShortcut(event, shortcut) {
+        if (!shortcut) return false;
+        return event.key.toUpperCase() === shortcut.key.toUpperCase() &&
+               event.altKey === shortcut.alt &&
+               event.shiftKey === shortcut.shift &&
+               event.ctrlKey === shortcut.ctrl;
+    }
+
+    /**
+     * Parse shortcut string to object
+     */
+    function parseShortcut(str) {
+        if (!str) return null;
+        const parts = str.toUpperCase().split('+').map(p => p.trim());
+        const key = parts.pop();
+        return {
+            key,
+            ctrl: parts.includes('CTRL'),
+            alt: parts.includes('ALT'),
+            shift: parts.includes('SHIFT')
+        };
+    }
+
+    /**
+     * Determine if dark mode should be active
+     */
+    function isDarkMode(theme) {
+        if (theme === 'dark') return true;
+        if (theme === 'light') return false;
+        // Auto: check system preference
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    /**
+     * Apply theme to an element
+     */
+    function applyTheme(element, theme) {
+        if (!element) return;
+        currentTheme = theme;
+        if (isDarkMode(theme)) {
+            element.classList.add('digest-dark');
+        } else {
+            element.classList.remove('digest-dark');
+        }
+    }
+
+    /**
+     * Update theme on all overlays
+     */
+    function updateAllThemes(theme) {
+        applyTheme(overlay, theme);
+        applyTheme(summaryOverlay, theme);
+    }
+
+    /**
+     * Sync badge settings UI when changed from summary overlay
+     */
+    function syncBadgeSetting(setting, value) {
+        if (!overlay) return;
+        const options = overlay.querySelectorAll(`[data-setting="${setting}"] .digest-settings-option`);
+        options.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.value === value);
+        });
+    }
 
     /** Viewport width excluding scrollbar */
     function viewportWidth() {
@@ -2487,7 +2597,7 @@
         }
         .digest-slide-handle {
             position: absolute !important;
-            left: -28px !important;
+            left: -30px !important;
             top: 50% !important;
             transform: translateY(-50%) !important;
             width: 28px !important;
@@ -2506,7 +2616,7 @@
             transition: all 0.2s ease !important;
         }
         .digest-slide-handle:hover {
-            left: -30px !important;
+            left: -32px !important;
             box-shadow: -4px 0 16px rgba(0,0,0,.3) !important;
         }
         .digest-handle {
@@ -2581,23 +2691,51 @@
             color: #fff !important;
             font-weight: 600 !important;
         }
-        .digest-btn.inspect-btn {
-            background: #f0f0f0 !important;
-            border-color: #999 !important;
-            color: #666 !important;
-            font-size: 11px !important;
-            padding: 6px 4px !important;
-        }
-        .digest-btn.inspect-btn:hover {
-            background: #999 !important;
-            color: #fff !important;
+        .digest-footer {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 8px !important;
         }
         .digest-status {
             font-size: 10px !important;
             color: #666 !important;
-            text-align: center !important;
-            padding: 4px !important;
             margin: 0 !important;
+            flex: 1 !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+        }
+        .digest-badge-settings {
+            position: relative !important;
+        }
+        .digest-badge-settings .digest-settings-btn {
+            min-width: 24px !important;
+            width: 24px !important;
+            height: 24px !important;
+            flex: none !important;
+            padding: 4px !important;
+            font-size: 12px !important;
+        }
+        .digest-badge-settings .digest-settings-popover {
+            right: 0 !important;
+            bottom: 28px !important;
+            top: auto !important;
+            min-width: 160px !important;
+        }
+        .digest-badge-settings .inspect-btn {
+            width: 100% !important;
+            margin-top: 8px !important;
+            padding-top: 8px !important;
+            border-top: 1px solid #e5e7eb !important;
+            border-radius: 0 !important;
+            border-left: none !important;
+            border-right: none !important;
+            border-bottom: none !important;
+            background: transparent !important;
+        }
+        .digest-badge-settings .inspect-btn:hover {
+            background: #f3f4f6 !important;
         }
         .digest-branding {
             font-size: 8px !important;
@@ -2619,7 +2757,7 @@
             border: 3px solid #667eea !important;
             border-radius: 16px !important;
             width: 96% !important;
-            max-width: 1200px !important;
+            max-width: 760px !important;
             max-height: 90vh !important;
             box-shadow: 0 10px 40px rgba(102, 126, 234, 0.35), 0 0 0 9999px rgba(0, 0, 0, 0.4) !important;
             animation: digest-summary-fadein 0.3s ease !important;
@@ -2683,7 +2821,7 @@
 
         .digest-summary-content {
             padding: 28px 40px !important;
-            font: 17px/1.8 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+            font: var(--digest-font-size, 17px)/var(--digest-line-height, 1.8) system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
             color: #2d3748 !important;
             max-height: calc(90vh - 180px) !important;
             overflow-y: auto !important;
@@ -2740,6 +2878,239 @@
             transform: translateY(-2px) !important;
             box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4) !important;
         }
+
+        .digest-summary-header-controls {
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+        }
+
+        .digest-summary-settings {
+            position: relative !important;
+        }
+
+        .digest-summary-settings-btn {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: #fff !important;
+            font-size: 18px !important;
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 8px !important;
+            cursor: pointer !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: all 0.2s !important;
+            padding: 0 !important;
+            line-height: 1 !important;
+        }
+
+        .digest-summary-settings-btn:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+        }
+
+        .digest-summary-popover {
+            top: 40px !important;
+            right: 0 !important;
+            min-width: 180px !important;
+        }
+
+        .digest-settings-popover {
+            position: absolute !important;
+            top: 40px !important;
+            right: 0 !important;
+            background: #fff !important;
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 10px !important;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;
+            padding: 16px !important;
+            min-width: 200px !important;
+            z-index: 10 !important;
+            display: none !important;
+        }
+
+        .digest-settings-popover.open {
+            display: block !important;
+        }
+
+        .digest-settings-group {
+            margin-bottom: 14px !important;
+        }
+
+        .digest-settings-group:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        .digest-settings-label {
+            font: 600 11px/1.2 system-ui, sans-serif !important;
+            color: #667eea !important;
+            margin: 0 0 8px 0 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+        }
+
+        .digest-settings-options {
+            display: flex !important;
+            gap: 4px !important;
+        }
+
+        .digest-settings-option {
+            flex: 1 !important;
+            padding: 6px 8px !important;
+            border: 1px solid #ddd !important;
+            background: #fff !important;
+            color: #666 !important;
+            border-radius: 6px !important;
+            cursor: pointer !important;
+            font: 500 12px/1.2 system-ui, sans-serif !important;
+            text-align: center !important;
+            transition: all 0.15s !important;
+        }
+
+        .digest-settings-option:hover {
+            border-color: #667eea !important;
+            color: #667eea !important;
+        }
+
+        .digest-settings-option.active {
+            background: #667eea !important;
+            border-color: #667eea !important;
+            color: #fff !important;
+        }
+
+        .digest-shortcut-row {
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            margin-bottom: 6px !important;
+        }
+        .digest-shortcut-row:last-child {
+            margin-bottom: 0 !important;
+        }
+        .digest-shortcut-label {
+            font: 500 11px/1.2 system-ui, sans-serif !important;
+            color: #666 !important;
+            min-width: 40px !important;
+        }
+        .digest-shortcut-input {
+            flex: 1 !important;
+            padding: 4px 8px !important;
+            border: 1px solid #ddd !important;
+            border-radius: 4px !important;
+            font: 500 11px/1.2 system-ui, sans-serif !important;
+            text-align: center !important;
+            cursor: pointer !important;
+            background: #fff !important;
+            color: #333 !important;
+        }
+        .digest-shortcut-input:focus {
+            outline: none !important;
+            border-color: #667eea !important;
+            background: #f0f4ff !important;
+        }
+        .digest-shortcut-input.recording {
+            border-color: #f59e0b !important;
+            background: #fffbeb !important;
+            animation: digest-pulse 1s infinite !important;
+        }
+        @keyframes digest-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Dark mode for shortcuts */
+        .digest-dark .digest-shortcut-label {
+            color: #9ca3af !important;
+        }
+        .digest-dark .digest-shortcut-input {
+            background: #374151 !important;
+            border-color: #4b5563 !important;
+            color: #e5e7eb !important;
+        }
+        .digest-dark .digest-shortcut-input:focus {
+            border-color: #6366f1 !important;
+            background: #1e1b4b !important;
+        }
+
+        /* Dark mode styles */
+        .digest-overlay.digest-dark {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%) !important;
+            border-color: #4338ca !important;
+        }
+        .digest-dark .digest-slide-handle {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%) !important;
+            border-color: #4338ca !important;
+        }
+        .digest-dark .digest-content {
+            background: rgba(30, 27, 75, 0.95) !important;
+        }
+        .digest-dark .digest-btn {
+            background: #1e1b4b !important;
+            border-color: #6366f1 !important;
+            color: #a5b4fc !important;
+        }
+        .digest-dark .digest-btn:hover {
+            background: #6366f1 !important;
+            color: #fff !important;
+        }
+        .digest-dark .digest-btn.active {
+            background: #6366f1 !important;
+            color: #fff !important;
+        }
+        .digest-dark .digest-status {
+            color: #9ca3af !important;
+        }
+        .digest-dark .digest-badge-settings .inspect-btn {
+            border-top-color: #374151 !important;
+            color: #d1d5db !important;
+        }
+        .digest-dark .digest-badge-settings .inspect-btn:hover {
+            background: #374151 !important;
+        }
+        .digest-dark .digest-settings-popover {
+            background: #1f2937 !important;
+            border-color: #374151 !important;
+        }
+        .digest-dark .digest-settings-label {
+            color: #a5b4fc !important;
+        }
+        .digest-dark .digest-settings-option {
+            background: #374151 !important;
+            border-color: #4b5563 !important;
+            color: #d1d5db !important;
+        }
+        .digest-dark .digest-settings-option:hover {
+            border-color: #6366f1 !important;
+            color: #a5b4fc !important;
+        }
+        .digest-dark .digest-settings-option.active {
+            background: #6366f1 !important;
+            border-color: #6366f1 !important;
+            color: #fff !important;
+        }
+
+        /* Dark mode for summary overlay */
+        .digest-summary-overlay.digest-dark {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
+            border-color: #4338ca !important;
+        }
+        .digest-summary-overlay.digest-dark .digest-summary-header {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%) !important;
+        }
+        .digest-summary-overlay.digest-dark .digest-summary-content {
+            color: #e5e7eb !important;
+        }
+        .digest-summary-overlay.digest-dark .digest-summary-footer {
+            background: rgba(30, 27, 75, 0.3) !important;
+            border-top-color: rgba(99, 102, 241, 0.3) !important;
+        }
+        .digest-summary-overlay.digest-dark .digest-summary-footer-text {
+            color: #6b7280 !important;
+        }
+        .digest-summary-overlay.digest-dark .digest-summary-close-btn {
+            background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%) !important;
+        }
     `;
         document.head.appendChild(style);
     }
@@ -2747,14 +3118,28 @@
     /**
      * Create the main overlay
      */
-    function createOverlay(OVERLAY_COLLAPSED, OVERLAY_POS, storage, onDigest, onInspect) {
+    async function createOverlay(OVERLAY_COLLAPSED, OVERLAY_POS, storage, onDigest, onInspect) {
         if (overlay && overlay.isConnected) return overlay;
 
         ensureCSS();
 
+        // Load saved display settings
+        const savedFontSize = await storage.get(STORAGE_KEYS.SUMMARY_FONT_SIZE) || 'default';
+        const savedLineHeight = await storage.get(STORAGE_KEYS.SUMMARY_LINE_HEIGHT) || 'default';
+        const savedTheme = await storage.get(STORAGE_KEYS.THEME) || 'auto';
+
+        // Load shortcuts
+        const savedShortcutLarge = await storage.get(STORAGE_KEYS.SHORTCUT_LARGE);
+        const savedShortcutSmall = await storage.get(STORAGE_KEYS.SHORTCUT_SMALL);
+        shortcuts.large = savedShortcutLarge ? parseShortcut(savedShortcutLarge) : DEFAULT_SHORTCUTS.large;
+        shortcuts.small = savedShortcutSmall ? parseShortcut(savedShortcutSmall) : DEFAULT_SHORTCUTS.small;
+
         overlay = document.createElement('div');
         overlay.className = OVERLAY_COLLAPSED.value ? 'digest-overlay collapsed' : 'digest-overlay';
         overlay.setAttribute(UI_ATTR, '');
+
+        // Apply theme
+        applyTheme(overlay, savedTheme);
 
         // Set initial position
         const maxX = viewportWidth() - BADGE_WIDTH;
@@ -2778,11 +3163,53 @@
         </div>
         <div class="digest-content">
             <div class="digest-buttons">
-                <button class="digest-btn" data-size="large">Large</button>
-                <button class="digest-btn" data-size="small">Small</button>
+                <button class="digest-btn" data-size="large" title="${formatShortcut(shortcuts.large)}">Large</button>
+                <button class="digest-btn" data-size="small" title="${formatShortcut(shortcuts.small)}">Small</button>
             </div>
-            <button class="digest-btn inspect-btn">Inspect</button>
-            <div class="digest-status">Ready</div>
+            <div class="digest-footer">
+                <div class="digest-status">Ready</div>
+                <div class="digest-badge-settings">
+                    <button class="digest-btn digest-settings-btn" title="Display settings">&#9881;</button>
+                    <div class="digest-settings-popover">
+                        <div class="digest-settings-group">
+                            <div class="digest-settings-label">Font Size</div>
+                            <div class="digest-settings-options" data-setting="fontSize">
+                                <button class="digest-settings-option${savedFontSize === 'small' ? ' active' : ''}" data-value="small">S</button>
+                                <button class="digest-settings-option${savedFontSize === 'default' ? ' active' : ''}" data-value="default">M</button>
+                                <button class="digest-settings-option${savedFontSize === 'large' ? ' active' : ''}" data-value="large">L</button>
+                            </div>
+                        </div>
+                        <div class="digest-settings-group">
+                            <div class="digest-settings-label">Spacing</div>
+                            <div class="digest-settings-options" data-setting="lineHeight">
+                                <button class="digest-settings-option${savedLineHeight === 'compact' ? ' active' : ''}" data-value="compact">-</button>
+                                <button class="digest-settings-option${savedLineHeight === 'default' ? ' active' : ''}" data-value="default">=</button>
+                                <button class="digest-settings-option${savedLineHeight === 'comfortable' ? ' active' : ''}" data-value="comfortable">+</button>
+                            </div>
+                        </div>
+                        <div class="digest-settings-group">
+                            <div class="digest-settings-label">Theme</div>
+                            <div class="digest-settings-options" data-setting="theme">
+                                <button class="digest-settings-option${savedTheme === 'light' ? ' active' : ''}" data-value="light">Light</button>
+                                <button class="digest-settings-option${savedTheme === 'dark' ? ' active' : ''}" data-value="dark">Dark</button>
+                                <button class="digest-settings-option${savedTheme === 'auto' ? ' active' : ''}" data-value="auto">Auto</button>
+                            </div>
+                        </div>
+                        <div class="digest-settings-group">
+                            <div class="digest-settings-label">Shortcuts</div>
+                            <div class="digest-shortcut-row">
+                                <span class="digest-shortcut-label">Large:</span>
+                                <input type="text" class="digest-shortcut-input" data-shortcut="large" value="${formatShortcut(shortcuts.large)}" readonly placeholder="Click to set">
+                            </div>
+                            <div class="digest-shortcut-row">
+                                <span class="digest-shortcut-label">Small:</span>
+                                <input type="text" class="digest-shortcut-input" data-shortcut="small" value="${formatShortcut(shortcuts.small)}" readonly placeholder="Click to set">
+                            </div>
+                        </div>
+                        <button class="digest-btn inspect-btn">Inspect Elements</button>
+                    </div>
+                </div>
+            </div>
         </div>
     `;
 
@@ -2793,8 +3220,14 @@
         const dragHandle = overlay.querySelector('.digest-handle');
         const digestBtns = overlay.querySelectorAll('.digest-btn[data-size]');
         const inspectBtn = overlay.querySelector('.inspect-btn');
+        const settingsPopover = overlay.querySelector('.digest-settings-popover');
+        const settingsBtn = overlay.querySelector('.digest-settings-btn');
 
-        slideHandle.addEventListener('click', (e) => toggleSlide(e, OVERLAY_COLLAPSED, OVERLAY_POS, storage));
+        slideHandle.addEventListener('click', (e) => {
+            // Close settings popover when collapsing badge
+            settingsPopover.classList.remove('open');
+            toggleSlide(e, OVERLAY_COLLAPSED, OVERLAY_POS, storage);
+        });
         dragHandle.addEventListener('mousedown', (e) => startDrag(e, OVERLAY_COLLAPSED, OVERLAY_POS, storage));
         dragHandle.addEventListener('touchstart', (e) => startDrag(e, OVERLAY_COLLAPSED, OVERLAY_POS, storage));
 
@@ -2806,6 +3239,149 @@
         });
 
         inspectBtn.addEventListener('click', onInspect);
+
+        // Badge settings popover
+
+        settingsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            settingsPopover.classList.toggle('open');
+        });
+
+        // Close popover when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.digest-badge-settings')) {
+                settingsPopover.classList.remove('open');
+            }
+        });
+
+        // Handle font size changes
+        const fontSizeOptions = overlay.querySelectorAll('[data-setting="fontSize"] .digest-settings-option');
+        fontSizeOptions.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const value = btn.dataset.value;
+                fontSizeOptions.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                storage.set(STORAGE_KEYS.SUMMARY_FONT_SIZE, value);
+                // Apply live to open summary
+                if (summaryOverlay && summaryOverlay.isConnected) {
+                    summaryOverlay.style.setProperty('--digest-font-size', `${SUMMARY_FONT_SIZES[value]}px`);
+                }
+            });
+        });
+
+        // Handle line height changes
+        const lineHeightOptions = overlay.querySelectorAll('[data-setting="lineHeight"] .digest-settings-option');
+        lineHeightOptions.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const value = btn.dataset.value;
+                lineHeightOptions.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                storage.set(STORAGE_KEYS.SUMMARY_LINE_HEIGHT, value);
+                // Apply live to open summary
+                if (summaryOverlay && summaryOverlay.isConnected) {
+                    summaryOverlay.style.setProperty('--digest-line-height', SUMMARY_LINE_HEIGHTS[value]);
+                }
+            });
+        });
+
+        // Handle theme changes
+        const themeOptions = overlay.querySelectorAll('[data-setting="theme"] .digest-settings-option');
+        themeOptions.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const value = btn.dataset.value;
+                themeOptions.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                storage.set(STORAGE_KEYS.THEME, value);
+                updateAllThemes(value);
+            });
+        });
+
+        // Listen for system theme changes (for auto mode)
+        if (window.matchMedia) {
+            mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
+            const handleSystemThemeChange = () => {
+                if (currentTheme === 'auto') {
+                    updateAllThemes('auto');
+                }
+            };
+            if (mediaQueryList.addEventListener) {
+                mediaQueryList.addEventListener('change', handleSystemThemeChange);
+            } else if (mediaQueryList.addListener) {
+                mediaQueryList.addListener(handleSystemThemeChange);
+            }
+        }
+
+        // Handle shortcut recording
+        const shortcutInputs = overlay.querySelectorAll('.digest-shortcut-input');
+        shortcutInputs.forEach(input => {
+            input.addEventListener('click', () => {
+                input.classList.add('recording');
+                input.value = 'Press keys...';
+
+                const recordHandler = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Ignore modifier-only keys
+                    if (['Control', 'Alt', 'Shift', 'Meta'].includes(e.key)) return;
+
+                    const shortcut = {
+                        key: e.key.toUpperCase(),
+                        ctrl: e.ctrlKey,
+                        alt: e.altKey,
+                        shift: e.shiftKey
+                    };
+
+                    const shortcutStr = formatShortcut(shortcut);
+                    const shortcutType = input.dataset.shortcut;
+
+                    input.value = shortcutStr;
+                    input.classList.remove('recording');
+                    shortcuts[shortcutType] = shortcut;
+
+                    // Save to storage
+                    const storageKey = shortcutType === 'large' ? STORAGE_KEYS.SHORTCUT_LARGE : STORAGE_KEYS.SHORTCUT_SMALL;
+                    storage.set(storageKey, shortcutStr);
+
+                    // Update button title
+                    const btn = overlay.querySelector(`[data-size="${shortcutType}"]`);
+                    if (btn) btn.title = shortcutStr;
+
+                    document.removeEventListener('keydown', recordHandler, true);
+                };
+
+                document.addEventListener('keydown', recordHandler, true);
+
+                // Cancel on blur
+                const blurHandler = () => {
+                    input.classList.remove('recording');
+                    input.value = formatShortcut(shortcuts[input.dataset.shortcut]);
+                    document.removeEventListener('keydown', recordHandler, true);
+                    input.removeEventListener('blur', blurHandler);
+                };
+                input.addEventListener('blur', blurHandler);
+            });
+        });
+
+        // Global keyboard shortcut listener
+        if (keyboardHandler) {
+            document.removeEventListener('keydown', keyboardHandler);
+        }
+        keyboardHandler = (e) => {
+            // Don't trigger if typing in an input/textarea
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
+                return;
+            }
+
+            if (matchesShortcut(e, shortcuts.large)) {
+                e.preventDefault();
+                onDigest('large');
+            } else if (matchesShortcut(e, shortcuts.small)) {
+                e.preventDefault();
+                onDigest('small');
+            }
+        };
+        document.addEventListener('keydown', keyboardHandler);
 
         return overlay;
     }
@@ -2942,7 +3518,7 @@
     /**
      * Show summary overlay
      */
-    function showSummaryOverlay(summaryText, mode, container, OVERLAY_COLLAPSED, onRestore) {
+    async function showSummaryOverlay(summaryText, mode, container, OVERLAY_COLLAPSED, onRestore, storage) {
         removeSummaryOverlay();
 
         // Auto-collapse actions overlay on mobile to prevent overlap
@@ -2952,9 +3528,20 @@
             collapseOverlay(OVERLAY_COLLAPSED);
         }
 
+        // Load saved display settings
+        const savedFontSize = await storage.get(STORAGE_KEYS.SUMMARY_FONT_SIZE) || 'default';
+        const savedLineHeight = await storage.get(STORAGE_KEYS.SUMMARY_LINE_HEIGHT) || 'default';
+
         summaryOverlay = document.createElement('div');
         summaryOverlay.className = 'digest-summary-overlay';
         summaryOverlay.setAttribute(UI_ATTR, '');
+
+        // Apply CSS custom properties
+        summaryOverlay.style.setProperty('--digest-font-size', `${SUMMARY_FONT_SIZES[savedFontSize]}px`);
+        summaryOverlay.style.setProperty('--digest-line-height', SUMMARY_LINE_HEIGHTS[savedLineHeight]);
+
+        // Apply theme
+        applyTheme(summaryOverlay, currentTheme);
 
         const sizeLabel = mode.includes('large') ? 'Large' : 'Small';
         const isSelectedText = !container;
@@ -2963,7 +3550,38 @@
         <div class="digest-summary-container">
             <div class="digest-summary-header">
                 <div class="digest-summary-badge">${escapeHtml(sizeLabel)} Summary${isSelectedText ? ' (Selected Text)' : ''}</div>
-                <button class="digest-summary-close" title="Close">✕</button>
+                <div class="digest-summary-header-controls">
+                    <div class="digest-summary-settings">
+                        <button class="digest-summary-settings-btn" title="Display settings">&#9881;</button>
+                        <div class="digest-settings-popover digest-summary-popover">
+                            <div class="digest-settings-group">
+                                <div class="digest-settings-label">Font Size</div>
+                                <div class="digest-settings-options" data-setting="fontSize">
+                                    <button class="digest-settings-option${savedFontSize === 'small' ? ' active' : ''}" data-value="small">S</button>
+                                    <button class="digest-settings-option${savedFontSize === 'default' ? ' active' : ''}" data-value="default">M</button>
+                                    <button class="digest-settings-option${savedFontSize === 'large' ? ' active' : ''}" data-value="large">L</button>
+                                </div>
+                            </div>
+                            <div class="digest-settings-group">
+                                <div class="digest-settings-label">Spacing</div>
+                                <div class="digest-settings-options" data-setting="lineHeight">
+                                    <button class="digest-settings-option${savedLineHeight === 'compact' ? ' active' : ''}" data-value="compact">-</button>
+                                    <button class="digest-settings-option${savedLineHeight === 'default' ? ' active' : ''}" data-value="default">=</button>
+                                    <button class="digest-settings-option${savedLineHeight === 'comfortable' ? ' active' : ''}" data-value="comfortable">+</button>
+                                </div>
+                            </div>
+                            <div class="digest-settings-group">
+                                <div class="digest-settings-label">Theme</div>
+                                <div class="digest-settings-options" data-setting="theme">
+                                    <button class="digest-settings-option${currentTheme === 'light' ? ' active' : ''}" data-value="light">Light</button>
+                                    <button class="digest-settings-option${currentTheme === 'dark' ? ' active' : ''}" data-value="dark">Dark</button>
+                                    <button class="digest-settings-option${currentTheme === 'auto' ? ' active' : ''}" data-value="auto">Auto</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="digest-summary-close" title="Close">&#10005;</button>
+                </div>
             </div>
             <div class="digest-summary-content">
                 <div class="digest-summary-content-inner">
@@ -2995,6 +3613,65 @@
             closeBtnFooter.addEventListener('click', closeHandler);
         }
 
+        // Summary settings popover
+        const settingsBtn = summaryOverlay.querySelector('.digest-summary-settings-btn');
+        const settingsPopover = summaryOverlay.querySelector('.digest-settings-popover');
+
+        settingsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            settingsPopover.classList.toggle('open');
+        });
+
+        // Close popover when clicking outside
+        summaryOverlay.querySelector('.digest-summary-container').addEventListener('click', (e) => {
+            if (!e.target.closest('.digest-summary-settings')) {
+                settingsPopover.classList.remove('open');
+            }
+        });
+
+        // Handle font size changes
+        const fontSizeOptions = summaryOverlay.querySelectorAll('[data-setting="fontSize"] .digest-settings-option');
+        fontSizeOptions.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const value = btn.dataset.value;
+                fontSizeOptions.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                storage.set(STORAGE_KEYS.SUMMARY_FONT_SIZE, value);
+                summaryOverlay.style.setProperty('--digest-font-size', `${SUMMARY_FONT_SIZES[value]}px`);
+                // Sync badge settings if visible
+                syncBadgeSetting('fontSize', value);
+            });
+        });
+
+        // Handle line height changes
+        const lineHeightOptions = summaryOverlay.querySelectorAll('[data-setting="lineHeight"] .digest-settings-option');
+        lineHeightOptions.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const value = btn.dataset.value;
+                lineHeightOptions.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                storage.set(STORAGE_KEYS.SUMMARY_LINE_HEIGHT, value);
+                summaryOverlay.style.setProperty('--digest-line-height', SUMMARY_LINE_HEIGHTS[value]);
+                // Sync badge settings if visible
+                syncBadgeSetting('lineHeight', value);
+            });
+        });
+
+        // Handle theme changes
+        const themeOptions = summaryOverlay.querySelectorAll('[data-setting="theme"] .digest-settings-option');
+        themeOptions.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const value = btn.dataset.value;
+                themeOptions.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                storage.set(STORAGE_KEYS.THEME, value);
+                updateAllThemes(value);
+                // Sync badge settings if visible
+                syncBadgeSetting('theme', value);
+            });
+        });
+
+        // Close overlay when clicking backdrop
         summaryOverlay.addEventListener('click', (e) => {
             if (e.target === summaryOverlay) {
                 if (isSelectedText) {
@@ -3007,6 +3684,11 @@
 
         const escHandler = (e) => {
             if (e.key === 'Escape') {
+                // Close popover first if open
+                if (settingsPopover.classList.contains('open')) {
+                    settingsPopover.classList.remove('open');
+                    return;
+                }
                 if (isSelectedText) {
                     removeSummaryOverlay();
                 } else {
@@ -3286,7 +3968,7 @@
                 );
 
                 updateOverlayStatus('digested', mode);
-                showSummaryOverlay(result, mode, container, OVERLAY_COLLAPSED, restoreOriginal);
+                showSummaryOverlay(result, mode, container, OVERLAY_COLLAPSED, restoreOriginal, storage);
 
             } catch (err) {
                 console.error('Digest error:', err);

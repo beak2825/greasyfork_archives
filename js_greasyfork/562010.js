@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EarnPepe Faucet Rotator PRO
 // @namespace    https://earnpepe.online/
-// @version      1.4
+// @version      1.5
 // @description  Fully automated faucet rotator for EarnPepe
 // @author       Rubystance
 // @license      MIT

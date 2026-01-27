@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         Coursera Right-Side Transcript
 // @namespace    elddc
-// @version      1.1
-// @description  Place the transcript on the right side of the screen.
+// @version      1.2
+// @description  Place the transcript on the right side of the screen and auto-scroll to active section.
 // @author       Elddc
 // @match        https://www.coursera.org/learn/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=coursera.org
 // @grant        none
-// @license MIT
+// @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/506351/Coursera%20Right-Side%20Transcript.user.js
 // @updateURL https://update.greasyfork.org/scripts/506351/Coursera%20Right-Side%20Transcript.meta.js
 // ==/UserScript==
@@ -24,20 +24,24 @@ setTimeout(autoScroll, 2000);
 /* reposition transcript */
 const styles = document.createElement('style');
 styles.innerHTML = `
-#video-player-row {
+/* put video container on the left */
+div[data-testid="outer-container"] {
   position: fixed;
-  left: 0;
-  width: 60vw;
+  left: 5vw;
+  width: 55vw;
   top: 20vh;
 }
-#video-player-row > div {
-  height: 100%;
+/* keep video from shrinking when scrolling */
+[data-testid="inner-container"] {
+  height: 100% !important;
 }
-#video-player-row + div + div {
+/* move title, transcript, etc to the left */
+div:has(>[data-testid="outer-container"]) {
   position: relative;
   left: 56vw;
   width: 36vw;
 }
+/* move non-transcript elements up */
 div[data-testid="tabs-root"] {
   position: relative;
   top: 0;
@@ -45,8 +49,8 @@ div[data-testid="tabs-root"] {
 }
 div[data-testid="silent-select-field"] {
   position: fixed;
-  top: calc(25vh + 400px);
-  left: 65px;
+  bottom: 5vh;
+  left: 5vw;
 }
 
 /* only needed for auto-scrolling */

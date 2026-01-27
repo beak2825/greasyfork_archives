@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Happymod by Ultra hack
-// @version      2
+// @version      2.1
 // @author       Ultra hack
 // @match        *://*moomoo.io/*
 // @match        *://*sandbox.moomoo.io/*
@@ -496,7 +496,7 @@ let easystar = new EasyStar.js();
             newFont.type = "text/css";
             document.body.append(newFont);
             let min = document.createElement("script");
-            min.src = "https://rawgit.com/kawanet/msgpack-lite/master/dist/msgpack.min.js";
+            min.src = "https://update.greasyfork.org/scripts/423602/msgpack.js";
             document.body.append(min);
         },
         main: () => {

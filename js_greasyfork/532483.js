@@ -3,72 +3,25 @@
 // @namespace   Violentmonkey Scripts
 // @match       https://www.fragrantica.com/*
 // @grant       none
-// @version     1.0
+// @version     1.1
 // @author      Azuravian
 // @license     MIT
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
-// @description 1/11/2025, 6:34:17 PM
+// @description Fixes minor pain points on Fragrantica.com
 // @downloadURL https://update.greasyfork.org/scripts/532483/fragranticacom%20fixes.user.js
 // @updateURL https://update.greasyfork.org/scripts/532483/fragranticacom%20fixes.meta.js
 // ==/UserScript==
 
 
 waitForKeyElements(
-  "#showDiagram",
+  "p[itemprop='aggregateRating']",
   start);
 
 function start() {
-  const infonotes = document.getElementsByClassName('info-note');
-  const topdiv = document.getElementById('toptop')
-  for (const p of infonotes) {
-    if (p.innerText.includes('Perfume rating')) {
-      topdiv.appendChild(p);
-    }
-  }
-
-  pyramidevent();
-}
-
-function pyramidevent() {
-  document.getElementById('showDiagram').addEventListener('change', function () {
-    if (this.checked) {
-      // Call your function when checkbox is checked
-      setTimeout(pyramid, 500);
-    }
-  });
-}
-
-function pyramid() {
-  const imageDict = {};
-
-  document.querySelectorAll('div').forEach(grandparent => {
-      const children = Array.from(grandparent.children);
-
-      if (children.length === 2) {
-          const [imgParent, textDiv] = children;
-          const img = imgParent.querySelector('img');
-
-          if (img) {
-              const src = img.getAttribute('src');
-              const filename = src.split('/').pop();
-              const text = textDiv.textContent.trim();
-              imageDict[filename] = text;
-          }
-      }
-  });
-
-  var notesbox = document.getElementsByClassName('notes-box')[0].querySelector('div');
-
-  if (notesbox) {
-    var nbImgs = notesbox.querySelectorAll('div > div > div > img');
-    nbImgs.forEach(nbimg => {
-      var nbfn = nbimg.getAttribute('src').split('/').pop();
-      var nbtext = document.createElement('div');
-      nbtext.style.fontSize = '12px';
-      nbtext.innerText = imageDict[nbfn];
-      nbimg.parentElement.appendChild(nbtext);
-    });
-  }
+  const rating = document.querySelector("p[itemprop='aggregateRating']").parentElement;
+  const topdiv = document.getElementById("toptop");
+  rating.classList.replace("justify-center", "justify-left");
+  topdiv.appendChild(rating);
 }
 
 /*--- waitForKeyElements():  A utility function, for Greasemonkey scripts,

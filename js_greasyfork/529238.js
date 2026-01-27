@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn War Stuff Enhanced
 // @namespace    namespace
-// @version      1.10
+// @version      1.11
 // @description  Show travel status and hospital time and sort by hospital time on war page. Fork of https://greasyfork.org/en/scripts/448681-torn-war-stuff
 // @author       xentac
 // @license      MIT
@@ -390,18 +390,43 @@
     if (!status.members) {
       return false;
     }
+    const req_time = Date.now();
     for (const [k, v] of Object.entries(status.members)) {
-      let d_cache = description_cache.get(v.status.description);
+      const status = v.status;
+      status.last_req_time = req_time;
+      let d_cache = description_cache.get(status.description);
       if (!d_cache) {
-        d_cache = v.status.description
+        d_cache = status.description
           .replace("South Africa", "SA")
           .replace("Cayman Islands", "CI")
           .replace("United Kingdom", "UK")
           .replace("Argentina", "Arg")
           .replace("Switzerland", "Switz");
       }
-      v.status.description = d_cache;
-      member_status.set(k, v.status);
+      status.description = d_cache;
+
+      const prev = member_status.get(k);
+      const prev_state = prev?.state ?? "Unknown";
+      const prev_since = prev?.since ?? req_time;
+      const prev_traveling_error_bar = prev?.traveling_error_bar ?? 0;
+      const prev_last_req_time = prev?.last_req_time;
+
+      if (prev_state == status.state) {
+        // If our previous state is the same as our current state, pass since and traveling_error_bars forward
+        status.since = prev_since;
+        status.traveling_error_bar = prev_traveling_error_bar;
+      } else {
+        // Otherwise set them new
+        status.since = Date.now();
+        if (prev_state != "Traveling") {
+          // If they weren't traveling before but are now
+          // Set the error bar based on the last request (so we can maybe predict flight times)
+          // TODO: This needs to be cached in local storage (and cleaned up) so that it persists over refreshes
+          v.traveling_error_bar = Date.now() - (prev_last_req_time ?? 0);
+        }
+      }
+
+      member_status.set(k, status);
     }
   }
 
@@ -426,6 +451,28 @@
         div: li.querySelector("DIV.status"),
       });
     });
+  }
+
+  function queue_until(deferredWrites, node, until, dirty) {
+    if (node.getAttribute("data-until") != until) {
+      deferredWrites.push([node, "data-until", until]);
+      return true;
+    }
+    return dirty;
+  }
+  function queue_since(deferredWrites, node, since, dirty) {
+    if (node.getAttribute("data-since") != since) {
+      deferredWrites.push([node, "data-since", since]);
+      return true;
+    }
+    return dirty;
+  }
+  function queue_sort(deferredWrites, node, level, dirty) {
+    if (node.getAttribute("data-sortA") != level) {
+      deferredWrites.push([node, "data-sortA", level]);
+      return true;
+    }
+    return dirty;
   }
 
   const TIME_BETWEEN_FRAMES = 500;
@@ -453,10 +500,8 @@
         return;
       }
 
-      if (li.getAttribute("data-until") != status.until) {
-        deferredWrites.push([li, "data-until", status.until]);
-        dirtySort = true;
-      }
+      dirtySort = queue_until(deferredWrites, li, status.until, dirtySort);
+      dirtySort = queue_since(deferredWrites, li, status.since, dirtySort);
       let data_location = "";
       switch (status.state) {
         case "Abroad":
@@ -469,10 +514,7 @@
             )
           ) {
             if (status_DIV.textContent == "Okay") {
-              if (li.getAttribute("data-sortA") != "0") {
-                deferredWrites.push([li, "data-sortA", "0"]);
-                dirtySort = true;
-              }
+              dirtySort = queue_sort(deferredWrites, li, 0, dirtySort);
               deferredWrites.push([status_DIV, STATUS_DIFFERS, "true"]);
             }
             status_DIV.style.setProperty(
@@ -481,37 +523,30 @@
             );
             break;
           }
+          deferredWrites.push([
+            status_DIV,
+            "data-traveling-error-bar",
+            status.traveling_error_bar,
+          ]);
           deferredWrites.push([status_DIV, STATUS_DIFFERS, "false"]);
           if (status.description.includes("Traveling to ")) {
-            if (li.getAttribute("data-sortA") != "5") {
-              deferredWrites.push([li, "data-sortA", "5"]);
-              dirtySort = true;
-            }
+            dirtySort = queue_sort(deferredWrites, li, 5, dirtySort);
             const content = "► " + status.description.split("Traveling to ")[1];
             data_location = content;
             status_DIV.style.setProperty("--twse-content", `"${content}"`);
           } else if (status.description.includes("In ")) {
-            if (li.getAttribute("data-sortA") != "4") {
-              deferredWrites.push([li, "data-sortA", "4"]);
-              dirtySort = true;
-            }
+            dirtySort = queue_sort(deferredWrites, li, 4, dirtySort);
             const content = status.description.split("In ")[1];
             data_location = content;
             status_DIV.style.setProperty("--twse-content", `"${content}"`);
           } else if (status.description.includes("Returning")) {
-            if (li.getAttribute("data-sortA") != "3") {
-              deferredWrites.push([li, "data-sortA", "3"]);
-              dirtySort = true;
-            }
+            dirtySort = queue_sort(deferredWrites, li, 3, dirtySort);
             const content =
               "◄ " + status.description.split("Returning to Torn from ")[1];
             data_location = content;
             status_DIV.style.setProperty("--twse-content", `"${content}"`);
           } else if (status.description.includes("Traveling")) {
-            if (li.getAttribute("data-sortA") != "6") {
-              deferredWrites.push([li, "data-sortA", "6"]);
-              dirtySort = true;
-            }
+            dirtySort = queue_sort(deferredWrites, li, 6, dirtySort);
             const content = "Traveling";
             data_location = content;
             status_DIV.style.setProperty("--twse-content", `"${content}"`);
@@ -534,10 +569,7 @@
             // Our API knowledge will be that they still have hospital time
             // but they will be Okay.
             if (hosp_time_remaining >= 0) {
-              if (li.getAttribute("data-sortA") != "0") {
-                deferredWrites.push([li, "data-sortA", "0"]);
-                dirtySort = true;
-              }
+              dirtySort = queue_sort(deferredWrites, li, 0, dirtySort);
               deferredWrites.push([status_DIV, STATUS_DIFFERS, "true"]);
             }
             status_DIV.style.setProperty(
@@ -549,10 +581,7 @@
             break;
           }
           deferredWrites.push([status_DIV, STATUS_DIFFERS, "false"]);
-          if (li.getAttribute("data-sortA") != "2") {
-            deferredWrites.push([li, "data-sortA", "2"]);
-            dirtySort = true;
-          }
+          dirtySort = queue_sort(deferredWrites, li, 2, dirtySort);
           if (status.description.includes("In a")) {
             deferredWrites.push([status_DIV, TRAVELING, "true"]);
           } else {
@@ -582,10 +611,7 @@
             "--twse-content",
             `"${status_DIV.textContent}"`,
           );
-          if (li.getAttribute("data-sortA") != "1") {
-            deferredWrites.push([li, "data-sortA", "1"]);
-            dirtySort = true;
-          }
+          dirtySort = queue_sort(deferredWrites, li, 1, dirtySort);
           deferredWrites.push([status_DIV, TRAVELING, "false"]);
           deferredWrites.push([status_DIV, HIGHLIGHT, "false"]);
           deferredWrites.push([status_DIV, STATUS_DIFFERS, "false"]);
@@ -635,9 +661,18 @@
               return 1;
             }
           }
-          return (
-            left.getAttribute("data-until") - right.getAttribute("data-until")
-          );
+          const sort = left.getAttribute("data-sortA");
+          // Differs and Okay status sorts since oldest first
+          if (sort === "0" || sort === "1") {
+            return (
+              right.getAttribute("data-since") - left.getAttribute("data-since")
+            );
+            // Hospital timers sort until soonest first
+          } else {
+            return (
+              left.getAttribute("data-until") - right.getAttribute("data-until")
+            );
+          }
         });
         let sorted = true;
         for (let j = 0; j < sorted_lis.length; j++) {

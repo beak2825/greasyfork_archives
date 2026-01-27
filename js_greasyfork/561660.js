@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Vouch Checkout
 // @namespace    Violentmonkey Scripts
-// @version      0.2
+// @version      0.3
 // @match        https://app.vouchconcierge.com/hotelboss/*
 // @description  for vouch checkout room
 // @author       Eric
@@ -88,7 +88,7 @@
             if (key == "c") {
                 (async () => {
                     let parts = await getClip();
-                    parts = parts.split(";");
+                    parts = parts.split(",");
                     for (let i = 0; i < parts.length; i += 2) {
                         const roomNum = parts[i];
                         const lastName = parts[i + 1];

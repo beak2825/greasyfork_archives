@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NSFC_conclusion_downloader_Enhanced
 // @namespace    https://blog.xianx.info/
-// @version      1.9
+// @version      1.10
 // @description  帮助你直接下载国自然结题报告 (增强版: 代理加速、智能终止)
 // @author       xianx (Modified by Antigravity)
 // @license      MIT
@@ -13,6 +13,19 @@
 // @downloadURL https://update.greasyfork.org/scripts/563434/NSFC_conclusion_downloader_Enhanced.user.js
 // @updateURL https://update.greasyfork.org/scripts/563434/NSFC_conclusion_downloader_Enhanced.meta.js
 // ==/UserScript==
+
+/*
+ * 🙏 感谢 / Acknowledgements:
+ * 1. https://github.com/ejfkdev/NsfcReportExport (提供了图片代理加速思路)
+ * 2. https://greasyfork.org/zh-CN/scripts/421052-nsfc-conclusion-downloader (最原始脚本)
+ * 3. https://greasyfork.org/zh-CN/scripts/537382-nsfc-conclusion-downloader-enhanced (基础版本，本项目在此基础上修改)
+ *
+ * 📅 更新日志 / Changelog:
+ * v1.10 (2026-01-26)
+ * - [Fix] 修复文档结束检测逻辑：优先判定直连 404，解决了代理报错掩盖真实文件结束（导致死循环或只有 Missing 页）的问题。
+ * - [Fix] 优化结尾清理逻辑：检测到文档结束时，自动回滚并删除末尾所有因下载失败或 404 产生的空白页 ("Page Missing")，确保 PDF 结尾干净。
+ * - [Opt] 改进了错误处理策略，更准确地识别“文件不存在”与“网络拥堵”。
+ */
 
 /* globals $, jspdf */
 
@@ -77,6 +90,7 @@
                 return await response.blob();
             } catch (e) {
                 clearTimeout(timeoutId);
+                e.url = url; // Attach URL to error for downstream check
                 throw e;
             }
         };
@@ -88,11 +102,14 @@
             // strict check: if every single attempt returned 404, the file is gone.
             const all404 = allErrors.length > 0 && allErrors.every(e => e.status === 404);
 
-            if (all404) {
+            // Critical: If the direct link explicitly says 404, it is definitely 404.
+            const direct404 = allErrors.find(e => (e.url === originalUrl || e.url === absoluteUrl) && e.status === 404);
+
+            if (all404 || direct404) {
                 throw new Error('Definitely_404');
             } else {
                 // warning log
-                console.warn(`[NSFC] Proxy Fail:`, allErrors.map(e => e.status || e.message));
+                console.warn(`[NSFC] Proxy Fail:`, allErrors.map(e => `${e.status || 'ERR'}(${e.url})`));
                 throw new Error('Proxy_Download_Failed');
             }
         }
@@ -202,8 +219,8 @@
             doc.setDocumentProperties({ title: `${projectID} ${projectName}`, creator: 'NSFC_Enhanced' });
 
             let pageIndex = startPage;
-            let consecutiveErrors = 0;
-            let consecutive404s = 0;
+            let consecutiveAnyErrors = 0; // Tracks ANY error (missing or failures)
+            let consecutive404s = 0;      // Tracks verified 404s
 
             while (true) {
                 statusText.text(`Downloading P${pageIndex} - P${pageIndex + batchSize - 1}...`);
@@ -224,7 +241,7 @@
                         localStorage.setItem(STORAGE_KEY_PAGE, res.index);
 
                         // Reset counters on success
-                        consecutiveErrors = 0;
+                        consecutiveAnyErrors = 0;
                         consecutive404s = 0;
 
                         if (res.isEnd) {
@@ -233,7 +250,17 @@
                             break;
                         }
                     } else {
+                        consecutiveAnyErrors++;
+
                         if (res.isEnd) {
+                            // Hit explicit end. Remove any trailing failed pages.
+                            if (consecutiveAnyErrors > 1) { // >1 because current one is not added yet
+                                const pagesToRemove = consecutiveAnyErrors - 1;
+                                console.log(`[NSFC] Hit End. Cleaning up last ${pagesToRemove} pages.`);
+                                for (let k = 0; k < pagesToRemove; k++) {
+                                    if (doc.getNumberOfPages() > 0) doc.deletePage(doc.getNumberOfPages());
+                                }
+                            }
                             stopEverything = true;
                             break;
                         }
@@ -244,21 +271,33 @@
                             console.log(`[NSFC] P${res.index} is 404. Count=${consecutive404s}`);
                             if (consecutive404s >= 3) {
                                 console.log('[NSFC] 3 consecutive 404s -> Stop.');
+
+                                // Remove ALL consecutive errors (failures + 404s) from the end
+                                // We added (consecutiveAnyErrors - 1) pages so far.
+                                const pagesToRemove = consecutiveAnyErrors - 1;
+                                if (pagesToRemove > 0) {
+                                    console.log(`[NSFC] Removing last ${pagesToRemove} empty pages.`);
+                                    for (let k = 0; k < pagesToRemove; k++) {
+                                        if (doc.getNumberOfPages() > 0) doc.deletePage(doc.getNumberOfPages());
+                                    }
+                                }
                                 stopEverything = true;
                                 break;
                             }
                         } else {
-                            // Non-404 error (e.g. timeout despite retries)
-                            consecutive404s = 0; // Reset if we hit a weird error to be safe?
-                            // Actually, if we have timeouts, we shouldn't assume end of doc.
-                            consecutiveErrors++;
+                            // Non-404 error. Reset 404 counter safely?
+                            // Actually, if we have 404, Error, 404, Error... it's confusing.
+                            // But usually, if it's end of doc, it should be 404, 404, 404.
+                            // With the fix in step 1, we expect consistent 404s now.
+                            consecutive404s = 0;
                         }
 
                         doc.addPage('a4', 'p');
                         doc.text(`Page ${res.index} Missing`, 20, 30);
 
-                        if (consecutiveErrors >= 10) {
-                            alert('Too many errors. Stopping.');
+                        if (consecutiveAnyErrors >= 20) {
+                            // Safety brake
+                            alert('Too many consecutive errors. Stopping.');
                             stopEverything = true;
                             break;
                         }

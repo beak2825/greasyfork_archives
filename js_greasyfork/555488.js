@@ -23,6 +23,7 @@
 // @name:fr      YouTube - Bloquer Aperçu Lecture Automatique des Miniatures et Bande-annonce de Chaîne
 // @name:fr-CA   YouTube - Bloquer Aperçu Lecture Automatique des Miniatures et Bande-annonce de Chaîne
 // @name:gl      YouTube - Bloquear Vista Previa de Reprodución Automática de Miniaturas e Tráiler do Canal
+// @name:gu      YouTube - ઓટોપ્લે પ્રિવ્યૂ થમ્બનેલ અને ચેનલ ટ્રેલર બ્લોક કરો
 // @name:he      YouTube - חסימת תצוגה מקדימה אוטומטית של תמונות ממוזערות וטריילר ערוץ
 // @name:hi      YouTube - ऑटोप्ले थंबनेल पूर्वावलोकन और चैनल ट्रेलर ब्लॉक करें
 // @name:hr      YouTube - Blokiraj Automatski Pregled Miniatura i Trailer Kanala
@@ -90,6 +91,7 @@
 // @description:fr      Bloque les aperçus au survol des miniatures YouTube (WebP et vidéo) et arrête les bandes-annonces de chaîne (vidéo + son). Conserve les barres de progression, boutons de lecture et images statiques. Sans connexion ni permission, s’exécute au chargement de la page.
 // @description:fr-CA   Bloque les aperçus au survol des miniatures YouTube (WebP et vidéo) et arrête les bandes-annonces de chaîne (vidéo + son). Conserve les barres de progression, boutons de lecture et images statiques. Sans connexion ni permission, s’exécute au chargement de la page.
 // @description:gl      Bloquea as vistas previas de miniaturas de YouTube ao pasar o rato (WebP e vídeo) e detén os tráilers do canal (vídeo + son). Mantén as barras de progreso, botóns de reprodución e imaxes estáticas. Sen inicio de sesión nin permisos, execútase ao cargar a páxina.
+// @description:gu      YouTube થમ્બનેલ હોવર પ્રિવ્યૂ (WebP અને વીડિયો) અને ચેનલ ટ્રેલર (વીડિયો + ઑડિયો) ને બ્લોક કરે છે. પ્રોગ્રેસ બાર, પ્લે બટન અને સ્ટેટિક ઇમેજીસને જાળવી રાખે છે. તમામ પેજ પર કામ કરે છે, લોગિન અથવા પરવાનગીની જરૂર નથી, પેજ લોડ થતાં જ ચાલે છે.
 // @description:he      חוסם תצוגות מקדימות של תמונות ממוזערות YouTube (WebP ווידאו) ועוצר טריילרים של ערוצים (וידאו + קול). שומר על סרגלי התקדמות, כפתורי ניגון ותמונות סטטיות. ללא כניסה או הרשאות, פועל בטעינת הדף.
 // @description:hi      YouTube थंबनेल होवर पूर्वावलोकन (WebP और वीडियो) और चैनल ट्रेलर (वीडियो + ऑडियो) को ब्लॉक करता है। प्रोग्रेस बार, प्ले बटन और स्थिर छवियां रखता है। सभी पेजों पर काम करता है, लॉगिन या अनुमति नहीं चाहिए, पेज लोड होते ही चलता है।
 // @description:hr      Blokira preglede pri lebdenju na sličicama YouTube (WebP i video) i zaustavlja trailere kanala (video + zvuk). Zadržava trake napretka, tipke za reprodukciju i statične slike. Bez prijave ili dozvole, pokreće se pri učitavanju stranice.
@@ -126,16 +128,16 @@
 // @description:th      บล็อกการแสดงตัวอย่างเล่นอัตโนมัติของ YouTube เมื่อเลื่อนเมาส์บนรูปย่อ (WebP และวิดีโอ) และหยุดตัวอย่างช่อง (วีดีโอ + เสียง) รักษาแถบความคืบหน้า ปุ่มเล่น และภาพนิ่ง ไม่ต้องล็อกอินหรืออนุญาต ทำงานเมื่อโหลดหน้าเว็บ
 // @description:tl      Hinaharang ang hover preview ng thumbnail sa YouTube (WebP at video) at pinipigilan ang channel trailer (video + audio). Pinapanatili ang progress bar, play button, at static na imahe. Gumagana sa lahat ng page, walang login o permission na kailangan, tumatakbo sa document-start.
 // @description:tr      Tüm YouTube sayfalarında küçük resim hover önizlemelerini (WebP ve video) ve kanal fragmanlarını (video + ses) engeller. İlerleme çubuklarını, oynat düğmelerini ve statik resimleri korur. Giriş veya izin gerekmez, sayfa yüklenirken çalışır.
-// @description:ug      بارلىق YouTube بەتلىرىدە كىچىك رەسىم hover ئالدىن كۆرۈشلىرىنى (WebP & ۋىدىيو) ۋە قانال تىزىرلىقلىرىنى (ۋىدىيو + ئاۋاز) چەكلەيدۇ. ئىلگىرىلەش تارىمىقى، ئويناش كۇنۇپكىلىرى ۋە سىتاتىك رەسىملەرنى ساقلايدۇ. كىرىش ياكى ئىجازەت تەلەپ قىلمايدۇ، بەت يۈكلەنگەندە ئىجرا بولىدۇ.
+// @description:ug      بارلىق YouTube بەتلىرىدە كىچىك رەسىم hover ئالدىن كۆرۈشلىرىنى (WebP & ۋىدىيو) ۋە قانال تىزىرلىقلىرىنى (ۋىدىيو + ئاۋاز) چەكلەيدۇ. ئىلگىرىلەش تارىمىقى، ئويناش كۇنۇپكىلىرى ۋە سىتاتىك رەسىملەرنى ساقلايدۇ. كىرىش ياكى ئىجازەت تەلەپ قىلمايدۇ، بەت يۈكلەنگەندە ئىجرا بولىدۇ。
 // @description:uk      Блокує попередній перегляд при наведенні на мініатюри YouTube (WebP та відео) та зупиняє трейлери каналів (відео + звук). Зберігає смуги прогресу, кнопки відтворення та статичні зображення. Без входу чи дозволів, запускається при завантаженні сторінки.
-// @description:ur      تھمب نیل ہوور پیش نظارہ YouTube (WebP اور ویڈیو) کو بلاک کرتا ہے اور چینل ٹریلر (ویڈیو + آڈیو) کو روکتا ہے۔ پروگریس بار، پلے بٹن اور سٹیٹک تصاویر کو برقرار رکھتا ہے۔ تمام صفحات پر کام کرتا ہے، لاگ ان یا اجازت کی ضرورت نہیں، صفحہ لوڈ ہوتے ہی چلتا ہے۔
+// @description:ur      تھمب نیل ہوور پیش نظارہ YouTube (WebP اور ویڈیو) کو بلاک کرتا ہے اور چینل ٹریلر (ویڈیو + آڈیو) کو روکتا ہے۔ پروگریس بار، پلے بٹن اور سٹیٹک تصاویر کو برقرار رکھتا ہے۔ تمام صفحات پر کام کرتا ہے، لاگ ان یا اجازت کی ضرورت نہیں، صفحہ لوڈ ہوتے ہی چلتا ہے。
 // @description:vi      Chặn xem trước tự động thumbnail YouTube khi di chuột qua (WebP & video) và dừng trailer kênh (video + âm thanh). Giữ nguyên thanh tiến độ, nút play và ảnh tĩnh. Hoạt động trên mọi trang, không cần đăng nhập hay quyền, chạy ngay khi tải trang.
 // @description:zh-CN   在所有YouTube页面上阻止缩略图悬停预览（WebP和视频）并停止频道预告片（视频+音频）。保留进度条、播放按钮和静态图像。无需登录或权限，页面加载时运行。
 // @description:zh-HK   在所有 YouTube 頁面上阻止縮圖懸停預覽（WebP 同視頻）並停止頻道預告片（視頻＋音頻）。保留進度條、播放按鈕同靜態圖像。無需登錄或權限，頁面載入時即執行。
 // @description:zh-TW   在所有 YouTube 頁面上阻止縮圖懸停預覽（WebP 與視頻）並停止頻道預告片（視頻＋音頻）。保留進度條、播放按鈕和靜態圖像。無需登錄或權限，頁面載入時即執行。
 // @namespace    https://openuserjs.org/users/miebie.1412
 // @author       miebie.1412
-// @version      1.7.7
+// @version      1.7.8
 // @match        https://*.youtube.com/*
 // @grant        none
 // @run-at       document-start

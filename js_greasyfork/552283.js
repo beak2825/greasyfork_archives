@@ -9,7 +9,7 @@
 // @run-at      document-start
 // @license     MIT
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @version     1.9.0
+// @version     1.9.2
 // @grant       GM_info
 // @grant       GM_addStyle
 // @grant       GM_setValue
@@ -560,6 +560,13 @@
             return this.el.querySelector(SELECTORS.BADGES.MEMBERS) ||
                 /會員專屬|Members only/.test(this.el.innerText);
         }
+        get isUserPlaylist() {
+            const link = this.el.querySelector('a[href*="list="]');
+            if (link && /list=(LL|WL|FL)/.test(link.href)) return true;
+            const texts = Array.from(this.el.querySelectorAll(SELECTORS.METADATA.TEXT));
+            const ownershipKeywords = /Private|Unlisted|Public|私人|不公開|不公开|公開|公开/i;
+            return texts.some(t => ownershipKeywords.test(t.textContent));
+        }
         get isPlaylist() {
             const link = this.el.querySelector('a[href*="list="], [content-id^="PL"]');
             if (link) return true;
@@ -573,6 +580,11 @@
         constructor(config) {
             this.config = config;
             this.customRules = new CustomRuleManager(config);
+        }
+        get isPageAllowingContent() {
+            const path = window.location.pathname;
+            return /^\/feed\/(playlists|library|subscriptions)/.test(path) ||
+                   /\/playlists$/.test(path);
         }
         processMutations(mutations) {
             if (mutations.length > MUTATION_THRESHOLD) {
@@ -618,6 +630,10 @@
             const textRule = this.customRules.check(element, element.textContent);
             if (textRule) return this._hide(element, textRule);
             if (this._checkSectionFilter(element)) return;
+            if (this.isPageAllowingContent) {
+                element.dataset.ypChecked = 'true';
+                return;
+            }
             const isVideoElement = /VIDEO|LOCKUP|RICH-ITEM/.test(element.tagName);
             if (isVideoElement) {
                 const item = new LazyVideoData(element);
@@ -712,6 +728,7 @@
         }
         _checkPlaylistFilter(item, element) {
             if (!this.config.get('RULE_ENABLES').recommended_playlists || !item.isPlaylist) return false;
+            if (item.isUserPlaylist) return false;
             this._hide(element, 'recommended_playlists');
             return true;
         }
@@ -1204,10 +1221,14 @@
         manage(k) {
             const l = this.config.get(k);
             const c = prompt(`[${l.join(', ')}]\n1.${this.t('adv_add')} 2.${this.t('adv_remove')} 3.${this.t('adv_clear')} 0.${this.t('back')}`);
-            if (c === '1') { const v = prompt(`${this.t('adv_add')}:`); if (v) this.config.set(k, [...l, ...v.split(',')]); }
-            if (c === '2') { const v = prompt(`${this.t('adv_remove')}:`); if (v) this.config.set(k, l.filter(i => i !== v)); }
-            if (c === '3') this.config.set(k, []);
-            this.onRefresh(); this.showAdvancedMenu();
+            if (!c) return;
+            const choice = c.trim();
+            if (choice === '0') { this.showAdvancedMenu(); return; }
+            if (choice === '1') { const v = prompt(`${this.t('adv_add')}:`); if (v) this.config.set(k, [...l, ...v.split(',')]); }
+            if (choice === '2') { const v = prompt(`${this.t('adv_remove')}:`); if (v) this.config.set(k, l.filter(i => i !== v)); }
+            if (choice === '3') this.config.set(k, []);
+            this.onRefresh();
+            this.manage(k);
         }
         toggle(k, adv) { this.config.set(k, !this.config.get(k)); this.onRefresh(); adv ? this.showAdvancedMenu() : this.showMainMenu(); }
         update(k, v) { if (k) this.config.set(k, v); this.onRefresh(); this.showMainMenu(); }

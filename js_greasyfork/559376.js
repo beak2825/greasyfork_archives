@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Claude/Grok/LMArena | Conversation/Chat Markdown Export/Download
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      9.9
+// @version      10.0
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Export AI chat conversations to Markdown. Supports Claude.ai, Grok.com, and LMArena.ai
@@ -1674,17 +1674,17 @@
             data.messages.forEach(msg => {
                 const parentKey = msg.parentMessageIds?.[0] || 'root';
                 const siblings = messagesByParent.get(parentKey) || [];
-                
+
                 // Check if this is the first message in a group of siblings
                 const isFirstInGroup = siblings[0]?.id === msg.id;
-                
+
                 if (isFirstInGroup) {
                     currentTurn++;
                 }
 
                 // Detect battle mode: multiple assistant messages with same parent
-                const isBattle = siblings.length > 1 && 
-                                msg.role === 'assistant' && 
+                const isBattle = siblings.length > 1 &&
+                                msg.role === 'assistant' &&
                                 siblings.filter(s => s.role === 'assistant').length > 1;
 
                 const position = msg.participantPosition || '';
@@ -1719,7 +1719,7 @@
             const modelNamesFromDOM = cfg.INCLUDE_MODEL_INFO
                 ? this.getModelNamesFromDOM()
                 : [];
-            
+
             // Only reverse for direct mode (chronological order needed)
             if (!isBattleMode && modelNamesFromDOM.length > 0) {
                 modelNamesFromDOM.reverse();
@@ -2070,8 +2070,29 @@
             padding: 12px 16px;
             border-top: 1px solid #374151;
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
             background: #1f2937;
+        }
+        .settings-panel .kofi-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #22c55e;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.15s, transform 0.1s;
+        }
+        .settings-panel .kofi-button:hover {
+            background: #16a34a;
+            transform: translateY(-1px);
         }
         .settings-panel .reset-button {
             background: transparent;
@@ -2249,9 +2270,20 @@
 
             this.panel.appendChild(content);
 
-            // Footer with reset button (fixed at bottom)
+            // Footer with Ko-Fi button and reset button (fixed at bottom)
             const footer = document.createElement('div');
             footer.className = 'footer';
+
+            const kofiLink = document.createElement('a');
+            kofiLink.className = 'kofi-button';
+            kofiLink.href = 'https://ko-fi.com/piknockyou';
+            kofiLink.target = '_blank';
+            kofiLink.rel = 'noopener noreferrer';
+            kofiLink.title = 'Support this script on Ko-Fi';
+            kofiLink.textContent = '☕ Support';
+            kofiLink.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
 
             const resetButton = document.createElement('button');
             resetButton.className = 'reset-button';
@@ -2263,6 +2295,7 @@
                 this.refreshCheckboxes(providerName);
             });
 
+            footer.appendChild(kofiLink);
             footer.appendChild(resetButton);
             this.panel.appendChild(footer);
 

@@ -3,7 +3,7 @@
 // @name:zh-CN   页面滚动助手
 // @name:zh-TW   頁面滾動助手
 // @namespace    http://tampermonkey.net/
-// @version      1.1.01
+// @version      1.1.02
 // @description  A set of floating buttons on the screen that quickly scroll to the top and bottom of the page, and scroll up/down one page.
 // @description:zh-CN  在屏幕上显示一组浮动按钮，帮助用户快速滚动到页面顶部或底部，并支持向上/向下滚动一页的功能。
 // @description:zh-TW  在螢幕上顯示一組浮動按鈕，幫助用戶快速滾動到頁面頂部或底部，並支援向上/向下滾動一頁的功能。
@@ -15,11 +15,19 @@
 // @exclude      https://www.bilibili.com/
 // @exclude      https://*.microsoft/*
 // @exclude      https://gemini.google.com/*
-// @exclude      https://chatgpt.com/
-// @exclude      https://claude.ai/*
+// @exclude      https://chatgpt.com/*
+// @exclude      https://drive.google.com/*
 // @exclude      https://www.perplexity.ai/*
+// @exclude      https://github.com/copilot*
+// @exclude      https://claude.ai/*
 // @exclude      https://chat.deepseek.com/*
-// @exclude      https://www.twitch.tv/
+// @exclude      https://kimi.moonshot.cn/*
+// @exclude      https://www.doubao.com/*
+// @exclude      https://www.twitch.tv/*
+// @exclude      https://www.flaticon.com/*
+// @exclude      https://www.windy.com/*
+// @exclude      https://*.kingfa.com.cn/*
+// @exclude      https://www.accupass.com/event/2510080612504929276220
 // @noframes
 // @grant        none
 // @license      MIT

@@ -1,10 +1,9 @@
 // ==UserScript==
 // @name            Download on QNAP NAS
 // @description     Download links or magnet links on QNAP NAS via Download Station, you can input url manually or right-click on the link and then hit on "Download from Last Link"
-// @version         1.03
+// @version         1.04
 // @match           *://*/*
 // @run-at          document-end
-// @grant           none
 // @copyright       2024, MSerj
 // @license         MIT
 //

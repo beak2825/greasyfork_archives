@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         FunnyJunk Ultimate Manager (Collapsed Default)
+// @name         FunnyJunk Ultimate Thumb Manager
 // @namespace    http://tampermonkey.net/
-// @version      7.1
-// @description  Automated Thumbs Up/Down with ID matching. Permanent list is hidden by default.
-// @author       Coding Partner
+// @version      9.1
+// @description  Automated Thumbs Up/Down. Fixes issue where the checked comment itself was skipped.
+// @author       Emanon
 // @match        https://*.funnyjunk.com/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/551889/FunnyJunk%20Ultimate%20Manager%20%28Collapsed%20Default%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/551889/FunnyJunk%20Ultimate%20Manager%20%28Collapsed%20Default%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/551889/FunnyJunk%20Ultimate%20Thumb%20Manager.user.js
+// @updateURL https://update.greasyfork.org/scripts/551889/FunnyJunk%20Ultimate%20Thumb%20Manager.meta.js
 // ==/UserScript==
 
 (function() {
@@ -18,9 +18,30 @@
     let currentMode = 'skip';
     let permanentBlocklist = new Set();
     let tempTargetSet = new Set();
-    let isListExpanded = false; // CHANGED: Default is now FALSE (Closed)
+    let isListExpanded = false;
 
-    // Load saved list
+    // --- STORAGE ---
+    function loadBlocklist() {
+        try {
+            const saved = localStorage.getItem('fj_user_blocklist');
+            if (saved) {
+                permanentBlocklist = new Set(JSON.parse(saved));
+            }
+        } catch (e) {
+            console.error("FJ Manager: Error loading list. Resetting.", e);
+            permanentBlocklist = new Set();
+        }
+    }
+
+    function saveBlocklist() {
+        try {
+            localStorage.setItem('fj_user_blocklist', JSON.stringify(Array.from(permanentBlocklist)));
+            renderBlocklistUI();
+        } catch (e) {
+            console.error("FJ Manager: Could not save list.", e);
+        }
+    }
+
     loadBlocklist();
 
     // --- HELPER: CLEAN USERNAME ---
@@ -35,19 +56,6 @@
         return null;
     }
 
-    // --- STORAGE MANAGEMENT ---
-    function loadBlocklist() {
-        const saved = localStorage.getItem('fj_user_blocklist');
-        if (saved) {
-            permanentBlocklist = new Set(JSON.parse(saved));
-        }
-    }
-
-    function saveBlocklist() {
-        localStorage.setItem('fj_user_blocklist', JSON.stringify(Array.from(permanentBlocklist)));
-        renderBlocklistUI();
-    }
-
     function addToBlocklist(username) {
         if (!username) return;
         username = username.toLowerCase().trim();
@@ -60,6 +68,20 @@
         saveBlocklist();
     }
 
+    // --- HELPER: HUMAN CLICK SIMULATION ---
+    function triggerHumanClick(element) {
+        if (!element) return;
+        const events = ['mouseover', 'mousedown', 'mouseup', 'click'];
+        events.forEach(eventType => {
+            const event = new MouseEvent(eventType, {
+                bubbles: true,
+                cancelable: true,
+                view: window
+            });
+            element.dispatchEvent(event);
+        });
+    }
+
     // --- 1. SCAN & INJECT ---
     function performScan() {
         const thumbs = document.querySelectorAll('.thUp');
@@ -70,13 +92,11 @@
             const container = thumb.closest('div[id^="c"]');
             if (!container) return;
 
-            // 1. Find User Logic
             const userLink = container.querySelector('a[href*="/user/"]');
             if(userLink) {
                 const cleanName = getUsernameFromLink(userLink);
                 if(cleanName) usersOnPage.add(cleanName);
 
-                // 2. Inject Checkbox if missing
                 if (!container.querySelector('.fj-auto-checkbox')) {
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
@@ -111,7 +131,7 @@
         });
     }
 
-    // --- 3. THE CLICKING LOGIC (SURGICAL) ---
+    // --- 3. CLICK ENGINE ---
     function clickNextThumb() {
         if (!isRunning) return;
 
@@ -123,50 +143,70 @@
             const container = upBtn.closest('div[id^="c"]');
 
             let currentName = null;
+            let isDirectlyChecked = false; // NEW: Check specifically for this comment's box
+
             if (container) {
                 const userLink = container.querySelector('a[href*="/user/"]');
                 currentName = getUsernameFromLink(userLink);
+
+                // DIRECT CHECK: Is the checkbox next to this specific comment checked?
+                const localCheckbox = container.querySelector('.fj-auto-checkbox');
+                if (localCheckbox && localCheckbox.checked) {
+                    isDirectlyChecked = true;
+                }
             }
 
             const isPermBlocked = currentName && permanentBlocklist.has(currentName);
             const isTempBlocked = currentName && tempTargetSet.has(currentName);
-            const isTargeted = isPermBlocked || isTempBlocked;
+
+            // LOGIC UPDATE: Target if blocked OR if this specific box is checked
+            const isTargeted = isPermBlocked || isTempBlocked || isDirectlyChecked;
 
             if (isTargeted) {
+                // TARGET FOUND
                 if (currentMode === 'downvote') {
-                    // ID Match Logic
-                    const upId = upBtn.id;
-                    if (upId && upId.startsWith('up_')) {
-                        const downId = upId.replace('up_', 'dn_');
-                        const downBtn = document.getElementById(downId);
+                    // 1. Calculate Down ID
+                    let downBtn = null;
+                    if (upBtn.id && upBtn.id.startsWith('up_')) {
+                        const downId = upBtn.id.replace('up_', 'dn_');
+                        downBtn = document.getElementById(downId);
+                    }
+                    if (!downBtn && container) {
+                         downBtn = container.querySelector('.thDn');
+                    }
 
-                        if (downBtn) {
-                            downBtn.click();
-                            console.log(`DOWNVOTED (ID Match): ${currentName}`);
+                    if (downBtn) {
+                        // 2. CHECK STATE (Prevent toggling off)
+                        const isActive = downBtn.className.includes('_i') || downBtn.classList.length > 1;
+                        if (isActive) {
+                            console.log(`Target ${currentName} already downvoted. Skipping.`);
                             upBtn.setAttribute('data-processed', 'true');
                         } else {
-                            console.log(`Target ${currentName}: ID Match failed (Button missing?), skipping.`);
+                            triggerHumanClick(downBtn);
+                            console.log(`DOWNVOTED: ${currentName}`);
                             upBtn.setAttribute('data-processed', 'true');
                         }
                     } else {
-                        // Fallback
-                        const downBtn = container.querySelector('.thDn');
-                        if (downBtn) {
-                            downBtn.click();
-                            console.log(`DOWNVOTED (Fallback): ${currentName}`);
-                        }
+                        console.log(`Target found (${currentName}) but NO down button. Skipping.`);
                         upBtn.setAttribute('data-processed', 'true');
                     }
                 } else {
+                    // Skip
                     console.log(`SKIPPING: ${currentName}`);
                     upBtn.setAttribute('data-processed', 'true');
                 }
             } else {
-                upBtn.click();
+                // NEUTRAL USER (Upvote)
+                const isUpActive = upBtn.className.includes('_i') || upBtn.classList.length > 1;
+                if (!isUpActive) {
+                    triggerHumanClick(upBtn);
+                } else {
+                    upBtn.setAttribute('data-processed', 'true');
+                }
             }
 
             statusText.innerText = `Scan: ${visibleThumbs.length - 1} left`;
-            setTimeout(clickNextThumb, 120);
+            setTimeout(clickNextThumb, 150);
         } else {
             finishClicking();
         }
@@ -198,6 +238,21 @@
     }
 
     // --- 4. UI CONSTRUCTION ---
+
+    // --- RESTORE BUTTON (Hidden by default) ---
+    const restoreBtn = document.createElement('div');
+    restoreBtn.innerText = 'M';
+    Object.assign(restoreBtn.style, {
+        position: 'fixed', top: '50px', right: '10px', zIndex: '9999',
+        backgroundColor: 'rgba(76, 175, 80, 0.7)', color: 'white',
+        width: '30px', height: '30px', borderRadius: '50%',
+        display: 'none', justifyContent: 'center', alignItems: 'center',
+        cursor: 'pointer', fontWeight: 'bold', fontSize: '14px',
+        boxShadow: '0 2px 5px rgba(0,0,0,0.3)'
+    });
+    restoreBtn.title = 'Restore Manager';
+
+    // --- MAIN PANEL ---
     const mainPanel = document.createElement('div');
     Object.assign(mainPanel.style, {
         position: 'fixed', top: '50px', right: '10px', zIndex: '10000',
@@ -207,11 +262,41 @@
         border: '2px solid #4CAF50', display: 'flex', flexDirection: 'column', gap: '8px'
     });
 
+    function minimizePanel() {
+        mainPanel.style.display = 'none';
+        restoreBtn.style.display = 'flex';
+    }
+
+    function restorePanel() {
+        mainPanel.style.display = 'flex';
+        restoreBtn.style.display = 'none';
+    }
+
+    restoreBtn.addEventListener('click', restorePanel);
+
+    const headerRow = document.createElement('div');
+    headerRow.style.display = 'flex';
+    headerRow.style.justifyContent = 'space-between';
+    headerRow.style.alignItems = 'center';
+
     const statusText = document.createElement('div');
     statusText.innerText = 'Ready';
     statusText.style.fontWeight = 'bold';
-    statusText.style.textAlign = 'center';
     statusText.style.fontSize = '14px';
+
+    const minBtn = document.createElement('div');
+    minBtn.innerText = '_';
+    minBtn.style.cursor = 'pointer';
+    minBtn.style.fontWeight = 'bold';
+    minBtn.style.padding = '0 5px';
+    minBtn.style.color = '#aaa';
+    minBtn.title = "Hide Panel";
+    minBtn.style.border = '1px solid #555';
+    minBtn.style.borderRadius = '3px';
+    minBtn.addEventListener('click', minimizePanel);
+
+    headerRow.appendChild(statusText);
+    headerRow.appendChild(minBtn);
 
     const btn = document.createElement('button');
     btn.innerText = 'START / STOP';
@@ -234,7 +319,6 @@
     divider.style.borderColor = '#555';
     divider.style.margin = '5px 0';
 
-    // CHANGED: Initial Text is now [+]
     const listHeader = document.createElement('div');
     listHeader.innerText = 'Permanent List [+]';
     listHeader.style.fontWeight = 'bold';
@@ -245,7 +329,6 @@
     listHeader.style.borderRadius = '4px';
     listHeader.style.textAlign = 'center';
 
-    // CHANGED: Initial Display is now NONE
     const listContent = document.createElement('div');
     listContent.style.display = 'none';
     listContent.style.flexDirection = 'column';
@@ -262,7 +345,6 @@
         }
     });
 
-    // --- REFRESH ROW ---
     const refreshRow = document.createElement('div');
     refreshRow.style.display = 'flex';
     refreshRow.style.gap = '5px';
@@ -271,7 +353,6 @@
     pageUserSelect.style.width = '100%';
     pageUserSelect.innerHTML = '<option value="">-- Load Users --</option>';
 
-    // THE REFRESH BUTTON
     const refreshBtn = document.createElement('button');
     refreshBtn.innerText = '⟳';
     refreshBtn.title = 'Scan page for new users';
@@ -362,7 +443,7 @@
     }
 
     // --- ASSEMBLE ---
-    mainPanel.appendChild(statusText);
+    mainPanel.appendChild(headerRow);
     mainPanel.appendChild(btn);
     mainPanel.appendChild(modeSelect);
     mainPanel.appendChild(divider);
@@ -376,6 +457,7 @@
 
     mainPanel.appendChild(listContent);
 
+    document.body.appendChild(restoreBtn);
     document.body.appendChild(mainPanel);
 
     // Init

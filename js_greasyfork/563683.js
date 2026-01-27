@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Pollination AI Page Summarizer
-// @version      1.2.1
+// @version      1.2.2
 // @description  Summarize webpage or selected text via Pollinations API (Free, Anonymous, Keyless)
 // @author       SH3LL
 // @match        *://*/*
@@ -187,7 +187,7 @@
             .toggle{position:fixed;right:0;top:50%;transform:translateY(-50%);width:18px;height:48px;background:#151515;border:1px solid #444;border-right:none;border-radius:6px 0 0 6px;cursor:pointer;z-index:1000000;display:flex;align-items:center;justify-content:center;color:#555;font-size:14px;transition:right .2s,background .15s,opacity .3s;opacity:0.3}
             .toggle:hover{background:#1a1a1a;color:#888;opacity:1}
             .row{display:flex;gap:6px}
-            select{flex:1;padding:6px 8px;font-size:13px;border-radius:5px;border:1px solid #2a2a2a;background:#111;color:#aaa;cursor:pointer;outline:none}
+            select{flex:1;padding:6px 8px;font-size:13px;border-radius:5px;border:1px solid #2a2a2a;background:#111;color:#aaa;cursor:pointer;outline:none;width: max-content; min-width: 140px; max-width: 100%}
             select:focus{border-color:#0af}
             button.sum{padding:6px 10px;font-size:13px;font-weight:600;border-radius:5px;border:none;background:#0af;color:#000;cursor:pointer;white-space:nowrap;transition:opacity .15s}
             button.sum:hover{opacity:.85}

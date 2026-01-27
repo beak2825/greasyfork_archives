@@ -133,8 +133,8 @@
     });
 
     const punctMap = { "。": ".", "！": "!", "？": "?", "，": ",", "：": ":", "；": ";" };
-    let output = parts.join(" ").replace(/[。！？，：；]/g, c => punctMap[c]);
-    output = output.replace(/(^[\s\[]*\p{L}|[.!?]\s*\p{L})/ug, m => m.toUpperCase());
+    let output = parts.join(" ").replace(new RegExp(`[${Object.keys(punctMap)}]`,'g'), c => punctMap[c]);
+    output = output.replace(/(^[\s\[]*\p{L}|[.!?][\s\[]*\p{L})/ug, m => m.toUpperCase());
     output = output.replace(/(\s+?[.!?,:;])/g,m=>m.trim());
     // output = output.replace(/\s+/,' ');
     return output;

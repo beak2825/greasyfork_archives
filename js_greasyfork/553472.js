@@ -2,7 +2,7 @@
 // @license         MIT
 // @name            CleanURLs and SkipRedirects
 // @name:en         CleanURLs and SkipRedirects
-// @version         10.0
+// @version         10.1
 // @description     Supprime les paramètres de suivi des URLs et passe les redirections
 // @description:en  Removes tracking parameters from URLs and skips redirects
 // @author          LeDimiScript
@@ -338,7 +338,6 @@
       'optout',
       'oq',
       'organic_search_click',
-      'origin',
       'os',
       'p',
       'p1',

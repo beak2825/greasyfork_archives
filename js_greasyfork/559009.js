@@ -24,9 +24,9 @@
 // @connect      raw.githubusercontent.com
 // @namespace    Violentmonkey Scripts
 // @author       SedapnyaTidur
-// @version      1.0.13
+// @version      1.0.14
 // @license      MIT
-// @revision     1/9/2026, 5:20:18 PM
+// @revision     1/26/2026, 2:09:18 PM
 // @description  Redirects instance of Redlib that having an error or has a Anubis/Cerberus/Cloudflare/GoAway check to another instance. The CSP for websites must be removed/modified using an addon for this script to work. To have a better effect make sure to reorder this script so it runs as soon as possible.
 // @downloadURL https://update.greasyfork.org/scripts/559009/%5BRedlib%5D%20Error%20%20PoW%20Redirector.user.js
 // @updateURL https://update.greasyfork.org/scripts/559009/%5BRedlib%5D%20Error%20%20PoW%20Redirector.meta.js
@@ -112,7 +112,7 @@
 
   const configs = [{
     query: ':scope > pre:first-child',
-    texts: ['', 'Moved Permanently', 'Service has been shutdown']
+    texts: ['', 'Moved Permanently', 'Service has been shutdown', 'maintenance', 'no available server']
   }, {
     query: ':scope > :is(main,div:first-child,article:first-child,center:first-child) > h1:first-child',
     texts: ["Making sure you're not a bot!", 'The Oratrice is rendering its judgment!', 'Oh noes!', "We’ll be back soon!", 'Performance Tracking', '504 Gateway Time-out', '503 Service Temporarily Unavailable', '502 Bad Gateway', 'ERROR']
@@ -170,8 +170,8 @@
       return { minute:' 1',hour:' 60',day:' 1440',month:' 43829',year:' 525949' }[field]
     }).split(' ').reduce((sum, value) => sum * Number(value), 1);
     const values = lastCheckedDate.replace(/:[0-9]+\s+[APap][Mm]$/, '').split(/(?:\/|,\s+|:)/).map(Number);
-    const clock24 = (/[Pp][Mm]$/.test(lastCheckedDate) && values[3] !== 12) ? 12 : 0;
-    const past = (values[0] * 1440) + (values[1] * 43829) + (values[2] * 525949) + ((values[3] + clock24) * 60) + values[4];
+    const hour24 = (/[Pp][Mm]$/.test(lastCheckedDate) && values[3] !== 12) ? 12 : 0;
+    const past = (values[0] * 1440) + (values[1] * 43829) + (values[2] * 525949) + ((values[3] + hour24) * 60) + values[4];
     const date = new Date();
     const now = (date.getFullYear() * 525949) + ((date.getMonth() + 1) * 43829) + (date.getDate() * 1440) + (date.getHours() * 60) + date.getMinutes();
     if (now - past >= elapsed) return true;
@@ -294,11 +294,13 @@
     if (!deleteCookies) return;
     window.sessionStorage.clear();
     window.localStorage.clear();
+
+    const host = window.location.hostname;
+    const domain = host.replace(/^(?:[^.]+\.)*([^.]+\.[^.]+)$/, '$1');
+    const skip = (domain === host);
+
     if (document.cookie) {
       // Can't expire/delete HttpOnly cookies this way.
-      const host = window.location.hostname;
-      const domain = host.replace(/^(?:[^.]+\.)*([^.]+\.[^.]+)$/, '$1');
-      const skip = (domain === host);
       document.cookie.split('; ').forEach(cookie => {
         document.cookie = `${cookie};Path=/;Expires=Thu, 01 Jan 1970 00:00:01 GMT;Secure;HostOnly;`;
         document.cookie = `${cookie};Domain=${domain};Path=/;Expires=Thu, 01 Jan 1970 00:00:01 GMT;Secure;HostOnly;`;
@@ -314,7 +316,9 @@
     // Set <Config Mode> to <Advanced> and in <Security> category, change <Allow scripts to access cookies> to <All> to work.
     if (typeof(GM_cookie) !== 'undefined' && GM_cookie.delete) {
       GM_cookie.delete({ url: window.location.origin + '/' });
+      if (!skip) GM_cookie.delete({ url: window.location.protocol + '//' + domain + '/' });
       GM_cookie.delete({ url: 'https://anubis.techaro.lol/' });
+      GM_cookie.delete({ url: 'https://techaro.lol/' });
     }
   };
 
@@ -448,6 +452,7 @@
           height: 100%;
           justify-content: center;
           left: 0px;
+          pointer-events: none;
           position: fixed;
           top: 0px;
           width: 100%;

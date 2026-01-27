@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         n-Nurbo client
 // @namespace    http://youtube.com
-// @version      1.6.0.3
-// @description  Bot  =  P()     Shift=Insta, AutoBiomehat Autoheal, F=Trap, V=Spike, C=4Spikes, B=4Traps, N=Mill./'
+// @version      1.6.1.0
+// @description  Bot =  P    Shift=Insta, AutoBiomehat Autoheal, F=Trap, V=Spike, C=4Spikes, B=4Traps, N=Mill. Glotus AutoBreak for traps.
 // @icon         https://static.wikia.nocookie.net/moom/images/7/70/Cookie.png/revision/latest?cb=20190223141839
 // @author       Nurbo Mod
 // @match        *://moomoo.io/*
@@ -101,9 +101,9 @@ class Input {
     };
 
     healPlayer(currentHealth) {
-        let timeout = 115;
+        let timeout = 80;
         if (currentHealth <= 60) {
-            timeout = 1;
+            timeout = 25;
         };
         setTimeout(() => {
             this.useItem(0); // heal with apple
@@ -254,7 +254,7 @@ class Bot {
         this.name = name;
         this.age = 1;
         this.lastFollowTime = 0;
-        this.followInterval = 100; // обновляем движение каждые 100мс
+        this.followInterval = 20; // обновляем движение каждые 100мс
 
         this.powSolver.generateAltchaToken().then((token) => {
             this.ws = new WebSocket(document.ws.url.split('?token=')[0] + `?token=${token}`);
@@ -343,7 +343,7 @@ class Bot {
     };
 };
 
-const init = () => {
+const init2 = () => {
     document.getElementById('promoImgHolder').remove(); // remove the promo
     for (let i = 0; i < document.getElementsByClassName('adsbygoogle').length; i++) {
         document.getElementsByClassName('adsbygoogle')[0].remove();
@@ -484,10 +484,9 @@ const init = () => {
 let waitForGameName = setInterval(() => {
     if (document.getElementById('gameName')) {
         clearInterval(waitForGameName);
-        return init();
+        return init2();
     };
 }, 100);
-
 (function() {
     'use strict';
 
@@ -510,7 +509,8 @@ let waitForGameName = setInterval(() => {
         accessory: null,
         isSkull: null,
         health: 100,
-        secondaryWeapon: null
+        secondaryWeapon: null,
+        hasSpecialWeapon: false
     };
 
     const keysPressed = {};
@@ -564,7 +564,7 @@ let waitForGameName = setInterval(() => {
         `;
 
         const title = document.createElement('span');
-        title.textContent = 'NURBO MOD v1.6.0.3';
+        title.textContent = 'NURBO MOD v1.6.0.4';
         title.style.cssText = 'font-weight: 600; font-size: 14px; color: #4CAF50;';
 
         const closeBtn = document.createElement('span');
@@ -587,22 +587,8 @@ let waitForGameName = setInterval(() => {
         infoSection.innerHTML = `
             <div style="margin-bottom: 20px;">
                 <h3 style="color: #4CAF50; margin: 0 0 12px 0; border-bottom: 1px solid #333; padding-bottom: 6px; font-size: 13px; font-weight: 600;">📊 INFORMATION</h3>
-                <div style="display: flex; justify-content: space-between; margin: 8px 0; font-size: 13px;">
-                    <span style="color: #aaa;">Health:</span>
-                    <span id="menu-health" style="color: #FF6B6B; font-weight: 500;">100%</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin: 8px 0; font-size: 13px;">
-                    <span style="color: #aaa;">Weapon:</span>
-                    <span id="menu-weapon" style="color: #FFD166; font-weight: 500;">-</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin: 8px 0; font-size: 13px;">
-                    <span style="color: #aaa;">Biome:</span>
-                    <span id="menu-biome" style="color: #06D6A0; font-weight: 500;">-</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin: 8px 0; font-size: 13px;">
-                    <span style="color: #aaa;">Enemies:</span>
-                    <span id="menu-enemies" style="color: #EF476F; font-weight: 500;">0</span>
-                </div>
+
+
             </div>
         `;
 
@@ -614,6 +600,10 @@ let waitForGameName = setInterval(() => {
                 <div style="display: flex; justify-content: space-between; margin: 6px 0; font-size: 12px;">
                     <span style="color: #bbb;">Shift:</span>
                     <span style="color: #06D6A0; font-weight: 500;">Insta Attack</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin: 6px 0; font-size: 12px;">
+                    <span style="color: #bbb;">R:</span>
+                    <span style="color: #06D6A0; font-weight: 500;">2nd Weapon Attack</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin: 6px 0; font-size: 12px;">
                     <span style="color: #bbb;">F (Hold):</span>
@@ -657,15 +647,15 @@ let waitForGameName = setInterval(() => {
             <div style="margin: 8px 0;">
                 <label style="display: flex; align-items: center; margin: 10px 0; cursor: pointer; font-size: 13px;">
                     <input type="checkbox" id="autoheal-toggle" checked style="margin-right: 10px; accent-color: #4CAF50;">
-                    <span style="color: #ccc;">Auto Heal</span>
+                    <span style="color: #ccc;">-</span>
                 </label>
                 <label style="display: flex; align-items: center; margin: 10px 0; cursor: pointer; font-size: 13px;">
                     <input type="checkbox" id="biomehat-toggle" checked style="margin-right: 10px; accent-color: #4CAF50;">
-                    <span style="color: #ccc;">Auto Biome Hat</span>
+                    <span style="color: #ccc;">--</span>
                 </label>
                 <label style="display: flex; align-items: center; margin: 10px 0; cursor: pointer; font-size: 13px;">
                     <input type="checkbox" id="autoclick-toggle" checked style="margin-right: 10px; accent-color: #4CAF50;">
-                    <span style="color: #ccc;">Auto Click (RMB)</span>
+                    <span style="color: #ccc;">---</span>
                 </label>
             </div>
         `;
@@ -787,12 +777,33 @@ let waitForGameName = setInterval(() => {
             const status = statusBar;
             const health = document.getElementById('menu-health');
             const weapon = document.getElementById('menu-weapon');
+            const secondary = document.getElementById('menu-secondary');
             const biome = document.getElementById('menu-biome');
             const enemies = document.getElementById('menu-enemies');
 
             // Update statistics
             if (health) health.textContent = myPlayer.health ? `${myPlayer.health}%` : '100%';
             if (enemies) enemies.textContent = enemiesNear.length;
+
+            // Update weapon info
+            if (weapon) {
+                const weaponNames = {
+                    0: 'Sword', 1: 'Axe', 2: 'Bow', 3: 'Pickaxe', 4: 'Rod',
+                    5: 'Platform', 6: 'Wall', 7: 'Spike', 8: 'Spring',
+                    9: 'Boomerang', 10: 'Dynamite', 11: 'Balloon', 12: 'Hammer',
+                    13: 'Glider', 14: 'Bomb', 15: 'Katana'
+                };
+                weapon.textContent = weaponNames[myPlayer.weapon] || myPlayer.weapon;
+            }
+
+            if (secondary) {
+                if (myPlayer.hasSpecialWeapon) {
+                    const specialWeapons = {12: 'Hammer', 13: 'Glider', 15: 'Katana'};
+                    secondary.textContent = specialWeapons[myPlayer.secondaryWeapon] || myPlayer.secondaryWeapon;
+                } else {
+                    secondary.textContent = 'None';
+                }
+            }
 
             // Determine biome
             if (biome && myPlayer.y !== null) {
@@ -854,6 +865,9 @@ let waitForGameName = setInterval(() => {
         for (let i = 26; i <= 28; i++) if (isVisible(document.getElementById("actionBarItem" + i))) windmillType = i - 16;
         for (let i = 33; i <= 38; i++) if (i !== 36 && isVisible(document.getElementById("actionBarItem" + i))) turretType = i - 16;
         for (let i = 16; i <= 18; i++) if (isVisible(document.getElementById("actionBarItem" + i))) foodType = i - 16;
+
+        // Check for special secondary weapons (12, 13, 15)
+        checkSpecialWeapons();
     }
 
     function toRad(degrees) {
@@ -867,6 +881,26 @@ let waitForGameName = setInterval(() => {
             }
         }
         return myPlayer.weapon;
+    }
+
+    // Check if player has special secondary weapons (12, 13, 15)
+    function checkSpecialWeapons() {
+        const specialWeapons = [12, 13, 15];
+        let foundSpecial = false;
+        let foundWeapon = null;
+
+        for (let i = 9; i <= 15; i++) {
+            if (isVisible(document.getElementById("actionBarItem" + i)) && i !== myPlayer.weapon) {
+                if (specialWeapons.includes(i)) {
+                    foundSpecial = true;
+                    foundWeapon = i;
+                    break;
+                }
+            }
+        }
+
+        myPlayer.hasSpecialWeapon = foundSpecial;
+        myPlayer.secondaryWeapon = foundWeapon;
     }
 
     function performAttackWithSpikes() {
@@ -912,6 +946,151 @@ let waitForGameName = setInterval(() => {
     function placeSingleTrap() {
         place(boostType);
     }
+
+    // ===================== SPECIAL WEAPON HAT SYSTEM =====================
+ // ===================== SPECIAL WEAPON HAT SYSTEM =====================
+function initSpecialWeaponHatSystem() {
+    let hatCycleInterval = null;
+    let isHat20Active = false;
+    let isMoving = false;
+    let movementKeys = new Set();
+
+    // Special weapons that trigger hat system
+    const SPECIAL_WEAPONS = [12, 13, 15]; // Hammer, Glider, Katana
+
+    // Check if player is holding a special weapon (current active weapon)
+    function isHoldingSpecialWeapon() {
+        return SPECIAL_WEAPONS.includes(myPlayer.weapon);
+    }
+
+    // Check if player is standing still (not moving)
+    function isStandingStill() {
+        return movementKeys.size === 0 && !isMoving;
+    }
+
+    // Set hat safely
+    function setHatSafely(hatId) {
+        if (myPlayer && myPlayer.id != null) {
+            doNewSend(["c", [0, hatId, 0]]);
+        }
+    }
+
+    // Start the hat cycle for special weapons
+    function startHatCycle() {
+        if (hatCycleInterval) clearInterval(hatCycleInterval);
+
+        // Set hat 20 immediately
+        setHatSafely(20);
+        isHat20Active = true;
+
+        // Start 3-second cycle for hat 53
+        hatCycleInterval = setInterval(() => {
+            if (isHoldingSpecialWeapon() && isStandingStill()) {
+                // Switch to hat 53 for 150ms
+                setHatSafely(53);
+                isHat20Active = false;
+
+                // Return to hat 20 after 150ms
+                setTimeout(() => {
+                    if (isHoldingSpecialWeapon() && isStandingStill()) {
+                        setHatSafely(20);
+                        isHat20Active = true;
+                    }
+                }, 150);
+            }
+        }, 3000); // Every 3 seconds
+    }
+
+    // Stop the hat cycle
+    function stopHatCycle() {
+        if (hatCycleInterval) {
+            clearInterval(hatCycleInterval);
+            hatCycleInterval = null;
+        }
+        isHat20Active = false;
+
+        // Return to normal hat (6) if standing still
+        if (isStandingStill()) {
+            setHatSafely(6);
+        }
+    }
+
+    // Update hat based on conditions
+    function updateSpecialWeaponHat() {
+        // Check if player is holding special weapon and is standing still
+        if (isHoldingSpecialWeapon() && isStandingStill()) {
+            startHatCycle();
+        } else {
+            stopHatCycle();
+            // If no special weapon or moving, use normal hat
+            if (isStandingStill()) {
+                setHatSafely(6);
+            }
+        }
+    }
+
+    // Track movement
+    document.addEventListener("keydown", e => {
+        const key = e.key.toLowerCase();
+        const movementKeysList = ["w", "a", "s", "d", "arrowup", "arrowdown", "arrowleft", "arrowright"];
+
+        if (movementKeysList.includes(key)) {
+            if (!movementKeys.has(key)) {
+                movementKeys.add(key);
+                isMoving = true;
+                updateSpecialWeaponHat();
+            }
+        }
+    });
+
+    document.addEventListener("keyup", e => {
+        const key = e.key.toLowerCase();
+        const movementKeysList = ["w", "a", "s", "d", "arrowup", "arrowdown", "arrowleft", "arrowright"];
+
+        if (movementKeysList.includes(key)) {
+            movementKeys.delete(key);
+            isMoving = movementKeys.size > 0;
+            // Small delay to ensure movement has stopped
+            setTimeout(updateSpecialWeaponHat, 50);
+        }
+    });
+
+    // Monitor for weapon changes
+    let lastWeaponCheck = 0;
+    const WEAPON_CHECK_INTERVAL = 500;
+
+    function checkWeaponPeriodically() {
+        const now = Date.now();
+        if (now - lastWeaponCheck < WEAPON_CHECK_INTERVAL) return;
+        lastWeaponCheck = now;
+
+        // Update the hat system based on current weapon
+        updateSpecialWeaponHat();
+    }
+
+    // Initial check
+    updateSpecialWeaponHat();
+
+    // Periodic checks
+    setInterval(checkWeaponPeriodically, WEAPON_CHECK_INTERVAL);
+
+    // Also check when WebSocket messages update player weapon
+    const originalHandleMessage = handleMessage;
+    handleMessage = function(m) {
+        originalHandleMessage(m);
+
+        // Check if weapon info was updated in the message
+        if (myPlayer.weapon !== null) {
+            updateSpecialWeaponHat();
+        }
+    };
+
+    return {
+        updateSpecialWeaponHat,
+        stopHatCycle,
+        startHatCycle
+    };
+}
 
     // ===================== AUTOBIOME HAT =====================
     function autoBiomeHatController() {
@@ -1179,59 +1358,47 @@ let waitForGameName = setInterval(() => {
 
     // ===================== INSTA ATTACK =====================
     function performNormalInsta() {
-        let attackAngle = Math.atan2(mouseY - height / 2, mouseX - width / 2);
-        if (nearestEnemy) {
-            const dx = myPlayer.x - nearestEnemy[1];
-            const dy = myPlayer.y - nearestEnemy[2];
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-
-
-
-        } else {
-            attackAngle = Math.atan2(mouseY - height / 2, mouseX - width / 2);
-        }
-
         storeEquip(0, 1);
+    setTimeout(() => {
+
+
+        const primary = myPlayer.weapon;
+        const secondary = getSecondaryWeaponIndex();
+
+        doNewSend(["c", [0, 7, 0]]);
+        doNewSend(["z", [primary, true]]);
+        doNewSend(["F", [1]]);
+        setTimeout(() => doNewSend(["F", [0]]), 25);
+
         setTimeout(() => {
-            doNewSend(["D", [attackAngle]]);
-
-            const primary = myPlayer.weapon;
-            const secondary = getSecondaryWeaponIndex();
-
-            doNewSend(["c", [0, 7, 0]]);
-            doNewSend(["z", [primary, true]]);
-            doNewSend(["F", [1, attackAngle]]);
-            setTimeout(() => doNewSend(["F", [0, attackAngle]]), 25);
+            doNewSend(["c", [0, 53, 0]]);
+            doNewSend(["z", [secondary, true]]);
+            doNewSend(["F", [1]]);
+            setTimeout(() => doNewSend(["F", [0]]), 25);
 
             setTimeout(() => {
-                doNewSend(["c", [0, 53, 0]]);
-                doNewSend(["z", [secondary, true]]);
-                doNewSend(["F", [1, attackAngle]]);
-                setTimeout(() => doNewSend(["F", [0, attackAngle]]), 25);
+                doNewSend(["c", [0, 6, 0]]);
+                doNewSend(["z", [primary, true]]);
+                doNewSend(["z", [primary, true]]);
+                autoaim = false;
 
                 setTimeout(() => {
-                    doNewSend(["c", [0, 6, 0]]);
-                    doNewSend(["z", [primary, true]]);
-                    doNewSend(["z", [primary, true]]);
+                    storeEquip(11, 1);
 
-                    setTimeout(() => {
-                        storeEquip(11, 1);
-
-                        if (secondary === 15) {
-                            doNewSend(["z", [secondary, true]]);
-                            setTimeout(() => doNewSend(["z", [primary, true]]), 1900);
-                        } else if (secondary === 12) {
-                            doNewSend(["z", [secondary, true]]);
-                            setTimeout(() => doNewSend(["z", [primary, true]]), 1000);
-                        } else if (secondary === 13) {
-                            doNewSend(["z", [secondary, true]]);
-                            setTimeout(() => doNewSend(["z", [primary, true]]), 400);
-                        }
-                    }, 170);
-                }, 120);
+                    if (secondary === 15) {
+                        doNewSend(["z", [secondary, true]]);
+                        setTimeout(() => doNewSend(["z", [primary, true]]), 1500);
+                    } else if (secondary === 12) {
+                        doNewSend(["z", [secondary, true]]);
+                        setTimeout(() => doNewSend(["z", [primary, true]]), 1000);
+                    } else if (secondary === 13) {
+                        doNewSend(["z", [secondary, true]]);
+                        setTimeout(() => doNewSend(["z", [primary, true]]), 400);
+                    }
+                }, 170);
             }, 120);
         }, 120);
+    }, 120);
     }
 
     // ===================== TRACK MOUSE POSITION =====================
@@ -1309,11 +1476,60 @@ let waitForGameName = setInterval(() => {
             performFourTraps();
         }
 
+        if (key === 'r' && document.activeElement.id.toLowerCase() !== "chatbox") {
+            storeEquip(0, 1);
+            setTimeout(() => {
+
+                const primary = myPlayer.weapon;
+                const secondary = getSecondaryWeaponIndex();
+
+                doNewSend(["z", [secondary, true]]);
+                doNewSend(["z", [secondary, true]]);
+
+                doNewSend(["c", [0, 53, 0]]);
+                doNewSend(["F", [1]]);
+                setTimeout(() => doNewSend(["F", [0]]), 25);
+
+                setTimeout(() => {
+
+                    doNewSend(["z", [primary, true]]);
+                    doNewSend(["c", [0, 7, 0]]);
+                    doNewSend(["F", [1]]);
+                    setTimeout(() => doNewSend(["F", [0]]), 25);
+                }, 90);
+
+                setTimeout(() => {
+
+                    doNewSend(["z", [primary, true]]);
+                    doNewSend(["z", [primary, true]]);
+                    doNewSend(["c", [0, 6, 0]]);
+                    storeEquip(11, 1);
+                    autoaim = false;
+
+                    setTimeout(() => {
+
+                        if (secondary === 15) {
+                            doNewSend(["z", [secondary, true]]);
+                            setTimeout(() => doNewSend(["z", [primary, true]]), 1500);
+                        } else if (secondary === 12) {
+                            doNewSend(["z", [secondary, true]]);
+                            setTimeout(() => doNewSend(["z", [primary, true]]), 1000);
+                        } else if (secondary === 13) {
+                            doNewSend(["z", [secondary, true]]);
+                            setTimeout(() => doNewSend(["z", [primary, true]]), 400);
+                        }
+                    }, 200);
+                }, 500);
+            }, 120);
+        }
+
         // N key - Toggle auto mill
         if (key === 'n') {
             automill = !automill;
         }
-
+ if (key === 'g') {
+       place(turretType)
+        }
         // Space - Attack with spikes
         if (key === ' ') {
             performAttackWithSpikes();
@@ -1458,6 +1674,9 @@ let waitForGameName = setInterval(() => {
         // Start auto hats
         autoBiomeHatController();
 
+        // Start special weapon hat system
+        initSpecialWeaponHatSystem();
+
         // Intervals for automatic actions
         setInterval(() => {
             if (automill) {
@@ -1492,11 +1711,5 @@ let waitForGameName = setInterval(() => {
     }, 100);
 
 })();
-
-
-
-
-
-
 
 

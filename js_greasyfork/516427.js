@@ -1,11 +1,14 @@
 // ==UserScript==
 // @name         福建江夏学院教务平台过程评价自动输入
 // @namespace    http://tampermonkey.net/
-// @version      5.0
+// @version      5.1
 // @description  在福建江夏学院教学管理信息服务平台上自动输入，并提示用户手动提交
-// @author       YourName
+// @author       ahrinya
 // @match        *://jwxt.fjjxu.edu.cn/*
 // @grant        GM_addStyle
+// @compatible   chrome
+// @compatible   firefox
+// @compatible   edge
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/516427/%E7%A6%8F%E5%BB%BA%E6%B1%9F%E5%A4%8F%E5%AD%A6%E9%99%A2%E6%95%99%E5%8A%A1%E5%B9%B3%E5%8F%B0%E8%BF%87%E7%A8%8B%E8%AF%84%E4%BB%B7%E8%87%AA%E5%8A%A8%E8%BE%93%E5%85%A5.user.js
 // @updateURL https://update.greasyfork.org/scripts/516427/%E7%A6%8F%E5%BB%BA%E6%B1%9F%E5%A4%8F%E5%AD%A6%E9%99%A2%E6%95%99%E5%8A%A1%E5%B9%B3%E5%8F%B0%E8%BF%87%E7%A8%8B%E8%AF%84%E4%BB%B7%E8%87%AA%E5%8A%A8%E8%BE%93%E5%85%A5.meta.js

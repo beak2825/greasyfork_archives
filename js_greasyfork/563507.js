@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         J-Biblio2Dou
 // @namespace    http://tampermonkey.net/
-// @version      2.01
+// @version      2.02
 // @description  Extracting bibliography data from Hanmoto + openBD or CiNii and fill Douban new_book subjects; add shortcuts on Douban search pages
 // @author       千叶ゃ(based on Good2Dou)
 // @match        *://*.hanmoto.com/bd/isbn/*
@@ -443,7 +443,8 @@
         const isbn = normalizeIsbn((risMap.SN?.[0] || '').trim());
         const py = (risMap.PY?.[0] || '').trim();
         const pagesRaw = (risMap.EP?.[0] || '').trim();
-        const pages = pagesRaw ? pagesRaw.replace(/p$/i, '').trim() : '';
+        const pagesMatch = pagesRaw.match(/(\d+)\s*p/i);
+        const pages = pagesMatch ? pagesMatch[1] : '';
 
         return {
             title,

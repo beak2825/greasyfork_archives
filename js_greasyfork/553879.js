@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google AI Studio Width Fix
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Sets style="max-width: 100%;" on some elements and unsets max-width on .chat-session-content.
 // @author       Ȼaptain Jøhn “Søap” MacTavish
 // @match        https://aistudio.google.com/*
@@ -20,7 +20,7 @@
         // Selector for elements to have max-width set to 100%.
         const setSelector = '.ng-star-inserted, .mat-mdc-tooltip-trigger.prompt-input-wrapper';
         // Selector for elements to have max-width unset.
-        const unsetSelector = '.chat-session-content';
+        const unsetSelector = '.chat-session-content, ms-prompt-box';
 
         /**
          * Applies 'max-width: 100%' to all matching elements.

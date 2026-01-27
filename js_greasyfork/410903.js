@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          new Facebook figuccio
 // @namespace     https://greasyfork.org/users/237458
-// @version       44.6
+// @version       44.7
 // @author        figuccio
 // @description   new facebook color 2026
 // @match         https://*.facebook.com/*
@@ -23,6 +23,51 @@
 // ==/UserScript==
 (function() {
  'use strict';
+//nasconde reel gennaio 2026
+  //Approccio CSS: nasconde gli elementi contenenti "Reels" o con attributi correlati ai reels
+    GM_addStyle(`
+        /* Hide Reels section by aria-label */
+        [aria-label="Reels"], [aria-label="Reels and short videos"] {
+            display: none !important;
+        }
+
+        /* Hide spans/links containing "Reels" text in feed */
+        div[data-pagelet*="Reels"],
+        div[data-pagelet*="reels"] {
+            display: none !important;
+        }
+    `);
+
+    //Osservatore DOM per contenuti caricati dinamicamente
+    function hideReels() {
+        //Trova e nascondi gli elementi con intestazioni "Reels"
+        document.querySelectorAll('span, h2, h3').forEach(el => {
+            if (el.textContent.trim() === 'Reels' ||
+                el.textContent.trim() === 'Reels and short videos') {
+                //Attraversa verso l'alto per trovare il contenitore e nasconderlo
+                let container = el.closest('[data-pagelet]') ||
+                                el.closest('div[class*="x1"]')?.parentElement?.parentElement?.parentElement;
+                if (container) {
+                    container.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    //Eseguire il caricamento e osservare i cambiamenti (Facebook è una SPA)
+    const observer = new MutationObserver(() => {
+        hideReels();
+    });
+
+    if (document.body) {
+        observer.observe(document.body, { childList: true, subtree: true });
+        hideReels();
+    } else {
+        document.addEventListener('DOMContentLoaded', () => {
+            observer.observe(document.body, { childList: true, subtree: true });
+            hideReels();
+        });
+    }
 //////////////////////////////////////////////////////sponsorizzato non interferisce con salva link luglio 2025
 let blockadcontact = true;
 let blockadpost = true;
@@ -352,6 +397,7 @@ observer.observe(document.body, { childList: true, subtree: true, attributes: fa
 ///////////////////////////////////////////////////////////////////////////////////
     //Suggeriti per te
    GM_addStyle('[aria-label="Suggeriti per te"] {display:none!important;}');
+   GM_addStyle('[aria-label="I tuoi suggerimenti di gruppi"] {display:none!important;}');//gennaio 2026
    // Funzione per nascondere la sezione di creazione delle storie
    GM_addStyle('[aria-label="Storie"] {display:none!important;}');
 // Funzione per gestire lo stato della checkbox e la sfocatura della chat

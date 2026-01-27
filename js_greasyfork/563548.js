@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MoDuL's: Racing Theme Changer
 // @namespace    modul.torn.racing
-// @version      1.2.2
+// @version      1.2.3
 // @description  Racing Theme Changer (PDA compatible)
 // @author       MoDuL, BrainSlug (Thanks for the idea buddy)
 // @match        https://www.torn.com/page.php?sid=racing*
@@ -18,10 +18,10 @@
 (function () {
   "use strict";
 
-  if (window.__RACING_THEME_LOADED_V121__) return;
-  window.__RACING_THEME_LOADED_V121__ = true;
+  if (window.__RACING_THEME_LOADED__) return;
+  window.__RACING_THEME_LOADED__ = true;
 
-  var VERSION = "1.2.1";
+  var VERSION = "1.2.4";
   var TAG = "[MoDuL Racing Theme v" + VERSION + "]";
   try { console.log(TAG, "Loaded ✅"); } catch (e) {}
 
@@ -35,7 +35,9 @@
   var SELECT_ID = "Racing_theme_select";
   var STYLE_ID = "Racing_theme_style";
 
-  var IMG_SELECTOR = ".img-track";
+  var IMG_SELECTOR_MAIN = ".img-track";
+  var IMG_SELECTOR_ANY  = "img[class*='img-track']";
+
   var BTN_SIZE = 28;
 
   var STOP_WHEN_BANNER_OFFSCREEN = true;
@@ -75,7 +77,6 @@
       "#" + ROOT_ID + ".open #" + PANEL_ID + "{display:block;}",
       "#" + PANEL_ID + " .ttl{font-weight:700;opacity:.92;margin:2px 0 8px 0;font-size:13px;}",
       "#" + SELECT_ID + "{width:100%;border-radius:10px;padding:10px 12px;font-size:16px;background:rgba(255,255,255,0.82);}",
-
       "#racingdetails{overflow:hidden !important;height:auto !important;max-height:none !important;}",
     ].join("\n");
 
@@ -182,46 +183,9 @@
     ul.style.background = "linear-gradient(rgba(40,40,40,0.90),rgba(10,10,10,0.84))";
     ul.style.border = "2px solid rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0.35)";
     ul.style.borderRadius = "10px";
-
-    ul.style.padding = "10 0 0 0";
-    ul.style.margin = "30 0 0 0";
-
     ul.style.boxShadow = "0 4px 14px rgba(0,0,0,0.55),0 0 0 1px rgba(0,0,0,0.6)";
     ul.style.backdropFilter = "blur(3px)";
     ul.style.webkitBackdropFilter = "blur(3px)";
-
-    ul.style.display = "flex";
-    ul.style.alignItems = "center";
-    ul.style.justifyContent = "center";
-    ul.style.overflow = "hidden";
-
-    ul.style.fontSize = "12px";
-    ul.style.lineHeight = "1";
-    if (window.innerWidth < 480) {
-      ul.style.fontSize = "11px";
-    }
-    var names = ul.querySelectorAll(".pd-name");
-    for (var i = 0; i < names.length; i++) {
-      names[i].style.opacity = "0.7";
-      names[i].style.fontWeight = "500";
-      names[i].style.display = "inline-flex";
-      names[i].style.alignItems = "center";
-    }
-
-    var vals = ul.querySelectorAll(".pd-val");
-    for (var j = 0; j < vals.length; j++) {
-      vals[j].style.opacity = "1";
-      vals[j].style.fontWeight = "600";
-      vals[j].style.display = "inline-flex";
-      vals[j].style.alignItems = "center";
-    }
-
-    var lis = ul.querySelectorAll("li");
-    for (var k = 0; k < lis.length; k++) {
-      lis[k].style.display = "flex";
-      lis[k].style.alignItems = "center";
-      lis[k].style.whiteSpace = "normal";
-    }
   }
 
   function applyAutoColor(ribbon) {
@@ -311,7 +275,45 @@
   }
 
   function getTrackImg() {
-    return document.querySelector(IMG_SELECTOR);
+    return document.querySelector(IMG_SELECTOR_MAIN);
+  }
+
+  // ✅ normalize odd Torn srcs like: "//casino/race/images/A1_s.jpg"
+  function normalizeSrc_(src) {
+    src = String(src || "").trim();
+    if (!src) return "";
+    if (src.indexOf("//casino/") === 0) src = src.slice(1); // "//casino/..." -> "/casino/..."
+    return src;
+  }
+
+  // ✅ matches:
+  // /casino/race/images/A1.jpg
+  // /casino/race/images/A1_s.jpg   (stats thumbnails)
+  function rewriteTrackSrc_(src, classLetter) {
+    src = normalizeSrc_(src);
+    if (!src) return null;
+
+    // Parse safely:
+    // - absolute: https://www.torn.com/...
+    // - relative: /casino/...
+    // - relative: casino/...  (rare)
+    var url;
+    try {
+      url = new URL(src, location.origin);
+    } catch (e) {
+      return null;
+    }
+
+    var path = url.pathname || "";
+    var m = path.match(/^\/casino\/race\/images\/([A-Z])(\d+)(?:_s)?\.jpg$/i);
+    if (!m) return null;
+
+    var id = m[2];
+    var isSmall = /_s\.jpg$/i.test(path);
+    url.pathname = "/casino/race/images/" + classLetter + id + (isSmall ? "_s" : "") + ".jpg";
+
+    if (!url.search) url.search = "?v=" + Date.now();
+    return url.toString();
   }
 
   function setTrackImageClass(classLetter) {
@@ -319,17 +321,21 @@
     if (!img) return;
 
     var src = img.getAttribute("src") || img.src || "";
-    if (!src) return;
-
-    var m = src.match(/\/casino\/race\/images\/([A-Z])(\d+)\.jpg(\?[^#]*)?/i);
-    if (!m) return;
-
-    var id = m[2];
-    var qs = m[3] || "";
-    var newSrc = "/casino/race/images/" + classLetter + id + ".jpg" + (qs || ("?v=" + Date.now()));
-    if (newSrc === src) return;
+    var newSrc = rewriteTrackSrc_(src, classLetter);
+    if (!newSrc) return;
 
     img.setAttribute("src", newSrc);
+  }
+
+  // ✅ NEW: also hit stats images + any other img-track variants
+  function setAllTrackThumbsClass_(classLetter) {
+    var imgs = document.querySelectorAll(IMG_SELECTOR_ANY);
+    for (var i = 0; i < imgs.length; i++) {
+      var im = imgs[i];
+      var s = im.getAttribute("src") || im.src || "";
+      var ns = rewriteTrackSrc_(s, classLetter);
+      if (ns && ns !== s) im.setAttribute("src", ns);
+    }
   }
 
   function ensureRaceDetailsUnder_() {
@@ -342,7 +348,6 @@
     if (ul.previousElementSibling !== tracks) {
       tracks.insertAdjacentElement("afterend", ul);
     }
-
     ul.style.position = "static";
   }
 
@@ -361,7 +366,10 @@
     if (banner) applyBannerClass(banner, raceClass);
 
     ensureRaceDetailsUnder_();
+
     setTrackImageClass(raceClass);
+    setAllTrackThumbsClass_(raceClass);
+
     syncPickerValue();
   }
 
@@ -378,7 +386,6 @@
     applyAll(selected);
 
     try { console.log(TAG, "Class =", selected, sourceTag ? "(" + sourceTag + ")" : ""); } catch (e) {}
-
     schedule();
   }
 
@@ -406,7 +413,10 @@
   }
 
   function setupLightMutationObserver() {
-    var root = document.getElementById("racingMainContainer") || document.getElementById("racingAdditionalContainer") || document.body;
+    var root = document.getElementById("racingMainContainer") ||
+               document.getElementById("racingAdditionalContainer") ||
+               document.body;
+
     if (!root || typeof MutationObserver !== "function") return;
 
     var obs = new MutationObserver(function () {
@@ -425,6 +435,7 @@
           }
         }
 
+        setAllTrackThumbsClass_(selected);
         schedule();
       }, 250);
     });

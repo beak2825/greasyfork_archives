@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google Zen Color, Font & Logo
 // @namespace    http://tampermonkey.net/
-// @version      1.8
+// @version      1.9
 // @description  Replace Google logo with custom logo, apply grayscale to service logos, supports dark mode
 // @author       djshigel
 // @license      MIT
@@ -22,6 +22,7 @@
 // @match        https://translate.google.com/*
 // @match        https://photos.google.com/*
 // @match        https://www.google.com/shopping*
+// @match        https://gemini.google.com/*
 // @grant        none
 // @run-at       document-start
 // @downloadURL https://update.greasyfork.org/scripts/550946/Google%20Zen%20Color%2C%20Font%20%20Logo.user.js
@@ -349,8 +350,8 @@
                 visibility: visible !important;
             }
             
-            div:has(div > div > #aim-lhs-panel-threads-view-container[style="display: none;"]) > div:has(button),
-            div:has(div > div > #aim-lhs-panel-threads-view-container[style="display: none; overflow: auto;"]) > div:has(button) {
+            div:has(div > div[style="display: none;"] > #aim-lhs-panel-threads-view-container) > div:has(button),
+            div:has(div > div[style="display: none; overflow: auto;"] > #aim-lhs-panel-threads-view-container) > div:has(button) {
                 background: transparent;
             }
             

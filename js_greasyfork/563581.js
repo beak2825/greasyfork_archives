@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         三叉戟-发版管理-表格增强_for_poseidon_v1.7.0
+// @name         三叉戟-发版管理-表格增强
 // @namespace    http://tampermonkey.net/
-// @version      1.5.1
-// @description  发版管理页面，相关功能的增强实现 (Poseidon v1.7.0+ 兼容，增强Branch检查诊断)
+// @version      1.6.0
+// @description  发版管理页面，相关功能的增强实现 (增加完整调试日志+扩大查询范围)
 // @author       shrek_maxi
 // @match        https://poseidon.cisdigital.cn/app/devops*
 // @match        https://poseidon.cisdigital.cn/devops*
@@ -13,22 +13,21 @@
 // @require      https://unpkg.com/xlsx/dist/xlsx.full.min.js
 // @license      MIT
 // @run-at       document-idle
-// @downloadURL https://update.greasyfork.org/scripts/563581/%E4%B8%89%E5%8F%89%E6%88%9F-%E5%8F%91%E7%89%88%E7%AE%A1%E7%90%86-%E8%A1%A8%E6%A0%BC%E5%A2%9E%E5%BC%BA_for_poseidon_v170.user.js
-// @updateURL https://update.greasyfork.org/scripts/563581/%E4%B8%89%E5%8F%89%E6%88%9F-%E5%8F%91%E7%89%88%E7%AE%A1%E7%90%86-%E8%A1%A8%E6%A0%BC%E5%A2%9E%E5%BC%BA_for_poseidon_v170.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563581/%E4%B8%89%E5%8F%89%E6%88%9F-%E5%8F%91%E7%89%88%E7%AE%A1%E7%90%86-%E8%A1%A8%E6%A0%BC%E5%A2%9E%E5%BC%BA.user.js
+// @updateURL https://update.greasyfork.org/scripts/563581/%E4%B8%89%E5%8F%89%E6%88%9F-%E5%8F%91%E7%89%88%E7%AE%A1%E7%90%86-%E8%A1%A8%E6%A0%BC%E5%A2%9E%E5%BC%BA.meta.js
 // ==/UserScript==
 
 (function () {
     "use strict";
 
     // 脚本版本信息
-    const SCRIPT_VERSION = "1.5.1";
+    const SCRIPT_VERSION = "1.6.0";
     const SCRIPT_NAME = "三叉戟-发版管理-表格增强";
     
-    // 可能的 releases API 路径 (v1.7.0 兼容)
+    // 可能的 releases API 路径 (/api 在前)
     const RELEASES_API_PATHS = [
-        "/api/releases/",           // v1.7.0 新路径
-        "/api/devops/releases/",    // 备选路径
-        "/devops/api/releases/",    // 老路径
+        "/api/devops/releases/",    // 主路径
+        "/api/releases/",           // 备选路径
     ];
 
     // 支持多种 URL 格式 (v1.7.0+ 兼容)
@@ -1512,21 +1511,55 @@
                     continue;
                 }
                 
-                // 查找与当前tag匹配的构建记录
-                const matchingBuild = builds.find(b => b.tag === version || b.tag === tag);
+                // 查找与当前版本号匹配的构建记录
+                // 只要版本号匹配就OK，不管分支类型 (release/tags/hotfix 都行)
+                // 注意: 版本和分支信息在 config 对象中
+                
+                console.log(`[三叉戟] ${appName} 查找版本 ${version}, 共 ${builds.length} 条构建记录`);
+                
+                // 列出所有构建记录的版本信息用于调试
+                const allVersions = builds.map((b, idx) => {
+                    const cfg = b.config || {};
+                    return `[${idx}] ${cfg.branch || 'N/A'}:${cfg.tag || 'N/A'}`;
+                });
+                console.log(`[三叉戟] ${appName} 所有构建版本:`, allVersions);
+                
+                // 查找版本号匹配的构建
+                const matchingBuild = builds.find((b, idx) => {
+                    // 获取 config 对象中的 tag/branch
+                    const config = b.config || {};
+                    const buildTag = (config.tag || '').trim();
+                    const buildBranch = (config.branch || '').trim();
+                    
+                    // 从 tag 提取版本号: "2.12.0", "2.11.1-release"
+                    const tagVersion = buildTag.replace(/-release$/, '').split('(')[0].trim();
+                    
+                    // 从 branch 提取版本号: "release/v2.11.1", "tags/v2.11.1", "hotfix/v2.17.1"
+                    const branchMatch = buildBranch.match(/(?:release|tags|hotfix|feature|test)\/v?(\d+\.\d+\.\d+)/i);
+                    const branchVersion = branchMatch ? branchMatch[1] : null;
+                    
+                    console.log(`[三叉戟] ${appName}[${idx}] 检查: branch="${buildBranch}" (提取=${branchVersion}), tag="${buildTag}" (提取=${tagVersion}), 目标=${version}`);
+                    
+                    // 只要 tag 或 branch 中的版本号匹配即可
+                    if (tagVersion === version || branchVersion === version) {
+                        console.log(`[三叉戟] ✓ ${appName} 在记录[${idx}]找到匹配: branch=${buildBranch}, tag=${buildTag}`);
+                        return true;
+                    }
+                    
+                    return false;
+                });
                 
                 if (matchingBuild) {
-                    const actualBranch = matchingBuild.branch || '';
-                    if (actualBranch === expectedBranch) {
-                        passed.push(appName);
-                    } else {
-                        issues.push(`${appName}: branch="${actualBranch}" 应为"${expectedBranch}"`);
-                    }
+                    passed.push(appName);
                 } else if (builds.length > 0) {
-                    // API 正常但没找到匹配的构建
-                    issues.push(`${appName}: 未找到tag=${version}的构建记录 (共${builds.length}条记录)`);
+                    // 没找到匹配，列出所有记录的版本信息
+                    const versions = builds.map(b => {
+                        const cfg = b.config || {};
+                        return `${cfg.branch || 'N/A'}:${cfg.tag || 'N/A'}`;
+                    }).join(', ');
+                    issues.push(`${appName}: 未找到v${version} (现有${builds.length}条: ${versions})`);
+                    console.warn(`[三叉戟] ✗ ${appName}: 未找到版本 ${version}，所有记录:`, versions);
                 } else {
-                    // builds 为空，可能是真的没有构建记录
                     apiUnavailable.push(appName);
                 }
             } catch (error) {
@@ -1547,7 +1580,7 @@
         
         let message = '';
         if (issues.length === 0 && apiUnavailable.length === 0) {
-            message = `✓ ${passed.length}个服务branch格式正确(tags/v{version})`;
+            message = `✓ ${passed.length}个服务均有对应版本的构建记录`;
         } else {
             const parts = [];
             if (issues.length > 0) {
@@ -1566,11 +1599,10 @@
         };
     }
 
-    // 可能的 apps/builds API 路径 (v1.7.0 兼容)
+    // 可能的 apps/builds API 路径 (/api 在前)
     const APPS_API_PATHS = [
-        "/api/devops/apps/",    // v1.7.0 新路径
+        "/api/devops/apps/",    // 主路径
         "/api/apps/",           // 备选路径
-        "/devops/api/apps/",    // 老路径
     ];
     let workingAppsPath = null;
 
@@ -1618,7 +1650,7 @@
 
     function tryFetchBuilds(appId, basePath, appName, silent = false) {
         return new Promise((resolve, reject) => {
-            const apiUrl = `${getApiBaseUrl()}${basePath}${appId}/builds/?page=1&page_size=20`;
+            const apiUrl = `${getApiBaseUrl()}${basePath}${appId}/builds/?page=1&page_size=100`;
             
             GM_xmlhttpRequest({
                 method: "GET",
@@ -1648,10 +1680,20 @@
                         }
                         
                         if (result.code === 0 && Array.isArray(result.data)) {
-                            if (!silent) console.log(`[三叉戟] ${appName || appId} 构建记录: ${result.data.length} 条`);
+                            if (!silent) {
+                                console.log(`[三叉戟] ${appName || appId} 构建记录: ${result.data.length} 条`);
+                                if (result.data.length > 0) {
+                                    console.log(`[三叉戟] ${appName || appId} API返回的第一条数据:`, result.data[0]);
+                                }
+                            }
                             resolve(result.data);
                         } else if (Array.isArray(result.results)) {
-                            if (!silent) console.log(`[三叉戟] ${appName || appId} 构建记录: ${result.results.length} 条`);
+                            if (!silent) {
+                                console.log(`[三叉戟] ${appName || appId} 构建记录: ${result.results.length} 条`);
+                                if (result.results.length > 0) {
+                                    console.log(`[三叉戟] ${appName || appId} API返回的第一条数据:`, result.results[0]);
+                                }
+                            }
                             resolve(result.results);
                         } else {
                             reject(new Error("API返回结构异常"));
@@ -2121,7 +2163,7 @@
 
     // 获取当前生效的 releases API 基路径
     function getReleasesBasePath() {
-        return workingReleasesPath || "/devops/api/releases/";
+        return workingReleasesPath || "/api/devops/releases/";
     }
 
     function fetchReleaseDetailData(releaseId) {
@@ -2868,7 +2910,7 @@
         const baseUrl = getApiBaseUrl();
         GM_xmlhttpRequest({
             method: "POST",
-            url: `${baseUrl}/devops/api/migration/exports/`,
+            url: `${baseUrl}/api/devops/migration/exports/`,
             headers: {
                 "accept": "application/json, text/plain, */*",
                 "accept-language": "zh-CN,zh;q=0.9",
@@ -2944,7 +2986,7 @@
         const baseUrl = getApiBaseUrl();
         GM_xmlhttpRequest({
             method: "POST",
-            url: `${baseUrl}/devops/api/migration/exports/`,
+            url: `${baseUrl}/api/devops/migration/exports/`,
             headers: {
                 "accept": "application/json, text/plain, */*",
                 "accept-language": "zh-CN,zh;q=0.9",

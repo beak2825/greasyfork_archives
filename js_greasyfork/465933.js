@@ -5,21 +5,23 @@
 // @homepageURL  https://greasyfork.org/scripts/465933-clean-url-improved
 // @supportURL   https://greasyfork.org/scripts/465933-clean-url-improved/feedback
 // @author       Schimon Jehudah
-// @collaborator Angilbert Dimitri アンジルベールディミトリ
+// @collaborator Angilbert Dimitri
+// @collaborator LeDimiScript
+// @collaborator アンジルベールディミトリ
 // @copyright    2023 - 2026, Schimon Jehudah (http://schimon.i2p)
 // @license      MIT; https://opensource.org/licenses/MIT
 // @run-at       document-start
 // @match        file:///*
 // @match        *://*/*
-// @version      26.01.01
+// @grant        GM.getValue
+// @grant        GM.notification
+// @grant        GM.registerMenuCommand
+// @grant        GM.setValue
+// @version      26.01.27
 // @icon         data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn5qlPC90ZXh0Pjwvc3ZnPgo=
 // @downloadURL https://update.greasyfork.org/scripts/465933/CleanURLs%20%28Clean%20URL%20Improved%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/465933/CleanURLs%20%28Clean%20URL%20Improved%29.meta.js
 // ==/UserScript==
-
-// NOTE GM.getValue and GM.setValue
-// will be used for statistics and
-// custom lists
 
 /*
 
@@ -75,6 +77,39 @@ if (url.hash || url.search) {
 // Check whether HTML; otherwise, exit.
 //if (!document.contentType == "text/html")
 //if (document.doctype == null) return;
+
+var gmGetValue,
+    gmSetValue,
+    gmNotification,
+    gmRegisterMenuCommand;
+
+if (typeof GM !== "undefined" && typeof GM.getValue === "function") {
+  gmGetValue = true;
+} else {
+  gmGetValue = false;
+  console.warn("Greasemonkey API GM.getValue does not seem to be available.");
+}
+
+if (typeof GM !== "undefined" && typeof GM.setValue === "function") {
+  gmSetValue = true;
+} else {
+  gmSetValue = false;
+  console.warn("Greasemonkey API GM.setValue does not seem to be available.");
+}
+
+if (typeof GM !== "undefined" && typeof GM.notification === "function") {
+  gmNotification = true;
+} else {
+  gmNotification = false;
+  console.warn("Greasemonkey API GM.notification does not seem to be available.");
+}
+
+if (typeof GM !== "undefined" && typeof GM.registerMenuCommand === "function") {
+  gmRegisterMenuCommand = true;
+} else {
+  gmRegisterMenuCommand = false;
+  console.warn("Greasemonkey API GM.registerMenuCommand does not seem to be available.");
+}
 
 var itemColor, newURLItem, selectionItem, urlParameter;
 
@@ -273,7 +308,7 @@ const whitelist = [
   "state",                // cdn
   "station",              // christiannetcast.com / truthradio.com
   "__switch_theme",       // theanarchistlibrary.org
-//  "tag",                  // id
+//"tag",                  // id
   "tags",                 // blasta
   "template",             // zapier
   "tid",                  // mybb
@@ -358,6 +393,7 @@ const blacklist = [
   "bta",
   "businessType",
   "campaign",
+  "campaign_id",
   "campaignId",
 //"__cf_chl_rt_tk",
 //"cid", // breaks sacred magick
@@ -405,6 +441,8 @@ const blacklist = [
 //"gclid",
 //"gclsrc",
   "gh_jid",
+  "__goaway_challenge",
+  "__goaway_id",
   "gps-id",
 //"gs_lcp",
   "gt",
@@ -477,6 +515,7 @@ const blacklist = [
   "promoid",
   "psc",
   "psprogram",
+  "pubid",
   "pvid",
   "qid",
 //"r",
@@ -982,13 +1021,15 @@ function createButton(x, y, url) {
 
 function extractURL(url) {
   let item = document.createElement("a");
-  item.textContent = "🔗"; // 🧧 🏷️ 🔖
+  item.textContent = "🔗"; // 🧧 🏷️ 🔖 🔗
   item.title = "Extracted URL";
   item.id = "url-extracted";
   item.style.all = "unset";
+  item.style.background = "grey";
+  item.style.borderRadius = "50%";
   item.style.outline = "none";
-  item.style.height = "15px";
-  item.style.width = "15px";
+  item.style.height = "1em";
+  item.style.width = "1em";
   item.style.padding = "3px";
   item.style.margin = "3px";
   //item.style.fontSize = "0.9rem" // 90%
@@ -1059,8 +1100,8 @@ function purgeURL(url, listType) {
   //item.textContent = itemTextContent;
   item.style.borderRadius = "50%";
   item.style.outline = "none";
-  item.style.height = "15px";
-  item.style.width = "15px";
+  item.style.height = "1em";
+  item.style.width = "1em";
   item.style.padding = "3px";
   item.style.margin = "3px";
   if (orgUrl){
@@ -1099,7 +1140,7 @@ function hrefDataHandler(url, listType) {
         if (url.searchParams.has(whitelist[i])) {
           newURL.searchParams.set(
             whitelist[i],
-            url.searchParams.has(whitelist[i]) // catchedValue
+            url.searchParams.get(whitelist[i]) // catchedValue
           );
         }
       }
@@ -1110,7 +1151,7 @@ function hrefDataHandler(url, listType) {
         if (url.searchParams.has(a2z[i])) {
           newURL.searchParams.set(
             a2z[i],
-            url.searchParams.has(a2z[i])
+            url.searchParams.get(a2z[i])
           );
         }
       }
@@ -1120,7 +1161,7 @@ function hrefDataHandler(url, listType) {
         if (url.searchParams.has(A2Z[i])) {
           newURL.searchParams.set(
             A2Z[i],
-            url.searchParams.has(A2Z[i])
+            url.searchParams.get(A2Z[i])
           );
         }
       }
@@ -1131,7 +1172,7 @@ function hrefDataHandler(url, listType) {
         if (url.searchParams.has(a2z[i])) {
           newURL.searchParams.set(
             a2z[i],
-            url.searchParams.has(a2z[i]) // catchedValue
+            url.searchParams.get(a2z[i]) // catchedValue
           );
         }
       }
@@ -1141,7 +1182,7 @@ function hrefDataHandler(url, listType) {
         if (url.searchParams.has(A2Z[i])) {
           newURL.searchParams.set(
             A2Z[i],
-            url.searchParams.has(A2Z[i]) // catchedValue
+            url.searchParams.get(A2Z[i]) // catchedValue
           );
         }
       }

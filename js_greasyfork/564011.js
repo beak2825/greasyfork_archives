@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         全局浏览器WallpaperEngine壁纸插件 带UI
 // @namespace    http://tampermonkey.net/
-// @version      4.13
+// @version      5.2
 // @description  优雅挂载url格式壁纸，自带护眼对比色处理，自动追踪暗色/浅色主题模式。
 // @author       HCID274
 // @match        *://*/*
@@ -17,18 +17,18 @@
 // @downloadURL https://update.greasyfork.org/scripts/564011/%E5%85%A8%E5%B1%80%E6%B5%8F%E8%A7%88%E5%99%A8WallpaperEngine%E5%A3%81%E7%BA%B8%E6%8F%92%E4%BB%B6%20%E5%B8%A6UI.user.js
 // @updateURL https://update.greasyfork.org/scripts/564011/%E5%85%A8%E5%B1%80%E6%B5%8F%E8%A7%88%E5%99%A8WallpaperEngine%E5%A3%81%E7%BA%B8%E6%8F%92%E4%BB%B6%20%E5%B8%A6UI.meta.js
 // ==/UserScript==
- 
-(function() {
+
+(function () {
     'use strict';
- 
+
     // ================= ⚙️ 默认配置 (URL控制权在此) =================
-const DEFAULT_CONFIG = {
+    const DEFAULT_CONFIG = {
         url: "https://happyhappyhappy.hcid274.xyz/api/v1/sys/fetch?t=gAAAAABpde52sahF-0TJpWgiQWN9nJyA42-giCkuWQpmi-X8QbdUvMJBsWHPs4SQ_5mIfezrEOBBT5V9pj7ovtVntKeNaQXVww==",
         opacity: 0.15,
         blur: 2,
         theme: 'auto' // 'auto' | 'light' | 'dark'
     };
- 
+
     // ================= 🛡️ 存储安全封装 =================
     function safeGetValue(key, defaultValue) {
         try {
@@ -38,7 +38,7 @@ const DEFAULT_CONFIG = {
             return defaultValue;
         }
     }
- 
+
     function safeSetValue(key, value) {
         try {
             GM_setValue(key, value);
@@ -50,23 +50,23 @@ const DEFAULT_CONFIG = {
             }
         }
     }
- 
+
     // 注册菜单命令
     GM_registerMenuCommand("🧹 重置壁纸脚本数据", () => {
-        if(confirm("壁纸脚本：确定要清空所有缓存和设置吗？这可以修复脚本无法运行的问题。")) {
+        if (confirm("壁纸脚本：确定要清空所有缓存和设置吗？这可以修复脚本无法运行的问题。")) {
             GM_deleteValue('user_config');
             GM_deleteValue('cached_bg_data');
             GM_deleteValue('cached_url'); // 清除缓存的URL记录
             location.reload();
         }
     });
- 
+
     // 初始化配置
     let config, cachedImgData, cachedUrl;
     try {
         // 读取存储的配置，但只保留样式设置
         const savedConfig = safeGetValue('user_config', DEFAULT_CONFIG);
- 
+
         // 强制同步：URL 永远以代码为准，防止 UI 缓存冲突
         config = {
             ...DEFAULT_CONFIG,
@@ -74,22 +74,54 @@ const DEFAULT_CONFIG = {
             blur: savedConfig.blur || DEFAULT_CONFIG.blur,
             theme: savedConfig.theme || DEFAULT_CONFIG.theme
         };
- 
+
         cachedImgData = safeGetValue('cached_bg_data', '');
         cachedUrl = safeGetValue('cached_url', ''); // 读取缓存图片对应的URL
     } catch (e) {
         console.error("[壁纸脚本] 初始化严重错误，重置:", e);
-        config = {...DEFAULT_CONFIG};
+        config = { ...DEFAULT_CONFIG };
         cachedImgData = '';
         cachedUrl = '';
     }
- 
+
     console.log("%c[壁纸修复版] 🚀 脚本启动...", "color: #00e0ff; font-weight: bold;");
- 
+
     // ================= 🛡️ 样式注入系统 (CSP Bypass) =================
     let globalSheet = null;
     let uiSheet = null;
- 
+    let monacoObserver = null;
+    let applyingMonacoCursor = false;
+
+    function forceMonacoCursorVisible(isDark) {
+        if (applyingMonacoCursor) return;
+        applyingMonacoCursor = true;
+        const cursorColor = isDark ? '#ffffff' : '#000000';
+        const cursors = document.querySelectorAll(
+            '.monaco-editor .cursors-layer .cursor, .monaco-editor .cursors-layer .cursor-primary, .monaco-editor .cursors-layer .cursor-secondary'
+        );
+        cursors.forEach((cursor) => {
+            cursor.style.setProperty('visibility', 'visible', 'important');
+            cursor.style.setProperty('border-left-width', '1px', 'important');
+            cursor.style.setProperty('border-left-style', 'solid', 'important');
+            cursor.style.setProperty('border-left-color', cursorColor, 'important');
+            cursor.style.setProperty('background-color', cursorColor, 'important');
+        });
+        applyingMonacoCursor = false;
+
+        if (!monacoObserver && document.body) {
+            monacoObserver = new MutationObserver(() => {
+                const hasMonaco = document.querySelector('.monaco-editor');
+                if (hasMonaco) forceMonacoCursorVisible(isDark);
+            });
+            monacoObserver.observe(document.body, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['style', 'class']
+            });
+        }
+    }
+
     function updateStyleSheet(css, sheetType) {
         // 方案 1: Constructable Stylesheets (最推荐)
         try {
@@ -106,8 +138,8 @@ const DEFAULT_CONFIG = {
                 }
                 return;
             }
-        } catch (e) {}
- 
+        } catch (e) { }
+
         // 方案 2: 标准 Style 标签注入
         try {
             const id = sheetType === 'global' ? 'hcid-global-style' : 'hcid-ui-style';
@@ -125,7 +157,7 @@ const DEFAULT_CONFIG = {
             console.error("样式注入完全失败", e);
         }
     }
- 
+
     // ================= 🎨 核心样式逻辑 =================
     function applyStyle(base64Img, currentConfig) {
         if (!base64Img) return;
@@ -148,9 +180,11 @@ const DEFAULT_CONFIG = {
         // 2. 🎨 定义动态变量 (深色 vs 浅色)
         // 浅色模式: 纯白底
         // 深色模式: 深灰蓝底 (非纯黑，避免死板) + 微弱亮边框 (Rim Light)
-        const bgBase = isDark ? "20, 24, 30" : "255, 255, 255"; 
+        const bgBase = isDark ? "20, 24, 30" : "255, 255, 255";
         const glassBorder = isDark ? "1px solid rgba(255, 255, 255, 0.1)" : "none";
-        const fontColorOverride = isDark ? "color: #ffffff !important; text-shadow: 0 1px 1px rgba(0,0,0,0.8);" : ""; 
+        const fontColorOverride = isDark
+            ? "color: #ffffff !important; text-shadow: 0 1px 1px rgba(0,0,0,0.8);"
+            : "color: #000000 !important; text-shadow: none !important;";
 
         // 3. 🧠 智能层级计算 (防止颜色堆叠过重)
         // 逻辑：层级越深，背景透明度越低。
@@ -163,24 +197,51 @@ const DEFAULT_CONFIG = {
         const opLvl3 = (op * 0.3).toFixed(3);
 
         let css = `
-            /* 1. 底层壁纸 */
-            body {
-                background-image: url('${base64Img}') !important;
-                background-attachment: fixed !important;
-                background-size: cover !important;
-                background-repeat: no-repeat !important;
-                background-position: center !important;
-                /* 强制全局文字颜色 (Variant A 独有) */
-                ${isDark ? 'color: #ffffff !important;' : ''}
+            /* ✅ 壁纸放到底层，不再污染字体渲染 */
+            html::before{
+              content:"";
+              position: fixed;
+              inset: 0;
+              z-index: -1;
+
+              background-image: url('${base64Img}');
+              background-size: cover;
+              background-position: center;
+              background-repeat: no-repeat;
+
+              /* ✅ 模糊只作用在壁纸层 */
+              filter: blur(${currentConfig.blur}px);
+
+              /* 让边缘不露白边 */
+              transform: scale(1.05);
+
+              /* 控制壁纸透明度（可选） */
+              opacity: 1;
+            }
+
+            /* ✅ 页面主体不要再背负“模糊” */
+            body{
+              background: transparent !important;
+              ${isDark ? 'color:#ffffff !important; caret-color:#ffffff !important;' : 'color:#000000 !important; caret-color:#000000 !important;'}
             }
             
             /* 强制所有元素文字变白 (慎用，可能破坏高亮，但这是 A 方案的核心) */
             ${isDark ? `
             *:not(i):not([class*="icon"]):not(svg *) {
                 color: #ffffff !important;
-                text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+                /* ✅ 优化后的阴影：更自然、不容易“分层” */
+                text-shadow: 0 1px 2px rgba(0,0,0,0.35);
             }
             a { color: #66ccff !important; }
+            ` : ''}
+            ${!isDark ? `
+            /* 强制所有元素文字变黑 (浅色模式) */
+            *:not(i):not([class*="icon"]):not(svg *) {
+                color: #000000 !important;
+                text-shadow: none !important;
+                caret-color: #000000 !important;
+            }
+            a { color: #0055cc !important; }
             ` : ''}
 
             /* 2. 智能透明化 (排除视频播放器和Canvas) */
@@ -213,23 +274,33 @@ const DEFAULT_CONFIG = {
             }
             ` : ''}
 
-            /* 3. 毛玻璃效果 */
-            body, #app, #root, main {
-                backdrop-filter: blur(${currentConfig.blur}px) !important;
-                -webkit-backdrop-filter: blur(${currentConfig.blur}px) !important;
-            }
-
             /* 4. 输入框强化可见性 */
             input, textarea, pre, code, select {
                 background-color: rgba(${bgBase}, 0.7) !important;
                 backdrop-filter: blur(10px) !important;
                 ${fontColorOverride}
+                caret-color: ${isDark ? '#ffffff' : '#000000'} !important;
             }
 
             /* 5. 保护媒体元素 */
             img, video, canvas, svg, iframe {
                 background-color: transparent !important;
                 opacity: 1 !important;
+            }
+
+            /* ✅ GitHub 代码区关闭阴影（文字就不会怪） */
+            pre, code, .blob-code, .blob-code-inner, .highlight span{
+              text-shadow: none !important;
+            }
+
+            /* Monaco 编辑器光标适配（浅色强制黑） */
+            .monaco-editor .cursors-layer .cursor,
+            .monaco-editor .cursors-layer .cursor-primary,
+            .monaco-editor .cursors-layer .cursor-secondary {
+              ${isDark ? 'background-color: #ffffff !important; border-color: #ffffff !important;' : 'background-color: #000000 !important; border-color: #000000 !important;'}
+              visibility: visible !important;
+              border-left-width: 1px !important;
+              border-left-style: solid !important;
             }
         `;
 
@@ -263,28 +334,29 @@ const DEFAULT_CONFIG = {
         }
 
         updateStyleSheet(css, 'global');
+        forceMonacoCursorVisible(isDark);
     }
 
- 
+
     // ================= 🖼️ 下载逻辑 =================
     function fetchAndApply(forceDownload = false) {
         if (cachedImgData && cachedUrl === config.url && !forceDownload) {
             applyStyle(cachedImgData, config);
             return;
         }
- 
+
         console.log(`[Wallpaper] Starting download (URL changed or no cache): ${config.url}`);
         // 这里不调用 showToast，因为 UI 还没初始化好，或者可能被 Shadow DOM 隔离
- 
+
         GM_xmlhttpRequest({
             method: "GET",
             url: config.url,
             responseType: "blob",
             timeout: 30000,
-            onload: function(response) {
+            onload: function (response) {
                 if (response.status === 200) {
                     var reader = new FileReader();
-                    reader.onloadend = function() {
+                    reader.onloadend = function () {
                         const result = reader.result;
                         // 阈值检查：3MB * 1.35 ≈ 4.1MB
                         if (result.length > 3 * 1024 * 1024 * 1.35) {
@@ -299,52 +371,42 @@ const DEFAULT_CONFIG = {
                     };
                     reader.readAsDataURL(response.response);
                 } else {
-                     if (cachedImgData) applyStyle(cachedImgData, config);
+                    if (cachedImgData) applyStyle(cachedImgData, config);
                 }
             },
-            onerror: function(err) {
-                 if (cachedImgData) applyStyle(cachedImgData, config);
+            onerror: function (err) {
+                if (cachedImgData) applyStyle(cachedImgData, config);
             },
-            ontimeout: function() {
-                 if (cachedImgData) applyStyle(cachedImgData, config);
+            ontimeout: function () {
+                if (cachedImgData) applyStyle(cachedImgData, config);
             }
         });
     }
- 
+
     // ================= 🖥️ UI 构建 (Shadow DOM 终极隔离版) =================
     // 解决“能拖动但看不见”的问题：使用 Shadow DOM 彻底隔离外部 CSS 污染
     function createUI() {
         const hostId = 'hcid-wallpaper-host';
         if (document.getElementById(hostId)) return;
- 
+
         // 1. 创建宿主 (Host)，直接挂载到 html 根节点，层级更高
         const host = document.createElement('div');
         host.id = hostId;
-        // 宿主作为定位基准，拦截所有外部样式
-        host.style.cssText = `
-            position: fixed;
-            top: 15%;
-            right: 20px;
-            z-index: 2147483647;
-            width: 0;
-            height: 0;
-            overflow: visible;
-            font-family: sans-serif;
-            line-height: normal;
-        `;
- 
+        // ❌ [CSP Fix] 不再使用 inline style 赋值
+        // host.style.cssText = ... (Deleted)
+
         // 2. 创建 Shadow Root (隔离罩)
         const shadow = host.attachShadow({ mode: 'open' });
- 
+
         // 3. 内部容器
         const container = document.createElement('div');
         container.id = 'hcid-container';
- 
+
         // --- 悬浮球 ---
         const ball = document.createElement('div');
         ball.id = 'hcid-ball';
         ball.title = '壁纸设置';
-        
+
         // 使用 DOM API 创建 SVG 以规避 TrustedHTML 限制
         const xmlns = "http://www.w3.org/2000/svg";
         const svg = document.createElementNS(xmlns, 'svg');
@@ -368,23 +430,23 @@ const DEFAULT_CONFIG = {
         svg.appendChild(path);
 
         ball.appendChild(svg);
- 
+
         // --- 面板 ---
         const panel = document.createElement('div');
         panel.id = 'hcid-panel';
         panel.className = 'hidden';
- 
+
         // 辅助函数：构建设置项
         const createGroup = (labelText, inputEl, valSpanId = null) => {
             const group = document.createElement('div');
             group.className = 'hcid-group';
             const row = document.createElement('div');
             row.className = 'hcid-label-row';
- 
+
             const label = document.createElement('label');
             label.textContent = labelText;
             row.appendChild(label);
- 
+
             if (valSpanId) {
                 const span = document.createElement('span');
                 span.id = valSpanId; // 这里ID在ShadowDOM内是唯一的
@@ -395,7 +457,7 @@ const DEFAULT_CONFIG = {
             group.appendChild(inputEl);
             return group;
         };
- 
+
         // 透明度
         const inputOpacity = document.createElement('input');
         inputOpacity.type = 'range';
@@ -403,7 +465,7 @@ const DEFAULT_CONFIG = {
         inputOpacity.value = config.opacity;
         inputOpacity.oninput = (e) => shadow.getElementById('val-opacity').textContent = e.target.value;
         panel.appendChild(createGroup("背景透明度", inputOpacity, 'val-opacity'));
- 
+
         // 模糊度
         const inputBlur = document.createElement('input');
         inputBlur.type = 'range';
@@ -423,53 +485,62 @@ const DEFAULT_CONFIG = {
         themeGroup.appendChild(themeRow);
 
         const selectTheme = document.createElement('select');
-        selectTheme.style.width = '100%';
-        selectTheme.style.padding = '4px';
-        selectTheme.style.borderRadius = '4px';
-        selectTheme.style.border = '1px solid #ccc';
-        
+        // ❌ [CSP Fix] 移除了 inline style
+
         const opts = [
-            {v: 'auto', t: '🌗 跟随系统 (自动)'},
-            {v: 'light', t: '☀️ 浅色 (白水晶)'},
-            {v: 'dark', t: '🌑 深色 (黑水晶)'}
+            { v: 'auto', t: '🌗 跟随系统 (自动)' },
+            { v: 'light', t: '☀️ 浅色 (白水晶)' },
+            { v: 'dark', t: '🌑 深色 (黑水晶)' }
         ];
         opts.forEach(o => {
             const op = document.createElement('option');
             op.value = o.v;
             op.textContent = o.t;
-            if(config.theme === o.v) op.selected = true;
+            if (config.theme === o.v) op.selected = true;
             selectTheme.appendChild(op);
         });
         themeGroup.appendChild(selectTheme);
         panel.appendChild(themeGroup);
- 
+
         // 按钮组
         const btnGroup = document.createElement('div');
         btnGroup.className = 'hcid-btns';
- 
+
         const btnSave = document.createElement('button');
         btnSave.id = 'hcid-btn-save';
         btnSave.textContent = '💾 保存设置';
         btnGroup.appendChild(btnSave);
- 
+
         const btnReset = document.createElement('button');
         btnReset.id = 'hcid-btn-reset';
         btnReset.textContent = '🔄 恢复默认';
         btnGroup.appendChild(btnReset);
- 
+
         panel.appendChild(btnGroup);
         container.appendChild(ball);
         container.appendChild(panel);
- 
+
         // Toast
         const toast = document.createElement('div');
         toast.id = 'hcid-toast';
         container.appendChild(toast);
- 
+
         // --- 样式注入 (注入到 Shadow DOM 内部，外部无法干扰) ---
         const style = document.createElement('style');
         style.textContent = `
-            :host { all: initial; } /* 阻断继承 */
+            :host { 
+                all: initial; 
+                /* ✅ [CSP Fix] 样式移入 CSS，彻底避开 inline style */
+                position: fixed;
+                top: 15%;
+                right: 20px;
+                z-index: 2147483647;
+                width: 0;
+                height: 0;
+                overflow: visible;
+                font-family: sans-serif;
+                line-height: normal;
+            } /* 阻断继承 */
             #hcid-container { position: relative; }
  
             #hcid-ball {
@@ -501,6 +572,15 @@ const DEFAULT_CONFIG = {
             .hcid-group { margin-bottom: 12px; }
             .hcid-label-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 12px; color: #555; font-weight: bold; }
             input[type=range] { width: 100%; }
+            
+            /* ✅ [CSP Fix] Select 样式移入 CSS */
+            select {
+                width: 100%;
+                padding: 4px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
+
             .hcid-btns { display: flex; gap: 10px; margin-top: 15px; }
             button { flex: 1; padding: 8px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; }
             #hcid-btn-save { background: #007aff; color: white; }
@@ -513,49 +593,77 @@ const DEFAULT_CONFIG = {
             }
             #hcid-toast.show { opacity: 1; }
         `;
- 
+
         shadow.appendChild(style);
         shadow.appendChild(container);
- 
-        // 挂载到 documentElement (html) 而不是 body，避免 body 样式影响
-        (document.documentElement || document.body).appendChild(host);
- 
+
+        // 挂载到 document.body (避免挂载到 html 会导致部分 Google 页面报错)
+        if (document.body) {
+            document.body.appendChild(host);
+        } else {
+            console.warn("[Wallpaper] Body not ready, retrying later...");
+            return; // 将由 Observer 再次触发
+        }
+
         // --- 事件逻辑 (针对 Host 操作) ---
         let isDragging = false;
         let hasMoved = false;
         let startX, startY, initialLeft, initialTop;
- 
+
+        // ✅ [CSP Detection] 检测是否支持拖动 (是否允许 inline style)
+        let dragEnabled = true;
+        try {
+            host.style.left = "10px";   // 测试写入 inline style
+            host.style.left = "";       // 还原
+        } catch (e) {
+            dragEnabled = false;
+        }
+
+        if (!dragEnabled) {
+            console.warn("[Wallpaper] CSP strict site detected, drag disabled.");
+        }
+
         // 注意：事件监听的是 shadow 内部的 ball
-        ball.onmousedown = (e) => {
-            isDragging = true; hasMoved = false;
-            startX = e.clientX; startY = e.clientY;
- 
-            // 获取宿主的位置
-            const rect = host.getBoundingClientRect();
- 
-            // 转换为 left/top 定位
-            host.style.right = 'auto';
-            host.style.left = rect.left + 'px';
-            host.style.top = rect.top + 'px';
- 
-            initialLeft = rect.left; initialTop = rect.top;
-        };
- 
-        document.onmousemove = (e) => {
-            if (!isDragging) return;
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-            if (Math.abs(dx) > 2 || Math.abs(dy) > 2) hasMoved = true;
- 
-            // 移动宿主
-            host.style.left = (initialLeft + dx) + 'px';
-            host.style.top = (initialTop + dy) + 'px';
-        };
- 
-        document.onmouseup = () => { isDragging = false; };
- 
-        ball.onclick = () => { if (!hasMoved) panel.classList.toggle('hidden'); };
- 
+        if (dragEnabled) {
+            const onMouseMove = (e) => {
+                if (!isDragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                if (Math.abs(dx) > 2 || Math.abs(dy) > 2) hasMoved = true;
+
+                // 移动宿主
+                host.style.left = (initialLeft + dx) + 'px';
+                host.style.top = (initialTop + dy) + 'px';
+            };
+
+            const onMouseUp = () => {
+                isDragging = false;
+                document.removeEventListener('mousemove', onMouseMove, true);
+                document.removeEventListener('mouseup', onMouseUp, true);
+            };
+
+            ball.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                hasMoved = false;
+                startX = e.clientX; startY = e.clientY;
+
+                // 获取宿主的位置
+                const rect = host.getBoundingClientRect();
+
+                // 转换为 left/top 定位
+                host.style.right = 'auto';
+                host.style.left = rect.left + 'px';
+                host.style.top = rect.top + 'px';
+
+                initialLeft = rect.left; initialTop = rect.top;
+
+                document.addEventListener('mousemove', onMouseMove, true);
+                document.addEventListener('mouseup', onMouseUp, true);
+            }, { capture: true });
+        }
+
+        ball.addEventListener('click', () => { if (!hasMoved) panel.classList.toggle('hidden'); });
+
         btnSave.onclick = () => {
             config = {
                 url: DEFAULT_CONFIG.url,
@@ -565,16 +673,16 @@ const DEFAULT_CONFIG = {
             };
             safeSetValue('user_config', config);
             applyStyle(cachedImgData, config);
- 
+
             // 显示 Toast (在 Shadow DOM 内部)
             const t = shadow.getElementById('hcid-toast');
-            if(t) {
+            if (t) {
                 t.textContent = "✨ 样式设置已保存";
                 t.classList.add('show');
                 setTimeout(() => t.classList.remove('show'), 2000);
             }
         };
- 
+
         btnReset.onclick = () => {
             if (confirm("重置所有设置？")) {
                 GM_deleteValue('user_config');
@@ -582,14 +690,14 @@ const DEFAULT_CONFIG = {
             }
         };
     }
- 
+
     // ================= 🚀 启动逻辑 =================
     if (cachedImgData && cachedUrl === config.url) {
         applyStyle(cachedImgData, config);
     } else {
         fetchAndApply(true);
     }
- 
+
     // 监听系统主题变化 (仅在 auto 模式下生效)
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
         if (config.theme === 'auto' && cachedImgData) {
@@ -605,7 +713,7 @@ const DEFAULT_CONFIG = {
         }
     });
     observer.observe(document.documentElement, { childList: true, subtree: true });
- 
+
     window.addEventListener('DOMContentLoaded', createUI);
- 
+
 })();

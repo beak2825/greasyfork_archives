@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name        Limax Client
+// @name        Limax Client[1.1]
 // @namespace   Violentmonkey Scripts
 // @match       *://limax.io/*
 // @grant       GM_addStyle
@@ -10,13 +10,13 @@
 // @grant       GM.setValue
 // @grant       GM.deleteValue
 // @grant       unsafeWindow
-// @version     1.0
+// @version     1.1
 // @author      Drik
-// @description Hud(RAlt): Ad Blocker, Auto Play, esp, tracers and more functions!!!
+// @description !!! UPDATE !!! Hud(RAlt): Ad Blocker, Auto Play(new kill mode 1.1) , esp, tracers, HUD, and more functions!!!
 // @run-at      document-idle
 // @license     MIT
-// @downloadURL https://update.greasyfork.org/scripts/559920/Limax%20Client.user.js
-// @updateURL https://update.greasyfork.org/scripts/559920/Limax%20Client.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/559920/Limax%20Client%5B11%5D.user.js
+// @updateURL https://update.greasyfork.org/scripts/559920/Limax%20Client%5B11%5D.meta.js
 // ==/UserScript==
 (async function() {
     'use strict';
@@ -32,7 +32,10 @@
         Tracers: false,
         ESP: false,
         AutoNick: false,
-        AutoNickValue: ''
+        AutoNickValue: '',
+        HUD: false,
+        ToggleKey: 'AltRight',
+        Theme: 'dark'
     };
 
     async function gmGet(key, def) {
@@ -79,6 +82,14 @@
       --shadow: 0 6px 24px rgba(2,6,23,0.6);
     }
 
+    .theme-white {
+      --bg: rgba(255,255,255,0.98);
+      --panel: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(250,250,255,0.85));
+      --accent: linear-gradient(90deg,#fef3c7,#c7d2fe);
+      --muted: rgba(12,34,56,0.6);
+      --shadow: 0 8px 30px rgba(2,6,23,0.06);
+    }
+
     #limax-toolbox {
       font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif !important;
       -webkit-font-smoothing: antialiased !important;
@@ -101,9 +112,7 @@
       line-height: 1.18;
     }
 
-    #limax-toolbox, #limax-toolbox * {
-      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif !important;
-    }
+    #limax-toolbox, #limax-toolbox * { font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif !important; }
 
     #limax-toolbox.show { display:block; animation: dropIn 220ms cubic-bezier(.2,.9,.3,1); }
     @keyframes dropIn { from { transform: translateY(-8px) scale(.995); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
@@ -111,15 +120,15 @@
     .lt-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
     .lt-title { display:flex; gap:12px; align-items:center; }
     .lt-logo { min-width:120px; height:44px; border-radius:10px; background:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:800; color:#04263b; font-size:14px; padding:0 12px; }
-    .lt-h1 { font-size:18px; font-weight:700; margin:0; }
+    .lt-h1 { font-size:18px; font-weight:700; margin:0; color: var(--muted); }
     .lt-sub { font-size:12px; color:var(--muted); margin-top:2px; }
 
     .lt-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 
-    .lt-card { background:var(--panel); border-radius:10px; padding:12px; min-height:92px; display:flex; flex-direction:column; justify-content:space-between; transition: transform .12s, box-shadow .12s; border:1px solid rgba(255,255,255,0.02); }
-    .lt-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(2,6,23,0.6); }
+    .lt-card { background:var(--panel); border-radius:10px; padding:12px; min-height:92px; display:flex; flex-direction:column; justify-content:space-between; transition: transform .12s, box-shadow .12s; border:1px solid rgba(0,0,0,0.03); color: var(--muted);}
+    .lt-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(2,6,23,0.06); }
     .title-row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
-    .lt-card h3 { margin:0; font-size:14px; font-weight:700; }
+    .lt-card h3 { margin:0; font-size:14px; font-weight:700; color: inherit; }
     .lt-card p { margin:8px 0 0 0; font-size:12px; color:var(--muted); line-height:1.25; }
 
     .lt-switch { position:relative; width:56px; height:30px; border-radius:999px; background: rgba(255,255,255,0.06); display:flex; align-items:center; padding:4px; cursor:pointer; box-sizing:border-box; }
@@ -128,18 +137,21 @@
     .lt-switch.on .knob { transform: translateX(26px); }
 
     .lt-controls { margin-top:10px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .lt-input { background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.04); color: #eaf6ff; padding:8px 10px; border-radius:8px; outline:none; min-width:160px; font-size:13px; }
+    .lt-input { background: rgba(0,0,0,0.12); border: 1px solid rgba(255,255,255,0.04); color: #eaf6ff; padding:8px 10px; border-radius:8px; outline:none; min-width:160px; font-size:13px; }
     .lt-small { font-size:12px; color:var(--muted); }
 
     .lt-footer { margin-top:14px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
     .lt-toggle-key { font-weight:700; font-size:12px; color:#cfefff; }
     .lt-footer .save { background: linear-gradient(90deg,#60a5fa,#7dd3fc); color:#04263b; border-radius:10px; padding:8px 12px; font-weight:700; cursor:pointer; border:none; }
 
+    .lt-btn { padding:8px 10px; border-radius:8px; background: rgba(0,0,0,0.12); border:1px solid rgba(255,255,255,0.02); cursor:pointer; color:var(--muted); font-size:13px; }
+
     @media (max-width:780px) { #limax-toolbox{ right:16px; left:16px;} .lt-grid{grid-template-columns:1fr;} .lt-logo{min-width:96px;font-size:13px;padding:0 8px;} }
   `);
 
     const root = document.createElement('div');
     root.id = 'limax-toolbox';
+    if (state.Theme === 'white') root.classList.add('theme-white');
     document.body.appendChild(root);
 
     let adIv = null;
@@ -147,6 +159,7 @@
     let trRunner = null;
     let espRunner = null;
     let origWsSend = null;
+    let hudRunner = null;
 
     function adStart() {
         const S = ['#advert', '#vertad', '#crossPromotion'];
@@ -569,51 +582,752 @@
         try {
             if (unsafeWindow && unsafeWindow.AutoBot) return;
         } catch (e) {}
-        const botSrc = `
-    (function(){
-      try{
-        var OrigWS = window.WebSocket;
-        var sock = null;
-        function wrap(u, p){
-          var s = p ? new OrigWS(u,p) : new OrigWS(u);
-          try{ if((u && u.indexOf('limax.io')!==-1) || (u && u.indexOf('127.0.0.1')!==-1)) sock = s; }catch(e){}
-          var orig = s.send.bind(s);
-          s.send = function(data){ return orig(data); };
-          s.addEventListener('close', function(){ if(sock===s) sock = null; });
-          return s;
-        }
-        window.WebSocket = function(u,p){ return wrap(u,p); };
-        window.WebSocket.prototype = OrigWS.prototype;
-        var on = false, iv = null;
-        var RT = 33, FD = 300, PUSH = 700, PF = 2, TC = 10;
-        var lastTrap = 0, TRAPBUF = 12, PBW = 6;
-        var kill = false, KMIN = 300, KR = 250, KTS = 55, KTI = 10, SHELBUF = 200, SHELREACH = 200;
-        function getMe(){ try{ if(typeof window.true_id==='undefined' || window.true_id===-1) return null; return (window.players_show_pos && window.players_show_pos[window.true_id]) ? window.players_show_pos[window.true_id] : null; }catch(e){return null;} }
-        function myScore(){ try{ if(typeof window.id!=='undefined' && window.players && window.players[window.id] && window.players[window.id].id===window.true_id) return window.players[window.id].score||0; if(window.players && Array.isArray(window.players)){ for(var i=0;i<window.players.length;i++){ var p=window.players[i]; if(p && p.id===window.true_id) return p.score||0; } } return (typeof window.score!=='undefined')?window.score:0; }catch(e){return 0;} }
-        function gatherTraps(){ var out=[]; try{ var pt=window.players_trap || window.trap_map || []; if(Array.isArray(pt)){ for(var pid=0; pid<pt.length; pid++){ var arr = pt[pid]; if(!arr) continue; for(var ti=0; ti<arr.length; ti++){ var t=arr[ti]; if(!t) continue; var tx=(typeof t.x!=='undefined')?t.x:((typeof t.rx!=='undefined')?t.rx:0); var ty=(typeof t.y!=='undefined')?t.y:((typeof t.ry!=='undefined')?t.ry:0); var tr=(typeof t.radius!=='undefined')?t.radius:((typeof t.r!=='undefined')?t.r:(t.instRadius||0)); out.push({x:tx,y:ty,r:tr,owner:pid,lifetime:(t.lifetime||0)}); } } } else if(typeof pt==='object'){ for(var k in pt){ if(!pt.hasOwnProperty(k)) continue; var list=pt[k]; if(!list) continue; for(var j=0;j<list.length;j++){ var t=list[j]; if(!t) continue; var tx=(typeof t.x!=='undefined')?t.x:((typeof t.rx!=='undefined')?t.rx:0); var ty=(typeof t.y!=='undefined')?t.y:((typeof t.ry!=='undefined')?t.ry:0); var tr=(typeof t.radius!=='undefined')?t.radius:((typeof t.r!=='undefined')?t.r:0); out.push({x:tx,y:ty,r:tr,owner:k,lifetime:(t.lifetime||0)}); } } } }catch(e){} return out; }
-        function dist(x1,y1,x2,y2){ var dx=x1-x2, dy=y1-y2; return Math.sqrt(dx*dx+dy*dy); }
-        function projectionParam(px,py,x1,y1,x2,y2){ var Cx=x2-x1, Cy=y2-y1; var len_sq=Cx*Cx+Cy*Cy; if(len_sq===0) return 0; return ((px-x1)*Cx + (py-y1)*Cy)/len_sq; }
-        function pointLineDist(px,py,x1,y1,x2,y2){ var A=px-x1, B=py-y1, C=x2-x1, D=y2-y1; var dot=A*C + B*D; var len_sq=C*C + D*D; var param=-1; if(len_sq!==0) param = dot/len_sq; var xx, yy; if(param<0){ xx = x1; yy = y1;} else if(param>1){ xx = x2; yy = y2; } else { xx = x1 + param * C; yy = y1 + param * D; } var dx=px-xx, dy=py-yy; return Math.sqrt(dx*dx + dy*dy); }
-        function isTrapNearPoint(traps,x,y,buf){ buf = buf||0; for(var i=0;i<traps.length;i++){ var t=traps[i]; if(dist(t.x,t.y,x,y) <= (t.r||0) + buf) return true; } return false; }
-        function pathIntersectsTrap(traps,x1,y1,x2,y2,excludeOwner){ for(var i=0;i<traps.length;i++){ var t=traps[i]; if(typeof excludeOwner!=='undefined' && t.owner==excludeOwner) continue; var extra = (typeof window.true_id!=='undefined' && t.owner != window.true_id) ? 30 : 0; var d = pointLineDist(t.x,t.y,x1,y1,x2,y2); if(d <= (t.r||0) + TRAPBUF + extra) return true; } return false; }
-        function closestPlayer(){ try{ var me=getMe(); if(!me||!window.players_show_pos||!window.players) return null; var bestD=Infinity,bestId=null; for(var i=0;i<window.players.length;i++){ var p=window.players[i]; if(!p) continue; if(p.id===window.true_id) continue; var pos=window.players_show_pos[p.id]; if(!pos) continue; var dx=pos.x-me.x, dy=pos.y-me.y, d2=dx*dx+dy*dy; if(d2<bestD){ bestD=d2; bestId=p.id; } } return bestId===null?null:{id:bestId,d2:bestD,dist:Math.sqrt(bestD)}; }catch(e){return null;} }
-        function nearestInfo(){ try{ var best=closestPlayer(); if(!best) return null; var p=null; for(var i=0;i<window.players.length;i++) if(window.players[i] && window.players[i].id===best.id){ p=window.players[i]; break; } var pos=(window.players_show_pos && window.players_show_pos[best.id])?window.players_show_pos[best.id]:null; return { id: best.id, dist: best.dist, player: p, pos: pos }; }catch(e){return null;} }
-        function sendControl(angle, trapFlag){ try{ if(!sock && window.socket) sock = window.socket; if(!sock) return; if(!isFinite(angle)) angle = 0; var t = trapFlag ? 1 : 0; sock.send("[" + 0 + "," + angle + "," + t + "]"); }catch(e){} }
-        function normalize(x,y){ var L=Math.sqrt(x*x+y*y); if(L===0) return {x:0,y:0}; return {x:x/L,y:y/L}; }
-        function safeApproach(tx,ty,me,traps,excludeOwner){ var angle=Math.atan2(ty-me.y,tx-me.x)+Math.PI; if(!pathIntersectsTrap(traps,me.x,me.y,tx,ty,excludeOwner)) return {x:tx,y:ty,angle:angle}; var best=null,bestScore=Infinity; var steps=36,dists=[40,80,140,220]; for(var s=0;s<dists.length;s++){ var distOffset=dists[s]; for(var i=0;i<steps;i++){ var a=-Math.PI + (i/steps)*(2*Math.PI); var ca=Math.cos(a), sa=Math.sin(a); var nx = tx + ca*distOffset, ny = ty + sa*distOffset; var penalty=0; if(pathIntersectsTrap(traps,me.x,me.y,nx,ny,excludeOwner)) penalty += 1000000; for(var ti=0; ti<traps.length; ti++){ var t=traps[ti]; if(typeof excludeOwner!=='undefined' && t.owner==excludeOwner) continue; var td = dist(nx,ny,t.x,t.y) - (t.r||0); if(td < 0) penalty += (15000 + Math.abs(td) * 80); else if(td < 120) penalty += (1200 - td * 6); } var d = dist(me.x,me.y,nx,ny); var score = d + penalty + distOffset*0.2; if(score < bestScore){ bestScore = score; best = { x: nx, y: ny, angle: Math.atan2(ny - me.y, nx - me.x) + Math.PI }; } } } if(best) return best; return { x: tx, y: ty, angle: angle }; }
-        function trapBetween(me,target,trap,buffer){ var t = projectionParam(trap.x, trap.y, me.x, me.y, target.x, target.y); if(t < 0 || t > 1) return false; var d = pointLineDist(trap.x, trap.y, me.x, me.y, target.x, target.y); return d <= (trap.r || 0) + (buffer || 0); }
-        function findBestTrapBetween(me,target,traps){ var list=[]; for(var i=0;i<traps.length;i++){ var t=traps[i]; if(trapBetween(me,target,t, TRAPBUF + 10)){ var ed = dist(t.x,t.y,target.x,target.y); list.push({ trap: t, ed: ed }); } } if(list.length===0) return null; list.sort(function(a,b){ return a.ed - b.ed; }); return list[0].trap; }
-        function repulsionVector(me,traps){ var rx=0, ry=0, minDanger=Infinity; for(var i=0;i<traps.length;i++){ var t=traps[i]; if(typeof window.true_id!=='undefined' && t.owner == window.true_id) continue; var dcenter=dist(me.x,me.y,t.x,t.y); var d=dcenter - (t.r||0); if(d < minDanger) minDanger = d; var dd = Math.max(d,0.1); var w = 1/(dd*dd); rx += (me.x - t.x) * w; ry += (me.y - t.y) * w; } return { rx: rx, ry: ry, minDanger: minDanger }; }
-        function emergencyEvade(me,traps){ var rep = repulsionVector(me,traps); if(!rep) return false; if(rep.minDanger > 160) return false; var v = normalize(rep.rx, rep.ry); if(v.x===0 && v.y===0) return false; var push = 900; var targetX = me.x + v.x * push, targetY = me.y + v.y * push; var angle = Math.atan2(targetY - me.y, targetX - me.x) + Math.PI; sendControl(angle,0); for(var k=1;k<=3;k++){ (function(a,d){ setTimeout(function(){ sendControl(a,0); }, d); })(angle, k*40); } return true; }
-        function performKillBehavior(){ var me=getMe(); if(!me) return false; var sc=myScore(); if(sc <= KMIN) return false; var info=nearestInfo(); if(!info || !info.pos) return false; var enemyScore = (info.player && typeof info.player.score!=='undefined')?info.player.score:0; if(enemyScore < 100) return false; var traps=gatherTraps(); var ev=emergencyEvade(me,traps); if(ev) return true; var pvx=0,pvy=0; try{ if(info.player){ if(typeof info.player.vx!=='undefined') pvx=info.player.vx; if(typeof info.player.vy!=='undefined') pvy=info.player.vy; } }catch(e){} var predX = info.pos.x + pvx * PF; var predY = info.pos.y + pvy * PF; var distToTarget = dist(me.x, me.y, predX, predY); if(distToTarget <= KR){ var targetPoint={x:predX,y:predY}; var chosen=findBestTrapBetween(me,targetPoint,traps); if(chosen){ var dir=normalize(chosen.x-targetPoint.x, chosen.y-targetPoint.y); var shelterX = chosen.x + dir.x * ((chosen.r||0)+SHELBUF); var shelterY = chosen.y + dir.y * ((chosen.r||0)+SHELBUF); var safe = safeApproach(shelterX,shelterY,me,traps,undefined); if(safe){ var distShelter=dist(me.x,me.y,shelterX,shelterY); if(distShelter <= SHELREACH){ var angleToEnemy = Math.atan2(predY - me.y, predX - me.x) + Math.PI; for(var i=0;i<KTS;i++){ (function(a,delay){ setTimeout(function(){ sendControl(a,1); }, delay); })(angleToEnemy, i * KTI); } setTimeout(function(){ sendControl(Math.atan2(predY - me.y, predX - me.x) + Math.PI, 0); }, KTS * KTI + 30); return true; } else { sendControl(safe.angle,0); return true; } } } var angle = Math.atan2(predY - me.y, predX - me.x) + Math.PI; for(var j=0;j<KTS;j++){ (function(a,delay){ setTimeout(function(){ sendControl(a,1); }, delay); })(angle, j * KTI); } setTimeout(function(){ sendControl(Math.atan2(predY - me.y, predX - me.x) + Math.PI, 0); }, KTS * KTI + 30); return true; } else { var safe2 = safeApproach(predX,predY,me,traps,undefined); if(safe2){ sendControl(safe2.angle,0); return true; } } return false; }
-        function findClosestBonusSafe(traps){ try{ var update_map = window.update_bonus_map || window.player_update_bonus_map || []; var bonus_map = window.bonus_map || window.bonusMap || null; var player_bonus_map = window.player_bonus_map || window.playerBonusMap || window.player_bonus_map; var me = getMe(); if(!me) return null; var best=null,bestScore=Infinity; for(var i=0;i<update_map.length;i++){ var idb = update_map[i]; var bx=0,by=0,isPlayerBonus=false; if(typeof idb==='number' && bonus_map && typeof bonus_map[idb] !== 'undefined'){ var b = bonus_map[idb]; if(!b) continue; bx = (typeof b.rx!=='undefined')?b.rx:((typeof b.x!=='undefined')?b.x:0); by = (typeof b.ry!=='undefined')?b.ry:((typeof b.y!=='undefined')?b.y:0); } else { isPlayerBonus = true; try{ var BIG = (typeof window.BONUS_DEAD_KEY !== 'undefined') ? window.BONUS_DEAD_KEY : 1000000; if(BIG && idb >= BIG){ var j = Math.floor(idb / BIG) - 1; var k = idb % BIG; var pb = (player_bonus_map && player_bonus_map[j]) ? player_bonus_map[j][k] : null; if(!pb) continue; bx = (typeof pb.rx!=='undefined')?pb.rx:((typeof pb.x!=='undefined')?pb.x:0); by = (typeof pb.ry!=='undefined')?pb.ry:((typeof pb.y!=='undefined')?pb.y:0); } else continue; }catch(e){ continue; } } var dx=bx-me.x, dy=by-me.y; var d=Math.sqrt(dx*dx + dy*dy); if(isPlayerBonus){ if(isTrapNearPoint(traps,bx,by,PBW)) continue; } var penalty=0; if(pathIntersectsTrap(traps, me.x, me.y, bx, by)) penalty += 1000000; for(var tI=0; tI<traps.length; tI++){ var t=traps[tI]; var td = dist(bx,by,t.x,t.y) - (t.r||0); if(td < 0) penalty += (10000 + Math.abs(td) * 50); else if(td < 60) penalty += (600 - td * 5); } var score = d + penalty; if(score < bestScore){ bestScore = score; best = { x: bx, y: by, isPlayerBonus: isPlayerBonus, d: d }; } } return best; }catch(e){return null;} }
-        function botTick(){ try{ if(!sock && window.socket) sock = window.socket; if(!sock) return; if(typeof window.game_is_show !== 'undefined' && !window.game_is_show) return; var me=getMe(); if(!me) return; var traps = gatherTraps(); var evadeNow = emergencyEvade(me,traps); if(evadeNow) return; if(kill){ var did=performKillBehavior(); if(did) return; } var nearestP = closestPlayer(); var isFlee = nearestP && nearestP.dist < FD; if(isFlee){ var pPos = window.players_show_pos[nearestP.id]; if(!pPos) return; var pvx=0,pvy=0; try{ for(var i=0;i<window.players.length;i++){ var pe=window.players[i]; if(pe && pe.id===nearestP.id){ if(typeof pe.vx!=='undefined') pvx=pe.vx; if(typeof pe.vy!=='undefined') pvy=pe.vy; break; } } }catch(e){} var predX = pPos.x + pvx * PF; var predY = pPos.y + pvy * PF; var dx = me.x - predX, dy = me.y - predY; var distv = Math.sqrt(dx*dx + dy*dy); if(distv < 1) distv = 1; var ux = dx / distv, uy = dy / distv; var push = PUSH + Math.max(0, (FD - distv)) * 2; var targetX = me.x + ux * push, targetY = me.y + uy * push; if(pathIntersectsTrap(traps, me.x, me.y, targetX, targetY)){ var rx=0, ry=0, totalw=0; for(var ti=0; ti<traps.length; ti++){ var t=traps[ti]; var td = dist(me.x, me.y, t.x, t.y) - Math.max(1, t.r||0); if(td <= 0) td = 0.1; var w = 1/(td*td); rx += (me.x - t.x)*w; ry += (me.y - t.y)*w; totalw += w; } if(totalw>0){ rx /= totalw; ry /= totalw; var rlen = Math.sqrt(rx*rx + ry*ry); if(rlen < 1){ rx = ux; ry = uy; rlen = 1; } rx = rx / rlen; ry = ry / rlen; targetX = me.x + rx * push; targetY = me.y + ry * push; } } var angle = Math.atan2(targetY - me.y, targetX - me.x) + Math.PI; var now=Date.now(); var wantTrap = (myScore() > 1000 && (now - lastTrap) > TC); if(wantTrap){ lastTrap = now; sendControl(angle,1); setTimeout(function(){ sendControl(angle,0); }, 80); } else sendControl(angle,0); return; } var target = findClosestBonusSafe(traps); if(target){ var dx = target.x - me.x, dy = target.y - me.y; var angle = Math.atan2(dy, dx) + Math.PI; sendControl(angle,0); return; } var jitter = (Math.random() - 0.5) * 0.6; var base = (typeof window.mouseangle !== 'undefined') ? window.mouseangle : 0; sendControl(base + jitter, 0); }catch(e){} }
-        function startBot(){ if(iv) clearInterval(iv); iv = setInterval(botTick, RT); on = true; }
-        function stopBot(){ if(iv){ clearInterval(iv); iv=null; } on=false; }
-        window.AutoBot = { start: startBot, stop: stopBot, setKill: function(v){ kill = !!v; }, isRunning: function(){ return !!on; } };
-        try{ if(window.socket) sock = window.socket; }catch(e){}
-      }catch(e){} })();
-    `;
+        const botSrc = "(" + (function() {
+            try {
+                var OrigWS = window.WebSocket;
+                var sockRef = null;
+                var enemyPositionHistory = [];
+                var lastLoggedMyRadius = 0;
+
+                function wrapSocket(url, protocols) {
+                    var s = protocols ? new OrigWS(url, protocols) : new OrigWS(url);
+                    try {
+                        if ((url && url.indexOf("limax.io") !== -1) || (url && url.indexOf("127.0.0.1") !== -1)) sockRef = s;
+                    } catch (e) {}
+                    s.addEventListener("open", function() {
+                        try {
+                            var initialRadius = (window.players_radius && window.players_radius[window.true_id]) ? window.players_radius[window.true_id] : 25;
+                            lastLoggedMyRadius = initialRadius;
+                        } catch (e) {}
+                    });
+                    var origSend = s.send.bind(s);
+                    s.send = function(data) {
+                        return origSend(data);
+                    };
+                    s.addEventListener("close", function() {
+                        if (sockRef === s) sockRef = null;
+                    });
+                    return s;
+                }
+                window.WebSocket = function(url, protocols) {
+                    return wrapSocket(url, protocols);
+                };
+                window.WebSocket.prototype = OrigWS.prototype;
+                var enabled = false;
+                var loopIv = null;
+                var RATE_MS = 16;
+                var F_D = 300;
+                var F_P = 700;
+                var P_F = 2.3;
+                var T_C = 10;
+                var ltt = 0;
+                var PBW = 6;
+                var killMode = false;
+                var KMS = 300;
+                var K_R = 250;
+                var KTS = 55;
+                var KTSI = 10;
+                var S_B = 200;
+                var S_R_D = 200;
+                var EST = 1777;
+                var KCR = 148;
+                var KTIM = 195;
+                var KRTB = 24;
+                var KTBS = 15;
+                var KTBD = 13;
+                var SER = 27;
+                var MTR = 520;
+                var MTMD = 380;
+                var STW = 2.5;
+                var kltp = 0;
+                var DRIK_XD = Date.now();
+                var leva = 0;
+
+                function getMyPos() {
+                    try {
+                        if (typeof window.true_id === 'undefined' || window.true_id === -1) return null;
+                        return (window.players_show_pos && window.players_show_pos[window.true_id]) ? window.players_show_pos[window.true_id] : null;
+                    } catch (e) {
+                        return null;
+                    }
+                }
+
+                function getMyScore() {
+                    try {
+                        if (typeof window.id !== 'undefined' && window.players && window.players[window.id] && window.players[window.id].id === window.true_id) return window.players[window.id].score || 0;
+                        if (window.players && Array.isArray(window.players)) {
+                            for (var i = 0; i < window.players.length; i++) {
+                                var p = window.players[i];
+                                if (p && p.id === window.true_id) return p.score || 0;
+                            }
+                        }
+                        return (typeof window.score !== 'undefined') ? window.score : 0;
+                    } catch (e) {
+                        return 0;
+                    }
+                }
+
+                function getMyRadius() {
+                    return (window.players_radius && window.players_radius[window.true_id]) ? window.players_radius[window.true_id] : 25;
+                }
+
+                function getPlayerRadius(pid) {
+                    return (window.players_radius && window.players_radius[pid]) ? window.players_radius[pid] : 25;
+                }
+
+                function gatherTraps() {
+                    var traps = [];
+                    try {
+                        var pt = window.players_trap || window.trap_map || [];
+                        if (Array.isArray(pt)) {
+                            for (var pid = 0; pid < pt.length; pid++) {
+                                var arr = pt[pid];
+                                if (!arr) continue;
+                                for (var ti = 0; ti < arr.length; ti++) {
+                                    var t = arr[ti];
+                                    if (!t) continue;
+                                    var tx = (typeof t.x !== 'undefined') ? t.x : ((typeof t.rx !== 'undefined') ? t.rx : 0);
+                                    var ty = (typeof t.y !== 'undefined') ? t.y : ((typeof t.ry !== 'undefined') ? t.ry : 0);
+                                    var tr = (typeof t.radius !== 'undefined') ? t.radius : ((typeof t.r !== 'undefined') ? t.r : (t.instRadius || 0));
+                                    traps.push({
+                                        x: tx,
+                                        y: ty,
+                                        r: tr,
+                                        owner: pid,
+                                        lifetime: (t.lifetime || 0)
+                                    });
+                                }
+                            }
+                        } else if (typeof pt === 'object') {
+                            for (var k in pt) {
+                                if (!pt.hasOwnProperty(k)) continue;
+                                var list = pt[k];
+                                if (!list) continue;
+                                for (var j = 0; j < list.length; j++) {
+                                    var t = list[j];
+                                    if (!t) continue;
+                                    var tx = (typeof t.x !== 'undefined') ? t.x : ((typeof t.rx !== 'undefined') ? t.rx : 0);
+                                    var ty = (typeof t.y !== 'undefined') ? t.y : ((typeof t.ry !== 'undefined') ? t.ry : 0);
+                                    var tr = (typeof t.radius !== 'undefined') ? t.radius : ((typeof t.r !== 'undefined') ? t.r : 0);
+                                    traps.push({
+                                        x: tx,
+                                        y: ty,
+                                        r: tr,
+                                        owner: k,
+                                        lifetime: (t.lifetime || 0)
+                                    });
+                                }
+                            }
+                        }
+                    } catch (e) {}
+                    return traps;
+                }
+
+                function distance(x1, y1, x2, y2) {
+                    var dx = x1 - x2,
+                        dy = y1 - y2;
+                    return Math.sqrt(dx * dx + dy * dy);
+                }
+
+                function PJP(px, py, x1, y1, x2, y2) {
+                    var Cx = x2 - x1,
+                        Cy = y2 - y1;
+                    var len_sq = Cx * Cx + Cy * Cy;
+                    if (len_sq === 0) return 0;
+                    return ((px - x1) * Cx + (py - y1) * Cy) / len_sq;
+                }
+
+                function PLD(px, py, x1, y1, x2, y2) {
+                    var A = px - x1,
+                        B = py - y1,
+                        C = x2 - x1,
+                        D = y2 - y1;
+                    var dot = A * C + B * D;
+                    var len_sq = C * C + D * D;
+                    var param = -1;
+                    if (len_sq !== 0) param = dot / len_sq;
+                    var xx, yy;
+                    if (param < 0) {
+                        xx = x1;
+                        yy = y1;
+                    } else if (param > 1) {
+                        xx = x2;
+                        yy = y2;
+                    } else {
+                        xx = x1 + param * C;
+                        yy = y1 + param * D;
+                    }
+                    var dx = px - xx,
+                        dy = py - yy;
+                    return Math.sqrt(dx * dx + dy * dy);
+                }
+
+                function TNP(traps, x, y, buf) {
+                    buf = buf || 0;
+                    for (var i = 0; i < traps.length; i++) {
+                        var t = traps[i];
+                        if (distance(t.x, t.y, x, y) <= (t.r || 0) + buf) return true;
+                    }
+                    return false;
+                }
+
+                function PIT(traps, x1, y1, x2, y2, excludeOwner) {
+                    for (var i = 0; i < traps.length; i++) {
+                        var t = traps[i];
+                        if (typeof excludeOwner !== 'undefined' && t.owner == excludeOwner) continue;
+                        var extra = (typeof window.true_id !== 'undefined' && t.owner != window.true_id) ? 30 : 0;
+                        var d = PLD(t.x, t.y, x1, y1, x2, y2);
+                        if (d <= (t.r || 0) + 14 + extra) return true;
+                    }
+                    return false;
+                }
+
+                function PlayerAndID() {
+                    try {
+                        var me = getMyPos();
+                        if (!me || !window.players_show_pos || !window.players) return null;
+                        var bestD = Infinity;
+                        var bestId = null;
+                        for (var i = 0; i < window.players.length; i++) {
+                            var p = window.players[i];
+                            if (!p || p.id === window.true_id) continue;
+                            var pos = window.players_show_pos[p.id];
+                            if (!pos) continue;
+                            var dx = pos.x - me.x,
+                                dy = pos.y - me.y,
+                                d2 = dx * dx + dy * dy;
+                            if (d2 < bestD) {
+                                bestD = d2;
+                                bestId = p.id;
+                            }
+                        }
+                        return bestId === null ? null : {
+                            id: bestId,
+                            d2: bestD,
+                            dist: Math.sqrt(bestD)
+                        };
+                    } catch (e) {
+                        return null;
+                    }
+                }
+
+                function NPI() {
+                    try {
+                        var best = PlayerAndID();
+                        if (!best) return null;
+                        var p = null;
+                        for (var i = 0; i < window.players.length; i++) {
+                            if (window.players[i] && window.players[i].id === best.id) {
+                                p = window.players[i];
+                                break;
+                            }
+                        }
+                        var pos = (window.players_show_pos && window.players_show_pos[best.id]) ? window.players_show_pos[best.id] : null;
+                        return {
+                            id: best.id,
+                            dist: best.dist,
+                            player: p,
+                            pos: pos
+                        };
+                    } catch (e) {
+                        return null;
+                    }
+                }
+
+                function GNT(me, excludeId, maxCount) {
+                    var threats = [];
+                    try {
+                        for (var i = 0; i < window.players.length; i++) {
+                            var p = window.players[i];
+                            if (!p || p.id === window.true_id || p.id === excludeId) continue;
+                            var pos = window.players_show_pos ? window.players_show_pos[p.id] : null;
+                            if (!pos) continue;
+                            var d = distance(me.x, me.y, pos.x, pos.y);
+                            if (d > 520) continue;
+                            var r = (window.players_radius && window.players_radius[p.id]) ? window.players_radius[p.id] : 25;
+                            var score = p.score || 0;
+                            var pvx = p.vx || 0;
+                            var pvy = p.vy || 0;
+                            var speed = Math.sqrt(pvx * pvx + pvy * pvy);
+                            threats.push({
+                                id: p.id,
+                                pos: pos,
+                                dist: d,
+                                radius: r,
+                                score: score,
+                                vx: pvx,
+                                vy: pvy,
+                                speed: speed
+                            });
+                        }
+                        threats.sort(function(a, b) {
+                            return a.dist - b.dist;
+                        });
+                        return threats.slice(0, maxCount || 4);
+                    } catch (e) {
+                        return [];
+                    }
+                }
+
+                function CMR(me, threats) {
+                    var rx = 0,
+                        ry = 0;
+                    for (var i = 0; i < threats.length; i++) {
+                        var t = threats[i];
+                        var dx = me.x - t.pos.x;
+                        var dy = me.y - t.pos.y;
+                        var d = Math.max(t.dist - t.radius - getMyRadius(), 40);
+                        var w = (t.score / 200 + t.radius / 30 + (380 - t.dist) * 0.02) / (d * d);
+                        if (t.speed > 25) w *= 1.6;
+                        rx += dx * w;
+                        ry += dy * w;
+                    }
+                    return normalize(rx, ry);
+                }
+
+                function sendControl(angle, trapFlag) {
+                    try {
+                        if (!sockRef && window.socket) sockRef = window.socket;
+                        if (!sockRef) return;
+                        if (!isFinite(angle)) angle = 0;
+                        var t = trapFlag ? 1 : 0;
+                        sockRef.send("[" + 0 + "," + angle + "," + t + "]");
+                    } catch (e) {}
+                }
+
+                function normalize(x, y) {
+                    var L = Math.sqrt(x * x + y * y);
+                    if (L === 0) return {
+                        x: 0,
+                        y: 0
+                    };
+                    return {
+                        x: x / L,
+                        y: y / L
+                    };
+                }
+
+                function safeApproach(targetX, targetY, me, traps, excludeOwner) {
+                    var angle = Math.atan2(targetY - me.y, targetX - me.x) + Math.PI;
+                    if (!PIT(traps, me.x, me.y, targetX, targetY, excludeOwner)) return {
+                        x: targetX,
+                        y: targetY,
+                        angle: angle
+                    };
+                    var best = null;
+                    var bestScore = Infinity;
+                    var steps = 36;
+                    var dists = [40, 80, 140, 220];
+                    for (var s = 0; s < dists.length; s++) {
+                        var distOffset = dists[s];
+                        for (var i = 0; i < steps; i++) {
+                            var a = -Math.PI + (i / steps) * (2 * Math.PI);
+                            var ca = Math.cos(a),
+                                sa = Math.sin(a);
+                            var nx = targetX + ca * distOffset,
+                                ny = targetY + sa * distOffset;
+                            var penalty = 0;
+                            if (PIT(traps, me.x, me.y, nx, ny, excludeOwner)) penalty += 1000000;
+                            for (var ti = 0; ti < traps.length; ti++) {
+                                var t = traps[ti];
+                                if (typeof excludeOwner !== 'undefined' && t.owner == excludeOwner) continue;
+                                var td = distance(nx, ny, t.x, t.y) - (t.r || 0);
+                                if (td < 0) penalty += (15000 + Math.abs(td) * 80);
+                                else if (td < 120) penalty += (1200 - td * 6);
+                            }
+                            var d = distance(me.x, me.y, nx, ny);
+                            var score = d + penalty + distOffset * 0.2;
+                            if (score < bestScore) {
+                                bestScore = score;
+                                best = {
+                                    x: nx,
+                                    y: ny,
+                                    angle: Math.atan2(ny - me.y, nx - me.x) + Math.PI
+                                };
+                            }
+                        }
+                    }
+                    if (best) return best;
+                    return {
+                        x: targetX,
+                        y: targetY,
+                        angle: angle
+                    };
+                }
+
+                function GCT(me, enemyPos, enemyR, myR, desiredBase) {
+                    var dx = me.x - enemyPos.x;
+                    var dy = me.y - enemyPos.y;
+                    var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                    var ux = dx / dist;
+                    var uy = dy / dist;
+                    var px = -uy;
+                    var py = ux;
+                    var extra = enemyR * 0.6;
+                    var targetX = enemyPos.x + ux * (desiredBase + extra) + px * 85;
+                    var targetY = enemyPos.y + uy * (desiredBase + extra) + py * 85;
+                    return {
+                        x: targetX,
+                        y: targetY
+                    };
+                }
+
+                function UEPH(info) {
+                    if (!info || !info.pos) return;
+                    var now = Date.now();
+                    enemyPositionHistory.push({
+                        ts: now,
+                        x: info.pos.x,
+                        y: info.pos.y
+                    });
+                    while (enemyPositionHistory.length > 0 && now - enemyPositionHistory[0].ts > 3000) enemyPositionHistory.shift();
+                }
+
+                function EMS(info) {
+                    UEPH(info);
+                    var now = Date.now();
+                    if (enemyPositionHistory.length < 5) return false;
+                    var relevant = enemyPositionHistory.filter(function(p) {
+                        return now - p.ts <= EST;
+                    });
+                    if (relevant.length < 4) return false;
+                    var first = relevant[0];
+                    var last = relevant[relevant.length - 1];
+                    var totalDx = last.x - first.x;
+                    var totalDy = last.y - first.y;
+                    var totalDist = Math.sqrt(totalDx * totalDx + totalDy * totalDy);
+                    if (totalDist < 35) return false;
+                    var mainAngle = Math.atan2(totalDy, totalDx);
+                    var maxDeviation = 0;
+                    for (var i = 1; i < relevant.length; i++) {
+                        var prev = relevant[i - 1];
+                        var curr = relevant[i];
+                        var segDx = curr.x - prev.x;
+                        var segDy = curr.y - prev.y;
+                        var segDist = Math.sqrt(segDx * segDx + segDy * segDy);
+                        if (segDist < 6) continue;
+                        var segAngle = Math.atan2(segDy, segDx);
+                        var delta = Math.abs(segAngle - mainAngle);
+                        if (delta > Math.PI) delta = 2 * Math.PI - delta;
+                        if (delta > maxDeviation) maxDeviation = delta;
+                    }
+                    return maxDeviation < 0.25;
+                }
+
+                function PKB() {
+                    var me = getMyPos();
+                    if (!me) return false;
+                    var myScore = getMyScore();
+                    if (myScore <= KMS) return false;
+                    var info = NPI();
+                    if (!info || !info.pos || !info.player) return false;
+                    var enemyScore = info.player.score || 0;
+                    if (enemyScore < 100) return false;
+                    var myR = getMyRadius();
+                    var enemyR = getPlayerRadius(info.id);
+                    var traps = gatherTraps();
+                    if (EEE(me, traps)) return true;
+                    var currentRadius = myR;
+                    lastLoggedMyRadius = currentRadius;
+                    var threats = GNT(me, info.id, 4);
+                    var HST = false;
+                    var secondaryDir = {
+                        x: 0,
+                        y: 0
+                    };
+                    if (threats.length > 0) {
+                        var rep = CMR(me, threats);
+                        if (rep.x !== 0 || rep.y !== 0) {
+                            HST = true;
+                            secondaryDir = rep;
+                        }
+                    }
+                    var IST = EMS(info);
+                    var desiredCircleR = myR + enemyR + KCR + (enemyR * 0.55);
+                    var pvx = info.player.vx || 0;
+                    var pvy = info.player.vy || 0;
+                    var predX = info.pos.x + pvx * P_F * 1.75;
+                    var predY = info.pos.y + pvy * P_F * 1.75;
+                    var distToPred = distance(me.x, me.y, predX, predY);
+                    var now = Date.now();
+                    var shouldRam = IST || (enemyR < SER);
+                    if (shouldRam) {
+                        var ramAngle = Math.atan2(predY - me.y, predX - me.x) + Math.PI;
+                        if (now - kltp > 90) {
+                            for (var i = 0; i < KRTB; i++) {
+                                (function(a, d) {
+                                    setTimeout(function() {
+                                        sendControl(a, 1);
+                                    }, d);
+                                })(ramAngle, i * KTBD);
+                            }
+                            kltp = now;
+                            setTimeout(function() {
+                                sendControl(ramAngle, 0);
+                            }, KRTB * KTBD + 55);
+                        } else {
+                            sendControl(ramAngle, 0);
+                        }
+                        return true;
+                    }
+                    if (HST && threats.length >= 1) {
+                        var threatAngle = Math.atan2(secondaryDir.y, secondaryDir.x) + Math.PI;
+                        sendControl(threatAngle, 0);
+                        return true;
+                    }
+                    var currDist = distance(me.x, me.y, info.pos.x, info.pos.y);
+                    if (currDist < desiredCircleR - 48) {
+                        var pushAngle = Math.atan2(me.y - info.pos.y, me.x - info.pos.x) + Math.PI;
+                        sendControl(pushAngle, 0);
+                        return true;
+                    }
+                    var target = GCT(me, info.pos, enemyR, myR, desiredCircleR);
+                    var safe = safeApproach(target.x, target.y, me, traps, info.id);
+                    var moveAngle = safe ? safe.angle : Math.atan2(target.y - me.y, target.x - me.x) + Math.PI;
+                    if (now - kltp > KTIM) {
+                        var trapAngle = moveAngle;
+                        for (var k = 0; k < KTBS; k++) {
+                            (function(a, d) {
+                                setTimeout(function() {
+                                    sendControl(a, 1);
+                                }, d);
+                            })(trapAngle, k * KTBD);
+                        }
+                        kltp = now;
+                        setTimeout(function() {
+                            sendControl(moveAngle, 0);
+                        }, KTBS * KTBD + 65);
+                    } else {
+                        sendControl(moveAngle, 0);
+                    }
+                    return true;
+                }
+
+                function EEE(me, traps) {
+                    var rep = RVR(me, traps);
+                    if (!rep || rep.minDanger > 160) return false;
+                    var v = normalize(rep.rx, rep.ry);
+                    if (v.x === 0 && v.y === 0) return false;
+                    var push = 920;
+                    var targetX = me.x + v.x * push;
+                    var targetY = me.y + v.y * push;
+                    var angle = Math.atan2(targetY - me.y, targetX - me.x) + Math.PI;
+                    sendControl(angle, 0);
+                    for (var k = 1; k <= 3; k++) {
+                        (function(a, d) {
+                            setTimeout(function() {
+                                sendControl(a, 0);
+                            }, d);
+                        })(angle, k * 40);
+                    }
+                    return true;
+                }
+
+                function RVR(me, traps) {
+                    var rx = 0,
+                        ry = 0,
+                        minDanger = Infinity;
+                    for (var i = 0; i < traps.length; i++) {
+                        var t = traps[i];
+                        if (typeof window.true_id !== 'undefined' && t.owner == window.true_id) continue;
+                        var dcenter = distance(me.x, me.y, t.x, t.y);
+                        var d = dcenter - (t.r || 0);
+                        if (d < minDanger) minDanger = d;
+                        var dd = Math.max(d, 0.1);
+                        var w = 1 / (dd * dd);
+                        rx += (me.x - t.x) * w;
+                        ry += (me.y - t.y) * w;
+                    }
+                    return {
+                        rx: rx,
+                        ry: ry,
+                        minDanger: minDanger
+                    };
+                }
+
+                function FCBS(traps) {
+                    try {
+                        var update_map = window.update_bonus_map || window.player_update_bonus_map || [];
+                        var bonus_map = window.bonus_map || window.bonusMap || null;
+                        var player_bonus_map = window.player_bonus_map || window.playerBonusMap || window.player_bonus_map;
+                        var me = getMyPos();
+                        if (!me) return null;
+                        var best = null;
+                        var bestScore = Infinity;
+                        for (var i = 0; i < update_map.length; i++) {
+                            var idb = update_map[i];
+                            var bx = 0,
+                                by = 0,
+                                isPlayerBonus = false;
+                            if (typeof idb === 'number' && bonus_map && typeof bonus_map[idb] !== 'undefined') {
+                                var b = bonus_map[idb];
+                                if (!b) continue;
+                                bx = (typeof b.rx !== 'undefined') ? b.rx : ((typeof b.x !== 'undefined') ? b.x : 0);
+                                by = (typeof b.ry !== 'undefined') ? b.ry : ((typeof b.y !== 'undefined') ? b.y : 0);
+                            } else {
+                                isPlayerBonus = true;
+                                try {
+                                    var BIG = (typeof window.BONUS_DEAD_KEY !== 'undefined') ? window.BONUS_DEAD_KEY : 1000000;
+                                    if (BIG && idb >= BIG) {
+                                        var j = Math.floor(idb / BIG) - 1;
+                                        var k = idb % BIG;
+                                        var pb = (player_bonus_map && player_bonus_map[j]) ? player_bonus_map[j][k] : null;
+                                        if (!pb) continue;
+                                        bx = (typeof pb.rx !== 'undefined') ? pb.rx : ((typeof pb.x !== 'undefined') ? pb.x : 0);
+                                        by = (typeof pb.ry !== 'undefined') ? pb.ry : ((typeof pb.y !== 'undefined') ? pb.y : 0);
+                                    } else continue;
+                                } catch (e) {
+                                    continue;
+                                }
+                            }
+                            var dx = bx - me.x,
+                                dy = by - me.y;
+                            var d = Math.sqrt(dx * dx + dy * dy);
+                            if (isPlayerBonus && TNP(traps, bx, by, PBW)) continue;
+                            var penalty = 0;
+                            if (PIT(traps, me.x, me.y, bx, by)) penalty += 1000000;
+                            for (var tI = 0; tI < traps.length; tI++) {
+                                var t = traps[tI];
+                                var td = distance(bx, by, t.x, t.y) - (t.r || 0);
+                                if (td < 0) penalty += (10000 + Math.abs(td) * 50);
+                                else if (td < 60) penalty += (600 - td * 5);
+                            }
+                            var score = d + penalty;
+                            if (score < bestScore) {
+                                bestScore = score;
+                                best = {
+                                    x: bx,
+                                    y: by,
+                                    isPlayerBonus: isPlayerBonus,
+                                    d: d
+                                };
+                            }
+                        }
+                        return best;
+                    } catch (e) {
+                        return null;
+                    }
+                }
+
+                function botTick() {
+                    try {
+                        if (!sockRef && window.socket) sockRef = window.socket;
+                        if (!sockRef) return;
+                        if (typeof window.game_is_show !== 'undefined' && !window.game_is_show) return;
+                        var me = getMyPos();
+                        if (!me) return;
+                        var traps = gatherTraps();
+                        if (EEE(me, traps)) return;
+                        if (killMode) {
+                            if (PKB()) return;
+                        }
+                        var nearestP = PlayerAndID();
+                        var isFlee = nearestP && nearestP.dist < F_D;
+                        if (isFlee) {
+                            var pPos = window.players_show_pos[nearestP.id];
+                            if (!pPos) return;
+                            var pvx = 0,
+                                pvy = 0;
+                            try {
+                                for (var i = 0; i < window.players.length; i++) {
+                                    var pe = window.players[i];
+                                    if (pe && pe.id === nearestP.id) {
+                                        if (typeof pe.vx !== 'undefined') pvx = pe.vx;
+                                        if (typeof pe.vy !== 'undefined') pvy = pe.vy;
+                                        break;
+                                    }
+                                }
+                            } catch (e) {}
+                            var predX = pPos.x + pvx * P_F;
+                            var predY = pPos.y + pvy * P_F;
+                            var dx = me.x - predX,
+                                dy = me.y - predY;
+                            var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                            var ux = dx / dist,
+                                uy = dy / dist;
+                            var push = F_P + Math.max(0, (F_D - dist)) * 2;
+                            var targetX = me.x + ux * push,
+                                targetY = me.y + uy * push;
+                            if (PIT(traps, me.x, me.y, targetX, targetY)) {
+                                var rx = 0,
+                                    ry = 0,
+                                    totalw = 0;
+                                for (var ti = 0; ti < traps.length; ti++) {
+                                    var t = traps[ti];
+                                    var td = distance(me.x, me.y, t.x, t.y) - Math.max(1, t.r || 0);
+                                    if (td <= 0) td = 0.1;
+                                    var w = 1 / (td * td);
+                                    rx += (me.x - t.x) * w;
+                                    ry += (me.y - t.y) * w;
+                                    totalw += w;
+                                }
+                                if (totalw > 0) {
+                                    rx /= totalw;
+                                    ry /= totalw;
+                                    var rlen = Math.sqrt(rx * rx + ry * ry) || 1;
+                                    rx /= rlen;
+                                    ry /= rlen;
+                                    targetX = me.x + rx * push;
+                                    targetY = me.y + ry * push;
+                                }
+                            }
+                            var angle = Math.atan2(targetY - me.y, targetX - me.x) + Math.PI;
+                            var now = Date.now();
+                            var wantTrap = (getMyScore() > 1000 && (now - ltt) > T_C);
+                            if (wantTrap) {
+                                ltt = now;
+                                sendControl(angle, 1);
+                                setTimeout(function() {
+                                    sendControl(angle, 0);
+                                }, 80);
+                            } else sendControl(angle, 0);
+                            return;
+                        }
+                        var target = FCBS(traps);
+                        if (target) {
+                            var dx = target.x - me.x,
+                                dy = target.y - me.y;
+                            var angle = Math.atan2(dy, dx) + Math.PI;
+                            sendControl(angle, 0);
+                            return;
+                        }
+                        var jitter = (Math.random() - 0.5) * 0.6;
+                        var base = (typeof window.mouseangle !== 'undefined') ? window.mouseangle : 0;
+                        sendControl(base + jitter, 0);
+                    } catch (e) {}
+                }
+
+                function startBot() {
+                    if (loopIv) clearInterval(loopIv);
+                    loopIv = setInterval(botTick, RATE_MS);
+                }
+
+                function stopBot() {
+                    if (loopIv) {
+                        clearInterval(loopIv);
+                        loopIv = null;
+                    }
+                }
+                window.AutoBot = {
+                    start: function() {
+                        startBot();
+                    },
+                    stop: function() {
+                        stopBot();
+                    },
+                    setKill: function(v) {
+                        killMode = !!v;
+                    },
+                    isRunning: function() {
+                        return !!loopIv;
+                    }
+                };
+                try {
+                    if (window.socket) sockRef = window.socket;
+                } catch (e) {}
+                return {};
+            } catch (e) {}
+        }).toString() + ")();";
         try {
             const s = document.createElement('script');
             s.textContent = botSrc;
@@ -656,6 +1370,153 @@
             WebSocket.prototype.send = origWsSend;
         } catch (e) {}
         origWsSend = null;
+    }
+
+    function startHUD() {
+        if (hudRunner) return;
+        const W = unsafeWindow;
+        const css = `
+    #HUD {
+      position: fixed;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 99999;
+      padding: 8px 14px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+      color: #ffffff;
+      background: rgba(6,10,20,0.55);
+      border-radius: 8px;
+      display: none;
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+      transition: opacity 160ms ease, transform 160ms ease;
+      opacity: 1;
+    }
+    #HUD.show { display: block; opacity: 1; transform: translateX(-50%) translateY(0); }
+    #HUD.hidden { opacity: 0; transform: translateX(-50%) translateY(-6px); pointer-events: none; }
+    #HUD .item { margin: 0 8px; display: inline-block; }
+    `;
+        if (typeof GM_addStyle === 'function') GM_addStyle(css);
+        if (document.getElementById('HUD')) return;
+        const hud = document.createElement('div');
+        hud.id = 'HUD';
+        const spanFPS = document.createElement('span');
+        spanFPS.className = 'item fps';
+        const spanTime = document.createElement('span');
+        spanTime.className = 'item time';
+        const spanPlayers = document.createElement('span');
+        spanPlayers.className = 'item players';
+        hud.appendChild(spanFPS);
+        hud.appendChild(spanTime);
+        hud.appendChild(spanPlayers);
+        document.body.appendChild(hud);
+        let sessionStart = 0;
+        let lastGameShow = Boolean(W.game_is_show);
+        if (lastGameShow && sessionStart === 0) sessionStart = Date.now();
+        let rafLast = performance.now();
+        let rafFPS = 0;
+        let lastUpdate = 0;
+        const Interval = 0x1f3 - 0x12c;
+
+        function pad(v) {
+            return v.toString().padStart(2, '0');
+        }
+
+        function formatTime(ms) {
+            if (!ms || ms <= 0) return '00:00:00';
+            const sTotal = Math.floor(ms / 1000);
+            const h = Math.floor(sTotal / 3600);
+            const m = Math.floor((sTotal % 3600) / 60);
+            const s = sTotal % 60;
+            return `${pad(h)}:${pad(m)}:${pad(s)}`;
+        }
+
+        function readFPS() {
+            try {
+                if (W.fps && typeof W.fps.fps === 'number') return Math.round(W.fps.fps);
+            } catch (e) {}
+            return null;
+        }
+
+        function countPlayers() {
+            let cnt = 0;
+            try {
+                const arr = W.players_nickname;
+                if (Array.isArray(arr)) {
+                    for (let i = 0; i < arr.length; i++) {
+                        const v = arr[i];
+                        if (typeof v === 'string' && v !== '') cnt++;
+                    }
+                }
+            } catch (e) {}
+            return cnt;
+        }
+
+        function updateLogic(now) {
+            const gameShow = Boolean(W.game_is_show);
+            if (gameShow && !lastGameShow) {
+                sessionStart = Date.now();
+            } else if (!gameShow && lastGameShow) {
+                sessionStart = 0;
+            }
+            lastGameShow = gameShow;
+            if (!state.HUD || !gameShow) {
+                hud.classList.remove('show');
+                hud.classList.add('hidden');
+                if (!gameShow) {
+                    spanFPS.textContent = 'FPS: 0';
+                    spanTime.textContent = 'Time: 00:00:00';
+                    spanPlayers.textContent = 'players: 0';
+                }
+                return;
+            }
+            hud.classList.remove('hidden');
+            if (!hud.classList.contains('show')) hud.classList.add('show');
+            let fpsVal = readFPS();
+            if (fpsVal === null) fpsVal = rafFPS || 0;
+            const timeVal = sessionStart ? formatTime(Date.now() - sessionStart) : '00:00:00';
+            const playersVal = countPlayers();
+            spanFPS.textContent = `FPS: ${fpsVal}`;
+            spanTime.textContent = `Time: ${timeVal}`;
+            spanPlayers.textContent = `players: ${playersVal}`;
+        }
+
+        function rafLoop(now) {
+            const dt = now - rafLast;
+            rafLast = now;
+            if (dt > 0) rafFPS = Math.round(1000 / dt);
+            if (now - lastUpdate >= Interval) {
+                lastUpdate = now;
+                updateLogic(now);
+            }
+            requestAnimationFrame(rafLoop);
+        }
+        requestAnimationFrame(rafLoop);
+        hudRunner = {
+            stop: () => {
+                try {
+                    hud.remove();
+                } catch (e) {}
+                hudRunner = null;
+            }
+        };
+    }
+
+    function stopHUD() {
+        if (!hudRunner && document.getElementById('HUD')) {
+            try {
+                document.getElementById('HUD').remove();
+            } catch (e) {}
+            hudRunner = null;
+        } else if (hudRunner) {
+            try {
+                document.getElementById('HUD') && document.getElementById('HUD').remove();
+            } catch (e) {}
+            hudRunner = null;
+        }
     }
 
     function applyFeature(key, on) {
@@ -705,21 +1566,37 @@
                                     api2.stop();
                                 }
                             } catch (e) {}
-                        }, 300);
+                        }, 0x12c);
                     }
                 } catch (e) {}
+            } else if (key === 'HUD') {
+                if (on) startHUD();
+                else stopHUD();
             }
         } catch (e) {}
     }
 
     function applyAll() {
         Object.keys(defaults).forEach(k => {
-            if (k === 'visible' || k === 'AutoNickValue') return;
+            if (k === 'visible' || k === 'AutoNickValue' || k === 'ToggleKey' || k === 'Theme') return;
             applyFeature(k, !!state[k]);
         });
     }
 
+    function escapeHtml(s) {
+        return String(s || '').replace(/[&<>"']/g, function(m) {
+            return ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            })[m];
+        });
+    }
+
     function render() {
+        root.classList.toggle('theme-white', state.Theme === 'white');
         root.innerHTML = `
       <div class="lt-header">
         <div class="lt-title">
@@ -754,11 +1631,11 @@
             <h3>Auto Play</h3>
             <div class="lt-switch ${state.AutoPlay ? 'on' : ''}" data-switch="AutoPlay" role="switch" aria-checked="${!!state.AutoPlay}"><div class="knob"></div></div>
           </div>
-          <p class="lt-small">Auto-gather & basic combat routines (beta)</p>
+          <p class="lt-small">Auto-gather && basic combat routines</p>
           <div class="lt-controls" data-controls-for="AutoPlay" style="display:${state.AutoPlay ? 'flex' : 'none'}">
             <label class="lt-small" style="display:flex;align-items:center;gap:8px">
               <input type="checkbox" class="lt-input-checkbox" id="autoPlayKill" ${state.AutoPlayKillMode ? 'checked' : ''}>
-              <span>Kill Mode (beta)</span>
+              <span>Kill Mode</span>
             </label>
           </div>
         </div>
@@ -787,16 +1664,44 @@
           <p class="lt-small">Automatically sets a chosen nickname in game when entering the game and always uses only it</p>
           <div class="lt-controls" data-controls-for="AutoNick" style="display:${state.AutoNick ? 'flex' : 'none'}">
             <input class="lt-input" id="autoNickInput" value="${escapeHtml(state.AutoNickValue || '')}" placeholder="Enter nickname">
-            <button class="lt-save-nick lt-input" id="saveNickBtn" style="min-width:88px; cursor:pointer; padding:8px 10px;">Save</button>
-            <button class="lt-input" id="clearNickBtn" style="min-width:88px; cursor:pointer; padding:8px 10px;">Clear</button>
+            <button class="lt-save-nick lt-btn" id="saveNickBtn" style="min-width:88px;">Save</button>
+            <button class="lt-btn" id="clearNickBtn" style="min-width:88px;">Clear</button>
           </div>
         </div>
+
+        <div class="lt-card" data-feature="HUD">
+          <div class="title-row">
+            <h3>HUD</h3>
+            <div class="lt-switch ${state.HUD ? 'on' : ''}" data-switch="HUD" role="switch" aria-checked="${!!state.HUD}"><div class="knob"></div></div>
+          </div>
+          <p class="lt-small">HUD showing FPS, in-game session time, and active players count</p>
+        </div>
+
+        <div class="lt-card" data-feature="ClickGUI">
+          <div class="title-row">
+            <h3>ClickGUI</h3>
+            <div class="lt-switch on" role="switch" aria-checked="true" style="opacity:0.6;cursor:default;"><div class="knob"></div></div>
+          </div>
+          <p class="lt-small">Menu controls: keybind and theme</p>
+          <div class="lt-controls" data-controls-for="ClickGUI" style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+            <div style="display:flex;gap:8px;align-items:center">
+              <button class="lt-btn" id="changeKeyBtn">Change Key</button>
+              <div class="lt-small" id="currentKeyDisplay">${FKD(state.ToggleKey)} - toggle</div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <button class="lt-btn" id="themeDarkBtn">Dark</button>
+              <button class="lt-btn" id="themeWhiteBtn">White</button>
+              <div class="lt-small">Current: ${escapeHtml(capitalize(state.Theme || 'dark'))}</div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <div class="lt-footer">
         <div></div>
         <div style="display:flex;gap:10px;align-items:center">
-          <div class="lt-toggle-key">Right Alt - toggle</div>
+          <div class="lt-toggle-key" id="lt-toggle-key">${FKD(state.ToggleKey)} - toggle</div>
           <button class="save" id="lt-close">Close</button>
         </div>
       </div>
@@ -804,11 +1709,22 @@
         attachHandlers();
     }
 
+    function FKD(code) {
+        if (!code) return 'AltRight';
+        return code.replace('Key', '').replace('Digit', '').replace('Arrow', '').replace('Right', 'Right').replace('Left', 'Left');
+    }
+
+    function capitalize(s) {
+        if (!s) return s;
+        return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
     function attachHandlers() {
         const switches = root.querySelectorAll('[data-switch]');
         switches.forEach(el => {
+            const key = el.getAttribute('data-switch');
+            if (key === 'ClickGUI') return;
             el.onclick = async function() {
-                const key = this.getAttribute('data-switch');
                 state[key] = !state[key];
                 if (key === 'AutoPlay' && !state.AutoPlay) state.AutoPlayKillMode = false;
                 await saveState();
@@ -855,6 +1771,81 @@
             toggle(false);
             render();
         };
+
+        const changeKeyBtn = root.querySelector('#changeKeyBtn');
+        const currentKeyDisplay = root.querySelector('#currentKeyDisplay');
+        const ltToggleKey = root.querySelector('#lt-toggle-key');
+        if (changeKeyBtn) {
+            changeKeyBtn.onclick = function() {
+                startBinding(changeKeyBtn, currentKeyDisplay, ltToggleKey);
+            };
+        }
+
+        const themeDarkBtn = root.querySelector('#themeDarkBtn');
+        const themeWhiteBtn = root.querySelector('#themeWhiteBtn');
+        if (themeDarkBtn) {
+            themeDarkBtn.onclick = async function() {
+                state.Theme = 'dark';
+                await saveState();
+                render();
+            };
+        }
+        if (themeWhiteBtn) {
+            themeWhiteBtn.onclick = async function() {
+                state.Theme = 'white';
+                await saveState();
+                render();
+            };
+        }
+
+        function startBinding(buttonEl, displayEl, footerEl) {
+            buttonEl.textContent = 'Press key...';
+            let done = false;
+
+            function finish(ok, code) {
+                if (done) return;
+                done = true;
+                window.removeEventListener('keydown', onKey, true);
+                window.removeEventListener('mousedown', onMouse, true);
+                buttonEl.textContent = 'Change Key';
+                if (ok && code) {
+                    const invalid = (code === 'Escape' || code === 'MouseLeft' || code === 'MouseRight');
+                    if (invalid) {
+                        state.ToggleKey = defaults.ToggleKey;
+                    } else {
+                        state.ToggleKey = code;
+                    }
+                } else {
+                    state.ToggleKey = defaults.ToggleKey;
+                }
+                saveState().then(() => {
+                    render();
+                });
+            }
+
+            function onKey(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                const code = e.code || e.key || null;
+                if (!code) {
+                    finish(false);
+                    return;
+                }
+                if (code === 'Escape') {
+                    finish(false);
+                    return;
+                }
+                finish(true, code);
+            }
+
+            function onMouse(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                finish(false);
+            }
+            window.addEventListener('keydown', onKey, true);
+            window.addEventListener('mousedown', onMouse, true);
+        }
     }
 
     function toggle(force) {
@@ -871,22 +1862,9 @@
         } catch (e) {}
     }
 
-
-
-    function escapeHtml(s) {
-        return String(s || '').replace(/[&<>"']/g, function(m) {
-            return ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;'
-            })[m];
-        });
-    }
-
     document.addEventListener('keydown', function(e) {
-        if (e.code === 'AltRight') {
+        const bind = state.ToggleKey || defaults.ToggleKey;
+        if (e.code === bind) {
             e.preventDefault();
             toggle();
             render();
@@ -896,10 +1874,11 @@
             toggle(false);
             render();
         }
-    });
+    }, true);
 
     render();
     applyAll();
+
     try {
         if (state.AutoPlay) {
             try {
@@ -910,6 +1889,7 @@
             } catch (e) {}
         }
     } catch (e) {}
+
     if (state.visible) toggle(true);
 
     window.LimaxClient = {
@@ -922,4 +1902,5 @@
         },
         gmDelete
     };
+
 })();

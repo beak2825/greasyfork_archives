@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KOSTROMA | Script for staff
 // @namespace    https://greasyfork.org/ru/users/1288704-itsuki-liquid
-// @version      3.402
+// @version      3.403
 // @description  Basic script for staff GA/ZGA/Kurator
 // @author       I.Liquid
 // @match        https://forum.blackrussia.online/threads/*
@@ -452,12 +452,12 @@
            $(`button#accepted`).click(() => pasteContent(4, threadData, true));
            $(`button#declined`).click(() => pasteContent(5, threadData, true));
            $(`button#toADM`).click(() => pasteContent(6, threadData, true));
-           $(`button#toTech`).click(() => pasteContent(13, threadData, true));
-           $(`button#toGA`).click(() => pasteContent(11, threadData, true));
+           $(`button#toTech`).click(() => pasteContent(14, threadData, true));
+           $(`button#toGA`).click(() => pasteContent(12, threadData, true));
            $(`button#cantRedundant`).click(() => pasteContent(7, threadData, true));
            $(`button#letScammedType`).click(() => pasteContent(8, threadData, true));
-           $(`button#withForm`).click(() => pasteContent(22, threadData, true));
-           $(`button#redirect`).click(() => pasteContent(12, threadData, false));
+           $(`button#withForm`).click(() => pasteContent(23, threadData, true));
+           $(`button#redirect`).click(() => pasteContent(13, threadData, false));
 
         $(`button#selectAnswer`).click(() => {
             XF.alert(buttonsMarkup(buttons), null, 'Выберите ответ:');

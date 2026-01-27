@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SV HaUI Helper
 // @namespace    https://github.com/vuquan2005/svHaUI-Helper
-// @version      2.1.0
+// @version      2.2.0
 // @author       VuQuan
 // @description  Nâng cao trải nghiệm cho sinh viên HaUI
 // @license      GPL-3.0-only
@@ -9,10 +9,21 @@
 // @homepageURL  https://github.com/vuquan2005/svHaUI-Helper
 // @supportURL   https://github.com/vuquan2005/svHaUI-Helper/issues
 // @match        https://sv.haui.edu.vn/*
+// @grant        GM.addValueChangeListener
+// @grant        GM.deleteValue
+// @grant        GM.deleteValues
+// @grant        GM.getValue
+// @grant        GM.getValues
+// @grant        GM.listValues
+// @grant        GM.removeValueChangeListener
+// @grant        GM.setValue
+// @grant        GM.setValues
 // @grant        GM_addStyle
+// @grant        GM_addValueChangeListener
 // @grant        GM_deleteValue
 // @grant        GM_getValue
 // @grant        GM_listValues
+// @grant        GM_removeValueChangeListener
 // @grant        GM_setValue
 // @run-at       document-end
 // @downloadURL https://update.greasyfork.org/scripts/562762/SV%20HaUI%20Helper.user.js
@@ -24,8 +35,22 @@
 
   const d=new Set;const e = async e=>{d.has(e)||(d.add(e),(t=>{typeof GM_addStyle=="function"?GM_addStyle(t):(document.head||document.documentElement).appendChild(document.createElement("style")).append(t);})(e));};
 
-  e(" .sv-quick-nav{float:right;display:inline-flex;gap:8px;align-items:center;margin-top:-2px;position:relative;z-index:9}.sv-quick-nav-link{display:inline-block;padding:4px 12px;border-radius:4px;text-decoration:none;font-size:13px;font-weight:500;color:#5a6fd6;background:#667eea26;border:1px solid rgba(102,126,234,.25);transition:all .2s ease}.sv-quick-nav-link i{margin-right:4px}.sv-quick-nav-link:hover{background:#667eea;color:#fff;border-color:#667eea;text-decoration:none}.sv-quick-nav-link.active{background:#667eea;color:#fff;border-color:#667eea;pointer-events:none;cursor:default} ");
+  e(" .sv-quick-nav{float:right;display:inline-flex;gap:8px;align-items:center;margin-top:-2px;position:relative;z-index:9}.sv-quick-nav-link{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:4px;text-decoration:none;font-size:13px;font-weight:500;color:#5a6fd6;background:#667eea26;border:1px solid rgba(102,126,234,.25);transition:all .2s ease}@media(max-width:520px){.sv-quick-nav-link-label{display:none}}.sv-quick-nav-link:hover{background:#667eea;color:#fff;border-color:#667eea;text-decoration:none}.sv-quick-nav-link.active{background:#667eea;color:#fff;border-color:#667eea;pointer-events:none;cursor:default} ");
 
+  console.log(
+    `%c 🎓 SV HaUI Helper %c 🚀 v${"2.2.0"} %c 🕒 ${"260126130427"} %c 👨‍💻 VuQuan %c
+%c✨ Cảm thấy hữu ích? Hãy ủng hộ mình nhé! 👇
+%c🏦 TPBank: 07602987000 (VU VIET QUAN)
+%c👉 QR Scan: https://img.vietqr.io/image/TPB-07602987000-qr_only.png`,
+    "background: #42639e; color: #fff; padding: 5px 10px; border-radius: 6px 0 0 6px; font-weight: bold; font-size: 14px; margin-top: 5px;",
+    "background: #3182ce; color: #fff; padding: 5px 10px; font-weight: bold; font-size: 14px; margin-top: 5px;",
+    "background: #dd6b20; color: #fff; padding: 5px 10px; font-weight: bold; font-size: 14px; margin-top: 5px;",
+    "background: #9279c9; color: #fff; padding: 5px 10px; border-radius: 0 6px 6px 0; font-weight: bold; font-size: 14px; margin-top: 5px;",
+    "",
+    "color: #c56798; font-size: 13px; font-weight: bold; margin-top: 12px; margin-bottom: 3px;",
+    "color: #3aac77; font-size: 14px; font-weight: bold; margin-bottom: 3px;",
+    "color: #5092d7; font-size: 13px; font-weight: bold; margin-bottom: 5px;"
+  );
   const LOG_LEVEL_PRIORITY = {
     debug: 0,
     info: 1,
@@ -34,21 +59,18 @@
     none: 4
   };
   const LEVEL_STYLES = {
-    debug: "color: #9CA3AF",
-    info: "color: #3B82F6",
-    warn: "color: #F59E0B",
+    debug: "color: #7a6a96ff",
+    info: "color: #418aff",
+    warn: "color: #f5a317; font-weight: 500",
     error: "color: #EF4444; font-weight: bold"
   };
   const LEVEL_ICONS = {
-    debug: "🔍",
+    debug: "👾",
     info: "ℹ️",
-    warn: "⚠️",
-    error: "❌"
+    warn: "",
+    error: ""
   };
   let globalMinLevel = "debug";
-  function setGlobalLogLevel(level) {
-    globalMinLevel = level;
-  }
   const noop = () => {
   };
   class Logger {
@@ -102,9 +124,9 @@ setLevel(level) {
       this.minLevel = level;
     }
   }
-  const log$3 = new Logger({ prefix: "HaUI" });
+  const log$1 = new Logger({ prefix: "HaUI" });
   function createLogger(name) {
-    return log$3.child(name);
+    return log$1.child(name);
   }
   class WindowLocationWrapper {
     constructor(location = window.location) {
@@ -131,6 +153,211 @@ get pathAndQuery() {
     }
   }
   const browserLocation = new WindowLocationWrapper();
+  var _GM = (() => typeof GM != "undefined" ? GM : void 0)();
+  var _GM_addValueChangeListener = (() => typeof GM_addValueChangeListener != "undefined" ? GM_addValueChangeListener : void 0)();
+  var _GM_deleteValue = (() => typeof GM_deleteValue != "undefined" ? GM_deleteValue : void 0)();
+  var _GM_getValue = (() => typeof GM_getValue != "undefined" ? GM_getValue : void 0)();
+  var _GM_listValues = (() => typeof GM_listValues != "undefined" ? GM_listValues : void 0)();
+  var _GM_removeValueChangeListener = (() => typeof GM_removeValueChangeListener != "undefined" ? GM_removeValueChangeListener : void 0)();
+  var _GM_setValue = (() => typeof GM_setValue != "undefined" ? GM_setValue : void 0)();
+  const StorageAPI = {
+async getValue(key, defaultValue) {
+      if (_GM?.getValue) {
+        return _GM.getValue(key, defaultValue);
+      }
+      if (typeof _GM_getValue === "function") {
+        return _GM_getValue(key, defaultValue);
+      }
+      throw new Error("GM.getValue/GM_getValue is not available!");
+    },
+async setValue(key, value) {
+      if (_GM?.setValue) {
+        return _GM.setValue(key, value);
+      }
+      if (typeof _GM_setValue === "function") {
+        _GM_setValue(key, value);
+        return;
+      }
+      throw new Error("GM.setValue/GM_setValue is not available!");
+    },
+async deleteValue(key) {
+      if (_GM?.deleteValue) {
+        return _GM.deleteValue(key);
+      }
+      if (typeof _GM_deleteValue === "function") {
+        _GM_deleteValue(key);
+        return;
+      }
+      throw new Error("GM.deleteValue/GM_deleteValue is not available!");
+    },
+async listValues() {
+      if (_GM?.listValues) {
+        return _GM.listValues();
+      }
+      if (typeof _GM_listValues === "function") {
+        return _GM_listValues();
+      }
+      throw new Error("GM.listValues/GM_listValues is not available!");
+    },
+
+async getValues(keysOrDefaults) {
+      if (_GM?.getValues) {
+        return _GM.getValues(keysOrDefaults);
+      }
+      if (Array.isArray(keysOrDefaults)) {
+        const results = await Promise.all(
+          keysOrDefaults.map(async (key) => ({
+            key,
+            value: await StorageAPI.getValue(key)
+          }))
+        );
+        return results.reduce(
+          (acc, { key, value }) => {
+            acc[key] = value;
+            return acc;
+          },
+          {}
+        );
+      } else {
+        const entries = Object.entries(keysOrDefaults);
+        const results = await Promise.all(
+          entries.map(async ([key, defaultValue]) => ({
+            key,
+            value: await StorageAPI.getValue(key, defaultValue)
+          }))
+        );
+        return results.reduce(
+          (acc, { key, value }) => {
+            acc[key] = value;
+            return acc;
+          },
+          {}
+        );
+      }
+    },
+async setValues(values) {
+      if (_GM?.setValues) {
+        return _GM.setValues(values);
+      }
+      await Promise.all(
+        Object.entries(values).map(([key, value]) => StorageAPI.setValue(key, value))
+      );
+    },
+async deleteValues(keys) {
+      if (_GM?.deleteValues) {
+        return _GM.deleteValues(keys);
+      }
+      await Promise.all(keys.map((key) => StorageAPI.deleteValue(key)));
+    },
+async addValueChangeListener(key, callback) {
+      if (_GM?.addValueChangeListener) {
+        return _GM.addValueChangeListener(key, callback);
+      }
+      if (typeof _GM_addValueChangeListener === "function") {
+        return _GM_addValueChangeListener(key, callback);
+      }
+      throw new Error("GM.addValueChangeListener/GM_addValueChangeListener is not available!");
+    },
+async removeValueChangeListener(listenerId) {
+      if (_GM?.removeValueChangeListener) {
+        _GM.removeValueChangeListener(listenerId);
+        return;
+      }
+      if (typeof _GM_removeValueChangeListener === "function") {
+        _GM_removeValueChangeListener(listenerId);
+        return;
+      }
+      throw new Error(
+        "GM.removeValueChangeListener/GM_removeValueChangeListener is not available!"
+      );
+    }
+  };
+  class ScopedStorage {
+    prefix;
+static SEPARATOR = ".";
+constructor(scopeName) {
+      this.prefix = scopeName ? `${scopeName}${ScopedStorage.SEPARATOR}` : "";
+    }
+getFullKey(key) {
+      return `${this.prefix}${key}`;
+    }
+getLocalKey(fullKey) {
+      return fullKey.substring(this.prefix.length);
+    }
+async get(key, defaultValue) {
+      return StorageAPI.getValue(this.getFullKey(key), defaultValue);
+    }
+async getMultiple(input) {
+      let payload;
+      if (Array.isArray(input)) {
+        payload = input.map((k) => this.getFullKey(k));
+      } else {
+        payload = {};
+        for (const [key, value] of Object.entries(input)) {
+          payload[this.getFullKey(key)] = value;
+        }
+      }
+      const rawResult = await StorageAPI.getValues(payload);
+      const result = {};
+      for (const [fullKey, value] of Object.entries(rawResult)) {
+        if (fullKey.startsWith(this.prefix)) {
+          const localKey = this.getLocalKey(fullKey);
+          result[localKey] = value;
+        }
+      }
+      return result;
+    }
+async set(key, value) {
+      await StorageAPI.setValue(this.getFullKey(key), value);
+    }
+async setMultiple(values) {
+      const prefixedValues = {};
+      for (const [key, value] of Object.entries(values)) {
+        prefixedValues[this.getFullKey(key)] = value;
+      }
+      await StorageAPI.setValues(prefixedValues);
+    }
+async delete(key) {
+      await StorageAPI.deleteValue(this.getFullKey(key));
+    }
+async deleteMultiple(keys) {
+      await StorageAPI.deleteValues(keys.map((k) => this.getFullKey(k)));
+    }
+async keys() {
+      const allGlobalKeys = await StorageAPI.listValues();
+      return allGlobalKeys.filter((key) => key.startsWith(this.prefix)).map((key) => this.getLocalKey(key));
+    }
+async has(key) {
+      const sentinel = "aHR0cHM6Ly9pbWcudmlldHFyLmlvL2ltYWdlL1RQQi0wNzYwMjk4NzAwMC1xcl9vbmx5LnBuZz9hZGRJbmZvPUVhc3RlciUyMEVnZw==";
+      const value = await StorageAPI.getValue(this.getFullKey(key), sentinel);
+      return value !== sentinel;
+    }
+async entries() {
+      const keys = await this.keys();
+      if (keys.length === 0) {
+        return {};
+      }
+      return this.getMultiple(keys);
+    }
+async clear() {
+      const keys = await this.keys();
+      if (keys.length > 0) {
+        await this.deleteMultiple(keys);
+      }
+    }
+async onValueChange(key, callback) {
+      const requestedKey = key;
+      return StorageAPI.addValueChangeListener(
+        this.getFullKey(key),
+        (_key, oldValue, newValue, remote) => {
+          callback(requestedKey, oldValue, newValue, remote);
+        }
+      );
+    }
+async removeValueChangeListener(listenerId) {
+      await StorageAPI.removeValueChangeListener(listenerId);
+    }
+  }
   class Feature {
 
 
@@ -143,8 +370,12 @@ id;
     priority;
     urlMatch;
     _log;
+    _storage;
 get log() {
       return this._log ??= createLogger(this.name);
+    }
+    get storage() {
+      return this._storage ??= new ScopedStorage("feat:" + this.id);
     }
 matchResult = null;
     constructor(config) {
@@ -201,342 +432,6 @@ shouldRun() {
 cleanup() {
     }
   }
-  const DEFAULT_SETTINGS = {
-logLevel: "warn",
-captchaUndoTelex: true
-  };
-  var _GM_deleteValue = (() => typeof GM_deleteValue != "undefined" ? GM_deleteValue : void 0)();
-  var _GM_getValue = (() => typeof GM_getValue != "undefined" ? GM_getValue : void 0)();
-  var _GM_listValues = (() => typeof GM_listValues != "undefined" ? GM_listValues : void 0)();
-  var _GM_setValue = (() => typeof GM_setValue != "undefined" ? GM_setValue : void 0)();
-  class StorageManager {
-
-
-get(key, defaultValue) {
-      return _GM_getValue(key, defaultValue);
-    }
-    set(key, value) {
-      _GM_setValue(key, value);
-    }
-    remove(key) {
-      _GM_deleteValue(key);
-    }
-    keys() {
-      return _GM_listValues();
-    }
-
-
-
-getRaw(key, defaultValue) {
-      return _GM_getValue(key, defaultValue);
-    }
-setRaw(key, value) {
-      _GM_setValue(key, value);
-    }
-removeRaw(key) {
-      _GM_deleteValue(key);
-    }
-allKeys() {
-      return _GM_listValues();
-    }
-  }
-  const storage = new StorageManager();
-  const log$2 = createLogger("BaseSetting");
-  class BaseSetting {
-key;
-displayLabel;
-displayDescription;
-_value;
-defaultValue;
-listeners = new Set();
-    constructor(config) {
-      this.key = config.key;
-      this.displayLabel = config.displayLabel;
-      this.displayDescription = config.displayDescription;
-      this.defaultValue = config.defaultValue;
-      this._value = this.load();
-    }
-
-
-
-getValue() {
-      return this._value;
-    }
-setValue(value) {
-      if (!this.validate(value)) {
-        log$2.w(`Validation failed for setting "${this.key}":`, value);
-        return false;
-      }
-      const oldValue = this._value;
-      if (this.isEqual(oldValue, value)) {
-        return true;
-      }
-      this._value = value;
-      this.save();
-      this.emit(oldValue, value);
-      return true;
-    }
-reset() {
-      this.setValue(this.defaultValue);
-    }
-isEqual(a, b) {
-      return a === b;
-    }
-
-
-
-serialize() {
-      return JSON.stringify(this._value);
-    }
-deserialize(data) {
-      try {
-        return JSON.parse(data);
-      } catch {
-        log$2.w(`Failed to deserialize setting "${this.key}", using default`);
-        return this.defaultValue;
-      }
-    }
-
-
-
-get storageKey() {
-      return `setting_${this.key}`;
-    }
-load() {
-      try {
-        const stored = storage.getRaw(this.storageKey);
-        if (stored === void 0) {
-          storage.setRaw(this.storageKey, this.defaultValue);
-          return this.defaultValue;
-        }
-        return stored;
-      } catch (e) {
-        log$2.e(`Failed to load setting "${this.key}":`, e);
-        return this.defaultValue;
-      }
-    }
-save() {
-      try {
-        storage.setRaw(this.storageKey, this._value);
-      } catch (e) {
-        log$2.e(`Failed to save setting "${this.key}":`, e);
-      }
-    }
-
-
-
-onChange(handler) {
-      this.listeners.add(handler);
-      return () => this.listeners.delete(handler);
-    }
-emit(oldValue, newValue) {
-      const event = {
-        key: this.key,
-        oldValue,
-        newValue,
-        timestamp: Date.now()
-      };
-      this.listeners.forEach((handler) => {
-        try {
-          handler(event);
-        } catch (e) {
-          log$2.e(`Error in change handler for "${this.key}":`, e);
-        }
-      });
-    }
-
-
-
-toJSON() {
-      return {
-        key: this.key,
-        displayLabel: this.displayLabel,
-        displayDescription: this.displayDescription,
-        optionType: this.optionType,
-        value: this._value,
-        defaultValue: this.defaultValue
-      };
-    }
-toString() {
-      return `${this.constructor.name}(${this.key}=${String(this._value)})`;
-    }
-  }
-  class BooleanSetting extends BaseSetting {
-    optionType = "boolean";
-    constructor(config) {
-      super(config);
-    }
-validate(value) {
-      return typeof value === "boolean";
-    }
-toggle() {
-      this.setValue(!this._value);
-    }
-isEnabled() {
-      return this._value === true;
-    }
-isDisabled() {
-      return this._value === false;
-    }
-  }
-  class SelectSetting extends BaseSetting {
-    optionType = "select";
-options;
-    constructor(config) {
-      super(config);
-      this.options = Object.freeze([...config.options]);
-    }
-validate(value) {
-      return this.options.some((opt) => opt.value === value);
-    }
-getSelectedOption() {
-      return this.options.find((opt) => opt.value === this._value);
-    }
-getSelectedLabel() {
-      return this.getSelectedOption()?.label ?? "";
-    }
-selectByIndex(index) {
-      if (index < 0 || index >= this.options.length) {
-        return false;
-      }
-      return this.setValue(this.options[index].value);
-    }
-getSelectedIndex() {
-      return this.options.findIndex((opt) => opt.value === this._value);
-    }
-isSelected(value) {
-      return this._value === value;
-    }
-  }
-  const log$1 = createLogger("SettingsManager");
-  class SettingsManager {
-registry = new Map();
-globalListeners = new Set();
-
-
-
-logLevel;
-captchaUndoTelex;
-featureSettings = new Map();
-    constructor() {
-      console.log("🔧 [HaUI:SettingsManager] Initializing settings...");
-      this.logLevel = new SelectSetting({
-        key: "logLevel",
-        displayLabel: "Log Level",
-        displayDescription: "Mức độ chi tiết của log output",
-        defaultValue: DEFAULT_SETTINGS.logLevel,
-        options: [
-          { value: "debug", label: "Debug", description: "Hiển thị tất cả logs" },
-          { value: "info", label: "Info", description: "Thông tin chung" },
-          { value: "warn", label: "Warning", description: "Cảnh báo và lỗi" },
-          { value: "error", label: "Error", description: "Chỉ lỗi" },
-          { value: "none", label: "None", description: "Tắt hoàn toàn" }
-        ]
-      });
-      setGlobalLogLevel(this.logLevel.getValue());
-      this.logLevel.onChange((event) => {
-        setGlobalLogLevel(event.newValue);
-      });
-      this.captchaUndoTelex = new BooleanSetting({
-        key: "captchaUndoTelex",
-        displayLabel: "Captcha Undo Telex",
-        displayDescription: "Tự động hoàn tác gõ Telex khi nhập captcha",
-        defaultValue: DEFAULT_SETTINGS.captchaUndoTelex
-      });
-      this.register(this.logLevel);
-      this.register(this.captchaUndoTelex);
-      log$1.d("✅ Settings ready!");
-    }
-
-
-
-register(setting) {
-      if (this.registry.has(setting.key)) {
-        log$1.w(`Setting "${setting.key}" already registered, overwriting`);
-      }
-      this.registry.set(setting.key, setting);
-      setting.onChange((event) => {
-        this.emitGlobal(setting.key, event);
-      });
-      log$1.d(`  ${setting.key} = ${JSON.stringify(setting.getValue())}`);
-    }
-get(key) {
-      return this.registry.get(key);
-    }
-has(key) {
-      return this.registry.has(key);
-    }
-getAll() {
-      return Array.from(this.registry.values());
-    }
-toJSON() {
-      const result = {};
-      this.registry.forEach((setting, key) => {
-        result[key] = setting.getValue();
-      });
-      return result;
-    }
-
-
-
-isFeatureEnabled(featureId, name, description) {
-      let setting = this.featureSettings.get(featureId);
-      if (!setting) {
-        setting = new BooleanSetting({
-          key: `feature_${featureId}`,
-          displayLabel: name ?? featureId,
-          displayDescription: description ?? `Bật/tắt ${name ?? featureId}`,
-          defaultValue: true
-        });
-        this.featureSettings.set(featureId, setting);
-        this.register(setting);
-      }
-      return setting.getValue();
-    }
-setFeatureEnabled(featureId, enabled, name, description) {
-      let setting = this.featureSettings.get(featureId);
-      if (!setting) {
-        setting = new BooleanSetting({
-          key: `feature_${featureId}`,
-          displayLabel: name ?? featureId,
-          displayDescription: description ?? `Bật/tắt ${name ?? featureId}`,
-          defaultValue: true
-        });
-        this.featureSettings.set(featureId, setting);
-        this.register(setting);
-      }
-      setting.setValue(enabled);
-    }
-getFeatureSetting(featureId) {
-      return this.featureSettings.get(featureId);
-    }
-
-
-
-onAnyChange(handler) {
-      this.globalListeners.add(handler);
-      return () => this.globalListeners.delete(handler);
-    }
-emitGlobal(key, event) {
-      this.globalListeners.forEach((handler) => {
-        try {
-          handler(key, event);
-        } catch (e) {
-          log$1.e(`Error in global change handler:`, e);
-        }
-      });
-    }
-
-
-
-resetAll() {
-      this.registry.forEach((setting) => {
-        setting.reset();
-      });
-      log$1.i("All settings reset to defaults");
-    }
-  }
-  const settings = new SettingsManager();
   const log = createLogger("FeatureManager");
   class FeatureManager {
     features = new Map();
@@ -554,6 +449,29 @@ register(feature) {
 registerAll(features) {
       features.forEach((f) => this.register(f));
     }
+async _executeStart(feature) {
+      try {
+        log.d(`Starting: ${feature.name}`);
+        await feature.run();
+        this.running.add(feature.id);
+        log.i(`✅ Started: ${feature.name}`);
+        return true;
+      } catch (error) {
+        log.e(`Error starting "${feature.name}":`, error);
+        return false;
+      }
+    }
+_executeStop(feature) {
+      try {
+        feature.cleanup();
+        this.running.delete(feature.id);
+        log.i(`🛑 Stopped: ${feature.name}`);
+        return true;
+      } catch (error) {
+        log.e(`Error stopping "${feature.name}":`, error);
+        return false;
+      }
+    }
 async applyFeatures() {
       if (this.isApplying) {
         log.d("applyFeatures already in progress, queuing...");
@@ -568,40 +486,21 @@ async applyFeatures() {
         );
         for (const [id, feature] of sortedFeatures) {
           if (!this.running.has(id)) continue;
-          const isEnabled = settings.isFeatureEnabled(
-            feature.id,
-            feature.name,
-            feature.description
-          );
           const shouldRun = feature.shouldRun();
-          if (!isEnabled || !shouldRun) {
-            try {
-              feature.cleanup();
-              this.running.delete(id);
-              log.d(
-                `🛑 Stopped: ${feature.name} (${!isEnabled ? "Disabled" : "URL mismatch"})`
-              );
-            } catch (error) {
-              log.e(`Error stopping "${feature.name}":`, error);
-            }
+          if (
+!shouldRun
+          ) {
+            const reason = !shouldRun ? "URL mismatch" : "Disabled";
+            log.d(`Stopping ${feature.name} (Reason: ${reason})`);
+            this._executeStop(feature);
           }
         }
         for (const [id, feature] of sortedFeatures) {
           if (this.running.has(id)) continue;
-          if (!settings.isFeatureEnabled(feature.id, feature.name, feature.description)) {
-            continue;
-          }
           if (!feature.shouldRun()) {
             continue;
           }
-          try {
-            log.d(`Starting: ${feature.name} (priority: ${feature.priority})`);
-            await feature.run();
-            this.running.add(id);
-            log.d(`✅ Started: ${feature.name}`);
-          } catch (error) {
-            log.e(`Error starting "${feature.name}":`, error);
-          }
+          await this._executeStart(feature);
         }
         log.i(`✅ Running ${this.running.size}/${this.features.size} features`);
       } finally {
@@ -622,7 +521,20 @@ getAll() {
 isRunning(id) {
       return this.running.has(id);
     }
+    getAllIds() {
+      return Array.from(this.features.keys());
+    }
+    getAllRunningIds() {
+      return Array.from(this.running.values());
+    }
+    getAllNotRunningIds() {
+      return Array.from(this.features.keys()).filter((id) => !this.running.has(id));
+    }
 async startFeature(id) {
+      if (this.isApplying) {
+        log.w("Cannot manually start feature while features are being applied");
+        return false;
+      }
       const feature = this.features.get(id);
       if (!feature) {
         log.w(`Feature "${id}" not found`);
@@ -632,18 +544,13 @@ async startFeature(id) {
         log.d(`Feature "${feature.name}" is already running`);
         return false;
       }
-      try {
-        log.d(`Starting feature: ${feature.name}`);
-        await feature.run();
-        this.running.add(id);
-        log.i(`✅ Started: ${feature.name}`);
-        return true;
-      } catch (error) {
-        log.e(`Error starting "${feature.name}":`, error);
-        return false;
-      }
+      return this._executeStart(feature);
     }
 stopFeature(id) {
+      if (this.isApplying) {
+        log.w("Cannot manually stop feature while features are being applied");
+        return false;
+      }
       const feature = this.features.get(id);
       if (!feature) {
         log.w(`Feature "${id}" not found`);
@@ -653,20 +560,10 @@ stopFeature(id) {
         log.d(`Feature "${feature.name}" is not running`);
         return false;
       }
-      try {
-        log.d(`Stopping feature: ${feature.name}`);
-        feature.cleanup();
-        this.running.delete(id);
-        log.i(`🛑 Stopped: ${feature.name}`);
-        return true;
-      } catch (error) {
-        log.e(`Error stopping "${feature.name}":`, error);
-        return false;
-      }
+      return this._executeStop(feature);
     }
   }
   const featureManager = new FeatureManager();
-  const TITLE_UPDATE_DEBOUNCE_MS = 100;
   const URL_TITLE_MAP = {
 "/": "🏠 Trang chủ",
 "/student/recharge/cashinqr": "💳 Nạp tiền QR",
@@ -729,6 +626,7 @@ stopFeature(id) {
     "/student/application/sotayantoan": "📘 Sổ tay an toàn",
     "/student/application/hddanhgiaketquahoctap": "📘 HD đánh giá KQ"
   };
+  const TITLE_UPDATE_DEBOUNCE_MS = 100;
   const DOM = {
 panelHeader: () => {
       const el = document.querySelector("span.k-panel-header-text:first-child");
@@ -822,13 +720,11 @@ friendInfo: () => {
       });
     }
 run() {
-      this.log.i("Initializing...");
       this.originalTitle = document.title;
       const found = this.updateTitle();
       if (!found) {
         this.observeContentChanges();
       }
-      this.log.i("Ready!");
     }
 updateTitle() {
       const pathAndQuery = this.location.pathAndQuery;
@@ -850,7 +746,7 @@ updateTitle() {
       }
       const panelHeader = DOM.panelHeader();
       if (panelHeader) {
-        this.setTitle(`📄 ${this.truncate(panelHeader, 30)}`);
+        this.setTitle(`📄 ${panelHeader}`);
         return true;
       }
       this.log.d("No matching pattern, keeping original title");
@@ -862,10 +758,6 @@ updateTitle() {
         document.title = newTitle;
         this.log.d(`Title set: ${newTitle}`);
       }
-    }
-    truncate(str, maxLength) {
-      if (str.length <= maxLength) return str;
-      return str.substring(0, maxLength - 1) + "…";
     }
     observeContentChanges() {
       const content = document.querySelector(".be-content");
@@ -943,20 +835,22 @@ cleanup() {
   ];
   const HANDLERS = {
     "sso-login": {
-      inputSelector: "#ctl00_txtimgcode",
-      submitSelector: "#ctl00_butLogin",
-      imageSelector: "#ctl00_Image1"
+      inputSelector: '[id^="ctl"][id$="_txtimgcode"]',
+      submitSelector: '[id^="ctl"][id$="_butLogin"]',
+      imageSelector: '[id^="ctl"][id$="_Image1"]'
     },
     register: {
-      inputSelector: "#ctl02_txtimgcode",
-      submitSelector: "#ctl02_btnSubmit",
-      imageSelector: "#ctl02_Image1"
+      inputSelector: '[id^="ctl"][id$="_txtimgcode"]',
+      submitSelector: '[id^="ctl"][id$="_btnSubmit"]',
+      imageSelector: '[id^="ctl"][id$="_Image1"]'
     }
   };
   class CaptchaHelperFeature extends Feature {
     inputEl = null;
     submitEl = null;
     currentHandler = null;
+    isUndoTelex;
+    undoTelexListenerId = null;
 normalizeTimer = null;
 handleInput = this.onInput.bind(this);
     handleKeyDown = this.onKeyDown.bind(this);
@@ -969,8 +863,15 @@ handleInput = this.onInput.bind(this);
         urlMatch: URL_PATTERNS$1
       });
     }
-run() {
-      this.log.i("Initializing...");
+async run() {
+      this.isUndoTelex = await this.storage.get("undoTelex", false);
+      this.undoTelexListenerId = await this.storage.onValueChange(
+        "undoTelex",
+        (_key, _old, newVal) => {
+          this.isUndoTelex = !!newVal;
+          this.log.d("Settings updated:", { isUndoTelex: this.isUndoTelex });
+        }
+      );
       const matchName = this.matchResult?.matchName;
       if (!matchName) {
         this.log.w("No match result available");
@@ -987,15 +888,15 @@ run() {
       if (!this.inputEl) {
         this.log.w("Captcha input not found:", this.currentHandler.inputSelector);
         return;
-      }
+      } else this.log.d("Captcha input found:", this.inputEl.getAttribute("id"));
       if (!this.submitEl) {
         this.log.w("Submit button not found:", this.currentHandler.submitSelector);
-      }
+        return;
+      } else this.log.d("Submit button found:", this.submitEl.getAttribute("id"));
       this.inputEl.addEventListener("input", this.handleInput);
       this.inputEl.addEventListener("keydown", this.handleKeyDown);
       this.inputEl.addEventListener("blur", this.handleBlur);
       this.inputEl.focus();
-      this.log.i("Ready! Input:", this.currentHandler.inputSelector);
     }
 onInput() {
       if (this.normalizeTimer) {
@@ -1012,8 +913,7 @@ normalizeInput() {
         this.normalizeTimer = null;
       }
       const original = this.inputEl.value;
-      const undoTelex = settings.captchaUndoTelex.getValue();
-      const normalized = undoTelex ? normalizeCaptchaInputUndo(original) : normalizeCaptchaInput(original);
+      const normalized = this.isUndoTelex ? normalizeCaptchaInputUndo(original) : normalizeCaptchaInput(original);
       if (original !== normalized) {
         this.inputEl.value = normalized;
         this.inputEl.setSelectionRange(normalized.length, normalized.length);
@@ -1045,6 +945,10 @@ submit() {
       }
     }
 cleanup() {
+      if (this.undoTelexListenerId !== null) {
+        this.storage.removeValueChangeListener(this.undoTelexListenerId);
+        this.undoTelexListenerId = null;
+      }
       if (this.normalizeTimer) {
         clearTimeout(this.normalizeTimer);
         this.normalizeTimer = null;
@@ -1067,10 +971,10 @@ cleanup() {
   const URL_PATTERNS = [
 { name: "personal-study", pattern: /^\/student\/result\/studyresults$/ },
     { name: "personal-exam", pattern: /^\/student\/result\/examresult$/ },
-{ name: "friend-study", pattern: /^\/student\/result\/viewstudyresult\?/ },
-    { name: "friend-exam", pattern: /^\/student\/result\/viewexamresult\?/ },
-{ name: "class-study", pattern: /^\/student\/result\/viewstudyresultclass\?/ },
-    { name: "class-exam", pattern: /^\/student\/result\/viewexamresultclass\?/ }
+{ name: "friend-study", pattern: /^\/student\/result\/viewstudyresult/ },
+    { name: "friend-exam", pattern: /^\/student\/result\/viewexamresult/ },
+{ name: "class-study", pattern: /^\/student\/result\/viewstudyresultclass/ },
+    { name: "class-exam", pattern: /^\/student\/result\/viewexamresultclass/ }
   ];
   class QuickNavFeature extends Feature {
     navElement = null;
@@ -1083,7 +987,6 @@ cleanup() {
       });
     }
     run() {
-      this.log.i("Initializing...");
       const navLinks = this.generateNavLinks();
       if (navLinks.length === 0) {
         this.log.w("No nav links generated for current URL");
@@ -1096,40 +999,43 @@ cleanup() {
       }
       this.navElement = this.createNavElement(navLinks);
       panelHeading.insertBefore(this.navElement, panelHeading.firstChild);
-      this.log.i("Ready! Nav links injected.");
     }
 generateNavLinks() {
       const pathname = this.location.path;
       const search = this.location.search;
-      const isStudy = pathname.includes("studyresult");
-      const isExam = pathname.includes("examresult");
-      if (!isStudy && !isExam) return [];
-      let studyUrl;
-      let examUrl;
-      if (pathname === "/student/result/studyresults") {
-        studyUrl = pathname;
-        examUrl = "/student/result/examresult";
-      } else if (pathname === "/student/result/examresult") {
-        studyUrl = "/student/result/studyresults";
-        examUrl = pathname;
-      } else if (pathname.startsWith("/student/result/viewstudyresult") && !pathname.includes("class")) {
-        studyUrl = pathname + search;
-        examUrl = pathname.replace("viewstudyresult", "viewexamresult") + search;
-      } else if (pathname.startsWith("/student/result/viewexamresult") && !pathname.includes("class")) {
-        studyUrl = pathname.replace("viewexamresult", "viewstudyresult") + search;
-        examUrl = pathname + search;
-      } else if (pathname.includes("viewstudyresultclass")) {
-        studyUrl = pathname + search;
-        examUrl = pathname.replace("viewstudyresultclass", "viewexamresultclass") + search;
-      } else if (pathname.includes("viewexamresultclass")) {
-        studyUrl = pathname.replace("viewexamresultclass", "viewstudyresultclass") + search;
-        examUrl = pathname + search;
-      } else {
-        return [];
-      }
+      const mappings = [
+{
+          type: "class",
+          study: "viewstudyresultclass",
+          exam: "viewexamresultclass",
+          useParams: true
+        },
+{ type: "friend", study: "viewstudyresult", exam: "viewexamresult", useParams: true },
+{ type: "personal", study: "studyresults", exam: "examresult", useParams: false }
+      ];
+      const config = mappings.find(
+        (m) => pathname.includes(m.study) || pathname.includes(m.exam)
+      );
+      if (!config) return [];
+      const isStudy = pathname.includes(config.study);
+      const isExam = !isStudy;
+      const targetPath = isStudy ? pathname.replace(config.study, config.exam) : pathname.replace(config.exam, config.study);
+      const query = config.useParams ? search : "";
       return [
-        { label: "Điểm TX", icon: "📊", url: studyUrl, isActive: isStudy },
-        { label: "Điểm thi", icon: "📋", url: examUrl, isActive: isExam }
+        {
+          label: "Điểm TX",
+          icon: "📊",
+          url: (isStudy ? pathname : targetPath) + query,
+          isActive: isStudy,
+          description: "Xem kết quả học tập"
+        },
+        {
+          label: "Điểm thi",
+          icon: "📋",
+          url: (isExam ? pathname : targetPath) + query,
+          isActive: isExam,
+          description: "Xem kết quả thi"
+        }
       ];
     }
 createNavElement(links) {
@@ -1138,8 +1044,16 @@ createNavElement(links) {
       for (const link of links) {
         const a = document.createElement("a");
         a.href = link.url;
+        a.title = link.description;
         a.className = `${CSS_PREFIX}-link${link.isActive ? " active" : ""}`;
-        a.textContent = `${link.icon} ${link.label}`;
+        const icon = document.createElement("span");
+        icon.className = `${CSS_PREFIX}-link-icon`;
+        icon.textContent = link.icon;
+        const label = document.createElement("span");
+        label.className = `${CSS_PREFIX}-link-label`;
+        label.textContent = link.label;
+        a.appendChild(icon);
+        a.appendChild(label);
         container.appendChild(a);
       }
       return container;
@@ -1154,16 +1068,11 @@ cleanup() {
     new CaptchaHelperFeature(),
     new QuickNavFeature()
   ];
-  console.log(
-    `%c🎓 SV HaUI Helper %cv${"2.1.0"}`,
-    "color: #667eea; font-size: 20px; font-weight: bold;",
-    "color: #764ba2; font-size: 14px;"
-  );
   async function main() {
-    log$3.i("Initializing...");
+    log$1.i("Initializing...");
     featureManager.registerAll(allFeatures);
     await featureManager.applyFeatures();
-    log$3.i("✅ Ready!");
+    log$1.i("✅ Ready!");
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", main);

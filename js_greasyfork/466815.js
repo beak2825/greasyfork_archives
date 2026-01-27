@@ -33,10 +33,10 @@
 (function () {
   'use strict';
 
-  var _GM = /* @__PURE__ */ (() => typeof GM != "undefined" ? GM : void 0)();
-  var _GM_getValue = /* @__PURE__ */ (() => typeof GM_getValue != "undefined" ? GM_getValue : void 0)();
-  var _GM_registerMenuCommand = /* @__PURE__ */ (() => typeof GM_registerMenuCommand != "undefined" ? GM_registerMenuCommand : void 0)();
-  var _unsafeWindow = /* @__PURE__ */ (() => typeof unsafeWindow != "undefined" ? unsafeWindow : void 0)();
+  var _GM = (() => typeof GM != "undefined" ? GM : void 0)();
+  var _GM_getValue = (() => typeof GM_getValue != "undefined" ? GM_getValue : void 0)();
+  var _GM_registerMenuCommand = (() => typeof GM_registerMenuCommand != "undefined" ? GM_registerMenuCommand : void 0)();
+  var _unsafeWindow = (() => typeof unsafeWindow != "undefined" ? unsafeWindow : void 0)();
   const REPLACEMENTS_KEY = "locationReplacements";
   const safeJSONParse = (text, defaultValue) => {
     try {
@@ -73,10 +73,7 @@
         '请输入新的位置替换规则（JSON格式的键值对，例如 {"旧字符串": "新字符串"}）：',
         currentRules
       );
-      if (!input) {
-        alert("替换规则未更改。");
-        return;
-      }
+      if (!input) return;
       try {
         const parsed = JSON.parse(input);
         if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
@@ -128,7 +125,9 @@
     routes = [];
     serve(prefix, action, constrait = {}) {
       if (Array.isArray(prefix)) {
-        prefix.forEach((p) => this.routes.push({ prefix: p, action, constrait }));
+        prefix.forEach((p) => {
+          this.routes.push({ prefix: p, action, constrait });
+        });
         return;
       }
       this.routes.push({ prefix, action, constrait });
@@ -272,32 +271,24 @@
   const router = new Router();
   router.serve(
     [
-      /** 视频 */
-      "https://www.bilibili.com/video/",
-      /** 新列表 */
-      "https://www.bilibili.com/list/",
-      /** 新版单独动态页 */
-      "https://www.bilibili.com/opus/",
-      /** 课程页 */
-      "https://www.bilibili.com/cheese/play/",
-      /** 话题页 */
-      "https://www.bilibili.com/v/topic/detail"
+"https://www.bilibili.com/video/",
+"https://www.bilibili.com/list/",
+"https://www.bilibili.com/opus/",
+"https://www.bilibili.com/cheese/play/",
+"https://www.bilibili.com/v/topic/detail"
     ],
     hookLit
   );
   router.serve(
-    /** 活动页 */
-    "https://www.bilibili.com/blackboard/",
+"https://www.bilibili.com/blackboard/",
     observeAndInjectComments
   );
   router.serve(
-    /** 拜年祭 */
-    "https://www.bilibili.com/festival/",
+"https://www.bilibili.com/festival/",
     hookBBComment
   );
   router.serve(
-    /** 专栏 */
-    "https://www.bilibili.com/read/",
+"https://www.bilibili.com/read/",
     async () => {
       observeAndInjectComments();
       const articleDetail = await isElementLoaded(".article-detail");

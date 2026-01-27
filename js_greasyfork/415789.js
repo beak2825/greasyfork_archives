@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         🔥🔥🔥B站视频下载解析 - 2023 最新 - BILIBILI Download
-// @namespace    https://xbeibeix.com/api/bilibili
-// @version      1.0.5
+// @name         🔥🔥🔥B站视频下载解析 - 2026 最新 - BILIBILI Download
+// @namespace    https://peanutdl.com/zh/bilibili
+// @version      1.0.7
 // @description  快速解析B站视频，可直接下载MP4格式B站视频。
 // @author       xbeibeix.com
 // @match        https://www.bilibili.com/video/*
 // @grant        none
 // @require      https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js
-// @downloadURL https://update.greasyfork.org/scripts/415789/%F0%9F%94%A5%F0%9F%94%A5%F0%9F%94%A5B%E7%AB%99%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E8%A7%A3%E6%9E%90%20-%202023%20%E6%9C%80%E6%96%B0%20-%20BILIBILI%20Download.user.js
-// @updateURL https://update.greasyfork.org/scripts/415789/%F0%9F%94%A5%F0%9F%94%A5%F0%9F%94%A5B%E7%AB%99%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E8%A7%A3%E6%9E%90%20-%202023%20%E6%9C%80%E6%96%B0%20-%20BILIBILI%20Download.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/415789/%F0%9F%94%A5%F0%9F%94%A5%F0%9F%94%A5B%E7%AB%99%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E8%A7%A3%E6%9E%90%20-%202026%20%E6%9C%80%E6%96%B0%20-%20BILIBILI%20Download.user.js
+// @updateURL https://update.greasyfork.org/scripts/415789/%F0%9F%94%A5%F0%9F%94%A5%F0%9F%94%A5B%E7%AB%99%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E8%A7%A3%E6%9E%90%20-%202026%20%E6%9C%80%E6%96%B0%20-%20BILIBILI%20Download.meta.js
 // ==/UserScript==
 
 (function () {
@@ -19,6 +19,6 @@
     $("#go").click(function () {
         var patt1 = new RegExp("(BV|av)[a-zA-Z0-9]*"); var bvid = patt1.exec(window.location.href);
         var tempwindow = window.open("_blank");
-        tempwindow.location = "https://xbeibeix.com/api/bilibili/?monkey=" + bvid[0]
+        tempwindow.location = "https://peanutdl.com/zh/bilibili?monkey=" + bvid[0]
     })
 })();

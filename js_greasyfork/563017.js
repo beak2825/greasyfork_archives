@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ウィキトラベルのアイヌ語の表記変換
 // @namespace    https://lit.link/toracatman
-// @version      2026-01-23
+// @version      2026-01-26
 // @description  ウィキトラベルにアイヌ語の表記変換器を追加します。
 // @author       トラネコマン
 // @match        https://wikitravel.org/*
@@ -227,42 +227,78 @@ function changeNotation(notation) {
 }
 
 (() => {
-    let assoc = document.getElementById("p-namespaces");
-    if (assoc == null) return;
+    let pcsite = document.getElementById("mw-mf-viewport") == null;
+    let assoc;
+    let h1;
+    if (pcsite) {
+        assoc = document.getElementById("p-namespaces");
+        if (assoc == null) return;
+    }
+    else {
+        h1 = document.getElementById("firstHeading");
+        if (h1 == null) return;
+    }
+
+    let fix = document.createElement("style");
+    fix.textContent = ".client-js .collapsible-block:not(.collapsible-block-js){display:block;}";
+    document.body.appendChild(fix);
 
     let style = document.createElement("style");
     style.id = "font-style";
     document.body.appendChild(style);
 
-    let dropdown = assoc.nextElementSibling;
-    dropdown.classList.remove("emptyPortlet");
+    if (pcsite) {
+        let dropdown = assoc.nextElementSibling;
+        dropdown.classList.remove("emptyPortlet");
 
-    let label = dropdown.querySelector(".vector-menu-heading-label");
-    label.textContent = "Itakitokpa / イタキトㇰパ";
+        let label = dropdown.querySelector(".vector-menu-heading-label");
+        label.textContent = "Itakitokpa / イタキトㇰパ";
 
-    let variants = dropdown.lastElementChild;
-    variants.classList.remove("emptyPortlet");
+        let variants = dropdown.lastElementChild;
+        variants.classList.remove("emptyPortlet");
 
-    let list = variants.querySelector(".vector-menu-content-list");
-    list.innerHTML = "";
-    for (let i in c) {
-        let varlang = document.createElement("li");
-        varlang.id = `ca-varlang-${i}`;
-        varlang.classList.add(`ca-variants-${i}`);
-        varlang.classList.add("mw-list-item");
-        varlang.innerHTML = `<a href="#" lang="${i}" hreflang="${i}"><span>${c[i].n}</span></a>`;
-        list.appendChild(varlang);
-        varlang.querySelector("a").addEventListener("click", function(e) {
-            label.innerHTML = c[this.lang].n;
-            changeNotation(this.lang);
-            localStorage.setItem("ain-lang", this.lang);
-            e.preventDefault();
-        });
+        let list = variants.querySelector(".vector-menu-content-list");
+        list.innerHTML = "";
+        for (let i in c) {
+            let varlang = document.createElement("li");
+            varlang.id = `ca-varlang-${i}`;
+            varlang.classList.add(`ca-variants-${i}`);
+            varlang.classList.add("mw-list-item");
+            varlang.innerHTML = `<a href="#" lang="${i}" hreflang="${i}"><span>${c[i].n}</span></a>`;
+            list.appendChild(varlang);
+            varlang.querySelector("a").addEventListener("click", function(e) {
+                label.innerHTML = c[this.lang].n;
+                changeNotation(this.lang);
+                localStorage.setItem("ain-lang", this.lang);
+                e.preventDefault();
+            });
+        }
+
+        let lang = localStorage.getItem("ain-lang");
+        if (lang != null) {
+            label.innerHTML = c[lang].n;
+            changeNotation(lang);
+        }
     }
+    else {
+        let list = document.createElement("select");
+        list.id = "varlang-list";
+        for (let i in c) {
+            let varlang = document.createElement("option");
+            varlang.value = i;
+            varlang.textContent = c[i].n.replace(/<small>(.+?)<\/small>/g, "_$1");
+            list.appendChild(varlang);
+        }
+        h1.after(list);
+        list.addEventListener("change", function(e) {
+            changeNotation(this.value);
+            localStorage.setItem("ain-lang", this.value);
+        });
 
-    let lang = localStorage.getItem("ain-lang");
-    if (lang != null) {
-        label.innerHTML = c[lang].n;
-        changeNotation(lang);
+        let lang = localStorage.getItem("ain-lang");
+        if (lang != null) {
+            list.value = lang;
+            changeNotation(lang);
+        }
     }
 })();

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         이미지 다운로더 + HR
-// @version         2.90.0.8.260124
+// @version         2.90.0.8.260126
 // @namespace       http://tampermonkey.net/
 // @description     Images can be extracted and batch downloaded from most websites. Especially for websites the right click fails or image can not save. Extra features: zip download / auto-enlarge image. See the script description at info page (suitable for chrome/firefox+tampermonkey)
 // @author          桃源隐叟-The hide oldman in taoyuan mountain, donghaerang
@@ -172,11 +172,6 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 // kobis.or.kr URL 처리
                 if (urlStr.includes("kobis.or.kr")) {
                     urlStr = urlStr.replace(/thumb_x192\/thn_/g, "");
-                }
-                // tving URL 처리 (개선)
-                if (urlStr.includes("tving.com")) {
-                    // /dims/resize/... 부분을 제거하여 원본 이미지 요청
-                    urlStr = urlStr.replace(/\/dims\/resize\/[^\?]+/g, "");
                 }
                 // 범용 .jpeg 확장자 -> .jpg 확장자로 변경 (URL 단계에서 처리)
                 if (urlStr.toLowerCase().includes(".jpeg")) {
@@ -362,44 +357,43 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             img.onload = function() {
                 const w = this.naturalWidth || this.width;
                 const h = this.naturalHeight || this.height;
-                const isTving = url.includes("tving.com");
                 const typeTag = (blob.type || "").toLowerCase();
                 const isJpgWebp = /(.jpg|.jpeg|.webp)/i.test(url) || 
                                  ['image/jpeg', 'image/jpg', 'image/webp'].includes(typeTag);
 
-                // 규칙 1: tving & (1920x1080 or 1280x720) -> 원본 유지 .jpg 저장
-                if (isTving && ((w === 1920 && h === 1080) || (w === 1280 && h === 720))) {
+                // Rule 1: 지정된 해상도인 경우 원본 유지 .jpg (가로형/세로형 무관)
+                if ((w === 1920 && h === 1080) || (w === 1280 && h === 720)) {
                     processImageAdvanced(this, w, h).then(b => saveAs(b, `${filename}.jpg`));
                 } 
-                // 규칙 2: tving & 480x693 -> 500x750 확대 .jpg 저장
-                else if (isTving && w === 480 && h === 693) {
+                // Rule 2: 480x693 해상도 -> 500x750 확대 잘라내기 .jpg
+                else if (w === 480 && h === 693) {
                     processImageAdvanced(this, 500, 750).then(b => saveAs(b, `${filename}.jpg`));
                 }
-                // 규칙 3: tving 미포함 & .png -> 원본 유지 .png 저장
-                else if (!isTving && (typeTag === 'image/png' || url.toLowerCase().includes('.png'))) {
-                    saveAs(blob, `${filename}.png`);
-                }
-                // 가로형 이미지 규칙 (규칙 4, 5, 6)
+                // 가로형 이미지 규칙 (Rule 3, 4, 5)
                 else if (isJpgWebp && w > h) {
-                    if (w > 3840 || h > 2160) { // 규칙 4: 초고해상도 축소
+                    if (w > 3840 || h > 2160) { // Rule 3: 초고해상도 축소
                         processImageAdvanced(this, 3840, 2160).then(b => saveAs(b, `${filename}.jpg`));
-                    } else if (w < 1280 && h < 720) { // 규칙 5: 저해상도 확대
+                    } else if (w < 1280 && h < 720) { // Rule 4: 저해상도 확대
                         processImageAdvanced(this, 1280, 720).then(b => saveAs(b, `${filename}.jpg`));
-                    } else { // 규칙 6: 범위 내 이미지 16:9 비율 강제
+                    } else if (w >= 1280 && w <= 3840 && h >= 720 && h <= 2160) { // Rule 5: 16:9 비율 강제
                         processImageAdvanced(this, w, Math.round(w / (16/9))).then(b => saveAs(b, `${filename}.jpg`));
+                    } else { // Rule 9: 범위 밖은 원본 그대로
+                        saveAs(blob, `${filename}.jpg`);
                     }
                 }
-                // 세로형 이미지 규칙 (규칙 7, 8, 9)
+                // 세로형 이미지 규칙 (Rule 6, 7, 8)
                 else if (isJpgWebp && w < h) {
-                    if (w > 2000 || h > 3000) { // 규칙 7: 초고해상도 축소
+                    if (w > 2000 || h > 3000) { // Rule 6: 초고해상도 축소
                         processImageAdvanced(this, 2000, 3000).then(b => saveAs(b, `${filename}.jpg`));
-                    } else if (w < 500 && h < 750) { // 규칙 8: 저해상도 확대
+                    } else if (w < 500 && h < 750) { // Rule 7: 저해상도 확대
                         processImageAdvanced(this, 500, 750).then(b => saveAs(b, `${filename}.jpg`));
-                    } else { // 규칙 9: 범위 내 이미지 2:3 비율 강제
+                    } else if (w >= 500 || h >= 750) { // Rule 8: 2:3 비율 강제
                         processImageAdvanced(this, Math.round(h * (2/3)), h).then(b => saveAs(b, `${filename}.jpg`));
+                    } else { // Rule 9
+                        saveAs(blob, `${filename}.jpg`);
                     }
                 }
-                // 규칙 10: 위 조건에 해당하지 않는 경우 원본 그대로 저장
+                // Rule 9 & 10: 위 조건에 해당하지 않는 파일은 그대로 다운로드
                 else {
                     let ext = typeTag.split('/')[1] ? typeTag.split('/')[1].split(';')[0].replace('jpeg', 'jpg') : 'jpg';
                     saveAs(blob, `${filename}.${ext}`);

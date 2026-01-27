@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Toolasha
 // @namespace    http://tampermonkey.net/
-// @version      0.5.07
+// @version      0.5.23
 // @description  Toolasha - Enhanced tools for Milky Way Idle.
-// @author       Celasha and Claude, thank you to bot7420, DrDucky, Frotty, Truth_Light, AlphB, qu, and sentientmilk, for providing the basis for a lot of this. Thank you to Miku, Orvel, Jigglymoose, Incinarator, Knerd, and others for their time and help. Thank you to Steez for testing and helping me figure out where I'm wrong! Thank you to Tib for his generous contribution of the Character Cards. Special thanks to Zaeter for the name.
+// @author       Celasha and Claude, thank you to bot7420, DrDucky, Frotty, Truth_Light, AlphB, qu, and sentientmilk, for providing the basis for a lot of this. Thank you to Miku, Orvel, Jigglymoose, Incinarator, Knerd, and others for their time and help. Thank you to Steez for testing and helping me figure out where I'm wrong! Thank you to Tib for his generous contribution of the Character Cards. Thank you to Sapnas for -deeply- testing and singlehandedly help me improve performance. Special thanks to Zaeter for the name.
 // @license      CC-BY-NC-SA-4.0
 // @run-at       document-start
 // @match        https://www.milkywayidle.com/*
@@ -413,6 +413,14 @@
                     type: 'checkbox',
                     default: true,
                 },
+                actions_compactActionBar: {
+                    id: 'actions_compactActionBar',
+                    label: 'Compact action bar (limit width, truncate long names)',
+                    type: 'checkbox',
+                    default: false,
+                    dependencies: ['totalActionTime'],
+                    help: 'Limits action bar width to prevent screen-spanning on wide monitors. Long action names will be truncated with "..." - hover to see full text.',
+                },
                 actionPanel_totalTime: {
                     id: 'actionPanel_totalTime',
                     label: 'Action panel: Total time, times to reach target level, exp/hour',
@@ -501,6 +509,13 @@
                     type: 'checkbox',
                     default: true,
                     help: 'Displays profit/hour and profit/day for alchemy actions based on success rate and market prices',
+                },
+                actions_missingMaterialsButton: {
+                    id: 'actions_missingMaterialsButton',
+                    label: 'Show "Missing Mats Marketplace" button on production panels',
+                    type: 'checkbox',
+                    default: true,
+                    help: 'Adds button to production panels that opens marketplace with tabs for missing materials',
                 },
             },
         },
@@ -695,7 +710,6 @@
                     label: 'Enable Enhancement Tracker',
                     type: 'checkbox',
                     default: false,
-                    requiresRefresh: true,
                     help: 'Track enhancement attempts, costs, and statistics',
                 },
                 enhancementTracker_showOnlyOnEnhancingScreen: {
@@ -908,7 +922,6 @@
                     label: 'Track task reroll costs',
                     type: 'checkbox',
                     default: true,
-                    requiresRefresh: true,
                     help: 'Tracks how much gold/cowbells spent rerolling each task (EXPERIMENTAL - may cause UI freezing)',
                 },
                 taskMapIndex: {
@@ -1813,21 +1826,6 @@
                     handlers.splice(index, 1);
                 }
             }
-        }
-
-        /**
-         * Debug helper: Log WebSocket handler counts
-         * TEMPORARY: For testing handler accumulation fix
-         */
-        debugHandlers() {
-            console.log('=== WebSocket Handler Diagnostics ===');
-            let totalHandlers = 0;
-            for (const [type, handlers] of this.messageHandlers.entries()) {
-                console.log(`  ${type}: ${handlers.length} handler(s)`);
-                totalHandlers += handlers.length;
-            }
-            console.log(`Total: ${totalHandlers} handlers across ${this.messageHandlers.size} event types`);
-            console.log('====================================');
         }
     }
 
@@ -3511,22 +3509,6 @@
                 pendingCallbacks: this.debounceTimers.size,
             };
         }
-
-        /**
-         * Debug helper: Log detailed handler information
-         * TEMPORARY: For testing handler accumulation fix
-         */
-        debugHandlers() {
-            console.log('=== DOM Observer Diagnostics ===');
-            console.log('Total handlers:', this.handlers.length);
-            console.log('Active observers:', this.isObserving);
-            console.log('Pending callbacks:', this.debounceTimers.size);
-            console.log('\nHandler list:');
-            this.handlers.forEach((h, i) => {
-                console.log(`  ${i + 1}. ${h.name}${h.debounce ? ' (debounced)' : ''}`);
-            });
-            console.log('================================');
-        }
     }
 
     // Create singleton instance
@@ -3674,7 +3656,7 @@
             this.API_URL = 'https://www.milkywayidle.com/game_data/marketplace.json';
 
             // Cache settings
-            this.CACHE_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
+            this.CACHE_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
             this.CACHE_KEY_DATA = 'MWITools_marketAPI_json';
             this.CACHE_KEY_TIMESTAMP = 'MWITools_marketAPI_timestamp';
 
@@ -3919,6 +3901,25 @@
          */
         clearErrors() {
             this.errorLog = [];
+        }
+
+        /**
+         * Clear cache and fetch fresh market data
+         * @returns {Promise<Object|null>} Fresh market data or null if failed
+         */
+        async clearCacheAndRefetch() {
+            console.log('[MarketAPI] 🔄 Clearing cache and fetching fresh data...');
+
+            // Clear storage cache
+            await storage.delete(this.CACHE_KEY_DATA, 'settings');
+            await storage.delete(this.CACHE_KEY_TIMESTAMP, 'settings');
+
+            // Clear in-memory state
+            this.marketData = null;
+            this.lastFetchTimestamp = null;
+
+            // Force fresh fetch
+            return await this.fetch(true);
         }
     }
 
@@ -5480,7 +5481,7 @@
     /**
      * Calculate bonus revenue from essence and rare find drops
      * @param {Object} actionDetails - Action details from game data
-     * @param {number} actionsPerHour - Actions per hour
+     * @param {number} actionsPerHour - Base actions per hour (efficiency not applied)
      * @param {Map} characterEquipment - Equipment map
      * @param {Object} itemDetailMap - Item details map
      * @returns {Object} Bonus revenue data with essence and rare find drops
@@ -5592,6 +5593,250 @@
     }
 
     /**
+     * Profit Calculation Constants
+     * Shared constants used across profit calculators
+     */
+
+    /**
+     * Marketplace tax rate (2%)
+     */
+    const MARKET_TAX = 0.02;
+
+    /**
+     * Base drink consumption rate per hour (before Drink Concentration)
+     */
+    const DRINKS_PER_HOUR_BASE = 12;
+
+    /**
+     * Seconds per hour (for rate conversions)
+     */
+    const SECONDS_PER_HOUR = 3600;
+
+    /**
+     * Hours per day (for daily profit calculations)
+     */
+    const HOURS_PER_DAY = 24;
+
+    /**
+     * Gathering skill action types
+     * Skills that gather raw materials from the world
+     */
+    const GATHERING_TYPES$2 = ['/action_types/foraging', '/action_types/woodcutting', '/action_types/milking'];
+
+    /**
+     * Production skill action types
+     * Skills that craft items from materials
+     */
+    const PRODUCTION_TYPES$4 = [
+        '/action_types/brewing',
+        '/action_types/cooking',
+        '/action_types/cheesesmithing',
+        '/action_types/crafting',
+        '/action_types/tailoring',
+    ];
+
+    /**
+     * Profit Calculation Helpers
+     * Pure functions for profit/rate calculations used across features
+     *
+     * These functions consolidate duplicated calculations from:
+     * - profit-calculator.js
+     * - gathering-profit.js
+     * - task-profit-calculator.js
+     * - action-time-display.js
+     * - tooltip-prices.js
+     */
+
+
+    // ============ Rate Conversions ============
+
+    /**
+     * Calculate actions per hour from action time
+     * @param {number} actionTimeSeconds - Time per action in seconds
+     * @returns {number} Actions per hour (0 if invalid input)
+     *
+     * @example
+     * calculateActionsPerHour(6) // Returns 600 (3600 / 6)
+     * calculateActionsPerHour(0) // Returns 0 (invalid)
+     */
+    function calculateActionsPerHour(actionTimeSeconds) {
+        if (!actionTimeSeconds || actionTimeSeconds <= 0) {
+            return 0;
+        }
+        return SECONDS_PER_HOUR / actionTimeSeconds;
+    }
+
+    /**
+     * Calculate hours needed for a number of actions
+     * @param {number} actionCount - Number of actions/attempts
+     * @param {number} actionsPerHour - Actions per hour rate
+     * @returns {number} Hours needed (0 if invalid input)
+     *
+     * @example
+     * calculateHoursForActions(600, 600) // Returns 1
+     * calculateHoursForActions(1200, 600) // Returns 2
+     */
+    function calculateHoursForActions(actionCount, actionsPerHour) {
+        if (!actionsPerHour || actionsPerHour <= 0) {
+            return 0;
+        }
+        return actionCount / actionsPerHour;
+    }
+
+    /**
+     * Calculate seconds needed for a number of actions
+     * @param {number} actionCount - Number of actions/attempts
+     * @param {number} actionsPerHour - Actions per hour rate
+     * @returns {number} Seconds needed (0 if invalid input)
+     *
+     * @example
+     * calculateSecondsForActions(100, 600) // Returns 600 (100/600 * 3600)
+     */
+    function calculateSecondsForActions(actionCount, actionsPerHour) {
+        return calculateHoursForActions(actionCount, actionsPerHour) * SECONDS_PER_HOUR;
+    }
+
+    // ============ Efficiency Calculations ============
+
+    /**
+     * Calculate efficiency multiplier from efficiency percentage
+     * Efficiency gives bonus action completions per attempt
+     *
+     * @param {number} efficiencyPercent - Efficiency as percentage (e.g., 150 for 150%)
+     * @returns {number} Multiplier (e.g., 2.5 for 150% efficiency)
+     *
+     * @example
+     * calculateEfficiencyMultiplier(0)   // Returns 1.0 (no bonus)
+     * calculateEfficiencyMultiplier(50)  // Returns 1.5
+     * calculateEfficiencyMultiplier(150) // Returns 2.5
+     */
+    function calculateEfficiencyMultiplier(efficiencyPercent) {
+        return 1 + (efficiencyPercent || 0) / 100;
+    }
+
+    // ============ Profit Calculations ============
+
+    /**
+     * Calculate profit per action from hourly profit data
+     *
+     * IMPORTANT: This assumes profitPerHour already includes efficiency.
+     * The formula works because:
+     * - profitPerHour = actionsPerHour × efficiencyMultiplier × profitPerItem
+     * - profitPerHour / actionsPerHour = efficiencyMultiplier × profitPerItem
+     * - This gives profit per ATTEMPT (what the queue shows)
+     *
+     * @param {number} profitPerHour - Profit per hour (includes efficiency)
+     * @param {number} actionsPerHour - Base actions per hour (without efficiency)
+     * @returns {number} Profit per action/attempt (0 if invalid input)
+     *
+     * @example
+     * // With 150% efficiency (2.5x), 600 actions/hr, 50 profit/item:
+     * // profitPerHour = 600 × 2.5 × 50 = 75,000
+     * calculateProfitPerAction(75000, 600) // Returns 125 (profit per attempt)
+     */
+    function calculateProfitPerAction(profitPerHour, actionsPerHour) {
+        if (!actionsPerHour || actionsPerHour <= 0) {
+            return 0;
+        }
+        return profitPerHour / actionsPerHour;
+    }
+
+    /**
+     * Calculate profit per day from hourly profit
+     * @param {number} profitPerHour - Profit per hour
+     * @returns {number} Profit per day
+     *
+     * @example
+     * calculateProfitPerDay(10000) // Returns 240,000
+     */
+    function calculateProfitPerDay(profitPerHour) {
+        return profitPerHour * HOURS_PER_DAY;
+    }
+
+    // ============ Cost Calculations ============
+
+    /**
+     * Calculate drink consumption rate with Drink Concentration
+     * @param {number} drinkConcentration - Drink Concentration stat as decimal (e.g., 0.15 for 15%)
+     * @returns {number} Drinks consumed per hour
+     *
+     * @example
+     * calculateDrinksPerHour(0)    // Returns 12 (base rate)
+     * calculateDrinksPerHour(0.15) // Returns 13.8 (12 × 1.15)
+     */
+    function calculateDrinksPerHour(drinkConcentration = 0) {
+        return DRINKS_PER_HOUR_BASE * (1 + drinkConcentration);
+    }
+
+    /**
+     * Calculate price after marketplace tax
+     * @param {number} price - Price before tax
+     * @returns {number} Price after 2% tax deduction
+     *
+     * @example
+     * calculatePriceAfterTax(100) // Returns 98
+     */
+    function calculatePriceAfterTax(price) {
+        return price * (1 - MARKET_TAX);
+    }
+
+    // ============ Composite Calculations ============
+
+    /**
+     * Calculate complete profit breakdown for queued actions
+     * Takes raw inputs and returns all intermediate + final values
+     *
+     * @param {Object} params - Calculation parameters
+     * @param {number} params.profitPerHour - Profit per hour (from profit calculator)
+     * @param {number} params.actionsPerHour - Base actions per hour (from profit calculator)
+     * @param {number} params.actionCount - Number of queued actions/attempts
+     * @param {number} [params.revenuePerHour] - Revenue per hour (optional, for estimated value mode)
+     * @param {string} [params.valueMode='profit'] - 'profit' or 'estimated_value'
+     * @returns {Object} Profit breakdown with all calculated values
+     *
+     * @example
+     * calculateQueueProfitBreakdown({
+     *     profitPerHour: 75000,
+     *     actionsPerHour: 600,
+     *     actionCount: 100,
+     * })
+     * // Returns: { totalProfit: 12500, profitPerAction: 125, hoursNeeded: 0.167, ... }
+     */
+    function calculateQueueProfitBreakdown({
+        profitPerHour,
+        actionsPerHour,
+        actionCount,
+        revenuePerHour,
+        valueMode = 'profit',
+    }) {
+        // Determine which value to use based on mode
+        const valuePerHour =
+            valueMode === 'estimated_value' && revenuePerHour !== undefined ? revenuePerHour : profitPerHour;
+
+        // Calculate derived values
+        const profitPerAction = calculateProfitPerAction(valuePerHour, actionsPerHour);
+        const totalProfit = profitPerAction * actionCount;
+        const hoursNeeded = calculateHoursForActions(actionCount, actionsPerHour);
+        const secondsNeeded = hoursNeeded * SECONDS_PER_HOUR;
+
+        return {
+            // Final values
+            totalProfit,
+            profitPerAction,
+
+            // Time values
+            hoursNeeded,
+            secondsNeeded,
+
+            // Input values (for reference)
+            valuePerHour,
+            actionsPerHour,
+            actionCount,
+            valueMode,
+        };
+    }
+
+    /**
      * Profit Calculator Module
      * Calculates production costs and profit for crafted items
      */
@@ -5602,10 +5847,6 @@
      */
     class ProfitCalculator {
         constructor() {
-            // Constants
-            this.MARKET_TAX = 0.02; // 2% marketplace tax
-            this.DRINKS_PER_HOUR = 12; // Average drink consumption per hour
-
             // Cached static game data (never changes during session)
             this._itemDetailMap = null;
             this._actionDetailMap = null;
@@ -5742,7 +5983,7 @@
             const communityEfficiency = this.calculateCommunityBuffBonus(communityBuffLevel, actionDetails.type);
 
             // Total efficiency bonus (all sources additive)
-            const efficiencyBonus =
+            const totalEfficiency =
                 levelEfficiency + houseEfficiency + equipmentEfficiency + teaEfficiency + communityEfficiency;
 
             // Calculate equipment speed bonus
@@ -5767,7 +6008,7 @@
             // Calculate efficiency multiplier
             // Formula matches original MWI Tools: 1 + efficiency%
             // Example: 150% efficiency → 1 + 1.5 = 2.5x multiplier
-            const efficiencyMultiplier = 1 + efficiencyBonus / 100;
+            const efficiencyMultiplier = 1 + totalEfficiency / 100;
 
             // Items produced per hour (with efficiency multiplier)
             const itemsPerHour = actionsPerHour * outputAmount * efficiencyMultiplier;
@@ -5794,7 +6035,7 @@
             const outputPrice = getItemPrice(itemHrid, { context: 'profit', side: 'sell' }) || 0;
 
             // Apply market tax (2% tax on sales)
-            const priceAfterTax = outputPrice * (1 - this.MARKET_TAX);
+            const priceAfterTax = calculatePriceAfterTax(outputPrice);
 
             // Cost per item (without efficiency scaling)
             const costPerItem = totalMaterialCost / outputAmount;
@@ -5803,21 +6044,24 @@
             // Efficiency repeats the action, consuming materials each time
             const materialCostPerHour = actionsPerHour * totalMaterialCost * efficiencyMultiplier;
 
-            // Revenue per hour (already accounts for efficiency in itemsPerHour calculation)
-            const revenuePerHour = itemsPerHour * priceAfterTax + gourmetBonusItems * priceAfterTax;
+            // Revenue per hour (gross, before tax)
+            const revenuePerHour = itemsPerHour * outputPrice + gourmetBonusItems * outputPrice;
 
             // Calculate tea consumption costs (drinks consumed per hour)
             const teaCosts = this.calculateTeaCosts(actionDetails.type, actionsPerHour, drinkConcentration);
             const totalTeaCostPerHour = teaCosts.reduce((sum, tea) => sum + tea.totalCost, 0);
-
-            // Total costs per hour (materials + teas)
-            const totalCostPerHour = materialCostPerHour + totalTeaCostPerHour;
 
             // Calculate bonus revenue from essence and rare find drops (before profit calculation)
             const bonusRevenue = calculateBonusRevenue(actionDetails, actionsPerHour, characterEquipment, itemDetailMap);
 
             // Apply efficiency multiplier to bonus revenue (efficiency repeats the action, including bonus rolls)
             const efficiencyBoostedBonusRevenue = (bonusRevenue?.totalBonusRevenue || 0) * efficiencyMultiplier;
+
+            // Calculate market tax (2% of gross revenue including bonus revenue)
+            const marketTax = (revenuePerHour + efficiencyBoostedBonusRevenue) * MARKET_TAX;
+
+            // Total costs per hour (materials + teas + market tax)
+            const totalCostPerHour = materialCostPerHour + totalTeaCostPerHour + marketTax;
 
             // Profit per hour (revenue + bonus revenue - total costs)
             const profitPerHour = revenuePerHour + efficiencyBoostedBonusRevenue - totalCostPerHour;
@@ -5843,11 +6087,13 @@
                 itemPrice,
                 outputPrice, // Output price before tax (bid or ask based on mode)
                 priceAfterTax, // Output price after 2% tax (bid or ask based on mode)
+                revenuePerHour,
                 profitPerItem,
                 profitPerHour,
-                profitPerDay: profitPerHour * 24, // Profit per day
+                profitPerAction: calculateProfitPerAction(profitPerHour, actionsPerHour), // Profit per attempt
+                profitPerDay: calculateProfitPerDay(profitPerHour), // Profit per day
                 bonusRevenue, // Bonus revenue from essences and rare finds
-                efficiencyBonus, // Total efficiency
+                totalEfficiency, // Total efficiency percentage
                 levelEfficiency, // Level advantage efficiency
                 houseEfficiency, // House room efficiency
                 equipmentEfficiency, // Equipment efficiency
@@ -6089,8 +6335,8 @@
                 // Get tea price based on pricing mode (uses 'profit' context with 'buy' side)
                 const teaPrice = getItemPrice(drink.itemHrid, { context: 'profit', side: 'buy' }) || 0;
 
-                // Drink Concentration increases consumption rate: base 12/hour × (1 + DC%)
-                const drinksPerHour = 12 * (1 + drinkConcentration);
+                // Drink Concentration increases consumption rate
+                const drinksPerHour = calculateDrinksPerHour(drinkConcentration);
 
                 costs.push({
                     itemHrid: drink.itemHrid,
@@ -6107,534 +6353,6 @@
 
     // Create and export singleton instance
     const profitCalculator = new ProfitCalculator();
-
-    /**
-     * Skill Gear Detector
-     *
-     * Auto-detects gear and buffs from character equipment for any skill.
-     * Originally designed for enhancing, now works generically for all skills.
-     */
-
-
-    /**
-     * Detect best gear for a specific skill by equipment slot
-     * @param {string} skillName - Skill name (e.g., 'enhancing', 'cooking', 'milking')
-     * @param {Map} equipment - Character equipment map (equipped items only)
-     * @param {Object} itemDetailMap - Item details map from init_client_data
-     * @returns {Object} Best gear per slot with bonuses
-     */
-    function detectSkillGear(skillName, equipment, itemDetailMap) {
-        const gear = {
-            // Totals for calculations
-            toolBonus: 0,
-            speedBonus: 0,
-            rareFindBonus: 0,
-            experienceBonus: 0,
-
-            // Best items per slot for display
-            toolSlot: null, // main_hand or two_hand
-            bodySlot: null, // body
-            legsSlot: null, // legs
-            handsSlot: null, // hands
-        };
-
-        // Get items to scan - only use equipment map (already filtered to equipped items only)
-        let itemsToScan = [];
-
-        if (equipment) {
-            // Scan only equipped items from equipment map
-            itemsToScan = Array.from(equipment.values()).filter((item) => item && item.itemHrid);
-        }
-
-        // Track best item per slot (by item level, then enhancement level)
-        const slotCandidates = {
-            tool: [], // main_hand or two_hand or skill-specific tool
-            body: [], // body
-            legs: [], // legs
-            hands: [], // hands
-            neck: [], // neck (accessories have 5× multiplier)
-            ring: [], // ring (accessories have 5× multiplier)
-            earring: [], // earring (accessories have 5× multiplier)
-        };
-
-        // Dynamic stat names based on skill
-        const successStat = `${skillName}Success`;
-        const speedStat = `${skillName}Speed`;
-        const rareFindStat = `${skillName}RareFind`;
-        const experienceStat = `${skillName}Experience`;
-
-        // Search all items for skill-related bonuses and group by slot
-        for (const item of itemsToScan) {
-            const itemDetails = itemDetailMap[item.itemHrid];
-            if (!itemDetails?.equipmentDetail?.noncombatStats) continue;
-
-            const stats = itemDetails.equipmentDetail.noncombatStats;
-            const enhancementLevel = item.enhancementLevel || 0;
-            const multiplier = getEnhancementMultiplier(itemDetails, enhancementLevel);
-            const equipmentType = itemDetails.equipmentDetail.type;
-
-            // Generic stat calculation: Loop over ALL stats and apply multiplier
-            const allStats = {};
-            for (const [statName, statValue] of Object.entries(stats)) {
-                if (typeof statValue !== 'number') continue; // Skip non-numeric values
-                allStats[statName] = statValue * 100 * multiplier;
-            }
-
-            // Check if item has any skill-related stats (including universal skills)
-            const hasSkillStats =
-                allStats[successStat] ||
-                allStats[speedStat] ||
-                allStats[rareFindStat] ||
-                allStats[experienceStat] ||
-                allStats.skillingSpeed ||
-                allStats.skillingExperience;
-
-            if (!hasSkillStats) continue;
-
-            // Calculate bonuses for this item (backward-compatible output)
-            const itemBonuses = {
-                item: item,
-                itemDetails: itemDetails,
-                itemLevel: itemDetails.itemLevel || 0,
-                enhancementLevel: enhancementLevel,
-                // Named bonuses (dynamic based on skill)
-                toolBonus: allStats[successStat] || 0,
-                speedBonus: (allStats[speedStat] || 0) + (allStats.skillingSpeed || 0), // Combine speed sources
-                rareFindBonus: allStats[rareFindStat] || 0,
-                experienceBonus: (allStats[experienceStat] || 0) + (allStats.skillingExperience || 0), // Combine experience sources
-                // Generic access to all stats
-                allStats: allStats,
-            };
-
-            // Group by slot
-            // Tool slots: skill-specific tools (e.g., enhancing_tool, cooking_tool) plus main_hand/two_hand
-            const skillToolType = `/equipment_types/${skillName}_tool`;
-            if (
-                equipmentType === skillToolType ||
-                equipmentType === '/equipment_types/main_hand' ||
-                equipmentType === '/equipment_types/two_hand'
-            ) {
-                slotCandidates.tool.push(itemBonuses);
-            } else if (equipmentType === '/equipment_types/body') {
-                slotCandidates.body.push(itemBonuses);
-            } else if (equipmentType === '/equipment_types/legs') {
-                slotCandidates.legs.push(itemBonuses);
-            } else if (equipmentType === '/equipment_types/hands') {
-                slotCandidates.hands.push(itemBonuses);
-            } else if (equipmentType === '/equipment_types/neck') {
-                slotCandidates.neck.push(itemBonuses);
-            } else if (equipmentType === '/equipment_types/ring') {
-                slotCandidates.ring.push(itemBonuses);
-            } else if (equipmentType === '/equipment_types/earring') {
-                slotCandidates.earring.push(itemBonuses);
-            }
-        }
-
-        // Select best item per slot (highest item level, then highest enhancement level)
-        const selectBest = (candidates) => {
-            if (candidates.length === 0) return null;
-
-            return candidates.reduce((best, current) => {
-                // Compare by item level first
-                if (current.itemLevel > best.itemLevel) return current;
-                if (current.itemLevel < best.itemLevel) return best;
-
-                // If item levels are equal, compare by enhancement level
-                if (current.enhancementLevel > best.enhancementLevel) return current;
-                return best;
-            });
-        };
-
-        const bestTool = selectBest(slotCandidates.tool);
-        const bestBody = selectBest(slotCandidates.body);
-        const bestLegs = selectBest(slotCandidates.legs);
-        const bestHands = selectBest(slotCandidates.hands);
-        const bestNeck = selectBest(slotCandidates.neck);
-        const bestRing = selectBest(slotCandidates.ring);
-        const bestEarring = selectBest(slotCandidates.earring);
-
-        // Add bonuses from best items in each slot
-        if (bestTool) {
-            gear.toolBonus += bestTool.toolBonus;
-            gear.speedBonus += bestTool.speedBonus;
-            gear.rareFindBonus += bestTool.rareFindBonus;
-            gear.experienceBonus += bestTool.experienceBonus;
-            gear.toolSlot = {
-                name: bestTool.itemDetails.name,
-                enhancementLevel: bestTool.enhancementLevel,
-            };
-        }
-
-        if (bestBody) {
-            gear.toolBonus += bestBody.toolBonus;
-            gear.speedBonus += bestBody.speedBonus;
-            gear.rareFindBonus += bestBody.rareFindBonus;
-            gear.experienceBonus += bestBody.experienceBonus;
-            gear.bodySlot = {
-                name: bestBody.itemDetails.name,
-                enhancementLevel: bestBody.enhancementLevel,
-            };
-        }
-
-        if (bestLegs) {
-            gear.toolBonus += bestLegs.toolBonus;
-            gear.speedBonus += bestLegs.speedBonus;
-            gear.rareFindBonus += bestLegs.rareFindBonus;
-            gear.experienceBonus += bestLegs.experienceBonus;
-            gear.legsSlot = {
-                name: bestLegs.itemDetails.name,
-                enhancementLevel: bestLegs.enhancementLevel,
-            };
-        }
-
-        if (bestHands) {
-            gear.toolBonus += bestHands.toolBonus;
-            gear.speedBonus += bestHands.speedBonus;
-            gear.rareFindBonus += bestHands.rareFindBonus;
-            gear.experienceBonus += bestHands.experienceBonus;
-            gear.handsSlot = {
-                name: bestHands.itemDetails.name,
-                enhancementLevel: bestHands.enhancementLevel,
-            };
-        }
-
-        if (bestNeck) {
-            gear.toolBonus += bestNeck.toolBonus;
-            gear.speedBonus += bestNeck.speedBonus;
-            gear.rareFindBonus += bestNeck.rareFindBonus;
-            gear.experienceBonus += bestNeck.experienceBonus;
-        }
-
-        if (bestRing) {
-            gear.toolBonus += bestRing.toolBonus;
-            gear.speedBonus += bestRing.speedBonus;
-            gear.rareFindBonus += bestRing.rareFindBonus;
-            gear.experienceBonus += bestRing.experienceBonus;
-        }
-
-        if (bestEarring) {
-            gear.toolBonus += bestEarring.toolBonus;
-            gear.speedBonus += bestEarring.speedBonus;
-            gear.rareFindBonus += bestEarring.rareFindBonus;
-            gear.experienceBonus += bestEarring.experienceBonus;
-        }
-
-        return gear;
-    }
-
-    /**
-     * Detect active enhancing teas from drink slots
-     * @param {Array} drinkSlots - Active drink slots for enhancing action type
-     * @param {Object} itemDetailMap - Item details map from init_client_data
-     * @returns {Object} Active teas { enhancing, superEnhancing, ultraEnhancing, blessed }
-     */
-    function detectEnhancingTeas(drinkSlots, _itemDetailMap) {
-        const teas = {
-            enhancing: false, // Enhancing Tea (+3 levels)
-            superEnhancing: false, // Super Enhancing Tea (+6 levels)
-            ultraEnhancing: false, // Ultra Enhancing Tea (+8 levels)
-            blessed: false, // Blessed Tea (1% double jump)
-        };
-
-        if (!drinkSlots || drinkSlots.length === 0) {
-            return teas;
-        }
-
-        // Tea HRIDs to check for
-        const teaMap = {
-            '/items/enhancing_tea': 'enhancing',
-            '/items/super_enhancing_tea': 'superEnhancing',
-            '/items/ultra_enhancing_tea': 'ultraEnhancing',
-            '/items/blessed_tea': 'blessed',
-        };
-
-        for (const drink of drinkSlots) {
-            if (!drink || !drink.itemHrid) continue;
-
-            const teaKey = teaMap[drink.itemHrid];
-            if (teaKey) {
-                teas[teaKey] = true;
-            }
-        }
-
-        return teas;
-    }
-
-    /**
-     * Get enhancing tea level bonus
-     * @param {Object} teas - Active teas from detectEnhancingTeas()
-     * @returns {number} Total level bonus from teas
-     */
-    function getEnhancingTeaLevelBonus(teas) {
-        // Teas don't stack - highest one wins
-        if (teas.ultraEnhancing) return 8;
-        if (teas.superEnhancing) return 6;
-        if (teas.enhancing) return 3;
-
-        return 0;
-    }
-
-    /**
-     * Get enhancing tea speed bonus (base, before concentration)
-     * @param {Object} teas - Active teas from detectEnhancingTeas()
-     * @returns {number} Base speed bonus % from teas
-     */
-    function getEnhancingTeaSpeedBonus(teas) {
-        // Teas don't stack - highest one wins
-        // Base speed bonuses (before drink concentration):
-        if (teas.ultraEnhancing) return 6; // +6% base
-        if (teas.superEnhancing) return 4; // +4% base
-        if (teas.enhancing) return 2; // +2% base
-
-        return 0;
-    }
-
-    /**
-     * Backward-compatible wrapper for enhancing gear detection
-     * @param {Map} equipment - Character equipment map (equipped items only)
-     * @param {Object} itemDetailMap - Item details map from init_client_data
-     * @returns {Object} Best enhancing gear per slot with bonuses
-     */
-    function detectEnhancingGear(equipment, itemDetailMap) {
-        return detectSkillGear('enhancing', equipment, itemDetailMap);
-    }
-
-    /**
-     * Enhancement Configuration Manager
-     *
-     * Combines auto-detected enhancing parameters with manual overrides from settings.
-     * Provides single source of truth for enhancement simulator inputs.
-     */
-
-
-    /**
-     * Get enhancing parameters (auto-detected or manual)
-     * @returns {Object} Enhancement parameters for simulator
-     */
-    function getEnhancingParams() {
-        const autoDetect = config.getSettingValue('enhanceSim_autoDetect', false);
-
-        if (autoDetect) {
-            return getAutoDetectedParams();
-        } else {
-            return getManualParams();
-        }
-    }
-
-    /**
-     * Get auto-detected enhancing parameters from character data
-     * @returns {Object} Auto-detected parameters
-     */
-    function getAutoDetectedParams() {
-        // Get character data
-        const equipment = dataManager.getEquipment();
-        const skills = dataManager.getSkills();
-        const drinkSlots = dataManager.getActionDrinkSlots('/action_types/enhancing');
-        const itemDetailMap = dataManager.getInitClientData()?.itemDetailMap || {};
-
-        // Detect gear from equipped items only
-        const gear = detectEnhancingGear(equipment, itemDetailMap);
-
-        // Detect drink concentration from equipment (Guzzling Pouch)
-        // IMPORTANT: Only scan equipped items, not entire inventory
-        let drinkConcentration = 0;
-        const itemsToScan = equipment ? Array.from(equipment.values()).filter((item) => item && item.itemHrid) : [];
-
-        for (const item of itemsToScan) {
-            const itemDetails = itemDetailMap[item.itemHrid];
-            if (!itemDetails?.equipmentDetail?.noncombatStats?.drinkConcentration) continue;
-
-            const concentration = itemDetails.equipmentDetail.noncombatStats.drinkConcentration;
-            const enhancementLevel = item.enhancementLevel || 0;
-            const multiplier = getEnhancementMultiplier(itemDetails, enhancementLevel);
-            const scaledConcentration = concentration * 100 * multiplier;
-
-            // Only keep the highest concentration (shouldn't have multiple, but just in case)
-            if (scaledConcentration > drinkConcentration) {
-                drinkConcentration = scaledConcentration;
-            }
-        }
-
-        // Detect teas
-        const teas = detectEnhancingTeas(drinkSlots);
-
-        // Get tea level bonus (base, then scale with concentration)
-        const baseTeaLevel = getEnhancingTeaLevelBonus(teas);
-        const teaLevelBonus = baseTeaLevel > 0 ? baseTeaLevel * (1 + drinkConcentration / 100) : 0;
-
-        // Get tea speed bonus (base, then scale with concentration)
-        const baseTeaSpeed = getEnhancingTeaSpeedBonus(teas);
-        const teaSpeedBonus = baseTeaSpeed > 0 ? baseTeaSpeed * (1 + drinkConcentration / 100) : 0;
-
-        // Get tea wisdom bonus (base, then scale with concentration)
-        // Wisdom Tea/Coffee provide 12% wisdom, scales with drink concentration
-        let baseTeaWisdom = 0;
-        if (drinkSlots && drinkSlots.length > 0) {
-            for (const drink of drinkSlots) {
-                if (!drink || !drink.itemHrid) continue;
-                const drinkDetails = itemDetailMap[drink.itemHrid];
-                if (!drinkDetails?.consumableDetail?.buffs) continue;
-
-                const wisdomBuff = drinkDetails.consumableDetail.buffs.find(
-                    (buff) => buff.typeHrid === '/buff_types/wisdom'
-                );
-
-                if (wisdomBuff && wisdomBuff.flatBoost) {
-                    baseTeaWisdom += wisdomBuff.flatBoost * 100; // Convert to percentage
-                }
-            }
-        }
-        const teaWisdomBonus = baseTeaWisdom > 0 ? baseTeaWisdom * (1 + drinkConcentration / 100) : 0;
-
-        // Get Enhancing skill level
-        const enhancingSkill = skills.find((s) => s.skillHrid === '/skills/enhancing');
-        const enhancingLevel = enhancingSkill?.level || 1;
-
-        // Get Observatory house room level (enhancing uses observatory, NOT laboratory!)
-        const houseLevel = dataManager.getHouseRoomLevel('/house_rooms/observatory');
-
-        // Calculate global house buffs from ALL house rooms
-        // Rare Find: 0.2% base + 0.2% per level (per room, only if level >= 1)
-        // Wisdom: 0.05% base + 0.05% per level (per room, only if level >= 1)
-        const houseRooms = dataManager.getHouseRooms();
-        let houseRareFindBonus = 0;
-        let houseWisdomBonus = 0;
-
-        for (const [_hrid, room] of houseRooms) {
-            const level = room.level || 0;
-            if (level >= 1) {
-                // Each room: 0.2% per level (NOT 0.2% base + 0.2% per level)
-                houseRareFindBonus += 0.2 * level;
-                // Each room: 0.05% per level (NOT 0.05% base + 0.05% per level)
-                houseWisdomBonus += 0.05 * level;
-            }
-        }
-
-        // Get Enhancing Speed community buff level
-        const communityBuffLevel = dataManager.getCommunityBuffLevel('/community_buff_types/enhancing_speed');
-        // Formula: 20% base + 0.5% per level
-        const communitySpeedBonus = communityBuffLevel > 0 ? 20 + (communityBuffLevel - 1) * 0.5 : 0;
-
-        // Get Experience (Wisdom) community buff level
-        const communityWisdomLevel = dataManager.getCommunityBuffLevel('/community_buff_types/experience');
-        // Formula: 20% base + 0.5% per level (same as other community buffs)
-        const communityWisdomBonus = communityWisdomLevel > 0 ? 20 + (communityWisdomLevel - 1) * 0.5 : 0;
-
-        // Calculate total success rate bonus
-        // Equipment + house + (check for other sources)
-        const houseSuccessBonus = houseLevel * 0.05; // 0.05% per level for success
-        const equipmentSuccessBonus = gear.toolBonus;
-        const totalSuccessBonus = equipmentSuccessBonus + houseSuccessBonus;
-
-        // Calculate total speed bonus
-        // Speed bonus (from equipment) + house bonus (1% per level) + community buff + tea speed
-        const houseSpeedBonus = houseLevel * 1.0; // 1% per level for action speed
-        const totalSpeedBonus = gear.speedBonus + houseSpeedBonus + communitySpeedBonus + teaSpeedBonus;
-
-        // Calculate total experience bonus
-        // Equipment + house wisdom + tea wisdom + community wisdom
-        const totalExperienceBonus = gear.experienceBonus + houseWisdomBonus + teaWisdomBonus + communityWisdomBonus;
-
-        // Calculate guzzling bonus multiplier (1.0 at level 0, scales with drink concentration)
-        const guzzlingBonus = 1 + drinkConcentration / 100;
-
-        return {
-            // Core values for calculations
-            enhancingLevel: enhancingLevel + teaLevelBonus, // Base level + tea bonus
-            houseLevel: houseLevel,
-            toolBonus: totalSuccessBonus, // Tool + house combined
-            speedBonus: totalSpeedBonus, // Speed + house + community + tea combined
-            rareFindBonus: gear.rareFindBonus + houseRareFindBonus, // Rare find (equipment + all house rooms)
-            experienceBonus: totalExperienceBonus, // Experience (equipment + house + tea + community wisdom)
-            guzzlingBonus: guzzlingBonus, // Drink concentration multiplier for blessed tea
-            teas: teas,
-
-            // Display info (for UI) - show best item per slot
-            toolSlot: gear.toolSlot,
-            bodySlot: gear.bodySlot,
-            legsSlot: gear.legsSlot,
-            handsSlot: gear.handsSlot,
-            detectedTeaBonus: teaLevelBonus,
-            communityBuffLevel: communityBuffLevel, // For display (speed)
-            communitySpeedBonus: communitySpeedBonus, // For display
-            communityWisdomLevel: communityWisdomLevel, // For display
-            communityWisdomBonus: communityWisdomBonus, // For display
-            teaSpeedBonus: teaSpeedBonus, // For display
-            teaWisdomBonus: teaWisdomBonus, // For display
-            drinkConcentration: drinkConcentration, // For display
-            houseRareFindBonus: houseRareFindBonus, // For display
-            houseWisdomBonus: houseWisdomBonus, // For display
-            equipmentRareFind: gear.rareFindBonus, // For display
-            equipmentExperience: gear.experienceBonus, // For display
-            equipmentSuccessBonus: equipmentSuccessBonus, // For display
-            houseSuccessBonus: houseSuccessBonus, // For display
-            equipmentSpeedBonus: gear.speedBonus, // For display
-            houseSpeedBonus: houseSpeedBonus, // For display
-        };
-    }
-
-    /**
-     * Get manual enhancing parameters from config settings
-     * @returns {Object} Manual parameters
-     */
-    function getManualParams() {
-        // Get values directly from config
-        const getValue = (key, defaultValue) => {
-            return config.getSettingValue(key, defaultValue);
-        };
-
-        const houseLevel = getValue('enhanceSim_houseLevel', 8);
-        const teas = {
-            enhancing: getValue('enhanceSim_enhancingTea', false),
-            superEnhancing: getValue('enhanceSim_superEnhancingTea', false),
-            ultraEnhancing: getValue('enhanceSim_ultraEnhancingTea', true),
-            blessed: getValue('enhanceSim_blessedTea', true),
-        };
-
-        // Calculate tea bonuses
-        const teaLevelBonus = teas.ultraEnhancing ? 8 : teas.superEnhancing ? 6 : teas.enhancing ? 3 : 0;
-        const teaSpeedBonus = teas.ultraEnhancing ? 6 : teas.superEnhancing ? 4 : teas.enhancing ? 2 : 0;
-
-        // Calculate house bonuses
-        const houseSpeedBonus = houseLevel * 1.0; // 1% per level
-        const houseSuccessBonus = houseLevel * 0.05; // 0.05% per level
-
-        // Get community buffs
-        const communityBuffLevel = dataManager.getCommunityBuffLevel('/community_buff_types/enhancing_speed');
-        const communitySpeedBonus = communityBuffLevel > 0 ? 20 + (communityBuffLevel - 1) * 0.5 : 0;
-
-        // Equipment speed is whatever's left after house/community/tea
-        const totalSpeed = getValue('enhanceSim_speedBonus', 48.5);
-        const equipmentSpeedBonus = Math.max(0, totalSpeed - houseSpeedBonus - communitySpeedBonus - teaSpeedBonus);
-
-        const toolBonusEquipment = getValue('enhanceSim_toolBonus', 6.05);
-        const totalToolBonus = toolBonusEquipment + houseSuccessBonus;
-
-        return {
-            enhancingLevel: getValue('enhanceSim_enhancingLevel', 140) + teaLevelBonus,
-            houseLevel: houseLevel,
-            toolBonus: totalToolBonus, // Total = equipment + house
-            speedBonus: totalSpeed,
-            rareFindBonus: getValue('enhanceSim_rareFindBonus', 0),
-            experienceBonus: getValue('enhanceSim_experienceBonus', 0),
-            guzzlingBonus: 1 + getValue('enhanceSim_drinkConcentration', 12.9) / 100,
-            teas: teas,
-
-            // Display info for manual mode
-            toolSlot: null,
-            bodySlot: null,
-            legsSlot: null,
-            handsSlot: null,
-            detectedTeaBonus: teaLevelBonus,
-            communityBuffLevel: communityBuffLevel,
-            communitySpeedBonus: communitySpeedBonus,
-            teaSpeedBonus: teaSpeedBonus,
-            equipmentSpeedBonus: equipmentSpeedBonus,
-            houseSpeedBonus: houseSpeedBonus,
-            equipmentSuccessBonus: toolBonusEquipment, // Just equipment
-            houseSuccessBonus: houseSuccessBonus,
-        };
-    }
 
     /**
      * Enhancement Calculator
@@ -7905,22 +7623,6 @@
 
 
     /**
-     * Action types for gathering skills (3 skills)
-     */
-    const GATHERING_TYPES$2 = ['/action_types/foraging', '/action_types/woodcutting', '/action_types/milking'];
-
-    /**
-     * Action types for production skills that benefit from Gourmet Tea (5 skills)
-     */
-    const PRODUCTION_TYPES$3 = [
-        '/action_types/brewing',
-        '/action_types/cooking',
-        '/action_types/cheesesmithing',
-        '/action_types/crafting',
-        '/action_types/tailoring',
-    ];
-
-    /**
      * Cache for processing action conversions (inputItemHrid → conversion data)
      * Built once per game data load to avoid O(n) searches through action map
      */
@@ -7987,13 +7689,8 @@
             processingConversionCache = buildProcessingConversionCache(gameData);
         }
 
-        // Ensure market data is loaded (check in-memory first to avoid storage reads)
-        if (!marketAPI.isLoaded()) {
-            const marketData = await marketAPI.fetch();
-            if (!marketData) {
-                return null;
-            }
-        }
+        // Note: Market API is pre-loaded by caller (max-produceable.js)
+        // No need to check or fetch here
 
         // Get character data
         const equipment = dataManager.getEquipment();
@@ -8007,7 +7704,7 @@
         const actualTimePerActionSec = baseTimePerActionSec / (1 + speedBonus);
 
         // Calculate actions per hour
-        const actionsPerHour = 3600 / actualTimePerActionSec;
+        const actionsPerHour = calculateActionsPerHour(actualTimePerActionSec);
 
         // Get character's actual equipped drink slots for this action type (from WebSocket data)
         const drinkSlots = dataManager.getActionDrinkSlots(actionDetail.type);
@@ -8020,7 +7717,7 @@
 
         // Gourmet Tea only applies to production skills (Brewing, Cooking, Cheesesmithing, Crafting, Tailoring)
         // NOT gathering skills (Foraging, Woodcutting, Milking)
-        const gourmetBonus = PRODUCTION_TYPES$3.includes(actionDetail.type)
+        const gourmetBonus = PRODUCTION_TYPES$4.includes(actionDetail.type)
             ? parseGourmetBonus(drinkSlots, gameData.itemDetailMap, drinkConcentration)
             : 0;
 
@@ -8062,8 +7759,7 @@
         }
 
         // Calculate drink consumption costs
-        // Drink Concentration increases consumption rate: base 12/hour × (1 + DC%)
-        const drinksPerHour = 12 * (1 + drinkConcentration);
+        const drinksPerHour = calculateDrinksPerHour(drinkConcentration);
         let drinkCostPerHour = 0;
         const drinkCosts = [];
         for (const drink of drinkSlots) {
@@ -8124,7 +7820,7 @@
 
         // Calculate efficiency multiplier (matches production profit calculator pattern)
         // Efficiency "repeats the action" - we apply it to item outputs, not action rate
-        const efficiencyMultiplier = 1 + totalEfficiency / 100;
+        const efficiencyMultiplier = calculateEfficiencyMultiplier(totalEfficiency);
 
         // Calculate revenue from drop table
         // Processing happens PER ACTION (before efficiency multiplies the count)
@@ -8132,13 +7828,11 @@
         let revenuePerHour = 0;
         let processingRevenueBonus = 0; // Track extra revenue from Processing Tea
         const processingConversions = []; // Track conversion details for display
-        const baseOutputs = []; // Track base item outputs for display
+        const baseOutputs = []; // Display-only base item outputs (not used for totals)
         const dropTable = actionDetail.dropTable;
 
         for (const drop of dropTable) {
             const rawPrice = getItemPrice(drop.itemHrid, { context: 'profit', side: 'sell' }) || 0;
-            const rawPriceAfterTax = rawPrice * 0.98;
-
             // Apply gathering quantity bonus to drop amounts
             const baseAvgAmount = (drop.minCount + drop.maxCount) / 2;
             const avgAmountPerAction = baseAvgAmount * (1 + totalGathering);
@@ -8171,21 +7865,20 @@
 
                 // Revenue per hour = per-action × actionsPerHour × efficiency
                 const processedPrice = getItemPrice(processedItemHrid, { context: 'profit', side: 'sell' }) || 0;
-                const processedPriceAfterTax = processedPrice * 0.98;
 
                 const rawItemsPerHour = actionsPerHour * drop.dropRate * rawPerAction * efficiencyMultiplier;
                 const processedItemsPerHour = actionsPerHour * drop.dropRate * processedPerAction * efficiencyMultiplier;
 
-                revenuePerHour += rawItemsPerHour * rawPriceAfterTax;
-                revenuePerHour += processedItemsPerHour * processedPriceAfterTax;
+                revenuePerHour += rawItemsPerHour * rawPrice;
+                revenuePerHour += processedItemsPerHour * processedPrice;
 
                 // Track processing details
                 const rawItemName = gameData.itemDetailMap[drop.itemHrid]?.name || 'Unknown';
                 const processedItemName = gameData.itemDetailMap[processedItemHrid]?.name || 'Unknown';
 
                 // Value gain per conversion = cheese value - cost of milk used
-                const costOfMilkUsed = conversionRatio * rawPriceAfterTax;
-                const valueGainPerConversion = processedPriceAfterTax - costOfMilkUsed;
+                const costOfMilkUsed = conversionRatio * rawPrice;
+                const valueGainPerConversion = processedPrice - costOfMilkUsed;
                 const revenueFromConversion = processedItemsPerHour * valueGainPerConversion;
 
                 processingRevenueBonus += revenueFromConversion;
@@ -8197,31 +7890,19 @@
                     revenuePerHour: revenueFromConversion,
                 });
 
-                // Store outputs (show both raw and processed)
+                // Store combined raw + processed revenue (processing bonus shown separately as extra value)
                 baseOutputs.push({
                     name: rawItemName,
                     itemsPerHour: rawItemsPerHour,
                     dropRate: drop.dropRate,
                     priceEach: rawPrice,
-                    priceAfterTax: rawPriceAfterTax,
-                    revenuePerHour: rawItemsPerHour * rawPrice,
-                });
-
-                baseOutputs.push({
-                    name: processedItemName,
-                    itemsPerHour: processedItemsPerHour,
-                    dropRate: drop.dropRate * processingBonus,
-                    priceEach: processedPrice,
-                    priceAfterTax: processedPriceAfterTax,
-                    revenuePerHour: processedItemsPerHour * processedPrice,
-                    isProcessed: true, // Flag to show processing percentage
-                    processingChance: processingBonus, // Store the processing chance (e.g., 0.15 for 15%)
+                    revenuePerHour: rawItemsPerHour * rawPrice + processedItemsPerHour * processedPrice,
                 });
             } else {
                 // No processing - simple calculation
                 rawPerAction = avgAmountPerAction;
                 const rawItemsPerHour = actionsPerHour * drop.dropRate * rawPerAction * efficiencyMultiplier;
-                revenuePerHour += rawItemsPerHour * rawPriceAfterTax;
+                revenuePerHour += rawItemsPerHour * rawPrice;
 
                 const itemName = gameData.itemDetailMap[drop.itemHrid]?.name || 'Unknown';
                 baseOutputs.push({
@@ -8229,7 +7910,6 @@
                     itemsPerHour: rawItemsPerHour,
                     dropRate: drop.dropRate,
                     priceEach: rawPrice,
-                    priceAfterTax: rawPriceAfterTax,
                     revenuePerHour: rawItemsPerHour * rawPrice,
                 });
             }
@@ -8243,13 +7923,12 @@
                 // Use weighted average price for gourmet bonus
                 if (processedItemHrid && processingBonus > 0) {
                     const processedPrice = getItemPrice(processedItemHrid, { context: 'profit', side: 'sell' }) || 0;
-                    const processedPriceAfterTax = processedPrice * 0.98;
                     const weightedPrice =
-                        (rawPerAction * rawPriceAfterTax + processedPerAction * processedPriceAfterTax) /
+                        (rawPerAction * rawPrice + processedPerAction * processedPrice) /
                         (rawPerAction + processedPerAction);
                     revenuePerHour += bonusItemsPerHour * weightedPrice;
                 } else {
-                    revenuePerHour += bonusItemsPerHour * rawPriceAfterTax;
+                    revenuePerHour += bonusItemsPerHour * rawPrice;
                 }
             }
         }
@@ -8263,18 +7942,21 @@
         // Add bonus revenue to total revenue
         revenuePerHour += efficiencyBoostedBonusRevenue;
 
-        // Calculate net profit
-        const profitPerHour = revenuePerHour - drinkCostPerHour;
-        const profitPerDay = profitPerHour * 24;
+        // Calculate market tax (2% of gross revenue)
+        const marketTax = revenuePerHour * MARKET_TAX;
+
+        // Calculate net profit (revenue - market tax - drink costs)
+        const profitPerHour = revenuePerHour - marketTax - drinkCostPerHour;
 
         return {
             profitPerHour,
-            profitPerDay,
+            profitPerAction: calculateProfitPerAction(profitPerHour, actionsPerHour), // Profit per attempt
+            profitPerDay: calculateProfitPerDay(profitPerHour), // Profit per day
             revenuePerHour,
             drinkCostPerHour,
             drinkCosts, // Array of individual drink costs {name, priceEach, costPerHour}
             actionsPerHour, // Base actions per hour (without efficiency)
-            baseOutputs, // Array of base item outputs {name, itemsPerHour, dropRate, priceEach, revenuePerHour}
+            baseOutputs, // Display-only base outputs {name, itemsPerHour, dropRate, priceEach, revenuePerHour}
             totalEfficiency, // Total efficiency percentage
             efficiencyMultiplier, // Efficiency as multiplier (1 + totalEfficiency / 100)
             speedBonus,
@@ -8292,6 +7974,539 @@
                 gatheringTeaBonus: gatheringTea, // Gathering Tea component (as decimal)
                 achievementGathering: achievementGathering, // Achievement Tier component (as decimal)
             },
+        };
+    }
+
+    /**
+     * Skill Gear Detector
+     *
+     * Auto-detects gear and buffs from character equipment for any skill.
+     * Originally designed for enhancing, now works generically for all skills.
+     */
+
+
+    /**
+     * Detect best gear for a specific skill by equipment slot
+     * @param {string} skillName - Skill name (e.g., 'enhancing', 'cooking', 'milking')
+     * @param {Map} equipment - Character equipment map (equipped items only)
+     * @param {Object} itemDetailMap - Item details map from init_client_data
+     * @returns {Object} Best gear per slot with bonuses
+     */
+    function detectSkillGear(skillName, equipment, itemDetailMap) {
+        const gear = {
+            // Totals for calculations
+            toolBonus: 0,
+            speedBonus: 0,
+            rareFindBonus: 0,
+            experienceBonus: 0,
+
+            // Best items per slot for display
+            toolSlot: null, // main_hand or two_hand
+            bodySlot: null, // body
+            legsSlot: null, // legs
+            handsSlot: null, // hands
+        };
+
+        // Get items to scan - only use equipment map (already filtered to equipped items only)
+        let itemsToScan = [];
+
+        if (equipment) {
+            // Scan only equipped items from equipment map
+            itemsToScan = Array.from(equipment.values()).filter((item) => item && item.itemHrid);
+        }
+
+        // Track best item per slot (by item level, then enhancement level)
+        const slotCandidates = {
+            tool: [], // main_hand or two_hand or skill-specific tool
+            body: [], // body
+            legs: [], // legs
+            hands: [], // hands
+            neck: [], // neck (accessories have 5× multiplier)
+            ring: [], // ring (accessories have 5× multiplier)
+            earring: [], // earring (accessories have 5× multiplier)
+        };
+
+        // Dynamic stat names based on skill
+        const successStat = `${skillName}Success`;
+        const speedStat = `${skillName}Speed`;
+        const rareFindStat = `${skillName}RareFind`;
+        const experienceStat = `${skillName}Experience`;
+
+        // Search all items for skill-related bonuses and group by slot
+        for (const item of itemsToScan) {
+            const itemDetails = itemDetailMap[item.itemHrid];
+            if (!itemDetails?.equipmentDetail?.noncombatStats) continue;
+
+            const stats = itemDetails.equipmentDetail.noncombatStats;
+            const enhancementLevel = item.enhancementLevel || 0;
+            const multiplier = getEnhancementMultiplier(itemDetails, enhancementLevel);
+            const equipmentType = itemDetails.equipmentDetail.type;
+
+            // Generic stat calculation: Loop over ALL stats and apply multiplier
+            const allStats = {};
+            for (const [statName, statValue] of Object.entries(stats)) {
+                if (typeof statValue !== 'number') continue; // Skip non-numeric values
+                allStats[statName] = statValue * 100 * multiplier;
+            }
+
+            // Check if item has any skill-related stats (including universal skills)
+            const hasSkillStats =
+                allStats[successStat] ||
+                allStats[speedStat] ||
+                allStats[rareFindStat] ||
+                allStats[experienceStat] ||
+                allStats.skillingSpeed ||
+                allStats.skillingExperience;
+
+            if (!hasSkillStats) continue;
+
+            // Calculate bonuses for this item (backward-compatible output)
+            const itemBonuses = {
+                item: item,
+                itemDetails: itemDetails,
+                itemLevel: itemDetails.itemLevel || 0,
+                enhancementLevel: enhancementLevel,
+                // Named bonuses (dynamic based on skill)
+                toolBonus: allStats[successStat] || 0,
+                speedBonus: (allStats[speedStat] || 0) + (allStats.skillingSpeed || 0), // Combine speed sources
+                rareFindBonus: allStats[rareFindStat] || 0,
+                experienceBonus: (allStats[experienceStat] || 0) + (allStats.skillingExperience || 0), // Combine experience sources
+                // Generic access to all stats
+                allStats: allStats,
+            };
+
+            // Group by slot
+            // Tool slots: skill-specific tools (e.g., enhancing_tool, cooking_tool) plus main_hand/two_hand
+            const skillToolType = `/equipment_types/${skillName}_tool`;
+            if (
+                equipmentType === skillToolType ||
+                equipmentType === '/equipment_types/main_hand' ||
+                equipmentType === '/equipment_types/two_hand'
+            ) {
+                slotCandidates.tool.push(itemBonuses);
+            } else if (equipmentType === '/equipment_types/body') {
+                slotCandidates.body.push(itemBonuses);
+            } else if (equipmentType === '/equipment_types/legs') {
+                slotCandidates.legs.push(itemBonuses);
+            } else if (equipmentType === '/equipment_types/hands') {
+                slotCandidates.hands.push(itemBonuses);
+            } else if (equipmentType === '/equipment_types/neck') {
+                slotCandidates.neck.push(itemBonuses);
+            } else if (equipmentType === '/equipment_types/ring') {
+                slotCandidates.ring.push(itemBonuses);
+            } else if (equipmentType === '/equipment_types/earring') {
+                slotCandidates.earring.push(itemBonuses);
+            }
+        }
+
+        // Select best item per slot (highest item level, then highest enhancement level)
+        const selectBest = (candidates) => {
+            if (candidates.length === 0) return null;
+
+            return candidates.reduce((best, current) => {
+                // Compare by item level first
+                if (current.itemLevel > best.itemLevel) return current;
+                if (current.itemLevel < best.itemLevel) return best;
+
+                // If item levels are equal, compare by enhancement level
+                if (current.enhancementLevel > best.enhancementLevel) return current;
+                return best;
+            });
+        };
+
+        const bestTool = selectBest(slotCandidates.tool);
+        const bestBody = selectBest(slotCandidates.body);
+        const bestLegs = selectBest(slotCandidates.legs);
+        const bestHands = selectBest(slotCandidates.hands);
+        const bestNeck = selectBest(slotCandidates.neck);
+        const bestRing = selectBest(slotCandidates.ring);
+        const bestEarring = selectBest(slotCandidates.earring);
+
+        // Add bonuses from best items in each slot
+        if (bestTool) {
+            gear.toolBonus += bestTool.toolBonus;
+            gear.speedBonus += bestTool.speedBonus;
+            gear.rareFindBonus += bestTool.rareFindBonus;
+            gear.experienceBonus += bestTool.experienceBonus;
+            gear.toolSlot = {
+                name: bestTool.itemDetails.name,
+                enhancementLevel: bestTool.enhancementLevel,
+            };
+        }
+
+        if (bestBody) {
+            gear.toolBonus += bestBody.toolBonus;
+            gear.speedBonus += bestBody.speedBonus;
+            gear.rareFindBonus += bestBody.rareFindBonus;
+            gear.experienceBonus += bestBody.experienceBonus;
+            gear.bodySlot = {
+                name: bestBody.itemDetails.name,
+                enhancementLevel: bestBody.enhancementLevel,
+            };
+        }
+
+        if (bestLegs) {
+            gear.toolBonus += bestLegs.toolBonus;
+            gear.speedBonus += bestLegs.speedBonus;
+            gear.rareFindBonus += bestLegs.rareFindBonus;
+            gear.experienceBonus += bestLegs.experienceBonus;
+            gear.legsSlot = {
+                name: bestLegs.itemDetails.name,
+                enhancementLevel: bestLegs.enhancementLevel,
+            };
+        }
+
+        if (bestHands) {
+            gear.toolBonus += bestHands.toolBonus;
+            gear.speedBonus += bestHands.speedBonus;
+            gear.rareFindBonus += bestHands.rareFindBonus;
+            gear.experienceBonus += bestHands.experienceBonus;
+            gear.handsSlot = {
+                name: bestHands.itemDetails.name,
+                enhancementLevel: bestHands.enhancementLevel,
+            };
+        }
+
+        if (bestNeck) {
+            gear.toolBonus += bestNeck.toolBonus;
+            gear.speedBonus += bestNeck.speedBonus;
+            gear.rareFindBonus += bestNeck.rareFindBonus;
+            gear.experienceBonus += bestNeck.experienceBonus;
+        }
+
+        if (bestRing) {
+            gear.toolBonus += bestRing.toolBonus;
+            gear.speedBonus += bestRing.speedBonus;
+            gear.rareFindBonus += bestRing.rareFindBonus;
+            gear.experienceBonus += bestRing.experienceBonus;
+        }
+
+        if (bestEarring) {
+            gear.toolBonus += bestEarring.toolBonus;
+            gear.speedBonus += bestEarring.speedBonus;
+            gear.rareFindBonus += bestEarring.rareFindBonus;
+            gear.experienceBonus += bestEarring.experienceBonus;
+        }
+
+        return gear;
+    }
+
+    /**
+     * Detect active enhancing teas from drink slots
+     * @param {Array} drinkSlots - Active drink slots for enhancing action type
+     * @param {Object} itemDetailMap - Item details map from init_client_data
+     * @returns {Object} Active teas { enhancing, superEnhancing, ultraEnhancing, blessed }
+     */
+    function detectEnhancingTeas(drinkSlots, _itemDetailMap) {
+        const teas = {
+            enhancing: false, // Enhancing Tea (+3 levels)
+            superEnhancing: false, // Super Enhancing Tea (+6 levels)
+            ultraEnhancing: false, // Ultra Enhancing Tea (+8 levels)
+            blessed: false, // Blessed Tea (1% double jump)
+        };
+
+        if (!drinkSlots || drinkSlots.length === 0) {
+            return teas;
+        }
+
+        // Tea HRIDs to check for
+        const teaMap = {
+            '/items/enhancing_tea': 'enhancing',
+            '/items/super_enhancing_tea': 'superEnhancing',
+            '/items/ultra_enhancing_tea': 'ultraEnhancing',
+            '/items/blessed_tea': 'blessed',
+        };
+
+        for (const drink of drinkSlots) {
+            if (!drink || !drink.itemHrid) continue;
+
+            const teaKey = teaMap[drink.itemHrid];
+            if (teaKey) {
+                teas[teaKey] = true;
+            }
+        }
+
+        return teas;
+    }
+
+    /**
+     * Get enhancing tea level bonus
+     * @param {Object} teas - Active teas from detectEnhancingTeas()
+     * @returns {number} Total level bonus from teas
+     */
+    function getEnhancingTeaLevelBonus(teas) {
+        // Teas don't stack - highest one wins
+        if (teas.ultraEnhancing) return 8;
+        if (teas.superEnhancing) return 6;
+        if (teas.enhancing) return 3;
+
+        return 0;
+    }
+
+    /**
+     * Get enhancing tea speed bonus (base, before concentration)
+     * @param {Object} teas - Active teas from detectEnhancingTeas()
+     * @returns {number} Base speed bonus % from teas
+     */
+    function getEnhancingTeaSpeedBonus(teas) {
+        // Teas don't stack - highest one wins
+        // Base speed bonuses (before drink concentration):
+        if (teas.ultraEnhancing) return 6; // +6% base
+        if (teas.superEnhancing) return 4; // +4% base
+        if (teas.enhancing) return 2; // +2% base
+
+        return 0;
+    }
+
+    /**
+     * Backward-compatible wrapper for enhancing gear detection
+     * @param {Map} equipment - Character equipment map (equipped items only)
+     * @param {Object} itemDetailMap - Item details map from init_client_data
+     * @returns {Object} Best enhancing gear per slot with bonuses
+     */
+    function detectEnhancingGear(equipment, itemDetailMap) {
+        return detectSkillGear('enhancing', equipment, itemDetailMap);
+    }
+
+    /**
+     * Enhancement Configuration Manager
+     *
+     * Combines auto-detected enhancing parameters with manual overrides from settings.
+     * Provides single source of truth for enhancement simulator inputs.
+     */
+
+
+    /**
+     * Get enhancing parameters (auto-detected or manual)
+     * @returns {Object} Enhancement parameters for simulator
+     */
+    function getEnhancingParams() {
+        const autoDetect = config.getSettingValue('enhanceSim_autoDetect', false);
+
+        if (autoDetect) {
+            return getAutoDetectedParams();
+        } else {
+            return getManualParams();
+        }
+    }
+
+    /**
+     * Get auto-detected enhancing parameters from character data
+     * @returns {Object} Auto-detected parameters
+     */
+    function getAutoDetectedParams() {
+        // Get character data
+        const equipment = dataManager.getEquipment();
+        const skills = dataManager.getSkills();
+        const drinkSlots = dataManager.getActionDrinkSlots('/action_types/enhancing');
+        const itemDetailMap = dataManager.getInitClientData()?.itemDetailMap || {};
+
+        // Detect gear from equipped items only
+        const gear = detectEnhancingGear(equipment, itemDetailMap);
+
+        // Detect drink concentration from equipment (Guzzling Pouch)
+        // IMPORTANT: Only scan equipped items, not entire inventory
+        let drinkConcentration = 0;
+        const itemsToScan = equipment ? Array.from(equipment.values()).filter((item) => item && item.itemHrid) : [];
+
+        for (const item of itemsToScan) {
+            const itemDetails = itemDetailMap[item.itemHrid];
+            if (!itemDetails?.equipmentDetail?.noncombatStats?.drinkConcentration) continue;
+
+            const concentration = itemDetails.equipmentDetail.noncombatStats.drinkConcentration;
+            const enhancementLevel = item.enhancementLevel || 0;
+            const multiplier = getEnhancementMultiplier(itemDetails, enhancementLevel);
+            const scaledConcentration = concentration * 100 * multiplier;
+
+            // Only keep the highest concentration (shouldn't have multiple, but just in case)
+            if (scaledConcentration > drinkConcentration) {
+                drinkConcentration = scaledConcentration;
+            }
+        }
+
+        // Detect teas
+        const teas = detectEnhancingTeas(drinkSlots);
+
+        // Get tea level bonus (base, then scale with concentration)
+        const baseTeaLevel = getEnhancingTeaLevelBonus(teas);
+        const teaLevelBonus = baseTeaLevel > 0 ? baseTeaLevel * (1 + drinkConcentration / 100) : 0;
+
+        // Get tea speed bonus (base, then scale with concentration)
+        const baseTeaSpeed = getEnhancingTeaSpeedBonus(teas);
+        const teaSpeedBonus = baseTeaSpeed > 0 ? baseTeaSpeed * (1 + drinkConcentration / 100) : 0;
+
+        // Get tea wisdom bonus (base, then scale with concentration)
+        // Wisdom Tea/Coffee provide 12% wisdom, scales with drink concentration
+        let baseTeaWisdom = 0;
+        if (drinkSlots && drinkSlots.length > 0) {
+            for (const drink of drinkSlots) {
+                if (!drink || !drink.itemHrid) continue;
+                const drinkDetails = itemDetailMap[drink.itemHrid];
+                if (!drinkDetails?.consumableDetail?.buffs) continue;
+
+                const wisdomBuff = drinkDetails.consumableDetail.buffs.find(
+                    (buff) => buff.typeHrid === '/buff_types/wisdom'
+                );
+
+                if (wisdomBuff && wisdomBuff.flatBoost) {
+                    baseTeaWisdom += wisdomBuff.flatBoost * 100; // Convert to percentage
+                }
+            }
+        }
+        const teaWisdomBonus = baseTeaWisdom > 0 ? baseTeaWisdom * (1 + drinkConcentration / 100) : 0;
+
+        // Get Enhancing skill level
+        const enhancingSkill = skills.find((s) => s.skillHrid === '/skills/enhancing');
+        const enhancingLevel = enhancingSkill?.level || 1;
+
+        // Get Observatory house room level (enhancing uses observatory, NOT laboratory!)
+        const houseLevel = dataManager.getHouseRoomLevel('/house_rooms/observatory');
+
+        // Calculate global house buffs from ALL house rooms
+        // Rare Find: 0.2% base + 0.2% per level (per room, only if level >= 1)
+        // Wisdom: 0.05% base + 0.05% per level (per room, only if level >= 1)
+        const houseRooms = dataManager.getHouseRooms();
+        let houseRareFindBonus = 0;
+        let houseWisdomBonus = 0;
+
+        for (const [_hrid, room] of houseRooms) {
+            const level = room.level || 0;
+            if (level >= 1) {
+                // Each room: 0.2% per level (NOT 0.2% base + 0.2% per level)
+                houseRareFindBonus += 0.2 * level;
+                // Each room: 0.05% per level (NOT 0.05% base + 0.05% per level)
+                houseWisdomBonus += 0.05 * level;
+            }
+        }
+
+        // Get Enhancing Speed community buff level
+        const communityBuffLevel = dataManager.getCommunityBuffLevel('/community_buff_types/enhancing_speed');
+        // Formula: 20% base + 0.5% per level
+        const communitySpeedBonus = communityBuffLevel > 0 ? 20 + (communityBuffLevel - 1) * 0.5 : 0;
+
+        // Get Experience (Wisdom) community buff level
+        const communityWisdomLevel = dataManager.getCommunityBuffLevel('/community_buff_types/experience');
+        // Formula: 20% base + 0.5% per level (same as other community buffs)
+        const communityWisdomBonus = communityWisdomLevel > 0 ? 20 + (communityWisdomLevel - 1) * 0.5 : 0;
+
+        // Calculate total success rate bonus
+        // Equipment + house + (check for other sources)
+        const houseSuccessBonus = houseLevel * 0.05; // 0.05% per level for success
+        const equipmentSuccessBonus = gear.toolBonus;
+        const totalSuccessBonus = equipmentSuccessBonus + houseSuccessBonus;
+
+        // Calculate total speed bonus
+        // Speed bonus (from equipment) + house bonus (1% per level) + community buff + tea speed
+        const houseSpeedBonus = houseLevel * 1.0; // 1% per level for action speed
+        const totalSpeedBonus = gear.speedBonus + houseSpeedBonus + communitySpeedBonus + teaSpeedBonus;
+
+        // Calculate total experience bonus
+        // Equipment + house wisdom + tea wisdom + community wisdom
+        const totalExperienceBonus = gear.experienceBonus + houseWisdomBonus + teaWisdomBonus + communityWisdomBonus;
+
+        // Calculate guzzling bonus multiplier (1.0 at level 0, scales with drink concentration)
+        const guzzlingBonus = 1 + drinkConcentration / 100;
+
+        return {
+            // Core values for calculations
+            enhancingLevel: enhancingLevel + teaLevelBonus, // Base level + tea bonus
+            houseLevel: houseLevel,
+            toolBonus: totalSuccessBonus, // Tool + house combined
+            speedBonus: totalSpeedBonus, // Speed + house + community + tea combined
+            rareFindBonus: gear.rareFindBonus + houseRareFindBonus, // Rare find (equipment + all house rooms)
+            experienceBonus: totalExperienceBonus, // Experience (equipment + house + tea + community wisdom)
+            guzzlingBonus: guzzlingBonus, // Drink concentration multiplier for blessed tea
+            teas: teas,
+
+            // Display info (for UI) - show best item per slot
+            toolSlot: gear.toolSlot,
+            bodySlot: gear.bodySlot,
+            legsSlot: gear.legsSlot,
+            handsSlot: gear.handsSlot,
+            detectedTeaBonus: teaLevelBonus,
+            communityBuffLevel: communityBuffLevel, // For display (speed)
+            communitySpeedBonus: communitySpeedBonus, // For display
+            communityWisdomLevel: communityWisdomLevel, // For display
+            communityWisdomBonus: communityWisdomBonus, // For display
+            teaSpeedBonus: teaSpeedBonus, // For display
+            teaWisdomBonus: teaWisdomBonus, // For display
+            drinkConcentration: drinkConcentration, // For display
+            houseRareFindBonus: houseRareFindBonus, // For display
+            houseWisdomBonus: houseWisdomBonus, // For display
+            equipmentRareFind: gear.rareFindBonus, // For display
+            equipmentExperience: gear.experienceBonus, // For display
+            equipmentSuccessBonus: equipmentSuccessBonus, // For display
+            houseSuccessBonus: houseSuccessBonus, // For display
+            equipmentSpeedBonus: gear.speedBonus, // For display
+            houseSpeedBonus: houseSpeedBonus, // For display
+        };
+    }
+
+    /**
+     * Get manual enhancing parameters from config settings
+     * @returns {Object} Manual parameters
+     */
+    function getManualParams() {
+        // Get values directly from config
+        const getValue = (key, defaultValue) => {
+            return config.getSettingValue(key, defaultValue);
+        };
+
+        const houseLevel = getValue('enhanceSim_houseLevel', 8);
+
+        // Get tea selection from dropdown (replaces 3 separate checkboxes)
+        const teaSelection = getValue('enhanceSim_tea', 'ultra');
+        const teas = {
+            enhancing: teaSelection === 'basic',
+            superEnhancing: teaSelection === 'super',
+            ultraEnhancing: teaSelection === 'ultra',
+            blessed: getValue('enhanceSim_blessedTea', true),
+        };
+
+        // Calculate tea bonuses based on selection
+        const teaLevelBonus =
+            teaSelection === 'ultra' ? 8 : teaSelection === 'super' ? 6 : teaSelection === 'basic' ? 3 : 0;
+        const teaSpeedBonus =
+            teaSelection === 'ultra' ? 6 : teaSelection === 'super' ? 4 : teaSelection === 'basic' ? 2 : 0;
+
+        // Calculate house bonuses
+        const houseSpeedBonus = houseLevel * 1.0; // 1% per level
+        const houseSuccessBonus = houseLevel * 0.05; // 0.05% per level
+
+        // Get community buffs
+        const communityBuffLevel = dataManager.getCommunityBuffLevel('/community_buff_types/enhancing_speed');
+        const communitySpeedBonus = communityBuffLevel > 0 ? 20 + (communityBuffLevel - 1) * 0.5 : 0;
+
+        // Equipment speed is whatever's left after house/community/tea
+        const totalSpeed = getValue('enhanceSim_speedBonus', 48.5);
+        const equipmentSpeedBonus = Math.max(0, totalSpeed - houseSpeedBonus - communitySpeedBonus - teaSpeedBonus);
+
+        const toolBonusEquipment = getValue('enhanceSim_toolBonus', 6.05);
+        const totalToolBonus = toolBonusEquipment + houseSuccessBonus;
+
+        return {
+            enhancingLevel: getValue('enhanceSim_enhancingLevel', 140) + teaLevelBonus,
+            houseLevel: houseLevel,
+            toolBonus: totalToolBonus, // Total = equipment + house
+            speedBonus: totalSpeed,
+            rareFindBonus: getValue('enhanceSim_rareFindBonus', 0),
+            experienceBonus: getValue('enhanceSim_experienceBonus', 0),
+            guzzlingBonus: 1 + getValue('enhanceSim_drinkConcentration', 12.9) / 100,
+            teas: teas,
+
+            // Display info for manual mode
+            toolSlot: null,
+            bodySlot: null,
+            legsSlot: null,
+            handsSlot: null,
+            detectedTeaBonus: teaLevelBonus,
+            communityBuffLevel: communityBuffLevel,
+            communitySpeedBonus: communitySpeedBonus,
+            teaSpeedBonus: teaSpeedBonus,
+            equipmentSpeedBonus: equipmentSpeedBonus,
+            houseSpeedBonus: houseSpeedBonus,
+            equipmentSuccessBonus: toolBonusEquipment, // Just equipment
+            houseSuccessBonus: houseSuccessBonus,
         };
     }
 
@@ -9040,7 +9255,7 @@
                 html += '<div style="font-weight: bold; margin-bottom: 4px;">PROFIT</div>';
                 html += '<div style="font-size: 0.9em; margin-left: 8px;">';
 
-                const profitPerDay = profitData.profitPerHour * 24;
+                const profitPerDay = profitData.profitPerDay;
                 const profitColor = profitData.profitPerHour >= 0 ? config.COLOR_TOOLTIP_PROFIT : config.COLOR_TOOLTIP_LOSS;
 
                 html += `<div style="color: ${profitColor}; font-weight: bold;">Net: ${numberFormatter(profitData.profitPerHour)}/hr (${formatKMB(profitPerDay)}/day)</div>`;
@@ -9129,8 +9344,8 @@
 
             // Detailed profit breakdown
             html += '<div style="margin-top: 8px; font-size: 0.85em;">';
-            const profitPerAction = profitData.profitPerHour / profitData.actionsPerHour;
-            const profitPerDay = profitData.profitPerHour * 24;
+            const profitPerAction = profitData.profitPerAction;
+            const profitPerDay = profitData.profitPerDay;
             const profitColor = profitData.profitPerHour >= 0 ? config.COLOR_TOOLTIP_PROFIT : config.COLOR_TOOLTIP_LOSS;
 
             html += `<div style="color: ${profitColor};">Profit: ${numberFormatter(profitPerAction)}/action, ${numberFormatter(profitData.profitPerHour)}/hour, ${formatKMB(profitPerDay)}/day</div>`;
@@ -9322,7 +9537,7 @@
                 // Calculate base actions per hour
                 const baseTimeCost = actionDetail.baseTimeCost; // in nanoseconds
                 const timeInSeconds = baseTimeCost / 1e9;
-                const actionsPerHour = 3600 / timeInSeconds;
+                const actionsPerHour = calculateActionsPerHour(timeInSeconds);
 
                 // Calculate items per hour
                 const itemsPerHour = actionsPerHour * action.dropRate;
@@ -11552,52 +11767,77 @@
                 }
 
                 const dataset = row.dataset;
-
-                if (!dataset.listingId) {
-                    continue;
-                }
-
-                const itemHrid = dataset.itemHrid;
-                const enhancementLevel = Number(dataset.enhancementLevel);
-                const isSell = dataset.isSell === 'true';
-                const price = Number(dataset.price);
-                const orderQuantity = Number(dataset.orderQuantity);
-                const filledQuantity = Number(dataset.filledQuantity);
-                const unclaimedCoinCount = Number(dataset.unclaimedCoinCount) || 0;
-                const unclaimedItemCount = Number(dataset.unclaimedItemCount) || 0;
+                const hasMatchedListing = !!dataset.listingId;
 
                 // Insert at index 4 (same as headers) to maintain alignment
                 const insertIndex = 4;
                 const insertBeforeCell = row.children[insertIndex] || null;
 
-                // Create Top Order Price cell
-                const topOrderCell = this.createTopOrderPriceCell(itemHrid, enhancementLevel, isSell, price, priceCache);
-                row.insertBefore(topOrderCell, insertBeforeCell);
+                if (hasMatchedListing) {
+                    // Matched row - create cells with actual data
+                    const itemHrid = dataset.itemHrid;
+                    const enhancementLevel = Number(dataset.enhancementLevel);
+                    const isSell = dataset.isSell === 'true';
+                    const price = Number(dataset.price);
+                    const orderQuantity = Number(dataset.orderQuantity);
+                    const filledQuantity = Number(dataset.filledQuantity);
+                    const unclaimedCoinCount = Number(dataset.unclaimedCoinCount) || 0;
+                    const unclaimedItemCount = Number(dataset.unclaimedItemCount) || 0;
 
-                // Create Top Order Age cell (if setting enabled)
-                if (config.getSetting('market_showTopOrderAge')) {
-                    const topOrderAgeCell = this.createTopOrderAgeCell(itemHrid, enhancementLevel, isSell);
-                    row.insertBefore(topOrderAgeCell, row.children[insertIndex + 1]);
-                }
+                    // Create Top Order Price cell
+                    const topOrderCell = this.createTopOrderPriceCell(
+                        itemHrid,
+                        enhancementLevel,
+                        isSell,
+                        price,
+                        priceCache
+                    );
+                    row.insertBefore(topOrderCell, insertBeforeCell);
 
-                // Create Total Price cell
-                const currentInsertIndex = insertIndex + (config.getSetting('market_showTopOrderAge') ? 2 : 1);
-                const totalPriceCell = this.createTotalPriceCell(
-                    itemHrid,
-                    isSell,
-                    price,
-                    orderQuantity,
-                    filledQuantity,
-                    unclaimedCoinCount,
-                    unclaimedItemCount
-                );
-                row.insertBefore(totalPriceCell, row.children[currentInsertIndex]);
+                    // Create Top Order Age cell (if setting enabled)
+                    if (config.getSetting('market_showTopOrderAge')) {
+                        const topOrderAgeCell = this.createTopOrderAgeCell(itemHrid, enhancementLevel, isSell);
+                        row.insertBefore(topOrderAgeCell, row.children[insertIndex + 1]);
+                    }
 
-                // Create Listed Age cell (if setting enabled)
-                if (config.getSetting('market_showListingAge') && dataset.createdTimestamp) {
-                    const listedInsertIndex = currentInsertIndex + 1;
-                    const listedAgeCell = this.createListedAgeCell(dataset.createdTimestamp);
-                    row.insertBefore(listedAgeCell, row.children[listedInsertIndex]);
+                    // Create Total Price cell
+                    const currentInsertIndex = insertIndex + (config.getSetting('market_showTopOrderAge') ? 2 : 1);
+                    const totalPriceCell = this.createTotalPriceCell(
+                        itemHrid,
+                        isSell,
+                        price,
+                        orderQuantity,
+                        filledQuantity,
+                        unclaimedCoinCount,
+                        unclaimedItemCount
+                    );
+                    row.insertBefore(totalPriceCell, row.children[currentInsertIndex]);
+
+                    // Create Listed Age cell (if setting enabled)
+                    if (config.getSetting('market_showListingAge') && dataset.createdTimestamp) {
+                        const listedInsertIndex = currentInsertIndex + 1;
+                        const listedAgeCell = this.createListedAgeCell(dataset.createdTimestamp);
+                        row.insertBefore(listedAgeCell, row.children[listedInsertIndex]);
+                    }
+                } else {
+                    // Unmatched row - create placeholder cells to prevent column misalignment
+                    const topOrderCell = this.createPlaceholderCell();
+                    row.insertBefore(topOrderCell, insertBeforeCell);
+
+                    if (config.getSetting('market_showTopOrderAge')) {
+                        const topOrderAgeCell = this.createPlaceholderCell();
+                        row.insertBefore(topOrderAgeCell, row.children[insertIndex + 1]);
+                    }
+
+                    const currentInsertIndex = insertIndex + (config.getSetting('market_showTopOrderAge') ? 2 : 1);
+                    const totalPriceCell = this.createPlaceholderCell();
+                    row.insertBefore(totalPriceCell, row.children[currentInsertIndex]);
+
+                    if (config.getSetting('market_showListingAge')) {
+                        const listedInsertIndex = currentInsertIndex + 1;
+                        const listedAgeCell = this.createPlaceholderCell();
+                        row.insertBefore(listedAgeCell, row.children[listedInsertIndex]);
+                    }
                 }
             }
         }
@@ -11789,6 +12029,24 @@
             // Format relative time
             span.textContent = formatRelativeTime(ageMs);
             span.style.color = '#AAAAAA'; // Gray for time display
+
+            cell.appendChild(span);
+            return cell;
+        }
+
+        /**
+         * Create placeholder cell for unmatched rows
+         * @returns {HTMLElement} Empty table cell element
+         */
+        createPlaceholderCell() {
+            const cell = document.createElement('td');
+            cell.classList.add('mwi-listing-price-cell');
+
+            const span = document.createElement('span');
+            span.classList.add('mwi-listing-price-value');
+            span.textContent = 'N/A';
+            span.style.color = '#666666'; // Gray for placeholder
+            span.style.fontSize = '0.9em';
 
             cell.appendChild(span);
             return cell;
@@ -13385,7 +13643,7 @@
     /**
      * Action types for production skills (5 skills)
      */
-    const PRODUCTION_TYPES$2 = [
+    const PRODUCTION_TYPES$3 = [
         '/action_types/brewing',
         '/action_types/cooking',
         '/action_types/cheesesmithing',
@@ -13408,7 +13666,7 @@
         }
 
         // Only process production actions with outputs
-        if (!PRODUCTION_TYPES$2.includes(actionDetail.type)) {
+        if (!PRODUCTION_TYPES$3.includes(actionDetail.type)) {
             return null;
         }
 
@@ -13416,13 +13674,8 @@
             return null; // No output - nothing to calculate
         }
 
-        // Ensure market data is loaded
-        if (!marketAPI.isLoaded()) {
-            const marketData = await marketAPI.fetch();
-            if (!marketData) {
-                return null;
-            }
-        }
+        // Note: Market API is pre-loaded by caller (max-produceable.js)
+        // No need to check or fetch here
 
         // Get output item HRID
         const outputItemHrid = actionDetail.outputItems[0].itemHrid;
@@ -13659,10 +13912,9 @@
         // Create top-level summary
         const profit = Math.round(profitData.profitPerHour);
         const profitPerDay = Math.round(profitData.profitPerDay);
-        // Revenue is already after tax (calculated with 0.98 multiplier), so calculate gross revenue
-        const grossRevenue = Math.round(profitData.revenuePerHour / 0.98);
-        const marketTax = Math.round(grossRevenue * 0.02);
-        const revenue = grossRevenue;
+        // Revenue is now gross (pre-tax)
+        const revenue = Math.round(profitData.revenuePerHour);
+        const marketTax = Math.round(revenue * MARKET_TAX);
         const costs = Math.round(profitData.drinkCostPerHour + marketTax);
         const summary = `${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day | Total profit: 0`;
 
@@ -13680,15 +13932,7 @@
                 const decimals = output.itemsPerHour < 1 ? 2 : 1;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
-
-                // Show processing percentage for processed items
-                if (output.isProcessed && output.processingChance) {
-                    const processingPercent = formatPercentage(output.processingChance, 1);
-                    line.textContent = `• ${output.name}: (${processingPercent}) ${output.itemsPerHour.toFixed(decimals)}/hr @ ${formatWithSeparator(output.priceEach)} each → ${formatLargeNumber(Math.round(output.revenuePerHour))}/hr`;
-                } else {
-                    line.textContent = `• ${output.name}: ${output.itemsPerHour.toFixed(decimals)}/hr @ ${formatWithSeparator(output.priceEach)} each → ${formatLargeNumber(Math.round(output.revenuePerHour))}/hr`;
-                }
-
+                line.textContent = `• ${output.name}: ${output.itemsPerHour.toFixed(decimals)}/hr @ ${formatWithSeparator(output.priceEach)} each → ${formatLargeNumber(Math.round(output.revenuePerHour))}/hr`;
                 baseOutputContent.appendChild(line);
             }
         }
@@ -13703,8 +13947,9 @@
             1
         );
 
-        // Bonus Drops subsections - split by type
+        // Bonus Drops subsections - split by type (bonus drops are base actions/hour)
         const bonusDrops = profitData.bonusRevenue?.bonusDrops || [];
+        const efficiencyMultiplier = profitData.efficiencyMultiplier || 1;
         const essenceDrops = bonusDrops.filter((drop) => drop.type === 'essence');
         const rareFinds = bonusDrops.filter((drop) => drop.type === 'rare_find');
 
@@ -13713,15 +13958,17 @@
         if (essenceDrops.length > 0) {
             const essenceContent = document.createElement('div');
             for (const drop of essenceDrops) {
-                const decimals = drop.dropsPerHour < 1 ? 2 : 1;
+                const adjustedDropsPerHour = drop.dropsPerHour * efficiencyMultiplier;
+                const adjustedRevenuePerHour = drop.revenuePerHour * efficiencyMultiplier;
+                const decimals = adjustedDropsPerHour < 1 ? 2 : 1;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
                 const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
-                line.textContent = `• ${drop.itemName}: ${drop.dropsPerHour.toFixed(decimals)}/hr (${dropRatePct}) → ${formatLargeNumber(Math.round(drop.revenuePerHour))}/hr`;
+                line.textContent = `• ${drop.itemName}: ${adjustedDropsPerHour.toFixed(decimals)}/hr (${dropRatePct}) → ${formatLargeNumber(Math.round(adjustedRevenuePerHour))}/hr`;
                 essenceContent.appendChild(line);
             }
 
-            const essenceRevenue = essenceDrops.reduce((sum, d) => sum + d.revenuePerHour, 0);
+            const essenceRevenue = essenceDrops.reduce((sum, d) => sum + d.revenuePerHour * efficiencyMultiplier, 0);
             const essenceFindBonus = profitData.bonusRevenue?.essenceFindBonus || 0;
             essenceSection = createCollapsibleSection(
                 '',
@@ -13738,15 +13985,17 @@
         if (rareFinds.length > 0) {
             const rareFindContent = document.createElement('div');
             for (const drop of rareFinds) {
-                const decimals = drop.dropsPerHour < 1 ? 2 : 1;
+                const adjustedDropsPerHour = drop.dropsPerHour * efficiencyMultiplier;
+                const adjustedRevenuePerHour = drop.revenuePerHour * efficiencyMultiplier;
+                const decimals = adjustedDropsPerHour < 1 ? 2 : 1;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
                 const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
-                line.textContent = `• ${drop.itemName}: ${drop.dropsPerHour.toFixed(decimals)}/hr (${dropRatePct}) → ${formatLargeNumber(Math.round(drop.revenuePerHour))}/hr`;
+                line.textContent = `• ${drop.itemName}: ${adjustedDropsPerHour.toFixed(decimals)}/hr (${dropRatePct}) → ${formatLargeNumber(Math.round(adjustedRevenuePerHour))}/hr`;
                 rareFindContent.appendChild(line);
             }
 
-            const rareFindRevenue = rareFinds.reduce((sum, d) => sum + d.revenuePerHour, 0);
+            const rareFindRevenue = rareFinds.reduce((sum, d) => sum + d.revenuePerHour * efficiencyMultiplier, 0);
             const rareFindBonus = profitData.bonusRevenue?.rareFindBonus || 0;
             rareFindSection = createCollapsibleSection(
                 '',
@@ -13764,6 +14013,30 @@
         }
         if (rareFindSection) {
             revenueDiv.appendChild(rareFindSection);
+        }
+
+        // Processing Bonus subsection (Processing Tea conversions)
+        let processingSection = null;
+        if (profitData.processingConversions && profitData.processingConversions.length > 0) {
+            const processingContent = document.createElement('div');
+            for (const conversion of profitData.processingConversions) {
+                const line = document.createElement('div');
+                line.style.marginLeft = '8px';
+                line.textContent = `• ${conversion.rawItem} → ${conversion.processedItem}: ${conversion.conversionsPerHour.toFixed(1)}/hr, +${formatWithSeparator(Math.round(conversion.valueGain))} each → ${formatLargeNumber(Math.round(conversion.revenuePerHour))}/hr`;
+                processingContent.appendChild(line);
+            }
+
+            const processingRevenue = profitData.processingRevenueBonus || 0;
+            const processingChance = profitData.processingBonus || 0;
+            processingSection = createCollapsibleSection(
+                '',
+                `Processing Bonus: ${formatLargeNumber(Math.round(processingRevenue))}/hr (${formatPercentage(processingChance, 1)} proc)`,
+                null,
+                processingContent,
+                false,
+                1
+            );
+            revenueDiv.appendChild(processingSection);
         }
 
         // Costs Section
@@ -13784,7 +14057,7 @@
         const drinkCount = profitData.drinkCosts?.length || 0;
         const drinkCostsSection = createCollapsibleSection(
             '',
-            `Drink Costs: ${formatLargeNumber(costs)}/hr (${drinkCount} drink${drinkCount !== 1 ? 's' : ''})`,
+            `Drink Costs: ${formatLargeNumber(Math.round(profitData.drinkCostPerHour))}/hr (${drinkCount} drink${drinkCount !== 1 ? 's' : ''})`,
             null,
             drinkCostsContent,
             false,
@@ -13941,10 +14214,13 @@
                     profitSummaryDiv.textContent = `${baseSummary} | Total profit: ∞`;
                 } else if (newValue > 0) {
                     // Calculate total profit for selected actions
-                    const efficiencyMultiplier = 1 + profitData.totalEfficiency / 100;
-                    const actualAttempts = Math.ceil(newValue / efficiencyMultiplier);
-                    const hoursNeeded = actualAttempts / profitData.actionsPerHour;
-                    const totalProfit = Math.round(profitData.profitPerHour * hoursNeeded);
+                    const actualAttempts = Math.ceil(newValue / profitData.efficiencyMultiplier);
+                    const queueBreakdown = calculateQueueProfitBreakdown({
+                        profitPerHour: profitData.profitPerHour,
+                        actionsPerHour: profitData.actionsPerHour,
+                        actionCount: actualAttempts,
+                    });
+                    const totalProfit = Math.round(queueBreakdown.totalProfit);
                     profitSummaryDiv.textContent = `${baseSummary} | Total profit: ${formatLargeNumber(totalProfit)}`;
                 } else {
                     profitSummaryDiv.textContent = `${baseSummary} | Total profit: 0`;
@@ -14003,7 +14279,7 @@
             'materialCostPerHour',
             'totalTeaCostPerHour',
             'actionsPerHour',
-            'efficiencyBonus',
+            'totalEfficiency',
             'levelEfficiency',
             'houseEfficiency',
             'teaEfficiency',
@@ -14029,7 +14305,7 @@
 
         // Create top-level summary (bonus revenue now included in profitPerHour)
         const profit = Math.round(profitData.profitPerHour);
-        const profitPerDay = Math.round(profit * 24);
+        const profitPerDay = Math.round(profitData.profitPerDay);
         const bonusRevenueTotal = profitData.bonusRevenue?.totalBonusRevenue || 0;
         // Use outputPrice (pre-tax) for revenue display
         const revenue = Math.round(
@@ -14038,7 +14314,7 @@
                 bonusRevenueTotal
         );
         // Calculate market tax (2% of revenue)
-        const marketTax = Math.round(revenue * 0.02);
+        const marketTax = Math.round(revenue * MARKET_TAX);
         const costs = Math.round(profitData.materialCostPerHour + profitData.totalTeaCostPerHour + marketTax);
         const summary = `${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day | Total profit: 0`;
 
@@ -14165,7 +14441,7 @@
                 line.style.marginLeft = '8px';
                 // Material structure: { itemName, amount, askPrice, totalCost, baseAmount }
                 const amountPerAction = material.amount || 0;
-                const efficiencyMultiplier = 1 + profitData.efficiencyBonus / 100;
+                const efficiencyMultiplier = profitData.efficiencyMultiplier;
                 const amountPerHour = amountPerAction * profitData.actionsPerHour * efficiencyMultiplier;
 
                 // Build material line with embedded Artisan information
@@ -14268,7 +14544,7 @@
                 `<div style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY});">Modifiers:</div>`
             );
             modifierLines.push(
-                `<div style="margin-left: 8px;">• Efficiency: +${profitData.efficiencyBonus.toFixed(1)}% (${effParts.join(', ')})</div>`
+                `<div style="margin-left: 8px;">• Efficiency: +${profitData.totalEfficiency.toFixed(1)}% (${effParts.join(', ')})</div>`
             );
         }
 
@@ -14378,10 +14654,14 @@
                     profitSummaryDiv.textContent = `${baseSummary} | Total profit: ∞`;
                 } else if (newValue > 0) {
                     // Calculate total profit for selected actions
-                    const efficiencyMultiplier = 1 + profitData.efficiencyBonus / 100;
+                    const efficiencyMultiplier = profitData.efficiencyMultiplier;
                     const actualAttempts = Math.ceil(newValue / efficiencyMultiplier);
-                    const hoursNeeded = actualAttempts / profitData.actionsPerHour;
-                    const totalProfit = Math.round(profitData.profitPerHour * hoursNeeded);
+                    const queueBreakdown = calculateQueueProfitBreakdown({
+                        profitPerHour: profitData.profitPerHour,
+                        actionsPerHour: profitData.actionsPerHour,
+                        actionCount: actualAttempts,
+                    });
+                    const totalProfit = Math.round(queueBreakdown.totalProfit);
                     profitSummaryDiv.textContent = `${baseSummary} | Total profit: ${formatLargeNumber(totalProfit)}`;
                 } else {
                     profitSummaryDiv.textContent = `${baseSummary} | Total profit: 0`;
@@ -14424,14 +14704,21 @@
      */
     function buildGatheringActionsBreakdown(profitData, actionsCount) {
         // Calculate actual attempts needed (input is desired output actions)
-        const efficiencyMultiplier = 1 + profitData.totalEfficiency / 100;
+        const efficiencyMultiplier = profitData.efficiencyMultiplier || 1;
         const actualAttempts = Math.ceil(actionsCount / efficiencyMultiplier);
-        const hoursNeeded = actualAttempts / profitData.actionsPerHour;
+        const queueBreakdown = calculateQueueProfitBreakdown({
+            profitPerHour: profitData.profitPerHour,
+            actionsPerHour: profitData.actionsPerHour,
+            actionCount: actualAttempts,
+        });
+        const hoursNeeded = queueBreakdown.hoursNeeded;
 
         // Calculate totals
         const totalRevenue = Math.round(profitData.revenuePerHour * hoursNeeded);
-        const totalCosts = Math.round(profitData.drinkCostPerHour * hoursNeeded);
-        const totalProfit = totalRevenue - totalCosts;
+        const totalMarketTax = Math.round(totalRevenue * MARKET_TAX);
+        const totalDrinkCosts = Math.round(profitData.drinkCostPerHour * hoursNeeded);
+        const totalCosts = totalDrinkCosts + totalMarketTax;
+        const totalProfit = Math.round(queueBreakdown.totalProfit);
 
         const detailsContent = document.createElement('div');
 
@@ -14447,14 +14734,7 @@
                 const totalRevenueLine = output.revenuePerHour * hoursNeeded;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
-
-                if (output.isProcessed && output.processingChance) {
-                    const processingPercent = formatPercentage(output.processingChance, 1);
-                    line.textContent = `• ${output.name}: (${processingPercent}) ${totalItems.toFixed(1)} items @ ${formatWithSeparator(output.priceEach)} each → ${formatLargeNumber(Math.round(totalRevenueLine))}`;
-                } else {
-                    line.textContent = `• ${output.name}: ${totalItems.toFixed(1)} items @ ${formatWithSeparator(output.priceEach)} each → ${formatLargeNumber(Math.round(totalRevenueLine))}`;
-                }
-
+                line.textContent = `• ${output.name}: ${totalItems.toFixed(1)} items @ ${formatWithSeparator(output.priceEach)} each → ${formatLargeNumber(Math.round(totalRevenueLine))}`;
                 baseOutputContent.appendChild(line);
             }
         }
@@ -14469,7 +14749,7 @@
             1
         );
 
-        // Bonus Drops subsections
+        // Bonus Drops subsections (bonus drops are base actions/hour)
         const bonusDrops = profitData.bonusRevenue?.bonusDrops || [];
         const essenceDrops = bonusDrops.filter((drop) => drop.type === 'essence');
         const rareFinds = bonusDrops.filter((drop) => drop.type === 'rare_find');
@@ -14479,8 +14759,10 @@
         if (essenceDrops.length > 0) {
             const essenceContent = document.createElement('div');
             for (const drop of essenceDrops) {
-                const totalDrops = drop.dropsPerHour * hoursNeeded;
-                const totalRevenueLine = drop.revenuePerHour * hoursNeeded;
+                const adjustedDropsPerHour = drop.dropsPerHour * efficiencyMultiplier;
+                const adjustedRevenuePerHour = drop.revenuePerHour * efficiencyMultiplier;
+                const totalDrops = adjustedDropsPerHour * hoursNeeded;
+                const totalRevenueLine = adjustedRevenuePerHour * hoursNeeded;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
                 const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
@@ -14488,7 +14770,10 @@
                 essenceContent.appendChild(line);
             }
 
-            const essenceRevenue = essenceDrops.reduce((sum, d) => sum + d.revenuePerHour * hoursNeeded, 0);
+            const essenceRevenue = essenceDrops.reduce(
+                (sum, d) => sum + d.revenuePerHour * efficiencyMultiplier * hoursNeeded,
+                0
+            );
             const essenceFindBonus = profitData.bonusRevenue?.essenceFindBonus || 0;
             essenceSection = createCollapsibleSection(
                 '',
@@ -14505,8 +14790,10 @@
         if (rareFinds.length > 0) {
             const rareFindContent = document.createElement('div');
             for (const drop of rareFinds) {
-                const totalDrops = drop.dropsPerHour * hoursNeeded;
-                const totalRevenueLine = drop.revenuePerHour * hoursNeeded;
+                const adjustedDropsPerHour = drop.dropsPerHour * efficiencyMultiplier;
+                const adjustedRevenuePerHour = drop.revenuePerHour * efficiencyMultiplier;
+                const totalDrops = adjustedDropsPerHour * hoursNeeded;
+                const totalRevenueLine = adjustedRevenuePerHour * hoursNeeded;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
                 const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
@@ -14514,7 +14801,10 @@
                 rareFindContent.appendChild(line);
             }
 
-            const rareFindRevenue = rareFinds.reduce((sum, d) => sum + d.revenuePerHour * hoursNeeded, 0);
+            const rareFindRevenue = rareFinds.reduce(
+                (sum, d) => sum + d.revenuePerHour * efficiencyMultiplier * hoursNeeded,
+                0
+            );
             const rareFindBonus = profitData.bonusRevenue?.rareFindBonus || 0;
             rareFindSection = createCollapsibleSection(
                 '',
@@ -14532,6 +14822,32 @@
         }
         if (rareFindSection) {
             revenueDiv.appendChild(rareFindSection);
+        }
+
+        // Processing Bonus subsection (Processing Tea conversions)
+        let processingSection = null;
+        if (profitData.processingConversions && profitData.processingConversions.length > 0) {
+            const processingContent = document.createElement('div');
+            for (const conversion of profitData.processingConversions) {
+                const totalConversions = conversion.conversionsPerHour * hoursNeeded;
+                const totalRevenueFromConversion = conversion.revenuePerHour * hoursNeeded;
+                const line = document.createElement('div');
+                line.style.marginLeft = '8px';
+                line.textContent = `• ${conversion.rawItem} → ${conversion.processedItem}: ${totalConversions.toFixed(1)} conversions, +${formatWithSeparator(Math.round(conversion.valueGain))} each → ${formatLargeNumber(Math.round(totalRevenueFromConversion))}`;
+                processingContent.appendChild(line);
+            }
+
+            const totalProcessingRevenue = (profitData.processingRevenueBonus || 0) * hoursNeeded;
+            const processingChance = profitData.processingBonus || 0;
+            processingSection = createCollapsibleSection(
+                '',
+                `Processing Bonus: ${formatLargeNumber(Math.round(totalProcessingRevenue))} (${formatPercentage(processingChance, 1)} proc)`,
+                null,
+                processingContent,
+                false,
+                1
+            );
+            revenueDiv.appendChild(processingSection);
         }
 
         // Costs Section
@@ -14554,7 +14870,7 @@
         const drinkCount = profitData.drinkCosts?.length || 0;
         const drinkCostsSection = createCollapsibleSection(
             '',
-            `Drink Costs: ${formatLargeNumber(totalCosts)} (${drinkCount} drink${drinkCount !== 1 ? 's' : ''})`,
+            `Drink Costs: ${formatLargeNumber(totalDrinkCosts)} (${drinkCount} drink${drinkCount !== 1 ? 's' : ''})`,
             null,
             drinkCostsContent,
             false,
@@ -14562,6 +14878,24 @@
         );
 
         costsDiv.appendChild(drinkCostsSection);
+
+        // Market Tax subsection
+        const marketTaxContent = document.createElement('div');
+        const marketTaxLine = document.createElement('div');
+        marketTaxLine.style.marginLeft = '8px';
+        marketTaxLine.textContent = `• Market Tax: 2% of revenue → ${formatLargeNumber(totalMarketTax)}`;
+        marketTaxContent.appendChild(marketTaxLine);
+
+        const marketTaxSection = createCollapsibleSection(
+            '',
+            `Market Tax: ${formatLargeNumber(totalMarketTax)} (2%)`,
+            null,
+            marketTaxContent,
+            false,
+            1
+        );
+
+        costsDiv.appendChild(marketTaxSection);
 
         // Assemble breakdown
         detailsContent.appendChild(revenueDiv);
@@ -14610,9 +14944,14 @@
      */
     function buildProductionActionsBreakdown(profitData, actionsCount) {
         // Calculate actual attempts needed (input is desired output actions)
-        const efficiencyMultiplier = 1 + profitData.efficiencyBonus / 100;
+        const efficiencyMultiplier = profitData.efficiencyMultiplier;
         const actualAttempts = Math.ceil(actionsCount / efficiencyMultiplier);
-        const hoursNeeded = actualAttempts / profitData.actionsPerHour;
+        const queueBreakdown = calculateQueueProfitBreakdown({
+            profitPerHour: profitData.profitPerHour,
+            actionsPerHour: profitData.actionsPerHour,
+            actionCount: actualAttempts,
+        });
+        const hoursNeeded = queueBreakdown.hoursNeeded;
 
         // Calculate totals
         const bonusRevenueTotal = profitData.bonusRevenue?.totalBonusRevenue || 0;
@@ -14624,11 +14963,11 @@
                 hoursNeeded
         );
         // Calculate market tax (2% of revenue)
-        const totalMarketTax = Math.round(totalRevenue * 0.02);
+        const totalMarketTax = Math.round(totalRevenue * MARKET_TAX);
         const totalCosts = Math.round(
             (profitData.materialCostPerHour + profitData.totalTeaCostPerHour) * hoursNeeded + totalMarketTax
         );
-        const totalProfit = totalRevenue - totalCosts;
+        const totalProfit = Math.round(queueBreakdown.totalProfit);
 
         const detailsContent = document.createElement('div');
 
@@ -14751,7 +15090,7 @@
         // Material Costs subsection
         const materialCostsContent = document.createElement('div');
         if (profitData.materialCosts && profitData.materialCosts.length > 0) {
-            const efficiencyMultiplier = 1 + profitData.efficiencyBonus / 100;
+            const efficiencyMultiplier = profitData.efficiencyMultiplier;
             for (const material of profitData.materialCosts) {
                 const totalMaterial = material.amount * actionsCount * efficiencyMultiplier;
                 const totalMaterialCost = material.totalCost * actionsCount * efficiencyMultiplier;
@@ -14887,7 +15226,7 @@
     /**
      * Action types for production skills (5 skills)
      */
-    const PRODUCTION_TYPES$1 = [
+    const PRODUCTION_TYPES$2 = [
         '/action_types/brewing',
         '/action_types/cooking',
         '/action_types/cheesesmithing',
@@ -15124,7 +15463,7 @@
         if (!actionNameElement) return;
 
         const actionName = getOriginalText(actionNameElement);
-        const actionHrid = getActionHridFromName(actionName);
+        const actionHrid = getActionHridFromName$1(actionName);
         if (!actionHrid) return;
 
         // Get action details
@@ -15141,7 +15480,7 @@
         }
 
         // Check if this is a production action
-        if (PRODUCTION_TYPES$1.includes(actionDetail.type)) {
+        if (PRODUCTION_TYPES$2.includes(actionDetail.type)) {
             const dropTableElement = panel.querySelector(SELECTORS.DROP_TABLE);
             if (dropTableElement) {
                 await displayProductionProfit(panel, actionHrid, SELECTORS.DROP_TABLE);
@@ -15391,7 +15730,7 @@
      * @param {string} actionName - Display name of action
      * @returns {string|null} Action HRID or null if not found
      */
-    function getActionHridFromName(actionName) {
+    function getActionHridFromName$1(actionName) {
         const gameData = dataManager.getInitClientData();
         if (!gameData?.actionDetailMap) {
             return null;
@@ -15686,13 +16025,8 @@
                         this.queueMenuObserver.disconnect();
 
                         // Queue DOM changed (reordering) - re-inject times
+                        // NOTE: Reconnection happens inside injectQueueTimes after async completes
                         this.injectQueueTimes(queueMenu);
-
-                        // Reconnect to continue watching
-                        this.queueMenuObserver.observe(queueMenu, {
-                            childList: true,
-                            subtree: true,
-                        });
                     });
 
                     this.queueMenuObserver.observe(queueMenu, {
@@ -15932,25 +16266,41 @@
             // Re-apply CSS override on every update to prevent game's CSS from truncating text
             // ONLY for non-combat actions (combat needs normal width for HP/MP bars)
             // Use setProperty with 'important' to ensure we override game's styles
-            actionNameElement.style.setProperty('overflow', 'visible', 'important');
-            actionNameElement.style.setProperty('text-overflow', 'clip', 'important');
-            actionNameElement.style.setProperty('white-space', 'nowrap', 'important');
-            actionNameElement.style.setProperty('max-width', 'none', 'important');
-            actionNameElement.style.setProperty('width', 'auto', 'important');
-            actionNameElement.style.setProperty('min-width', 'max-content', 'important');
 
-            // Apply to entire parent chain (up to 5 levels)
-            let parent = actionNameElement.parentElement;
-            let levels = 0;
-            while (parent && levels < 5) {
-                parent.style.setProperty('overflow', 'visible', 'important');
-                parent.style.setProperty('text-overflow', 'clip', 'important');
-                parent.style.setProperty('white-space', 'nowrap', 'important');
-                parent.style.setProperty('max-width', 'none', 'important');
-                parent.style.setProperty('width', 'auto', 'important');
-                parent.style.setProperty('min-width', 'max-content', 'important');
-                parent = parent.parentElement;
-                levels++;
+            // Check if compact mode is enabled
+            const compactMode = config.getSettingValue('actions_compactActionBar', false);
+
+            if (compactMode) {
+                // COMPACT MODE: Only modify action name element, NOT parents
+                // This prevents breaking the header layout (community buffs, profile, etc.)
+                actionNameElement.style.setProperty('max-width', '800px', 'important');
+                actionNameElement.style.setProperty('overflow', 'hidden', 'important');
+                actionNameElement.style.setProperty('text-overflow', 'clip', 'important');
+                actionNameElement.style.setProperty('white-space', 'nowrap', 'important');
+
+                // DO NOT modify parent containers - let game's CSS control header layout
+            } else {
+                // FULL WIDTH MODE (default): Expand to show all text
+                actionNameElement.style.setProperty('overflow', 'visible', 'important');
+                actionNameElement.style.setProperty('text-overflow', 'clip', 'important');
+                actionNameElement.style.setProperty('white-space', 'nowrap', 'important');
+                actionNameElement.style.setProperty('max-width', 'none', 'important');
+                actionNameElement.style.setProperty('width', 'auto', 'important');
+                actionNameElement.style.setProperty('min-width', 'max-content', 'important');
+
+                // Apply to entire parent chain (up to 5 levels)
+                let parent = actionNameElement.parentElement;
+                let levels = 0;
+                while (parent && levels < 5) {
+                    parent.style.setProperty('overflow', 'visible', 'important');
+                    parent.style.setProperty('text-overflow', 'clip', 'important');
+                    parent.style.setProperty('white-space', 'nowrap', 'important');
+                    parent.style.setProperty('max-width', 'none', 'important');
+                    parent.style.setProperty('width', 'auto', 'important');
+                    parent.style.setProperty('min-width', 'max-content', 'important');
+                    parent = parent.parentElement;
+                    levels++;
+                }
             }
 
             // Get character data
@@ -15976,7 +16326,7 @@
             }
 
             const { actionTime, totalEfficiency } = stats;
-            const baseActionsPerHour = 3600 / actionTime;
+            const baseActionsPerHour = calculateActionsPerHour(actionTime);
 
             // Calculate average actions per attempt from efficiency
             const guaranteedActions = 1 + Math.floor(totalEfficiency / 100);
@@ -16230,10 +16580,38 @@
             // Clear any previous appended stats
             this.clearAppendedStats(actionNameElement);
 
+            // Get clean action name before appending stats
+            const cleanActionName = this.getCleanActionName(actionNameElement);
+
             // Create marker span for our additions
             const statsSpan = document.createElement('span');
             statsSpan.className = 'mwi-appended-stats';
-            statsSpan.style.cssText = `color: var(--text-color-secondary, ${config.COLOR_TEXT_SECONDARY});`;
+
+            // Check if compact mode is enabled
+            const compactMode = config.getSettingValue('actions_compactActionBar', false);
+
+            if (compactMode) {
+                // COMPACT MODE: Truncate stats if too long
+                statsSpan.style.cssText = `
+                color: var(--text-color-secondary, ${config.COLOR_TEXT_SECONDARY});
+                display: inline-block;
+                max-width: 400px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                vertical-align: bottom;
+            `;
+                // Set full text as tooltip on both stats span and parent element
+                const fullText = cleanActionName + ' ' + statsText;
+                statsSpan.setAttribute('title', fullText);
+                actionNameElement.setAttribute('title', fullText);
+            } else {
+                // FULL WIDTH MODE: Show all stats
+                statsSpan.style.cssText = `color: var(--text-color-secondary, ${config.COLOR_TEXT_SECONDARY});`;
+                // Remove tooltip in full width mode
+                actionNameElement.removeAttribute('title');
+            }
+
             statsSpan.textContent = ' ' + statsText;
 
             // Append to action name element
@@ -16452,6 +16830,9 @@
          * @param {HTMLElement} queueMenu - Queue menu container element
          */
         injectQueueTimes(queueMenu) {
+            // Track if we need to reconnect observer at the end
+            let shouldReconnectObserver = false;
+
             try {
                 // Get all queued actions
                 const currentActions = dataManager.getCurrentActions();
@@ -16465,12 +16846,16 @@
                     return;
                 }
 
-                // Clear all existing time displays to prevent duplicates
+                // Clear all existing time and profit displays to prevent duplicates
                 queueMenu.querySelectorAll('.mwi-queue-action-time').forEach((el) => el.remove());
+                queueMenu.querySelectorAll('.mwi-queue-action-profit').forEach((el) => el.remove());
                 const existingTotal = document.querySelector('#mwi-queue-total-time');
                 if (existingTotal) {
                     existingTotal.remove();
                 }
+
+                // Observer is already disconnected by callback - we'll reconnect in finally
+                shouldReconnectObserver = true;
 
                 let accumulatedTime = 0;
                 let hasInfinite = false;
@@ -16520,6 +16905,8 @@
                             const isInfinite = !currentAction.hasMaxCount || currentAction.actionHrid.includes('/combat/');
 
                             let actionTimeSeconds = 0; // Time spent on this action (for profit calculation)
+                            let count = 0; // Item/action count for profit calculation
+                            let actualAttempts = 0; // Actual attempts for profit calculation
 
                             if (isInfinite) {
                                 // Check for material limit on infinite actions
@@ -16545,7 +16932,8 @@
                                     if (materialLimit !== null) {
                                         // Material-limited infinite action - calculate time
                                         // NOTE: materialLimit is already attempts, not actions
-                                        const actualAttempts = materialLimit;
+                                        actualAttempts = materialLimit;
+                                        count = materialLimit; // For infinite actions, count = attempts
                                         const totalTime = actualAttempts * actionTime;
                                         accumulatedTime += totalTime;
                                         actionTimeSeconds = totalTime;
@@ -16555,7 +16943,7 @@
                                     hasInfinite = true;
                                 }
                             } else {
-                                const count = currentAction.maxCount - currentAction.currentCount;
+                                count = currentAction.maxCount - currentAction.currentCount;
                                 const timeData = this.calculateActionTime(actionDetails, currentAction.actionHrid);
                                 if (timeData) {
                                     const { actionTime, totalEfficiency } = timeData;
@@ -16566,7 +16954,7 @@
                                     const avgActionsPerAttempt = guaranteedActions + chanceForExtra / 100;
 
                                     // Calculate actual attempts needed
-                                    const actualAttempts = Math.ceil(count / avgActionsPerAttempt);
+                                    actualAttempts = Math.ceil(count / avgActionsPerAttempt);
                                     const totalTime = actualAttempts * actionTime;
                                     accumulatedTime += totalTime;
                                     actionTimeSeconds = totalTime;
@@ -16578,6 +16966,8 @@
                                 actionsToCalculate.push({
                                     actionHrid: currentAction.actionHrid,
                                     timeSeconds: actionTimeSeconds,
+                                    count: count,
+                                    actualAttempts: actualAttempts,
                                 });
                             }
                         }
@@ -16665,12 +17055,12 @@
                     // Calculate total time for this action
                     let totalTime;
                     let actionTimeSeconds = 0; // Time spent on this action (for profit calculation)
+                    let actualAttempts = 0; // Actual attempts for profit calculation
                     if (isTrulyInfinite) {
                         totalTime = Infinity;
                     } else {
                         // Calculate actual attempts needed
                         // NOTE: materialLimit returns attempts, but finite counts are items
-                        let actualAttempts;
                         if (materialLimit !== null) {
                             // Material-limited - count is already attempts
                             actualAttempts = count;
@@ -16691,6 +17081,9 @@
                         actionsToCalculate.push({
                             actionHrid: actionObj.actionHrid,
                             timeSeconds: actionTimeSeconds,
+                            count: count,
+                            actualAttempts: actualAttempts,
+                            divIndex: divIndex, // Store index to match back to DOM element
                         });
                     }
 
@@ -16735,6 +17128,26 @@
                         // Fallback: append to action div
                         actionDiv.appendChild(timeDiv);
                     }
+
+                    // Create empty profit div for this action (will be populated asynchronously)
+                    if (!isTrulyInfinite && actionTimeSeconds > 0) {
+                        const profitDiv = document.createElement('div');
+                        profitDiv.className = 'mwi-queue-action-profit';
+                        profitDiv.dataset.divIndex = divIndex;
+                        profitDiv.style.cssText = `
+                        color: var(--text-color-secondary, ${config.COLOR_TEXT_SECONDARY});
+                        font-size: 0.85em;
+                        margin-top: 2px;
+                    `;
+                        // Leave empty - will be filled by async calculation
+                        profitDiv.textContent = '';
+
+                        if (actionTextContainer) {
+                            actionTextContainer.appendChild(profitDiv);
+                        } else {
+                            actionDiv.appendChild(profitDiv);
+                        }
+                    }
                 }
 
                 // Add total time at bottom (includes current action + all queued)
@@ -16769,20 +17182,31 @@
 
                 // Calculate profit asynchronously (non-blocking)
                 if (actionsToCalculate.length > 0 && marketAPI.isLoaded()) {
-                    this.calculateAndDisplayTotalProfit(totalDiv, actionsToCalculate, totalText);
+                    // Async will handle observer reconnection after updates complete
+                    shouldReconnectObserver = false;
+                    this.calculateAndDisplayTotalProfit(totalDiv, actionsToCalculate, totalText, queueMenu);
                 }
             } catch (error) {
                 console.error('[MWI Tools] Error injecting queue times:', error);
+            } finally {
+                // Reconnect observer only if async didn't take over
+                if (shouldReconnectObserver && this.queueMenuObserver) {
+                    this.queueMenuObserver.observe(queueMenu, {
+                        childList: true,
+                        subtree: true,
+                    });
+                }
             }
         }
 
         /**
          * Calculate and display total profit asynchronously (non-blocking)
          * @param {HTMLElement} totalDiv - The total display div element
-         * @param {Array} actionsToCalculate - Array of {actionHrid, timeSeconds} objects
+         * @param {Array} actionsToCalculate - Array of {actionHrid, timeSeconds, count, actualAttempts, divIndex} objects
          * @param {string} baseText - Base text (time) to prepend
+         * @param {HTMLElement} queueMenu - Queue menu element to reconnect observer after updates
          */
-        async calculateAndDisplayTotalProfit(totalDiv, actionsToCalculate, baseText) {
+        async calculateAndDisplayTotalProfit(totalDiv, actionsToCalculate, baseText, queueMenu) {
             // Generate unique ID for this calculation to prevent race conditions
             const calculationId = Date.now() + Math.random();
             this.activeProfitCalculationId = calculationId;
@@ -16795,7 +17219,7 @@
                 const profitPromises = actionsToCalculate.map(
                     (action) =>
                         Promise.race([
-                            this.calculateProfitForAction(action.actionHrid, action.timeSeconds),
+                            this.calculateProfitForAction(action),
                             new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 500)),
                         ]).catch(() => null) // Convert rejections to null
                 );
@@ -16809,11 +17233,29 @@
                     return;
                 }
 
-                // Aggregate results
-                results.forEach((result) => {
-                    if (result.status === 'fulfilled' && result.value !== null) {
-                        totalProfit += result.value;
+                // Aggregate results and update individual action profit displays
+                results.forEach((result, index) => {
+                    const actionProfit = result.status === 'fulfilled' && result.value !== null ? result.value : null;
+
+                    if (actionProfit !== null) {
+                        totalProfit += actionProfit;
                         hasProfitData = true;
+
+                        // Update individual action's profit display
+                        const action = actionsToCalculate[index];
+                        if (action.divIndex !== undefined) {
+                            const profitDiv = document.querySelector(
+                                `.mwi-queue-action-profit[data-div-index="${action.divIndex}"]`
+                            );
+                            if (profitDiv) {
+                                const profitColor =
+                                    actionProfit >= 0
+                                        ? config.getSettingValue('color_profit', '#4ade80')
+                                        : config.getSettingValue('color_loss', '#f87171');
+                                const profitSign = actionProfit >= 0 ? '+' : '';
+                                profitDiv.innerHTML = `Profit: <span style="color: ${profitColor};">${profitSign}${formatWithSeparator(Math.round(actionProfit))}</span>`;
+                            }
+                        }
                     }
                 });
 
@@ -16836,58 +17278,62 @@
                 }
             } catch (error) {
                 console.warn('[Action Time Display] Error calculating total profit:', error);
+            } finally {
+                // CRITICAL: Reconnect mutation observer after ALL DOM updates are complete
+                // This prevents infinite loop by ensuring observer only reconnects once all profit divs are updated
+                if (this.queueMenuObserver && queueMenu) {
+                    this.queueMenuObserver.observe(queueMenu, {
+                        childList: true,
+                        subtree: true,
+                    });
+                }
             }
         }
 
         /**
-         * Calculate profit or estimated value for a single action based on time spent
-         * @param {string} actionHrid - Action HRID
-         * @param {number} timeSeconds - Time spent on this action in seconds
+         * Calculate profit or estimated value for a single action based on action count
+         * @param {Object} action - Action object with {actionHrid, timeSeconds, count, actualAttempts}
          * @returns {Promise<number|null>} Total value (profit or revenue) or null if unavailable
          */
-        async calculateProfitForAction(actionHrid, timeSeconds) {
-            const actionDetails = dataManager.getActionDetails(actionHrid);
+        async calculateProfitForAction(action) {
+            const actionDetails = dataManager.getActionDetails(action.actionHrid);
             if (!actionDetails) {
                 return null;
             }
 
-            // Get value mode setting (profit or estimated_value)
             const valueMode = config.getSettingValue('actionQueue_valueMode', 'profit');
 
-            // Calculate value per hour based on mode
-            let valuePerHour = null;
-
-            // Try gathering profit first (foraging, woodcutting, milking)
-            const gatheringProfit = await calculateGatheringProfit(actionHrid);
+            // Get profit data (already has profitPerAction calculated)
+            let profitData = null;
+            const gatheringProfit = await calculateGatheringProfit(action.actionHrid);
             if (gatheringProfit) {
-                if (valueMode === 'estimated_value' && gatheringProfit.revenuePerHour !== undefined) {
-                    valuePerHour = gatheringProfit.revenuePerHour;
-                } else if (gatheringProfit.profitPerHour !== undefined) {
-                    valuePerHour = gatheringProfit.profitPerHour;
-                }
+                profitData = gatheringProfit;
             } else if (actionDetails.outputItems?.[0]?.itemHrid) {
-                // Try production profit (crafting, cooking, etc.)
-                const productionProfit = await profitCalculator.calculateProfit(actionDetails.outputItems[0].itemHrid);
-                if (productionProfit) {
-                    if (valueMode === 'estimated_value') {
-                        // Calculate revenue: (items * priceAfterTax) + bonus revenue
-                        const revenuePerHour =
-                            productionProfit.totalItemsPerHour * productionProfit.priceAfterTax +
-                            (productionProfit.bonusRevenue?.totalBonusRevenue || 0) * productionProfit.efficiencyMultiplier;
-                        valuePerHour = revenuePerHour;
-                    } else if (productionProfit.profitPerHour !== undefined) {
-                        valuePerHour = productionProfit.profitPerHour;
-                    }
-                }
+                profitData = await profitCalculator.calculateProfit(actionDetails.outputItems[0].itemHrid);
             }
 
-            // Calculate value based on time spent
-            if (valuePerHour !== null) {
-                const timeHours = timeSeconds / 3600;
-                return valuePerHour * timeHours;
+            if (!profitData) {
+                return null;
             }
 
-            return null;
+            const attemptsForValue = action.actualAttempts ?? action.count ?? 0;
+            if (!attemptsForValue) {
+                return 0;
+            }
+
+            if (typeof profitData.actionsPerHour !== 'number') {
+                return null;
+            }
+
+            const breakdown = calculateQueueProfitBreakdown({
+                profitPerHour: profitData.profitPerHour,
+                actionsPerHour: profitData.actionsPerHour,
+                actionCount: attemptsForValue,
+                revenuePerHour: profitData.revenuePerHour,
+                valueMode,
+            });
+
+            return breakdown.totalProfit;
         }
 
         /**
@@ -19187,7 +19633,7 @@
      * Action type constants for classification
      */
     const GATHERING_TYPES = ['/action_types/foraging', '/action_types/woodcutting', '/action_types/milking'];
-    const PRODUCTION_TYPES = [
+    const PRODUCTION_TYPES$1 = [
         '/action_types/brewing',
         '/action_types/cooking',
         '/action_types/cheesesmithing',
@@ -19273,7 +19719,7 @@
                 clearTimeout(this.profitCalcTimeout);
                 this.profitCalcTimeout = setTimeout(() => {
                     this.updateAllCounts();
-                }, 300); // Wait 300ms after last panel appears (reduced from 1000ms for better responsiveness)
+                }, 50); // Wait 50ms after last panel appears for better responsiveness
             });
 
             // Check for existing action panels that may already be open
@@ -19287,7 +19733,7 @@
                 clearTimeout(this.profitCalcTimeout);
                 this.profitCalcTimeout = setTimeout(() => {
                     this.updateAllCounts();
-                }, 300); // Reduced from 1000ms for better responsiveness
+                }, 50); // Fast initial load for better responsiveness
             }
         }
 
@@ -19529,7 +19975,7 @@
                 if (GATHERING_TYPES.includes(actionDetails.type)) {
                     const profitData = await calculateGatheringProfit(data.actionHrid);
                     profitPerHour = profitData?.profitPerHour || null;
-                } else if (PRODUCTION_TYPES.includes(actionDetails.type)) {
+                } else if (PRODUCTION_TYPES$1.includes(actionDetails.type)) {
                     const profitData = await calculateProductionProfit(data.actionHrid);
                     profitPerHour = profitData?.profitPerHour || null;
                 }
@@ -19593,6 +20039,12 @@
          * Update all counts
          */
         async updateAllCounts() {
+            // Pre-load market API ONCE before all profit calculations
+            // This prevents all 20+ calculations from triggering simultaneous fetches
+            if (!marketAPI.isLoaded()) {
+                await marketAPI.fetch();
+            }
+
             // Get inventory once and build index for O(1) lookups
             const inventory = dataManager.getInventory();
 
@@ -20455,6 +20907,833 @@
     }
 
     const requiredMaterials = new RequiredMaterials();
+
+    /**
+     * Material Calculator Utility
+     * Shared calculation logic for material requirements with artisan bonus
+     */
+
+
+    /**
+     * Calculate material requirements for an action
+     * @param {string} actionHrid - Action HRID (e.g., "/actions/crafting/celestial_enhancer")
+     * @param {number} numActions - Number of actions to perform
+     * @returns {Array<Object>} Array of material requirement objects (includes upgrade items)
+     */
+    function calculateMaterialRequirements(actionHrid, numActions) {
+        const actionDetails = dataManager.getActionDetails(actionHrid);
+        const inventory = dataManager.getInventory();
+        const gameData = dataManager.getInitClientData();
+
+        if (!actionDetails) {
+            return [];
+        }
+
+        // Calculate artisan bonus (material reduction from Artisan Tea)
+        const artisanBonus = calculateArtisanBonus(actionDetails);
+
+        const materials = [];
+
+        // Process regular input items first
+        if (actionDetails.inputItems && actionDetails.inputItems.length > 0) {
+            for (const input of actionDetails.inputItems) {
+                const basePerAction = input.count || input.amount || 1;
+
+                // Apply artisan reduction to materials
+                // Materials are consumed PER ACTION
+                // Efficiency gives bonus actions for FREE (no material cost)
+                const materialsPerAction = basePerAction * (1 - artisanBonus);
+
+                // Calculate total materials needed for queued actions
+                const totalRequired = Math.ceil(materialsPerAction * numActions);
+
+                const inventoryItem = inventory.find((i) => i.itemHrid === input.itemHrid);
+                const have = inventoryItem?.count || 0;
+                const missingAmount = Math.max(0, totalRequired - have);
+
+                const itemDetails = gameData.itemDetailMap[input.itemHrid];
+                if (!itemDetails) {
+                    continue;
+                }
+
+                materials.push({
+                    itemHrid: input.itemHrid,
+                    itemName: itemDetails.name,
+                    required: totalRequired,
+                    have: have,
+                    missing: missingAmount,
+                    isTradeable: itemDetails.isTradable === true, // British spelling
+                    isUpgradeItem: false,
+                });
+            }
+        }
+
+        // Process upgrade item at the end (if exists)
+        if (actionDetails.upgradeItemHrid) {
+            // Upgrade items always need exactly 1 per action, no artisan reduction
+            const totalRequired = numActions;
+
+            const inventoryItem = inventory.find((i) => i.itemHrid === actionDetails.upgradeItemHrid);
+            const have = inventoryItem?.count || 0;
+            const missingAmount = Math.max(0, totalRequired - have);
+
+            const itemDetails = gameData.itemDetailMap[actionDetails.upgradeItemHrid];
+            if (itemDetails) {
+                materials.push({
+                    itemHrid: actionDetails.upgradeItemHrid,
+                    itemName: itemDetails.name,
+                    required: totalRequired,
+                    have: have,
+                    missing: missingAmount,
+                    isTradeable: itemDetails.isTradable === true, // British spelling
+                    isUpgradeItem: true, // Flag to identify upgrade items
+                });
+            }
+        }
+
+        return materials;
+    }
+
+    /**
+     * Calculate artisan bonus (material reduction) for an action
+     * @param {Object} actionDetails - Action details from game data
+     * @returns {number} Artisan bonus (0-1 decimal, e.g., 0.1129 for 11.29% reduction)
+     */
+    function calculateArtisanBonus(actionDetails) {
+        try {
+            const gameData = dataManager.getInitClientData();
+            if (!gameData) {
+                return 0;
+            }
+
+            // Get character data
+            const equipment = dataManager.getEquipment();
+            const itemDetailMap = gameData.itemDetailMap || {};
+
+            // Calculate artisan bonus (material reduction from Artisan Tea)
+            const drinkConcentration = getDrinkConcentration(equipment, itemDetailMap);
+            const activeDrinks = dataManager.getActionDrinkSlots(actionDetails.type);
+            const artisanBonus = parseArtisanBonus(activeDrinks, itemDetailMap, drinkConcentration);
+
+            return artisanBonus;
+        } catch (error) {
+            console.error('[Material Calculator] Error calculating artisan bonus:', error);
+            return 0;
+        }
+    }
+
+    /**
+     * Missing Materials Marketplace Button
+     * Adds button to production panels that opens marketplace with tabs for missing materials
+     */
+
+
+    /**
+     * Module-level state
+     */
+    let cleanupObserver = null;
+    let currentMaterialsTabs = [];
+    let domObserverUnregister = null;
+    let processedPanels = new WeakSet();
+    let inventoryUpdateHandler = null;
+    let storedActionHrid = null;
+    let storedNumActions = 0;
+
+    /**
+     * Production action types (where button should appear)
+     */
+    const PRODUCTION_TYPES = [
+        '/action_types/brewing',
+        '/action_types/cooking',
+        '/action_types/cheesesmithing',
+        '/action_types/crafting',
+        '/action_types/tailoring',
+    ];
+
+    /**
+     * Initialize missing materials button feature
+     */
+    function initialize$1() {
+        console.log('[MissingMats] Initializing missing materials button feature');
+        setupMarketplaceCleanupObserver();
+
+        // Watch for action panels appearing
+        domObserverUnregister = domObserver.onClass(
+            'MissingMaterialsButton-ActionPanel',
+            'SkillActionDetail_skillActionDetail',
+            () => processActionPanels()
+        );
+
+        // Process existing panels
+        processActionPanels();
+    }
+
+    /**
+     * Cleanup function
+     */
+    function cleanup() {
+        console.log('[MissingMats] Cleaning up missing materials button feature');
+
+        // Unregister DOM observer
+        if (domObserverUnregister) {
+            domObserverUnregister();
+            domObserverUnregister = null;
+        }
+
+        // Disconnect marketplace cleanup observer
+        if (cleanupObserver) {
+            cleanupObserver.disconnect();
+            cleanupObserver = null;
+        }
+
+        // Remove any existing custom tabs
+        removeMissingMaterialTabs();
+
+        // Clear processed panels
+        processedPanels = new WeakSet();
+    }
+
+    /**
+     * Process action panels - watch for input changes
+     */
+    function processActionPanels() {
+        const panels = document.querySelectorAll('[class*="SkillActionDetail_skillActionDetail"]');
+
+        panels.forEach((panel) => {
+            // Skip if already processed
+            if (processedPanels.has(panel)) {
+                return;
+            }
+
+            // Find the input box using utility
+            const inputField = findActionInput(panel);
+            if (!inputField) {
+                return;
+            }
+
+            // Mark as processed
+            processedPanels.add(panel);
+
+            // Attach input listeners using utility
+            attachInputListeners(panel, inputField, (value) => {
+                updateButtonForPanel(panel, value);
+            });
+
+            // Initial update if there's already a value
+            performInitialUpdate(inputField, (value) => {
+                updateButtonForPanel(panel, value);
+            });
+        });
+    }
+
+    /**
+     * Update button visibility and content for a panel based on input value
+     * @param {HTMLElement} panel - Action panel element
+     * @param {string} value - Input value (number of actions)
+     */
+    function updateButtonForPanel(panel, value) {
+        const numActions = parseInt(value) || 0;
+
+        // Remove existing button
+        const existingButton = panel.querySelector('#mwi-missing-mats-button');
+        if (existingButton) {
+            existingButton.remove();
+        }
+
+        // Don't show button if no quantity entered
+        if (numActions <= 0) {
+            return;
+        }
+
+        // Check if feature is enabled
+        if (config.getSetting('actions_missingMaterialsButton') !== true) {
+            return;
+        }
+
+        // Get action details
+        const actionHrid = getActionHridFromPanel(panel);
+        if (!actionHrid) {
+            return;
+        }
+
+        const gameData = dataManager.getInitClientData();
+        const actionDetail = gameData.actionDetailMap[actionHrid];
+        if (!actionDetail) {
+            return;
+        }
+
+        // Verify this is a production action
+        if (!PRODUCTION_TYPES.includes(actionDetail.type)) {
+            return;
+        }
+
+        // Check if action has input materials
+        if (!actionDetail.inputItems || actionDetail.inputItems.length === 0) {
+            return;
+        }
+
+        // Get missing materials using shared utility
+        const missingMaterials = calculateMaterialRequirements(actionHrid, numActions);
+        if (missingMaterials.length === 0) {
+            return;
+        }
+
+        // Create and insert button with actionHrid and numActions for live updates
+        const button = createMissingMaterialsButton(missingMaterials, actionHrid, numActions);
+
+        // Find insertion point (beneath item requirements field)
+        const itemRequirements = panel.querySelector('.SkillActionDetail_itemRequirements__3SPnA');
+        if (itemRequirements) {
+            itemRequirements.parentNode.insertBefore(button, itemRequirements.nextSibling);
+        } else {
+            // Fallback: insert at top of panel
+            panel.insertBefore(button, panel.firstChild);
+        }
+
+        // Don't manipulate modal styling - let the game handle it
+        // The modal will scroll naturally if content overflows
+    }
+
+    /**
+     * Get action HRID from panel
+     * @param {HTMLElement} panel - Action panel element
+     * @returns {string|null} Action HRID or null
+     */
+    function getActionHridFromPanel(panel) {
+        // Get action name from panel
+        const actionNameElement = panel.querySelector('[class*="SkillActionDetail_name"]');
+        if (!actionNameElement) {
+            return null;
+        }
+
+        const actionName = actionNameElement.textContent.trim();
+        return getActionHridFromName(actionName);
+    }
+
+    /**
+     * Convert action name to HRID
+     * @param {string} actionName - Display name of action
+     * @returns {string|null} Action HRID or null if not found
+     */
+    function getActionHridFromName(actionName) {
+        const gameData = dataManager.getInitClientData();
+        if (!gameData?.actionDetailMap) {
+            return null;
+        }
+
+        // Search for action by name
+        for (const [hrid, detail] of Object.entries(gameData.actionDetailMap)) {
+            if (detail.name === actionName) {
+                return hrid;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Create missing materials marketplace button
+     * @param {Array} missingMaterials - Array of missing material objects
+     * @param {string} actionHrid - Action HRID for recalculating materials
+     * @param {number} numActions - Number of actions for recalculating materials
+     * @returns {HTMLElement} Button element
+     */
+    function createMissingMaterialsButton(missingMaterials, actionHrid, numActions) {
+        const button = document.createElement('button');
+        button.id = 'mwi-missing-mats-button';
+        button.textContent = 'Missing Mats Marketplace';
+        button.style.cssText = `
+        width: 100%;
+        padding: 10px 16px;
+        margin: 8px 0 16px 0;
+        background: linear-gradient(180deg, rgba(91, 141, 239, 0.2) 0%, rgba(91, 141, 239, 0.1) 100%);
+        color: #ffffff;
+        border: 1px solid rgba(91, 141, 239, 0.4);
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    `;
+
+        // Hover effect
+        button.addEventListener('mouseenter', () => {
+            button.style.background = 'linear-gradient(180deg, rgba(91, 141, 239, 0.35) 0%, rgba(91, 141, 239, 0.25) 100%)';
+            button.style.borderColor = 'rgba(91, 141, 239, 0.6)';
+            button.style.boxShadow = '0 3px 6px rgba(0, 0, 0, 0.3)';
+        });
+
+        button.addEventListener('mouseleave', () => {
+            button.style.background = 'linear-gradient(180deg, rgba(91, 141, 239, 0.2) 0%, rgba(91, 141, 239, 0.1) 100%)';
+            button.style.borderColor = 'rgba(91, 141, 239, 0.4)';
+            button.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
+        });
+
+        // Click handler
+        button.addEventListener('click', async () => {
+            await handleMissingMaterialsClick(missingMaterials, actionHrid, numActions);
+        });
+
+        return button;
+    }
+
+    /**
+     * Handle missing materials button click
+     * @param {Array} missingMaterials - Array of missing material objects
+     * @param {string} actionHrid - Action HRID for recalculating materials
+     * @param {number} numActions - Number of actions for recalculating materials
+     */
+    async function handleMissingMaterialsClick(missingMaterials, actionHrid, numActions) {
+        console.log('[MissingMats] Button clicked with materials:', missingMaterials);
+
+        // Store context for live updates
+        storedActionHrid = actionHrid;
+        storedNumActions = numActions;
+
+        // Navigate to marketplace
+        const success = await navigateToMarketplace();
+        if (!success) {
+            console.error('[MissingMats] Failed to navigate to marketplace');
+            return;
+        }
+
+        // Wait a moment for marketplace to settle
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        // Create custom tabs
+        createMissingMaterialTabs(missingMaterials);
+
+        // Setup inventory listener for live updates
+        setupInventoryListener();
+    }
+
+    /**
+     * Navigate to marketplace by simulating click on navbar
+     * @returns {Promise<boolean>} True if successful
+     */
+    async function navigateToMarketplace() {
+        // Find marketplace navbar button
+        const navButtons = document.querySelectorAll('.NavigationBar_nav__3uuUl');
+        const marketplaceButton = Array.from(navButtons).find((nav) => {
+            const svg = nav.querySelector('svg[aria-label="navigationBar.marketplace"]');
+            return svg !== null;
+        });
+
+        if (!marketplaceButton) {
+            console.error('[MissingMats] Marketplace navbar button not found');
+            return false;
+        }
+
+        // Simulate click
+        marketplaceButton.click();
+
+        // Wait for marketplace panel to appear
+        return await waitForMarketplace();
+    }
+
+    /**
+     * Wait for marketplace panel to appear
+     * @returns {Promise<boolean>} True if marketplace appeared within timeout
+     */
+    async function waitForMarketplace() {
+        const maxAttempts = 50;
+        const delayMs = 100;
+
+        for (let i = 0; i < maxAttempts; i++) {
+            // Check for marketplace panel by looking for tabs container
+            const tabsContainer = document.querySelector('.MuiTabs-flexContainer[role="tablist"]');
+            if (tabsContainer) {
+                // Verify it's the marketplace tabs (has "Market Listings" tab)
+                const hasMarketListings = Array.from(tabsContainer.children).some((btn) =>
+                    btn.textContent.includes('Market Listings')
+                );
+                if (hasMarketListings) {
+                    return true;
+                }
+            }
+
+            await new Promise((resolve) => setTimeout(resolve, delayMs));
+        }
+
+        console.error('[MissingMats] Marketplace did not open within timeout');
+        return false;
+    }
+
+    /**
+     * Create custom tabs for missing materials
+     * @param {Array} missingMaterials - Array of missing material objects
+     */
+    function createMissingMaterialTabs(missingMaterials) {
+        const tabsContainer = document.querySelector('.MuiTabs-flexContainer[role="tablist"]');
+
+        if (!tabsContainer) {
+            console.error('[MissingMats] Tabs container not found');
+            return;
+        }
+
+        // Remove any existing custom tabs first
+        removeMissingMaterialTabs();
+
+        // Get reference tab for cloning (use "My Listings" as template)
+        const referenceTab = Array.from(tabsContainer.children).find((btn) => btn.textContent.includes('My Listings'));
+
+        if (!referenceTab) {
+            console.error('[MissingMats] Reference tab not found');
+            return;
+        }
+
+        // Enable flex wrapping for multiple rows (like game's native tabs)
+        if (tabsContainer) {
+            tabsContainer.style.flexWrap = 'wrap';
+        }
+
+        // Create tab for each missing material
+        currentMaterialsTabs = [];
+        for (const material of missingMaterials) {
+            const tab = createCustomTab(material, referenceTab);
+            tabsContainer.appendChild(tab);
+            currentMaterialsTabs.push(tab);
+        }
+
+        console.log('[MissingMats] Created', currentMaterialsTabs.length, 'custom tabs');
+    }
+
+    /**
+     * Setup inventory listener for live tab updates
+     * Listens for inventory changes via websocket and updates tabs accordingly
+     */
+    function setupInventoryListener() {
+        // Remove existing listener if any
+        if (inventoryUpdateHandler) {
+            webSocketHook.off('*', inventoryUpdateHandler);
+        }
+
+        // Create new listener that watches for inventory-related messages
+        inventoryUpdateHandler = (data) => {
+            // Check if this message might affect inventory
+            // Common message types that update inventory:
+            // - item_added, item_removed, items_updated
+            // - market_buy_complete, market_sell_complete
+            // - Or any message with inventory field
+            if (
+                data.type?.includes('item') ||
+                data.type?.includes('inventory') ||
+                data.type?.includes('market') ||
+                data.inventory ||
+                data.characterItems
+            ) {
+                updateTabsOnInventoryChange();
+            }
+        };
+
+        webSocketHook.on('*', inventoryUpdateHandler);
+    }
+
+    /**
+     * Update all custom tabs when inventory changes
+     * Recalculates materials and updates badge display
+     */
+    function updateTabsOnInventoryChange() {
+        // Check if we have valid context
+        if (!storedActionHrid || storedNumActions <= 0) {
+            return;
+        }
+
+        // Check if tabs still exist
+        if (currentMaterialsTabs.length === 0) {
+            return;
+        }
+
+        // Recalculate materials with current inventory
+        const updatedMaterials = calculateMaterialRequirements(storedActionHrid, storedNumActions);
+
+        // Update each existing tab
+        currentMaterialsTabs.forEach((tab) => {
+            const itemHrid = tab.getAttribute('data-item-hrid');
+            const material = updatedMaterials.find((m) => m.itemHrid === itemHrid);
+
+            if (material) {
+                updateTabBadge(tab, material);
+            }
+        });
+    }
+
+    /**
+     * Update a single tab's badge with new material data
+     * @param {HTMLElement} tab - Tab element to update
+     * @param {Object} material - Material object with updated counts
+     */
+    function updateTabBadge(tab, material) {
+        const badgeSpan = tab.querySelector('.TabsComponent_badge__1Du26');
+        if (!badgeSpan) {
+            return;
+        }
+
+        // Determine tab state based on inventory and tradeability
+        const hasInInventory = material.have > 0;
+
+        let statusColor;
+        let statusText;
+
+        if (!material.isTradeable) {
+            statusColor = '#888888'; // Gray - not tradeable
+            statusText = 'Not Tradeable';
+        } else if (hasInInventory) {
+            // Have inventory - check if we're missing materials
+            if (material.missing > 0) {
+                statusColor = '#ef4444'; // Red - missing materials
+                statusText = `Missing: ${formatWithSeparator(material.missing)}`;
+            } else {
+                statusColor = '#4ade80'; // Green - sufficient materials
+                statusText = 'Sufficient';
+            }
+        } else {
+            statusColor = '#fb923c'; // Orange - need to buy first
+            statusText = 'Need: Add 1 to inventory';
+        }
+
+        // Title case: capitalize first letter of each word
+        const titleCaseName = material.itemName
+            .split(' ')
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+
+        // Update badge HTML
+        badgeSpan.innerHTML = `
+        <div style="text-align: center;">
+            <div>${titleCaseName}</div>
+            <div style="font-size: 0.75em; color: ${statusColor};">
+                ${statusText}
+            </div>
+        </div>
+    `;
+
+        // Update tab styling based on state
+        if (!material.isTradeable) {
+            tab.style.opacity = '0.5';
+            tab.style.cursor = 'not-allowed';
+        } else if (!hasInInventory) {
+            // Orange tint for zero-inventory items
+            tab.style.opacity = '0.85';
+            tab.style.cursor = 'help';
+            tab.title = 'Add at least 1 to your inventory first, then click to open order book';
+        } else {
+            // Green - ready to use
+            tab.style.opacity = '1';
+            tab.style.cursor = 'pointer';
+            tab.title = '';
+        }
+    }
+
+    /**
+     * Create a custom tab for a material
+     * @param {Object} material - Material object with itemHrid, itemName, missing, have, isTradeable
+     * @param {HTMLElement} referenceTab - Reference tab to clone structure from
+     * @returns {HTMLElement} Custom tab element
+     */
+    function createCustomTab(material, referenceTab) {
+        // Clone reference tab structure
+        const tab = referenceTab.cloneNode(true);
+
+        // Mark as custom tab for later identification
+        tab.setAttribute('data-mwi-custom-tab', 'true');
+        tab.setAttribute('data-item-hrid', material.itemHrid);
+
+        // Determine tab state based on inventory and tradeability
+        const hasInInventory = material.have > 0;
+
+        // Color coding:
+        // - Green: Have sufficient materials (missing = 0)
+        // - Red: Missing materials (missing > 0) but have at least 1 in inventory
+        // - Orange: No inventory at all (can't open order book)
+        // - Gray: Not tradeable at all
+        let statusColor;
+        let statusText;
+
+        if (!material.isTradeable) {
+            statusColor = '#888888'; // Gray - not tradeable
+            statusText = 'Not Tradeable';
+        } else if (hasInInventory) {
+            // Have inventory - check if we're missing materials
+            if (material.missing > 0) {
+                statusColor = '#ef4444'; // Red - missing materials
+                statusText = `Missing: ${formatWithSeparator(material.missing)}`;
+            } else {
+                statusColor = '#4ade80'; // Green - sufficient materials
+                statusText = 'Sufficient';
+            }
+        } else {
+            statusColor = '#fb923c'; // Orange - need to buy first
+            statusText = 'Need: Add 1 to inventory';
+        }
+
+        // Update text content
+        const badgeSpan = tab.querySelector('.TabsComponent_badge__1Du26');
+        if (badgeSpan) {
+            // Title case: capitalize first letter of each word
+            const titleCaseName = material.itemName
+                .split(' ')
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join(' ');
+
+            badgeSpan.innerHTML = `
+            <div style="text-align: center;">
+                <div>${titleCaseName}</div>
+                <div style="font-size: 0.75em; color: ${statusColor};">
+                    ${statusText}
+                </div>
+            </div>
+        `;
+        }
+
+        // Gray out if not tradeable
+        if (!material.isTradeable) {
+            tab.style.opacity = '0.5';
+            tab.style.cursor = 'not-allowed';
+        } else if (!hasInInventory) {
+            // Orange tint for zero-inventory items
+            tab.style.opacity = '0.85';
+            tab.style.cursor = 'help';
+            tab.title = 'Add at least 1 to your inventory first, then click to open order book';
+        }
+
+        // Remove selected state
+        tab.classList.remove('Mui-selected');
+        tab.setAttribute('aria-selected', 'false');
+        tab.setAttribute('tabindex', '-1');
+
+        // Add click handler
+        tab.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (!material.isTradeable) {
+                // Not tradeable - do nothing
+                return;
+            }
+
+            if (!hasInInventory) {
+                // Show alert for zero-inventory items
+                alert(
+                    `${material.itemName} Order Book:\n\n` +
+                        `You need at least 1 ${material.itemName} in your inventory to view the order book.\n\n` +
+                        `How to fix:\n` +
+                        `1. Go to "Market Listings" tab\n` +
+                        `2. Search for "${material.itemName}"\n` +
+                        `3. Buy at least 1 from the market\n` +
+                        `4. Then you can shift+click it in your inventory to open the order book`
+                );
+                return;
+            }
+
+            // Has inventory - open order book
+            openOrderBook(material.itemHrid, material.itemName);
+        });
+
+        return tab;
+    }
+
+    /**
+     * Remove all missing material tabs
+     */
+    function removeMissingMaterialTabs() {
+        const customTabs = document.querySelectorAll('[data-mwi-custom-tab="true"]');
+        customTabs.forEach((tab) => tab.remove());
+        currentMaterialsTabs = [];
+
+        // Clean up inventory listener
+        if (inventoryUpdateHandler) {
+            webSocketHook.off('*', inventoryUpdateHandler);
+            inventoryUpdateHandler = null;
+        }
+
+        // Clear stored context
+        storedActionHrid = null;
+        storedNumActions = 0;
+    }
+
+    /**
+     * Open order book for an item using shift+click simulation
+     * @param {string} itemHrid - Item HRID (e.g., "/items/egg")
+     * @param {string} itemName - Item name for logging
+     * @returns {boolean} True if successful
+     */
+    function openOrderBook(itemHrid, itemName) {
+        // Extract sprite ID from HRID
+        const spriteId = itemHrid.replace('/items/', '');
+
+        // Find inventory panel
+        const inventoryPanel = document.querySelector('.Inventory_inventory__17CH2');
+        if (!inventoryPanel) {
+            console.error('[MissingMats] Inventory panel not found');
+            return false;
+        }
+
+        // Find all clickable items in inventory
+        const inventoryItems = inventoryPanel.querySelectorAll('.Item_item__2De2O.Item_clickable__3viV6');
+
+        for (const itemElement of inventoryItems) {
+            const useElement = itemElement.querySelector('use');
+            if (useElement) {
+                const href = useElement.getAttribute('href');
+
+                // Match item by sprite ID
+                if (href && href.includes(`#${spriteId}`)) {
+                    // Simulate shift+click to open order book
+                    const clickEvent = new MouseEvent('click', {
+                        bubbles: true,
+                        cancelable: true,
+                        shiftKey: true,
+                    });
+
+                    itemElement.dispatchEvent(clickEvent);
+                    console.log('[MissingMats] Opened order book for:', itemName);
+                    return true;
+                }
+            }
+        }
+
+        console.warn('[MissingMats] Item not found in inventory:', itemName);
+        return false;
+    }
+
+    /**
+     * Setup marketplace cleanup observer
+     * Watches for marketplace panel removal and cleans up custom tabs
+     */
+    function setupMarketplaceCleanupObserver() {
+        cleanupObserver = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                for (const removedNode of mutation.removedNodes) {
+                    // Check if marketplace panel was removed
+                    // Look for tabs container disappearing
+                    if (removedNode.nodeType === Node.ELEMENT_NODE) {
+                        const hadTabsContainer = removedNode.querySelector('.MuiTabs-flexContainer[role="tablist"]');
+                        if (hadTabsContainer) {
+                            // Marketplace closed, remove custom tabs
+                            removeMissingMaterialTabs();
+                            console.log('[MissingMats] Marketplace closed, cleaned up custom tabs');
+                        }
+                    }
+                }
+            }
+        });
+
+        // Observe document.body for removed nodes
+        if (document.body) {
+            cleanupObserver.observe(document.body, {
+                childList: true,
+                subtree: true,
+            });
+        }
+    }
+
+    var missingMaterialsButton = {
+        initialize: initialize$1,
+        cleanup,
+    };
 
     /**
      * Ability Book Calculator
@@ -23484,32 +24763,45 @@
         const achievementTiers = ['Beginner', 'Novice', 'Adept', 'Veteran', 'Elite', 'Champion'];
         const achievementFlags = new Array(6).fill('0');
 
-        if (characterData.characterAchievements) {
+        if (characterData.characterAchievements && clientData?.achievementDetailMap) {
             const tierCounts = {};
 
-            // Count achievements by tier
+            // Count completed achievements by tier
+            // characterAchievements only has achievementHrid and isCompleted
+            // Need to look up tierHrid from achievementDetailMap
             for (const achievement of characterData.characterAchievements) {
-                if (achievement.achievementTier) {
-                    tierCounts[achievement.achievementTier] = (tierCounts[achievement.achievementTier] || 0) + 1;
+                // Only count completed achievements
+                if (!achievement.isCompleted || !achievement.achievementHrid) {
+                    continue;
+                }
+
+                // Look up achievement details to get tier
+                const achDetails = clientData.achievementDetailMap[achievement.achievementHrid];
+                if (achDetails?.tierHrid) {
+                    // Extract tier name from HRID: /achievement_tiers/veteran -> Veteran
+                    const tierName = achDetails.tierHrid.replace('/achievement_tiers/', '');
+                    const tierNameCapitalized = tierName.charAt(0).toUpperCase() + tierName.slice(1);
+                    tierCounts[tierNameCapitalized] = (tierCounts[tierNameCapitalized] || 0) + 1;
                 }
             }
 
-            // Check if each tier is complete (need to get total count from clientData)
-            if (clientData?.achievementDetailMap) {
-                const tierTotals = {};
-
-                for (const achData of Object.values(clientData.achievementDetailMap)) {
-                    if (achData.achievementTier) {
-                        tierTotals[achData.achievementTier] = (tierTotals[achData.achievementTier] || 0) + 1;
-                    }
+            // Count total achievements per tier from achievementDetailMap
+            const tierTotals = {};
+            for (const achData of Object.values(clientData.achievementDetailMap)) {
+                if (achData.tierHrid) {
+                    // Extract tier name from HRID: /achievement_tiers/veteran -> Veteran
+                    const tierName = achData.tierHrid.replace('/achievement_tiers/', '');
+                    const tierNameCapitalized = tierName.charAt(0).toUpperCase() + tierName.slice(1);
+                    tierTotals[tierNameCapitalized] = (tierTotals[tierNameCapitalized] || 0) + 1;
                 }
-
-                achievementTiers.forEach((tier, i) => {
-                    const have = tierCounts[tier] || 0;
-                    const total = tierTotals[tier] || 0;
-                    achievementFlags[i] = have > 0 && have === total ? '1' : '0';
-                });
             }
+
+            // Set flags: 1 if tier is complete (have === total), 0 otherwise
+            achievementTiers.forEach((tier, i) => {
+                const have = tierCounts[tier] || 0;
+                const total = tierTotals[tier] || 0;
+                achievementFlags[i] = have > 0 && have === total ? '1' : '0';
+            });
         }
 
         const achievements = achievementFlags.join('');
@@ -24806,8 +26098,8 @@
             };
         }
 
-        // Calculate per-action profit from per-hour profit
-        const profitPerAction = profitData.profitPerHour / profitData.actionsPerHour;
+        // Use pre-calculated profitPerAction from profit calculator
+        const profitPerAction = profitData.profitPerAction;
 
         return {
             totalValue: profitPerAction * quantity,
@@ -24855,8 +26147,10 @@
             };
         }
 
-        // Calculate per-action values from per-hour values
-        const profitPerAction = profitData.profitPerHour / profitData.actionsPerHour;
+        // Use pre-calculated profitPerAction from profit calculator
+        const profitPerAction = profitData.profitPerAction;
+
+        // Calculate per-action values for breakdown display
         const revenuePerAction =
             (profitData.itemsPerHour * profitData.priceAfterTax + profitData.gourmetBonusItems * profitData.priceAfterTax) /
             profitData.actionsPerHour;
@@ -24882,7 +26176,7 @@
                 actionsPerHour: profitData.actionsPerHour,
                 itemsPerAction: profitData.itemsPerHour / profitData.actionsPerHour,
                 bonusRevenue: profitData.bonusRevenue, // Pass through bonus revenue data
-                efficiencyMultiplier: profitData.details?.efficiencyMultiplier || 1, // Pass through efficiency multiplier
+                efficiencyMultiplier: profitData.efficiencyMultiplier || 1, // Pass through efficiency multiplier
             },
         };
     }
@@ -25476,7 +26770,7 @@
 
                 // Efficiency reduces the number of actions needed
                 const actualActionsNeeded = remainingActions / efficiencyMultiplier;
-                const totalSeconds = (actualActionsNeeded / actionsPerHour) * 3600;
+                const totalSeconds = calculateSecondsForActions(actualActionsNeeded, actionsPerHour);
                 timeEstimate = timeReadable(totalSeconds);
             }
 
@@ -25609,21 +26903,23 @@
                     const details = profitData.action.details;
                     const quantity = profitData.action.breakdown.quantity;
                     const actionsPerHour = details.actionsPerHour;
-                    const hoursNeeded = quantity / actionsPerHour;
+                    const efficiencyMultiplier = details.efficiencyMultiplier || 1;
+
+                    // Calculate actual attempts needed (quantity is successful completions)
+                    const actualAttempts = Math.ceil(quantity / efficiencyMultiplier);
+                    const hoursNeeded = actualAttempts / actionsPerHour;
 
                     // Base outputs (gathered items)
                     if (details.baseOutputs && details.baseOutputs.length > 0) {
                         lines.push(`<div style="margin-top: 2px; color: #aaa;">Items Gathered:</div>`);
                         for (const output of details.baseOutputs) {
-                            const itemsForTask = (output.itemsPerHour / actionsPerHour) * quantity;
+                            // output.itemsPerHour includes efficiency, so divide it out for per-action rate
+                            const itemsForTask = (output.itemsPerHour / actionsPerHour / efficiencyMultiplier) * quantity;
                             const revenueForTask = output.revenuePerHour * hoursNeeded;
                             const dropRateText =
                                 output.dropRate < 1.0 ? ` (${formatPercentage(output.dropRate, 1)} drop)` : '';
-                            const processingText = output.isProcessed
-                                ? ` [${formatPercentage(output.processingChance, 1)} processed]`
-                                : '';
                             lines.push(
-                                `<div>• ${output.name}: ${itemsForTask.toFixed(1)} items @ ${numberFormatter(Math.round(output.priceEach))} = ${numberFormatter(Math.round(revenueForTask))}${dropRateText}${processingText}</div>`
+                                `<div>• ${output.name}: ${itemsForTask.toFixed(1)} items @ ${numberFormatter(Math.round(output.priceEach))} = ${numberFormatter(Math.round(revenueForTask))}${dropRateText}</div>`
                             );
                         }
                     }
@@ -25635,8 +26931,7 @@
                         details.bonusRevenue.bonusDrops.length > 0
                     ) {
                         const bonusRevenue = details.bonusRevenue;
-                        const efficiencyMultiplier = details.efficiencyMultiplier || 1;
-                        const totalBonusRevenue = bonusRevenue.totalBonusRevenue * efficiencyMultiplier * hoursNeeded;
+                        const totalBonusRevenue = bonusRevenue.totalBonusRevenue * hoursNeeded;
 
                         lines.push(
                             `<div style="margin-top: 4px; color: #aaa;">Bonus Drops: ${numberFormatter(Math.round(totalBonusRevenue))}</div>`
@@ -25649,8 +26944,9 @@
                         // Show essence drops
                         if (essenceDrops.length > 0) {
                             for (const drop of essenceDrops) {
-                                const dropsForTask = drop.dropsPerHour * efficiencyMultiplier * hoursNeeded;
-                                const revenueForTask = drop.revenuePerHour * efficiencyMultiplier * hoursNeeded;
+                                // drop.dropsPerHour doesn't include efficiency, so multiply by hoursNeeded only
+                                const dropsForTask = drop.dropsPerHour * hoursNeeded;
+                                const revenueForTask = drop.revenuePerHour * hoursNeeded;
                                 lines.push(
                                     `<div>• ${drop.itemName}: ${dropsForTask.toFixed(2)} drops @ ${numberFormatter(Math.round(drop.priceEach))} = ${numberFormatter(Math.round(revenueForTask))}</div>`
                                 );
@@ -25660,8 +26956,9 @@
                         // Show rare find drops
                         if (rareFindDrops.length > 0) {
                             for (const drop of rareFindDrops) {
-                                const dropsForTask = drop.dropsPerHour * efficiencyMultiplier * hoursNeeded;
-                                const revenueForTask = drop.revenuePerHour * efficiencyMultiplier * hoursNeeded;
+                                // drop.dropsPerHour doesn't include efficiency, so multiply by hoursNeeded only
+                                const dropsForTask = drop.dropsPerHour * hoursNeeded;
+                                const revenueForTask = drop.revenuePerHour * hoursNeeded;
                                 lines.push(
                                     `<div>• ${drop.itemName}: ${dropsForTask.toFixed(2)} drops @ ${numberFormatter(Math.round(drop.priceEach))} = ${numberFormatter(Math.round(revenueForTask))}</div>`
                                 );
@@ -27010,14 +28307,25 @@
         }
 
         /**
+         * Check if task is completed (has Claim Reward button)
+         */
+        isTaskCompleted(taskCard) {
+            const claimButton = taskCard.querySelector('button.Button_button__1Fe9z.Button_buy__3s24l');
+            return claimButton && claimButton.textContent.includes('Claim Reward');
+        }
+
+        /**
          * Get sort order for a task
          */
         getTaskOrder(taskCard) {
             const parsed = this.parseTaskCard(taskCard);
-            if (!parsed) return { skillOrder: 999, taskName: '', isCombat: false, monsterSortIndex: 999 };
+            if (!parsed) {
+                return { skillOrder: 999, taskName: '', isCombat: false, monsterSortIndex: 999, isCompleted: false };
+            }
 
             const skillOrder = this.TASK_ORDER[parsed.skillType] || 999;
             const isCombat = parsed.skillType === 'Defeat';
+            const isCompleted = this.isTaskCompleted(taskCard);
 
             // For combat tasks, get monster sort index from game data
             let monsterSortIndex = 999;
@@ -27038,6 +28346,7 @@
                 skillType: parsed.skillType,
                 isCombat,
                 monsterSortIndex,
+                isCompleted,
             };
         }
 
@@ -27065,19 +28374,24 @@
             const orderA = this.getTaskOrder(cardA);
             const orderB = this.getTaskOrder(cardB);
 
-            // First sort by skill type (combat vs non-combat)
+            // First: Sort by completion status (incomplete tasks first, completed tasks last)
+            if (orderA.isCompleted !== orderB.isCompleted) {
+                return orderA.isCompleted ? 1 : -1;
+            }
+
+            // Second: Sort by skill type (combat vs non-combat)
             if (orderA.skillOrder !== orderB.skillOrder) {
                 return orderA.skillOrder - orderB.skillOrder;
             }
 
-            // Within combat tasks, sort by zone progression (sortIndex)
+            // Third: Within combat tasks, sort by zone progression (sortIndex)
             if (orderA.isCombat && orderB.isCombat) {
                 if (orderA.monsterSortIndex !== orderB.monsterSortIndex) {
                     return orderA.monsterSortIndex - orderB.monsterSortIndex;
                 }
             }
 
-            // Within same skill type (or same zone for combat), sort alphabetically by task name
+            // Fourth: Within same skill type (or same zone for combat), sort alphabetically by task name
             return orderA.taskName.localeCompare(orderB.taskName);
         }
 
@@ -29545,12 +30859,12 @@
             if (this.isActive) return;
 
             // Initialize header display (always enabled with networth feature)
-            if (dataManager.getSetting('networth')) {
+            if (config.isFeatureEnabled('networth')) {
                 networthHeaderDisplay.initialize();
             }
 
             // Initialize inventory panel display (separate toggle)
-            if (dataManager.getSetting('inventorySummary')) {
+            if (config.isFeatureEnabled('inventorySummary')) {
                 networthInventoryDisplay.initialize();
             }
 
@@ -29573,11 +30887,11 @@
                 this.currentData = networthData;
 
                 // Update displays
-                if (dataManager.getSetting('networth')) {
+                if (config.isFeatureEnabled('networth')) {
                     networthHeaderDisplay.update(networthData);
                 }
 
-                if (dataManager.getSetting('inventorySummary')) {
+                if (config.isFeatureEnabled('inventorySummary')) {
                     networthInventoryDisplay.update(networthData);
                 }
             } catch (error) {
@@ -29656,7 +30970,7 @@
                         this.renderAllBadges();
                     }
                 },
-                { debounce: true, debounceDelay: 10 } // Very fast debounce for responsiveness
+                { debounce: true, debounceDelay: 150 } // 150ms debounce to reduce calculation frequency
             );
             this.unregisterHandlers.push(badgeRefreshUnregister);
         }
@@ -30122,9 +31436,9 @@
          * Setup settings listeners for feature toggle and color changes
          */
         setupSettingListener() {
-            config.onSettingChange('invSort', (value) => {
+            config.onSettingChange('invSort', async (value) => {
                 if (value) {
-                    this.initialize();
+                    await this.initialize();
                 } else {
                     this.disable();
                 }
@@ -30140,7 +31454,7 @@
         /**
          * Initialize inventory sort feature
          */
-        initialize() {
+        async initialize() {
             if (!config.getSetting('invSort')) {
                 return;
             }
@@ -30151,7 +31465,7 @@
             }
 
             // Load persisted settings
-            this.loadSettings();
+            await this.loadSettings();
 
             // Check if inventory is already open
             const existingInv = document.querySelector('[class*="Inventory_items"]');
@@ -30221,14 +31535,13 @@
         }
 
         /**
-         * Load settings from localStorage
+         * Load settings from storage
          */
-        loadSettings() {
+        async loadSettings() {
             try {
-                const saved = localStorage.getItem('toolasha_inventory_sort');
-                if (saved) {
-                    const settings = JSON.parse(saved);
-                    this.currentMode = settings.mode || 'none';
+                const settings = await storage.getJSON('inventorySort', 'settings');
+                if (settings && settings.mode) {
+                    this.currentMode = settings.mode;
                 }
             } catch (error) {
                 console.error('[InventorySort] Failed to load settings:', error);
@@ -30236,15 +31549,17 @@
         }
 
         /**
-         * Save settings to localStorage
+         * Save settings to storage
          */
         saveSettings() {
             try {
-                localStorage.setItem(
-                    'toolasha_inventory_sort',
-                    JSON.stringify({
+                storage.setJSON(
+                    'inventorySort',
+                    {
                         mode: this.currentMode,
-                    })
+                    },
+                    'settings',
+                    true // immediate write for user preference
                 );
             } catch (error) {
                 console.error('[InventorySort] Failed to save settings:', error);
@@ -33351,9 +34666,9 @@
 
         /**
          * Check if action queue is empty and send notification
-         * @param {Object} data - WebSocket data
+         * @param {Object} _data - WebSocket data (unused, but kept for handler signature)
          */
-        checkActionQueue(data) {
+        checkActionQueue(_data) {
             if (!config.getSetting('notifiEmptyAction')) {
                 return;
             }
@@ -33362,11 +34677,9 @@
                 return;
             }
 
-            // Check if queue is empty
-            // endCharacterActions contains actions, filter for those not done (isDone === false)
-            const actions = data.endCharacterActions || [];
-            const activeActions = actions.filter((action) => action.isDone === false);
-            const isEmpty = activeActions.length === 0;
+            // Get current actions from dataManager (source of truth for all queued actions)
+            const allActions = dataManager.getCurrentActions();
+            const isEmpty = allActions.length === 0;
 
             // Only notify on transition from not-empty to empty
             if (isEmpty && !this.wasEmpty) {
@@ -35593,11 +36906,13 @@
                 if (node.dataset.processed === '1') continue;
 
                 const text = node.textContent.trim();
-                const timestamp = this.getTimestampFromMessage(node);
-                if (!timestamp) continue;
 
+                // Check message relevance FIRST before parsing timestamp
                 // Battle started message
                 if (text.includes('Battle started:')) {
+                    const timestamp = this.getTimestampFromMessage(node);
+                    if (!timestamp) continue;
+
                     const dungeonName = text.split('Battle started:')[1]?.split(']')[0]?.trim();
                     if (dungeonName) {
                         // Cache the dungeon name (survives chat scrolling)
@@ -35612,8 +36927,11 @@
                     }
                     node.dataset.processed = '1';
                 }
-                // Key counts message
+                // Key counts message (warn if timestamp fails - these should always have timestamps)
                 else if (text.includes('Key counts:')) {
+                    const timestamp = this.getTimestampFromMessage(node, true);
+                    if (!timestamp) continue;
+
                     const team = this.getTeamFromMessage(node);
                     if (!team.length) continue;
 
@@ -35626,6 +36944,9 @@
                 }
                 // Party failed message
                 else if (text.match(/Party failed on wave \d+/)) {
+                    const timestamp = this.getTimestampFromMessage(node);
+                    if (!timestamp) continue;
+
                     events.push({
                         type: 'fail',
                         timestamp,
@@ -35635,6 +36956,9 @@
                 }
                 // Battle ended (canceled/fled)
                 else if (text.includes('Battle ended:')) {
+                    const timestamp = this.getTimestampFromMessage(node);
+                    if (!timestamp) continue;
+
                     events.push({
                         type: 'cancel',
                         timestamp,
@@ -35702,26 +37026,32 @@
          * Get timestamp from message DOM element
          * Handles both American (M/D HH:MM:SS AM/PM) and international (DD-M HH:MM:SS) formats
          * @param {HTMLElement} msg - Message element
+         * @param {boolean} warnOnFailure - Whether to log warning if parsing fails (default: false)
          * @returns {Date|null} Parsed timestamp or null
          */
-        getTimestampFromMessage(msg) {
+        getTimestampFromMessage(msg, warnOnFailure = false) {
             const text = msg.textContent.trim();
 
             // Try American format: [M/D HH:MM:SS AM/PM] or [M/D HH:MM:SS] (24-hour)
-            let match = text.match(/\[(\d{1,2})\/(\d{1,2})\s+(\d{1,2}):(\d{2}):(\d{2})\s*([AP]M)?\]/);
+            // Use \s* to handle potential spacing variations
+            let match = text.match(/\[(\d{1,2})\/(\d{1,2})\s*(\d{1,2}):(\d{2}):(\d{2})\s*([AP]M)?\]/);
             let isAmerican = true;
 
             if (!match) {
                 // Try international format: [DD-M HH:MM:SS] (24-hour)
-                match = text.match(/\[(\d{1,2})-(\d{1,2})\s+(\d{1,2}):(\d{2}):(\d{2})\]/);
+                // Use \s* to handle potential spacing variations in dungeon chat
+                match = text.match(/\[(\d{1,2})-(\d{1,2})\s*(\d{1,2}):(\d{2}):(\d{2})\]/);
                 isAmerican = false;
             }
 
             if (!match) {
-                console.warn(
-                    '[Dungeon Tracker] Found key counts but could not parse timestamp from:',
-                    text.match(/\[.*?\]/)?.[0]
-                );
+                // Only warn if explicitly requested (for important messages like "Key counts:")
+                if (warnOnFailure) {
+                    console.warn(
+                        '[Dungeon Tracker] Found key counts but could not parse timestamp from:',
+                        text.match(/\[.*?\]/)?.[0]
+                    );
+                }
                 return null;
             }
 
@@ -40598,6 +41928,14 @@
                 return profitDisplay !== null;
             },
         },
+        {
+            key: 'actions_missingMaterialsButton',
+            name: 'Missing Materials Button',
+            category: 'Actions',
+            initialize: () => missingMaterialsButton.initialize(),
+            async: false,
+            healthCheck: null, // Button added by panel observer, no standalone health check
+        },
 
         // Combat Features
         {
@@ -40751,7 +42089,7 @@
             name: 'Inventory Sort',
             category: 'Economy',
             initialize: () => inventorySort.initialize(),
-            async: false,
+            async: true,
         },
         {
             key: 'inventoryBadgePrices',
@@ -41026,6 +42364,7 @@
             actionPanel_gatheringStats: gatheringStats,
             requiredMaterials: requiredMaterials,
             alchemy_profitDisplay: alchemyProfitDisplay,
+            actions_missingMaterialsButton: missingMaterialsButton,
             abilityBookCalculator: abilityBookCalculator,
             zoneIndices: zoneIndices,
             combatScore: combatScore,
@@ -41631,6 +42970,9 @@
             card.className = 'toolasha-settings-card';
             card.id = 'toolasha-settings-content';
 
+            // Add search box at the top
+            this.addSearchBox(card);
+
             // Generate settings from config
             this.generateSettings(card);
 
@@ -41860,10 +43202,20 @@
             div.dataset.settingId = settingId;
             div.dataset.type = settingDef.type || 'checkbox';
 
-            // Add dependency class and make parent settings collapsible
-            if (settingDef.dependencies && settingDef.dependencies.length > 0) {
+            // Add dependency class and store dependency info
+            if (settingDef.dependencies) {
                 div.classList.add('has-dependency');
-                div.dataset.dependencies = settingDef.dependencies.join(',');
+
+                // Handle both array format (legacy, AND logic) and object format (supports OR logic)
+                if (Array.isArray(settingDef.dependencies)) {
+                    // Legacy format: ['dep1', 'dep2'] means AND logic
+                    div.dataset.dependencies = settingDef.dependencies.join(',');
+                    div.dataset.dependencyMode = 'all'; // AND logic
+                } else if (typeof settingDef.dependencies === 'object') {
+                    // New format: {mode: 'any', settings: ['dep1', 'dep2']}
+                    div.dataset.dependencies = settingDef.dependencies.settings.join(',');
+                    div.dataset.dependencyMode = settingDef.dependencies.mode || 'all'; // 'any' = OR, 'all' = AND
+                }
             }
 
             // Add not-implemented class for red text
@@ -42021,7 +43373,114 @@
         }
 
         /**
-         * Add utility buttons (Reset, Export, Import)
+         * Add search box to filter settings
+         * @param {HTMLElement} container - Container element
+         */
+        addSearchBox(container) {
+            const searchContainer = document.createElement('div');
+            searchContainer.className = 'toolasha-search-container';
+            searchContainer.style.cssText = `
+            margin-bottom: 20px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        `;
+
+            // Search input
+            const searchInput = document.createElement('input');
+            searchInput.type = 'text';
+            searchInput.className = 'toolasha-search-input';
+            searchInput.placeholder = 'Search settings...';
+            searchInput.style.cssText = `
+            flex: 1;
+            padding: 8px 12px;
+            background: #2a2a2a;
+            color: white;
+            border: 1px solid #555;
+            border-radius: 4px;
+            font-size: 14px;
+        `;
+
+            // Clear button
+            const clearButton = document.createElement('button');
+            clearButton.textContent = 'Clear';
+            clearButton.className = 'toolasha-search-clear';
+            clearButton.style.cssText = `
+            padding: 8px 16px;
+            background: #444;
+            color: white;
+            border: 1px solid #555;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        `;
+            clearButton.style.display = 'none'; // Hidden by default
+
+            // Filter function
+            const filterSettings = (query) => {
+                const lowerQuery = query.toLowerCase().trim();
+
+                // If query is empty, show everything
+                if (!lowerQuery) {
+                    // Show all settings
+                    document.querySelectorAll('.toolasha-setting').forEach((setting) => {
+                        setting.style.display = 'flex';
+                    });
+                    // Show all groups
+                    document.querySelectorAll('.toolasha-settings-group').forEach((group) => {
+                        group.style.display = 'block';
+                    });
+                    clearButton.style.display = 'none';
+                    return;
+                }
+
+                clearButton.style.display = 'block';
+
+                // Filter settings
+                document.querySelectorAll('.toolasha-settings-group').forEach((group) => {
+                    let visibleCount = 0;
+
+                    group.querySelectorAll('.toolasha-setting').forEach((setting) => {
+                        const label = setting.querySelector('.toolasha-setting-label')?.textContent || '';
+                        const help = setting.querySelector('.toolasha-setting-help')?.textContent || '';
+                        const searchText = (label + ' ' + help).toLowerCase();
+
+                        if (searchText.includes(lowerQuery)) {
+                            setting.style.display = 'flex';
+                            visibleCount++;
+                        } else {
+                            setting.style.display = 'none';
+                        }
+                    });
+
+                    // Hide group if no visible settings
+                    if (visibleCount === 0) {
+                        group.style.display = 'none';
+                    } else {
+                        group.style.display = 'block';
+                    }
+                });
+            };
+
+            // Input event listener
+            searchInput.addEventListener('input', (e) => {
+                filterSettings(e.target.value);
+            });
+
+            // Clear button event listener
+            clearButton.addEventListener('click', () => {
+                searchInput.value = '';
+                filterSettings('');
+                searchInput.focus();
+            });
+
+            searchContainer.appendChild(searchInput);
+            searchContainer.appendChild(clearButton);
+            container.appendChild(searchContainer);
+        }
+
+        /**
+         * Add utility buttons (Reset, Export, Import, Fetch Prices)
          * @param {HTMLElement} container - Container element
          */
         addUtilityButtons(container) {
@@ -42033,6 +43492,12 @@
             syncBtn.textContent = 'Copy Settings to All Characters';
             syncBtn.className = 'toolasha-utility-button toolasha-sync-button';
             syncBtn.addEventListener('click', () => this.handleSync());
+
+            // Fetch Latest Prices button
+            const fetchPricesBtn = document.createElement('button');
+            fetchPricesBtn.textContent = '🔄 Fetch Latest Prices';
+            fetchPricesBtn.className = 'toolasha-utility-button toolasha-fetch-prices-button';
+            fetchPricesBtn.addEventListener('click', () => this.handleFetchPrices(fetchPricesBtn));
 
             // Reset button
             const resetBtn = document.createElement('button');
@@ -42053,6 +43518,7 @@
             importBtn.addEventListener('click', () => this.handleImport());
 
             buttonsDiv.appendChild(syncBtn);
+            buttonsDiv.appendChild(fetchPricesBtn);
             buttonsDiv.appendChild(resetBtn);
             buttonsDiv.appendChild(exportBtn);
             buttonsDiv.appendChild(importBtn);
@@ -42202,14 +43668,27 @@
 
             settings.forEach((settingEl) => {
                 const dependencies = settingEl.dataset.dependencies.split(',');
-                let enabled = true;
+                const mode = settingEl.dataset.dependencyMode || 'all'; // 'all' = AND, 'any' = OR
+                let enabled = false;
 
-                // Check if all dependencies are met
-                for (const depId of dependencies) {
-                    const depInput = document.getElementById(depId);
-                    if (depInput && depInput.type === 'checkbox' && !depInput.checked) {
-                        enabled = false;
-                        break;
+                if (mode === 'any') {
+                    // OR logic: at least one dependency must be met
+                    for (const depId of dependencies) {
+                        const depInput = document.getElementById(depId);
+                        if (depInput && depInput.type === 'checkbox' && depInput.checked) {
+                            enabled = true;
+                            break; // Found at least one enabled, that's enough
+                        }
+                    }
+                } else {
+                    // AND logic (default): all dependencies must be met
+                    enabled = true; // Assume enabled, then check all
+                    for (const depId of dependencies) {
+                        const depInput = document.getElementById(depId);
+                        if (depInput && depInput.type === 'checkbox' && !depInput.checked) {
+                            enabled = false;
+                            break; // Found one disabled, no need to check rest
+                        }
                     }
                 }
 
@@ -42251,6 +43730,66 @@
                 alert(`Settings successfully copied to ${result.count} character${result.count > 1 ? 's' : ''}!`);
             } else {
                 alert(`Failed to sync settings: ${result.error || 'Unknown error'}`);
+            }
+        }
+
+        /**
+         * Handle fetch latest prices
+         * @param {HTMLElement} button - Button element for state updates
+         */
+        async handleFetchPrices(button) {
+            // Disable button and show loading state
+            const originalText = button.textContent;
+            button.disabled = true;
+            button.textContent = '⏳ Fetching...';
+
+            try {
+                // Clear cache and fetch fresh data
+                const result = await marketAPI.clearCacheAndRefetch();
+
+                if (result) {
+                    // Success - clear listing price display cache to force re-render
+                    document.querySelectorAll('.mwi-listing-prices-set').forEach((table) => {
+                        table.classList.remove('mwi-listing-prices-set');
+                    });
+
+                    // Show success state
+                    button.textContent = '✅ Updated!';
+                    button.style.backgroundColor = '#00ff00';
+                    button.style.color = '#000';
+
+                    // Reset button after 2 seconds
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.style.backgroundColor = '';
+                        button.style.color = '';
+                        button.disabled = false;
+                    }, 2000);
+                } else {
+                    // Failed - show error state
+                    button.textContent = '❌ Failed';
+                    button.style.backgroundColor = '#ff0000';
+
+                    // Reset button after 3 seconds
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.style.backgroundColor = '';
+                        button.disabled = false;
+                    }, 3000);
+                }
+            } catch (error) {
+                console.error('[SettingsUI] Fetch prices failed:', error);
+
+                // Show error state
+                button.textContent = '❌ Error';
+                button.style.backgroundColor = '#ff0000';
+
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.backgroundColor = '';
+                    button.disabled = false;
+                }, 3000);
             }
         }
 
@@ -42440,20 +43979,20 @@
                                         '[Toolasha] Try refreshing the page or reopening the relevant game panels'
                                     );
                                 }
-                            }, 3000);
+                            }, 1000);
                         }
-                    }, 2000); // Wait 2s after initialization to check health
+                    }, 500); // Wait 500ms after initialization to check health
                 } catch (error) {
                     console.error('[Toolasha] Feature initialization failed:', error);
                 }
-            }, 1000);
+            }, 100);
         });
 
         // Expose minimal user-facing API
         const targetWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
 
         targetWindow.Toolasha = {
-            version: '0.5.08',
+            version: '0.5.23',
 
             // Feature toggle API (for users to manage settings via console)
             features: {
@@ -42463,21 +44002,6 @@
                 toggle: (key) => config.toggleFeature(key),
                 status: (key) => config.isFeatureEnabled(key),
                 info: (key) => config.getFeatureInfo(key),
-            },
-
-            // Debug API (TEMPORARY: for testing handler accumulation fix)
-            debug: {
-                domHandlers: () => domObserver.debugHandlers(),
-                wsHandlers: () => webSocketHook.debugHandlers(),
-                domStats: () => domObserver.getStats(),
-                runTest: () => {
-                    console.log('🧪 Handler Accumulation Test');
-                    console.log('📊 DOM Observer:');
-                    domObserver.debugHandlers();
-                    console.log('\n📊 WebSocket:');
-                    webSocketHook.debugHandlers();
-                    console.log('\n👉 Switch characters 3 times, then run: Toolasha.debug.runTest()');
-                },
             },
         };
     }

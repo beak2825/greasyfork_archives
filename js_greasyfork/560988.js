@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         text reviver
 // @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  replaces words with more fun words
+// @version      0.2
+// @description  replace bug words with bird words
 // @author       You
 // @match        https://en.wikipedia.org/wiki/*
+// @match        https://www.inaturalist.org/*
 // @icon         http://wikipedia.org/favicon.ico
 // @include      http://code.jquery.com/jquery-3.5.1.min.js
 // @grant        none
@@ -14,6 +15,7 @@
 
 (function() {
 	//Do you hate reading wikipedia? This will make it more fun. 
+
 
 	
 	function textNodesUnder(el) {
@@ -55,6 +57,15 @@ String.prototype.toProperCase = function () {
 dict = {
 	
 	"worm":"wyrm",
+	"Germanic":"Islewestern",
+	
+	"Qi " : "Air ",
+	" qi " : " air ",
+	" qì " : " air ",
+	
+	//" r":" 12121213",
+	//"r":"rr",
+	//" 12121213":" r",
 	
 	"hematuria": "bloody pee",
 	"mesangium":"space between the blood vessels",
@@ -75,7 +86,7 @@ dict = {
 	
 	"stained": "colorized",
 	"staining": "colorizing",
-	"stain": "colorization",
+	" stain": " colorization",
 	
 	
 	
@@ -89,14 +100,12 @@ dict = {
 	"Hymenoptera":"Bzzzers",
 	"wasp":"yazata",
 	"Wasp":"Yazata",
-	"bee ":"chamrosh",
-	"Bee ":"Chamrosh",
 	" ant ":" anqā ",
 	" Ant ":" Anqā ",	
 	"parasitoid":"predator",
 	"consumed":"eaten",
-	"hosts":"meat",
-	"host ":"meat ",
+	" hosts":" meat",
+	" host ":" meat ",
 	"parasitism":"predation",
 	"Parasitism":"Predation",
 	"kleptoparasites":"nest-sharers",
@@ -204,7 +213,7 @@ dict = {
 	"hexapod":"sixleg",
 	"Insecta":"Angelidae",
 	"Insect":"Angel",
-	"terrestrial":"land",
+	" terrestrial":" land",
 	
 	"species":"sect",
 	
@@ -298,46 +307,85 @@ dict = {
 	
 	////
 	'herself': 'xhxirrxmxsxexlf',
-	'himself': 'herself',
-	'xhxirrxmxsxexlf': 'himself',
-
+	'himself': 'hrerwerrwesreweewrwerlf',
+	
+	
 	' his ': ' xhxixs ',
 	' her ': ' his ',
-	' xhxixs ': ' her ',
+
 	
 	' him ': ' hxixmx ',
-	' her ': ' him ',
-	' hxixmx ': ' her ',
+	' her\s': ' him ',
+
+
 	
-	'him,': 'hiuhhuihuhghm,',
-	'her,': 'him,',
-	'hiuhhuihuhghm,': 'her,',	
-	
-	' male': ' xmxaxlxe',
-	'female': 'male',
-	' xmxaxlxe': ' female',
-	
+	' him,': ' hiuhhuihuhghm,',
+	' her,': ' him,',
+
+
+	' him[.]': ' hxixmxrrx',
+	' her[.]': ' him.',
+
 	' hers ': ' his ',
-	
-	
-	' he ': ' xhxe ',
-	' she ': ' he ',
-	' xhxe ': ' she ',
-	
+	' he ': ' xhrrxe ',
+	' she ': ' he ',	
 	' He ': ' xHxe ',
-	' She ': ' He ',
-	' xHxe ': ' She ',	
+	' She ': ' He ',	
+	' His ' : ' Hrirrrrersrrrr ',
+	' Her ' : ' His ',
+	
+	'masculine': 'mfamfmfmfasccculddifne',
+	'feminine':'masculine',
 	
 	"he's": 'xhxxxe',
 	"she's": "he's",
-	'xhxxxe': "she's",
+
+	
+	
+	
+	' xhxixs ': ' her ',
+	' hxixmx ': ' her ',
+	' hiuhhuihuhghm,': ' her,',	
+	' hxixmxrrx': ' her.',	
+	' xhrrxe ': ' she ',
+	' xHxe ': ' She ',		
+	'xhxxxe': "she's",	
+	' Hrirrrrersrrrr ' : ' Her ',
+	"mfamfmfmfasccculddifne": "feminine",
+
+	
+	
+	' male ': ' xmxaxlxe',
+	'female': 'male',
+
+	
+	
+
+
+	
+
+
+
+	
+
 	
 	
 	
 	
 	' man ': ' wxoxmxaxn ',		
 	' woman': ' man',	
+	
+	
+	' man,': 'wgogopqjnbmabbfkln',		
+	' woman,': ' man.',	
+	
 	' wxoxmxaxn ': ' woman ',	
+	'wgogopqjnbmabbfkln': ' woman,',	
+	
+	
+	' man\'s': ' wxoxmxaxgggngerreg',		
+	' woman\'s': ' man\'s',	
+	' wxoxmxaxgggngerreg': ' woman\'s',	
 	
 	' boy': ' bxoxy',		
 	' girl': ' boy',	
@@ -349,7 +397,10 @@ dict = {
 	
 	' men ': ' wxoxmxexn ',		
 	' women': ' men',	
-	' wxoxmxexn ': ' women ',			
+	' wxoxmxexn ': ' women ',		
+	
+	" men's ": " wrrxxrmoxerrxnxs ",		
+	" women's ": " rrmrerrrrerrrnsrr ",		
 	
 	'femininity': 'femxxxx',	
 	'masculinity': 'femininity',
@@ -379,6 +430,12 @@ dict = {
 	"fly":"bird",
 	"idae":"Sect",
 	
+	' xmxaxlxe': ' female ',
+	'xhxirrxmxsxexlf': 'himself',
+	'hrerwerrwesreweewrwerlf' : 'herself',
+//	 ' him.': ' her.',
+	" wrrxxrmoxerrxnxs " : " women's ",		
+	" rrmrerrrrerrrnsrr " : " men's ",		
 	
 	"the_end":"the_end"
 	

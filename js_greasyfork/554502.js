@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google AI Studio | Conversation/Chat MarkDown-Export/Download (DOM-based)
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      2.9
+// @version      3.0
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Export AI Studio conversations to Markdown with intelligent mode detection, toolbar integration, and abortable processing. Features dual-mode extraction and configurable filters.
@@ -1471,11 +1471,48 @@
         includeAiResponsesCheckbox = createCheckbox('Include AI Responses', INCLUDE_AI_RESPONSES, (val) => INCLUDE_AI_RESPONSES = val);
         includeAiThinkingCheckbox = createCheckbox('Include AI Thinking', INCLUDE_AI_THINKING, (val) => INCLUDE_AI_THINKING = val);
 
-        // Remove margin-bottom from the last checkbox to prevent extra space at the bottom
-        const lastWrapper = settingsPanel.lastElementChild;
-        if (lastWrapper) {
-            lastWrapper.style.marginBottom = '0';
-        }
+        // Add separator line before Ko-Fi button
+        const separator = document.createElement('div');
+        separator.style.cssText = `
+            height: 1px;
+            background: #5f6368;
+            margin: 12px 0;
+        `;
+        settingsPanel.appendChild(separator);
+
+        // Ko-Fi donation button
+        const kofiLink = document.createElement('a');
+        kofiLink.href = 'https://ko-fi.com/piknockyou';
+        kofiLink.target = '_blank';
+        kofiLink.rel = 'noopener noreferrer';
+        kofiLink.title = 'Support this script on Ko-Fi';
+        kofiLink.textContent = '☕ Support';
+        kofiLink.style.cssText = `
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: #1a73e8;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.15s;
+        `;
+        kofiLink.addEventListener('mouseenter', () => {
+            kofiLink.style.background = '#1557b0';
+        });
+        kofiLink.addEventListener('mouseleave', () => {
+            kofiLink.style.background = '#1a73e8';
+        });
+        kofiLink.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+        settingsPanel.appendChild(kofiLink);
 
         // ALTERNATIVE STRATEGY 1: Append panel to body instead of buttonContainer
         // This completely removes it from the toolbar stacking context

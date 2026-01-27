@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Price Filler [Market+Bazaar] by Rosti powered by Weav3r.dev
 // @namespace    https://github.com/Rosti-dev
-// @version      1.0.2
+// @version      1.0.3
 // @description  On "Fill" click on the Item Market or Bazaar, autofills the price with the lowest market price minus $1 (customizable), and shows a price popup.
 // @author       Rosti
 // @license      MIT License
@@ -27,6 +27,10 @@
 // -Chedburn for absolutely making the user experience worse by a huge margin due to his "vision" forcing people to use scripts or burn 5% of every purchase.
 
 /*
+ * v1.0.3 (2026-01-25):
+ * - Added: Item Market warning detection now shows underprice alerts as browser prompts
+ * - Enhanced: DOM observer detects both Bazaar (`.t-red`) and Item Market (`aria-live`) warnings
+ *
  * v1.0.2 (2025-01-24):
  * - Fixed: Torn Browser popup warning now have 30-second cooldown to prevent spam on mobile
  *
@@ -463,7 +467,7 @@
 			for (const mutation of mutations) {
 				for (const node of mutation.addedNodes) {
 					if (node.nodeType === Node.ELEMENT_NODE) {
-						// Check for warning div with class "t-red"
+						// Bazaar warning detection (existing)
 						const warningDiv = node.classList?.contains('t-red') ? node : node.querySelector?.('.t-red');
 						if (warningDiv) {
 							const text = warningDiv.textContent;
@@ -472,9 +476,66 @@
 								const warningMessage = text.trim();
 								if (!nativeWarnings.has(warningMessage)) {
 									nativeWarnings.add(warningMessage);
-									console.log('[PriceFiller] Native Torn warning detected (DOM):', warningMessage);
+									console.log('[PriceFiller] Bazaar warning detected (DOM):', warningMessage);
 									showNativeWarningsAsAlerts();
 								}
+							}
+						}
+
+						// Item Market warning detection (NEW) - DEBUG
+						if (CONFIG.debug) {
+							console.log('[PriceFiller DEBUG] Mutation detected node:', node.className, node.tagName);
+							// Log all aria-live elements
+							if (node.getAttribute?.('aria-live')) {
+								console.log('[PriceFiller DEBUG] Found aria-live:', node.getAttribute('aria-live'), node.className);
+							}
+						}
+
+						const ariaLiveDiv = node.getAttribute?.('aria-live') === 'assertive' ? node :
+										   node.querySelector?.('[aria-live="assertive"]');
+						if (ariaLiveDiv) {
+							if (CONFIG.debug) {
+								console.log('[PriceFiller DEBUG] aria-live="assertive" found, searching for warnText...');
+								console.log('[PriceFiller DEBUG] ariaLiveDiv HTML:', ariaLiveDiv.innerHTML.substring(0, 200));
+							}
+
+							// Try multiple selector strategies
+							const warnText =
+								ariaLiveDiv.querySelector?.('[class*="warnText"]') ||
+								ariaLiveDiv.querySelector?.('p[class]') ||
+								ariaLiveDiv.querySelector?.('[class*="warning"]') ||
+								ariaLiveDiv.querySelector?.('[class*="alert"]');
+
+							if (warnText) {
+								const warningMessage = warnText.textContent.trim();
+								if (CONFIG.debug) {
+									console.log('[PriceFiller DEBUG] warnText found:', warningMessage);
+								}
+								if (warningMessage && !nativeWarnings.has(warningMessage)) {
+									nativeWarnings.add(warningMessage);
+									console.log('[PriceFiller] Item Market warning detected (DOM):', warningMessage);
+									showNativeWarningsAsAlerts();
+								}
+							} else if (CONFIG.debug) {
+								console.log('[PriceFiller DEBUG] No warnText found in aria-live element');
+								// Try direct text content
+								const directText = ariaLiveDiv.textContent.trim();
+								if (directText && (directText.includes('worth') || directText.includes('estimated') || directText.includes('price'))) {
+									console.log('[PriceFiller DEBUG] Found potential warning in direct text:', directText);
+									if (!nativeWarnings.has(directText)) {
+										nativeWarnings.add(directText);
+										console.log('[PriceFiller] Item Market warning detected (direct text):', directText);
+										showNativeWarningsAsAlerts();
+									}
+								}
+							}
+						}
+
+						// Broad search for any element with "worth" or "estimated" text
+						if (CONFIG.debug && node.textContent) {
+							const text = node.textContent;
+							if (text.includes('worth') || text.includes('estimated') || text.includes('underpriced')) {
+								console.log('[PriceFiller DEBUG] Node with warning keywords found:', node.className, node.tagName, text.substring(0, 100));
 							}
 						}
 					}
@@ -484,6 +545,7 @@
 
 		// Also check for existing warnings on page load
 		setTimeout(() => {
+			// Bazaar warnings (existing)
 			const existingWarnings = document.querySelectorAll('.t-red');
 			existingWarnings.forEach(warningDiv => {
 				const text = warningDiv.textContent;
@@ -491,11 +553,79 @@
 					const warningMessage = text.trim();
 					if (!nativeWarnings.has(warningMessage)) {
 						nativeWarnings.add(warningMessage);
-						console.log('[PriceFiller] Native Torn warning detected (existing):', warningMessage);
+						console.log('[PriceFiller] Bazaar warning detected (existing):', warningMessage);
 						showNativeWarningsAsAlerts();
 					}
 				}
 			});
+
+			// Item Market warnings (NEW) - DEBUG
+			if (CONFIG.debug) {
+				console.log('[PriceFiller DEBUG] Searching for Item Market warnings on page load...');
+				console.log('[PriceFiller DEBUG] All aria-live elements:', document.querySelectorAll('[aria-live]').length);
+			}
+
+			const itemMarketWarnings = document.querySelectorAll('[aria-live="assertive"]');
+			if (CONFIG.debug) {
+				console.log('[PriceFiller DEBUG] Found', itemMarketWarnings.length, 'aria-live="assertive" elements');
+			}
+
+			itemMarketWarnings.forEach((ariaDiv, index) => {
+				if (CONFIG.debug) {
+					console.log('[PriceFiller DEBUG] aria-live[' + index + ']:', ariaDiv.className);
+					console.log('[PriceFiller DEBUG] aria-live[' + index + '] HTML:', ariaDiv.innerHTML.substring(0, 300));
+				}
+
+				// Try multiple selector strategies
+				const warnText =
+					ariaDiv.querySelector('[class*="warnText"]') ||
+					ariaDiv.querySelector('p[class]') ||
+					ariaDiv.querySelector('[class*="warning"]') ||
+					ariaDiv.querySelector('[class*="alert"]');
+
+				if (warnText) {
+					const warningMessage = warnText.textContent.trim();
+					if (CONFIG.debug) {
+						console.log('[PriceFiller DEBUG] warnText found:', warningMessage);
+					}
+					if (warningMessage && !nativeWarnings.has(warningMessage)) {
+						nativeWarnings.add(warningMessage);
+						console.log('[PriceFiller] Item Market warning detected (existing):', warningMessage);
+						showNativeWarningsAsAlerts();
+					}
+				} else if (CONFIG.debug) {
+					console.log('[PriceFiller DEBUG] No warnText selector found, trying direct text...');
+					const directText = ariaDiv.textContent.trim();
+					if (directText && (directText.includes('worth') || directText.includes('estimated') || directText.includes('price'))) {
+						console.log('[PriceFiller DEBUG] Found potential warning in direct text:', directText);
+						if (!nativeWarnings.has(directText)) {
+							nativeWarnings.add(directText);
+							console.log('[PriceFiller] Item Market warning detected (direct text):', directText);
+							showNativeWarningsAsAlerts();
+						}
+					}
+				}
+			});
+
+			// Last resort: search entire document for warning keywords
+			if (CONFIG.debug) {
+				console.log('[PriceFiller DEBUG] Performing broad document search for warning keywords...');
+				const allElements = document.querySelectorAll('*');
+				let warningCount = 0;
+				allElements.forEach(el => {
+					if (el.textContent && el.textContent.length < 500) { // Avoid large containers
+						const text = el.textContent;
+						if ((text.includes('worth') || text.includes('estimated')) &&
+							(text.includes('underpriced') || text.includes('listed') || text.includes('price'))) {
+							warningCount++;
+							if (warningCount <= 5) { // Log first 5 matches
+								console.log('[PriceFiller DEBUG] Warning keyword found in:', el.tagName, el.className, text.substring(0, 100));
+							}
+						}
+					}
+				});
+				console.log('[PriceFiller DEBUG] Total elements with warning keywords:', warningCount);
+			}
 		}, 100);
 
 		// Start observing the document for changes
@@ -515,14 +645,19 @@
 			}
 		});
 
-		// Show each warning as a browser alert (only those not shown recently)
+		// Show all warnings in a single consolidated alert
 		if (warningsToShow.length > 0) {
-			warningsToShow.forEach((warning, index) => {
-				// Use setTimeout to avoid blocking, stagger alerts slightly
-				setTimeout(() => {
-					alert(`⚠️ Torn Pricing Warning:\n\n${warning}`);
-				}, index * 150);
-			});
+			let alertMessage = '⚠️ Torn Pricing Warning(s):\n\n';
+
+			if (warningsToShow.length === 1) {
+				alertMessage += warningsToShow[0];
+			} else {
+				warningsToShow.forEach((warning, index) => {
+					alertMessage += `${index + 1}. ${warning}\n\n`;
+				});
+			}
+
+			alert(alertMessage);
 		}
 
 		// Clear the Set to prevent duplicates (warnings are tracked in lastShownWarnings Map)

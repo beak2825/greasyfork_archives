@@ -7,7 +7,7 @@
 // @run-at      document-start
 // @noframes
 // @license MIT
-// @version     3.25
+// @version     3.26
 // @author      CoopCoding
 // @description 16/08/2024, 9:48:10 am
 // @match *://wuffs.org/*
@@ -618,6 +618,8 @@
 // @match *://thepit.social/*
 // @match *://fediverse.zachleat.com/*
 // @match *://typo.social/*
+// @match *://typo.social/*
+// @match *://kolektiva.social/*
 // @downloadURL https://update.greasyfork.org/scripts/503796/Mastodon%20Auto-Redirect%20To%20Home%20Instance.user.js
 // @updateURL https://update.greasyfork.org/scripts/503796/Mastodon%20Auto-Redirect%20To%20Home%20Instance.meta.js
 // ==/UserScript==

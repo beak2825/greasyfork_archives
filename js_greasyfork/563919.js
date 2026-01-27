@@ -1,27 +1,20 @@
 // ==UserScript==
 // @name         Dolphinware
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  NEW Krunker Free Cheat
+// @version      1.2
+// @description  Free Krunker.io Cheats
 // @author       Frojy
 // @match        *://krunker.io/*
-// @match        *://browserfps.com/*
 // @exclude      *://krunker.io/social*
 // @exclude      *://krunker.io/editor*
 // @icon         https://www.google.com/s2/favicons?domain=krunker.io
 // @grant        none
 // @run-at       document-start
+// @license      MIT
 // @require      https://unpkg.com/three@0.150.0/build/three.min.js
-// @license      Proprietary
 // @downloadURL https://update.greasyfork.org/scripts/563919/Dolphinware.user.js
 // @updateURL https://update.greasyfork.org/scripts/563919/Dolphinware.meta.js
 // ==/UserScript==
-
-/*
-Copyright (c) 2026 Frojy
-All rights reserved.
-*/
-
 
 const THREE = window.THREE;
 delete window.THREE;
@@ -29,7 +22,8 @@ delete window.THREE;
 const settings = {
     aimbotEnabled: true,
     aimbotOnRightMouse: false,
-    espEnabled: true
+    espEnabled: true,
+    espColor: '#66b3ff'
 };
 
 const keyToSetting = {
@@ -83,23 +77,43 @@ tempObject.rotation.order = 'YXZ';
 const geometry = new THREE.EdgesGeometry(new THREE.BoxGeometry(5, 15, 5).translate(0, 7.5, 0));
 
 const material = new THREE.RawShaderMaterial({
+    uniforms: {
+        uColor: { value: new THREE.Color(settings.espColor) }
+    },
+
     vertexShader: `
+        precision mediump float;
         attribute vec3 position;
         uniform mat4 projectionMatrix;
         uniform mat4 modelViewMatrix;
         void main() {
             gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            gl_Position.z = 1.0;
         }
     `,
     fragmentShader: `
+        precision mediump float;
+        uniform vec3 uColor;
         void main() {
-            gl_FragColor = vec4(0.4, 0.7, 1.0, 1.0);
+            gl_FragColor = vec4(uColor, 1.0);
         }
     `
 });
 
+Object.defineProperty(settings, 'espColor', {
+    get() {
+        return this.__espColor;
+    },
+    set(value) {
+        this.__espColor = value;
+        material.uniforms.uColor.value.set(value);
+    }
+});
+settings.__espColor = settings.espColor;
+
 const line = new THREE.LineSegments(new THREE.BufferGeometry(), material);
+material.depthTest = false;
+material.depthWrite = false;
+material.transparent = true;
 line.frustumCulled = false;
 
 const linePositions = new THREE.BufferAttribute(new Float32Array(100 * 2 * 3), 3);
@@ -275,6 +289,7 @@ el.innerHTML = `<style>
     padding: 10px 12px;
     border-radius: 8px;
     border: 1px solid rgba(255,255,255,0.15);
+    cursor: grab;
 }
 .zui-header span {
     font-size: 14px;
@@ -358,7 +373,7 @@ animate();
 function createGUI() {
     const guiEl = fromHtml(`<div class="zui">
         <div class="zui-header">
-            <span>Dolphinware [v1.0]</span>
+            <span>Dolphinware [v1.2]</span>
         </div>
         <div class="zui-content"></div>
     </div>`);
@@ -366,6 +381,38 @@ function createGUI() {
     const headerEl = guiEl.querySelector('.zui-header');
     const contentEl = guiEl.querySelector('.zui-content');
     const headerStatusEl = guiEl.querySelector('.zui-item-value');
+
+    let isDragging = false;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+
+    headerEl.onpointerdown = function (e) {
+        isDragging = true;
+        headerEl.setPointerCapture(e.pointerId);
+
+        const rect = guiEl.getBoundingClientRect();
+        dragOffsetX = e.clientX - rect.left;
+        dragOffsetY = e.clientY - rect.top;
+
+        headerEl.style.cursor = "grabbing";
+    };
+
+    headerEl.onpointermove = function (e) {
+        if (!isDragging) return;
+        guiEl.style.left = `${e.clientX - dragOffsetX}px`;
+        guiEl.style.top = `${e.clientY - dragOffsetY}px`;
+        guiEl.style.transform = "";
+    };
+
+    headerEl.onpointerup = function () {
+        isDragging = false;
+        headerEl.style.cursor = "grab";
+    };
+
+    headerEl.onpointercancel = function () {
+        isDragging = false;
+        headerEl.style.cursor = "grab";
+    };
 
     headerEl.onclick = function () {
         const isHidden = contentEl.style.display === 'none';
@@ -379,6 +426,7 @@ function createGUI() {
     }
 
     for (const prop in settings) {
+    if (prop === 'espColor') continue;
         let name = displayNames[prop] || fromCamel(prop);
         let shortKey = settingToKey[prop];
 
@@ -418,6 +466,31 @@ function createGUI() {
             }
         });
     }
+
+    const espColorItem = fromHtml(`
+<div class="zui-item" style="flex-direction:column;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span>ESP Color</span>
+        <span>▼</span>
+    </div>
+    <div style="display:none;margin-top:8px;">
+        <input type="color" value="${settings.espColor}"
+               style="width:100%;height:28px;border:none;cursor:pointer;">
+    </div>
+</div>`);
+
+    const espDropdown = espColorItem.children[1];
+
+    espColorItem.children[0].onclick = function () {
+        espDropdown.style.display =
+            espDropdown.style.display === 'none' ? '' : 'none';
+    };
+
+    espDropdown.querySelector('input').oninput = function (e) {
+        settings.espColor = e.target.value;
+    };
+
+    contentEl.appendChild(espColorItem);
 
     return guiEl;
 }

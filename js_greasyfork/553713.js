@@ -3,7 +3,7 @@
 // @name:en          HWHNewCharacterExt
 // @name:ru          HWHNewCharacterExt
 // @namespace        HWHNewCharacterExt
-// @version          2.23
+// @version          2.25
 // @description      Extension for HeroWarsHelper script
 // @description:en   Extension for HeroWarsHelper script
 // @description:ru   Расширение для скрипта HeroWarsHelper
@@ -37,7 +37,9 @@
         NEW_CHARACTER: 'New Character',
         NEW_CHARACTER_TITLE: 'Complete quests for a new hero or titan',
         NEW_CHARACTER_NO_EVENT: 'The event is not active',
-        NEW_CHARACTER_SOMETHING_WENT_WRONG: '<span style="color: red;"> Something went wrong </span> <br> Please try again',
+        NEW_CHARACTER_SOMETHING_WENT_WRONG:`<span style="color: red;">Oops! Something went wrong</span>
+          <br> Please try again
+          <br> If you keep seeing this, wait for the next extension update`,
         NEW_CHARACTER_SELECT_ACTION: 'Select an action',
         NT_TITAN_EVENT: '<span style="color: White; font-size: 35px;"> The Titan Awakens </span> <br>',
         NT_COLLECT_TITANS: 'Сollect the Titans',
@@ -46,35 +48,37 @@
         NT_COLLECT_HEROES_TITLE: 'Сollecting the Heroes of the maximum rank by purchasing fragments in the store',
         NT_COLLECT_TOTEM_SKILLS: 'Сollect totem skills',
         NT_COLLECT_TOTEM_SKILLS_TITLE: 'Get the influence skill of the maximum rank by purchasing fragments in the store',
-        NT_COLLECT_TITANS_PROGRESS: '<span style="color: green;"> {counter} </span> titans left to collect',
+        NT_COLLECT_TITANS_PROGRESS: '<span style="color: LimeGreen;"> {counter} </span> titans left to collect',
         NT_TITANS_COLLECTED: 'All titans have been collected',
         NT_TOTEM_SKILLS_COLLECTED: 'All influence skills have been collected',
         NT_TITANS_AND_TOTEM_SKILLS_COLLECTED: 'Titans and Totem influence skills have been collected',
-        NT_COLLECT_TOTEM_SKILLS_PROGRESS: '<span style="color: green;"> {counter} </span> influence skills left to collect <br> Collecting...',
+        NT_COLLECT_TOTEM_SKILLS_PROGRESS: '<span style="color: LimeGreen;"> {counter} </span> influence skills left to collect <br> Collecting...',
         NT_CHAPTER_NOT_AVAILABLE: '<span style="color: red;"> Chapter unavailable </span> <br> Complete the previous chapter',
-        NT_COLLECT_HEROES_PROGRESS: '<span style="color: green;"> {counter} </span> heroes left to collect <br> Collecting...',
-        NT_HEROES_COLLECTED: '<span style="color: LimeGreen;">All heroes have been collected</span>',
+        NT_COLLECT_HEROES_PROGRESS: '<span style="color: LimeGreen;"> {counter} </span> heroes left to collect <br> Collecting...',
+        NT_HEROES_COLLECTED: 'All heroes have been collected',
         NT_COLLECT_EVERYTHING: 'Collect everything',
         NT_COLLECT_EVERYTHING_TITLE: 'Collect heroes, titans, totems, pets',
-        NT_BOSS_WAS_KILLED: 'The Chapter <span style="color: green; font-family: Times New Roman;"> {chapterNumber} </span> boss didn\'t appreciate our health-conscious approach... to his health.',
+        NT_BOSS_WAS_KILLED: 'The Chapter <span style="color: LimeGreen; font-family: Times New Roman;"> {chapterNumber} </span> boss didn\'t appreciate our health-conscious approach... to his health.',
         NT_BOSS_WAS_KILLED_SET_PROGRESS_1: 'All done. <span style="color: LimeGreen;">Boss defeated</span>. Collecting trophies...',
         NT_BOSS_WAS_KILLED_SET_PROGRESS_2: '<br>Oh no, our loot is too much for this humble bag\'s capacity.',
         NT_BOSS_WAS_KILLED_SET_PROGRESS_3: '<br>Urgently calling the porters guild.',
         NT_BOSS_WAS_KILLED_SET_PROGRESS_4: '<br>All of it!',
         NT_BOSS_WAS_KILLED_SET_PROGRESS_5: '<br><span style="color: LimeGreen;">Stand by.</span> Arrival in approximately seconds ',
-        NT_BOSS_WAS_NOT_KILLED: 'The Chapter <span style="color: green; font-family: Times New Roman;"> {chapterNumber} </span> boss was not killed <br> Reload the game and try to kill the boss yourself',
+        NT_BOSS_WAS_NOT_KILLED: 'The Chapter <span style="color: LimeGreen; font-family: Times New Roman;"> {chapterNumber} </span> boss was not killed <br> Reload the game and try to kill the boss yourself',
         NT_COMPLETE_CHAPTER: 'Complete the chapter',
+        NT_COMPLETE_CHAPTER_START: 'Kick off the Magic Vibe',
+        NT_COMPLETE_CHAPTER_CANCEL: 'Hogwarts cancellation',
         NT_COMPLETE_CHAPTER_TITLE: 'Complete an available chapter',
         NT_ALL_CHAPTERS_COMPLETED: 'All chapters completed',
         NT_NOT_ENOUGH_BUFF:
-          `Not enough buff to complete Chapter <span style="color: green; font-family: Times New Roman;"> {chapterNumber} </span>
+          `Not enough buff to complete Chapter <span style="color: LimeGreen; font-family: Times New Roman;"> {chapterNumber} </span>
           You have: <span style="color: red;"> {buffAmount} </span> <br>
-          You need: <span style="color: green;"> {invasionBuff} </span>`,
+          You need: <span style="color: LimeGreen;"> {invasionBuff} </span>`,
         NT_ENTER_TITAN_IDS:
-          `Chapter <span style="color: green; font-family: Times New Roman;"> {chapterNumber} </span> is available for completion <br>
+          `Chapter <span style="color: LimeGreen; font-family: Times New Roman;"> {chapterNumber} </span> is available for completion <br>
           Enter <span style="color: red;"> 5 </span> titan IDs separated by commas or dashes`,
         NT_ENTER_HERO_IDS:
-          `Chapter <span style="color: green; font-family: Times New Roman;"> {chapterNumber} </span> is available for completion <br>
+          `Chapter <span style="color: LimeGreen; font-family: Times New Roman;"> {chapterNumber} </span> is available for completion <br>
           Enter <span style="color: red;"> 5 </span> hero IDs separated by commas or dashes`,
         NT_MUST_FIVE_TITANS: 'There must be <span style="color: red;"> 5 </span> titans',
         NT_MUST_FIVE_HEROES: 'There must be <span style="color: red;"> 5 </span> heroes',
@@ -99,7 +103,7 @@
         NHR_COMPLETE_TASKS: 'Complete the tasks',
         NHR_COMPLETE_TASKS_TITLE: 'Complete event tasks: collect heroes, buy pets, spend coins',
         NHR_TASKS_COMPLETED: 'The tasks have been completed',
-        NHR_LIVES_ARE_OVER: 'Failed to complete chapter <span style="color: green; font-family: Times New Roman;"> {chapterNumber} </span>. Lives are over. Try again',
+        NHR_LIVES_ARE_OVER: 'Failed to complete chapter <span style="color: LimeGreen; font-family: Times New Roman;"> {chapterNumber} </span>. Lives are over. Try again',
         NHR_SHOPPING: 'Make purchases...',
         NHR_NOTHING_HERE_1: 'What\'s this? Where is it? When? Booooooooooosss...',
         NHR_NOTHING_HERE_2: 'Nobody\'s heeere! ',
@@ -107,7 +111,7 @@
         NHR_NOTHING_HERE_4: 'If he\'s not there, then what\'s supposed to be here?',
         NHR_COMPLETE_CHAPTER_N1: 'Raid for Chapter <span style="font-family: Times New Roman;">I</span>',
         NHR_COMPLETE_CHAPTER_N1_TITLE: 'Complete chapter I one time',
-        NHR_COMPLETE_CHAPTER_N1_COMPLETED: 'Chapter <span style="color: green; font-family: Times New Roman;">I</span> raid completed',
+        NHR_COMPLETE_CHAPTER_N1_COMPLETED: 'Chapter <span style="color: LimeGreen; font-family: Times New Roman;">I</span> raid completed',
         NHR_CHAPTER_N1_RAID: 'Starting <span style="color: LimeGreen;">{raidNumber}</span>/3 raid chapter I',
         NHR_MAKE_OTHER_TASKS: '<br>Moving on to other quests',
         NHR_GET_HERO_IDS: 'Hero IDs',
@@ -121,9 +125,13 @@
           Sapphire Medallion: <span style="color: LimeGreen;">{sapphireMedallion}</span> <br>
           Soul stones: <span style="color: LimeGreen;">{fragmentHero}</span>`,
         NHR_SPEND_VALOR_COINS_MESSAGE: 'Exchange all available Coins of Valor?',
-        NHR_APPLY: 'Exchange',
-        NHR_NOT_APPLY: 'Thanks, but no thanks. Real Heroes don\'t need help!',
-        NHR_COMPLETE_CHAPTER_N2: 'Let\'s begin to complete <span style="color: LimeGreen;"> II </span> chapter',
+
+        NHR_APPLY: 'Spend it before I change my mind',
+        NHR_NOT_APPLY: 'Oh no, I\'ve already changed my mind',
+        NHR_COMPLETE_CHAPTER_N2: 'Let\'s begin to complete <span style="color: LimeGreen; font-family: Times New Roman;"> II </span> chapter',
+        NHR_COMPLETE_CHAPTER_N1_MESSAGE: 'Complete chapter <span style="color: LimeGreen; font-family: Times New Roman;"> I </span>?',
+        NHR_COMPLETE_CHAPTER_N1_APPLY: 'Click if you\'re brave',
+        NHR_COMPLETE_CHAPTER_N1_NOT_APPLY: 'Nah, I\'m losing my nerve',
     };
 
     i18nLangData['en'] = Object.assign(i18nLangData['en'], i18nLangDataEn);
@@ -132,7 +140,9 @@
         NEW_CHARACTER: 'Новый персонаж',
         NEW_CHARACTER_TITLE: 'Выполнять задания для нового героя или титана',
         NEW_CHARACTER_NO_EVENT: 'Ивент не активен',
-        NEW_CHARACTER_SOMETHING_WENT_WRONG: '<span style="color: red;"> Что-то пошло не так </span> <br> Попробуйте заново',
+        NEW_CHARACTER_SOMETHING_WENT_WRONG: `<span style="color: red;">В процессе выполнения произошла ошибка</span>
+          <br> Повторите действие еще раз
+          <br> Если ошибка повторяется, подождите обновления расширения`,
         NEW_CHARACTER_SELECT_ACTION: 'Выберите действие',
         NT_TITAN_EVENT: '<span style="color: White; font-size: 35px;"> Пробуждение Титана </span> <br>',
         NT_COLLECT_TITANS: 'Собрать титанов',
@@ -141,36 +151,38 @@
         NT_COLLECT_HEROES_TITLE: 'Собрать героев максимального ранга, покупая фрагменты в магазине',
         NT_COLLECT_TOTEM_SKILLS: 'Собрать тотемы',
         NT_COLLECT_TOTEM_SKILLS_TITLE: 'Собрать навыки тотемов максимального ранга, покупая фрагменты в магазине',
-        NT_COLLECT_TITANS_PROGRESS: 'Осталось собрать титанов: <span style="color: green;"> {counter} </span> шт.',
+        NT_COLLECT_TITANS_PROGRESS: 'Осталось собрать титанов: <span style="color: LimeGreen;"> {counter} </span> шт.',
         NT_TITANS_COLLECTED: 'Титаны собраны',
         NT_TOTEM_SKILLS_COLLECTED: 'Все навыки влияния собраны',
         NT_TITANS_AND_TOTEM_SKILLS_COLLECTED: 'Титаны и навыки влияния тотемов собраны',
-        NT_COLLECT_TOTEM_SKILLS_PROGRESS: 'Осталось собрать навыков тотемов: <span style="color: green;"> {counter} </span> шт. <br> Собираем...',
+        NT_COLLECT_TOTEM_SKILLS_PROGRESS: 'Осталось собрать навыков тотемов: <span style="color: LimeGreen;"> {counter} </span> шт. <br> Собираем...',
         NT_CHAPTER_NOT_AVAILABLE: '<span style="color: red;"> Глава не доступна </span> <br> Завершите предыдущую главу',
-        NT_COLLECT_HEROES_PROGRESS: 'Осталось собрать героев: <span style="color: green;"> {counter} </span> шт. <br> Собираем...',
-        NT_HEROES_COLLECTED: '<span style="color: LimeGreen;">Все герои собраны</span>',
+        NT_COLLECT_HEROES_PROGRESS: 'Осталось собрать героев: <span style="color: LimeGreen;"> {counter} </span> шт. <br> Собираем...',
+        NT_HEROES_COLLECTED: 'Все герои собраны',
         NT_COLLECT_EVERYTHING: 'Собрать все',
         NT_COLLECT_EVERYTHING_TITLE: 'Собрать героев, титанов, тотемы, питомцев',
-        NT_BOSS_WAS_KILLED: 'Босс <span style="color: green; font-family: Times New Roman;"> {chapterNumber} </span> главы не пережил нашего искреннего интереса к его здоровью',
+        NT_BOSS_WAS_KILLED: 'Босс <span style="color: LimeGreen; font-family: Times New Roman;"> {chapterNumber} </span> главы не пережил нашего искреннего интереса к его здоровью',
         NT_BOSS_WAS_KILLED_SET_PROGRESS_1: 'Готовенько. <span style="color: LimeGreen;">Босс повержен</span>. Собираем трофеи...',
         NT_BOSS_WAS_KILLED_SET_PROGRESS_2: '<br>О нет, размеры добычи превосходят скромные возможности этого мешка.',
         NT_BOSS_WAS_KILLED_SET_PROGRESS_3: '<br>Срочно вызываем гильдию носильщиков!',
         NT_BOSS_WAS_KILLED_SET_PROGRESS_4: '<br>Всю!',
         NT_BOSS_WAS_KILLED_SET_PROGRESS_5: '<br><span style="color: LimeGreen;">Ожидайте.</span> Прибытие, примерно секунд через ',
-        NT_BOSS_WAS_NOT_KILLED: 'Босса <span style="color: green; font-family: Times New Roman;"> {chapterNumber} </span> главы не убили <br> Перезагрузите игру, и попробуйте убить босса самостоятельно',
+        NT_BOSS_WAS_NOT_KILLED: 'Босса <span style="color: LimeGreen; font-family: Times New Roman;"> {chapterNumber} </span> главы не убили <br> Перезагрузите игру, и попробуйте убить босса самостоятельно',
         NT_COMPLETE_CHAPTER: 'Пройти главу',
+        NT_COMPLETE_CHAPTER_START: 'Старт магического движняка',
+        NT_COMPLETE_CHAPTER_CANCEL: 'Отмена Хогвартса',
         NT_COMPLETE_CHAPTER_TITLE: 'Пройти доступную главу',
         NT_ALL_CHAPTERS_COMPLETED: 'Все главы пройдены',
         NT_NOT_ENOUGH_BUFF:
-          `Недостаточно усиления для прохождения <span style="color: green; font-family: Times New Roman;"> {chapterNumber} </span> главы <br>
+          `Недостаточно усиления для прохождения <span style="color: LimeGreen; font-family: Times New Roman;"> {chapterNumber} </span> главы <br>
           У вас: <span style="color: red;"> {buffAmount} </span> <br>
-          Необходимо: <span style="color: green;"> {invasionBuff} </span>`,
+          Необходимо: <span style="color: LimeGreen;"> {invasionBuff} </span>`,
         NT_ENTER_TITAN_IDS:
-          `Для прохождения доступна <span style="color: green; font-family: Times New Roman;"> {chapterNumber} </span> глава <br>
-          Введите <span style="color: red;"> 5 </span> id <span style="color: green;"> титанов </span> через запятые или дефисы`,
+          `Для прохождения доступна <span style="color: LimeGreen; font-family: Times New Roman;"> {chapterNumber} </span> глава <br>
+          Введите <span style="color: red;"> 5 </span> id <span style="color: LimeGreen;"> титанов </span> через запятые или дефисы`,
         NT_ENTER_HERO_IDS:
-          `Для прохождения доступна <span style="color: green; font-family: Times New Roman;"> {chapterNumber} </span> глава <br>
-          Введите <span style="color: red;"> 5 </span> id <span style="color: green;"> героев </span> через запятые или дефисы`,
+          `Для прохождения доступна <span style="color: LimeGreen; font-family: Times New Roman;"> {chapterNumber} </span> глава <br>
+          Введите <span style="color: red;"> 5 </span> id <span style="color: LimeGreen;"> героев </span> через запятые или дефисы`,
         NT_MUST_FIVE_TITANS:'Должно быть <span style="color: red;"> 5 </span> титанов',
         NT_MUST_FIVE_HEROES:'Должно быть <span style="color: red;"> 5 </span> героев',
         NT_MUST_ONLY_NUMBERS: 'Список должен содержать только цифры и запятые',
@@ -197,7 +209,7 @@
         NHR_COMPLETE_TASKS_TITLE: 'Выполнить задания ивента: собрать героев, купить питомцев, потратить монеты',
         NHR_TASKS_COMPLETED: 'Задания выполнены',
         NHR_LIVES_ARE_OVER:
-          `Дорогой дневник, мне не подобрать слов, чтобы описать боль и унижение, которые были получены при походе на босса <span style="color: green; font-family: Times New Roman;"> {chapterNumber} </span> главы.
+          `Дорогой дневник, мне не подобрать слов, чтобы описать боль и унижение, которые были получены при походе на босса <span style="color: LimeGreen; font-family: Times New Roman;"> {chapterNumber} </span> главы.
           Наши богатыри были втянуты в яростный бой, точнее не бой, а именно пиздилку, мочилово, где всё равнялось, даже морды с асфальтом.
           И после нескольких дней этого хаоса и резни наступил бесславный и постыдный конец нашему походу.<br> <br>
           Конец. Конец. Концы в воду! Давай по новой!`,
@@ -208,7 +220,7 @@
         NHR_NOTHING_HERE_4: 'Если там нет, то чё здесь должно быть?',
         NHR_COMPLETE_CHAPTER_N1: 'Рейд <span style="font-family: Times New Roman;">I</span> главы',
         NHR_COMPLETE_CHAPTER_N1_TITLE: 'Пройти I главу 1 раз',
-        NHR_COMPLETE_CHAPTER_N1_COMPLETED: 'Рейд <span style="color: green; font-family: Times New Roman;">I</span> главы выполнен',
+        NHR_COMPLETE_CHAPTER_N1_COMPLETED: 'Рейд <span style="color: LimeGreen; font-family: Times New Roman;">I</span> главы выполнен',
         NHR_CHAPTER_N1_RAID: 'Выполняем <span style="color: LimeGreen;">{raidNumber}</span>/3 рейд I главы',
         NHR_MAKE_OTHER_TASKS: '<br> Приступаем к выполнению других заданий',
         NHR_GET_HERO_IDS: 'Id героев',
@@ -223,9 +235,14 @@
           <span style="color: LimeGreen;">3</span> пoртсигара отечественных, куртка замшевая - <span style="color: LimeGreen;">три</span> куртки,
           сапфировый медальон - <span style="color: LimeGreen;">{sapphireMedallion}</span>, камни души - <span style="color: LimeGreen;">{fragmentHero}</span>`,
         NHR_SPEND_VALOR_COINS_MESSAGE: 'Потратить все имеющиеся монеты доблести?',
-        NHR_APPLY: 'Потратить',
-        NHR_NOT_APPLY: 'Спасибо, не надо. Настоящим Героям помощь не нужна!',
-        NHR_COMPLETE_CHAPTER_N2: 'Проходим <span style="color: LimeGreen;"> II </span> главу',
+
+        NHR_APPLY: 'Потратить, пока не передумал',
+        NHR_NOT_APPLY: 'А нет, не успел. Уже передумал',
+        NHR_COMPLETE_CHAPTER_N2: 'Проходим <span style="color: LimeGreen; font-family: Times New Roman;"> II </span> главу',
+
+        NHR_COMPLETE_CHAPTER_N1_MESSAGE: 'Выполнить рейд <span style="color: LimeGreen; font-family: Times New Roman;"> I </span> главы?',
+        NHR_COMPLETE_CHAPTER_N1_APPLY: 'Жми, если смелый',
+        NHR_COMPLETE_CHAPTER_N1_NOT_APPLY: 'Нет, чёт я очкую',
     };
 
     i18nLangData['ru'] = Object.assign(i18nLangData['ru'], i18nLangDataRu);
@@ -244,46 +261,50 @@
             return I18N('NEW_CHARACTER_TITLE');
         },
         result: async function () {
-            if (compareVersions(scriptInfo.version, '2.390') < 0) {
-                confShow(`${I18N('NT_OUTDATED_VERSION_OF_SCRIPT')}`);
-                return;
-            }
-            console.log(scriptInfo.version);
-            let invasionInfo = await Caller.send('invasion_getInfo');
-//if (true) {
-            if (invasionInfo) {
-                let invasionInfoId = invasionInfo.id;
-                let chapters = Object.values(lib.data.invasion.chapter).filter((e) => e.invasionId === invasionInfoId);
-                //const startDate = new Date("2025-11-14 14:00:00".replace(' ', 'T') + 'Z');
-                const startDate = new Date((chapters[0].startDate).replace(' ', 'T') + 'Z');
-                const todayDate = Date.now();
-                console.log(startDate);
-                console.log(todayDate);
-
-                if (todayDate < startDate) {
-                    confShow(`${I18N('NEW_CHARACTER_NO_EVENT')}`);
-                    return;
-                }
-                let titanIvent = false;
-                for (let chapter of chapters) {
-                    if (chapter.settings?.unitType === 'titan') {
-                        titanIvent = true;
-                        break;
-                    }
-                }
-
-                if (titanIvent) {
-//if (true) {
-                    await onClickNewTitanButton();
-                } else {
-                    await onClickNewHeroButton();
-                }
-            } else {
-                confShow(`${I18N('NEW_CHARACTER_NO_EVENT')}`);
-            }
+            await onClickNewCharacterButton();
         },
         color: 'pink',
     });
+
+    async function onClickNewCharacterButton() {
+        if (compareVersions(scriptInfo.version, '2.390') < 0) {
+            confShow(`${I18N('NT_OUTDATED_VERSION_OF_SCRIPT')}`);
+            return;
+        }
+        console.log(scriptInfo.version);
+        let invasionInfo = await Caller.send('invasion_getInfo');
+//if (true) {
+        if (invasionInfo) {
+            let invasionInfoId = invasionInfo.id;
+            let chapters = Object.values(lib.data.invasion.chapter).filter((e) => e.invasionId === invasionInfoId);
+            //const startDate = new Date("2025-11-14 14:00:00".replace(' ', 'T') + 'Z');
+            const startDate = new Date((chapters[0].startDate).replace(' ', 'T') + 'Z');
+            const todayDate = Date.now();
+            console.log(startDate);
+            console.log(todayDate);
+
+            if (todayDate < startDate) {
+                confShow(`${I18N('NEW_CHARACTER_NO_EVENT')}`);
+                return;
+            }
+            let titanIvent = false;
+            for (let chapter of chapters) {
+                if (chapter.settings?.unitType === 'titan') {
+                    titanIvent = true;
+                    break;
+                }
+            }
+
+            if (titanIvent) {
+//if (true) {
+                await onClickNewTitanButton();
+            } else {
+                await onClickNewHeroButton();
+            }
+        } else {
+            confShow(`${I18N('NEW_CHARACTER_NO_EVENT')}`);
+        }
+    }
 
     async function onClickNewHeroButton() {
         const popupButtons = [
@@ -319,9 +340,7 @@
                     return I18N('NHR_COMPLETE_CHAPTER_N1_TITLE');
                 },
                 result: async function () {
-                    await firstHeroicChapterRaid();
-                    setProgress('', true);
-                    confShow(I18N('NHR_COMPLETE_CHAPTER_N1_COMPLETED'));
+                    await completeChapterN1();
                 },
                 color: 'pink',
             },
@@ -474,7 +493,10 @@
             await Caller.send('invasion_resetChapter');
         }
         setProgress('', true);
-        confShow(I18N('NHR_TASKS_COMPLETED'));
+        await popup.confirm(I18N('NHR_TASKS_COMPLETED'));
+
+        //Возврат в меню "Новый герой"
+        onClickNewHeroButton();
     }
 
     async function completeTitansTasks() {
@@ -528,7 +550,40 @@
         await Caller.send('invasion_resetChapter');
 
         setProgress('', true);
-        confShow(I18N('NHR_TASKS_COMPLETED'));
+        await popup.confirm(I18N('NHR_TASKS_COMPLETED'));
+        //Возврат в меню "Новый титан"
+        returnToNewTitanMenu();
+    }
+    async function completeChapterN1() {
+        let answer = await popup.confirm(
+            I18N('NHR_COMPLETE_CHAPTER_N1_MESSAGE'),
+            [
+                { msg: I18N('NHR_COMPLETE_CHAPTER_N1_APPLY'), result: true, color: 'green' },
+                { msg: I18N('NHR_COMPLETE_CHAPTER_N1_NOT_APPLY'), result: false, isCancel: true, color: 'red' },
+            ],
+        );
+        if (!answer) {
+            //Возврат в меню "Новый герой"
+            returnToNewHeroMenu();
+            return;
+        }
+        await firstHeroicChapterRaid();
+        setProgress('', true);
+        await popup.confirm(I18N('NHR_COMPLETE_CHAPTER_N1_COMPLETED'));
+        //Возврат в меню "Новый герой"
+        returnToNewHeroMenu();
+    }
+
+    function returnToNewHeroMenu() {
+        onClickNewHeroButton();
+    }
+
+    function returnToNewTitanMenu() {
+        onClickNewTitanButton();
+    }
+
+    function returnToNewCharacterMenu() {
+        onClickNewCharacterButton();
     }
 
     async function firstHeroicChapterRaid() {
@@ -610,7 +665,9 @@
         console.log('chapterNumber ' + chapterNumber);
 
         if (buffAmount < invasionBuff) {
-            confShow(I18N('NT_NOT_ENOUGH_BUFF', { chapterNumber: romanNumerals[chapterNumber], buffAmount, invasionBuff}));
+            await popup.confirm(I18N('NT_NOT_ENOUGH_BUFF', { chapterNumber: romanNumerals[chapterNumber], buffAmount, invasionBuff}));
+            //Возврат в меню "Новый персонаж"
+            returnToNewCharacterMenu();
             return;
         }
         if (titanOrHero === 'hero' ) {
@@ -618,6 +675,10 @@
         }
         if (titanOrHero === 'titan' ) {
             await completeTitansChapter(chapters, chapterId, chapterNumber, farmedChapters, missionRaid);
+        }
+        if (!missionRaid) {
+            //Возврат в меню "Новый персонаж"
+            returnToNewCharacterMenu();
         }
     }
 
@@ -756,7 +817,12 @@
                 setProgress(I18N('NT_MISSION_PROGRESS_BOSS'), false);
             }
             await new Promise((e) => setTimeout(e, 2000));
-            await attackHeroMission(missionId, chapterId, heroes, pet, boss, petsFavor);
+
+            let error = await attackHeroMission(missionId, chapterId, heroes, pet, boss, petsFavor);
+            if (error) {
+                await popup.confirm(I18N('NEW_CHARACTER_SOMETHING_WENT_WRONG'));
+                return;
+            }
 
             //Результат атаки
             let invasionInfo = await Caller.send('invasion_getInfo');
@@ -774,11 +840,11 @@
                     return;
                 }
                 if (invasionInfo.farmedChapters.includes(chapterId)) {
-                    confShow(I18N('NT_BOSS_WAS_KILLED', { chapterNumber: romanNumerals[chapterNumber]}));
+                    await popup.confirm(I18N('NT_BOSS_WAS_KILLED', { chapterNumber: romanNumerals[chapterNumber]}));
                     //Сбросить главу
                     await Caller.send('invasion_resetChapter')
                 } else {
-                    confShow(I18N('NT_BOSS_WAS_NOT_KILLED', { chapterNumber: romanNumerals[chapterNumber]}));
+                    await popup.confirm(I18N('NT_BOSS_WAS_NOT_KILLED', { chapterNumber: romanNumerals[chapterNumber]}));
                 }
                 return;
             }
@@ -788,7 +854,7 @@
         }
         if (lives == 0) {
             setProgress('', true);
-            confShow(I18N('NHR_LIVES_ARE_OVER', { chapterNumber: romanNumerals[chapterNumber]}));
+            await popup.confirm(I18N('NHR_LIVES_ARE_OVER', { chapterNumber: romanNumerals[chapterNumber]}));
             return;
         }
     }
@@ -906,7 +972,11 @@
                 setProgress(I18N('NT_MISSION_PROGRESS_BOSS'), false);
             }
             await new Promise((e) => setTimeout(e, 2000));
-            await attackTitanMission(missionId, chapterId, heroes, firstSpiritSkills, boss);
+            let error = await attackTitanMission(missionId, chapterId, heroes, firstSpiritSkills, boss);
+            if (error) {
+                await popup.confirm(I18N('NEW_CHARACTER_SOMETHING_WENT_WRONG'));
+                return;
+            }
 
             //Результат атаки
             let invasionInfo = await Caller.send('invasion_getInfo');
@@ -921,11 +991,11 @@
             //Результат атаки босса
             if (boss) {
                 if (invasionInfo.farmedChapters.includes(chapterId)) {
-                    confShow(I18N('NT_BOSS_WAS_KILLED', { chapterNumber: romanNumerals[chapterNumber]}));
+                    await popup.confirm(I18N('NT_BOSS_WAS_KILLED', { chapterNumber: romanNumerals[chapterNumber]}));
                     //Сбросить главу
                     await Caller.send('invasion_resetChapter')
                 } else {
-                    confShow(I18N('NT_BOSS_WAS_NOT_KILLED', { chapterNumber: romanNumerals[chapterNumber]}));
+                    await popup.confirm(I18N('NT_BOSS_WAS_NOT_KILLED', { chapterNumber: romanNumerals[chapterNumber]}));
                 }
                 return;
             }
@@ -935,7 +1005,7 @@
         }
         if (lives == 0) {
             setProgress('', true);
-            confShow(I18N('NHR_LIVES_ARE_OVER', { chapterNumber: romanNumerals[chapterNumber]}));
+            await popup.confirm(I18N('NHR_LIVES_ARE_OVER', { chapterNumber: romanNumerals[chapterNumber]}));
             return;
         }
     }
@@ -1070,8 +1140,11 @@
                     setProgress(I18N('NT_MISSION_PROGRESS_BOSS'), false);
                 }
                 await new Promise((e) => setTimeout(e, 2000));
-                await attackTitanMission(missionId, chapterId, heroes, firstSpiritSkills, boss);
-
+                let error = await attackTitanMission(missionId, chapterId, heroes, firstSpiritSkills, boss);
+                if (error) {
+                    await popup.confirm(I18N('NEW_CHARACTER_SOMETHING_WENT_WRONG'));
+                    return;
+                }
                 //Убили / не убили босса, вышли с "while"
                 if (boss == true) {
                     break;
@@ -1265,7 +1338,11 @@
                 }
                 await new Promise((e) => setTimeout(e, 2000));
 
-                await attackHeroMission(missionId, chapterId, heroes, pet, boss, petsFavor);
+                let error = await attackHeroMission(missionId, chapterId, heroes, pet, boss, petsFavor);
+                if (error) {
+                    await popup.confirm(I18N('NEW_CHARACTER_SOMETHING_WENT_WRONG'));
+                    return;
+                }
                 //Убили / не убили босса, вышли с "while"
                 if (boss == true) {
                     break;
@@ -1356,12 +1433,12 @@
         return 0;
     }
 
-    function getAllHeroIDs() {
+    async function getAllHeroIDs() {
         let heroIds = Object.values(lib.data.hero).filter(e => e.type === 'hero' && !e.roleExtended.includes('boss'));
         heroIds = heroIds.filter((e) => e.id != 63 && e.id != 65);
         const heroIdsConsole = heroIds.map(e => `${e.id} - ` + cheats.translate(`LIB_HERO_NAME_${e.id}`)).join('\n');
         console.log(heroIdsConsole);
-        popup.customPopup(async (complete) => {
+        await popup.customPopup(async (complete) => {
             popup.custom.insertAdjacentHTML(
                 'beforeend',
                 '<div class="PopUp_text" style="text-align: left;">' + heroIds.map((e) => `<div>${e.id} - ` + cheats.translate(`LIB_HERO_NAME_${e.id}`) + '</div>').join('') + '</div>'
@@ -1373,9 +1450,11 @@
             });
             popup.show();
         });
+        //Возврат в меню "Новый персонаж"
+        returnToNewCharacterMenu();
     }
 
-    function getAllTitanIDs() {
+    async function getAllTitanIDs() {
         let waterTitans = Object.values(lib.data.hero).filter(e => e.type === 'titan' && e.id < 4010);;
         let fireTitans = Object.values(lib.data.hero).filter(e => e.type === 'titan' && e.id >= 4010 && e.id < 4020);
         let earthTitans = Object.values(lib.data.hero).filter(e => e.type === 'titan' && e.id >= 4020 && e.id < 4030);
@@ -1391,7 +1470,7 @@
         message += `<div class="PopUp_text" style="color: SlateGray; text-align: center;">${I18N('NT_DARK_TITANS')}</div>` + darknessTitans.map((e) => `<div class="PopUp_text" style="text-align: left;">${e.id} - ` + cheats.translate(`LIB_HERO_NAME_${e.id}`) + '</div>').join('') + '<br>';
         message += `<div class="PopUp_text" style="color: Yellow; text-align: center;">${I18N('NT_LIGHT_TITANS')}</div>` + lightTitans.map((e) => `<div class="PopUp_text" style="text-align: left;">${e.id} - ` + cheats.translate(`LIB_HERO_NAME_${e.id}`) + '</div>').join('');
 
-        popup.customPopup(async (complete) => {
+        await popup.customPopup(async (complete) => {
             popup.custom.insertAdjacentHTML(
                 'beforeend',
                 message
@@ -1403,6 +1482,8 @@
             });
             popup.show();
         });
+        //Возврат в меню "Новый титан"
+        returnToNewTitanMenu();
     }
 
     async function getAttackingTeam (heroes, other = [], allHeroes = []) {
@@ -1435,14 +1516,14 @@
         }
         const answer = await popup.confirm(message, [
             {
-                msg: I18N('NT_COMPLETE_CHAPTER'),
+                msg: I18N('NT_COMPLETE_CHAPTER_START'),
                 placeholder: '1,2,3,4,5,6',
                 isInput: true,
                 default: titanAttackingTeams,
                 color: 'green',
             },
             {
-                msg: I18N('BTN_CANCEL'),
+                msg: I18N('NT_COMPLETE_CHAPTER_CANCEL'),
                 result: false,
                 isCancel: true,
                 color: 'red',
@@ -1486,6 +1567,8 @@
             ],
         );
         if (!answer) {
+            //Возврат в меню "Новый персонаж"
+            returnToNewCharacterMenu();
             return;
         }
 
@@ -1517,7 +1600,9 @@
         console.log('grailLvl ' + grailLvl);
 
         if (valorCoins < (2800 - grailLvl * 100)) {
-            confShow(I18N('NHR_NOT_ENOUGH_COINS'));
+            await popup.confirm(I18N('NHR_NOT_ENOUGH_COINS'));
+            //Возврат в меню "Новый персонаж"
+            returnToNewCharacterMenu();
             return;
         }
 
@@ -1544,9 +1629,9 @@
                 }
             }
         }
-        confShow(I18N('NHR_SPEND_VALOR_COINS_RESULT', {sapphireMedallion:sapphireMedallion, fragmentHero: fragmentHero > fragmentTitan ? fragmentHero : fragmentTitan }));
-        console.log(sapphireMedallion);
-        console.log(fragmentHero);
+        await popup.confirm(I18N('NHR_SPEND_VALOR_COINS_RESULT', {sapphireMedallion:sapphireMedallion, fragmentHero: fragmentHero > fragmentTitan ? fragmentHero : fragmentTitan }));
+        //Возврат в меню "Новый персонаж"
+        returnToNewCharacterMenu();
     }
 
     async function buyTitansAndTotemSkils (shopId, titanIds, titanFragments, titanSkilsIds, titanSkilFragments) {
@@ -1836,125 +1921,135 @@
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     async function attackTitanMission(missionId, chapterId, heroes, firstSpiritSkills, boss = false) {
-        if (boss == true) {
-            console.log('%cАтакуем босса ', 'color: green; font-weight: bold;');
-        }
-        const startBattle = await Caller.send({
-            name: 'invasion_bossStart',
-            args: {
-                id: missionId,
-                chapterId: chapterId,
-                heroes: heroes,
-                //firstSpiritElement: "earth",
-                firstSpiritSkills: firstSpiritSkills,
-                favor: {},
-            },
-        });
-        const calcBattle = await Calc(startBattle);
-
-        if (!calcBattle.result.win) {
-            const cloneBattle = structuredClone(startBattle);
-            const bFix = new WinFixBattle(cloneBattle);
-            let result = await bFix.start(cloneBattle.endTime, Infinity);
-            if (result.result?.win) {
-                calcBattle.result = result.result;
-                calcBattle.progress = result.progress;
-                calcBattle.battleTimer = result.battleTimer;
+        try {
+            if (boss == true) {
+                console.log('%cАтакуем босса ', 'color: green; font-weight: bold;');
             }
-        }
+            const startBattle = await Caller.send({
+                name: 'invasion_bossStart',
+                args: {
+                    id: missionId,
+                    chapterId: chapterId,
+                    heroes: heroes,
+                    //firstSpiritElement: "earth",
+                    firstSpiritSkills: firstSpiritSkills,
+                    favor: {},
+                },
+            });
+            const calcBattle = await Calc(startBattle);
 
-        if (!calcBattle.result.win && boss == true) {
-            //Босса не убили
-            console.log('%cБосса не убили ', 'color: red; font-weight: bold;');
-            return;
-        }
-        if (boss == true) {
-            let timer = calcBattle.battleTimer;
-            console.log('%cУбили босса', 'color: green; font-weight: bold;');
-            let message = I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_1');
-            setProgress(message, false);
-            await new Promise((e) => setTimeout(e, 1000));
-            message += I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_2');
-            setProgress(message, false);
-            await new Promise((e) => setTimeout(e, 1000));
-            message += I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_3');
-            setProgress(message, false);
-            await new Promise((e) => setTimeout(e, 1000));
-            message += I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_4');
-            setProgress(message, false);
-            await new Promise((e) => setTimeout(e, 1000));
-            message += I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_5');
-            await countdownTimer(timer, message);
-        }
+            if (!calcBattle.result.win) {
+                const cloneBattle = structuredClone(startBattle);
+                const bFix = new WinFixBattle(cloneBattle);
+                let result = await bFix.start(cloneBattle.endTime, Infinity);
+                if (result.result?.win) {
+                    calcBattle.result = result.result;
+                    calcBattle.progress = result.progress;
+                    calcBattle.battleTimer = result.battleTimer;
+                }
+            }
 
-        const endBattle = await Caller.send({
-            name: 'invasion_bossEnd',
-            args: {
-                id: missionId,
-                result: calcBattle.result,
-                progress: calcBattle.progress,
-            },
-        });
+            if (!calcBattle.result.win && boss == true) {
+                //Босса не убили
+                console.log('%cБосса не убили ', 'color: red; font-weight: bold;');
+                return;
+            }
+            if (boss == true) {
+                let timer = calcBattle.battleTimer;
+                console.log('%cУбили босса', 'color: green; font-weight: bold;');
+                let message = I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_1');
+                setProgress(message, false);
+                await new Promise((e) => setTimeout(e, 1000));
+                message += I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_2');
+                setProgress(message, false);
+                await new Promise((e) => setTimeout(e, 1000));
+                message += I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_3');
+                setProgress(message, false);
+                await new Promise((e) => setTimeout(e, 1000));
+                message += I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_4');
+                setProgress(message, false);
+                await new Promise((e) => setTimeout(e, 1000));
+                message += I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_5');
+                await countdownTimer(timer, message);
+            }
+
+            const endBattle = await Caller.send({
+                name: 'invasion_bossEnd',
+                args: {
+                    id: missionId,
+                    result: calcBattle.result,
+                    progress: calcBattle.progress,
+                },
+            });
+            return false;
+        } catch (e) {
+            return true;
+        }
     }
 
     async function attackHeroMission(missionId, chapterId, heroes, pet, boss = false, petsFavor) {
-        if (boss == true) {
-            console.log('%cАтакуем босса ', 'color: green; font-weight: bold;');
-        }
-        const startBattle = await Caller.send({
-            name: 'invasion_bossStart',
-            args: {
-                id: missionId,
-                chapterId: chapterId,
-                heroes: heroes,
-                pet: pet,
-                favor: petsFavor,
-            },
-        });
-        const calcBattle = await Calc(startBattle);
-
-        if (!calcBattle.result.win) {
-            const cloneBattle = structuredClone(startBattle);
-            const bFix = new WinFixBattle(cloneBattle);
-            let result = await bFix.start(cloneBattle.endTime, Infinity);
-            if (result.result?.win) {
-                calcBattle.result = result.result;
-                calcBattle.progress = result.progress;
-                calcBattle.battleTimer = result.battleTimer;
+        try {
+            if (boss == true) {
+                console.log('%cАтакуем босса ', 'color: green; font-weight: bold;');
             }
-        }
+            const startBattle = await Caller.send({
+                name: 'invasion_bossStart',
+                args: {
+                    id: missionId,
+                    chapterId: chapterId,
+                    heroes: heroes,
+                    pet: pet,
+                    favor: petsFavor,
+                },
+            });
+            const calcBattle = await Calc(startBattle);
 
-        if (!calcBattle.result.win && boss == true) {
-            //Босса не убили
-            console.log('%cБосса не убили ', 'color: red; font-weight: bold;');
-            return;
-        }
-        if (boss == true) {
-            let timer = calcBattle.battleTimer;
-            console.log('%cУбили босса', 'color: green; font-weight: bold;');
-            let message = I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_1');
-            setProgress(message, false);
-            await new Promise((e) => setTimeout(e, 1000));
-            message += I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_2');
-            setProgress(message, false);
-            await new Promise((e) => setTimeout(e, 1000));
-            message += I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_3');
-            setProgress(message, false);
-            await new Promise((e) => setTimeout(e, 1000));
-            message += I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_4');
-            setProgress(message, false);
-            await new Promise((e) => setTimeout(e, 1000));
-            message += I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_5');
-            await countdownTimer(timer, message);
-        }
+            if (!calcBattle.result.win) {
+                const cloneBattle = structuredClone(startBattle);
+                const bFix = new WinFixBattle(cloneBattle);
+                let result = await bFix.start(cloneBattle.endTime, Infinity);
+                if (result.result?.win) {
+                    calcBattle.result = result.result;
+                    calcBattle.progress = result.progress;
+                    calcBattle.battleTimer = result.battleTimer;
+                }
+            }
 
-        await Caller.send({
-            name: 'invasion_bossEnd',
-            args: {
-                id: missionId,
-                result: calcBattle.result,
-                progress: calcBattle.progress,
-            },
-        });
+            if (!calcBattle.result.win && boss == true) {
+                //Босса не убили
+                console.log('%cБосса не убили ', 'color: red; font-weight: bold;');
+                return;
+            }
+            if (boss == true) {
+                let timer = calcBattle.battleTimer;
+                console.log('%cУбили босса', 'color: green; font-weight: bold;');
+                let message = I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_1');
+                setProgress(message, false);
+                await new Promise((e) => setTimeout(e, 1000));
+                message += I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_2');
+                setProgress(message, false);
+                await new Promise((e) => setTimeout(e, 1000));
+                message += I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_3');
+                setProgress(message, false);
+                await new Promise((e) => setTimeout(e, 1000));
+                message += I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_4');
+                setProgress(message, false);
+                await new Promise((e) => setTimeout(e, 1000));
+                message += I18N('NT_BOSS_WAS_KILLED_SET_PROGRESS_5');
+                await countdownTimer(timer, message);
+            }
+
+            await Caller.send({
+                name: 'invasion_bossEnd',
+                args: {
+                    id: missionId,
+                    result: calcBattle.result,
+                    progress: calcBattle.progress,
+                },
+            });
+            return false;
+        } catch (e) {
+            return true;
+        }
     }
 })();

@@ -19,8 +19,8 @@
 // @comment     the script manager will ask for permission the first time.
 // @connect     *
 //
-// @version     250
-// @require     https://ppixiv.org/builds/r250/ppixiv-main.user.js#sha256=2c15449ee56883d5595de8dc865cd88dd28e51be4c6724aeefa6cb4c38788fac
+// @version     251
+// @require     https://ppixiv.org/builds/r251/ppixiv-main.user.js#sha256=c4cd4fcb1b8e1064558ba200695bb0cecf1212f2ce8d9a7de276652785783178
 // @downloadURL https://update.greasyfork.org/scripts/370418/ppixiv%20for%20Pixiv.user.js
 // @updateURL https://update.greasyfork.org/scripts/370418/ppixiv%20for%20Pixiv.meta.js
 // ==/UserScript==

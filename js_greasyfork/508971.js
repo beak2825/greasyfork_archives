@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GM论坛勋章百宝箱
 // @namespace    http://tampermonkey.net/
-// @version      2.6.10
+// @version      2.6.11
 // @description  主要用于管理GM论坛的个人勋章，查看其他勋章属性请下载【勋章放大镜】
 // @match        https://www.gamemale.com/wodexunzhang-showxunzhang.html?action=my
 // @match        https://www.gamemale.com/plugin.php?id=wodexunzhang:showxunzhang&action=my
@@ -616,6 +616,7 @@
             "『厢庭望远』",
             "『狄文卡德的残羽』",
             "『炫目的铁塔』",
+            "『天圆地方』",
         ],
         "Prize": [
             "深渊遗物",
@@ -733,6 +734,8 @@
             // 2026年奖品
             "救命饮料",
             "适当显灵",
+            "未知纸盒",
+            "光明奇幻木偶",
         ],
     };
     // 2025年元旦活动新增的类别，期间限定的临时活动勋章

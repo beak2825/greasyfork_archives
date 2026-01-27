@@ -4,7 +4,7 @@
 // @namespace            https://github.com/v2hot/v2ex.rep
 // @homepageURL          https://github.com/v2hot/v2ex.rep#readme
 // @supportURL           https://github.com/v2hot/v2ex.rep/issues
-// @version              1.7.3
+// @version              1.7.4
 // @description          专注提升 V2EX 主题回复浏览体验的浏览器扩展/用户脚本。主要功能有 ✅ 修复有被 block 的用户时错位的楼层号；✅ 回复时自动带上楼层号；✅ 显示热门回复；✅ 显示被引用的回复；✅ 查看用户在当前主题下的所有回复与被提及的回复；✅ 自动预加载所有分页，支持解析显示跨页面引用；✅ 回复时上传图片；✅ 无感自动签到；✅ 懒加载用户头像图片；✅ 一直显示感谢按钮 🙏；✅ 一直显示隐藏回复按钮 🙈；✅ 快速发送感谢/快速隐藏回复（no confirm）等。
 // @description:zh-CN    专注提升 V2EX 主题回复浏览体验的浏览器扩展/用户脚本。主要功能有 ✅ 修复有被 block 的用户时错位的楼层号；✅ 回复时自动带上楼层号；✅ 显示热门回复；✅ 显示被引用的回复；✅ 查看用户在当前主题下的所有回复与被提及的回复；✅ 自动预加载所有分页，支持解析显示跨页面引用；✅ 回复时上传图片；✅ 无感自动签到；✅ 懒加载用户头像图片；✅ 一直显示感谢按钮 🙏；✅ 一直显示隐藏回复按钮 🙈；✅ 快速发送感谢/快速隐藏回复（no confirm）等。
 // @icon                 https://www.v2ex.com/favicon.ico
@@ -2918,6 +2918,8 @@
       firstReply.scrollIntoView({ block: "start" })
       event.preventDefault()
       event.stopImmediatePropagation()
+    } else {
+      location.reload()
     }
     for (const pagingElement of $$(".page_current,.page_normal")) {
       if (pagingElement.textContent === String(page)) {
@@ -3076,10 +3078,29 @@
       for (const replyElement of orgReplyElements) {
         replyElement.dataset.page = String(currentPage)
       }
-      for (let i2 = 1; i2 <= totalPage; i2++) {
-        if (i2 === currentPage) {
-          continue
+      const maxPreloadPageCount = parseInt10(
+        getSettingsValue("maxPreloadPageCount")
+      )
+      let pagesToLoad = []
+      if (maxPreloadPageCount === 0) {
+        for (let i2 = 1; i2 <= totalPage; i2++) {
+          if (i2 !== currentPage) {
+            pagesToLoad.push(i2)
+          }
         }
+      } else {
+        const nextPages = []
+        for (let i2 = currentPage + 1; i2 <= totalPage; i2++) {
+          nextPages.push(i2)
+        }
+        const prevPages = []
+        for (let i2 = currentPage - 1; i2 >= 1; i2--) {
+          prevPages.push(i2)
+        }
+        pagesToLoad = [...nextPages, ...prevPages].slice(0, maxPreloadPageCount)
+        pagesToLoad.sort((a, b) => a - b)
+      }
+      for (const i2 of pagesToLoad) {
         console.info("[V2EX.REP] Fetching page", i2)
         const html = await getTopicPage(topicId, i2)
         if (html) {
@@ -3753,6 +3774,19 @@
     loadMultiPages: {
       title: "\u9884\u52A0\u8F7D\u6240\u6709\u5206\u9875",
       defaultValue: true,
+    },
+    maxPreloadPageCount: {
+      title: "\u6700\u591A\u9884\u52A0\u8F7D\u5206\u9875\u4E2A\u6570",
+      type: "select",
+      defaultValue: "10",
+      options: {
+        所有: "0",
+        3: "3",
+        5: "5",
+        10: "10",
+        15: "15",
+        20: "20",
+      },
     },
     uploadImage: {
       title: "\u56DE\u590D\u65F6\u4E0A\u4F20\u56FE\u7247",

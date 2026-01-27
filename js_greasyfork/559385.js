@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         HKU Enrolment Loud Alarm + Live Countdown (Count-based)
+// @name         港大工学院选课系统开放检测通知脚本：HKU Enrolment Loud Alarm + Live Countdown (Count-based)
 // @namespace    https://msc.engg.hku.hk/
 // @version      4.5
 // @author       Tian Jialin
@@ -9,8 +9,8 @@
 // @run-at       document-end
 // @grant        GM_notification
 // @grant        GM_addStyle
-// @downloadURL https://update.greasyfork.org/scripts/559385/HKU%20Enrolment%20Loud%20Alarm%20%2B%20Live%20Countdown%20%28Count-based%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/559385/HKU%20Enrolment%20Loud%20Alarm%20%2B%20Live%20Countdown%20%28Count-based%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/559385/%E6%B8%AF%E5%A4%A7%E5%B7%A5%E5%AD%A6%E9%99%A2%E9%80%89%E8%AF%BE%E7%B3%BB%E7%BB%9F%E5%BC%80%E6%94%BE%E6%A3%80%E6%B5%8B%E9%80%9A%E7%9F%A5%E8%84%9A%E6%9C%AC%EF%BC%9AHKU%20Enrolment%20Loud%20Alarm%20%2B%20Live%20Countdown%20%28Count-based%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/559385/%E6%B8%AF%E5%A4%A7%E5%B7%A5%E5%AD%A6%E9%99%A2%E9%80%89%E8%AF%BE%E7%B3%BB%E7%BB%9F%E5%BC%80%E6%94%BE%E6%A3%80%E6%B5%8B%E9%80%9A%E7%9F%A5%E8%84%9A%E6%9C%AC%EF%BC%9AHKU%20Enrolment%20Loud%20Alarm%20%2B%20Live%20Countdown%20%28Count-based%29.meta.js
 // ==/UserScript==
 
 (() => {

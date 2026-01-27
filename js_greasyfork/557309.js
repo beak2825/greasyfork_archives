@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google AI Studio | Conversation/Chat Markdown-Export/Download (XHR/DOM)
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      2.7
+// @version      2.8
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Exports the full conversation to Markdown with collapsible thinking blocks. Supports dual extraction modes: XHR (instant, recommended) and DOM (scroll-based fallback).
@@ -1048,6 +1048,30 @@
         .settings-panel .toggle-switch:hover {
             background: #6f7378;
         }
+
+        .settings-panel .support-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding: 8px 12px;
+            background: transparent;
+            border: 1px solid #5f6368;
+            border-radius: 6px;
+            color: #9aa0a6;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .settings-panel .support-link:hover {
+            background: #3c4043;
+            border-color: #8ab4f8;
+            color: #8ab4f8;
+        }
     `;
 
     GM_addStyle(`
@@ -1425,6 +1449,19 @@
             toggleContainer.appendChild(this.toggleLabelDOM);
 
             this.panel.appendChild(toggleContainer);
+
+            // Support link
+            const supportLink = document.createElement('a');
+            supportLink.className = 'support-link';
+            supportLink.href = 'https://ko-fi.com/piknockyou';
+            supportLink.target = '_blank';
+            supportLink.rel = 'noopener noreferrer';
+            supportLink.title = 'Support this script on Ko-Fi';
+            supportLink.textContent = '☕ Support';
+            supportLink.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+            this.panel.appendChild(supportLink);
 
             // Toggle tooltip on hover
             let toggleTooltipTimeout = null;

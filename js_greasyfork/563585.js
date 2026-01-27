@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Gitee直接打开外链
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.2
 // @description  自动处理Gitee外链，若在中间页则自动跳转
 // @author       CandyMuj
-// @match        https://gitee.com/*
+// @match        *://gitee.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=gitee.com
 // @grant        none
 // @license      AGPL License
@@ -18,18 +18,19 @@
 
     let urlPrefix = "https://gitee.com/link?target="
     function processLinks() {
-        let links = document.querySelectorAll(`a[href*='${urlPrefix}']`);
-        
+        let links = document.querySelectorAll(`a[href*='${urlPrefix}']:not([data-click-removed])`);
+
         links.forEach(function(link) {
             let href = link.getAttribute("href");
             let targetPath = href.split("target=")[1];
             let decodedPath = decodeURIComponent(targetPath);
-            
+
             link.setAttribute("href", decodedPath);
             link.setAttribute("target", "_blank");
+            link.setAttribute('data-click-removed', 'true');
         });
-        
-        // 5秒后再次执行
+
+        // 定时执行，避免滚动获取到新的链接无法替换
         setTimeout(processLinks, 1500);
     }
 

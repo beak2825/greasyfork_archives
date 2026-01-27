@@ -3,7 +3,7 @@
 // @description b站评论过滤器
 // @license MIT
 // @namespace dreamcenter
-// @version 3.4.0.1
+// @version 3.5.0.1
 // @match *://*.bilibili.com/video/*
 // @match *://*.bilibili.com/opus/*
 // @match *://space.bilibili.com/*/dynamic
@@ -57,6 +57,11 @@ const filterFunction = {
         for(var key of banAt) {
             if (raw.includes(key)) return true;
         }
+    },
+    bySearch (raw) {
+        for(var key of banMap) {
+            if (raw.includes(key)) return true;
+        }
     }
 }
 
@@ -91,6 +96,10 @@ function judgeIfBanned(raw) {
                     continue; // 跳过被回复者的检查
                 }
                 if (filterFunction.byAt(atText)) return true;
+            }
+            if (type == "search") {
+                const searchText = node.innerText.trim();
+                if (searchText && filterFunction.bySearch(searchText)) return true;
             }
             // 其它情况看是否有需求再加
         }

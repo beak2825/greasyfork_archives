@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         POS 销售单同步助手 + 现金账本 (V6.5.15 缓存修复版)
+// @name         POS 销售单同步助手 + 现金账本 (V6.6.2 修复空括号版)
 // @namespace    playbox-electronics
-// @version      6.5.15
-// @description  F11：POS 转销售单。修复：付款返回后价格标签变为空白方块的问题(缓存逻辑修复)；保留所有功能。
+// @version      6.6.2
+// @description  F11：POS 转销售单。修复：彻底过滤 "[]" 空备注，确保订单行描述和消息墙整洁。
 // @match        *://*.odoo.com/pos/*
 // @match        *://*.odoo.sh/pos/*
 // @match        *://*/pos/*
 // @grant        none
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/557572/POS%20%E9%94%80%E5%94%AE%E5%8D%95%E5%90%8C%E6%AD%A5%E5%8A%A9%E6%89%8B%20%2B%20%E7%8E%B0%E9%87%91%E8%B4%A6%E6%9C%AC%20%28V6515%20%E7%BC%93%E5%AD%98%E4%BF%AE%E5%A4%8D%E7%89%88%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/557572/POS%20%E9%94%80%E5%94%AE%E5%8D%95%E5%90%8C%E6%AD%A5%E5%8A%A9%E6%89%8B%20%2B%20%E7%8E%B0%E9%87%91%E8%B4%A6%E6%9C%AC%20%28V6515%20%E7%BC%93%E5%AD%98%E4%BF%AE%E5%A4%8D%E7%89%88%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/557572/POS%20%E9%94%80%E5%94%AE%E5%8D%95%E5%90%8C%E6%AD%A5%E5%8A%A9%E6%89%8B%20%2B%20%E7%8E%B0%E9%87%91%E8%B4%A6%E6%9C%AC%20%28V662%20%E4%BF%AE%E5%A4%8D%E7%A9%BA%E6%8B%AC%E5%8F%B7%E7%89%88%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/557572/POS%20%E9%94%80%E5%94%AE%E5%8D%95%E5%90%8C%E6%AD%A5%E5%8A%A9%E6%89%8B%20%2B%20%E7%8E%B0%E9%87%91%E8%B4%A6%E6%9C%AC%20%28V662%20%E4%BF%AE%E5%A4%8D%E7%A9%BA%E6%8B%AC%E5%8F%B7%E7%89%88%29.meta.js
 // ==/UserScript==
 
 (function () {
@@ -47,21 +47,13 @@
         --pb-success-text: #4ade80;
         --pb-danger-text: #f87171;
       }
-
-      /* --- 强制排序 & 防挤压 --- */
-      .control-buttons {
-          display: flex;
-          flex-wrap: wrap;
-      }
+      .control-buttons { display: flex; flex-wrap: wrap; }
       .control-buttons > .more-btn { order: 99 !important; }
       #pb-cash-btn, #pb-pricelist-label { order: 2 !important; }
 
-      /* --- 价格表标签 UI --- */
       #pb-pricelist-label {
-          /* 关键属性：防止压缩 */
           flex-shrink: 0 !important;
           min-width: fit-content !important;
-
           margin-left: 10px;
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
           font-size: 14px;
@@ -79,123 +71,32 @@
           white-space: nowrap;
           cursor: default;
       }
-      /* 如果标签内容为空，强制隐藏背景，防止出现小方块 */
-      #pb-pricelist-label:empty {
-          display: none !important;
-          padding: 0 !important;
-          margin: 0 !important;
-      }
+      #pb-pricelist-label:empty { display: none !important; }
+      #pb-pricelist-icon { font-size: 13px; color: #6b7280; }
 
-      #pb-pricelist-icon {
-          font-size: 13px;
-          color: #6b7280;
-      }
-
-      /* --- 通用弹窗样式 --- */
-      .pb-modal-overlay {
-          position: fixed; inset: 0;
-          background: rgba(0, 0, 0, 0.7);
-          backdrop-filter: blur(6px);
-          display: flex; align-items: center; justify-content: center;
-          z-index: 999999; font-family: var(--pb-font);
-          opacity: 0; visibility: hidden; transition: all 0.3s ease;
-      }
+      .pb-modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 999999; font-family: var(--pb-font); opacity: 0; visibility: hidden; transition: all 0.3s ease; }
       .pb-modal-overlay.pb-visible { opacity: 1; visibility: visible; }
-      .pb-modal-box {
-          background: var(--pb-glass-bg);
-          backdrop-filter: blur(30px) saturate(120%);
-          -webkit-backdrop-filter: blur(30px) saturate(120%);
-          border: 1px solid var(--pb-glass-border);
-          box-shadow: var(--pb-shadow);
-          border-radius: 24px;
-          width: 520px;
-          max-width: 95vw;
-          display: flex; flex-direction: column;
-          transform: scale(0.9);
-          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-          overflow: hidden;
-          max-height: 85vh;
-          color: white;
-      }
+      .pb-modal-box { background: var(--pb-glass-bg); backdrop-filter: blur(30px) saturate(120%); -webkit-backdrop-filter: blur(30px) saturate(120%); border: 1px solid var(--pb-glass-border); box-shadow: var(--pb-shadow); border-radius: 24px; width: 520px; max-width: 95vw; display: flex; flex-direction: column; transform: scale(0.9); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow: hidden; max-height: 85vh; color: white; }
       .pb-modal-overlay.pb-visible .pb-modal-box { transform: scale(1); }
-      .pb-modal-header {
-          padding: 24px 32px 10px;
-          display: flex; justify-content: space-between; align-items: center;
-          border-bottom: none;
-      }
+      .pb-modal-header { padding: 24px 32px 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: none; }
       .pb-modal-title { font-size: 20px; font-weight: 600; color: white; letter-spacing: 0.5px; }
-
-      .pb-modal-close {
-          width: 32px; height: 32px;
-          display: flex; align-items: center; justify-content: center;
-          font-family: Arial, sans-serif;
-          font-size: 26px;
-          line-height: 1;
-          color: rgba(255,255,255,0.5);
-          cursor: pointer;
-          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s;
-      }
-      .pb-modal-close:hover {
-          color: white;
-          transform: rotate(90deg);
-      }
-
-      .pb-modal-body {
-          padding: 0 0 24px 0;
-          font-size: 16px;
-          font-weight: 500;
-          line-height: 1.6;
-          color: rgba(255, 255, 255, 0.95);
-          overflow-y: auto;
-      }
-      .pb-message-content {
-          padding: 24px 32px;
-          color: white;
-          font-size: 16px;
-          font-weight: 500;
-      }
-      .pb-modal-footer {
-          padding: 0 32px 24px;
-          display: flex; justify-content: flex-end; gap: 12px;
-      }
-      .pb-modal-btn {
-          padding: 9px 24px;
-          font-size: 14px;
-          font-weight: 600;
-          border-radius: 12px;
-          cursor: pointer;
-          border: none;
-          transition: all 0.2s ease;
-          backdrop-filter: blur(4px);
-          letter-spacing: 0.5px;
-      }
+      .pb-modal-close { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-family: Arial, sans-serif; font-size: 26px; line-height: 1; color: rgba(255,255,255,0.5); cursor: pointer; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s; }
+      .pb-modal-close:hover { color: white; transform: rotate(90deg); }
+      .pb-modal-body { padding: 0 0 24px 0; font-size: 16px; font-weight: 500; line-height: 1.6; color: rgba(255, 255, 255, 0.95); overflow-y: auto; }
+      .pb-message-content { padding: 24px 32px; color: white; font-size: 16px; font-weight: 500; white-space: pre-wrap; }
+      .pb-modal-footer { padding: 0 32px 24px; display: flex; justify-content: flex-end; gap: 12px; }
+      .pb-modal-btn { padding: 9px 24px; font-size: 14px; font-weight: 600; border-radius: 12px; cursor: pointer; border: none; transition: all 0.2s ease; backdrop-filter: blur(4px); letter-spacing: 0.5px; }
       .pb-modal-btn:active { transform: scale(0.96); }
-      .pb-modal-btn-primary {
-          background: rgba(255, 255, 255, 0.35);
-          color: white;
-          border: 1px solid rgba(255, 255, 255, 0.5);
-          font-weight: 700;
-          text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      }
-      .pb-modal-btn-primary:hover {
-          background: rgba(255, 255, 255, 0.5);
-          border-color: rgba(255, 255, 255, 0.7);
-          transform: translateY(-1px);
-          box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-      }
-      .pb-modal-btn-secondary {
-          background: transparent;
-          color: rgba(255,255,255,0.9);
-          border: 1px solid rgba(255,255,255,0.25);
-          font-weight: 600;
-      }
+      .pb-modal-btn-primary { background: rgba(255, 255, 255, 0.35); color: white; border: 1px solid rgba(255, 255, 255, 0.5); font-weight: 700; text-shadow: 0 1px 3px rgba(0,0,0,0.4); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+      .pb-modal-btn-primary:hover { background: rgba(255, 255, 255, 0.5); border-color: rgba(255, 255, 255, 0.7); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.2); }
+      .pb-modal-btn-secondary { background: transparent; color: rgba(255,255,255,0.9); border: 1px solid rgba(255,255,255,0.25); font-weight: 600; }
       .pb-modal-btn-secondary:hover { background: rgba(255,255,255,0.2); color: white; }
       .pb-loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000000; opacity: 0; transition: opacity 0.2s; visibility: hidden; }
       .pb-loading-overlay.pb-visible { opacity: 1; visibility: visible; }
       .pb-loading-box { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 24px 40px; border-radius: 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; color: white; font-weight: 500; backdrop-filter: blur(20px); }
       .pb-spinner { width: 32px; height: 32px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.1); border-top-color: white; animation: pb-spin 0.8s infinite linear; }
       @keyframes pb-spin { to{transform: rotate(1turn)} }
+
       .pb-table-container { margin: 0; }
       .pb-table { width: 100%; border-collapse: collapse; font-size: 13px; font-weight: 400; text-align: left; }
       .pb-table th { padding: 12px 32px; color: var(--pb-text-header); font-weight: 600; font-size: 13px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); position: sticky; top: 0; z-index: 10; background: transparent; }
@@ -359,89 +260,81 @@
       try {
           const pos = window.posmodel;
           if (!pos) return "";
-
           let order = null;
-          if (typeof pos.get_order === "function") {
-              order = pos.get_order();
-          }
+          if (typeof pos.get_order === "function") order = pos.get_order();
           if (!order && pos.selectedOrder) order = pos.selectedOrder;
           if (!order) return "";
-
           const pl = order.pricelist_id;
           if (!pl) return "";
-
-          const name = (pl.name || pl.display_name || "").toString().trim();
-          return name;
-      } catch (e) {
-          return "";
-      }
+          return (pl.name || pl.display_name || "").toString().trim();
+      } catch (e) { return ""; }
   }
 
   function updatePricelistLabel() {
       const container = document.querySelector(".control-buttons");
       if (!container) return;
-
       let tag = document.getElementById("pb-pricelist-label");
-      let forceUpdate = false; // 标记：是否强制更新
-
-      // 核心修复逻辑：
-      // 如果 DOM 中找不到标签，或者标签被从容器中移除了（说明 Odoo 重绘了界面）
-      // 我们需要创建/移动标签，并标记需要【强制更新内容】，无视 lastPricelistName 缓存。
+      let forceUpdate = false;
       if (!tag) {
           tag = document.createElement("span");
           tag.id = "pb-pricelist-label";
-          // 初始插入
           const cashBtn = document.getElementById("pb-cash-btn");
-          if (cashBtn) {
-              cashBtn.insertAdjacentElement("afterend", tag);
-          } else {
-              container.appendChild(tag);
-          }
-          forceUpdate = true; // 新创建的，肯定是空的，必须强制更新
+          if (cashBtn) cashBtn.insertAdjacentElement("afterend", tag);
+          else container.appendChild(tag);
+          forceUpdate = true;
       } else if (tag.parentNode !== container) {
           container.appendChild(tag);
-          forceUpdate = true; // 被重新挂载的，可能状态丢失，强制更新
+          forceUpdate = true;
       }
-
       const name = getCurrentPricelistName();
-
-      // 如果不是强制更新模式，且名字没变，才走缓存逻辑
       if (!forceUpdate && name === lastPricelistName) {
           if (!name && tag.style.display !== "none") tag.style.display = "none";
           if (name && tag.style.display === "none") tag.style.display = "inline-flex";
           return;
       }
-
       lastPricelistName = name;
-
       if (name) {
           tag.innerHTML = `<i class="fa fa-tag" id="pb-pricelist-icon"></i> <span>${name}</span>`;
           tag.style.display = "inline-flex";
       } else {
-          tag.innerHTML = ""; // 彻底清空内容
+          tag.innerHTML = "";
           tag.style.display = "none";
       }
   }
 
+  // [核心修改] 增强清洗函数，专门处理空数组 []
   function cleanNoteText(rawNote) {
       let clean = rawNote;
       try {
           if (clean && typeof clean === 'string' && (clean.startsWith('[') || clean.startsWith('{'))) {
                const parsed = JSON.parse(clean);
-               if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].text) {
-                   clean = parsed[0].text;
-               } else if (parsed.text) {
-                   clean = parsed.text;
+               // 处理数组: [{"text":...}] 或 []
+               if (Array.isArray(parsed)) {
+                   if (parsed.length > 0 && parsed[0].text) {
+                       clean = parsed[0].text;
+                   } else {
+                       clean = ""; // 空数组或无 text 属性 -> 视为空
+                   }
                }
-          } else if (clean && typeof clean === 'object') {
-               if (Array.isArray(clean) && clean.length > 0 && clean[0].text) {
-                   clean = clean[0].text;
-               } else if (clean.text) {
-                   clean = clean.text;
+               // 处理对象: {"text":...}
+               else if (typeof parsed === 'object') {
+                   if (parsed.text) {
+                       clean = parsed.text;
+                   } else {
+                       clean = ""; // 无 text 属性 -> 视为空
+                   }
                }
           }
-      } catch (e) {}
-      return typeof clean === 'string' ? clean : "";
+      } catch (e) {
+          // 解析失败，保持原样（可能是普通字符串）
+      }
+
+      // 最终清洗：转字符串 -> 去除两端空格 -> 再次检查是否为残留的 "[]"
+      if (typeof clean !== 'string') return "";
+      clean = clean.trim();
+      if (clean === "[]") return ""; // 强制过滤残留的空数组字符串
+
+      return clean;
   }
 
   function getOrderGlobalNote(order) {
@@ -482,18 +375,27 @@
             const lJson = l.export_as_JSON();
             if (lJson && lJson.note) rawLineNote = lJson.note;
         }
+
+        // [调用增强后的清洗函数]
         const cleanLineNote = cleanNoteText(rawLineNote);
 
+        // [严格判断] 只有当 cleanLineNote 有真实内容时，才进行处理
         if (cleanLineNote) {
              let prodName = l.product_id.display_name || l.product_id.name;
              if (typeof l.export_as_JSON === "function") {
                  const json = l.export_as_JSON();
                  if (json && json.full_product_name) prodName = json.full_product_name;
              }
-             const formatted = `${prodName}: ${cleanLineNote}`;
-             lineVals.name = formatted;
-             notesToPost.push(formatted);
+
+             // 1. 消息墙：保留产品名 + 备注
+             const formattedForChatter = `${prodName}: ${cleanLineNote}`;
+             notesToPost.push(formattedForChatter);
+
+             // 2. 订单行：纯备注 (无产品名)
+             lineVals.name = cleanLineNote;
         }
+        // 如果 else (备注为空)，则 lineVals.name 不被赋值，Odoo 会自动使用默认产品描述
+
         return [0, 0, lineVals];
     }).filter(Boolean);
 
@@ -557,7 +459,7 @@
                 if (typeof posmodel.selectedOrder.set_client_order_ref === "function") {
                     posmodel.selectedOrder.set_client_order_ref(soName);
                 } else if (typeof posmodel.selectedOrder.set_name === "function") {
-                    // 可选：某些版本用这个改名字
+                    // 可选
                 }
                 posmodel.selectedOrder.name = soName;
                 console.log(`[POS Sync] 已将当前 POS 单绑定至: ${soName}`);
@@ -611,7 +513,7 @@
                     const amountClass = isPositive ? 'pb-amount-in' : 'pb-amount-out';
                     const sign = isPositive ? '+' : '';
                     let labelText = l.payment_ref || '无备注';
-                    labelText = labelText.replace(/PLAYBOX ELECTRONICS\s+\d+\/\d+-/gi, '');
+                    labelText = labelText.replace(/PLAYBOX ELECTRONICS\s+[\w]+\/\d+-/gi, '');
                     labelText = labelText.replace(/在-/g, '收入: ').replace(/out-/g, '支出: ');
                     const dateStr = l.date.split(" ")[0];
                     html += `<tr>
@@ -660,9 +562,6 @@
     }
   });
 
-  // =========================
-  // 核心修复：双重保障 (规格显示 + 标签挂载)
-  // =========================
   setInterval(() => {
     if (!document.getElementById("pb-pos-style")) ensureModalDom();
     addIntegratedButton();
@@ -670,33 +569,22 @@
 
     const modals = document.querySelectorAll(".modal-content:not([data-pb-spec-done='1'])");
     modals.forEach(modal => {
-        const hasTitle =
-            modal.querySelector("header.modal-header h3.section-title") ||
-            modal.querySelector("header.modal-header .modal-title");
+        const hasTitle = modal.querySelector("header.modal-header h3.section-title") || modal.querySelector("header.modal-header .modal-title");
         if (hasTitle) injectSpec(modal);
     });
 
   }, 500);
 
   function getProductKeyFromModal(modal) {
-    const titleEl =
-      modal.querySelector("header.modal-header h3.section-title") ||
-      modal.querySelector("header.modal-header .modal-title");
-
+    const titleEl = modal.querySelector("header.modal-header h3.section-title") || modal.querySelector("header.modal-header .modal-title");
     if (!titleEl) return null;
-
     const full = titleEl.textContent.replace(/\s+/g, " ").trim();
     if (!full) return null;
-
     const m = full.match(/\[([^\]]+)]/);
-    if (m && m[1]) {
-      return { type: "code", value: m[1].trim() };
-    }
-
+    if (m && m[1]) return { type: "code", value: m[1].trim() };
     const firstPart = full.split("|")[0];
     const name = firstPart ? firstPart.trim() : null;
     if (name) return { type: "name", value: name };
-
     return null;
   }
 
@@ -704,44 +592,18 @@
 
   async function getUomNamesByKey(keyInfo) {
     if (!keyInfo) return [];
-
     const cacheKey = keyInfo.type + ":" + keyInfo.value;
     if (uomCache[cacheKey]) return uomCache[cacheKey];
-
     let domain;
-    if (keyInfo.type === "code") {
-      domain = [["default_code", "=", keyInfo.value]];
-    } else {
-      domain = [
-        "|",
-        "|",
-        ["default_code", "=", keyInfo.value],
-        ["name", "=", keyInfo.value],
-        ["display_name", "=", keyInfo.value],
-      ];
-    }
+    if (keyInfo.type === "code") domain = [["default_code", "=", keyInfo.value]];
+    else domain = ["|", "|", ["default_code", "=", keyInfo.value], ["name", "=", keyInfo.value], ["display_name", "=", keyInfo.value]];
 
-    const products = await callOdoo(
-      "product.product",
-      "search_read",
-      [domain, ["id", "uom_ids"]],
-      { limit: 1 }
-    );
-
-    if (!products || !products.length) {
-      uomCache[cacheKey] = [];
-      return [];
-    }
-
+    const products = await callOdoo("product.product", "search_read", [domain, ["id", "uom_ids"]], { limit: 1 });
+    if (!products || !products.length) { uomCache[cacheKey] = []; return []; }
     const uids = products[0].uom_ids || [];
-    if (!uids.length) {
-      uomCache[cacheKey] = [];
-      return [];
-    }
-
+    if (!uids.length) { uomCache[cacheKey] = []; return []; }
     const uoms = await callOdoo("uom.uom", "read", [uids, ["name"]]);
     const names = (uoms || []).map((u) => u.name).filter(Boolean);
-
     uomCache[cacheKey] = names;
     return names;
   }
@@ -750,35 +612,17 @@
     if (!modal) return;
     if (modal.dataset.pbSpecDone === "1") return;
     modal.dataset.pbSpecDone = "1";
-
     const keyInfo = getProductKeyFromModal(modal);
     if (!keyInfo) return;
-
     let names;
-    try {
-      names = await getUomNamesByKey(keyInfo);
-    } catch (e) {
-      console.warn("读取 uom_ids 失败:", e);
-      return;
-    }
+    try { names = await getUomNamesByKey(keyInfo); } catch (e) { return; }
     if (!names || !names.length) return;
-
     const labelText = "规格";
     const joined = names.join(" / ");
-
-    const titleEl =
-      modal.querySelector("header.modal-header h3.section-title") ||
-      modal.querySelector("header.modal-header .modal-title");
-
+    const titleEl = modal.querySelector("header.modal-header h3.section-title") || modal.querySelector("header.modal-header .modal-title");
     if (titleEl) {
-      const originalText =
-        titleEl.getAttribute("data-pb-original-title") ||
-        titleEl.textContent.replace(/\s+/g, " ").trim();
-
-      if (!titleEl.getAttribute("data-pb-original-title")) {
-        titleEl.setAttribute("data-pb-original-title", originalText);
-      }
-
+      const originalText = titleEl.getAttribute("data-pb-original-title") || titleEl.textContent.replace(/\s+/g, " ").trim();
+      if (!titleEl.getAttribute("data-pb-original-title")) titleEl.setAttribute("data-pb-original-title", originalText);
       titleEl.textContent = `${originalText} | ${labelText}: ${joined}`;
     }
   }
@@ -787,20 +631,14 @@
     for (const m of mutations) {
       for (const node of m.addedNodes) {
         if (!(node instanceof HTMLElement)) continue;
-
         if (node.matches(".modal-content")) {
-          const hasTitle =
-            node.querySelector("header.modal-header h3.section-title") ||
-            node.querySelector("header.modal-header .modal-title");
+          const hasTitle = node.querySelector("header.modal-header h3.section-title") || node.querySelector("header.modal-header .modal-title");
           if (hasTitle) injectSpec(node);
         }
-
         if (node.querySelector) {
           const modals = node.querySelectorAll(".modal-content");
           modals.forEach((modal) => {
-            const hasTitle =
-              modal.querySelector("header.modal-header h3.section-title") ||
-              modal.querySelector("header.modal-header .modal-title");
+            const hasTitle = modal.querySelector("header.modal-header h3.section-title") || modal.querySelector("header.modal-header .modal-title");
             if (hasTitle) injectSpec(modal);
           });
         }
@@ -809,16 +647,9 @@
   });
 
   try {
-      if(document.body) {
-        specObserver.observe(document.body, { childList: true, subtree: true });
-      } else {
-        window.addEventListener("DOMContentLoaded", () => {
-             specObserver.observe(document.body, { childList: true, subtree: true });
-        });
-      }
+      if(document.body) specObserver.observe(document.body, { childList: true, subtree: true });
+      else window.addEventListener("DOMContentLoaded", () => { specObserver.observe(document.body, { childList: true, subtree: true }); });
       console.log("📦 商品规格标题栏展示已启用（双重保障模式）");
-  } catch (e) {
-      console.warn("规格监听启动失败:", e);
-  }
+  } catch (e) { console.warn("规格监听启动失败:", e); }
 
 })();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Linux.do 帖子导出到 Notion
 // @namespace    https://linux.do/
-// @version      1.1.6
+// @version      1.1.7
 // @description  导出 Linux.do 帖子到 Notion（支持筛选、图片引用、丰富格式、文件附件）
 // @author       flobby
 // @license      MIT
@@ -984,6 +984,7 @@
 
     // -----------------------
     // 生成楼层 Callout Block
+    // 返回一个数组：第一个是 callout block，后续是溢出的 blocks（如果内容超过 100 个）
     // -----------------------
     function generatePostCalloutBlock(post, topic, settings) {
         const isOp = (post.username || "").toLowerCase() === (topic.opUsername || "").toLowerCase();
@@ -1016,14 +1017,40 @@
 
         children.push(...contentBlocks);
 
-        return {
-            type: "callout",
-            callout: {
-                icon: { type: "emoji", emoji },
-                rich_text: [{ type: "text", text: { content: title } }],
-                children: children.slice(0, 100), // Notion 限制每个 block 最多 100 个子 block
-            },
-        };
+        // Notion 限制每个 block 最多 100 个子 block
+        // 如果超过 100 个，将溢出的 blocks 包裹在续接 callout 中
+        const maxChildren = 100;
+        const result = [];
+
+        // 将 children 按 100 个一组拆分
+        for (let i = 0; i < children.length; i += maxChildren) {
+            const chunk = children.slice(i, i + maxChildren);
+            const isFirst = i === 0;
+            const partNumber = Math.floor(i / maxChildren) + 1;
+            const totalParts = Math.ceil(children.length / maxChildren);
+
+            let calloutTitle;
+            let calloutEmoji;
+
+            if (isFirst) {
+                calloutTitle = title;
+                calloutEmoji = emoji;
+            } else {
+                calloutTitle = `#${post.post_number}楼 续（${partNumber}/${totalParts}）`;
+                calloutEmoji = "📎";
+            }
+
+            result.push({
+                type: "callout",
+                callout: {
+                    icon: { type: "emoji", emoji: calloutEmoji },
+                    rich_text: [{ type: "text", text: { content: calloutTitle } }],
+                    children: chunk,
+                },
+            });
+        }
+
+        return result;
     }
 
     // -----------------------
@@ -2209,8 +2236,8 @@
             ui.setStatus("正在生成楼层内容…", "#6366f1");
             let processedCount = 0;
             for (const post of selected) {
-                const postBlock = generatePostCalloutBlock(post, data.topic, settings);
-                blocks.push(postBlock);
+                const postBlocks = generatePostCalloutBlock(post, data.topic, settings);
+                blocks.push(...postBlocks);
                 processedCount++;
                 if (processedCount % 10 === 0) {
                     ui.setProgress(processedCount, selected.length, "生成楼层");

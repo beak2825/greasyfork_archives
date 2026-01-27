@@ -1,18 +1,20 @@
 // ==UserScript==
-// @name         PSNine price
+// @name         PS price
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  在 PSNine 游戏页面展示港服价格历史和史低价格
 // @author       听风
 // @match        https://psnine.com/psngame/*
+// @match        https://psn0.com/psngame/*
 // @match        https://www.psnine.com/psngame/*
+// @match        https://www.psn0.com/psngame/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
 // @require      https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js
 // @connect      api.psnsgame.com
 // @license MI
-// @downloadURL https://update.greasyfork.org/scripts/562623/PSNine%20price.user.js
-// @updateURL https://update.greasyfork.org/scripts/562623/PSNine%20price.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562623/PS%20price.user.js
+// @updateURL https://update.greasyfork.org/scripts/562623/PS%20price.meta.js
 // ==/UserScript==
 
 (function () {

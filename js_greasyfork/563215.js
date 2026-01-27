@@ -3,7 +3,7 @@
 // @namespace    https://github.com/snacks-yummy/Greasy-Fork
 // @supportURL   https://github.com/snacks-yummy/Greasy-Fork/issues
 // @homepageURL  https://github.com/snacks-yummy/Greasy-Fork
-// @version      1.5.421
+// @version      1.5.424
 // @author       零食怎么吃都不胖
 // @description  全站网页增强：新标签页打开/去重定向/短链还原/文本裸链转链接/网盘提取码识别填充/已访问变色统计/自动展开/通用登录遮挡/百度搜索净化布局/ CSDN 增强/ QQ邮箱净化/设置面板与备份
 // @note         引用与致谢（参考脚本清单）：
@@ -613,6 +613,7 @@
                     ['toggle', 'baiduStyleOptimizeEnabled', '居中布局与样式优化（参考脚本）', '使用参考脚本的居中/单双列布局与卡片样式；关闭后只保留净化类开关。', { icon: '🎛' }],
                     ['toggle', 'baiduCleanAdsEnabled', '去广告/净化', '隐藏常见推广、品牌广告与干扰模块（尽量只做样式隐藏）。', { icon: '🧼' }],
                     ['toggle', 'baiduHideAiAnswerEnabled', '屏蔽 AI 回答/AI 模块', '隐藏百度搜索中常见的 AI 回答/AI 概览等模块。', { icon: '🤖' }],
+                    ['toggle', 'baiduAiAutoExpandEnabled', 'AI 自动展开', '当 AI 模块未被屏蔽时，自动展开折叠内容（会避开“分析中/加载中”状态，减少误触）。', { icon: '🤖' }],
                     ['toggle', 'baiduPinOfficialEnabled', '官网置顶（实验）', '将标注“官网/官方”的结果尽量移动到结果列表顶部。', { icon: '📌' }],
                 ]),
             };
@@ -786,6 +787,15 @@
 
             function validateSettingsSchema(defaults, groups) {
                 try {
+                    const ignoreUi = new Set([
+                        'copyCurrentUrlHotkeyCustom',
+                        'panCodeSmartSelectHotkeyCustom',
+                        'excludeDomains',
+                        'newTabExcludeUrls',
+                        'textLinkifyIncludeHosts',
+                        'textLinkifyExcludeHosts',
+                        'loginPopupBypassAllowHosts',
+                    ]);
                     const defaultKeys = Object.keys(defaults || {});
                     const defaultSet = new Set(defaultKeys.map(String));
                     const uiKeys = [];
@@ -818,6 +828,7 @@
                     const missingUi = [];
                     const missingDefault = [];
                     defaultSet.forEach((k) => {
+                        if (ignoreUi.has(k) || /Custom$/.test(k)) return;
                         if (!uiSet.has(k)) missingUi.push(k);
                     });
                     uiSet.forEach((k) => {
@@ -967,7 +978,7 @@
             let smartRedirectAutoJumpDone = false;
 
             const SCRIPT_LABEL = '新标签页Pro·全站网页增强工具箱';
-            const SCRIPT_VERSION = '1.5.421';
+            const SCRIPT_VERSION = '1.5.424';
             const SCRIPT_INSTALL_URL = 'https://update.greasyfork.org/scripts/563215/%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5Pro-%E5%85%A8%E7%AB%99%E7%BD%91%E9%A1%B5%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E7%AE%B1.user.js';
             const SCRIPT_INFO_URL = 'https://greasyfork.org/zh-CN/scripts/563215-%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5pro-%E5%85%A8%E7%AB%99%E7%BD%91%E9%A1%B5%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E7%AE%B1';
             const SCRIPT_UPDATE_URL = (function() {
@@ -2379,13 +2390,19 @@
                     const retryCount = (safeApplyRuntimeSettings._retryCount || 0) + 1;
                     safeApplyRuntimeSettings._retryCount = retryCount;
                     const message = e && e.message ? String(e.message) : String(e);
+                    const stack = e && e.stack ? String(e.stack) : '';
                     try {
-                        debugLog('applyRuntimeSettingsError', { retryCount, error: message }, 'ERROR');
+                        debugLog(
+                            'applyRuntimeSettingsError',
+                            { retryCount, error: message, stack: stack ? stack.slice(0, 2000) : '' },
+                            'ERROR'
+                        );
                     } catch (e2) {}
                     if (!safeApplyRuntimeSettings._reported) {
                         safeApplyRuntimeSettings._reported = true;
                         try {
                             console.error(`[${SCRIPT_LABEL}] applyRuntimeSettings 发生异常：${message}`);
+                            if (stack) console.error(stack);
                         } catch (e3) {}
                     }
                     if (retryCount <= 3) {
@@ -4123,6 +4140,7 @@
                                 ${renderRowFromSchema('baiduStyleOptimizeEnabled')}
                                 ${renderRowFromSchema('baiduCleanAdsEnabled')}
                                 ${renderRowFromSchema('baiduHideAiAnswerEnabled')}
+                                ${renderRowFromSchema('baiduAiAutoExpandEnabled')}
                                 ${renderRowFromSchema('baiduPinOfficialEnabled')}
                                 ${renderRowFromSchema('baiduLayoutMode')}
                                 ${renderRowFromSchema('baiduFloatHideMode')}
@@ -9945,6 +9963,14 @@
                 let startLeft = 0;
                 let startTop = 0;
                 let moved = false;
+                let activePointerId = null;
+                let lastPointerDownAt = 0;
+                let dragW = 50;
+                let dragH = 100;
+                let latestX = 0;
+                let latestY = 0;
+                let dragRaf = 0;
+                let dragMoveBound = false;
                 const dragThreshold = 5;
 
                 const applySavedPos = () => {
@@ -9986,57 +10012,91 @@
                     );
                 };
 
-                const onDown = (e) => {
-                    if (!e || e.button !== 0) return;
+                const bindDragMoveListeners = () => {
+                    if (dragMoveBound) return;
+                    try {
+                        window.addEventListener('mousemove', onMouseMove, true);
+                        container.addEventListener('pointermove', onPointerMove, true);
+                        container.addEventListener('pointerup', onPointerUp, true);
+                        container.addEventListener('pointercancel', onPointerCancel, true);
+                    } catch (e) {}
+                    dragMoveBound = true;
+                };
+                const unbindDragMoveListeners = () => {
+                    if (!dragMoveBound) return;
+                    try {
+                        window.removeEventListener('mousemove', onMouseMove, true);
+                        container.removeEventListener('pointermove', onPointerMove, true);
+                        container.removeEventListener('pointerup', onPointerUp, true);
+                        container.removeEventListener('pointercancel', onPointerCancel, true);
+                    } catch (e) {}
+                    dragMoveBound = false;
+                };
+                const scheduleDragApply = () => {
+                    if (dragRaf) return;
+                    dragRaf = requestAnimationFrame(() => {
+                        dragRaf = 0;
+                        if (!dragging) return;
+                        const dx = latestX - startX;
+                        const dy = latestY - startY;
+                        if (!moved) {
+                            const dist = Math.sqrt(dx * dx + dy * dy);
+                            if (dist <= dragThreshold) return;
+                            moved = true;
+                        }
+                        const vw = window.innerWidth || (document.documentElement && document.documentElement.clientWidth) || 0;
+                        const vh = window.innerHeight || (document.documentElement && document.documentElement.clientHeight) || 0;
+                        const maxLeft = vw ? Math.max(6, vw - dragW - 6) : null;
+                        const maxTop = vh ? Math.max(6, vh - dragH - 6) : null;
+                        const nextLeft = maxLeft == null ? startLeft + dx : Math.max(6, Math.min(maxLeft, startLeft + dx));
+                        const nextTop = maxTop == null ? startTop + dy : Math.max(6, Math.min(maxTop, startTop + dy));
+                        setImportant(container, 'left', `${nextLeft}px`);
+                        setImportant(container, 'top', `${nextTop}px`);
+                    });
+                };
+                const startDragAt = (x, y, pointerId, ev) => {
+                    if (dragging) return;
                     dragging = true;
                     moved = false;
-                    startX = e.pageX;
-                    startY = e.pageY;
+                    activePointerId = pointerId;
+                    startX = x;
+                    startY = y;
+                    latestX = x;
+                    latestY = y;
                     try {
                         const rect = container.getBoundingClientRect();
                         startLeft = rect.left;
                         startTop = rect.top;
+                        dragW = rect.width || dragW;
+                        dragH = rect.height || dragH;
                     } catch (e2) {
                         startLeft = 0;
                         startTop = 0;
+                        dragW = 50;
+                        dragH = 100;
                     }
-                    debugLog('goTBDragDown', { x: startX, y: startY, left: startLeft, top: startTop, t: Date.now() }, 'DEBUG');
-                    try {
-                        e.preventDefault();
-                    } catch (e2) {}
-                };
-
-                const onMove = (e) => {
-                    if (!dragging) return;
-                    const dx = (e.pageX || 0) - startX;
-                    const dy = (e.pageY || 0) - startY;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist <= dragThreshold) return;
-                    moved = true;
-                    const vw = window.innerWidth || (document.documentElement && document.documentElement.clientWidth) || 0;
-                    const vh = window.innerHeight || (document.documentElement && document.documentElement.clientHeight) || 0;
-                    let w = 50;
-                    let h = 100;
-                    try {
-                        const rect = container.getBoundingClientRect();
-                        w = rect.width || w;
-                        h = rect.height || h;
-                    } catch (e2) {}
-                    const maxLeft = vw ? Math.max(6, vw - w - 6) : null;
-                    const maxTop = vh ? Math.max(6, vh - h - 6) : null;
-                    const nextLeft = maxLeft == null ? startLeft + dx : Math.max(6, Math.min(maxLeft, startLeft + dx));
-                    const nextTop = maxTop == null ? startTop + dy : Math.max(6, Math.min(maxTop, startTop + dy));
-                    setImportant(container, 'left', `${nextLeft}px`);
-                    setImportant(container, 'top', `${nextTop}px`);
                     setImportant(container, 'right', 'auto');
                     setImportant(container, 'bottom', 'auto');
                     setImportant(container, 'position', 'fixed');
-                    debugLog('goTBDragMove', { x: e.pageX, y: e.pageY, left: nextLeft, top: nextTop, t: Date.now() }, 'DEBUG');
+                    bindDragMoveListeners();
+                    debugLog('goTBDragDown', { x: startX, y: startY, left: startLeft, top: startTop, t: Date.now() }, 'DEBUG');
+                    try {
+                        if (ev && typeof ev.preventDefault === 'function') ev.preventDefault();
+                        if (ev && typeof ev.stopPropagation === 'function') ev.stopPropagation();
+                    } catch (e2) {}
                 };
-
-                const onUp = (e) => {
+                const endDrag = (e) => {
                     if (!dragging) return;
                     dragging = false;
+                    try {
+                        if (dragRaf) cancelAnimationFrame(dragRaf);
+                    } catch (e2) {}
+                    dragRaf = 0;
+                    try {
+                        if (activePointerId != null && container.releasePointerCapture) container.releasePointerCapture(activePointerId);
+                    } catch (e2) {}
+                    activePointerId = null;
+                    unbindDragMoveListeners();
                     if (!moved) return;
                     lastDragEndTime = Date.now();
                     try {
@@ -10047,6 +10107,51 @@
                     try {
                         if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
                     } catch (e2) {}
+                };
+                const onMouseMove = (e) => {
+                    if (!dragging) return;
+                    if (activePointerId != null) return;
+                    latestX = e && typeof e.clientX === 'number' ? e.clientX : 0;
+                    latestY = e && typeof e.clientY === 'number' ? e.clientY : 0;
+                    scheduleDragApply();
+                };
+                const onPointerMove = (e) => {
+                    if (!dragging) return;
+                    if (!e) return;
+                    if (activePointerId != null && e.pointerId !== activePointerId) return;
+                    latestX = typeof e.clientX === 'number' ? e.clientX : 0;
+                    latestY = typeof e.clientY === 'number' ? e.clientY : 0;
+                    scheduleDragApply();
+                    try {
+                        e.preventDefault();
+                    } catch (e2) {}
+                };
+                const onPointerUp = (e) => {
+                    if (!e) return endDrag(e);
+                    if (activePointerId != null && e.pointerId !== activePointerId) return;
+                    endDrag(e);
+                };
+                const onPointerCancel = (e) => {
+                    if (!e) return endDrag(e);
+                    if (activePointerId != null && e.pointerId !== activePointerId) return;
+                    endDrag(e);
+                };
+
+                const onUp = (e) => {
+                    endDrag(e);
+                };
+                const onPointerDown = (e) => {
+                    if (!e || e.button !== 0) return;
+                    lastPointerDownAt = Date.now();
+                    try {
+                        if (container.setPointerCapture) container.setPointerCapture(e.pointerId);
+                    } catch (e2) {}
+                    startDragAt(e.clientX || 0, e.clientY || 0, e.pointerId, e);
+                };
+                const onMouseDown = (e) => {
+                    if (Date.now() - lastPointerDownAt < 800) return;
+                    if (!e || e.button !== 0) return;
+                    startDragAt(e.clientX || 0, e.clientY || 0, null, e);
                 };
 
                 applySavedPos();
@@ -10086,8 +10191,8 @@
 
                 container.addEventListener('contextmenu', showContextMenu, true);
                 container.addEventListener('click', onContainerClick, true);
-                container.addEventListener('mousedown', onDown, true);
-                window.addEventListener('mousemove', onMove, true);
+                container.addEventListener('pointerdown', onPointerDown, true);
+                container.addEventListener('mousedown', onMouseDown, true);
                 window.addEventListener('mouseup', onUp, true);
                 document.addEventListener('click', onDocClick, true);
 
@@ -10103,8 +10208,9 @@
                     try {
                         container.removeEventListener('contextmenu', showContextMenu, true);
                         container.removeEventListener('click', onContainerClick, true);
-                        container.removeEventListener('mousedown', onDown, true);
-                        window.removeEventListener('mousemove', onMove, true);
+                        container.removeEventListener('pointerdown', onPointerDown, true);
+                        container.removeEventListener('mousedown', onMouseDown, true);
+                        unbindDragMoveListeners();
                         window.removeEventListener('mouseup', onUp, true);
                         document.removeEventListener('click', onDocClick, true);
                     } catch (e) {}
@@ -11466,6 +11572,9 @@
                         '#kp_box{display:none !important;}',
                         '#asideAd{display:none !important;}',
                         '.blog-ad-box{display:none !important;}',
+                        '.blog-footer-bottom{display:none !important;}',
+                        '#copyright-box{display:none !important;}',
+                        '#csdn-copyright-footer{display:none !important;}',
                         '.csdn-common-logo-ad{display:none !important;}',
                         '.top_banner{display:none !important;}',
                     ].join('\n')
@@ -12092,6 +12201,8 @@
                     applyBaiduAiAutoExpandRuntime._state ||
                     (applyBaiduAiAutoExpandRuntime._state = {
                         lastClickAtByCard: new WeakMap(),
+                        lastClickAtByKey: new Map(),
+                        clickCountByKey: new Map(),
                         lastRunAt: 0,
                     });
                 try {
@@ -12108,6 +12219,7 @@
                     baiduAiAutoExpandStop = null;
                 }
                 if (!isSearchPage) return;
+                if (!on || Boolean(settings.baiduHideAiAnswerEnabled)) return;
                 let timerId = 0;
                 const isAiCardBusy = (card) => {
                     if (!card) return false;
@@ -12130,6 +12242,32 @@
                     if (!text) return false;
                     return /分析中|正在分析|加载中|正在加载|请稍候|稍候|Loading/i.test(text);
                 };
+                const resolveAiCardKey = (card) => {
+                    if (!card || !(card instanceof Element)) return '';
+                    try {
+                        const tpl = String(card.getAttribute('tpl') || '').trim();
+                        const srcid = String(card.getAttribute('srcid') || '').trim();
+                        const mid = String(card.getAttribute('m-name') || '').trim();
+                        const id = String(card.getAttribute('id') || '').trim();
+                        const mu = String(card.getAttribute('mu') || '').trim();
+                        const base = srcid || id || mid || mu;
+                        if (!base) return '';
+                        return tpl ? `${tpl}:${base}` : base;
+                    } catch (e) {
+                        return '';
+                    }
+                };
+                const trimSmallMap = (map, max) => {
+                    const limit = typeof max === 'number' && max > 0 ? Math.floor(max) : 80;
+                    if (!map || typeof map.size !== 'number') return;
+                    if (map.size <= limit) return;
+                    const removeCount = map.size - limit;
+                    const keys = map.keys();
+                    for (let i = 0; i < removeCount; i++) {
+                        const k = keys.next();
+                        if (k && !k.done) map.delete(k.value);
+                    }
+                };
                 const tryAutoToggle = (expand) => {
                     const now = Date.now();
                     if (state.lastRunAt && now - state.lastRunAt < 260) return;
@@ -12142,10 +12280,17 @@
                         const card = list[i];
                         if (!(card instanceof Element)) continue;
                         if (expand && card.getAttribute('data-ntp-ai-auto-expanded') === '1') continue;
-                        if (expand && isAiCardBusy(card)) continue;
+                        if (isAiCardBusy(card)) continue;
+                        const key = resolveAiCardKey(card);
                         if (expand) {
                             const last = state.lastClickAtByCard.get(card) || 0;
                             if (last && now - last < 3500) continue;
+                            if (key) {
+                                const lastKeyAt = state.lastClickAtByKey.get(key) || 0;
+                                if (lastKeyAt && now - lastKeyAt < 12000) continue;
+                                const cnt = state.clickCountByKey.get(key) || 0;
+                                if (cnt >= 2) continue;
+                            }
                         }
                         let clicked = false;
                         const foldTexts = card.querySelectorAll('.cos-fold-switch-text');
@@ -12208,6 +12353,14 @@
                                 try {
                                     state.lastClickAtByCard.set(card, now);
                                 } catch (e2) {}
+                                if (key) {
+                                    try {
+                                        state.lastClickAtByKey.set(key, now);
+                                        state.clickCountByKey.set(key, (state.clickCountByKey.get(key) || 0) + 1);
+                                        trimSmallMap(state.lastClickAtByKey, 90);
+                                        trimSmallMap(state.clickCountByKey, 90);
+                                    } catch (e3) {}
+                                }
                             } else {
                                 try {
                                     card.removeAttribute('data-ntp-ai-auto-expanded');
@@ -12216,20 +12369,6 @@
                         }
                     }
                 };
-
-                if (!on || Boolean(settings.baiduHideAiAnswerEnabled)) {
-                    try {
-                        tryAutoToggle(false);
-                    } catch (e2) {}
-                    try {
-                        TimerRegistry.setTimeout(() => {
-                            try {
-                                tryAutoToggle(false);
-                            } catch (e3) {}
-                        }, 420);
-                    } catch (e4) {}
-                    return;
-                }
 
                 const root = document.getElementById('content_left') || document.body;
                 if (!root) return;
@@ -12986,9 +13125,10 @@
                                 'body.single-column .detail-icon_3mni6,body.single-column .detail-icon_3mni6 i{display:inline-flex !important;align-items:center !important;visibility:visible !important;}',
                                 'body.double-column #container.sam_newgrid,body.double-column #content_left,body.double-column .wrapper_new #content_left,body.double-column #container.sam_newgrid #content_left{width:100% !important;max-width:1400px !important;margin:0 auto !important;padding:10px !important;display:flex !important;flex-wrap:wrap !important;gap:20px !important;align-items:stretch !important;justify-content:space-between !important;}',
                                 'body.double-column .c-container,body.double-column .result-op,body.double-column .result{width:calc(50% - 10px) !important;margin:0 !important;padding:20px !important;border-radius:10px !important;box-shadow:0 3px 10px rgba(0,0,0,0.08) !important;background-color:#fff !important;transition:all 0.3s ease !important;box-sizing:border-box !important;overflow:hidden !important;display:flex !important;flex-direction:column !important;max-height:none !important;position:relative !important;}',
+                                'body.double-column #content_left > div[tpl="wenda_generate"],body.double-column #content_left > div[tpl="ai_ask"],body.double-column #content_left > div[tpl="ai_index"],body.double-column #content_left > .result-op[tpl="wenda_generate"],body.double-column #content_left > .result-op[tpl="ai_ask"],body.double-column #content_left > .result-op[tpl="ai_index"]{width:100% !important;max-width:100% !important;flex:0 0 100% !important;overflow:visible !important;position:relative !important;z-index:2 !important;}',
                                 'body.double-column .ntp-baidu-cos-card{padding:0 !important;background-color:transparent !important;overflow:hidden !important;display:block !important;}',
                                 'body.double-column .ntp-baidu-cos-card > div{width:100% !important;max-width:100% !important;margin:0 !important;}',
-                                'body.double-column #content_left > .c-container:first-child:not(.ntp-baidu-official-span),body.double-column #content_left > .result:first-child:not(.ntp-baidu-official-span),body.double-column #content_left > .result-op:first-child:not(.ntp-baidu-official-span){width:calc(50% - 10px) !important;max-width:calc(50% - 10px) !important;flex:0 0 calc(50% - 10px) !important;margin:0 !important;}',
+                                'body.double-column #content_left > .c-container:first-child:not(.ntp-baidu-official-span):not([tpl="wenda_generate"]):not([tpl="ai_ask"]):not([tpl="ai_index"]),body.double-column #content_left > .result:first-child:not(.ntp-baidu-official-span):not([tpl="wenda_generate"]):not([tpl="ai_ask"]):not([tpl="ai_index"]),body.double-column #content_left > .result-op:first-child:not(.ntp-baidu-official-span):not([tpl="wenda_generate"]):not([tpl="ai_ask"]):not([tpl="ai_index"]){width:calc(50% - 10px) !important;max-width:calc(50% - 10px) !important;flex:0 0 calc(50% - 10px) !important;margin:0 !important;}',
                                 'body.double-column #content_left > .ntp-baidu-official-span{width:100% !important;max-width:100% !important;flex:0 0 100% !important;}',
                                 'body.double-column #content_left > .c-container:first-child *,body.double-column #content_left > .result:first-child *,body.double-column #content_left > .result-op:first-child *{max-width:100% !important;}',
                                 'body.double-column .c-abstract,body.double-column .c-span-last{max-height:4.8em !important;overflow:hidden !important;display:-webkit-box !important;-webkit-line-clamp:3 !important;-webkit-box-orient:vertical !important;line-height:1.6 !important;}',
@@ -17587,48 +17727,75 @@
              * 按当前设置启用或停用脚本主功能入口
              */
             function applyRuntimeSettings() {
+                if (!document || !document.documentElement) return;
+                if (!document.body && document.readyState === 'loading') return;
                 runSelfCheckOnce();
-                const excluded = isExcludedDomain(settings.excludeDomains);
+                const runStep = (name, fn, fallback) => {
+                    try {
+                        return fn();
+                    } catch (e) {
+                        const message = e && e.message ? String(e.message) : String(e);
+                        const stack = e && e.stack ? String(e.stack) : '';
+                        debugLog(
+                            'applyStepError',
+                            { step: name, error: message, stack: stack ? stack.slice(0, 1200) : '' },
+                            'ERROR'
+                        );
+                        return fallback;
+                    }
+                };
+                const excluded = Boolean(runStep('isExcludedDomain', () => isExcludedDomain(settings.excludeDomains), false));
                 const runtimeShouldActive = Boolean(settings.enabled) && !excluded;
-                applyAutoUnfold(!excluded && Boolean(settings.autoUnfoldEnabled));
-                applyLoginPopupBypass(Boolean(settings.loginPopupBypassEnabled));
-                applyCsdnStrongCopy(!excluded && Boolean(settings.csdnStrongCopyEnabled));
-                applyCsdnCleanPage(!excluded && Boolean(settings.csdnCleanPageEnabled));
-                applyCsdnCommentControl(runtimeShouldActive);
-                applyCsdnBottomArticleControl(runtimeShouldActive);
-                applyCsdnUnfreezeScroll(!excluded && Boolean(settings.csdnUnfreezeScrollEnabled));
-                applyCsdnLoginJumpGuard(runtimeShouldActive);
-                applyCsdnRedirectFastJump(!excluded && Boolean(settings.csdnRedirectFastJumpEnabled));
-                applyQqMailCleanVipBubble(runtimeShouldActive);
-                applyPanCodeAssist(!excluded && Boolean(settings.panCodeAssistEnabled));
-                applyPanCodeSmartSelectHotkey(!excluded && Boolean(settings.panCodeAssistEnabled), settings);
-                applyHoverTitleEnhancer(runtimeShouldActive, settings);
-                applyItskCloudQueryAutoJump(runtimeShouldActive);
+                runStep('applyAutoUnfold', () => applyAutoUnfold(!excluded && Boolean(settings.autoUnfoldEnabled)));
+                runStep('applyLoginPopupBypass', () => applyLoginPopupBypass(Boolean(settings.loginPopupBypassEnabled)));
+                runStep('applyCsdnStrongCopy', () => applyCsdnStrongCopy(!excluded && Boolean(settings.csdnStrongCopyEnabled)));
+                runStep('applyCsdnCleanPage', () => applyCsdnCleanPage(!excluded && Boolean(settings.csdnCleanPageEnabled)));
+                runStep('applyCsdnCommentControl', () => applyCsdnCommentControl(runtimeShouldActive));
+                runStep('applyCsdnBottomArticleControl', () => applyCsdnBottomArticleControl(runtimeShouldActive));
+                runStep('applyCsdnUnfreezeScroll', () => applyCsdnUnfreezeScroll(!excluded && Boolean(settings.csdnUnfreezeScrollEnabled)));
+                runStep('applyCsdnLoginJumpGuard', () => applyCsdnLoginJumpGuard(runtimeShouldActive));
+                runStep('applyCsdnRedirectFastJump', () => applyCsdnRedirectFastJump(!excluded && Boolean(settings.csdnRedirectFastJumpEnabled)));
+                runStep('applyQqMailCleanVipBubble', () => applyQqMailCleanVipBubble(runtimeShouldActive));
+                runStep('applyPanCodeAssist', () => applyPanCodeAssist(!excluded && Boolean(settings.panCodeAssistEnabled)));
+                runStep('applyPanCodeSmartSelectHotkey', () =>
+                    applyPanCodeSmartSelectHotkey(!excluded && Boolean(settings.panCodeAssistEnabled), settings)
+                );
+                runStep('applyHoverTitleEnhancer', () => applyHoverTitleEnhancer(runtimeShouldActive, settings));
+                runStep('applyItskCloudQueryAutoJump', () => applyItskCloudQueryAutoJump(runtimeShouldActive));
                 SmartRedirectHintState.tipRecheckAllowed = runtimeShouldActive;
                 if (!runtimeShouldActive) stopSmartRedirectTipRecheck();
                 const smartRedirectTipShown =
-                    consumeSmartRedirectTip(runtimeShouldActive) ||
-                    consumeSmartRedirectTipForUrl(location.href, runtimeShouldActive);
+                    Boolean(runStep('consumeSmartRedirectTip', () => consumeSmartRedirectTip(runtimeShouldActive), false)) ||
+                    Boolean(runStep('consumeSmartRedirectTipForUrl', () => consumeSmartRedirectTipForUrl(location.href, runtimeShouldActive), false));
                 if (runtimeShouldActive && !smartRedirectTipShown) ensureSmartRedirectTipRecheck();
                 const wasRuntimeActive = runtimeActive;
-                const beforeFeatureState = readFeatureState();
-                applyGoTopBottomControls(Boolean(settings.pinScrollEnabled));
-                applyDebugOverlay();
-                applyCopyCurrentUrlHotkey(runtimeShouldActive, settings);
-                applyVisitedLinkColor(runtimeShouldActive, settings);
-                applyBaiduSearchEnhance(runtimeShouldActive);
+                const emptyFeatureState = {
+                    overlayEnabled: false,
+                    overlayVisible: false,
+                    goTBEnabled: false,
+                    goTBContainer: false,
+                    goTBHasTop: false,
+                    goTBHasBottom: false,
+                    goTBVisible: false,
+                };
+                const beforeFeatureState = runStep('readFeatureState.before', () => readFeatureState(), emptyFeatureState);
+                runStep('applyGoTopBottomControls', () => applyGoTopBottomControls(Boolean(settings.pinScrollEnabled)));
+                runStep('applyDebugOverlay', () => applyDebugOverlay());
+                runStep('applyCopyCurrentUrlHotkey', () => applyCopyCurrentUrlHotkey(runtimeShouldActive, settings));
+                runStep('applyVisitedLinkColor', () => applyVisitedLinkColor(runtimeShouldActive, settings));
+                runStep('applyBaiduSearchEnhance', () => applyBaiduSearchEnhance(runtimeShouldActive));
                 debugLog('apply', { enabled: Boolean(settings.enabled), excluded, active: runtimeShouldActive });
                 if (!runtimeShouldActive) {
                     if (runtimeActive) deactivateRuntime();
                     runtimeActive = false;
-                    syncFeatureStates('applyRuntimeSettings.inactive');
+                    runStep('syncFeatureStates.inactive', () => syncFeatureStates('applyRuntimeSettings.inactive'));
                     return;
                 }
-                applySmartRedirectForPage(settings);
+                runStep('applySmartRedirectForPage', () => applySmartRedirectForPage(settings));
                 if (!runtimeActive) runtimeActive = true;
-                activateRuntime();
-                syncFeatureStates('applyRuntimeSettings.active');
-                const afterFeatureState = readFeatureState();
+                runStep('activateRuntime', () => activateRuntime());
+                runStep('syncFeatureStates.active', () => syncFeatureStates('applyRuntimeSettings.active'));
+                const afterFeatureState = runStep('readFeatureState.after', () => readFeatureState(), emptyFeatureState);
                 const runtimeBecameActive = !wasRuntimeActive && runtimeActive;
                 const overlayBecameVisible = !beforeFeatureState.overlayVisible && afterFeatureState.overlayVisible;
                 const goTBBecameVisible = !beforeFeatureState.goTBVisible && afterFeatureState.goTBVisible;

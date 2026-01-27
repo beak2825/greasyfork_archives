@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Response Collapse for Quick Navigation
 // @namespace    https://mekineer.com
-// @version      0.1
+// @version      0.2
 // @description  Collapse long Gemini responses. Click the user message to expand the corresponding response. Adds Collapse/Expand buttons.
 // @author       mekineer and Nova (ChatGPT 5.2 Thinking).  Concept: John Chi.
 // @match        https://gemini.google.com/*
@@ -17,7 +17,7 @@
   const CFG = {
     collapsedMaxHeightPx: 140,   // visible height when collapsed
     minHeightToCollapsePx: 220,  // don't collapse short replies
-    autoCollapseNew: true,       // auto-collapse new/changed responses
+    autoCollapseNew: false,       // auto-collapse new/changed responses
   };
 
   // ---------- styles ----------

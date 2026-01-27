@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         小红书全能AI助手
 // @namespace    http://tampermonkey.net/
-// @version      2.4.2
+// @version      2.5
 // @description  采用API拦截技术，支持自动滚动获取全部笔记，生成带xsec_token的永久有效链接，支持导出Excel/CSV/JSON。新增AI创作模块，内置多种写作模版，支持自定义模版和AI生成人设。提升创作效率，助力内容变现！新增excel带图片导出模式，方便直观查看封面图。新增资源下载功能，支持高清图片/视频批量下载。
 // @author       Coriander
+// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAx9JREFUWEfNl09MU0EQxn/beFTDDRI41FAMcNGbBw62oPEGid6UULxg1EhEEzExgdBEEzRqlKDxZCHgDZJ6U8TWAyaQGIsHMQLSA0S8VYQT2NXp9tnX0vKnpi2TNH1vd3bmm5lv9+0o0kQ73SXsc7QCx1EcjU9rnOl6O3pXRNAqCjqCIsB6LKQioYh9rbK/6MMnWojFHgElO3KwWyUBBD1q9q3fWvoPgHY1dIHu2a3N3PRVt5ob98naOABdVd+K5nluxnJc5dBe9TU4qHS128lvRzDnOufoH4iyETukihJ9EnSH0i5PAFRj7oH8z0r9UmlXw0fQZrsVWhQRKcFCEepvQo0DcNXrQgeechDtbQAVpbCyBiurqUmqqYSD+2FyOnPyZE50ln7A4vKWCc5egvIyCA3DzV4YeZ00UlEGQ/eN88670HsjOTczZ8bbvXCiDqbC8HkeBkahuhLE5sBICqDdAzh9yjh1n4OlZZgdTxqcDEPfIAw9SI1aMjg1DVrDpe5tAIRewOJ36LyXzIAgv+IFz1ljXN5FJAOjrwwIcd583YwfO2L0JHvW2qqGjKXYnAExJkYfDyYBaGWibmyDGhe0t/z9bikDSMQO4NZlEO5YJTggfHCBf8SUIo0TqQCEPB8C0Ddg6m5xQIj4xAcXu+DLPASHjY5/1BDUDkAyWF6amXjCkcYLW5Sg1gWBZ3C7H6Y+mWdJ48y35LiQ0HvGGLHzIFsJLAJLSSQzssYmmzMg0TVfM9vMqqMYkcwIejEiv59rhliy3URP2H6n3/zXJsbsO+ipz+huCUCQSb2E3eJQRNL+ZsIQS/a1ALQIKDtCxu0i4EUs8GPvk7YEXFPbNrvAmj5ZJ3dB49wSYbTlUIgqANJFzoFfq4aE8izBiC0h49iEmctagszUyevoHvgYFf1zXEwA6PBeuJLVXwUe5pVp2Yyr2HmVaMUW8tYNZXWuI6xrT6IxcbeiHYVtTCT62ZDf1pp5ekB1FaYU2qfmgvGLQWpzKi0adOfxlhxF0ZGxObUiT7RqbjRNoJ0oVZIzINMNy5Eehtg7NvCrSChqz/IfgUZkW/BhLsQAAAAASUVORK5CYII=
 // @match        https://creator.xiaohongshu.com/publish/*
 // @match        https://www.xiaohongshu.com/*
 // @connect      *
@@ -13,6 +14,9 @@
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
 // @grant        GM_download
+// @require      https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js
+// @require      https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js
+// @require      https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/562498/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%85%A8%E8%83%BDAI%E5%8A%A9%E6%89%8B.user.js
 // @updateURL https://update.greasyfork.org/scripts/562498/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%85%A8%E8%83%BDAI%E5%8A%A9%E6%89%8B.meta.js
@@ -245,6 +249,105 @@
   // 启动页面切换监听
   setupPageChangeListener();
 
+  // ==========================
+  // 屏蔽登录弹窗逻辑
+  // ==========================
+  const SHIELD_LOGIN_KEY = "pc-shield-login-dialog";
+  let _shieldLoginObserver = null;
+
+  function addShieldLoginObserver() {
+    if (_shieldLoginObserver) return;
+    try {
+      console.log("[XHS助手] 启用屏蔽登录弹窗");
+      _shieldLoginObserver = new MutationObserver(() => {
+        const closeBtn = document.querySelector(
+          ".login-container .icon-btn-wrapper",
+        );
+        if (closeBtn) {
+          try {
+            closeBtn.click();
+            console.log("[XHS助手] 登录弹窗出现，已自动关闭");
+          } catch (e) {
+            console.warn("[XHS助手] 关闭登录弹窗失败", e);
+          }
+        }
+      });
+      const attachObserver = () => {
+        try {
+          if (document.body)
+            _shieldLoginObserver.observe(document.body, {
+              childList: true,
+              subtree: true,
+            });
+        } catch (e) {
+          console.warn("[XHS助手] attach observer 失败", e);
+        }
+      };
+      if (document.body) {
+        attachObserver();
+      } else {
+        window.addEventListener("DOMContentLoaded", attachObserver, {
+          once: true,
+        });
+      }
+      // 立即尝试隐藏已存在的节点
+      const loginNode = document.querySelector(".login-container");
+      if (loginNode) {
+        try {
+          loginNode.style.display = "none";
+        } catch (e) {}
+      }
+    } catch (e) {
+      console.warn("[XHS助手] 添加屏蔽登录弹窗 observer 失败", e);
+    }
+  }
+
+  function removeShieldLoginObserver() {
+    if (_shieldLoginObserver) {
+      try {
+        _shieldLoginObserver.disconnect();
+      } catch (e) {}
+      _shieldLoginObserver = null;
+      console.log("[XHS助手] 已停止屏蔽登录弹窗");
+    }
+  }
+
+  // 读取设置并初始化
+  function initShieldLoginFromSetting() {
+    try {
+      const enable = GM_getValue ? GM_getValue(SHIELD_LOGIN_KEY, false) : false;
+      const $cb = document.getElementById("pc-shield-login-dialog");
+      if ($cb) $cb.checked = !!enable;
+      if (enable) addShieldLoginObserver();
+      else removeShieldLoginObserver();
+    } catch (e) {
+      console.warn("[XHS助手] 读取屏蔽登录设置失败", e);
+    }
+  }
+
+  // 立即在脚本启动时应用用户设置（若用户此前已开启，则生效）
+  try {
+    initShieldLoginFromSetting();
+  } catch (e) {
+    console.warn("[XHS助手] 启动时初始化屏蔽登录设置失败", e);
+  }
+
+  // 绑定设置面板复选框变化
+  function bindShieldLoginSetting() {
+    const $cb = document.getElementById("pc-shield-login-dialog");
+    if (!$cb) return;
+    $cb.addEventListener("change", (e) => {
+      const checked = !!e.target.checked;
+      try {
+        if (GM_setValue) GM_setValue(SHIELD_LOGIN_KEY, checked);
+      } catch (err) {
+        console.warn("[XHS助手] 保存屏蔽登录设置失败", err);
+      }
+      if (checked) addShieldLoginObserver();
+      else removeShieldLoginObserver();
+    });
+  }
+
   // ==========================================
   // 1. API 拦截器 (Hook XHR)
   // ==========================================
@@ -420,16 +523,24 @@
   // ==========================================
   // 3. 核心样式
   // ==========================================
+  GM_addStyle(
+    '@import url("https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css");',
+  );
   const UI_CSS = `
+        /* 覆盖 Bootstrap 可能会影响全局的样式 */
+        #xhs-ai-helper * {
+             box-sizing: border-box;
+        }
         @keyframes slideIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 36, 66, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 36, 66, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 36, 66, 0); } }
         #xhs-ai-helper {
-            position: fixed; top: 100px; right: 20px; width: 380px;
+            position: fixed; top: 100px; right: 20px; width: 400px;
             background: rgba(255, 255, 255, 0.98);
             box-shadow: 0 8px 32px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
             border-radius: 16px; z-index: 999999;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             transition: all 0.3s; display: flex; flex-direction: column; color: #333;
+            font-size: 14px;
         }
         .drag-handle { padding: 15px; cursor: move; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; user-select: none; }
         .ai-brand { font-weight: 800; font-size: 15px; display: flex; align-items: center; gap: 5px; color: #ff2442; }
@@ -443,11 +554,12 @@
             background: #fff; border-radius: 16px 16px 0 0;
             border-bottom: 1px solid #f0f0f0; user-select: none;
             overflow-x: auto; white-space: nowrap;
+            position: relative;
             /* 隐藏滚动条但保留功能 */
             scrollbar-width: none; -ms-overflow-style: none;
         }
         .ai-tabs::-webkit-scrollbar { display: none; }
-
+        
         .ai-tab-item {
             padding: 8px 12px; font-size: 13px; font-weight: 600; color: #666; cursor: pointer;
             border-radius: 8px 8px 0 0; transition: all 0.2s; position: relative;
@@ -469,9 +581,10 @@
 
         .ai-input, .ai-textarea, .ai-select { width: 100%; padding: 8px 10px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; background:#f9f9f9; }
         .ai-textarea { height: 80px; resize: vertical; }
-        .ai-btn { width: 100%; padding: 10px; background: #ff2442; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 5px; }
-        .ai-btn:hover { opacity: 0.9; }
-        .ai-btn.secondary { background: #f0f0f0; color: #333; }
+        .ai-btn { width: 100%; padding: 10px; background: #ff2442; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 5px; transition: all 0.2s; }
+        .ai-btn:hover { opacity: 0.9; box-shadow: 0 2px 8px rgba(255, 36, 66, 0.3); }
+        .ai-btn.secondary { background: #f8f9fa; color: #333; border: 1px solid #dee2e6; }
+        .ai-btn.secondary:hover { background: #e9ecef; }
         .ai-btn.scrolling { background: #ff9800; animation: pulse 2s infinite; }
 
         .data-card { background: #f4f8ff; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #e1eaff; }
@@ -493,7 +606,7 @@
             white-space: pre-wrap; display: none;
         }
         .ai-compact-box { background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #ebd4b5; }
-
+        
         /* 资源下载板块样式 */
         .res-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-top: 10px; }
         .res-item { position: relative; aspect-ratio: 1; border-radius: 6px; overflow: hidden; border: 1px solid #eee; cursor: pointer; }
@@ -535,6 +648,14 @@
             #xhs-ai-helper .ai-tab-item { padding: 10px 8px; font-size: 12px; }
             #xhs-ai-helper .ai-content-body { padding: 10px; }
         }
+
+        /* Toggle Switch */
+        .ai-switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
+        .ai-switch input { opacity: 0; width: 0; height: 0; }
+        .ai-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #e4e4e4; transition: .3s; border-radius: 34px; }
+        .ai-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        input:checked + .ai-slider { background-color: #ff2442; }
+        input:checked + .ai-slider:before { transform: translateX(20px); }
     `;
   GM_addStyle(UI_CSS);
 
@@ -569,6 +690,7 @@
                 <div class="ai-tabs">
                     <div class="ai-tab-item active" data-tab="data">数据导出</div>
                     <div class="ai-tab-item" data-tab="write">AI创作</div>
+                    <!-- <div class="ai-tab-item" data-tab="marketing">营销工具</div> -->
                     <div class="ai-tab-item" data-tab="analysis">AI分析</div>
                     <div class="ai-tab-item" data-tab="download">资源下载</div>
                     <div class="ai-tab-item" data-tab="settings">⚙️ 设置</div>
@@ -585,15 +707,25 @@
                             <button id="auto-scroll-btn" class="ai-btn secondary" style="padding:8px;">⏬ 自动滚动加载全部</button>
                         </div>
 
-                        <div style="display:flex;gap:5px; flex-wrap:wrap;">
-                            <select id="export-format" class="ai-select" style="margin-bottom:0; width:100px;">
+                        <div style="display:flex;gap:5px; flex-wrap:wrap; align-items: center;">
+                            <select id="export-format" class="ai-select" style="margin-bottom:0; width:auto; flex:1;">
+                                <option value="xlsx_embed">Excel (永久嵌入图)</option>
                                 <option value="csv">CSV (纯文本)</option>
-                                <option value="xls">Excel(含预览图)</option>
                                 <option value="json">JSON</option>
+                                <option value="md">Markdown (MD)</option>
+                                <option value="html">HTML (网页还原)</option>
                             </select>
                             <button id="clean-data-btn" class="ai-btn secondary" style="width:auto;margin-top:0;">清空</button>
                         </div>
-
+                        
+                        <div id="split-setting-area" style="display:flex; font-size:12px; margin-top:5px; align-items:center; gap:8px; background:#f0f7ff; padding:6px 10px; border-radius:4px; border:1px solid #d6e4ff;">
+                                <span style="font-weight:bold;color:#1890ff;">📦 分包设置：</span>
+                                <label style="cursor:pointer;"><input type="checkbox" id="enable-split" checked> 启用分包</label>
+                                <div style="display:flex;align-items:center;">
+                                    每包 <input type="number" id="split-size" value="200" style="width:50px; margin:0 4px; padding:2px; text-align:center; border:1px solid #ddd; border-radius:4px;"> 条
+                                </div>
+                        </div>
+                        
                         <div class="ai-compact-box" style="margin-top:8px; padding: 6px; background:#f5f5f5; border-radius:4px;">
                              <label style="font-size:12px; font-weight:bold; display:block; margin-bottom:6px; color:#555;">导出字段 (点击切换):</label>
                              <div id="export-field-container" class="export-field-container">
@@ -646,18 +778,66 @@
                               </div>
                               <div id="template-manage-status" style="margin-top:6px;font-size:12px;color:#666;"></div>
                             </div>
-
+                            
                             <button id="ai-gen-btn" class="ai-btn" style="margin-top:10px;">✨ 生成文案</button>
                             <div id="ai-status" style="text-align:center;font-size:12px;margin-top:5px;color:#999;"></div>
                         </div>
                     </div>
 
+                    <!--
+                    <div id="panel-marketing" class="tab-panel">
+                        <div class="data-card">
+                             <div style="font-size: 14px; font-weight: bold; margin-bottom: 5px; color:#2c3e50;">🔍 关键词搜索</div>
+                             <div style="display:flex; gap:5px;">
+                                <input id="mkt-keyword" class="ai-input" placeholder="输入搜索关键词" style="margin-bottom:0;">
+                                <button id="mkt-search-btn" class="ai-btn" style="width:auto; margin:0; background:#ff2442;">搜索</button>
+                             </div>
+                             <div style="font-size: 11px; color:#999; margin-top:5px;">将会跳转到搜索页并自动准备抓取数据。</div>
+                        </div>
+
+                        <div class="data-card" style="border-left: 4px solid #9c27b0;">
+                             <div style="font-size: 14px; font-weight: bold; margin-bottom: 5px; color:#2c3e50;">💬 批量评论导出</div>
+                             <div style="font-size: 11px; color:#666; margin-bottom:10px;">基于当前已捕获的笔记列表，批量抓取评论。</div>
+                             
+                             <div class="ai-compact-box" style="background:#fdfdff; border-color:#e1d6e8;">
+                                <div style="font-size:12px; margin-bottom:5px;">
+                                    当前待处理笔记：<span id="mkt-note-count" style="font-weight:bold; color:#9c27b0;">0</span> 篇
+                                </div>
+                                
+                                <label style="display:block; font-size:12px; margin-bottom:3px; color:#555;">点赞数过滤 (仅导出点赞大于 N 的评论):</label>
+                                <input id="mkt-filter-likes" class="ai-input" type="number" value="10" placeholder="0 表示不限" style="height:30px; margin-bottom:8px;">
+                                
+                                <label style="display:block; font-size:12px; margin-bottom:3px; color:#555;">抓取范围 (每篇笔记):</label>
+                                <select id="mkt-crawl-scope" class="ai-select" style="height:30px; padding:2px 8px; margin-bottom:8px;">
+                                    <option value="initial">仅首屏热评 (速度快，免验证)</option>
+                                </select>
+                                
+                                <button id="mkt-run-btn" class="ai-btn" style="background:#9c27b0;">🚀 开始批量抓取评论</button>
+                             </div>
+
+                             <div id="mkt-progress-area" style="display:none; margin-top:10px;">
+                                <div style="background:#eee; height:6px; border-radius:3px; overflow:hidden;">
+                                    <div id="mkt-progress-bar" style="width:0%; height:100%; background:#9c27b0; transition: width 0.3s;"></div>
+                                </div>
+                                <div id="mkt-status-text" style="font-size:11px; color:#666; text-align:center; margin-top:4px;">正在准备...</div>
+                             </div>
+                             
+                             <div id="mkt-result-area" style="display:none; margin-top:10px; border-top:1px dashed #ddd; padding-top:10px;">
+                                <div style="font-size:12px; margin-bottom:5px;">
+                                    已采集评论：<b id="mkt-result-count" style="color:#d32f2f;">0</b> 条
+                                </div>
+                                <button id="mkt-export-btn" class="ai-btn" style="background:#00b85c;">📥 导出评论数据 (Excel)</button>
+                             </div>
+                        </div>
+                    </div>
+                    -->
+                    
                     <div id="panel-analysis" class="tab-panel">
                         <!-- Section 1: 智能分析 -->
                         <div class="data-card" style="border-left: 4px solid #4a90e2; background: #f0f7ff;">
                            <div style="font-size: 14px; font-weight: bold; margin-bottom: 5px; color:#2c3e50;">📊 智能总结与分析</div>
                            <div style="font-size: 11px; color:#666; margin-bottom:10px;">上传导出的 CSV/JSON，让 AI 分析趋势。</div>
-
+                           
                            <input type="file" id="analysis-file-input" accept=".csv,.json" style="display:none;" />
                            <label for="analysis-file-input" class="file-upload-label" id="analysis-file-label">
                                📂 点击选择或拖拽文件 (CSV/JSON)
@@ -675,14 +855,14 @@
                               <button id="analysis-config-btn" class="ai-btn secondary" style="width:auto; padding:4px 8px; font-size:12px; margin:0;" title="API 设置">⚙️ 配置 API</button>
                            </div>
                            <div style="font-size: 11px; color:#666; margin: 0 0 10px;">AI 自动分类数据并生成新文件。</div>
-
+                           
                            <div class="ai-compact-box">
                                <label style="font-size:12px;color:#888;display:block;margin-bottom:4px;">自定义分类 (可选, 逗号分隔)</label>
                                <textarea id="analysis-categories" class="ai-textarea" style="height:40px; margin-bottom:8px; border:1px solid #eee; background:#f9f9f9; padding:5px; font-size: 12px;" placeholder="美妆, 穿搭, 美食..."></textarea>
-
+                               
                                <div style="display:flex; justify-content:space-between; align-items:center;">
                                    <div style="font-size:12px;color:#666; display:flex; align-items:center; gap:5px;">
-                                      导出格式:
+                                      导出格式: 
                                       <select id="analysis-export-format" class="ai-select" style="width:auto; padding:3px 6px; margin:0; height:auto; background:#fff; border-color:#ddd;">
                                           <option value="xls">Excel</option> // 默认Excel
                                           <option value="csv">CSV</option>
@@ -692,19 +872,19 @@
                                    <button id="analysis-classify-btn" class="ai-btn" style="width:auto; padding:6px 15px; margin:0; background:#ff9800;">🚀 开始分类</button>
                                </div>
                            </div>
-
+                           
                            <div id="classify-status" style="margin-top:8px; font-size:12px; color:#666;"></div>
                            <div id="api-limit-tip" style="display:none; margin-top:8px; font-size:11px; color:#d35400; background:rgba(255,152,0,0.1); padding:8px; border-radius:4px; line-height: 1.4;">
                               ⚠️ 检测到未分类数据。这通常是因为 API 速率限制或额度不足。<br>建议：<br>1. 检查 API Key 额度。<br>2. 更换更稳定的模型 (如 gpt-3.5/4)。<br>3. 每次处理需要一定时间，请耐心等待。
                            </div>
                         </div>
                     </div>
-
+                
                     <div id="panel-download" class="tab-panel">
                         <div class="data-card">
                              <div style="font-size: 14px; font-weight: bold; margin-bottom: 5px; color:#2c3e50;">📥 笔记资源提取</div>
                              <div style="font-size: 11px; color:#666; margin-bottom:10px;">输入笔记链接，或者在详情页直接使用。（支持无水印图片/视频下载）</div>
-
+                             
                              <input id="res-url-input" class="ai-input" placeholder="粘贴小红书笔记链接 (或者留空自动检测当前页)" />
                              <button id="res-fetch-btn" class="ai-btn" style="background:#2196f3;">🔍 提取资源</button>
                         </div>
@@ -717,21 +897,21 @@
                                     <option value="best_wm">最高画质 (可能带水印)</option>
                                 </select>
                              </div>
-
+                             
                              <div class="ai-compact-box" style="margin-bottom:8px;padding:5px;background:#f1f8e9;">
                                 <div style="font-size: 11px; display:flex; justify-content:space-between; align-items:center;">
                                    <label style="cursor:pointer;"><input type="checkbox" id="res-select-all" checked> 全选</label>
                                    <span style="color:#666;">点击图片可预览/取消</span>
                                 </div>
                              </div>
-
+                             
                              <div id="res-grid" class="res-grid"></div>
-
+                             
                              <button id="res-download-btn" class="ai-btn" style="background:#4CAF50; margin-top:10px;">⬇️ 批量下载选中资源</button>
                              <div id="res-status" style="margin-top:5px; font-size:11px; color:#666; text-align:center;"></div>
                         </div>
                     </div>
-
+                
                     <div id="panel-settings" class="tab-panel">
                         <div class="data-card">
                              <div style="font-size: 13px; font-weight: bold; margin-bottom: 8px;">⚙️ 全局 API 设置</div>
@@ -743,16 +923,26 @@
                                     <button id="api-config-add" class="ai-btn secondary" style="width:32px;margin:0;padding:0;" title="新增配置">➕</button>
                                     <button id="api-config-del" class="ai-btn secondary" style="width:32px;margin:0;padding:0;" title="删除配置">🗑️</button>
                                 </div>
-
+                                
                                 <input id="api-base-url" class="ai-input" placeholder="Base URL" style="margin-bottom:5px;">
                                 <input id="api-key" type="password" class="ai-input" placeholder="API Key" style="margin-bottom:5px;">
-
+                                
                                 <div style="display:flex;gap:5px;">
                                     <input id="api-model" class="ai-input" placeholder="Model (e.g. gpt-3.5-turbo)" style="margin-bottom:0;flex:1;">
                                     <button id="api-model-fetch-btn" class="ai-btn secondary" style="width:40px;margin:0;padding:0;" title="尝试获取模型列表">🔄</button>
                                 </div>
                                 <select id="api-model-select" class="ai-select" style="display:none;margin-top:5px;"></select>
                              </div>
+                               <div style="margin-top:8px;padding:12px;background:#fff;border-radius:8px;border:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                                  <div>
+                                     <div style="font-size:14px; font-weight:600; color:#333; margin-bottom:2px;">🛡️ 屏蔽登录弹窗</div>
+                                     <div style="font-size:11px; color:#888;">自动关闭烦人的登录提示，享受纯净浏览</div>
+                                  </div>
+                                  <label class="ai-switch" title="点击开启/关闭">
+                                    <input type="checkbox" id="pc-shield-login-dialog">
+                                    <span class="ai-slider"></span>
+                                  </label>
+                               </div>
                         </div>
                     </div>
                 </div>
@@ -769,6 +959,7 @@
       div.classList.toggle("minimized");
 
     const tabs = div.querySelectorAll(".ai-tab-item");
+    const tabsContainer = div.querySelector(".ai-tabs");
     tabs.forEach(
       (t) =>
         (t.onclick = () => {
@@ -778,6 +969,16 @@
             .querySelectorAll(".tab-panel")
             .forEach((p) => p.classList.remove("active"));
           div.querySelector("#panel-" + t.dataset.tab).classList.add("active");
+
+          // 选中 Tab 自动居中滚动逻辑
+          if (tabsContainer) {
+            const targetScroll =
+              t.offsetLeft - tabsContainer.offsetWidth / 2 + t.offsetWidth / 2;
+            tabsContainer.scrollTo({
+              left: targetScroll,
+              behavior: "smooth",
+            });
+          }
         }),
     );
 
@@ -792,6 +993,12 @@
       }
     };
     div.querySelector("#export-btn").onclick = exportData;
+
+    // 监听导出格式切换
+    const fmtSel = div.querySelector("#export-format");
+    const splitArea = div.querySelector("#split-setting-area");
+    // 全类型支持分包，不再隐藏 splitArea
+    // if (fmtSel && splitArea) { ... }
 
     // 资源下载绑定
     div.querySelector("#res-fetch-btn").onclick = handleFetchResources;
@@ -811,6 +1018,14 @@
 
     // AI功能绑定
     // div.querySelector("#config-toggle").onclick = ... // Removed
+
+    // 初始化并绑定屏蔽登录弹窗设置
+    try {
+      initShieldLoginFromSetting();
+      bindShieldLoginSetting();
+    } catch (e) {
+      console.warn("[XHS助手] 初始化屏蔽登录设置失败", e);
+    }
 
     // ============================
     // Config Manager Logic
@@ -1178,6 +1393,35 @@
       if (settingsTab) settingsTab.click();
     };
 
+    // 营销工具绑定
+    div.querySelector("#mkt-search-btn").onclick = () => {
+      const kw = div.querySelector("#mkt-keyword").value.trim();
+      if (kw) {
+        const url = `https://www.xiaohongshu.com/search_result?keyword=${encodeURIComponent(kw)}&source=web_search_result_notes`;
+        if (
+          confirm(
+            `即将跳转到搜索页：${kw}\n\n跳转后请点击“自动滚动”以加载更多笔记，然后再回到这里抓取评论。`,
+          )
+        ) {
+          location.href = url;
+        }
+      }
+    };
+
+    // 更新营销工具面板的数据计数
+    // Add an observer or hook to update count when tab is switched
+    tabs.forEach((t) => {
+      if (t.dataset.tab === "marketing") {
+        t.addEventListener("click", () => {
+          const cnt = document.getElementById("mkt-note-count");
+          if (cnt) cnt.innerText = GLOBAL_DATA.size;
+        });
+      }
+    });
+
+    div.querySelector("#mkt-run-btn").onclick = handleBatchCommentCrawl;
+    div.querySelector("#mkt-export-btn").onclick = exportCommentData;
+
     // 绑定导出字段点击事件
     const exportContainer = div.querySelector("#export-field-container");
     if (exportContainer) {
@@ -1327,50 +1571,425 @@
     }
   }
 
-  function exportList(dataList, format, baseName, selectedCols) {
+  // ==========================================
+  // 新增核心功能：ExcelJS 导出与图片嵌入
+  // ==========================================
+  function fetchImageBuffer(url) {
+    return new Promise((resolve) => {
+      if (!url || !url.startsWith("http")) {
+        resolve(null);
+        return;
+      }
+      GM_xmlhttpRequest({
+        method: "GET",
+        url: url,
+        responseType: "arraybuffer",
+        timeout: 15000,
+        onload: (res) => {
+          if (res.status === 200) {
+            resolve(res.response);
+          } else {
+            resolve(null);
+          }
+        },
+        onerror: () => resolve(null),
+        ontimeout: () => resolve(null),
+      });
+    });
+  }
+
+  async function exportAdvanced(dataList, selectedCols, splitSize = 200) {
+    const statusDiv = document.createElement("div");
+    statusDiv.id = "xhs-export-status";
+    statusDiv.style.cssText =
+      "position:fixed;top:20px;right:20px;background:rgba(0,0,0,0.85);color:#fff;padding:15px 20px;border-radius:8px;z-index:9999999;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,0.2);backdrop-filter:blur(5px);max-width:300px;";
+    document.body.appendChild(statusDiv);
+
+    const updateStatus = (msg) => {
+      if (statusDiv) statusDiv.innerHTML = msg;
+    };
+    const closeStatus = () => {
+      setTimeout(() => {
+        if (statusDiv) statusDiv.remove();
+      }, 3000);
+    };
+
+    try {
+      updateStatus("🚀 正在初始化数据...");
+
+      // 1. 数据分包
+      const chunks = [];
+      for (let i = 0; i < dataList.length; i += splitSize) {
+        chunks.push(dataList.slice(i, i + splitSize));
+      }
+
+      // 并发控制辅助函数
+      const processImagesInBatch = async (tasks, limit = 5) => {
+        const results = [];
+        const executing = [];
+        for (const task of tasks) {
+          const p = Promise.resolve().then(() => task());
+          results.push(p);
+          if (limit <= tasks.length) {
+            const e = p.then(() => executing.splice(executing.indexOf(e), 1));
+            executing.push(e);
+            if (executing.length >= limit) {
+              await Promise.race(executing);
+            }
+          }
+        }
+        return Promise.all(results);
+      };
+
+      for (let i = 0; i < chunks.length; i++) {
+        const chunk = chunks[i];
+        const wb = new ExcelJS.Workbook();
+        const sheet = wb.addWorksheet("小红书数据");
+
+        // 设置列
+        sheet.columns = selectedCols.map((key) => {
+          let w = 25;
+          if (key === "封面图") w = 35; // 适配 250px 宽度
+          if (key === "链接" || key === "标题") w = 40;
+          if (key === "内容" || key === "描述") w = 60;
+          if (key === "笔记ID") w = 30;
+          return { header: key, key: key, width: w };
+        });
+
+        // 收集图片任务
+        const imageTasks = [];
+
+        // 填充数据文本
+        chunk.forEach((rowData) => {
+          const row = sheet.addRow(rowData);
+          const rowNum = row.number;
+
+          // 如果有封面图列，准备下载
+          if (selectedCols.includes("封面图")) {
+            const url = rowData["封面图"];
+            if (url) {
+              row.height = 250; // 适配 334px 高度 (approx 250 points)
+              // 记录任务
+              imageTasks.push(async () => {
+                const buffer = await fetchImageBuffer(url);
+                // 获取图片尺寸用于按比例缩放
+                let w = 0,
+                  h = 0;
+                if (buffer) {
+                  try {
+                    const blob = new Blob([buffer]);
+                    const u = URL.createObjectURL(blob);
+                    const img = new Image();
+                    await new Promise((resolve) => {
+                      img.onload = () => {
+                        w = img.naturalWidth;
+                        h = img.naturalHeight;
+                        resolve();
+                      };
+                      img.onerror = resolve;
+                      img.src = u;
+                    });
+                    URL.revokeObjectURL(u);
+                  } catch (e) {}
+                }
+                return {
+                  buffer,
+                  rowNum,
+                  colIndex: selectedCols.indexOf("封面图"),
+                  w,
+                  h,
+                };
+              });
+            } else {
+              row.height = 20;
+            }
+          } else {
+            row.height = 20;
+          }
+
+          // 处理链接样式
+          if (selectedCols.includes("链接")) {
+            const idx = selectedCols.indexOf("链接");
+            const cell = row.getCell(idx + 1);
+            if (cell.value && String(cell.value).startsWith("http")) {
+              cell.value = { text: "点击跳转", hyperlink: rowData["链接"] };
+              cell.font = { color: { argb: "FF0000FF" }, underline: true };
+            }
+          }
+        });
+
+        // 执行图片下载任务
+        if (imageTasks.length > 0) {
+          // 分批下载提示
+          const totalTasks = imageTasks.length;
+          updateStatus(
+            `📦 处理分包 ${i + 1}/${chunks.length}<br>🖼️ 正在下载并嵌入 ${totalTasks} 张图片 (并发5)...<br><span style='font-size:12px;opacity:0.8'>请勿关闭页面</span>`,
+          );
+
+          const results = await processImagesInBatch(imageTasks, 5);
+
+          // 嵌入图片
+          results.forEach((res) => {
+            if (res && res.buffer) {
+              const imgId = wb.addImage({
+                buffer: res.buffer,
+                extension: "png",
+              });
+
+              // 按比例缩放 (适配 334px 高度)
+              let finalW = 250;
+              let finalH = 334;
+              if (res.w && res.h) {
+                finalW = finalH * (res.w / res.h);
+              }
+
+              sheet.addImage(imgId, {
+                tl: { col: res.colIndex, row: res.rowNum - 1 }, // row is 0-based for image pos
+                ext: { width: finalW, height: finalH },
+                editAs: "oneCell",
+              });
+              // 清空该单元格文本
+              sheet.getRow(res.rowNum).getCell(res.colIndex + 1).value = "";
+            }
+          });
+        }
+
+        const buffer = await wb.xlsx.writeBuffer();
+        const fileName =
+          chunks.length > 1
+            ? `xhs_data_part_${i + 1}.xlsx`
+            : `xhs_data_full.xlsx`;
+
+        updateStatus(`✅ 导出分包 ${i + 1}/${chunks.length}，正在下载...`);
+        const blob = new Blob([buffer], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+
+        // 如果是多包下载，稍作停顿，避免浏览器拦截或卡顿
+        if (chunks.length > 1) {
+          await new Promise((r) => setTimeout(r, 1000));
+        }
+      }
+
+      closeStatus();
+    } catch (e) {
+      console.error(e);
+      updateStatus("❌ 导出出错: " + e.message);
+      setTimeout(() => closeStatus(), 5000);
+    }
+  }
+
+  async function exportList(
+    dataList,
+    format,
+    baseName,
+    selectedCols,
+    splitSize = 999999,
+  ) {
     if (!dataList || dataList.length === 0) return;
 
     // 默认全选
     let headers = Object.keys(dataList[0]);
-    // 如果有指定列，则强行使用指定列 (支持自定义字段顺序，且不依赖 dataList[0] 是否拥有该key)
     if (selectedCols && selectedCols.length > 0) {
       headers = selectedCols;
     }
 
-    if (format === "json") {
-      // JSON 也要过滤字段
-      const filteredList = dataList.map((row) => {
-        const newRow = {};
-        headers.forEach((h) => (newRow[h] = row[h]));
-        return newRow;
-      });
-      download(
-        JSON.stringify(filteredList, null, 2),
-        `${baseName}.json`,
-        "application/json",
-      );
-    } else if (format === "xls") {
-      // Excel (HTML Table 伪装)
-      let html = `
-            <html xmlns:o="urn:schemas-microsoft-com:office:office"
-                  xmlns:x="urn:schemas-microsoft-com:office:excel"
+    // 分包处理
+    const chunks = [];
+    for (let i = 0; i < dataList.length; i += splitSize) {
+      chunks.push(dataList.slice(i, i + splitSize));
+    }
+
+    // 简易提示
+    const statusDiv = document.createElement("div");
+    if (chunks.length > 1) {
+      statusDiv.style.cssText =
+        "position:fixed;top:20px;right:20px;background:rgba(0,0,0,0.8);color:#fff;padding:15px;border-radius:8px;z-index:999999;";
+      document.body.appendChild(statusDiv);
+    }
+
+    for (let i = 0; i < chunks.length; i++) {
+      const chunk = chunks[i];
+      const currentBaseName =
+        chunks.length > 1 ? `${baseName}_part_${i + 1}` : baseName;
+
+      if (chunks.length > 1) {
+        statusDiv.innerHTML = `📦 正在导出 ${format.toUpperCase()} 分包 ${i + 1}/${chunks.length}...`;
+      }
+
+      let content = "";
+      let type = "";
+      let ext = "";
+
+      if (format === "json") {
+        const filteredList = chunk.map((row) => {
+          const newRow = {};
+          headers.forEach((h) => (newRow[h] = row[h]));
+          return newRow;
+        });
+        content = JSON.stringify(filteredList, null, 2);
+        ext = "json";
+        type = "application/json";
+      } else if (format === "md") {
+        content =
+          "# 小红书采集数据导出\n\n> 导出时间: " +
+          new Date().toLocaleString() +
+          "\n\n---\n\n";
+        chunk.forEach((row, index) => {
+          const rowIdx = i * splitSize + index + 1;
+          content += `### ${rowIdx}. ${row["标题"] || "无标题"}\n\n`;
+          content += `**作者**: ${row["作者"] || "未知"}  |  **点赞**: ${row["点赞数"] || 0}  |  [🔗 原文链接](${row["链接"]})\n\n`;
+          if (row["封面图"]) {
+            content += `![封面图](${row["封面图"]})\n\n`;
+          }
+          if (row["内容"] || row["描述"]) {
+            content += `**内容描述**:\n\n${(row["内容"] || row["描述"]).replace(/\n/g, "\n\n")}\n\n`;
+          }
+          content += `---\n\n`;
+        });
+        ext = "md";
+        type = "text/markdown;charset=utf-8";
+      } else if (format === "html") {
+        // HTML: 尝试下载图片并转 Base64 用于本地保存
+        if (chunks.length <= 1) {
+          // 如果仅一包但也需要处理图片，必须显示提示 (因为下载图片较慢)
+          statusDiv.style.cssText =
+            "position:fixed;top:20px;right:20px;background:rgba(0,0,0,0.8);color:#fff;padding:15px;border-radius:8px;z-index:999999;";
+          if (!statusDiv.parentNode) document.body.appendChild(statusDiv);
+        }
+        statusDiv.innerHTML = `📦 正在导出 HTML (Part ${i + 1}/${chunks.length})<br>🖼️ 正在下载并将图片转为Base64以实现本地保存...`;
+
+        // 并发控制函数
+        const processImagesInBatch = async (tasks, limit = 5) => {
+          const results = [];
+          const executing = [];
+          for (const task of tasks) {
+            const p = Promise.resolve().then(() => task());
+            results.push(p);
+            if (limit <= tasks.length) {
+              const e = p.then(() => executing.splice(executing.indexOf(e), 1));
+              executing.push(e);
+              if (executing.length >= limit) {
+                await Promise.race(executing);
+              }
+            }
+          }
+          return Promise.all(results);
+        };
+
+        const imageTasks = chunk.map((row, idx) => async () => {
+          const url = row["封面图"];
+          if (!url) return { index: idx, base64: "" };
+          try {
+            const buffer = await fetchImageBuffer(url);
+            if (buffer) {
+              const blob = new Blob([buffer]);
+              return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () =>
+                  resolve({ index: idx, base64: reader.result });
+                reader.readAsDataURL(blob);
+              });
+            }
+          } catch (e) {
+            console.warn("Image fetch failed", e);
+          }
+          return { index: idx, base64: url }; // 失败则使用原链接
+        });
+
+        // 执行图片下载任务
+        const imageResults = await processImagesInBatch(imageTasks, 5);
+        const base64Map = {};
+        imageResults.forEach((r) => {
+          if (r) base64Map[r.index] = r.base64;
+        });
+
+        let cardsHtml = "";
+        chunk.forEach((row, idx) => {
+          const cover = base64Map[idx] || row["封面图"] || "";
+          const title = row["标题"] || "无标题";
+          const author = row["作者"] || "未知";
+          const likes = row["点赞数"] || "0";
+          const link = row["链接"] || "#";
+          const desc = row["内容"] || row["描述"] || "";
+
+          cardsHtml += `
+               <div class="note-card">
+                  <a href="${link}" target="_blank" class="card-link">
+                      <div class="cover-wrapper">
+                          <img src="${cover}" class="cover-img" loading="lazy" alt="${title}">
+                      </div>
+                      <div class="card-body">
+                          <div class="title">${title}</div>
+                          <div class="author-info">
+                              <div class="author">
+                                 <span>👤 ${author}</span>
+                              </div>
+                              <div class="likes">
+                                 <span>❤️ ${likes}</span>
+                              </div>
+                          </div>
+                           <div class="desc">${desc}</div>
+                      </div>
+                  </a>
+               </div>`;
+        });
+
+        content = `
+            <!DOCTYPE html>
+            <html lang="zh-CN">
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>小红书数据导出 - Part ${i + 1}</title>
+              <style>
+                  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f4f6f8; padding: 20px; margin: 0; }
+                  .header { text-align: center; margin-bottom: 30px; color: #333; }
+                  .container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+                  .note-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: transform 0.2s, box-shadow 0.2s; position: relative; }
+                  .note-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+                  .card-link { text-decoration: none; color: inherit; display: block; height: 100%; }
+                  .cover-wrapper { position: relative; padding-top: 133.33%; background: #f0f0f0; }
+                  .cover-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+                  .card-body { padding: 12px; display: flex; flex-direction: column; justify-content: space-between; }
+                  .title { font-weight: 600; font-size: 15px; line-height: 1.4; color: #333; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; min-height: 42px; }
+                  .author-info { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #999; margin-bottom: 8px; }
+                  .desc { font-size: 13px; color: #666; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; margin-top: 5px; }
+                  @media (max-width: 600px) {
+                      .container { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+                      body { padding: 10px; }
+                  }
+              </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h2>小红书采集数据 (Part ${i + 1}/${chunks.length}, 共${chunk.length}条)</h2>
+                    <p style="font-size:12px;color:#666;">导出时间: ${new Date().toLocaleString()}</p>
+                </div>
+                <div class="container">
+                    ${cardsHtml}
+                </div>
+            </body>
+            </html>`;
+        ext = "html";
+        type = "text/html;charset=utf-8";
+      } else if (format === "xls") {
+        // Excel (HTML Table)
+        let html = `
+            <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+                  xmlns:x="urn:schemas-microsoft-com:office:excel" 
                   xmlns="http://www.w3.org/TR/REC-html40">
             <head>
                <meta charset="utf-8">
-               <!--[if gte mso 9]>
-               <xml>
-                <x:ExcelWorkbook>
-                 <x:ExcelWorksheets>
-                  <x:ExcelWorksheet>
-                   <x:Name>Sheet1</x:Name>
-                   <x:WorksheetOptions>
-                    <x:DisplayGridlines/>
-                   </x:WorksheetOptions>
-                  </x:ExcelWorksheet>
-                 </x:ExcelWorksheets>
-                </x:ExcelWorkbook>
-               </xml>
-               <![endif]-->
                <style>
                  td { vertical-align: middle; text-align: center; font-size: 11pt; }
                  .text { mso-number-format:"\@"; }
@@ -1378,52 +1997,61 @@
             </head>
             <body>
             <table border="1" style="border-collapse: collapse; width: 100%;">`;
+        html += "<thead><tr style='background-color:#f2f2f2; height:40px;'>";
+        headers.forEach(
+          (h) =>
+            (html += `<th style="padding:10px; border:1px solid #ccc;">${h}</th>`),
+        );
+        html += "</tr></thead><tbody>";
 
-      // 表头
-      html += "<thead><tr style='background-color:#f2f2f2; height:40px;'>";
-      headers.forEach(
-        (h) =>
-          (html += `<th style="padding:10px; border:1px solid #ccc;">${h}</th>`),
-      );
-      html += "</tr></thead><tbody>";
-
-      // 内容
-      dataList.forEach((row) => {
-        // 关键：给 tr 设置高度，确保能容纳图片
-        html += "<tr style='height:110px;'>";
-        headers.forEach((h) => {
-          const val = row[h] || "";
-          if (h === "封面图" && val) {
-            html += `<td style="width:120px; text-align:center;"><img src="${val}" width="100" height="100" /></td>`;
-          } else if (h === "链接" && val) {
-            html += `<td><a href="${val}" target="_blank">点击跳转</a></td>`;
-          } else {
-            html += `<td class="text" style="max-width:300px; overflow:hidden;">${val}</td>`; // 强制文本格式
-          }
+        chunk.forEach((row) => {
+          html += "<tr style='height:110px;'>";
+          headers.forEach((h) => {
+            const val = row[h] || "";
+            if (h === "封面图" && val) {
+              html += `<td style="width:120px; text-align:center;"><img src="${val}" width="100" height="100" /></td>`;
+            } else if (h === "链接" && val) {
+              html += `<td><a href="${val}" target="_blank">点击跳转</a></td>`;
+            } else {
+              html += `<td class="text" style="max-width:300px; overflow:hidden;">${val}</td>`;
+            }
+          });
+          html += "</tr>";
         });
-        html += "</tr>";
-      });
-      html += "</tbody></table></body></html>";
+        html += "</tbody></table></body></html>";
 
-      download(html, `${baseName}.xls`, "application/vnd.ms-excel");
-    } else {
-      // CSV
-      const csvBody = dataList
-        .map((row) =>
-          headers
-            .map((h) => {
-              let v = row[h] || "";
-              v = String(v).replace(/"/g, '""');
-              return `"${v}"`;
-            })
-            .join(","),
-        )
-        .join("\n");
-      download(
-        "\ufeff" + headers.join(",") + "\n" + csvBody,
-        `${baseName}.csv`,
-        "text/csv;charset=utf-8",
-      );
+        content = html;
+        ext = "xls";
+        type = "application/vnd.ms-excel";
+      } else {
+        // CSV
+        const csvBody = chunk
+          .map((row) =>
+            headers
+              .map((h) => {
+                let v = row[h] || "";
+                v = String(v).replace(/"/g, '""');
+                return `"${v}"`;
+              })
+              .join(","),
+          )
+          .join("\n");
+        content = "\ufeff" + headers.join(",") + "\n" + csvBody;
+        ext = "csv";
+        type = "text/csv;charset=utf-8";
+      }
+
+      download(content, `${currentBaseName}.${ext}`, type);
+
+      // 延时防拦截
+      if (chunks.length > 1) {
+        await new Promise((r) => setTimeout(r, 1000));
+      }
+    }
+
+    if (chunks.length > 1) {
+      statusDiv.innerHTML = "✅ 所有分包导出完成";
+      setTimeout(() => statusDiv.remove(), 2000);
     }
   }
 
@@ -1470,7 +2098,18 @@
     }
 
     const dataList = Array.from(GLOBAL_DATA.values());
-    exportList(dataList, format, "xhs_data_full", selectedCols);
+
+    // 统一获取分包设置
+    const enableSplit = document.getElementById("enable-split").checked;
+    const splitSizeInput =
+      parseInt(document.getElementById("split-size").value) || 200;
+    const splitSize = enableSplit ? splitSizeInput : 999999;
+
+    if (format === "xlsx_embed") {
+      exportAdvanced(dataList, selectedCols, splitSize);
+    } else {
+      exportList(dataList, format, "xhs_data_full", selectedCols, splitSize);
+    }
   }
 
   function download(content, name, type) {
@@ -1981,6 +2620,173 @@
       btn.disabled = false;
       btn.innerText = "📂 智能分类并导出";
     }
+  }
+
+  // ==========================================
+  // 9. 营销工具 - 批量评论抓取逻辑
+  // ==========================================
+  let COLLECTED_COMMENTS = [];
+
+  async function handleBatchCommentCrawl() {
+    const btn = document.getElementById("mkt-run-btn");
+    const progressArea = document.getElementById("mkt-progress-area");
+    const progressBar = document.getElementById("mkt-progress-bar");
+    const statusText = document.getElementById("mkt-status-text");
+    const resultArea = document.getElementById("mkt-result-area");
+    const resultCount = document.getElementById("mkt-result-count");
+
+    // Configs
+    const likeFilter =
+      parseInt(document.getElementById("mkt-filter-likes").value) || 0;
+    // const scope = document.getElementById('mkt-crawl-scope').value; // Currently only 'initial' supported
+
+    if (GLOBAL_DATA.size === 0)
+      return alert(
+        "当前没有捕获到任何笔记。\n请先进行搜索或浏览页面，确保“数据导出”面板有数据。",
+      );
+
+    btn.disabled = true;
+    progressArea.style.display = "block";
+    resultArea.style.display = "none";
+    COLLECTED_COMMENTS = [];
+
+    const notes = Array.from(GLOBAL_DATA.values());
+    const total = notes.length;
+    let processed = 0;
+    let successCount = 0;
+
+    for (let i = 0; i < total; i++) {
+      const note = notes[i];
+      const percent = Math.round(((i + 1) / total) * 100);
+      progressBar.style.width = percent + "%";
+      statusText.innerText = `正在处理 (${i + 1}/${total}): ${note.标题.substring(0, 10)}...`;
+
+      try {
+        let noteId = note.笔记ID;
+        let xsecToken = "";
+        let targetUrl = note.链接 || "";
+
+        // 尝试从链接提取 token
+        if (targetUrl) {
+          const match = targetUrl.match(/xsec_token=([^&]+)/);
+          if (match) xsecToken = match[1];
+        }
+
+        // 如果笔记ID缺失，尝试从链接提取
+        if (!noteId && targetUrl) {
+          const idMatch = targetUrl.match(/\/explore\/([a-zA-Z0-9]+)/);
+          if (idMatch) noteId = idMatch[1];
+        }
+
+        if (noteId) {
+          let apiUrl = `https://edith.xiaohongshu.com/api/sns/web/v2/comment/page?note_id=${noteId}&cursor=&top_comment_id=&image_formats=jpg,webp,avif`;
+          if (xsecToken) {
+            apiUrl += `&xsec_token=${xsecToken}`;
+          }
+
+          const responseText = await new Promise((resolve) => {
+            GM_xmlhttpRequest({
+              method: "GET",
+              url: apiUrl,
+              headers: {
+                "User-Agent": navigator.userAgent,
+                Referer: "https://www.xiaohongshu.com/",
+                Origin: "https://www.xiaohongshu.com",
+              },
+              onload: (res) => resolve(res.responseText),
+              onerror: () => resolve(null),
+            });
+          });
+
+          if (responseText) {
+            const json = JSON.parse(responseText);
+            // API 结构: data.comments [...]
+            if (
+              json.data &&
+              json.data.comments &&
+              Array.isArray(json.data.comments)
+            ) {
+              const comments = json.data.comments;
+
+              const validComments = comments.filter((c) => {
+                const likes = parseInt(c.like_count) || 0;
+                return likes >= likeFilter;
+              });
+
+              validComments.forEach((c) => {
+                const u = c.user_info || c.user || {};
+                COLLECTED_COMMENTS.push({
+                  noteId: noteId,
+                  noteTitle: note.标题,
+                  noteLink: targetUrl,
+                  commentContent: c.content,
+                  commentLikes: c.like_count || 0,
+                  commentTime: c.create_time || 0,
+                  userNickname: u.nickname || "未知",
+                  userId: u.user_id || u.id || "",
+                  userImage: u.image || "",
+                });
+              });
+              successCount++;
+            }
+          }
+        }
+      } catch (e) {
+        console.warn(`[MKTool] Failed to fetch note ${note.笔记ID}`, e);
+      }
+
+      // Random delay to avoid block (500ms - 1000ms) - API 请求频率限制
+      await new Promise((r) => setTimeout(r, 500 + Math.random() * 500));
+      processed++;
+    }
+
+    statusText.innerText = `✅ 完成！成功处理 ${successCount} 篇笔记，共提取 ${COLLECTED_COMMENTS.length} 条评论`;
+    resultCount.innerText = COLLECTED_COMMENTS.length;
+    resultArea.style.display = "block";
+    btn.disabled = false;
+  }
+  function exportCommentData() {
+    if (COLLECTED_COMMENTS.length === 0) return alert("没有可导出的评论数据");
+
+    // Excel Format
+    let html = `
+            <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+                  xmlns:x="urn:schemas-microsoft-com:office:excel" 
+                  xmlns="http://www.w3.org/TR/REC-html40">
+            <head><meta charset="utf-8"></head><body>
+            <table border="1">
+            <thead>
+                <tr style="background:#f0f0f0;">
+                    <th>笔记ID</th>
+                    <th>笔记标题</th>
+                    <th>笔记链接</th>
+                    <th>评论内容</th>
+                    <th>评论点赞</th>
+                    <th>评论时间</th>
+                    <th>用户昵称</th>
+                    <th>用户ID</th>
+                </tr>
+            </thead><tbody>`;
+
+    COLLECTED_COMMENTS.forEach((row) => {
+      html += `<tr>
+            <td>${row.noteId}</td>
+            <td>${row.noteTitle}</td>
+            <td><a href="${row.noteLink}" target="_blank">链接</a></td>
+            <td>${row.commentContent}</td>
+            <td>${row.commentLikes}</td>
+            <td>${new Date(parseInt(row.commentTime)).toLocaleString()}</td>
+            <td>${row.userNickname}</td>
+            <td>${row.userId}</td>
+          </tr>`;
+    });
+    html += "</tbody></table></body></html>";
+
+    download(
+      html,
+      `xhs_comments_${new Date().getTime()}.xls`,
+      "application/vnd.ms-excel",
+    );
   }
 
   // ==========================================

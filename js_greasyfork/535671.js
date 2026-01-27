@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Ranged Way Idle
-// @version      6.23
+// @version      6.24
 // @author       AlphB
 // @description  一些超级有用的MWI的QoL功能
 // @match        https://*.milkywayidle.com/*
@@ -163,7 +163,7 @@
     };
 
     const globalVariables = {
-        scriptVersion: GM_info?.script?.version || "6.23",
+        scriptVersion: GM_info?.script?.version || "6.24",
         marketAPIUrl: "https://www.milkywayidle.com/game_data/marketplace.json",
         initCharacterData: null,
         documentObserver: null,
@@ -552,20 +552,20 @@
                 get: hookedGet, configurable: true, enumerable: true
             });
 
-            // send
-            const originalSend = WebSocket.prototype.send;
-
-            WebSocket.prototype.send = function (message) {
-                if (!this.url || !this.url.includes("wss://api.milkywayidle")) {
-                    return originalSend.call(this, message);
-                }
-                try {
-                    globalVariables.webSocketMessageProcessor(message, 'send');
-                } catch (err) {
-                    console.error(err);
-                }
-                return originalSend.call(this, message);
-            }
+            // // send
+            // const originalSend = WebSocket.prototype.send;
+            //
+            // WebSocket.prototype.send = function (message) {
+            //     if (!this.url || !this.url.includes("wss://api.milkywayidle")) {
+            //         return originalSend.call(this, message);
+            //     }
+            //     try {
+            //         globalVariables.webSocketMessageProcessor(message, 'send');
+            //     } catch (err) {
+            //         console.error(err);
+            //     }
+            //     return originalSend.call(this, message);
+            // }
         }
 
         function initDocumentObserver() {
@@ -3037,7 +3037,7 @@
 
                 sendMessage(obj) {
                     if (configs.immemorialMarketClass.debugPrintIMWSMessages.value) {
-                        console.log('IMWS send', obj);
+                        console.log('IMWS send', JSON.parse(JSON.stringify(obj)));
                     }
                     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
                         try {
@@ -3356,15 +3356,17 @@
             const imConfigs = {
                 "password": "",
 
-                "accurate-create-time": false,
-                "real-name-order-owner": false,
-                "upload-listings-id-time": false,
-                "upload-listings-item-info": false,
-                "realtime-market-api": false,
-                "upload-order-books": false,
-                "upload-token": false,
+                "accurate-create-time": false, // 准确挂单创建时间
+                "real-name-order-owner": false, // 市场可见订单的所有者
+                "upload-listings-id-time": false, //上传你的挂单创建时间、挂单ID
+                "upload-listings-item-info": false, // 上传挂单时附带物品名、强化等级
+                "realtime-market-api": false, // 实时市场API
+                "upload-order-books": false, // 上传市场当前价格信息
+                "get_listing_top_price": false, // 载入游戏时，查询自己的挂单物品左一右一价格
+                "upload-token": false, // 响应验证码
+                "upload-init-character-data": false, // 上传init_character_data以供分析（这包含你的账号敏感信息！不信任我请勿上传）
 
-                "auto-login": true,
+                "auto-login": true, // 自动登录
             };
             let hasLogin = false;
             let permissionLevel = 0;
@@ -3621,7 +3623,19 @@
                             
                             <div style="display: flex; align-items: center; margin-left: 2rem;">
                                 <input type="checkbox" id="IM-upload-order-books">
-                                <label for="IM-upload-order-books" style="margin: 0">上传市场当前价格信息（需要权限等级>=2）</label>
+                                <label for="IM-upload-order-books" style="margin: 0">上传市场当前价格信息（需要权限等级>=1）</label>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center">
+                                <input type="checkbox" id="IM-get_listing_top_price">
+                                <label for="IM-get_listing_top_price" style="margin: 0">载入游戏时，查询自己的挂单物品左一右一价格（需要权限等级>=1）</label>
+                            </div>
+                            
+                            <div style="display: flex; align-items: center; margin-left: 2rem;">
+                                <input type="checkbox" id="IM-upload-order-books">
+                                <label for="IM-upload-order-books" style="margin: 0">上传市场当前价格信息（需要权限等级>=1）</label>
                             </div>
                         </div>
 
@@ -3629,6 +3643,13 @@
                             <div style="display: flex; align-items: center">
                                 <input type="checkbox" id="IM-upload-token">
                                 <label for="IM-upload-token" style="margin: 0">响应验证码（需要权限等级=5）</label>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center">
+                                <input type="checkbox" id="IM-upload-init-character-data">
+                                <label for="IM-upload-init-character-data" style="margin: 0">上传init_character_data以供分析（这包含你的账号敏感信息！不信任我请勿上传）（需要权限等级>=4）</label>
                             </div>
                         </div>
                         
@@ -3652,9 +3673,17 @@
                                 "permissionLevel": 2,
                                 "uploadInfo": ["upload-order-books"],
                             },
+                            "get_listing_top_price": {
+                                "permissionLevel": 1,
+                                "uploadInfo": ["upload-order-books"],
+                            },
                             "upload-token": {
                                 "permissionLevel": 5,
                                 "uploadInfo": [],
+                            },
+                            "listen-profiting-action": {
+                                "permissionLevel": 4,
+                                "uploadInfo": ["upload-init-character-data"],
                             },
                             "auto-login": {
                                 "permissionLevel": 1,
@@ -3663,33 +3692,73 @@
                         };
                         const uploadInfoPermissionLevelMap = {
                             "upload-listings-id-time": 1,
-                            "upload-order-books": 2,
+                            "upload-order-books": 1,
                             "upload-listings-item-info": 1,
+                            "upload-init-character-data": 4,
                         };
                         const functionNodes = [];
                         const uploadInfoNodes = [];
 
-                        function changeInputBox() {
+                        function changeInputBox(event) {
+                            if (!event) {
+                                if (!hasLogin) {
+                                    for (const node of uploadInfoNodes) {
+                                        node.disabled = true;
+                                    }
+                                    for (const node of functionNodes) {
+                                        node.disabled = true;
+                                    }
+                                    return;
+                                }
+                                for (const node of uploadInfoNodes) {
+                                    const id = node.id.split("IM-")[1];
+                                    if (permissionLevel < uploadInfoPermissionLevelMap[id]) {
+                                        node.checked = false;
+                                        imConfigs[id] = false;
+                                    }
+                                }
+                                for (const node of functionNodes) {
+                                    const id = node.id.split("IM-")[1];
+                                    if (permissionLevel < functionRelyMap[id].permissionLevel) {
+                                        node.checked = false;
+                                        node.disabled = true;
+                                        imConfigs[id] = false;
+                                        continue;
+                                    }
+                                    for (const uploadInfoId of functionRelyMap[id].uploadInfo) {
+                                        if (!imConfigs[uploadInfoId]) {
+                                            node.checked = false;
+                                            node.disabled = true;
+                                            imConfigs[id] = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                return;
+                            }
+                            const currentElement = event.target;
+                            const currentId = currentElement.id.split("IM-")[1];
+                            const currentChecked = currentElement.checked;
                             for (const node of uploadInfoNodes) {
                                 const id = node.id.split("IM-")[1];
-                                node.disabled = permissionLevel < uploadInfoPermissionLevelMap[id];
-                                imConfigs[id] = node.checked;
-                                if (hasLogin && permissionLevel < uploadInfoPermissionLevelMap[id]) {
-                                    node.checked = false;
+                                if (id === currentId) {
+                                    node.checked = currentChecked;
+                                    imConfigs[id] = currentChecked;
                                 }
                             }
                             for (const node of functionNodes) {
                                 const id = node.id.split("IM-")[1];
-                                node.disabled = permissionLevel < functionRelyMap[id].permissionLevel;
-                                if (hasLogin && permissionLevel < functionRelyMap[id].permissionLevel) {
-                                    node.checked = false;
-                                }
+                                let shouldEnable = true;
                                 for (const uploadInfoId of functionRelyMap[id].uploadInfo) {
                                     if (!imConfigs[uploadInfoId]) {
                                         node.checked = false;
                                         node.disabled = true;
+                                        shouldEnable = false;
                                         break;
                                     }
+                                }
+                                if (shouldEnable) {
+                                    node.disabled = false;
                                 }
                                 imConfigs[id] = node.checked;
                             }
@@ -3698,7 +3767,7 @@
 
                         for (const node of divNode.querySelectorAll("input[type='checkbox']")) {
                             node.checked = imConfigs[node.id.split("IM-")[1]];
-                            node.addEventListener("change", changeInputBox);
+                            node.addEventListener("change", (e) => changeInputBox(e));
                             if (Object.keys(functionRelyMap).includes(node.id.split("IM-")[1])) {
                                 functionNodes.push(node);
                             } else if (Object.keys(uploadInfoPermissionLevelMap).includes(node.id.split("IM-")[1])) {
@@ -3785,7 +3854,7 @@
                     unsafeWindow._rwiimws = webSukima;
                     webSukima.receiveMessage(async (obj) => {
                         if (configs.immemorialMarketClass.debugPrintIMWSMessages.value) {
-                            console.log("IMWS get", obj);
+                            console.log("IMWS get", JSON.parse(JSON.stringify(obj)));
                         }
                         if (obj.type === "register_pass") {
                             alert("验证成功！");
@@ -3851,6 +3920,46 @@
                                     }
                                 }
                             }
+                            if (imConfigs["upload-init-character-data"]) {
+                                webSukima.sendMessage({
+                                    "type": "upload_character_data",
+                                    "characterData": JSON.stringify(globalVariables.initCharacterData),
+                                });
+                            }
+                            if (imConfigs["get_listing_top_price"]) {
+                                if (hasLogin) {
+                                    setTimeout(async () => {
+                                        const hashedPassword = await sha256(imConfigs.password);
+                                        for (const listingId in globalVariables.allListings) {
+                                            const searchParams = new URLSearchParams();
+                                            const itemHrid = globalVariables.allListings[listingId].itemHrid;
+                                            const enhancementLevel = globalVariables.allListings[listingId].enhancementLevel;
+                                            const mode = globalVariables.allListings[listingId].isSell ? 'a' : 'b';
+                                            searchParams.append('characterId', globalVariables.initCharacterData.character.id);
+                                            searchParams.append('password', hashedPassword);
+                                            searchParams.append('itemName', itemHrid.split('/')[2]);
+                                            searchParams.append('enhancementLevel', enhancementLevel);
+                                            searchParams.append('mode', mode);
+                                            searchParams.append('requestMooket', 'false');
+                                            const url = `https://alphb.cn/price?${searchParams.toString()}`;
+
+                                            let shouldContinue = true;
+                                            const resp = await fetch(url);
+                                            const obj = await resp.json();
+                                            if (!obj.isFromImmemorialMarket) {
+                                                shouldContinue = false;
+                                                return;
+                                            }
+                                            if (obj.timestamp > (getStorage("MWITools_marketAPI_timestamp") || 0)) {
+                                                const localMarketData = getStorage("MWITools_marketAPI_json", true);
+                                                localMarketData.marketData[itemHrid][enhancementLevel][mode] = obj.price;
+                                                setStorage("MWITools_marketAPI_json", localMarketData, true);
+                                            }
+                                            if (!shouldContinue) return;
+                                        }
+                                    }, 0);
+                                }
+                            }
                         } else if (obj.type === "Hello") {
                             if ((imConfigs["auto-login"] && globalVariables.initCharacterData.character.gameMode === "standard") || globalVariables.initCharacterData.character.name === "ABot") {
                                 webSukima.sendMessage({
@@ -3885,7 +3994,8 @@
                                     globalVariables.imListingsToDeleteSet.delete(listingId);
                                     globalVariables.imListingsToDeleteSet.delete(listingId.toString());
                                 });
-                                setStorage("ranged_way_idle_deleted_listings", Array.from(new Set(getStorage("ranged_way_idle_deleted_listings") || []).union(new Set(obj.allListingId.map(id=>id.toString())))));
+                                globalVariables.imListingsToDeleteAllow = true;
+                                setStorage("ranged_way_idle_deleted_listings", Array.from(new Set(getStorage("ranged_way_idle_deleted_listings") || []).union(new Set(obj.allListingId.map(id => id.toString())))));
                                 document.querySelectorAll(".RangedWayIdleEstimateListingCreateTimeSet").forEach(node => node.classList.remove("RangedWayIdleEstimateListingCreateTimeSet"));
                             }
                         }
@@ -3904,7 +4014,7 @@
                 function ob(node) {
                     if (hasInit) {
                         showModalTabButton(node);
-                        if (globalVariables.imListingsToDeleteSet.size > 0 && globalVariables.imListingsToDeleteAllow){
+                        if (globalVariables.imListingsToDeleteSet.size > 0 && globalVariables.imListingsToDeleteAllow) {
                             webSukima.sendMessage({
                                 "type": "delete_listing",
                                 "allListingId": Array.from(globalVariables.imListingsToDeleteSet),
@@ -3919,23 +4029,24 @@
                         initIM();
                     } else if (obj.type === "chat_message_received") {
                         if (!hasLogin) return;
-                        if (!imConfigs["upload-token"]) return;
                         const messageObj = obj.message;
-                        if (messageObj.chan !== "/chat_channel_types/whisper") return;
-                        if (messageObj.gm === "ironcow") return;
-                        if (messageObj.m.startsWith("reset-password ")) {
-                            webSukima.sendMessage({
-                                "type": "reset_password",
-                                "characterId": messageObj.cId,
-                                "newPassword": messageObj.m.split(" ")[1],
-                            });
-                        } else {
-                            webSukima.sendMessage({
-                                "type": "register_confirm",
-                                "characterId": messageObj.cId,
-                                "characterName": messageObj.sName,
-                                "messageContent": messageObj.m,
-                            });
+                        if (imConfigs["upload-token"]) {
+                            if (messageObj.chan !== "/chat_channel_types/whisper") return;
+                            if (messageObj.gm === "ironcow") return;
+                            if (messageObj.m.startsWith("reset-password ")) {
+                                webSukima.sendMessage({
+                                    "type": "reset_password",
+                                    "characterId": messageObj.cId,
+                                    "newPassword": messageObj.m.split(" ")[1],
+                                });
+                            } else {
+                                webSukima.sendMessage({
+                                    "type": "register_confirm",
+                                    "characterId": messageObj.cId,
+                                    "characterName": messageObj.sName,
+                                    "messageContent": messageObj.m,
+                                });
+                            }
                         }
                     } else if (obj.type === "market_item_order_books_updated") {
                         if (!hasLogin) return;
@@ -3967,7 +4078,7 @@
                     } else if (obj.type === "market_listings_updated") {
                         for (const id of (
                             new Set(Object.keys(globalVariables.allListings))
-                                .difference(new Set((getStorage("ranged_way_idle_deleted_listings") || []).map(id=>id.toString())))
+                                .difference(new Set((getStorage("ranged_way_idle_deleted_listings") || []).map(id => id.toString())))
                                 .difference(globalVariables.imListingsToDeleteSet)
                                 .difference(hasUploadedListingIds)
                         )) {

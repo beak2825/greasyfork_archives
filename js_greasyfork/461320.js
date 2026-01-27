@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Refined GitHub Notifications
 // @namespace    https://greasyfork.org/en/scripts/461320-refined-github-notifications
-// @version      0.6.8
+// @version      0.6.9
 // @description  Enhances the GitHub Notifications page, making it more productive and less noisy.
 // @author       Anthony Fu (https://github.com/antfu)
 // @license      MIT
@@ -89,6 +89,9 @@
 }
 /* Hide blue dot on notification with the new navigration */
 .AppHeader .AppHeader-button.AppHeader-button--hasIndicator::before {
+  display: none !important;
+}
+.styles-module__notificationIndicator--Xi7hr:before {
   display: none !important;
 }
 /* Limit notification container width on large screen for better readability */

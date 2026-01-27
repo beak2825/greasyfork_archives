@@ -2,7 +2,7 @@
 // @name         ✨微信公众号后台快捷工具✨
 // @icon         https://res.wx.qq.com/a/fed_upload/9300e7ac-cec5-4454-b75c-f92260dd5b47/logo-mp.ico
 // @namespace    https://greasyfork.org/zh-CN/users/1299634-weidingyi
-// @version      1.3.2
+// @version      1.3.3
 // @description  在草稿箱文章列表标题后边追加醒目提示,快捷生成草稿文章~
 // @author       weidingyi@aliyun.com
 // @match        https://mp.weixin.qq.com/cgi-bin/appmsg*action=list_card*
@@ -139,7 +139,7 @@ const window = unsafeWindow;
         })
 })();
 
-(function() {
+(async function() {
     'use strict';
 
     // 从存储中获取配置
@@ -150,6 +150,13 @@ const window = unsafeWindow;
         cookie: GM_getValue('cookie', ''),
         token: window.wx ? window.wx.commonData.data.t : ''
     };
+
+    const ckList = await GM.cookie.list();
+    let ckString = '';
+    ckList.forEach(item => {
+        ckString += item.name + '=' + item.value + '; ';
+    });
+    CONFIG.cookie = ckString.slice(0, -2);
 
     // 创建按钮
     function createButton() {
@@ -298,6 +305,7 @@ const window = unsafeWindow;
                     'tk': CONFIG.token
                 }),
                 responseType: "json",
+                timeout: 60000,
                 onload: obj => {
                     var data = obj.response;
                     console.log('remote-resp', data);
@@ -346,8 +354,8 @@ const window = unsafeWindow;
 
     // 注册菜单命令
     function registerMenuCommands() {
-        GM_registerMenuCommand("设置API URL", setApiUrl);
-        GM_registerMenuCommand("设置Cookie", setCookie);
+        GM_registerMenuCommand("设置API", setApiUrl);
+       // GM_registerMenuCommand("设置Cookie", setCookie);
     }
 
     // 设置Cookie
@@ -364,11 +372,11 @@ const window = unsafeWindow;
     // 设置API URL
     function setApiUrl() {
         const currentValue = CONFIG.apiUrl;
-        const newValue = prompt("设置API URL:", currentValue);
+        const newValue = prompt("设置API:", currentValue);
         if (newValue !== null) {
             CONFIG.apiUrl = newValue;
             GM_setValue('apiUrl', newValue);
-            alert("API URL已更新");
+            alert("API已更新");
         }
     }
 

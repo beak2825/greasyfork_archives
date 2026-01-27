@@ -2,7 +2,7 @@
 // @name         RuTracker Search Filter
 // @name:en      RuTracker Search Filter
 // @namespace    http://tampermonkey.net/
-// @version      1.4.1
+// @version      1.6.1
 // @license MIT
 // @description  Расширенный фильтр категорий и результатов поиска
 // @description:en  Advanced category and search results filter
@@ -22,6 +22,8 @@
     // Флаги для отслеживания применения настроек
     let isApplyingSettings = false;  // в функции applyHiddenCategories
     let isProcessingResults = false;  // в функции processSearchResults
+    let isAltModeActive = false;
+    let altSelectedCategories = new Set();
 
     // Конфигурация для различных сайтов
     const siteConfigs = {
@@ -122,6 +124,7 @@
                 allGroupsPrefix: '[ВСЕ] ',
                 helpText: '• Выбор раздела с подразделами включает и сам раздел, и все его подразделы<br>' +
                           '• Опции [ВСЕ] позволяют выбрать все разделы в группе сразу<br>' +
+                          '• Зажмите Alt при выборе, чтобы выбирать только родительские разделы<br>' +
                           '• Используйте кнопки над списком для управления видимостью категорий'
             }
         },
@@ -250,6 +253,7 @@
                 allGroupsPrefix: '[ВСЕ] ',
                 helpText: '• Выбор раздела с подразделами включает и сам раздел, и все его подразделы<br>' +
                           '• Опции [ВСЕ] позволяют выбрать все разделы в группе сразу<br>' +
+                          '• Зажмите Alt при выборе, чтобы выбирать только родительские разделы<br>' +
                           '• Используйте кнопки над списком для управления видимостью категорий'
             }
         },
@@ -383,6 +387,7 @@
                 allGroupsPrefix: '[ВСЕ] ',
                 helpText: '• Выбор раздела с подразделами включает и сам раздел, и все его подразделы<br>' +
                           '• Опции [ВСЕ] позволяют выбрать все разделы в группе сразу<br>' +
+                          '• Зажмите Alt при выборе, чтобы выбирать только родительские разделы<br>' +
                           '• Используйте кнопки над списком для управления видимостью категорий'
             }
         }
@@ -410,6 +415,84 @@
     if (!currentSite) {
         // console.log('[Category Enhancer] Нет конфигурации для текущего сайта');
         return;
+    }
+
+    // Функция для восстановления состояния Alt-выбора из localStorage
+    function restoreAltStateFromLS(categoryMap) {
+        const storageKey = `altSelectedCategories_${currentHostname}`;
+        const savedAltCategories = localStorage.getItem(storageKey);
+
+        if (!savedAltCategories) return;
+
+        try {
+            const altCategoriesArray = JSON.parse(savedAltCategories);
+            altCategoriesArray.forEach(catId => {
+                if (categoryMap[catId]) {
+                    altSelectedCategories.add(catId);
+                }
+            });
+        } catch (e) {
+            console.error('[Category Enhancer] Ошибка восстановления Alt-категорий:', e);
+        }
+    }
+
+    // Функция для настройки режима "только родительские категории"
+    function setupRootOnlyMode(selectElement, categoryMap) {
+        // Получаем настройки
+        const settingsKey = `categorySettings_${currentHostname}`;
+        const savedSettings = JSON.parse(localStorage.getItem(settingsKey) || '{}');
+        const disableAutoSubcategories = savedSettings['disable-auto-subcategories'] !== undefined ?
+            savedSettings['disable-auto-subcategories'] : false;
+
+        // Если автовыбор дочерних отключен, не инициализируем Alt
+        if (disableAutoSubcategories) return;
+
+        // Отслеживаем нажатие Alt
+        document.addEventListener('keydown', function(e) {
+            if (e.altKey) {
+                isAltModeActive = true;
+                // Добавляем визуальную индикацию
+                selectElement.style.outline = '3px solid #FF9800';
+                selectElement.style.outlineOffset = '2px';
+                selectElement.title = '⚡ Режим: выбор ТОЛЬКО родительских разделов (Alt зажат)';
+            }
+        });
+
+        document.addEventListener('keyup', function(e) {
+            if (!e.altKey) {
+                isAltModeActive = false;
+                // Убираем визуальную индикацию
+                selectElement.style.outline = '';
+                selectElement.style.outlineOffset = '';
+                selectElement.title = '';
+            }
+        });
+
+        // Отслеживаем изменение выбора
+        selectElement.addEventListener('change', function(e) {
+            const selected = Array.from(selectElement.selectedOptions).map(opt => opt.value);
+
+            // Обновляем Set категорий, выбранных с Alt
+            selected.forEach(categoryId => {
+                // Если это родительская категория с подкатегориями
+                if (categoryMap[categoryId]) {
+                    if (isAltModeActive) {
+                        // Добавляем в Set - эта категория выбрана с Alt
+                        altSelectedCategories.add(categoryId);
+                    } else {
+                        // Удаляем из Set - эта категория выбрана без Alt
+                        altSelectedCategories.delete(categoryId);
+                    }
+                }
+            });
+
+            // Удаляем из Set категории, которые больше не выбраны
+            altSelectedCategories.forEach(categoryId => {
+                if (!selected.includes(categoryId)) {
+                    altSelectedCategories.delete(categoryId);
+                }
+            });
+        });
     }
 
     // Функция для обработки результатов поиска и интеграции со встроенным механизмом
@@ -630,6 +713,8 @@
         const categoryMap = buildCategoryMap(rootOptions, selectElement);
         // console.log(`[Category Enhancer] Построена карта категорий: ${Object.keys(categoryMap).length} родительских категорий`);
 
+        restoreAltStateFromLS(categoryMap);
+
         // Добавляем опции [ВСЕ] для выбора всех элементов в группе
         const optgroupMap = addGroupSelectors(optgroups, selectElement);
         // console.log(`[Category Enhancer] Добавлены селекторы групп: ${Object.keys(optgroupMap).length} групп`);
@@ -665,6 +750,9 @@
         setupAutoApply(selectElement);
         // console.log('[Category Enhancer] Настроено автоматическое применение настроек');
 
+        // Настраиваем режим "только родительские категории"
+        setupRootOnlyMode(selectElement, categoryMap);
+
         // console.log('[Category Enhancer] Скрипт успешно инициализирован для сайта', currentHostname);
     }
 
@@ -682,13 +770,8 @@
 
             // Используем метод сайта для получения подкатегорий, если он доступен
             let subcategories = [];
-            if (currentSite.getSubcategories) {
-                subcategories = currentSite.getSubcategories(rootOption, selectElement, allOptions);
-            } else {
-                // В противном случае используем селектор, возвращаемый getSubcategoryClass
-                const subCategorySelector = currentSite.getSubcategoryClass(rootId);
-                subcategories = Array.from(selectElement.querySelectorAll(subCategorySelector));
-            }
+            subcategories = currentSite.getSubcategories(rootOption, selectElement, allOptions);
+
 
             // Добавляем значения подкатегорий в карту
             subcategories.forEach(subOption => {
@@ -767,14 +850,30 @@
                     parentOption.style.backgroundColor = '#e0f0e0';  // Светло-зеленая подсветка
                 }
 
-                // Подсвечиваем подкатегории
-                categoryMap[categoryId].forEach(subId => {
-                    const subOption = document.getElementById(`fs-${subId}`) ||
-                                    selectElement.querySelector(`option[value="${subId}"]`);
-                    if (subOption) {
-                        subOption.style.backgroundColor = '#e0f0e0';  // Светло-зеленая подсветка
-                    }
-                });
+                // Получаем настройки
+                const settingsKey = `categorySettings_${currentHostname}`;
+                const savedSettings = JSON.parse(localStorage.getItem(settingsKey) || '{}');
+                const disableAutoSubcategories = savedSettings['disable-auto-subcategories'] !== undefined ?
+                    savedSettings['disable-auto-subcategories'] : false;
+
+                // Подсвечиваем подкатегории только если категория не была выбрана с alt
+                if (!isAltModeActive && !altSelectedCategories.has(categoryId) && !disableAutoSubcategories) {
+                    categoryMap[categoryId].forEach(subId => {
+                        const subOption = document.getElementById(`fs-${subId}`) ||
+                                        selectElement.querySelector(`option[value="${subId}"]`);
+                        if (subOption) {
+                            subOption.style.backgroundColor = '#e0f0e0';  // Светло-зеленая подсветка
+                        }
+                    });
+                }
+            }
+            // Обычная категория
+            else {
+                const option = document.getElementById(`fs-${categoryId}`) ||
+                              selectElement.querySelector(`option[value="${categoryId}"]`);
+                if (option) {
+                    option.style.backgroundColor = '#e0f0e0';
+                }
             }
         });
     }
@@ -795,6 +894,11 @@
     // Функция для настройки обработчика отправки формы
     function setupFormSubmitHandler(formElement, selectElement, categoryMap, optgroupMap, selectors) {
         formElement.addEventListener('submit', function(e) {
+            // Сохраняем состояние Alt-выбора в localStorage перед отправкой
+            const storageKey = `altSelectedCategories_${currentHostname}`;
+            const altArray = Array.from(altSelectedCategories);
+            localStorage.setItem(storageKey, JSON.stringify(altArray));
+
             // Получаем все выбранные категории
             const selected = Array.from(selectElement.selectedOptions).map(opt => opt.value);
 
@@ -831,7 +935,6 @@
             selected.forEach(categoryId => {
                 // Если опция исключения включена и категория скрыта, пропускаем ее
                 if (excludeHiddenFromSearch && hiddenCategoryIds.has(categoryId)) {
-                    // console.log(`[Category Enhancer] Категория ${categoryId} скрыта, пропускаем`);
                     return;
                 }
 
@@ -842,8 +945,6 @@
                         optgroupMap[categoryId].forEach(subId => {
                             if (!excludeHiddenFromSearch || !hiddenCategoryIds.has(subId)) {
                                 finalCategories.push(subId);
-                            } else {
-                                // console.log(`[Category Enhancer] Подкатегория ${subId} скрыта, пропускаем`);
                             }
                         });
                         processedGroupIds.add(categoryId);
@@ -855,14 +956,18 @@
                     // Добавляем саму родительскую категорию
                     finalCategories.push(categoryId);
 
-                    // Добавляем подкатегории
-                    categoryMap[categoryId].forEach(subId => {
-                        if (!excludeHiddenFromSearch || !hiddenCategoryIds.has(subId)) {
-                            finalCategories.push(subId);
-                        } else {
-                            // console.log(`[Category Enhancer] Подкатегория ${subId} скрыта, пропускаем`);
-                        }
-                    });
+                    // Получаем настройки
+                    const disableAutoSubcategories = savedSettings['disable-auto-subcategories'] !== undefined ?
+                        savedSettings['disable-auto-subcategories'] : false;
+
+                    // Добавляем дочерние, только если автовыбор не отключен и категория не выбрана с alt
+                    if (!disableAutoSubcategories && !altSelectedCategories.has(categoryId)) {
+                        categoryMap[categoryId].forEach(subId => {
+                            if (!excludeHiddenFromSearch || !hiddenCategoryIds.has(subId)) {
+                                finalCategories.push(subId);
+                            }
+                        });
+                    }
                 }
                 // Иначе добавляем выбранную категорию напрямую
                 else {
@@ -931,14 +1036,14 @@
 
                         // Заменяем пробелы на +, если включен spaceAsPlus
                         if (currentSite.spaceAsPlus) {
-                            processedSearchQuery = shouldEncodeSearch ? 
-                                processedSearchQuery.replace(/%20/g, '+') : 
+                            processedSearchQuery = shouldEncodeSearch ?
+                                processedSearchQuery.replace(/%20/g, '+') :
                                 searchQuery.replace(/ /g, '+');
                         }
 
                         // Создаем URL поиска
                         const finalUrl = currentSite.createSearchUrl(categoriesParam, processedSearchQuery);
-                        
+
                         // Перенаправляем на URL поиска
                         window.location.href = finalUrl;
                     } else {
@@ -1119,6 +1224,12 @@
             {
                 id: 'keep-hidden-categories-visible',
                 label: 'Оставлять скрытые категории видимыми в селекторе выбора разделов',
+                type: 'checkbox',
+                default: false
+            },
+            {
+                id: 'disable-auto-subcategories',
+                label: 'Отключить автоматический выбор дочерних категорий',
                 type: 'checkbox',
                 default: false
             }
@@ -1643,7 +1754,8 @@
         const uiSettings = currentSite.createUiSettings ? currentSite.createUiSettings() : [
             { id: 'move-hidden-results', default: true },
             { id: 'exclude-hidden-categories-from-search', default: true },
-            { id: 'keep-hidden-categories-visible', default: false }
+            { id: 'keep-hidden-categories-visible', default: false },
+            { id: 'disable-auto-subcategories', default: false }
         ];
 
         // Собираем значения всех настроек
@@ -1762,25 +1874,6 @@
         // По завершении работы сбрасываем флаг
         setTimeout(() => {
             isApplyingSettings = false;
-        }, 10);
-    }
-
-    // Функция для обновления внешнего вида селектора категорий
-    function refreshSelectElement(selectElement) {
-        setTimeout(function() {
-            const selectWidth = selectElement.style.width;
-            selectElement.style.width = '99.99%';
-            setTimeout(function() {
-                selectElement.style.width = selectWidth;
-            }, 0);
-
-            // Эмулируем клик где-то рядом с селектором для обновления интерфейса
-            const evt = new MouseEvent("click", {
-                bubbles: true,
-                cancelable: true,
-                view: window
-            });
-            selectElement.parentNode.dispatchEvent(evt);
         }, 10);
     }
 

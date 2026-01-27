@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AnMe
 // @author       zjw
-// @version      9.8.2
+// @version      9.8.3
 // @namespace    https://github.com/Zhu-junwei/AnMe
 // @description  通用多网站多账号切换器
 // @description:zh  通用多网站多账号切换器
@@ -903,8 +903,7 @@
             $('#btn-goto-host').onclick = () => {
                 const host = $('#host-sel').value;
                 if (host) {
-                    // 默认使用 https 协议跳转
-                    window.open('https://' + host, '_blank');
+                    window.open('https://' + host, '_blank','noopener,noreferrer');
                 }
             };
 

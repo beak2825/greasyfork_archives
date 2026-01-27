@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TwitchTranslate
 // @namespace    MrSelenix
-// @version      1.0.8
+// @version      1.0.9
 // @description  Automatically translates messages in Twitch chat to other languages.
 // @author       MrSelenix
 // @match        https://www.twitch.tv/*
@@ -112,7 +112,6 @@
     //////////////////
     // Initialize   //
     //////////////////
-
     function initialize() {
         applyTheme(isLightMode() ? lightMode : darkMode);
 
@@ -125,9 +124,14 @@
             }
         });
 
-        const theme = new MutationObserver(() => {
-            applyTheme(isLightMode() ? lightMode : darkMode);
-        });
+        if (!window.__themeObserverRunning) {
+            window.__themeObserverRunning = true;
+
+            const theme = new MutationObserver(() => {
+                applyTheme(isLightMode() ? lightMode : darkMode);
+            });
+            theme.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+        }
 
         const sevenTV = new MutationObserver(() => { //7tv check
             const sTV = document.getElementsByClassName("seventv-tw-button seventv-mod-logs-button")[0];
@@ -140,16 +144,38 @@
 
         sevenTV.observe(document.body, { childList: true, subtree: true });
         observer.observe(document.body, { childList: true, subtree: true });
-        theme.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
 
         setTimeout(() => {
             sevenTV.disconnect();
-        }, 20000);
-
+        }, 10000);
     }
 
-    let extraction = false;
-    initialize();
+    let prev = null;
+    setInterval(reset, 1000);
+
+    function reset() {
+        if (!document.querySelector('div[data-a-player-type="site"]')) {
+            prev = null;
+            return
+        }
+
+        // Checks URL of the page to see if it changes (eg. on a raid or navigation) and restarts the script.
+        if (document.querySelector('[data-test-selector="stream-info-card-component__title-link"]')) {
+            if (document.querySelector('[data-test-selector="stream-info-card-component__title-link"]').href !== prev) {
+                prev = document.querySelector('[data-test-selector="stream-info-card-component__title-link"]').href;
+                initialize();
+                messageExtraction();
+            }
+        }
+        else if (document.querySelector('h1.tw-title')) {
+            if (("https://www.twitch.tv/" + document.querySelector('h1.tw-title').textContent.toLowerCase()) !== prev) {
+                prev = ("https://www.twitch.tv/" + document.querySelector('h1.tw-title').textContent.toLowerCase());
+                initialize();
+                messageExtraction();
+            }
+        };
+    }
 
     //////////////////////////////
     // Create Settings Button   //
@@ -161,11 +187,9 @@
         if (document.getElementById('tt_settings')) return;
         if (document.querySelector('[data-a-target="chat-send-button"]')) {
             chatButton = document.querySelector('[data-a-target="chat-send-button"]').parentNode.parentNode;
-            //console.log("applied to chat button");
         }
         else {
             chatButton = document.querySelector('.player-controls__right-control-group').childNodes[2]; // Fallback to video player control bar.
-            console.log("applied to player controls");
         }
 
         mainButton = document.createElement('button');
@@ -189,10 +213,8 @@
 
         if (chatButton) {
             chatButton.parentNode.insertBefore(mainButton, chatButton);
-            if (extraction == false) {
-                console.log(`[TwitchTranslate] Version ${GM_info.script.version} Loaded Successfully`);
-                messageExtraction();
-            }
+            console.log(`[TwitchTranslate] Version ${GM_info.script.version} Loaded Successfully`);
+            messageExtraction();
 
         } else {
             console.error("Error appending");
@@ -850,7 +872,6 @@
     //////////////////////////////
 
     function messageExtraction() {
-        extraction = true;
         const originals = new Map();
         const chatContainer = document.querySelector('[data-test-selector="chat-scrollable-area__message-container"], .scrollable-container.seventv-chat-scroller, .video-chat__message-list-wrapper');
         if (!chatContainer) return;

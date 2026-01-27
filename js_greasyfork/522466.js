@@ -6,7 +6,7 @@
 // @icon                https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @author              ElectroKnight22
 // @namespace           electroknight22_youtube_better_theater_mode_namespace
-// @version             3.2.4
+// @version             3.2.6
 // @match               *://www.youtube.com/*
 // @match               *://www.youtube-nocookie.com/*
 // @require             https://update.greasyfork.org/scripts/549881/1733676/YouTube%20Helper%20API.js
@@ -376,10 +376,13 @@
                     id: 'betterTheater-staticTuckRecommendationWidthClampStyle',
                     getRule: () => `
                         #id.ytd-watch-metadata, #top-row.ytd-watch-metadata {
-                            max-width: calc(var(--ytd-watch-flexy-max-player-width-wide-screen)
-                                + var(--ytd-watch-flexy-sidebar-width)
-                                + var(--ytd-watch-flexy-horizontal-page-margin) * 3
-                                - 2 * var(--ytd-watch-flexy-horizontal-page-margin))
+                            max-width:
+                                calc(
+                                    min(
+                                        calc(100vw - 3 * var(--ytd-watch-flexy-horizontal-page-margin)),
+                                        100% + var(--ytd-watch-flexy-sidebar-width) + var(--ytd-watch-flexy-horizontal-page-margin)
+                                    )
+                                )
                             !important;
                         }
                     `,
@@ -508,15 +511,13 @@
                     id: 'betterTheater-tuckRecommendationVodStyle',
                     getRule: () => `
                         #id.ytd-watch-metadata, #top-row.ytd-watch-metadata {
-                            width: calc(100vw
-                                - 2
-                                * var(--ytd-watch-flexy-horizontal-page-margin)
-                                - var(--ytd-watch-flexy-sidebar-width)
-                                - var(--ytd-watch-flexy-horizontal-page-margin))
-                            !important;
+                            width: calc(100% + var(--ytd-watch-flexy-sidebar-width) + var(--ytd-watch-flexy-horizontal-page-margin)) !important;
                         }
-                        #secondary {
+                        #secondary:not(:has(ytd-playlist-panel-renderer)) {
                             transform: translateY(calc(var(--ytd-watch-flexy-top-padding) * 6)) !important;
+                        }
+                        #secondary:has(ytd-playlist-panel-renderer) {
+                            transform: translateY(calc(var(--ytd-watch-flexy-top-padding) * 6.5 + 1px)) !important;
                         }
                     `,
                 },
@@ -524,10 +525,13 @@
                     id: 'betterTheater-tuckRecommendationVideoStyle',
                     getRule: () => `
                         #id.ytd-watch-metadata, #top-row.ytd-watch-metadata {
-                            width: calc(100vw - 2 * var(--ytd-watch-flexy-horizontal-page-margin)) !important;
+                            width: calc(100% + var(--ytd-watch-flexy-sidebar-width) + var(--ytd-watch-flexy-horizontal-page-margin)) !important;
                         }
-                        #secondary {
+                        #secondary:not(:has(ytd-playlist-panel-renderer)) {
                             transform: translateY(calc(var(--ytd-watch-flexy-top-padding) * 6)) !important;
+                        }
+                        #secondary:has(ytd-playlist-panel-renderer) {
+                            transform: translateY(calc(var(--ytd-watch-flexy-top-padding) * 6.5 + 1px)) !important;
                         }
                     `,
                 },
@@ -822,6 +826,11 @@
             const isVod = api.video.wasStreamedOrPremiered;
             const canHaveChat = api.video.isLiveOrVodContent || isVod;
             const isCollapsed = !api.chat.container || !api.chat.iFrame || api.chat.isCollapsed; // TODO: Patch helper lib. YouTube can return chat state even when chat elements are missing.
+
+            console.log('isVod:', isVod, 'canHaveChat:', canHaveChat, 'isCollapsed:', isCollapsed);
+
+            if (!canHaveChat || (isVod && isCollapsed)) console.log('video style');
+            if (!isCollapsed) console.log(isVod ? 'vod style' : 'liveStyle');
 
             if (!canHaveChat || (isVod && isCollapsed)) return StyleManager.toggle(styles.videoStyle, true);
             if (!isCollapsed) return StyleManager.toggle(isVod ? styles.vodStyle : styles.liveStyle, true);

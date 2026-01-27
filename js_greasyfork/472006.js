@@ -4,7 +4,7 @@
 // @author         Blaff, Blatomi, Atlantis, Rand0max
 // @namespace      JV_Chat_MP
 // @license        MIT
-// @version        0.1.112.v655_MP
+// @version        0.1.112.v657_MP
 // @icon           https://images.emojiterra.com/google/noto-emoji/unicode-15/color/128px/2709.png
 // @match          https://*.jeuxvideo.com/messages-prives/message.php*
 // @grant          none
@@ -2672,10 +2672,12 @@ function addJVChatButton(document) {
     document.head.insertAdjacentHTML("beforeend", css);
     let blocPreRight = document.getElementsByClassName("action-left");
     let jvchatButton = makeJVChatButton();
-    //let divElement = document.querySelector('.text-editor');
-    let divElement = document.querySelector('#message');
-    blocPreRight[1].insertAdjacentHTML('afterbegin', jvchatButton);
-    blocPreRight[2].insertAdjacentHTML('beforeend', jvchatButton);
+    //let textAreaExist = document.querySelector('.text-editor');
+    let textAreaExist = document.querySelector('#repondre-mp form');
+    if (textAreaExist) {
+        blocPreRight[1].insertAdjacentHTML('afterbegin', jvchatButton);
+        blocPreRight[2].insertAdjacentHTML('beforeend', jvchatButton);
+    }
 }
 
 function bindJVChatButton(document) {
@@ -3006,26 +3008,8 @@ function main() {
 }
 
 
-//main();
+main();
 
-
-/* ATTENDRE ZONE DE TEXTE JS */
-(function() {
-    const container = document.querySelector('#bloc-formulaire-forum form, #repondre-mp form');
-    if (!container) return console.warn("Pas de zone de texte"); // exit
-    const textReact = '.messageEditor__containerEdit';
-    if (container.querySelector(textReact)) return main(); //déjà là => start et exit
-    const observer = new MutationObserver((muts) => {
-        if (container.querySelector(textReact)) {
-            observer.disconnect();
-            clearTimeout(timeout);
-            main();
-        }
-    });
-    observer.observe(container, { childList: true, subtree: true });
-    const timeout = setTimeout(() => observer.disconnect(), 4000); // abandon après 4 sec  exit
-})();
-/* ATTENDRE ZONE DE TEXTE JS */
 
 //////////////////////// TEMPORAIRE BONUS /////////////////////////////////
 

@@ -2,7 +2,7 @@
 // @name         StreamSaver Video Sniffer
 // @name:zh-CN   通用视频嗅探器
 // @namespace    org.jw23.videosniffer
-// @version      23.5
+// @version      24.1
 // @description  Sniff video (m3u8/mp4) and download using StreamSaver (Low Memory).
 // @description:zh-CN  专为安卓大文件设计：使用 StreamSaver 代理流式下载，几乎不占内存，支持 M3U8 转 MP4。
 // @author       jw23 (Modified for StreamSaver)
@@ -21,434 +21,400 @@
 // @updateURL https://update.greasyfork.org/scripts/557786/StreamSaver%20Video%20Sniffer.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
-    // StreamSaver 代理配置
-    streamSaver.mitm = 'https://xn--ghqr82bqvkxl7a.xn--10vm87c.xn--6qq986b3xl/connect';
+    // StreamSaver 配置
+    streamSaver.mitm = 'https://jimmywarting.github.io/StreamSaver.js/mitm.html?version=2.0.0';
 
-    const Config = {
-        scanInterval: 2000,
-        uiId: 'gm-sniffer-stream-v23-fixed',
-        get maxThreads() { return GM_getValue('max_threads', 3); },
-        maxRetries: 5,
-        retryDelay: 2000,
-        colors: { primary: '#03a9f4', background: 'rgba(0, 0, 0, 0.9)', text: '#ffffff' }
+    const I18N = {
+        title: "视频嗅探助手",
+        download: "下载",
+        downloading: "下载中...",
+        complete: "下载完成",
+        error: "出错",
+        no_video: "暂未发现视频",
+        copy: "复制链接"
     };
 
-    GM_registerMenuCommand(`⚙️ 设置并发下载数 (当前: ${Config.maxThreads})`, () => {
-        const val = parseInt(prompt('请输入并发数 (建议 2-5):', Config.maxThreads));
-        if (val && val > 0 && val <= 16) {
-            GM_setValue('max_threads', val);
-            alert(`设置成功，刷新生效。`);
-        }
-    });
+    // 缓存队列：用于存放UI加载完成前嗅探到的视频
+    const PENDING_ITEMS = [];
+    const FOUND_URLS = new Set();
+    let uiInstance = null;
 
-    const Utils = {
-        request: (url, isBinary = false) => {
-            return new Promise((resolve, reject) => {
-                GM_xmlhttpRequest({
-                    method: 'GET',
-                    url: url,
-                    responseType: isBinary ? 'arraybuffer' : 'text',
-                    headers: { 'Referer': location.href, 'Origin': location.origin },
-                    timeout: 60000,
-                    onload: (res) => (res.status >= 200 && res.status < 300) ? resolve(res.response) : reject(new Error(`HTTP ${res.status}`)),
-                    onerror: (err) => reject(err),
-                    ontimeout: () => reject(new Error('Timeout'))
-                });
-            });
-        },
-        sleep: (ms) => new Promise(r => setTimeout(r, ms)),
-        createElement: (tag, attrs = {}, children = []) => {
-            const el = document.createElement(tag);
-            Object.entries(attrs).forEach(([k, v]) => {
-                if (k === 'style') Object.assign(el.style, v);
-                else if (k.startsWith('on')) el.addEventListener(k.substring(2).toLowerCase(), v);
-                else el.setAttribute(k, v);
-            });
-            (Array.isArray(children) ? children : [children]).forEach(c => el.appendChild(c instanceof Node ? c : document.createTextNode(String(c))));
-            return el;
-        },
-        getFilename: (url) => {
-            let name = url.split('?')[0].split('/').pop();
-            return (name && name.trim() !== '') ? decodeURIComponent(name) : `video_${Date.now()}.mp4`;
-        },
-        resolveUrl: (baseUrl, relativeUrl) => {
-            if (relativeUrl.startsWith('http')) return relativeUrl;
-            try { return new URL(relativeUrl, baseUrl).href; } catch { return relativeUrl; }
-        }
-    };
+    // ==========================================
+    // 1. 核心 M3U8 下载逻辑 (保持 AES 修复版)
+    // ==========================================
+    function hex2buf(hex) {
+        if (hex.startsWith('0x')) hex = hex.slice(2);
+        return new Uint8Array(hex.match(/[\da-f]{2}/gi).map(h => parseInt(h, 16)));
+    }
 
-    const AESCrypto = {
-        hexToBytes: (hex) => new Uint8Array(hex.replace(/^0x/i, '').match(/.{1,2}/g).map(byte => parseInt(byte, 16))),
-        sequenceToIV: (seq) => {
-            const view = new DataView(new ArrayBuffer(16));
-            view.setUint32(12, seq, false);
-            return new Uint8Array(view.buffer);
-        },
-        decrypt: async (data, key, iv) => {
+    function seq2iv(seq) {
+        const buffer = new ArrayBuffer(16);
+        const view = new DataView(buffer);
+        view.setUint32(12, seq, false);
+        return new Uint8Array(buffer);
+    }
+
+    class M3U8Downloader {
+        constructor(url, progressCallback) {
+            this.masterUrl = url;
+            this.onProgress = progressCallback || function(){};
+            this.baseUrl = new URL(url, window.location.href).href.substring(0, new URL(url, window.location.href).href.lastIndexOf('/') + 1);
+            this.aesKey = null;
+            this.globalIv = null;
+        }
+
+        async start() {
             try {
-                const k = await window.crypto.subtle.importKey('raw', key, { name: 'AES-CBC' }, false, ['decrypt']);
-                return new Uint8Array(await window.crypto.subtle.decrypt({ name: 'AES-CBC', iv: iv }, k, data));
-            } catch (e) { console.error('Decryption failed', e); return null; }
-        }
-    };
+                this.onProgress(0, "解析 M3U8...");
+                const manifest = await this.fetchText(this.masterUrl);
 
-    const Bus = {
-        events: {},
-        on(e, cb) { (this.events[e] = this.events[e] || []).push(cb); },
-        emit(e, d) { (this.events[e] || []).forEach(cb => cb(d)); }
-    };
-
-    class Sniffer {
-        constructor() {
-            this.seen = new Set();
-            this.rules = { m3u8: /\.m3u8($|\?)|application\/.*mpegurl/i, mp4: /\.mp4($|\?)|video\/mp4/i };
-        }
-        start() {
-            this.hookFetch();
-            this.hookXHR();
-        }
-        detect(url, type = '') {
-            if (!url || url.match(/^data:|^blob:|\.(png|jpg|gif|css|js|woff|svg)/i)) return;
-            const key = url.split('?')[0];
-            if (this.seen.has(key)) return;
-            
-            for (const [k, r] of Object.entries(this.rules)) {
-                if (r.test(url) || r.test(type.toLowerCase())) {
-                    this.seen.add(key);
-                    console.log(`[Sniffer] ${k}: ${url}`);
-                    Bus.emit('video-found', { url, type: k });
-                    break;
-                }
-            }
-        }
-        hookFetch() {
-            const orig = unsafeWindow.fetch;
-            unsafeWindow.fetch = async (...args) => {
-                const res = await orig.apply(unsafeWindow, args);
-                try { res.clone().headers.forEach((v, k) => k.toLowerCase() === 'content-type' && this.detect(res.url, v)); } catch {}
-                return res;
-            };
-        }
-        hookXHR() {
-            const orig = unsafeWindow.XMLHttpRequest;
-            const self = this;
-            unsafeWindow.XMLHttpRequest = class extends orig {
-                open(m, u, ...a) { this._url = u; super.open(m, u, ...a); }
-                send(...a) {
-                    this.addEventListener('readystatechange', () => {
-                        if (this.readyState === 4) try { self.detect(this.responseURL || this._url, this.getResponseHeader('content-type')); } catch {}
-                    });
-                    super.send(...a);
-                }
-            };
-        }
-    }
-
-    class StreamSaverWriter {
-        async init(filename) {
-            this.writer = streamSaver.createWriteStream(filename).getWriter();
-        }
-        async write(data) {
-            if (this.writer) await this.writer.write(data);
-        }
-        async close() {
-            if (this.writer) await this.writer.close();
-        }
-        async abort() {
-            if (this.writer) await this.writer.abort();
-        }
-    }
-
-    const downloadM3u8 = async (url, onProgress, writer) => {
-        onProgress(0, '解析M3U8...');
-        let content = await Utils.request(url);
-        
-        // 解析 Master Playlist
-        if (content.includes('#EXT-X-STREAM-INF')) {
-            const lines = content.split('\n');
-            let best = 0, targetUrl = null;
-            lines.forEach((l, i) => {
-                if (l.startsWith('#EXT-X-STREAM-INF')) {
-                    const bw = parseInt((l.match(/BANDWIDTH=(\d+)/) || [0,0])[1]);
-                    if (bw > best && lines[i+1] && !lines[i+1].startsWith('#')) {
-                        best = bw;
-                        targetUrl = Utils.resolveUrl(url, lines[i+1].trim());
-                    }
-                }
-            });
-            if (targetUrl) {
-                url = targetUrl;
-                content = await Utils.request(url);
-            }
-        }
-
-        const lines = content.split('\n');
-        const segs = [];
-        let key = null, iv = null, seq = 0;
-        
-        lines.forEach(line => {
-            const l = line.trim();
-            if (!l) return;
-            if (l.startsWith('#EXT-X-KEY')) {
-                const u = (l.match(/URI="([^"]+)"/) || [])[1];
-                const i = (l.match(/IV=(0x[\da-f]+)/i) || [])[1];
-                if (u) {
-                    key = Utils.resolveUrl(url, u);
-                    iv = i ? AESCrypto.hexToBytes(i) : null;
-                }
-            } else if (l.startsWith('#EXT-X-MEDIA-SEQUENCE')) {
-                seq = parseInt(l.split(':')[1]);
-            } else if (!l.startsWith('#')) {
-                segs.push({ url: Utils.resolveUrl(url, l), key, iv, seq: seq++ });
-            }
-        });
-
-        if (!segs.length) throw new Error('无分片');
-
-        // 下载密钥
-        const keyCache = new Map();
-        const keys = [...new Set(segs.filter(s => s.key).map(s => s.key))];
-        for (const kUrl of keys) {
-            onProgress(0, '下载密钥...');
-            keyCache.set(kUrl, new Uint8Array(await Utils.request(kUrl, true)));
-        }
-
-        // ==========================================
-        // 核心修复 1: Mux.js 时间轴修复
-        // ==========================================
-        const transmuxer = new muxjs.mp4.Transmuxer();
-        let bufferQueue = [];
-        let hasWrittenHeader = false; // 标记是否写入过 initSegment
-
-        transmuxer.on('data', (segment) => {
-            // 只有第一次写入 initSegment (FTYP+MOOV)
-            // 后续只写入 data (MOOF+MDAT)
-            if (!hasWrittenHeader) {
-                const data = new Uint8Array(segment.initSegment.byteLength + segment.data.byteLength);
-                data.set(segment.initSegment, 0);
-                data.set(segment.data, segment.initSegment.byteLength);
-                bufferQueue.push(data);
-                hasWrittenHeader = true;
-                console.log('[Muxer] Writing Init Header');
-            } else {
-                bufferQueue.push(segment.data);
-            }
-        });
-
-        let nextIdx = 0, doneCount = 0, writeIdx = 0;
-        const dlMap = new Map();
-
-        const worker = async () => {
-            while (nextIdx < segs.length) {
-                const idx = nextIdx++;
-                const seg = segs[idx];
-                let raw = null, retry = Config.maxRetries;
-
-                while (!raw && retry-- > 0) {
-                    try {
-                        let d = await Utils.request(seg.url, true);
-                        if (seg.key) {
-                            d = (await AESCrypto.decrypt(d, keyCache.get(seg.key), seg.iv || AESCrypto.sequenceToIV(seg.seq))).buffer;
+                if (manifest.includes('#EXT-X-STREAM-INF')) {
+                    const lines = manifest.split('\n');
+                    for (let line of lines) {
+                        if (line.trim() && !line.startsWith('#')) {
+                            const subUrl = new URL(line.trim(), this.baseUrl).href;
+                            const subDownloader = new M3U8Downloader(subUrl, this.onProgress);
+                            return subDownloader.start();
                         }
-                        raw = d;
-                    } catch { await Utils.sleep(Config.retryDelay); }
-                }
-
-                dlMap.set(idx, raw ? new Uint8Array(raw) : new Uint8Array(0));
-
-                // 串行转码与写入
-                while (dlMap.has(writeIdx)) {
-                    const chunk = dlMap.get(writeIdx);
-                    dlMap.delete(writeIdx);
-                    bufferQueue = [];
-                    
-                    if (chunk.length > 0) {
-                        try {
-                            transmuxer.push(chunk);
-                            transmuxer.flush(); // 这里的 flush 可能会导致问题，但在逐个处理时，如果不 flush 可能不出数据
-                            // 由于我们上面加了 hasWrittenHeader 锁，所以即使 flush 导致重新生成 initSegment，我们也会忽略它
-                        } catch (e) { console.warn('Mux error', e); }
                     }
-
-                    for (const d of bufferQueue) await writer.write(d);
-                    writeIdx++;
                 }
 
-                doneCount++;
-                onProgress(((doneCount / segs.length) * 100).toFixed(1), `下载中 ${((doneCount / segs.length) * 100).toFixed(0)}%`);
+                const { segments, keyInfo, mediaSequence } = this.parseM3U8(manifest);
+                if (segments.length === 0) throw new Error("未找到分片");
+
+                if (keyInfo) {
+                    this.onProgress(0, "获取密钥...");
+                    await this.fetchKey(keyInfo);
+                }
+
+                const fileStream = streamSaver.createWriteStream('video_download.mp4');
+                const writer = fileStream.getWriter();
+                const transmuxer = new muxjs.mp4.Transmuxer();
+                let initSegmentWritten = false;
+
+                transmuxer.on('data', (segment) => {
+                    let data;
+                    if (segment.initSegment && !initSegmentWritten) {
+                        data = new Uint8Array(segment.initSegment.byteLength + segment.data.byteLength);
+                        data.set(segment.initSegment, 0);
+                        data.set(segment.data, segment.initSegment.byteLength);
+                        initSegmentWritten = true;
+                    } else {
+                        data = new Uint8Array(segment.data);
+                    }
+                    writer.write(data);
+                });
+
+                let count = 0;
+                const total = segments.length;
+
+                for (let i = 0; i < total; i++) {
+                    const seg = segments[i];
+                    const currentSeq = mediaSequence + i;
+                    const segUrl = new URL(seg.uri, this.baseUrl).href;
+                    
+                    try {
+                        let tsData = await this.fetchBuffer(segUrl);
+                        if (this.aesKey) {
+                            let iv;
+                            if (seg.iv) iv = hex2buf(seg.iv);
+                            else if (this.globalIv) iv = hex2buf(this.globalIv);
+                            else iv = seq2iv(currentSeq);
+                            tsData = await this.decrypt(tsData, iv);
+                        }
+                        transmuxer.push(new Uint8Array(tsData));
+                        transmuxer.flush();
+                    } catch (e) {
+                        console.error(`片段 error`, e);
+                    }
+                    count++;
+                    this.onProgress((count / total) * 100, `下载 ${count}/${total}`);
+                }
+
+                writer.close();
+                this.onProgress(100, I18N.complete);
+            } catch (err) {
+                console.error(err);
+                this.onProgress(0, "错误: " + err.message);
+                alert("下载失败: " + err.message);
             }
-        };
-
-        await Promise.all(Array(Math.min(Config.maxThreads, segs.length)).fill(null).map(worker));
-    };
-
-    const downloadMp4Stream = async (url, onProgress, writer) => {
-        onProgress(0, '连接中...');
-        const res = await fetch(url, { headers: { 'Referer': location.href } });
-        if (!res.body) throw new Error('No body');
-        const reader = res.body.getReader();
-        const total = +res.headers.get('Content-Length');
-        let loaded = 0;
-        
-        while(true) {
-            const {done, value} = await reader.read();
-            if (done) break;
-            await writer.write(value);
-            loaded += value.length;
-            onProgress(total ? ((loaded/total)*100).toFixed(1) : 0, total ? `${((loaded/total)*100).toFixed(1)}%` : `${(loaded/1024/1024).toFixed(1)}MB`);
         }
-    };
 
-    const TaskRunner = async (url, type, btn) => {
-        const origText = btn.textContent;
-        let fname = Utils.getFilename(url);
-        if (type === 'm3u8' && !fname.endsWith('.mp4')) fname += '.mp4';
-        
-        const writer = new StreamSaverWriter();
-        try {
-            await writer.init(fname);
-            btn.textContent = '准备...';
-            if (type === 'm3u8') await downloadM3u8(url, (p, t) => btn.textContent = t||p, writer);
-            else await downloadMp4Stream(url, (p, t) => btn.textContent = t||p, writer);
-            
-            btn.textContent = '完成';
-            await writer.close();
-        } catch (e) {
-            console.error(e);
-            alert(`下载失败: ${e.message}`);
-            await writer.abort();
-            btn.textContent = '失败';
-        } finally {
-            setTimeout(() => btn.textContent = origText, 3000);
+        parseM3U8(content) {
+            const lines = content.split('\n');
+            const segments = [];
+            let keyInfo = null;
+            let mediaSequence = 0;
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i].trim();
+                if (!line) continue;
+                if (line.startsWith('#EXT-X-MEDIA-SEQUENCE:')) mediaSequence = parseInt(line.split(':')[1]);
+                else if (line.startsWith('#EXT-X-KEY')) {
+                    const method = (line.match(/METHOD=([^,]+)/) || [])[1];
+                    const uri = (line.match(/URI="([^"]+)"/) || [])[1];
+                    const iv = (line.match(/IV=(0x[\da-fA-F]+)/) || [])[1];
+                    if (method === 'AES-128') {
+                        keyInfo = { uri, iv };
+                        this.globalIv = iv;
+                    }
+                } else if (line.startsWith('#EXTINF')) {
+                    let duration = parseFloat(line.split(':')[1]);
+                    let uri = lines[i+1] ? lines[i+1].trim() : '';
+                    if (uri && !uri.startsWith('#')) {
+                        segments.push({ uri, duration, iv: null });
+                        i++;
+                    }
+                } else if (!line.startsWith('#')) segments.push({ uri: line, duration: 0, iv: null });
+            }
+            return { segments, keyInfo, mediaSequence };
         }
-    };
 
-    class UI {
+        fetchText(url) {
+            return new Promise((resolve, reject) => {
+                GM_xmlhttpRequest({ method: "GET", url, onload: r => (r.status >= 200 && r.status < 300) ? resolve(r.responseText) : reject(new Error(r.statusText)), onerror: reject });
+            });
+        }
+        fetchBuffer(url) {
+            return new Promise((resolve, reject) => {
+                GM_xmlhttpRequest({ method: "GET", url, responseType: 'arraybuffer', onload: r => (r.status >= 200 && r.status < 300) ? resolve(r.response) : reject(new Error(r.statusText)), onerror: reject });
+            });
+        }
+        async fetchKey(keyInfo) {
+            const keyUrl = new URL(keyInfo.uri, this.baseUrl).href;
+            const keyBuffer = await this.fetchBuffer(keyUrl);
+            this.aesKey = await window.crypto.subtle.importKey("raw", keyBuffer, { name: "AES-CBC" }, false, ["decrypt"]);
+        }
+        async decrypt(data, iv) {
+            return await window.crypto.subtle.decrypt({ name: "AES-CBC", iv: iv }, this.aesKey, data);
+        }
+    }
+
+    // ==========================================
+    // 2. UI 界面 (延迟加载机制)
+    // ==========================================
+    class FloatingUI {
         constructor() {
-            this.root = null;
-            this.list = null;
-            Bus.on('video-found', (d) => this.addItem(d));
+            this.init();
         }
         init() {
-            if (document.getElementById(Config.uiId)) return;
-            const host = Utils.createElement('div', { id: Config.uiId, style: { position: 'fixed', top: '15%', right: '2%', zIndex: 999999 } });
-            const shadow = host.attachShadow({ mode: 'open' });
-            
-            // ==========================================
-            // 核心修复 2: 样式调整，默认 min 状态
-            // ==========================================
-            shadow.innerHTML = `
-            <style>
-                :host { font-family: sans-serif; font-size: 12px; }
-                .box {
-                    width: 220px; background: ${Config.colors.background}; color: ${Config.colors.text};
-                    border: 1px solid ${Config.colors.primary}; border-radius: 6px;
-                    backdrop-filter: blur(5px); display: flex; flex-direction: column;
-                    box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: width 0.3s;
-                }
-                .head { padding: 8px; background: rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; cursor: move; }
-                .title { font-weight: bold; color: ${Config.colors.primary}; }
-                .list { max-height: 200px; overflow-y: auto; }
-                .item { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-                .row { display: flex; gap: 5px; align-items: center; margin-bottom: 5px; }
-                .tag { background: ${Config.colors.primary}; color: #000; padding: 1px 3px; border-radius: 3px; font-weight: bold; font-size: 10px; }
-                .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
-                .actions { display: flex; gap: 5px; }
-                button { flex: 1; border: none; padding: 6px; border-radius: 3px; cursor: pointer; font-size: 12px; }
-                .btn-copy { background: #555; color: white; }
-                .btn-down { background: ${Config.colors.primary}; color: #000; font-weight: bold; }
-                
-                /* 最小化样式 */
-                .box.min { width: 40px; height: 40px; border-radius: 50%; justify-content: center; align-items: center; overflow: hidden; cursor: pointer; }
-                .box.min .list, .box.min .title { display: none; }
-                .box.min .head { background: transparent; padding: 0; width: 100%; height: 100%; justify-content: center; }
-                .toggle { font-size: 16px; font-weight: bold; }
-            </style>
-            `;
-
-            // 默认加上 'min' class
-            this.root = Utils.createElement('div', { class: 'box min' }); 
-            this.list = Utils.createElement('div', { class: 'list' });
-            
-            // 初始图标为闪电
-            const toggle = Utils.createElement('span', { class: 'toggle' }, '⚡');
-            
-            const head = Utils.createElement('div', { class: 'head' });
-            head.appendChild(Utils.createElement('span', { class: 'title' }, '流式嗅探'));
-            head.appendChild(toggle);
-
-            // 点击切换逻辑
-            const toggleAction = (e) => {
-                e && e.stopPropagation();
-                const isMin = this.root.classList.toggle('min');
-                toggle.textContent = isMin ? '⚡' : '－';
-            };
-
-            // 在 min 状态下，点击整个头部或盒子都应该展开
-            toggle.onclick = toggleAction;
-            this.root.onclick = (e) => {
-                if (this.root.classList.contains('min')) toggleAction(e);
-            };
-
-            this.root.appendChild(head);
-            this.root.appendChild(this.list);
-            shadow.appendChild(this.root);
-            (document.body || document.documentElement).appendChild(host);
-
-            // 拖拽逻辑 (保持不变)
-            let isDrag = false, startX, startY, initRight, initTop;
-            const onDown = (e) => {
-                if(e.target === toggle && !this.root.classList.contains('min')) return;
-                isDrag = true;
-                const t = e.touches ? e.touches[0] : e;
-                startX = t.clientX; startY = t.clientY;
-                const rect = host.getBoundingClientRect();
-                initRight = window.innerWidth - rect.right;
-                initTop = rect.top;
-            };
-            const onMove = (e) => {
-                if (!isDrag) return;
-                if(e.preventDefault) e.preventDefault();
-                const t = e.touches ? e.touches[0] : e;
-                host.style.right = (initRight + (startX - t.clientX)) + 'px';
-                host.style.top = (initTop + (t.clientY - startY)) + 'px';
-            };
-            head.addEventListener('mousedown', onDown);
-            head.addEventListener('touchstart', onDown);
-            document.addEventListener('mousemove', onMove);
-            document.addEventListener('touchmove', onMove, {passive: false});
-            document.addEventListener('mouseup', () => isDrag=false);
-            document.addEventListener('touchend', () => isDrag=false);
+            this.createStyle();
+            this.createBtn();
+            this.createPanel();
+            // 处理之前积压的视频
+            this.processPending();
         }
+        processPending() {
+            while(PENDING_ITEMS.length > 0) {
+                const item = PENDING_ITEMS.pop();
+                this.addItem(item.url, item.type);
+            }
+        }
+        createStyle() {
+            GM_addStyle(`
+                #vs-btn { position: fixed; bottom: 20px; right: 20px; width: 45px; height: 45px; background: #007bff; border-radius: 50%; color: #fff; text-align: center; line-height: 45px; cursor: pointer; z-index: 2147483647; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-size: 24px; user-select: none; transition: transform 0.2s; }
+                #vs-btn:hover { transform: scale(1.1); }
+                #vs-panel { position: fixed; bottom: 80px; right: 20px; width: 320px; max-height: 500px; background: #fff; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); z-index: 2147483647; display: none; flex-direction: column; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; color: #333; }
+                #vs-header { padding: 12px 15px; background: #f8f9fa; border-radius: 8px 8px 0 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
+                #vs-list { flex: 1; overflow-y: auto; padding: 0; max-height: 400px; }
+                .vs-item { padding: 12px 15px; border-bottom: 1px solid #f1f1f1; display: flex; flex-direction: column; gap: 8px; }
+                .vs-meta { display: flex; align-items: center; gap: 8px; }
+                .vs-tag { background: #6c757d; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+                .vs-url { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #666; font-size: 12px; }
+                .vs-actions { display: flex; gap: 8px; }
+                .vs-btn-dl { flex: 1; background: #28a745; color: white; border: none; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: background 0.2s; }
+                .vs-btn-dl:hover { background: #218838; }
+                .vs-btn-dl:disabled { background: #94d3a2; cursor: not-allowed; }
+                .vs-btn-cp { background: #17a2b8; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+                .vs-progress-wrap { height: 4px; background: #e9ecef; border-radius: 2px; overflow: hidden; margin-top: 4px; display:none; }
+                .vs-progress-bar { height: 100%; background: #007bff; width: 0%; transition: width 0.3s ease; }
+            `);
+        }
+        createBtn() {
+            // 确保 document.body 存在
+            if (!document.body) return;
+            const btn = document.createElement('div');
+            btn.id = 'vs-btn';
+            btn.textContent = '⬇';
+            btn.onclick = () => {
+                const p = document.getElementById('vs-panel');
+                p.style.display = p.style.display === 'none' ? 'flex' : 'none';
+            };
+            document.body.appendChild(btn);
+        }
+        createPanel() {
+            if (!document.body) return;
+            const panel = document.createElement('div');
+            panel.id = 'vs-panel';
+            
+            const header = document.createElement('div');
+            header.id = 'vs-header';
+            
+            const title = document.createElement('span');
+            title.textContent = I18N.title;
+            const close = document.createElement('span');
+            close.textContent = '✕';
+            close.style.cursor = 'pointer';
+            close.style.fontSize = '16px';
+            close.onclick = () => { panel.style.display = 'none'; };
 
-        addItem({ url, type }) {
-            this.init();
+            header.appendChild(title);
+            header.appendChild(close);
             
-            // 移除了自动点击 toggle 展开的逻辑，保持默认收缩
+            const list = document.createElement('div');
+            list.id = 'vs-list';
+            list.innerHTML = `<div style="text-align:center;padding:20px;color:#adb5bd;">${I18N.no_video}</div>`;
+
+            panel.appendChild(header);
+            panel.appendChild(list);
+            document.body.appendChild(panel);
+            this.list = list;
+        }
+        addItem(url, type) {
+            if (!this.list) return;
+            // 清除"无视频"占位
+            if (this.list.firstChild && this.list.firstChild.textContent === I18N.no_video) {
+                this.list.innerHTML = '';
+            }
             
-            const item = Utils.createElement('div', { class: 'item' }, [
-                Utils.createElement('div', { class: 'row' }, [
-                    Utils.createElement('span', { class: 'tag' }, type),
-                    Utils.createElement('span', { class: 'name', title: url }, Utils.getFilename(url))
-                ]),
-                Utils.createElement('div', { class: 'actions' }, [
-                    Utils.createElement('button', { class: 'btn-copy', onclick: (e) => {
-                        navigator.clipboard.writeText(url);
-                        e.target.textContent = '已复制';
-                        setTimeout(() => e.target.textContent = '复制', 1000);
-                    }}, '复制'),
-                    Utils.createElement('button', { class: 'btn-down', onclick: (e) => TaskRunner(url, type, e.target) }, '下载')
-                ])
-            ]);
+            const item = document.createElement('div');
+            item.className = 'vs-item';
             
-            if (this.list.firstChild) this.list.insertBefore(item, this.list.firstChild);
-            else this.list.appendChild(item);
+            // Meta行
+            const meta = document.createElement('div');
+            meta.className = 'vs-meta';
+            const tag = document.createElement('span');
+            tag.className = 'vs-tag';
+            tag.textContent = type.toUpperCase();
+            const urlText = document.createElement('span');
+            urlText.className = 'vs-url';
+            urlText.textContent = url;
+            urlText.title = url;
+            meta.appendChild(tag);
+            meta.appendChild(urlText);
+
+            // 操作行
+            const actions = document.createElement('div');
+            actions.className = 'vs-actions';
+            
+            const dlBtn = document.createElement('button');
+            dlBtn.className = 'vs-btn-dl';
+            dlBtn.textContent = I18N.download;
+            
+            const cpBtn = document.createElement('button');
+            cpBtn.className = 'vs-btn-cp';
+            cpBtn.textContent = I18N.copy;
+            cpBtn.onclick = () => {
+                navigator.clipboard.writeText(url);
+                cpBtn.textContent = "Copied!";
+                setTimeout(() => cpBtn.textContent = I18N.copy, 1000);
+            };
+
+            actions.appendChild(dlBtn);
+            actions.appendChild(cpBtn);
+
+            // 进度条
+            const pWrap = document.createElement('div');
+            pWrap.className = 'vs-progress-wrap';
+            const pBar = document.createElement('div');
+            pBar.className = 'vs-progress-bar';
+            pWrap.appendChild(pBar);
+
+            // 下载逻辑绑定
+            dlBtn.onclick = () => {
+                dlBtn.disabled = true;
+                dlBtn.textContent = I18N.downloading;
+                pWrap.style.display = 'block';
+
+                const update = (p, msg) => { 
+                    pBar.style.width = p + '%'; 
+                    if(msg) dlBtn.textContent = msg; 
+                };
+                
+                if (type === 'mp4') {
+                    GM_download({
+                        url, 
+                        name: `video_${Date.now()}.mp4`,
+                        onprogress: (d) => {
+                            if (d.total) update((d.loaded/d.total)*100);
+                        },
+                        onload: () => { update(100, I18N.complete); dlBtn.disabled = false; },
+                        onerror: () => { update(0, I18N.error); dlBtn.disabled = false; }
+                    });
+                } else {
+                    new M3U8Downloader(url, update).start()
+                        .then(() => { dlBtn.disabled = false; })
+                        .catch((e) => { 
+                            console.error(e);
+                            dlBtn.textContent = I18N.error; 
+                            dlBtn.disabled = false; 
+                        });
+                }
+            };
+
+            item.appendChild(meta);
+            item.appendChild(actions);
+            item.appendChild(pWrap);
+            
+            this.list.insertBefore(item, this.list.firstChild);
         }
     }
 
-    new Sniffer().start();
-    new UI();
+    // ==========================================
+    // 3. 嗅探与初始化 (解决时序问题)
+    // ==========================================
+    
+    // 全局检查函数
+    function check(url) {
+        if (!url || url.startsWith('blob:') || FOUND_URLS.has(url)) return;
+        
+        let type = '';
+        if (url.includes('.m3u8')) type = 'm3u8';
+        else if (url.includes('.mp4')) type = 'mp4';
+        
+        if (type) {
+            FOUND_URLS.add(url);
+            // 如果UI已经初始化，直接添加
+            if (uiInstance && uiInstance.list) {
+                uiInstance.addItem(url, type);
+            } else {
+                // UI还没好，存入队列
+                PENDING_ITEMS.push({ url, type });
+            }
+        }
+    }
+
+    // 立即Hook (在document-start时执行)
+    const _fetch = unsafeWindow.fetch;
+    unsafeWindow.fetch = async (...args) => {
+        const url = args[0] instanceof Request ? args[0].url : args[0];
+        check(url);
+        return _fetch.apply(unsafeWindow, args);
+    };
+
+    const _open = unsafeWindow.XMLHttpRequest.prototype.open;
+    unsafeWindow.XMLHttpRequest.prototype.open = function (m, url) {
+        check(url);
+        return _open.apply(this, arguments);
+    };
+
+    // 延迟UI初始化 (等待DOM Ready)
+    function tryInitUI() {
+        if (document.body && !uiInstance) {
+            uiInstance = new FloatingUI();
+        }
+    }
+
+    // 1. 如果当前已经是 interactive 或 complete，直接初始化
+    if (document.readyState === 'interactive' || document.readyState === 'complete') {
+        tryInitUI();
+    } else {
+        // 2. 否则监听 DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', tryInitUI);
+        // 3. 再加一层保险，监听 window load
+        window.addEventListener('load', tryInitUI);
+    }
+
 })();

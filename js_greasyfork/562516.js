@@ -1,20 +1,23 @@
 // ==UserScript==
-// @name         Audio Equalizer
+// @name         Audio-Equalizer-1.5.26
 // @namespace    http://tampermonkey.net/
-// @version      1.4.26
-// @description  Эквалайзер с UI, перетаскиванием и изменением тона для Kick.com
-// @author       Tapeavion-gullampis810
-// @match        ://*/*
-// @license         MIT
+// @version      1.5.26
+// @description  Equalizer with UI, for the video player.// @author       Tapeavion-gullampis810
+// @match        https://www.youtube.com/*
+// @match        https://www.kick.com/*
+// @match        https://www.twitch.tv/*
+// @license      MIT
 // @icon         https://greasyfork.s3.us-east-2.amazonaws.com/xp4m73v6kixyvkv6tawfe54eiu9x
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/562516/Audio%20Equalizer.user.js
-// @updateURL https://update.greasyfork.org/scripts/562516/Audio%20Equalizer.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562516/Audio-Equalizer-1526.user.js
+// @updateURL https://update.greasyfork.org/scripts/562516/Audio-Equalizer-1526.meta.js
 // ==/UserScript==
 
-// matches  ://*/* / /
-//  https://www.youtube.com/*
-// etc
+
+// matches  ://*/*
+// @match        https://www.youtube.com/*
+// @match        https://www.kick.com/*
+// etc и.тд
 
 (function () {
     'use strict';
@@ -22,7 +25,7 @@
     if (window.eqHasRun) return;
     window.eqHasRun = true;
 
-    const STORAGE_KEY = 'customAudioEqSettings';
+    const STORAGE_KEY = 'customAudioEqualizerSettings';
 
     // Функции сохранения/загрузки
     function saveSettings() {
@@ -198,6 +201,19 @@
     `;
     document.body.appendChild(panel);
 
+        // Наблюдатель за появлением <video> (важно для YouTube/Twitch/Kick)
+    const videoObserver = new MutationObserver(() => {
+        initializeAudioIfNeeded();
+    });
+
+    videoObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    // Пытаемся инициализировать сразу
+    initializeAudioIfNeeded();
+
     // Загружаем сохранённые настройки сразу после создания панели
     loadSettings();
 
@@ -233,48 +249,71 @@
 
     // Аудио-часть
     let audioContext = null;
+
+        function resumeAudioOnInteraction() {
+        if (audioContext && audioContext.state !== 'running') {
+            audioContext.resume().then(() => {
+                console.log('AudioContext разблокирован');
+                applyCurrentSettings();  // Применяем настройки сразу после разблокировки
+            });
+        }
+    }
+
+// Разблокируем при первом клике, таче или нажатии клавиши
+document.addEventListener('click', resumeAudioOnInteraction, { once: true });
+document.addEventListener('touchstart', resumeAudioOnInteraction, { once: true });
+document.addEventListener('keydown', resumeAudioOnInteraction, { once: true });
+    
+
     let source = null;
     let lowFilter, midFilter, highFilter, gainNode;
     let video = null;
 
-    async function initAudio() {
-        if (audioContext) return;
+    let audioInitialized = false;
+
+    async function initializeAudioIfNeeded() {
+        if (audioInitialized) return;
 
         video = document.querySelector('video');
-        if (!video) {
-            alert('Видео не найдено. Подождите загрузки стрима и нажмите EQ ещё раз.');
-            return;
+        if (!video) return;  // Видео ещё не появилось — подождём observer
+
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
 
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        await audioContext.resume();
+        // Подключаем цепочку (это можно делать без resume)
+        if (!source) {
+            source = audioContext.createMediaElementSource(video);
+            lowFilter = audioContext.createBiquadFilter();
+            lowFilter.type = 'lowshelf';
+            lowFilter.frequency.value = 200;
 
-        source = audioContext.createMediaElementSource(video);
-        video.volume = 0;
+            midFilter = audioContext.createBiquadFilter();
+            midFilter.type = 'peaking';
+            midFilter.frequency.value = 1000;
+            midFilter.Q.value = 1;
 
-        lowFilter = audioContext.createBiquadFilter();
-        lowFilter.type = 'lowshelf';
-        lowFilter.frequency.value = 200;
+            highFilter = audioContext.createBiquadFilter();
+            highFilter.type = 'highshelf';
+            highFilter.frequency.value = 5000;
 
-        midFilter = audioContext.createBiquadFilter();
-        midFilter.type = 'peaking';
-        midFilter.frequency.value = 1000;
-        midFilter.Q.value = 1;
+            gainNode = audioContext.createGain();
 
-        highFilter = audioContext.createBiquadFilter();
-        highFilter.type = 'highshelf';
-        highFilter.frequency.value = 5000;
+            source.connect(lowFilter);
+            lowFilter.connect(midFilter);
+            midFilter.connect(highFilter);
+            highFilter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
 
-        gainNode = audioContext.createGain();
+            video.volume = 0;  // Отключаем оригинальный звук
+        }
 
-        source.connect(lowFilter);
-        lowFilter.connect(midFilter);
-        midFilter.connect(highFilter);
-        highFilter.connect(gainNode);
-        gainNode.connect(audioContext.destination);
+        audioInitialized = true;
 
-        // Применяем текущие (возможно сохранённые) значения после инициализации
-        applyCurrentSettings();
+        // Применяем сохранённые настройки к фильтрам (если контекст уже разблокирован)
+        if (audioContext.state === 'running') {
+            applyCurrentSettings();
+        }
     }
 
     function applyCurrentSettings() {
@@ -294,7 +333,11 @@
     }
 
     toggleBtn.onclick = async () => {
-        await initAudio();
+        await initializeAudioIfNeeded();  // На всякий случай пытаемся инициализировать
+        if (audioContext && audioContext.state !== 'running') {
+            await audioContext.resume();  // Если пользователь кликнул кнопку — точно разблокируем
+        }
+        applyCurrentSettings();
         panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
     };
 
@@ -312,7 +355,7 @@
 
             // Обновляем текст
             if (id === 'pitch') {
-                panel.querySelector('#' + id + '-val').textContent = (val / 100).toFixed(2) + '×';
+                panel.querySelector('#' + id + '-val').textContent = (val / 100).toFixed(1) + '×';
             } else if (id === 'volume') {
                 panel.querySelector('#' + id + '-val').textContent = val + '%';
             } else {
@@ -324,3 +367,5 @@
         };
     });
 })();
+
+

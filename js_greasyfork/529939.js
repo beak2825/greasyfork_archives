@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Dark Mode (kid4rm90s fork)
 // @namespace    https://greasyfork.org/en/users/1434751-poland-fun
-// @version      1.11.3
+// @version      1.11.5
 // @description  Enable dark mode in WME.
 // @author       poland_fun
 // @contributor	 kid4rm90s and luan_tavares_127
@@ -171,6 +171,9 @@ Version
 		- Fixed for place opening hours delete icon showing incorrect color
 1.11.1 - Fixed - 
 		- Added support for WME AD to BS Calendar pop-up
+1.11.5 - Fixed - 
+		- Fixed for WME PIE script compatibility
+		- Fixed for WME AD to BS Calendar pop-up (forgot to add some CSS in 1.11.1)
 */
 
 /* global W */
@@ -181,7 +184,7 @@ Version
 
 (function main() {
   ('use strict');
-  const updateMessage = '<strong>Fixed :</strong><br> - Added support for WME AD to BS Calendar pop-up <br>';
+  const updateMessage = '<strong>Fixed :</strong><br> - Fixed for WME PIE script compatibility,<br>- Fixed for WME AD to BS Calendar pop-up (forgot to add some CSS in 1.11.4)<br>';
   const scriptName = GM_info.script.name;
   const scriptVersion = GM_info.script.version;
 	const downloadUrl = 'https://greasyfork.org/scripts/529939-wme-dark-mode-kid4rm90s-fork/code/WME%20Dark%20Mode%20%28kid4rm90s%20fork%29.user.js';
@@ -1574,10 +1577,15 @@ Version
 			}
 
 /****** Place Interface Enhancement PIE **************************************/
-    [wz-theme="dark"] #divPlaceFilter #piePlaceFilter,
-	[wz-theme="dark"] #divPlaceNamesFontCustomization input {
-    color: var(--content_p1) !important; /* overrided */
-    } 
+			[wz-theme="dark"] #divPlaceFilter #piePlaceFilter,
+			[wz-theme="dark"] #divPlaceNamesFontCustomization input {
+			color: var(--content_p1) !important; /* overrided */
+			}
+
+			[wz-theme="dark"] #pieViewEditGeom {
+			background-color: var(--background_default) !important;
+			}
+
 
 /****** Open Other Maps OOM **************************************/
     [wz-theme="dark"] fieldset #txtOOMLanguage,
@@ -1755,15 +1763,17 @@ Version
 			}
 
 			[wz-theme="dark"] #closure_startDate-bs-val,
-			[wz-theme="dark"] #closure_endDate-bs-val {
+			[wz-theme="dark"] #closure_endDate-bs-val,
+			[wz-theme="dark"] #wmeac-advanced-closure-dialog-rangestartdate-bs-val,
+			[wz-theme="dark"] #wmeac-advanced-closure-dialog-rangeenddate-bs-val {
 				color: var(--content_p1) !important;
 			}
 
-			[wz-theme="dark"] td:hover {
+			[wz-theme="dark"] .bs-calendar-popup table td:hover {
 				background: var(--always_dark_inactive) !important;
 			}
 
-			[wz-theme="dark"] th {
+			[wz-theme="dark"] .bs-calendar-popup table th {
 				color: var(--content_p1) !important;
 			}
 			/* Targets the Date (First span) */

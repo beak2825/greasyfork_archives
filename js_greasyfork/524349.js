@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         百度翻译美化
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.2
 // @description  新版不好用，不顺手，优化成精简版，哈哈哈
 // @author       You
 // @match        https://fanyi.baidu.com/mtpe-individual/*
@@ -15,13 +15,7 @@
 
 (function() {
     'use strict';
-    document.querySelector("#multiContainer > div.ZHrlRAUU > div").style="width:60%;margin:0 auto";
-    document.querySelector("#root > div:nth-child(2) > div > div.QWmdE1v6 > div").style="visibility: hidden;";
-    document.querySelector("#multiContainer > div.ZHrlRAUU > div > div.atNgw6Cp > div.UUQFuhdE > div.YGx8668_").style="visibility: hidden;";
-    document.querySelector("#root > div:nth-child(2) > div > span.URCZyDIb").style="visibility: hidden;";
-    document.querySelector("#multiContainer > div.ZHrlRAUU > div > div.lslKUKjX > div.qJU3axmS > div.LxF9kyWA > span").click();
-    setTimeout(()=>{
-        document.querySelector("#root > div.KxVKmLZM").style="display: none;";
-    },500)
+    document.querySelector("#multiContent > div > div.DLUyugHN").style="width:60%;margin:0 auto";
+   document.querySelector("#multiContent > div > div:nth-child(2) > div.Hu5qsRSB").style.display="none"
     // Your code here...
 })();

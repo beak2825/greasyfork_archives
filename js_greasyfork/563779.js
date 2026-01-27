@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         IMDb SeriesGraph Rating Colors
 // @namespace    http://tampermonkey.net/
-// @version      2.4
-// @description  Applies SeriesGraph rating color codes to IMDb episode heatmaps, histograms, and creates a Season Average section. Adds "Save Image" functionality with auto-transpose for long seasons.
+// @version      2.5
+// @description  Applies SeriesGraph rating color codes to IMDb episode heatmaps, histograms, and creates a Season Average section. Adds "Save Image" functionality with auto-transpose for long seasons. Works for all languages.
 // @author       Windy
 // @match        https://www.imdb.com/title/*/ratings*
 // @match        https://www.imdb.com/*/title/*/ratings*
@@ -321,7 +321,7 @@
         return { seasons, maxEps };
     }
 
-    // --- SCREENSHOT FUNCTIONALITY ---
+// --- SCREENSHOT FUNCTIONALITY ---
     async function downloadGraph() {
         const btn = document.getElementById('sg-download-btn');
         const updateBtn = (text) => { if(btn) btn.innerText = text; };
@@ -370,7 +370,8 @@
                 dataTableWidth = (gridData.maxEps * CELL_W) + 120; // Episodes on X axis
             }
 
-            const totalWidth = Math.max(1400, dataTableWidth + 350);
+            // 320px (Sidebar) + 60px (Padding) + Buffer
+            const totalWidth = dataTableWidth + 380;
 
             const wrapper = document.createElement('div');
             wrapper.style.cssText = `position: absolute; top: 0; left: 0; z-index: -9999; background-color: #1F1F1F; color: #ffffff; width: ${totalWidth}px; font-family: Roboto, Helvetica, Arial, sans-serif; display: flex; flex-direction: row; border-radius: 4px; overflow: hidden;`;
@@ -439,12 +440,22 @@
                 avgClone.style.cssText = 'background: transparent; border: none; padding: 0; box-shadow: none;';
                 const avgTitle = avgClone.querySelector('h3'); if(avgTitle) avgTitle.style.color = '#ffffff';
                 const infoIcon = avgClone.querySelector('.sg-info-icon'); if (infoIcon) infoIcon.style.display = 'none';
+
                 avgClone.querySelectorAll('.sg-season-card').forEach(card => {
-                    card.style.borderColor = 'rgba(255,255,255,0.1)'; card.style.background = 'rgba(255,255,255,0.03)';
+                    card.style.borderColor = 'rgba(255,255,255,0.1)';
+                    card.style.background = 'rgba(255,255,255,0.03)';
                     card.querySelector('.sg-season-label').style.color = '#ccc';
+
                     const score = card.querySelector('.sg-season-score');
+                    score.style.boxShadow = 'none';
+                    score.style.border = 'none';
+
                     const bg = score.style.backgroundColor;
-                    if(bg && (bg.includes('231') || bg.includes('99') || bg.includes('24') || bg.includes('29'))) score.style.color = '#fff'; else score.style.color = '#2a2a2a';
+                    if(bg && (bg.includes('231') || bg.includes('99') || bg.includes('24') || bg.includes('29'))) {
+                        score.style.color = '#fff';
+                    } else {
+                        score.style.color = '#2a2a2a';
+                    }
                 });
                 mainContent.appendChild(avgClone);
             }
@@ -512,7 +523,6 @@
 
             } else {
                 // *** STANDARD BUILD (Rows = Seasons, Cols = Episodes) ***
-                // We use cloning of the DOM because it preserves the exact look best for normal layouts
                 const heatmapRow = document.createElement('div');
                 heatmapRow.style.cssText = `display: flex; flex-direction: row; align-items: flex-start;`;
 

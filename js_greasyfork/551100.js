@@ -4,7 +4,7 @@
 // @source       https://github.com/tengxunlaozu/baijiahao
 // @namespace    https://github.com/tengxunlaozu/baijiahao
 // @support      https://github.com/tengxunlaozu/baijiahao/issues
-// @version      2.1
+// @version      3.0
 // @description  屏蔽百家号文章
 // @author       tengxunlaozu
 // @match        *://www.baidu.com/*
@@ -15,35 +15,79 @@
 (function () {
   'use strict';
 
+  const BAIDU_TOOL_TPL_WHITELIST = [
+    'weather_forecast_new_san',
+    'air_quality_san',
+    'time_now_san',
+    'date_query_san',
+    'holiday_san',
+    'calculator_san',
+    'unit_convert_san',
+    'exchange_rate_san',
+    'translate_san',
+    'dict_san',
+    'ip_query_san',
+    'whois_san',
+    'map_san',
+    'route_plan_san',
+    'transit_san'
+  ];
+
+  function isBaiduToolCard(el) {
+    const tpl = el.getAttribute('tpl');
+    if (tpl && BAIDU_TOOL_TPL_WHITELIST.includes(tpl)) return true;
+
+    const mName = el.getAttribute('m-name');
+    if (mName && /weather|calculator|translate|dict|map|unit|exchange|ip_query|whois/.test(mName)) {
+      return true;
+    }
+
+    const mu = el.getAttribute('mu');
+    if (mu && /weathernew\.pae\.baidu\.com|fanyi\.baidu\.com|dict\.baidu\.com|map\.baidu\.com/.test(mu)) {
+      return true;
+    }
+
+    return false;
+  }
+
   function killBaijiahao() {
 
-    /* 1️⃣ 新版 cosc-card 百家号 */
+    /* 1️⃣ cosc-card（新版百家号聚合） */
     document.querySelectorAll('.cosc-card, .cosc-card-content')
-      .forEach(el => el.remove());
+      .forEach(el => {
+        const container = el.closest('.result, .c-container, .cosc-card');
+        if (container && isBaiduToolCard(container)) return;
+        el.remove();
+      });
 
     /* 2️⃣ contype = nohumanReview */
     document.querySelectorAll('[data-click-info]')
       .forEach(el => {
         const info = el.getAttribute('data-click-info');
+        const container = el.closest('.c-container, .result, .cosc-card');
+        if (!container || isBaiduToolCard(container)) return;
+
         if (info && info.includes('"nohumanReview"')) {
-          el.closest('.c-container, .result, .cosc-card')?.remove();
+          container.remove();
         }
       });
 
-    /* 3️⃣ aladdin 结构 + mu 指向百家号（你这张图的核心） */
+    /* 3️⃣ mu 指向百家号（最稳定） */
     document.querySelectorAll('.result.c-container[mu]')
       .forEach(el => {
+        if (isBaiduToolCard(el)) return;
+
         const mu = el.getAttribute('mu');
         if (mu && mu.includes('baijiahao.baidu.com')) {
           el.remove();
         }
       });
 
-    /* 4️⃣ 兜底：标题链接但真实来源是百家号 */
+    /* 4️⃣ 兜底：baidu.com/link + mu */
     document.querySelectorAll('a[href^="https://www.baidu.com/link"]')
       .forEach(a => {
         const container = a.closest('.result.c-container');
-        if (!container) return;
+        if (!container || isBaiduToolCard(container)) return;
 
         const mu = container.getAttribute('mu');
         if (mu && mu.includes('baijiahao.baidu.com')) {
@@ -51,27 +95,22 @@
         }
       });
 
-    /* 5️⃣ aladdin_struct 聚合卡（百家号常用） */
+    /* 5️⃣ aladdin_struct 聚合卡 */
     document.querySelectorAll('[class*="aladdin"], [class*="aladding"]')
       .forEach(el => {
-        if (el.innerText.includes('百家号')) {
-          el.closest('.result, .c-container')?.remove();
+        const container = el.closest('.result, .c-container');
+        if (!container || isBaiduToolCard(container)) return;
+
+        if (container.getAttribute('mu')?.includes('baijiahao.baidu.com')) {
+          container.remove();
         }
       });
   }
 
-  // 初次执行
   killBaijiahao();
 
-  // 监听动态加载
-  const observer = new MutationObserver(() => {
-    killBaijiahao();
-  });
-
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
+  const observer = new MutationObserver(killBaijiahao);
+  observer.observe(document.body, { childList: true, subtree: true });
 
 })();
 

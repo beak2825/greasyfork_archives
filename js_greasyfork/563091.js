@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GeoGuessr Better Breakdown
 // @namespace    https://greasyfork.org/users/1179204
-// @version      1.2.5
+// @version      1.2.8
 // @description  built-in StreetView Window to view where you guessed and the correct location
 // @author       KaKa
 // @license      MIT
@@ -27,7 +27,7 @@
 const SEARCH_RADIUS = 250000;
 const STORAGE_CAP = 50;
 const PEEK_STATE = defaultState();
-const MAP_TYPES = ["roadmap", "satellite", "hybrid", "terrain"];
+const MAP_TYPES = ["Roadmap", "Satellite", "Terrain"];
 const MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const MONTHS_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const MOVEMENT_STORAGE_PREFIX = "ggbbui_move_path_";
@@ -68,9 +68,23 @@ const SVG_SOURCE = {
     SPAWN: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" fill="currentColor"></path></svg>`,
     PANEL: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3,9H17V7H3V9M3,13H17V11H3V13M3,17H17V15H3V17M19,17H21V15H19V17M19,7V9H21V7H19M19,13H21V11H19V13Z" /></svg>`,
     CAMERA: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" fill="currentColor"></path></svg>`,
+    Satellite:`<svg viewBox="0 0 24 24" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M16.9394 2.35352C17.5252 1.76774 18.4749 1.76774 19.0607 2.35352L20.4749 3.76774C21.0607 4.35352 21.0607 5.30327 20.4749 5.88906L17.6465 8.71749C17.0607 9.30327 16.111 9.30327 15.5252 8.71749L15.2574 8.44975L14.1998 9.50743L15.753 11.0607C16.7294 12.037 16.7294 13.6199 15.753 14.5962L14.3388 16.0105C13.3625 16.9868 11.7796 16.9868 10.8033 16.0105L9.25002 14.4572L8.2072 15.5L8.47493 15.7677C9.06072 16.3535 9.06072 17.3033 8.47493 17.8891L5.6465 20.7175C5.06072 21.3033 4.11097 21.3033 3.52518 20.7175L2.11097 19.3033C1.52518 18.7175 1.52518 17.7677 2.11097 17.182L4.9394 14.3535C5.52518 13.7677 6.47493 13.7677 7.06072 14.3535L7.50009 14.7929L8.54292 13.7501L6.56066 11.7678C5.58435 10.7915 5.58435 9.20859 6.56066 8.23228L7.97487 6.81807C8.95118 5.84176 10.5341 5.84176 11.5104 6.81807L13.4927 8.80032L14.5503 7.74264L14.111 7.30327C13.5252 6.71749 13.5252 5.76774 14.111 5.18195L16.9394 2.35352ZM7.14093 15.848L6.35361 15.0606C6.15835 14.8654 5.84177 14.8654 5.6465 15.0606L2.81808 17.8891C2.62282 18.0843 2.62282 18.4009 2.81808 18.5962L4.23229 20.0104C4.42755 20.2056 4.74414 20.2056 4.9394 20.0104L7.76782 17.182C7.96309 16.9867 7.96309 16.6701 7.76782 16.4748L7.15214 15.8592C7.15025 15.8573 7.14837 15.8555 7.14649 15.8536C7.14462 15.8517 7.14277 15.8498 7.14093 15.848ZM18.3536 3.06063C18.1583 2.86537 17.8418 2.86537 17.6465 3.06063L14.8181 5.88906C14.6228 6.08432 14.6228 6.4009 14.8181 6.59617L16.2323 8.01038C16.4276 8.20564 16.7441 8.20564 16.9394 8.01038L19.7678 5.18195C19.9631 4.98669 19.9631 4.67011 19.7678 4.47484L18.3536 3.06063ZM7.26777 11.0607C6.68198 10.4749 6.68198 9.52517 7.26777 8.93939L8.68198 7.52517C9.26777 6.93939 10.2175 6.93939 10.8033 7.52517L15.0459 11.7678C15.6317 12.3536 15.6317 13.3033 15.0459 13.8891L13.6317 15.3033C13.0459 15.8891 12.0962 15.8891 11.5104 15.3033L7.26777 11.0607Z" fill="currentColor"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M17.571 16.4217C17.4643 16.6794 17.3079 16.9135 17.1107 17.1107C16.9135 17.3078 16.6794 17.4643 16.4217 17.571C16.1641 17.6777 15.8879 17.7326 15.6091 17.7326C15.3329 17.7326 15.1091 17.5088 15.1091 17.2326C15.1091 16.9565 15.3329 16.7326 15.6091 16.7326C15.7566 16.7326 15.9027 16.7036 16.039 16.6471C16.1754 16.5906 16.2992 16.5079 16.4036 16.4035C16.5079 16.2992 16.5907 16.1754 16.6471 16.039C16.7036 15.9027 16.7326 15.7566 16.7326 15.6091C16.7326 15.3329 16.9565 15.1091 17.2326 15.1091C17.5088 15.1091 17.7327 15.3329 17.7327 15.6091C17.7327 15.8879 17.6777 16.1641 17.571 16.4217Z" fill="#ffffff"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M19.551 16.9097C19.3277 17.5209 18.9794 18.0703 18.5249 18.5248C18.0704 18.9794 17.5209 19.3277 16.9097 19.5509C16.2988 19.7741 15.6397 19.8673 14.9713 19.8288C14.6956 19.8129 14.485 19.5765 14.5009 19.3008C14.5168 19.0251 14.7532 18.8145 15.0289 18.8304C15.5672 18.8615 16.0894 18.786 16.5666 18.6116C17.0437 18.4374 17.4682 18.1673 17.8178 17.8177C18.1673 17.4682 18.4374 17.0437 18.6117 16.5666C18.786 16.0893 18.8615 15.5671 18.8305 15.0288C18.8146 14.7531 19.0251 14.5168 19.3008 14.5008C19.5765 14.4849 19.8129 14.6955 19.8288 14.9712C19.8674 15.6397 19.7741 16.2987 19.551 16.9097Z" fill="currentColor"></path> </g></svg>`,
+    Terrain:`<svg viewBox="0 0 24 24" fill="none" width="26" height="26"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8 10L3 18H13L8 10Z" fill="currentColor"></path> <path d="M10.5286 10.7543L13.5 6L21 18H15.0572L10.5286 10.7543Z" fill="currentColor"></path> </g></svg>`,
+    Roadmap:`<svg viewBox="0 0 24 24" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M3 8.70938C3 7.23584 3 6.49907 3.39264 6.06935C3.53204 5.91678 3.70147 5.79466 3.89029 5.71066C4.42213 5.47406 5.12109 5.70705 6.51901 6.17302C7.58626 6.52877 8.11989 6.70665 8.6591 6.68823C8.85714 6.68147 9.05401 6.65511 9.24685 6.60952C9.77191 6.48541 10.2399 6.1734 11.176 5.54937L12.5583 4.62778C13.7574 3.82843 14.3569 3.42876 15.0451 3.3366C15.7333 3.24444 16.4168 3.47229 17.7839 3.92799L18.9487 4.31624C19.9387 4.64625 20.4337 4.81126 20.7169 5.20409C21 5.59692 21 6.11871 21 7.16229V15.2907C21 16.7642 21 17.501 20.6074 17.9307C20.468 18.0833 20.2985 18.2054 20.1097 18.2894C19.5779 18.526 18.8789 18.293 17.481 17.827C16.4137 17.4713 15.8801 17.2934 15.3409 17.3118C15.1429 17.3186 14.946 17.3449 14.7532 17.3905C14.2281 17.5146 13.7601 17.8266 12.824 18.4507L11.4417 19.3722C10.2426 20.1716 9.64311 20.5713 8.95493 20.6634C8.26674 20.7556 7.58319 20.5277 6.21609 20.072L5.05132 19.6838C4.06129 19.3538 3.56627 19.1888 3.28314 18.7959C3 18.4031 3 17.8813 3 16.8377V8.70938Z" stroke="currentColor" stroke-width="1.5"></path> <path d="M9 6.63867V20.5" stroke="currentColor" stroke-width="1.5"></path> <path d="M15 3V17" stroke="currentColor" stroke-width="1.5"></path> </g></svg>`,
     PATH: `<svg viewBox="0 0 24 24" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.78 20H9.78C7.98 20 4.58 19.09 4.58 15.64C4.58 12.19 7.98 11.28 9.78 11.28H14.22C14.37 11.28 17.92 11.23 17.92 8.42C17.92 5.61 14.37 5.56 14.22 5.56H9.22C9.02109 5.56 8.83032 5.48098 8.68967 5.34033C8.54902 5.19968 8.47 5.00891 8.47 4.81C8.47 4.61109 8.54902 4.42032 8.68967 4.27967C8.83032 4.13902 9.02109 4.06 9.22 4.06H14.22C16.02 4.06 19.42 4.97 19.42 8.42C19.42 11.87 16.02 12.78 14.22 12.78H9.78C9.63 12.78 6.08 12.83 6.08 15.64C6.08 18.45 9.63 18.5 9.78 18.5H14.78C14.9789 18.5 15.1697 18.579 15.3103 18.7197C15.451 18.8603 15.53 19.0511 15.53 19.25C15.53 19.4489 15.451 19.6397 15.3103 19.7803C15.1697 19.921 14.9789 20 14.78 20Z" fill="currentColor"></path> <path d="M6.44 8.31C5.74314 8.30407 5.06363 8.09202 4.48708 7.70056C3.91054 7.30909 3.46276 6.75573 3.20018 6.11021C2.93759 5.46469 2.87195 4.75589 3.01153 4.07312C3.1511 3.39036 3.48965 2.76418 3.9845 2.2735C4.47935 1.78281 5.10837 1.44958 5.79229 1.31579C6.47622 1.182 7.18444 1.25363 7.82771 1.52167C8.47099 1.78971 9.02054 2.24215 9.40711 2.82199C9.79368 3.40182 9.99998 4.08311 10 4.78C10 5.2461 9.90773 5.70759 9.72846 6.13783C9.54919 6.56808 9.28648 6.95856 8.95551 7.28675C8.62453 7.61494 8.23184 7.87433 7.80009 8.04995C7.36834 8.22558 6.90609 8.31396 6.44 8.31ZM6.44 2.75C6.04444 2.75 5.65776 2.86729 5.32886 3.08706C4.99996 3.30682 4.74362 3.61918 4.59224 3.98463C4.44087 4.35008 4.40126 4.75221 4.47843 5.14018C4.5556 5.52814 4.74609 5.8845 5.02579 6.16421C5.3055 6.44391 5.66186 6.6344 6.04982 6.71157C6.43779 6.78874 6.83992 6.74913 7.20537 6.59776C7.57082 6.44638 7.88318 6.19003 8.10294 5.86114C8.32271 5.53224 8.44 5.14556 8.44 4.75C8.44 4.48735 8.38827 4.22728 8.28776 3.98463C8.18725 3.74198 8.03993 3.5215 7.85422 3.33578C7.6685 3.15007 7.44802 3.00275 7.20537 2.90224C6.96272 2.80173 6.70265 2.75 6.44 2.75Z" fill="currentColor"></path> <path d="M17.56 22.75C16.8614 22.752 16.1779 22.5466 15.5961 22.1599C15.0143 21.7733 14.5603 21.2227 14.2916 20.5778C14.0229 19.933 13.9515 19.2229 14.0866 18.5375C14.2217 17.8521 14.5571 17.2221 15.0504 16.7275C15.5437 16.2328 16.1726 15.8956 16.8577 15.7586C17.5427 15.6215 18.253 15.6909 18.8986 15.9577C19.5442 16.2246 20.0961 16.6771 20.4844 17.2578C20.8727 17.8385 21.08 18.5214 21.08 19.22C21.08 20.1545 20.7095 21.0508 20.0496 21.7125C19.3898 22.3743 18.4945 22.7473 17.56 22.75ZM17.56 17.19C17.1644 17.19 16.7778 17.3073 16.4489 17.5271C16.12 17.7468 15.8636 18.0592 15.7122 18.4246C15.5609 18.7901 15.5213 19.1922 15.5984 19.5802C15.6756 19.9681 15.8661 20.3245 16.1458 20.6042C16.4255 20.8839 16.7819 21.0744 17.1698 21.1516C17.5578 21.2287 17.9599 21.1891 18.3254 21.0377C18.6908 20.8864 19.0032 20.63 19.2229 20.3011C19.4427 19.9722 19.56 19.5856 19.56 19.19C19.56 18.6596 19.3493 18.1508 18.9742 17.7758C18.5991 17.4007 18.0904 17.19 17.56 17.19Z" fill="currentColor"></path> </g></svg>`,
     PIN: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M11.9999 17V21M6.9999 12.6667V6C6.9999 4.89543 7.89533 4 8.9999 4H14.9999C16.1045 4 16.9999 4.89543 16.9999 6V12.6667L18.9135 15.4308C19.3727 16.094 18.898 17 18.0913 17H5.90847C5.1018 17 4.62711 16.094 5.08627 15.4308L6.9999 12.6667Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path> </g></svg>`,
 };
+
+const TILE_TEMPLATE = {
+    Google_Maps: `https://mapsresources-pa.googleapis.com/v1/tiles?map_id=61449c20e7fc278b&version=15797339025669136861&pb=!1m7!8m6!1m3!1i{z}!2i{x}!3i{y}!2i9!3x1!2m2!1e0!2sm!3m7!2sen!3smx!5e1105!12m1!1e3!12m1!1e2!4e0!5m5!1e0!8m2!1e1!1e1!8i47083502!6m6!1e12!2i2!11e0!39b0!44e0!50e0`,
+    Google_Terrain: `https://mapsresources-pa.googleapis.com/v1/tiles?map_id=61449c20e7fc278b&version=15797339025669136861&pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e4!2st!3i725!2m3!1e0!2sr!3i725483392!3m12!2sen!3smx!5e18!12m1!1e3!2m2!1sset!2sTerrain!12m3!1e37!2m1!1ssmartmaps!4e0!5m2!1e3!5f2!23i56565656!26m2!1e2!1e3`,
+    Google_Satellite: `https://mts1.googleapis.com/vt?hl=en-mx&lyrs=s&x={x}&y={y}&z={z}`,
+    Google_StreetView: `https://maps.googleapis.com/maps/vt?pb=%211m5%211m4%211i{z}%212i{x}%213i{y}%214i256%212m8%211e2%212ssvv%214m2%211scc%212s*211m3*211e2*212b1*213e2*212b1*214b1%214m2%211ssvl%212s*212b1%213m17%212sen%213sUS%215e18%2112m4%211e68%212m2%211sset%212sRoadmap%2112m3%211e37%212m1%211ssmartmaps%2112m4%211e26%212m2%211sstyles%212ss.e%3Ag.f%7Cp.c%3A%231098ad%7Cp.w%3A1%2Cs.e%3Ag.s%7Cp.c%3A%2399e9f2%7Cp.w%3A3%215m1%215f1.35`,
+    Google_Satellite_Road: `https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m2!1e0!2sm!3m14!2sen!3smx!5e18!12m4!1e68!2m2!1sset!2sRoadmapSatellite!12m3!1e37!2m1!1ssmartmaps!12m1!1e3!5m1!5f1.35`,
+    Google_Hybrid_Labels: `https://www.google.com/maps/vt?pb=!1m7!8m6!1m3!1i{z}!2i{x}!3i{y}!2i9!3x1!2m2!1e0!2sm!3m7!2sen!3smx!5e1105!12m1!1e4!12m1!1e2!4e0!5m5!1e0!8m2!1e1!1e1!8i47083502!6m6!1e12!2i2!11e0!39b0!44e0!50e0`,
+    Google_Labels: `https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m2!1e0!2sm!3m17!2sen!3smx!5e1105!12m4!1e68!2m2!1sset!2sRoadmap!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2ss.t:18|s.e:g.s|p.w:3,s.e:g|p.v:off,s.t:1|s.e:g.s|p.v:off,s.e:l|p.v:on!4i0!5m2!1e0!5f2`,
+    Google_Labels_Emphasise_Borders: `https://www.google.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m2!1e0!2sm!3m17!2sen!3smx!5e1105!12m4!1e68!2m2!1sset!2sRoadmap!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2ss.t:18|s.e:g.s|p.w:2,s.e:g|p.v:off,s.t:1|s.e:g.s|p.v:on,s.e:l|p.v:on!4i0!5m2!1e0!5f1.5`,
+}
 
 let svs = null;
 let spawn = null;
@@ -83,8 +97,10 @@ let mapObserver = null;
 let panoSelector = null;
 let closeControl = null;
 let pathPolyline = null;
+let customMapType = null;
 let gameLoopTimer = null;
 let coverageLayer = null;
+let opacityControl = null;
 let markerObserver = null;
 let viewerObserver = null;
 let currentGameToken = null;
@@ -100,11 +116,13 @@ let isPathDisplayed = false;
 let gameLoopRunning = false;
 let clickListenerAttached = false;
 
-let MAP_MAKING_API_KEY = GM_getValue("MAP_MAKING_API_KEY", "PASTE_YOUR_KEY_HERE");
 let MAP_LIST;
 let LOCATION;
+let MAP_MAKING_API_KEY = GM_getValue("MAP_MAKING_API_KEY", "PASTE_YOUR_KEY_HERE");
 let previousMapId = JSON.parse(GM_getValue('previousMapId', null));
 let previousTags = JSON.parse(GM_getValue('previousTags', '[]'));
+let currentLayers = ["Google_Maps","Google_Labels"];
+
 
 
 // ============================================================================
@@ -493,17 +511,18 @@ async function gameLoop() {
     const isDuelEnd = !!duelEndEl;
     const isRoundEnd = !!roundEndEl;
 
-    if ((!token || !round) && !isDuelEnd && !dcEndEl && !isReplay) return;
-    if (isReplay) {
-        addAnalyzeControl(replayEl)
-        return
-    }
-
     if (!isRoundEnd && !isGameEnd && !isDuelEnd && !isDcEnd) {
         removePeekMarker();
         clearMovementPaths()
         toggleMapType(true)
         if (isCoverageLayer) toggleCoverageLayer("off");
+        return
+    }
+
+    if ((!token || !round) && !isDuelEnd && !dcEndEl && !isReplay) return;
+
+    if (isReplay) {
+        addAnalyzeControl(replayEl)
         return
     }
 
@@ -597,7 +616,7 @@ function attachClickListener(map) {
         if (domCache.queryOne(SELECTORS.roundEnd) ||
             domCache.queryOne(SELECTORS.gameEnd) ||
             domCache.queryOne(SELECTORS.dcEnd) ||
-            (domCache.queryOne(SELECTORS.duelEnd))) {
+            (domCache.queryOne(SELECTORS.duelEnd) && window.location.href.includes('summary'))) {
             if (!isCoverageLayer) return
             const pano = await getNearestPano(coords);
             if (!pano || pano.error) return
@@ -620,33 +639,68 @@ function attachClickListener(map) {
     });
 }
 
-function toggleCoverageLayer(action) {
-    if (!guessMap) return;
-    if (!coverageLayer) coverageLayer = new google.maps.StreetViewCoverageLayer();
-
-    const shouldShow = action === "on" || (action !== "off" && !isCoverageLayer);
-    const map = shouldShow ? guessMap : null;
-
-    coverageLayer.setMap(map);
-    isCoverageLayer = shouldShow;
-}
-
 // ============================================================================
 // MAP CONTROLS & UI
 // ============================================================================
 
+function addOpacityControl(layer) {
+    function updateSliderBackground(slider, value) {
+        const percentage = (value / slider.getAttribute('max')) * 100;
+        slider.style.background = `linear-gradient(to right, #2196F3 0%, #2196F3 ${percentage}%, #d0d0d0 ${percentage}%, #d0d0d0 100%)`;
+    }
+
+    if(opacityControl) removeOpacityControl();
+
+    opacityControl = document.createElement('div');
+    opacityControl.className = 'map-control sv-opacity-control';
+    opacityControl.id = 'sv-opacity-control';
+
+    const slider = document.createElement('input');
+    slider.className = 'sv-opacity-control__slider';
+    slider.setAttribute('type', 'range');
+    slider.setAttribute('min', '0');
+    slider.setAttribute('max', '100');
+    slider.setAttribute('step', '20');
+    const savedOpacity = GM_getValue('coverageOpacity', '100');
+    slider.value = savedOpacity;
+    slider.title = 'Adjust visibility of Street View coverage overlay';
+
+    layer.set('opacity', savedOpacity / 100);
+    updateSliderBackground(slider, savedOpacity);
+
+
+    slider.addEventListener('input', function() {
+        const opacity = slider.value / 100
+        layer.set('opacity', opacity);
+        GM_setValue('coverageOpacity', slider.value);
+        updateSliderBackground(slider, slider.value);
+    });
+
+    opacityControl.appendChild(slider);
+    const container = document.getElementById('sv-coverage-toggle')?.parentElement;
+    if(container) container.appendChild(opacityControl);
+}
+
+
+function removeOpacityControl() {
+    if (opacityControl) {
+        opacityControl.remove();
+        opacityControl = null;
+    }
+}
+
 function setMapControls(container) {
     let pathControl = document.getElementById('path-focus');
     let mapTypeControl = document.getElementById('map-type-toggle');
-    let coverageLayerControl = document.getElementById('layer-toggle');
+    let coverageLayerControl = document.getElementById('sv-coverage-toggle');
 
     const isMove = domCache.queryOne(SELECTORS.moveButton)
     if (coverageLayerControl && (pathControl || !isMove) && mapTypeControl) return
 
     if (!coverageLayerControl) {
         coverageLayerControl = document.createElement('button');
-        coverageLayerControl.className = 'peek-map-control';
-        coverageLayerControl.id = 'layer-toggle'
+        coverageLayerControl.className = 'map-control';
+        coverageLayerControl.id = 'sv-coverage-toggle'
         coverageLayerControl.title = 'Toggle Street View Coverage Overlay'
         coverageLayerControl.innerHTML = `
             <img alt="Coverage Layer Toggle" loading="lazy" width="24" height="24" decoding="async" data-nimg="1" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2023%2038%22%3E%3Cpath%20d%3D%22M16.6%2038.1h-5.5l-.2-2.9-.2%202.9h-5.5L5%2025.3l-.8%202a1.53%201.53%200%2001-1.9.9l-1.2-.4a1.58%201.58%200%2001-1-1.9v-.1c.3-.9%203.1-11.2%203.1-11.2a2.66%202.66%200%20012.3-2l.6-.5a6.93%206.93%200%20014.7-12%206.8%206.8%200%20014.9%202%207%207%200%20012%204.9%206.65%206.65%200%2001-2.2%205l.7.5a2.78%202.78%200%20012.4%202s2.9%2011.2%202.9%2011.3a1.53%201.53%200%2001-.9%201.9l-1.3.4a1.63%201.63%200%2001-1.9-.9l-.7-1.8-.1%2012.7zm-3.6-2h1.7L14.9%2020.3l1.9-.3%202.4%206.3.3-.1c-.2-.8-.8-3.2-2.8-10.9a.63.63%200%2000-.6-.5h-.6l-1.1-.9h-1.9l-.3-2a4.83%204.83%200%20003.5-4.7A4.78%204.78%200%200011%202.3H10.8a4.9%204.9%200%2000-1.4%209.6l-.3%202h-1.9l-1%20.9h-.6a.74.74%200%2000-.6.5c-2%207.5-2.7%2010-3%2010.9l.3.1L4.8%2020l1.9.3.2%2015.8h1.6l.6-8.4a1.52%201.52%200%20011.5-1.4%201.5%201.5%200%20011.5%201.4l.9%208.4zm-10.9-9.6zm17.5-.1z%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23333%22%20opacity%3D%22.7%22/%3E%3Cpath%20d%3D%22M5.9%2013.6l1.1-.9h7.8l1.2.9%22%20fill%3D%22%23ce592c%22/%3E%3Cellipse%20cx%3D%2210.9%22%20cy%3D%2213.1%22%20rx%3D%222.7%22%20ry%3D%22.3%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23ce592c%22%20opacity%3D%22.5%22/%3E%3Cpath%20d%3D%22M20.6%2026.1l-2.9-11.3a1.71%201.71%200%2000-1.6-1.2H5.699999999999999a1.69%201.69%200%2000-1.5%201.3l-3.1%2011.3a.61.61%200%2000.3.7l1.1.4a.61.61%200%2000.7-.3l2.7-6.7.2%2016.8h3.6l.6-9.3a.47.47%200%2001.44-.5h.06c.4%200%20.4.2.5.5l.6%209.3h3.6L15.7%2020.3l2.5%206.6a.52.52%200%2000.66.31l1.2-.4a.57.57%200%2000.5-.7z%22%20fill%3D%22%23fdbf2d%22/%3E%3Cpath%20d%3D%22M7%2013.6l3.9%206.7%203.9-6.7%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23cf572e%22%20opacity%3D%22.6%22/%3E%3Ccircle%20cx%3D%2210.9%22%20cy%3D%227%22%20r%3D%225.9%22%20fill%3D%22%23fdbf2d%22/%3E%3C/svg%3E" style="color: transparent;">
@@ -656,7 +710,7 @@ function setMapControls(container) {
     }
     if (!pathControl && isMove) {
         pathControl = document.createElement('button');
-        pathControl.className = 'peek-map-control';
+        pathControl.className = 'map-control';
         pathControl.id = 'path-focus';
         pathControl.title = 'Toggle Movement Path';
         pathControl.innerHTML = SVG_SOURCE.PATH
@@ -665,23 +719,162 @@ function setMapControls(container) {
     }
     if (!mapTypeControl) {
         mapTypeControl = document.createElement('button');
-        mapTypeControl.className = 'peek-map-control';
+        mapTypeControl.className = 'map-control';
         mapTypeControl.id = 'map-type-toggle';
-        mapTypeControl.innerHTML = SVG_SOURCE.LAYERS
+        mapTypeControl.innerHTML = SVG_SOURCE.Satellite
         container.appendChild(mapTypeControl);
-        mapTypeControl.title = `Toggle ${MAP_TYPES[(mapTypeIndex + 1) % MAP_TYPES.length].toUpperCase()} Map`;
+        mapTypeControl.title = `Toggle ${MAP_TYPES[(mapTypeIndex + 1) % MAP_TYPES.length]} Map`;
         mapTypeControl.onclick = () => toggleMapType();
     }
 }
 
-function toggleMapType(reset) {
-    const control = document.getElementById('map-type-toggle')
-    if (reset) mapTypeIndex = 0
-    else mapTypeIndex = (mapTypeIndex + 1) % MAP_TYPES.length;
+function toggleCoverageLayer(action) {
+    if (!guessMap) return;
+    if (!customMapType) customMapType = extendGoogleMapType();
+    const shouldShow = action === "on" || (action !== "off" && !isCoverageLayer);
+    if (shouldShow) {
+        currentLayers.splice(1, 0, 'Google_StreetView');
+        const layers = new customMapType(currentLayers.map(layerName => makeTileLayer(layerName)));
+        guessMap.mapTypes.set("roadmap", layers)
+    }
+    else {
+        currentLayers = currentLayers.filter(layer => layer !== 'Google_StreetView')
+        removeOpacityControl()
+        const layers = new customMapType(currentLayers.map(layerName => makeTileLayer(layerName)));
+        guessMap.mapTypes.set("roadmap", layers)
+    }
+    isCoverageLayer = shouldShow;
+}
 
-    const nextType = MAP_TYPES[mapTypeIndex];
-    guessMap.setMapTypeId(nextType);
-    control.title = `Toggle ${MAP_TYPES[(mapTypeIndex + 1) % MAP_TYPES.length].toUpperCase()} Map`;
+function extendGoogleMapType() {
+    function MR(e, t) {
+        return new Promise(n => {
+            google.maps.event.addListenerOnce(e, t, n);
+        });
+    }
+
+    class customMapType extends google.maps.ImageMapType {
+        constructor(layers, options = null) {
+            const defaultOptions = {
+                getTileUrl: function (coord, zoom) {
+                    return null;
+                },
+                tileSize: new google.maps.Size(256, 256),
+                maxZoom: 20,
+                name: 'CustomMapType',
+            };
+
+
+            super({ ...defaultOptions, ...options });
+            this.layers = layers;
+        }
+
+        getTile(t, n, r) {
+            const o = this.layers.map(i => {
+                if (typeof i.getTile !== 'function') {
+                    console.error('getTile method is missing in layer:', i);
+                }
+                return i.getTile(t, n, r);
+            });
+            const s = document.createElement("div");
+            s.append(...o);
+
+            Promise.all(o.map(i => MR(i, "load"))).then(() => {
+                google.maps.event.trigger(s, "load");
+            });
+
+            return s;
+        }
+
+
+        releaseTile(tile) {
+            let index = 0;
+            for (const child of tile.children) {
+                if (child instanceof HTMLElement) {
+                    this.layers[index]?.releaseTile(child);
+                    index += 1;
+                }
+            }
+        }
+    }
+    return customMapType
+}
+
+function makeTileLayer(layerName) {
+    const tileUrl = TILE_TEMPLATE[layerName];
+
+    const layer = new google.maps.ImageMapType({
+        getTileUrl: function (coord, zoom) {
+            return tileUrl
+                .replace('{z}', zoom)
+                .replace('{x}', coord.x)
+                .replace('{y}', coord.y);
+        },
+        tileSize: new google.maps.Size(256, 256),
+        name: layerName,
+        maxZoom: 20,
+    })
+    if (layerName.includes('StreetView')) addOpacityControl(layer);
+    return layer;
+}
+
+function toggleMapType(reset = false) {
+    if (!guessMap) return;
+
+    const control = document.getElementById('map-type-toggle');
+
+    if (reset) {
+        mapTypeIndex = 0;
+    } else {
+        mapTypeIndex = (mapTypeIndex + 1) % MAP_TYPES.length;
+    }
+
+    const currentType = MAP_TYPES[mapTypeIndex];
+    const nextType = MAP_TYPES[(mapTypeIndex + 1) % MAP_TYPES.length];
+
+    if (!customMapType) {
+        customMapType = extendGoogleMapType();
+    }
+
+    switch (currentType) {
+        case 'Roadmap':
+            // Google Maps
+            currentLayers[0] = 'Google_Maps'
+            if (!currentLayers.includes('Google_Labels')) currentLayers.push('Google_Labels')
+            currentLayers = currentLayers.filter(layer => layer !== 'Google_Hybrid_Labels')
+            break;
+        case 'Terrain':
+            // Terrain Map
+            currentLayers[0] = 'Google_Terrain'
+            if (!currentLayers.includes('Google_Labels')) currentLayers.push('Google_Labels')
+            currentLayers = currentLayers.filter(layer => layer !== 'Google_Hybrid_Labels')
+            break;
+        case 'Satellite':
+            // Satellite Map
+            currentLayers[0] = 'Google_Satellite'
+            if (!currentLayers.includes('Google_Hybrid_Labels')) currentLayers.push('Google_Hybrid_Labels')
+            currentLayers = currentLayers.filter(layer => layer !== 'Google_Labels')
+            break;
+    }
+
+    const layers = new customMapType(
+        currentLayers.map(name => makeTileLayer(name))
+    );
+
+    guessMap.mapTypes.set('roadmap', layers);
+
+    if (control) {
+        control.innerHTML = SVG_SOURCE[nextType];
+        control.title = `Toggle ${nextType} Map`;
+    }
+}
+
+function adjustCoverageOpacity(layer,opacity) {
+    if (!guessMap || !layer) return;
+
+    layer.set('opacity',opacity)
+
+    GM_setValue('coverageOpacity', opacity);
 }
 
 function focusPath() {
@@ -1255,11 +1448,11 @@ function analyze(round) {
                 canvas.style.pointerEvents = 'none'
                 var centerHeading;
                 const panoIds = replayData
-                    .filter(item => item.type === 'PanoPosition' && item.payload?.panoId)
-                    .map(item => item.payload.panoId);
+                .filter(item => item.type === 'PanoPosition' && item.payload?.panoId)
+                .map(item => item.payload.panoId);
                 if (panoIds.length > 1) {
                     var panoId = panoIds[Math.floor(Math.random() * panoIds.length)]
-                }
+                    }
                 else {
                     panoId = panoIds[0]
                 }
@@ -1795,7 +1988,6 @@ function addDuelRoundsPanel() {
             }
 
             if (closeControl) closeControl.click();
-            toggleCoverageLayer("off");
         });
     });
     panelContent.appendChild(roundsContainer);
@@ -2014,8 +2206,8 @@ function getGeneration(worldsize, country, lat, date) {
     if (worldsize === 6656) {
         const dateStr = date.toISOString().slice(0, 7);
         const gen2Countries = new Set(['AU', 'BR', 'CA', 'CL', 'JP', 'GB', 'IE', 'NZ', 'MX', 'RU', 'US', 'IT', 'DK', 'GR', 'RO',
-            'PL', 'CZ', 'CH', 'SE', 'FI', 'BE', 'LU', 'NL', 'ZA', 'SG', 'TW', 'HK', 'MO', 'MC', 'NO',
-            'SM', 'AD', 'IM', 'JE', 'FR', 'DE', 'ES', 'PT', 'SJ']);
+                                       'PL', 'CZ', 'CH', 'SE', 'FI', 'BE', 'LU', 'NL', 'ZA', 'SG', 'TW', 'HK', 'MO', 'MC', 'NO',
+                                       'SM', 'AD', 'IM', 'JE', 'FR', 'DE', 'ES', 'PT', 'SJ']);
         const gen3Dates = {
             'BD': '2021-04', 'EC': '2022-03', 'FI': '2020-09', 'IN': '2021-10', 'LK': '2021-02', 'KH': '2022-10',
             'LB': '2021-05', 'NG': '2021-06', 'ST': '2024-02', 'US': '2019-01', 'VN': '2021-01', 'ES': '2023-01'
@@ -2177,8 +2369,8 @@ function createPayload(mode, coorData, s, d, r) {
     }
     else if (mode === 'SingleImageSearch') {
         payload = [["apiv3"],
-        [[null, null, parseFloat(coorData.lat), parseFloat(coorData.lng)], r],
-        [[null, null, null, null, null, null, null, null, null, null, [s, d]], null, null, null, null, null, null, null, [2], null, [[[type, true, 2]]]], [[1, 2, 3, 4, 8, 6]]]
+                   [[null, null, parseFloat(coorData.lat), parseFloat(coorData.lng)], r],
+                   [[null, null, null, null, null, null, null, null, null, null, [s, d]], null, null, null, null, null, null, null, [2], null, [[[type, true, 2]]]], [[1, 2, 3, 4, 8, 6]]]
     }
     else {
         throw new Error("Invalid mode!");
@@ -2323,11 +2515,9 @@ function enterFullscreen(panoDiv) {
 }
 
 function exitFullscreen() {
-    if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
-        document.exitFullscreen?.();
-        document.webkitExitFullscreen?.();
-        document.msExitFullscreen?.();
-    }
+    document.exitFullscreen?.();
+    document.webkitExitFullscreen?.();
+    document.msExitFullscreen?.();
 }
 
 // ============================================================================
@@ -2532,19 +2722,13 @@ function togglePhotoMode(photoControl, viewer) {
     if (isPhotoMode) {
         enterFullscreen(panoDiv);
 
-        const footer = domCache.queryAll('.gmnoprint');
-        for (const el of footer) {
-            el.style.display = 'none';
-        }
-
         for (const ctrl of controls) {
             ctrl.style.display = 'none';
         }
         if (panoSelect) panoSelect.style.display = 'none';
-
         viewer.setOptions({
-            addressControl: false,
             linksControl: false,
+            addressControl: false,
             fullscreenControl: false,
             clickToGo: false,
         });
@@ -2556,6 +2740,7 @@ function togglePhotoMode(photoControl, viewer) {
       .embed-controls {display: none !important}
       .SLHIdE-sv-links-control {display: none !important}
       [alt="Google"] {display: none !important}
+      .gmnoprint.SLHIdE-sv-links-control {display: none !important}
       [class$="gmnoprint"], [class$="gm-style-cc"], [class$="gm-compass"] {display: none !important}
     `);
     } else {
@@ -2565,8 +2750,8 @@ function togglePhotoMode(photoControl, viewer) {
         if (panoSelect) panoSelect.style.display = '';
 
         viewer.setOptions({
-            addressControl: true,
             linksControl: true,
+            addressControl: true,
             fullscreenControl: true,
             clickToGo: true,
         });
@@ -2579,6 +2764,64 @@ function togglePhotoMode(photoControl, viewer) {
         applyStyles(photoControl, { opacity: '1' });
         photoControl.title = 'Photo Mode (Hide UI)';
     }
+}
+
+const getPanorama = (lat, lng) => {
+    return new Promise((resolve) => {
+        if (!svs) initSVS();
+        svs.getPanorama(
+            { location: { lat, lng }, radius: 50 },
+            (data, status) => {
+                if (status === google.maps.StreetViewStatus.OK) {
+                    resolve(data);
+                } else {
+                    resolve(null);
+                }
+            }
+        );
+    });
+};
+
+async function moveStreetView(direction) {
+    if (!viewer) return;
+
+    const currentPos = viewer.getPosition();
+    if (!currentPos) return;
+
+    const lat = currentPos.lat();
+    const lng = currentPos.lng();
+    const heading = viewer.getPov().heading;
+    const TARGET_DISTANCE = 100;
+
+    const mainHeading = direction === 'forward' ? heading : (heading + 180) % 360;
+    const leftHeading = (mainHeading - 45) % 360;
+    const rightHeading = (mainHeading + 45) % 360;
+
+    const currentLatLng = new google.maps.LatLng(lat, lng);
+    const mainPoint = google.maps.geometry.spherical.computeOffset(currentLatLng, TARGET_DISTANCE, mainHeading);
+    const leftPoint = google.maps.geometry.spherical.computeOffset(currentLatLng, TARGET_DISTANCE, leftHeading);
+    const rightPoint = google.maps.geometry.spherical.computeOffset(currentLatLng, TARGET_DISTANCE, rightHeading);
+
+    let [panoMain, panoLeft, panoRight] = await Promise.allSettled([
+        getPanorama(mainPoint.lat(), mainPoint.lng()),
+        getPanorama(leftPoint.lat(), leftPoint.lng()),
+        getPanorama(rightPoint.lat(), rightPoint.lng())
+    ]);
+
+    let newPos = currentPos;
+
+    if (panoMain && panoMain.status === 'fulfilled' && panoMain.value) {
+        newPos = panoMain.value.location.latLng;
+    } else if (panoLeft && panoLeft.status === 'fulfilled' && panoLeft.value) {
+        newPos = panoLeft.value.location.latLng;
+    } else if (panoRight && panoRight.status === 'fulfilled' && panoRight.value) {
+        newPos = panoRight.value.location.latLng;
+    }
+
+    viewer.setPosition({
+        lat: newPos.lat(),
+        lng: newPos.lng()
+    });
 }
 
 // ============================================================================
@@ -2599,7 +2842,7 @@ function buildMapHTML(m) {
 
 function openNativeStreetView(pano) {
     if (!guessMap || !pano || pano.error) return;
-    toggleCoverageLayer("on")
+    if(!isCoverageLayer) toggleCoverageLayer("on");
     const shareDiv = domCache.queryOne("[class*='standard-final-result_challengeFriendButton']")
     if (shareDiv) shareDiv.style.display = 'none'
     const xpDiv = domCache.queryOne("[class*='level-up-xp-button']")
@@ -2692,11 +2935,9 @@ function openNativeStreetView(pano) {
             e.stopPropagation();
             if (shareDiv) shareDiv.style.display = 'block';
             if (xpDiv) xpDiv.style.display = 'inline-flex';
-            exitFullscreen();
             splitContainer.classList.remove('active');
             removePeekMarker();
             clearMovementPath();
-            toggleCoverageLayer("off")
         };
         viewer.controls[google.maps.ControlPosition.RIGHT_TOP].push(closeControl);
 
@@ -2831,11 +3072,50 @@ function openNativeStreetView(pano) {
             togglePhotoMode(photoControl, viewer);
         });
         document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement && isPhotoMode) {
-                togglePhotoMode(photoControl, viewer);
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+                if (isPhotoMode) togglePhotoMode(photoControl, viewer);
+                closeControl.style.display = '';
+            }
+            else {
+                closeControl.style.display = 'none';
             }
         });
         viewer.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(photoControl);
+
+        // Jump distance control
+        const jumpControl = document.createElement('div');
+        jumpControl.className = 'pano-control';
+        jumpControl.id = 'pano-jump';
+        const jumpForwardBtn = document.createElement('button');
+        jumpForwardBtn.className = 'pano-jump-btn pano-control';
+        jumpForwardBtn.textContent = '100m';
+        jumpForwardBtn.title = 'Jump forward 100 metres (Hotkey: 3)';
+
+        const jumpBackwardBtn = document.createElement('button');
+        jumpBackwardBtn.className = 'pano-jump-btn pano-control';
+        jumpBackwardBtn.textContent = '-100m';
+        jumpBackwardBtn.title = 'Jump backward 100 metres (Hotkey: 4)';
+
+        jumpForwardBtn.addEventListener('click', () => moveStreetView('forward'));
+        jumpBackwardBtn.addEventListener('click', () => moveStreetView('backward'));
+
+        jumpControl.appendChild(jumpForwardBtn);
+        jumpControl.appendChild(jumpBackwardBtn);
+
+        viewer.controls[google.maps.ControlPosition.TOP_CENTER].push(jumpControl);
+
+        document.addEventListener('keydown', (e) => {
+            if (splitContainer && splitContainer.classList.contains('active')) {
+                if (e.key === '4' && !e.ctrlKey && !e.altKey && !e.metaKey) {
+                    e.preventDefault();
+                    moveStreetView('backward');
+                } else if (e.key === '3' && !e.ctrlKey && !e.altKey && !e.metaKey) {
+                    e.preventDefault();
+                    moveStreetView('forward');
+                }
+            }
+        });
+
 
         if (!panoSelector) panoSelector = document.createElement("select");
         panoSelector.id = "pano-select";
@@ -2939,8 +3219,8 @@ function showMapList() {
             const input = document.getElementById('peek-map-tags');
 
             let currentTags = input.value.split(',')
-                .map(t => t.trim())
-                .filter(t => t.length > 0);
+            .map(t => t.trim())
+            .filter(t => t.length > 0);
 
             if (this.classList.contains('active')) {
                 currentTags = currentTags.filter(t => t !== tag);
@@ -3308,11 +3588,11 @@ function main() {
         }
     }
 
-    .peek-map-control {
+    .map-control {
         background: rgb(0, 0, 0, 0.8);
         color: white;
         border: 0px;
-        top: 80px;
+        top: 100px;
         padding: 8px;
         text-transform: none;
         appearance: none;
@@ -3328,12 +3608,12 @@ function main() {
         z-index: 9999;
     }
 
-    .peek-map-control:hover {
+    .map-control:hover {
         opacity: 1.0;
         color:#ffcf4a;
     }
 
-    #layer-toggle {
+    #sv-coverage-toggle {
         left: 1rem;
     }
 
@@ -3343,6 +3623,83 @@ function main() {
 
     #path-focus {
         left: 8rem;
+    }
+
+    #sv-opacity-control {
+        left: 1rem;
+        top: 64px;
+        width: 100px !important;
+        border-radius: 5px !important;
+        height: 24px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 10px !important;
+        background: #ffffff !important;
+        opacity: 0.9;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .sv-opacity-control__slider {
+        width: 100%;
+        height: 5px;
+        borde: none;
+        padding: 0;
+        background: linear-gradient(to right, #e8e8e8, #d0d0d0);
+        outline: none;
+        appearance: auto;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    #pano-jump {
+        display: flex !important;
+        gap: 0 !important;
+        padding: 0 !important;
+        margin: 8px 10px !important;
+        width: auto !important;
+        height: auto !important;
+        background: none rgb(68, 68, 68) !important;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px !important;
+        border-radius: 2px !important;
+    }
+
+    .pano-jump-btn {
+        padding: 8px 12px;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        background: transparent;
+        color: inherit;
+        flex: 0 1 auto;
+        border-right: 1px solid rgba(0, 0, 0, 0.3);
+        transition: all 0.2s ease;
+        font-size: 14px;
+        line-height: 1;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .pano-jump-btn:first-child {
+        border-top-left-radius: 2px;
+        border-bottom-left-radius: 2px;
+    }
+
+    .pano-jump-btn:last-child {
+        border-right: none;
+        border-top-right-radius: 2px;
+        border-bottom-right-radius: 2px;
+    }
+
+    .pano-jump-btn:hover {
+        background-color: rgba(100, 100, 100, 0.5);
+        color: #e6e6e6;
+    }
+
+    .pano-jump-btn:active {
+        background-color: rgba(80, 80, 80, 0.7);
     }
 
     .peek-modal {

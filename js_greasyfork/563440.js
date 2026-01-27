@@ -3,7 +3,7 @@
 // @name:zh-CN   Google AI Studio | 优化工具 - Dae
 // @name:en      Google AI Studio | Enhancement tool - Dae
 // @namespace    https://space.bilibili.com/261168982
-// @version      1.0.6
+// @version      1.0.8
 // @description  Google AI Studio 增强插件。集成一键清空聊天、自动选择提示词、长文本转文件、滚动导航及引用文本等人性化功能。
 // @description:en  Enhancement tool for Google AI Studio. Features one-click chat clearing, auto-applying system instructions, long text-to-file conversion, scroll navigation, and selection quotes. Fully customizable via a gear-icon settings panel.
 // @author       Dae & Gemini
@@ -33,7 +33,6 @@
     // 菜单 ID 存储数组
     let registeredMenuIds = []; 
 
-    // 改为 let，允许运行时修改
     let CURRENT_LANG = GM_getValue('language', 'zh'); 
 
     // --- 全局实时配置对象 ---
@@ -64,14 +63,14 @@
         themePreferenceDark:  GM_getValue('themePreferenceDark', 'default'),
 
         // === 2. 增强功能 (Enhancements) ===
-        // 自动配置系统指令
+        // 自动配置提示词
         autoSystemInstructionName: GM_getValue('autoSystemInstructionName', '__DISABLED__'),
 
-        // 工具栏快速指令选择器
+        // 工具栏提示词选择器
         enableToolbarInstructionPicker: GM_getValue('enableToolbarInstructionPicker', false),
         toolbarSelectedInstruction: GM_getValue('toolbarSelectedInstruction', '__DISABLED__'),
     
-        // 2. 存储抓取到的指令列表 (默认空数组)
+        // 2. 存储抓取到的提示词列表 (默认空数组)
         savedSystemInstructions: GM_getValue('savedSystemInstructions', []),
         enableQuote: GM_getValue('enableQuote', true), 
         enableAutoFilePaste: GM_getValue('enableAutoFilePaste', true), // 超长文本粘贴自动转 .txt 文件
@@ -148,11 +147,12 @@
         
         // 下拉菜单里的“关闭”选项
         val_off:                    ['关闭', 'Off'],
-        val_empty_list:             ['列表为空，请创建一个系统指令\n(初次请手动打开一次提示词面板以读取)', 'List empty, please create an instruction\n(Please manually dropdown the instruction list once to load it on first use.)'],
-        lbl_auto_instruction_mode:  ['自动应用系统指令', 'Auto-Apply System Instruction'],        tip_auto_instruction_mode:  ['选择在新建聊天时自动应用的指令。', 'Select the instruction to auto-apply.'],
-        // 工具栏指令选择器
-        lbl_toolbar_instruction_picker: ['启用工具栏指令选择器', 'Enable Toolbar Instruction Picker'],
-        tip_toolbar_instruction_picker: ['在编辑器工具栏添加快速切换指令的下拉框。', 'Add a quick instruction switcher dropdown in the editor toolbar.'],
+        val_empty_list:             ['列表为空，请创建一个提示词\n(初次请手动打开一次提示词面板以读取)', 'List empty, please create an instruction\n(Please manually dropdown the instruction list once to load it on first use.)'],
+        lbl_auto_instruction_mode:  ['自动应用提示词', 'Auto-Apply System Instruction'],        tip_auto_instruction_mode:  ['选择在新建聊天时自动应用的提示词。', 'Select the instruction to auto-apply.'],
+        // 工具栏提示词选择器
+        lbl_toolbar_instruction_picker: ['启用工具栏提示词选择器', 'Enable Toolbar Instruction Picker'],
+        tip_toolbar_instruction_picker: ['在编辑器工具栏添加快速切换提示词的下拉框。', 'Add a quick instruction switcher dropdown in the editor toolbar.'],
+        tip_select_instruction:     ['选择提示词', 'Select Instruction'],
 
         lbl_quote:                  ['启用“划词引用”功能', 'Enable Text Selection Quote'],
         tip_quote:                  ['选中文本后显示“引用”浮窗，点击可将内容及作者格式化后插入输入框。', 'Show a floating button upon text selection to insert formatted quotes.'],
@@ -469,9 +469,27 @@
         ms-text-chunk li p { display: inline !important; margin: 0 !important; }
 
         /* ==================== 2. 代码块字体 ==================== */
-        code, pre {
-            font-family: 'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Hack', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Courier New', monospace !important;
+        code, pre, .inline-code {
+            font-family: 'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Hack', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Courier New',
+            'Noto Sans SC', 
+            monospace !important;
+
             font-size: 0.95em !important;
+            font-variant-ligatures: none !important; 
+        }
+        .inline-code { font-weight: 400 !important; }
+
+        /* 允许公式换行 */
+        ms-katex pre, ms-katex code {
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            box-sizing: border-box !important;
+        }
+        /* 避免内联公式产生的 pre 带有过大的 margin */
+        ms-katex pre {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: transparent !important;
         }
         ms-text-chunk :not(pre) > code {
             background-color: var(--my-code-bg) !important;
@@ -479,9 +497,28 @@
             padding: 2px 5px !important;
             border-radius: 4px !important;
         }
+
+        /* ==================== 聊天字体优化 ==================== */
+        /* 1. 针对正文段落和列表 */
+        ms-text-chunk p, 
+        ms-text-chunk li,
+        .markdown-content p,
+        .markdown-content li {
+            /* 优先苹方，否则回退原思源黑体 */
+            font-family: "PingFang SC", "Noto Sans SC", sans-serif !important;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            /* 普通文字粗细 */
+            font-weight: 400 !important;
+        }
+        /* 2. 标题跟随使用苹方 */
+        ms-text-chunk h1, ms-text-chunk h2, ms-text-chunk h3, 
+        ms-text-chunk h4, ms-text-chunk h5, ms-text-chunk h6 {
+            font-family: "PingFang SC", "Noto Sans SC", sans-serif !important;
+        }
     `;
 
-    // 粗体修复专用 CSS (独立 ID)
+    // 粗体修复专用 CSS
     const BOLD_FIX_ID = 'dae-bold-fix-style';
     const BOLD_FIX_CSS = `
         .md-bold-fix {
@@ -506,7 +543,9 @@
             document.head.appendChild(styleEl);
         }
 
-        // 增加 line-height 控制，实现同比例缩放
+        // 动态计算公式文本大小：基准字号 + 2.5
+        const mathSize = parseFloat(size) + 2.5;
+
         styleEl.textContent = `
             ms-text-chunk, 
             .markdown-content,
@@ -518,10 +557,14 @@
                 font-size: ${size}px !important;
                 line-height: 1.6 !important; 
             }
+            /* 公式字体比正文大 2.5px */
+            ms-katex, .katex {
+                font-size: ${mathSize}px !important;
+            }
         `;
     }
 
-    // 1. 基础排版控制器
+    // 1. Markdown排版优化控制器
     function updateBaseMarkdownStyle() {
         let el = document.getElementById(MARKDOWN_BASE_ID);
         if (activeSettings.enableMarkdownEnhancement) {
@@ -559,7 +602,8 @@
                 styleEl.textContent = `
                     .response-feedback-button,
                     button[iconname="thumb_up"],
-                    button[iconname="thumb_down"] { 
+                    button[iconname="thumb_down"],
+                    .status-message.hover-or-edit { 
                         display: none !important; 
                     }
                 `;
@@ -649,6 +693,18 @@
         }
 
         styleEl.textContent = css;
+
+        // 同步更新引用卡片颜色
+        const quoteCard = document.querySelector('.gemini-quote-card');
+        if (quoteCard && pendingQuoteState) {
+            const isDark = isCurrentDarkMode();
+            const isUser = (pendingQuoteState.author === '用户' || pendingQuoteState.author === 'User' || pendingQuoteState.author === t('quote_card_author_user'));
+            
+            const colorVal = isUser ? (isDark ? activeSettings.userBgColorDark : activeSettings.userBgColorLight)
+                                    : (isDark ? activeSettings.modelBgColorDark : activeSettings.modelBgColorLight);
+            
+            quoteCard.style.borderLeftColor = parseRgbaColor(colorVal).hex;
+        }
     }
 
     // 3. 粗体修复控制器 (CSS + 逻辑触发)
@@ -676,7 +732,7 @@
     // 4. 统一入口 (用于 Reset 按钮)
     function updateAllMarkdownStyles() {
         updateBaseMarkdownStyle();
-        updateChatBackgroundStyles(); // 调用新的背景色函数
+        updateChatBackgroundStyles();
         updateBoldFixState();
     }
 
@@ -754,6 +810,13 @@
                     
                     /* 初始进入动画：从右侧滑入 */
                     animation: dae-notif-slideIn 0.3s cubic-bezier(0.2, 0, 0, 1);
+                }
+
+                /* 移动端字体缩小 1.5px */
+                @media (max-width: 960px) {
+                    .dae-opt-notification {
+                        font-size: 12.5px;
+                    }
                 }
 
                 @keyframes dae-notif-slideIn {
@@ -1559,7 +1622,7 @@
             transform: scale(1.15); /* 按住时回弹一点点，模拟物理手感 */
         }
 
-        /* ==================== 2. [重构] 差异化样式 (仅保留布局差异) ==================== */
+        /* ==================== 2. 差异化样式 (仅保留布局差异) ==================== */
         
         /* 字体大小滑块：固定宽度 */
         .dae-slider-input {
@@ -1911,6 +1974,44 @@
         mat-dialog-content .search-bar-close-button {
             display: none !important;
         }
+
+
+        /* === 移动端工具栏提示词选择器专用样式 === */
+        @media (max-width: 768px) {
+            #dae-toolbar-instruction-picker {
+                margin: 0 !important;
+                flex: none !important;
+            }
+            
+            #dae-toolbar-instruction-picker .dae-select-trigger {
+                width: 32px !important;
+                height: 32px !important;
+                padding: 0 !important;
+                justify-content: center !important;
+                border: none !important;
+                border-radius: 50% !important;
+                background: transparent !important;
+                box-shadow: none !important; 
+            }
+
+            #dae-toolbar-instruction-picker .dae-select-trigger:hover,
+            #dae-toolbar-instruction-picker .dae-select-trigger:active,
+            #dae-toolbar-instruction-picker .dae-select-trigger.active {
+                background-color: var(--gc-btn-hover) !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+            
+            #dae-toolbar-instruction-picker .dae-select-value,
+            #dae-toolbar-instruction-picker .dae-select-arrow {
+                display: none !important;
+            }
+
+            #dae-toolbar-instruction-picker svg {
+                margin-top: 1px !important;
+                margin-right: 0 !important;
+            }
+        }
     `);
 
     // --- 主题定义 ---
@@ -2225,47 +2326,117 @@
         updateChatBackgroundStyles();
     }
 
-    // --- Markdown 文本节点优化与还原 ---
-    
-    // 1. 正向优化函数：执行空格隔离法则
+    // Markdown 排版优化与粗体修复
     function optimizeMarkdownText() {
         if (!activeSettings.enableBoldSpacingFix) return;
 
-        // 内部常量定义，防止污染全局
         const TARGET_TAG = 'ms-text-chunk';
-        const PROCESSED_FLAG = 'data-md-refined'; // 换个标记名
+        const PROCESSED_FLAG = 'data-md-refined'; 
         const FIX_CLASS = 'md-bold-fix';
 
+        // === 反转粗体夹心饼干结构纠正 ===
+        const fixInvertedBoldStructure = (container) => {
+            const strongs = Array.from(container.querySelectorAll('strong:not(.md-bold-fix), b:not(.md-bold-fix)'));
+
+            strongs.forEach(strong => {
+                const getVisualSibling = (node, isPrev) => {
+                    let curr = isPrev ? node.previousSibling : node.nextSibling;
+                    while (curr) {
+                        if (curr.nodeType === 8) { 
+                            curr = isPrev ? curr.previousSibling : curr.nextSibling;
+                            continue;
+                        }
+                        if (curr.nodeType === 3 && !curr.nodeValue.trim()) { 
+                            curr = isPrev ? curr.previousSibling : curr.nextSibling;
+                            continue;
+                        }
+                        return curr;
+                    }
+                    return null;
+                };
+
+                const prevNode = getVisualSibling(strong, true);
+                const nextNode = getVisualSibling(strong, false);
+
+                if (!prevNode || !nextNode) return;
+
+                const getNodeText = (n) => n.nodeType === 3 ? n.nodeValue : n.textContent;
+                const prevText = getNodeText(prevNode);
+                const nextText = getNodeText(nextNode);
+
+                // 匹配 ...**A <strong>B</strong> C**...
+                const leftMatch = prevText.match(/([\s\S]*)\*\*([^*]+)$/); 
+                const rightMatch = nextText.match(/^([^*]+)\*\*([\s\S]*)/);
+
+                if (leftMatch && rightMatch) {
+                    // 1. 重建左侧 (去除星号，将目标文本变粗)
+                    const leftFrag = document.createDocumentFragment();
+                    if (leftMatch[1]) leftFrag.appendChild(document.createTextNode(leftMatch[1]));
+                    
+                    const newLeftBold = document.createElement('strong');
+                    newLeftBold.className = FIX_CLASS;
+                    newLeftBold.setAttribute('data-bold-side', 'left'); // 标记左侧
+                    newLeftBold.textContent = leftMatch[2];
+                    leftFrag.appendChild(newLeftBold);
+
+                    if (prevNode.nodeType === 3) prevNode.replaceWith(leftFrag);
+                    else { prevNode.textContent = ''; prevNode.appendChild(leftFrag); }
+
+                    // 2. 重建中间 (降级为普通文本，但保留 span 壳以便还原)
+                    const middleSpan = document.createElement('span');
+                    middleSpan.className = 'md-restore-middle'; 
+                    middleSpan.textContent = strong.textContent;
+                    strong.replaceWith(middleSpan);
+
+                    // 3. 重建右侧 (去除星号，将目标文本变粗)
+                    const rightFrag = document.createDocumentFragment();
+                    
+                    const newRightBold = document.createElement('strong');
+                    newRightBold.className = FIX_CLASS;
+                    newRightBold.setAttribute('data-bold-side', 'right'); // 标记右侧
+                    newRightBold.textContent = rightMatch[1];
+                    rightFrag.appendChild(newRightBold);
+                    
+                    if (rightMatch[2]) rightFrag.appendChild(document.createTextNode(rightMatch[2]));
+
+                    if (nextNode.nodeType === 3) nextNode.replaceWith(rightFrag);
+                    else { nextNode.textContent = ''; nextNode.appendChild(rightFrag); }
+                }
+            });
+        };
+
+        // === 主遍历循环 ===
         document.querySelectorAll(TARGET_TAG).forEach(container => {
-            // 状态检查
             if (container.hasAttribute(PROCESSED_FLAG)) {
-                // 如果内容没变且已经处理过，跳过
-                if (!container.textContent.includes('')) return;
+                if (!container.textContent.includes('**')) return;
             }
-            
             container.setAttribute(PROCESSED_FLAG, 'true');
 
+            // 1. 夹心饼干修复
+            if (container.textContent.includes('**')) {
+                fixInvertedBoldStructure(container);
+            }
+
+            // 2. 常规 **bold** 优化
             const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
             let textNode;
             const tasks = [];
-
-            // 1. 扫描阶段
+            
             while (textNode = walker.nextNode()) {
-                // 过滤代码区域
                 if (textNode.parentElement?.closest('code, pre, .inline-code')) continue;
-                
-                const content = textNode.nodeValue;
-                if (content.includes('')) {
+                if (textNode.parentElement?.classList.contains(FIX_CLASS)) continue;
+                if (textNode.parentElement?.classList.contains('md-restore-middle')) continue;
+
+                if (textNode.nodeValue.includes('**')) {
                     tasks.push(textNode);
                 }
             }
 
-            // 2. 变换阶段 (从后往前替换，保证节点索引安全)
             tasks.forEach(node => {
+                if (!node.isConnected) return; 
+
                 const rawText = node.nodeValue;
-                // 匹配加粗语法
                 const regex = /\*\*([\s\S]+?)\*\*/g;
-                
                 let hasMatch = false;
                 const fragment = document.createDocumentFragment();
                 let lastIdx = 0;
@@ -2273,31 +2444,22 @@
 
                 while ((match = regex.exec(rawText)) !== null) {
                     hasMatch = true;
-                    // 放入匹配前的纯文本
+                    // 添加 ** 前面的普通文本
                     fragment.appendChild(document.createTextNode(rawText.substring(lastIdx, match.index)));
-
-                    const boldContent = match[1].trim();
-                    const beforeChar = rawText[match.index - 1] || '';
-                    const afterChar = rawText[regex.lastIndex] || '';
-
-                    // 判定法则：如果前后紧邻的是非空字符且不是标点，则补空格
-                    // 正则说明：[^\s\p{P}\p{S}] 表示非空格且非标点符号
-                    const needSpaceBefore = /[^\s\p{P}\p{S}]/u.test(beforeChar);
-                    const needSpaceAfter = /[^\s\p{P}\p{S}]/u.test(afterChar);
-
-                    if (needSpaceBefore) fragment.appendChild(document.createTextNode(' '));
                     
+                    const boldContent = match[1].trim();
+                    
+                    // 仅创建粗体节点
                     const strong = document.createElement('strong');
                     strong.className = FIX_CLASS;
                     strong.textContent = boldContent;
                     fragment.appendChild(strong);
-
-                    if (needSpaceAfter) fragment.appendChild(document.createTextNode(' '));
-
+                    
                     lastIdx = regex.lastIndex;
                 }
 
                 if (hasMatch) {
+                    // 添加剩余文本
                     fragment.appendChild(document.createTextNode(rawText.substring(lastIdx)));
                     node.replaceWith(fragment);
                 }
@@ -2307,19 +2469,45 @@
         });
     }
 
-    // [重构] 还原逻辑
+    // 粗体修复还原逻辑
     function restoreMarkdownText() {
-        console.log('[Gemini 优化] 正在重置文本格式...');
+        console.log('[Gemini 优化] 正在重置文本格式 (精准还原模式)...');
         
-        // 寻找我们的新类名
-        document.querySelectorAll('strong.md-bold-fix').forEach(el => {
-            el.replaceWith(document.createTextNode(`${el.textContent}`));
+        // 优先还原中间被降级的文本，将其变回粗体
+        document.querySelectorAll('span.md-restore-middle').forEach(el => {
+            const strong = document.createElement('strong');
+            strong.textContent = el.textContent;
+            el.replaceWith(strong);
         });
 
-        // 移除新标记
+        // 还原脚本生成的粗体节点，变回带 ** 的文本
+        const fixNodes = document.querySelectorAll('strong.md-bold-fix');
+        
+        fixNodes.forEach(el => {
+            const text = el.textContent;
+            let originalMdTextStr = '';
+
+            const side = el.getAttribute('data-bold-side');
+
+            if (side === 'left') {
+                originalMdTextStr = `**${text}`;
+            } else if (side === 'right') {
+                originalMdTextStr = `${text}**`;
+            } else {
+                originalMdTextStr = `**${text}**`;
+            }
+
+            const textNode = document.createTextNode(originalMdTextStr);
+            
+            if (el.parentNode) {
+                el.parentNode.replaceChild(textNode, el);
+            }
+        });
+
+        // 3. 清理标记
         document.querySelectorAll('ms-text-chunk[data-md-refined]').forEach(chunk => {
             chunk.removeAttribute('data-md-refined');
-            chunk.normalize();
+            chunk.normalize(); 
         });
     }
 
@@ -3087,65 +3275,63 @@
         const settingsConfig = [
             { type: 'header', label: 'settings_group_ui' },
         
-            // === 智能主题选择器 (动态 Key + 动态 Options) ===
+            // [主题选择]
             { 
                 key: dynamicThemeKey, 
                 label: 'lbl_theme_select', 
                 tooltip: 'tip_theme_select',
                 type: 'select', 
                 options: dynamicThemeOptions, 
-                // [标记] 告诉渲染器我们要在这里加自定义按钮
                 hasRootBgPicker: true, 
                 action: () => {
                     GM_setValue(dynamicThemeKey, activeSettings[dynamicThemeKey]);
                     applyTheme();
-                    // 切换主题时，控制按钮的显示/隐藏
+                    // 切换时更新自定义背景按钮可见性
                     const row = document.getElementById(`dae-row-${dynamicThemeKey}`);
                     const customBtn = row ? row.querySelector('.dae-root-bg-btn') : null;
                     if (customBtn) {
-                        // 只有 Default 主题才显示此按钮
+                        // 仅默认主题显示
                         customBtn.style.display = activeSettings[dynamicThemeKey] === 'default' ? 'inline-flex' : 'none';
                     }
                 }
             },
         
-            // [字体] 保留了 tip_font_size
+            // [字体大小]
             { key: 'chatFontSize', label: 'lbl_font_size',
               type: 'slider', min: 12, max: 16, defaultValue: 14, step: 0.5,
               action: () => updateFontSize() },
             
-            // [Markdown] 保留了 tip_md_enhance
+            // [Markdown 优化]
             { key: 'enableMarkdownEnhancement', label: 'lbl_md_enhance', tooltip: 'tip_md_enhance',
               action: () => updateBaseMarkdownStyle() },
 
-            // 用户底色 (触发 updateChatBackgroundStyles)
+            // [用户底色]
             { key: 'enableUserColorDifference', label: 'lbl_user_color',
               action: () => updateChatBackgroundStyles(),
               hasColorPicker: true,
               colorKey: 'userBgColor'
             },
 
-            // 模型底色
+            // [模型底色]
             { key: 'enableModelColorDifference', label: 'lbl_model_color',
               action: () => updateChatBackgroundStyles(),
               hasColorPicker: true,
               colorKey: 'modelBgColor'
             },
 
-            // 保留了 tip_bold_fix
+            // [粗体修复]
             { key: 'enableBoldSpacingFix', label: 'lbl_bold_fix', tooltip: 'tip_bold_fix',
               action: () => updateBoldFixState() },
 
-            // 隐藏评价按钮
+            // [隐藏评价按钮]
             { key: 'hideFeedbackButtons', label: 'lbl_hide_feedback',
               action: () => updateFeedbackButtonsVisibility() },
 
-            // [免责声明] 移除了 tooltip
+            // [隐藏免责声明]
             { key: 'hideDisclaimer', label: 'lbl_disclaimer', 
               action: () => updateDisclaimerVisibility() },
             
-            // [API 隐藏] 移除了 tooltip: 'tip_hide_api' 属性
-            // 这样界面上就不会出现那个显示 broken key 的图标了
+            // [隐藏 API 密钥]
             { key: 'hideApiKeyInput', label: 'lbl_hide_api_key_input',
               action: () => updateApiKeyVisibility() },
             { key: 'hideApiKeySettings', label: 'lbl_hide_api_key_settings',
@@ -3153,7 +3339,7 @@
 
             { type: 'header', label: 'settings_group_func' },
 
-            // 工具栏指令选择器开关
+            // [工具栏提示词选择器]
             { 
                 key: 'enableToolbarInstructionPicker', 
                 label: 'lbl_toolbar_instruction_picker', 
@@ -3168,20 +3354,19 @@
                 }
             },
 
-            // === 自动指令配置 (下拉菜单版) ===
+            // [自动应用提示词]
             { 
                 key: 'autoSystemInstructionName', 
                 label: 'lbl_auto_instruction_mode', 
                 tooltip: 'tip_auto_instruction_mode',
                 type: 'select',
-                // 显式禁用滚轮切换功能
-                disableWheel: true, 
+                disableWheel: true, // 禁用滚轮切换
                 options: () => {
-                    // 情况 A：有存档指令
+                    // 情况A：有存档提示词
                     if (activeSettings.savedSystemInstructions && activeSettings.savedSystemInstructions.length) {
                         const list = [];
                         
-                        // 动态判断：只有当前不是“未启用”状态时，才显示“关闭”选项
+                        // 若当前非“未启用”状态，追加“关闭”选项
                         if (activeSettings.autoSystemInstructionName !== '__DISABLED__') {
                             list.push({ val: '__DISABLED__', label: 'val_off' });
                         }
@@ -3192,7 +3377,7 @@
                         return list;
                     } 
                     
-                    // 情况 B：列表为空
+                    // 情况B：列表为空
                     return [{ 
                         val: '', 
                         label: 'val_empty_list', 
@@ -3201,19 +3386,18 @@
                 },
             },
             
-            // [引用] 保留 tip_quote
+            // [划词引用]
             { key: 'enableQuote', label: 'lbl_quote', tooltip: 'tip_quote',
               action: () => { if(!activeSettings.enableQuote) hideQuoteBtn(); } },
               
-            // [转文件] 保留 tip_file_paste
+            // [长文本转文件]
             { key: 'enableAutoFilePaste', label: 'lbl_file_paste', tooltip: 'tip_file_paste' }, 
             
-            // [代码粘贴] 保留 tip_code_paste
+            // [代码粘贴]
             { key: 'enableCodePaste', label: 'lbl_code_paste', tooltip: 'tip_code_paste' },
             
-            // [搜索后缀] 保留 tip_search_suffix
+            // [搜索后缀]
             { key: 'showSearchSuffixBtn', label: 'lbl_show_suffix_btn', tooltip: 'tip_search_suffix',
-              // 删除了 isHidden: isMobile, 让它在移动端也显示
               action: () => {
                   if (activeSettings.showSearchSuffixBtn) {
                       injectSuffixToggle();
@@ -3226,18 +3410,16 @@
               }
             },
             
-            // [关联删除] 
+            // [高级删除] 
             { key: 'enableDeleteAssociated', label: 'lbl_delete_associated', tooltip: 'tip_delete_associated' },
             
-            // 直链打开功能
+            // [直链打开]
             { key: 'enableDirectLinks', label: 'lbl_direct_links', tooltip: 'tip_direct_links',
               action: () => {
                   if (activeSettings.enableDirectLinks) {
-                      // 开启时：立即触发一次全页扫描
-                      LinkSanitizer.run();
+                      LinkSanitizer.run();    // 开启：立即扫描
                   } else {
-                      // 关闭时：立即还原已被修改的链接
-                      LinkSanitizer.revert();
+                      LinkSanitizer.revert(); // 关闭：还原链接
                   }
               }
             },
@@ -3255,11 +3437,11 @@
                   applyScrollNavState();
                   toggleSubOption('enableScrollNav', 'scrollNavCentered', isEnabled);
                   
-                  // PC端：开启时若有滚动空间，自动沉底显示子选项
+                  // PC端：开启后自动滚底以显示子选项
                   if (isEnabled && window.innerWidth >= 768) {
                       const listEl = document.querySelector('.dae-settings-list');
                       if (listEl) {
-                          // 给予微小延迟等待 DOM 展开动画
+                          // 等待 DOM 展开动画
                           setTimeout(() => {
                               listEl.scrollTo({
                                   top: listEl.scrollHeight,
@@ -3270,7 +3452,7 @@
                   }
               } },
             
-            // [居中] 子选项，无 tooltip
+            // [居中显示] (滚动导航子选项)
             { key: 'scrollNavCentered', label: 'lbl_scroll_center', isSub: true,
               isHidden: isMobile, 
               action: () => { if(updateScrollNavLayout) updateScrollNavLayout(); } }
@@ -3372,7 +3554,6 @@
             // leftWrapper 具有 flex-grow: 1，它会自动占据中间所有空白，将后续元素推向最右侧
             row.appendChild(leftWrapper); 
 
-            // 编辑指令名称按钮 (移至此处，位于左侧文字容器和右侧开关之间)
             if (cfg.hasEditBtn) {
                 const editBtn = document.createElement('button');
                 editBtn.className = 'dae-color-menu-btn'; // 复用圆形按钮样式
@@ -3795,10 +3976,27 @@
         saveBtn.style.fontSize = '13px';
         
         saveBtn.addEventListener('click', () => {
+            // 工具栏提示词选择器是否从“关闭”变为“开启”
+            const justEnabledPicker = !initialSnapshot.enableToolbarInstructionPicker && activeSettings.enableToolbarInstructionPicker;
+
+            // 保存所有设置
             for (const key in activeSettings) {
                 GM_setValue(key, activeSettings[key]);
             }
+            
+            // 关闭面板
             closePanel();
+
+            // 如果刚刚开启了工具栏提示词选择器，执行同步逻辑
+            if (justEnabledPicker) {
+                console.log('[Gemini 优化] 检测到提示词选择器刚刚开启，正在尝试同步当前网页提示词...');
+                setTimeout(() => {
+                    if (typeof injectToolbarInstructionPicker === 'function') {
+                        injectToolbarInstructionPicker();
+                    }
+                    autoConfigLogic.syncFromWebPage();
+                }, 200);
+            }
         });
 
         actions.appendChild(cancelBtn);
@@ -3812,6 +4010,8 @@
         document.body.appendChild(panel);
 
         function closePanel() {
+            document.querySelectorAll('.dae-setting-popup-tooltip, .gemini-custom-tooltip').forEach(el => el.remove());
+            
             hideTooltip();
             
             // 清理所有残留的下拉菜单
@@ -5081,9 +5281,15 @@
         // 创建卡片
         const card = document.createElement('div');
         card.className = 'gemini-quote-card';
-        if (author !== '用户' && author !== 'User') {
-            card.style.borderLeftColor = '#f4944aff';
-        }
+        
+        // 根据身份及主题，实时抓取用户设定的底色并提取其纯色 (Hex)
+        const isDark = isCurrentDarkMode();
+        const isUser = (author === '用户' || author === 'User' || author === t('quote_card_author_user'));
+        
+        const colorKey = isUser ? (isDark ? 'userBgColorDark' : 'userBgColorLight') 
+                                : (isDark ? 'modelBgColorDark' : 'modelBgColorLight');
+        
+        card.style.borderLeftColor = parseRgbaColor(activeSettings[colorKey]).hex;
 
         // 头部
         const header = document.createElement('div');
@@ -5092,7 +5298,7 @@
         const authorSpan = document.createElement('span');
         authorSpan.className = 'gemini-quote-author';
 
-        // [逻辑优化] 统一处理 User 和 Model 的多语言与防御
+        // 统一处理 User 和 Model 的多语言与防御
         let finalAuthor = author;
 
         // 1. 如果抓取到的是用户
@@ -5309,7 +5515,7 @@
         }, true); 
     }
 
-    // --- 工具栏指令选择器注入逻辑 ---
+    // --- 工具栏提示词选择器注入逻辑 ---
     function injectToolbarInstructionPicker() {
         if (!activeSettings.enableToolbarInstructionPicker) return;
         
@@ -5357,6 +5563,52 @@
         triggerBtn.className = 'dae-select-trigger notranslate';
         triggerBtn.setAttribute('data-no-translate', '1');
 
+        // Tooltip
+        let tooltipEl = null;
+        let showTimeout = null;
+
+        const showTip = () => {
+            if (tooltipEl) return;
+            tooltipEl = document.createElement('div');
+            tooltipEl.className = 'gemini-custom-tooltip notranslate';
+            tooltipEl.setAttribute('data-no-translate', '1');
+            tooltipEl.textContent = protect(t('tip_select_instruction'));
+            document.body.appendChild(tooltipEl);
+
+            const rect = triggerBtn.getBoundingClientRect();
+            const tooltipRect = tooltipEl.getBoundingClientRect();
+
+            // --- 动态偏移逻辑 ---
+            const isPC = window.innerWidth >= 768;
+            const verticalOffset = isPC ? 7 : 8;
+            
+            const top = rect.bottom + verticalOffset;
+            const left = rect.left + (rect.width / 2) - (tooltipRect.width / 2) - 5;
+
+            tooltipEl.style.top = `${top}px`;
+            tooltipEl.style.left = `${left}px`;
+            tooltipEl.style.transformOrigin = 'top center';
+
+            requestAnimationFrame(() => {
+                if(tooltipEl) tooltipEl.classList.add('visible');
+            });
+        };
+
+        const hideTip = () => {
+            clearTimeout(showTimeout);
+            if (tooltipEl) {
+                const el = tooltipEl;
+                tooltipEl = null;
+                el.classList.remove('visible');
+                setTimeout(() => { if (el) el.remove(); }, 150);
+            }
+        };
+
+        triggerBtn.addEventListener('mouseenter', () => { showTimeout = setTimeout(showTip, 500); });
+        triggerBtn.addEventListener('mouseleave', hideTip);
+        // 点击开启下拉框时立即隐藏 Tooltip
+        triggerBtn.addEventListener('click', hideTip);
+
         const getCurrentLabel = () => {
             const currentVal = activeSettings.toolbarSelectedInstruction;
             const list = activeSettings.savedSystemInstructions || [];
@@ -5365,7 +5617,15 @@
             return currentVal;
         };
 
+        // 定义 SVG 图标 (代表配置提示词)
+        const aiIcon = `
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0; margin-right: 8px; filter: drop-shadow(0 0 1px rgba(66, 133, 244, 0.2));">
+            <path d="M19 10L20.25 12.75L23 14L20.25 15.25L19 18L17.75 15.25L15 14L17.75 12.75L19 10Z" fill="#4285F4" />
+            <path d="M9 2L11.25 6.75L16 9L11.25 11.25L9 16L6.75 11.25L2 9L6.75 6.75L9 2Z" fill="#4285F4" />
+        </svg>`;
+
         triggerBtn.innerHTML = `
+            ${aiIcon}
             <span class="dae-select-value">${protect(getCurrentLabel())}</span>
             <span class="material-symbols-outlined dae-select-arrow">keyboard_arrow_down</span>
         `;
@@ -5477,12 +5737,12 @@
                         closeDropdown();
 
                         if (newVal === '__DISABLED__') {
-                            console.log('[Gemini 优化] 工具栏选择器：选择"关闭"，应用第一项指令');
+                            console.log('[Gemini 优化] 工具栏选择器：选择"关闭"，应用第一项');
                             // 关闭时不需要传递索引，内部逻辑通过 ID 判断
                             await applyInstructionFromToolbar('__SELECT_FIRST__'); 
                         } else {
-                            // [关键修复] 传递 realIndex 给执行函数
-                            console.log(`[Gemini 优化] 工具栏选择器：正在应用指令 "${newVal}" (Index: ${opt.realIndex})`);
+                            // 传递 realIndex 给执行函数
+                            console.log(`[Gemini 优化] 工具栏选择器：正在应用提示词 "${newVal}" (Index: ${opt.realIndex})`);
                             await applyInstructionFromToolbar(newVal, opt.realIndex);
                         }
                     });
@@ -5531,43 +5791,74 @@
             if (!toolbarContainer.isConnected) return;
 
             const isMobile = window.innerWidth < 768;
-            let useFlexMode = isMobile;
 
-            if (!isMobile) {
-                const containerRect = toolbarContainer.getBoundingClientRect();
-                const center = containerRect.left + (containerRect.width / 2);
-                const halfWidth = 90; 
-                
-                const leftRect = leftSection ? leftSection.getBoundingClientRect() : { right: 0 };
+            // === 移动端逻辑：变为单图标并置于右侧工具栏的最左边 ===
+            if (isMobile) {
+                // 1. 重置样式为图标模式
+                Object.assign(pickerWrapper.style, {
+                    position: 'static', transform: 'none', left: 'auto',
+                    display: 'inline-flex', 
+                    marginRight: '0px', // 紧贴其他按钮（原生按钮自带间距，这里无需额外大间距）
+                    zIndex: '1'
+                });
+                triggerBtn.style.width = ''; // 移除固定宽度，由 CSS 控制为 32px
+                triggerBtn.style.maxWidth = 'none';
+
+                // 2. 寻找右侧工具栏容器 (toolbar-right)
+                // XPath 对应的大致位置就是这个 div
                 const rightSection = toolbar.querySelector('.toolbar-right') || toolbar.querySelector('div[class*="right"]');
-                const rightRect = rightSection ? rightSection.getBoundingClientRect() : { left: Infinity };
-
-                if (leftRect.right > (center - halfWidth) || rightRect.left < (center + halfWidth)) {
-                    useFlexMode = true;
+                
+                if (rightSection) {
+                    // 强制插入到第一个位置 (Prepend)
+                    // 这样无论右侧有多少个按钮，它永远在最左边
+                    if (rightSection.firstElementChild !== pickerWrapper) {
+                        rightSection.prepend(pickerWrapper);
+                    }
+                } else {
+                    // 兜底：如果找不到右侧容器，就放在主容器最后
+                    if (toolbarContainer.lastElementChild !== pickerWrapper) {
+                        toolbarContainer.appendChild(pickerWrapper);
+                    }
                 }
+                return; // 移动端处理完毕，直接返回
+            }
+            
+            let useFlexMode = false; // 默认为非 Flex
+
+            const containerRect = toolbarContainer.getBoundingClientRect();
+            const center = containerRect.left + (containerRect.width / 2);
+            const halfWidth = 90; 
+            
+            const leftSection = toolbar.querySelector('.toolbar-left') || toolbar.querySelector('div[class*="left"]');
+            const rightSection = toolbar.querySelector('.toolbar-right') || toolbar.querySelector('div[class*="right"]');
+            
+            const leftRect = leftSection ? leftSection.getBoundingClientRect() : { right: 0 };
+            const rightRect = rightSection ? rightSection.getBoundingClientRect() : { left: Infinity };
+
+            if (leftRect.right > (center - halfWidth) || rightRect.left < (center + halfWidth)) {
+                useFlexMode = true;
             }
 
             let pc_width = '200px';
-            let mobile_width = '135px';
 
             if (useFlexMode) {
-                // === Flex / Mobile / 拥挤模式 ===
+                // === Flex  ===
                 Object.assign(pickerWrapper.style, {
                     position: 'static', transform: 'none', left: 'auto',
                     display: 'flex', justifyContent: 'center', alignItems: 'center',
                     flex: '100', minWidth: '0', margin: '0 4px', zIndex: '1'
                 });
-                triggerBtn.style.width = isMobile ? mobile_width : pc_width;
+                triggerBtn.style.width = pc_width;
                 triggerBtn.style.maxWidth = '100%';
 
-                // [防抖动移动] 只有位置不对时才移动 DOM，避免触发 MutationObserver 循环
+                // 防抖
                 if (leftSection && leftSection.nextSibling !== pickerWrapper) {
                     leftSection.after(pickerWrapper);
                 } else if (!leftSection && toolbarContainer.firstElementChild !== pickerWrapper) {
                     toolbarContainer.prepend(pickerWrapper);
                 }
             } else {
-                // === Absolute / PC / 宽敞模式 ===
+                // === Absolute  ===
                 Object.assign(pickerWrapper.style, {
                     position: 'absolute', left: '50%', transform: 'translateX(-50%)',
                     display: 'inline-flex', justifyContent: 'normal', alignItems: 'center',
@@ -5576,14 +5867,13 @@
                 triggerBtn.style.width = pc_width;
                 triggerBtn.style.maxWidth = 'none';
 
-                // [防抖动移动]
+                // 防抖
                 if (toolbarContainer.lastElementChild !== pickerWrapper) {
                     toolbarContainer.appendChild(pickerWrapper);
                 }
             }
         };
         
-        // 将 updateLayout 挂载到 DOM 元素上，供外部调用（防止重复注入）
         pickerWrapper._daeUpdateLayout = updateLayout;
 
         // 初次布局
@@ -5604,7 +5894,7 @@
         }
         window._daeToolbarResizeObserver.observe(toolbarContainer);
 
-        console.log('[Gemini 优化] 指令选择器注入完成');
+        console.log('[Gemini 优化] 提示词选择器注入完成');
     }
 
     function removeToolbarInstructionPicker() {
@@ -5625,7 +5915,7 @@
         valueSpan.textContent = protect(displayText);
     }
 
-    // 从工具栏应用指令的核心逻辑
+    // 从工具栏应用提示词的核心逻辑
     async function applyInstructionFromToolbar(targetName, targetIndex = -1) {
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         const wait = (sel, timeout = 5000) => new Promise(resolve => {
@@ -5648,7 +5938,7 @@
                     const style = document.createElement('style');
                     style.id = STEALTH_STYLE_ID;
                     
-                    const isMobile = window.innerWidth < 768;
+                    const isMobile = window.innerWidth <= 960;
                     const mobileSidebarCSS = isMobile ? `
                         ms-right-side-panel,
                         .sidebar-overlay { 
@@ -5679,6 +5969,9 @@
             }
         };
 
+        // 成功标记
+        let applySuccess = false;
+
         try {
             // 开启隐身模式
             toggleStealth(true);
@@ -5695,7 +5988,7 @@
             }
 
             if (!openBtn) {
-                console.warn('[Gemini 优化] 无法找到指令入口');
+                console.warn('[Gemini 优化] 无法找到提示词入口');
                 return;
             }
 
@@ -5711,17 +6004,9 @@
             let targetOption;
             
             if (selectRawFirstOption) {
-                // 模式A: 强制选择第一项（通常是“+创建”）
                 targetOption = allOptions[0];
             } 
             else if (targetIndex >= 0) {
-                // [关键修复] 模式B: 基于索引的精准选择
-                // 注意：allOptions 通常包含第一项 "+ Create"。
-                // 我们的 savedSystemInstructions 是去掉了 + Create 的列表。
-                // 因此 savedList[i] 对应 allOptions[i + 1]。
-                // 我们需要校验 offset 是否正确。
-                
-                // 检查第一项是否是 "+ Create" 类型的占位符
                 const firstText = allOptions[0].textContent.trim();
                 const hasHeader = firstText.startsWith('+') || firstText.includes('创建') || firstText.includes('Create');
                 const offset = hasHeader ? 1 : 0;
@@ -5731,24 +6016,23 @@
                 if (realDomIndex < allOptions.length) {
                     targetOption = allOptions[realDomIndex];
                     
-                    // 双重校验：如果索引对应的文字完全不对，可能列表发生了变化，回退到文字匹配
                     const optionText = targetOption.textContent.trim();
                     if (optionText !== targetName) {
                         console.warn(`[Gemini 优化] 索引匹配失效 (期望: ${targetName}, 实际: ${optionText})，回退到名称匹配`);
-                        targetOption = allOptions.find(opt => opt.textContent.trim() === targetName);
+                        targetOption = Array.from(allOptions).find(opt => opt.textContent.trim() === targetName);
                     }
                 }
             } 
             
-            // 模式C: 兜底回退 (名称匹配)，总是匹配第一个同名项
             if (!targetOption) {
-                targetOption = allOptions.find(opt => opt.textContent.trim() === targetName);
+                targetOption = Array.from(allOptions).find(opt => opt.textContent.trim() === targetName);
             }
 
             if (targetOption) {
                 await sleep(50);
                 targetOption.click();
-                console.log(`[Gemini 优化] ✅ 已应用指令: ${targetName}`);
+                console.log(`[Gemini 优化] ✅ 已应用提示词: ${targetName}`);
+                applySuccess = true; // [标记成功]
             }
 
             await sleep(200);
@@ -5760,7 +6044,7 @@
                 const msgEl = toast.querySelector('.message');
                 if (msgEl) {
                     const text = msgEl.textContent.trim();
-                    if (text.includes('系统指令已删除') || text.includes('System instruction deleted')) {
+                    if (text.includes('提示词已删除') || text.includes('System instruction deleted')) {
                         const closeBtn = toast.querySelector('button[iconname="close"]');
                         if (closeBtn) closeBtn.click();
                     }
@@ -5768,9 +6052,28 @@
             });
 
         } catch (e) {
-            console.error('[Gemini 优化] 工具栏指令应用失败:', e);
+            console.error('[Gemini 优化] 工具栏提示词应用失败:', e);
         } finally {
-            setTimeout(() => toggleStealth(false), 750);
+            setTimeout(() => toggleStealth(false), 888);
+            
+            // 成功通知
+            if (applySuccess && window.innerWidth <= 960) {
+                let message;
+                if (targetName === '__DISABLED__' || targetName === '__SELECT_FIRST__') {
+                    message = CURRENT_LANG === 'zh' 
+                        ? '提示词已关闭'
+                        : 'Instruction closed';
+                } else {
+                    message = CURRENT_LANG === 'zh' 
+                        ? `提示词已切换`
+                        : `Instruction switched`;
+                        // ? `提示词已切换为：[${targetName}]`
+                        // : `Instruction switched to: [${targetName}]`;
+                }
+                
+                // 显示通知
+                setTimeout(() => showNotification(message, 888), 0);
+            }
         }
     }
 
@@ -5862,9 +6165,8 @@
             return currentUrl;
         }
 
-        // 处理单个链接 (后台静默执行)
+        // 处理单个链接
         async function processLink(anchor) {
-            // 如果功能关闭，不执行任何解析，也不修改状态
             if (!activeSettings.enableDirectLinks) return;
 
             const originalHref = anchor.href;
@@ -5887,7 +6189,7 @@
                 }
 
                 if (finalUrl && finalUrl !== originalHref) {
-                    anchor.href = finalUrl; // 直接修改 href
+                    anchor.href = finalUrl;
                     anchor.target = '_blank';
                     anchor.dataset.resolved = 'true';
                     nodeStatus.set(anchor, LinkState.RESOLVED);
@@ -6030,7 +6332,7 @@
         return { activate, run: scanDocument, revert };
     })();
 
-    // --- 系统指令列表抓取器 ---
+    // --- 提示词列表抓取器 ---
     const instructionScraper = (function() {
 
         // 抓取逻辑
@@ -6077,7 +6379,7 @@
                     }
                 }
             } catch (e) {
-                console.error('[Gemini 优化] 指令解析失败:', e);
+                console.error('[Gemini 优化] 提示词解析失败:', e);
             }
         }
 
@@ -6090,7 +6392,7 @@
         return { init, saveList };
     })();
 
-    // --- 自动系统指令配置逻辑 ---
+    // --- 自动提示词配置逻辑 ---
     const autoConfigLogic = (function() {
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         
@@ -6118,7 +6420,7 @@
                     style.id = STEALTH_STYLE_ID;
                     
                     // 移动端判定
-                    const isMobile = window.innerWidth < 768;
+                    const isMobile = window.innerWidth <= 960;
                     
                     // 移动端额外隐藏规则：侧边栏本栏 + 侧边栏遮罩层
                     const mobileSidebarCSS = isMobile ? `
@@ -6160,7 +6462,7 @@
             updateToolbarPickerDisplay('__DISABLED__');
         }
 
-        // 从网页读取当前已选中的指令
+        // 从网页读取当前已选中的提示词
         async function syncFromWebPage() {
             const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
             const wait = (sel, timeout = 5000) => new Promise((resolve) => {
@@ -6193,7 +6495,7 @@
             }
 
             // 1. 等待主输入框（判定 UI 已就绪）
-            const mainEditor = await wait('ms-prompt-box textarea', 8000);
+            const mainEditor = await wait('ms-prompt-box textarea', 3000); // 缩短超时 8s→3s
             if (!mainEditor) {
                 console.warn('[Gemini 优化] 同步中止：主输入框加载超时');
                 return;
@@ -6206,7 +6508,7 @@
                     if (!existing) {
                         const style = document.createElement('style');
                         style.id = STEALTH_STYLE_ID;
-                        const isMobile = window.innerWidth < 768;
+                        const isMobile = window.innerWidth <= 960;
                         const mobileSidebarCSS = isMobile ? `
                             ms-right-side-panel, .sidebar-overlay { 
                                 opacity: 0 !important; visibility: hidden !important; 
@@ -6232,88 +6534,108 @@
             try {
                 isRunning = true;
                 toggleStealth(true);
-                console.log('[Gemini 优化] 正在同步系统指令状态...');
+                console.log('[Gemini 优化] 🚀 快速同步开始...');
 
-                // 2. 检索指令入口
+                // === 优化点1: 先检查是否已经打开，避免重复点击 ===
                 let openBtn = document.querySelector('ms-system-instructions-panel > button');
+                let needsReopen = false;
+
                 if (!openBtn) {
                     const tuneBtn = document.querySelector('.runsettings-toggle-button') || 
                                     document.querySelector('button[iconname="tune"]');
                     if (tuneBtn) {
                         tuneBtn.click();
-                        openBtn = await wait('ms-system-instructions-panel > button', 3000);
+                        openBtn = await wait('ms-system-instructions-panel > button', 1500); // 缩短 3s→1.5s
+                        needsReopen = true;
                     }
                 }
 
                 if (!openBtn) {
-                    console.error('[Gemini 优化] 未能找到指令面板入口');
+                    console.error('[Gemini 优化] 未能找到提示词面板入口');
                     return;
                 }
 
-                // 3. 点击进入并展开下拉框
+                // === 优化点2: 立即点击，缩短等待 ===
                 openBtn.click();
-                const dropdown = await wait('mat-dialog-content mat-select', 3000);
-                if (!dropdown) return;
+                await sleep(50); // 减少延迟 (原本可能隐含更长等待)
+                
+                const dropdown = await wait('mat-dialog-content mat-select', 1500); // 缩短 3s→1.5s
+                if (!dropdown) {
+                    console.warn('[Gemini 优化] 下拉框加载超时');
+                    return;
+                }
+                
                 dropdown.click();
 
-                // 4. 等待选项渲染，并执行精准匹配
-                await wait('.cdk-overlay-pane mat-option', 3000);
-                const allOptions = document.querySelectorAll('.cdk-overlay-pane mat-option');
-
-                if (allOptions.length > 0) {
-                    instructionScraper.saveList(allOptions);
-
-                    let domIndex = -1;
-                    let foundText = '';
-
-                    allOptions.forEach((opt, idx) => {
-                        if (opt.getAttribute('aria-selected') === 'true') {
-                            domIndex = idx;
-                            foundText = opt.textContent.trim();
-                        }
-                    });
-
-                    let syncedName = '__DISABLED__';
-                    let internalIndex = -1;
-
-                    if (domIndex !== -1) {
-                        const firstText = allOptions[0].textContent.trim();
-                        const hasHeader = firstText.startsWith('+') || firstText.includes('创建') || firstText.includes('Create');
-
-                        if (hasHeader && domIndex === 0) {
-                            syncedName = '__DISABLED__';
-                            internalIndex = -1;
-                        } else {
-                            syncedName = foundText;
-                            internalIndex = hasHeader ? (domIndex - 1) : domIndex;
-                        }
-                        console.log(`[Gemini 优化] 同步成功: "${syncedName}" (Index: ${internalIndex})`);
-                    } else {
-                        console.warn('[Gemini 优化] 未找到选中项，可能处于初始状态');
-                    }
-
-                    // 5. 更新状态
-                    activeSettings.toolbarSelectedInstruction = syncedName;
-                    GM_setValue('toolbarSelectedInstruction', syncedName);
-                    window._daeActiveInstructionIndex = internalIndex;
-                    updateToolbarPickerDisplay(syncedName);
+                // === 优化点3: 快速轮询选项 (原 await wait 改为主动轮询) ===
+                let allOptions = null;
+                for (let attempt = 0; attempt < 30; attempt++) { // 最多等 300ms
+                    allOptions = document.querySelectorAll('.cdk-overlay-pane mat-option');
+                    if (allOptions.length > 0) break;
+                    await sleep(10);
                 }
 
-                // 6. 收尾
-                await sleep(50);
-                const closeBtn = document.querySelector('mat-dialog-container button[iconname="close"]');
-                if (closeBtn) {
-                    closeBtn.click();
+                if (!allOptions || allOptions.length === 0) {
+                    console.warn('[Gemini 优化] 选项列表加载超时');
+                    return;
+                }
+
+                // === 优化点4: 存档 + 同步一气呵成 ===
+                instructionScraper.saveList(allOptions);
+
+                let domIndex = -1;
+                let foundText = '';
+
+                allOptions.forEach((opt, idx) => {
+                    if (opt.getAttribute('aria-selected') === 'true') {
+                        domIndex = idx;
+                        foundText = opt.textContent.trim();
+                    }
+                });
+
+                let syncedName = '__DISABLED__';
+                let internalIndex = -1;
+
+                if (domIndex !== -1) {
+                    const firstText = allOptions[0].textContent.trim();
+                    const hasHeader = firstText.startsWith('+') || firstText.includes('创建') || firstText.includes('Create');
+
+                    if (hasHeader && domIndex === 0) {
+                        syncedName = '__DISABLED__';
+                        internalIndex = -1;
+                    } else {
+                        syncedName = foundText;
+                        internalIndex = hasHeader ? (domIndex - 1) : domIndex;
+                    }
+                    console.log(`[Gemini 优化] ✅ 同步完成: "${syncedName}" (Index: ${internalIndex})`);
                 } else {
-                    const backdrop = document.querySelector('.cdk-overlay-backdrop');
-                    if (backdrop) backdrop.click();
+                    console.warn('[Gemini 优化] 未找到选中项');
+                }
+
+                // 5. 更新状态
+                activeSettings.toolbarSelectedInstruction = syncedName;
+                GM_setValue('toolbarSelectedInstruction', syncedName);
+                window._daeActiveInstructionIndex = internalIndex;
+                updateToolbarPickerDisplay(syncedName);
+
+                // === 优化点5: 快速收尾，无需过多延迟 ===
+                const backdrop = document.querySelector('.cdk-overlay-backdrop');
+                if (backdrop) backdrop.click();
+                
+                // 只有新打开的侧边栏才需要关闭
+                if (needsReopen) {
+                    await sleep(100);
+                    const closeBtn = document.querySelector('mat-dialog-container button[iconname="close"]');
+                    if (closeBtn) closeBtn.click();
                 }
 
             } catch (e) {
                 console.error('[Gemini 优化] 同步异常:', e);
             } finally {
-                setTimeout(() => toggleStealth(false), 500);
-                isRunning = false;
+                setTimeout(() => {
+                    toggleStealth(false);
+                    isRunning = false;
+                }, 888); // 缩短隐身模式持续时间
             }
         }
 
@@ -6327,7 +6649,7 @@
                 return;
             }
 
-            // 尝试获取系统指令入口
+            // 尝试获取提示词入口
             let openBtn = document.querySelector('ms-system-instructions-panel > button');
 
             // 如果当前找不到入口（面板未打开），尝试通过工具栏 Tune 按钮打开
@@ -6336,11 +6658,11 @@
                                 document.querySelector('button[iconname="tune"]');
                 
                 if (tuneBtn) {
-                    const isMobile = window.innerWidth < 768;
+                    const isMobile = window.innerWidth <= 960;
                     if (isMobile) toggleStealth(true);
                     // PC端不开启隐身，以免影响侧边栏视觉
 
-                    console.log('[Gemini 优化] 未找到指令入口，尝试打开运行设置面板...');
+                    console.log('[Gemini 优化] 未找到提示词入口，尝试打开运行设置面板...');
                     tuneBtn.click();
                     openBtn = await wait('ms-system-instructions-panel > button', 2000);
                 }
@@ -6349,7 +6671,7 @@
             if (!openBtn) return; 
 
             isRunning = true;
-            console.log('[Gemini 优化] 🕵️‍♂️ 触发系统指令后台同步...');
+            console.log('[Gemini 优化] 🕵️‍♂️ 触发提示词后台同步...');
 
             try {
                 toggleStealth(true);
@@ -6387,14 +6709,14 @@
                     const msgEl = toast.querySelector('.message');
                     if (msgEl) {
                         const text = msgEl.textContent.trim();
-                        if (text.includes('系统指令已删除') || text.includes('System instruction deleted')) {
+                        if (text.includes('提示词已删除') || text.includes('System instruction deleted')) {
                             const closeBtn = toast.querySelector('button[iconname="close"]');
                             if (closeBtn) closeBtn.click();
                         }
                     }
                 });
 
-                setTimeout(() => toggleStealth(false), 750);
+                setTimeout(() => toggleStealth(false), 888);
                 isRunning = false;
             }
         }
@@ -6417,14 +6739,15 @@
             }
             
             if (!location.href.includes('prompts/new_chat')) {
-                hasConfiguredSession = false;
                 return;
             }
 
+            // 刷新时强制重置锁（因为页面重新加载，应该重新配置）
+            hasConfiguredSession = false;
+
             const turnCount = document.querySelectorAll('ms-chat-turn').length;
             if (turnCount > 0) {
-                hasConfiguredSession = false;
-                return;
+                return;  // 有对话内容时不配置，但锁已经被上面重置了
             }
 
             const titleEl = document.querySelector('h1.mode-title');
@@ -6451,19 +6774,19 @@
                     
                     if (tuneBtn) {
                         console.log('[Gemini 优化] 运行设置面板未打开，尝试自动展开...');
-                        if (window.innerWidth < 768) toggleStealth(true);
+                        if (window.innerWidth <= 960) toggleStealth(true);
                         tuneBtn.click();
                         openBtn = await wait('ms-system-instructions-panel > button', 2000);
                     }
                 }
 
                 if (!openBtn) {
-                    console.log('[Gemini 优化] ❌ 无法找到指令入口，终止配置');
+                    console.log('[Gemini 优化] ❌ 无法找到提示词入口，终止配置');
                     return;
                 }
                 
                 if (openBtn.textContent.trim().includes(targetName)) {
-                    console.log('[Gemini 优化] 指令已匹配，标记为完成');
+                    console.log('[Gemini 优化] 提示词已匹配，标记为完成');
                     hasConfiguredSession = true;
 
                     // 即使没打开弹窗，也要确保工具栏显示正确
@@ -6493,7 +6816,7 @@
                 if (targetOption) {
                     await sleep(100);
                     targetOption.click();
-                    console.log('[Gemini 优化] ✅ 指令已应用: ' + targetName);
+                    console.log('[Gemini 优化] ✅ 提示词已应用: ' + targetName);
                     
                     hasConfiguredSession = true;
 
@@ -6513,7 +6836,7 @@
             } catch (e) {
                 console.debug('[Gemini 优化] AutoConfig Error:', e);
             } finally {
-                setTimeout(() => toggleStealth(false), 750);
+                setTimeout(() => toggleStealth(false), 888);
                 isRunning = false; // 释放运行锁
             }
         }
@@ -6559,7 +6882,7 @@
                         if (hasModelSearch) return;
                     }
 
-                    // 只有非上述情况的 dialog 弹窗关闭（主要是系统指令弹窗）才触发扫描
+                    // 只有非上述情况的 dialog 弹窗关闭，才触发扫描
                     if (!isRunning) {
                         setTimeout(() => performBackgroundScan(), 300);
                     }
@@ -6572,7 +6895,7 @@
                     const isDropdownOpen = !!document.querySelector('.mat-mdc-select-panel');
                     if (isDropdownOpen) return;
 
-                    // 只有当存在系统指令组件时，点击遮罩才刷新，否则可能是关掉其他什么弹窗
+                    // 只有当存在提示词组件时，点击遮罩才刷新，否则可能是关掉其他什么弹窗
                     if (document.querySelector('ms-system-instructions')) {
                         setTimeout(performBackgroundScan, 400);
                     }
@@ -6682,7 +7005,7 @@
         }, 20);
     }
 
-    // [重构] 注入进阶删除按钮组 (同时插入两个按钮)
+    // 注入进阶删除按钮组 (同时插入两个按钮)
     function injectAdvancedDeleteButtons(originalDeleteBtn) {
         // --- 辅助函数：创建克隆按钮 ---
         // 增加了 color 参数
@@ -6838,7 +7161,7 @@
             targetIndices.reverse();
 
             for (const idx of targetIndices) {
-                // [关键] 每次重抓 DOM，确保拿到最新的元素引用
+                // 每次重抓 DOM，确保拿到最新的元素引用
                 const currentDomTurns = document.querySelectorAll('ms-chat-turn');
                 const turn = currentDomTurns[idx];
 
@@ -6985,7 +7308,7 @@
             // 2. 获取选项文本
             const text = option.textContent.trim();
             
-            // 3. 判定是否为“带加号”的占位符选项 (对应 HTML: + 创建新指令)
+            // 3. 判定是否为“带加号”的占位符选项 (对应 HTML: + 创建新提示词)
             const isPlaceholder = text.startsWith('+') || text.includes('创建') || text.includes('Create');
 
             if (isPlaceholder) {
@@ -7070,7 +7393,7 @@
         // 6. 插入设置按钮
         insertSettingsButton(); 
         
-        // 启动指令抓取器
+        // 启动提示词抓取器
         instructionScraper.init();
         
         // 启动链接净化器
@@ -7108,7 +7431,7 @@
             // 每次 DOM 变动，都尝试同步搜索状态
             updateGoogleSearchState();
             
-            // 实时同步原生指令名到工具栏
+            // 实时同步提示词到工具栏
             if (activeSettings.enableToolbarInstructionPicker) {
                 // 如果当前时间在锁定期间内，跳过同步
                 if (Date.now() >= ignoreNativeSyncTimestamp) {
@@ -7130,7 +7453,7 @@
                             // 实时更新工具栏 UI 显示
                             updateToolbarPickerDisplay(syncName);
                             
-                            console.log(`[Gemini 优化] 原生指令变更检测：${syncName}`);
+                            console.log(`[Gemini 优化] 提示词变更检测：${syncName}`);
                         }
                     }
                 }
@@ -7145,7 +7468,7 @@
             // 3. 尝试插入/更新后缀开关状态
             injectSuffixToggle(); 
     
-            // 尝试注入工具栏指令选择器
+            // 尝试注入工具栏提示词选择器
             if (activeSettings.enableToolbarInstructionPicker) {
                 injectToolbarInstructionPicker();
             }
@@ -7320,6 +7643,10 @@
         // 监听位置变化事件，重新定位按钮
         window.addEventListener('locationchange', () => {
             const currentChatId = extractChatIdFromUrl(location.href);
+            
+            // 如果聊天ID没变，说明是刷新，跳过自动配置
+            const isRefresh = (window._lastChatId === currentChatId);
+            
             if (window._lastChatId !== currentChatId) {
                 window._lastChatId = currentChatId;
                 
@@ -7334,28 +7661,27 @@
                 }
             }
             
-            // 1. 基础 UI 修复 (按钮位置、Markdown渲染)
+            // 1. 基础 UI 修复
             setTimeout(() => {
                 ensureCorrectButtonPlacement();
-                
-                // 重新检查工具栏选择器
                 if (activeSettings.enableToolbarInstructionPicker) {
                     injectToolbarInstructionPicker();
                 }
-                
                 if (activeSettings.enableBoldSpacingFix) {
                     optimizeMarkdownText();
                 }
             }, 500);
 
-            // 2. 尝试自动应用指令 (如果是进入新聊天)
-            setTimeout(() => autoConfigLogic.execute(), 500);
+            // 2. 自动配置：只在真正切换聊天时触发，刷新时跳过
+            if (!isRefresh) {
+                setTimeout(() => autoConfigLogic.execute(), 500);
+            }
 
-            // 3. 空列表自动补救机制
+            // 3. 空列表补救
             setTimeout(() => {
                 const currentList = activeSettings.savedSystemInstructions;
                 if (!currentList || currentList.length === 0) {
-                    console.log('[Gemini 优化] ⚠️ 检测到指令列表为空，正在尝试获取...');
+                    console.log('[Gemini 优化] ⚠️ 检测到提示词列表为空，正在尝试获取...');
                     autoConfigLogic.forceUpdateList();
                 }
             }, 2500);

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Juxtaposition Pretendo Enhancer
 // @namespace    https://github.com/ItsFuntum/Juxtaposition-Enhancer
-// @version      2026-01-23
+// @version      2026-01-26
 // @description  Userscript that improves Pretendo's Juxtaposition on the web.
 // @author       Funtum
 // @match        *://juxt.pretendo.network/*
@@ -53,25 +53,96 @@
     });
   }
 
+  function isPaintingVisible(wrapper) {
+    if (!wrapper) return false;
+
+    const rect = wrapper.getBoundingClientRect();
+    const style = getComputedStyle(wrapper);
+
+    return (
+      rect.width > 0 &&
+      rect.height > 0 &&
+      style.display !== "none" &&
+      style.visibility !== "hidden" &&
+      style.opacity !== "0"
+    );
+  }
+
+  function lockPaintingScroll(wrapper) {
+    if (!isPaintingVisible(wrapper)) {
+      return;
+    }
+
+    const block = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    };
+
+    // Lock page scroll
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+
+    // Block ALL scroll-related events
+    ["touchstart", "touchmove", "touchend", "wheel", "pointermove"].forEach(
+      (evt) => {
+        wrapper.addEventListener(evt, block, {
+          passive: false,
+          capture: true,
+        });
+      },
+    );
+  }
+
+  function unlockPaintingScroll() {
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.width = "";
+  }
+
   function override_closePainting() {
     const wrapper = document.getElementById("painting-wrapper");
     if (!wrapper) return;
 
     const okBtn = wrapper.querySelector("button.primary");
-
-    if (!okBtn) {
-      console.warn("Painting button (okBtn) not found");
-      return;
-    }
+    if (!okBtn) return;
 
     okBtn.onclick = (e) => {
+      if (!isPaintingVisible(wrapper)) {
+        console.log("OK clicked while painting hidden — ignored");
+        return;
+      }
+
       e.preventDefault();
       e.stopPropagation();
+
+      unlockPaintingScroll();
       savePainting(wrapper);
+    };
+
+    const cancelBtn = wrapper.querySelector(
+      "#button-wrapper button:not(.primary)",
+    );
+    if (!cancelBtn) return;
+
+    cancelBtn.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      unlockPaintingScroll();
+      wrapper.style.display = "none";
     };
   }
 
   function savePainting(wrapper) {
+    if (!isPaintingVisible(wrapper)) {
+      console.log("savePainting aborted: painting not visible");
+      return;
+    }
+
     const postPage = wrapper.previousElementSibling;
     if (!postPage) return;
 
@@ -349,6 +420,21 @@
       document.querySelector(".community-top").appendChild(postPage);
       document.querySelector(".community-top").appendChild(paintingWrapper);
 
+      const canvas = paintingWrapper.querySelector("#painting");
+      if (canvas) {
+        canvas.style.touchAction = "none";
+        const observer = new MutationObserver(() => {
+          if (isPaintingVisible(paintingWrapper)) {
+            lockPaintingScroll(paintingWrapper);
+          }
+        });
+
+        observer.observe(paintingWrapper, {
+          attributes: true,
+          attributeFilter: ["style", "class"],
+        });
+      }
+
       await loadScriptOnce(
         "https://juxt.pretendo.network/js/painting.global.js",
       );
@@ -489,6 +575,21 @@
 
     postsWrapper.appendChild(postPage);
     postsWrapper.appendChild(paintingWrapper);
+
+    const canvas = paintingWrapper.querySelector("#painting");
+    if (canvas) {
+      canvas.style.touchAction = "none";
+      const observer = new MutationObserver(() => {
+        if (isPaintingVisible(paintingWrapper)) {
+          lockPaintingScroll(paintingWrapper);
+        }
+      });
+
+      observer.observe(paintingWrapper, {
+        attributes: true,
+        attributeFilter: ["style", "class"],
+      });
+    }
 
     await loadScriptOnce("https://juxt.pretendo.network/js/painting.global.js");
     await loadScriptOnce(

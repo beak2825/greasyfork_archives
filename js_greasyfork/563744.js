@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JPDB Kinetic Layout
 // @namespace    jpdb-kinetic-layout
-// @version      1.1
+// @version      1.3
 // @description  Different sections on JPDB review page are now detachable and resizable!
 // @author       Idhtft
 // @match        https://jpdb.io/
@@ -41,10 +41,10 @@
                 (document.head || document.documentElement).appendChild(st);
                 document.documentElement.classList.add('jpdbf-prehide');
                 window.__jpdbf_unhideJPDB = (node) => {
-                    try { if (node) node.classList.remove('jpdbf-prehide-target'); } catch {}
+                    try { if (node) node.classList.remove('jpdbf-prehide-target'); } catch { }
                     document.documentElement.classList.remove('jpdbf-prehide');
-                    try { st.remove(); } catch {}
-                    try { delete window.__jpdbf_unhideJPDB; } catch {}
+                    try { st.remove(); } catch { }
+                    try { delete window.__jpdbf_unhideJPDB; } catch { }
                 };
             })();
 
@@ -57,7 +57,6 @@
                 moveThresh: 3,
                 dockSnapDist: 5
             };
-
             addStyle(`
                 :root{ --jpdbfSideW: 32px; --jpdbfSideInsetX: 8px; --jpdbfSideInsetY: 6px; --jpdbfOpNudgeY: -1.5px; --jpdbfOpPad: 28px; }
                 .jpdbf-float { position: fixed !important; z-index: 2147483647 !important; max-width: 80vw; width: 280px; background: rgba(20,20,22,var(--jpdbfAlpha,1)); color: #e7e7e7; border: 1px solid #3a3a3a; border-radius: 14px; padding: 10px; box-sizing: border-box; touch-action: none; overflow: hidden; cursor: grab; }
@@ -76,26 +75,9 @@
                 .jpdbf-op-row input[type=range]::-webkit-slider-runnable-track { height: 8px; border-radius: 9999px; background: #2b2b2e }
                 .jpdbf-op-row input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; margin-top: -4px; width: 16px; height: 16px; border-radius: 9999px; background: #d7d7d7; border: 1px solid #666 }
                 .jpdbf-op-val { display: flex; align-items: center; justify-content: flex-end; white-space: nowrap; font-size: 12px; font-variant-numeric: tabular-nums; opacity: .95; min-width: 5ch; text-align: right; line-height: 1; transform: translateY(var(--jpdbfOpNudgeY)); }
-
-                .jpdbf-placeholder {
-                    height: 0px !important;
-                    min-height: 0px !important;
-                    margin: 0 auto !important;
-                    opacity: 0;
-                    border: 0;
-                    border-radius: 14px;
-                    box-sizing: border-box;
-                    transition: all 0.2s ease;
-                    pointer-events: none;
-                    overflow: hidden;
-                }
-                .jpdbf-placeholder.ready {
-                    opacity: 1;
-                    border: 2px dashed #4CAF50;
-                    margin-bottom: 1rem !important;
-                }
+                .jpdbf-placeholder { height: 0px !important; min-height: 0px !important; margin: 0 auto !important; opacity: 0; border: 0; border-radius: 14px; box-sizing: border-box; transition: all 0.2s ease; pointer-events: none; overflow: hidden; }
+                .jpdbf-placeholder.ready { opacity: 1; border: 2px dashed #4CAF50; margin-bottom: 1rem !important; }
             `);
-
             const STATE_KEY = 'jpdbf:pos:v2';
             const OPACITY_KEY = 'jpdbf:alpha:v1';
             const qs = (s, r = document) => r.querySelector(s);
@@ -130,43 +112,59 @@
                     if (pos !== undefined) st.pos = pos;
                     if (docked !== undefined) st.docked = docked;
                     localStorage.setItem(STATE_KEY, JSON.stringify(st));
-                } catch {}
+                } catch { }
             };
             const saveFromRect = (r) => saveState(entryFromRect(r), false);
 
-            function computeLocksFromRect(r) { const vw = innerWidth, vh = innerHeight, L = TUNE.lockSense;
+            function computeLocksFromRect(r) {
+                const vw = innerWidth, vh = innerHeight, L = TUNE.lockSense;
                 return { lockL: r.left <= L, lockR: (vw - (r.left + r.width)) <= L, lockT: r.top <= L, lockB: (vh - (r.top + r.height)) <= L };
             }
-            function computeAnchorAxes(r, E) { const vw = innerWidth, vh = innerHeight;
+            function computeAnchorAxes(r, E) {
+                const vw = innerWidth, vh = innerHeight;
                 const dL = r.left, dT = r.top, dR = vw - (r.left + r.width), dB = vh - (r.top + r.height);
                 const ax = dR <= E ? 'right' : (dL <= E ? 'left' : null);
                 const ay = dB <= E ? 'bottom' : (dT <= E ? 'top' : null);
-                return { ax, ay }; }
-            function maskNearEdges(r, E) { const vw = innerWidth, vh = innerHeight;
+                return { ax, ay };
+            }
+            function maskNearEdges(r, E) {
+                const vw = innerWidth, vh = innerHeight;
                 const dL = r.left, dT = r.top, dR = vw - (r.left + r.width), dB = vh - (r.top + r.height);
                 return { L: dL <= E, R: dR <= E, T: dT <= E, B: dB <= E };
             }
             function isAnchoredX(e) { return !!(e && (e.lockL || e.lockR || e.ax === 'left' || e.ax === 'right')); }
             function isAnchoredY(e) { return !!(e && (e.lockT || e.lockB || e.ay === 'top' || e.ay === 'bottom')); }
-            function applyAnchoredPosition(w, h, e) { const vw = innerWidth, vh = innerHeight;
-                const ax = e.lockR ? 'right' : (e.lockL ? 'left' : (e.ax || null)); const ay = e.lockB ? 'bottom' : (e.lockT ? 'top' : (e.ay || null)); let l = e.x, t = e.y;
+            function applyAnchoredPosition(w, h, e) {
+                const vw = innerWidth, vh = innerHeight;
+                const ax = e.lockR ? 'right' : (e.lockL ? 'left' : (e.ax || null)); const ay = e.lockB ? 'bottom' : (e.lockT ? 'top' : (e.ay || null));
+                let l = e.x, t = e.y;
                 if (ax === 'right') l = Math.max(0, Math.min(vw - w, vw - w - (e.offR || 0)));
                 else if (ax === 'left') l = 0; if (ay === 'bottom') t = Math.max(0, Math.min(vh - h, vh - h - (e.offB || 0)));
                 else if (ay === 'top') t = 0; return clamp(l, t, w, h);
             }
-            function entryFromRect(r) { const a = computeAnchorAxes(r, TUNE.anchorSense);
+            function entryFromRect(r) {
+                const a = computeAnchorAxes(r, TUNE.anchorSense);
                 const locks = computeLocksFromRect(r);
-                const vw = innerWidth, vh = innerHeight; const offR = (a.ax === 'right') ? (vw - (r.left + r.width)) : 0; const offB = (a.ay === 'bottom') ? (vh - (r.top + r.height)) : 0; return { x: r.left, y: r.top, ax: a.ax, ay: a.ay, offR, offB, ...locks };
+                const vw = innerWidth, vh = innerHeight; const offR = (a.ax === 'right') ? (vw - (r.left + r.width)) : 0;
+                const offB = (a.ay === 'bottom') ? (vh - (r.top + r.height)) : 0;
+                return { x: r.left, y: r.top, ax: a.ax, ay: a.ay, offR, offB, ...locks };
             }
-            function makePartialAnchorEntry(r, mask) { const vw = innerWidth, vh = innerHeight;
+            function makePartialAnchorEntry(r, mask) {
+                const vw = innerWidth, vh = innerHeight;
                 const e = { x: r.left, y: r.top, ax: null, ay: null, offR: 0, offB: 0, lockL: false, lockR: false, lockT: false, lockB: false };
-                if (mask.R) { e.ax = 'right'; e.lockR = true; e.offR = vw - (r.left + r.width); } if (mask.L) { e.ax = 'left'; e.lockL = true; e.x = 0; } if (mask.B) { e.ay = 'bottom'; e.lockB = true; e.offB = vh - (r.top + r.height); } if (mask.T) { e.ay = 'top'; e.lockT = true; e.y = 0; } return e; }
+                if (mask.R) { e.ax = 'right'; e.lockR = true; e.offR = vw - (r.left + r.width); }
+                if (mask.L) { e.ax = 'left'; e.lockL = true; e.x = 0; }
+                if (mask.B) { e.ay = 'bottom'; e.lockB = true; e.offB = vh - (r.top + r.height); }
+                if (mask.T) { e.ay = 'top'; e.lockT = true; e.y = 0; } return e;
+            }
 
-            function loadAlpha() { const v = Number(localStorage.getItem(OPACITY_KEY));
+            function loadAlpha() {
+                const v = Number(localStorage.getItem(OPACITY_KEY));
                 if (Number.isFinite(v) && v >= 0.2 && v <= 1) return v; return 1;
             }
             function saveAlpha(v) { localStorage.setItem(OPACITY_KEY, String(v)); }
-            function applyOpacityTo(el) { const v = loadAlpha();
+            function applyOpacityTo(el) {
+                const v = loadAlpha();
                 el.style.setProperty('--jpdbfAlpha', String(v)); el.style.setProperty('--jpdbfBtnOpacity', String(v));
             }
             function ensureOpacityUI() {
@@ -179,8 +177,12 @@
                 const val = document.createElement('div'); val.className = 'jpdbf-op-val'; val.textContent = rng.value + '%';
                 rng.addEventListener('input', () => { const p = Math.max(20, Math.min(100, Number(rng.value))); val.textContent = p + '%'; const v = p / 100; if (floatingEl) { floatingEl.style.setProperty('--jpdbfAlpha', String(v)); floatingEl.style.setProperty('--jpdbfBtnOpacity', String(v)); } saveAlpha(v); });
                 row.appendChild(rng); row.appendChild(val); hb.appendChild(row);
-                const checkbox = floatingEl.querySelector('#show-checkbox-1'); if (checkbox) { const sync = () => { if (checkbox.checked) floatingEl.classList.add('jpdbf-op-open');
-                else floatingEl.classList.remove('jpdbf-op-open'); }; checkbox.addEventListener('change', sync); sync(); }
+                const checkbox = floatingEl.querySelector('#show-checkbox-1'); if (checkbox) {
+                    const sync = () => {
+                        if (checkbox.checked) floatingEl.classList.add('jpdbf-op-open');
+                        else floatingEl.classList.remove('jpdbf-op-open');
+                    }; checkbox.addEventListener('change', sync); sync();
+                }
             }
 
             let floatingEl = null, placeholderEl = null;
@@ -191,26 +193,39 @@
             let pendingCenter = null, suppressRO = 0;
             let forceSaveEntry = null, forceSaveUntil = 0;
             let isDocked = true;
+            let justDetached = false;
 
-            function setForcedSave(entry, ms = 1500) { forceSaveEntry = entry;
+            function setForcedSave(entry, ms = 1500) {
+                forceSaveEntry = entry;
                 forceSaveUntil = performance.now() + ms; setTimeout(() => { if (performance.now() > forceSaveUntil) { forceSaveEntry = null; } }, ms + 200);
             }
             const INTERACTIVE = 'input,button,select,textarea,label,a,[role="button"],[contenteditable="true"]';
             const stopAnim = () => { if (raf) cancelAnimationFrame(raf); raf = 0; };
             const samples = [];
-            const pushSample = (x, y, t) => { samples.push({ x, y, t }); const cut = t - TUNE.velWindowMs;
-                while (samples.length && samples[0].t < cut) samples.shift(); };
-            function releaseVelocity() { if (samples.length < 2) return { vx: 0, vy: 0 };
+            const pushSample = (x, y, t) => {
+                samples.push({ x, y, t });
+                const cut = t - TUNE.velWindowMs;
+                while (samples.length && samples[0].t < cut) samples.shift();
+            };
+            function releaseVelocity() {
+                if (samples.length < 2) return { vx: 0, vy: 0 };
                 let S1 = 0, St = 0, Sx = 0, Sy = 0, Stt = 0, Stx = 0, Sty = 0;
-                for (const s of samples) { S1 += 1; St += s.t; Sx += s.x; Sy += s.y;
-                    Stt += s.t * s.t; Stx += s.t * s.x; Sty += s.t * s.y;
+                for (const s of samples) {
+                    S1 += 1;
+                    St += s.t; Sx += s.x; Sy += s.y;
+                    Stt += s.t * s.t; Stx += s.t * s.x;
+                    Sty += s.t * s.y;
                 } const den = (S1 * Stt - St * St) || 1;
                 let VX = (S1 * Stx - St * Sx) / den * 1000;
                 let VY = (S1 * Sty - St * Sy) / den * 1000; const sp = Math.hypot(VX, VY);
-                if (sp > 6000) { const k = 6000 / sp; VX *= k; VY *= k;
-                } return { vx: VX, vy: VY }; }
+                if (sp > 6000) {
+                    const k = 6000 / sp;
+                    VX *= k; VY *= k;
+                } return { vx: VX, vy: VY };
+            }
 
-            function writeAndSave(x, y) { if (isDocked) return;
+            function writeAndSave(x, y) {
+                if (isDocked) return;
                 floatingEl.style.left = x + 'px'; floatingEl.style.top = y + 'px'; const r = floatingEl.getBoundingClientRect(); saveFromRect(r);
             }
 
@@ -224,23 +239,31 @@
                         const vw = innerWidth, vh = innerHeight; let hitL = false, hitR = false, hitT = false, hitB = false; const preVx = vx, preVy = vy;
                         if (nx < 0) { nx = 0; hitL = true; } if (nx + r.width > vw) { nx = vw - r.width; hitR = true; }
                         if (ny < 0) { ny = 0; hitT = true; } if (ny + r.height > vh) { ny = vh - r.height; hitB = true; }
-                        if ((hitL || hitR) && !rx && (now - lastKickX > 140)) { const k = Math.max(8, Math.min(36, 10 + 0.006 * Math.abs(preVx))); const to = hitL ? Math.min(k, vw - r.width) : Math.max(vw - r.width - k, 0);
+                        if ((hitL || hitR) && !rx && (now - lastKickX > 140)) {
+                            const k = Math.max(8, Math.min(36, 10 + 0.006 * Math.abs(preVx))); const to = hitL ? Math.min(k, vw - r.width) : Math.max(vw - r.width - k, 0);
                             rx = { from: nx, to, t0: now, dur: 160 };
                             vx = 0; lastKickX = now;
                         }
-                        if ((hitT || hitB) && !ry && (now - lastKickY > 140)) { const k = Math.max(8, Math.min(36, 10 + 0.006 * Math.abs(preVy)));
+                        if ((hitT || hitB) && !ry && (now - lastKickY > 140)) {
+                            const k = Math.max(8, Math.min(36, 10 + 0.006 * Math.abs(preVy)));
                             const to = hitT ? Math.min(k, vh - r.height) : Math.max(vh - r.height - k, 0);
                             ry = { from: ny, to, t0: now, dur: 160 }; vy = 0; lastKickY = now;
                         }
-                        if (rx) { const p = Math.min(1, (now - rx.t0) / rx.dur);
+                        if (rx) {
+                            const p = Math.min(1, (now - rx.t0) / rx.dur);
                             nx = rx.from + (rx.to - rx.from) * (1 - Math.pow(1 - p, 3));
-                            if (p >= 1) rx = null; }
-                        if (ry) { const p = Math.min(1, (now - ry.t0) / ry.dur);
+                            if (p >= 1) rx = null;
+                        }
+                        if (ry) {
+                            const p = Math.min(1, (now - ry.t0) / ry.dur);
                             ny = ry.from + (ry.to - ry.from) * (1 - Math.pow(1 - p, 3));
-                            if (p >= 1) ry = null; }
+                            if (p >= 1) ry = null;
+                        }
                         writeAndSave(nx, ny);
-                        if ((vx * vx + vy * vy) < (12 * 12) && !rx && !ry) { raf = 0;
-                            return; }
+                        if ((vx * vx + vy * vy) < (12 * 12) && !rx && !ry) {
+                            raf = 0;
+                            return;
+                        }
                         tick(ts);
                     });
                 }
@@ -251,7 +274,8 @@
                 if (!floatingEl || isDocked) return;
                 stopAnim(); rx = null; ry = null;
                 const r = floatingEl.getBoundingClientRect();
-                if (forceSaveEntry && performance.now() < forceSaveUntil) { saveState(forceSaveEntry, false);
+                if (forceSaveEntry && performance.now() < forceSaveUntil) {
+                    saveState(forceSaveEntry, false);
                 } else { saveFromRect(r); }
             }
 
@@ -273,12 +297,16 @@
                 floatingEl.parentNode.insertBefore(placeholderEl, floatingEl);
             }
 
-            function removePlaceholder() { if (placeholderEl) { placeholderEl.remove();
-                placeholderEl = null;
-            } }
+            function removePlaceholder() {
+                if (placeholderEl) {
+                    placeholderEl.remove();
+                    placeholderEl = null;
+                }
+            }
 
             function detachMenu(initialEvent) {
                 isDocked = false;
+                justDetached = true;
                 const rect = floatingEl.getBoundingClientRect();
                 createPlaceholder(rect);
                 floatingEl.classList.remove('jpdbf-docked');
@@ -286,8 +314,8 @@
 
                 if (floatingEl.parentElement) floatingEl.parentElement.classList.remove('jpdbf-drag-zone');
                 const newRect = floatingEl.getBoundingClientRect();
-                const mouseX = initialEvent ? initialEvent.clientX : rect.left + rect.width/2;
-                const mouseY = initialEvent ? initialEvent.clientY : rect.top + rect.height/2;
+                const mouseX = initialEvent ? initialEvent.clientX : rect.left + rect.width / 2;
+                const mouseY = initialEvent ? initialEvent.clientY : rect.top + rect.height / 2;
                 const centeredLeft = mouseX - (newRect.width / 2);
                 const centeredTop = mouseY - 20;
                 floatingEl.style.left = centeredLeft + 'px';
@@ -301,7 +329,6 @@
             function dockMenu() {
                 isDocked = true;
                 floatingEl.classList.remove('jpdbf-float'); floatingEl.classList.add('jpdbf-docked');
-
                 if (floatingEl.parentElement) floatingEl.parentElement.classList.add('jpdbf-drag-zone');
                 floatingEl.style.left = ''; floatingEl.style.top = '';
                 removePlaceholder(); saveState(null, true);
@@ -321,23 +348,30 @@
                 if (detectMode(floatingEl) === 'gr') grMovedDistance = Math.max(grMovedDistance, movedNow);
                 const now = performance.now(); pushSample(e.clientX, e.clientY, now); lastMoveX = e.clientX;
                 lastMoveY = e.clientY; lastMoveT = now;
-                if (placeholderEl && !isDocked) {
+                if (placeholderEl && !isDocked && !justDetached) {
                     const distToBottom = window.innerHeight - (r.top + r.height);
-                    if (distToBottom < TUNE.dockSnapDist) { placeholderEl.classList.add('ready'); placeholderEl.style.height = (placeholderEl._fullHeight || 80) + 'px';
+                    if (distToBottom < TUNE.dockSnapDist) {
+                        placeholderEl.classList.add('ready');
+                        placeholderEl.style.height = (placeholderEl._fullHeight || 80) + 'px';
                     }
-                    else { placeholderEl.classList.remove('ready');
-                        placeholderEl.style.height = '0px'; }
+                    else {
+                        placeholderEl.classList.remove('ready');
+                        placeholderEl.style.height = '0px';
+                    }
                 }
             };
             const onGlobalUp = (e) => {
                 if (!dragging || !floatingEl) return;
+                const wasFreshlyDetached = justDetached;
+                justDetached = false;
+
                 dragging = false;
-                try { floatingEl.releasePointerCapture(e.pointerId); } catch {}
+                try { floatingEl.releasePointerCapture(e.pointerId); } catch { }
 
                 const r = floatingEl.getBoundingClientRect();
                 const distToBottom = window.innerHeight - (r.top + r.height);
 
-                if (!isDocked && distToBottom < TUNE.dockSnapDist) {
+                if (!isDocked && distToBottom < TUNE.dockSnapDist && !wasFreshlyDetached) {
                     dockMenu();
                     return;
                 }
@@ -346,8 +380,10 @@
                 pushSample(e.clientX, e.clientY, now);
                 if (detectMode(floatingEl) === 'gr') grMovedSinceShown = grMovedDistance > TUNE.moveThresh;
                 if (!isDocked) {
-                    if ((now - lastMoveT) >= TUNE.releaseQuietMs && Math.hypot(e.clientX - lastMoveX, e.clientY - lastMoveY) <= TUNE.releaseQuietPx) { freezeAndSave();
-                        return; }
+                    if ((now - lastMoveT) >= TUNE.releaseQuietMs && Math.hypot(e.clientX - lastMoveX, e.clientY - lastMoveY) <= TUNE.releaseQuietPx) {
+                        freezeAndSave();
+                        return;
+                    }
                     const v = releaseVelocity();
                     startInertia(v.vx, v.vy);
                 }
@@ -388,8 +424,9 @@
                     samples.length = 0; const now = performance.now(); pushSample(e.clientX, e.clientY, now);
                     lastMoveX = e.clientX; lastMoveY = e.clientY; lastMoveT = now;
                     e.preventDefault();
-                    try { el.setPointerCapture(e.pointerId);
-                    } catch {}
+                    try {
+                        el.setPointerCapture(e.pointerId);
+                    } catch { }
                 };
                 dragSources.forEach(src => src.addEventListener('pointerdown', onPointerDown));
             }
@@ -397,8 +434,9 @@
             let chevronObs = null;
             let sizeObs = null;
             function startSizeObserver(el) {
-                if (sizeObs) try { sizeObs.disconnect();
-                } catch {}
+                if (sizeObs) try {
+                    sizeObs.disconnect();
+                } catch { }
                 sizeObs = new ResizeObserver(() => {
                     if (suppressRO > 0) { suppressRO--; return; }
                     if (!floatingEl || isDocked) return;
@@ -414,17 +452,15 @@
             function applySaved(el) {
                 const st = loadState();
                 isDocked = (st && typeof st.docked === 'boolean') ? st.docked : true;
-                if (isDocked) { dockMenu(); return;
-                }
+                if (isDocked) { dockMenu(); return; }
                 detachMenu(null);
                 const r0 = el.getBoundingClientRect();
                 if (st && st.pos) {
                     const p = applyAnchoredPosition(r0.width, r0.height, st.pos);
                     el.style.left = p.left + 'px'; el.style.top = p.top + 'px';
-                    saveFromRect(el.getBoundingClientRect());
                 } else {
                     const c = clamp(Math.max(0, innerWidth - r0.width - 20), Math.max(0, innerHeight - r0.height - 20), r0.width, r0.height);
-                    el.style.left = c.left + 'px'; el.style.top = c.top + 'px'; saveFromRect(el.getBoundingClientRect());
+                    el.style.left = c.left + 'px'; el.style.top = c.top + 'px';
                 }
             }
 
@@ -446,14 +482,16 @@
                 }
 
                 floatingEl = el;
-                try { el.classList.add('jpdbf-prehide-target');
-                } catch {}
+                try {
+                    el.classList.add('jpdbf-prehide-target');
+                } catch { }
                 const hasChevron = !!el.querySelector('#show-checkbox-1-label.side-button');
                 el.classList.toggle('jpdbf-has-chevron', hasChevron);
                 applySaved(el); applyOpacityTo(el); attachDrag(el); startSizeObserver(el);
 
-                if (chevronObs) try { chevronObs.disconnect();
-                } catch {}
+                if (chevronObs) try {
+                    chevronObs.disconnect();
+                } catch { }
                 chevronObs = new MutationObserver(() => syncChevronFlag());
                 chevronObs.observe(el, { childList: true, subtree: true, attributes: true });
 
@@ -520,6 +558,7 @@
 
         })();
     })();
+
     (function () {
         const addStyle = (css) => {
             const style = document.createElement('style');
@@ -538,7 +577,6 @@
                 .jpdb-drag-handle { cursor: grab; user-select: none; display: inline-block; transition: opacity 0.1s; }
                 .jpdb-drag-handle:active { cursor: grabbing; }
                 .jpdb-drag-handle:hover { opacity: 0.8; }
-
                 .jpdb-detached {
                     position: fixed !important;
                     background-color: rgb(24, 24, 24) !important;
@@ -549,24 +587,12 @@
                     will-change: transform, left, top; z-index: 100; margin: 0 !important;
                     cursor: grab;
                 }
-
-                .jpdb-detached.jpdb-dragging {
-                    cursor: grabbing !important;
-                }
-
-                .jpdb-detached div, .jpdb-detached span, .jpdb-detached p, .jpdb-detached h6 {
-                    cursor: auto;
-                }
-
+                .jpdb-detached.jpdb-dragging { cursor: grabbing !important; }
                 .jpdb-detached a, .jpdb-detached button,
                 .jpdb-detached input, .jpdb-detached textarea,
-                .jpdb-detached select, .jpdb-detached label {
-                    cursor: auto;
-                }
-                .jpdb-detached a:hover, .jpdb-detached button:hover {
-                    cursor: pointer;
-                }
-
+                .jpdb-detached select, .jpdb-detached label,
+                .jpdb-detached .description { cursor: auto; }
+                .jpdb-detached a:hover, .jpdb-detached button:hover { cursor: pointer; }
                 .jpdb-placeholder {
                     height: 0px;
                     margin: 0px; opacity: 0; border: 0px dashed transparent;
@@ -581,16 +607,12 @@
                     opacity: 1;
                     border: 2px dashed #4CAF50; color: #4CAF50; margin-bottom: 1rem;
                 }
-
-                body.jpdb-dragging-active {
-                    user-select: none !important;
-                }
+                body.jpdb-dragging-active { user-select: none !important; }
             `);
             function constrainToViewport(el) {
                 if (!el) return;
                 const winW = window.innerWidth;
                 const winH = window.innerHeight;
-
                 const w = el.offsetWidth;
                 const h = el.offsetHeight;
                 let x = parseFloat(el.style.left) || 0;
@@ -618,15 +640,14 @@
                     const data = localStorage.getItem(STORAGE_PREFIX + key);
                     return data ? JSON.parse(data) : null;
                 },
-                remove(key) { localStorage.removeItem(STORAGE_PREFIX + key);
-                }
+                remove(key) { localStorage.removeItem(STORAGE_PREFIX + key); }
             };
             const DragManager = {
                 active: false, element: null, placeholder: null,
                 startX: 0, startY: 0, initialLeft: 0, initialTop: 0,
                 rafId: null, inertiaRafId: null,
 
-                vx: 0, vy: 0, lastX: 0, lastY: 0, lastMoveTime: 0,
+                vx: 0, vy: 0, history: [],
 
                 start(e, container) {
                     if (this.inertiaRafId) {
@@ -643,11 +664,10 @@
                     this.startX = e.clientX;
                     this.startY = e.clientY;
 
-                    this.lastX = e.clientX;
-                    this.lastY = e.clientY;
+                    this.history = [];
                     this.vx = 0;
                     this.vy = 0;
-                    this.lastMoveTime = Date.now();
+                    this.history.push({ x: e.clientX, y: e.clientY, t: Date.now() });
 
                     if (this.element.classList.contains('jpdb-detached')) {
                         const comp = window.getComputedStyle(this.element);
@@ -671,11 +691,11 @@
 
                 processMove(cx, cy) {
                     const now = Date.now();
-                    this.vx = cx - this.lastX;
-                    this.vy = cy - this.lastY;
-                    this.lastX = cx;
-                    this.lastY = cy;
-                    this.lastMoveTime = now;
+                    this.history.push({ x: cx, y: cy, t: now });
+                    while (this.history.length > 0 && now - this.history[0].t > 60) {
+                        this.history.shift();
+                    }
+
                     const dx = cx - this.startX;
                     const dy = cy - this.startY;
                     if (!this.element.classList.contains('jpdb-detached')) {
@@ -753,8 +773,33 @@
                         this.element.classList.remove('jpdb-dragging');
                     }
                     document.body.classList.remove('jpdb-dragging-active');
-                    const timeSinceLastMove = Date.now() - this.lastMoveTime;
-                    if (timeSinceLastMove > 50) {
+                    const now = Date.now();
+                    const targetTime = now - 40;
+
+                    let prev = this.history[0];
+                    if (this.history.length > 1) {
+                         for (let i = this.history.length - 1; i >= 0; i--) {
+                             const pt = this.history[i];
+                             if (pt.t <= targetTime) {
+                                 prev = pt;
+                                 break;
+                             }
+                             prev = pt;
+                         }
+                    }
+
+                    if (prev && this.history.length > 0) {
+                        const last = this.history[this.history.length - 1];
+                        const dt = last.t - prev.t;
+
+                        if (dt > 0 && (now - last.t) < 80) {
+                             this.vx = (last.x - prev.x) / dt * 16;
+                             this.vy = (last.y - prev.y) / dt * 16;
+                        } else {
+                            this.vx = 0;
+                            this.vy = 0;
+                        }
+                    } else {
                         this.vx = 0;
                         this.vy = 0;
                     }
@@ -762,7 +807,7 @@
                     if (this.placeholder && this.placeholder.classList.contains('ready-to-dock')) {
                         this.dock();
                     } else if (this.element && this.element.classList.contains('jpdb-detached')) {
-                        if (Math.abs(this.vx) > 0.1 || Math.abs(this.vy) > 0.1) {
+                        if (Math.abs(this.vx) > 0.5 || Math.abs(this.vy) > 0.5) {
                             this.startInertia();
                         } else {
                             constrainToViewport(this.element);
@@ -778,16 +823,18 @@
                 },
 
                 startInertia() {
-                    const friction = 0.96;
-                    const stopThreshold = 0.1;
+                    const friction = 0.965;
+                    const stopThreshold = 0.05;
                     const bounceFactor = 0.6;
+                    const throwPower = 1.0;
 
                     let currentLeft = parseFloat(this.element.style.left);
                     let currentTop = parseFloat(this.element.style.top);
-
                     const elWidth = this.element.offsetWidth;
                     const elHeight = this.element.offsetHeight;
 
+                    this.vx *= throwPower;
+                    this.vy *= throwPower;
                     const inertiaLoop = () => {
                         this.vx *= friction;
                         this.vy *= friction;
@@ -944,9 +991,9 @@
 
                     const rect = detached.getBoundingClientRect();
                     const isVScroll = detached.scrollHeight > detached.clientHeight &&
-                                      e.clientX >= rect.right - (detached.offsetWidth - detached.clientWidth);
+                        e.clientX >= rect.right - (detached.offsetWidth - detached.clientWidth);
                     const isHScroll = detached.scrollWidth > detached.clientWidth &&
-                                      e.clientY >= rect.bottom - (detached.offsetHeight - detached.clientHeight);
+                        e.clientY >= rect.bottom - (detached.offsetHeight - detached.clientHeight);
                     if (isVScroll || isHScroll) return;
 
                     const RESIZE_MARGIN = 20;

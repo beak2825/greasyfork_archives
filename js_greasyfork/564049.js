@@ -1,10 +1,14 @@
 // ==UserScript==
 // @name         TORN Auction Price Checker
 // @namespace    https://torn.com/
-// @version      2.20.0
+// @version      2.28.0
 // @description  Check historical prices for similar auction items
 // @author       WinterValor [3945658]
 // @match        https://www.torn.com/amarket.php*
+// @match        https://www.torn.com/page.php?sid=ItemMarket*
+// @match        https://www.torn.com/item.php*
+// @match        https://www.torn.com/bazaar.php*
+// @match        https://www.torn.com/displaycase.php*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
 // @connect      btrmmuuoofbonmuwrkzg.supabase.co
@@ -19,7 +23,7 @@
     const CONFIG = {
         SUPABASE_URL: 'https://btrmmuuoofbonmuwrkzg.supabase.co',
         SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0cm1tdXVvb2Zib25tdXdya3pnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg4NTEzMTgsImV4cCI6MjA4NDQyNzMxOH0.E-s0k46BORXLICAvxtEpqoM3Qmh4-TRLaJAwXO6wJTY',
-        CACHE_TTL: 5 * 60 * 1000, // 5 minutes - historical data doesn't change
+        CACHE_TTL: 5 * 60 * 1000,
         CACHE_KEY: 'ah_search_cache',
         MAX_CACHE_ENTRIES: 50
     };
@@ -65,7 +69,7 @@
     GM_addStyle(`
         .ah-btn {
             position: absolute;
-            top: 0;
+            top: 28px;
             right: 0;
             padding: 4px 10px;
             background: #1a1a1a;
@@ -236,6 +240,9 @@
         .ah-item-right { text-align: right; }
         .ah-price { font-size: 14px; font-weight: 600; color: #22c55e; margin: 0; }
         .ah-date { font-size: 10px; color: #525252; margin: 2px 0 0; }
+        .ah-players { font-size: 10px; color: #737373; margin: 3px 0 0; }
+        .ah-players a { color: #60a5fa; text-decoration: none; }
+        .ah-players a:hover { text-decoration: underline; }
 
         .ah-loading, .ah-empty, .ah-error {
             padding: 40px;
@@ -532,6 +539,8 @@
                     } else if (a.bonus_ids?.length) {
                         bonusHtml = a.bonus_ids.map(id => `<span class="ah-bonus">${getBonusName(id)}</span>`).join('');
                     }
+                    const sellerLink = a.seller_id ? `<a href="https://www.torn.com/profiles.php?XID=${a.seller_id}" target="_blank">${a.seller_name || a.seller_id}</a>` : 'Unknown';
+                    const buyerLink = a.buyer_id ? `<a href="https://www.torn.com/profiles.php?XID=${a.buyer_id}" target="_blank">${a.buyer_name || a.buyer_id}</a>` : 'Unknown';
                     return `
                     <div class="ah-item">
                         <div class="ah-item-left">
@@ -543,6 +552,7 @@
                                 ${a.stat_armor ? ' · Armor: ' + a.stat_armor.toFixed(1) : ''}
                             </p>
                             ${bonusHtml ? `<div class="ah-item-bonuses">${bonusHtml}</div>` : ''}
+                            <p class="ah-players">Seller: ${sellerLink} · Buyer: ${buyerLink}</p>
                         </div>
                         <div class="ah-item-right">
                             <p class="ah-price">${formatPrice(a.price)}</p>
@@ -639,33 +649,73 @@
         render();
     }
 
-    // Parse item data from auction row
-    function parseRow(row) {
+    // Detect current page type
+    function getPageType() {
+        const url = window.location.href;
+        if (url.includes('amarket.php')) return 'auction';
+        if (url.includes('sid=ItemMarket')) return 'itemmarket';
+        if (url.includes('item.php')) return 'inventory';
+        if (url.includes('bazaar.php')) return 'bazaar';
+        if (url.includes('displaycase.php')) return 'displaycase';
+        return 'unknown';
+    }
+
+    // Check if item has auction-eligible rarity (Yellow, Orange, Red quality OR extraordinary circulation rarity)
+    function hasAuctionRarity(container) {
+        // Check for quality rarity (Yellow, Orange, Red)
+        const rarityEl = container.querySelector('[class*="rarity___"]');
+        if (rarityEl) {
+            const className = rarityEl.className.toLowerCase();
+            const text = rarityEl.textContent.toLowerCase();
+            if (className.includes('yellow') || className.includes('orange') || className.includes('red') ||
+                text.includes('yellow') || text.includes('orange') || text.includes('red')) {
+                return true;
+            }
+        }
+
+        // Check for rare circulation rarity (very rare items that can be auctioned)
+        const rareIcon = container.querySelector('.extraordinary-rarity-icon, .extremely-rare-rarity-icon, [class*="extraordinary"], [class*="extremely-rare"]');
+        if (rareIcon) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // Parse item data from auction house row
+    function parseAuctionRow(row) {
         let itemName = '';
-        let parsedBonuses = []; // Array of {id, value}
+        let parsedBonuses = [];
         let quality = null;
 
-        // Get item name from .item-name span
         const nameEl = row.querySelector('.item-name');
         if (nameEl) {
             itemName = nameEl.textContent.trim();
         }
 
-        // Get bonuses from the gray text under the item name
-        // Can have multiple bonuses separated by <br>: "29% Weaken<br>20% Cripple"
         const bonusTextEl = row.querySelector('.title p.t-gray-6');
         if (bonusTextEl) {
             const bonusLines = bonusTextEl.innerHTML.split(/<br\s*\/?>/i);
             for (const line of bonusLines) {
                 const text = line.trim();
-                // Parse patterns like "22% Specialist", "16% Powerful", "3 T Disarm"
-                const matches = text.match(/([\d.]+)\s*(%|T)\s+(.+)/i);
-                if (matches) {
-                    const bonusValue = parseFloat(matches[1]);
-                    const bonusName = matches[3].trim().toLowerCase().replace(/[\s-]/g, '');
-                    let bonusId = state.bonusMap[bonusName];
+                let bonusValue = null;
+                let bonusName = null;
+
+                // Try to match with numeric value: "22% Specialist" or "3 T Disarm"
+                const matchWithValue = text.match(/([\d.]+)\s*(%|T)\s+(.+)/i);
+                if (matchWithValue) {
+                    bonusValue = parseFloat(matchWithValue[1]);
+                    bonusName = matchWithValue[3].trim();
+                } else if (text && !text.match(/^\d/)) {
+                    // No number at start - treat whole text as bonus name (e.g., "Irradiate")
+                    bonusName = text;
+                }
+
+                if (bonusName) {
+                    const bonusNameKey = bonusName.toLowerCase().replace(/[\s-]/g, '');
+                    let bonusId = state.bonusMap[bonusNameKey];
                     if (!bonusId) {
-                        bonusId = state.bonusMap[matches[3].trim().toLowerCase()];
+                        bonusId = state.bonusMap[bonusName.toLowerCase()];
                     }
                     if (bonusId) {
                         parsedBonuses.push({ id: bonusId, value: bonusValue });
@@ -674,7 +724,6 @@
             }
         }
 
-        // Get quality from expanded item info section
         const expandedInfo = row.querySelector('.show-item-info');
         if (expandedInfo) {
             const qualitySpan = expandedInfo.querySelector('span[aria-label*="Quality"]');
@@ -704,11 +753,98 @@
             }
         }
 
-        console.log('[AH] Parsed:', { itemName, parsedBonuses, quality });
+        console.log('[AH] Parsed auction:', { itemName, parsedBonuses, quality });
+        return { itemName, parsedBonuses, quality };
+    }
+
+    // Parse item data from item market
+    function parseItemMarketRow(container) {
+        let itemName = '';
+        let parsedBonuses = [];
+        let quality = null;
+
+        // Get item name from description bold text
+        const nameEl = container.querySelector('.description___xJ1N5 .bold');
+        if (nameEl) {
+            itemName = nameEl.textContent.trim();
+            // Remove "The " prefix if present (e.g., "The Riot Body" -> "Riot Body")
+            itemName = itemName.replace(/^The\s+/i, '');
+        }
+
+        // Get all property wrappers (use li elements to avoid duplicates)
+        const properties = container.querySelectorAll('li.propertyWrapper___xSOH1');
+        for (const prop of properties) {
+            const titleEl = prop.querySelector('.title___DbORn');
+            if (!titleEl) continue;
+            const title = titleEl.textContent.trim();
+
+            if (title === 'Quality:') {
+                const valueEl = prop.querySelector('[aria-label*="Quality"]');
+                if (valueEl) {
+                    const match = valueEl.getAttribute('aria-label')?.match(/([\d.]+)%?\s*Quality/i);
+                    if (match) {
+                        quality = parseFloat(match[1]);
+                    }
+                }
+            }
+
+            if (title === 'Bonus:') {
+                const valueEl = prop.querySelector('[aria-label*="Bonus"]');
+                if (valueEl) {
+                    const ariaLabel = valueEl.getAttribute('aria-label') || '';
+                    // Parse bonuses with values: "20% Impregnable Bonus" or "3 T Disarm Bonus"
+                    // Also parse bonuses without values: " Irradiate Bonus"
+                    let bonusValue = null;
+                    let bonusName = null;
+
+                    // Try to match with numeric value first
+                    const matchWithValue = ariaLabel.match(/([\d.]+)\s*(%|T)?\s*(.+?)\s*Bonus/i);
+                    if (matchWithValue) {
+                        bonusValue = parseFloat(matchWithValue[1]);
+                        bonusName = matchWithValue[3].trim();
+                    } else {
+                        // Try to match without numeric value (e.g., " Irradiate Bonus")
+                        const matchNoValue = ariaLabel.match(/^\s*(.+?)\s*Bonus/i);
+                        if (matchNoValue) {
+                            bonusName = matchNoValue[1].trim();
+                        }
+                    }
+
+                    if (bonusName) {
+                        const bonusNameKey = bonusName.toLowerCase().replace(/[\s-]/g, '');
+                        let bonusId = state.bonusMap[bonusNameKey];
+                        if (!bonusId) {
+                            bonusId = state.bonusMap[bonusName.toLowerCase()];
+                        }
+                        if (bonusId) {
+                            parsedBonuses.push({ id: bonusId, value: bonusValue });
+                        }
+                        console.log('[AH] Found bonus:', bonusName, bonusValue, bonusId);
+                    }
+                }
+            }
+        }
+
+        console.log('[AH] Parsed item market:', { itemName, parsedBonuses, quality });
         return { itemName, parsedBonuses, quality };
     }
 
     function injectButtons() {
+        const pageType = getPageType();
+
+        if (pageType === 'auction') {
+            injectAuctionButtons();
+        } else if (pageType === 'itemmarket') {
+            injectItemMarketButtons();
+        } else if (pageType === 'inventory' || pageType === 'displaycase') {
+            // Inventory and display case have identical DOM structure
+            injectInventoryButtons();
+        } else if (pageType === 'bazaar') {
+            injectBazaarButtons();
+        }
+    }
+
+    function injectAuctionButtons() {
         const allLis = document.querySelectorAll('li');
         Array.from(allLis).forEach(li => {
             if (!li.querySelector('.item-cont-wrap')) return;
@@ -722,28 +858,126 @@
 
             if (li.querySelector('.ah-btn')) return;
 
-            addButton(li, expandedInfo);
+            const btn = document.createElement('button');
+            btn.className = 'ah-btn';
+            btn.textContent = 'Price Check';
+            btn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const data = parseAuctionRow(li);
+                openModal(data.itemName, data.parsedBonuses, data.quality);
+            };
+
+            const descWrapper = expandedInfo.querySelector('.descriptionWrapper___Lh0y0');
+            if (descWrapper) {
+                descWrapper.style.position = 'relative';
+                descWrapper.appendChild(btn);
+            } else {
+                expandedInfo.appendChild(btn);
+            }
         });
     }
 
-    function addButton(row, expandedInfo) {
-        const btn = document.createElement('button');
-        btn.className = 'ah-btn';
-        btn.textContent = 'Price Check';
-        btn.onclick = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const data = parseRow(row);
-            openModal(data.itemName, data.parsedBonuses, data.quality);
-        };
+    function injectItemMarketButtons() {
+        // Find item info containers in the item market
+        const containers = document.querySelectorAll('.itemInfoWrapper___nA_eu, [class*="itemInfo___"]');
+        Array.from(containers).forEach(container => {
+            // Skip if button already exists
+            if (container.querySelector('.ah-btn')) return;
 
-        const descWrapper = expandedInfo.querySelector('.descriptionWrapper___Lh0y0');
-        if (descWrapper) {
-            descWrapper.style.position = 'relative';
-            descWrapper.appendChild(btn);
-        } else {
-            expandedInfo.appendChild(btn);
-        }
+            // Only show button for Yellow, Orange, Red rarity items
+            if (!hasAuctionRarity(container)) return;
+
+            const btn = document.createElement('button');
+            btn.className = 'ah-btn';
+            btn.textContent = 'Price Check';
+            btn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const data = parseItemMarketRow(container);
+                openModal(data.itemName, data.parsedBonuses, data.quality);
+            };
+
+            // Place button in description wrapper
+            const descWrapper = container.querySelector('.descriptionWrapper___Lh0y0');
+            if (descWrapper) {
+                descWrapper.style.position = 'relative';
+                descWrapper.appendChild(btn);
+            } else {
+                // Fallback: place in item-info div
+                const itemInfo = container.querySelector('[class*="itemInfo___"]') || container;
+                itemInfo.style.position = 'relative';
+                itemInfo.appendChild(btn);
+            }
+        });
+    }
+
+    function injectInventoryButtons() {
+        // Find expanded item info in inventory (li.show-item-info)
+        const containers = document.querySelectorAll('li.show-item-info');
+        Array.from(containers).forEach(container => {
+            // Skip if button already exists
+            if (container.querySelector('.ah-btn')) return;
+
+            // Only show button for Yellow, Orange, Red rarity items
+            if (!hasAuctionRarity(container)) return;
+
+            const btn = document.createElement('button');
+            btn.className = 'ah-btn';
+            btn.textContent = 'Price Check';
+            btn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // Reuse item market parser - same DOM structure
+                const data = parseItemMarketRow(container);
+                openModal(data.itemName, data.parsedBonuses, data.quality);
+            };
+
+            // Place button in description wrapper
+            const descWrapper = container.querySelector('.descriptionWrapper___Lh0y0');
+            if (descWrapper) {
+                descWrapper.style.position = 'relative';
+                descWrapper.appendChild(btn);
+            } else {
+                const itemInfo = container.querySelector('[class*="itemInfo___"]') || container;
+                itemInfo.style.position = 'relative';
+                itemInfo.appendChild(btn);
+            }
+        });
+    }
+
+    function injectBazaarButtons() {
+        // Find expanded item info in bazaar (div.info___liccG.show-item-info or div.show-item-info)
+        const containers = document.querySelectorAll('div.show-item-info, [class*="info___"].show-item-info');
+        Array.from(containers).forEach(container => {
+            // Skip if button already exists
+            if (container.querySelector('.ah-btn')) return;
+
+            // Only show button for Yellow, Orange, Red rarity items
+            if (!hasAuctionRarity(container)) return;
+
+            const btn = document.createElement('button');
+            btn.className = 'ah-btn';
+            btn.textContent = 'Price Check';
+            btn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // Reuse item market parser - same DOM structure
+                const data = parseItemMarketRow(container);
+                openModal(data.itemName, data.parsedBonuses, data.quality);
+            };
+
+            // Place button in description wrapper
+            const descWrapper = container.querySelector('.descriptionWrapper___Lh0y0');
+            if (descWrapper) {
+                descWrapper.style.position = 'relative';
+                descWrapper.appendChild(btn);
+            } else {
+                const itemInfo = container.querySelector('[class*="itemInfo___"]') || container;
+                itemInfo.style.position = 'relative';
+                itemInfo.appendChild(btn);
+            }
+        });
     }
 
     function observe() {

@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Wallhaven 裁剪辅助 (自动填入+倍数选择)
+// @name         Wallhaven 辅助下载 (自动填入+倍数选择)
 // @namespace    http://tampermonkey.net/
 // @version      0.1
 // @description  Wallhaven壁纸详情页，点击裁剪下载时，自动填入原图分辨率，并提供1/2, 1/3等倍数缩放选项。
@@ -8,8 +8,8 @@
 // @match        https://wallhaven.cc/w/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=wallhaven.cc
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/563661/Wallhaven%20%E8%A3%81%E5%89%AA%E8%BE%85%E5%8A%A9%20%28%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%A5%2B%E5%80%8D%E6%95%B0%E9%80%89%E6%8B%A9%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563661/Wallhaven%20%E8%A3%81%E5%89%AA%E8%BE%85%E5%8A%A9%20%28%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%A5%2B%E5%80%8D%E6%95%B0%E9%80%89%E6%8B%A9%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563661/Wallhaven%20%E8%BE%85%E5%8A%A9%E4%B8%8B%E8%BD%BD%20%28%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%A5%2B%E5%80%8D%E6%95%B0%E9%80%89%E6%8B%A9%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563661/Wallhaven%20%E8%BE%85%E5%8A%A9%E4%B8%8B%E8%BD%BD%20%28%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%A5%2B%E5%80%8D%E6%95%B0%E9%80%89%E6%8B%A9%29.meta.js
 // ==/UserScript==
 
 (function() {

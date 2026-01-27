@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         cela-auto
 // @namespace    https://github.com/Moker32/
-// @version      4.1.0
+// @version      4.2.1
 // @description  中国干部网络学院自动学习脚本，支持浦东分院等多种环境，采用状态机驱动的极简高效架构。模块化重构版本。
 // @author       Moker32
 // @license      GPL-3.0-or-later
@@ -137,8 +137,18 @@
             GWYPX: {
                 name: "党校分院",
                 hostnames: [ "cela.gwypx.com.cn" ],
-                supported: false,
-                reason: "暂不支持党校分院环境"
+                pathPatterns: [ "/pcPage/index", "/pcPage/commend/coursedetail" ],
+                features: {
+                    type: "spa",
+                    framework: "vue",
+                    router: "history",
+                    apiBase: "auto",
+                    siteMeta: "fosung"
+                },
+                supported: true,
+                variants: {
+                    MAIN: "cela.gwypx.com.cn"
+                }
             },
             CBEAD: {
                 name: "企业分院",
@@ -198,6 +208,23 @@
                     container: "#coursePlayer",
                     video: 'video[api-base-url], iframe[src*="play"]',
                     controls: ".video-controls, .dsf-video-player"
+                }
+            },
+            GWYPX: {
+                INDEX: {
+                    primary: ".course-item",
+                    fallback: '[class*="course"]',
+                    context: "#app",
+                    extractors: {
+                        courseId: [ "data-id", "id" ],
+                        courseName: [ ".title", "h3" ],
+                        link: [ "href" ]
+                    }
+                },
+                PLAYER: {
+                    container: ".video-container",
+                    video: "video.vjs-tech",
+                    controls: ".vjs-control-bar"
                 }
             },
             CBEAD: {
@@ -343,6 +370,19 @@
                 domPattern: [ "#coursePlayer", "video[api-base-url]" ],
                 actions: [ "report_progress" ]
             },
+            GWYPX_INDEX: {
+                name: "党校首页",
+                urlPattern: /pcPage\/index/,
+                domPattern: [ "#app" ],
+                features: [ "vue", "spa" ],
+                actions: [ "scan_courses" ]
+            },
+            GWYPX_PLAYER: {
+                name: "党校播放页",
+                urlPattern: /pcPage\/commend\/coursedetail/,
+                domPattern: [ "video.vjs-tech" ],
+                actions: [ "report_progress" ]
+            },
             CBEAD_INDEX: {
                 name: "企业首页",
                 urlPattern: /class\/index/,
@@ -411,7 +451,15 @@
             },
             GWYPX: {
                 baseUrl: "https://cela.gwypx.com.cn",
-                supported: false
+                version: "v1",
+                endpoints: {
+                    GET_COURSE_LIST: "/api/course/list",
+                    PULSE_SAVE_RECORD: "/api/player/pulse/saveRecord"
+                },
+                supported: true,
+                fallback: {
+                    PULSE_SAVE_RECORD: [ "/inc/nc/course/play/pulseSaveRecord" ]
+                }
             },
             CBEAD: {
                 baseUrl: "https://cela.cbead.cn",
@@ -434,6 +482,11 @@
                     retryDelay: 1e3
                 }
             }
+        },
+        PAGE_TYPE_WHITELIST: {
+            PUDONG: [ "PLAYER", "COLUMN", "INDEX" ],
+            CBEAD: [ "PLAYER", "COLUMN", "BRANCH_LIST" ],
+            GWYPX: [ "PLAYER", "CENTER" ]
         }
     };
     const EventBus = {
@@ -563,11 +616,15 @@
             COURSE_COMPLETION_DELAY: 5,
             PUDONG_MODE: false,
             PUDONG_API_BASE: "",
+            GWYPX_MODE: false,
+            GWYPX_API_BASE: "",
             CBEAD_MODE: false,
             CBEAD_API_BASE: "",
             IS_PORTAL: false,
+            UNSUPPORTED_BRANCH: "",
             SUPER_FAST_MODE: true,
-            FAST_LEARNING_MODE: true
+            FAST_LEARNING_MODE: true,
+            WARNING_BATCH_LEARNING: true
         },
         config: {},
         load() {
@@ -586,7 +643,7 @@
             this.config[key] = value;
         }
     };
-    const CONFIG$1 = new Proxy(Settings.config, {
+    const CONFIG = new Proxy(Settings.config, {
         get(target, prop) {
             return Settings.get(prop) ?? target[prop];
         },
@@ -598,7 +655,7 @@
     });
     var infraConfig = Object.freeze({
         __proto__: null,
-        CONFIG: CONFIG$1,
+        CONFIG: CONFIG,
         Settings: Settings
     });
     const RequestQueue = {
@@ -633,7 +690,7 @@
             }
         }
     };
-    const SIGN_UP_PATTERNS = [ "我要报名", "立即报名", "立即加入", "报名学习", "加入学习" ];
+    const SIGN_UP_PATTERNS = [ "我要报名", "立即报名", "立即加入", "报名学习", "加入学习", "是", "确定", "确认" ];
     function findSignUpButton() {
         const xpathConditions = SIGN_UP_PATTERNS.map(pattern => `contains(., "${pattern}")`).join(" or ");
         const xpath = `//button[${xpathConditions}] | //a[${xpathConditions}]`;
@@ -661,30 +718,50 @@
     function getSignUpButtonText(button) {
         return button?.textContent?.trim() || "报名按钮";
     }
-    const MASK_SELECTORS = [ "#D339registerMask", '[id*="registerMask"]', '[class*="register-mask"]' ];
-    const MASK_BUTTON_SELECTORS = [ ".register-img", '[class*="register-img"]', ".vjs-big-play-button", ".vjs-play-control" ];
+    const MASK_SELECTORS = [ "#D339registerMask", '[id*="registerMask"]', '[class*="register-mask"]', ".el-message-box__wrapper", ".v-modal" ];
+    const MASK_BUTTON_SELECTORS = [ ".register-img", '[class*="register-img"]', ".vjs-big-play-button", ".vjs-play-control", ".el-message-box__btns .el-button--primary" ];
     function clickMaskButton() {
         let clickedCount = 0;
         const clickDetails = [];
+        const messageBox = document.querySelector(".el-message-box");
+        if (messageBox) {
+            const dialogButtons = messageBox.querySelectorAll('button, .el-button, [role="button"]');
+            for (const btn of dialogButtons) {
+                if (btn.offsetParent !== null) {
+                    const text = btn.textContent?.trim() || "";
+                    if (text === "是" || text === "确定" || text === "确认") {
+                        btn.click();
+                        clickedCount++;
+                        console.log(`[DOMHelper] 🎯 点击弹窗按钮: "${text}"`);
+                    }
+                }
+            }
+            return {
+                clicked: clickedCount,
+                buttons: clickDetails
+            };
+        }
         for (const selector of MASK_BUTTON_SELECTORS) {
             const elements = document.querySelectorAll(selector);
             for (const el of elements) {
                 if (el.offsetParent !== null) {
-                    const btnInfo = {
-                        selector: selector,
-                        tagName: el.tagName,
-                        id: el.id,
-                        className: el.className
-                    };
-                    clickDetails.push(btnInfo);
                     el.click();
                     clickedCount++;
-                    console.log(`[DOMHelper] 🖱️ 点击遮罩按钮: ${el.tagName}.${el.className}`);
+                    console.log(`[DOMHelper] 鼠标模拟点击选择器匹配按钮: ${selector}`);
                 }
             }
         }
-        if (clickedCount > 0) {
-            console.log(`[DOMHelper] 🖱️ 已点击 ${clickedCount} 个遮罩按钮`);
+        const allButtons = document.querySelectorAll('button, .el-button, [role="button"]');
+        for (const btn of allButtons) {
+            if (btn.offsetParent !== null) {
+                const text = btn.textContent?.trim() || "";
+                if (SIGN_UP_PATTERNS.some(pattern => text === pattern || text.includes(pattern))) {
+                    if (text === "否" || text === "取消") continue;
+                    btn.click();
+                    clickedCount++;
+                    console.log(`[DOMHelper] 鼠标模拟点击文本匹配按钮: "${text}"`);
+                }
+            }
         }
         return {
             clicked: clickedCount,
@@ -706,33 +783,49 @@
                 }
             }
         }
+        const elMessages = document.querySelectorAll(".el-message-box__message");
+        for (const msg of elMessages) {
+            if (msg.textContent.includes("是否学习") || msg.textContent.includes("未学习")) {
+                masks.push({
+                    selector: "text:是否学习",
+                    tagName: "DIV"
+                });
+            }
+        }
         return {
             exists: masks.length > 0,
             masks: masks
         };
     }
     function startMaskObserver() {
+        let isClicking = false;
         const observer = new MutationObserver(mutations => {
+            if (isClicking) return;
+            let shouldCheck = false;
             for (const mutation of mutations) {
-                for (const node of mutation.addedNodes) {
-                    if (node.nodeType === Node.ELEMENT_NODE) {
-                        for (const selector of MASK_SELECTORS) {
-                            const baseSelector = selector.split(":")[0];
-                            if (node.matches && node.matches(baseSelector)) {
-                                console.log(`[DOMHelper] 🛡️ 检测到遮罩: ${node.tagName}#${node.id || ""}.${node.className || ""}`);
-                                setTimeout(() => clickMaskButton(), 100);
-                                break;
-                            }
-                        }
-                    }
+                if (mutation.addedNodes.length > 0) {
+                    shouldCheck = true;
+                    break;
                 }
+            }
+            if (shouldCheck) {
+                isClicking = true;
+                setTimeout(() => {
+                    const mask = detectMask();
+                    if (mask.exists) {
+                        clickMaskButton();
+                    }
+                    setTimeout(() => {
+                        isClicking = false;
+                    }, 1e3);
+                }, 300);
             }
         });
         observer.observe(document.body, {
             childList: true,
             subtree: true
         });
-        console.log("[DOMHelper] 🛡️ 遮罩监听器已启动");
+        console.log("[DOMHelper] 🛡️ 全局遮罩监听器已启动");
         return observer;
     }
     var infraDomHelper = Object.freeze({
@@ -747,6 +840,11 @@
         return typeof window !== "undefined" && window.UI ? window.UI : null;
     }
     function detectEnvironment() {
+        CONFIG.PUDONG_MODE = false;
+        CONFIG.GWYPX_MODE = false;
+        CONFIG.CBEAD_MODE = false;
+        CONFIG.IS_PORTAL = false;
+        CONFIG.UNSUPPORTED_BRANCH = "";
         const hostname = window.location.hostname;
         const pathname = window.location.pathname;
         const hash = window.location.hash;
@@ -801,21 +899,30 @@
                         console.log(`✅ 容器特征检测 (${envConfig.features.courseContainer}, +5分)`);
                     }
                 }
+                if (envConfig.features.siteMeta) {
+                    const meta = document.querySelector(`meta[name="site"][content="${envConfig.features.siteMeta}"]`);
+                    if (meta) {
+                        result.confidence += 20;
+                        console.log(`✅ Site Meta特征检测 (${envConfig.features.siteMeta}, +20分)`);
+                    }
+                }
             }
         }
         const envConfig = result.currentEnv ? CONSTANTS.ENVIRONMENTS[result.currentEnv] : null;
         if (result.currentEnv === "PORTAL") {
-            CONFIG$1.IS_PORTAL = true;
+            CONFIG.IS_PORTAL = true;
             console.log("🏠 检测到中国干部网络学院门户页面");
         } else if (result.currentEnv === "PUDONG") {
-            CONFIG$1.PUDONG_MODE = true;
-            CONFIG$1.PUDONG_API_BASE = `https://${hostname}`;
+            CONFIG.PUDONG_MODE = true;
+            CONFIG.PUDONG_API_BASE = `https://${hostname}`;
             console.log("🏢 检测到浦东分院环境");
         } else if (result.currentEnv === "GWYPX") {
-            CONFIG$1.UNSUPPORTED_BRANCH = "党校分院";
+            CONFIG.GWYPX_MODE = true;
+            CONFIG.GWYPX_API_BASE = `https://${hostname}`;
+            console.log("🏢 检测到党校分院环境");
         } else if (result.currentEnv === "CBEAD") {
-            CONFIG$1.CBEAD_MODE = true;
-            CONFIG$1.CBEAD_API_BASE = `https://${hostname}`;
+            CONFIG.CBEAD_MODE = true;
+            CONFIG.CBEAD_API_BASE = `https://${hostname}`;
             console.log("🏢 检测到企业分院环境");
         }
         console.log(`🌐 环境检测完成: ${result.currentEnv || "UNKNOWN"} (置信度: ${result.confidence}%)`);
@@ -824,22 +931,112 @@
         console.log(`   - 特征: ${JSON.stringify(result.features)}`);
         EventBus.publish("environment:detected", {
             ...result,
-            pudongMode: CONFIG$1.PUDONG_MODE,
-            isPortal: CONFIG$1.IS_PORTAL,
-            unsupportedBranch: CONFIG$1.UNSUPPORTED_BRANCH
+            pudongMode: CONFIG.PUDONG_MODE,
+            gwypxMode: CONFIG.GWYPX_MODE,
+            isPortal: CONFIG.IS_PORTAL,
+            unsupportedBranch: CONFIG.UNSUPPORTED_BRANCH
         });
         setTimeout(() => {
             const UI = getUI();
             if (!UI || !UI.setIncompatible) return;
-            if (CONFIG$1.UNSUPPORTED_BRANCH && envConfig) {
+            if (CONFIG.UNSUPPORTED_BRANCH && envConfig) {
                 UI.setIncompatible(`⚠️ 当前检测到【${envConfig.name}】，${envConfig.reason}`);
-            } else if (CONFIG$1.IS_PORTAL && envConfig) {
+            } else if (CONFIG.IS_PORTAL && envConfig) {
                 UI.setIncompatible(`🏠 ${envConfig.reason}`);
-            } else if (!CONFIG$1.PUDONG_MODE && !CONFIG$1.IS_PORTAL && !CONFIG$1.CBEAD_MODE) {
+            } else if (!CONFIG.PUDONG_MODE && !CONFIG.IS_PORTAL && !CONFIG.CBEAD_MODE && !CONFIG.GWYPX_MODE) {
                 UI.setIncompatible("🔍 当前域名未被识别为受支持的学习环境，脚本已停止加载。");
             }
         }, 100);
         return result;
+    }
+    function _matchesPath(urlPath, pattern) {
+        if (urlPath.startsWith("#")) {
+            const hashPath = urlPath.substring(1);
+            if (hashPath === pattern || hashPath.startsWith(pattern + "/")) {
+                return true;
+            }
+            const hashParts = hashPath.split("/").filter(Boolean);
+            const patternParts = pattern.split("/").filter(Boolean);
+            if (patternParts.length === 1 && !pattern.includes("/")) {
+                if (hashParts.length >= 1) {
+                    const hashRouteName = hashParts[0];
+                    if (hashRouteName === pattern || hashRouteName.startsWith(pattern + "?")) {
+                        return true;
+                    }
+                }
+            } else if (patternParts.length > 0 && hashParts.length >= patternParts.length) {
+                const lastPart = hashParts[patternParts.length - 1];
+                const patternLastPart = patternParts[patternParts.length - 1];
+                if (lastPart === patternLastPart || lastPart.startsWith(patternLastPart + "?")) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        if (urlPath === pattern) {
+            return true;
+        }
+        if (urlPath.endsWith(pattern)) {
+            return true;
+        }
+        if (urlPath.startsWith(pattern + "/")) {
+            return true;
+        }
+        const urlParts = urlPath.split("/").filter(Boolean);
+        const patternParts = pattern.split("/").filter(Boolean);
+        if (patternParts.length > 0 && urlParts.length >= patternParts.length) {
+            const lastPart = urlParts[urlParts.length - 1];
+            const patternLastPart = patternParts[patternParts.length - 1];
+            if (lastPart === patternLastPart || lastPart.startsWith(patternLastPart + "?")) {
+                return true;
+            }
+        }
+        return false;
+    }
+    function detectPageType(options) {
+        const {url: url = window.location.href, pathPatterns: pathPatterns, pageTypes: pageTypes, domSelectors: domSelectors = null, domMatchType: domMatchType = "PLAYER"} = options;
+        let urlPath = "";
+        const hashIndex = url.indexOf("#");
+        if (hashIndex !== -1) {
+            urlPath = url.substring(hashIndex);
+        } else {
+            try {
+                urlPath = new URL(url).pathname;
+            } catch (e) {
+                urlPath = url;
+            }
+        }
+        for (const [type, pattern] of Object.entries(pathPatterns)) {
+            if (Array.isArray(pattern)) {
+                for (const p of pattern) {
+                    if (_matchesPath(urlPath, p)) {
+                        return pageTypes[type];
+                    }
+                }
+            } else if (_matchesPath(urlPath, pattern)) {
+                return pageTypes[type];
+            }
+        }
+        if (domSelectors && domSelectors.length > 0) {
+            for (const selector of domSelectors) {
+                if (document.querySelector(selector)) {
+                    return pageTypes[domMatchType] || domMatchType.toLowerCase();
+                }
+            }
+        }
+        return pageTypes.UNKNOWN || "unknown";
+    }
+    function createPageDetector(config) {
+        const {pathPatterns: pathPatterns, pageTypes: pageTypes, domSelectors: domSelectors, domMatchType: domMatchType} = config;
+        return function identifyPage() {
+            return detectPageType({
+                url: window.location.href,
+                pathPatterns: pathPatterns,
+                pageTypes: pageTypes,
+                domSelectors: domSelectors,
+                domMatchType: domMatchType
+            });
+        };
     }
     const PUDONG_CONSTANTS = {
         PATH_PATTERNS: {
@@ -914,7 +1111,10 @@
                 ...customHeaders
             };
             if (!(data instanceof FormData)) {
-                if (typeof data === "string" && data.includes("=")) {
+                const config = ServiceLocator.get(ServiceNames.CONFIG);
+                if (config?.GWYPX_MODE && data) {
+                    headers["Content-Type"] = "application/json";
+                } else if (typeof data === "string" && data.includes("=") && !data.startsWith("{")) {
                     headers["Content-Type"] = "application/x-www-form-urlencoded";
                 } else if (data) {
                     headers["Content-Type"] = "application/json";
@@ -926,7 +1126,7 @@
             }
             return headers;
         },
-        _handleResponse(response, resolve, reject) {
+        _handleResponse(response, resolve, _reject) {
             if (response.status === 401) {
                 this._cachedToken = null;
                 this._log("Token 可能已过期 (401)，清除缓存", "warn");
@@ -1661,32 +1861,53 @@
             return await PudongApi.checkCompletion(courseId, coursewareId);
         }
     };
-    const PudongLearner$1 = {
-        _validatePageType(pageType) {
-            const allowedTypes = [ PudongHandler.PAGE_TYPES.PLAYER, PudongHandler.PAGE_TYPES.COLUMN, PudongHandler.PAGE_TYPES.INDEX ];
+    const DEFAULT_MESSAGES = {
+        default: "⚠️ 当前页面不支持自动学习。请进入课程播放页或列表页。"
+    };
+    function createPageValidator(options) {
+        const {whitelist: whitelist, pageTypes: pageTypes, customMessages: customMessages = {}} = options;
+        function validate(pageType) {
+            const allowedTypes = whitelist.map(key => pageTypes[key]);
             if (allowedTypes.includes(pageType)) {
                 return true;
             }
+            const message = customMessages[pageType] || customMessages.default || DEFAULT_MESSAGES.default;
             EventBus.publish(CONSTANTS.EVENTS.LOG, {
-                message: "⚠️ 当前页面不支持自动学习。请进入课程播放页或列表页。",
+                message: message,
                 type: "warn"
             });
             EventBus.publish(CONSTANTS.EVENTS.STATUS_UPDATE, "页面不支持");
             return false;
+        }
+        return {
+            validate: validate
+        };
+    }
+    const PudongLearner$1 = {
+        get _pageValidator() {
+            return createPageValidator({
+                whitelist: CONSTANTS.PAGE_TYPE_WHITELIST.PUDONG,
+                pageTypes: PudongHandler.PAGE_TYPES,
+                customMessages: {
+                    default: "⚠️ 当前页面不支持自动学习。请进入课程播放页或列表页。"
+                }
+            });
+        },
+        _validatePageType(pageType) {
+            return this._pageValidator.validate(pageType);
         },
         async selectAndExecute() {
-            if (!CONFIG$1.PUDONG_MODE) {
+            if (!CONFIG.PUDONG_MODE) {
                 return null;
             }
             const pageType = PudongHandler.identifyPage();
             if (!this._validatePageType(pageType)) {
                 return false;
             }
-            const href = window.location.href;
-            if (pageType === PudongHandler.PAGE_TYPES.PLAYER || href.includes("/coursePlayer")) {
+            if (pageType === PudongHandler.PAGE_TYPES.PLAYER) {
                 return await this._handlePlayerPage();
             }
-            if (pageType === PudongHandler.PAGE_TYPES.COLUMN || pageType === PudongHandler.PAGE_TYPES.INDEX || href.includes("/column") || href.includes("/index") || href.includes("specialdetail")) {
+            if (pageType === PudongHandler.PAGE_TYPES.COLUMN || pageType === PudongHandler.PAGE_TYPES.INDEX) {
                 return await this._handleColumnPage();
             }
             return null;
@@ -1848,21 +2069,15 @@
     const PudongHandler = {
         PAGE_TYPES: PUDONG_CONSTANTS.PAGE_TYPES,
         SELECTORS: PUDONG_CONSTANTS.SELECTORS,
-        identifyPage() {
-            const url = window.location.href;
-            if (url.includes(PUDONG_CONSTANTS.PATH_PATTERNS.PLAYER)) {
-                return this.PAGE_TYPES.PLAYER;
-            }
-            for (const pattern of PUDONG_CONSTANTS.PATH_PATTERNS.COLUMN) {
-                if (url.includes(pattern)) {
-                    return this.PAGE_TYPES.COLUMN;
-                }
-            }
-            if (url.includes(PUDONG_CONSTANTS.PATH_PATTERNS.INDEX)) {
-                return this.PAGE_TYPES.INDEX;
-            }
-            return this.PAGE_TYPES.UNKNOWN;
-        },
+        identifyPage: createPageDetector({
+            pathPatterns: PUDONG_CONSTANTS.PATH_PATTERNS,
+            pageTypes: {
+                ...PUDONG_CONSTANTS.PAGE_TYPES,
+                UNKNOWN: "unknown"
+            },
+            domSelectors: [ "video[api-base-url]", ".dsf_course_player", ".course-player", ".pd_course_pla" ],
+            domMatchType: "PLAYER"
+        }),
         init() {
             if (!this.isPudongMode()) return;
             console.log("浦东分院处理器已激活");
@@ -1914,7 +2129,7 @@
             }
         },
         isPudongMode() {
-            return CONFIG$1.PUDONG_MODE === true;
+            return CONFIG.PUDONG_MODE === true;
         },
         async scanCourses() {
             return await PudongScanner.scanCourses();
@@ -5953,16 +6168,18 @@
                 TAG_BTN: ".label-btn"
             }
         },
-        identifyPage() {
-            const url = window.location.href;
-            if (url.includes(CBEAD_CONSTANTS.PATH_PATTERNS.PLAYER)) return this.PAGE_TYPES.PLAYER;
-            if (url.includes(CBEAD_CONSTANTS.PATH_PATTERNS.BRANCH_LIST)) return this.PAGE_TYPES.BRANCH_LIST;
-            if (url.includes(CBEAD_CONSTANTS.PATH_PATTERNS.COLUMN)) return this.PAGE_TYPES.COLUMN;
-            if (url.includes(CBEAD_CONSTANTS.PATH_PATTERNS.HOME_V)) return this.PAGE_TYPES.HOME_V;
-            return this.PAGE_TYPES.UNKNOWN;
-        },
+        identifyPage: createPageDetector({
+            pathPatterns: CBEAD_CONSTANTS.PATH_PATTERNS,
+            pageTypes: {
+                PLAYER: "player",
+                BRANCH_LIST: "branch_list",
+                COLUMN: "column",
+                HOME_V: "home_v",
+                UNKNOWN: "unknown"
+            }
+        }),
         isCbeadMode() {
-            return CONFIG$1.CBEAD_MODE === true;
+            return CONFIG.CBEAD_MODE === true;
         },
         extractId() {
             const hash = window.location.hash;
@@ -6103,8 +6320,107 @@
             });
         }
     };
+    const IEnvironment = {
+        PAGE_TYPES: {
+            INDEX: "index",
+            COLUMN: "column",
+            PLAYER: "player",
+            UNKNOWN: "unknown"
+        },
+        identifyPage: null,
+        isEnvironmentMode: null,
+        init: null,
+        getCourses: null,
+        scanCourses: null,
+        startPlayerFlow: null,
+        getPlayInfo: null,
+        reportProgress: null,
+        checkCompletion: null
+    };
+    const ENVIRONMENT_IDS = {
+        PUDONG: "pudong",
+        CBEAD: "cbead",
+        DX: "dx"
+    };
+    const GwypxPlayer = {
+        ...CbeadPlayer,
+        SELECTORS: {
+            ...CbeadPlayer.SELECTORS,
+            ALI_PLAYER: ".prism-player",
+            ALI_VIDEO: ".prism-player video",
+            COMPLETED_TAG: ".el-tag--success",
+            PROGRESS_TEXT: ".progress-text"
+        },
+        extractChapterProgress(verbose = false) {
+            const pageText = document.body.innerText;
+            const progressMatch = pageText.match(/完成度[：:]\s*(\d+)%/);
+            if (progressMatch) {
+                return parseInt(progressMatch[1]);
+            }
+            return CbeadPlayer.extractChapterProgress(verbose);
+        },
+        isCourseReallyCompleted() {
+            const tags = Array.from(document.querySelectorAll(".el-tag"));
+            const hasCompletedTag = tags.some(tag => tag.innerText.includes("已完成"));
+            if (hasCompletedTag) return true;
+            const progress = this.extractChapterProgress();
+            if (progress >= 100) return true;
+            return false;
+        }
+    };
+    const GwypxPlayerFlow = {
+        ...CbeadPlayerFlow,
+        _getPlayer() {
+            return GwypxPlayer;
+        }
+    };
+    const GWYPX_PATH_PATTERNS = {
+        INDEX: "/pcPage/index",
+        CENTER: "/pcPage/personalCenter",
+        PLAYER: "/pcPage/commend/coursedetail"
+    };
+    const GWYPX_PAGE_TYPES = {
+        INDEX: "index",
+        PLAYER: "player",
+        CENTER: "personal_center",
+        UNKNOWN: "unknown"
+    };
+    const GwypxHandler = {
+        ...IEnvironment,
+        PAGE_TYPES: GWYPX_PAGE_TYPES,
+        identifyPage: createPageDetector({
+            pathPatterns: GWYPX_PATH_PATTERNS,
+            pageTypes: GWYPX_PAGE_TYPES,
+            domSelectors: [ "video.vjs-tech", ".prism-player", ".aliplayer-container" ],
+            domMatchType: "PLAYER"
+        }),
+        isCourseReallyCompleted() {
+            return GwypxPlayer.isCourseReallyCompleted();
+        },
+        async learnWithRealPlayback(course) {
+            return await GwypxPlayerFlow.learnWithRealPlayback(course);
+        },
+        extractPageCourseTitle() {
+            const titleEl = document.querySelector(".course-name, .title, h1");
+            return titleEl ? titleEl.textContent.trim() : document.title;
+        },
+        init() {
+            if (!CONFIG.GWYPX_MODE) return;
+            console.log("[GwypxHandler] 初始化党校分院处理器");
+        }
+    };
     let currentPlayerLearningId = null;
     const CbeadLearner = {
+        get _pageValidator() {
+            return createPageValidator({
+                whitelist: CONSTANTS.PAGE_TYPE_WHITELIST.CBEAD,
+                pageTypes: CbeadHandler.PAGE_TYPES,
+                customMessages: {
+                    home_v: "⚠️ 当前是展示主页页面，没有可学习的课程列表。请进入课程详情页或列表页。",
+                    default: "⚠️ 当前页面不支持自动学习。请进入专题详情页或课程列表页。"
+                }
+            });
+        },
         getCurrentPlayerLearningId() {
             return currentPlayerLearningId;
         },
@@ -6114,27 +6430,10 @@
             console.log(`[CbeadLearner] 📍 更新播放页学习任务ID: ${oldId || "none"} → ${id || "none"}`);
         },
         _validatePageType(pageType) {
-            const allowedTypes = [ CbeadHandler.PAGE_TYPES.PLAYER, CbeadHandler.PAGE_TYPES.COLUMN, CbeadHandler.PAGE_TYPES.BRANCH_LIST ];
-            if (allowedTypes.includes(pageType)) {
-                return true;
-            }
-            if (pageType === CbeadHandler.PAGE_TYPES.HOME_V) {
-                EventBus.publish(CONSTANTS.EVENTS.LOG, {
-                    message: "⚠️ 当前是展示主页页面，没有可学习的课程列表。请进入课程详情页或列表页。",
-                    type: "warn"
-                });
-                EventBus.publish(CONSTANTS.EVENTS.STATUS_UPDATE, "展示页无课程");
-            } else {
-                EventBus.publish(CONSTANTS.EVENTS.LOG, {
-                    message: "⚠️ 当前页面不支持自动学习。请进入专题详情页或课程列表页。",
-                    type: "warn"
-                });
-                EventBus.publish(CONSTANTS.EVENTS.STATUS_UPDATE, "页面不支持");
-            }
-            return false;
+            return this._pageValidator.validate(pageType);
         },
         async selectAndExecute() {
-            if (!CONFIG$1.CBEAD_MODE) {
+            if (!CONFIG.CBEAD_MODE) {
                 return null;
             }
             const pageType = CbeadHandler.identifyPage();
@@ -6174,7 +6473,7 @@
             }
             const sourceUrl = sessionStorage.getItem("cbeadLearnSourceUrl");
             if (!sourceUrl) {
-                const currentUrl = `#${window.location.hash || ""}`;
+                const currentUrl = window.location.href;
                 sessionStorage.setItem("cbeadLearnSourceUrl", currentUrl);
                 console.log(`[CbeadLearner] 📌 保存来源 URL: ${currentUrl}`);
             }
@@ -6292,7 +6591,12 @@
                 type: "info"
             });
             await new Promise(resolve => setTimeout(resolve, 2e3));
-            window.location.href = returnUrl;
+            if (returnUrl && returnUrl.startsWith("#")) {
+                const baseUrl = window.location.href.split("#")[0];
+                window.location.href = baseUrl + returnUrl;
+            } else {
+                window.location.href = returnUrl;
+            }
             this._resetToggleButton("学习完成");
             return false;
         },
@@ -6385,7 +6689,7 @@
             }
             const incompleteCourses = pageCourses.filter(c => c.progress < 100);
             if (incompleteCourses.length > 0) {
-                const currentUrl = `#${window.location.hash || ""}`;
+                const currentUrl = window.location.href;
                 sessionStorage.setItem("cbeadLearnSourceUrl", currentUrl);
                 console.log(`[CbeadLearner] 📌 保存来源 URL: ${currentUrl}`);
                 await this._navigateToCourse(incompleteCourses[0]);
@@ -6556,14 +6860,851 @@
         CbeadLearner: CbeadLearner,
         default: CbeadLearner
     });
-    const ENVIRONMENT_IDS = {
-        PUDONG: "pudong",
-        CBEAD: "cbead"
+    const Validator = {
+        validateCourseId(courseId, methodName = "Method") {
+            if (!courseId || typeof courseId !== "string" || courseId.trim() === "") {
+                throw new Error(`${methodName}: 课程ID无效 (courseId: "${courseId}")`);
+            }
+        },
+        validateNumber(value, paramName, methodName = "Method", min = 0, max = Infinity) {
+            const num = Number(value);
+            if (isNaN(num) || num < min || num > max) {
+                throw new Error(`${methodName}: ${paramName}无效 (值: ${value}, 范围: ${min}-${max})`);
+            }
+            return num;
+        }
+    };
+    const GWYPX_API_CONFIG = {
+        baseUrl: null,
+        endpoints: {
+            APP_INIT: "/pcApi/api/portal/app/init",
+            COURSE_GET: "/pcApi/api/course/web/get",
+            STUDY_START: "/pcApi/api/study/start",
+            STUDY_END: "/pcApi/api/study/v2/end",
+            STUDY_PROGRESS: "/pcApi/api/study/progress",
+            TRAINEE_INFO: "/pcApi/api/getTrainee",
+            COURSE_QUERY_REL: "/pcApi/api/courseuser/web/queryRel",
+            COURSE_ADD_REL: "/pcApi/api/courseuser/web/addRel",
+            PERSONAL_COURSES: "/pcApi/api/personal/queryDataUnenrolled",
+            COURSE_BY_CATEGORY: "/pcApi/api/portal/course/getPageByCategory"
+        },
+        getBaseUrl() {
+            const config = ServiceLocator.get(ServiceNames.CONFIG);
+            this.baseUrl = config?.GWYPX_API_BASE || `https://${window.location.hostname}`;
+            return this.baseUrl;
+        },
+        getUrl(endpoint) {
+            const baseUrl = this.getBaseUrl();
+            const endpointPath = this.endpoints[endpoint] || endpoint;
+            return baseUrl + endpointPath;
+        }
+    };
+    const GwypxApi = {
+        ...ApiCore,
+        isSuccessResponse(result) {
+            return result && (result.success === true || result.code === 200 || result.code === 2e4 || result.state === 2e4 || result.status === "success" || result.status === "ok");
+        },
+        _getIdCardHash() {
+            let hash = "";
+            let source = "";
+            const cookieMatch = document.cookie.match(/idCardHash=([^;]+)/);
+            if (cookieMatch) {
+                hash = decodeURIComponent(cookieMatch[1]);
+                source = "cookie";
+            }
+            if (!hash) {
+                const findDeep = (obj, target) => {
+                    if (!obj || typeof obj !== "object") return null;
+                    if (obj[target]) return obj[target];
+                    for (const key in obj) {
+                        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                            const res = findDeep(obj[key], target);
+                            if (res) return res;
+                        }
+                    }
+                    return null;
+                };
+                if (window.userInfo?.idCardHash) {
+                    hash = window.userInfo.idCardHash;
+                    source = "window.userInfo";
+                } else if (window.traineeInfo?.idCardHash) {
+                    hash = window.traineeInfo.idCardHash;
+                    source = "window.traineeInfo";
+                } else if (window.subSiteConfig) {
+                    hash = window.subSiteConfig.idCardHash || window.subSiteConfig.data?.idCardHash || window.subSiteConfig.data?.data?.idCardHash;
+                    if (hash) {
+                        source = "window.subSiteConfig(nested)";
+                    } else {
+                        hash = findDeep(window.subSiteConfig, "idCardHash");
+                        if (hash) source = "window.subSiteConfig(deep)";
+                    }
+                }
+            }
+            if (!hash) {
+                try {
+                    const app = document.querySelector("#app");
+                    const vue = app?.__vue__ || app?.__vue_app__;
+                    const store = vue?.$store || vue?.store;
+                    if (store?.state) {
+                        const findInObj = (obj, targetKey) => {
+                            if (!obj || typeof obj !== "object") return null;
+                            if (obj[targetKey]) return obj[targetKey];
+                            for (const key in obj) {
+                                if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                                    const found = findInObj(obj[key], targetKey);
+                                    if (found) return found;
+                                }
+                            }
+                            return null;
+                        };
+                        const found = findInObj(store.state, "idCardHash");
+                        if (found) {
+                            hash = found;
+                            source = "Vuex";
+                        }
+                    }
+                } catch (e) {}
+            }
+            if (!hash) {
+                hash = localStorage.getItem("idCardHash");
+                if (hash) source = "localStorage";
+            }
+            if (!hash) {
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    const val = localStorage.getItem(key);
+                    if (val && val.includes("idCardHash")) {
+                        try {
+                            const parsed = JSON.parse(val);
+                            const findHash = obj => {
+                                if (!obj || typeof obj !== "object") return null;
+                                if (obj.idCardHash) return obj.idCardHash;
+                                for (const k in obj) {
+                                    const res = findHash(obj[k]);
+                                    if (res) return res;
+                                }
+                                return null;
+                            };
+                            const res = findHash(parsed);
+                            if (res) {
+                                hash = res;
+                                source = `localStorage.${key}`;
+                                break;
+                            }
+                        } catch (e) {}
+                    }
+                }
+            }
+            const finalHash = hash || sessionStorage.getItem("idCardHash") || "";
+            if (finalHash) {
+                console.log(`[GwypxApi] 找到 idCardHash: ${finalHash.substring(0, 8)}... 来自 ${source || "sessionStorage"}`);
+            }
+            return finalHash;
+        },
+        interceptIdCardHash(payload) {
+            if (typeof payload === "string" && payload.includes("idCardHash")) {
+                try {
+                    const data = JSON.parse(payload);
+                    if (data.idCardHash) {
+                        console.log("[GwypxApi] 拦截到 idCardHash:", data.idCardHash);
+                        localStorage.setItem("idCardHash", data.idCardHash);
+                    }
+                } catch (e) {}
+            }
+        },
+        _prepareHeaders(customHeaders = {}, data = null) {
+            const headers = ApiCore._prepareHeaders.call(this, customHeaders, data);
+            delete headers["Authorization"];
+            delete headers["X-Auth-Token"];
+            if (data) {
+                headers["Content-Type"] = "application/json";
+            }
+            headers["Referer"] = window.location.href + (window.location.href.includes("?") ? "&" : "?") + "_cela_t=" + Date.now();
+            return headers;
+        },
+        async request(options) {
+            const originalLog = this._log;
+            this._log = (msg, level) => {
+                if (msg.includes("未找到认证token")) return;
+                originalLog.call(this, msg, level);
+            };
+            try {
+                return await ApiCore.request.call(this, options);
+            } finally {
+                this._log = originalLog;
+            }
+        },
+        async getPlayInfo(courseId) {
+            try {
+                Validator.validateCourseId(courseId, "getPlayInfo");
+                const url = GWYPX_API_CONFIG.getUrl("COURSE_GET");
+                const payload = {
+                    courseId: courseId,
+                    idCardHash: this._getIdCardHash()
+                };
+                console.log("[GwypxApi] 正在获取播放信息, payload:", payload);
+                const response = await this.post(url, JSON.stringify(payload), {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+                console.log("[GwypxApi] 播放信息响应:", response);
+                if (response && response.data) {
+                    const studyTimes = response.data.studyTimes || 0;
+                    const progress = response.data.progress || 0;
+                    return {
+                        courseId: courseId,
+                        title: response.data.name,
+                        duration: response.data.courseDuration || response.data.duration || 0,
+                        studyTimes: studyTimes,
+                        progress: progress,
+                        idCardHash: payload.idCardHash
+                    };
+                }
+                if (response && response.name && response.courseId) {
+                    return {
+                        courseId: courseId,
+                        title: response.name,
+                        duration: response.courseDuration || response.duration || 0,
+                        idCardHash: payload.idCardHash
+                    };
+                }
+                console.warn("[GwypxApi] getPlayInfo: 响应格式无法识别", response);
+                return null;
+            } catch (error) {
+                if (error.message.includes("课程ID无效")) {
+                    throw error;
+                }
+                console.error("[GwypxApi] getPlayInfo failed:", error);
+                return null;
+            }
+        },
+        async studyStart(courseId, tbtpId = null) {
+            Validator.validateCourseId(courseId, "studyStart");
+            const url = GWYPX_API_CONFIG.getUrl("STUDY_START");
+            const payload = {
+                courseId: courseId,
+                idCardHash: this._getIdCardHash(),
+                studyType: "VIDEO",
+                tbtpId: tbtpId
+            };
+            console.log(`[GwypxApi] 发送 studyStart: ${courseId}, tbtpId: ${tbtpId}`);
+            return await this.post(url, JSON.stringify(payload));
+        },
+        async queryRel(courseId) {
+            Validator.validateCourseId(courseId, "queryRel");
+            const url = GWYPX_API_CONFIG.getUrl("COURSE_QUERY_REL");
+            const payload = {
+                courseId: courseId,
+                idCardHash: this._getIdCardHash()
+            };
+            console.log(`[GwypxApi] 查询课程关联状态: ${courseId}`);
+            return await this.post(url, JSON.stringify(payload));
+        },
+        async addRel(courseId) {
+            Validator.validateCourseId(courseId, "addRel");
+            const url = GWYPX_API_CONFIG.getUrl("COURSE_ADD_REL");
+            const payload = {
+                courseId: courseId,
+                idCardHash: this._getIdCardHash()
+            };
+            console.log(`[GwypxApi] 建立课程关联: ${courseId}`);
+            return await this.post(url, JSON.stringify(payload));
+        },
+        async reportProgress(playInfo, studyTimes = 60, totalStudyTimes = 60) {
+            const url = GWYPX_API_CONFIG.getUrl("STUDY_PROGRESS");
+            const payload = {
+                courseId: playInfo.courseId,
+                idCardHash: playInfo.idCardHash || this._getIdCardHash(),
+                studyTimes: studyTimes,
+                totalStudyTimes: totalStudyTimes,
+                tbtpId: playInfo.tbtpId || null
+            };
+            console.log(`[GwypxApi] 发送进度同步 (studyTimes: ${studyTimes}): ${playInfo.courseId}, tbtpId: ${payload.tbtpId}`);
+            return await this.post(url, JSON.stringify(payload));
+        },
+        async reportEnd(playInfo) {
+            const url = GWYPX_API_CONFIG.getUrl("STUDY_END");
+            const payload = {
+                courseId: playInfo.courseId,
+                idCardHash: playInfo.idCardHash || this._getIdCardHash(),
+                tbtpId: playInfo.tbtpId || null
+            };
+            console.log(`[GwypxApi] 发送完成确认 (v2/end): ${playInfo.courseId}, tbtpId: ${payload.tbtpId}`);
+            return await this.post(url, JSON.stringify(payload));
+        },
+        async getPersonalCourses(pageNum = 0, pageSize = 15, filters = {}) {
+            pageNum = Validator.validateNumber(pageNum, "pageNum", "getPersonalCourses", 0);
+            pageSize = Validator.validateNumber(pageSize, "pageSize", "getPersonalCourses", 1, 100);
+            const url = GWYPX_API_CONFIG.getUrl("PERSONAL_COURSES");
+            const payload = {
+                pagenum: pageNum,
+                pageSize: pageSize,
+                isComplete: filters.isComplete || null,
+                isExcellent: filters.isExcellent || null,
+                isFinished: filters.isFinished || null,
+                year: filters.year || null,
+                idCardHash: this._getIdCardHash(),
+                completeSf: filters.completeSf || 0
+            };
+            console.log(`[GwypxApi] 获取个人中心课程列表: 第${pageNum + 1}页, 每页${pageSize}`);
+            return await this.post(url, JSON.stringify(payload));
+        },
+        async getCoursesByCategory(pageNum = 0, pageSize = 15, categoryId = null) {
+            pageNum = Validator.validateNumber(pageNum, "pageNum", "getCoursesByCategory", 0);
+            pageSize = Validator.validateNumber(pageSize, "pageSize", "getCoursesByCategory", 1, 100);
+            const url = GWYPX_API_CONFIG.getUrl("COURSE_BY_CATEGORY");
+            const payload = {
+                pagenum: pageNum,
+                pagesize: pageSize,
+                name: "",
+                idCardHash: this._getIdCardHash()
+            };
+            if (categoryId) {
+                payload.categoryId = categoryId;
+            }
+            console.log(`[GwypxApi] 获取分类课程: categoryId=${categoryId || "默认"}, 第${pageNum + 1}页, 每页${pageSize}`);
+            return await this.post(url, JSON.stringify(payload));
+        }
+    };
+    const LEARNER_CONSTANTS = {
+        PROGRESS_INCREMENT: 60,
+        INITIAL_TIME_OFFSET: 60,
+        MAX_SYNC_LOOPS: 60,
+        SUPER_FAST_INTERVAL: 5e3,
+        NORMAL_INTERVAL: 1e4,
+        BATCH_PAGE_SIZE: 20,
+        BATCH_REQUEST_DELAY: 1e3,
+        MASK_WAIT_TIME: 2e3,
+        API_REL_DELAY: 1e3
+    };
+    class GlobalStateManager {
+        constructor() {
+            this.STORAGE_KEY = "__CELA_GWYPX_STATE__";
+        }
+        getState() {
+            if (!window[this.STORAGE_KEY]) {
+                window[this.STORAGE_KEY] = {
+                    isRunning: false,
+                    stopRequested: false,
+                    startTime: null,
+                    loopCount: 0
+                };
+            }
+            return window[this.STORAGE_KEY];
+        }
+        resetState() {
+            if (window[this.STORAGE_KEY]) {
+                window[this.STORAGE_KEY] = {
+                    isRunning: false,
+                    stopRequested: false,
+                    startTime: null,
+                    loopCount: 0
+                };
+                console.log("[GwypxStateManager] 🔓 全局状态已重置");
+            }
+        }
+        cleanup() {
+            delete window[this.STORAGE_KEY];
+            console.log("[GwypxStateManager] 🗑️ 全局状态已清理");
+        }
+        setRunning(isRunning) {
+            const state = this.getState();
+            state.isRunning = isRunning;
+            if (isRunning) {
+                state.startTime = Date.now();
+                state.loopCount = 0;
+            }
+        }
+        requestStop() {
+            const state = this.getState();
+            state.stopRequested = true;
+        }
+        shouldStop() {
+            const state = this.getState();
+            return state.stopRequested;
+        }
+        isRunning() {
+            const state = this.getState();
+            return state.isRunning;
+        }
+        incrementLoopCount() {
+            const state = this.getState();
+            state.loopCount = (state.loopCount || 0) + 1;
+            return state.loopCount;
+        }
+        getLoopCount() {
+            const state = this.getState();
+            return state.loopCount || 0;
+        }
+        exceedsMaxLoops(maxLoops = LEARNER_CONSTANTS.MAX_SYNC_LOOPS) {
+            return this.getLoopCount() >= maxLoops;
+        }
+    }
+    const stateManager = new GlobalStateManager;
+    const GwypxLearner = {
+        get _pageValidator() {
+            return createPageValidator({
+                whitelist: CONSTANTS.PAGE_TYPE_WHITELIST.GWYPX,
+                pageTypes: GwypxHandler.PAGE_TYPES,
+                customMessages: {
+                    index: "⚠️ 党校分院首页暂不支持自动学习。请进入课程播放页或个人中心。",
+                    default: "⚠️ 当前页面不支持自动学习。请进入课程播放页或个人中心。"
+                }
+            });
+        },
+        _validatePageType(pageType) {
+            return this._pageValidator.validate(pageType);
+        },
+        async selectAndExecute() {
+            if (!CONFIG.GWYPX_MODE) return null;
+            const pageType = GwypxHandler.identifyPage();
+            if (!this._validatePageType(pageType)) {
+                return false;
+            }
+            if (pageType === GwypxHandler.PAGE_TYPES.PLAYER) {
+                return await this.startPlayerFlow();
+            }
+            if (pageType === GwypxHandler.PAGE_TYPES.CENTER) {
+                return await this.startCategoryBatchFlow();
+            }
+            return null;
+        },
+        async startPlayerFlow() {
+            if (stateManager.isRunning()) {
+                EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                    message: "⚠️ 学习流程已在运行中，跳过重复启动",
+                    type: "warn"
+                });
+                return false;
+            }
+            stateManager.setRunning(true);
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const courseId = urlParams.get("courseId") || urlParams.get("id");
+                const tbtpId = urlParams.get("tbtpId");
+                if (!courseId) {
+                    EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                        message: "❌ 无法识别课程ID",
+                        type: "error"
+                    });
+                    return false;
+                }
+                EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                    message: `🎬 开始党校分院播放页流程 (ID: ${courseId})`,
+                    type: "info"
+                });
+                const playInfo = await GwypxApi.getPlayInfo(courseId);
+                if (!playInfo) {
+                    EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                        message: "❌ 获取播放信息失败，可能未识别学员身份",
+                        type: "error"
+                    });
+                    return false;
+                }
+                playInfo.tbtpId = tbtpId;
+                const domProgressAtStart = this._extractProgressFromDom();
+                if (playInfo.progress >= 100 || domProgressAtStart >= 100) {
+                    EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                        message: "✅ 该课程已完成 (100%)！正在执行最终确认...",
+                        type: "success"
+                    });
+                    const endResult = await GwypxApi.reportEnd(playInfo);
+                    if (GwypxApi.isSuccessResponse(endResult)) {
+                        EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                            message: "🎊 课程已确认结课！",
+                            type: "success"
+                        });
+                    }
+                    this._resetToggleButton("学习完成");
+                    return true;
+                }
+                const {detectMask: detectMask} = await Promise.resolve().then(function() {
+                    return infraDomHelper;
+                });
+                const mask = detectMask();
+                if (mask.exists) {
+                    EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                        message: "🛡️ 检测到系统弹窗，等待自动处理...",
+                        type: "info"
+                    });
+                    await new Promise(resolve => setTimeout(resolve, LEARNER_CONSTANTS.MASK_WAIT_TIME));
+                } else {
+                    const relStatus = await GwypxApi.queryRel(courseId);
+                    if (!relStatus?.data) {
+                        EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                            message: "🖱️ 正在自动关联课程 (建立学习关系)...",
+                            type: "info"
+                        });
+                        await GwypxApi.addRel(courseId);
+                        await new Promise(resolve => setTimeout(resolve, LEARNER_CONSTANTS.API_REL_DELAY));
+                    }
+                }
+                await GwypxApi.studyStart(courseId, playInfo.tbtpId);
+                EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                    message: "🛰️ 已发送开始学习信号",
+                    type: "info"
+                });
+                this._clickPlayButton();
+                EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                    message: "🚀 启动持续进度同步机制...",
+                    type: "info"
+                });
+                let cumulativeTime = (playInfo.studyTimes || 0) + LEARNER_CONSTANTS.INITIAL_TIME_OFFSET;
+                while (true) {
+                    if (stateManager.shouldStop()) {
+                        EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                            message: "⏹️ 收到停止请求，终止进度同步",
+                            type: "warn"
+                        });
+                        return false;
+                    }
+                    if (stateManager.exceedsMaxLoops()) {
+                        const elapsed = Math.floor((Date.now() - stateManager.getState().startTime) / 1e3);
+                        EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                            message: `⚠️ 已达到最大同步次数限制 (${LEARNER_CONSTANTS.MAX_SYNC_LOOPS}次)，已运行 ${elapsed} 秒。为防止内存溢出已停止。如果进度未满，请刷新页面继续。`,
+                            type: "error"
+                        });
+                        this._resetToggleButton("同步超时");
+                        return false;
+                    }
+                    stateManager.incrementLoopCount();
+                    const result = await GwypxApi.reportProgress(playInfo, cumulativeTime, LEARNER_CONSTANTS.PROGRESS_INCREMENT);
+                    const domProgress = this._extractProgressFromDom();
+                    const apiProgress = parseInt(result?.courseProgress?.percentage || result?.data?.percentage || 0);
+                    const currentProgress = Math.max(domProgress, apiProgress);
+                    EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                        message: `📊 进度 ${currentProgress}% (页面${domProgress}%, API${apiProgress}%) - 循环 ${stateManager.getLoopCount()}/${LEARNER_CONSTANTS.MAX_SYNC_LOOPS}`,
+                        type: "info"
+                    });
+                    EventBus.publish(CONSTANTS.EVENTS.STATUS_UPDATE, `学习中 ${currentProgress}%`);
+                    if (currentProgress >= 100) {
+                        EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                            message: "✅ 课程已达到 100% 完成！正在进行最终确认...",
+                            type: "success"
+                        });
+                        const endResult = await GwypxApi.reportEnd(playInfo);
+                        if (GwypxApi.isSuccessResponse(endResult)) {
+                            EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                                message: "🎊 课程已成功结课！",
+                                type: "success"
+                            });
+                        }
+                        this._resetToggleButton("学习完成");
+                        return true;
+                    }
+                    cumulativeTime += LEARNER_CONSTANTS.PROGRESS_INCREMENT;
+                    const waitTime = CONFIG.SUPER_FAST_MODE ? LEARNER_CONSTANTS.SUPER_FAST_INTERVAL : LEARNER_CONSTANTS.NORMAL_INTERVAL;
+                    await new Promise(resolve => setTimeout(resolve, waitTime));
+                }
+            } catch (error) {
+                console.error("[GwypxLearner] startPlayerFlow error:", error);
+                EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                    message: `❌ 学习流程异常: ${error.message}`,
+                    type: "error"
+                });
+                return false;
+            } finally {
+                stateManager.resetState();
+            }
+        },
+        _extractProgressFromDom() {
+            const progressEl = document.querySelector(".el-progress__text");
+            if (progressEl) {
+                const text = progressEl.textContent || "";
+                const match = text.match(/(\d+)%/);
+                if (match) return parseInt(match[1]);
+            }
+            return 0;
+        },
+        _clickPlayButton() {
+            console.log("[GwypxLearner] ===== 播放按钮检测开始 =====");
+            const video = document.querySelector("video");
+            if (video) {
+                video.muted = true;
+                console.log("[GwypxLearner] 🔇 已静音");
+            }
+            const aliPlayer = document.querySelector(".prism-player");
+            const videoJsPlayer = document.querySelector(".video-js");
+            console.log(`[GwypxLearner] 🎬 播放器: ${videoJsPlayer ? "Video.js" : aliPlayer ? "Aliplayer" : "未知"}`);
+            const bigPlayBtn = document.querySelector(".vjs-big-play-button");
+            console.log(`[GwypxLearner] 🔍 大播放按钮: ${bigPlayBtn ? "✓" : "✗"}`);
+            let clicked = false;
+            if (bigPlayBtn && bigPlayBtn.offsetParent !== null) {
+                console.log("[GwypxLearner] 🎯 点击大播放按钮");
+                bigPlayBtn.click();
+                clicked = true;
+            }
+            if (!clicked && video) {
+                console.log("[GwypxLearner] 🎯 直接 video.play()");
+                const playPromise = video.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log("[GwypxLearner] ✅ 播放成功");
+                    }).catch(error => {
+                        console.warn("[GwypxLearner] ⚠️ 播放失败:", error.message);
+                    });
+                }
+                clicked = true;
+            }
+            if (!clicked) {
+                console.warn("[GwypxLearner] ⚠️ 未找到播放按钮");
+            }
+            console.log("[GwypxLearner] ===== 播放按钮检测结束 =====");
+            setTimeout(() => {
+                const currentVideo = document.querySelector("video");
+                if (currentVideo && !currentVideo.paused) {
+                    console.log("[GwypxLearner] ✅ 视频正在播放");
+                }
+            }, 1e3);
+        },
+        _resetToggleButton(statusText) {
+            const toggleBtn = document.getElementById(CONSTANTS.SELECTORS.TOGGLE_BTN.replace("#", ""));
+            if (toggleBtn) {
+                toggleBtn.setAttribute("data-state", "stopped");
+                toggleBtn.textContent = "开始学习";
+            }
+            EventBus.publish(CONSTANTS.EVENTS.STATUS_UPDATE, statusText);
+        },
+        async _executeBatchFlow(fetchPageFunc, flowName) {
+            if (stateManager.isRunning()) {
+                EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                    message: `⚠️ ${flowName}已在运行中，跳过重复启动`,
+                    type: "warn"
+                });
+                return {
+                    success: false,
+                    alreadyRunning: true
+                };
+            }
+            stateManager.setRunning(true);
+            EventBus.publish(CONSTANTS.EVENTS.LEARNING_START);
+            const stats = {
+                totalCourses: 0,
+                completedCourses: 0,
+                skippedCourses: 0,
+                failedCourses: 0
+            };
+            try {
+                EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                    message: `🚀 开始${flowName}...`,
+                    type: "info"
+                });
+                let pageNum = 0;
+                const pageSize = LEARNER_CONSTANTS.BATCH_PAGE_SIZE;
+                let totalElements = 0;
+                while (!stateManager.shouldStop()) {
+                    EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                        message: `📥 正在获取第 ${pageNum + 1} 页课程...`,
+                        type: "info"
+                    });
+                    let response;
+                    try {
+                        response = await fetchPageFunc(pageNum, pageSize);
+                    } catch (e) {
+                        console.error(`[GwypxLearner] 获取课程请求失败:`, e);
+                        EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                            message: `❌ 获取第 ${pageNum + 1} 页课程失败: ${e.message}`,
+                            type: "error"
+                        });
+                        break;
+                    }
+                    if (!response || typeof response !== "object" || !response.datalist) {
+                        console.warn("[GwypxLearner] 获取课程响应无效:", response);
+                        EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                            message: `❌ 获取课程响应无效`,
+                            type: "error"
+                        });
+                        break;
+                    }
+                    const courseList = response.datalist || [];
+                    totalElements = response.totalelements || 0;
+                    if (courseList.length === 0) {
+                        EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                            message: `✅ 所有课程已学习完成`,
+                            type: "success"
+                        });
+                        break;
+                    }
+                    if (pageNum === 0 && courseList.length > 0) {
+                        console.log("[GwypxLearner] 课程数据示例:", JSON.stringify(courseList[0], null, 2));
+                    }
+                    for (let i = 0; i < courseList.length; i++) {
+                        if (stateManager.shouldStop()) {
+                            EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                                message: "⏹️ 收到停止请求，终止学习",
+                                type: "warn"
+                            });
+                            break;
+                        }
+                        const item = courseList[i];
+                        const course = this._normalizeCourseItem(item);
+                        if (this._isCourseCompleted(item)) {
+                            stats.skippedCourses++;
+                            console.log(`[GwypxLearner] 跳过已学习课程: ${course.title}`);
+                            EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                                message: `⏭️ ${course.title} 已学习，跳过`,
+                                type: "info"
+                            });
+                            continue;
+                        }
+                        stats.totalCourses++;
+                        EventBus.publish(CONSTANTS.EVENTS.STATUS_UPDATE, `学习中 ${stats.completedCourses + stats.skippedCourses + stats.failedCourses + 1}/${totalElements || stats.totalCourses}`);
+                        try {
+                            const result = await this._completeCourseByApi(course.courseId, course.title);
+                            if (result.skipped) {
+                                stats.skippedCourses++;
+                                EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                                    message: `⏭️ ${course.title} 已完成，跳过`,
+                                    type: "info"
+                                });
+                            } else if (result.success) {
+                                stats.completedCourses++;
+                                EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                                    message: `✅ ${course.title} 学习完成`,
+                                    type: "success"
+                                });
+                            } else {
+                                stats.failedCourses++;
+                                EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                                    message: `⚠️ ${course.title} 学习失败`,
+                                    type: "warn"
+                                });
+                            }
+                            EventBus.publish(CONSTANTS.EVENTS.STATISTICS_UPDATE, {
+                                total: stats.totalCourses,
+                                completed: stats.completedCourses,
+                                learned: stats.completedCourses,
+                                failed: stats.failedCourses,
+                                skipped: stats.skippedCourses
+                            });
+                        } catch (error) {
+                            stats.failedCourses++;
+                            const errorMsg = error?.message || String(error);
+                            console.error(`[GwypxLearner] 学习 ${course.title} 失败:`, error);
+                            EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                                message: `❌ ${course.title} 学习失败: ${errorMsg}`,
+                                type: "error"
+                            });
+                            EventBus.publish(CONSTANTS.EVENTS.STATISTICS_UPDATE, {
+                                total: stats.totalCourses,
+                                completed: stats.completedCourses,
+                                learned: stats.completedCourses,
+                                failed: stats.failedCourses,
+                                skipped: stats.skippedCourses
+                            });
+                        }
+                        if (i < courseList.length - 1) {
+                            await new Promise(resolve => setTimeout(resolve, LEARNER_CONSTANTS.BATCH_REQUEST_DELAY));
+                        }
+                    }
+                    EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                        message: `📚 第 ${pageNum + 1} 页学习完成: 完成 ${stats.completedCourses}, 跳过 ${stats.skippedCourses}, 失败 ${stats.failedCourses}`,
+                        type: "info"
+                    });
+                    if (courseList.length < pageSize || stats.completedCourses + stats.skippedCourses >= totalElements) {
+                        break;
+                    }
+                    pageNum++;
+                }
+                EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                    message: `🎉 ${flowName}完成！总计: ${stats.totalCourses}, 完成: ${stats.completedCourses}, 跳过: ${stats.skippedCourses}, 失败: ${stats.failedCourses}`,
+                    type: "success"
+                });
+                EventBus.publish(CONSTANTS.EVENTS.STATUS_UPDATE, `学习完成 ${stats.completedCourses}/${stats.totalCourses}`);
+                return {
+                    success: true,
+                    stats: stats
+                };
+            } catch (error) {
+                console.error(`[GwypxLearner] ${flowName} error:`, error);
+                const errorMsg = error?.message || String(error);
+                EventBus.publish(CONSTANTS.EVENTS.LOG, {
+                    message: `❌ ${flowName}异常: ${errorMsg}`,
+                    type: "error"
+                });
+                return {
+                    success: false,
+                    error: error,
+                    stats: stats
+                };
+            } finally {
+                stateManager.resetState();
+                EventBus.publish(CONSTANTS.EVENTS.LEARNING_STOP);
+                console.log(`[GwypxLearner] 🔓 ${flowName}状态已重置`);
+            }
+        },
+        _normalizeCourseItem(item) {
+            return {
+                courseId: item.id || item.courseId || item.tbtpId,
+                title: item.name || item.title || item.courseName || item.tbtpName,
+                percentage: item.percentage,
+                studyStatus: item.studyStatus,
+                creditHour: item.creditHour
+            };
+        },
+        _isCourseCompleted(item) {
+            return item.showStatusMsg === "已学习" || item.studyStatus === "2" || item.percentage === "100%";
+        },
+        async startCenterBatchFlow() {
+            return await this._executeBatchFlow(async (pageNum, pageSize) => await GwypxApi.getPersonalCourses(pageNum, pageSize, {
+                completeSf: 0
+            }), "个人中心批量学习");
+        },
+        async startCategoryBatchFlow() {
+            return await this._executeBatchFlow(async (pageNum, pageSize) => await GwypxApi.getCoursesByCategory(pageNum, pageSize), "分类课程批量学习");
+        },
+        async _completeCourseByApi(courseId, title) {
+            if (!courseId) {
+                throw new Error("课程ID无效");
+            }
+            console.log(`[GwypxLearner] 开始学习: ${title} (ID: ${courseId})`);
+            const playInfo = await GwypxApi.getPlayInfo(courseId);
+            if (!playInfo) {
+                throw new Error("获取播放信息失败");
+            }
+            console.log(`[GwypxLearner] 播放信息: 进度${playInfo.progress}%, 已学${playInfo.studyTimes}秒`);
+            if (playInfo.progress >= 100) {
+                console.log(`[GwypxLearner] 课程已完成，跳过`);
+                return {
+                    skipped: true,
+                    success: true
+                };
+            }
+            await GwypxApi.studyStart(courseId, playInfo.tbtpId);
+            console.log(`[GwypxLearner] 已发送开始学习信号`);
+            let endResult = null;
+            let endPercentage = 0;
+            const maxEndAttempts = 10;
+            for (let attempt = 1; attempt <= maxEndAttempts; attempt++) {
+                console.log(`[GwypxLearner] 发送完成确认 (第${attempt}次)...`);
+                endResult = await GwypxApi.reportEnd(playInfo);
+                endPercentage = parseInt(endResult?.courseProgress?.percentage || endResult?.percentage || "0", 10);
+                console.log(`[GwypxLearner] 完成确认结果: percentage=${endPercentage}%`);
+                if (endPercentage >= 100) {
+                    console.log(`[GwypxLearner] 课程已完成! percentage: ${endPercentage}%`);
+                    return {
+                        success: true,
+                        skipped: false
+                    };
+                }
+                if (attempt < maxEndAttempts) {
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+            }
+            console.warn(`[GwypxLearner] 课程未完全完成, percentage: ${endPercentage}%`);
+            return {
+                success: endPercentage > playInfo.progress,
+                skipped: false,
+                progress: endPercentage
+            };
+        }
     };
     const ApiFactory = {
         _instances: {
             [ENVIRONMENT_IDS.PUDONG]: null,
-            [ENVIRONMENT_IDS.CBEAD]: null
+            [ENVIRONMENT_IDS.CBEAD]: null,
+            [ENVIRONMENT_IDS.DX]: null
         },
         createApi(envId) {
             if (this._instances[envId]) {
@@ -6579,6 +7720,10 @@
                 apiInstance = CbeadApi;
                 break;
 
+              case ENVIRONMENT_IDS.DX:
+                apiInstance = GwypxApi;
+                break;
+
               default:
                 throw new Error(`未知的 API 类型: ${envId}`);
             }
@@ -6591,6 +7736,9 @@
         getCbeadApi() {
             return this.createApi(ENVIRONMENT_IDS.CBEAD);
         },
+        getGwypxApi() {
+            return this.createApi(ENVIRONMENT_IDS.DX);
+        },
         getCurrentApi() {
             const config = ServiceLocator.get(ServiceNames.CONFIG);
             if (config?.PUDONG_MODE) {
@@ -6598,6 +7746,9 @@
             }
             if (config?.CBEAD_MODE) {
                 return this.getCbeadApi();
+            }
+            if (config?.GWYPX_MODE) {
+                return this.getGwypxApi();
             }
             return this.getPudongApi();
         },
@@ -6609,19 +7760,23 @@
             if (config?.CBEAD_MODE) {
                 return CBEAD_API_CONFIG;
             }
+            if (config?.GWYPX_MODE) {
+                return GWYPX_API_CONFIG;
+            }
             return PUDONG_API_CONFIG;
         },
         clearCache() {
             this._instances = {
                 [ENVIRONMENT_IDS.PUDONG]: null,
-                [ENVIRONMENT_IDS.CBEAD]: null
+                [ENVIRONMENT_IDS.CBEAD]: null,
+                [ENVIRONMENT_IDS.DX]: null
             };
         }
     };
     const API$1 = Object.assign({}, PudongApi, CbeadApi, PUDONG_API_CONFIG, CBEAD_API_CONFIG, {
         factory: ApiFactory
     });
-    const UI_CSS_CONTENT = '#api-learner-panel { all: initial !important; position: fixed !important; bottom: 20px !important; right: 20px !important; left: auto !important; top: auto !important; width: 400px !important; height: auto !important; min-height: 200px !important; margin: 0 !important; padding: 0 !important; transform: none !important; zoom: 1 !important; background: #ffffff !important; border: 1px solid #dddddd !important; border-radius: 8px !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important; z-index: 2147483647 !important; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important; font-size: 14px !important; color: #333333 !important; line-height: 1.5 !important; text-align: left !important; box-sizing: border-box !important; display: flex !important; flex-direction: column !important; overflow: hidden !important; } #api-learner-panel * { all: unset !important; box-sizing: border-box !important; font-family: inherit !important; background: transparent !important; margin: 0 !important; padding: 0 !important; border: none !important; } #api-learner-panel *:before, #api-learner-panel *:after { content: none !important; display: none !important; } #api-learner-panel .header { display: block !important; background: #f7f7f7 !important; padding: 10px 15px !important; font-weight: bold !important; border-bottom: 1px solid #ddd !important; width: 100% !important; } #api-learner-panel .content { display: block !important; padding: 15px !important; width: 100% !important; background: #ffffff !important; flex-grow: 1 !important; } #api-learner-panel .status { display: block !important; margin-bottom: 10px !important; font-weight: bold !important; } #api-learner-panel .statistics { display: flex !important; justify-content: space-between !important; margin-bottom: 10px !important; padding: 8px !important; background: #f9f9f9 !important; border-radius: 4px !important; font-size: 12px !important; width: 100% !important; } #api-learner-panel .stat-item { display: block !important; text-align: center !important; flex: 1 !important; } #api-learner-panel .progress-bar { display: block !important; height: 8px !important; background: #eeeeee !important; border-radius: 4px !important; overflow: hidden !important; margin-bottom: 10px !important; width: 100% !important; } #api-learner-panel #learner-progress-inner { display: block !important; height: 100% !important; width: 0% !important; background: #4caf50 !important; transition: width 0.3s ease !important; } #api-learner-panel .log-container { display: block !important; height: 150px !important; overflow-y: auto !important; background: #fafafa !important; padding: 8px !important; border: 1px solid #eeeeee !important; border-radius: 4px !important; font-size: 11px !important; line-height: 1.4 !important; font-family: monospace !important; width: 100% !important; } #api-learner-panel .log-entry { display: block !important; margin-bottom: 4px !important; border-left: 2px solid #ccc !important; padding-left: 6px !important; word-break: break-all !important; } #api-learner-panel .log-entry.error { color: #f44336 !important; border-left-color: #f44336 !important; } #api-learner-panel .log-entry.success { color: #4caf50 !important; border-left-color: #4caf50 !important; } #api-learner-panel .log-entry.warn { color: #ff9800 !important; border-left-color: #ff9800 !important; } #api-learner-panel .log-entry.info { color: #2196f3 !important; border-left-color: #2196f3 !important; } #api-learner-panel .footer { display: block !important; padding: 10px 15px !important; border-top: 1px solid #dddddd !important; text-align: center !important; width: 100% !important; background: #ffffff !important; } #api-learner-panel button { display: inline-block !important; padding: 8px 16px !important; border-radius: 4px !important; cursor: pointer !important; font-size: 13px !important; font-weight: bold !important; line-height: 1.2 !important; background-color: #2196f3 !important; color: #ffffff !important; margin-left: 8px !important; vertical-align: middle !important; } #api-learner-panel button#toggle-learning-btn[data-state="running"] { background-color: #f44336 !important; } #api-learner-panel .incompatible-banner { display: flex !important; align-items: center !important; padding: 12px 15px !important; background: #fff9e6 !important; border-bottom: 1px solid #ffe082 !important; } #api-learner-panel .incompatible-banner .warning-icon { font-size: 24px !important; margin-right: 12px !important; opacity: 0.8 !important; } #api-learner-panel .incompatible-banner .warning-content { flex: 1 !important; } #api-learner-panel .incompatible-banner .warning-title { font-size: 14px !important; font-weight: bold !important; color: #f57c00 !important; margin-bottom: 3px !important; } #api-learner-panel .incompatible-banner .warning-message { font-size: 12px !important; color: #f57c00 !important; line-height: 1.4 !important; opacity: 0.85 !important; } #api-learner-panel.incompatible-mode { border: 2px solid #ffe082 !important; box-shadow: 0 2px 8px rgba(245, 124, 0, 0.15) !important; } #api-learner-panel.incompatible-mode .header { background: #fffde7 !important; color: #f57c00 !important; }';
+    const UI_CSS_CONTENT = '#api-learner-panel { all: initial !important; position: fixed !important; bottom: 20px !important; right: 20px !important; left: auto !important; top: auto !important; width: 400px !important; height: auto !important; min-height: 200px !important; margin: 0 !important; padding: 0 !important; transform: none !important; zoom: 1 !important; background: #ffffff !important; border: 1px solid #dddddd !important; border-radius: 8px !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important; z-index: 2147483647 !important; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important; font-size: 14px !important; color: #333333 !important; line-height: 1.5 !important; text-align: left !important; box-sizing: border-box !important; display: flex !important; flex-direction: column !important; overflow: hidden !important; } #api-learner-panel * { all: unset !important; box-sizing: border-box !important; font-family: inherit !important; background: transparent !important; margin: 0 !important; padding: 0 !important; border: none !important; } #api-learner-panel *:before, #api-learner-panel *:after { content: none !important; display: none !important; } #api-learner-panel .header { display: block !important; background: #f7f7f7 !important; padding: 10px 15px !important; font-weight: bold !important; border-bottom: 1px solid #ddd !important; width: 100% !important; } #api-learner-panel .content { display: block !important; padding: 15px !important; width: 100% !important; background: #ffffff !important; flex-grow: 1 !important; } #api-learner-panel .status { display: block !important; margin-bottom: 10px !important; font-weight: bold !important; } #api-learner-panel .warning-box { display: block !important; margin-bottom: 10px !important; padding: 8px 12px !important; background: #fff3cd !important; border: 1px solid #ffc107 !important; border-radius: 4px !important; color: #856404 !important; font-size: 12px !important; line-height: 1.4 !important; } #api-learner-panel .statistics { display: flex !important; justify-content: space-between !important; margin-bottom: 10px !important; padding: 8px !important; background: #f9f9f9 !important; border-radius: 4px !important; font-size: 12px !important; width: 100% !important; } #api-learner-panel .stat-item { display: block !important; text-align: center !important; flex: 1 !important; } #api-learner-panel .progress-bar { display: block !important; height: 8px !important; background: #eeeeee !important; border-radius: 4px !important; overflow: hidden !important; margin-bottom: 10px !important; width: 100% !important; } #api-learner-panel #learner-progress-inner { display: block !important; height: 100% !important; width: 0% !important; background: #4caf50 !important; transition: width 0.3s ease !important; } #api-learner-panel .log-container { display: block !important; height: 150px !important; overflow-y: auto !important; background: #fafafa !important; padding: 8px !important; border: 1px solid #eeeeee !important; border-radius: 4px !important; font-size: 11px !important; line-height: 1.4 !important; font-family: monospace !important; width: 100% !important; } #api-learner-panel .log-entry { display: block !important; margin-bottom: 4px !important; border-left: 2px solid #ccc !important; padding-left: 6px !important; word-break: break-all !important; } #api-learner-panel .log-entry.error { color: #f44336 !important; border-left-color: #f44336 !important; } #api-learner-panel .log-entry.success { color: #4caf50 !important; border-left-color: #4caf50 !important; } #api-learner-panel .log-entry.warn { color: #ff9800 !important; border-left-color: #ff9800 !important; } #api-learner-panel .log-entry.info { color: #2196f3 !important; border-left-color: #2196f3 !important; } #api-learner-panel .footer { display: block !important; padding: 10px 15px !important; border-top: 1px solid #dddddd !important; text-align: center !important; width: 100% !important; background: #ffffff !important; } #api-learner-panel button { display: inline-block !important; padding: 8px 16px !important; border-radius: 4px !important; cursor: pointer !important; font-size: 13px !important; font-weight: bold !important; line-height: 1.2 !important; background-color: #2196f3 !important; color: #ffffff !important; margin-left: 8px !important; vertical-align: middle !important; } #api-learner-panel button#toggle-learning-btn[data-state="running"] { background-color: #f44336 !important; } #api-learner-panel .incompatible-banner { display: flex !important; align-items: center !important; padding: 12px 15px !important; background: #fff9e6 !important; border-bottom: 1px solid #ffe082 !important; } #api-learner-panel .incompatible-banner .warning-icon { font-size: 24px !important; margin-right: 12px !important; opacity: 0.8 !important; } #api-learner-panel .incompatible-banner .warning-content { flex: 1 !important; } #api-learner-panel .incompatible-banner .warning-title { font-size: 14px !important; font-weight: bold !important; color: #f57c00 !important; margin-bottom: 3px !important; } #api-learner-panel .incompatible-banner .warning-message { font-size: 12px !important; color: #f57c00 !important; line-height: 1.4 !important; opacity: 0.85 !important; } #api-learner-panel.incompatible-mode { border: 2px solid #ffe082 !important; box-shadow: 0 2px 8px rgba(245, 124, 0, 0.15) !important; } #api-learner-panel.incompatible-mode .header { background: #fffde7 !important; color: #f57c00 !important; }';
     const UI = {
         logs: [],
         logBuffer: [],
@@ -6636,7 +7791,7 @@
         createPanel: () => {
             const panel = document.createElement("div");
             panel.id = "api-learner-panel";
-            panel.innerHTML = `\n            <div class="header">\n                cela学习助手 v4.0.0\n            </div>\n            <div class="content">\n                <div class="status">状态: <span id="learner-status">待命</span></div>\n                <div class="statistics">\n                    <div class="stat-item">总计: <span id="stat-total">0</span></div>\n                    <div class="stat-item">已完成: <span id="stat-completed">0</span></div>\n                    <div class="stat-item">新学习: <span id="stat-learned">0</span></div>\n                    <div class="stat-item">失败: <span id="stat-failed">0</span></div>\n                    <div class="stat-item">跳过: <span id="stat-skipped">0</span></div>\n                </div>\n                <div class="progress-bar"><div id="learner-progress-inner"></div></div>\n\n                <div class="log-container"></div>\n            </div>\n            <div class="footer">\n                <button id="toggle-learning-btn" data-state="stopped">开始学习</button>\n            </div>\n        `;
+            panel.innerHTML = `\n            <div class="header">\n                cela学习助手 v4.2.1\n            </div>\n            <div class="content">\n                <div class="status">状态: <span id="learner-status">待命</span></div>\n                ${CONFIG.WARNING_BATCH_LEARNING && CONFIG.GWYPX_MODE ? `\n                <div class="warning-box">\n                    ⚠️ 党校分院：慎用批量学习功能，可能被系统检测\n                </div>\n                ` : ""}\n                <div class="statistics">\n                    <div class="stat-item">总计: <span id="stat-total">0</span></div>\n                    <div class="stat-item">已完成: <span id="stat-completed">0</span></div>\n                    <div class="stat-item">新学习: <span id="stat-learned">0</span></div>\n                    <div class="stat-item">失败: <span id="stat-failed">0</span></div>\n                    <div class="stat-item">跳过: <span id="stat-skipped">0</span></div>\n                </div>\n                <div class="progress-bar"><div id="learner-progress-inner"></div></div>\n\n                <div class="log-container"></div>\n            </div>\n            <div class="footer">\n                <button id="toggle-learning-btn" data-state="stopped">开始学习</button>\n            </div>\n        `;
             document.body.appendChild(panel);
             UI.addStyles();
             UI.initEventListeners();
@@ -7189,13 +8344,19 @@
     };
     const FlowOrchestrator = {
         async selectAndExecute() {
-            if (CONFIG$1.CBEAD_MODE) {
+            if (CONFIG.GWYPX_MODE) {
+                const gwypxResult = await GwypxLearner.selectAndExecute();
+                if (gwypxResult !== null) {
+                    return gwypxResult;
+                }
+            }
+            if (CONFIG.CBEAD_MODE) {
                 const cbeadResult = await CbeadLearner.selectAndExecute();
                 if (cbeadResult !== null) {
                     return cbeadResult;
                 }
             }
-            if (CONFIG$1.PUDONG_MODE) {
+            if (CONFIG.PUDONG_MODE) {
                 const pudongResult = await PudongLearner.selectAndExecute();
                 if (pudongResult !== null) {
                     return pudongResult;
@@ -7225,6 +8386,10 @@
             this.isRunning = false;
             this.stopRequested = true;
             this.state = CONSTANTS.LEARNING_STATES.IDLE;
+            const gwypxState = window.__CELA_GWYPX_STATE__;
+            if (gwypxState) {
+                gwypxState.stopRequested = true;
+            }
             if (API && API.abortController) {
                 API.abortController.abort();
                 EventBus.publish(CONSTANTS.EVENTS.LOG, {
@@ -7245,7 +8410,7 @@
             });
         },
         hasValidId: function() {
-            if (CONFIG$1.IS_PORTAL || CONFIG$1.UNSUPPORTED_BRANCH) return false;
+            if (CONFIG.IS_PORTAL || CONFIG.UNSUPPORTED_BRANCH) return false;
             const href = window.location.href;
             if (href.includes("pagehome/index") || document.querySelector('[module-name="nc.pagehome.index"]')) {
                 return false;
@@ -7256,14 +8421,15 @@
             const isPudongSpecialPage = PudongHandler.identifyPage() === PudongHandler.PAGE_TYPES.COLUMN;
             const isCbeadTrainNewPage = window.location.href.includes("train-new/class-detail");
             const isCbeadPlayerPage = window.location.href.includes("study/course/detail");
+            const isGwypxPlayerPage = window.location.href.includes("/pcPage/commend/coursedetail");
             const isChannelListPage = window.location.href.includes("channelList");
             if (isChannelListPage) {
                 return false;
             }
-            if (isCoursePlayerPage || isSpecialDetailPage || isChannelDetailPage || isPudongSpecialPage || isCbeadTrainNewPage || isCbeadPlayerPage) {
+            if (isCoursePlayerPage || isSpecialDetailPage || isChannelDetailPage || isPudongSpecialPage || isCbeadTrainNewPage || isCbeadPlayerPage || isGwypxPlayerPage) {
                 let id = null;
                 const urlParams = new URLSearchParams(window.location.search);
-                id = urlParams.get("id");
+                id = urlParams.get("id") || urlParams.get("courseId");
                 if (!id) {
                     const hash = window.location.hash;
                     if (hash.includes("?")) {
@@ -7410,16 +8576,18 @@
         ServiceLocator.register(ServiceNames.UI, UI);
         ServiceLocator.register(ServiceNames.API, API$1);
         ServiceLocator.register(ServiceNames.LEARNER, Learner);
-        ServiceLocator.register(ServiceNames.CONFIG, CONFIG$1);
+        ServiceLocator.register(ServiceNames.CONFIG, CONFIG);
         setAPI(API$1);
     }
     function initScript() {
+        startMaskObserver();
         Settings.load();
         setupDependencyInjection();
         UI.createPanel();
         detectEnvironment();
         PudongHandler.init();
         CbeadHandler.init();
+        GwypxHandler.init();
         GM_registerMenuCommand("导出调试日志", UI.exportLogs, "e");
         const toggleBtn = document.getElementById(CONSTANTS.SELECTORS.TOGGLE_BTN.replace("#", ""));
         if (toggleBtn) {
@@ -7433,7 +8601,7 @@
                     Learner.state = CONSTANTS.LEARNING_STATES.LEARNING;
                     EventBus.publish(CONSTANTS.EVENTS.LEARNING_START);
                     EventBus.publish(CONSTANTS.EVENTS.STATUS_UPDATE, "学习中...");
-                    if (CONFIG$1.PUDONG_MODE) {
+                    if (CONFIG.PUDONG_MODE) {
                         EventBus.publish("pudong:startLearning");
                         return;
                     }
@@ -7448,21 +8616,23 @@
             });
         }
         EventBus.publish(CONSTANTS.EVENTS.LOG, {
-            message: "🚀 cela学习助手 v4.0 初始化完成",
+            message: "🚀 cela学习助手 v4.2.1 初始化完成",
             type: "success"
         });
         setTimeout(() => {
             checkAndStartAutoLearning();
         }, 1e3);
         setupRouteListener();
-        if (CONFIG$1.CBEAD_MODE) {
+        if (CONFIG.CBEAD_MODE) {
             setupProgressErrorMonitor();
         }
     }
     let isAutoStarting = false;
     function checkAndStartAutoLearning() {
-        if (CONFIG$1.CBEAD_MODE && window.location.href.includes("study/course/detail")) {
-            console.log("[Init] 🔍 检测到企业分院播放页，准备开始学习...");
+        const isCbeadPlayer = CONFIG.CBEAD_MODE && window.location.href.includes("study/course/detail");
+        const isGwypxPlayer = CONFIG.GWYPX_MODE && window.location.href.includes("/pcPage/commend/coursedetail");
+        if (isCbeadPlayer || isGwypxPlayer) {
+            console.log(`[Init] 🔍 检测到${isCbeadPlayer ? "企业" : "党校"}分院播放页，准备开始学习...`);
             if (isAutoStarting) {
                 console.log("[Init] ⚠️ 学习任务已在进行中，跳过重复启动");
                 return;
@@ -7482,7 +8652,7 @@
         }
     }
     function setupRouteListener() {
-        if (!CONFIG$1.CBEAD_MODE) {
+        if (!CONFIG.CBEAD_MODE) {
             console.log("[Init] 📌 非企业分院环境，不设置路由监听");
             return;
         }
@@ -7747,16 +8917,16 @@
             const clickResult = clickMaskButton();
             console.log(`[Init] 🖱️ 已点击 ${clickResult.clicked} 个遮罩按钮`);
         }
-        startMaskObserver();
     }
     const hasVideoElement = document.querySelector("video") !== null;
-    if (window.location.href.includes("study/course/detail") && hasVideoElement) {
+    const isPlayerPage = window.location.href.includes("study/course/detail") || window.location.href.includes("/pcPage/commend/coursedetail");
+    if (isPlayerPage && hasVideoElement) {
         immediateMuteAllVideos();
     }
     setTimeout(initScript, 1e3);
     exports.API = API$1;
     exports.ApiFactory = ApiFactory;
-    exports.CONFIG = CONFIG$1;
+    exports.CONFIG = CONFIG;
     exports.CONSTANTS = CONSTANTS;
     exports.CbeadHandler = CbeadHandler;
     exports.CbeadLearner = CbeadLearner;

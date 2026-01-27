@@ -67,7 +67,7 @@
 // @description:ug    YouTube كۆرۈش تەجرىبەڭىزنى ياخشىلايدىغان، تىز ۋە ھەقسىز HD ۋىدىئو چۈشۈرگۈچى. يۇتۇب، تيك توك، ئىنستاگرام، Threads، X (ئالدىنقى Twitter) ۋە باشقا پلاتفورمالاردىن ۋىدىئو چۈشۈرۈشنى قوللايدۇ. سۇ ئىشاراتسىز ئېغىزدىن سۈپەتلىك چۈشۈرۈشتىن لەززەتلىنىڭ.
 // @description:vi    Trình tải video HD tất cả trong một, nhanh chóng và miễn phí. Hỗ trợ tải video từ YouTube, TikTok, Instagram, Threads, X (trước đây là Twitter) và nhiều nền tảng khác. Thưởng thức tải xuống chất lượng cao mượt mà mà không có watermark.
 // @namespace   AllInOneDownloader_Daniel
-// @version     1.0.1
+// @version     1.0.2
 // @author      Daniel
 // @icon        data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAAwCAYAAABe6Vn9AAACZElEQVR4AeyZbVKDMBCGgYuJ/9WT2CNoqx6hnkT9T72YuA+WDg0M2SSblnFwWCfNfuR9EhqatiqM/+72bX3/3jZirccaYo2HL8yByrLYishazHfVx1hfXJDfHEhG18BIWHeFxHYJvn85gHxjZvWvQFmn16D4ukIGk5i1xLpCWafXoPi6QgaTmLXEukJZp9eg+LpCBpOYtYR6hTi7yPnGe84JVSs1feemlrG1ddVAx7OL+cd9jdDj2JpQ+wOeatTwIPVEqleobYuXcB3zGVqvjH2rjVUDfW3KQ3kFKGAY2xyIgh+bcndJqFAYNKpXiGDsUlAxMOgLBiIpN1QsDNqigEjMBZUCg65oIJKtoVJh0JQERAErKAsY9CQDUSQVygoGLSZAFIqFsoRBhxkQxUKheKaFPDQZw2emQAymhQKGWHIszRwIcQhFMO0pw0fMlC+1rwN62Lc7zblkLsY9syAY4a5A+vAN+8mdq63xwUDNikb795sOr6NNziyjH7AQDgAmhQ9sAPRJ+3QBQ+6pI7IBg4A/VzQia4zSEIbAoQMA7POxvHU3AGLJGcYntp+6Wy6xyFk6AhF61jnxghhiJ1xJXeZAqEEotzLtKcsFw1hZgCjMrQwUBkBvcp83ABOTw7IBIRYoDIDepF/9/YDEBl9qoODKV0pYIlC3vcuuWMqcHMTca9a/OCB5Zn3327s8t0bfNPn8iwP6KYrTqoi40ftt6C8m/iRnoveKXbJ5bPudUTaUG1fK0E/b9S8OSATWArIVsQ1tMfea9S8RyAUIel3Jm2z0xguqsKzgt4oPjv8BCgbZ6l9/AQAA//9HnEu0AAAABklEQVQDAI1HmgBXKvxdAAAAAElFTkSuQmCC
 // @include     https://*.youtube.com/*
@@ -95,7 +95,7 @@
 
 	
 	/*!
-	* Copyright (c) 2024 - 2026, Daniel. All rights reserved.
+	* Copyright (c) 2026 - 2026, Daniel. All rights reserved.
 	*
 	* Permission is hereby granted, free of charge, to any person obtaining a copy
 	* of this software and associated documentation files (the "Software"), to deal
@@ -178,7 +178,7 @@
 
 	const YouTubeDownloader = {
 	  downloadVideo: function() {
-	    const url = "https://www.tool77.com/" + CommonUtils.getSupportedLang() + "/v/dsocialvideo?url=" + window.location.href;
+	    const url = "https://www.tool77.com/" + CommonUtils.getSupportedLang() + "/v/downloader?url=" + window.location.href;
 	    CommonUtils.openInTab(url);
 	  },
 	  genrate: function() {
@@ -256,7 +256,7 @@
 	const TiktokDownloader = {
 	  downloadVideo: function(playId) {
 	    if (playId) {
-	      const url = "https://www.tool77.com/" + CommonUtils.getSupportedLang() + "/v/dsocialvideo?url=https%3A%2F%2Fwww.tiktok.com%2F%40_%2Fvideo/" + playId;
+	      const url = "https://www.tool77.com/" + CommonUtils.getSupportedLang() + "/v/downloader?url=https%3A%2F%2Fwww.tiktok.com%2F%40_%2Fvideo/" + playId;
 	      CommonUtils.openInTab(url);
 	    }
 	  },
@@ -327,7 +327,7 @@
 
 	const ThreadsDownloader = {
 	  downloadVideo: function(url) {
-	    const openUrl = "https://www.tool77.com/" + CommonUtils.getSupportedLang() + "/v/dsocialvideo?url=" + url;
+	    const openUrl = "https://www.tool77.com/" + CommonUtils.getSupportedLang() + "/v/downloader?url=" + url;
 	    CommonUtils.openInTab(openUrl);
 	  },
 	  run: function() {
@@ -377,7 +377,7 @@
 	  isTweetdeck: () => window.location.host.includes("tweetdeck"),
 	  extractStatusId: (url) => url ? (url.match(/\/status\/(\d+)/) || [null, null])[1] : null,
 	  downloadVideo: function(statusIds) {
-	    const url = "https://www.tool77.com/" + CommonUtils.getSupportedLang() + "/v/dsocialvideo?url=https%3A%2F%2Fx.com/_/status/" + statusIds;
+	    const url = "https://www.tool77.com/" + CommonUtils.getSupportedLang() + "/v/downloader?url=https%3A%2F%2Fx.com/_/status/" + statusIds;
 	    CommonUtils.openInTab(url);
 	  },
 	  addButtonTo: function(article) {
@@ -478,7 +478,7 @@
 
 	const InstagramDownloader = {
 	  downloadVideo: function() {
-	    const url = "https://www.tool77.com/" + CommonUtils.getSupportedLang() + "/v/dsocialvideo?url=" + window.location.href;
+	    const url = "https://www.tool77.com/" + CommonUtils.getSupportedLang() + "/v/downloader?url=" + window.location.href;
 	    CommonUtils.openInTab(url);
 	  },
 	  run: function() {

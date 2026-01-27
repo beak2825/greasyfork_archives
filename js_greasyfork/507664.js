@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Perplexity.ai Limits Overlay (Dark Mode, Draggable)
 // @namespace    http://tampermonkey.net/
-// @version      2.3
+// @version      3.1
 // @description  Overlays various limit values on Perplexity.ai main and search pages, updates on submit
 // @match        https://www.perplexity.ai/
 // @match        https://www.perplexity.ai/search*
@@ -14,158 +14,177 @@
 (function() {
     'use strict';
 
-    // Create and style the limits box
-    const limitsBox = document.createElement('div');
-    limitsBox.id = 'limits-box';
-    limitsBox.style.cssText = `
-        position: fixed;
-        right: 20px;
-        top: 20px;
-        background-color: rgba(30, 30, 30, 0.9);
-        color: #ffffff;
-        border: 1px solid #444;
-        border-radius: 5px;
-        padding: 10px;
-        font-family: Arial, sans-serif;
-        font-size: 14px;
-        z-index: 9999;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        cursor: move;
-        user-select: none;
-    `;
+    // ---------------------------
+    // Configuration
+    // ---------------------------
+    const CONFIG = {
+        apiEndpoint: 'https://www.perplexity.ai/rest/rate-limit/all',
+        triggerEndpoint: '/rest/sse/perplexity_ask',
+        checkDelays: [2000, 5000] // Check after 2s and again after 5s to be safe
+    };
 
-    // Function to fetch and display the limits
-    async function displayLimits() {
+    let limitsBox = null;
+
+    // ---------------------------
+    // Network Interception (The Fix)
+    // ---------------------------
+    // We run with @grant none, so window.fetch IS the page's fetch.
+
+    const originalFetch = window.fetch;
+    window.fetch = async function(...args) {
+        let url = args[0];
+        if (url instanceof Request) url = url.url;
+        url = url ? url.toString() : '';
+
+        // Hook the specific ASK endpoint
+        if (url.includes(CONFIG.triggerEndpoint)) {
+            // Trigger updates
+            CONFIG.checkDelays.forEach(delay => setTimeout(fetchLimits, delay));
+        }
+
+        return originalFetch.apply(this, args);
+    };
+
+    // Also hook XHR just in case Perplexity switches methods or uses mixed calls
+    const originalXHROpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function(method, url) {
+        this._url = url ? url.toString() : '';
+        return originalXHROpen.apply(this, arguments);
+    };
+
+    const originalXHRSend = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype.send = function() {
+        if (this._url && this._url.includes(CONFIG.triggerEndpoint)) {
+             CONFIG.checkDelays.forEach(delay => setTimeout(fetchLimits, delay));
+        }
+        return originalXHRSend.apply(this, arguments);
+    };
+
+    // ---------------------------
+    // Fetch Limits From Server
+    // ---------------------------
+    async function fetchLimits() {
         try {
-            const response = await fetch('https://www.perplexity.ai/rest/user/settings');
-            const data = await response.json();
-
-            const limits = [
-                { label: "Messages Limit:", value: data.gpt4_limit },
-                { label: "Document Upload Limit:", value: data.upload_limit },
-                { label: "Image Upload Limit:", value: data.article_image_upload_limit },
-                { label: "Image Generation Limit:", value: data.create_limit },
-                { label: "Page Creation Limit:", value: data.pages_limit }
-            ];
-
-            const table = document.createElement('table');
-            table.style.borderCollapse = 'collapse';
-            table.style.width = '100%';
-
-            limits.forEach(limit => {
-                const row = table.insertRow();
-                const labelCell = row.insertCell(0);
-                const valueCell = row.insertCell(1);
-
-                labelCell.textContent = limit.label;
-                labelCell.style.textAlign = 'left';
-                labelCell.style.paddingRight = '10px';
-
-                valueCell.textContent = limit.value;
-                valueCell.style.textAlign = 'right';
+            // Add timestamp to prevent caching
+            const timestamp = Date.now();
+            const response = await originalFetch(`${CONFIG.apiEndpoint}?t=${timestamp}`, {
+                credentials: 'include'
             });
 
-            limitsBox.innerHTML = '';
-            limitsBox.appendChild(table);
+            if (response.ok) {
+                const data = await response.json();
+                updateLimitsUI(data.remaining_pro);
+            }
         } catch (error) {
-            console.error('Error fetching limits:', error);
+            // Silent catch to avoid console spam
         }
     }
 
-    // Add the limits box to the page
-    document.body.appendChild(limitsBox);
+    // ---------------------------
+    // UI Creation & Updates
+    // ---------------------------
+    function initUI() {
+        if (document.getElementById('limits-box')) return;
 
-    // Initial update
-    displayLimits();
+        limitsBox = document.createElement('div');
+        limitsBox.id = 'limits-box';
+        limitsBox.style.cssText = `
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            background-color: rgba(30, 30, 30, 0.95);
+            color: #e8e8e8;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 13px;
+            z-index: 99999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            cursor: grab;
+            user-select: none;
+            backdrop-filter: blur(5px);
+            min-width: 180px;
+            transition: transform 0.1s ease;
+        `;
 
-    // Make the box vertically draggable
-    let isDragging = false;
-    let currentY, initialY;
-    let yOffset = GM_getValue('yOffset', 0);
+        document.body.appendChild(limitsBox);
 
-    function setPosition() {
-        const maxY = window.innerHeight - limitsBox.offsetHeight;
-        yOffset = Math.max(0, Math.min(yOffset, maxY));
-        limitsBox.style.transform = `translateY(${yOffset}px)`;
-        GM_setValue('yOffset', yOffset);
+        // Restore position from localStorage (since we removed GM_)
+        const savedY = parseFloat(localStorage.getItem('perplexity_limits_pos_y')) || 20;
+        const maxY = window.innerHeight - 100;
+        limitsBox.style.transform = `translateY(${Math.min(savedY, maxY)}px)`;
+
+        setupDraggable(limitsBox);
+        fetchLimits();
     }
 
-    function dragStart(e) {
-        initialY = e.clientY - yOffset;
-        isDragging = true;
+    function updateLimitsUI(value) {
+        if (!limitsBox) initUI();
+
+        limitsBox.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px;">
+                <span style="opacity: 0.8;">Remaining Queries :</span>
+                <span style="font-weight: 700; color: #fff; font-size: 15px;">${value ?? '—'}</span>
+            </div>
+        `;
     }
 
-    function dragEnd() {
-        isDragging = false;
-        setPosition();
-    }
+    // ---------------------------
+    // Draggable Logic
+    // ---------------------------
+    function setupDraggable(element) {
+        let isDragging = false;
+        let startY = 0;
+        let initialTransformY = 0;
 
-    function drag(e) {
-        if (isDragging) {
+        element.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            element.style.cursor = 'grabbing';
+            startY = e.clientY;
+
+            const style = window.getComputedStyle(element);
+            const matrix = new WebKitCSSMatrix(style.transform);
+            initialTransformY = matrix.m42;
+
             e.preventDefault();
-            currentY = e.clientY - initialY;
-            yOffset = currentY;
-            setPosition();
-        }
-    }
+        });
 
-    // Set initial position
-    setPosition();
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
 
-    limitsBox.addEventListener('mousedown', dragStart);
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('mouseup', dragEnd);
+            const deltaY = e.clientY - startY;
+            let newY = initialTransformY + deltaY;
 
-    // Function to update limits on submit
-    function updateOnSubmit() {
-        console.log('Update triggered');
-        // Add a 2-second delay before fetching updated limits
-        setTimeout(() => {
-            displayLimits();
-        }, 3000);
-    }
+            const maxY = window.innerHeight - element.offsetHeight;
+            newY = Math.max(0, Math.min(newY, maxY));
 
-    // Listen for Enter key press
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            updateOnSubmit();
-        }
-    });
+            element.style.transform = `translateY(${newY}px)`;
+        });
 
-    // Function to add listener to submit button
-    function addSubmitListener() {
-        const submitButton = document.querySelector('button[aria-label="Submit"]');
-        if (submitButton) {
-            submitButton.addEventListener('click', updateOnSubmit);
-            console.log('Submit button listener added');
-        } else {
-            // If button not found, try again after a short delay
-            setTimeout(addSubmitListener, 1000);
-        }
-    }
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                element.style.cursor = 'grab';
 
-    // Call this function when the page loads
-    addSubmitListener();
-
-    // Also add a MutationObserver to watch for dynamically added submit buttons
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.addedNodes && mutation.addedNodes.length > 0) {
-                for (let node of mutation.addedNodes) {
-                    if (node.nodeType === Node.ELEMENT_NODE) {
-                        const submitButton = node.querySelector('button[aria-label="Submit"]');
-                        if (submitButton) {
-                            submitButton.addEventListener('click', updateOnSubmit);
-                            console.log('Submit button listener added to dynamically created button');
-                        }
-                    }
-                }
+                const style = window.getComputedStyle(element);
+                const matrix = new WebKitCSSMatrix(style.transform);
+                // Save to localStorage
+                localStorage.setItem('perplexity_limits_pos_y', matrix.m42);
             }
         });
+    }
+
+    // ---------------------------
+    // Initialization
+    // ---------------------------
+    const observer = new MutationObserver(() => {
+        if (document.body) {
+            initUI();
+            observer.disconnect();
+        }
     });
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
+    observer.observe(document.documentElement, { childList: true });
+
 })();

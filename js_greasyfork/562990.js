@@ -1,33 +1,58 @@
 // ==UserScript==
-// @name         MTeam FREE Torrents Extractor
-// @namespace    http://tampermonkey.net/
-// @version      2.0
+// @name         M-Team 免费种子提取
+// @name:en      M-Team FREE Torrents Extractor
+// @namespace    https://github.com/cyrahs
+// @version      2.6
 // @description  获取页面上所有标记为FREE的torrent id并通过API获取下载链接
+// @description:en  Finds all FREE-marked torrents on the page and fetches download links via the API.
 // @author       cyrah
 // @license      MIT
+// @homepageURL  https://github.com/cyrahs/mteam-js
+// @supportURL   https://github.com/cyrahs/mteam-js
 // @match        https://*.m-team.cc/*
 // @match        https://m-team.cc/*
-// @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/562990/MTeam%20FREE%20Torrents%20Extractor.user.js
-// @updateURL https://update.greasyfork.org/scripts/562990/MTeam%20FREE%20Torrents%20Extractor.meta.js
+// @icon         https://kp.m-team.cc/favicon.ico
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @downloadURL https://update.greasyfork.org/scripts/562990/M-Team%20%E5%85%8D%E8%B4%B9%E7%A7%8D%E5%AD%90%E6%8F%90%E5%8F%96.user.js
+// @updateURL https://update.greasyfork.org/scripts/562990/M-Team%20%E5%85%8D%E8%B4%B9%E7%A7%8D%E5%AD%90%E6%8F%90%E5%8F%96.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
 
-    // 配置管理（使用 localStorage）
-    const CONFIG_KEY = 'mteam_free_torrents_config';
+    // 配置管理（使用 GM 存储）
+    const CONFIG_KEYS = {
+        apiEndpoint: 'mteam_api_endpoint',
+        apiKey: 'mteam_api_key',
+        openUrl: 'mteam_open_url'
+    };
 
     function getConfig() {
         const defaultConfig = {
             apiEndpoint: 'https://api.m-team.cc/api/torrent/genDlToken',
-            apiKey: ''
+            apiKey: '',
+            openUrl: ''
         };
         try {
-            const saved = localStorage.getItem(CONFIG_KEY);
-            if (saved) {
-                return { ...defaultConfig, ...JSON.parse(saved) };
+            const storedEndpoint = GM_getValue(CONFIG_KEYS.apiEndpoint, undefined);
+            const storedApiKey = GM_getValue(CONFIG_KEYS.apiKey, undefined);
+            const storedOpenUrl = GM_getValue(CONFIG_KEYS.openUrl, undefined);
+
+            const hasGMValues =
+                storedEndpoint !== undefined ||
+                storedApiKey !== undefined ||
+                storedOpenUrl !== undefined;
+
+            if (hasGMValues) {
+                return {
+                    ...defaultConfig,
+                    apiEndpoint: storedEndpoint !== undefined ? storedEndpoint : defaultConfig.apiEndpoint,
+                    apiKey: storedApiKey !== undefined ? storedApiKey : defaultConfig.apiKey,
+                    openUrl: storedOpenUrl !== undefined ? storedOpenUrl : defaultConfig.openUrl
+                };
             }
+
         } catch (e) {
             console.error('读取配置失败:', e);
         }
@@ -36,7 +61,9 @@
 
     function saveConfig(config) {
         try {
-            localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+            GM_setValue(CONFIG_KEYS.apiEndpoint, config.apiEndpoint);
+            GM_setValue(CONFIG_KEYS.apiKey, config.apiKey);
+            GM_setValue(CONFIG_KEYS.openUrl, config.openUrl);
         } catch (e) {
             console.error('保存配置失败:', e);
         }
@@ -389,6 +416,18 @@
             console.log('\n完整结果:');
             console.log(resultTextWithInfo);
 
+            // 复制完成后按需打开指定网址
+            if (copied) {
+                const openUrl = (config.openUrl || '').trim();
+                if (openUrl) {
+                    try {
+                        window.open(openUrl, '_blank', 'noopener');
+                    } catch (e) {
+                        console.warn('自动打开网址失败:', e);
+                    }
+                }
+            }
+
             // 保存到全局变量
             window.freeTorrentIds = freeTorrents.map(t => t.id);
             window.freeTorrents = freeTorrents;
@@ -445,7 +484,7 @@
 
         panel.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="margin: 0; color: #1890ff;">MTeam FREE 种子设置</h3>
+                <h3 style="margin: 0; color: #1890ff;">M-Team FREE 种子设置</h3>
                 <button id="mteam-settings-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
             </div>
             <div style="margin-bottom: 15px;">
@@ -459,6 +498,13 @@
                 <input type="text" id="mteam-api-key" value="${config.apiKey}" 
                     style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;"
                     placeholder="请输入API Key">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">复制后自动打开网址 (可选):</label>
+                <input type="text" id="mteam-open-url" value="${config.openUrl || ''}" 
+                    style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;"
+                    placeholder="例如: http://localhost:8080 或 qbittorrent://">
+                <small style="color: #666;">留空则不自动打开新标签页</small>
             </div>
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
                 <button id="mteam-settings-cancel" style="padding: 8px 16px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; background: #f5f5f5;">取消</button>
@@ -476,13 +522,14 @@
         document.getElementById('mteam-settings-save').onclick = () => {
             const apiEndpoint = document.getElementById('mteam-api-endpoint').value.trim();
             const apiKey = document.getElementById('mteam-api-key').value.trim();
+            const openUrl = document.getElementById('mteam-open-url').value.trim();
 
             if (!apiEndpoint) {
                 alert('API Endpoint不能为空');
                 return;
             }
 
-            saveConfig({ apiEndpoint, apiKey });
+            saveConfig({ apiEndpoint, apiKey, openUrl });
             alert('设置已保存');
             panel.remove();
         };
@@ -506,47 +553,109 @@
 
     // 创建悬浮按钮
     function createFloatingButton() {
-        const button = document.createElement('button');
-        button.id = 'mteam-free-btn';
-        button.textContent = '获取FREE种子';
-        button.style.cssText = `
+        const wrapper = document.createElement('div');
+        wrapper.id = 'mteam-free-btn-wrap';
+        wrapper.style.cssText = `
             position: fixed;
             bottom: 20px;
             right: 20px;
-            padding: 12px 24px;
+            display: inline-flex;
+            align-items: center;
             background: #1890ff;
-            color: white;
-            border: none;
             border-radius: 25px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
+            overflow: hidden;
             box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
             z-index: 9999;
-            transition: all 0.3s;
+            transition: transform 0.3s;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         `;
 
-        button.onmouseover = () => {
-            button.style.background = '#40a9ff';
-            button.style.transform = 'scale(1.05)';
+        const mainButton = document.createElement('button');
+        mainButton.id = 'mteam-free-btn';
+        mainButton.textContent = '获取FREE种子';
+        mainButton.style.cssText = `
+            height: 44px;
+            padding: 0 14px 0 20px;
+            background: transparent;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            transition: color 0.3s;
+        `;
+
+        const divider = document.createElement('span');
+        divider.style.cssText = `
+            width: 1px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 1px;
+            align-self: stretch;
+            margin: 6px 0;
+            pointer-events: none;
+        `;
+
+        const settingsButton = document.createElement('button');
+        settingsButton.id = 'mteam-settings-btn';
+        settingsButton.innerHTML = `
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"
+                style="width: 22px; height: 22px; display: block; fill: currentColor;">
+                <path d="M19.14,12.94c0.04-0.31,0.06-0.63,0.06-0.94s-0.02-0.63-0.06-0.94l2.03-1.58
+                    c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.11-0.2-0.35-0.28-0.57-0.22l-2.39,0.96
+                    c-0.5-0.38-1.04-0.7-1.64-0.94L14.5,2.5c-0.02-0.22-0.2-0.39-0.42-0.39h-3.84
+                    c-0.22,0-0.4,0.17-0.42,0.39L9.44,5.35C8.84,5.59,8.3,5.91,7.8,6.29L5.41,5.33
+                    c-0.21-0.08-0.46,0.02-0.57,0.22L2.92,8.87C2.81,9.07,2.86,9.34,3.04,9.48l2.03,1.58
+                    C5.03,11.37,5.01,11.69,5.01,12s0.02,0.63,0.06,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61
+                    l1.92,3.32c0.11,0.2,0.35,0.28,0.57,0.22l2.39-0.96c0.5,0.38,1.04,0.7,1.64,0.94
+                    l0.38,2.85c0.02,0.22,0.2,0.39,0.42,0.39h3.84c0.22,0,0.4-0.17,0.42-0.39l0.38-2.85
+                    c0.6-0.24,1.14-0.56,1.64-0.94l2.39,0.96c0.21,0.08,0.46-0.02,0.57-0.22l1.92-3.32
+                    c0.11-0.2,0.06-0.46-0.12-0.61L19.14,12.94z M12,15.6c-1.99,0-3.6-1.61-3.6-3.6
+                    s1.61-3.6,3.6-3.6s3.6,1.61,3.6,3.6S13.99,15.6,12,15.6z"/>
+            </svg>
+        `;
+        settingsButton.title = '打开设置';
+        settingsButton.setAttribute('aria-label', '设置');
+        settingsButton.style.cssText = `
+            height: 44px;
+            padding: 0 10px;
+            min-width: 40px;
+            background: transparent;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s;
+        `;
+
+        wrapper.onmouseenter = () => {
+            wrapper.style.background = '#40a9ff';
+            wrapper.style.transform = 'scale(1.05)';
         };
-        button.onmouseout = () => {
-            button.style.background = '#1890ff';
-            button.style.transform = 'scale(1)';
+        wrapper.onmouseleave = () => {
+            wrapper.style.background = '#1890ff';
+            wrapper.style.transform = 'scale(1)';
         };
 
-        button.onclick = () => {
+        mainButton.onclick = () => {
             main();
         };
 
-        // 右键点击打开设置
-        button.oncontextmenu = (e) => {
-            e.preventDefault();
+        settingsButton.onclick = () => {
             showSettingsPanel();
         };
 
-        document.body.appendChild(button);
+        wrapper.appendChild(mainButton);
+        wrapper.appendChild(divider);
+        wrapper.appendChild(settingsButton);
+        document.body.appendChild(wrapper);
     }
 
     // 初始化

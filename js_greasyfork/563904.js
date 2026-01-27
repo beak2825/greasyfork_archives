@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Instagram Ultimate Video Controls
+// @name         Instagram | Ultimate Video Controls
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      1.7.5
+// @version      1.7.8
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Adds video controls to Instagram: seekable progress bar, volume/speed sliders, Picture-in-Picture, fullscreen, and full keyboard shortcuts. Sleek auto-hiding UI that respects native play/pause behavior.
@@ -10,8 +10,8 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/563904/Instagram%20Ultimate%20Video%20Controls.user.js
-// @updateURL https://update.greasyfork.org/scripts/563904/Instagram%20Ultimate%20Video%20Controls.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563904/Instagram%20%7C%20Ultimate%20Video%20Controls.user.js
+// @updateURL https://update.greasyfork.org/scripts/563904/Instagram%20%7C%20Ultimate%20Video%20Controls.meta.js
 // ==/UserScript==
 
 (function() {
@@ -965,6 +965,18 @@
             // Speed control
             this.speedWrap = this.createSpeedControl();
 
+            // Support button
+            this.supportBtn = document.createElement('a');
+            this.supportBtn.className = 'igu-btn';
+            this.supportBtn.href = 'https://ko-fi.com/piknockyou';
+            this.supportBtn.target = '_blank';
+            this.supportBtn.rel = 'noopener noreferrer';
+            this.supportBtn.innerHTML = '☕';
+            this.supportBtn.style.fontSize = '16px';
+            this.supportBtn.style.textDecoration = 'none';
+            this.supportBtn.addEventListener('click', (e) => e.stopPropagation());
+            TooltipManager.attach(this.supportBtn, 'Support this script');
+
             // PiP button
             this.pipBtn = this.createButton('igu-btn', ICONS.pip, () => this.togglePiP());
             TooltipManager.attach(this.pipBtn, 'Picture-in-Picture (P)');
@@ -974,9 +986,9 @@
             TooltipManager.attach(this.fsBtn, 'Fullscreen (F)');
 
             // Assemble controls - volume and speed next to play button
-            // Timeline has flex: 1, pip has margin-left: auto to push pip/fs to the right
+            // Timeline has flex: 1, support has margin-left: auto to push support/pip/fs to the right
             // No margins on edge buttons for corner accessibility
-            this.pipBtn.style.marginLeft = 'auto';
+            this.supportBtn.style.marginLeft = 'auto';
             this.playBtn.style.marginLeft = '0';
             this.fsBtn.style.marginRight = '0';
 
@@ -985,6 +997,7 @@
                 this.volumeWrap,
                 this.speedWrap,
                 this.timeline,
+                this.supportBtn,
                 this.pipBtn,
                 this.fsBtn
             );

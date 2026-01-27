@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name          关注列表导出
+// @name         关注列表导出
 // @namespace    https://github.com/yourname
-// @version      1.2
-// @description  [箭头修复+固定序号]三重发博时间获取+并发优化+反爬增强
+// @version      1.3
+// @description  [安全增强+历史保护]并发优化+智能暂停+防误触+无痕模式
 // @author       YourName
 // @match        https://weibo.com/*
 // @match        https://*.weibo.com/*
@@ -11,6 +11,7 @@
 // @grant        GM_notification
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant        GM_registerMenuCommand
 // @connect      weibo.com
 // @require      https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.7/dayjs.min.js
@@ -19,7 +20,6 @@
 // @downloadURL https://update.greasyfork.org/scripts/540942/%E5%85%B3%E6%B3%A8%E5%88%97%E8%A1%A8%E5%AF%BC%E5%87%BA.user.js
 // @updateURL https://update.greasyfork.org/scripts/540942/%E5%85%B3%E6%B3%A8%E5%88%97%E8%A1%A8%E5%AF%BC%E5%87%BA.meta.js
 // ==/UserScript==
-
 
 (function () {
     'use strict';
@@ -57,11 +57,10 @@
                 'en-US,en;q=0.9,zh-CN;q=0.8'
             ],
             USER_AGENTS: [
-                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36',
-                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36',
-                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Safari/605.1.15',
-                'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Mobile/15E148 Safari/604.1'
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15',
+                'Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1'
             ],
             ACCEPT_ENCODING: [
                 'gzip, deflate, br',
@@ -146,16 +145,17 @@
             line-height: 1.2;
         `,
         DATE_FORMAT: 'YYYY.M.D',
-        MIN_DELAY: 500,  // 增加最小延迟时间
-        MAX_DELAY: 3000, // 增加最大延迟时间
-        MAX_CONCURRENT: 5,
-        MAX_RETRY: 5,
+        MIN_DELAY: 1500,
+        MAX_DELAY: 5000,
+        MAX_CONCURRENT: 3,
+        MAX_RETRY: 7,
         PAGE_SIZE: 20,
         EXPORT_FORMATS: {
             HTML: 'HTML',
             CSV: 'CSV'
         },
-        CACHE_EXPIRY: 30 * 60 * 1000, // 缓存有效期30分钟
+        CACHE_EXPIRY: 30 * 60 * 1000,
+        HISTORY_EXPIRY: 180 * 24 * 60 * 60 * 1000
     };
 
     class WeiboFollowExporter {
@@ -178,8 +178,46 @@
             };
             this.exportFormat = CONFIG.EXPORT_FORMATS.HTML;
             this.formatSelector = null;
+            this.lastErrorTime = 0;
+            this.errorCount = 0;
+            this.pauseMultiplier = 1;
+            this.showRemoved = GM_getValue('showRemoved', true);
+            this.stealthMode = false;
+            this.stealthCheckbox = null;
+
+            this.cleanupHistoryData();
+            setInterval(() => {
+                this.cleanupHistoryData();
+            }, 24 * 60 * 60 * 1000);
+
+            this.registerMenuCommands();
             this.init();
             this.bindPageUnload();
+        }
+
+        registerMenuCommands() {
+            const showRemovedText = this.showRemoved ? '隐藏减少关注' : '显示减少关注';
+            GM_registerMenuCommand(showRemovedText, () => {
+                this.showRemoved = !this.showRemoved;
+                GM_setValue('showRemoved', this.showRemoved);
+                const newText = this.showRemoved ? '隐藏减少关注' : '显示减少关注';
+                GM_notification({
+                    title: '设置已更新',
+                    text: `减少关注显示: ${this.showRemoved ? '开启' : '关闭'}`,
+                    timeout: 2000
+                });
+            });
+        }
+
+        cleanupHistoryData() {
+            const historyKey = `followHistory_${this.userId}`;
+            const historyData = GM_getValue(historyKey, { timestamp: 0, users: {} });
+
+            if (Date.now() - historyData.timestamp > CONFIG.HISTORY_EXPIRY) {
+                historyData.users = {};
+                historyData.timestamp = Date.now();
+                GM_setValue(historyKey, historyData);
+            }
         }
 
         extractUserId() {
@@ -195,6 +233,9 @@
             this.createManualTextarea();
             this.createExportButton();
             this.createProgressText();
+            if (location.pathname.includes('/follow')) {
+                this.createStealthModeCheckbox();
+            }
             this.addPageListener();
         }
 
@@ -211,7 +252,6 @@
                 align-items: flex-end;
             `;
 
-            // 创建格式选择器
             const formatContainer = document.createElement('div');
             formatContainer.style.cssText = `
                 position: absolute;
@@ -256,10 +296,9 @@
             formatContainer.appendChild(formatLabel);
             formatContainer.appendChild(this.formatSelector);
 
-            // 创建导出按钮
             this.exportButton = document.createElement('button');
             this.exportButton.id = 'weiboExportBtn';
-            this.exportButton.textContent = '↓ 导出关注列表';
+            this.exportButton.textContent = '导出关注列表';
             this.exportButton.style = CONFIG.BUTTON_STYLE;
             this.exportButton.onclick = () => this.startExport();
 
@@ -287,10 +326,8 @@
             this.switchButton.style = CONFIG.SWITCH_BUTTON_STYLE;
             this.switchButton.onclick = () => {
                 if (!location.pathname.includes('/follow')) {
-                    // 在非关注页面，直接切换输入框显示状态
                     this.toggleTextarea();
                 } else {
-                    // 在关注页面，切换自动/手动模式
                     this.toggleMode();
                 }
             };
@@ -307,41 +344,77 @@
             document.body.appendChild(this.manualTextarea);
         }
 
-        toggleMode() {
-            // 检查是否要切换到自动模式（当前是手动模式，且点击切换按钮）
-            const willSwitchToAuto = this.isManualMode;
+        createStealthModeCheckbox() {
+            const container = document.createElement('div');
+            container.style.cssText = `
+                position: fixed;
+                bottom: 210px;
+                right: 30px;
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                background: rgba(255, 255, 255, 0.9);
+                padding: 6px 10px;
+                border-radius: 6px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                font-size: 12px;
+                color: #333;
+            `;
 
-            // 在非关注页面时，如果要切换到自动模式，立即阻止并提示
+            this.stealthCheckbox = document.createElement('input');
+            this.stealthCheckbox.type = 'checkbox';
+            this.stealthCheckbox.id = 'weiboStealthMode';
+            this.stealthCheckbox.style.cssText = `
+                width: 14px;
+                height: 14px;
+                cursor: pointer;
+                margin: 0;
+            `;
+            this.stealthCheckbox.checked = this.stealthMode;
+            this.stealthCheckbox.onchange = () => {
+                this.stealthMode = this.stealthCheckbox.checked;
+            };
+
+            const label = document.createElement('label');
+            label.htmlFor = 'weiboStealthMode';
+            label.textContent = '无痕模式';
+            label.style.cssText = `
+                cursor: pointer;
+                white-space: nowrap;
+                font-size: 12px;
+                color: #666;
+            `;
+
+            container.appendChild(this.stealthCheckbox);
+            container.appendChild(label);
+            document.body.appendChild(container);
+        }
+
+        toggleMode() {
+            const willSwitchToAuto = this.isManualMode;
             if (!location.pathname.includes('/follow') && willSwitchToAuto) {
                 alert('只有在关注列表页面才能使用自动获取模式');
                 return;
             }
 
-            // 正常切换模式
             this.isManualMode = !this.isManualMode;
-
-            // 在关注页面时
             if (location.pathname.includes('/follow')) {
                 this.exportButton.style.display = 'block';
-                this.exportButton.textContent = this.isManualMode ? '导出手动输入列表' : '↓ 导出关注列表';
+                this.exportButton.textContent = this.isManualMode ? '导出手动输入列表' : '导出关注列表';
                 this.switchButton.textContent = this.isManualMode ? '手动输入模式' : '自动获取模式';
 
                 if (this.isManualMode) {
-                    // 切换到手动模式时，显示输入框
                     this.toggleTextarea();
                 } else {
-                    // 切换到自动模式时，隐藏输入框并清空内容
                     this.manualTextarea.style.display = 'none';
                     this.manualTextarea.value = '';
                 }
             } else {
-                // 在非关注页面时
                 if (this.isManualMode) {
-                    // 切换到手动模式时，显示导出按钮，但不显示输入框
                     this.exportButton.style.display = 'block';
                     this.exportButton.textContent = '导出手动输入列表';
                 } else {
-                    // 隐藏所有元素
                     this.exportButton.style.display = 'none';
                     this.manualTextarea.style.display = 'none';
                 }
@@ -351,14 +424,10 @@
         toggleTextarea() {
             const isVisible = this.manualTextarea.style.display === 'block';
             this.manualTextarea.style.display = isVisible ? 'none' : 'block';
-
-            // 同步显示/隐藏导出按钮
             if (this.exportButton) {
                 this.exportButton.style.display = isVisible ? 'none' : 'block';
                 this.exportButton.textContent = '导出手动输入列表';
             }
-
-            // 隐藏时清空内容
             if (isVisible) {
                 this.manualTextarea.value = '';
             }
@@ -366,6 +435,9 @@
 
         async startExport() {
             if (this.isExporting) return;
+
+            const confirmExport = confirm('确定开始导出吗？导出过程中请不要关闭页面。');
+            if (!confirmExport) return;
 
             if (this.isManualMode) {
                 await this.startManualExport();
@@ -404,7 +476,6 @@
 
             try {
                 this.isExporting = true;
-                // 隐藏手动输入相关元素
                 if (this.manualTextarea) this.manualTextarea.style.display = 'none';
                 if (this.switchButton) this.switchButton.style.display = 'none';
                 this.updateButtonText('正在获取数据...');
@@ -464,22 +535,19 @@
                 alert(`导出失败：${error.message}`);
             } finally {
                 this.isExporting = false;
-                this.updateButtonText(this.isManualMode ? '导出手动输入列表' : '↓ 导出关注列表');
+                this.updateButtonText(this.isManualMode ? '导出手动输入列表' : '导出关注列表');
                 this.hideProgressText();
-                // 导出完成后重新显示手动输入相关元素
                 if (this.manualTextarea) this.manualTextarea.style.display = this.isManualMode ? 'block' : 'none';
                 if (this.switchButton) this.switchButton.style.display = 'block';
                 this.controller = new AbortController();
             }
         }
 
-        // 检查缓存是否有效
         isCacheValid(key, type) {
             const lastUpdate = this.cache.lastUpdate.get(`${type}_${key}`);
             return lastUpdate && (Date.now() - lastUpdate) < CONFIG.CACHE_EXPIRY;
         }
 
-        // 从缓存获取数据
         getCachedData(key, type) {
             if (this.isCacheValid(key, type)) {
                 return this.cache[type].get(key);
@@ -487,14 +555,12 @@
             return null;
         }
 
-        // 设置缓存数据
         setCacheData(key, type, data) {
             this.cache[type].set(key, data);
             this.cache.lastUpdate.set(`${type}_${key}`, Date.now());
         }
 
         async fetchUserInfoWithRetry(id, retryCount = 0) {
-            // 先检查缓存
             const cachedData = this.getCachedData(id, 'userInfo');
             if (cachedData) {
                 return cachedData;
@@ -503,14 +569,13 @@
             try {
                 const response = await this.fetchUserProfile(id);
                 if (response?.data?.user) {
-                    // 设置缓存
                     this.setCacheData(id, 'userInfo', response.data.user);
                     return response.data.user;
                 }
                 throw new Error('获取用户信息失败');
             } catch (error) {
                 if (retryCount < CONFIG.MAX_RETRY) {
-                    await new Promise(resolve => setTimeout(resolve, 2000 * (retryCount + 1)));
+                    await this.smartPause(retryCount);
                     return this.fetchUserInfoWithRetry(id, retryCount + 1);
                 }
                 throw error;
@@ -518,7 +583,6 @@
         }
 
         async fetchWeiboDataWithRetry(id, retryCount = 0) {
-            // 先检查缓存
             const cachedData = this.getCachedData(id, 'weiboData');
             if (cachedData) {
                 return cachedData;
@@ -527,18 +591,38 @@
             try {
                 const response = await this.fetchWeiboData(id);
                 if (response?.data?.list) {
-                    // 设置缓存
                     this.setCacheData(id, 'weiboData', response);
                     return response;
                 }
                 throw new Error('获取微博数据失败');
             } catch (error) {
                 if (retryCount < CONFIG.MAX_RETRY) {
-                    await new Promise(resolve => setTimeout(resolve, 2000 * (retryCount + 1)));
+                    await this.smartPause(retryCount);
                     return this.fetchWeiboDataWithRetry(id, retryCount + 1);
                 }
                 return null;
             }
+        }
+
+        async smartPause(retryCount) {
+            const now = Date.now();
+            if (now - this.lastErrorTime < 30000) {
+                this.errorCount++;
+            } else {
+                this.errorCount = 1;
+            }
+            this.lastErrorTime = now;
+
+            if (this.errorCount >= 3) {
+                this.pauseMultiplier = Math.min(this.pauseMultiplier * 2, 8);
+            }
+
+            const baseDelay = 2000 * (retryCount + 1);
+            const extraDelay = Math.random() * 1000;
+            const finalDelay = baseDelay * this.pauseMultiplier + extraDelay;
+
+            console.log(`智能暂停: ${Math.round(finalDelay)}ms (倍率: ${this.pauseMultiplier}x)`);
+            await new Promise(resolve => setTimeout(resolve, finalDelay));
         }
 
         parseLastPost(weiboData) {
@@ -551,7 +635,6 @@
             const key = `followers_${uid}`;
             const prevData = GM_getValue(key, null);
 
-            // 如果没有历史数据，保存当前数据并返回"无"
             if (!prevData) {
                 GM_setValue(key, {
                     count: currentCount,
@@ -564,10 +647,8 @@
                 };
             }
 
-            // 有历史数据，计算变化值
             const change = currentCount - prevData.count;
 
-            // 更新数据
             GM_setValue(key, {
                 count: currentCount,
                 timestamp: Date.now()
@@ -583,7 +664,6 @@
         async startAutoExport() {
             try {
                 this.isExporting = true;
-                // 隐藏手动输入相关元素
                 if (this.manualTextarea) this.manualTextarea.style.display = 'none';
                 if (this.switchButton) this.switchButton.style.display = 'none';
 
@@ -591,23 +671,20 @@
                 this.updateButtonText('正在获取总数...');
                 this.totalFollows = await this.getTotalFollows();
 
-                // 修改预估时间计算逻辑
                 const totalPages = Math.ceil(this.totalFollows / CONFIG.PAGE_SIZE);
-                const avgTimePerRequest = 3; // 每个请求平均3秒
+                const avgTimePerRequest = this.stealthMode ? 2 : 4;
                 const concurrentRequests = CONFIG.MAX_CONCURRENT;
                 const estimatedTime = Math.ceil((totalPages * avgTimePerRequest) / concurrentRequests);
 
                 if (!confirm(`准备导出 ${this.totalFollows} 个关注，预计需要 ${estimatedTime} 秒（约${Math.ceil(estimatedTime/60)}分钟），继续吗？`)) {
                     this.isExporting = false;
-                    this.updateButtonText('↓ 导出关注列表');
+                    this.updateButtonText('导出关注列表');
                     return;
                 }
 
                 this.updateButtonText('开始导出...');
                 this.showProgressText();
                 this.updateProgressText('正在准备数据...');
-
-                // 添加初始进度显示
                 this.currentProgress = 0;
                 this.updateProgressText(`导出: 0/${this.totalFollows} | 0%`);
 
@@ -627,9 +704,8 @@
                 alert(`导出失败：${error.message}`);
             } finally {
                 this.isExporting = false;
-                this.updateButtonText('↓ 导出关注列表');
+                this.updateButtonText('导出关注列表');
                 this.hideProgressText();
-                // 导出完成后重新显示手动输入相关元素
                 if (this.manualTextarea) this.manualTextarea.style.display = this.isManualMode ? 'block' : 'none';
                 if (this.switchButton) this.switchButton.style.display = 'block';
                 this.controller = new AbortController();
@@ -639,6 +715,27 @@
         async getTotalFollows() {
             const data = await this.fetchAPI(1);
             if (!data || !data.total_number) throw new Error('无法获取关注总数');
+
+            const historyKey = `followHistory_${this.userId}`;
+            let historyData = GM_getValue(historyKey, { timestamp: 0, users: {} });
+
+            if (!historyData.users || Object.keys(historyData.users).length === 0) {
+                historyData.users = {};
+                historyData.timestamp = Date.now();
+
+                data.users.forEach(user => {
+                    historyData.users[user.idstr] = {
+                        name: user.screen_name,
+                        remark: user.remark || '',
+                        url: `https://weibo.com/u/${user.idstr}`,
+                        addedTime: Date.now(),
+                        removed: false
+                    };
+                });
+
+                GM_setValue(historyKey, historyData);
+            }
+
             return data.total_number;
         }
 
@@ -647,7 +744,6 @@
             let result = [];
             let currentPage = 1;
             let processedCount = 0;
-            let lastProgressUpdate = 0;
 
             while (currentPage <= totalPage) {
                 const pagesToFetch = Array.from(
@@ -664,7 +760,6 @@
                         this.fetchWithRetry(page)
                             .then(async data => {
                                 if (data?.users) {
-                                    // 立即更新进度
                                     processedCount += data.users.length;
                                     this.currentProgress = processedCount;
                                     this.updateProgressText(
@@ -685,7 +780,6 @@
                     }
                 }
 
-                // 减少延迟时间，让进度更新更快
                 await new Promise(resolve => setTimeout(resolve, 200));
             }
 
@@ -695,7 +789,6 @@
 
         async fetchWithRetry(page, retryCount = 0) {
             try {
-                // 使用指数退避延迟
                 const backoffDelay = Math.pow(2, retryCount) * 1000;
                 await new Promise(r => setTimeout(r, backoffDelay));
 
@@ -703,7 +796,7 @@
             } catch (error) {
                 console.error(`第 ${page} 页尝试 ${retryCount + 1} 次失败：`, error);
                 if (retryCount < CONFIG.MAX_RETRY) {
-                    await new Promise(r => setTimeout(r, 2000 * (retryCount + 1)));
+                    await this.smartPause(retryCount);
                     return this.fetchWithRetry(page, retryCount + 1);
                 }
                 this.failedPages.push(page);
@@ -712,6 +805,8 @@
         }
 
         async getLastPost(uid) {
+            if (this.stealthMode) return null;
+
             try {
                 const data = await this.fetchWeiboData(uid);
                 if (data?.data?.list) {
@@ -726,6 +821,8 @@
         }
 
         async getLastPostFromProfile(uid) {
+            if (this.stealthMode) return null;
+
             try {
                 const data = await this.fetchUserProfile(uid);
                 return data?.status?.created_at || null;
@@ -733,17 +830,6 @@
                 console.error('获取用户信息失败:', error);
                 return null;
             }
-        }
-
-        normalizeTime(rawTime) {
-            const mappings = {
-                '今天': dayjs().format('YYYY-MM-DD'),
-                '昨天': dayjs().subtract(1, 'day').format('YYYY-MM-DD')
-            };
-            Object.entries(mappings).forEach(([key, val]) => {
-                rawTime = rawTime.replace(key, val);
-            });
-            return dayjs(rawTime).isValid() ? dayjs(rawTime).format('YYYY-MM-DD HH:mm:ss') : null;
         }
 
         randomDelay() {
@@ -762,22 +848,24 @@
         }
 
         async processUser(user, page, index) {
-            // 增加更随机的延迟策略
             const dynamicDelay = Math.random() * (CONFIG.MAX_DELAY - CONFIG.MIN_DELAY) + CONFIG.MIN_DELAY;
             await new Promise(r => setTimeout(r, dynamicDelay));
 
             const currentFollowers = user.followers_count;
             const followersChange = await this.getFollowersChange(user.idstr, currentFollowers);
 
-            const [lastPost1, lastPost2] = await Promise.allSettled([
-                this.getLastPost(user.idstr),
-                this.getLastPostFromProfile(user.idstr)
-            ]);
+            let lastPost = null;
+            if (!this.stealthMode) {
+                const [lastPost1, lastPost2] = await Promise.allSettled([
+                    this.getLastPost(user.idstr),
+                    this.getLastPostFromProfile(user.idstr)
+                ]);
 
-            const lastPost = [
-                lastPost1.status === 'fulfilled' ? lastPost1.value : null,
-                lastPost2.status === 'fulfilled' ? lastPost2.value : null
-            ].find(t => t && dayjs(t).isValid());
+                lastPost = [
+                    lastPost1.status === 'fulfilled' ? lastPost1.value : null,
+                    lastPost2.status === 'fulfilled' ? lastPost2.value : null
+                ].find(t => t && dayjs(t).isValid());
+            }
 
             return {
                 order: (page - 1) * CONFIG.PAGE_SIZE + index + 1,
@@ -819,7 +907,6 @@
                 'Pragma': 'no-cache'
             };
 
-            // 随机添加安全相关的请求头
             if (Math.random() > 0.3) {
                 headers['Sec-Fetch-Dest'] = this.randomArrayElement(CONFIG.REQUEST_HEADERS.SEC_FETCH_DEST);
                 headers['Sec-Fetch-Mode'] = this.randomArrayElement(CONFIG.REQUEST_HEADERS.SEC_FETCH_MODE);
@@ -858,6 +945,8 @@
         }
 
         async fetchUserProfile(uid) {
+            if (this.stealthMode) return { data: { user: { screen_name: '未知用户' } } };
+
             return new Promise((resolve, reject) => {
                 GM_xmlhttpRequest({
                     method: 'GET',
@@ -881,6 +970,8 @@
         }
 
         async fetchWeiboData(uid) {
+            if (this.stealthMode) return { data: { list: [] } };
+
             return new Promise((resolve, reject) => {
                 GM_xmlhttpRequest({
                     method: 'GET',
@@ -913,9 +1004,51 @@
         async exportFile(data) {
             this.exportFormat = this.formatSelector.value;
             const timestamp = dayjs().format(CONFIG.DATE_FORMAT);
-            // 根据模式设置不同的文件名前缀
             const prefix = this.isManualMode ? '自填导出' : this.userId;
             const filename = `${prefix}-${timestamp}`;
+
+            const currentUserIdSet = new Set(data.map(user => user.id));
+            const previousKey = `previousExport_${this.userId}`;
+            const previousUserIdSet = new Set(GM_getValue(previousKey, []));
+
+            const removedIds = [...previousUserIdSet].filter(id => !currentUserIdSet.has(id));
+
+            const historyKey = `followHistory_${this.userId}`;
+            let historyData = GM_getValue(historyKey, { timestamp: 0, users: {} });
+
+            this.removedUsers = removedIds.map(id => {
+                const user = historyData.users[id] || {};
+                return {
+                    id: id,
+                    name: user.name || '未知用户',
+                    url: user.url || `https://weibo.com/u/${id}`,
+                    remark: user.remark || ''
+                };
+            });
+
+            data.forEach(user => {
+                historyData.users[user.id] = {
+                    name: user.name,
+                    remark: user.remark,
+                    url: user.url,
+                    addedTime: Date.now(),
+                    removed: false,
+                    followers: user.followers_raw,
+                    lastExport: Date.now()
+                };
+            });
+
+            removedIds.forEach(id => {
+                if (historyData.users[id]) {
+                    historyData.users[id].removed = true;
+                    historyData.users[id].removedTime = Date.now();
+                }
+            });
+
+            historyData.timestamp = Date.now();
+            GM_setValue(historyKey, historyData);
+
+            GM_setValue(previousKey, [...currentUserIdSet]);
 
             if (this.exportFormat === CONFIG.EXPORT_FORMATS.CSV) {
                 await this.exportCSV(data, filename);
@@ -938,6 +1071,41 @@
         }
 
         async exportHTML(data, filename) {
+            const generateRemovedSection = () => {
+                if (!this.showRemoved || !this.removedUsers || this.removedUsers.length === 0) return '';
+
+                return `
+        <div class="removed-section">
+            <div class="removed-header">
+                <h2 style="margin: 0;">减少的关注（${this.removedUsers.length}人）</h2>
+                <div class="removed-count">这些用户已从你的关注列表中消失</div>
+            </div>
+            <table class="removed-table">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>昵称</th>
+                        <th>备注</th>
+                        <th>主页链接/ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${this.removedUsers.map((item, index) => `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${this.escapeHtml(item.name)}</td>
+                            <td>${item.remark ? this.escapeHtml(item.remark) : '-'}</td>
+                            <td>
+                                <a href="${item.url}" target="_blank">访问主页</a>
+                                <div class="user-id">ID: ${this.escapeHtml(item.id)}</div>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>`;
+            };
+
             const htmlContent = `
 <!DOCTYPE html>
 <html>
@@ -1085,46 +1253,48 @@
             vertical-align: baseline;
         }
         .follower-filter {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            display: inline-block;
             margin-right: 15px;
         }
-        .follower-input {
-            width: 50px; /* 缩小输入框宽度 */
+        #followerFilter {
             padding: 5px;
             border-radius: 4px;
             border: 1px solid #ccc;
             font-size: 12px;
-            text-align: center;
-            /* 移除上下箭头 */
-            -moz-appearance: textfield;
+            width: 120px;
         }
-        .follower-input::-webkit-outer-spin-button,
-        .follower-input::-webkit-inner-spin-button {
-            -webkit-appearance: none; /* 移除Webkit浏览器的上下箭头 */
-            margin: 0;
-        }
-        .follower-unit {
-            padding: 5px;
+        .removed-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #fff6f6;
+            border-left: 4px solid #e74c3c;
             border-radius: 4px;
-            border: 1px solid #ccc;
-            font-size: 12px;
-            width: 50px;
         }
-        .apply-btn {
-            padding: 5px 10px;
-            margin-left: 5px;
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
+        .removed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
-        .apply-btn:hover {
-            background: #2980b9;
+        .removed-count {
+            color: #e74c3c;
+            font-weight: bold;
         }
+        .removed-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .removed-table th {
+            background: #fdecea;
+            color: #c0392b;
+        }
+        .removed-table td, .removed-table th {
+            padding: 10px;
+            border: 1px solid #f5cccc;
+            text-align: left;
+        }
+        .removed-table tr:hover { background: #fef0ef; }
     </style>
 </head>
 <body>
@@ -1142,20 +1312,15 @@
         <div class="info">
             <div>用户ID：${this.userId}</div>
             <div class="info-center">导出时间：${dayjs().format('YYYY年MM月DD日 HH:mm')}</div>
-            <!-- 修改后的粉丝数筛选控件：恢复单位选择 -->
             <div class="follower-filter">
-                <input type="number" min="0" class="follower-input" id="minFollower" placeholder="最小值" oninput="applyCustomFilter()">
-                <select class="follower-unit" id="minUnit" onchange="applyCustomFilter()">
-                    <option value="1">个</option> <!-- 默认选择"个" -->
-                    <option value="1000">千</option>
-                    <option value="10000">万</option>
-                </select>
-                <span>-</span>
-                <input type="number" min="0" class="follower-input" id="maxFollower" placeholder="最大值" oninput="applyCustomFilter()">
-                <select class="follower-unit" id="maxUnit" onchange="applyCustomFilter()">
-                    <option value="1000">千</option> <!-- 默认选择"千" -->
-                    <option value="1">个</option>
-                    <option value="10000">万</option>
+                <select id="followerFilter" onchange="filterByFollowers(this.value)" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc; font-size: 12px;">
+                    <option value="all">全部粉丝数</option>
+                    <option value="0-1000">粉丝数0-1千</option>
+                    <option value="1000-2000">粉丝数1-2千</option>
+                    <option value="2000-5000">粉丝数2-5千</option>
+                    <option value="5000-10000">粉丝数5千-1万</option>
+                    <option value="10000-50000">粉丝数1万-5万以下</option>
+                    <option value="50000+">粉丝数5万以上</option>
                 </select>
             </div>
             <div class="unit-switch">
@@ -1205,6 +1370,8 @@
                 `).join('')}
             </tbody>
         </table>
+        ${generateRemovedSection()}
+
     </div>
     <script>
         let currentSort = { column: null, type: 'number', direction: 1 };
@@ -1259,7 +1426,6 @@
                 case 'remark':
                     const hasRemark = cell.dataset.hasRemark === '1';
                     const remarkText = cell.textContent.trim();
-                    // 有备注的排在前面，相同情况下按备注文本排序
                     return hasRemark ? remarkText : 'zzz' + remarkText;
                 case 'string':
                 default:
@@ -1310,24 +1476,39 @@
             });
         }
 
-        // 修改后的粉丝筛选函数：添加单位转换
-        function applyCustomFilter() {
-            const minInput = document.getElementById('minFollower').value;
-            const maxInput = document.getElementById('maxFollower').value;
-            const minUnit = parseInt(document.getElementById('minUnit').value) || 1;
-            const maxUnit = parseInt(document.getElementById('maxUnit').value) || 1000;
-
-            const min = minInput ? parseInt(minInput) * minUnit : 0;
-            const max = maxInput ? parseInt(maxInput) * maxUnit : Number.MAX_SAFE_INTEGER;
-
+        function filterByFollowers(range) {
             const rows = document.querySelectorAll('#followTable tbody tr');
             rows.forEach(row => {
                 const followers = parseInt(row.querySelector('.followers').dataset.followers) || 0;
-                const shouldShow = followers >= min && followers <= max;
+                let shouldShow = true;
+
+                switch(range) {
+                    case '0-1000':
+                        shouldShow = followers >= 0 && followers < 1000;
+                        break;
+                    case '1000-2000':
+                        shouldShow = followers >= 1000 && followers < 2000;
+                        break;
+                    case '2000-5000':
+                        shouldShow = followers >= 2000 && followers < 5000;
+                        break;
+                    case '5000-10000':
+                        shouldShow = followers >= 5000 && followers < 10000;
+                        break;
+                    case '10000-50000':
+                        shouldShow = followers >= 10000 && followers < 50000;
+                        break;
+                    case '50000+':
+                        shouldShow = followers >= 50000;
+                        break;
+                    case 'all':
+                    default:
+                        shouldShow = true;
+                }
+
                 row.style.display = shouldShow ? '' : 'none';
             });
         }
-
     </script>
 </body>
 </html>
@@ -1386,8 +1567,10 @@
         }
 
         bindPageUnload() {
-            window.addEventListener('beforeunload', () => {
+            window.addEventListener('beforeunload', (e) => {
                 if (this.isExporting) {
+                    e.preventDefault();
+                    e.returnValue = '正在导出数据，确定要离开吗？';
                     this.controller.abort();
                     GM_notification({
                         title: '导出已中止',
@@ -1412,11 +1595,9 @@
         }
     }
 
-    // 在所有微博页面都初始化
     if (location.host.includes('weibo.com')) {
         const exporter = new WeiboFollowExporter();
 
-        // 只在关注页面显示自动导出相关按钮
         if (!location.pathname.includes('/follow')) {
             if (exporter.exportButton) {
                 exporter.exportButton.style.display = 'none';
@@ -1424,7 +1605,6 @@
             if (exporter.progressText) {
                 exporter.progressText.style.display = 'none';
             }
-            // 默认为手动模式，但不显示输入框
             exporter.isManualMode = true;
             if (exporter.manualTextarea) {
                 exporter.manualTextarea.style.display = 'none';

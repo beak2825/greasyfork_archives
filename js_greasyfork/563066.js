@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Rem4rk's Locked Items Manager
 // @namespace    https://www.torn.com/
-// @version      2.0.4
+// @version      2.0.5
 // @description  This userscript allows you to lock items in your inventory to prevent accidentally trading, selling, donating, or trashing them. Perfect for protecting high-value items, collections, or anything you want to keep safe!- Now with Unique ID's, fallback protection, and a settings panel!
 // @author       rem4rk [2375926] - https://www.torn.com/profiles.php?XID=2375926
 // @match        https://www.torn.com/item.php*
@@ -101,6 +101,8 @@
         .torn-toast.show { transform: translateX(0); }
 
         body:not(.item-php) .torn-padlock, body:not(.item-php) .lock-icon { display: none !important; }
+
+
     `;
     document.head.appendChild(mainStyle);
 
@@ -154,7 +156,7 @@
     function updateHidingCSS() {
         const locked = getLockedItems();
         const ids = Object.keys(locked);
-        if (ids.length === 0 || window.location.href.includes('item.php')) {
+        if (ids.length === 0 || window.location.href.includes('item.php') || window.location.href.endsWith('page.php?sid=ItemMarket') || window.location.href.includes('page.php?sid=ItemMarket#/market')) {
             hidingStyle.textContent = ""; return;
         }
 
@@ -275,4 +277,23 @@
         '#itemRow-incognitoCheckbox-select-all, #_r_80_'
     ).forEach(el => el.remove());
     }
+
+    // ================= SPA URL change support =================
+function handlePageChange() {
+    // Re-run the main logic
+    runLogic();
+    updateHidingCSS();
+}
+
+// Run immediately on page load
+handlePageChange();
+
+// SPA support: re-run logic on URL changes (hash-based or sid-based)
+if (window.onurlchange === null) {
+    window.addEventListener('urlchange', handlePageChange);
+} else {
+    // fallback if onurlchange is not supported
+    window.addEventListener('hashchange', handlePageChange);
+}
+
 })();

@@ -17,7 +17,7 @@
 // @grant             GM.xmlHttpRequest
 // @connect           github.com
 // @connect           api.github.com
-// @license           MIT
+// @license      CC-BY-NC-ND-4.0; https://creativecommons.org/licenses/by-nc-nd/4.0/
 // @downloadURL https://update.greasyfork.org/scripts/501245/elGoogle.user.js
 // @updateURL https://update.greasyfork.org/scripts/501245/elGoogle.meta.js
 // ==/UserScript==

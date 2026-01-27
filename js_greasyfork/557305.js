@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Trakt.tv | Megascript
-// @description  All 13 userscripts from my "Trakt.tv Userscript Collection" repo merged into one for convenience. Namely: "Actor Pronunciation Helper", "All-in-One Lists View", "Average Season And Episode Ratings", "Bug Fixes and Optimizations", "Charts - Ratings Distribution", "Charts - Seasons", "Custom Links (Watch-Now + External)", "Custom Profile Image", "Enhanced List Preview Posters", "Enhanced Title Metadata", "Nested Header Navigation Menus", "Partial VIP Unlock", "Scheduled E-Mail Data Exports". See README for details.
-// @version      2026-01-22_19-08
+// @description  My 13 trakt.tv userscripts merged into one for convenience. Namely: Actor Pronunciation Helper, All-in-One Lists View, Average Season And Episode Ratings, Bug Fixes and Optimizations, Charts - Ratings Distribution, Charts - Seasons, Custom Links (Watch-Now + External), Custom Profile Image, Enhanced List Preview Posters, Enhanced Title Metadata, Nested Header Navigation Menus, Partial VIP Unlock, Scheduled E-Mail Data Exports. See README for details.
+// @version      2026-01-26_05-34
 // @namespace    https://github.com/Fenn3c401
 // @author       Fenn3c401
 // @license      GPL-3.0-or-later

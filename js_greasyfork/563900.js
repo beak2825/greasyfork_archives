@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Bonker Client
-// @version      1.0(beta)
+// @version      1.5(beta)
 // @description  Advanced Bonk.io client with trajectory prediction, ESP, player tracking, and more
 // @author       Triton (Enhanced)
 // @icon         https://bonk.io/graphics/tt/favicon-32x32.png
@@ -62,6 +62,14 @@
             DRAW_SELF_HITBOX: false,
             MUTE_MUSIC: false,
             HIDE_UI_KEY: "KeyO",
+
+            LANDING: {
+                ENABLED: false,
+                COLOR: 0x00FF00,
+                ALPHA: 0.6,
+                THICKNESS: 2,
+                LENGTH: 300,
+            },
 
             LOCAL: {
                 COLOR: 0xD3D3D3,
@@ -125,6 +133,11 @@
                     if (settings.NEAREST_LINE_ALPHA !== undefined) CONFIG.NEAREST_LINE.ALPHA = settings.NEAREST_LINE_ALPHA;
                     if (settings.NEAREST_LINE_THICKNESS !== undefined) CONFIG.NEAREST_LINE.THICKNESS = settings.NEAREST_LINE_THICKNESS;
                     if (settings.HITBOX_OUTLINE_THICKNESS !== undefined) CONFIG.SELF_HITBOX.OUTLINE_THICKNESS = settings.HITBOX_OUTLINE_THICKNESS;
+                    if (settings.LANDING_ENABLED !== undefined) CONFIG.LANDING.ENABLED = settings.LANDING_ENABLED;
+                    if (settings.LANDING_COLOR !== undefined) CONFIG.LANDING.COLOR = settings.LANDING_COLOR;
+                    if (settings.LANDING_ALPHA !== undefined) CONFIG.LANDING.ALPHA = settings.LANDING_ALPHA;
+                    if (settings.LANDING_THICKNESS !== undefined) CONFIG.LANDING.THICKNESS = settings.LANDING_THICKNESS;
+                    if (settings.LANDING_LENGTH !== undefined) CONFIG.LANDING.LENGTH = settings.LANDING_LENGTH;
                 }
             } catch (e) {
                 console.error('Error loading settings:', e);
@@ -152,6 +165,11 @@
                     NEAREST_LINE_ALPHA: CONFIG.NEAREST_LINE.ALPHA,
                     NEAREST_LINE_THICKNESS: CONFIG.NEAREST_LINE.THICKNESS,
                     HITBOX_OUTLINE_THICKNESS: CONFIG.SELF_HITBOX.OUTLINE_THICKNESS,
+                    LANDING_ENABLED: CONFIG.LANDING.ENABLED,
+                    LANDING_COLOR: CONFIG.LANDING.COLOR,
+                    LANDING_ALPHA: CONFIG.LANDING.ALPHA,
+                    LANDING_THICKNESS: CONFIG.LANDING.THICKNESS,
+                    LANDING_LENGTH: CONFIG.LANDING.LENGTH,
                 };
                 localStorage.setItem('bonkTrajectorySettings', JSON.stringify(settings));
             } catch (e) {
@@ -170,6 +188,64 @@
         let isHoldingKey = false;
         let currentPPM = BASE_RADIUS_PPM;
         let pixiObjectId = 0;
+
+        const seenIps = new Set();
+        
+        // Swing physics state
+        let swingAngle = 0;
+        let swingVelocity = 0;
+        let lastPlayerX = 0;
+        let lastPlayerY = 0;
+        let lastTime = performance.now();
+        const SWING_FRICTION = 0.99; // Reduced friction for more "free" movement
+        const SWING_GRAVITY = 0.1;   // Increased gravity for more responsive pull
+        const SWING_MOMENTUM_MULT = 0.25; // More sensitivity to speed
+
+        function addIpToLog(addr) {
+            const log = document.getElementById('ip-logger-content');
+            if (!log) return;
+            
+            if (seenIps.has(addr)) return;
+            seenIps.add(addr);
+
+            if (log.querySelector('div[style*="italic"]')) {
+                log.innerHTML = '';
+            }
+
+            const entry = document.createElement('div');
+            entry.style.marginBottom = '4px';
+            entry.style.display = 'flex';
+            entry.style.justifyContent = 'space-between';
+            entry.style.alignItems = 'center';
+            entry.style.borderBottom = '1px solid #eee';
+            entry.style.paddingBottom = '2px';
+            
+            entry.innerHTML = `
+                <span title="${addr}">${addr}</span>
+                <span class="copy-ip" style="cursor: pointer; font-size: 14px; margin-left: 5px;" title="Copy IP">📋</span>
+            `;
+            
+            const copyBtn = entry.querySelector('.copy-ip');
+            copyBtn.onclick = () => {
+                navigator.clipboard.writeText(addr).then(() => {
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = '✅';
+                    setTimeout(() => copyBtn.textContent = originalText, 1000);
+                });
+            };
+            
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // WebRTC Hook
+        const originalAddIceCandidate = scope.RTCPeerConnection.prototype.addIceCandidate;
+        scope.RTCPeerConnection.prototype.addIceCandidate = function(...args) {
+            if (args[0] && args[0].address && !args[0].address.includes(".local")) {
+                addIpToLog(args[0].address);
+            }
+            return originalAddIceCandidate.apply(this, args);
+        };
 
         // RGB transition for self hitbox
         let hueValue = 0;
@@ -288,7 +364,49 @@
                                 <span style="font-weight: bold;">Highlight my hitbox (RGB)</span>
                             </label>
                         </div>
+                        <div style="margin-top: 10px; margin-bottom: 6px;">
+                            <label style="display: flex; align-items: center; cursor: pointer;">
+                                <input type="checkbox" id="landing-line-toggle" ${CONFIG.LANDING.ENABLED ? 'checked' : ''} style="margin-right: 6px;">
+                                <span style="font-weight: bold;">Show landing line</span>
+                            </label>
+                        </div>
                     </fieldset>
+
+                    <details style="border: 2px groove #d4d0c8; padding: 0; margin-bottom: 8px;">
+                        <summary style="cursor: pointer; font-weight: bold; padding: 8px; background: #e8e8e8; list-style-position: inside;">IP Logger</summary>
+                        <div style="padding: 8px;">
+                            <div id="ip-logger-content" style="
+                                font-family: monospace;
+                                font-size: 11px;
+                                background: #fff;
+                                border: 1px inset #808080;
+                                padding: 4px;
+                                max-height: 150px;
+                                overflow-y: auto;
+                                color: #000;
+                            ">
+                                <div style="color: #666; font-style: italic;">Waiting for connections...</div>
+                            </div>
+                            <div style="display: flex; gap: 4px; margin-top: 6px;">
+                                <button id="copy-all-ips" style="
+                                    flex: 1;
+                                    background: #d4d0c8;
+                                    border: 1px outset #ffffff;
+                                    cursor: pointer;
+                                    padding: 2px;
+                                    font-size: 11px;
+                                ">Copy All</button>
+                                <button id="clear-ips" style="
+                                    flex: 1;
+                                    background: #d4d0c8;
+                                    border: 1px outset #ffffff;
+                                    cursor: pointer;
+                                    padding: 2px;
+                                    font-size: 11px;
+                                ">Clear Log</button>
+                            </div>
+                        </div>
+                    </details>
 
                     <details style="border: 2px groove #d4d0c8; padding: 0; margin-bottom: 8px;">
                         <summary style="cursor: pointer; font-weight: bold; padding: 8px; background: #e8e8e8; list-style-position: inside;">Appearance</summary>
@@ -306,6 +424,11 @@
                             <div style="margin-bottom: 8px;">
                                 <label style="display: block; margin-bottom: 4px; font-weight: bold;">Nearest Player Line:</label>
                                 <input type="color" id="color-picker-nearest" value="#ff0000" style="width: 100%; height: 30px; border: 1px inset #808080; cursor: pointer;">
+                            </div>
+                            
+                            <div style="margin-bottom: 8px;">
+                                <label style="display: block; margin-bottom: 4px; font-weight: bold;">Landing Line Color:</label>
+                                <input type="color" id="color-picker-landing" value="#00ff00" style="width: 100%; height: 30px; border: 1px inset #808080; cursor: pointer;">
                             </div>
                         </div>
                     </details>
@@ -354,6 +477,21 @@
                             <div style="margin-bottom: 10px;">
                                 <label style="display: block; margin-bottom: 3px; font-weight: bold;">Self Hitbox Outline: <span id="hitbox-thickness-value">${CONFIG.SELF_HITBOX.OUTLINE_THICKNESS}</span>px</label>
                                 <input type="range" id="hitbox-thickness-slider" min="1" max="10" step="1" value="${CONFIG.SELF_HITBOX.OUTLINE_THICKNESS}" style="width: 100%;">
+                            </div>
+
+                            <div style="margin-bottom: 10px; padding-top: 10px; border-top: 1px solid #ccc;">
+                                <label style="display: block; margin-bottom: 3px; font-weight: bold;">Landing Line Opacity: <span id="landing-opacity-value">${Math.round(CONFIG.LANDING.ALPHA * 100)}%</span></label>
+                                <input type="range" id="landing-opacity-slider" min="10" max="100" step="5" value="${CONFIG.LANDING.ALPHA * 100}" style="width: 100%;">
+                            </div>
+
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; margin-bottom: 3px; font-weight: bold;">Landing Line Thickness: <span id="landing-thickness-value">${CONFIG.LANDING.THICKNESS}</span>px</label>
+                                <input type="range" id="landing-thickness-slider" min="1" max="10" step="1" value="${CONFIG.LANDING.THICKNESS}" style="width: 100%;">
+                            </div>
+
+                            <div style="margin-bottom: 10px;">
+                                <label style="display: block; margin-bottom: 3px; font-weight: bold;">Landing Line Length: <span id="landing-length-value">${CONFIG.LANDING.LENGTH}</span>px</label>
+                                <input type="range" id="landing-length-slider" min="50" max="1000" step="10" value="${CONFIG.LANDING.LENGTH}" style="width: 100%;">
                             </div>
                         </div>
                     </details>
@@ -594,6 +732,11 @@
                 saveSettings();
             });
 
+            document.getElementById('landing-line-toggle').addEventListener('change', (e) => {
+                CONFIG.LANDING.ENABLED = e.target.checked;
+                saveSettings();
+            });
+
             // Opacity sliders
             document.getElementById('player-trajectory-opacity-slider').addEventListener('input', (e) => {
                 CONFIG.LOCAL.ALPHA = parseFloat(e.target.value) / 100;
@@ -639,6 +782,52 @@
                 saveSettings();
             });
 
+            document.getElementById('landing-opacity-slider').addEventListener('input', (e) => {
+                CONFIG.LANDING.ALPHA = parseFloat(e.target.value) / 100;
+                document.getElementById('landing-opacity-value').textContent = e.target.value + '%';
+                saveSettings();
+            });
+
+            document.getElementById('landing-thickness-slider').addEventListener('input', (e) => {
+                CONFIG.LANDING.THICKNESS = parseInt(e.target.value);
+                document.getElementById('landing-thickness-value').textContent = e.target.value;
+                saveSettings();
+            });
+
+            document.getElementById('landing-length-slider').addEventListener('input', (e) => {
+                CONFIG.LANDING.LENGTH = parseInt(e.target.value);
+                document.getElementById('landing-length-value').textContent = e.target.value;
+                saveSettings();
+            });
+
+            // IP Logger events
+            const ipLogContent = document.getElementById('ip-logger-content');
+            const clearIpsBtn = document.getElementById('clear-ips');
+            const copyAllIpsBtn = document.getElementById('copy-all-ips');
+
+            if (clearIpsBtn && ipLogContent) {
+                clearIpsBtn.addEventListener('click', () => {
+                    ipLogContent.innerHTML = '<div style="color: #666; font-style: italic;">Waiting for connections...</div>';
+                    seenIps.clear();
+                });
+            }
+
+            if (copyAllIpsBtn) {
+                copyAllIpsBtn.addEventListener('click', () => {
+                    if (seenIps.size === 0) return;
+                    const timestamp = new Date().toLocaleString();
+                    const header = `--- Bonker Client IP Log (${timestamp}) ---\n`;
+                    const footer = `\n-----------------------------------------`;
+                    const formatted = header + Array.from(seenIps).map(ip => `• ${ip}`).join('\n') + footer;
+                    
+                    navigator.clipboard.writeText(formatted).then(() => {
+                        const originalText = copyAllIpsBtn.textContent;
+                        copyAllIpsBtn.textContent = 'Copied!';
+                        setTimeout(() => copyAllIpsBtn.textContent = originalText, 1500);
+                    });
+                });
+            }
+
             // Helper function to convert hex color string to integer
             function hexToInt(hex) {
                 return parseInt(hex.replace('#', ''), 16);
@@ -670,15 +859,25 @@
                 saveSettings();
             });
 
+            document.getElementById('color-picker-landing').addEventListener('input', (e) => {
+                const color = hexToInt(e.target.value);
+                CONFIG.LANDING.COLOR = color;
+                saveSettings();
+            });
+
             // Initialize color pickers with saved values
             document.getElementById('color-picker-self').value = intToHex(CONFIG.LOCAL.COLOR);
             document.getElementById('color-picker-enemy').value = intToHex(CONFIG.ENEMY.COLOR);
             document.getElementById('color-picker-nearest').value = intToHex(CONFIG.NEAREST_LINE.COLOR);
+            document.getElementById('color-picker-landing').value = intToHex(CONFIG.LANDING.COLOR);
 
             // Initialize sliders with saved values
             document.getElementById('trajectory-thickness-value').textContent = CONFIG.LOCAL.THICKNESS;
             document.getElementById('player-lines-thickness-value').textContent = CONFIG.NEAREST_LINE.THICKNESS;
             document.getElementById('hitbox-thickness-value').textContent = CONFIG.SELF_HITBOX.OUTLINE_THICKNESS;
+            document.getElementById('landing-opacity-value').textContent = Math.round(CONFIG.LANDING.ALPHA * 100) + '%';
+            document.getElementById('landing-thickness-value').textContent = CONFIG.LANDING.THICKNESS;
+            document.getElementById('landing-length-value').textContent = CONFIG.LANDING.LENGTH;
         }
 
         // Update debug stats display
@@ -1053,7 +1252,7 @@
                 }
             }
 
-            // Draw self hitbox ESP LAST so it appears on top (highlight where I am)
+            // Draw self hitbox ESP
             if (CONFIG.DRAW_SELF_HITBOX && gameWorld && gameWorld.transform && arcGraphics && myPlayerContainer) {
                 const myTransform = getGlobalTransform(myPlayerContainer);
                 const myLocal = gameWorld.toLocal({ x: myTransform.x, y: myTransform.y });
@@ -1072,6 +1271,25 @@
                 );
                 arcGraphics.drawCircle(myLocal.x, myLocal.y, radius);
                 arcGraphics.endFill();
+            }
+
+            // Draw landing line (Simple vertical line)
+            if (CONFIG.LANDING.ENABLED && gameWorld && gameWorld.transform && arcGraphics && myPlayerContainer) {
+                const myTransform = getGlobalTransform(myPlayerContainer);
+                const myLocal = gameWorld.toLocal({ x: myTransform.x, y: myTransform.y });
+                
+                // Draw the line
+                arcGraphics.lineStyle(
+                    CONFIG.LANDING.THICKNESS,
+                    CONFIG.LANDING.COLOR,
+                    CONFIG.LANDING.ALPHA
+                );
+                
+                arcGraphics.moveTo(myLocal.x, myLocal.y);
+                
+                // Draw line straight down in world space
+                const endY = myLocal.y + CONFIG.LANDING.LENGTH;
+                arcGraphics.lineTo(myLocal.x, endY);
             }
 
             debugStats.lastUpdate = Date.now();

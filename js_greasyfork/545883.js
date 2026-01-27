@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AI Conversation Navigator
 // @namespace    https://greasyfork.org
-// @version      9.1
+// @version      9.2
 // @description  Floating navigator for your prompts in conversations. Applied for ChatGPT, Gemini, Aistudio, NotebookLM, Grok, Claude, Mistral, Perplexity, Meta, Poe, Deepai, Huggingface, Deepseek, Kimi, Qwen, Manus, Z.ai, Longcat, Chatglm, Chatboxai, Lmarena, Quillbot, Canva, Genspark, Character, Spacefrontiers, Scienceos, Evidencehunt, Playground (allen), Paperfigureqa (allen), Scira, Scispace, Exa.ai, Consensus, Openevidence, Pathway, Math-gpt.
 // @author       Bui Quoc Dung
 // @match        https://chatgpt.com/*
@@ -89,7 +89,7 @@
             userMessage: 'div[data-message-author-role="user"]',
             shiftTarget: '[data-scroll-root="true"]',
             shiftHeader: '.flex.items-center.justify-end.gap-2.overflow-x-hidden',
-            collapsedTop: '0'
+            collapsedTop: '5px'
         },
         gemini: {
             domain: 'gemini.google.com',
@@ -101,7 +101,7 @@
         },
         aistudio: {
             domain: 'aistudio.google.com',
-            includePath: 'aistudio.google.com/prompts/',
+            includePath: ['aistudio.google.com/prompts/','aistudio.google.com/u/1/prompts/', 'aistudio.google.com/u/2/prompts/'],
             customFinder: getAIStudioData,
             useClick: true,
             shiftTarget: '.layout-wrapper',
@@ -116,7 +116,7 @@
             userMessage: 'chat-message .from-user-container',
             shiftTarget: 'notebook, .boqOnegoogleliteOgbOneGoogleBar',
             shiftHeader: '.notebook-header-container, .boqOnegoogleliteOgbOneGoogleBar',
-            collapsedTop: '11px'
+            collapsedTop: '15px'
         },
         grok: {
             domain: 'grok.com',
@@ -124,7 +124,7 @@
             userMessage: '.relative.group.flex.flex-col.justify-center.items-end',
             shiftTarget: 'main',
             shiftHeader: '.ms-auto.end-3',
-            collapsedTop: '7px'
+            collapsedTop: '13px'
         },
         claude: {
             domain: 'claude.ai',
@@ -132,7 +132,7 @@
             userMessage: 'div.group.relative.inline-flex',
             shiftTarget: '.flex.flex-1.h-full.w-full.overflow-hidden.relative',
             shiftHeader: '[data-testid="wiggle-controls-actions"]',
-            collapsedTop: '0'
+            collapsedTop: '5px'
         },
         mistral: {
             domain: 'chat.mistral.ai',
@@ -180,7 +180,7 @@
             domain: 'chat.deepseek.com',
             includePath: 'chat.deepseek.com/a/chat/',
             userMessage: '._9663006 .fbb737a4',
-            shiftTarget: '._8f60047, ._189b4a0',
+            shiftTarget: '._8f60047, ._189b4a0, ._2be88ba',
             shiftHeader: '._2be88ba',
             collapsedTop: '10px'
         },
@@ -190,7 +190,7 @@
             userMessage: '.user-content',
             shiftTarget: '.has-sidebar',
             shiftHeader: '[class="chat-header-actions"]',
-            collapsedTop: '10px'
+            collapsedTop: '8px'
         },
         glm: {
             domain: 'chat.z.ai',
@@ -198,7 +198,7 @@
             userMessage: '.chat-user',
             shiftTarget:'#chat-container',
             shiftHeader: '.flex.px-1',
-            collapsedTop: '0'
+            collapsedTop: '15px'
         },
         qwen: {
             domain: 'chat.qwen.ai',
@@ -445,6 +445,61 @@
         }
     }
 
+    function navigateToMessage(messageIndex) {
+        const targetElement = findPromptElementByIndex(messageIndex - 1);
+        if (!targetElement) return;
+
+
+        const content = document.getElementById('message-nav-content');
+        if (content) {
+            const list = content.querySelector('ul');
+            if (list) {
+                list.querySelectorAll('.nav-list-item').forEach(li => li.classList.remove('active'));
+                const targetItem = list.children[messageIndex - 1];
+                if (targetItem) {
+                    targetItem.classList.add('active');
+                    targetItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+        }
+
+        activeMessageIndex = messageIndex;
+
+        const waitForImages = (element) => {
+            const images = element.querySelectorAll('img');
+            const promises = Array.from(images).map(img => {
+                if (img.complete) return Promise.resolve();
+                return new Promise((resolve) => {
+                    img.addEventListener('load', resolve);
+                    img.addEventListener('error', resolve);
+                    setTimeout(resolve, 3000);
+                });
+            });
+            return Promise.all(promises);
+        };
+
+        if (CURRENT_SITE.useClick) {
+            targetElement.click();
+        } else {
+            targetElement.scrollIntoView({ behavior: 'instant', block: 'start' });
+            waitForImages(targetElement).then(() => {
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    targetElement.classList.add('nav-blink-active');
+                    setTimeout(() => targetElement.classList.remove('nav-blink-active'), 2000);
+                    observer.unobserve(targetElement);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(targetElement);
+    }
+
     function createContainer() {
         let container = document.getElementById('message-nav');
         if (!container) {
@@ -453,15 +508,87 @@
             container.style.cssText = `top: 0; ${BASE_CONTAINER_CSS}`;
             const header = document.createElement('div');
             Object.assign(header.style, {
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: 'pointer', fontWeight: 'bold', position: 'sticky', top: '0', zIndex: '10',
-                padding: '15px 0', backgroundColor: 'Canvas',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                cursor: 'pointer', position: 'sticky', top: '0', zIndex: '10',
+                padding: '15px 10px', backgroundColor: 'Canvas',
                 borderBottom : '1px solid color-mix(in srgb, CanvasText 15%, transparent)'
             });
+
+            const navButtonsContainer = document.createElement('div');
+            Object.assign(navButtonsContainer.style, {
+                display: 'flex', gap: '5px', alignItems: 'center'
+            });
+
+            const firstBtn = document.createElement('button');
+            Object.assign(firstBtn.style, {
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: '16px', color: 'inherit', padding: '2px 5px'
+            });
+            firstBtn.textContent = '|◀';
+            firstBtn.title = 'Go to first message';
+            firstBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (cachedPrompts.length > 0) {
+                    navigateToMessage(1);
+                }
+            });
+
+            const prevBtn = document.createElement('button');
+            Object.assign(prevBtn.style, {
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: '16px', color: 'inherit', padding: '2px 5px'
+            });
+            prevBtn.textContent = '◀';
+            prevBtn.title = 'Go to previous message';
+            prevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (cachedPrompts.length > 0 && activeMessageIndex > 1) {
+                    navigateToMessage(activeMessageIndex - 1);
+                }
+            });
+
+            const nextBtn = document.createElement('button');
+            Object.assign(nextBtn.style, {
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: '16px', color: 'inherit', padding: '2px 5px'
+            });
+            nextBtn.textContent = '▶';
+            nextBtn.title = 'Go to next message';
+            nextBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (cachedPrompts.length > 0 && activeMessageIndex < cachedPrompts.length) {
+                    navigateToMessage(activeMessageIndex + 1);
+                }
+            });
+
+            const lastBtn = document.createElement('button');
+            Object.assign(lastBtn.style, {
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: '16px', color: 'inherit', padding: '2px 5px'
+            });
+            lastBtn.textContent = '▶|';
+            lastBtn.title = 'Go to last message';
+            lastBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (cachedPrompts.length > 0) {
+                    navigateToMessage(cachedPrompts.length);
+                }
+            });
+
+            navButtonsContainer.appendChild(firstBtn);
+            navButtonsContainer.appendChild(prevBtn);
+            navButtonsContainer.appendChild(nextBtn);
+            navButtonsContainer.appendChild(lastBtn);
+
             const toggleBtn = document.createElement('button');
-            Object.assign(toggleBtn.style, { background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: 'inherit' });
+            Object.assign(toggleBtn.style, {
+                background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: 'inherit',
+            });
             toggleBtn.textContent = 'Close';
+
+            header.appendChild(navButtonsContainer);
             header.appendChild(toggleBtn);
+
             const content = document.createElement('div');
             content.id = 'message-nav-content';
             content.style.padding = '5px';
@@ -481,10 +608,12 @@
                         borderLeft: '1px solid color-mix(in srgb, CanvasText 15%, transparent)'
                     });
                     Object.assign(header.style, {
-                        backgroundColor: 'Canvas', padding: '15px 0',
+                        backgroundColor: 'Canvas', padding: '15px 10px',
                         borderBottom: '1px solid color-mix(in srgb, CanvasText 15%, transparent)',
+                        justifyContent: 'space-between'
                     });
                     content.style.display = 'block';
+                    navButtonsContainer.style.display = 'flex';
                     toggleBtn.textContent = 'Close';
                 } else {
                     Object.assign(container.style, {
@@ -493,9 +622,11 @@
                         top: CURRENT_SITE.collapsedTop || '55px'
                     });
                     Object.assign(header.style, {
-                        backgroundColor: 'transparent', borderBottom: 'none', padding: '10px 0'
+                        backgroundColor: 'transparent', borderBottom: 'none', padding: '10px 0',
+                        justifyContent: 'center'
                     });
                     content.style.display = 'none';
+                    navButtonsContainer.style.display = 'none';
                     toggleBtn.textContent = 'Open';
                 }
 
@@ -544,47 +675,7 @@
         if (index === activeMessageIndex) listItem.classList.add('active');
 
         listItem.addEventListener('click', () => {
-            const parentList = listItem.parentElement;
-            if (parentList) parentList.querySelectorAll('.nav-list-item').forEach(li => li.classList.remove('active'));
-            listItem.classList.add('active');
-            activeMessageIndex = index;
-
-            const targetElement = findPromptElementByIndex(index - 1);
-            if (targetElement) {
-                const waitForImages = (element) => {
-                    const images = element.querySelectorAll('img');
-                    const promises = Array.from(images).map(img => {
-                        if (img.complete) return Promise.resolve();
-                        return new Promise((resolve) => {
-                            img.addEventListener('load', resolve);
-                            img.addEventListener('error', resolve);
-                            setTimeout(resolve, 3000);
-                        });
-                    });
-                    return Promise.all(promises);
-                };
-
-                if (CURRENT_SITE.useClick) {
-                    targetElement.click();
-                } else {
-                    targetElement.scrollIntoView({ behavior: 'instant', block: 'start' });
-                    waitForImages(targetElement).then(() => {
-                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    });
-                }
-
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            targetElement.classList.add('nav-blink-active');
-                            setTimeout(() => targetElement.classList.remove('nav-blink-active'), 2000);
-                            observer.unobserve(targetElement);
-                        }
-                    });
-                }, { threshold: 0.5 });
-
-                observer.observe(targetElement);
-            }
+            navigateToMessage(index);
         });
         return listItem;
     }

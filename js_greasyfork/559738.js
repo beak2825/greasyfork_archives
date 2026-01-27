@@ -1,105 +1,141 @@
 // ==UserScript==
-// @name         EarnCryptoWRS Auto Login & DOGE Faucet
+// @name         EarnCryptoWRS Auto Faucet + Currency Selector
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  Clicks ONLY after IconCaptcha shows "Verification complete." and button is enabled
+// @version      1.2
 // @author       Rubystance
 // @license      MIT
-// @match        https://earncryptowrs.in/
-// @match        https://earncryptowrs.in/app/dashboard
-// @match        https://earncryptowrs.in/app/faucet*
+// @match        https://earncryptowrs.in/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/559738/EarnCryptoWRS%20Auto%20Login%20%20DOGE%20Faucet.user.js
-// @updateURL https://update.greasyfork.org/scripts/559738/EarnCryptoWRS%20Auto%20Login%20%20DOGE%20Faucet.meta.js
+// @description Clicks ONLY after IconCaptcha shows "Verification complete." and button is enabled
+// @downloadURL https://update.greasyfork.org/scripts/559738/EarnCryptoWRS%20Auto%20Faucet%20%2B%20Currency%20Selector.user.js
+// @updateURL https://update.greasyfork.org/scripts/559738/EarnCryptoWRS%20Auto%20Faucet%20%2B%20Currency%20Selector.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
 
-    const FAUCETPAY_EMAIL = "YOUR_FAUCETPAY_EMAIL_HERE"; // << YOUR_FAUCETPAY_EMAIL
+    const STORAGE_KEY = 'earncryptowrs_currency';
+    const REF_KEY = 'earncryptowrs_ref_used';
+    const REF_URL = 'https://earncryptowrs.in/?r=14197';
+    const EMAIL = 'YOUR_FAUCETPAY_EMAIL_HERE'; // << YOUR_FAUCETPAY_EMAIL
 
-    function waitForElement(selector, timeout = 60000) {
+    if (
+        !localStorage.getItem(REF_KEY) &&
+        location.origin === 'https://earncryptowrs.in' &&
+        location.pathname === '/'
+    ) {
+        localStorage.setItem(REF_KEY, '1');
+        location.replace(REF_URL);
+        return;
+    }
+
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+    function waitFor(checkFn, interval = 500, timeout = 180000) {
         return new Promise((resolve, reject) => {
-            const el = document.querySelector(selector);
-            if (el) return resolve(el);
-
-            const observer = new MutationObserver(() => {
-                const element = document.querySelector(selector);
-                if (element) {
-                    observer.disconnect();
-                    resolve(element);
+            const start = Date.now();
+            const timer = setInterval(() => {
+                const res = checkFn();
+                if (res) {
+                    clearInterval(timer);
+                    resolve(res);
+                } else if (Date.now() - start > timeout) {
+                    clearInterval(timer);
+                    reject();
                 }
-            });
-
-            observer.observe(document.body, { childList: true, subtree: true });
-
-            setTimeout(() => {
-                observer.disconnect();
-                reject(`Timeout waiting for ${selector}`);
-            }, timeout);
+            }, interval);
         });
     }
 
-    function isIconCaptchaVerified() {
-        return [...document.querySelectorAll('.iconcaptcha-modal__body-title')]
-            .some(el => el.textContent.trim() === 'Verification complete.');
-    }
+    const CURRENCIES = [
+        'LTC','DOGE','ETH','XLM','TON','XRP','TRX','USDT','FEY','POL',
+        'BNB','SOL','DGB','PEPE','DASH','USDC','XMR','TARA','TRUMP',
+        'ADA','BCH','ZEC','FLT'
+    ];
 
-    function waitForCaptchaAndButton(button) {
-        return new Promise(resolve => {
-            const check = () => {
-                const disabled =
-                    button.disabled ||
-                    button.classList.contains('disabled') ||
-                    button.getAttribute('aria-disabled') === 'true';
+    function createCurrencySelector() {
+        if (document.getElementById('ecwrs-box')) return;
 
-                if (!disabled && isIconCaptchaVerified()) {
-                    resolve();
-                }
-            };
+        const box = document.createElement('div');
+        box.id = 'ecwrs-box';
+        box.style = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #111;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            z-index: 99999;
+            font-family: Arial, sans-serif;
+        `;
 
-            check();
+        const select = document.createElement('select');
+        select.style = `padding:5px;border-radius:5px;`;
 
-            const observer = new MutationObserver(check);
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true,
-                attributes: true
-            });
+        const saved = localStorage.getItem(STORAGE_KEY) || '';
+
+        const placeholder = document.createElement('option');
+        placeholder.textContent = 'CHOOSE FAUCET';
+        placeholder.disabled = true;
+        placeholder.selected = !saved;
+        select.appendChild(placeholder);
+
+        CURRENCIES.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = c;
+            if (c === saved) opt.selected = true;
+            select.appendChild(opt);
         });
+
+        select.addEventListener('change', () => {
+            const cur = select.value;
+            localStorage.setItem(STORAGE_KEY, cur);
+            location.href = `/app/faucet?currency=${cur}`;
+        });
+
+        box.appendChild(select);
+        document.body.appendChild(box);
     }
 
-    const url = location.href;
+    createCurrencySelector();
 
-    if (url === "https://earncryptowrs.in/") {
+    if (location.pathname === '/' && document.querySelector('input[name="wallet"]')) {
         (async () => {
-            const emailInput = await waitForElement('input[name="wallet"]');
-            emailInput.value = FAUCETPAY_EMAIL;
-            emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+            const emailInput = document.querySelector('input[name="wallet"]');
+            const loginButton = document.querySelector('button[type="submit"]');
 
-            const loginButton = await waitForElement('button[type="submit"]');
-            await waitForCaptchaAndButton(loginButton);
-            loginButton.click();
-        })();
+            if (emailInput && loginButton) {
+                emailInput.value = EMAIL;
+
+                await waitFor(() => !loginButton.disabled, 500, 600000); // waits up to 10 minutes
+
+                loginButton.click();
+            }
+        })().catch(() => {});
     }
 
-    if (url.includes('/app/dashboard')) {
+    if (location.pathname.includes('/app/faucet')) {
         (async () => {
-            const dogeLink = await waitForElement(
-                'a[href="https://earncryptowrs.in/app/faucet?currency=DOGE"]'
+            await waitFor(() => {
+                const t =
+                    document.querySelector('input[name="cf-turnstile-response"]') ||
+                    document.querySelector('textarea[name="cf-turnstile-response"]');
+                return t && t.value && t.value.length > 20 ? t : null;
+            }, 500, 180000);
+
+            const btn = await waitFor(() =>
+                document.querySelector('button.claim-button.step4'),
+                300,
+                30000
             );
-            dogeLink.click();
-        })();
+
+            const form = btn.closest('form');
+            if (form) {
+                form.submit();
+            }
+        })().catch(() => {});
     }
 
-    if (url.includes('/app/faucet') && url.includes('currency=DOGE')) {
-        (async () => {
-            const claimButton = await waitForElement(
-                'button.claim-button.step4'
-            );
-
-            await waitForCaptchaAndButton(claimButton);
-            claimButton.click();
-        })();
-    }
 })();

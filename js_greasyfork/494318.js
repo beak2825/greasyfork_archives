@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         米游社帖子图片链接提取
 // @namespace    https://github.com/shangxueink
-// @version      1.3
+// @version      1.4
 // @description  提取米游社帖子中的图片链接
 // @author       shangxueink
 // @match        https://www.miyoushe.com/*

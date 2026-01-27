@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Npm Userscript
-// @version      0.3.3
+// @version      0.3.4
 // @description  Various improvements and fixes for npmjs.com
 // @license      MIT
 // @author       Bjorn Lu
@@ -352,19 +352,32 @@
 
   // src/utils-fetch.ts
   async function getFullRepositoryLink() {
-    const repositoryLink = getNpmContext().context.packument.repository;
-    if (!repositoryLink) return;
+    const repository = getNpmContext().context.packument.repository;
+    if (!repository) return;
     const packageJson = await fetchPackageJson();
     const directory = packageJson?.repository?.directory;
-    if (!directory) return;
-    let fullRepositoryLink = repositoryLink;
-    if (!/\/tree\/.+$/.test(repositoryLink)) {
+    if (!directory) return repository;
+    return getRepositoryFilePath(directory);
+  }
+  async function getRepositoryFilePath(filePath) {
+    const repository = getNpmContext().context.packument.repository;
+    if (!repository) return;
+    let repositoryFilePath = repository;
+    if (!/\/tree\/.+$/.test(repository)) {
       const repoData = await fetchGitHubRepoData();
       if (!repoData) return;
-      fullRepositoryLink += `/tree/${repoData.default_branch}`;
+      repositoryFilePath += `/tree/${repoData.default_branch}`;
     }
-    fullRepositoryLink += `/${directory.replace(/^\/+/, "")}`;
-    return fullRepositoryLink;
+    if (repositoryFilePath.endsWith("/")) {
+      repositoryFilePath = repositoryFilePath.slice(0, -1);
+    }
+    if (filePath.startsWith("/")) {
+      filePath = filePath.slice(1);
+    }
+    if (filePath) {
+      repositoryFilePath += `/${filePath}`;
+    }
+    return repositoryFilePath;
   }
   async function fetchPackageFilesData() {
     const packageName = getPackageName();
@@ -445,6 +458,19 @@
           if (response.readyState === 2) {
             req.abort();
             resolve(response.responseHeaders);
+          }
+        }
+      });
+    });
+  }
+  function fetchStatus(input, init) {
+    return new Promise((resolve, reject) => {
+      const req = GM.xmlHttpRequest({
+        ...getSharedOptions(input, init, reject),
+        onreadystatechange: (response) => {
+          if (response.readyState === 2) {
+            req.abort();
+            resolve(response.status);
           }
         }
       });
@@ -3327,29 +3353,31 @@ implementation is broken for large numbers for some reason. This temporarily fix
     ];
   }
   async function fetchDocumentedDocs(docPath) {
-    let markdown = await fetchText(
-      `https://api.github.com/repos/es-tooling/module-replacements/contents/docs/modules/${docPath}.md`,
-      {
-        headers: {
-          Accept: "application/vnd.github.raw+json",
-          "X-GitHub-Api-Version": "2022-11-28"
+    return cacheResult(`fetchDocumentedDocs:${docPath}`, 120, async () => {
+      let markdown = await fetchText(
+        `https://api.github.com/repos/es-tooling/module-replacements/contents/docs/modules/${docPath}.md`,
+        {
+          headers: {
+            Accept: "application/vnd.github.raw+json",
+            "X-GitHub-Api-Version": "2022-11-28"
+          }
         }
-      }
-    );
-    markdown = markdown.replace(/^([\s\S]*?\n)# .+?\n/, "");
-    const html = await fetchText("https://api.github.com/markdown", {
-      method: "POST",
-      headers: {
-        Accept: "text/html",
-        "X-GitHub-Api-Version": "2022-11-28"
-      },
-      body: JSON.stringify({
-        text: markdown,
-        mode: "gfm",
-        context: "es-tooling/module-replacements"
-      })
+      );
+      markdown = markdown.replace(/^([\s\S]*?\n)# .+?\n/, "");
+      const html = await fetchText("https://api.github.com/markdown", {
+        method: "POST",
+        headers: {
+          Accept: "text/html",
+          "X-GitHub-Api-Version": "2022-11-28"
+        },
+        body: JSON.stringify({
+          text: markdown,
+          mode: "gfm",
+          context: "es-tooling/module-replacements"
+        })
+      });
+      return html;
     });
-    return html;
   }
   var description7;
   var init_module_replacements = __esm({
@@ -3357,6 +3385,7 @@ implementation is broken for large numbers for some reason. This temporarily fix
       init_utils_fetch();
       init_utils_ui();
       init_utils();
+      init_utils_cache();
       description7 = `Suggest alternatives for the package based on "es-tooling/module-replacements" data set.
 `;
     }
@@ -3473,22 +3502,59 @@ implementation is broken for large numbers for some reason. This temporarily fix
     }
   });
 
+  // src/features/remove-redundant-homepage.ts
+  var remove_redundant_homepage_exports = {};
+  __export(remove_redundant_homepage_exports, {
+    description: () => description11,
+    run: () => run9,
+    teardown: () => teardown4
+  });
+  function teardown4(previousUrl) {
+    if (isSamePackagePage(previousUrl)) return;
+    const homepageEl = document.getElementById("homePage");
+    if (homepageEl) {
+      homepageEl.parentElement.style.display = "";
+    }
+  }
+  function run9() {
+    if (!isValidPackagePage()) return;
+    const homepageEl = document.getElementById("homePage");
+    if (!homepageEl) return;
+    const npmContext = getNpmContext();
+    const homepage = npmContext.context.packument.homepage;
+    const repository = npmContext.context.packument.repository;
+    if (!homepage || !repository) return;
+    const isRedundant = homepage === repository || homepage === `${repository}#readme`;
+    if (isRedundant) {
+      homepageEl.parentElement.style.display = "none";
+    }
+  }
+  var description11;
+  var init_remove_redundant_homepage = __esm({
+    "src/features/remove-redundant-homepage.ts"() {
+      init_utils();
+      init_utils_npm_context();
+      description11 = `Remove the homepage link if it's the same as the repository link, or only has a hash to the readme.
+`;
+    }
+  });
+
   // src/features/remove-runkit.ts
   var remove_runkit_exports = {};
   __export(remove_runkit_exports, {
-    description: () => description11,
-    run: () => run9
+    description: () => description12,
+    run: () => run10
   });
-  function run9() {
+  function run10() {
     if (!isValidPackagePage()) return;
     const link = document.querySelector('a[href^="https://runkit.com/npm/"]');
     link?.remove();
   }
-  var description11;
+  var description12;
   var init_remove_runkit = __esm({
     "src/features/remove-runkit.ts"() {
       init_utils();
-      description11 = `Remove the RunKit link as it's dead.
+      description12 = `Remove the RunKit link as it's dead.
 `;
     }
   });
@@ -3496,12 +3562,12 @@ implementation is broken for large numbers for some reason. This temporarily fix
   // src/features/repository-card.ts
   var repository_card_exports = {};
   __export(repository_card_exports, {
-    description: () => description12,
-    run: () => run10,
+    description: () => description13,
+    run: () => run11,
     runPre: () => runPre10,
-    teardown: () => teardown4
+    teardown: () => teardown5
   });
-  function teardown4(previousUrl) {
+  function teardown5(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector(".npm-userscript-repository-card")?.remove();
   }
@@ -3524,23 +3590,36 @@ implementation is broken for large numbers for some reason. This temporarily fix
       margin: 0;
     }
     
-    .npm-userscript-card-title-separator,
-    .npm-userscript-card-title-separator + a {
+    .npm-userscript-repository-card-title-repo {
+      font-weight: bold;
+      text-wrap: nowrap;
+    }
+
+    .npm-userscript-repository-card-title-directory {
+      font-weight: bold;
+      color: #757575;
+      text-wrap: nowrap;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .npm-userscript-repository-card-title-separator {
       color: #757575;
     }
 
     .npm-userscript-repository-card-description {
-      display: flex;
-      align-items: center;
-      gap: 20px;
       margin: 0;
       margin-top: 10px;
     }
 
     .npm-userscript-repository-card-entry {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 5px;
+      margin-right: 20px;
+    }
+    .npm-userscript-repository-card-entry:last-child {
+      margin-right: 0;
     }
 
     .npm-userscript-repository-card a {
@@ -3559,7 +3638,7 @@ implementation is broken for large numbers for some reason. This temporarily fix
     }
   `);
   }
-  async function run10() {
+  async function run11() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-repository-card")) return;
     const repositoryH3 = document.getElementById("repository");
@@ -3575,6 +3654,7 @@ implementation is broken for large numbers for some reason. This temporarily fix
       directory = directory.replace(/^\/+/, "").replace(/\/+$/, "");
     }
     const fullRepoLink = repoData.html_url + (directory ? `/tree/${repoData.default_branch}/${directory}` : "");
+    const changelogLink = await getChangelogLink(repoData.full_name, directory);
     const card = document.createElement("div");
     card.className = "npm-userscript-repository-card";
     card.innerHTML = `
@@ -3586,29 +3666,34 @@ implementation is broken for large numbers for some reason. This temporarily fix
         height="24"
         style="border-radius: ${repoData.organization ? "3px" : "100%"}"
       >
-      <a class="fw6" href="${repoData.html_url}" rel="noopener noreferrer nofollow">
+      <a class="npm-userscript-repository-card-title-repo" href="${repoData.html_url}" rel="noopener noreferrer nofollow">
         ${repoData.full_name}
       </a>
       ${directory ? `
-            <span class="npm-userscript-card-title-separator">/</span>
-            <a class="fw6" href="${fullRepoLink}" rel="noopener noreferrer nofollow">
+            <span class="npm-userscript-repository-card-title-separator">/</span>
+            <a class="npm-userscript-repository-card-title-directory" href="${fullRepoLink}" title="${directory}" rel="noopener noreferrer nofollow">
               ${directory}
             </a>
             ` : ""}
     </div>
     <div class="npm-userscript-repository-card-description">
-      <a class="npm-userscript-repository-card-entry" href="${repoData.html_url}/stargazers" rel="noopener noreferrer nofollow">
+      <a class="npm-userscript-repository-card-entry" href="${repoData.html_url}/stargazers" title="${repoData.stargazers_count} stars" rel="noopener noreferrer nofollow">
         ${starSvg}
         ${repoData.stargazers_count.toLocaleString()}
       </a>
-      <a class="npm-userscript-repository-card-entry" href="${repoData.html_url}/issues" rel="noopener noreferrer nofollow" style="gap: 7px;">
+      <a class="npm-userscript-repository-card-entry" href="${repoData.html_url}/issues" title="${issueCount} issues" rel="noopener noreferrer nofollow" style="gap: 5px;">
         ${issueSvg}
         ${issueCount.toLocaleString()}
       </a>
-      <a class="npm-userscript-repository-card-entry" href="${repoData.html_url}/pulls" rel="noopener noreferrer nofollow">
+      <a class="npm-userscript-repository-card-entry" href="${repoData.html_url}/pulls" title="${prCount} pull requests" rel="noopener noreferrer nofollow">
         ${pullSvg}
         ${prCount.toLocaleString()}
       </a>
+      ${changelogLink ? `
+            <a class="npm-userscript-repository-card-entry" href="${changelogLink}" rel="noopener noreferrer nofollow" style="font-size: 90%">
+              ${changelogSvg} Changelog
+            </a>
+            ` : ""}
     </div>
   `;
     repositoryH3.insertAdjacentElement("afterend", card);
@@ -3621,32 +3706,45 @@ implementation is broken for large numbers for some reason. This temporarily fix
       }
     }
   }
-  var description12, starSvg, issueSvg, pullSvg;
+  async function getChangelogLink(ownerRepo, directory) {
+    const changelogPath = directory ? directory + "/CHANGELOG.md" : "CHANGELOG.md";
+    return cacheResult(`getChangelogLink:${ownerRepo}:${directory}`, 600, async () => {
+      const status = await fetchStatus(
+        `https://api.github.com/repos/${ownerRepo}/contents/${changelogPath}`
+      );
+      if (status === 200) {
+        return getRepositoryFilePath(changelogPath);
+      }
+    });
+  }
+  var description13, starSvg, issueSvg, pullSvg, changelogSvg;
   var init_repository_card = __esm({
     "src/features/repository-card.ts"() {
+      init_utils_cache();
       init_utils_fetch();
       init_utils();
-      description12 = `Consolidates all repository information in a card-like view in the package sidebar.
+      description13 = `Consolidates all repository information in a card-like view in the package sidebar.
 Enabling this would remove the "Stars", "Issues", and "Pull Requests" columns.
 `;
       starSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"></path></svg>`;
       issueSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"></path></svg>`;
       pullSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M1.5 3.25a2.25 2.25 0 1 1 3 2.122v5.256a2.251 2.251 0 1 1-1.5 0V5.372A2.25 2.25 0 0 1 1.5 3.25Zm5.677-.177L9.573.677A.25.25 0 0 1 10 .854V2.5h1A2.5 2.5 0 0 1 13.5 5v5.628a2.251 2.251 0 1 1-1.5 0V5a1 1 0 0 0-1-1h-1v1.646a.25.25 0 0 1-.427.177L7.177 3.427a.25.25 0 0 1 0-.354ZM3.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm0 9.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm8.25.75a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Z"></path></svg>`;
+      changelogSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M5 8.25a.75.75 0 0 1 .75-.75h4a.75.75 0 0 1 0 1.5h-4A.75.75 0 0 1 5 8.25ZM4 10.5A.75.75 0 0 0 4 12h4a.75.75 0 0 0 0-1.5H4Z"></path><path d="M13-.005c1.654 0 3 1.328 3 3 0 .982-.338 1.933-.783 2.818-.443.879-1.028 1.758-1.582 2.588l-.011.017c-.568.853-1.104 1.659-1.501 2.446-.398.789-.623 1.494-.623 2.136a1.5 1.5 0 1 0 2.333-1.248.75.75 0 0 1 .834-1.246A3 3 0 0 1 13 16H3a3 3 0 0 1-3-3c0-1.582.891-3.135 1.777-4.506.209-.322.418-.637.623-.946.473-.709.923-1.386 1.287-2.048H2.51c-.576 0-1.381-.133-1.907-.783A2.68 2.68 0 0 1 0 2.995a3 3 0 0 1 3-3Zm0 1.5a1.5 1.5 0 0 0-1.5 1.5c0 .476.223.834.667 1.132A.75.75 0 0 1 11.75 5.5H5.368c-.467 1.003-1.141 2.015-1.773 2.963-.192.289-.381.571-.558.845C2.13 10.711 1.5 11.916 1.5 13A1.5 1.5 0 0 0 3 14.5h7.401A2.989 2.989 0 0 1 10 13c0-.979.338-1.928.784-2.812.441-.874 1.023-1.748 1.575-2.576l.017-.026c.568-.853 1.103-1.658 1.501-2.448.398-.79.623-1.497.623-2.143 0-.838-.669-1.5-1.5-1.5Zm-10 0a1.5 1.5 0 0 0-1.5 1.5c0 .321.1.569.27.778.097.12.325.227.74.227h7.674A2.737 2.737 0 0 1 10 2.995c0-.546.146-1.059.401-1.5Z"></path></svg>`;
     }
   });
 
   // src/features/repository-directory.ts
   var repository_directory_exports = {};
   __export(repository_directory_exports, {
-    description: () => description13,
-    run: () => run11,
-    teardown: () => teardown5
+    description: () => description14,
+    run: () => run12,
+    teardown: () => teardown6
   });
-  function teardown5(previousUrl) {
+  function teardown6(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector("a[aria-labelledby*=repository-link]")?.classList.remove("npm-userscript-repository-directory");
   }
-  async function run11() {
+  async function run12() {
     if (!isValidPackagePage()) return;
     if (!document.querySelector(".npm-userscript-repository-directory")) return;
     const el = document.querySelector("a[aria-labelledby*=repository-link]");
@@ -3654,16 +3752,17 @@ Enabling this would remove the "Stars", "Issues", and "Pull Requests" columns.
     if (!el || !textEl) return;
     const fullRepositoryLink = await getFullRepositoryLink();
     if (!fullRepositoryLink) return;
+    if (el.href === fullRepositoryLink) return;
     el.href = fullRepositoryLink;
     textEl.textContent = fullRepositoryLink.replace(/^https?:\/\//, "");
     el.classList.add("npm-userscript-repository-directory");
   }
-  var description13;
+  var description14;
   var init_repository_directory = __esm({
     "src/features/repository-directory.ts"() {
       init_utils_fetch();
       init_utils();
-      description13 = `Adds the repository directory to the repository link.
+      description14 = `Adds the repository directory to the repository link.
 `;
     }
   });
@@ -3671,19 +3770,19 @@ Enabling this would remove the "Stars", "Issues", and "Pull Requests" columns.
   // src/features/show-binary-label.ts
   var show_binary_label_exports = {};
   __export(show_binary_label_exports, {
-    description: () => description14,
-    run: () => run12,
+    description: () => description15,
+    run: () => run13,
     runPre: () => runPre11,
-    teardown: () => teardown6
+    teardown: () => teardown7
   });
-  function teardown6(previousUrl) {
+  function teardown7(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelectorAll(".npm-userscript-types-label").forEach((el) => el.remove());
   }
   function runPre11() {
     addPackageLabelStyle();
   }
-  async function run12() {
+  async function run13() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-binary-label")) return;
     const packageJson = await fetchPackageJson();
@@ -3722,13 +3821,13 @@ Enabling this would remove the "Stars", "Issues", and "Pull Requests" columns.
     }
     return str;
   }
-  var description14, popularOs, popularArch;
+  var description15, popularOs, popularArch;
   var init_show_binary_label = __esm({
     "src/features/show-binary-label.ts"() {
       init_utils_fetch();
       init_utils_ui();
       init_utils();
-      description14 = `Adds a label for packages that ship prebuilt native binaries.
+      description15 = `Adds a label for packages that ship prebuilt native binaries.
 `;
       popularOs = ["linux", "darwin", "win32"];
       popularArch = ["x64", "arm64", "ia32"];
@@ -3738,19 +3837,19 @@ Enabling this would remove the "Stars", "Issues", and "Pull Requests" columns.
   // src/features/show-cli-label-and-command.ts
   var show_cli_label_and_command_exports = {};
   __export(show_cli_label_and_command_exports, {
-    description: () => description15,
-    run: () => run13,
+    description: () => description16,
+    run: () => run14,
     runPre: () => runPre12,
-    teardown: () => teardown7
+    teardown: () => teardown8
   });
-  function teardown7(previousUrl) {
+  function teardown8(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector(".npm-userscript-types-label")?.remove();
   }
   function runPre12() {
     addPackageLabelStyle();
   }
-  async function run13() {
+  async function run14() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-types-label")) return;
     const packageName = getPackageName();
@@ -3791,14 +3890,14 @@ Enabling this would remove the "Stars", "Issues", and "Pull Requests" columns.
     if (!codeBlock) return;
     codeBlock.textContent = command;
   }
-  var description15;
+  var description16;
   var init_show_cli_label_and_command = __esm({
     "src/features/show-cli-label-and-command.ts"() {
       init_utils_fetch();
       init_utils_npm_context();
       init_utils_ui();
       init_utils();
-      description15 = `Adds a label if the package ships a CLI via the package.json "bin" field, and update the install
+      description16 = `Adds a label if the package ships a CLI via the package.json "bin" field, and update the install
 command to "npm create" or "npx" accordingly.
 `;
     }
@@ -3807,19 +3906,19 @@ command to "npm create" or "npx" accordingly.
   // src/features/show-engine-label.ts
   var show_engine_label_exports = {};
   __export(show_engine_label_exports, {
-    description: () => description16,
-    run: () => run14,
+    description: () => description17,
+    run: () => run15,
     runPre: () => runPre13,
-    teardown: () => teardown8
+    teardown: () => teardown9
   });
-  function teardown8(previousUrl) {
+  function teardown9(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector(".npm-userscript-engine-label")?.remove();
   }
   function runPre13() {
     addPackageLabelStyle();
   }
-  async function run14() {
+  async function run15() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-engine-label")) return;
     const packageJson = await fetchPackageJson();
@@ -3832,13 +3931,13 @@ command to "npm create" or "npx" accordingly.
       label.title = `This package requires Node.js ${engines.node}`;
     }
   }
-  var description16;
+  var description17;
   var init_show_engine_label = __esm({
     "src/features/show-engine-label.ts"() {
       init_utils_fetch();
       init_utils_ui();
       init_utils();
-      description16 = `Adds a label of the engine versions (e.g. Node.js) that a package supports.
+      description17 = `Adds a label of the engine versions (e.g. Node.js) that a package supports.
 `;
     }
   });
@@ -3846,19 +3945,19 @@ command to "npm create" or "npx" accordingly.
   // src/features/show-file-types-label.ts
   var show_file_types_label_exports = {};
   __export(show_file_types_label_exports, {
-    description: () => description17,
-    run: () => run15,
+    description: () => description18,
+    run: () => run16,
     runPre: () => runPre14,
-    teardown: () => teardown9
+    teardown: () => teardown10
   });
-  function teardown9(previousUrl) {
+  function teardown10(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelectorAll(".npm-userscript-file-types-label").forEach((el) => el.remove());
   }
   function runPre14() {
     addPackageLabelStyle();
   }
-  async function run15() {
+  async function run16() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-file-types-label")) return;
     const data = await fetchPackageFilesData();
@@ -3917,13 +4016,13 @@ command to "npm create" or "npx" accordingly.
       }
     }
   }
-  var description17;
+  var description18;
   var init_show_file_types_label = __esm({
     "src/features/show-file-types-label.ts"() {
       init_utils_fetch();
       init_utils_ui();
       init_utils();
-      description17 = `Show ESM or CJS labels if the package ships them.
+      description18 = `Show ESM or CJS labels if the package ships them.
 `;
     }
   });
@@ -3931,19 +4030,19 @@ command to "npm create" or "npx" accordingly.
   // src/features/show-lifecycle-scripts-label.ts
   var show_lifecycle_scripts_label_exports = {};
   __export(show_lifecycle_scripts_label_exports, {
-    description: () => description18,
-    run: () => run16,
+    description: () => description19,
+    run: () => run17,
     runPre: () => runPre15,
-    teardown: () => teardown10
+    teardown: () => teardown11
   });
-  function teardown10(previousUrl) {
+  function teardown11(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector(".npm-userscript-lifecycle-scripts-label")?.remove();
   }
   function runPre15() {
     addPackageLabelStyle();
   }
-  async function run16() {
+  async function run17() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-lifecycle-scripts-label")) return;
     const packageJson = await fetchPackageJson();
@@ -3955,13 +4054,13 @@ command to "npm create" or "npx" accordingly.
     label.classList.add("npm-userscript-lifecycle-scripts-label");
     label.title = `This package defines lifecycle scripts that run on install: ${matchedScripts.map((s2) => `"${s2}"`).join(", ")}`;
   }
-  var description18, LIFECYCLE_SCRIPTS;
+  var description19, LIFECYCLE_SCRIPTS;
   var init_show_lifecycle_scripts_label = __esm({
     "src/features/show-lifecycle-scripts-label.ts"() {
       init_utils_fetch();
       init_utils_ui();
       init_utils();
-      description18 = `Adds a label if the package defines lifecycle scripts in its package.json.
+      description19 = `Adds a label if the package defines lifecycle scripts in its package.json.
 `;
       LIFECYCLE_SCRIPTS = ["postinstall", "preinstall", "install"];
     }
@@ -3970,12 +4069,12 @@ command to "npm create" or "npx" accordingly.
   // src/features/show-types-label.ts
   var show_types_label_exports = {};
   __export(show_types_label_exports, {
-    description: () => description19,
-    run: () => run17,
+    description: () => description20,
+    run: () => run18,
     runPre: () => runPre16,
-    teardown: () => teardown11
+    teardown: () => teardown12
   });
-  function teardown11(previousUrl) {
+  function teardown12(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector(".npm-userscript-types-label")?.remove();
   }
@@ -3987,7 +4086,7 @@ command to "npm create" or "npx" accordingly.
     }
   `);
   }
-  async function run17() {
+  async function run18() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-types-label")) return;
     const packageName = getPackageName();
@@ -4046,14 +4145,14 @@ command to "npm create" or "npx" accordingly.
     }
     return { type: "unknown" };
   }
-  var description19;
+  var description20;
   var init_show_types_label = __esm({
     "src/features/show-types-label.ts"() {
       init_utils_fetch();
       init_utils_npm_context();
       init_utils_ui();
       init_utils();
-      description19 = `Adds a label for packages that ship types. This is similar to npm's own DT / TS icon but
+      description20 = `Adds a label for packages that ship types. This is similar to npm's own DT / TS icon but
 with a more consistent UI. It is also more accurate if the package ship types but isn't detectable
 in the package.json.
 `;
@@ -5193,12 +5292,12 @@ in the package.json.
   // src/features/show-vulnerabilities.ts
   var show_vulnerabilities_exports = {};
   __export(show_vulnerabilities_exports, {
-    description: () => description20,
-    run: () => run18,
+    description: () => description21,
+    run: () => run19,
     runPre: () => runPre17,
-    teardown: () => teardown12
+    teardown: () => teardown13
   });
-  function teardown12(previousUrl) {
+  function teardown13(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector(".npm-userscript-vulnerability-label")?.remove();
     document.querySelectorAll(".npm-userscript-vulnerability-tag").forEach((el) => el.remove());
@@ -5239,7 +5338,7 @@ in the package.json.
     }
   `);
   }
-  async function run18() {
+  async function run19() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-vulnerability-label") && document.querySelector(".npm-userscript-vulnerability-tag"))
       return;
@@ -5355,7 +5454,7 @@ in the package.json.
     const settings = await Promise.resolve().then(() => (init_settings(), settings_exports));
     return settings.featureSettings;
   }
-  var import_gte, import_lt, import_max_satisfying, description20, warningSvg;
+  var import_gte, import_lt, import_max_satisfying, description21, warningSvg;
   var init_show_vulnerabilities = __esm({
     "src/features/show-vulnerabilities.ts"() {
       import_gte = __toESM(require_gte(), 1);
@@ -5365,7 +5464,7 @@ in the package.json.
       init_utils_npm_context();
       init_utils_ui();
       init_utils();
-      description20 = `Adds a label if a package is vulnerable in the header and versions table. The core vulnerability data
+      description21 = `Adds a label if a package is vulnerable in the header and versions table. The core vulnerability data
 is powered by https://osv.dev.
 `;
       warningSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>`;
@@ -5375,12 +5474,12 @@ is powered by https://osv.dev.
   // src/features/stars.ts
   var stars_exports = {};
   __export(stars_exports, {
-    description: () => description21,
-    run: () => run19,
+    description: () => description22,
+    run: () => run20,
     runPre: () => runPre18,
-    teardown: () => teardown13
+    teardown: () => teardown14
   });
-  function teardown13(previousUrl) {
+  function teardown14(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector(".npm-userscript-stars-column")?.remove();
   }
@@ -5399,7 +5498,7 @@ is powered by https://osv.dev.
     }
   `);
   }
-  async function run19() {
+  async function run20() {
     if (!isValidPackagePage()) return;
     if ((await getFeatureSettings4())["repository-card"].get() === true) return;
     if (document.querySelector(".npm-userscript-stars-column")) return;
@@ -5424,12 +5523,12 @@ is powered by https://osv.dev.
     const settings = await Promise.resolve().then(() => (init_settings(), settings_exports));
     return settings.featureSettings;
   }
-  var description21;
+  var description22;
   var init_stars = __esm({
     "src/features/stars.ts"() {
       init_utils_fetch();
       init_utils();
-      description21 = `Display a "Stars" column in the package sidebar for GitHub repos.
+      description22 = `Display a "Stars" column in the package sidebar for GitHub repos.
 `;
     }
   });
@@ -5437,15 +5536,15 @@ is powered by https://osv.dev.
   // src/features/tarball-size.ts
   var tarball_size_exports = {};
   __export(tarball_size_exports, {
-    description: () => description22,
-    run: () => run20,
-    teardown: () => teardown14
+    description: () => description23,
+    run: () => run21,
+    teardown: () => teardown15
   });
-  function teardown14(previousUrl) {
+  function teardown15(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector(".npm-userscript-tarball-size-column")?.remove();
   }
-  async function run20() {
+  async function run21() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-tarball-size-column")) return;
     const tarballSize = await getTarballSize();
@@ -5491,12 +5590,12 @@ is powered by https://osv.dev.
     const settings = await Promise.resolve().then(() => (init_settings(), settings_exports));
     return settings.featureSettings;
   }
-  var description22;
+  var description23;
   var init_tarball_size = __esm({
     "src/features/tarball-size.ts"() {
       init_utils_fetch();
       init_utils();
-      description22 = `Display the tarball size of the package.
+      description23 = `Display the tarball size of the package.
 `;
     }
   });
@@ -5504,16 +5603,16 @@ is powered by https://osv.dev.
   // src/features/unpacked-size-and-total-files.ts
   var unpacked_size_and_total_files_exports = {};
   __export(unpacked_size_and_total_files_exports, {
-    description: () => description23,
-    run: () => run21,
-    teardown: () => teardown15
+    description: () => description24,
+    run: () => run22,
+    teardown: () => teardown16
   });
-  function teardown15(previousUrl) {
+  function teardown16(previousUrl) {
     if (isSamePackagePage(previousUrl)) return;
     document.querySelector(".npm-userscript-unpacked-size-column")?.remove();
     document.querySelector(".npm-userscript-total-files-column")?.remove();
   }
-  async function run21() {
+  async function run22() {
     if (!isValidPackagePage()) return;
     if (document.querySelector(".npm-userscript-unpacked-size-column") || document.querySelector(".npm-userscript-total-files-column"))
       return;
@@ -5546,12 +5645,12 @@ is powered by https://osv.dev.
       licenseColumn.insertAdjacentElement("afterend", newUnpackedSizeColumn);
     }
   }
-  var description23;
+  var description24;
   var init_unpacked_size_and_total_files = __esm({
     "src/features/unpacked-size-and-total-files.ts"() {
       init_utils_fetch();
       init_utils();
-      description23 = `Display the "Unpacked Size" and "Total Files" columns for older packages that lack the data.
+      description24 = `Display the "Unpacked Size" and "Total Files" columns for older packages that lack the data.
 `;
     }
   });
@@ -5570,6 +5669,7 @@ is powered by https://osv.dev.
       init_move_funding();
       init_no_code_beta();
       init_remember_banner();
+      init_remove_redundant_homepage();
       init_remove_runkit();
       init_repository_card();
       init_repository_directory();
@@ -5594,6 +5694,7 @@ is powered by https://osv.dev.
         "move-funding": move_funding_exports,
         "no-code-beta": no_code_beta_exports,
         "remember-banner": remember_banner_exports,
+        "remove-redundant-homepage": remove_redundant_homepage_exports,
         "remove-runkit": remove_runkit_exports,
         "repository-card": repository_card_exports,
         "repository-directory": repository_directory_exports,

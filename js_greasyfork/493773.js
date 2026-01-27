@@ -3,7 +3,7 @@
 // @namespace   https://github.com/stanleyqubit/drop-my-flickr-links
 // @license     MIT License
 // @author      stanleyqubit
-// @compatible  firefox Tampermonkey with UserScripts API Dynamic
+// @compatible  firefox Tampermonkey
 // @compatible  chrome Violentmonkey or Tampermonkey
 // @compatible  edge Violentmonkey or Tampermonkey
 // @compatible  opera Tampermonkey
@@ -19,7 +19,7 @@
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_registerMenuCommand
-// @version     3.0.2
+// @version     3.0.3
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=flickr.com
 // @description Creates a hoverable dropdown menu that shows links to all available sizes for Flickr photos.
 // @downloadURL https://update.greasyfork.org/scripts/493773/Drop%20My%20Flickr%20Links%21.user.js
@@ -32,13 +32,6 @@
   copyright laws. Downloading a photo constitutes your agreement to use the
   photo in accordance with the license associated with it. Please check the
   individual photo's license information before use.
-
-  Note -- Firefox + Tampermonkey users: in order for the script to have full
-  access to the Flickr YUI `appContext` global variable and thus avoid having to
-  resort to workarounds which may result in incorrectly displayed links or
-  incomplete photo data, go to the Tampermonkey dashboard -> Settings, under
-  "Config mode" select "Advanced", then under "Content Script API" select
-  "UserScripts API Dynamic", then click "Save".
 
   FYI -- some authors may choose to disable photo downloads which means that
   Flickr will not make certain photo sizes (e.g. originals) available for users
@@ -83,6 +76,16 @@ const getOr = (...args) => {
       return v;
   }
 }
+
+const makeURL = (url) =>
+  new URL(url, url.startsWith('/') ? location.origin : undefined);
+
+const getFilename = (val) =>
+  val instanceof URL
+    ? decodeURIComponent(val.pathname).split('/').filter(Boolean).pop()
+    : typeof val === 'string' && val.length
+      ? getFilename(makeURL(val))
+      : 'unknown';
 
 const isLightboxURL = (url) =>
   url.lastIndexOf('/lightbox') > 34;
@@ -1948,7 +1951,7 @@ const PreviewMode = {
     const imgWrapper = $new('div', 'dmfl-pv-img-wrapper');
     this.bg.appendChild(imgWrapper);
 
-    let source = data.imageURL;
+    let src = data.url;
 
     const img = this.img = new Image();
     img.className = 'dmfl-pv-img';
@@ -2021,7 +2024,7 @@ const PreviewMode = {
       this.clear({ reason: 'image onerror handler triggered' });
     }
 
-    img.src = source instanceof Blob ? URL.createObjectURL(source) : source;
+    img.src = src instanceof Blob ? URL.createObjectURL(src) : src;
     imgWrapper.appendChild(img);
 
   },
@@ -2029,11 +2032,11 @@ const PreviewMode = {
   saveImage() {
     if (!(this.img?.complete && this.img.isConnected)) return;
     const isBlob = this.img.src.startsWith('blob');
-    console.debug(`Saving image${isBlob ? ' from blob ' : ' '}as: '${this.data.downloadFilename}'`);
+    console.debug(`Saving image${isBlob ? ' from blob ' : ' '}as: '${this.data.name}'`);
     if (o.PREPEND_AUTHOR_ID && !isBlob) {
       this.downloadController = dl({
-        url: this.data.downloadURL,
-        name: this.data.downloadFilename,
+        url: this.data.url_d,
+        name: this.data.name,
         maxRetries: 2,
         timeout: 30000,
       });
@@ -2043,9 +2046,9 @@ const PreviewMode = {
       if (isBlob) {
         link.href = this.img.src;
         link.target = '_blank';
-        link.download = this.data.downloadFilename;
+        link.download = this.data.name;
       } else {
-        link.href = this.data.downloadURL;
+        link.href = this.data.url_d;
       }
       document.body.appendChild(link);
       link.dispatchEvent(new MouseEvent('click'));
@@ -2675,41 +2678,42 @@ async function populate(dropdown) {
 
   const sizes = [];
   for (const item of info.descendingSizes) {
-    const imageURL = getOr(item.url, item.src, item.displayUrl);
-    if (!imageURL) {
+    let url = getOr(item.url, item.src, item.displayUrl);
+    if (!url) {
       console.debug("Invalid descendingSizes item:", item);
       continue;
     }
-    const downloadURL = imageURL.replace(/(\.[a-z]+)$/i, '_d$1');
-    const filename = imageURL.split('/').filter(Boolean).pop();
-    const extension = filename.split('.').pop();
+    const urlObj = makeURL(url);
+    url = urlObj.href; // Save original href before we modify urlObj
+    const filename = getFilename(urlObj);
+    const extension = filename.includes('.') ? filename.split('.').pop() : null;
+    const path = urlObj.pathname;
+    const url_d = (urlObj.pathname = path.replace(/(\.[a-z]+)$/i, '_d$1'), urlObj.href);
     const entry = $new('div', 'dmfl-dd-entry');
     const anchor = $new('a', 'dmfl-dd-entry-anchor');
-    anchor.setAttribute('href', o.PREPEND_AUTHOR_ID ? imageURL : downloadURL);
+    anchor.setAttribute('href', o.PREPEND_AUTHOR_ID ? url : url_d);
     anchor.textContent = `${item.width} x ${item.height} (${item.key})`;
     if (item.key == '?' && info.message) {
       anchor.setAttribute('title', `All sizes not available ${info.message}`);
     }
-    if (!extension.endsWith('jpg')) {
+    if (extension && extension !== 'jpg') {
+      // Show filename extension if other than jpg
       anchor.textContent += ` [${extension}]`;
     }
-    const downloadFilename = author && o.PREPEND_AUTHOR_ID ? `${author}_-_${filename}` : filename;
+    const name = o.PREPEND_AUTHOR_ID && author ? `${author}_-_${filename}` : filename;
     anchor.addEventListener('click', (event) => {
-      console.debug(`Saving image as: '${downloadFilename}'`);
+      console.debug(`Saving image as: '${name}'`);
       if (!o.PREPEND_AUTHOR_ID) return;
       event.preventDefault();
-      dl({url: downloadURL, name: downloadFilename, maxRetries: 2, timeout: 30000});
+      dl({url: url_d, name, maxRetries: 2, timeout: 30000});
     })
     entry.appendChild(anchor);
     const previewButton = $new('div', 'dmfl-dd-entry-pv');
     previewButton.textContent = '\u00a0\u229e\u00a0';
     const itemInfo = {
-      downloadURL: downloadURL,
-      downloadFilename: downloadFilename,
+      item, url, url_d, name,
       licenseInfo: info.licenseInfo,
       photoInfo: anchor.textContent,
-      item: item,
-      imageURL: imageURL,
     };
     previewButton.onclick = () => PreviewMode.enter(itemInfo);
     sizes.push(itemInfo);

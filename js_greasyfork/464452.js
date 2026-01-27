@@ -1,567 +1,352 @@
 // ==UserScript==
-// @name         WME - UR Manager
+// @name         WME - URs Colombia
 // @namespace    http://waze.com/
-// @version      2025.04.17.15
-// @description  Gestión de URs 
+// @version      2026.01.24
+// @description  Panel de URs con menú de inicio, filtro por departamento y parser robusto.
 // @author       Crotalo
 // @match        https://www.waze.com/*/editor*
 // @match        https://beta.waze.com/*/editor*
-// @grant        GM_addStyle
-// @require      https://code.jquery.com/jquery-3.6.0.min.js
-// @downloadURL https://update.greasyfork.org/scripts/464452/WME%20-%20UR%20Manager.user.js
-// @updateURL https://update.greasyfork.org/scripts/464452/WME%20-%20UR%20Manager.meta.js
+// @grant        GM_xmlhttpRequest
+// @connect      wmebr.info
+// @downloadURL https://update.greasyfork.org/scripts/464452/WME%20-%20URs%20Colombia.user.js
+// @updateURL https://update.greasyfork.org/scripts/464452/WME%20-%20URs%20Colombia.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    const CONFIG = {
-        MENSAJE_RESPUESTA: "¡Hola, Wazer! Gracias por tu reporte. Para resolverlo de forma efectiva, necesitamos un poco más de detalle sobre lo sucedido. Quedamos atentos a tu respuesta.",
-        MENSAJE_CIERRE: "¡¡Hola Wazer! Buen día, Lamentablemente no pudimos solucionar el error en esta ocasión. Por favor, déjanos más datos la próxima vez. Gracias por reportar. ",
-        MENSAJE_RESUELTA: "¡Hola Wazer! Buen día, el problema fue solucionado y se verá reflejado en la aplicación en la próxima actualización del mapa, esta tomará entre 3 y 5 días. ¡Gracias por reportar!!",
-        DEBUG: true,
-        BOTON_ID: 'urna-btn-fecha-exacta',
-        PANEL_ID: 'urna-panel-fecha-exacta',
-        INTERVALO_VERIFICACION: 5000,
-        UMBRAL_VIEJO: 7,
-        UMBRAL_RECIENTE: 3,
-        RETRASO_ENTRE_ACCIONES: 800
-    };
+    const TARGET_URL = "https://wmebr.info/ur/urs_on_state.php?state=All&country=Colombia&all=true";
+    let CACHED_DATA = []; // Almacén de datos en memoria
 
-    GM_addStyle(`
-        #${CONFIG.BOTON_ID} {
-            position: fixed !important;
-            bottom: 20px !important;
-            left: 20px !important;
-            z-index: 99999 !important;
-            padding: 10px 15px !important;
-            background: #3498db !important;
-            color: white !important;
-            font-weight: bold !important;
-            border: none !important;
-            border-radius: 5px !important;
-            cursor: pointer !important;
-            font-family: Arial, sans-serif !important;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
-        }
-        #${CONFIG.PANEL_ID} {
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            width: 500px;
-            max-height: 70vh;
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            background: white;
-            border: 2px solid #999;
-            z-index: 99998;
-            font-family: Arial, sans-serif;
-            font-size: 13px;
-            box-shadow: 2px 2px 15px rgba(0,0,0,0.3);
-            border-radius: 5px;
-            display: none;
-        }
-        #${CONFIG.PANEL_ID} .panel-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            max-height: calc(70vh - 60px);
-        }
-        #${CONFIG.PANEL_ID} table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        #${CONFIG.PANEL_ID} th {
-            position: sticky;
-            top: 0;
-            background-color: #f2f2f2;
-            z-index: 10;
-        }
-        #${CONFIG.PANEL_ID} th, #${CONFIG.PANEL_ID} td {
-            border: 1px solid #ddd;
-            padding: 6px;
-            text-align: left;
-        }
-        .ur-old { color: #d9534f; font-weight: bold; }
-        .ur-recent { color: #5bc0de; }
-        .ur-new { color: #5cb85c; }
-        .ur-visitada { background-color: #fdf5d4 !important; }
-        .ur-no-fecha { color: #777; font-style: italic; }
-        .ur-cerrada { text-decoration: line-through; opacity: 0.6; }
-        .btn-centrar {
-            padding: 4px 8px;
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        .panel-footer {
-            padding: 10px 15px;
-            background: #f8f8f8;
-            border-top: 1px solid #eee;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            position: sticky;
-            bottom: 0;
-            z-index: 20;
-            height: 60px;
-        }
-        .btn-global {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-        .btn-responder {
-            background: #f0ad4e;
-            color: white;
-        }
-        .btn-cerrar {
-            background: #5cb85c;
-            color: white;
-        }
-        .btn-resuelta {
-            background: #5bc0de;
-            color: white;
-        }
-    `);
-
-    let estado = {
-        URsActuales: [],
-        panelVisible: false,
-        botonUR: null,
-        intervaloVerificacion: null,
-        timeouts: [],
-        accionEnProgreso: false
-    };
-
-    function debugLog(message) {
-        if (CONFIG.DEBUG) console.log('[UR Script] ' + message);
-    }
-
-    function limpiarTimeouts() {
-        estado.timeouts.forEach(timeout => clearTimeout(timeout));
-        estado.timeouts = [];
-    }
-
-    function agregarTimeout(callback, delay) {
-        const timeoutId = setTimeout(() => {
-            callback();
-            estado.timeouts = estado.timeouts.filter(id => id !== timeoutId);
-        }, delay);
-        estado.timeouts.push(timeoutId);
-        return timeoutId;
-    }
-
-    function togglePanelURs() {
-        if (estado.panelVisible) {
-            $(`#${CONFIG.PANEL_ID}`).fadeOut(300, function() {
-                $(this).remove();
-            });
-            estado.panelVisible = false;
-            limpiarTimeouts();
+    function bootstrap() {
+        if (typeof W === 'object' && W.userscripts?.state.isReady) {
+            init();
         } else {
-            mostrarPanelURs();
+            document.addEventListener("wme-ready", init, { once: true });
         }
     }
 
-    function crearBoton() {
-        if ($(`#${CONFIG.BOTON_ID}`).length > 0) return;
-
-        debugLog('Creando botón...');
-        estado.botonUR = $(`<button id="${CONFIG.BOTON_ID}">📝 UR Manager</button>`)
-            .appendTo('body')
-            .on('click', togglePanelURs);
-
-        debugLog('Botón creado exitosamente');
+    function init() {
+        console.log("WME URs Colombia: Listo.");
+        addLauncher();
     }
 
-    function parsearFecha(valor) {
-        if (!valor) return null;
+    function createPanel() {
+        if (document.getElementById("wme-ur-panel")) return;
 
-        if (typeof valor === 'object' && '_seconds' in valor) {
-            try {
-                return new Date(valor._seconds * 1000 + (valor._nanoseconds / 1000000));
-            } catch (e) {
-                debugLog(`Error parseando Firebase Timestamp: ${JSON.stringify(valor)}`);
-            }
-        }
+        const panel = document.createElement("div");
+        panel.id = "wme-ur-panel";
 
-        if (typeof valor === 'string' && valor.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) {
-            try {
-                return new Date(valor);
-            } catch (e) {
-                debugLog(`Error parseando fecha ISO: ${valor}`);
-            }
-        }
+        Object.assign(panel.style, {
+            position: "fixed", top: "60px", right: "20px", width: "400px", height: "75vh",
+            backgroundColor: "white", border: "1px solid #ddd", borderRadius: "8px",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.15)", zIndex: "10000",
+            display: "flex", flexDirection: "column", fontFamily: '"Open Sans", sans-serif',
+            fontSize: "13px"
+        });
 
-        if (/^\d+$/.test(valor)) {
-            try {
-                const num = parseInt(valor);
-                return new Date(num > 1000000000000 ? num : num * 1000);
-            } catch (e) {
-                debugLog(`Error parseando timestamp numérico: ${valor}`);
-            }
-        }
-
-        return null;
-    }
-
-    function obtenerFechaCreacionExacta(ur) {
-        try {
-            if (ur.attributes.driveDate) {
-                const fecha = parsearFecha(ur.attributes.driveDate);
-                if (fecha) return fecha;
-            }
-            return null;
-        } catch (e) {
-            debugLog(`Error obteniendo fecha: ${e}`);
-            return null;
-        }
-    }
-
-    function clasificarUR(fecha) {
-        if (!fecha) return { estado: "Sin fecha", clase: "ur-no-fecha" };
-
-        const hoy = new Date();
-        const diff = hoy - fecha;
-        const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-        if (dias > CONFIG.UMBRAL_VIEJO) return { estado: `Antigua (${dias}d)`, clase: "ur-old" };
-        if (dias > CONFIG.UMBRAL_RECIENTE) return { estado: `Reciente (${dias}d)`, clase: "ur-recent" };
-        return { estado: `Nueva (${dias}d)`, clase: "ur-new" };
-    }
-
-    function mostrarPanelURs() {
-        estado.panelVisible = true;
-        limpiarTimeouts();
-        $(`#${CONFIG.PANEL_ID}`).remove();
-
-        const panel = $(`<div id="${CONFIG.PANEL_ID}">`);
-        const panelContent = $('<div class="panel-content">');
-        const panelFooter = $(`
-            <div class="panel-footer">
-                <button class="btn-global btn-responder" id="responder-todas">Preguntar</button>
-                <button class="btn-global btn-resuelta" id="resolver-todas">Resuelta</button>
-                <button class="btn-global btn-cerrar" id="cerrar-todas">No Identificada</button>
+        panel.innerHTML = `
+            <div style="padding: 12px 15px; background: #f0f4f7; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; border-radius: 8px 8px 0 0;">
+                <div style="display:flex; align-items:center;">
+                    <button id="ur-back" style="display:none; cursor:pointer; background:none; border:none; font-size:16px; margin-right:10px; color:#3498db;">⬅</button>
+                    <strong style="color: #354148;">URs Colombia (<span id="ur-count">0</span>)</strong>
+                </div>
+                <div>
+                    <button id="ur-refresh" style="cursor:pointer; background:white; border:1px solid #ccc; padding:4px 8px; border-radius:4px; margin-right:5px;" title="Recargar datos">↻</button>
+                    <button id="ur-close" style="cursor:pointer; background:none; border:none; color:#999; font-weight:bold; font-size:16px;" title="Cerrar">✕</button>
+                </div>
             </div>
-        `);
+            
+            <div id="ur-content" style="flex-grow: 1; overflow-y: auto; padding: 0; background: #fff; position: relative;">
+                <div id="ur-loading" style="padding: 40px; text-align: center; color: #888;">
+                    <p>Cargando datos...</p>
+                    <div style="border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                </div>
+            </div>
 
-        estado.URsActuales = obtenerURsSinAtender();
-
-        if (estado.URsActuales.length === 0) {
-            panelContent.html('<div style="padding:15px;text-align:center;"><b>No hay URs sin atender visibles</b></div>');
-        } else {
-            let tablaHTML = `
-                <h3 style="margin-top:0;">URs Activas: ${estado.URsActuales.length}</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Tipo</th>
-                            <th>Fecha Creación</th>
-                            <th>Estado</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
-
-            estado.URsActuales.forEach(ur => {
-                const id = ur.attributes.id;
-                const tipo = ur.attributes.type || 'Desconocido';
-                const fecha = obtenerFechaCreacionExacta(ur);
-                const clasificacion = clasificarUR(fecha);
-
-                let fechaStr = 'No disponible';
-                if (fecha) {
-                    fechaStr = fecha.toLocaleDateString('es-ES', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
+            <style>
+                @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                
+                /* Estilos Generales */
+                .ur-row { padding: 10px 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.2s; }
+                .ur-row:hover { background-color: #f9fcff; border-left: 3px solid #3498db; }
+                .ur-desc { color: #333; margin-bottom: 4px; line-height: 1.3; }
+                .ur-meta { color: #888; font-size: 11px; display: flex; justify-content: space-between; align-items: center; }
+                .ur-tag { background: #eee; padding: 1px 5px; border-radius: 3px; font-size: 10px; }
+                
+                /* Estilos Menú Principal */
+                .menu-btn {
+                    display: block; width: 90%; margin: 15px auto; padding: 15px;
+                    background: #fff; border: 1px solid #ddd; border-radius: 8px;
+                    text-align: left; cursor: pointer; transition: all 0.2s;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
                 }
+                .menu-btn:hover { border-color: #3498db; background: #f0f8ff; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+                .menu-title { font-size: 14px; font-weight: bold; color: #2c3e50; display: block; margin-bottom: 5px; }
+                .menu-desc { font-size: 11px; color: #7f8c8d; }
 
-                tablaHTML += `
-                    <tr id="fila-ur-${id}">
-                        <td>${id}</td>
-                        <td>${tipo}</td>
-                        <td>${fechaStr}</td>
-                        <td class="${clasificacion.clase}">${clasificacion.estado}</td>
-                        <td><button class="btn-centrar" data-id="${id}">🗺️ Centrar</button></td>
-                    </tr>`;
-            });
+                /* Estilos Lista Departamentos */
+                .dept-btn {
+                    padding: 12px 20px; border-bottom: 1px solid #eee; cursor: pointer;
+                    display: flex; justify-content: space-between; color: #444;
+                }
+                .dept-btn:hover { background-color: #f9f9f9; color: #3498db; }
+                .dept-count { background: #eee; padding: 2px 6px; border-radius: 10px; font-size: 10px; color: #666; }
+            </style>
+        `;
 
-            panelContent.html(`
-                ${tablaHTML}
-                    </tbody>
-                </table>
-            `);
+        document.body.appendChild(panel);
 
-            panelContent.on('click', '.btn-centrar', function() {
-                if (estado.accionEnProgreso) return;
-                const id = $(this).data('id');
-                centrarYMostrarUR(id);
-                $(`#fila-ur-${id}`).addClass('ur-visitada');
-            });
-        }
+        
+        document.getElementById("ur-close").onclick = () => panel.style.display = "none";
+        document.getElementById("ur-refresh").onclick = fetchData;
+        document.getElementById("ur-back").onclick = showHome; // Por defecto vuelve al home
 
-        panelFooter.on('click', '#responder-todas', function() {
-            if (estado.accionEnProgreso) return;
-            estado.URsActuales.forEach((ur, index) => {
-                agregarTimeout(() => responderUR(ur.attributes.id), index * CONFIG.RETRASO_ENTRE_ACCIONES);
-            });
-        });
-
-        panelFooter.on('click', '#resolver-todas', function() {
-            if (estado.accionEnProgreso) return;
-            estado.URsActuales.forEach((ur, index) => {
-                agregarTimeout(() => resolverUR(ur.attributes.id), index * CONFIG.RETRASO_ENTRE_ACCIONES);
-            });
-        });
-
-        panelFooter.on('click', '#cerrar-todas', function() {
-            if (estado.accionEnProgreso) return;
-            estado.URsActuales.forEach((ur, index) => {
-                agregarTimeout(() => cerrarUR(ur.attributes.id), index * CONFIG.RETRASO_ENTRE_ACCIONES);
-            });
-        });
-
-        panel.append(panelContent);
-        panel.append(panelFooter);
-        panel.appendTo('body').fadeIn(300);
+        fetchData();
     }
 
-    function obtenerURsSinAtender() {
-        try {
-            if (!W.model?.mapUpdateRequests?.objects) return [];
+    -
 
-            const bounds = W.map.getExtent();
-            return Object.values(W.model.mapUpdateRequests.objects)
-                .filter(ur => {
-                    const geom = ur.getOLGeometry?.();
-                    if (!geom) return false;
+    function fetchData() {
+        const container = document.getElementById("ur-content");
+        const countSpan = document.getElementById("ur-count");
+        const backBtn = document.getElementById("ur-back");
+        
+        // Reset UI
+        container.innerHTML = `
+            <div style="padding: 40px; text-align: center; color: #888;">
+                <p>Actualizando base de datos...</p>
+                <div style="border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+            </div>`;
+        countSpan.innerText = "-";
+        backBtn.style.display = "none";
 
-                    const center = geom.getBounds().getCenterLonLat();
-                    if (!bounds.containsLonLat(center)) return false;
-
-                    if (ur.attributes.resolved) return false;
-
-                    const comentarios = ur.attributes.comments || [];
-                    return !comentarios.some(c => c.type === 'user' && c.text?.trim().length > 0);
-                });
-        } catch (e) {
-            debugLog('Error obteniendo URs: ' + e);
-            return [];
-        }
-    }
-
-    function centrarYMostrarUR(id) {
-        if (estado.accionEnProgreso) return;
-        estado.accionEnProgreso = true;
-
-        limpiarTimeouts();
-
-        const ur = W.model.mapUpdateRequests.getObjectById(Number(id));
-        if (!ur) {
-            debugLog(`UR ${id} no encontrada`);
-            estado.accionEnProgreso = false;
-            return;
-        }
-
-        if (ur.attributes.resolved) {
-            debugLog(`UR ${id} ya está resuelta`);
-            $(`#fila-ur-${id}`).addClass('ur-cerrada').find('.btn-centrar').prop('disabled', true);
-            estado.accionEnProgreso = false;
-            return;
-        }
-
-        const geom = ur.getOLGeometry?.();
-        if (geom) {
-            const center = geom.getBounds().getCenterLonLat();
-            W.map.setCenter(center, 17);
-
-            agregarTimeout(() => {
-                try {
-                    if (W.control?.MapUpdateRequest?.show) {
-                        W.control.MapUpdateRequest.show(ur);
-                    } else if (W.control?.MapProblem?.show) {
-                        W.control.MapProblem.show(ur);
-                    } else if (W.control?.UR?.show) {
-                        W.control.UR.show(ur);
-                    } else if (W.selectionManager) {
-                        W.selectionManager.select([ur]);
+        GM_xmlhttpRequest({
+            method: "GET",
+            url: TARGET_URL,
+            onload: function(response) {
+                // Parsing
+                const dataScript = extractScript(response.responseText);
+                if (dataScript) {
+                    try {
+                        CACHED_DATA = cleanAndParse(dataScript);
+                        countSpan.innerText = CACHED_DATA.length;
+                        showHome(); 
+                    } catch (e) {
+                        console.error(e);
+                        container.innerHTML = `<p style="padding:20px; color:red;">Error parseando datos.<br><small>${e.message}</small></p>`;
                     }
-                    $(`#fila-ur-${id}`).addClass('ur-visitada');
-                } catch (e) {
-                    debugLog(`Error al mostrar UR ${id}: ${e}`);
-                } finally {
-                    estado.accionEnProgreso = false;
-                }
-            }, 300);
-        } else {
-            debugLog(`No se pudo obtener geometría para UR ${id}`);
-            estado.accionEnProgreso = false;
-        }
-    }
-
-    function responderUR(id) {
-        if (estado.accionEnProgreso) return;
-        estado.accionEnProgreso = true;
-
-        limpiarTimeouts();
-        const ur = W.model.mapUpdateRequests.getObjectById(Number(id));
-        if (!ur) {
-            estado.accionEnProgreso = false;
-            return;
-        }
-
-        centrarYMostrarUR(id);
-
-        agregarTimeout(() => {
-            const commentField = $('.new-comment-text');
-            if (commentField.length) {
-                commentField.val(CONFIG.MENSAJE_RESPUESTA);
-                const sendButton = $('.send-button');
-                if (sendButton.length) {
-                    sendButton.click();
-                }
-            }
-            estado.accionEnProgreso = false;
-        }, 1500);
-    }
-
-    function resolverUR(id) {
-        if (estado.accionEnProgreso) return;
-        estado.accionEnProgreso = true;
-
-        limpiarTimeouts();
-        const ur = W.model.mapUpdateRequests.getObjectById(Number(id));
-        if (!ur) {
-            estado.accionEnProgreso = false;
-            return;
-        }
-
-        centrarYMostrarUR(id);
-
-        agregarTimeout(() => {
-            const commentField = $('.new-comment-text');
-            if (commentField.length) {
-                commentField.val(CONFIG.MENSAJE_RESUELTA);
-
-                const resueltaButton = $('label[for="state-solved"]');
-                if (resueltaButton.length) {
-                    resueltaButton.click();
-
-                    agregarTimeout(() => {
-                        const sendButton = $('.send-button');
-                        if (sendButton.length) {
-                            sendButton.click();
-                        }
-                        const noIssueButton = document.querySelector('[data-status="NO_ISSUE"]');
-                        if (noIssueButton) noIssueButton.click();
-
-                        const okButton = Array.from(document.querySelectorAll('button')).find(btn =>
-                            btn.textContent.trim().includes('OK') || btn.textContent.trim().includes('Aplicar')
-                        );
-                        if (okButton) okButton.click();
-
-                        agregarTimeout(() => {
-                            $(`#fila-ur-${id}`).addClass('ur-cerrada').find('.btn-centrar').prop('disabled', true);
-                            estado.accionEnProgreso = false;
-                        }, 500);
-                    }, 300);
                 } else {
-                    estado.accionEnProgreso = false;
+                    container.innerHTML = '<p style="padding:20px; color:red;">No se encontraron datos.</p>';
                 }
-            } else {
-                estado.accionEnProgreso = false;
-            }
-        }, 1500);
+            },
+            onerror: () => container.innerHTML = '<p style="padding:20px; color:red;">Error de conexión.</p>'
+        });
     }
 
-    function cerrarUR(id) {
-        if (estado.accionEnProgreso) return;
-        estado.accionEnProgreso = true;
+    function extractScript(html) {
+        const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/gi;
+        let match, dataScript = "", maxLen = 0;
+        while ((match = scriptRegex.exec(html)) !== null) {
+            if (match[1].length > maxLen && !match[1].includes("jquery")) {
+                maxLen = match[1].length;
+                dataScript = match[1];
+            }
+        }
+        const start = dataScript.indexOf('[');
+        const end = dataScript.lastIndexOf(']');
+        return (start !== -1 && end > start) ? dataScript.substring(start, end + 1) : null;
+    }
 
-        limpiarTimeouts();
-        const ur = W.model.mapUpdateRequests.getObjectById(Number(id));
-        if (!ur) {
-            estado.accionEnProgreso = false;
+
+
+    function showHome() {
+        const container = document.getElementById("ur-content");
+        const backBtn = document.getElementById("ur-back");
+        
+        backBtn.style.display = "none"; // Ocultar atrás en el home
+        container.scrollTop = 0;
+
+        container.innerHTML = `
+            <div style="padding: 20px 0;">
+                <h3 style="text-align:center; color:#333; margin-bottom:20px;">Selecciona una opción</h3>
+                
+                <div class="menu-btn" id="btn-show-all">
+                    <span class="menu-title">🌎 Ver Todas las URs</span>
+                    <span class="menu-desc">Muestra la lista completa de ${CACHED_DATA.length} reportes sin filtrar.</span>
+                </div>
+
+                <div class="menu-btn" id="btn-show-depts">
+                    <span class="menu-title">🏛️ Filtrar por Departamento</span>
+                    <span class="menu-desc">Selecciona un departamento específico (Antioquia, Bogotá, Valle, etc).</span>
+                </div>
+            </div>
+        `;
+
+        document.getElementById("btn-show-all").onclick = () => renderList(CACHED_DATA, "Todas", true);
+        document.getElementById("btn-show-depts").onclick = showDepartmentsList;
+    }
+
+    function showDepartmentsList() {
+        const container = document.getElementById("ur-content");
+        const backBtn = document.getElementById("ur-back");
+        
+        // Configurar botón atrás para volver al Home
+        backBtn.style.display = "block";
+        backBtn.onclick = showHome;
+        container.scrollTop = 0;
+
+        
+        const depts = {};
+        CACHED_DATA.forEach(ur => {
+            const st = ur.state ? ur.state.trim() : "Desconocido";
+            depts[st] = (depts[st] || 0) + 1;
+        });
+
+        
+        const sortedDepts = Object.keys(depts).sort();
+
+        
+        let html = `<div style="padding-bottom:20px;">`;
+        if (sortedDepts.length === 0) html += `<p style="padding:20px; text-align:center;">No hay departamentos disponibles.</p>`;
+        
+        sortedDepts.forEach(dept => {
+            html += `
+                <div class="dept-btn" data-dept="${dept}">
+                    <span>${dept}</span>
+                    <span class="dept-count">${depts[dept]}</span>
+                </div>
+            `;
+        });
+        html += `</div>`;
+        container.innerHTML = html;
+
+        
+        const buttons = container.querySelectorAll(".dept-btn");
+        buttons.forEach(btn => {
+            btn.onclick = () => {
+                const selectedDept = btn.getAttribute("data-dept");
+                // Filtrar datos
+                const filteredData = CACHED_DATA.filter(ur => {
+                    const st = ur.state ? ur.state.trim() : "Desconocido";
+                    return st === selectedDept;
+                });
+                renderList(filteredData, selectedDept, false);
+            };
+        });
+    }
+
+    function renderList(data, title, isHomeBack) {
+        const container = document.getElementById("ur-content");
+        const backBtn = document.getElementById("ur-back");
+        const countSpan = document.getElementById("ur-count");
+        
+        
+        backBtn.style.display = "block";
+        
+        backBtn.onclick = isHomeBack ? showHome : showDepartmentsList;
+
+        countSpan.innerText = data.length;
+        container.innerHTML = "";
+        container.scrollTop = 0;
+
+        
+        const header = document.createElement("div");
+        header.style.cssText = "padding: 10px 15px; background: #fafafa; border-bottom: 1px solid #eee; color: #555; font-size: 12px; font-weight: bold;";
+        header.innerText = `Vista: ${title} (${data.length})`;
+        container.appendChild(header);
+
+        if (data.length === 0) {
+            container.innerHTML += '<p style="padding:20px; text-align:center; color:#888;">No hay URs en esta selección.</p>';
             return;
         }
 
-        centrarYMostrarUR(id);
+        data.forEach(item => {
+            if (item.coordinates) {
+                const parts = item.coordinates.trim().split(" ");
+                const lat = parts[0];
+                const lon = parts[1];
 
-        agregarTimeout(() => {
-            const commentField = $('.new-comment-text');
-            if (commentField.length) {
-                commentField.val(CONFIG.MENSAJE_CIERRE);
-                const sendButton = $('.send-button');
-                if (sendButton.length) {
-                    sendButton.click();
+                let tempDiv = document.createElement("div");
+                tempDiv.innerHTML = item.description || "";
+                let cleanDesc = tempDiv.textContent || tempDiv.innerText || "Sin descripción";
+                cleanDesc = cleanDesc.replace("On opening by Wazer:", "").trim();
+                if(cleanDesc.length > 80) cleanDesc = cleanDesc.substring(0, 80) + "...";
 
-                    agregarTimeout(() => {
-                        const niButton = $('label[for="state-not-identified"]');
-                        if (niButton.length) {
-                            niButton.click();
+                const urId = item.urid;
+                const user = item.updatedby || "Anónimo";
+                const age = item.age + " días";
+                const type = item.type;
+                const state = item.state || "";
 
-                            agregarTimeout(() => {
-                                $(`#fila-ur-${id}`).addClass('ur-cerrada').find('.btn-centrar').prop('disabled', true);
-                                estado.accionEnProgreso = false;
-                            }, 500);
-                        } else {
-                            estado.accionEnProgreso = false;
-                        }
-                    }, 300);
-                } else {
-                    estado.accionEnProgreso = false;
-                }
-            } else {
-                estado.accionEnProgreso = false;
+                const row = document.createElement("div");
+                row.className = "ur-row";
+                row.innerHTML = `
+                    <div class="ur-desc">📍 ${cleanDesc}</div>
+                    <div class="ur-meta">
+                        <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 65%;" title="${user} - ${state}">
+                            👤 ${user} <span style="color:#888; font-weight:normal;">• ${state}</span>
+                        </span>
+                        <span style="flex-shrink: 0;">🕒 ${age}</span>
+                    </div>
+                    <div class="ur-meta" style="margin-top:3px;">
+                        <span class="ur-tag">${type}</span>
+                        <span style="color:#3498db; font-weight:bold;">Ir ➜</span>
+                    </div>
+                `;
+
+                row.onclick = () => {
+                    if (W && W.map) {
+                         const center = new OpenLayers.LonLat(parseFloat(lon), parseFloat(lat)).transform('EPSG:4326', 'EPSG:900913');
+                         W.map.setCenter(center, 17);
+                    }
+                };
+                container.appendChild(row);
             }
-        }, 1500);
-        estado.accionEnProgreso = false;
+        });
     }
 
-    function inicializarScript() {
-        debugLog('Inicializando script...');
-        window.togglePanelURs = togglePanelURs;
-        crearBoton();
+    
+    function cleanAndParse(str) {
+        str = str.replace(/,\s*\]$/, "]");
+        str = str.replace(/\\n/g, "___NL___").replace(/\\r/g, "___CR___").replace(/\\t/g, "___TAB___");
+        str = str.replace(/\\'/g, "___SQ_ESC___").replace(/\\"/g, "___DQ_ESC___").replace(/\\\\/g, "___BS_ESC___");
+        str = str.replace(/\\/g, "\\\\");
+        str = str.replace(/'/g, '"');
+        str = str.replace(/([{,]\s*)([a-zA-Z0-9_]+?)\s*:/g, '$1"$2":');
+        str = str.replace(/___SQ_ESC___/g, "'").replace(/___DQ_ESC___/g, '\\"').replace(/___BS_ESC___/g, "\\\\");
+        str = str.replace(/___NL___/g, "\\n").replace(/___CR___/g, "\\r").replace(/___TAB___/g, "\\t");
+        return JSON.parse(str);
+    }
 
-        estado.intervaloVerificacion = setInterval(() => {
-            if ($(`#${CONFIG.BOTON_ID}`).length === 0) {
-                debugLog('Botón no encontrado, recreando...');
-                crearBoton();
+    function addLauncher() {
+        const checkInterval = setInterval(() => {
+            const sidebar = document.getElementById("sidebar");
+            if (sidebar) {
+                clearInterval(checkInterval);
+                if (document.getElementById("btn-ur-panel")) return;
+
+                const btn = document.createElement("button");
+                btn.id = "btn-ur-panel";
+                btn.textContent = "🇨🇴 URs Colombia";
+                Object.assign(btn.style, {
+                    display: "block", width: "90%", margin: "10px auto", padding: "8px 0",
+                    backgroundColor: "#2ecc71", color: "white", border: "none",
+                    borderRadius: "20px", fontWeight: "bold", fontSize: "13px",
+                    cursor: "pointer", boxShadow: "0 2px 5px rgba(0,0,0,0.2)"
+                });
+                btn.onmouseover = () => btn.style.backgroundColor = "#27ae60";
+                btn.onmouseout = () => btn.style.backgroundColor = "#2ecc71";
+                btn.onclick = () => {
+                    const panel = document.getElementById("wme-ur-panel");
+                    if (!panel) createPanel();
+                    else panel.style.display = (panel.style.display === "none") ? "flex" : "none";
+                };
+                sidebar.insertBefore(btn, sidebar.firstChild);
             }
-        }, CONFIG.INTERVALO_VERIFICACION);
-
-        debugLog('Script inicializado correctamente');
+        }, 500);
     }
 
-    function esperarWME() {
-        if (typeof W === 'undefined' || !W.loginManager || !W.model || !W.map) {
-            debugLog('WME no está completamente cargado, reintentando...');
-            setTimeout(esperarWME, 1000);
-            return;
-        }
+    bootstrap();
 
-        if (!W.model.mapUpdateRequests) {
-            debugLog('Módulo mapUpdateRequests no está disponible, reintentando...');
-            setTimeout(esperarWME, 1000);
-            return;
-        }
-
-        setTimeout(inicializarScript, 2000);
-    }
-
-    debugLog('Script cargado, esperando WME...');
-    esperarWME();
 })();

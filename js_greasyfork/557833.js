@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Odoo Stock History RPC (V23.88 SearchBar Ultra)
 // @namespace    http://tampermonkey.net/
-// @version      23.88
+// @version      23.89
 // @description  Odoo库存 - 搜索框深度适配 + 暴力兜底 + 修复产品名读取
 // @author       Playbox
 // @match        *://*.odoo.com/web*
@@ -629,15 +629,36 @@
                 return false;
             }
 
+            // ============================
+            // 修改后的日期解析逻辑
+            // ============================
             let localDateObj = null;
+
+            // 情况1：完整日期 (例如: 2025年12月26日 10:52)
             if (dateText.includes('年')) {
                 const m = dateText.match(/(\d{4})年(\d{1,2})月(\d{1,2})日\s*(\d{1,2})[时:](\d{1,2})/);
                 if (m) localDateObj = new Date(m[1], m[2] - 1, m[3], m[4], m[5]);
-            } else if (/\d{4}-\d{1,2}-\d{1,2}/.test(dateText)) {
+            }
+            // 情况2 (新增)：省略年份的日期 (例如: 1月7日 10:56) - 默认为当前年份
+            else if (dateText.includes('月') && dateText.includes('日')) {
+                const m = dateText.match(/(\d{1,2})月(\d{1,2})日\s*(\d{1,2})[时:](\d{1,2})/);
+                if (m) {
+                    const currentYear = new Date().getFullYear();
+                    localDateObj = new Date(currentYear, m[1] - 1, m[2], m[3], m[4]);
+                }
+            }
+            // 情况3：ISO 格式 (YYYY-MM-DD)
+            else if (/\d{4}-\d{1,2}-\d{1,2}/.test(dateText)) {
                 localDateObj = new Date(dateText.replace(/-/g, '/'));
-            } else if (/\d{1,2}\/\d{1,2}\/\d{4}/.test(dateText)) {
+            }
+            // 情况4：斜杠格式 (MM/DD/YYYY)
+            else if (/\d{1,2}\/\d{1,2}\/\d{4}/.test(dateText)) {
                 localDateObj = new Date(dateText);
-            } else { localDateObj = new Date(dateText); }
+            }
+            else {
+                localDateObj = new Date(dateText);
+            }
+            // ============================
 
             if (localDateObj && !isNaN(localDateObj)) localDateObj.setSeconds(59);
             const utcDateStr = localDateObj && !isNaN(localDateObj) ? localDateObj.toISOString().replace('T', ' ').substring(0, 19) : null;

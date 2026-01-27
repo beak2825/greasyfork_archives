@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         新球体育网欧赔对比
 // @namespace    http://dol.freevar.com/
-// @version      0.4
+// @version      0.5
 // @description  揾出边间公司揸fit！
 // @author       Dolphin
 // @match        https://m.titan007.com/info/*
@@ -121,21 +121,51 @@
             };
         },
 
-        // 计算准确度
-        calculateAccuracy: function(probabilities, homeScore, guestScore) {
+        // 计算准确度（新逻辑）
+        calculateAccuracy: function(probabilities, homeScore, guestScore, avgProbType) {
             const scoreDiff = homeScore - guestScore;
 
-            if (scoreDiff === 0) {
-                return probabilities.draw;
-            } else if (Math.abs(scoreDiff) === 1) {
-                const targetProb = scoreDiff > 0 ? probabilities.win : probabilities.lose;
-                return 1 - Math.abs(targetProb - 0.6);
-            } else if (Math.abs(scoreDiff) === 2) {
-                const targetProb = scoreDiff > 0 ? probabilities.win : probabilities.lose;
-                return 1 - Math.abs(targetProb - 0.8);
+            // 根据平均概率最高类型计算准确度
+            if (avgProbType === 'win') {
+                // 平均胜概率最高
+                if (scoreDiff > 0) {
+                    // 主队胜
+                    if (scoreDiff === 1) {
+                        return 1 - Math.abs(probabilities.win - 0.6);
+                    } else if (scoreDiff === 2) {
+                        return 1 - Math.abs(probabilities.win - 0.8);
+                    } else {
+                        return probabilities.win; // 净胜2球以上
+                    }
+                } else {
+                    // 主队不胜（平局或客队胜）
+                    return 1 - probabilities.win;
+                }
+            } else if (avgProbType === 'lose') {
+                // 平均负概率最高
+                if (scoreDiff < 0) {
+                    // 客队胜
+                    const loseDiff = Math.abs(scoreDiff);
+                    if (loseDiff === 1) {
+                        return 1 - Math.abs(probabilities.lose - 0.6);
+                    } else if (loseDiff === 2) {
+                        return 1 - Math.abs(probabilities.lose - 0.8);
+                    } else {
+                        return probabilities.lose; // 净胜2球以上
+                    }
+                } else {
+                    // 客队不胜（平局或主队胜）
+                    return 1 - probabilities.lose;
+                }
             } else {
-                const targetProb = scoreDiff > 0 ? probabilities.win : probabilities.lose;
-                return targetProb;
+                // 平均平概率最高
+                if (scoreDiff === 0) {
+                    return probabilities.draw;
+                } else if (scoreDiff > 0) {
+                    return probabilities.win;
+                } else {
+                    return probabilities.lose;
+                }
             }
         },
 
@@ -324,10 +354,40 @@
                     try {
                         const oddsData = await utils.fetchOddsData(match.scheduleId, preMatchHour);
 
-                        // 计算每个公司的准确度
-                        Object.entries(oddsData).forEach(([companyName, odds]) => {
+                        // 计算所有公司的平均概率
+                        let totalWinProb = 0;
+                        let totalDrawProb = 0;
+                        let totalLoseProb = 0;
+                        let companyCount = 0;
+
+                        // 计算每个公司的概率并累加
+                        const allProbabilities = [];
+                        for (const [companyName, odds] of Object.entries(oddsData)) {
                             const probabilities = utils.calculateProbabilities(odds.win, odds.draw, odds.lose);
-                            const accuracy = utils.calculateAccuracy(probabilities, match.homeScore, match.guestScore);
+                            allProbabilities.push({companyName, probabilities});
+
+                            totalWinProb += probabilities.win;
+                            totalDrawProb += probabilities.draw;
+                            totalLoseProb += probabilities.lose;
+                            companyCount++;
+                        }
+
+                        // 计算平均概率
+                        const avgWinProb = totalWinProb / companyCount;
+                        const avgDrawProb = totalDrawProb / companyCount;
+                        const avgLoseProb = totalLoseProb / companyCount;
+
+                        // 确定平均概率最高的类型
+                        let avgProbType = 'win'; // 默认胜
+                        if (avgLoseProb > avgWinProb && avgLoseProb > avgDrawProb) {
+                            avgProbType = 'lose';
+                        } else if (avgDrawProb > avgWinProb && avgDrawProb > avgLoseProb) {
+                            avgProbType = 'draw';
+                        }
+
+                        // 计算每个公司的准确度
+                        allProbabilities.forEach(({companyName, probabilities}) => {
+                            const accuracy = utils.calculateAccuracy(probabilities, match.homeScore, match.guestScore, avgProbType);
 
                             // 保存数据
                             if (!euroStats[companyName]) {
@@ -568,7 +628,7 @@
 
                 // 排序并取前10
                 combinations.sort((a, b) => b.winCount - a.winCount);
-                const topCombinations = combinations.slice(0, 10);
+                const topCombinations = combinations.slice(0, 50);
 
                 if (topCombinations.length === 0) {
                     alert('没有找到有效的对比数据');

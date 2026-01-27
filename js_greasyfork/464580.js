@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Miniflux automatically refresh feeds
 // @namespace    https://reader.miniflux.app/
-// @version      34
+// @version      36
 // @description  Automatically refreshes Miniflux feeds
 // @author       Tehhund
 // @match        *://*.miniflux.app/*
@@ -35,6 +35,12 @@ const refreshFeeds = async () => {
   pageLastRefreshedNode.id = `pageLastRefreshed`;
   pageLastRefreshedNode.textContent = `Page last refreshed at ${new Date().toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}.`;
   statusDiv.appendChild(pageLastRefreshedNode);
+  let feedsLastRefreshedNode = document.createElement('div');
+  feedsLastRefreshedNode.id = `feedsLastRefreshed`;
+  statusDiv.appendChild(feedsLastRefreshedNode);
+  let numberToRefresh = document.createElement('div');
+  numberToRefresh.id = `numberToRefresh`;
+  statusDiv.appendChild(numberToRefresh);
   // setTimeout(() => { toastDiv.remove(); }, 900000); // remove after 15 minutes. // Going to leave the node for now so we can see when the page was last refreshed.
   if (!apiKey) { // If the API key isn't specified, try getting it from localstorage.
     apiKey = localStorage.getItem('miniFluxRefresherApiKey');
@@ -64,17 +70,13 @@ const refreshFeeds = async () => {
   let feedsArray = res.map(currentFeed => currentFeed); // Turn JSON into an array for sorting.
   feedsArray.sort((a, b) => { return (new Date(a.checked_at) - new Date(b.checked_at)); }); // Sort from least recently checked to most recently checked so least recent gets refreshed first.
   setToast('Got list of feeds.');
-  let feedsLastRefreshedNode = document.createElement('div');
-  feedsLastRefreshedNode.id = `feedsLastRefreshed`;
-  feedsLastRefreshedNode.textContent = `Oldest feed last refreshed at ${new Date(feedsArray[0].checked_at).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}.`;
-  statusDiv.appendChild(feedsLastRefreshedNode);
-  let countFeedsToRefresh = 0;
-  let countFeedsToNotRefresh = 0;
+  document.getElementById('feedsLastRefreshed').textContent = `Oldest feed last refreshed at ${new Date(feedsArray[0].checked_at).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}.`;
+  let countOfFeedsToRefresh = 0;
+  let countOfFeeds = feedsArray.length;
   for (let [index, feed] of feedsArray.entries()) {
     let lastChecked = new Date(feed.checked_at).getTime();
     if (Date.now() - lastChecked > rateLimit) {
-      countFeedsToRefresh++;
-      //console.log(`${feed.title} ${feed.site_url}: It's been more than 12 hours, refresh.`);
+      countOfFeedsToRefresh++;
       setToast(`${feed.title} ${feed.site_url}: It's been more than 12 hours, refresh.`);
       setTimeout(
         async () => {
@@ -88,17 +90,14 @@ const refreshFeeds = async () => {
               headers: { 'X-Auth-Token': apiKey }
             });
             newNode.textContent += ` Complete.`;
-            countFeedsToRefresh--;
-            setToast(`${countFeedsToRefresh} feeds left to refresh.`);
-            //console.log(res);
+            countOfFeedsToRefresh--;
+            setToast(`${countOfFeedsToRefresh} feeds left to refresh.`);
+            document.getElementById('numberToRefresh').textContent = `${countOfFeedsToRefresh} feeds to refreshout of ${countOfFeeds}`;
           }
         }, 15000 * index); // Wait 15 seconds between refreshing feeds to avoid rate limiting.
-    } else {
-      countFeedsToNotRefresh++;
-      //console.log(`${feed.title} last refreshed at ${new Date(feed.checked_at).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}, do nothing.`);
     }
   }
-  setToast(`${countFeedsToRefresh} feeds to refresh, ${countFeedsToNotRefresh} to skip.`);
+  document.getElementById('numberToRefresh').textContent = `${countOfFeedsToRefresh} feeds to refresh out of ${countOfFeeds}`; // Set the status once as soon as refreshFeeds() runs. It will be updated as each feed is refreshed.
 };
 
 const setToast = (text, timeout = 4000) => {

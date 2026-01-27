@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Market Emoji Picker for Linux.do
 // @namespace    https://linux.do/
-// @version      2.0.0
+// @version      2.1.0
 // @description  从云端市场加载表情包并允许用户组合分组，注入表情选择器到 Linux.do 论坛
 // @author       stevessr
 // @match        https://linux.do/*
@@ -24,7 +24,7 @@
   // ============== 配置 ==============
   const CONFIG = {
     // 云端市场基础 URL
-    marketBaseUrl: GM_getValue('marketBaseUrl', 'https://video2gif-pages.pages.dev'),
+    marketBaseUrl: GM_getValue('marketBaseUrl', 'https://s.pwsh.us.kg'),
     // 缓存有效期（毫秒）- 默认 24 小时
     cacheDuration: 24 * 60 * 60 * 1000,
     // 图片输出缩放比例
@@ -176,9 +176,38 @@
     })
   }
 
+  function fetchMarketIndex() {
+    const indexUrl = `${CONFIG.marketBaseUrl}/assets/market/index/index.json`
+    return fetchRemoteConfig(indexUrl)
+  }
+
+  function fetchMarketPage(page) {
+    const pageUrl = `${CONFIG.marketBaseUrl}/assets/market/index/page-${page}.json`
+    return fetchRemoteConfig(pageUrl)
+  }
+
+  async function loadMarketFromIndex() {
+    const indexData = await fetchMarketIndex()
+    const totalPages = Math.max(1, Number(indexData.totalPages || 1))
+
+    return {
+      metadata: {
+        version: indexData.version || '1.0',
+        exportDate: indexData.exportDate || new Date().toISOString(),
+        totalGroups: indexData.totalGroups || 0,
+        pageSize: indexData.pageSize || 0,
+        totalPages
+      }
+    }
+  }
+
   // ============== 表情数据管理 ==============
   let marketMetadata = null
   let marketGroups = []
+  let marketIndexInfo = null
+  let marketUsePagedIndex = false
+  let currentMarketPage = 1
+  const marketPageCache = new Map()
   let selectedEmojiGroups = []
 
   // 加载市场元数据
@@ -186,27 +215,59 @@
     // 先尝试使用缓存
     if (isCacheValid(MARKET_CACHE_TIME_KEY)) {
       const cached = loadCache(MARKET_CACHE_KEY)
-      if (cached && cached.groups) {
-        marketMetadata = cached
-        marketGroups = cached.groups || []
-        console.log('[Market Emoji] 使用市场缓存数据')
-        // 后台刷新
-        refreshMarketInBackground()
-        return
+      if (cached) {
+        if (cached.usePagedIndex && cached.index) {
+          marketUsePagedIndex = true
+          marketIndexInfo = cached.index
+          currentMarketPage = cached.currentPage || 1
+          if (cached.pages) {
+            Object.keys(cached.pages).forEach(page => {
+              marketPageCache.set(Number(page), cached.pages[page])
+            })
+          }
+          marketGroups = marketPageCache.get(currentMarketPage) || cached.groups || []
+          marketMetadata = {
+            version: marketIndexInfo.version,
+            exportDate: marketIndexInfo.exportDate,
+            totalGroups: marketIndexInfo.totalGroups
+          }
+          console.log('[Market Emoji] 使用市场分页缓存数据')
+          refreshMarketInBackground()
+          return
+        }
+
+        if (cached.groups) {
+          marketMetadata = cached
+          marketGroups = cached.groups || []
+          console.log('[Market Emoji] 使用市场缓存数据')
+          // 后台刷新
+          refreshMarketInBackground()
+          return
+        }
       }
     }
 
-    // 从远程加载
-    const metadataUrl = `${CONFIG.marketBaseUrl}/assets/market/metadata.json`
     try {
-      console.log('[Market Emoji] 从远程加载市场元数据：', metadataUrl)
-      const data = await fetchRemoteConfig(metadataUrl)
-      marketMetadata = data
-      marketGroups = data.groups || []
-      saveCache(MARKET_CACHE_KEY, data)
-      console.log('[Market Emoji] 市场元数据加载成功，共', marketGroups.length, '个分组')
+      console.log('[Market Emoji] 从远程加载市场分页索引')
+      const { metadata } = await loadMarketFromIndex()
+      marketUsePagedIndex = true
+      marketIndexInfo = metadata
+      await loadMarketPageData(1, true)
+      console.log('[Market Emoji] 市场分页索引加载成功，共', marketIndexInfo.totalGroups, '个分组')
     } catch (e) {
-      console.error('[Market Emoji] 市场元数据加载失败：', e)
+      console.warn('[Market Emoji] 市场分页加载失败，回退到 metadata.json：', e)
+      const metadataUrl = `${CONFIG.marketBaseUrl}/assets/market/metadata.json`
+      try {
+        console.log('[Market Emoji] 从远程加载市场元数据：', metadataUrl)
+        const data = await fetchRemoteConfig(metadataUrl)
+        marketMetadata = data
+        marketGroups = data.groups || []
+        saveCache(MARKET_CACHE_KEY, data)
+        console.log('[Market Emoji] 市场元数据加载成功，共', marketGroups.length, '个分组')
+        return
+      } catch (err) {
+        console.error('[Market Emoji] 市场元数据加载失败：', err)
+      }
       // 尝试使用过期缓存
       const cached = loadCache(MARKET_CACHE_KEY)
       if (cached && cached.groups) {
@@ -284,7 +345,64 @@
     }
   }
 
+  async function loadMarketPageData(page, saveToCache) {
+    if (!marketUsePagedIndex || !marketIndexInfo) return
+
+    let groups = marketPageCache.get(page)
+    if (!groups) {
+      const pageData = await fetchMarketPage(page)
+      groups = pageData.groups || []
+      marketPageCache.set(page, groups)
+    }
+
+    currentMarketPage = page
+    marketGroups = groups
+    marketMetadata = {
+      version: marketIndexInfo.version || '1.0',
+      exportDate: marketIndexInfo.exportDate || new Date().toISOString(),
+      totalGroups: marketIndexInfo.totalGroups || 0
+    }
+
+    if (saveToCache) {
+      const pagesObj = {}
+      marketPageCache.forEach((value, key) => {
+        pagesObj[key] = value
+      })
+      saveCache(MARKET_CACHE_KEY, {
+        usePagedIndex: true,
+        index: marketIndexInfo,
+        pages: pagesObj,
+        currentPage: currentMarketPage,
+        groups
+      })
+    }
+  }
+
   function refreshMarketInBackground() {
+    if (marketUsePagedIndex) {
+      loadMarketFromIndex()
+        .then(({ metadata }) => {
+          marketIndexInfo = metadata
+          loadMarketPageData(currentMarketPage, true)
+          console.log('[Market Emoji] 市场后台刷新完成')
+        })
+        .catch(() => {
+          const metadataUrl = `${CONFIG.marketBaseUrl}/assets/market/metadata.json`
+          fetchRemoteConfig(metadataUrl)
+            .then(data => {
+              marketMetadata = data
+              marketGroups = data.groups || []
+              marketUsePagedIndex = false
+              marketIndexInfo = null
+              marketPageCache.clear()
+              saveCache(MARKET_CACHE_KEY, data)
+              console.log('[Market Emoji] 市场后台刷新完成（metadata 兼容）')
+            })
+            .catch(() => {})
+        })
+      return
+    }
+
     const metadataUrl = `${CONFIG.marketBaseUrl}/assets/market/metadata.json`
     fetchRemoteConfig(metadataUrl)
       .then(data => {
@@ -471,36 +589,71 @@
 
     modal.appendChild(footer)
 
+    // 分页控制
+    let pagination = null
+    const paginationInfo = document.createElement('div')
+    paginationInfo.style.fontSize = '12px'
+    paginationInfo.style.color = 'var(--primary-medium, #666)'
+    paginationInfo.style.alignSelf = 'center'
+
+    const prevBtn = document.createElement('button')
+    prevBtn.textContent = '上一页'
+    prevBtn.style.padding = '6px 10px'
+    prevBtn.style.border = '1px solid var(--primary-low, #ddd)'
+    prevBtn.style.borderRadius = '4px'
+    prevBtn.style.background = 'var(--secondary, #fff)'
+    prevBtn.style.cursor = 'pointer'
+
+    const nextBtn = document.createElement('button')
+    nextBtn.textContent = '下一页'
+    nextBtn.style.padding = '6px 10px'
+    nextBtn.style.border = '1px solid var(--primary-low, #ddd)'
+    nextBtn.style.borderRadius = '4px'
+    nextBtn.style.background = 'var(--secondary, #fff)'
+    nextBtn.style.cursor = 'pointer'
+
     // 渲染分组列表
     function renderGroupLists() {
       const selectedIds = new Set(CONFIG.selectedGroupIds)
       const query = searchInput.value.toLowerCase()
+      const selectedGroupMap = new Map()
+
+      // 优先使用已加载的分组详情，确保跨页显示
+      selectedEmojiGroups.forEach(group => {
+        selectedGroupMap.set(group.id, {
+          id: group.id,
+          name: group.name,
+          icon: group.icon,
+          detail: group.detail,
+          emojiCount: (group.emojis || []).length
+        })
+      })
 
       // 清空列表
       selectedList.innerHTML = ''
       availableList.innerHTML = ''
 
       // 渲染已选择的分组
-      marketGroups
-        .filter(group => {
-          return (
-            selectedIds.has(group.id) &&
-            (group.name.toLowerCase().includes(query) ||
-              (group.detail && group.detail.toLowerCase().includes(query)))
-          )
-        })
-        .forEach(group => {
-          const item = createGroupItem(group, true)
-          selectedList.appendChild(item)
-        })
+      CONFIG.selectedGroupIds.forEach(groupId => {
+        const group =
+          selectedGroupMap.get(groupId) || marketGroups.find(item => item.id === groupId)
+        if (!group) return
+        const groupName = (group.name || '').toLowerCase()
+        const groupDetail = (group.detail || '').toLowerCase()
+        if (query && !groupName.includes(query) && !groupDetail.includes(query)) return
+
+        const item = createGroupItem(group, true)
+        selectedList.appendChild(item)
+      })
 
       // 渲染可选择的分组
       marketGroups
         .filter(group => {
+          const groupName = (group.name || '').toLowerCase()
+          const groupDetail = (group.detail || '').toLowerCase()
           return (
             !selectedIds.has(group.id) &&
-            (group.name.toLowerCase().includes(query) ||
-              (group.detail && group.detail.toLowerCase().includes(query)))
+            (groupName.includes(query) || groupDetail.includes(query))
           )
         })
         .forEach(group => {
@@ -518,6 +671,60 @@
         noResult.style.gridColumn = '1 / -1'
         availableList.appendChild(noResult)
       }
+    }
+
+    async function updatePagination() {
+      if (!marketUsePagedIndex || !marketIndexInfo) return
+
+      if (!pagination) {
+        pagination = document.createElement('div')
+        pagination.style.display = 'flex'
+        pagination.style.alignItems = 'center'
+        pagination.style.justifyContent = 'space-between'
+        pagination.style.gap = '8px'
+        pagination.style.padding = '8px 16px'
+        pagination.style.borderTop = '1px solid var(--primary-low, #eee)'
+
+        prevBtn.onclick = async () => {
+          if (currentMarketPage <= 1) return
+          try {
+            await loadMarketPageData(currentMarketPage - 1, true)
+            renderGroupLists()
+            updatePaginationInfo()
+          } catch (e) {
+            console.error('[Market Emoji] 切换上一页失败：', e)
+          }
+        }
+
+        nextBtn.onclick = async () => {
+          if (currentMarketPage >= marketIndexInfo.totalPages) return
+          try {
+            await loadMarketPageData(currentMarketPage + 1, true)
+            renderGroupLists()
+            updatePaginationInfo()
+          } catch (e) {
+            console.error('[Market Emoji] 切换下一页失败：', e)
+          }
+        }
+
+        pagination.appendChild(prevBtn)
+        pagination.appendChild(paginationInfo)
+        pagination.appendChild(nextBtn)
+        modal.appendChild(pagination)
+      }
+
+      updatePaginationInfo()
+    }
+
+    function updatePaginationInfo() {
+      if (!marketIndexInfo) return
+      paginationInfo.textContent = `第 ${currentMarketPage} / ${marketIndexInfo.totalPages} 页`
+      prevBtn.disabled = currentMarketPage <= 1
+      nextBtn.disabled = currentMarketPage >= marketIndexInfo.totalPages
+      prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1'
+      nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1'
+      prevBtn.style.cursor = prevBtn.disabled ? 'not-allowed' : 'pointer'
+      nextBtn.style.cursor = nextBtn.disabled ? 'not-allowed' : 'pointer'
     }
 
     // 创建分组项
@@ -669,6 +876,7 @@
 
     // 初始渲染
     renderGroupLists()
+    updatePagination()
 
     // 添加到页面
     document.body.appendChild(backdrop)

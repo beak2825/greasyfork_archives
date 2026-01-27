@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Discord No Title Bar
 // @namespace discord-no-title-bar
-// @version 1.1.1
+// @version 1.1.2
 // @description A simple userstyle that removes Discord's new title bar.
 // @author Coxxs
 // @license MIT
@@ -31,17 +31,20 @@ let css = `
 .visual-refresh ._1ac1c54c56e5807c-search { margin-right: 35px }
 
 /* Padding above the Discord icon (top left) */
-.visual-refresh ._1f388bcaa446c0c8-tutorialContainer { padding-top: 8px }
+.visual-refresh ._1f388bcaa446c0c8-tutorialContainer { padding-top: var(--space-xs, 8px) }
 
 /* Remove help button */
 .visual-refresh .c38106a3f0c3ca76-trailing > a.edefb8e22d63c542-anchorUnderlineOnHover { display: none }
 
-/* Remove buttons other than inbox */
+/* Remove buttons other than inbox (Disabled for now) */
+/*
 .visual-refresh .c38106a3f0c3ca76-trailing > div[aria-label] { display: none }
 .visual-refresh .c38106a3f0c3ca76-trailing > div.c99c29809d200a61-clickable { display: flex }
+*/
 
 /* Remove rounded corner and top border */
 .visual-refresh ._5e434347c823b592-sidebarListRounded { border-top-left-radius: 0 !important; border-top: none !important } /* 2025-12-17 */
+/* Missing: Remove faint border above server banners */
 .visual-refresh .f75fb00fb7356cbe-chat[data-has-border=true] { border-top: none !important }
 .visual-refresh ._133bf5eea8e33a34-container, /* Friends */
 .visual-refresh .f391e3680aff100a-container, /* Message Requests */
@@ -71,18 +74,21 @@ let css = `
 .visual-refresh .searchBar__1ac1c { margin-right: 35px }
 
 /* Padding above the Discord icon (top left) */
-.visual-refresh .tutorialContainer__1f388 { padding-top: 8px }
+.visual-refresh .tutorialContainer__1f388 { padding-top: var(--space-xs, 8px) }
 
 /* Remove help button */
 .visual-refresh .trailing_c38106 > a.anchorUnderlineOnHover_edefb8 { display: none }
 
-/* Remove buttons other than inbox */
+/* Remove buttons other than inbox (Disabled for now) */
+/*
 .visual-refresh .trailing_c38106 > div[aria-label] { display: none }
 .visual-refresh .trailing_c38106 > div.clickable_c99c29 { display: flex }
+*/
 
 /* Remove rounded corner and top border */
 .visual-refresh .sidebarListRounded_c48ade { border-top-left-radius: 0 !important; border-top: none !important } /* 2025-04-15 */
 .visual-refresh .sidebarListRounded__5e434 { border-top-left-radius: 0 !important; border-top: none !important } /* 2025-11-13 */
+.visual-refresh .bannerVisible_f37cb1 .header_f37cb1 { border-top-left-radius: 0 !important; border-top: none !important } /* Remove faint border above server banners */
 .visual-refresh .chat_f75fb0[data-has-border=true] { border-top: none !important }
 .visual-refresh .container__133bf, /* Friends */
 .visual-refresh .container_f391e3, /* Message Requests */

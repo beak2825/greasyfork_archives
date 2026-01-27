@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         B站视频倍速器
 // @namespace    https://github.com/codertesla/bilibili-video-speed-controller-userscript
-// @version      1.2.0
-// @description  自由设定 Bilibili 视频的默认播放速度。支持记住设置、自动应用、手动倍速检测。
+// @version      1.4.0
+// @description  自由设定 Bilibili 视频的默认播放速度。支持记住设置、自动应用、手动倍速检测、键盘快捷键控制。
 // @author       codertesla
 // @match        *://*.bilibili.com/video/*
 // @match        *://*.bilibili.com/bangumi/*
@@ -20,7 +20,7 @@
 // @updateURL https://update.greasyfork.org/scripts/561015/B%E7%AB%99%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F%E5%99%A8.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     // ==================== 常量配置 ====================
@@ -32,7 +32,7 @@
         PLATFORM_DEFAULTS: {
             bilibili: 1.5
         },
-        PRESETS: [1.0, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0]
+        PRESETS: [0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0]
     };
 
     const MIN_SPEED = SPEED_SETTINGS.MIN;
@@ -99,7 +99,7 @@
 
         static isValidSpeed(speed) {
             return typeof speed === 'number' && !isNaN(speed) &&
-                   speed >= MIN_SPEED && speed <= MAX_SPEED;
+                speed >= MIN_SPEED && speed <= MAX_SPEED;
         }
 
         static findOptimalObserverTarget(selectors) {
@@ -587,6 +587,153 @@
         }
     }
 
+    // ==================== Toast 通知组件 ====================
+    class Toast {
+        constructor() {
+            this.container = null;
+            this.hideTimer = null;
+            this.injectStyles();
+        }
+
+        injectStyles() {
+            GM_addStyle(`
+                .speed-toast {
+                    position: fixed;
+                    top: 80px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    z-index: 1000000;
+                    background: rgba(28, 28, 28, 0.9);
+                    border-radius: 4px;
+                    padding: 10px 20px;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                    color: #fff;
+                    font-size: 16px;
+                    font-weight: 500;
+                    opacity: 0;
+                    transition: opacity 0.15s ease;
+                    pointer-events: none;
+                }
+                .speed-toast.visible {
+                    opacity: 1;
+                }
+            `);
+        }
+
+        createContainer() {
+            if (this.container) return;
+            this.container = document.createElement('div');
+            this.container.className = 'speed-toast';
+            document.body.appendChild(this.container);
+        }
+
+        show(message, speed) {
+            this.createContainer();
+
+            if (this.hideTimer) {
+                clearTimeout(this.hideTimer);
+            }
+
+            // 简化显示，只显示倍速数值
+            this.container.textContent = `${speed.toFixed(2)}x`;
+
+            // Force reflow for animation
+            this.container.offsetHeight;
+            this.container.classList.add('visible');
+
+            this.hideTimer = setTimeout(() => {
+                this.hide();
+            }, 800);
+        }
+
+        hide() {
+            if (this.container) {
+                this.container.classList.remove('visible');
+            }
+        }
+    }
+
+    // ==================== 键盘快捷键 ====================
+    class KeyboardShortcuts {
+        constructor(controller, toast) {
+            this.controller = controller;
+            this.toast = toast;
+            this.speedStep = 0.25;
+            this.boundHandleKeydown = this.handleKeydown.bind(this);
+            this.init();
+        }
+
+        init() {
+            document.addEventListener('keydown', this.boundHandleKeydown, true);
+            ErrorHandler.log('info', '键盘快捷键已启用: Shift+> 增加倍速, Shift+< 降低倍速, / 重置');
+        }
+
+        handleKeydown(e) {
+            // 忽略在输入框中的快捷键
+            const tagName = e.target.tagName.toLowerCase();
+            if (tagName === 'input' || tagName === 'textarea' || e.target.isContentEditable) {
+                return;
+            }
+
+            let handled = false;
+
+            // Shift + > (Shift + .) 增加倍速
+            if (e.shiftKey && (e.key === '>' || e.key === '.')) {
+                this.increaseSpeed();
+                handled = true;
+            }
+            // Shift + < (Shift + ,) 降低倍速
+            else if (e.shiftKey && (e.key === '<' || e.key === ',')) {
+                this.decreaseSpeed();
+                handled = true;
+            }
+            // / 重置倍速（不需要 Shift）
+            else if (e.key === '/' && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey) {
+                this.resetSpeed();
+                handled = true;
+            }
+
+            if (handled) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }
+
+        increaseSpeed() {
+            const newSpeed = Math.min(
+                SPEED_SETTINGS.MAX,
+                Math.round((this.controller.currentSpeed + this.speedStep) * 100) / 100
+            );
+            if (newSpeed !== this.controller.currentSpeed) {
+                this.controller.setSpeed(newSpeed);
+            }
+            this.toast.show(null, newSpeed);
+        }
+
+        decreaseSpeed() {
+            const newSpeed = Math.max(
+                SPEED_SETTINGS.MIN,
+                Math.round((this.controller.currentSpeed - this.speedStep) * 100) / 100
+            );
+            if (newSpeed !== this.controller.currentSpeed) {
+                this.controller.setSpeed(newSpeed);
+            }
+            this.toast.show(null, newSpeed);
+        }
+
+        resetSpeed() {
+            const defaultSpeed = SPEED_SETTINGS.DEFAULT;
+            if (this.controller.currentSpeed !== defaultSpeed) {
+                this.controller.setSpeed(defaultSpeed);
+            }
+            this.toast.show(null, defaultSpeed);
+        }
+
+        destroy() {
+            document.removeEventListener('keydown', this.boundHandleKeydown, true);
+        }
+    }
+
     // ==================== 悬浮设置面板 ====================
     class SettingsPanel {
         constructor(controller) {
@@ -609,10 +756,10 @@
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    background: rgba(0, 0, 0, 0.3);
+                    background: rgba(0, 0, 0, 0.5);
                     z-index: 999998;
                     opacity: 0;
-                    transition: opacity 0.2s ease;
+                    transition: opacity 0.15s ease;
                     pointer-events: none;
                 }
                 .speed-panel-overlay.visible {
@@ -622,162 +769,144 @@
                 .speed-panel {
                     position: fixed;
                     z-index: 999999;
-                    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-                    border-radius: 12px;
-                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
-                    min-width: 280px;
+                    background: #212121;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+                    min-width: 260px;
                     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                     color: #fff;
                     opacity: 0;
-                    transform: scale(0.95) translateY(-10px);
-                    transition: opacity 0.2s ease, transform 0.2s ease;
+                    transform: scale(0.95);
+                    transition: opacity 0.15s ease, transform 0.15s ease;
                     pointer-events: none;
                     user-select: none;
                 }
                 .speed-panel.visible {
                     opacity: 1;
-                    transform: scale(1) translateY(0);
+                    transform: scale(1);
                     pointer-events: auto;
                 }
                 .speed-panel-header {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    padding: 14px 16px;
-                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                    padding: 12px 16px;
+                    border-bottom: 1px solid #333;
                     cursor: move;
-                    background: rgba(255, 255, 255, 0.03);
-                    border-radius: 12px 12px 0 0;
                 }
                 .speed-panel-title {
-                    font-size: 14px;
-                    font-weight: 600;
-                    color: #00a1d6;
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                }
-                .speed-panel-title::before {
-                    content: '⚡';
+                    font-size: 13px;
+                    font-weight: 500;
+                    color: #fff;
                 }
                 .speed-panel-close {
-                    width: 24px;
-                    height: 24px;
+                    width: 20px;
+                    height: 20px;
                     border: none;
-                    background: rgba(255, 255, 255, 0.1);
-                    color: #999;
-                    border-radius: 6px;
+                    background: transparent;
+                    color: #888;
+                    border-radius: 4px;
                     cursor: pointer;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-size: 16px;
-                    transition: all 0.15s ease;
+                    font-size: 14px;
+                    transition: color 0.1s ease;
                 }
                 .speed-panel-close:hover {
-                    background: rgba(255, 82, 82, 0.2);
-                    color: #ff5252;
+                    color: #fff;
                 }
                 .speed-panel-body {
-                    padding: 20px 16px;
+                    padding: 16px;
                 }
                 .speed-display {
                     text-align: center;
-                    margin-bottom: 20px;
+                    margin-bottom: 16px;
                 }
                 .speed-display-value {
-                    font-size: 36px;
-                    font-weight: 700;
-                    background: linear-gradient(135deg, #00a1d6, #00d4aa);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    background-clip: text;
+                    font-size: 32px;
+                    font-weight: 600;
+                    color: #fff;
                     line-height: 1.2;
                 }
                 .speed-display-label {
-                    font-size: 12px;
+                    font-size: 11px;
                     color: #888;
                     margin-top: 4px;
                 }
                 .speed-slider-container {
-                    margin-bottom: 20px;
+                    margin-bottom: 16px;
                 }
                 .speed-slider {
                     -webkit-appearance: none;
                     appearance: none;
                     width: 100%;
-                    height: 6px;
-                    border-radius: 3px;
-                    background: linear-gradient(90deg, rgba(0, 161, 214, 0.3) 0%, rgba(0, 161, 214, 0.3) var(--progress), rgba(255, 255, 255, 0.1) var(--progress), rgba(255, 255, 255, 0.1) 100%);
+                    height: 4px;
+                    border-radius: 2px;
+                    background: linear-gradient(90deg, #fff 0%, #fff var(--progress), #444 var(--progress), #444 100%);
                     outline: none;
                     cursor: pointer;
                 }
                 .speed-slider::-webkit-slider-thumb {
                     -webkit-appearance: none;
                     appearance: none;
-                    width: 18px;
-                    height: 18px;
+                    width: 14px;
+                    height: 14px;
                     border-radius: 50%;
-                    background: linear-gradient(135deg, #00a1d6, #00d4aa);
+                    background: #fff;
                     cursor: pointer;
-                    box-shadow: 0 2px 8px rgba(0, 161, 214, 0.4);
-                    transition: transform 0.15s ease, box-shadow 0.15s ease;
+                    transition: transform 0.1s ease;
                 }
                 .speed-slider::-webkit-slider-thumb:hover {
-                    transform: scale(1.15);
-                    box-shadow: 0 4px 12px rgba(0, 161, 214, 0.6);
+                    transform: scale(1.2);
                 }
                 .speed-slider::-moz-range-thumb {
-                    width: 18px;
-                    height: 18px;
+                    width: 14px;
+                    height: 14px;
                     border-radius: 50%;
-                    background: linear-gradient(135deg, #00a1d6, #00d4aa);
+                    background: #fff;
                     cursor: pointer;
                     border: none;
-                    box-shadow: 0 2px 8px rgba(0, 161, 214, 0.4);
                 }
                 .speed-slider-labels {
                     display: flex;
                     justify-content: space-between;
-                    margin-top: 8px;
-                    font-size: 11px;
+                    margin-top: 6px;
+                    font-size: 10px;
                     color: #666;
                 }
                 .speed-presets {
                     display: grid;
                     grid-template-columns: repeat(4, 1fr);
-                    gap: 8px;
+                    gap: 6px;
                 }
                 .speed-preset-btn {
-                    padding: 10px 8px;
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                    background: rgba(255, 255, 255, 0.05);
-                    color: #ccc;
-                    border-radius: 8px;
+                    padding: 8px 6px;
+                    border: none;
+                    background: #333;
+                    color: #aaa;
+                    border-radius: 4px;
                     cursor: pointer;
-                    font-size: 13px;
+                    font-size: 12px;
                     font-weight: 500;
-                    transition: all 0.15s ease;
+                    transition: all 0.1s ease;
                 }
                 .speed-preset-btn:hover {
-                    background: rgba(0, 161, 214, 0.15);
-                    border-color: rgba(0, 161, 214, 0.3);
-                    color: #00a1d6;
+                    background: #444;
+                    color: #fff;
                 }
                 .speed-preset-btn.active {
-                    background: linear-gradient(135deg, rgba(0, 161, 214, 0.25), rgba(0, 212, 170, 0.25));
-                    border-color: #00a1d6;
-                    color: #00d4aa;
+                    background: #fff;
+                    color: #212121;
                 }
                 .speed-panel-footer {
-                    padding: 12px 16px;
-                    border-top: 1px solid rgba(255, 255, 255, 0.1);
+                    padding: 10px 16px;
+                    border-top: 1px solid #333;
                     display: flex;
                     justify-content: center;
-                    gap: 16px;
                 }
                 .speed-footer-hint {
-                    font-size: 11px;
+                    font-size: 10px;
                     color: #666;
                 }
             `);
@@ -974,7 +1103,7 @@
             this.updateSpeedDisplay();
             this.updateSlider();
             this.updatePresetButtons();
-            
+
             // Reset transform if using center positioning
             if (this.panel.style.transform.includes('translate')) {
                 const rect = this.panel.getBoundingClientRect();
@@ -982,7 +1111,7 @@
                 this.panel.style.top = `${rect.top}px`;
                 this.panel.style.transform = '';
             }
-            
+
             requestAnimationFrame(() => {
                 this.overlay.classList.add('visible');
                 this.panel.classList.add('visible');
@@ -1039,16 +1168,26 @@
 
     // ==================== 油猴菜单命令 ====================
     function registerMenuCommands(controller) {
+        // 创建 Toast 通知
+        const toast = new Toast();
+
         // 创建设置面板
         const settingsPanel = new SettingsPanel(controller);
+
+        // 创建键盘快捷键
+        const keyboardShortcuts = new KeyboardShortcuts(controller, toast);
 
         // 显示当前状态
         GM_registerMenuCommand(`📊 当前状态: ${controller.enabled ? controller.currentSpeed + 'x' : '已禁用'}`, () => {
             const status = controller.getStatus();
             alert(`B站视频倍速控制器\n\n` +
-                  `状态: ${status.enabled ? '启用' : '禁用'}\n` +
-                  `当前速度: ${status.currentSpeed}x\n` +
-                  `检测到视频: ${status.videoCount} 个`);
+                `状态: ${status.enabled ? '启用' : '禁用'}\n` +
+                `当前速度: ${status.currentSpeed}x\n` +
+                `检测到视频: ${status.videoCount} 个\n\n` +
+                `快捷键:\n` +
+                `Shift + >  增加倍速\n` +
+                `Shift + <  降低倍速\n` +
+                `/  重置倍速`);
         });
 
         // 启用/禁用
@@ -1060,6 +1199,8 @@
         GM_registerMenuCommand('⚙️ 打开设置面板', () => {
             settingsPanel.show();
         });
+
+        return { toast, settingsPanel, keyboardShortcuts };
     }
 
     // ==================== 主初始化 ====================

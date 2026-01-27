@@ -6,7 +6,7 @@
 // @match        https://www.bilibili.com/video/*
 // @match        https://search.bilibili.com/*
 // @icon         https://www.bilibili.com/favicon.ico
-// @version      1.2.4
+// @version      1.2.5
 // @grant        GM_registerMenuCommand
 // @grant        GM_unregisterMenuCommand
 // @grant        GM_getValue
@@ -167,29 +167,6 @@
             line-height: 1.5 !important;
         }
 
-        /* --- 新增：插件修改布局的适配样式 --- */
-        /* 适配 group/desc 布局中的 channel-name 按钮 */
-        .group\\/desc .channel-name + .bilibili-blacklist-btn {
-          margin-left: 8px !important;
-          margin-right: 0 !important;
-          font-size: 10px !important;
-          padding: 1px 4px !important;
-          vertical-align: middle !important;
-        }
-
-        /* 适配插件修改布局的悬浮按钮容器 */
-        .group\\/desc .blacklist-button-container {
-          position: absolute !important;
-          top: 8px !important;
-          right: 8px !important;
-          z-index: 100 !important;
-          opacity: 0 !important;
-          transition: opacity 0.2s ease !important;
-        }
-
-        .group\\/desc:hover .blacklist-button-container {
-          opacity: 1 !important;
-        }
 
         /* --- 隐藏直播卡片样式 --- */
         body.hide-live-cards .floor-single-card:has(.floor-title) {
@@ -679,7 +656,7 @@
             log(`包含class="video-card"的元素数量: ${$('.video-card').length}`);
             log(`包含class包含"video"的元素数量: ${$('[class*="video"]').length}`);
 
-            const possibleContainers = ['.bili-video-card', '.video-card', '.bili-video-card__wrap', '.feed-card', '.group\\/desc'];
+            const possibleContainers = ['.bili-video-card', '.video-card', '.bili-video-card__wrap', '.feed-card'];
             let foundCards = false;
 
             // 调试：检查页面中存在哪些可能的容器
@@ -695,36 +672,6 @@
                 const unprocessedElements = $(`${selector}:not([data-toblack-processed="true"])`);
                 log(`容器 ${selector}: 总数=${allElements.length}, 未处理=${unprocessedElements.length}`);
 
-                // 如果是.video-card，显示更多调试信息
-                if (selector === '.video-card' && allElements.length > 0) {
-                    log('  .video-card示例:');
-                    allElements.slice(0, 2).each((i, el) => {
-                        const $el = $(el);
-                        log(`    示例${i + 1}: class="${$el.attr('class')}", 内部是否有channel-name: ${$el.find('.channel-name').length}`);
-                        const channelLinks = $el.find('.channel-name');
-                        if (channelLinks.length > 0) {
-                            channelLinks.each((j, link) => {
-                                log(`      channel-name ${j + 1}: href="${$(link).attr('href')}", text="${$(link).text().trim()}"`);
-                            });
-                        }
-                    });
-                }
-            });
-
-            // 额外调试：检查是否有其他可能的BewlyBewly容器
-            const bewlyContainerSelectors = [
-                '.video-card', '.video-card.group', '[class*="video-card"]'
-            ];
-            log('=== BewlyBewly容器检查 ===');
-            bewlyContainerSelectors.forEach(selector => {
-                const elements = $(selector);
-                if (elements.length > 0) {
-                    log(`可能的BewlyBewly容器 ${selector}: ${elements.length}个`);
-                    // 只显示前3个元素的类名作为参考
-                    elements.slice(0, 3).each((i, el) => {
-                        log(`  示例${i + 1}: class="${$(el).attr('class')}" tag="${el.tagName}"`);
-                    });
-                }
             });
 
             possibleContainers.forEach(containerSelector => {
@@ -760,31 +707,16 @@
                             }
                             log(`首页: 结构匹配成功 (a.bili-video-card__info--owner)`);
                         } else {
-                            // 新增：检查插件修改布局中的 channel-name 结构
-                            const channelNameElement = $card.find('a.channel-name');
-                            if (channelNameElement.length > 0) {
-                                ownerLinkElement = channelNameElement;
-                                ownerUrl = channelNameElement.attr('href');
-                                // 在 channel-name 中提取名称，可能在嵌套的 span 中
-                                const nameSpans = channelNameElement.find('span span');
-                                if (nameSpans.length > 0) {
-                                    upName = nameSpans.last().text().trim();
-                                } else {
-                                    upName = channelNameElement.text().trim();
-                                }
-                                log(`首页: 插件布局结构匹配成功 (a.channel-name)`);
-                            } else {
-                                // Fallback 到旧的选择器逻辑
-                                const possibleOwnerSelectors = ['.up-name', '.author-text', '.up-name__text'];
-                                for (const selector of possibleOwnerSelectors) {
-                                    const element = $card.find(selector);
-                                    if (element.length > 0) {
-                                        ownerLinkElement = element; // 记录找到的元素
-                                        ownerUrl = element.attr('href');
-                                        upName = element.text().trim();
-                                        log(`首页: 备选结构匹配成功 (${selector})`);
-                                        break;
-                                    }
+                            // Fallback 到旧的选择器逻辑
+                            const possibleOwnerSelectors = ['.up-name', '.author-text', '.up-name__text'];
+                            for (const selector of possibleOwnerSelectors) {
+                                const element = $card.find(selector);
+                                if (element.length > 0) {
+                                    ownerLinkElement = element; // 记录找到的元素
+                                    ownerUrl = element.attr('href');
+                                    upName = element.text().trim();
+                                    log(`首页: 备选结构匹配成功 (${selector})`);
+                                    break;
                                 }
                             }
                         }
@@ -832,18 +764,6 @@
                         // --- 按钮放置 ---
                         let buttonAdded = false;
 
-
-
-                        // 新增：优先尝试插件布局的 channel-name 后面
-                        if (!buttonAdded && ownerLinkElement && ownerLinkElement.hasClass('channel-name')) {
-                            if (ownerLinkElement.next('.bilibili-blacklist-btn').length === 0) {
-                                const blackButton = $(`<a class="bilibili-blacklist-btn" data-uid="${uid}">拉黑</a>`);
-                                blackButton.on('click', function (e) { e.preventDefault(); e.stopPropagation(); window.tools_toblack(uid, upName); });
-                                ownerLinkElement.after(blackButton);
-                                buttonAdded = true;
-                                log('按钮添加到 channel-name 后面');
-                            } else { buttonAdded = true; /* Already exists */ }
-                        }
 
                         // 原有逻辑：尝试添加到 info--bottom 的前面
                         if (!buttonAdded) {
@@ -1055,9 +975,8 @@
                     document.querySelector('#app');                 // 万不得已才用 #app
                 log('尝试为搜索页面选择观察节点:', targetNode ? (targetNode.id || targetNode.className) : '未找到特定节点');
             } else {
-                // 首页目标: 优先尝试包含BewlyBewly video-card的容器
-                targetNode = document.querySelector('[data-v-89bbbbc2]') ||  // BewlyBewly的数据属性容器
-                    document.querySelector('#app .feed-list') ||             // 推荐流
+                // 首页目标
+                targetNode = document.querySelector('#app .feed-list') ||    // 推荐流
                     document.querySelector('#i_cecream') ||                  // 首页外层容器 ID 之一
                     document.querySelector('.bili-grid') ||                  // 通用网格布局
                     document.querySelector('#app .bili-layout') ||           // 更通用的布局容器
@@ -1084,16 +1003,10 @@
             injectStylesIntoShadowDOMs(BILI_BLACKLIST_STYLES); // 首次注入
             setTimeout(processPage, 1500);
 
-            // BewlyBewly可能需要更长加载时间，增加延迟重试
             setTimeout(() => {
-                log('=== 延迟重试检查 (为BewlyBewly) ===');
+                log('=== 延迟重试检查 ===');
                 processPage();
             }, 3000);
-
-            setTimeout(() => {
-                log('=== 最后一次重试检查 ===');
-                processPage();
-            }, 5000);
 
             // 定期检查作为后备 (可选，可以注释掉)
             // if (window.blacklistInterval) clearInterval(window.blacklistInterval);
