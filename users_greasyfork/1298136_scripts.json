@@ -1,5 +1,38 @@
 [
   {
+    "id": 564110,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-26T09:55:51.000Z",
+    "code_updated_at": "2026-01-26T10:03:11.000Z",
+    "namespace": "https://github.com/shangxueink",
+    "support_url": "https://github.com/koakuuma/tampermonkey-scripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1298136,
+        "name": "shangxueink",
+        "created_at": "2024-05-07T15:06:25.000Z",
+        "url": "https://greasyfork.org/users/1298136-shangxueink"
+      }
+    ],
+    "name": "Koishi Forum Discourse Reacter",
+    "description": "长按爱心按钮为 Koishi 论坛的当前帖子所有可点赞内容点赞，松开停止",
+    "url": "https://greasyfork.org/scripts/564110-koishi-forum-discourse-reacter",
+    "code_url": "https://update.greasyfork.org/scripts/564110/Koishi%20Forum%20Discourse%20Reacter.user.js",
+    "code_size": 10098,
+    "license": "MIT License",
+    "version": "0.5.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 558652,
     "daily_installs": 0,
     "total_installs": 5,

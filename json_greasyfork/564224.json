@@ -1,0 +1,59 @@
+{
+  "id": 564224,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-27T09:29:40.000Z",
+  "code_updated_at": "2026-01-27T11:51:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1564691,
+      "name": "SuperToolman",
+      "created_at": "2026-01-26T06:20:29.000Z",
+      "url": "https://greasyfork.org/users/1564691-supertoolman",
+      "scripts": [
+        {
+          "id": 564224,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-27T09:29:40.000Z",
+          "code_updated_at": "2026-01-27T11:51:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "宜搭脚本工具箱",
+          "description": "宜搭自动化辅助工具，支持规则填充、表单转换、打印样式调整等功能。",
+          "url": "https://greasyfork.org/scripts/564224-%E5%AE%9C%E6%90%AD%E8%84%9A%E6%9C%AC%E5%B7%A5%E5%85%B7%E7%AE%B1",
+          "code_url": "https://update.greasyfork.org/scripts/564224/%E5%AE%9C%E6%90%AD%E8%84%9A%E6%9C%AC%E5%B7%A5%E5%85%B7%E7%AE%B1.user.js",
+          "code_size": 75064,
+          "license": "MIT License",
+          "version": "2026-01-27.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "宜搭脚本工具箱",
+  "description": "宜搭自动化辅助工具，支持规则填充、表单转换、打印样式调整等功能。",
+  "url": "https://greasyfork.org/scripts/564224-%E5%AE%9C%E6%90%AD%E8%84%9A%E6%9C%AC%E5%B7%A5%E5%85%B7%E7%AE%B1",
+  "code_url": "https://update.greasyfork.org/scripts/564224/%E5%AE%9C%E6%90%AD%E8%84%9A%E6%9C%AC%E5%B7%A5%E5%85%B7%E7%AE%B1.user.js",
+  "code_size": 75064,
+  "license": "MIT License",
+  "version": "2026-01-27.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

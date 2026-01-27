@@ -1,0 +1,35 @@
+[
+  {
+    "id": 564100,
+    "daily_installs": 7,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-26T08:23:15.000Z",
+    "code_updated_at": "2026-01-26T08:46:33.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1564478,
+        "name": "hamdulila",
+        "created_at": "2026-01-25T13:32:09.000Z",
+        "url": "https://greasyfork.org/users/1564478-hamdulila"
+      }
+    ],
+    "name": "Combat_Assistence_V5 with some new features ( AutoHit and AutoFlick fixed , FPS unlock added )",
+    "description": "AutoHit , AutoFlick , NightVision , EspMode , FPSUnlock + AntiBan",
+    "url": "https://greasyfork.org/scripts/564100-combat-assistence-v5-with-some-new-features-autohit-and-autoflick-fixed-fps-unlock-added",
+    "code_url": "https://update.greasyfork.org/scripts/564100/Combat_Assistence_V5%20with%20some%20new%20features%20%28%20AutoHit%20and%20AutoFlick%20fixed%20%2C%20FPS%20unlock%20added%20%29.user.js",
+    "code_size": 33128,
+    "license": "MIT License",
+    "version": "73.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

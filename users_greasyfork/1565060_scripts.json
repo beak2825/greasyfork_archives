@@ -1,0 +1,35 @@
+[
+  {
+    "id": 564173,
+    "daily_installs": 5,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-26T20:00:31.000Z",
+    "code_updated_at": "2026-01-27T00:22:58.000Z",
+    "namespace": "https://github.com/dmitroderkach/youtube-pip",
+    "support_url": "https://github.com/dmitroderkach/youtube-pip/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1565060,
+        "name": "dmitroderkach",
+        "created_at": "2026-01-26T19:38:26.000Z",
+        "url": "https://greasyfork.org/users/1565060-dmitroderkach"
+      }
+    ],
+    "name": "YouTube PiP",
+    "description": "Smart Picture-in-Picture mode with all YouTube controls and functions",
+    "url": "https://greasyfork.org/scripts/564173-youtube-pip",
+    "code_url": "https://update.greasyfork.org/scripts/564173/YouTube%20PiP.user.js",
+    "code_size": 157163,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

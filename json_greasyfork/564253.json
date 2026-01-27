@@ -1,0 +1,59 @@
+{
+  "id": 564253,
+  "daily_installs": 1,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-27T16:06:48.000Z",
+  "code_updated_at": "2026-01-27T16:06:47.000Z",
+  "namespace": "249c0e38-4770-4cc7-ba23-f5ec70425bd1",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1565358,
+      "name": "JohnDoe30472",
+      "created_at": "2026-01-27T16:30:24.000Z",
+      "url": "https://greasyfork.org/users/1565358-johndoe30472",
+      "scripts": [
+        {
+          "id": 564253,
+          "daily_installs": 1,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-27T16:06:48.000Z",
+          "code_updated_at": "2026-01-27T16:06:47.000Z",
+          "namespace": "249c0e38-4770-4cc7-ba23-f5ec70425bd1",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "去掉v2free的烦人对话框",
+          "description": "去掉登录时烦人的确认对话框",
+          "url": "https://greasyfork.org/scripts/564253-%E5%8E%BB%E6%8E%89v2free%E7%9A%84%E7%83%A6%E4%BA%BA%E5%AF%B9%E8%AF%9D%E6%A1%86",
+          "code_url": "https://update.greasyfork.org/scripts/564253/%E5%8E%BB%E6%8E%89v2free%E7%9A%84%E7%83%A6%E4%BA%BA%E5%AF%B9%E8%AF%9D%E6%A1%86.user.js",
+          "code_size": 421,
+          "license": "The Unlicense",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "去掉v2free的烦人对话框",
+  "description": "去掉登录时烦人的确认对话框",
+  "url": "https://greasyfork.org/scripts/564253-%E5%8E%BB%E6%8E%89v2free%E7%9A%84%E7%83%A6%E4%BA%BA%E5%AF%B9%E8%AF%9D%E6%A1%86",
+  "code_url": "https://update.greasyfork.org/scripts/564253/%E5%8E%BB%E6%8E%89v2free%E7%9A%84%E7%83%A6%E4%BA%BA%E5%AF%B9%E8%AF%9D%E6%A1%86.user.js",
+  "code_size": 421,
+  "license": "The Unlicense",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

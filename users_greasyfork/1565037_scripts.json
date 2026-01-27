@@ -1,0 +1,35 @@
+[
+  {
+    "id": 564161,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-26T17:14:47.000Z",
+    "code_updated_at": "2026-01-26T17:14:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1565037,
+        "name": "The NB9 Architect",
+        "created_at": "2026-01-26T17:01:00.000Z",
+        "url": "https://greasyfork.org/users/1565037-the-nb9-architect"
+      }
+    ],
+    "name": "Gemini Safari Fix (The NB9 Architect's Version)",
+    "description": "Fixes the double-enter bug on Gemini for Safari. clean and safe.",
+    "url": "https://greasyfork.org/scripts/564161-gemini-safari-fix-the-nb9-architect-s-version",
+    "code_url": "https://update.greasyfork.org/scripts/564161/Gemini%20Safari%20Fix%20%28The%20NB9%20Architect%27s%20Version%29.user.js",
+    "code_size": 1652,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,5 +1,38 @@
 [
   {
+    "id": 564264,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-27T20:14:49.000Z",
+    "code_updated_at": "2026-01-27T20:14:49.000Z",
+    "namespace": "https://github.com/nate-kean/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1521635,
+        "name": "James River Data Team",
+        "created_at": "2025-10-02T14:59:09.000Z",
+        "url": "https://greasyfork.org/users/1521635-james-river-data-team"
+      }
+    ],
+    "name": "Visitors: autofill group",
+    "description": "Suggest the group an individual was checked into as the group to create them with.",
+    "url": "https://greasyfork.org/scripts/564264-visitors-autofill-group",
+    "code_url": "https://update.greasyfork.org/scripts/564264/Visitors%3A%20autofill%20group.user.js",
+    "code_size": 1811,
+    "license": "MIT License",
+    "version": "2026.1.27",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 562585,
     "daily_installs": 0,
     "total_installs": 1,

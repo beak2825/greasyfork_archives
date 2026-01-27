@@ -1,0 +1,35 @@
+[
+  {
+    "id": 564241,
+    "daily_installs": 1,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-27T13:10:43.000Z",
+    "code_updated_at": "2026-01-27T13:10:43.000Z",
+    "namespace": "none",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 823920,
+        "name": "Alius",
+        "created_at": "2021-10-11T03:31:11.000Z",
+        "url": "https://greasyfork.org/users/823920-alius"
+      }
+    ],
+    "name": "淘寶(含天貓)京東手機版網頁轉電腦版",
+    "description": "自動將京東、淘寶、天貓手機版網頁轉換為PC版網頁",
+    "url": "https://greasyfork.org/scripts/564241-%E6%B7%98%E5%AF%B6-%E5%90%AB%E5%A4%A9%E8%B2%93-%E4%BA%AC%E6%9D%B1%E6%89%8B%E6%A9%9F%E7%89%88%E7%B6%B2%E9%A0%81%E8%BD%89%E9%9B%BB%E8%85%A6%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/564241/%E6%B7%98%E5%AF%B6%28%E5%90%AB%E5%A4%A9%E8%B2%93%29%E4%BA%AC%E6%9D%B1%E6%89%8B%E6%A9%9F%E7%89%88%E7%B6%B2%E9%A0%81%E8%BD%89%E9%9B%BB%E8%85%A6%E7%89%88.user.js",
+    "code_size": 2767,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

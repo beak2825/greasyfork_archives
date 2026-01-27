@@ -1,0 +1,59 @@
+{
+  "id": 564145,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-26T14:38:18.000Z",
+  "code_updated_at": "2026-01-27T15:15:33.000Z",
+  "namespace": "https://github.com/MinecraftFan69420",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1564542,
+      "name": "MinecraftFan69420",
+      "created_at": "2026-01-25T17:26:22.000Z",
+      "url": "https://greasyfork.org/users/1564542-minecraftfan69420",
+      "scripts": [
+        {
+          "id": 564145,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-26T14:38:18.000Z",
+          "code_updated_at": "2026-01-27T15:15:33.000Z",
+          "namespace": "https://github.com/MinecraftFan69420",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Internet Roadtrip Fractional Odometer",
+          "description": "Adds hundredths of mi/km to the odometer display of Internet Roadtrip",
+          "url": "https://greasyfork.org/scripts/564145-internet-roadtrip-fractional-odometer",
+          "code_url": "https://update.greasyfork.org/scripts/564145/Internet%20Roadtrip%20Fractional%20Odometer.user.js",
+          "code_size": 3290,
+          "license": null,
+          "version": "0.37",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Internet Roadtrip Fractional Odometer",
+  "description": "Adds hundredths of mi/km to the odometer display of Internet Roadtrip",
+  "url": "https://greasyfork.org/scripts/564145-internet-roadtrip-fractional-odometer",
+  "code_url": "https://update.greasyfork.org/scripts/564145/Internet%20Roadtrip%20Fractional%20Odometer.user.js",
+  "code_size": 3290,
+  "license": null,
+  "version": "0.37",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

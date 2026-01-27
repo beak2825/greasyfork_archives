@@ -1,0 +1,59 @@
+{
+  "id": 564263,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-27T20:08:25.000Z",
+  "code_updated_at": "2026-01-27T20:08:25.000Z",
+  "namespace": "https://www.mynelson.com/*",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1565398,
+      "name": "5Gswatergod",
+      "created_at": "2026-01-27T20:06:00.000Z",
+      "url": "https://greasyfork.org/users/1565398-5gswatergod",
+      "scripts": [
+        {
+          "id": 564263,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-27T20:08:25.000Z",
+          "code_updated_at": "2026-01-27T20:08:25.000Z",
+          "namespace": "https://www.mynelson.com/*",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove thumdnail on top right corner",
+          "description": "Removing the thumbnail from MyNelson book viewer.",
+          "url": "https://greasyfork.org/scripts/564263-remove-thumdnail-on-top-right-corner",
+          "code_url": "https://update.greasyfork.org/scripts/564263/Remove%20thumdnail%20on%20top%20right%20corner.user.js",
+          "code_size": 2326,
+          "license": "N/A",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove thumdnail on top right corner",
+  "description": "Removing the thumbnail from MyNelson book viewer.",
+  "url": "https://greasyfork.org/scripts/564263-remove-thumdnail-on-top-right-corner",
+  "code_url": "https://update.greasyfork.org/scripts/564263/Remove%20thumdnail%20on%20top%20right%20corner.user.js",
+  "code_size": 2326,
+  "license": "N/A",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

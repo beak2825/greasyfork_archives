@@ -1,5 +1,38 @@
 [
   {
+    "id": 564129,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-26T11:45:29.000Z",
+    "code_updated_at": "2026-01-26T11:46:58.000Z",
+    "namespace": "https://msc.engg.hku.hk/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1549743,
+        "name": "tianjialin",
+        "created_at": "2025-12-18T17:48:50.000Z",
+        "url": "https://greasyfork.org/users/1549743-tianjialin"
+      }
+    ],
+    "name": "港大工学院选课结果更新脚本（手机app推送）HKU Enrolment Alert: view.asp missing keyword + auto reload (ntfy)",
+    "description": "定期抓取 enrolmentrecord_view.asp；若“不包含”关键词则报警 + ntfy；并随机真实刷新页面兜底",
+    "url": "https://greasyfork.org/scripts/564129-%E6%B8%AF%E5%A4%A7%E5%B7%A5%E5%AD%A6%E9%99%A2%E9%80%89%E8%AF%BE%E7%BB%93%E6%9E%9C%E6%9B%B4%E6%96%B0%E8%84%9A%E6%9C%AC-%E6%89%8B%E6%9C%BAapp%E6%8E%A8%E9%80%81-hku-enrolment-alert-view-asp-missing-keyword-auto-reload-ntfy",
+    "code_url": "https://update.greasyfork.org/scripts/564129/%E6%B8%AF%E5%A4%A7%E5%B7%A5%E5%AD%A6%E9%99%A2%E9%80%89%E8%AF%BE%E7%BB%93%E6%9E%9C%E6%9B%B4%E6%96%B0%E8%84%9A%E6%9C%AC%EF%BC%88%E6%89%8B%E6%9C%BAapp%E6%8E%A8%E9%80%81%EF%BC%89HKU%20Enrolment%20Alert%3A%20viewasp%20missing%20keyword%20%2B%20auto%20reload%20%28ntfy%29.user.js",
+    "code_size": 6251,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 559385,
     "daily_installs": 0,
     "total_installs": 1,
@@ -63,6 +96,6 @@
     "version": "4.3",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "public"
+    "visibility": "unlisted"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 564103,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-26T08:51:20.000Z",
+  "code_updated_at": "2026-01-26T08:51:20.000Z",
+  "namespace": "https://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1564735,
+      "name": "Kadir Bağca",
+      "created_at": "2026-01-26T08:47:54.000Z",
+      "url": "https://greasyfork.org/users/1564735-kadir-ba%C4%9Fca",
+      "scripts": [
+        {
+          "id": 564103,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-26T08:51:20.000Z",
+          "code_updated_at": "2026-01-26T08:51:20.000Z",
+          "namespace": "https://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Zoho CRM Copy Cell",
+          "description": "Zoho CRM Copy Cell (Ctrl+C + Toast)",
+          "url": "https://greasyfork.org/scripts/564103-zoho-crm-copy-cell",
+          "code_url": "https://update.greasyfork.org/scripts/564103/Zoho%20CRM%20Copy%20Cell.user.js",
+          "code_size": 1859,
+          "license": null,
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Zoho CRM Copy Cell",
+  "description": "Zoho CRM Copy Cell (Ctrl+C + Toast)",
+  "url": "https://greasyfork.org/scripts/564103-zoho-crm-copy-cell",
+  "code_url": "https://update.greasyfork.org/scripts/564103/Zoho%20CRM%20Copy%20Cell.user.js",
+  "code_size": 1859,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

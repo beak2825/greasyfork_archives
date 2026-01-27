@@ -1,5 +1,38 @@
 [
   {
+    "id": 564205,
+    "daily_installs": 4,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-27T05:57:52.000Z",
+    "code_updated_at": "2026-01-27T05:57:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 276180,
+        "name": "yagizaMJ",
+        "created_at": "2019-03-14T07:12:25.000Z",
+        "url": "https://greasyfork.org/users/276180-yagizamj"
+      }
+    ],
+    "name": "吾爱美化脚本 (Modern 52Pojie)",
+    "description": "移除旧版Discuz布局，使用现代化卡片式UI重构吾爱破解论坛首页及搜索页，支持自定义板块顺序和布局",
+    "url": "https://greasyfork.org/scripts/564205-%E5%90%BE%E7%88%B1%E7%BE%8E%E5%8C%96%E8%84%9A%E6%9C%AC-modern-52pojie",
+    "code_url": "https://update.greasyfork.org/scripts/564205/%E5%90%BE%E7%88%B1%E7%BE%8E%E5%8C%96%E8%84%9A%E6%9C%AC%20%28Modern%2052Pojie%29.user.js",
+    "code_size": 52220,
+    "license": "yagizaMJ",
+    "version": "1.29",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 545695,
     "daily_installs": 0,
     "total_installs": 19,

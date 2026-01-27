@@ -1,0 +1,35 @@
+[
+  {
+    "id": 564074,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-26T03:20:16.000Z",
+    "code_updated_at": "2026-01-26T03:20:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1564631,
+        "name": "iiil zah",
+        "created_at": "2026-01-26T03:10:34.000Z",
+        "url": "https://greasyfork.org/users/1564631-iiil-zah"
+      }
+    ],
+    "name": "🛡️定时点击",
+    "description": "支持启动自动最小化 | 默认位置记忆 | 代码预设 | 双击启停 | 完美吸附",
+    "url": "https://greasyfork.org/scripts/564074-%E5%AE%9A%E6%97%B6%E7%82%B9%E5%87%BB",
+    "code_url": "https://update.greasyfork.org/scripts/564074/%F0%9F%9B%A1%EF%B8%8F%E5%AE%9A%E6%97%B6%E7%82%B9%E5%87%BB.user.js",
+    "code_size": 16490,
+    "license": "MIT License",
+    "version": "15.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

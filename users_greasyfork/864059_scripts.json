@@ -1,5 +1,71 @@
 [
   {
+    "id": 564221,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-27T08:45:34.000Z",
+    "code_updated_at": "2026-01-27T08:45:33.000Z",
+    "namespace": "https://greasyfork.org/ja/users/864059",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864059,
+        "name": "七色の彩り",
+        "created_at": "2022-01-12T15:56:50.000Z",
+        "url": "https://greasyfork.org/users/864059-%E4%B8%83%E8%89%B2%E3%81%AE%E5%BD%A9%E3%82%8A"
+      }
+    ],
+    "name": "Open2ch Kome UID Display",
+    "description": "Open2chのkomeチャットの発言にUIDを明示的に表示し、UIDごとに色を付けて表示します。",
+    "url": "https://greasyfork.org/scripts/564221-open2ch-kome-uid-display",
+    "code_url": "https://update.greasyfork.org/scripts/564221/Open2ch%20Kome%20UID%20Display.user.js",
+    "code_size": 78900,
+    "license": "MIT License",
+    "version": "3.1.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 564076,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-26T03:51:33.000Z",
+    "code_updated_at": "2026-01-26T04:05:47.000Z",
+    "namespace": "https://greasyfork.org/ja/users/864059",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864059,
+        "name": "七色の彩り",
+        "created_at": "2022-01-12T15:56:50.000Z",
+        "url": "https://greasyfork.org/users/864059-%E4%B8%83%E8%89%B2%E3%81%AE%E5%BD%A9%E3%82%8A"
+      }
+    ],
+    "name": "Open2ch Kome URL自動補完",
+    "description": "komeでyoutubeのURLに含まれるはずの「=」が消えてしまうのを補完",
+    "url": "https://greasyfork.org/scripts/564076-open2ch-kome-url%E8%87%AA%E5%8B%95%E8%A3%9C%E5%AE%8C",
+    "code_url": "https://update.greasyfork.org/scripts/564076/Open2ch%20Kome%20URL%E8%87%AA%E5%8B%95%E8%A3%9C%E5%AE%8C.user.js",
+    "code_size": 5500,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 538807,
     "daily_installs": 0,
     "total_installs": 0,
@@ -30,6 +96,6 @@
     "version": "1.9.6",
     "locale": "ja",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   }
 ]

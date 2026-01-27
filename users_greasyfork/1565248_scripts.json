@@ -1,0 +1,35 @@
+[
+  {
+    "id": 564234,
+    "daily_installs": 1,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-27T10:58:18.000Z",
+    "code_updated_at": "2026-01-27T10:58:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1565248,
+        "name": "gwe9001",
+        "created_at": "2026-01-27T10:56:41.000Z",
+        "url": "https://greasyfork.org/users/1565248-gwe9001"
+      }
+    ],
+    "name": "Roadmap.sh - 讓 SVG 支援翻譯",
+    "description": "讓 roadmap.sh 的 SVG 路線圖支援翻譯！自動同步各種翻譯工具（沉浸式翻譯、瀏覽器翻譯等），支援多行文字、智慧寬度檢測、原文/翻譯切換同步，點擊節點後自動恢復翻譯",
+    "url": "https://greasyfork.org/scripts/564234-roadmap-sh-%E8%AE%93-svg-%E6%94%AF%E6%8F%B4%E7%BF%BB%E8%AD%AF",
+    "code_url": "https://update.greasyfork.org/scripts/564234/Roadmapsh%20-%20%E8%AE%93%20SVG%20%E6%94%AF%E6%8F%B4%E7%BF%BB%E8%AD%AF.user.js",
+    "code_size": 33649,
+    "license": "MIT License",
+    "version": "5.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

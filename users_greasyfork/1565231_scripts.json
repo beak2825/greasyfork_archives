@@ -1,0 +1,35 @@
+[
+  {
+    "id": 564229,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-27T10:21:38.000Z",
+    "code_updated_at": "2026-01-27T10:28:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1565231,
+        "name": "b9348",
+        "created_at": "2026-01-27T10:20:13.000Z",
+        "url": "https://greasyfork.org/users/1565231-b9348"
+      }
+    ],
+    "name": "Vercel 汉化脚本 - 中文化界面",
+    "description": "将 Vercel 界面翻译为中文。采用逻辑与词库分离设计，修复 React Hydration Error #418。",
+    "url": "https://greasyfork.org/scripts/564229-vercel-%E6%B1%89%E5%8C%96%E8%84%9A%E6%9C%AC-%E4%B8%AD%E6%96%87%E5%8C%96%E7%95%8C%E9%9D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/564229/Vercel%20%E6%B1%89%E5%8C%96%E8%84%9A%E6%9C%AC%20-%20%E4%B8%AD%E6%96%87%E5%8C%96%E7%95%8C%E9%9D%A2.user.js",
+    "code_size": 2540,
+    "license": "MIT License",
+    "version": "0.2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

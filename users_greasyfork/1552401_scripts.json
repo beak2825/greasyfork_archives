@@ -1,5 +1,38 @@
 [
   {
+    "id": 564089,
+    "daily_installs": 1,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-26T05:48:58.000Z",
+    "code_updated_at": "2026-01-27T17:34:01.000Z",
+    "namespace": "https://greasyfork.org/en/users/1552401-chipfin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1552401,
+        "name": "ChipFIN",
+        "created_at": "2025-12-25T12:35:41.000Z",
+        "url": "https://greasyfork.org/users/1552401-chipfin"
+      }
+    ],
+    "name": "Huuto.net Movies - Search Buttons & Redirects",
+    "description": "Lisää elokuva-aiheiset hakupainikkeet Huuto.netiin (IMDb, Videospace, Finna jne.) ja tekee automaattisia uudelleenohjauksia. Piilottaa FIx-galleria-napit ei-VHS-kohteista.",
+    "url": "https://greasyfork.org/scripts/564089-huuto-net-movies-search-buttons-redirects",
+    "code_url": "https://update.greasyfork.org/scripts/564089/Huutonet%20Movies%20-%20Search%20Buttons%20%20Redirects.user.js",
+    "code_size": 34021,
+    "license": "MIT License",
+    "version": "1.5.3",
+    "locale": "fi",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 562317,
     "daily_installs": 1,
     "total_installs": 4,

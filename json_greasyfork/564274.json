@@ -1,0 +1,59 @@
+{
+  "id": 564274,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-27T22:23:37.000Z",
+  "code_updated_at": "2026-01-27T22:23:37.000Z",
+  "namespace": "mangago.manga.backup.only.fulldeep",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1293814,
+      "name": "Epsit Ghodke",
+      "created_at": "2024-04-27T08:34:21.000Z",
+      "url": "https://greasyfork.org/users/1293814-epsit-ghodke",
+      "scripts": [
+        {
+          "id": 564274,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-27T22:23:37.000Z",
+          "code_updated_at": "2026-01-27T22:23:37.000Z",
+          "namespace": "mangago.manga.backup.only.fulldeep",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mangago Backup – by eppy",
+          "description": "Fully backs up Mangago manga lists (Want To Read, Reading, Already Read) with complete pagination into a CSV file.",
+          "url": "https://greasyfork.org/scripts/564274-mangago-backup-by-eppy",
+          "code_url": "https://update.greasyfork.org/scripts/564274/Mangago%20Backup%20%E2%80%93%20by%20eppy.user.js",
+          "code_size": 7629,
+          "license": "MIT License",
+          "version": "1.1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mangago Backup – by eppy",
+  "description": "Fully backs up Mangago manga lists (Want To Read, Reading, Already Read) with complete pagination into a CSV file.",
+  "url": "https://greasyfork.org/scripts/564274-mangago-backup-by-eppy",
+  "code_url": "https://update.greasyfork.org/scripts/564274/Mangago%20Backup%20%E2%80%93%20by%20eppy.user.js",
+  "code_size": 7629,
+  "license": "MIT License",
+  "version": "1.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}
