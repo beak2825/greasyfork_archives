@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name          Scholar's Toolkit
 // @namespace     greasyfork.org
-// @version       4.9
+// @version       5.0
 // @description   Checks for free PDFs from Google Scholar, Sci-Hub, LibGen, Anna's Archive, Sci-net, Semantic Scholar, Unpaywall, OpenAlex, Openrxiv (medRxiv/bioRxiv), and ArXiv. When hovering a DOI, it also displays journal name, ISSN, publisher, metrics (SJR, H-Index, JIF, CiteScore), citation count, and integrity status (PubPeer, Retraction Database, Beall's Predatory List).
 // @author        Bui Quoc Dung
 // @match         *://*/*
+// @resource      SJR_CSV https://raw.githubusercontent.com/BuiQuocDung1991/Userscript/main/Data/scimagojr%202024.csv
 // @grant         GM_getResourceText
 // @grant         GM_xmlhttpRequest
 // @require       https://cdn.jsdelivr.net/npm/he@1.2.0/he.min.js
@@ -158,9 +159,13 @@ function checkRIS(cell, doi, isSuccess) {
 }
 
 
-async function checkSJR(issn, sjrCell, hIndexCell) {
+function checkSJR(issn, sjrCell, hIndexCell) {
     const SJR_SEARCH_URL = 'https://www.scimagojr.com/journalsearch.php?q=';
-    const SJR_BASE_URL = 'https://www.scimagojr.com/';
+
+    const normalizeISSN = s =>
+        s ? s.replace(/[^0-9X]/gi, '').toUpperCase() : '';
+
+    const key = normalizeISSN(issn);
     const failUrl = SJR_SEARCH_URL + (issn ? encodeURIComponent(issn) : '');
 
     const updateFail = () => {
@@ -168,41 +173,72 @@ async function checkSJR(issn, sjrCell, hIndexCell) {
         updateLink(hIndexCell, '[No] H-index', failUrl, true);
     };
 
-    if (!issn) return updateFail();
+    if (!key) return updateFail();
 
     try {
-        const searchRes = await httpGet(SJR_SEARCH_URL + encodeURIComponent(issn));
-        const searchDoc = new DOMParser().parseFromString(searchRes.responseText, "text/html");
-        const link = searchDoc.querySelector('.search_results a');
+        const csv = GM_getResourceText('SJR_CSV');
+        if (!csv) return updateFail();
 
-        if (!link) return updateFail();
-        const journalUrl = SJR_BASE_URL + link.getAttribute('href');
-        const detailRes = await httpGet(journalUrl);
-        const d = new DOMParser().parseFromString(detailRes.responseText, "text/html");
-        const ps = d.querySelectorAll('.hindexnumber');
+        let lineStart = 0;
+        let lineEnd = csv.indexOf('\n');
+        const headerLine = csv.slice(0, lineEnd).trim();
+        const headers = headerLine.split(';').map(h => h.toLowerCase());
 
-        if (ps.length < 2) {
-            return updateFail();
+        const idxSourceId = headers.indexOf('sourceid');
+        const idxISSN = headers.indexOf('issn');
+        const idxSJR = headers.indexOf('sjr');
+        const idxQuart = headers.findIndex(h => h.includes('best quartile'));
+        const idxH = headers.indexOf('h index');
+
+        lineStart = lineEnd + 1;
+
+        while (lineStart < csv.length) {
+            lineEnd = csv.indexOf('\n', lineStart);
+            if (lineEnd === -1) lineEnd = csv.length;
+
+            const line = csv.slice(lineStart, lineEnd);
+            lineStart = lineEnd + 1;
+
+            if (!line) continue;
+
+            const cols = line.split(';');
+            const issnCell = cols[idxISSN];
+            if (!issnCell) continue;
+
+            const issns = issnCell
+                .replace(/"/g, '')
+                .split(',')
+                .map(normalizeISSN);
+
+            if (!issns.includes(key)) continue;
+            const sourceId = cols[idxSourceId]?.trim();
+            const sjr = cols[idxSJR]?.trim();
+            const quart = cols[idxQuart]?.trim();
+            const hindex = cols[idxH]?.trim();
+
+            const resultUrl = sourceId
+                ? `${SJR_SEARCH_URL}${encodeURIComponent(sourceId)}&tip=sid&clean=0`
+                : failUrl;
+            if (sjr) {
+                let txt = `SJR: ${sjr}`;
+                if (quart) txt += ` (${quart})`;
+                updateLink(sjrCell, txt, resultUrl, false);
+            } else {
+                updateLink(sjrCell, '[No] SJR', resultUrl, true);
+            }
+
+            if (hindex) {
+                updateLink(hIndexCell, `H-index: ${hindex}`, resultUrl, false);
+            } else {
+                updateLink(hIndexCell, '[No] H-index', resultUrl, true);
+            }
+            return;
         }
 
-        const sjr = ps[0].querySelector('.hsjr')?.textContent.trim();
-        const quart = ps[0].querySelector('span:not(.hsjr)')?.textContent.trim();
-        const h = ps[1].textContent.trim();
-        if (sjr) {
-            let text = `SJR: ${sjr}`;
-            if (quart) text += ` (${quart})`;
-            updateLink(sjrCell, text, journalUrl, false);
-        } else {
-            updateLink(sjrCell, '[No] SJR', journalUrl, true);
-        }
+        updateFail();
 
-        if (h) {
-            updateLink(hIndexCell, `H-index: ${h}`, journalUrl, false);
-        } else {
-            updateLink(hIndexCell, '[No] H-index', journalUrl, true);
-        }
-
-    } catch (error) {
+    } catch (e) {
+        console.error('checkSJR stream error:', e);
         updateFail();
     }
 }

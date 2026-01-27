@@ -3,16 +3,18 @@
 // @namespace    objection.lol
 // @description  Enhances Objection.lol Courtroom functionality
 // @icon         https://objection.lol/favicon.ico
-// @version      0.39
+// @version      0.42
 // @author       Anonymous
 // @license      CC0
 // @match        https://objection.lol/courtroom
 // @match        https://objection.lol/courtroom/*
 // @run-at       document-idle
 // @grant        GM_xmlhttpRequest
+// @grant        GM.xmlHttpRequest
 // @connect      catbox.moe
 // @connect      api.fxtwitter.com
 // @connect      youtube.com
+// @connect      video.twimg.com
 // @downloadURL https://update.greasyfork.org/scripts/543814/Objectionlol%20New%20Courtroom%20Enhancer.user.js
 // @updateURL https://update.greasyfork.org/scripts/543814/Objectionlol%20New%20Courtroom%20Enhancer.meta.js
 // ==/UserScript==
@@ -20,6 +22,7 @@
 (function () {
     "use strict";
     let settings = {};
+    const gmRequest = (typeof GM !== 'undefined' && GM?.xmlHttpRequest) || (typeof GM_xmlhttpRequest !== 'undefined' && GM_xmlhttpRequest);
 
     function addStyle() {
         const style = document.createElement("style");
@@ -146,23 +149,22 @@
             div#hoverContainer div#hoverPreviewHeader {
                 position: absolute;
                 right: 0;
-                top: -32px;
+                top: -24px;
             }
 
             #hoverPreviewHeader button {
                 all: unset;
                 width: 32px;
-                height: 32px;
+                height: 24px;
                 display: inline-grid;
                 place-items: center;
-                border-radius: 6px;
                 color: #fff;
-                background: #131313db;
+                background: #007aff;
                 transition: background 120ms ease, transform 80ms ease;
             }
 
             #hoverPreviewHeader button:hover {
-                background: rgba(255, 255, 255, 0.15);
+                background: rgb(125, 185, 255);
             }
 
             #hoverPreviewHeader button:active {
@@ -203,10 +205,11 @@
             #hoverContainer .embedText {
                 background-color: rgb(29, 29, 29);
                 color: white;
-                padding: 4px;
                 text-align: center;
                 width: 100%;
                 word-break: break-word;
+                display:flex;
+                justify-content: space-evenly;
             }
 
             #hoverContainer .embedMediaContainer img,
@@ -616,25 +619,8 @@
                     break;
                 case "youtube":
                     if (!settings.youtubeHoverPopup && !sticky) return;
-                    const videoUrl = new URL(url);
-                    var videoId;
-                    if (videoUrl.hostname == "youtu.be") {
-                        videoId = videoUrl.pathname.slice(1);
-                    } else {
-                        if (videoUrl.pathname.startsWith("/shorts/")) {
-                            videoId = videoUrl.pathname.slice(8);
-                        } else {
-                            videoId = videoUrl.searchParams.get("v");
-                        }
-                    }
-                    var startTime = videoUrl.searchParams.get("t") || 0;
-                    // convert startTime to seconds if it's in 1h23m45s format
-                    if (startTime && !/^\d+$/.test(startTime)) {
-                        startTime = startTime.match(/(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?/);
-                        startTime = 3600 * (startTime[1] || 0) + 60 * (startTime[2] || 0) + 1 * (startTime[3] || 0);
-                    }
-
-                    hoverContainer.insertAdjacentHTML("beforeend", `<div><iframe width="480" height="270" src="https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1&start=${startTime}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`); break;
+                    hoverContainer.insertAdjacentHTML("beforeend", `<div><iframe width="480" height="270" src="https://www.youtube.com/embed/${params.videoId}?enablejsapi=1&autoplay=1&start=${params.startTime}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`);
+                    break;
                 case "twitter":
                     if (!settings.twitterHoverPopup && !sticky) return;
                     const sourceUrl = new URL(url);
@@ -643,11 +629,10 @@
                     if (sticky && hoverPreviewHeader)
                         hoverPreviewHeader.style.display = "none";
 
-                    GM_xmlhttpRequest({
+                    gmRequest({
                         method: "GET",
                         url: apiUrl,
                         onload: r => {
-                            // api responds a json
                             if (!r.responseText) return;
                             const res = JSON.parse(r.responseText);
                             if (res.code !== 200) return;
@@ -657,7 +642,6 @@
 
                             const embedWrapper = document.createElement("div");
                             embedWrapper.className = "embedWrapper";
-
                             embedWrapper.insertAdjacentHTML("beforeend", `<div class="embedText">${linkify(res.tweet.text)}</div>`);
 
                             const media = res.tweet.media;
@@ -692,22 +676,48 @@
                             // videos
                             if (Array.isArray(media.videos)) {
                                 for (const video of media.videos) {
-                                    const v = document.createElement("video");
-                                    v.controls = true;
-                                    v.crossOrigin = "anonymous";
-                                    v.preload = "metadata";
-                                    v.poster = video.thumbnail_url;
+                                    gmRequest({
+                                        method: 'GET',
+                                        url: video.url,
+                                        responseType: 'blob',
+                                        onload: (resp) => {
+                                            if (resp.status !== 200) return;
+                                            if (!document.documentElement.contains(embedWrapper)) return;
+                                            const blob = resp.response;
+                                            const video = document.createElement("video");
+                                            video.src = URL.createObjectURL(blob);
+                                            video.autoplay = true;
+                                            video.controls = true;
+                                            video.loop = true;
+                                            video.poster = video.thumbnail_url;
+                                            video.addEventListener("error", () => {
+                                                video.style.display = "none";
+                                                embedWrapper.style.maxWidth = getComputedStyle(mediaContainer).width;
+                                            });
+                                            video.addEventListener("loadeddata", () => {
+                                                embedWrapper.style.maxWidth = getComputedStyle(mediaContainer).width;
+                                            });
 
-                                    const source = document.createElement("source");
-                                    source.src = video.url;
-                                    source.type = video.format;
-
-                                    v.appendChild(source);
-                                    mediaContainer.appendChild(v);
+                                            mediaContainer.appendChild(video);
+                                        }
+                                    });
                                 }
                             }
 
                             embedWrapper.appendChild(mediaContainer);
+
+                            // footer
+                            embedWrapper.insertAdjacentHTML("beforeend", `
+                                <div class="embedText">
+                                <span><a class="previewLink" href="https://twitter.com/${res.tweet.author.username}" target="_blank" referrerPolicy="no-referrer">${res.tweet.author.name}</a></span>
+                                <span><a class="previewLink" href="https://twitter.com/${sourceUrl.pathname.split("/")[1]}" target="_blank" referrerPolicy="no-referrer">${new Date(res.tweet.created_timestamp * 1000).toLocaleString()}</a></span>
+                                </div>
+                                <div class="embedText">
+                                <span>${res.tweet.replies} replies</span>
+                                <span>${res.tweet.retweets} retweets</span>
+                                <span>${res.tweet.likes} likes</span>
+                                </div>`);
+
                             hoverContainer.appendChild(embedWrapper);
                         },
                         onerror: () => { previewEmbedHide(true); }
@@ -775,11 +785,29 @@
                             anchor.addEventListener("mouseover", () => previewEmbedShow({ type: "audio", url: anchor.href }));
                             anchor.addEventListener("mouseout", () => previewEmbedHide());
                         } else if (["youtu.be", "www.youtube.com", "youtube.com", "m.youtube.com", "yewtu.be", "invidious.nerdvpn.de"].includes(url.hostname)) {
-                            anchor.addEventListener("mouseover", () => previewEmbedShow({ type: "youtube", url: anchor.href }));
-                            anchor.addEventListener("mouseout", () => previewEmbedHide());
+                            const videoUrl = new URL(url);
+                            let videoId;
+                            if (videoUrl.hostname == "youtu.be") {
+                                videoId = videoUrl.pathname.slice(1);
+                            } else {
+                                const match = /^\/(?:embed|shorts|v|watch)\/([^\/]+)/.exec(videoUrl.pathname);
+                                if (match) {
+                                    videoId = match[1];
+                                } else if (videoUrl.pathname === "/watch") {
+                                    videoId = videoUrl.searchParams.get("v");
+                                }
+                            }
+                            if (!videoId) return;
 
-                            GM_xmlhttpRequest({
-                                url: `https://www.youtube.com/oembed?url=${anchor.href}&format=json`,
+                            let startTime = videoUrl.searchParams.get("t") || 0;
+                            // convert startTime to seconds if it's in 1h23m45s format
+                            if (startTime && !/^\d+$/.test(startTime)) {
+                                startTime = startTime.match(/(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?/);
+                                startTime = 3600 * (startTime[1] || 0) + 60 * (startTime[2] || 0) + 1 * (startTime[3] || 0);
+                            }
+
+                            gmRequest({
+                                url: `https://www.youtube.com/oembed?url=${encodeURIComponent('https://www.youtube.com/watch?v=')}${videoId}&format=json`,
                                 method: "GET",
                                 onload: r => {
                                     if (r.status != 200) return;
@@ -789,20 +817,24 @@
 
                                     try {
                                         const data = JSON.parse(r.responseText);
-                                        if (data.title) anchor.textContent = `[YouTube] ${data.title.trim()}`;
+                                        if (!data.title) return;
+                                        anchor.textContent = `[YouTube] ${data.title.trim()}`;
+
+                                        anchor.addEventListener("mouseover", () => previewEmbedShow({ type: "youtube", url: anchor.href, videoId: videoId, startTime: startTime }));
+                                        anchor.addEventListener("mouseout", () => previewEmbedHide());
+
+                                        const stickyEmbedBtn = document.createElement("a");
+                                        stickyEmbedBtn.href = `javascript:;`;
+                                        stickyEmbedBtn.title = "Sticky embed"
+                                        stickyEmbedBtn.className = "previewStickyAnchor";
+                                        stickyEmbedBtn.innerText = "[#]";
+                                        stickyEmbedBtn.addEventListener("click", () => previewEmbedToggle({ type: "youtube", url: anchor.href, sticky: true }));
+                                        anchor.after(stickyEmbedBtn);
                                     } catch (e) { anchor.textContent = `[YouTube] ${r.status} ${r.responseText}`; }
 
                                     if (isAtBottom) anchorContainer.scrollTop = anchorContainer.scrollHeight;
                                 }
                             });
-
-                            const stickyEmbedBtn = document.createElement("a");
-                            stickyEmbedBtn.href = `javascript:;`;
-                            stickyEmbedBtn.title = "Sticky embed"
-                            stickyEmbedBtn.className = "previewStickyAnchor";
-                            stickyEmbedBtn.innerText = "[#]";
-                            stickyEmbedBtn.addEventListener("click", () => previewEmbedToggle({ type: "youtube", url: anchor.href, sticky: true }));
-                            anchor.after(stickyEmbedBtn);
 
                         } else if (["x.com", "twitter.com", "xcancel.com", "fxtwitter.com", "fixupx.com", "nitter.net"].includes(url.hostname)) {
                             anchor.addEventListener("mouseover", () => previewEmbedShow({ type: "twitter", url: anchor.href }));
@@ -1040,7 +1072,7 @@
                 fd.append("reqtype", reqType);
                 fd.append(dataType, uploadData);
 
-                GM_xmlhttpRequest({
+                gmRequest({
                     method: "POST",
                     url: UPLOAD_API,
                     data: fd,

@@ -7,7 +7,7 @@
 // @match         *://*.youtube.com/*
 // @match         *://*.youtu.be/*
 // @icon          https://cdn.icon-icons.com/icons2/1488/PNG/512/5295-youtube-i_102568.png
-// @version       1.3.4
+// @version       1.3.5
 // @license       MIT
 // @require       https://openuserjs.org/src/libs/sizzle/GM_config.js
 // @grant         GM_getValue
@@ -133,6 +133,8 @@
     var firstPath = pathArray[1];
     var lastPath = pathArray[pathArray.length - 1];
     //console.log("firstPath: " + firstPath + " lastPath: " + lastPath);
+
+    rearrangeSubs();
 
     //Check whether video is new to expand description
     if (firstPath === "watch" || firstPath === "live") {
@@ -460,6 +462,35 @@
             flgSubsDone = true;
           }
         }
+      }
+    }
+  }
+
+  //---------------------------------------
+  // Rearrange Subscriptions and You sections
+  //---------------------------------------
+  function rearrangeSubs() {
+    var guideSections = document.querySelectorAll("ytd-guide-renderer #sections:not([rearranged=true]) ytd-guide-section-renderer");
+    if (guideSections != null) {
+      var indexSubs = 0;
+      var indexYou = 0;
+      for (i = 0; i < guideSections.length; i++) {
+        var sectionN = document.querySelector("ytd-guide-renderer #sections ytd-guide-section-renderer:nth-child(" + (i+1) + "):not([rearranged=true]) a#endpoint[href='/feed/subscriptions']");
+        if (sectionN != null) indexSubs = i;
+        else {
+          sectionN = document.querySelector("ytd-guide-renderer #sections ytd-guide-section-renderer:nth-child(" + (i+1) + "):not([rearranged=true]) a#endpoint[href='/feed/you']");
+          if (sectionN != null) indexYou = i;
+        }
+      }
+
+      if (indexSubs < indexYou) {
+        var sectionsAll = document.querySelector("ytd-guide-renderer #sections");
+        if (sectionsAll != null) sectionsAll.setAttribute("rearranged", "true");
+        var sectionSubs = document.querySelector("ytd-guide-renderer #sections ytd-guide-section-renderer:nth-child(" + (indexSubs+1) + ")");
+        if (sectionSubs != null) sectionSubs.setAttribute("rearranged", "true");
+        var sectionYou = document.querySelector("ytd-guide-renderer #sections ytd-guide-section-renderer:nth-child(" + (indexYou+1) + ")");
+        if (sectionYou != null) sectionYou.setAttribute("rearranged", "true");
+        sectionYou.parentNode.insertBefore(sectionYou, sectionSubs);
       }
     }
   }

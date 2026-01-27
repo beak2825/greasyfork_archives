@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GGn Formatters
-// @version      46
+// @version      47
 // @description  Formatters
 // @author       ingts (some by ZeDoCaixao and letsclay)
 // @match        https://gazellegames.net/
@@ -50,7 +50,7 @@ function formatTitle(str, alias) {
 
     const smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|v.?|vs.?|via)$/i
     const alphanumericPattern = /([A-Za-z0-9\u00C0-\u00FF])/
-    const wordSeparators = /([ :–—-]|[^a-zA-Z0-9'’])/
+    const wordSeparators = /([ :–—-])/
     const allUppercaseWords = ['RPG', 'FPS', 'TPS', 'RTS', 'TBS', 'MMO', 'MMORPG', 'ARPG', 'JRPG', 'PVP', 'PVE', 'NTR', 'NPC', 'OST', 'MILF', 'VR']
     const uppercaseRegex = new RegExp(`^[A-Z]{2}$|${allUppercaseWords.join('|')}`)
     return str

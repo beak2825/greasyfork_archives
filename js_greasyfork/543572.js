@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Applovin Ads UTM
 // @namespace    http://tampermonkey.net/
-// @version      1.0.6
+// @version      1.0.7
 // @description  Applovin Ads UTM Tool For Saker!
 // @author       Jimmy
 // @include      *.axon.ai/campaigns?*
@@ -166,7 +166,7 @@
     console.log(act+'_trackBtn',trackBtn);
 
     let campaignsElementClass = "._campaign-table-header-title_ludp7_28"; //左上角广告账户选项元素
-    let campaignsElementClass2 = ".left--AlkAH"
+    let campaignsElementClass2 = "._campaign-table-header-title_kppt9_28"
     let dateElementClass = ".arco-picker-has-prefix"; //右上角日期元素
     let tableElementClass = "._219p"; //主体数据列表
     let tableElementClass2 = "tbody.om3e55n1.g4tp4svg"

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          TreeDibsMapper (Refactored)
 // @namespace     http://tampermonkey.net/
-// @version       3.12.3
+// @version       3.12.6
 // @description   Dibs, Faction-wide notes, and war management systems for Torn (PC AND TornPDA Support)
 // @author        TreeMapper [3573576]
 // @match         https://www.torn.com/loader.php?sid=attack&user2ID=*
@@ -154,7 +154,7 @@
 
     // Central configuration
     const config = {
-        VERSION: '3.12.3',
+        VERSION: '3.12.6',
         API_GET_URL: 'https://apiget-codod64xdq-uc.a.run.app',
         API_POST_URL: 'https://apipost-codod64xdq-uc.a.run.app',
         API_HTTP_GET_URL: 'https://us-central1-tornuserstracker.cloudfunctions.net/apiHttpGet',
@@ -4765,25 +4765,29 @@ try { ffscouterIdb.warmCache(); } catch (_) {}
                 // Try Cloud Storage first when URL is known
                 if (summaryUrl) {
                     let { status, json, etag, lastModified } = await api.fetchStorageJson(summaryUrl, { etag: clientEntry.etag, ifModifiedSince: clientEntry.lastModified });
-                    if (status === 200 && Array.isArray(json)) {
-                        const next = { ...clientEntry, summaryUrl, etag: etag || null, lastModified: lastModified || null, updatedAt: Date.now(), summary: json, source: 'storage200' };
-                        // summary persisted unconditionally (metrics pruned)
-                        state.rankedWarSummaryCache[cacheKey] = next;
-                        storage.set('rankedWarSummaryCache', state.rankedWarSummaryCache);
-                        try {
-                            state.rankedWarLastSummarySource = 'storage200';
-                            state.rankedWarLastSummaryMeta = { source: 'storage', etag: etag || null, lastModified: lastModified || null, count: Array.isArray(json) ? json.length : 0, url: summaryUrl };
-                            storage.set('rankedWarLastSummarySource', state.rankedWarLastSummarySource);
-                            storage.set('rankedWarLastSummaryMeta', state.rankedWarLastSummaryMeta);
-                        } catch(_) { /* noop */ }
-                        tdmlogger('debug', `getRankedWarSummarySmart: 200 OK for war ${warId}, fetched fresh summary (${Array.isArray(json) ? json.length : 0} entries).`);
-                        utils.perf.stop('getRankedWarSummarySmart');
-                        return next.summary;
+                    if (status === 200) {
+                        // Backend may return either a raw array or a wrapper object: { items: [...], scoreBleed?: {...} }
+                        const items = Array.isArray(json) ? json : (json && Array.isArray(json.items) ? json.items : null);
+                        const scoreBleed = (json && !Array.isArray(json) && typeof json === 'object') ? (json.scoreBleed || null) : null;
+                        if (Array.isArray(items)) {
+                            const next = { ...clientEntry, summaryUrl, etag: etag || null, lastModified: lastModified || null, updatedAt: Date.now(), summary: items, scoreBleed: scoreBleed || (clientEntry.scoreBleed || null), source: 'storage200' };
+                            state.rankedWarSummaryCache[cacheKey] = next;
+                            storage.set('rankedWarSummaryCache', state.rankedWarSummaryCache);
+                            try {
+                                state.rankedWarLastSummarySource = 'storage200';
+                                state.rankedWarLastSummaryMeta = { source: 'storage', etag: etag || null, lastModified: lastModified || null, count: items.length, url: summaryUrl, scoreBleed: next.scoreBleed || null };
+                                storage.set('rankedWarLastSummarySource', state.rankedWarLastSummarySource);
+                                storage.set('rankedWarLastSummaryMeta', state.rankedWarLastSummaryMeta);
+                            } catch(_) { /* noop */ }
+                            tdmlogger('debug', `getRankedWarSummarySmart: 200 OK for war ${warId}, fetched fresh summary (${items.length} entries).`);
+                            utils.perf.stop('getRankedWarSummarySmart');
+                            return next.summary;
+                        }
                     }
                     if (status === 304 && Array.isArray(clientEntry.summary)) {
                         try {
                             state.rankedWarLastSummarySource = 'storage304';
-                            state.rankedWarLastSummaryMeta = { source: 'storage', etag: clientEntry.etag || null, lastModified: clientEntry.lastModified || null, count: Array.isArray(clientEntry.summary) ? clientEntry.summary.length : 0, url: summaryUrl };
+                            state.rankedWarLastSummaryMeta = { source: 'storage', etag: clientEntry.etag || null, lastModified: clientEntry.lastModified || null, count: Array.isArray(clientEntry.summary) ? clientEntry.summary.length : 0, url: summaryUrl, scoreBleed: clientEntry.scoreBleed || null };
                             storage.set('rankedWarLastSummarySource', state.rankedWarLastSummarySource);
                             storage.set('rankedWarLastSummaryMeta', state.rankedWarLastSummaryMeta);
                         } catch(_) { /* noop */ }
@@ -4794,15 +4798,23 @@ try { ffscouterIdb.warmCache(); } catch (_) {}
                     // If 304 but we don't have a cached summary yet, force a one-time bootstrap without conditional headers
                     if (status === 304 && !Array.isArray(clientEntry.summary)) {
                         const forced = await api.fetchStorageJson(summaryUrl, {});
-                        if (forced.status === 200 && Array.isArray(forced.json)) {
-                            const next = { ...clientEntry, summaryUrl, etag: forced.etag || null, lastModified: forced.lastModified || null, updatedAt: Date.now(), summary: forced.json, source: 'storage200' };
-                            // forced summary persisted (metrics pruned)
-                            state.rankedWarSummaryCache[cacheKey] = next;
-                            storage.set('rankedWarSummaryCache', state.rankedWarSummaryCache);
-                            try { state.rankedWarLastSummarySource = 'storage200'; state.rankedWarLastSummaryMeta = { source: 'storage', etag: forced.etag || null, lastModified: forced.lastModified || null, count: next.summary.length, url: summaryUrl }; storage.set('rankedWarLastSummarySource', state.rankedWarLastSummarySource); storage.set('rankedWarLastSummaryMeta', state.rankedWarLastSummaryMeta); } catch(_) {}
-                            tdmlogger('debug', `getRankedWarSummarySmart: Forced 200 OK for war ${warId}, fetched fresh summary (${Array.isArray(forced.json) ? forced.json.length : 0} entries).`);
-                            utils.perf.stop('getRankedWarSummarySmart');
-                            return next.summary;
+                        if (forced.status === 200) {
+                            const forcedItems = Array.isArray(forced.json) ? forced.json : (forced.json && Array.isArray(forced.json.items) ? forced.json.items : null);
+                            const forcedScoreBleed = (forced.json && !Array.isArray(forced.json) && typeof forced.json === 'object') ? (forced.json.scoreBleed || null) : null;
+                            if (Array.isArray(forcedItems)) {
+                                const next = { ...clientEntry, summaryUrl, etag: forced.etag || null, lastModified: forced.lastModified || null, updatedAt: Date.now(), summary: forcedItems, scoreBleed: forcedScoreBleed || (clientEntry.scoreBleed || null), source: 'storage200' };
+                                state.rankedWarSummaryCache[cacheKey] = next;
+                                storage.set('rankedWarSummaryCache', state.rankedWarSummaryCache);
+                                try {
+                                    state.rankedWarLastSummarySource = 'storage200';
+                                    state.rankedWarLastSummaryMeta = { source: 'storage', etag: forced.etag || null, lastModified: forced.lastModified || null, count: next.summary.length, url: summaryUrl, scoreBleed: next.scoreBleed || null };
+                                    storage.set('rankedWarLastSummarySource', state.rankedWarLastSummarySource);
+                                    storage.set('rankedWarLastSummaryMeta', state.rankedWarLastSummaryMeta);
+                                } catch(_) {}
+                                tdmlogger('debug', `getRankedWarSummarySmart: Forced 200 OK for war ${warId}, fetched fresh summary (${forcedItems.length} entries).`);
+                                utils.perf.stop('getRankedWarSummarySmart');
+                                return next.summary;
+                            }
                         }
                     }
                     if (status === 404) {
@@ -4817,15 +4829,23 @@ try { ffscouterIdb.warmCache(); } catch (_) {}
                                 state.rankedWarSummaryCache[cacheKey] = { ...clientEntry };
                                 storage.set('rankedWarSummaryCache', state.rankedWarSummaryCache);
                                 const again = await api.fetchStorageJson(summaryUrl, { etag: clientEntry.etag, ifModifiedSince: clientEntry.lastModified });
-                                if (again.status === 200 && Array.isArray(again.json)) {
-                                    const next = { ...clientEntry, summaryUrl, etag: again.etag || null, lastModified: again.lastModified || null, updatedAt: Date.now(), summary: again.json, source: 'storage200' };
-                                    // retry summary persisted (metrics pruned)
-                                    state.rankedWarSummaryCache[cacheKey] = next;
-                                    storage.set('rankedWarSummaryCache', state.rankedWarSummaryCache);
-                                    try { state.rankedWarLastSummarySource = 'storage200'; state.rankedWarLastSummaryMeta = { source: 'storage', etag: again.etag || null, lastModified: again.lastModified || null, count: next.summary.length, url: summaryUrl }; storage.set('rankedWarLastSummarySource', state.rankedWarLastSummarySource); storage.set('rankedWarLastSummaryMeta', state.rankedWarLastSummaryMeta); } catch(_) {}
-                                    tdmlogger('debug', `getRankedWarSummarySmart: Retry 200 OK for war ${warId}, fetched fresh summary (${Array.isArray(again.json) ? again.json.length : 0} entries).`);
-                                    utils.perf.stop('getRankedWarSummarySmart');
-                                    return next.summary;
+                                if (again.status === 200) {
+                                    const againItems = Array.isArray(again.json) ? again.json : (again.json && Array.isArray(again.json.items) ? again.json.items : null);
+                                    const againScoreBleed = (again.json && !Array.isArray(again.json) && typeof again.json === 'object') ? (again.json.scoreBleed || null) : null;
+                                    if (Array.isArray(againItems)) {
+                                        const next = { ...clientEntry, summaryUrl, etag: again.etag || null, lastModified: again.lastModified || null, updatedAt: Date.now(), summary: againItems, scoreBleed: againScoreBleed || (clientEntry.scoreBleed || null), source: 'storage200' };
+                                        state.rankedWarSummaryCache[cacheKey] = next;
+                                        storage.set('rankedWarSummaryCache', state.rankedWarSummaryCache);
+                                        try {
+                                            state.rankedWarLastSummarySource = 'storage200';
+                                            state.rankedWarLastSummaryMeta = { source: 'storage', etag: again.etag || null, lastModified: again.lastModified || null, count: next.summary.length, url: summaryUrl, scoreBleed: next.scoreBleed || null };
+                                            storage.set('rankedWarLastSummarySource', state.rankedWarLastSummarySource);
+                                            storage.set('rankedWarLastSummaryMeta', state.rankedWarLastSummaryMeta);
+                                        } catch(_) {}
+                                        tdmlogger('debug', `getRankedWarSummarySmart: Retry 200 OK for war ${warId}, fetched fresh summary (${againItems.length} entries).`);
+                                        utils.perf.stop('getRankedWarSummarySmart');
+                                        return next.summary;
+                                    }
                                 }
                             }
                             tdmlogger('info', `getRankedWarSummarySmart: 404 Not Found for war ${warId}, attempting lazy materialization and retry.`);
@@ -6516,28 +6536,33 @@ try { ffscouterIdb.warmCache(); } catch (_) {}
                 // Handle 304 Not Modified: use cached summary if available
                 if (status === 304 && summaryCache && Array.isArray(summaryCache.summary)) {
                     summaryRows = summaryCache.summary;
+                    const scoreBleed = summaryCache.scoreBleed || null;
                     // Update timestamp on cache hit
                     summaryCache.updatedAt = Date.now();
                     state.rankedWarSummaryCache = state.rankedWarSummaryCache || {};
                     state.rankedWarSummaryCache[warId] = summaryCache;
                     storage.set('rankedWarSummaryCache', state.rankedWarSummaryCache);
                     
-                    // Stamp provenance for 304
+                    // Stamp provenance for 304 and keep score-bleed meta when present
                     try {
                         state.rankedWarLastSummarySource = 'summary-json-304';
-                        state.rankedWarLastSummaryMeta = { source: 'summary-json-304', count: summaryRows.length, url: urls.summaryUrl };
+                        state.rankedWarLastSummaryMeta = { source: 'summary-json-304', count: summaryRows.length, url: urls.summaryUrl, scoreBleed };
                         storage.set('rankedWarLastSummarySource', state.rankedWarLastSummarySource);
                         storage.set('rankedWarLastSummaryMeta', state.rankedWarLastSummaryMeta);
                     } catch(_) {}
+                    // Preserve score-bleed hint for downstream UI
+                    if (scoreBleed) {
+                        try { state.rankedWarLastSummaryMeta.scoreBleed = scoreBleed; } catch(_) {}
+                    }
                     return summaryRows;
                 }
 
                 if (status === 200 && (Array.isArray(json) || (json && Array.isArray(json.items)))) {
+                        const scoreBleed = json && !Array.isArray(json) ? (json.scoreBleed || null) : null;
                         if (Array.isArray(json)) {
                             summaryRows = json;
                         } else if (json && Array.isArray(json.items)) {
                             summaryRows = json.items;
-                            try { state.rankedWarLastSummaryMeta = state.rankedWarLastSummaryMeta || {}; state.rankedWarLastSummaryMeta.scoreBleed = json.scoreBleed || null; } catch(_) {}
                         } else {
                             summaryRows = [];
                         }
@@ -6551,6 +6576,7 @@ try { ffscouterIdb.warmCache(); } catch (_) {}
                             lastModified: lastModified || null,
                             updatedAt: Date.now(),
                             summary: summaryRows,
+                            scoreBleed: scoreBleed || null,
                             source: 'storage200'
                         };
                         state.rankedWarSummaryCache = state.rankedWarSummaryCache || {};
@@ -6561,7 +6587,9 @@ try { ffscouterIdb.warmCache(); } catch (_) {}
                     let provenanceStamped = false;
                     try {
                         state.rankedWarLastSummarySource = 'summary-json';
-                        state.rankedWarLastSummaryMeta = { source: 'summary-json', count: summaryRows.length, url: urls.summaryUrl };
+                        // Carry score-bleed metadata forward so UI can display it
+                        const scoreBleed = (json && !Array.isArray(json)) ? (json.scoreBleed || null) : null;
+                        state.rankedWarLastSummaryMeta = { source: 'summary-json', count: summaryRows.length, url: urls.summaryUrl, scoreBleed };
                         storage.set('rankedWarLastSummarySource', state.rankedWarLastSummarySource);
                         storage.set('rankedWarLastSummaryMeta', state.rankedWarLastSummaryMeta);
                         provenanceStamped = true;
@@ -20501,6 +20529,21 @@ try { ffscouterIdb.warmCache(); } catch (_) {}
                     if (s && s === opponentFactionId) return 'tdm-war-opp';
                     return '';
                 };
+
+                // Prefer backend-enriched fields (mode/category) when present.
+                // Backend emits: attack_mode + attack_category.
+                const deriveAttackModeForDisplay = (a) => {
+                    try {
+                        const v = a?.attack_mode || a?.attackMode || '';
+                        return v ? String(v) : '';
+                    } catch(_) { return ''; }
+                };
+                const deriveAttackCategoryForDisplay = (a) => {
+                    try {
+                        const v = a?.attack_category || a?.attackCategory || '';
+                        return v ? String(v) : '';
+                    } catch(_) { return ''; }
+                };
                 // Pagination & sorting state
                 let currentPage = 1, attacksPerPage = 50, sortKey = 'attackTime', sortAsc = false;
                 // Dynamic filter state: array of { fieldKey, op, value }
@@ -20720,6 +20763,8 @@ try { ffscouterIdb.warmCache(); } catch (_) {}
                             defender_la_diff: defenderLADiff,
                             result: a.result || '',
                             direction: a.direction || '',
+                            attack_mode: deriveAttackModeForDisplay(a),
+                            category: deriveAttackCategoryForDisplay(a),
                             // Treat as ranked war when Torn API flag present or war modifier indicates a war context
                             is_ranked_war: !!(a.is_ranked_war || a.isRankedWar || a.isRankedWar === true || a.is_ranked_war === true || Number(a?.modifiers?.war || 0) === 2),
                             is_stealthed: !!(a.is_stealthed || a.isStealthed || a.is_stealthed === true),
@@ -20749,6 +20794,8 @@ try { ffscouterIdb.warmCache(); } catch (_) {}
                     { key: 'defender_status', label: 'DefStatus' },
                     { key: 'result', label: 'Result' },
                     { key: 'direction', label: 'Direction', align: 'center' },
+                    { key: 'attack_mode', label: 'Mode', align: 'center' },
+                    { key: 'category', label: 'Category' },
                     { key: 'is_ranked_war', label: 'RankedWar', align: 'center' },
                     { key: 'is_stealthed', label: 'Stealthed', align: 'center' },
                     { key: 'chain', label: 'Chain', align: 'center' },
@@ -20868,7 +20915,7 @@ try { ffscouterIdb.warmCache(); } catch (_) {}
                                 } catch(_) { return 0; }
                             });
                             // CSV header in exact display order (expand attacker/defender to id+name for export)
-                            const header = ['Time','Log','AttackerId','Attacker','AtkFaction','AtkStatus','DefenderId','Defender','DefFaction','DefStatus','Result','Direction','is_ranked_war','is_stealthed','Chain','ChainSaver','TimeSinceLastAttack','RespectGain','RespectGainNoBonus','RespectGainNoChain','AtkActivity','AtkLastAction','AtkLADiff','DefActivity','DefLastAction','DefLADiff','Modifiers'];
+                            const header = ['Time','Log','AttackerId','Attacker','AtkFaction','AtkStatus','DefenderId','Defender','DefFaction','DefStatus','Result','Direction','AttackMode','Category','is_ranked_war','is_stealthed','Chain','ChainSaver','TimeSinceLastAttack','RespectGain','RespectGainNoBonus','RespectGainNoChain','AtkActivity','AtkLastAction','AtkLADiff','DefActivity','DefLastAction','DefLADiff','Modifiers'];
                             const csvLines = [header.join(',')];
                             const csvEscape = (v) => {
                                 if (v === null || typeof v === 'undefined') return '';
@@ -20878,6 +20925,8 @@ try { ffscouterIdb.warmCache(); } catch (_) {}
                             for (const a of sorted) {
                                 const endedIso = (a.ended || a.started) ? new Date((a.ended||a.started)*1000).toISOString() : '';
                                 const modifiersStr = a.modifiers ? JSON.stringify(a.modifiers) : '';
+                                const category = deriveAttackCategoryForDisplay(a);
+                                const attackMode = deriveAttackModeForDisplay(a);
                                 const row = [
                                     endedIso,
                                     a.code || '',
@@ -20885,18 +20934,14 @@ try { ffscouterIdb.warmCache(); } catch (_) {}
                                     a.attacker?.name || '',
                                     a.attacker?.faction?.name || a.attackerFactionName || a.attacker_faction_name || '',
                                     a.attacker_status || '',
-                                    a.attacker_activity || '',
-                                    a.attacker_last_action_ts ? new Date(a.attacker_last_action_ts * 1000).toISOString() : '',
-                                    a.attacker_la_diff != null ? a.attacker_la_diff : '',
                                     a.defender?.id || '',
                                     a.defender?.name || '',
                                     a.defender?.faction?.name || a.defenderFactionName || a.defender_faction_name || '',
                                     a.defender_status || '',
-                                    a.defender_activity || '',
-                                    a.defender_last_action_ts ? new Date(a.defender_last_action_ts * 1000).toISOString() : '',
-                                    a.defender_la_diff != null ? a.defender_la_diff : '',
                                     a.result || '',
                                     a.direction || '',
+                                    attackMode,
+                                    category,
                                     a.is_ranked_war ? 'Yes' : (a.isRankedWar ? 'Yes' : ''),
                                     a.is_stealthed ? 'Yes' : (a.isStealthed ? 'Yes' : ''),
                                     a.chain || '',
@@ -20905,6 +20950,12 @@ try { ffscouterIdb.warmCache(); } catch (_) {}
                                     Number(a.respect_gain || 0).toFixed(2),
                                     Number(a.respect_gain_no_bonus || 0).toFixed(2),
                                     Number(a.respect_gain_no_chain || 0).toFixed(2),
+                                    a.attacker_activity || '',
+                                    a.attacker_last_action_ts ? new Date(a.attacker_last_action_ts * 1000).toISOString() : '',
+                                    a.attacker_la_diff != null ? a.attacker_la_diff : '',
+                                    a.defender_activity || '',
+                                    a.defender_last_action_ts ? new Date(a.defender_last_action_ts * 1000).toISOString() : '',
+                                    a.defender_la_diff != null ? a.defender_la_diff : '',
                                     modifiersStr
                                 ].map(csvEscape);
                                 csvLines.push(row.join(','));
@@ -21141,6 +21192,8 @@ try { ffscouterIdb.warmCache(); } catch (_) {}
                 { key: 'totalRespectGainNoChain', label: 'Respect (No Chain)', align: 'center', render: (r)=> (Number(r.totalRespectGainNoChain||0)).toFixed(2), sortValue: (r)=>Number(r.totalRespectGainNoChain)||0 },
                 { key: 'totalRespectGainNoBonus', label: 'Respect (No Bonus)', align: 'center', render: (r)=> (Number(r.totalRespectGainNoBonus||0)).toFixed(2), sortValue: (r)=>Number(r.totalRespectGainNoBonus)||0 },
                 { key: 'totalRespectLoss', label: 'Respect Lost', align: 'center', render: (r)=> (Number(r.totalRespectLoss||0)).toFixed(2), sortValue: (r)=>Number(r.totalRespectLoss)||0 },
+                { key: 'scoreBleedCount', label: 'ScoreBleed Hits', align: 'center', render: ()=> { try { const sb = state.rankedWarLastSummaryMeta?.scoreBleed || null; return sb ? (sb.count || 0) : ''; } catch(_) { return ''; } }, sortValue: ()=> { try { const sb = state.rankedWarLastSummaryMeta?.scoreBleed || null; return sb ? Number(sb.count || 0) : 0; } catch(_) { return 0; } } },
+                { key: 'scoreBleedRespect', label: 'ScoreBleed Respect', align: 'center', render: ()=> { try { const sb = state.rankedWarLastSummaryMeta?.scoreBleed || null; return sb ? Number(sb.respect || 0).toFixed(2) : ''; } catch(_) { return ''; } }, sortValue: ()=> { try { const sb = state.rankedWarLastSummaryMeta?.scoreBleed || null; return sb ? Number(sb.respect || 0) : 0; } catch(_) { return 0; } } },
                 { key: 'averageRespectGain', label: 'Avg Respect', align: 'center', render: (r)=> (Number(r.averageRespectGain||0)).toFixed(2), sortValue: (r)=>Number(r.averageRespectGain)||0 },
                 { key: 'averageRespectGainNoChain', label: 'Avg Respect (No Chain)', align: 'center', render: (r)=> (Number(r.averageRespectGainNoChain||0)).toFixed(2), sortValue: (r)=>Number(r.averageRespectGainNoChain)||0 },
                 { key: 'averageRespectGainNoBonus', label: 'Avg Respect (No Bonus)', align: 'center', render: (r)=> (Number(r.averageRespectGainNoBonus||0)).toFixed(2), sortValue: (r)=>Number(r.averageRespectGainNoBonus)||0 },
@@ -21304,8 +21357,9 @@ try { ffscouterIdb.warmCache(); } catch (_) {}
                         return;
                     }
                     const rows = grp.attackers;
+                    const sb = state.rankedWarLastSummaryMeta?.scoreBleed || null;
                     const headers = [
-                        'attackerId','attackerName','attackerFactionId','attackerFactionName','totalAttacks','wins','losses','stalemates','totalRespectGain','totalRespectGainNoChain','totalRespectLoss','averageRespectGain','averageRespectGainNoChain','assistCount','outsideCount','overseasCount','retaliationCount','avgFairFight','lastTs'
+                        'attackerId','attackerName','attackerFactionId','attackerFactionName','totalAttacks','wins','losses','stalemates','totalRespectGain','totalRespectGainNoChain','totalRespectLoss','averageRespectGain','averageRespectGainNoChain','assistCount','outsideCount','overseasCount','retaliationCount','avgFairFight','lastTs','scoreBleedCount','scoreBleedRespect'
                     ];
                     const csvEscape = (v) => {
                         if (v === null || typeof v === 'undefined') return '';
@@ -21334,7 +21388,9 @@ try { ffscouterIdb.warmCache(); } catch (_) {}
                             r.overseasCount || 0,
                             r.retaliationCount || 0,
                             (Number(r.averageModifiers?.fair_fight || 0)).toFixed(2),
-                            r.lastTs || 0
+                            r.lastTs || 0,
+                            sb ? (sb.count || 0) : '',
+                            sb ? (Number(sb.respect || 0)).toFixed(2) : ''
                         ].map(csvEscape).join(',');
                         lines.push(line);
                     }

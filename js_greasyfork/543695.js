@@ -2,10 +2,11 @@
 // @name         Thundr Enhanced
 // @namespace    Thundr Enhanced
 // @description  Anti-Ban, displays partners IP, faces only matching, auto-message, block buy boost pop-ups and clutter, auto-start, instant partner preview, exposure/fit controls, displays partners device.
-// @version      2.3.2
+// @version      2.3.3
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=thundr.com
 // @match        *://*.thundr.com/*
 // @run-at       document-start
+// @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/543695/Thundr%20Enhanced.user.js
 // @updateURL https://update.greasyfork.org/scripts/543695/Thundr%20Enhanced.meta.js
 // ==/UserScript==
@@ -305,9 +306,9 @@
       }
       handleAutoMessage();
       handleVideoControls();
-  }, 500);
+  }, 1000);
 
-  // FIXED AUTO-MESSAGE (Reverted to v2.2.2 Logic for Mobile compatibility)
+  // Auto-Message
   function handleAutoMessage() {
       if (!autoMessageEnabled || autoMessageSent || !customMessage.trim()) return;
 
@@ -316,7 +317,7 @@
           const chatContainer = textarea.closest('.css-yftrfm');
           if (!chatContainer) return;
 
-          const sendBtn = chatContainer.querySelector('button.css-lwfflm, .css-12dqq3a');
+          const sendBtn = chatContainer.querySelector('button.css-lwfflm');
 
           if (sendBtn && textarea.value.trim() === "") {
               textarea.value = customMessage;
@@ -325,11 +326,6 @@
               autoMessageSent = true;
           }
       });
-
-      // Force send/next cycle (crucial for some mobile flows)
-      if (autoMessageEnabled && autoMessageSent) {
-          document.querySelectorAll('button.css-lwfflm, .css-12dqq3a').forEach(el => el.click());
-      }
   }
 
   // ==========================================

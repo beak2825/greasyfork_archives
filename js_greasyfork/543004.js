@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Humpty-Dumpty's Property Manager
-// @version      2.1.0
+// @version      2.2.0
 // @author       Humpty-Dumpty[2527857]
 // @description  Property management tools for the Torn City game
 // @license      MIT
@@ -927,10 +927,14 @@
         }
 
         if (CurrentState === State.HAS_FOUND_ADD_PROP_MARKET_DIV) {
-            const response = await fetchPropertyInformation(propertyId, false);
-            const propertyGuide = getPropertyGuide(response.property);
-            if (propertyGuide) {
-                price = propertyGuide.suggestedDailyRent * 10;
+            const allOwnedPropertiesWithLogs = GM_getValue("OWNED_PROPERTIES_WITH_LOGS", null);
+            if (allOwnedPropertiesWithLogs) {
+                if (allOwnedPropertiesWithLogs[propertyId]?.property) {
+                    const property = allOwnedPropertiesWithLogs[propertyId].property;
+                    const propertyGuide = getPropertyGuide(property);
+
+                    price = propertyGuide.suggestedDailyRent * daysToLease;
+                }
             }
 
             CurrentState = State.HAS_FETCHED_PROPERTY_INFO_ADD_MARKET;
@@ -963,96 +967,36 @@
                 {
                     baseHappy: 2550,
                     suggestedDailyRent: 450000,
-                    upgrades: [
-                        "Standard interior",
-                        "Large pool",
-                        "Hottub",
-                        "Sauna",
-                        "Bar",
-                        "Shooting range",
-                        "Airstrip"
-                    ]
+                    market_price: 75788000 // 575788000
                 },
                 {
                     baseHappy: 2725,
                     suggestedDailyRent: 600000,
-                    upgrades: [
-                        "Standard interior",
-                        "Large pool",
-                        "Extra large vault",
-                        "Hottub",
-                        "Sauna",
-                        "Bar",
-                        "Shooting range",
-                        "Medical facility",
-                        "Airstrip"
-                    ]
+                    market_price: 307788000 // 807788000
                 },
                 {
                     baseHappy: 3600,
                     suggestedDailyRent: 650000,
-                    upgrades: [
-                        "Superior interior",
-                        "Large pool",
-                        "Hottub",
-                        "Sauna",
-                        "Bar",
-                        "Shooting range",
-                        "Medical facility",
-                        "Airstrip"
-                    ]
+                    market_price: 92788000 // 842788000
                 },
                 {
                     baseHappy: 3725,
                     suggestedDailyRent: 750000,
-                    upgrades: [
-                        "Superior interior",
-                        "Large pool",
-                        "Extra large vault",
-                        "Hottub",
-                        "Sauna",
-                        "Bar",
-                        "Shooting range",
-                        "Medical facility",
-                        "Airstrip"
-                    ]
+                    market_price: 1057788000
                 },
                 {
                     baseHappy: 4225,
                     suggestedDailyRent: 1000000,
-                    upgrades: [
-                        "Superior interior",
-                        "Large pool",
-                        "Extra large vault",
-                        "Hottub",
-                        "Sauna",
-                        "Bar",
-                        "Shooting range",
-                        "Medical facility",
-                        "Airstrip",
-                        "Yacht"
-                    ]
+                    market_price: 1202788000 // 1952788000
                 }
             ]
         }
 
         let propertyGuide = undefined;
 
-        if (propertyRentGuide[property.property_type]) {
-            for (const info of propertyRentGuide[property.property_type]) {
-                if (info.upgrades.length !== property.upgrades.length) {
-                    continue;
-                }
-
-                let hasMissingUpgrade = false;
-                for (const upgrade of info.upgrades) {
-                    if (!property.upgrades.includes(upgrade)) {
-                        hasMissingUpgrade = true;
-                        break;
-                    }
-                }
-
-                if (hasMissingUpgrade) {
+        if (propertyRentGuide[property.property.id]) {
+            for (const info of propertyRentGuide[property.property.id]) {
+                if (info.market_price !== property.market_price) {
                     continue;
                 }
 
@@ -1082,23 +1026,21 @@
         const propertyId = matchArray[1];
         logInfo(`propertyId=${propertyId}`);
 
-        const response = await fetchPropertyInformation(propertyId, true);
-
-        const propertyGuide = getPropertyGuide(response.property);
-
         let daysToExtend = 10;
         let price = 999999999;
-        if (propertyGuide) {
-            price = propertyGuide.suggestedDailyRent * 10;
-        }
-
-        if (response) {
-            price = response.property.rented.cost_per_day * 10;
-        }
+        let baseHappy = 0;
+        let suggestedDailyRent = 0;
 
         const allOwnedPropertiesWithLogs = GM_getValue("OWNED_PROPERTIES_WITH_LOGS", null);
         if (allOwnedPropertiesWithLogs) {
-            console.dir(allOwnedPropertiesWithLogs[propertyId]);
+            if (allOwnedPropertiesWithLogs[propertyId]?.property) {
+                const property = allOwnedPropertiesWithLogs[propertyId].property;
+                const propertyGuide = getPropertyGuide(property);
+
+                price = property.cost_per_day * 10;
+                baseHappy = propertyGuide.baseHappy;
+                suggestedDailyRent = propertyGuide.suggestedDailyRent;
+            }
 
             if (allOwnedPropertiesWithLogs[propertyId]?.rentMarketAcceptLog) {
                 const marketRentAcceptLog = allOwnedPropertiesWithLogs[propertyId].rentMarketAcceptLog;
@@ -1117,7 +1059,7 @@
         if (CurrentState === State.PROCESSING_URL_MATCH) {
             const propertyTitleDiv = document.querySelector(`.property-info-cont div[role="heading"]`);
             const newSpan = document.createElement(`span`);
-            newSpan.innerText = `(${propertyGuide.baseHappy}) Suggested: $${getFormattedMoneyString(propertyGuide.suggestedDailyRent)} / day`;
+            newSpan.innerText = `(${baseHappy}) Suggested: $${getFormattedMoneyString(suggestedDailyRent)} / day`;
             newSpan.style.color = 'red';
             newSpan.style.marginLeft = '5px';
             newSpan.style.marginRight = '5px';
@@ -1147,7 +1089,7 @@
         }
 
         if (CurrentState === State.HAS_PROCESSED_PROP_DAYS) {
-            if ((price / daysToExtend) !== propertyGuide.suggestedDailyRent) {
+            if ((price / daysToExtend) !== suggestedDailyRent) {
                 const costExtensionLabel = document.querySelector(`.offerExtension-input .cost label.title`);
                 costExtensionLabel.style.color = 'red';
             }
@@ -1156,7 +1098,7 @@
         }
 
         if (CurrentState === State.HAS_PROCESSED_PROP_COST_LABEL) {
-            if ((price / daysToExtend) !== propertyGuide.suggestedDailyRent) {
+            if ((price / daysToExtend) !== suggestedDailyRent) {
                 const costExtensionContainer = document.querySelector(`.offerExtension-input li.cost`);
                 costExtensionContainer.style.border = "thin solid red";
             }

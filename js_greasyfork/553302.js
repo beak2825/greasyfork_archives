@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fill in profile pictures in the Family Section
 // @namespace    https://github.com/nate-kean/
-// @version      20251106
+// @version      20260127
 // @description  None
 // @author       Nate Kean
 // @match        https://jamesriver.fellowshiponego.com/members/view/*
@@ -14,14 +14,11 @@
 // ==/UserScript==
 
 (function() {
-    for (const initial of document.querySelectorAll(".family-panel div.user-initials")) {
+    for (const initial of document.querySelectorAll(".family-panel div.user-initials, .linked-panel div.user-initials")) {
         const pictureLink = document.createElement("a");
         const holder = initial.parentNode;
         const entry = holder.parentNode;
-        const link = entry.querySelector(`
-            div.family-item-details > p:first-of-type > a,
-            div:nth-child(3) > p:first-of-type > a
-        `).href;
+        const link = entry.querySelector(":not(div) > a").href;
         pictureLink.href = link;
         const picture = document.createElement("img");
         // Hide it until we delete the initials element, to prevent it from showing up under the profile entry.

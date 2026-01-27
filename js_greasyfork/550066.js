@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EH Enhance（E绅士增强）
 // @namespace    http://tampermonkey.net/
-// @version      1.10
+// @version      1.12
 // @description  Scroll to top/comment/bottom, copy gallery title, search selected text, search multiple tags, torrent magnet.（滚动到顶部/讨论区/底部，复制画廊标题，搜索选中文本，多标签搜索，种子磁力链接）
 // @author       ssnangua
 // @match        https://e-hentai.org/*
@@ -63,27 +63,54 @@
   const t = isChinese ? chinese : english;
 
   const EH = location.origin + "/?f_search=%s";
-  const WNACG = "https://www.wnacg.com/search/?q=%s&f=_all&s=create_time_DESC&syn=yes";
+  const WNACG =
+    "https://www.wnacg.com/search/?q=%s&f=_all&s=create_time_DESC&syn=yes";
   const HITOMI = "https://hitomi.la/search.html?%s";
   const YHG = "https://yhg007.com/search-%s-0-0-1.html";
   const ES = "es:%s";
 
   const SEARCH_BAR = [
-    { label: '<img src="https://e-hentai.org/favicon.ico">' + t.search, append: "", url: EH },
     {
-      label: '<img src="https://e-hentai.org/favicon.ico" style="filter: hue-rotate(135deg) brightness(1.5)">' + t.language,
+      label: '<img src="https://e-hentai.org/favicon.ico">' + t.search,
+      append: "",
+      url: EH,
+    },
+    {
+      label:
+        '<img src="https://e-hentai.org/favicon.ico" style="filter: hue-rotate(135deg) brightness(1.5)">' +
+        t.language,
       append: isChinese ? "language:chinese$" : "language:english$",
       url: EH,
     },
     {
-      label: '<img src="https://e-hentai.org/favicon.ico" style="filter: hue-rotate(135deg) invert(1)">' + t.uncensored,
+      label:
+        '<img src="https://e-hentai.org/favicon.ico" style="filter: hue-rotate(135deg) invert(1)">' +
+        t.uncensored,
       append: "other:uncensored$",
       url: EH,
     },
-    { label: '<img src="https://www.wnacg.com/favicon.ico">' + t.wnacg, append: "", url: WNACG },
-    { label: '<img src="https://ltn.gold-usergeneratedcontent.net/favicon-192x192.png">' + t.hitomi, append: "", url: HITOMI },
-    { label: '<img src="https://yhg007.com/static/favicon.ico">' + t.yhg, append: "", url: YHG },
-    { label: '<img src="https://www.voidtools.com/favicon.ico">' + t.es, append: "", url: ES },
+    {
+      label: '<img src="https://www.wnacg.com/favicon.ico">' + t.wnacg,
+      append: "",
+      url: WNACG,
+    },
+    {
+      label:
+        '<img src="https://ltn.gold-usergeneratedcontent.net/favicon-192x192.png">' +
+        t.hitomi,
+      append: "",
+      url: HITOMI,
+    },
+    {
+      label: '<img src="https://yhg007.com/static/favicon.ico">' + t.yhg,
+      append: "",
+      url: YHG,
+    },
+    {
+      label: '<img src="https://www.voidtools.com/favicon.ico">' + t.es,
+      append: "",
+      url: ES,
+    },
   ];
 
   const isListPage = document.querySelector(".itg.gld");
@@ -109,7 +136,8 @@
       const $toCommentBtn = createToolbarButton("💬", t.toComment, $comments);
       let count = $comments.querySelectorAll(".c1").length;
       if (count > 0) {
-        if ($comments.querySelector("#chd a").href.endsWith("#comments")) count += "+";
+        if ($comments.querySelector("#chd a").href.endsWith("#comments"))
+          count += "+";
         const $count = document.createElement("span");
         $count.className = "comments-count";
         $count.textContent = count;
@@ -148,7 +176,8 @@
       $buttons[0].style.marginTop = "20px";
 
       function updateGoToButton() {
-        const [$first, $prev, $next, $last] = document.querySelectorAll("#i4 a");
+        const [$first, $prev, $next, $last] =
+          document.querySelectorAll("#i4 a");
         const $gallery = document.querySelector("#i5 a");
         [$first, $prev, $gallery, $next, $last].forEach(($a, i) => {
           $buttons[i].onclick = $a.onclick || (() => (location.href = $a.href));
@@ -181,9 +210,14 @@
   /**********************************************/
 
   // 标题
-  const host = location.hostname === "e-hentai.org" ? "E-Hentai Galleries" : "ExHentai.org";
+  const host =
+    location.hostname === "e-hentai.org"
+      ? "E-Hentai Galleries"
+      : "ExHentai.org";
 
-  const searches = Object.fromEntries(new URLSearchParams(location.search.slice(1)));
+  const searches = Object.fromEntries(
+    new URLSearchParams(location.search.slice(1)),
+  );
   if (searches.f_search) {
     document.title = `search:${decodeURIComponent(searches.f_search)} - ${host}`;
   }
@@ -221,7 +255,9 @@
         $tag.addEventListener("click", () => {
           $tag.selected = !$tag.selected;
           $tag.parentNode.classList.toggle("selected", $tag.selected);
-          $act2.style.display = $tags.some(($tag) => $tag.selected) ? "" : "none";
+          $act2.style.display = $tags.some(($tag) => $tag.selected)
+            ? ""
+            : "none";
         });
       });
 
@@ -306,8 +342,14 @@
     selectedText = document.getSelection().toString().trim();
     if (selectedText) {
       $searchBar.style.display = "flex";
-      const left = Math.min(e.x, window.innerWidth - $searchBar.offsetWidth - 20);
-      const top = Math.min(e.y + 20, window.innerHeight - $searchBar.offsetHeight);
+      const left = Math.min(
+        e.x,
+        window.innerWidth - $searchBar.offsetWidth - 20,
+      );
+      const top = Math.min(
+        e.y + 20,
+        window.innerHeight - $searchBar.offsetHeight,
+      );
       $searchBar.style.left = left + "px";
       $searchBar.style.top = top + "px";
     } else {
@@ -322,18 +364,56 @@
     return $button;
   }
 
+  document
+    .querySelector("html")
+    .classList.add(
+      location.hostname === "e-hentai.org" ? "enhance-eh" : "enhance-ex",
+    );
+
   GM_addStyle(`
-    .ehs-eh {
+    .enhance-eh {
       --panel-bg: #edebdf;
       --panel-border: 1px solid #5c0d12;
       --tag-selected-bg: #d5c5c6;
       --tag-selected-color: royalblue;
+
+      & .eh-toolbar button, & button.eh-copy {
+        color: #5c0d11;
+        border-radius: 2px;
+        border: 1px solid #767676;
+        background: #efefef;
+        &:hover {
+          background: #e5e5e5;
+        }
+        &:active {
+          background: #f5f5f5;
+        }
+      }
+      button[data-label]::after {
+        color: #5c0d11;
+      }
     }
-    .ehs-ex {
+    .enhance-ex {
       --panel-bg: #4f535b;
       --panel-border: 1px solid #000000;
       --tag-selected-bg: #34353b;
       --tag-selected-color: skyblue;
+
+      & .eh-toolbar button, & button.eh-copy {
+        color: #faf8fa;
+        border-radius: 2px;
+        border: none;
+        background: #6b6b6b;
+        &:hover {
+          background: #7b7b7b;
+        }
+        &:active {
+          background: #616161;
+        }
+      }
+      button[data-label]::after {
+        color: #faf8fa;
+      }
     }
 
     .eh-toolbar {
@@ -378,6 +458,7 @@
           background: red;
           border-radius: 50%;
           padding: 2px;
+          color: #ffffff;
         }
       }
     }
@@ -415,6 +496,10 @@
       }
     }
 
+    body td.tc {
+      user-select: none;
+    }
+
     #taglist td>div a[style="color: blue;"] {
       color: var(--tag-selected-color) !important;
     }
@@ -435,6 +520,14 @@
     #tagmenu_act2 a {
       text-decoration: none;
       font-weight: bold;
+    }
+
+    button[name="torrent_info"] {
+      cursor: pointer;
+    }
+    button[name="torrent_magnet"] {
+      cursor: pointer;
+      margin-top: 2px !important;
     }
   `);
 })();

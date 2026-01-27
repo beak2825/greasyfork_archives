@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Magiczny przesuwacz przedmiotów
 // @namespace    http://tampermonkey.net/
-// @version      0.2.3
+// @version      0.2.4
 // @description  Przesuwa rzeczy z raportów na 20 półkę - trzeba kilkać w pole obok nazwy itemu (pojawi się podkreślenie jak przy linku)
 // @author       Varriz
 // @license      MIT
@@ -33,7 +33,7 @@
   // USTAWIENIA W /?a=settings
   // -------------------------
   (function injectSettingsUI() {
-    if (action !== 'settings') return;
+    if (location.search != "?a=settings") return;
 
     var div = document.getElementsByClassName('hr720')[0];
     if (!div) return;

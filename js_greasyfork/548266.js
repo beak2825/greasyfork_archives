@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Inbox Favicon Notifier for Linear
 // @namespace    http://tampermonkey.net/
-// @version      2025-09-04
+// @version      2026-01-26
 // @description  Changes the favicon to a red icon when there are unread items in the Linear inbox.
 // @author       Blake Stacks
 // @match        https://linear.app/transcend/*
@@ -61,6 +61,11 @@
 
 
       `;
+
+  // State tracking for cross-tab synchronization
+  let lastKnownTimestamp = 0;  // Most recent timestamp we've seen (from any tab)
+  let lastLocalCount = null;   // The count this tab last read from its own DOM
+
   const updateFavicon = (unreadCount) => {
     const faviconElements = [...document.querySelectorAll('link[rel="icon"]')];
     const svgBase64 = btoa(
@@ -97,18 +102,50 @@
         inboxLink.textContent?.trim().match(/^Inbox.*?(\d+)\+?$/)?.[1] || 0
       );
       console.log("Unread inbox count:", unreadCount);
-      // Store in localStorage
-      localStorage.setItem("linearUnreadCount", unreadCount.toString());
-      updateFavicon(unreadCount);
+
+      // Only generate a new timestamp if the count changed in THIS tab's DOM
+      if (unreadCount !== lastLocalCount) {
+        lastLocalCount = unreadCount;
+        const now = Date.now();
+
+        // Only write to localStorage if our timestamp is newer than what's stored
+        try {
+          const stored = JSON.parse(localStorage.getItem("linearUnreadCount"));
+          if (stored && stored.timestamp >= now) {
+            // Storage already has a newer or equal timestamp, don't overwrite
+            // But do update our local tracking and favicon
+            lastKnownTimestamp = stored.timestamp;
+            updateFavicon(stored.count);
+            return;
+          }
+        } catch (e) {
+          // No valid stored data, safe to write
+        }
+
+        lastKnownTimestamp = now;
+        localStorage.setItem("linearUnreadCount", JSON.stringify({
+          count: unreadCount,
+          timestamp: now
+        }));
+        updateFavicon(unreadCount);
+      }
+      // If count unchanged, do nothing - don't broadcast stale data
     }
   };
 
   // Listen for changes to localStorage
   window.addEventListener("storage", (event) => {
     if (event.key === "linearUnreadCount") {
-      const newCount = parseInt(event.newValue, 10) || 0;
-      console.log(`Storage event: linearUnreadCount changed to ${newCount}`);
-      updateFavicon(newCount);
+      try {
+        const data = JSON.parse(event.newValue);
+        if (data.timestamp > lastKnownTimestamp) {
+          lastKnownTimestamp = data.timestamp;
+          console.log(`Storage event: linearUnreadCount changed to ${data.count}`);
+          updateFavicon(data.count);
+        }
+      } catch (e) {
+        // Handle legacy format or parse errors
+      }
     }
   });
 

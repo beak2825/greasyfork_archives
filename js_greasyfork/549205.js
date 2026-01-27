@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name BLACK RUSSIA Stavropol || Скрипт Кураторов форума
 // @namespace https://forum.blackrussia.online
-// @version 1.0
-// @description Специально для BlackRussia || Stavropol
+// @version 1.1
+// @description Специально для BlackRussia By A.Mackenzie || Stavropol 
 // @author August_Mackenzie
 // @match https://forum.blackrussia.online/threads/*
 // @include https://forum.blackrussia.online/threads/

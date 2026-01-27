@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Get Zyxel Circle User Info
 // @namespace    http://tampermonkey.net/
-// @version      2.8
+// @version      2.9
 // @description  Get Zyxel Circle User Info with Web API and Digital Clock
 // @author       Rick.Chen
 // @match        https://beta.circle.zyxel.com/*
@@ -72,12 +72,26 @@ v2.8  - Updated for Vue 3 Composition API architecture
       - Enhanced regex patterns to handle Vue 3 ref() with various formats (with/without const, spaces, semicolons)
       - Improved code structure and added comprehensive comments
       - Maintained backward compatibility with legacy formats
+v2.9  - Added "Copy All" button feature
+      - One-click button to copy all panel content to clipboard
+      - Includes Account, Circle Account ID, MZC Account ID, PAYG, POSTPAY, Country, and Current Time
+      - Uses modern Clipboard API with execCommand fallback for compatibility
+      - Visual feedback when content is successfully copied
+      - Enhanced MZC Account ID extraction to work on all pages
+      - Added API fallback mechanism for MZC Account ID on non-dashboard pages
+      - Improved error handling and code documentation
 */
 
 (function() {
     'use strict';
 
     let debug = 0; // 1=debug mode, 0=normal mode
+
+    // ====== Constants ======
+    const API_BASE_URL = 'https://beta.circle.zyxel.com';
+    const INIT_DELAY = 500; // Delay in milliseconds before initializing data fetch
+    const SPA_MONITOR_INTERVAL = 1000; // Interval in milliseconds for SPA page detection
+    const COPY_FEEDBACK_DURATION = 2000; // Duration in milliseconds for copy button feedback
 
     // ====== Control Panel UI ======
     GM_addStyle(`
@@ -147,6 +161,22 @@ v2.8  - Updated for Vue 3 Composition API architecture
         .refresh-btn:hover {
             background: #005a87;
         }
+        .copy-all-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .copy-all-btn:hover {
+            background: #218838;
+        }
+        .copy-all-btn:active {
+            background: #1e7e34;
+        }
     `);
 
     let panel = null;
@@ -191,6 +221,7 @@ v2.8  - Updated for Vue 3 Composition API architecture
                     <div class="clock-label">Current Time:</div>
                     <div class="clock-value" id="current-time">Loading...</div>
                 </div>
+                <button id="copy-all-btn" class="copy-all-btn">Copy All</button>
             </div>
         `;
         document.body.appendChild(panel);
@@ -200,6 +231,12 @@ v2.8  - Updated for Vue 3 Composition API architecture
         const minimizeBtn = panel.querySelector('#minimize-user-info-panel');
         if (minimizeBtn) {
             minimizeBtn.addEventListener('click', showMiniButton);
+        }
+
+        // Copy All Button
+        const copyAllBtn = panel.querySelector('#copy-all-btn');
+        if (copyAllBtn) {
+            copyAllBtn.addEventListener('click', copyAllContent);
         }
 
         // Check if clock element exists
@@ -300,8 +337,126 @@ v2.8  - Updated for Vue 3 Composition API architecture
         }
     }
 
+    // ====== Copy All Content ======
+    /**
+     * Copy all panel content to clipboard.
+     *
+     * Collects all displayed information and formats it as text,
+     * then copies to clipboard using Clipboard API or fallback method.
+     *
+     * Args:
+     *     None
+     *
+     * Returns:
+     *     None
+     */
+    function copyAllContent() {
+        const getElementText = (id) => {
+            const element = document.getElementById(id);
+            return element ? element.textContent.trim() : 'N/A';
+        };
+
+        const content = [
+            `Account: ${getElementText('username')}`,
+            `Circle Account ID: ${getElementText('account-id')}`,
+            `MZC Account ID: ${getElementText('mzc-account-id')}`,
+            `PAYG: ${getElementText('payg-setting-value')}`,
+            `POSTPAY: ${getElementText('postpayenable-value')}`,
+            `Country: ${getElementText('country-name')}`,
+            `Current Time: ${getElementText('current-time')}`
+        ].join('\n');
+
+        // Try modern Clipboard API first
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(content).then(() => {
+                if (debug) console.log('[Copy] Content copied to clipboard');
+                // Show feedback
+                const btn = document.getElementById('copy-all-btn');
+                if (btn) {
+                    const originalText = btn.textContent;
+                    btn.textContent = 'Copied!';
+                    btn.style.background = '#218838';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '#28a745';
+                    }, COPY_FEEDBACK_DURATION);
+                }
+            }).catch(err => {
+                if (debug) console.error('[Copy] Clipboard API failed:', err);
+                // Fallback to execCommand
+                copyToClipboardFallback(content);
+            });
+        } else {
+            // Fallback to execCommand for older browsers
+            copyToClipboardFallback(content);
+        }
+    }
+
+    /**
+     * Fallback method to copy text to clipboard using execCommand.
+     *
+     * Creates a temporary textarea element, sets its value, selects it,
+     * executes copy command, then removes the element.
+     *
+     * Args:
+     *     text: string - The text to copy
+     *
+     * Returns:
+     *     None
+     */
+    function copyToClipboardFallback(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-999999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        textarea.setSelectionRange(0, 99999); // For mobile devices
+
+        try {
+            const successful = document.execCommand('copy');
+            if (successful) {
+                if (debug) console.log('[Copy] Content copied using execCommand');
+                // Show feedback
+                const btn = document.getElementById('copy-all-btn');
+                if (btn) {
+                    const originalText = btn.textContent;
+                    btn.textContent = 'Copied!';
+                    btn.style.background = '#218838';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '#28a745';
+                    }, COPY_FEEDBACK_DURATION);
+                }
+            } else {
+                if (debug) console.error('[Copy] execCommand failed');
+            }
+        } catch (err) {
+            if (debug) console.error('[Copy] execCommand error:', err);
+        } finally {
+            // Safely remove the temporary textarea element
+            if (textarea && textarea.parentNode) {
+                document.body.removeChild(textarea);
+            }
+        }
+    }
+
     // ====== Minimize/Restore Panel ======
     let miniBtn = null;
+    
+    /**
+     * Hide the main panel and show the minimize button.
+     *
+     * Hides the user info panel and displays a small button
+     * in the top-right corner to restore it.
+     *
+     * Args:
+     *     None
+     *
+     * Returns:
+     *     None
+     */
     function showMiniButton() {
         if (panel) panel.style.display = 'none';
         if (!miniBtn) {
@@ -326,6 +481,18 @@ v2.8  - Updated for Vue 3 Composition API architecture
         isPanelVisible = false;
         GM_setValue('panel_visible', false);
     }
+    
+    /**
+     * Restore the main panel and hide the minimize button.
+     *
+     * Shows the user info panel again and hides the minimize button.
+     *
+     * Args:
+     *     None
+     *
+     * Returns:
+     *     None
+     */
     function restorePanel() {
         if (panel) panel.style.display = 'block';
         if (miniBtn) miniBtn.style.display = 'none';
@@ -334,6 +501,18 @@ v2.8  - Updated for Vue 3 Composition API architecture
     }
 
     // ====== Show/Hide Panel ======
+    /**
+     * Show the user info panel.
+     *
+     * Displays the panel and hides the minimize button if it exists.
+     * Updates the visibility state in GM storage.
+     *
+     * Args:
+     *     None
+     *
+     * Returns:
+     *     None
+     */
     function showPanel() {
         if (panel) {
             panel.style.display = 'block';
@@ -342,11 +521,35 @@ v2.8  - Updated for Vue 3 Composition API architecture
             GM_setValue('panel_visible', true);
         }
     }
+    
+    /**
+     * Hide the user info panel.
+     *
+     * Wrapper function that calls showMiniButton to hide the panel.
+     *
+     * Args:
+     *     None
+     *
+     * Returns:
+     *     None
+     */
     function hidePanel() {
         showMiniButton();
     }
 
     // ====== Update Display ======
+    /**
+     * Update the username display in the panel.
+     *
+     * Updates the username element with the provided value and logs the update.
+     *
+     * Args:
+     *     value: string - The username value to display
+     *     source: string - The source of the data (for logging)
+     *
+     * Returns:
+     *     None
+     */
     function updateUsernameDisplay(value, source) {
         const element = document.getElementById('username');
         if (element) {
@@ -356,6 +559,19 @@ v2.8  - Updated for Vue 3 Composition API architecture
             if (debug) console.error('Username element not found');
         }
     }
+    
+    /**
+     * Update the account ID display in the panel.
+     *
+     * Updates the account ID element with the provided value and logs the update.
+     *
+     * Args:
+     *     value: string - The account ID value to display
+     *     source: string - The source of the data (for logging)
+     *
+     * Returns:
+     *     None
+     */
     function updateAccountIdDisplay(value, source) {
         const element = document.getElementById('account-id');
         if (element) {
@@ -365,6 +581,19 @@ v2.8  - Updated for Vue 3 Composition API architecture
             if (debug) console.error('account-id element not found');
         }
     }
+    
+    /**
+     * Update the country name display in the panel.
+     *
+     * Updates the country name element with the provided value and logs the update.
+     *
+     * Args:
+     *     value: string - The country name value to display
+     *     source: string - The source of the data (for logging)
+     *
+     * Returns:
+     *     None
+     */
     function updateCountryDisplay(value, source) {
         const element = document.getElementById('country-name');
         if (element) {
@@ -376,11 +605,24 @@ v2.8  - Updated for Vue 3 Composition API architecture
     }
 
     // ====== API and DOM Fetch ======
+    /**
+     * Fetch account ID and related user information from API.
+     *
+     * Attempts to fetch user information from the new API endpoint first,
+     * then falls back to the old API if the new one fails. Also extracts
+     * country name and username from the API responses.
+     *
+     * Args:
+     *     None
+     *
+     * Returns:
+     *     None
+     */
     function fetchAccountIdFromAPI() {
         // Try new API endpoint first
         GM_xmlhttpRequest({
             method: 'GET',
-            url: 'https://beta.circle.zyxel.com/setting/get_user_info',
+            url: `${API_BASE_URL}/setting/get_user_info`,
             onload: function(response) {
                 try {
                     const data = JSON.parse(response.responseText);
@@ -419,10 +661,22 @@ v2.8  - Updated for Vue 3 Composition API architecture
         });
     }
 
+    /**
+     * Fetch country name from the old API endpoint.
+     *
+     * Attempts to get country_name from /user/profile API endpoint
+     * as a fallback when the new API doesn't provide it.
+     *
+     * Args:
+     *     None
+     *
+     * Returns:
+     *     None
+     */
     function fetchCountryFromOldAPI() {
         GM_xmlhttpRequest({
             method: 'GET',
-            url: 'https://beta.circle.zyxel.com/user/profile',
+            url: `${API_BASE_URL}/user/profile`,
             onload: function(response) {
                 try {
                     const data = JSON.parse(response.responseText);
@@ -456,10 +710,22 @@ v2.8  - Updated for Vue 3 Composition API architecture
         });
     }
 
+    /**
+     * Fetch account ID and user information from the old API endpoint.
+     *
+     * Fallback function that fetches username, account_id, and country_name
+     * from /user/profile API when the new API endpoint fails.
+     *
+     * Args:
+     *     None
+     *
+     * Returns:
+     *     None
+     */
     function fetchAccountIdFromOldAPI() {
         GM_xmlhttpRequest({
             method: 'GET',
-            url: 'https://beta.circle.zyxel.com/user/profile',
+            url: `${API_BASE_URL}/user/profile`,
             onload: function(response) {
                 try {
                     const data = JSON.parse(response.responseText);
@@ -533,12 +799,15 @@ v2.8  - Updated for Vue 3 Composition API architecture
     /**
      * Generic DOM search function for any field.
      *
-     * Searches for a field value in various DOM locations.
+     * Searches for a field value in various DOM locations using multiple methods:
+     * 1. Regex patterns to match JavaScript variable assignments
+     * 2. Data attributes in HTML elements
+     * 3. Meta tags and input elements
      *
      * Args:
-     *     fieldName: string - The field name to search for
-     *     elementId: string - The element ID to update
-     *     storageKey: string - The GM storage key
+     *     fieldName: string - The field name to search for (e.g., 'account_id')
+     *     elementId: string - The element ID to update (unused, kept for compatibility)
+     *     storageKey: string - The GM storage key (unused, kept for compatibility)
      *
      * Returns:
      *     string|null: The found value or null if not found
@@ -589,7 +858,18 @@ v2.8  - Updated for Vue 3 Composition API architecture
         return null;
     }
 
-    // Backup to get account_id
+    /**
+     * Extract account_id from DOM using generic search function.
+     *
+     * Searches for account_id in the page HTML/DOM and updates
+     * the display if found. Falls back to DOM search when API fails.
+     *
+     * Args:
+     *     None
+     *
+     * Returns:
+     *     None
+     */
     function extractAccountIdFromDOM() {
         const value = searchFieldInDOM('account_id', 'account-id', 'account_id');
         if (value) {
@@ -601,6 +881,18 @@ v2.8  - Updated for Vue 3 Composition API architecture
         }
     }
 
+    /**
+     * Extract username from DOM by searching for userEmail variable.
+     *
+     * Searches for the userEmail JavaScript variable in the page HTML
+     * and uses it as the username. This is a fallback when API doesn't provide username.
+     *
+     * Args:
+     *     None
+     *
+     * Returns:
+     *     None
+     */
     function extractUsernameFromDOM() {
         const html = document.documentElement.outerHTML;
 
@@ -616,6 +908,18 @@ v2.8  - Updated for Vue 3 Composition API architecture
         }
     }
 
+    /**
+     * Extract country name from DOM using generic search function.
+     *
+     * Searches for country_name in the page HTML/DOM and updates
+     * the display if found. Falls back to DOM search when API fails.
+     *
+     * Args:
+     *     None
+     *
+     * Returns:
+     *     None
+     */
     function extractCountryFromDOM() {
         const value = searchFieldInDOM('country_name', 'country-name', 'country_name');
         if (value) {
@@ -631,7 +935,10 @@ v2.8  - Updated for Vue 3 Composition API architecture
      * Extract mzc_account_id from Vue 3 Composition API code.
      *
      * Searches for mzc_account_id value in HTML using regex patterns to match
-     * Vue 3 ref() syntax. Only executes on dashboard page, shows 'N/A' on other pages.
+     * Vue 3 ref() syntax. Works on all pages by trying multiple methods:
+     * 1. Check GM storage for previously saved value
+     * 2. Extract from current page HTML
+     * 3. Fetch from dashboard API endpoint (for non-dashboard pages)
      *
      * Supported formats:
      *   - const mzc_account_id = ref('value');
@@ -645,23 +952,22 @@ v2.8  - Updated for Vue 3 Composition API architecture
      *     None
      *
      * Note:
-     *     Only dashboard page extracts the value, other pages display 'N/A (Dashboard only)'.
      *     Updates both the UI element and GM storage if value is found.
      */
     function extractMzcAccountId() {
         const mzcAccountIdEl = document.getElementById('mzc-account-id');
+        if (!mzcAccountIdEl) return;
         
-        // Check if we're on dashboard page
-        if (!window.location.pathname.includes('/dashboard')) {
-            if (mzcAccountIdEl) {
-                mzcAccountIdEl.textContent = 'N/A (Dashboard only)';
-            }
-            return;
+        // Step 1: Try to get from GM storage first (previously saved value)
+        const savedValue = GM_getValue('mzc_account_id', null);
+        if (savedValue) {
+            mzcAccountIdEl.textContent = savedValue;
+            if (debug) console.log('[Tampermonkey] Using saved mzc_account_id from storage:', savedValue);
         }
         
-        // Get full HTML content for pattern matching
+        // Step 2: Try to extract from current page HTML
         const html = document.documentElement.outerHTML;
-        let mzcAccountIdValue = 'Not found';
+        let mzcAccountIdValue = null;
         
         // Regex patterns to match Vue 3 ref() syntax
         // Pattern 1: mzc_account_id = ref('value') - handles with/without const, spaces, semicolon
@@ -688,7 +994,21 @@ v2.8  - Updated for Vue 3 Composition API architecture
             }
         }
         
-        // Debug output if pattern matching failed
+        // If found in HTML, update display and save
+        if (mzcAccountIdValue) {
+            mzcAccountIdEl.textContent = mzcAccountIdValue;
+            GM_setValue('mzc_account_id', mzcAccountIdValue);
+            return;
+        }
+        
+        // Step 3: If not on dashboard page and not found in HTML, try fetching from dashboard API
+        if (!window.location.pathname.includes('/dashboard')) {
+            if (debug) console.log('[Tampermonkey] Not on dashboard page, trying to fetch from API...');
+            fetchMzcAccountIdFromAPI();
+            return;
+        }
+        
+        // Step 4: On dashboard page but not found in HTML
         if (!match) {
             const mzcIndex = html.indexOf('mzc_account_id');
             if (mzcIndex !== -1) {
@@ -712,17 +1032,92 @@ v2.8  - Updated for Vue 3 Composition API architecture
                     console.log('[Tampermonkey] mzc_account_id not found in HTML at all');
                 }
             }
+            
+            // If we have a saved value, keep using it, otherwise show "Not found"
+            if (!savedValue) {
+                mzcAccountIdEl.textContent = 'Not found';
+            }
         }
+    }
+
+    /**
+     * Fetch mzc_account_id from dashboard API endpoint.
+     *
+     * Attempts to get mzc_account_id by fetching the dashboard page HTML
+     * and extracting the value using regex patterns.
+     *
+     * Args:
+     *     None
+     *
+     * Returns:
+     *     None
+     */
+    function fetchMzcAccountIdFromAPI() {
+        const mzcAccountIdEl = document.getElementById('mzc-account-id');
         
-        // Update UI element with extracted value
-        if (mzcAccountIdEl) {
-            mzcAccountIdEl.textContent = mzcAccountIdValue;
-        }
-        
-        // Save to GM storage if value was successfully extracted
-        if (match) {
-            GM_setValue('mzc_account_id', mzcAccountIdValue);
-        }
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: `${API_BASE_URL}/dashboard`,
+            onload: function(response) {
+                try {
+                    const htmlContent = response.responseText;
+                    let mzcAccountIdValue = null;
+                    
+                    // Try the same regex patterns
+                    const patterns = [
+                        /mzc_account_id\s*=\s*ref\s*\(\s*['"`]([^'"`]+)['"`]\s*\)/,
+                        /const\s+mzc_account_id\s*=\s*ref\s*\(\s*['"`]([^'"`]+)['"`]\s*\)/,
+                        /mzc_account_id\s*:\s*['"`]([^'"`]+)['"`]/
+                    ];
+                    
+                    let match = null;
+                    for (let pattern of patterns) {
+                        match = htmlContent.match(pattern);
+                        if (match) {
+                            mzcAccountIdValue = match[1];
+                            break;
+                        }
+                    }
+                    
+                    if (mzcAccountIdValue) {
+                        if (mzcAccountIdEl) {
+                            mzcAccountIdEl.textContent = mzcAccountIdValue;
+                        }
+                        GM_setValue('mzc_account_id', mzcAccountIdValue);
+                        if (debug) console.log('[Tampermonkey] Found mzc_account_id from dashboard API:', mzcAccountIdValue);
+                    } else {
+                        // If API fetch failed, check if we have a saved value
+                        const savedValue = GM_getValue('mzc_account_id', null);
+                        if (savedValue && mzcAccountIdEl) {
+                            mzcAccountIdEl.textContent = savedValue;
+                            if (debug) console.log('[Tampermonkey] Using saved mzc_account_id after API fetch failed');
+                        } else if (mzcAccountIdEl) {
+                            mzcAccountIdEl.textContent = 'Not found';
+                        }
+                        if (debug) console.log('[Tampermonkey] mzc_account_id not found in dashboard API response');
+                    }
+                } catch (e) {
+                    if (debug) console.error('[Tampermonkey] Error parsing dashboard API response:', e);
+                    // Fallback to saved value or show "Not found"
+                    const savedValue = GM_getValue('mzc_account_id', null);
+                    if (savedValue && mzcAccountIdEl) {
+                        mzcAccountIdEl.textContent = savedValue;
+                    } else if (mzcAccountIdEl) {
+                        mzcAccountIdEl.textContent = 'Not found';
+                    }
+                }
+            },
+            onerror: function() {
+                if (debug) console.log('[Tampermonkey] Failed to fetch dashboard API');
+                // Fallback to saved value or show "Not found"
+                const savedValue = GM_getValue('mzc_account_id', null);
+                if (savedValue && mzcAccountIdEl) {
+                    mzcAccountIdEl.textContent = savedValue;
+                } else if (mzcAccountIdEl) {
+                    mzcAccountIdEl.textContent = 'Not found';
+                }
+            }
+        });
     }
 
     // ====== Tampermonkey Menu ======
@@ -766,7 +1161,7 @@ v2.8  - Updated for Vue 3 Composition API architecture
             if (!wasVisible) {
                 hidePanel();
             }
-            setTimeout(initializeDataFetch, 500);
+            setTimeout(initializeDataFetch, INIT_DELAY);
         }
 
         if (document.readyState === 'loading') {
@@ -778,10 +1173,22 @@ v2.8  - Updated for Vue 3 Composition API architecture
     // ====== Start Script ======
     init();
 
+    /**
+     * Fetch PAYG setting value from API endpoint.
+     *
+     * Fetches the /payg/setting page HTML and extracts the paygSetting
+     * value using regex patterns to match Vue 3 ref() syntax.
+     *
+     * Args:
+     *     None
+     *
+     * Returns:
+     *     None
+     */
     function fetchPaygSetting() {
         GM_xmlhttpRequest({
             method: 'GET',
-            url: 'https://beta.circle.zyxel.com/payg/setting',
+            url: `${API_BASE_URL}/payg/setting`,
             onload: function(response) {
                 try {
                     const html = response.responseText;
@@ -821,14 +1228,26 @@ v2.8  - Updated for Vue 3 Composition API architecture
                             }
                         }
                     }
-                    document.getElementById('payg-setting-value').textContent = paygSettingValue;
+                    const paygElement = document.getElementById('payg-setting-value');
+                    if (paygElement) {
+                        paygElement.textContent = paygSettingValue;
+                    } else {
+                        if (debug) console.error('[Tampermonkey] payg-setting-value element not found');
+                    }
                 } catch (e) {
                     if (debug) console.error('[Tampermonkey] Error parsing paygSetting:', e);
-                    document.getElementById('payg-setting-value').textContent = 'Parse error';
+                    const paygElement = document.getElementById('payg-setting-value');
+                    if (paygElement) {
+                        paygElement.textContent = 'Parse error';
+                    }
                 }
             },
             onerror: function() {
-                document.getElementById('payg-setting-value').textContent = 'Request error';
+                if (debug) console.error('[Tampermonkey] Failed to fetch paygSetting');
+                const paygElement = document.getElementById('payg-setting-value');
+                if (paygElement) {
+                    paygElement.textContent = 'Request error';
+                }
             }
         });
     }
@@ -850,10 +1269,10 @@ v2.8  - Updated for Vue 3 Composition API architecture
 
         // Try multiple API endpoints
         const apiEndpoints = [
-            'https://beta.circle.zyxel.com/payg/introduction/detail',
-            'https://beta.circle.zyxel.com/payg/setting',
-            'https://beta.circle.zyxel.com/user/profile',
-            'https://beta.circle.zyxel.com/dashboard'
+            `${API_BASE_URL}/payg/introduction/detail`,
+            `${API_BASE_URL}/payg/setting`,
+            `${API_BASE_URL}/user/profile`,
+            `${API_BASE_URL}/dashboard`
         ];
 
         let currentEndpointIndex = 0;
@@ -1032,14 +1451,25 @@ v2.8  - Updated for Vue 3 Composition API architecture
     }
 
     // ====== SPA Page Detection and POSTPAY Fetching ======
+    /**
+     * Monitor SPA page changes and refresh POSTPAY data when needed.
+     *
+     * Uses setInterval to detect when the user navigates to a license_store/detail
+     * page in the SPA (Single Page Application) and automatically fetches
+     * POSTPAYENABLE status for that page.
+     *
+     * Note:
+     *     This interval runs every second to detect route changes.
+     *     It only triggers when the pathname changes to avoid unnecessary API calls.
+     */
     let lastPath = '';
-    setInterval(() => {
+    let spaMonitorInterval = setInterval(() => {
         if (window.location.pathname.startsWith('/license_store/detail')) {
             if (document.getElementById('postpayenable-value') && lastPath !== window.location.pathname) {
                 lastPath = window.location.pathname;
                 fetchPostPayEnableFromVue();
             }
         }
-    }, 1000);
+    }, SPA_MONITOR_INTERVAL);
 
 })();

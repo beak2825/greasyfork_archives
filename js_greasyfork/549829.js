@@ -1,27 +1,58 @@
 // ==UserScript==
-// @name         老魔已读标记
-// @version      1.3.0
+// @name         JAVLibrary-助手
+// @version      1.0.0
 // @namespace    https://sleazyfork.org/zh-CN/users/1461640-%E6%98%9F%E5%AE%BF%E8%80%81%E9%AD%94
 // @author       星宿老魔
-// @description  JAV Library、Twitter/X、Instagram 媒体已读标记
+// @description  JAV Library 帖子已读标记、收藏、划词高亮
 // @match        *://www.javlibrary.com/*
-// @match        *://x.com/*/media*
-// @match        *://www.instagram.com/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=x.com
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=javlibrary.com
 // @license      GPL-3.0
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant        GM_deleteValue
+// @grant        GM_listValues
 // @grant        GM_openInTab
 // @grant        GM_xmlhttpRequest
 // @grant        GM_registerMenuCommand
 // @connect      api.github.com
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/549829/%E8%80%81%E9%AD%94%E5%B7%B2%E8%AF%BB%E6%A0%87%E8%AE%B0.user.js
-// @updateURL https://update.greasyfork.org/scripts/549829/%E8%80%81%E9%AD%94%E5%B7%B2%E8%AF%BB%E6%A0%87%E8%AE%B0.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/549829/JAVLibrary-%E5%8A%A9%E6%89%8B.user.js
+// @updateURL https://update.greasyfork.org/scripts/549829/JAVLibrary-%E5%8A%A9%E6%89%8B.meta.js
 // ==/UserScript==
 
 !function() {
   "use strict";
+  const CONFIG_STYLES_READ_TOPIC = {
+    opacity: "0.6",
+    background: "#f0f0f0",
+    color: "#888"
+  }, CONFIG_STYLES_READ_BADGE = {
+    color: "#666",
+    fontSize: "12px",
+    marginLeft: "8px",
+    fontWeight: "normal"
+  }, CONFIG_STYLES_UNFINISHED_BADGE = {
+    color: "#d2691e",
+    fontSize: "12px",
+    marginLeft: "8px",
+    fontWeight: "bold"
+  }, CONFIG_STYLES_UNFINISHED_TOPIC = {
+    opacity: "1",
+    background: "#fff7e6",
+    color: "#c05000"
+  }, CONFIG_STYLES_FAV_BUTTON = {
+    color: "#999",
+    fontSize: "12px",
+    marginLeft: "4px",
+    fontWeight: "normal",
+    cursor: "pointer",
+    textDecoration: "underline"
+  }, CONFIG_STYLES_HIGHLIGHT_WORD = {
+    background: "#fffb8f",
+    color: "#d48806",
+    padding: "0 2px",
+    borderRadius: "2px"
+  }, CONFIG_SELECTORS_topicLinks = 'a.topictitle[href*="publictopic.php"]', CONFIG_SELECTORS_allTopicLinks = 'a[href*="publictopic.php"]', CONFIG_REGEX_topicId = /publictopic\.php\?id=(\d+)/, CONFIG_TEXT_readBadge = "[已读]", CONFIG_TEXT_unfinishedBadge = "[已读未完]", CONFIG_TEXT_favButton = "[收藏]", CONFIG_TEXT_unfavButton = "[取消收藏]", CONFIG_GIST_TOKEN_KEY = "jav_gist_token", CONFIG_GIST_ID_KEY = "jav_gist_id", CONFIG_GIST_FILENAME = "jav_library_backup.json", CONFIG_GIST_DESCRIPTION = "JAVLibrary-助手 数据备份", CONFIG_GIST_LAST_BACKUP_KEY = "jav_gist_last_backup";
   class Storage {
     static get(key, defaultValue = null) {
       try {
@@ -58,435 +89,132 @@
         return [];
       }
     }
-    static migrateFromLocalStorage(key, deleteAfterMigration = !0) {
-      try {
-        const localValue = localStorage.getItem(key);
-        if (null !== localValue) {
-          try {
-            const parsed = JSON.parse(localValue);
-            this.set(key, parsed);
-          } catch {
-            GM_setValue(key, localValue);
+  }
+  class GistAPI {
+    static async request(token, config) {
+      if (!token) throw new Error("GitHub Token 未提供");
+      return new Promise((resolve, reject) => {
+        GM_xmlhttpRequest({
+          ...config,
+          headers: {
+            ...config.headers,
+            Authorization: `token ${token}`,
+            Accept: "application/vnd.github.v3+json"
+          },
+          onload: res => {
+            res.status >= 200 && res.status < 300 ? resolve(res) : reject(res);
+          },
+          onerror: err => reject(err)
+        });
+      });
+    }
+    static async getFile(token, gistId, filename) {
+      if (!gistId) throw new Error("Gist ID 未提供");
+      const response = await this.request(token, {
+        method: "GET",
+        url: `https://api.github.com/gists/${gistId}`
+      }), gistData = JSON.parse(response.responseText);
+      return gistData.files?.[filename] || null;
+    }
+    static async updateFile(token, gistId, filename, content) {
+      if (!gistId) throw new Error("Gist ID 未提供");
+      return await this.request(token, {
+        method: "PATCH",
+        url: `https://api.github.com/gists/${gistId}`,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        data: JSON.stringify({
+          files: {
+            [filename]: {
+              content: content
+            }
           }
-          return deleteAfterMigration && localStorage.removeItem(key), !0;
-        }
-        return !1;
-      } catch (error) {
-        return !1;
-      }
+        })
+      }), !0;
+    }
+    static async createGist(token, filename, content, description) {
+      const response = await this.request(token, {
+        method: "POST",
+        url: "https://api.github.com/gists",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        data: JSON.stringify({
+          description: description,
+          public: !1,
+          files: {
+            [filename]: {
+              content: content
+            }
+          }
+        })
+      });
+      return JSON.parse(response.responseText).id;
     }
   }
-  function addStyles(css, id) {
-    if (id) {
-      const existing = document.getElementById(id);
-      if (existing) return existing;
+  const _Toast = class {
+    static initContainer() {
+      return this.container || (this.container = document.createElement("div"), this.container.id = "toast-container", 
+      Object.assign(this.container.style, {
+        position: "fixed",
+        top: "20px",
+        right: "20px",
+        zIndex: "99999",
+        pointerEvents: "none"
+      }), document.body.appendChild(this.container)), this.container;
     }
-    const style = document.createElement("style");
-    return id && (style.id = id), style.textContent = css, document.head.appendChild(style), 
-    style;
-  }
-  const THEME_STYLES = {
-    media: {
-      container: {
-        position: "relative"
-      },
-      badge: {
-        content: "✓ 已读",
-        position: "absolute",
-        background: "linear-gradient(135deg, #00ba7c, #00a06a)",
-        color: "#fff",
-        padding: "4px 10px",
-        borderRadius: "12px",
-        fontSize: "12px",
-        fontWeight: "600",
-        bottom: "8px",
-        left: "8px",
-        boxShadow: "0 2px 8px rgba(0, 186, 124, 0.4)"
-      },
-      item: {
-        opacity: .75
-      }
-    },
-    list: {
-      container: {
-        position: "relative"
-      },
-      badge: {
-        content: "[已读]",
-        position: "inline",
-        background: "transparent",
-        color: "#666",
-        padding: "0",
-        borderRadius: "0",
-        fontSize: "12px",
-        fontWeight: "normal",
-        marginLeft: "8px"
-      },
-      item: {
-        opacity: .6
-      }
-    },
-    minimal: {
-      container: {
-        position: "relative"
-      },
-      badge: {
-        content: "✓",
-        position: "absolute",
-        background: "rgba(0, 0, 0, 0.6)",
-        color: "#00ba7c",
-        padding: "2px 6px",
-        borderRadius: "4px",
+    static show(message, type = "info", duration = 4e3) {
+      const container = this.initContainer(), toast = document.createElement("div");
+      return toast.textContent = message, Object.assign(toast.style, {
+        padding: "12px 20px",
+        marginBottom: "10px",
+        borderRadius: "6px",
+        color: "white",
+        boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
+        opacity: "0",
+        transform: "translateX(100%)",
+        transition: "all 0.3s ease-out",
         fontSize: "14px",
-        fontWeight: "900",
-        bottom: "8px",
-        left: "8px",
-        border: "1px solid #00ba7c"
-      },
-      item: {
-        opacity: .8
-      }
+        maxWidth: "300px",
+        wordWrap: "break-word",
+        pointerEvents: "auto",
+        cursor: "pointer"
+      }), toast.style.backgroundColor = {
+        success: "#10B981",
+        error: "#EF4444",
+        warning: "#F59E0B",
+        info: "#3B82F6"
+      }[type], toast.addEventListener("click", () => this.removeToast(toast)), container.appendChild(toast), 
+      setTimeout(() => {
+        toast.style.opacity = "1", toast.style.transform = "translateX(0)";
+      }, 10), duration > 0 && setTimeout(() => this.removeToast(toast), duration), toast;
+    }
+    static removeToast(toast) {
+      toast.style.opacity = "0", toast.style.transform = "translateX(100%)", setTimeout(() => toast.remove(), 300);
+    }
+    static success(message, duration = 4e3) {
+      return this.show(message, "success", duration);
+    }
+    static error(message, duration = 5e3) {
+      return this.show(message, "error", duration);
+    }
+    static warning(message, duration = 4e3) {
+      return this.show(message, "warning", duration);
+    }
+    static info(message, duration = 3e3) {
+      return this.show(message, "info", duration);
     }
   };
-  class BaseReadMark {
-    constructor(config) {
-      this.observer = null, this.processedElements = new WeakSet, this.debounceTimer = null, 
-      this.config = config, this.readMedia = this.getReadMedia();
-    }
-    init() {
-      this.injectStyles(), this.processMediaItems(), this.setupObserver(), this.setupUrlListener(), 
-      this.onInit();
-    }
-    onInit() {}
-    getReadMedia() {
-      try {
-        const data = Storage.get(this.config.storageKey, []) || [];
-        return new Set(data);
-      } catch (error) {
-        return new Set;
-      }
-    }
-    saveReadMedia() {
-      try {
-        Storage.set(this.config.storageKey, Array.from(this.readMedia));
-      } catch (error) {}
-    }
-    markAsRead(mediaId) {
-      this.readMedia.has(mediaId) || (this.readMedia.add(mediaId), this.saveReadMedia());
-    }
-    isRead(mediaId) {
-      return this.readMedia.has(mediaId);
-    }
-    injectStyles() {
-      addStyles(this.generateStyles(), `${this.config.cssPrefix}-read-mark-styles`);
-    }
-    generateStyles() {
-      return function(cssPrefix, theme) {
-        const style = THEME_STYLES[theme], readClass = `${cssPrefix}-read`;
-        let css = `\n    /* 已读标记容器样式 - ${theme}主题 */\n    .${readClass} {\n      position: ${style.container.position};\n    }\n  `;
-        return "absolute" === style.badge.position && (css += `\n    /* 已读标签 - 悬浮定位 */\n    .${readClass}::after {\n      content: '${style.badge.content}';\n      position: absolute;\n      bottom: ${style.badge.bottom};\n      left: ${style.badge.left};\n      background: ${style.badge.background};\n      color: ${style.badge.color};\n      padding: ${style.badge.padding};\n      border-radius: ${style.badge.borderRadius};\n      font-size: ${style.badge.fontSize};\n      font-weight: ${style.badge.fontWeight};\n      pointer-events: none;\n      z-index: 10;\n      ${style.badge.boxShadow ? `box-shadow: ${style.badge.boxShadow};` : ""}\n      ${style.badge.border ? `border: ${style.badge.border};` : ""}\n      letter-spacing: 0.5px;\n    }\n    `), 
-        css += `\n    /* 已读项目样式 */\n    .${readClass} img {\n      opacity: ${style.item.opacity};\n    }\n  `, 
-        css;
-      }(this.config.cssPrefix, this.config.theme);
-    }
-    applyReadStyle(element) {
-      const container = this.findMediaContainer(element);
-      if (container) {
-        const readClass = `${this.config.cssPrefix}-read`;
-        container.classList.contains(readClass) || container.classList.add(readClass);
-      }
-    }
-    setupObserver() {
-      this.observer = new MutationObserver(mutations => {
-        let hasNewNodes = !1;
-        for (const mutation of mutations) if (mutation.addedNodes.length > 0) {
-          hasNewNodes = !0;
-          break;
-        }
-        hasNewNodes && this.debounceProcess();
-      }), this.observer.observe(document.body, {
-        childList: !0,
-        subtree: !0
-      });
-    }
-    debounceProcess() {
-      this.debounceTimer && clearTimeout(this.debounceTimer), this.debounceTimer = window.setTimeout(() => {
-        this.processMediaItems(), this.onDebounceProcess();
-      }, 200);
-    }
-    onDebounceProcess() {}
-    setupUrlListener() {
-      const originalPushState = history.pushState, originalReplaceState = history.replaceState, self = this;
-      history.pushState = function(...args) {
-        originalPushState.apply(this, args), self.onUrlChange();
-      }, history.replaceState = function(...args) {
-        originalReplaceState.apply(this, args), self.onUrlChange();
-      }, window.addEventListener("popstate", () => this.onUrlChange());
-    }
-    onUrlChange() {
-      this.isValidPage() && setTimeout(() => this.processMediaItems(), 500);
-    }
-    destroy() {
-      this.observer && (this.observer.disconnect(), this.observer = null), this.debounceTimer && (clearTimeout(this.debounceTimer), 
-      this.debounceTimer = null), this.onDestroy();
-    }
-    onDestroy() {}
-  }
-  const CONFIG_STORAGE_GM_GITHUB_TOKEN_KEY = "jav_readmark_github_token", CONFIG_STORAGE_GM_GIST_ID_KEY = "jav_readmark_gist_id", CONFIG_STORAGE_LAST_AUTO_BACKUP_DATE = "jav_readmark_last_auto_backup", CONFIG_GIST_FILENAME = "jav_readmark_backup.json", CONFIG_GIST_DESCRIPTION = "JAV已读标记备份数据", CONFIG_UI_DIALOG = {
-    SETTINGS_Z_INDEX: "99999"
-  }, CONFIG_STYLES_READ_TOPIC = {
-    opacity: "0.6",
-    background: "#f0f0f0",
-    color: "#888"
-  }, CONFIG_STYLES_READ_BADGE = {
-    color: "#666",
-    fontSize: "12px",
-    marginLeft: "8px",
-    fontWeight: "normal"
-  }, CONFIG_STYLES_UNFINISHED_BADGE = {
-    color: "#d2691e",
-    fontSize: "12px",
-    marginLeft: "8px",
-    fontWeight: "bold"
-  }, CONFIG_STYLES_UNFINISHED_TOPIC = {
-    opacity: "1",
-    background: "#fff7e6",
-    color: "#c05000"
-  }, CONFIG_STYLES_FAV_BUTTON = {
-    color: "#999",
-    fontSize: "12px",
-    marginLeft: "4px",
-    fontWeight: "normal",
-    cursor: "pointer",
-    textDecoration: "underline"
-  }, CONFIG_STYLES_HIGHLIGHT_WORD = {
-    background: "#fffb8f",
-    color: "#d48806",
-    padding: "0 2px",
-    borderRadius: "2px"
-  }, CONFIG_SELECTORS_topicLinks = 'a.topictitle[href*="publictopic.php"]', CONFIG_SELECTORS_allTopicLinks = 'a[href*="publictopic.php"]', CONFIG_REGEX_topicId = /publictopic\.php\?id=(\d+)/, CONFIG_TEXT_readBadge = "[已读]", CONFIG_TEXT_unfinishedBadge = "[已读未完]", CONFIG_TEXT_favButton = "[收藏]", CONFIG_TEXT_unfavButton = "[取消收藏]", TWITTER_CONFIG = {
-    name: "Twitter",
-    storageKey: "laomo_twitter_read_media",
-    cssPrefix: "twitter-media-container",
-    theme: "media",
-    features: {
-      scrollRestore: !0,
-      unlockDrag: !1,
-      favorite: !1,
-      highlight: !1
-    }
-  }, INSTAGRAM_CONFIG = {
-    name: "Instagram",
-    storageKey: "laomo_instagram_read_media",
-    cssPrefix: "instagram-media-container",
-    theme: "minimal",
-    features: {
-      scrollRestore: !1,
-      unlockDrag: !0,
-      favorite: !1,
-      highlight: !1
-    }
-  };
-  class TwitterReadMark extends BaseReadMark {
-    constructor() {
-      super(TWITTER_CONFIG), this.scrollPositions = {}, this.saveScrollTimer = null, this.restoreButton = null;
-    }
-    onInit() {
-      this.loadScrollPositions(), this.setupScrollSave(), this.createRestoreButton();
-    }
-    extractMediaId(src) {
-      if (!src) return null;
-      const mediaMatch = src.match(/\/media\/([A-Za-z0-9_-]+)/);
-      if (mediaMatch) return mediaMatch[1];
-      const gifMatch = src.match(/\/tweet_video_thumb\/([A-Za-z0-9_-]+)/);
-      if (gifMatch) return gifMatch[1];
-      const videoMatch = src.match(/\/ext_tw_video_thumb\/\d+\/pu\/img\/([A-Za-z0-9_-]+)/);
-      return videoMatch ? videoMatch[1] : null;
-    }
-    processMediaItems() {
-      const isPhotoPage = window.location.href.includes("/photo/");
-      document.querySelectorAll('img[src*="pbs.twimg.com/media"], img[src*="pbs.twimg.com/tweet_video_thumb"], img[src*="pbs.twimg.com/ext_tw_video_thumb"], img.css-9pa8cd').forEach(img => {
-        this.processMediaImage(img, isPhotoPage);
-      });
-    }
-    findMediaContainer(element) {
-      if (window.location.href.includes("/photo/")) return null;
-      let parent = element.parentElement, depth = 0;
-      for (;parent && depth < 10; ) {
-        if ("LI" === parent.tagName && "listitem" === parent.getAttribute("role")) return parent;
-        parent = parent.parentElement, depth++;
-      }
-      return null;
-    }
-    isValidPage() {
-      const url = window.location.href;
-      return url.includes("x.com") && url.includes("/media");
-    }
-    processMediaImage(img, isPhotoPage) {
-      if (this.processedElements.has(img)) return;
-      this.processedElements.add(img);
-      const src = img.src, mediaId = this.extractMediaId(src);
-      mediaId && (this.isRead(mediaId) && !isPhotoPage && this.applyReadStyle(img), this.bindClickEvent(img, mediaId));
-    }
-    bindClickEvent(img, mediaId) {
-      const clickHandler = () => {
-        this.markAsRead(mediaId), this.applyReadStyle(img);
-      };
-      img.addEventListener("click", clickHandler, !0);
-      const container = this.findMediaContainer(img);
-      container && container !== img && container.addEventListener("click", clickHandler, !0);
-    }
-    generateStyles() {
-      let css = super.generateStyles();
-      return css += "\n      /* 恢复位置按钮样式 */\n      #twitter-scroll-restore-btn {\n        position: fixed;\n        bottom: 160px;\n        right: 20px;\n        width: 48px;\n        height: 48px;\n        background: #fff;\n        border: 1px solid rgb(207, 217, 222);\n        border-radius: 16px;\n        box-shadow: rgba(0, 0, 0, 0.08) 0px 8px 28px;\n        cursor: pointer;\n        z-index: 9999;\n        display: flex;\n        flex-direction: column;\n        align-items: center;\n        justify-content: center;\n        transition: all 0.2s ease;\n        user-select: none;\n      }\n\n      #twitter-scroll-restore-btn:hover {\n        background: rgb(247, 249, 249);\n        border-color: rgb(29, 155, 240);\n      }\n\n      #twitter-scroll-restore-btn:active {\n        transform: scale(0.95);\n      }\n\n      #twitter-scroll-restore-btn .restore-icon {\n        font-size: 20px;\n        color: rgb(29, 155, 240);\n        line-height: 1;\n      }\n\n      #twitter-scroll-restore-btn .restore-text {\n        font-size: 9px;\n        color: rgb(83, 100, 113);\n        margin-top: 2px;\n        white-space: nowrap;\n      }\n    ", 
-      css;
-    }
-    loadScrollPositions() {
-      try {
-        const data = Storage.get("laomo_twitter_scroll_position", {}) || {};
-        this.scrollPositions = data;
-      } catch (error) {
-        this.scrollPositions = {};
-      }
-    }
-    saveScrollPositions() {
-      try {
-        Storage.set("laomo_twitter_scroll_position", this.scrollPositions);
-      } catch (error) {}
-    }
-    extractUsername() {
-      const match = window.location.href.match(/x\.com\/([^\/]+)\/media/);
-      return match ? match[1] : null;
-    }
-    setupScrollSave() {
-      window.addEventListener("scroll", () => {
-        this.saveScrollTimer && clearTimeout(this.saveScrollTimer), this.saveScrollTimer = window.setTimeout(() => {
-          const username = this.extractUsername();
-          if (username) {
-            const scrollY = window.scrollY;
-            this.scrollPositions[username] = scrollY, this.saveScrollPositions(), this.updateRestoreButton();
-          }
-        }, 500);
-      });
-    }
-    createRestoreButton() {
-      this.restoreButton && this.restoreButton.remove();
-      const button = document.createElement("div");
-      button.id = "twitter-scroll-restore-btn", button.innerHTML = '\n      <div class="restore-icon">↓</div>\n      <div class="restore-text">恢复位置</div>\n    ';
-      const username = this.extractUsername(), savedPosition = username ? this.scrollPositions[username] : 0;
-      button.style.display = savedPosition > 100 ? "flex" : "none", button.addEventListener("click", () => this.restoreScrollPosition()), 
-      document.body.appendChild(button), this.restoreButton = button;
-    }
-    updateRestoreButton() {
-      if (!this.restoreButton) return;
-      const username = this.extractUsername(), savedPosition = username ? this.scrollPositions[username] : 0;
-      this.restoreButton.style.display = savedPosition > 100 ? "flex" : "none";
-    }
-    restoreScrollPosition() {
-      const username = this.extractUsername();
-      if (!username) return;
-      const savedPosition = this.scrollPositions[username];
-      !savedPosition || savedPosition <= 0 || (this.setButtonScrolling(!0), this.progressiveScroll(savedPosition));
-    }
-    setButtonScrolling(isScrolling) {
-      if (!this.restoreButton) return;
-      const icon = this.restoreButton.querySelector(".restore-icon"), text = this.restoreButton.querySelector(".restore-text");
-      isScrolling ? (icon && (icon.textContent = "⏳"), text && (text.textContent = "滚动中..."), 
-      this.restoreButton.style.pointerEvents = "none", this.restoreButton.style.opacity = "0.7") : (icon && (icon.textContent = "↓"), 
-      text && (text.textContent = "恢复位置"), this.restoreButton.style.pointerEvents = "auto", 
-      this.restoreButton.style.opacity = "1");
-    }
-    progressiveScroll(targetPosition) {
-      const stepHeight = .8 * window.innerHeight, scrollStep = () => {
-        const currentPosition = window.scrollY, remainingDistance = targetPosition - currentPosition;
-        if (remainingDistance <= 50) return void this.setButtonScrolling(!1);
-        const nextPosition = currentPosition + Math.min(stepHeight, remainingDistance);
-        window.scrollTo({
-          top: nextPosition,
-          behavior: "smooth"
-        }), setTimeout(() => {
-          Math.abs(window.scrollY - nextPosition) > 100 ? setTimeout(scrollStep, 300) : scrollStep();
-        }, 300);
-      };
-      scrollStep();
-    }
-    onDestroy() {
-      this.saveScrollTimer && (clearTimeout(this.saveScrollTimer), this.saveScrollTimer = null), 
-      this.restoreButton && (this.restoreButton.remove(), this.restoreButton = null);
-    }
-  }
-  class InstagramReadMark extends BaseReadMark {
-    constructor() {
-      super(INSTAGRAM_CONFIG), this.unlockedImages = new WeakSet;
-    }
-    onInit() {
-      this.unlockImageDrag();
-    }
-    onDebounceProcess() {
-      this.unlockImageDrag();
-    }
-    extractMediaId(href) {
-      if (!href) return null;
-      const match = href.match(/\/(?:p|reel)\/([A-Za-z0-9_-]+)/);
-      return match ? match[1] : null;
-    }
-    processMediaItems() {
-      document.querySelectorAll('a[href*="/p/"], a[href*="/reel/"]').forEach(link => {
-        this.processPostLink(link);
-      });
-    }
-    findMediaContainer(element) {
-      return element;
-    }
-    isValidPage() {
-      return window.location.href.includes("instagram.com");
-    }
-    processPostLink(link) {
-      if (this.processedElements.has(link)) return;
-      if (this.processedElements.add(link), !link.querySelector("img")) return;
-      const href = link.getAttribute("href");
-      if (!href) return;
-      const mediaId = this.extractMediaId(href);
-      mediaId && (this.isRead(mediaId) && this.applyReadStyle(link), this.bindClickEvent(link, mediaId));
-    }
-    bindClickEvent(element, mediaId) {
-      element.addEventListener("click", () => {
-        this.markAsRead(mediaId), this.applyReadStyle(element);
-      }, !0);
-    }
-    generateStyles() {
-      let css = super.generateStyles();
-      return css += "\n      /* 强制允许图片拖拽 */\n      .instagram-unlocked-image {\n        pointer-events: auto !important;\n      }\n      \n      /* 禁用遮挡层的鼠标事件（穿透）*/\n      .instagram-overlay-disabled {\n        pointer-events: none !important;\n      }\n    ", 
-      css;
-    }
-    unlockImageDrag() {
-      document.querySelectorAll("img.x5yr21d").forEach(img => {
-        if (this.unlockedImages.has(img)) return;
-        img.classList.add("instagram-unlocked-image"), img.setAttribute("draggable", "true"), 
-        this.unlockedImages.add(img);
-        let parent = img.parentElement, count = 0;
-        for (;parent && count < 4; ) {
-          const overlay = parent.querySelector("._aagw");
-          overlay && overlay.classList.add("instagram-overlay-disabled"), parent = parent.parentElement, 
-          count++;
-        }
-      });
-    }
-    setupUrlListener() {
-      let lastUrl = window.location.href;
-      setInterval(() => {
-        const currentUrl = window.location.href;
-        currentUrl !== lastUrl && (lastUrl = currentUrl, this.processMediaItems(), this.unlockImageDrag());
-      }, 1e3);
-    }
-  }
+  _Toast.container = null;
+  let Toast = _Toast;
   function extractTopicId(url) {
     const match = url.match(CONFIG_REGEX_topicId);
     return match ? match[1] : null;
   }
   function getReadTopics() {
     try {
-      const data = Storage.get("laomo_read_topics", []) || [];
+      const data = Storage.get("jav_read_topics", []) || [];
       return new Set(data);
     } catch (error) {
       return new Set;
@@ -494,7 +222,7 @@
   }
   function getUnfinishedTopics() {
     try {
-      const data = Storage.get("laomo_unfinished_topics", []) || [];
+      const data = Storage.get("jav_unfinished_topics", []) || [];
       return new Set(data);
     } catch (error) {
       return new Set;
@@ -502,21 +230,21 @@
   }
   function saveUnfinishedTopics(unfinishedTopics) {
     try {
-      Storage.set("laomo_unfinished_topics", Array.from(unfinishedTopics));
+      Storage.set("jav_unfinished_topics", Array.from(unfinishedTopics));
     } catch (error) {}
   }
   function getHighlightWords(topicId) {
     try {
-      return (Storage.get("laomo_jav_highlight_words", {}) || {})[topicId] || [];
+      return (Storage.get("jav_highlight_words", {}) || {})[topicId] || [];
     } catch (error) {
       return [];
     }
   }
   function setHighlightWords(topicId, words) {
     try {
-      const all = Storage.get("laomo_jav_highlight_words", {}) || {};
+      const all = Storage.get("jav_highlight_words", {}) || {};
       all[topicId] = Array.from(new Set(words.filter(w => w && w.trim().length > 0))), 
-      Storage.set("laomo_jav_highlight_words", all);
+      Storage.set("jav_highlight_words", all);
     } catch (error) {}
   }
   class ReadMarkManager {
@@ -759,11 +487,7 @@
     }
     setupReadMarks() {
       let topicLinks = document.querySelectorAll(CONFIG_SELECTORS_topicLinks);
-      if (0 === topicLinks.length) {
-        topicLinks = document.querySelectorAll(CONFIG_SELECTORS_allTopicLinks);
-        const allLinks = document.querySelectorAll('a[href*="publictopic.php"]');
-        document.querySelectorAll("table"), allLinks.forEach((link, index) => {});
-      }
+      0 === topicLinks.length && (topicLinks = document.querySelectorAll(CONFIG_SELECTORS_allTopicLinks)), 
       topicLinks.forEach(link => {
         const linkElement = link;
         linkElement.target = "_blank", linkElement.rel = "noopener noreferrer";
@@ -808,7 +532,7 @@
         const link = event.target.closest(CONFIG_SELECTORS_allTopicLinks);
         if (link && (event.ctrlKey || event.metaKey)) {
           const topicId = extractTopicId(link.href);
-          topicId && (this.markAsRead(topicId), this.markAsReadVisually(link, topicId), event.ctrlKey);
+          topicId && (this.markAsRead(topicId), this.markAsReadVisually(link, topicId));
         }
       });
     }
@@ -822,7 +546,7 @@
         const readTopics = getReadTopics();
         readTopics.add(topicId), function(readTopics) {
           try {
-            Storage.set("laomo_read_topics", Array.from(readTopics));
+            Storage.set("jav_read_topics", Array.from(readTopics));
           } catch (error) {}
         }(readTopics);
       }(topicId));
@@ -886,416 +610,96 @@
       void 0 !== style.color && (row.style.color = style.color));
     }
   }
-  const _Toast = class {
-    static initContainer() {
-      return this.container || (this.container = document.createElement("div"), this.container.id = "toast-container", 
-      Object.assign(this.container.style, {
-        position: "fixed",
-        top: "20px",
-        right: "20px",
-        zIndex: "99999",
-        pointerEvents: "none"
-      }), document.body.appendChild(this.container)), this.container;
-    }
-    static show(message, type = "info", duration = 4e3) {
-      const container = this.initContainer(), toast = document.createElement("div");
-      return toast.textContent = message, Object.assign(toast.style, {
-        padding: "12px 20px",
-        marginBottom: "10px",
-        borderRadius: "6px",
-        color: "white",
-        boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
-        opacity: "0",
-        transform: "translateX(100%)",
-        transition: "all 0.3s ease-out",
-        fontSize: "14px",
-        fontWeight: "400",
-        maxWidth: "300px",
-        wordWrap: "break-word",
-        pointerEvents: "auto",
-        cursor: "pointer"
-      }), toast.style.backgroundColor = {
-        success: "#10B981",
-        error: "#EF4444",
-        warning: "#F59E0B",
-        info: "#3B82F6"
-      }[type], toast.addEventListener("click", () => {
-        this.removeToast(toast);
-      }), container.appendChild(toast), setTimeout(() => {
-        toast.style.opacity = "1", toast.style.transform = "translateX(0)";
-      }, 10), duration > 0 && setTimeout(() => {
-        this.removeToast(toast);
-      }, duration), toast;
-    }
-    static removeToast(toast) {
-      toast.style.opacity = "0", toast.style.transform = "translateX(100%)", setTimeout(() => {
-        toast.parentNode && toast.remove();
-      }, 300);
-    }
-    static success(message, duration = 4e3) {
-      return this.show(message, "success", duration);
-    }
-    static error(message, duration = 5e3) {
-      return this.show(message, "error", duration);
-    }
-    static warning(message, duration = 4e3) {
-      return this.show(message, "warning", duration);
-    }
-    static info(message, duration = 3e3) {
-      return this.show(message, "info", duration);
-    }
-  };
-  _Toast.container = null;
-  let Toast = _Toast;
-  class GistAPI {
-    static async request(token, config) {
-      if (!token) throw new Error("GitHub Token 未提供");
-      const requestConfig = {
-        ...config,
-        headers: {
-          ...config.headers,
-          Authorization: `token ${token}`,
-          Accept: "application/vnd.github.v3+json"
-        }
-      };
-      return new Promise((resolve, reject) => {
-        GM_xmlhttpRequest({
-          ...requestConfig,
-          onload: res => {
-            res.status >= 200 && res.status < 300 ? resolve(res) : reject(res);
-          },
-          onerror: err => reject(err)
-        });
-      });
-    }
-    static async getFile(token, gistId, filename) {
-      if (!gistId) throw new Error("Gist ID 未提供");
-      try {
-        const response = await this.request(token, {
-          method: "GET",
-          url: `https://api.github.com/gists/${gistId}`
-        }), gistData = JSON.parse(response.responseText);
-        return gistData.files && gistData.files[filename] ? gistData.files[filename] : null;
-      } catch (error) {
-        throw error;
-      }
-    }
-    static async updateFile(token, gistId, filename, content) {
-      if (!gistId) throw new Error("Gist ID 未提供");
-      try {
-        return await this.request(token, {
-          method: "PATCH",
-          url: `https://api.github.com/gists/${gistId}`,
-          headers: {
-            "Content-Type": "application/json"
-          },
-          data: JSON.stringify({
-            files: {
-              [filename]: {
-                content: content
-              }
-            }
-          })
-        }), !0;
-      } catch (error) {
-        throw error;
-      }
-    }
-    static async createGist(token, filename, content, description, isPublic = !1) {
-      try {
-        const response = await this.request(token, {
-          method: "POST",
-          url: "https://api.github.com/gists",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          data: JSON.stringify({
-            description: description,
-            public: isPublic,
-            files: {
-              [filename]: {
-                content: content
-              }
-            }
-          })
-        });
-        return JSON.parse(response.responseText).id;
-      } catch (error) {
-        throw error;
-      }
-    }
-    static async deleteGist(token, gistId) {
-      if (!gistId) throw new Error("Gist ID 未提供");
-      try {
-        return await this.request(token, {
-          method: "DELETE",
-          url: `https://api.github.com/gists/${gistId}`
-        }), !0;
-      } catch (error) {
-        throw error;
-      }
-    }
-  }
   class GistSync {
-    static getGitHubToken() {
-      return Storage.get(CONFIG_STORAGE_GM_GITHUB_TOKEN_KEY, "") || "";
+    static getToken() {
+      return Storage.get(CONFIG_GIST_TOKEN_KEY, "") || "";
     }
     static getGistId() {
-      return Storage.get(CONFIG_STORAGE_GM_GIST_ID_KEY, "") || "";
-    }
-    static async getGistFile() {
-      const token = this.getGitHubToken(), gistId = this.getGistId();
-      if (!token) return null;
-      if (!gistId) return null;
-      try {
-        return await GistAPI.getFile(token, gistId, CONFIG_GIST_FILENAME) || null;
-      } catch (error) {
-        return 404 === error.status ? Toast.show("Gist 未找到，请检查Gist ID配置", "warning", 5e3) : Toast.show(`获取Gist文件失败: ${error.statusText || "Unknown error"}`, "error"), 
-        null;
-      }
-    }
-    static async updateGistFile(content) {
-      const token = this.getGitHubToken(), gistId = this.getGistId();
-      if (!token || !gistId) return Toast.show("GitHub Token 或 Gist ID 未配置", "error"), 
-      !1;
-      try {
-        return await GistAPI.updateFile(token, gistId, CONFIG_GIST_FILENAME, content), !0;
-      } catch (error) {
-        return Toast.show(`更新Gist文件失败: ${error.statusText || "Unknown error"}`, "error"), 
-        !1;
-      }
-    }
-    static async createGist(content) {
-      const token = this.getGitHubToken();
-      if (!token) return Toast.show("GitHub Token 未配置", "error"), null;
-      try {
-        return await GistAPI.createGist(token, CONFIG_GIST_FILENAME, content, CONFIG_GIST_DESCRIPTION, !1);
-      } catch (error) {
-        let errorMessage = "Unknown error";
-        try {
-          if (error.responseText) try {
-            const errorData = JSON.parse(error.responseText);
-            errorMessage = errorData.message || errorData.error || error.statusText || "Unknown error";
-          } catch {
-            errorMessage = error.responseText.substring(0, 200) || error.statusText || "Unknown error";
-          } else error.statusText ? errorMessage = error.statusText : error.message && (errorMessage = error.message);
-        } catch {
-          errorMessage = error.statusText || error.message || "Unknown error";
-        }
-        return 401 === error.status ? errorMessage = "Token 无效或已过期，请检查 GitHub Token" : 403 === error.status ? errorMessage = "Token 权限不足，需要 gist 权限" : 422 === error.status && (errorMessage = errorMessage || "请求参数错误"), 
-        Toast.show(`创建Gist失败: ${errorMessage}`, "error", 5e3), null;
-      }
-    }
-    static getJavLibraryData() {
-      const readTopics = Storage.get("laomo_read_topics", []) || [], unfinishedTopics = Storage.get("laomo_unfinished_topics", []) || [], highlightWords = Storage.get("laomo_jav_highlight_words", {}) || {};
-      return {
-        readTopics: Array.isArray(readTopics) ? readTopics : [],
-        unfinishedTopics: Array.isArray(unfinishedTopics) ? unfinishedTopics : [],
-        highlightWords: highlightWords && "object" == typeof highlightWords ? highlightWords : {}
-      };
-    }
-    static getTwitterData() {
-      const readMedia = Storage.get("laomo_twitter_read_media", []) || [], scrollPositions = Storage.get("laomo_twitter_scroll_position", {}) || {};
-      return {
-        readMedia: Array.isArray(readMedia) ? readMedia : [],
-        scrollPositions: scrollPositions && "object" == typeof scrollPositions ? scrollPositions : {}
-      };
-    }
-    static getInstagramData() {
-      const readMedia = Storage.get("laomo_instagram_read_media", []) || [];
-      return {
-        readMedia: Array.isArray(readMedia) ? readMedia : []
-      };
+      return Storage.get(CONFIG_GIST_ID_KEY, "") || "";
     }
     static getBackupData() {
-      const javData = this.getJavLibraryData(), twitterData = this.getTwitterData(), instagramData = this.getInstagramData();
       return {
         timestamp: (new Date).toISOString(),
-        version: "2.0.0",
-        javLibrary: javData,
-        twitter: twitterData,
-        instagram: instagramData
+        version: "1.0.0",
+        readTopics: Storage.get("jav_read_topics", []) || [],
+        unfinishedTopics: Storage.get("jav_unfinished_topics", []) || [],
+        highlightWords: Storage.get("jav_highlight_words", {}) || {}
       };
     }
     static mergeArrays(local, remote) {
-      const merged = new Set([ ...local, ...remote ]);
-      return Array.from(merged);
+      return [ ...new Set([ ...local, ...remote ]) ];
     }
     static mergeHighlightWords(local, remote) {
-      const merged = {
+      const result = {
         ...local
       };
-      for (const [topicId, words] of Object.entries(remote)) merged[topicId] ? merged[topicId] = this.mergeArrays(merged[topicId], words) : merged[topicId] = words;
-      return merged;
+      for (const key of Object.keys(remote)) result[key] = this.mergeArrays(result[key] || [], remote[key] || []);
+      return result;
     }
-    static mergeScrollPositions(local, remote) {
-      const merged = {
-        ...local
-      };
-      for (const [username, position] of Object.entries(remote)) (!merged[username] || position > merged[username]) && (merged[username] = position);
-      return merged;
-    }
-    static mergeBackupData(local, remote) {
-      const remoteJav = remote.javLibrary || {
-        readTopics: remote.javLibrary || [],
-        unfinishedTopics: remote.unfinishedLibrary || [],
-        highlightWords: remote.highlightWords || {}
-      };
-      Array.isArray(remoteJav) && (remote.javLibrary = {
-        readTopics: remoteJav,
-        unfinishedTopics: remote.unfinishedLibrary || [],
-        highlightWords: remote.highlightWords || {}
-      });
-      const localJav = local.javLibrary || {
-        readTopics: [],
-        unfinishedTopics: [],
-        highlightWords: {}
-      }, localTwitter = local.twitter || {
-        readMedia: [],
-        scrollPositions: {}
-      }, localInstagram = local.instagram || {
-        readMedia: []
-      }, remoteTwitter = remote.twitter || {
-        readMedia: [],
-        scrollPositions: {}
-      }, remoteInstagram = remote.instagram || {
-        readMedia: []
-      }, remoteJavData = {
-        readTopics: Array.isArray(remote.javLibrary) ? remote.javLibrary : remote.javLibrary?.readTopics || [],
-        unfinishedTopics: remote.unfinishedLibrary || remote.javLibrary?.unfinishedTopics || [],
-        highlightWords: remote.highlightWords || remote.javLibrary?.highlightWords || {}
-      };
-      return {
-        timestamp: (new Date).toISOString(),
-        version: "2.0.0",
-        javLibrary: {
-          readTopics: this.mergeArrays(localJav.readTopics, remoteJavData.readTopics),
-          unfinishedTopics: this.mergeArrays(localJav.unfinishedTopics, remoteJavData.unfinishedTopics),
-          highlightWords: this.mergeHighlightWords(localJav.highlightWords, remoteJavData.highlightWords)
-        },
-        twitter: {
-          readMedia: this.mergeArrays(localTwitter.readMedia, remoteTwitter.readMedia),
-          scrollPositions: this.mergeScrollPositions(localTwitter.scrollPositions, remoteTwitter.scrollPositions)
-        },
-        instagram: {
-          readMedia: this.mergeArrays(localInstagram.readMedia, remoteInstagram.readMedia)
-        }
-      };
-    }
-    static async importBackupData(data) {
-      const localData = this.getBackupData(), mergedData = this.mergeBackupData(localData, data);
-      mergedData.javLibrary && (Storage.set("laomo_read_topics", mergedData.javLibrary.readTopics), 
-      Storage.set("laomo_unfinished_topics", mergedData.javLibrary.unfinishedTopics), 
-      Storage.set("laomo_jav_highlight_words", mergedData.javLibrary.highlightWords)), 
-      mergedData.twitter && (Storage.set("laomo_twitter_read_media", mergedData.twitter.readMedia), 
-      Storage.set("laomo_twitter_scroll_position", mergedData.twitter.scrollPositions)), 
-      mergedData.instagram && Storage.set("laomo_instagram_read_media", mergedData.instagram.readMedia), 
-      mergedData.javLibrary.readTopics.length, localData.javLibrary?.readTopics.length, 
-      mergedData.twitter.readMedia.length, localData.twitter?.readMedia.length, mergedData.instagram.readMedia.length, 
-      localData.instagram?.readMedia.length, setTimeout(() => {
-        window.location.reload();
-      }, 1e3);
-    }
-    static async uploadToGist() {
-      if (!this.getGitHubToken()) return void Toast.show("GitHub Token 未配置。请通过油猴菜单「⚙️ 配置Gist同步参数」进行设置。", "error");
-      const currentGistId = this.getGistId(), notification = Toast.show("上传数据到Gist中...", "info", 0);
-      try {
-        let finalData;
-        if (currentGistId) try {
-          const gistFile = await this.getGistFile();
-          if (gistFile && gistFile.content) {
-            const remoteData = JSON.parse(gistFile.content), localData = this.getBackupData();
-            finalData = this.mergeBackupData(localData, remoteData);
-          } else finalData = this.getBackupData();
-        } catch {
-          finalData = this.getBackupData();
-        } else finalData = this.getBackupData();
-        const content = JSON.stringify(finalData, null, 2);
-        let success = !1, newGistCreated = !1;
-        if (currentGistId) success = await this.updateGistFile(content); else {
-          const newGistId = await this.createGist(content);
-          newGistId && (Storage.set(CONFIG_STORAGE_GM_GIST_ID_KEY, newGistId), success = !0, 
-          newGistCreated = !0);
-        }
-        notification.remove(), success ? newGistCreated ? Toast.show("新Gist已创建并自动保存！", "success", 7e3) : Toast.show("数据已合并并同步到Gist！", "success") : currentGistId && Toast.show("上传失败，请检查网络连接和Token权限", "error", 5e3);
-      } catch (error) {
-        notification.remove(), Toast.show(`上传失败: ${error.message || "Unknown error"}`, "error", 5e3);
-      }
-    }
-    static async downloadFromGist() {
-      if (!this.getGitHubToken()) return void Toast.show("GitHub Token 未配置。请通过油猴菜单「⚙️ 配置Gist同步参数」进行设置。", "error");
-      if (!this.getGistId()) return void Toast.show("Gist ID 未配置。请通过油猴菜单「⚙️ 配置Gist同步参数」进行设置，或先上传一次。", "warning", 5e3);
-      const notification = Toast.show("从Gist下载数据中...", "info", 0);
-      try {
-        const gistFile = await this.getGistFile();
-        if (notification.remove(), !gistFile || !gistFile.content) throw new Error("从Gist下载数据失败，未找到有效内容");
-        {
-          let data;
-          try {
-            data = JSON.parse(gistFile.content);
-          } catch (parseError) {
-            throw new Error(`JSON解析失败: ${parseError.message}`);
+    static async upload() {
+      const token = this.getToken();
+      let gistId = this.getGistId();
+      if (token) try {
+        Toast.info("正在上传...");
+        const data = this.getBackupData(), content = JSON.stringify(data, null, 2);
+        if (gistId) {
+          const remoteFile = await GistAPI.getFile(token, gistId, CONFIG_GIST_FILENAME);
+          if (remoteFile) {
+            const remoteData = JSON.parse(remoteFile.content);
+            data.readTopics = this.mergeArrays(data.readTopics, remoteData.readTopics || []), 
+            data.unfinishedTopics = this.mergeArrays(data.unfinishedTopics, remoteData.unfinishedTopics || []), 
+            data.highlightWords = this.mergeHighlightWords(data.highlightWords, remoteData.highlightWords || {});
           }
-          await this.importBackupData(data), Toast.show("已从Gist下载并合并到本地数据！", "success", 3e3);
-        }
+          await GistAPI.updateFile(token, gistId, CONFIG_GIST_FILENAME, JSON.stringify(data, null, 2));
+        } else gistId = await GistAPI.createGist(token, CONFIG_GIST_FILENAME, content, CONFIG_GIST_DESCRIPTION), 
+        Storage.set(CONFIG_GIST_ID_KEY, gistId);
+        Toast.success(`上传成功！共 ${data.readTopics.length} 条已读记录`);
       } catch (error) {
-        notification.remove(), Toast.show(error.message || "从Gist下载时发生错误。", "error");
-      }
+        Toast.error("上传失败，请检查 Token 和网络");
+      } else Toast.error("请先配置 GitHub Token");
     }
-    static getTodayDateString() {
-      const now = new Date;
-      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    static async download() {
+      const token = this.getToken(), gistId = this.getGistId();
+      if (token && gistId) try {
+        Toast.info("正在下载...");
+        const file = await GistAPI.getFile(token, gistId, CONFIG_GIST_FILENAME);
+        if (!file) return void Toast.error("未找到备份文件");
+        const remoteData = JSON.parse(file.content), localData = this.getBackupData(), mergedReadTopics = this.mergeArrays(localData.readTopics, remoteData.readTopics || []), mergedUnfinished = this.mergeArrays(localData.unfinishedTopics, remoteData.unfinishedTopics || []), mergedHighlight = this.mergeHighlightWords(localData.highlightWords, remoteData.highlightWords || {});
+        Storage.set("jav_read_topics", mergedReadTopics), Storage.set("jav_unfinished_topics", mergedUnfinished), 
+        Storage.set("jav_highlight_words", mergedHighlight), Toast.success(`下载成功！共 ${mergedReadTopics.length} 条已读记录`);
+      } catch (error) {
+        Toast.error("下载失败，请检查配置和网络");
+      } else Toast.error("请先配置 GitHub Token 和 Gist ID");
     }
     static async autoBackup() {
-      const token = this.getGitHubToken(), gistId = this.getGistId();
+      const token = this.getToken(), gistId = this.getGistId();
       if (!token || !gistId) return;
-      const today = this.getTodayDateString();
-      if (Storage.get(CONFIG_STORAGE_LAST_AUTO_BACKUP_DATE, "") !== today) try {
-        let finalData;
-        try {
-          const gistFile = await this.getGistFile();
-          if (gistFile && gistFile.content) {
-            const remoteData = JSON.parse(gistFile.content), localData = this.getBackupData();
-            finalData = this.mergeBackupData(localData, remoteData);
-          } else finalData = this.getBackupData();
-        } catch {
-          finalData = this.getBackupData();
-        }
-        const content = JSON.stringify(finalData, null, 2);
-        await this.updateGistFile(content) && (Storage.set(CONFIG_STORAGE_LAST_AUTO_BACKUP_DATE, today), 
-        Toast.show("📦 每日自动备份完成", "success", 2e3));
+      const today = (new Date).toISOString().split("T")[0];
+      if ((Storage.get(CONFIG_GIST_LAST_BACKUP_KEY, "") || "") !== today) try {
+        const data = this.getBackupData();
+        await GistAPI.updateFile(token, gistId, CONFIG_GIST_FILENAME, JSON.stringify(data, null, 2)), 
+        Storage.set(CONFIG_GIST_LAST_BACKUP_KEY, today);
       } catch (error) {}
     }
-  }
-  class SettingsPanel {
-    static show() {
-      const existingDialog = document.getElementById("jav-readmark-settings-dialog");
-      existingDialog && existingDialog.remove();
-      const dialogOverlay = document.createElement("div");
-      dialogOverlay.id = "jav-readmark-settings-dialog";
-      const dialogContent = document.createElement("div");
-      dialogContent.id = "jav-readmark-settings-dialog-content", dialogContent.innerHTML = `\n      <button id="jav-readmark-settings-close-btn" title="关闭">&times;</button>\n      <h3>Gist 同步参数配置</h3>\n      <div>\n        <label for="gist_token_input_jav">GitHub 个人访问令牌 (Token):</label>\n        <input type="password" id="gist_token_input_jav" value="${Storage.get(CONFIG_STORAGE_GM_GITHUB_TOKEN_KEY, "")}" placeholder="例如 ghp_xxxxxxxxxxxxxxxxx">\n        <small>Token 用于授权访问您的Gist。需要 Gist 读写权限。</small>\n      </div>\n      <div>\n        <label for="gist_id_input_jav">Gist ID:</label>\n        <input type="text" id="gist_id_input_jav" value="${Storage.get(CONFIG_STORAGE_GM_GIST_ID_KEY, "")}" placeholder="例如 123abc456def7890">\n        <small>Gist ID 是备份用Gist的标识。若为空，首次上传时将自动创建并保存。</small>\n      </div>\n      <div class="rw-dialog-buttons">\n        <button id="settings_cancel_btn_jav" class="rw-cancel-btn">取消</button>\n        <button id="settings_save_btn_jav" class="rw-save-btn">保存配置</button>\n      </div>\n    `, 
-      dialogOverlay.appendChild(dialogContent), document.body.appendChild(dialogOverlay), 
-      this.applyStyles();
-      const handleEscKey = e => {
-        "Escape" === e.key && closeDialog();
-      }, closeDialog = () => {
-        document.removeEventListener("keydown", handleEscKey), dialogOverlay.remove();
-      }, cancelAndClose = () => {
-        closeDialog(), Toast.show("参数设置已取消。", "info");
-      };
-      document.getElementById("settings_save_btn_jav")?.addEventListener("click", () => {
-        const newToken = document.getElementById("gist_token_input_jav").value.trim(), newGistId = document.getElementById("gist_id_input_jav").value.trim();
-        Storage.set(CONFIG_STORAGE_GM_GITHUB_TOKEN_KEY, newToken), Storage.set(CONFIG_STORAGE_GM_GIST_ID_KEY, newGistId);
-        let msg = "Gist参数已保存!";
-        newToken || newGistId ? newToken ? newGistId || (msg = "Gist ID已清空, Token已保存。") : msg = "Token已清空, Gist ID已保存。" : msg = "Gist参数已清空。", 
-        Toast.show(msg, "success"), closeDialog();
-      }), document.getElementById("settings_cancel_btn_jav")?.addEventListener("click", cancelAndClose), 
-      document.getElementById("jav-readmark-settings-close-btn")?.addEventListener("click", cancelAndClose), 
-      document.addEventListener("keydown", handleEscKey);
+    static showSettings() {
+      const token = this.getToken(), gistId = this.getGistId(), dialog = document.createElement("div");
+      dialog.style.cssText = "\n      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);\n      background: white; padding: 24px; border-radius: 12px; z-index: 100000;\n      box-shadow: 0 10px 40px rgba(0,0,0,0.3); min-width: 400px; font-family: sans-serif;\n    ", 
+      dialog.innerHTML = `\n      <h3 style="margin: 0 0 16px 0; font-size: 18px;">⚙️ Gist 同步设置</h3>\n      <div style="margin-bottom: 12px;">\n        <label style="display: block; margin-bottom: 4px; font-size: 14px;">GitHub Token:</label>\n        <input id="gist-token" type="password" value="${token}" placeholder="ghp_xxxx..."\n          style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;">\n      </div>\n      <div style="margin-bottom: 16px;">\n        <label style="display: block; margin-bottom: 4px; font-size: 14px;">Gist ID (可选，留空自动创建):</label>\n        <input id="gist-id" type="text" value="${gistId}" placeholder="留空则自动创建"\n          style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;">\n      </div>\n      <div style="display: flex; gap: 8px; justify-content: flex-end;">\n        <button id="gist-cancel" style="padding: 8px 16px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer;">取消</button>\n        <button id="gist-save" style="padding: 8px 16px; background: #3B82F6; color: white; border: none; border-radius: 6px; cursor: pointer;">保存</button>\n      </div>\n    `;
+      const overlay = document.createElement("div");
+      overlay.style.cssText = "position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 99999;", 
+      overlay.onclick = () => {
+        overlay.remove(), dialog.remove();
+      }, document.body.appendChild(overlay), document.body.appendChild(dialog), dialog.querySelector("#gist-cancel").addEventListener("click", () => {
+        overlay.remove(), dialog.remove();
+      }), dialog.querySelector("#gist-save").addEventListener("click", () => {
+        const newToken = dialog.querySelector("#gist-token").value.trim(), newGistId = dialog.querySelector("#gist-id").value.trim();
+        Storage.set(CONFIG_GIST_TOKEN_KEY, newToken), Storage.set(CONFIG_GIST_ID_KEY, newGistId), 
+        overlay.remove(), dialog.remove(), Toast.success("设置已保存");
+      });
     }
-    static applyStyles() {
-      addStyles(`\n      #jav-readmark-settings-dialog {\n        position: fixed; top: 0; left: 0; width: 100%; height: 100%;\n        background-color: rgba(0,0,0,0.6); z-index: ${CONFIG_UI_DIALOG?.SETTINGS_Z_INDEX};\n        display: flex; justify-content: center; align-items: center; font-family: sans-serif;\n      }\n      #jav-readmark-settings-dialog-content {\n        background: white; padding: 25px; border-radius: 8px;\n        box-shadow: 0 5px 20px rgba(0,0,0,0.3); width: 400px; max-width: 90%;\n        position: relative;\n      }\n      #jav-readmark-settings-dialog-content h3 { margin-top: 0; margin-bottom: 20px; text-align: center; color: #333; font-size: 1.3em; }\n      #jav-readmark-settings-dialog-content label { display: block; margin-bottom: 5px; color: #555; font-size: 0.95em; }\n      #jav-readmark-settings-dialog-content input[type="text"], #jav-readmark-settings-dialog-content input[type="password"] {\n        width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 0; font-size: 1em;\n      }\n      #jav-readmark-settings-dialog-content small { font-size:0.8em; color:#777; display:block; margin-top:4px; margin-bottom:12px; }\n      #jav-readmark-settings-dialog-content .rw-dialog-buttons { text-align: right; margin-top: 15px; }\n      #jav-readmark-settings-dialog-content .rw-dialog-buttons button { padding: 10px 18px; border-radius: 4px; border: none; cursor: pointer; font-size: 0.95em; transition: background-color 0.2s ease; }\n      #jav-readmark-settings-dialog-content .rw-dialog-buttons .rw-cancel-btn { margin-right: 10px; background-color: #f0f0f0; color: #333; }\n      #jav-readmark-settings-dialog-content .rw-dialog-buttons .rw-cancel-btn:hover { background-color: #e0e0e0; }\n      #jav-readmark-settings-dialog-content .rw-dialog-buttons .rw-save-btn { background-color: #4CAF50; color: white; }\n      #jav-readmark-settings-dialog-content .rw-dialog-buttons .rw-save-btn:hover { background-color: #45a049; }\n      #jav-readmark-settings-close-btn { position: absolute; top: 10px; right: 10px; font-size: 1.5em; color: #aaa; cursor: pointer; background: none; border: none; padding: 5px; line-height: 1; }\n      #jav-readmark-settings-close-btn:hover { color: #777; }\n    `, "jav-readmark-settings-styles");
+    static registerMenuCommands() {
+      GM_registerMenuCommand("⚙️ 配置 Gist 同步", () => this.showSettings()), GM_registerMenuCommand("📤 上传数据到 Gist", () => this.upload()), 
+      GM_registerMenuCommand("📥 从 Gist 下载数据", () => this.download());
     }
   }
   (class {
@@ -1305,25 +709,9 @@
     static initialize() {
       try {
         const currentUrl = window.location.href;
-        this.isTwitterMediaPage(currentUrl) ? (new TwitterReadMark).init() : this.isInstagramPage(currentUrl) ? (new InstagramReadMark).init() : this.isJavLibraryPage(currentUrl) && (new ReadMarkManager).init(), 
-        (this.isTwitterMediaPage(currentUrl) || this.isJavLibraryPage(currentUrl) || this.isInstagramPage(currentUrl)) && (this.registerMenuCommands(), 
+        this.isJavLibraryPage(currentUrl) && ((new ReadMarkManager).init(), GistSync.registerMenuCommands(), 
         GistSync.autoBackup());
       } catch (error) {}
-    }
-    static registerMenuCommands() {
-      GM_registerMenuCommand("⚙️ 配置Gist同步参数", () => {
-        SettingsPanel.show();
-      }), GM_registerMenuCommand("📤 上传数据到Gist", () => {
-        GistSync.uploadToGist();
-      }), GM_registerMenuCommand("📥 从Gist下载数据", () => {
-        GistSync.downloadFromGist();
-      });
-    }
-    static isInstagramPage(url) {
-      return url.includes("instagram.com");
-    }
-    static isTwitterMediaPage(url) {
-      return url.includes("x.com") && url.includes("/media");
     }
     static isJavLibraryPage(url) {
       return url.includes("javlibrary.com") && (url.includes("publicgroupsearch.php") || url.includes("publictopic.php") || url.includes("publicgroup.php"));

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Masquer_Pubs_Sponsor
 // @namespace    Masquer_Pubs_Sponsor
-// @version      4.7.6
+// @version      4.8.0
 // @description  Masquer certains éléments sur jeuxvideo.com et discord
 // @author       Atlantis
 // @icon         https://images.emojiterra.com/google/noto-emoji/unicode-15.1/color/128px/26d4.png
@@ -30,7 +30,7 @@ risibank.fr##.themed-container.content .bookmark
 risibank.fr##.tabs.btn-group > a.text-muted
 
 discord.com##.app-launcher-entrypoint[class*="buttonContainer"]
-discord.com##.user-profile-popout div[class*="-container"] > svg
+discord.com##.user-profile-popout div[class*="container"] > svg
 
 xboxygen.com##.htpub, .uk-section-xsmall
 

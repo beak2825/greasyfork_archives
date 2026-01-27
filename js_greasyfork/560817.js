@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         n-Nurbo client
 // @namespace    http://youtube.com
-// @version      1.6.1.0
+// @version      1.6.1.1
 // @description  Bot =  P    Shift=Insta, AutoBiomehat Autoheal, F=Trap, V=Spike, C=4Spikes, B=4Traps, N=Mill. Glotus AutoBreak for traps.
 // @icon         https://static.wikia.nocookie.net/moom/images/7/70/Cookie.png/revision/latest?cb=20190223141839
 // @author       Nurbo Mod
@@ -370,6 +370,9 @@ const init2 = () => {
             console.log('captured ws');
             window.WebSocket = originalWebSocket; // this sets the websocket constructor back to normal
 
+
+
+
             document.ws.player = new Player(document.ws);
             window.addEventListener('keyup', (e) => {
                 if (e.target.tagName === 'INPUT') {
@@ -529,6 +532,9 @@ let waitForGameName = setInterval(() => {
     let autoBiomeHatEnabled = true;
     let autoClickEnabled = true;
 
+    // ===================== SPECIAL WEAPON HAT SYSTEM =====================
+    let specialWeaponHatSystem = null;
+
     // ===================== MENU INTERFACE =====================
     function createMenu() {
         // Create menu container
@@ -587,8 +593,28 @@ let waitForGameName = setInterval(() => {
         infoSection.innerHTML = `
             <div style="margin-bottom: 20px;">
                 <h3 style="color: #4CAF50; margin: 0 0 12px 0; border-bottom: 1px solid #333; padding-bottom: 6px; font-size: 13px; font-weight: 600;">📊 INFORMATION</h3>
-
-
+                <div style="font-size: 12px; line-height: 1.5;">
+                    <div style="display: flex; justify-content: space-between; margin: 6px 0;">
+                        <span style="color: #bbb;">Health:</span>
+                        <span id="menu-health" style="color: #EF476F; font-weight: 500;">100%</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 6px 0;">
+                        <span style="color: #bbb;">Weapon:</span>
+                        <span id="menu-weapon" style="color: #FFD166; font-weight: 500;">Sword</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 6px 0;">
+                        <span style="color: #bbb;">Secondary:</span>
+                        <span id="menu-secondary" style="color: #06D6A0; font-weight: 500;">None</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 6px 0;">
+                        <span style="color: #bbb;">Biome:</span>
+                        <span id="menu-biome" style="color: #118AB2; font-weight: 500;">Normal</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 6px 0;">
+                        <span style="color: #bbb;">Nearby Enemies:</span>
+                        <span id="menu-enemies" style="color: #EF476F; font-weight: 500;">0</span>
+                    </div>
+                </div>
             </div>
         `;
 
@@ -647,15 +673,15 @@ let waitForGameName = setInterval(() => {
             <div style="margin: 8px 0;">
                 <label style="display: flex; align-items: center; margin: 10px 0; cursor: pointer; font-size: 13px;">
                     <input type="checkbox" id="autoheal-toggle" checked style="margin-right: 10px; accent-color: #4CAF50;">
-                    <span style="color: #ccc;">-</span>
+                    <span style="color: #ccc;">Auto Heal</span>
                 </label>
                 <label style="display: flex; align-items: center; margin: 10px 0; cursor: pointer; font-size: 13px;">
                     <input type="checkbox" id="biomehat-toggle" checked style="margin-right: 10px; accent-color: #4CAF50;">
-                    <span style="color: #ccc;">--</span>
+                    <span style="color: #ccc;">Auto Biome Hat</span>
                 </label>
                 <label style="display: flex; align-items: center; margin: 10px 0; cursor: pointer; font-size: 13px;">
                     <input type="checkbox" id="autoclick-toggle" checked style="margin-right: 10px; accent-color: #4CAF50;">
-                    <span style="color: #ccc;">---</span>
+                    <span style="color: #ccc;">Auto Click (RMB)</span>
                 </label>
             </div>
         `;
@@ -822,6 +848,7 @@ let waitForGameName = setInterval(() => {
             let statusText = '✅ Active ';
             statusText += autoHealEnabled ? '💊' : '';
             statusText += autoBiomeHatEnabled ? '🎩' : '';
+            statusText += autoClickEnabled ? '🎯' : '';
 
             status.textContent = statusText;
         }
@@ -948,149 +975,173 @@ let waitForGameName = setInterval(() => {
     }
 
     // ===================== SPECIAL WEAPON HAT SYSTEM =====================
- // ===================== SPECIAL WEAPON HAT SYSTEM =====================
-function initSpecialWeaponHatSystem() {
-    let hatCycleInterval = null;
-    let isHat20Active = false;
-    let isMoving = false;
-    let movementKeys = new Set();
+    function initSpecialWeaponHatSystem() {
+        let hatCycleInterval = null;
+        let lastHat53Time = 0;
+        let movementKeys = new Set();
+        let isMoving = false;
+        let enemiesNearby = false;
 
-    // Special weapons that trigger hat system
-    const SPECIAL_WEAPONS = [12, 13, 15]; // Hammer, Glider, Katana
+        // Special weapons that trigger hat system
+        const SPECIAL_WEAPONS = [12, 13, 15]; // Hammer, Glider, Katana
 
-    // Check if player is holding a special weapon (current active weapon)
-    function isHoldingSpecialWeapon() {
-        return SPECIAL_WEAPONS.includes(myPlayer.weapon);
-    }
-
-    // Check if player is standing still (not moving)
-    function isStandingStill() {
-        return movementKeys.size === 0 && !isMoving;
-    }
-
-    // Set hat safely
-    function setHatSafely(hatId) {
-        if (myPlayer && myPlayer.id != null) {
-            doNewSend(["c", [0, hatId, 0]]);
+        // Check if player is holding a special weapon
+        function isHoldingSpecialWeapon() {
+            return SPECIAL_WEAPONS.includes(myPlayer.weapon);
         }
-    }
 
-    // Start the hat cycle for special weapons
-    function startHatCycle() {
-        if (hatCycleInterval) clearInterval(hatCycleInterval);
+        // Check if player is standing still (not moving)
+        function isStandingStill() {
+            return movementKeys.size === 0 && !isMoving;
+        }
 
-        // Set hat 20 immediately
-        setHatSafely(20);
-        isHat20Active = true;
+        // Check if enemies are nearby (within 500px)
+        function checkEnemiesNearby() {
+            if (enemiesNear.length === 0) return false;
 
-        // Start 3-second cycle for hat 53
-        hatCycleInterval = setInterval(() => {
-            if (isHoldingSpecialWeapon() && isStandingStill()) {
-                // Switch to hat 53 for 150ms
-                setHatSafely(53);
-                isHat20Active = false;
+            for (const enemy of enemiesNear) {
+                const dx = myPlayer.x - enemy[1];
+                const dy = myPlayer.y - enemy[2];
+                const distance = Math.sqrt(dx * dx + dy * dy);
 
-                // Return to hat 20 after 150ms
-                setTimeout(() => {
-                    if (isHoldingSpecialWeapon() && isStandingStill()) {
+                if (distance <= 800) {
+                    // Check if enemy is in same clan (teammate)
+                    if (enemy[7] === myPlayer.clan) continue; // Skip teammates
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Set hat safely
+        function setHatSafely(hatId) {
+            if (myPlayer && myPlayer.id != null && ws && ws.readyState === WebSocket.OPEN) {
+                doNewSend(["c", [0, hatId, 0]]);
+                myPlayer.hat = hatId;
+            }
+        }
+
+        // Update hat based on conditions
+        function updateSpecialWeaponHat() {
+            // Check if player is holding special weapon
+            if (isHoldingSpecialWeapon()) {
+                // Check if standing still
+                if (isStandingStill()) {
+                    // Check if enemies nearby
+                    enemiesNearby = checkEnemiesNearby();
+
+                    if (enemiesNearby) {
+                        // Enemies nearby - wear hat 6
+                        setHatSafely(6);
+                        if (hatCycleInterval) {
+                            clearInterval(hatCycleInterval);
+                            hatCycleInterval = null;
+                        }
+                    } else {
+                        // No enemies nearby - wear hat 20
                         setHatSafely(20);
-                        isHat20Active = true;
+
+                        // Start hat 53 cycle if not already running
+                        if (!hatCycleInterval) {
+                            startHat53Cycle();
+                        }
                     }
-                }, 150);
-            }
-        }, 3000); // Every 3 seconds
-    }
-
-    // Stop the hat cycle
-    function stopHatCycle() {
-        if (hatCycleInterval) {
-            clearInterval(hatCycleInterval);
-            hatCycleInterval = null;
-        }
-        isHat20Active = false;
-
-        // Return to normal hat (6) if standing still
-        if (isStandingStill()) {
-            setHatSafely(6);
-        }
-    }
-
-    // Update hat based on conditions
-    function updateSpecialWeaponHat() {
-        // Check if player is holding special weapon and is standing still
-        if (isHoldingSpecialWeapon() && isStandingStill()) {
-            startHatCycle();
-        } else {
-            stopHatCycle();
-            // If no special weapon or moving, use normal hat
-            if (isStandingStill()) {
-                setHatSafely(6);
+                } else {
+                    // Player is moving - wear hat 6
+                    setHatSafely(12);
+                    if (hatCycleInterval) {
+                        clearInterval(hatCycleInterval);
+                        hatCycleInterval = null;
+                    }
+                }
+            } else {
+                // Not holding special weapon - wear hat 6
+                setHatSafely(20);
+                if (hatCycleInterval) {
+                    clearInterval(hatCycleInterval);
+                    hatCycleInterval = null;
+                }
             }
         }
-    }
 
-    // Track movement
-    document.addEventListener("keydown", e => {
-        const key = e.key.toLowerCase();
-        const movementKeysList = ["w", "a", "s", "d", "arrowup", "arrowdown", "arrowleft", "arrowright"];
+        // Start hat 53 cycle (every 3 seconds)
+        function startHat53Cycle() {
+            if (hatCycleInterval) clearInterval(hatCycleInterval);
 
-        if (movementKeysList.includes(key)) {
-            if (!movementKeys.has(key)) {
-                movementKeys.add(key);
-                isMoving = true;
-                updateSpecialWeaponHat();
+            hatCycleInterval = setInterval(() => {
+                // Check conditions again
+                if (isHoldingSpecialWeapon() && isStandingStill() && !checkEnemiesNearby()) {
+                    // Wear hat 53 for 150ms
+                    setHatSafely(53);
+                    lastHat53Time = Date.now();
+
+                    // Return to hat 20 after 150ms
+                    setTimeout(() => {
+                        if (isHoldingSpecialWeapon() && isStandingStill() && !checkEnemiesNearby()) {
+                            setHatSafely(20);
+                        }
+                    }, 150);
+                }
+            }, 3000); // Every 3 seconds
+        }
+
+        // Track movement
+        document.addEventListener("keydown", e => {
+            const key = e.key.toLowerCase();
+            const movementKeysList = ["w", "a", "s", "d", "arrowup", "arrowdown", "arrowleft", "arrowright"];
+
+            if (movementKeysList.includes(key)) {
+                if (!movementKeys.has(key)) {
+                    movementKeys.add(key);
+                    isMoving = true;
+                    updateSpecialWeaponHat();
+                }
             }
-        }
-    });
+        });
 
-    document.addEventListener("keyup", e => {
-        const key = e.key.toLowerCase();
-        const movementKeysList = ["w", "a", "s", "d", "arrowup", "arrowdown", "arrowleft", "arrowright"];
+        document.addEventListener("keyup", e => {
+            const key = e.key.toLowerCase();
+            const movementKeysList = ["w", "a", "s", "d", "arrowup", "arrowdown", "arrowleft", "arrowright"];
 
-        if (movementKeysList.includes(key)) {
-            movementKeys.delete(key);
-            isMoving = movementKeys.size > 0;
-            // Small delay to ensure movement has stopped
-            setTimeout(updateSpecialWeaponHat, 50);
-        }
-    });
+            if (movementKeysList.includes(key)) {
+                movementKeys.delete(key);
+                isMoving = movementKeys.size > 0;
 
-    // Monitor for weapon changes
-    let lastWeaponCheck = 0;
-    const WEAPON_CHECK_INTERVAL = 500;
+                // Small delay to ensure movement has stopped
+                setTimeout(() => {
+                    updateSpecialWeaponHat();
+                }, 50);
+            }
+        });
 
-    function checkWeaponPeriodically() {
-        const now = Date.now();
-        if (now - lastWeaponCheck < WEAPON_CHECK_INTERVAL) return;
-        lastWeaponCheck = now;
+        // Monitor for weapon changes and enemy updates
+        let lastUpdateTime = 0;
+        const UPDATE_INTERVAL = 200;
 
-        // Update the hat system based on current weapon
-        updateSpecialWeaponHat();
-    }
+        function periodicUpdate() {
+            const now = Date.now();
+            if (now - lastUpdateTime < UPDATE_INTERVAL) return;
+            lastUpdateTime = now;
 
-    // Initial check
-    updateSpecialWeaponHat();
-
-    // Periodic checks
-    setInterval(checkWeaponPeriodically, WEAPON_CHECK_INTERVAL);
-
-    // Also check when WebSocket messages update player weapon
-    const originalHandleMessage = handleMessage;
-    handleMessage = function(m) {
-        originalHandleMessage(m);
-
-        // Check if weapon info was updated in the message
-        if (myPlayer.weapon !== null) {
             updateSpecialWeaponHat();
         }
-    };
 
-    return {
-        updateSpecialWeaponHat,
-        stopHatCycle,
-        startHatCycle
-    };
-}
+        // Initial update
+        updateSpecialWeaponHat();
+
+        // Periodic updates
+        setInterval(periodicUpdate, UPDATE_INTERVAL);
+
+        return {
+            updateSpecialWeaponHat,
+            stop: function() {
+                if (hatCycleInterval) {
+                    clearInterval(hatCycleInterval);
+                    hatCycleInterval = null;
+                }
+            }
+        };
+    }
 
     // ===================== AUTOBIOME HAT =====================
     function autoBiomeHatController() {
@@ -1157,7 +1208,7 @@ function initSpecialWeaponHatSystem() {
                 if (movementKeys.size > 0) {
                     setHat(normalHat);
                 } else {
-                    setHat(6);
+                   
                 }
             }
         }
@@ -1359,46 +1410,43 @@ function initSpecialWeaponHatSystem() {
     // ===================== INSTA ATTACK =====================
     function performNormalInsta() {
         storeEquip(0, 1);
-    setTimeout(() => {
-
-
-        const primary = myPlayer.weapon;
-        const secondary = getSecondaryWeaponIndex();
-
-        doNewSend(["c", [0, 7, 0]]);
-        doNewSend(["z", [primary, true]]);
-        doNewSend(["F", [1]]);
-        setTimeout(() => doNewSend(["F", [0]]), 25);
-
         setTimeout(() => {
-            doNewSend(["c", [0, 53, 0]]);
-            doNewSend(["z", [secondary, true]]);
+            const primary = myPlayer.weapon;
+            const secondary = getSecondaryWeaponIndex();
+
+            doNewSend(["c", [0, 7, 0]]);
+            doNewSend(["z", [primary, true]]);
             doNewSend(["F", [1]]);
             setTimeout(() => doNewSend(["F", [0]]), 25);
 
             setTimeout(() => {
-                doNewSend(["c", [0, 6, 0]]);
-                doNewSend(["z", [primary, true]]);
-                doNewSend(["z", [primary, true]]);
-                autoaim = false;
+                doNewSend(["c", [0, 53, 0]]);
+                doNewSend(["z", [secondary, true]]);
+                doNewSend(["F", [1]]);
+                setTimeout(() => doNewSend(["F", [0]]), 25);
 
                 setTimeout(() => {
-                    storeEquip(11, 1);
+                    doNewSend(["c", [0, 6, 0]]);
+                    doNewSend(["z", [primary, true]]);
+                    doNewSend(["z", [primary, true]]);
 
-                    if (secondary === 15) {
-                        doNewSend(["z", [secondary, true]]);
-                        setTimeout(() => doNewSend(["z", [primary, true]]), 1500);
-                    } else if (secondary === 12) {
-                        doNewSend(["z", [secondary, true]]);
-                        setTimeout(() => doNewSend(["z", [primary, true]]), 1000);
-                    } else if (secondary === 13) {
-                        doNewSend(["z", [secondary, true]]);
-                        setTimeout(() => doNewSend(["z", [primary, true]]), 400);
-                    }
-                }, 170);
+                    setTimeout(() => {
+                        storeEquip(11, 1);
+
+                        if (secondary === 15) {
+                            doNewSend(["z", [secondary, true]]);
+                            setTimeout(() => doNewSend(["z", [primary, true]]), 1500);
+                        } else if (secondary === 12) {
+                            doNewSend(["z", [secondary, true]]);
+                            setTimeout(() => doNewSend(["z", [primary, true]]), 1000);
+                        } else if (secondary === 13) {
+                            doNewSend(["z", [secondary, true]]);
+                            setTimeout(() => doNewSend(["z", [primary, true]]), 400);
+                        }
+                    }, 170);
+                }, 120);
             }, 120);
         }, 120);
-    }, 120);
     }
 
     // ===================== TRACK MOUSE POSITION =====================
@@ -1476,10 +1524,10 @@ function initSpecialWeaponHatSystem() {
             performFourTraps();
         }
 
+        // R key - Secondary weapon attack
         if (key === 'r' && document.activeElement.id.toLowerCase() !== "chatbox") {
             storeEquip(0, 1);
             setTimeout(() => {
-
                 const primary = myPlayer.weapon;
                 const secondary = getSecondaryWeaponIndex();
 
@@ -1491,7 +1539,6 @@ function initSpecialWeaponHatSystem() {
                 setTimeout(() => doNewSend(["F", [0]]), 25);
 
                 setTimeout(() => {
-
                     doNewSend(["z", [primary, true]]);
                     doNewSend(["c", [0, 7, 0]]);
                     doNewSend(["F", [1]]);
@@ -1499,15 +1546,12 @@ function initSpecialWeaponHatSystem() {
                 }, 90);
 
                 setTimeout(() => {
-
                     doNewSend(["z", [primary, true]]);
                     doNewSend(["z", [primary, true]]);
                     doNewSend(["c", [0, 6, 0]]);
                     storeEquip(11, 1);
-                    autoaim = false;
 
                     setTimeout(() => {
-
                         if (secondary === 15) {
                             doNewSend(["z", [secondary, true]]);
                             setTimeout(() => doNewSend(["z", [primary, true]]), 1500);
@@ -1527,9 +1571,12 @@ function initSpecialWeaponHatSystem() {
         if (key === 'n') {
             automill = !automill;
         }
- if (key === 'g') {
-       place(turretType)
+
+        // G key - Place turret
+        if (key === 'g') {
+            place(turretType);
         }
+
         // Space - Attack with spikes
         if (key === ' ') {
             performAttackWithSpikes();
@@ -1651,7 +1698,7 @@ function initSpecialWeaponHatSystem() {
         // Change game name
         const gameName = document.getElementById('gameName');
         if (gameName) {
-            gameName.innerText = 'Hypbo mode';
+            gameName.innerText = 'Nurbo mode';
             gameName.style = 'color: #4CAF50;';
         }
 
@@ -1675,7 +1722,7 @@ function initSpecialWeaponHatSystem() {
         autoBiomeHatController();
 
         // Start special weapon hat system
-        initSpecialWeaponHatSystem();
+        specialWeaponHatSystem = initSpecialWeaponHatSystem();
 
         // Intervals for automatic actions
         setInterval(() => {
@@ -1711,5 +1758,4 @@ function initSpecialWeaponHatSystem() {
     }, 100);
 
 })();
-
 

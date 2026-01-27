@@ -3,7 +3,7 @@
 // @namespace           https://github.com/JS55CT/
 // @author              JS55CT
 // @description         Determines which geographical divisions are in a Viewport intersect with the given BBOX.
-// @version             2026.07.13.00
+// @version             2026.07.14.00
 // @license             MIT
 // @grant               GM_xmlhttpRequest
 // @connect             github.io
@@ -13,7 +13,7 @@
 
 var wmeGisLBBOX = (function () {
   // Constructor for the wmeGisLBBOX class
-  const funcName = "wmeGisLBBOX";
+  const funcName = 'wmeGisLBBOX';
 
   const BASE_URL = `https://WazeDev.github.io/wmeGisLBBOX/`;
   const BASE_URL_BBOX = `${BASE_URL}BBOX%20JSON/`;
@@ -51,7 +51,7 @@ var wmeGisLBBOX = (function () {
     // Fetch data using GM_xmlhttpRequest
     return new Promise((resolve, reject) => {
       GM_xmlhttpRequest({
-        method: "GET",
+        method: 'GET',
         url: url,
         onload: (response) => {
           if (response.status >= 200 && response.status < 300) {
@@ -147,11 +147,11 @@ var wmeGisLBBOX = (function () {
             if (checkIntersection(bbox, viewportBbox)) {
               return [
                 {
-                  ISO_ALPHA2: countryData["ISO_ALPHA2"],
-                  ISO_ALPHA3: countryData["ISO_ALPHA3"],
-                  name: countryData["name"],
-                  Sub_level: countryData["Sub_level"],
-                  source: "BBOX",
+                  ISO_ALPHA2: countryData['ISO_ALPHA2'],
+                  ISO_ALPHA3: countryData['ISO_ALPHA3'],
+                  name: countryData['name'],
+                  Sub_level: countryData['Sub_level'],
+                  source: 'BBOX',
                 },
               ];
             }
@@ -168,30 +168,35 @@ var wmeGisLBBOX = (function () {
   };
 
   /**
-   * Fetches and augments country data with subdivision information.
+   * Fetches and augments country data with subdivision information in parallel.
    *
-   * This asynchronous function retrieves base country information and then
-   * iteratively fetches additional subdivision data for each country, augmenting
-   * the country data with its respective subdivisions.
+   * This asynchronous function retrieves the base country information JSON, and then
+   * concurrently fetches first-level subdivision data for all countries that have
+   * subdivisions (`Sub_level > 0`). It augments each country's data object with
+   * the respective subdivisions (as `subL1`), or an empty object if none exist.
    *
-   * @returns {Object} - A comprehensive data object containing country details and
-   *                     corresponding first-level subdivisions.
+   * @returns {Promise<Object>} - Resolves to a comprehensive data object containing
+   *    the country details and, where applicable, an added `subL1` property with
+   *    first-level subdivision data.
    *
    * Process Overview:
    * 1. Fetches country data from a static JSON file.
-   * 2. Iterates through each country and retrieves its subdivision JSON data.
-   * 3. Adds the fetched subdivisions data to the country information structure.
+   * 2. For each country with subdivisions (Sub_level > 0), concurrently fetches subdivision JSON data.
+   * 3. Sets an empty `subL1` object for countries with `Sub_level === 0`.
+   * 4. Populates the `subL1` property of each country.
    *
    * Error Handling:
-   * - Logs an error if fetching either the country or subdivision data fails.
-   * - Returns an empty object if the initial fetch fails.
+   * - Logs a warning if fetching country or subdivision data fails.
+   * - Returns an empty object if the initial country fetch fails.
+   * - If a subdivision fetch fails or does not exist, initializes subL1 as an empty object.
    *
    * URLs:
-   * - Subdivision Data: Dynamic URL based on country ISO_ALPHA3 code from the base URL.
-   **/
+   * - Country Data: Static JSON at `${BASE_URL_BBOX}COUNTRIES_BBOX_ESPG4326.json`
+   * - Subdivision Data: `${BASE_URL_BBOX}{ISO_ALPHA3}/{ISO_ALPHA3}_BBOX_ESPG4326.json` (for Sub_level > 0)
+   */
   wmeGisLBBOX.prototype.getCountriesAndSubsJson = async function () {
     const url = `${BASE_URL_BBOX}COUNTRIES_BBOX_ESPG4326.json`;
-    const funcName = "getCountriesAndSubsJson";
+    const funcName = 'getCountriesAndSubsJson';
 
     try {
       // Fetch the country data
@@ -201,25 +206,35 @@ var wmeGisLBBOX = (function () {
         console.warn(`${funcName}: No country data found.`);
         return {};
       }
-      // Iterate over each country to fetch and add subdivision data
-      for (const countryCode in COUNTRY_DATA) {
-        if (COUNTRY_DATA.hasOwnProperty(countryCode)) {
-          // Fetch the first-level subdivision data for the country
-          const isoAlpha3 = COUNTRY_DATA[countryCode].ISO_ALPHA3;
+
+      const countryCodes = Object.keys(COUNTRY_DATA);
+
+      // Prepare subdivision fetches for countries with Sub_level > 0
+      const subFetchPromises = countryCodes.map((countryCode) => {
+        const country = COUNTRY_DATA[countryCode];
+        if (country.Sub_level > 0) {
+          const isoAlpha3 = country.ISO_ALPHA3;
           const subL1Url = `${BASE_URL_BBOX}${isoAlpha3}/${isoAlpha3}_BBOX_ESPG4326.json`;
-          try {
-            const subL1Data = await this.fetchJsonWithCache(subL1Url);
-            if (!subL1Data) {
-              COUNTRY_DATA[countryCode].subL1 = {}; // Initialize as empty object if no data is found
-            } else {
-              // Add subdivisions to the country data
-              COUNTRY_DATA[countryCode].subL1 = subL1Data;
-            }
-          } catch (subError) {
-            COUNTRY_DATA[countryCode].subL1 = {}; // Safely initialize as empty object in case of error
-          }
+          return this.fetchJsonWithCache(subL1Url)
+            .then((subL1Data) => ({ countryCode, subL1Data }))
+            .catch((subError) => {
+              console.warn(`${funcName}: Error fetching subL1 for ${countryCode}:`, subError);
+              return { countryCode, subL1Data: {} };
+            });
+        } else {
+          // No subdivisions, so set as empty object, return as a resolved promise!
+          return Promise.resolve({ countryCode, subL1Data: {} });
         }
-      }
+      });
+
+      // Await all subdivision fetches in parallel
+      const allSubdivisions = await Promise.all(subFetchPromises);
+
+      // Assign the fetched subdivision data
+      allSubdivisions.forEach(({ countryCode, subL1Data }) => {
+        COUNTRY_DATA[countryCode].subL1 = subL1Data || {};
+      });
+
       return COUNTRY_DATA;
     } catch (error) {
       console.warn(`${funcName}: Error fetching country data:`, error);
@@ -337,13 +352,13 @@ var wmeGisLBBOX = (function () {
       for (const feature of geoJsonData.features) {
         const featureGeometry = feature.geometry;
         // Check if the geometry type is Polygon or MultiPolygon
-        if (featureGeometry.type === "Polygon") {
+        if (featureGeometry.type === 'Polygon') {
           for (const polygon of featureGeometry.coordinates) {
             if (hasIntersection(polygon, viewportPolygon)) {
               return returnGeoJson ? geoJsonData : true; // Return the GeoJSON data or intersection boolean
             }
           }
-        } else if (featureGeometry.type === "MultiPolygon") {
+        } else if (featureGeometry.type === 'MultiPolygon') {
           for (const multiPolygon of featureGeometry.coordinates) {
             for (const polygon of multiPolygon) {
               if (hasIntersection(polygon, viewportPolygon)) {
@@ -412,20 +427,20 @@ var wmeGisLBBOX = (function () {
                 .reduce((acc, sub) => {
                   acc[sub.name] = {
                     subL3_num: sub.sub_num,
-                    source: "BBOX",
+                    source: 'BBOX',
                   };
                   return acc;
                 }, {});
               if (Object.keys(intersectingSubCounties).length > 0) {
-                let source = "BBOX";
+                let source = 'BBOX';
                 let geoJsonData = null;
                 if (highPrecision) {
-                  const intersectsGeoJson = await this.fetchAndCheckGeoJsonIntersection("USA", stateCode, countyData.sub_num, viewportBbox, returnGeoJson);
+                  const intersectsGeoJson = await this.fetchAndCheckGeoJsonIntersection('USA', stateCode, countyData.sub_num, viewportBbox, returnGeoJson);
                   if (returnGeoJson && intersectsGeoJson) {
                     geoJsonData = intersectsGeoJson;
-                    source = "GEOJSON";
+                    source = 'GEOJSON';
                   } else if (intersectsGeoJson) {
-                    source = "GEOJSON";
+                    source = 'GEOJSON';
                   } else {
                     continue;
                   }
@@ -442,11 +457,11 @@ var wmeGisLBBOX = (function () {
             }
           }
           if (Object.keys(intersectingCounties).length > 0) {
-            let stateSource = "BBOX";
+            let stateSource = 'BBOX';
             if (highPrecision) {
-              const anyCountyWithGeoJson = Object.values(intersectingCounties).some((county) => county.source === "GEOJSON");
+              const anyCountyWithGeoJson = Object.values(intersectingCounties).some((county) => county.source === 'GEOJSON');
               if (anyCountyWithGeoJson) {
-                stateSource = "GEOJSON";
+                stateSource = 'GEOJSON';
               }
             }
             intersectingRegions[stateData.name] = {
@@ -494,7 +509,7 @@ var wmeGisLBBOX = (function () {
     const subdivisionsResult = {};
     const countryCode = countryObj.ISO_ALPHA3;
     const subL1Url = `${BASE_URL_BBOX}${countryCode}/${countryCode}_BBOX_ESPG4326.json`;
-    const funcName = "getIntersectingSubdivisions";
+    const funcName = 'getIntersectingSubdivisions';
     try {
       // Check Sub_Level to decide how to handle subdivisions
       if (!countryObj.Sub_level) {
@@ -511,12 +526,12 @@ var wmeGisLBBOX = (function () {
           const subdivision = subL1Data[subdivisionID];
           // Check intersection for first-level subdivisions
           if (checkIntersection(subdivision.bbox, viewportBbox)) {
-            const subdivisionName = subdivision["name"];
+            const subdivisionName = subdivision['name'];
             // Initialize data for this subdivision
             subdivisionsResult[subdivisionName] = {
-              subL1_num: subdivision["sub_num"],
+              subL1_num: subdivision['sub_num'],
               subL1_id: subdivisionID,
-              source: "BBOX",
+              source: 'BBOX',
               subL2: {}, // Placeholder for second-level subdivisions
             };
             // If Sub_Level is 2, fetch second-level subdivision data
@@ -533,11 +548,11 @@ var wmeGisLBBOX = (function () {
                     const subsub = subsubDivision[subsubID];
                     // Check intersection for second-level subdivisions
                     if (checkIntersection(subsub.bbox, viewportBbox)) {
-                      const subsubName = subsub["name"];
+                      const subsubName = subsub['name'];
                       // Add intersecting second-level subdivisions
                       subdivisionsResult[subdivisionName].subL2[subsubName] = {
-                        subL2_num: subsub["sub_num"],
-                        source: "BBOX",
+                        subL2_num: subsub['sub_num'],
+                        source: 'BBOX',
                       };
                     }
                   }
@@ -585,7 +600,7 @@ var wmeGisLBBOX = (function () {
    **/
   wmeGisLBBOX.prototype.whatsInView = async function (viewportBbox, highPrecision = false, returnGeoJson = false) {
     const results = {};
-    const funcName = "whatsInView";
+    const funcName = 'whatsInView';
     try {
       const countries = await this.getIntersectingCountries(viewportBbox);
       if (!countries || Object.keys(countries).length === 0) {
@@ -605,7 +620,7 @@ var wmeGisLBBOX = (function () {
           };
           continue;
         }
-        if (country.ISO_ALPHA3 === "USA") {
+        if (country.ISO_ALPHA3 === 'USA') {
           const statesAndCounties = await this.getIntersectingStatesAndCounties(viewportBbox, highPrecision, returnGeoJson);
           if (statesAndCounties && Object.keys(statesAndCounties).length > 0) {
             results[country.name] = {

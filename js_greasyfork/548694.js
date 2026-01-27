@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        JAV cross-site navigation Linker (Class Refactor)
 // @namespace   https://tampermonkey.net/
-// @version     2026.01.12
+// @version     2026.01.21
 // @description Add Jable.tv link button to JAVDB, JAVBUS, JAVLIBRARY, AV01 and AVJOY pages, and cross-site navigation buttons, plus subtitle site links. Refactored as JableLinker class for maintainability. Adds JAVDB list page previews.
 // @author      庄引X@https://x.com/zhuangyin8
 // @match       https://javdb.com/*
@@ -19,6 +19,7 @@
 // @match       https://haijiao.com/*
 // @match       https://subtitlecat.com/*
 // @match       https://skrbtso.top/*
+// @match       https://mypikpak.com/drive/*
 // @grant       GM_xmlhttpRequest
 // @grant       GM_getValue
 // @grant       GM_setValue
@@ -53,6 +54,7 @@ class JableLinker {
             SUBTITLECAT: "https://subtitlecat.com",
             HAIJIAO: "https://haijiao.com",
             SKRBTSO: "https://skrbtso.top",
+            PIKPAK: "https://mypikpak.com",
         };
         this.SELECTORS = {
             // JAV Site Selectors
@@ -66,7 +68,7 @@ class JableLinker {
             AVJOY_TITLE: ".video-title h1",
             AV01_TITLE: "h1.text-white",
             SLADKOTV_TITLE: "h1.video-title ",
-            MISSAV_TITLE: ".mt-4 h1",
+            MISSAV_TITLE: ".mt-4 h1"
         };
         this.STYLES = {
             SUKEBEI: `table.torrent-list td:nth-child(4) {white-space: wrap;}.navbar-form .input-group>.form-control {width: 100%;margin-right: 50vw;}
@@ -77,7 +79,7 @@ class JableLinker {
             YHG: `.wrapper {margin-left: -50%;} .bobologo{ display: none !important;}`,
             JAVBUS: `.row > #waterfall{ width: 100vw !important; } .container { width: 80vw !important; } .masonry #waterfall{ display: grid; grid-template-columns: repeat(4, 1fr); } .mb20 { display: grid; grid-template-columns: repeat(3, 1fr); } .movie-box { width: auto !important; height: 100% !important; margin: 0 !important; } #waterfall .masonry-brick { position: relative !important; top: 0px !important; left: 0 !important; } .screencap img {width:auto  !important; }.movie-box .photo-frame, .movie-box img { width: 100% !important; height: auto !important; margin: 0 !important;} iframe,.banner728,.banner300,.bcpic2{display:none}
             .navbar-default .navbar-collapse, .navbar-default .navbar-form {display: flex !important;flex: 1;}.navbar-form .input-group {width: 100%;}`,
-            JAVDB: `.column {padding: 0; }.buttons:not(:last-child) {margin-bottom: 0rem;}.columns {align-items: center;}.container:not(.is-max-desktop):not(.is-max-widescreen) { max-width: 100vw; } .movie-list .item .video-title { white-space: normal; } .moj-content{display:none}.fancybox-slide--video .fancybox-content,.fancybox-video {height: auto !important;width: auto !important;/*left: 25%;top: 25%;*/}`,
+            JAVDB: `.column-video-cover {width: auto !important;}.video-panel .preview-images {display: grid;grid-template-columns: repeat(4, minmax(0px, 1fr));}.title.is-4 {display: inline-block !important;}.column {padding: 0; }.buttons:not(:last-child) {margin-bottom: 0rem;}.columns {align-items: center;}.container:not(.is-max-desktop):not(.is-max-widescreen) { max-width: 100vw; } .movie-list .item .video-title { white-space: normal; } .moj-content,.app-desktop-banner{display:none !important;}.fancybox-slide--video .fancybox-content,.fancybox-video {height: auto !important;width: auto !important;/*left: 25%;top: 25%;*/}`,
             JAVLIBRARY: `.main > div:not([id]),iframe,#leftmenu > table:last-child,#topbanner11{display:none}`,
             JABLE: `.video-img-box .title,.title{white-space:normal;max-height:auto}.container {max-width: 100% !important;} .right-sidebar {display: contents;max-width: 500px;} .right-sidebar .video-img-box {display:inline-block !important;} .right-sidebar>.gutter-20>.col-lg-12 {flex: 0 0 25% !important;} .justify-content-center,.h5,iframe,.asg-interstitial,.root--ujvuu ,.text-sponsor,.pb-3 .row .col-6:nth-child(2),.right-sidebar .row .col-6:nth-child(1){display:none}.right-sidebar .video-img-box .img-box {min-width: 100%; max-width: 100%;}.plyr--video {width: 80%;margin: auto;}`,
             AV01: `.group:has(> div.overflow-hidden){display:none} .gap-8 > div{grid-column:span 3 / span 3} .max-w-7xl{max-width: 90vw;}.space-y-4 > div{width: 33vw;display: -webkit-box;}`,
@@ -85,7 +87,7 @@ class JableLinker {
             AVJOY: `.related-video .thumb-overlay,.related-video .content-info {width: 100%;}.container {max-width: 100vw;} .content-right{ width: 100%;}.content-left {;max-width: 70%;margin:0 auto;} .content-right{display: grid;grid: auto-flow /repeat(4, 1fr) ;} .ad-content-bot,.ad-content-side{display:none}`,
             MISSAV: `.sm\\:container {max-width: 100vw !important;}.order-first{width:100vw !important;} .video-player-container {width: 100%;}.xl\\:grid-cols-4 {gap: 10px;}.-mt-6 {width: 80%;height: 80%;margin: 0 auto !important;}.order-last,.order-last >div {max-width: 100% !important;min-width: 100% !important;}.related-videos,.order-last > div  {display: grid;grid-template-columns: repeat(4, 1fr);gap: 10px;}.ad-banner,.advertisement,.ads,.list-none,.space-y-6{display:none !important;}.content-without-search > .flex, .order-last > div >.flex {flex-direction: column;}.ml-6 {margin-left: 0 !important;}.mb-6>div {width:100% !important}.truncate {white-space: normal;}`,
             HAIJIAO: `* {-webkit-user-select:auto;}.containeradvertising,.haslist,.article-handle,.url-box{display:none !important;}.floor_box .article img {max-width: 100% !important;}`,
-            SUBTITLECAT: `body + div,{display:none !important;z-index:-9999 !important;}`,
+            SUBTITLECAT: `body + div,{display:none !important;z-index:-9999 !important;}`
         };
         const commonButtons = {
             javdb: true,
@@ -102,7 +104,7 @@ class JableLinker {
             btsow: true,
             yhg: true,
             sukbei: true,
-            hayav: true,
+            hayav: true
         };
         this.SITE_CONFIG = {
             [this.SITES.JAVDB]: {
@@ -120,8 +122,8 @@ class JableLinker {
                     title: ".name",
                     size: ".meta",
                     date: ".time",
-                    insertPoint: ".magnet-name", //#magnets-content > div:nth-child(1) > div.magnet-name.column.is-four-fifths > a
-                },
+                    insertPoint: ".magnet-name" //#magnets-content > div:nth-child(1) > div.magnet-name.column.is-four-fifths > a
+                }
             },
             [this.SITES.JAVBUS]: {
                 titleSelector: this.SELECTORS.JAVBUS_TITLE,
@@ -137,8 +139,8 @@ class JableLinker {
                     title: "td:nth-child(1) a",
                     size: "td:nth-child(2) a",
                     date: "td:nth-child(3) a",
-                    insertPoint: "td",
-                },
+                    insertPoint: "td"
+                }
             },
             [this.SITES.JAVLIBRARY]: {
                 titleSelector: this.SELECTORS.JAVLIBRARY_TITLE,
@@ -146,7 +148,7 @@ class JableLinker {
                 pathCheck: "/?v=",
                 buttons: {
                     ...commonButtons
-                },
+                }
             },
             // Video Site Configs
             [this.SITES.JABLE]: {
@@ -157,7 +159,7 @@ class JableLinker {
                     ...commonButtons,
                     jable: false
                 },
-                isVideoSite: true,
+                isVideoSite: true
             },
             [this.SITES.AVJOY]: {
                 titleSelector: this.SELECTORS.AVJOY_TITLE,
@@ -167,7 +169,7 @@ class JableLinker {
                     ...commonButtons,
                     avjoy: false
                 },
-                isVideoSite: true,
+                isVideoSite: true
             },
             [this.SITES.AV01]: {
                 titleSelector: this.SELECTORS.AV01_TITLE,
@@ -177,7 +179,7 @@ class JableLinker {
                     ...commonButtons,
                     av01: false
                 },
-                isVideoSite: true,
+                isVideoSite: true
             },
             [this.SITES.SLADKOTV]: {
                 titleSelector: this.SELECTORS.SLADKOTV_TITLE,
@@ -187,7 +189,7 @@ class JableLinker {
                     ...commonButtons,
                     sladkotv: false
                 },
-                isVideoSite: true,
+                isVideoSite: true
             },
             [this.SITES.MISSAV]: {
                 titleSelector: this.SELECTORS.MISSAV_TITLE,
@@ -197,7 +199,7 @@ class JableLinker {
                     ...commonButtons,
                     missav: false
                 },
-                isVideoSite: true,
+                isVideoSite: true
             },
             // Magnet Site Configs
             [this.SITES.SKRBTSO]: {
@@ -212,7 +214,7 @@ class JableLinker {
                     title: "li:nth-child(1) > a",
                     size: "li.rrmi > span:nth-child(2)",
                     date: "li.rrmi > span:nth-child(4)",
-                    insertPoint: "li:nth-child(1) > a",
+                    insertPoint: "li:nth-child(1) > a"
                 },
                 magnetDetailsSelectors: {
                     list: "body > div > div:nth-child(3) > div.col-md-6",
@@ -220,8 +222,8 @@ class JableLinker {
                     title: "h3",
                     size: "div:nth-child(2) > div.panel-body > ul > li:nth-child(2)",
                     date: "div:nth-child(2) > div.panel-body > ul > li:nth-child(3)",
-                    insertPoint: "h3",
-                },
+                    insertPoint: "h3"
+                }
             },
             [this.SITES.SUKEBEI]: {
                 style: this.STYLES.SUKEBEI,
@@ -235,8 +237,8 @@ class JableLinker {
                     title: "td:nth-child(2) a:not(:has(i))",
                     size: "td:nth-child(4)",
                     date: "td:nth-child(5)",
-                    insertPoint: "td:nth-child(2) > a",
-                },
+                    insertPoint: "td:nth-child(2) > a"
+                }
             },
             [this.SITES.BTDIG]: {
                 style: this.STYLES.BTDIG,
@@ -247,11 +249,11 @@ class JableLinker {
                 },
                 magnetSelectors: {
                     list: ".one_result",
-                    hashLink: ".torrent_name a",
+                    hashLink: ".torrent_magnet a",
                     title: ".torrent_name a",
                     size: ".torrent_size",
                     date: ".torrent_age",
-                    insertPoint: ".torrent_magnet",
+                    insertPoint: ".torrent_magnet a"
                 },
                 magnetDetailsSelectors: {
                     list: "table",
@@ -259,8 +261,8 @@ class JableLinker {
                     title: "tbody > tr:nth-child(5) > td:nth-child(2)",
                     size: "tbody > tr:nth-child(6) > td:nth-child(2)",
                     date: "tbody > tr:nth-child(7) > td:nth-child(2)",
-                    insertPoint: "tbody > tr:nth-child(3) > th:nth-child(2)",
-                },
+                    insertPoint: "tbody > tr:nth-child(3) > th:nth-child(2)"
+                }
             },
             [this.SITES.BTSOW]: {
                 style: this.STYLES.BTSOW,
@@ -274,7 +276,7 @@ class JableLinker {
                     title: "a",
                     size: ".size",
                     date: ".date",
-                    insertPoint: "a",
+                    insertPoint: "a"
                 },
                 magnetDetailsSelectors: {
                     list: "main",
@@ -282,8 +284,8 @@ class JableLinker {
                     title: ".text-h5",
                     size: ".data-list div:nth-child(3) > div.value",
                     date: ".data-list div:nth-child(4) > div.value",
-                    insertPoint: ".text-h5",
-                },
+                    insertPoint: ".text-h5"
+                }
             },
             [this.SITES.YHG]: {
                 style: this.STYLES.YHG,
@@ -294,7 +296,7 @@ class JableLinker {
                     title: "div.title > h3 > a",
                     size: "div.sbar > span:nth-child(3) > b",
                     date: "div.sbar > span:nth-child(4) > b",
-                    insertPoint: "div.title h3 a",
+                    insertPoint: "div.title h3 a"
                 },
                 magnetDetailsSelectors: {
                     list: "main",
@@ -302,12 +304,17 @@ class JableLinker {
                     title: ".text-h5",
                     size: ".data-list div:nth-child(3) > div.value",
                     date: ".data-list div:nth-child(4) > div.value",
-                    insertPoint: ".text-h5",
-                },
+                    insertPoint: ".text-h5"
+                }
             },
             [this.SITES.HAIJIAO]: {
-                style: this.STYLES.HAIJIAO,
+                style: this.STYLES.HAIJIAO
             },
+            [this.SITES.PIKPAK]: {
+                style: this.STYLES.PIKPAK,
+                pathCheck: "/drive/",
+                isVideoSite: true
+            }
         };
     }
     // ==================== 2. UTILITY FUNCTIONS ====================
@@ -326,25 +333,50 @@ class JableLinker {
             });
             observer.observe(document.documentElement, {
                 childList: true,
-                subtree: true,
+                subtree: true
             });
             if (timeoutMs > 0) setTimeout(() => {
                 observer.disconnect();
                 reject(new Error(`waitForElement timeout: ${selector}`));
             }, timeoutMs);
         }),
-        moveElementToNextSiblingFirstChild: (selector) => {
-            const element = document.querySelector(selector);
-            if (!element) {
-                console.error("The provided element is invalid.");
-                return;
+        moveElement: (sourceDom, targetDom, insert = {
+            mode: 'inside', // inside | before | after
+            position: 'end' // start | end（仅 mode=inside 有效）
+        }) => {
+            const source = typeof sourceDom === 'string' ? document.querySelector(sourceDom) : sourceDom;
+            const target = typeof targetDom === 'string' ? document.querySelector(targetDom) : targetDom;
+            if (!(source instanceof Element)) {
+                console.error('[moveElement] invalid source:', sourceDom);
+                return false;
             }
-            const nextSibling = element.nextElementSibling;
-            if (!nextSibling) {
-                console.warn("The element has no next sibling to move to.");
-                return;
+            if (!(target instanceof Element)) {
+                console.error('[moveElement] invalid target:', targetDom);
+                return false;
             }
-            nextSibling.insertBefore(element, nextSibling.firstElementChild);
+            const {
+                mode,
+                position
+            } = insert;
+            switch (mode) {
+                case 'inside':
+                    if (position === 'start') {
+                        target.insertBefore(source, target.firstElementChild);
+                    } else {
+                        target.appendChild(source);
+                    }
+                    break;
+                case 'before':
+                    target.parentNode?.insertBefore(source, target);
+                    break;
+                case 'after':
+                    target.parentNode?.insertBefore(source, target.nextSibling);
+                    break;
+                default:
+                    console.error('[moveElement] unknown insert mode:', mode);
+                    return false;
+            }
+            return true;
         },
         getCodeFromCurrentSite: (domain, selector) => {
             if (!this.utils.isIncludes(domain)) return null;
@@ -352,7 +384,7 @@ class JableLinker {
             const title = titleElement ? titleElement.textContent.trim() : "";
             let codeMatch = title.match(/[A-Za-z]+-\d+/) || document.title.match(/[A-Za-z]+-\d+/);
             if (codeMatch && codeMatch[0]) return codeMatch[0];
-            const lastSegment = decodeURIComponent(window.location.pathname.split("/").filter(Boolean).pop() || "", );
+            const lastSegment = decodeURIComponent(window.location.pathname.split("/").filter(Boolean).pop() || "");
             codeMatch = lastSegment.match(/[A-Za-z]+-\d+/);
             return codeMatch ? codeMatch[0] : null;
         },
@@ -365,12 +397,12 @@ class JableLinker {
                     if (response.status >= 200 && response.status < 300) {
                         resolve(response);
                     } else {
-                        reject(new Error(`Request failed with status ${response.status}`), );
+                        reject(new Error(`Request failed with status ${response.status}`));
                     }
                 },
                 onerror: (error) => reject(new Error("Network error during request", {
                     cause: error
-                })),
+                }))
             });
         }),
         NewElement: (tagName = "div", config = {}) => {
@@ -378,11 +410,65 @@ class JableLinker {
             if (config.textContent) element.textContent = config.textContent;
             if (config.className) element.className = config.className;
             if (config.id) element.id = config.id;
-            if (config.attributes) Object.entries(config.attributes).forEach(([key, value]) => element.setAttribute(key, value), );
-            if (config.events) Object.entries(config.events).forEach(([event, handler]) => element.addEventListener(event, handler), );
+            if (config.attributes) Object.entries(config.attributes).forEach(([key, value]) => element.setAttribute(key, value));
+            if (config.events) Object.entries(config.events).forEach(([event, handler]) => element.addEventListener(event, handler));
             if (config.style) Object.assign(element.style, config.style);
             return element;
         },
+        createCopyButton: (selectors, options = {}) => {
+            const {
+                buttonText = '复制',
+                    buttonHTML = null,
+                    successText = '✔',
+                    successHTML = null,
+                    copySelectors = [],
+                    joiner = ' ',
+                    insert = {
+                        mode: 'inside',
+                        position: 'start'
+                    },
+                    buttonClass = 'copy-btn'
+            } = options;
+            const targets = typeof selectors === 'string' ? document.querySelectorAll(selectors) : selectors.flatMap(sel => document.querySelectorAll(sel));
+            const render = (btn, text, html) => {
+                html != null ? (btn.innerHTML = html) : (btn.innerText = text);
+            };
+            const resolveSelector = (item) => {
+                // 🔥 支持 fallback 选择器
+                if (typeof item === 'object' && item.primary) {
+                    return document.querySelector(item.primary) ? item.primary : item.fallback;
+                }
+                return item;
+            };
+            targets.forEach(target => {
+                const button = document.createElement('a');
+                button.type = 'button';
+                button.className = buttonClass;
+                render(button, buttonText, buttonHTML);
+                button.onclick = async () => {
+                    try {
+                        const text = copySelectors.map(sel => {
+                            const resolved = resolveSelector(sel);
+                            if (!resolved) return '';
+                            return [...document.querySelectorAll(resolved)].map(el => el.innerText.trim()).join(joiner);
+                        }).filter(Boolean).join(joiner);
+                        await navigator.clipboard.writeText(text);
+                        render(button, successText, successHTML);
+                        setTimeout(() => render(button, buttonText, buttonHTML), 1200);
+                    } catch (e) {
+                        console.error(e);
+                    }
+                };
+                // 插入按钮
+                if (insert.mode === 'inside') {
+                    insert.position === 'start' ? target.prepend(button) : target.append(button);
+                } else if (insert.mode === 'before') {
+                    target.before(button);
+                } else {
+                    target.after(button);
+                }
+            });
+        }
     };
     // ==================== 3. DOM & UI MANIPULATION ====================
     dom = {
@@ -390,7 +476,7 @@ class JableLinker {
             if (!style || document.getElementById(idKey)) return;
             const styleElement = this.utils.NewElement("style", {
                 id: idKey,
-                textContent: style,
+                textContent: style
             });
             document.head.appendChild(styleElement);
         },
@@ -399,75 +485,78 @@ class JableLinker {
             javbus: {
                 text: "JAVBUS",
                 color: "#e74c3c",
-                url: (code) => `${this.SITES.JAVBUS}/${code.replace("DSVR", "3DSVR")}`,
+                url: (code) => `${this.SITES.JAVBUS}/${code.replace("DSVR", "3DSVR")}`
             },
             javlibrary: {
                 text: "Javlibrary",
                 color: "#6027ae",
-                url: (code) => `${this.SITES.JAVLIBRARY}/cn/vl_searchbyid.php?keyword=${code}`,
+                url: (code) => `${this.SITES.JAVLIBRARY}/cn/vl_searchbyid.php?keyword=${code}`
             },
             hayav: {
                 text: "HAYAV",
                 color: "#8e44ad",
-                url: (code) => `${this.SITES.HAYAV}/search/${code}`,
+                url: (code) => `${this.SITES.HAYAV}/search/${code}`
             },
             avsubtitles: {
                 text: "AVSubtitles",
                 color: "#e91e63",
-                url: (code) => `${this.SITES.AVSUBTITLES}/search_results.php?search=${code}`,
+                url: (code) => `${this.SITES.AVSUBTITLES}/search_results.php?search=${code}`
             },
             subtitlecat: {
                 text: "SubtitleCat",
                 color: "#c0392b",
-                url: (code) => `${this.SITES.SUBTITLECAT}/index.php?search=${code}`,
+                url: (code) => `${this.SITES.SUBTITLECAT}/index.php?search=${code}`
             },
             // isVideoSite - 绿色/蓝色系
             jable: {
                 text: "Jable",
                 color: "#27ae60",
-                url: (code) => `${this.SITES.JABLE}/videos/${code}/`,
+                url: (code) => `${this.SITES.JABLE}/videos/${code}/`
             },
             av01: {
                 text: "AV01",
                 color: "#3498db",
-                url: (code) => `${this.SITES.AV01}/cn/search?q=${code}`,
+                url: (code) => `${this.SITES.AV01}/cn/search?q=${code}`
             },
             avjoy: {
                 text: "AVJOY",
                 color: "#16a085",
-                url: (code) => `${this.SITES.AVJOY}/search/videos/${code}`,
+                url: (code) => `${this.SITES.AVJOY}/search/videos/${code}`
             },
             sladkotv: {
                 text: "SLADKOTV",
                 color: "#2980b9",
-                url: (code) => `${this.SITES.SLADKOTV}/search?q=${code}`,
+                url: (code) => `${this.SITES.SLADKOTV}/search?q=${code}`
             },
             missav: {
                 text: "MISSAV",
                 color: "#1abc9c",
-                url: (code) => `${this.SITES.MISSAV}/cn/search/${code}`,
+                url: (code) => `${this.SITES.MISSAV}/cn/search/${code}`
             },
             // isMagnetSite - 棕色/灰色系
             btdig: {
                 text: "BTDIG",
                 color: "#795548",
                 url: (code) => `${this.SITES.BTDIG}/search?q=${code}`,
+                detailsURL: (code) => `${this.SITES.BTDIG}/${code}`
             },
             btsow: {
                 text: "BTSOW",
                 color: "#607d8b",
                 url: (code) => `${this.SITES.BTSOW}/search/${code}`,
+                detailsURL: (code) => `${this.SITES.BTSOW}/magnet/detail/${code}`
             },
             yhg: {
                 text: "YHG",
                 color: "#506d7b",
                 url: (code) => `${this.SITES.YHG}/search-${code}-0-0-1.html`,
+                detailsURL: (code) => `${this.SITES.YHG}/hash/${code}.html`
             },
             sukbei: {
                 text: "SUKEBEI",
                 color: "#6c757d",
-                url: (code) => `${this.SITES.SUKEBEI}/?f=0&c=0_0&q=${code}`,
-            },
+                url: (code) => `${this.SITES.SUKEBEI}/?f=0&c=0_0&q=${code}`
+            }
         },
         addCopyButtonsToList: (itemSelector, codeElementSelector) => {
             document.querySelectorAll(itemSelector).forEach((item) => {
@@ -487,7 +576,7 @@ class JableLinker {
                         //marginRight: "5px",
                         textDecoration: "none",
                         fontSize: "1em",
-                        verticalAlign: "middle",
+                        verticalAlign: "middle"
                     },
                     events: {
                         click: async (e) => {
@@ -507,27 +596,27 @@ class JableLinker {
                             } catch (err) {
                                 console.error("JableLinker: Copy failed:", err);
                             }
-                        },
-                    },
+                        }
+                    }
                 });
                 copyButton.textContent = "📋";
                 codeElement.insertAdjacentElement("afterbegin", copyButton);
             });
         },
         initBtdigFilesCollapse: () => {
-            const getIndent = el => parseFloat(el.style.paddingLeft || '0');
+            const getIndent = (el) => parseFloat(el.style.paddingLeft || "0");
             // 获取 fa 行后连续的 span / br
-            const getFollowingMetaNodes = el => {
+            const getFollowingMetaNodes = (el) => {
                 const nodes = [];
                 let n = el.nextSibling;
-                while (n && n.nodeType === 1 && (n.tagName === 'SPAN' || n.tagName === 'BR')) {
+                while (n && n.nodeType === 1 && (n.tagName === "SPAN" || n.tagName === "BR")) {
                     nodes.push(n);
                     n = n.nextSibling;
                 }
                 return nodes;
             };
             // 获取文件夹下所有子节点
-            const getChildren = folder => {
+            const getChildren = (folder) => {
                 const indent = getIndent(folder);
                 const children = [];
                 let node = folder.nextSibling;
@@ -536,7 +625,7 @@ class JableLinker {
                         node = node.nextSibling;
                         continue;
                     }
-                    if (node.classList?.contains('fa')) {
+                    if (node.classList?.contains("fa")) {
                         if (getIndent(node) <= indent) break;
                         children.push(node, ...getFollowingMetaNodes(node));
                     }
@@ -545,15 +634,15 @@ class JableLinker {
                 return children;
             };
             // 折叠文件夹
-            const collapse = folder => {
-                folder.classList.remove('fa-folder-open');
-                folder.classList.add('fa-folder-closed');
-                getChildren(folder).forEach(el => el.style.display = 'none');
+            const collapse = (folder) => {
+                folder.classList.remove("fa-folder-open");
+                folder.classList.add("fa-folder-closed");
+                getChildren(folder).forEach((el) => (el.style.display = "none"));
             };
             // 展开文件夹（只展开直属层）
-            const expand = folder => {
-                folder.classList.remove('fa-folder-closed');
-                folder.classList.add('fa-folder-open');
+            const expand = (folder) => {
+                folder.classList.remove("fa-folder-closed");
+                folder.classList.add("fa-folder-open");
                 const indent = getIndent(folder);
                 let node = folder.nextSibling;
                 while (node) {
@@ -561,57 +650,57 @@ class JableLinker {
                         node = node.nextSibling;
                         continue;
                     }
-                    if (node.classList?.contains('fa')) {
+                    if (node.classList?.contains("fa")) {
                         const nodeIndent = getIndent(node);
                         if (nodeIndent <= indent) break;
                         if (nodeIndent === indent + 1) {
-                            node.style.display = '';
-                            getFollowingMetaNodes(node).forEach(n => n.style.display = '');
+                            node.style.display = "";
+                            getFollowingMetaNodes(node).forEach(
+                                (n) => (n.style.display = ""));
                         }
                     }
                     node = node.nextSibling;
                 }
             };
             // 递归展开所有子文件夹
-            const expandAll = folder => {
+            const expandAll = (folder) => {
                 expand(folder);
-                const childrenFolders = getChildren(folder).filter(el => el.classList?.contains('fa-folder-closed'));
-                childrenFolders.forEach(f => expandAll(f));
+                const childrenFolders = getChildren(folder).filter((el) => el.classList?.contains("fa-folder-closed"));
+                childrenFolders.forEach((f) => expandAll(f));
             };
             // 递归折叠所有子文件夹
-            const collapseAll = folder => {
+            const collapseAll = (folder) => {
                 collapse(folder);
-                const childrenFolders = getChildren(folder).filter(el => el.classList?.contains('fa-folder-open'));
-                childrenFolders.forEach(f => collapseAll(f));
+                const childrenFolders = getChildren(folder).filter((el) => el.classList?.contains("fa-folder-open"));
+                childrenFolders.forEach((f) => collapseAll(f));
             };
             // 初始化：所有文件夹折叠 + 点击事件
-            const allFolders = document.querySelectorAll('.fa.fa-folder-open');
-            allFolders.forEach(folder => {
-                folder.style.cursor = 'pointer';
+            const allFolders = document.querySelectorAll(".fa.fa-folder-open");
+            allFolders.forEach((folder) => {
+                folder.style.cursor = "pointer";
                 collapse(folder);
-                folder.addEventListener('click', e => {
+                folder.addEventListener("click", (e) => {
                     e.stopPropagation();
-                    folder.classList.contains('fa-folder-closed') ? expand(folder) : collapse(folder);
+                    folder.classList.contains("fa-folder-closed") ? expand(folder) : collapse(folder);
                 });
             });
             // 创建“展开/折叠所有”按钮
             let expanded = false; // 当前状态
-            const btn = document.createElement('button');
-            btn.textContent = '展开所有文件夹';
-            btn.style.cssText = 'position:fixed;top:10px;right:10px;z-index:999;padding:5px 10px;font-size:14px;';
-            btn.addEventListener('click', () => {
+            const btn = document.createElement("button");
+            btn.textContent = "展开所有文件夹";
+            btn.style.cssText = "position:fixed;top:10px;right:10px;z-index:999;padding:5px 10px;font-size:14px;";
+            btn.addEventListener("click", () => {
                 if (!expanded) {
-                    allFolders.forEach(folder => expandAll(folder));
-                    btn.textContent = '折叠所有文件夹';
+                    allFolders.forEach((folder) => expandAll(folder));
+                    btn.textContent = "折叠所有文件夹";
                 } else {
-                    allFolders.forEach(folder => collapseAll(folder));
-                    btn.textContent = '展开所有文件夹';
+                    allFolders.forEach((folder) => collapseAll(folder));
+                    btn.textContent = "展开所有文件夹";
                 }
                 expanded = !expanded;
             });
             document.body.appendChild(btn);
         },
-        //
         addPreviewButtonsToList: (itemSelector, codeElementSelector) => {
             document.querySelectorAll(itemSelector).forEach((item) => {
                 if (item.querySelector(".tm-preview-btn")) return;
@@ -630,7 +719,7 @@ class JableLinker {
                         //marginRight: "5px",
                         textDecoration: "none",
                         fontSize: "1em",
-                        verticalAlign: "middle",
+                        verticalAlign: "middle"
                     },
                     events: {
                         click: async (e) => {
@@ -642,21 +731,21 @@ class JableLinker {
                             try {
                                 button.textContent = "⏳";
                                 const response = await this.utils.gmFetch(detailUrl);
-                                const doc = new DOMParser().parseFromString(response.responseText, "text/html", );
+                                const doc = new DOMParser().parseFromString(response.responseText, "text/html");
                                 const videoDetailElement = doc.querySelector(".video-detail");
-                                const stylesheetLink = doc.querySelector('link[rel="stylesheet"][href*="application"]', );
+                                const stylesheetLink = doc.querySelector('link[rel="stylesheet"][href*="application"]');
                                 if (videoDetailElement /*&& stylesheetLink*/ ) {
                                     // const cssUrl = new URL(stylesheetLink.getAttribute('href'), detailUrl).href;
-                                    this.drawer.openWithContent(videoDetailElement, codeElement.textContent.trim() /*, cssUrl*/ , );
+                                    this.drawer.openWithContent(videoDetailElement, codeElement.textContent.trim() /*, cssUrl*/ );
                                 } else {
-                                    console.error("JableLinker: Preview content or stylesheet not found.", );
+                                    console.error("JableLinker: Preview content or stylesheet not found.");
                                     alert("无法加载预览内容。");
                                 }
                             } catch (err) {
                                 console.error("JableLinker: Preview failed:", err);
                                 const errorMsg = err.message || "未知错误";
                                 if (errorMsg.includes("403")) {
-                                    alert("加载预览失败: 访问被拒绝 (403)。可能是网站阻止了请求，请尝试直接打开链接。", );
+                                    alert("加载预览失败: 访问被拒绝 (403)。可能是网站阻止了请求，请尝试直接打开链接。");
                                 } else {
                                     alert(`加载预览失败: ${errorMsg}`);
                                 }
@@ -665,8 +754,8 @@ class JableLinker {
                                     button.textContent = originalText;
                                 }
                             }
-                        },
-                    },
+                        }
+                    }
                 });
                 previewButton.textContent = "👁️";
                 codeElement.insertAdjacentElement("afterbegin", previewButton);
@@ -682,32 +771,32 @@ class JableLinker {
                     zIndex: "10000",
                     position: "fixed",
                     left: "0",
-                    top: "45px",
-                },
+                    top: "45px"
+                }
             });
             // JAVDB special handling (async search) - 其他站点色系（红色/紫色系）
             if (buttonsConfig?.javdb) {
                 try {
-                    const response = await this.utils.gmFetch(`${this.SITES.JAVDB}/search?q=${encodeURIComponent(code)}`, );
-                    const doc = new DOMParser().parseFromString(response.responseText, "text/html", );
+                    const response = await this.utils.gmFetch(`${this.SITES.JAVDB}/search?q=${encodeURIComponent(code)}`);
+                    const doc = new DOMParser().parseFromString(response.responseText, "text/html");
                     const videoLink = doc.querySelector('a[href*="/v/"]');
                     const url = videoLink ? `${this.SITES.JAVDB}${videoLink.getAttribute("href")}` : `${this.SITES.JAVDB}/search?q=${encodeURIComponent(code)}`;
-                    const btn = this.dom.createSingleButton("JAVDB", videoLink ? "#e74c3c" : "#c0392b", url, );
+                    const btn = this.dom.createSingleButton("JAVDB", videoLink ? "#e74c3c" : "#c0392b", url);
                     buttonContainer.appendChild(btn);
                 } catch (error) {
                     console.error("JAVDB search failed:", error);
-                    const btn = this.dom.createSingleButton("搜JAVDB", "#c0392b", `${this.SITES.JAVDB}/search?q=${encodeURIComponent(code)}`, );
+                    const btn = this.dom.createSingleButton("搜JAVDB", "#c0392b", `${this.SITES.JAVDB}/search?q=${encodeURIComponent(code)}`);
                     buttonContainer.appendChild(btn);
                 }
             }
             // Other sites
             Object.entries(this.dom.linkButtonDefs).forEach(([key, def]) => {
                 if (buttonsConfig?.[key]) {
-                    const btn = this.dom.createSingleButton(def.text, def.color, def.url(code), );
+                    const btn = this.dom.createSingleButton(def.text, def.color, def.url(code));
                     buttonContainer.appendChild(btn);
                 }
             });
-            titleElement.parentNode.insertBefore(buttonContainer, titleElement /*.nextSibling*/ , );
+            titleElement.parentNode.insertBefore(buttonContainer, titleElement /*.nextSibling*/ );
         },
         createSingleButton: (text, bgColor, url, target = "_self") => {
             return this.utils.NewElement("a", {
@@ -723,8 +812,8 @@ class JableLinker {
                     background: bgColor,
                     cursor: "pointer",
                     textDecoration: "none",
-                    fontSize: "14px",
-                },
+                    fontSize: "14px"
+                }
             });
         },
         enhanceMagnetLinks: (config, detail = false) => {
@@ -757,7 +846,7 @@ class JableLinker {
                         backgroundColor: "transparent",
                         borderColor: "transparent",
                         //marginRight: "10px",
-                        cursor: "pointer",
+                        cursor: "pointer"
                     },
                     events: {
                         click: async (e) => {
@@ -765,15 +854,15 @@ class JableLinker {
                             e.stopPropagation();
                             const button = e.currentTarget;
                             if (!button) return;
-                            await navigator.clipboard.writeText(decodeURIComponent(magnetUrl), );
+                            await navigator.clipboard.writeText(decodeURIComponent(magnetUrl));
                             button.textContent = "✅";
                             setTimeout(() => {
                                 if (button && button.parentNode) {
                                     button.textContent = "📋";
                                 }
                             }, 2000);
-                        },
-                    },
+                        }
+                    }
                 });
                 // Preview magnetUrl button
                 const previewBtn = this.utils.NewElement("button", {
@@ -786,7 +875,7 @@ class JableLinker {
                         backgroundColor: "transparent",
                         borderColor: "transparent",
                         //marginRight: "10px",
-                        cursor: "pointer",
+                        cursor: "pointer"
                     },
                     events: {
                         click: (e) => {
@@ -797,13 +886,13 @@ class JableLinker {
                                 button.textContent = "👀";
                             }
                             this.drawer.open(`https://magnet.pics/m/${hash}`, title);
-                        },
-                    },
+                        }
+                    }
                 });
                 parent.prepend(copyBtn, previewBtn);
                 node.__tm_magnet_enhanced__ = true;
             };
-            const run = () => document.querySelectorAll(detail ? config.magnetDetailsSelectors.list : config.magnetSelectors.list, ).forEach(processNode);
+            const run = () => document.querySelectorAll(detail ? config.magnetDetailsSelectors.list : config.magnetSelectors.list).forEach(processNode);
             run(); // Initial run
             // Observe for dynamically added nodes
             const observer = new MutationObserver((mutations) => {
@@ -853,7 +942,7 @@ class JableLinker {
             try {
                 const code = document.querySelector(this.SELECTORS.JAVDB_CODE)?.textContent.trim();
                 if (!code) {
-                    console.log("JableLinker: JAVDB code not found for image replacement.", );
+                    console.log("JableLinker: JAVDB code not found for image replacement.");
                     return;
                 }
                 const javbusUrl = `${this.SITES.JAVBUS}/${code}`;
@@ -865,45 +954,45 @@ class JableLinker {
                 const response = await this.utils.gmFetch(javbusUrl, {
                     headers
                 });
-                const doc = new DOMParser().parseFromString(response.responseText, "text/html", );
-                const anchorElements = Array.from(doc.querySelectorAll(this.SELECTORS.JAVBUS_SAMPLE_BOX), );
+                const doc = new DOMParser().parseFromString(response.responseText, "text/html");
+                const anchorElements = Array.from(doc.querySelectorAll(this.SELECTORS.JAVBUS_SAMPLE_BOX));
                 const javbusHrefs = anchorElements.map((a) => a.getAttribute("href")).filter(Boolean);
                 if (javbusHrefs.length > 0) {
                     if ((javbusHrefs[0] || "").includes("javdb")) {
-                        console.log("JableLinker: JAVBUS links back to JAVDB, skipping image replacement.", );
+                        console.log("JableLinker: JAVBUS links back to JAVDB, skipping image replacement.");
                         return;
                     }
                     const previewImagesContainer = document.querySelector(".preview-images");
                     if (previewImagesContainer) {
-                        Array.from(document.querySelectorAll(this.SELECTORS.JAVDB_PREVIEW_IMAGES), ).forEach((item) => item.remove());
+                        Array.from(document.querySelectorAll(this.SELECTORS.JAVDB_PREVIEW_IMAGES)).forEach((item) => item.remove());
                         javbusHrefs.forEach((href) => {
                             const a = this.utils.NewElement("a", {
                                 className: "tile-item",
                                 attributes: {
                                     href: href,
                                     "data-fancybox": "gallery",
-                                    "data-caption": "",
-                                },
+                                    "data-caption": ""
+                                }
                             });
                             const img = this.utils.NewElement("img", {
                                 attributes: {
                                     src: href,
                                     alt: "",
-                                    loading: "lazy",
-                                },
+                                    loading: "lazy"
+                                }
                             });
                             a.appendChild(img);
                             previewImagesContainer.appendChild(a);
                         });
-                        console.log(`JableLinker: Replaced preview images with ${javbusHrefs.length} items from JAVBUS for code: ${code}`, );
+                        console.log(`JableLinker: Replaced preview images with ${javbusHrefs.length} items from JAVBUS for code: ${code}`);
                     }
                 } else {
-                    console.log(`JableLinker: No preview images found on JAVBUS for code: ${code}`, );
+                    console.log(`JableLinker: No preview images found on JAVBUS for code: ${code}`);
                 }
             } catch (error) {
-                console.error("JableLinker: Error during replacePreviewImagesFromJAVBUS:", error, );
+                console.error("JableLinker: Error during replacePreviewImagesFromJAVBUS:", error);
             }
-        },
+        }
     };
     // ==================== 4. DRAWER CLASS FOR PREVIEWS ====================
     drawer = (() => {
@@ -913,7 +1002,7 @@ class JableLinker {
             const {
                 direction = "right",
                     width = "50vw",
-                    title = "Preview",
+                    title = "Preview"
             } = options;
             console.log(options);
             if (drawerInstance) {
@@ -933,16 +1022,16 @@ class JableLinker {
                     transform: `translateX(${direction === "left" ? "-100%" : "100%"})`,
                     transition: "transform 0.3s ease",
                     zIndex: "9999",
-                    overflowY: "auto",
-                },
+                    overflowY: "auto"
+                }
             });
             const header = this.utils.NewElement("div", {
                 style: {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    padding: "16px" /* ,borderBottom: '1px solid #eee', position: 'sticky', top: '0', backgroundColor: 'white', zIndex: '1'*/ ,
-                },
+                    padding: "16px" /* ,borderBottom: '1px solid #eee', position: 'sticky', top: '0', backgroundColor: 'white', zIndex: '1'*/
+                }
             });
             const titleEl = this.utils.NewElement("a", {
                 textContent: title,
@@ -952,7 +1041,7 @@ class JableLinker {
                 style: {
                     /* 'font-size': '24px'*/
                     "word-break": "break-all"
-                },
+                }
             });
             const closeBtn = this.utils.NewElement("button", {
                 textContent: "❌",
@@ -961,14 +1050,14 @@ class JableLinker {
                     border: "none",
                     fontSize: "24px",
                     cursor: "pointer",
-                    color: "#666",
-                },
+                    color: "#666"
+                }
             });
             const content = this.utils.NewElement("div", {
                 style: {
                     padding: "0",
                     height: "calc(100% - 60px)"
-                },
+                }
             });
             closeBtn.onclick = () => close();
             header.append(titleEl, closeBtn);
@@ -989,7 +1078,7 @@ class JableLinker {
             });
             instance.content.innerHTML = `<iframe width='100%' height='100%' src='${url}' style='display:block;'></iframe>`;
             requestAnimationFrame(
-                () => (instance.element.style.transform = "translateX(0)"), );
+                () => (instance.element.style.transform = "translateX(0)"));
         };
         const openWithContent = (element, title, cssHref) => {
             const instance = create({
@@ -1007,7 +1096,7 @@ class JableLinker {
                     padding: "1em",
                     backgroundColor: "#f5f5f5",
                     color: "#363636"
-                },
+                }
             });
             element.querySelectorAll("img[src]").forEach((img) => {
                 const src = img.getAttribute("src");
@@ -1018,7 +1107,7 @@ class JableLinker {
             wrapper.appendChild(element);
             instance.content.appendChild(wrapper);
             requestAnimationFrame(
-                () => (instance.element.style.transform = "translateX(0)"), );
+                () => (instance.element.style.transform = "translateX(0)"));
         };
         const close = () => {
             if (!drawerInstance) return;
@@ -1044,10 +1133,44 @@ class JableLinker {
     subtitles = {
         _inited: false,
         _state: {
-            vttText: null,
+            rawVttText: null, // 存储转换后的原始VTT，用于重新计算偏移
+            vttText: null, // 存储处理过偏移后的VTT
             subtitleLabel: null,
             objectUrlsByVideo: new WeakMap(),
             hasLoadedSubtitle: false,
+            offsetMs: 0 // 偏移毫秒数
+        },
+        // --- 时间处理核心函数 ---
+        _parseVttTime: (timeStr) => {
+            const match = timeStr.match(/(\d+):(\d{2}):(\d{2})\.(\d{3})/);
+            if (!match) return 0;
+            const [_, h, m, s, ms] = match;
+            return parseInt(h) * 3600000 + parseInt(m) * 60000 + parseInt(s) * 1000 + parseInt(ms);
+        },
+        _formatVttTime: (totalMs) => {
+            if (totalMs < 0) totalMs = 0;
+            const h = Math.floor(totalMs / 3600000).toString().padStart(2, '0');
+            const m = Math.floor((totalMs % 3600000) / 60000).toString().padStart(2, '0');
+            const s = Math.floor((totalMs % 60000) / 1000).toString().padStart(2, '0');
+            const ms = Math.floor(totalMs % 1000).toString().padStart(3, '0');
+            return `${h}:${m}:${s}.${ms}`;
+        },
+        // 应用偏移量到字幕文本
+        _applyOffset: (vttText, offsetMs) => {
+            if (offsetMs === 0) return vttText;
+            return vttText.replace(/(\d{2}:\d{2}:\d{2}\.\d{3}) --> (\d{2}:\d{2}:\d{2}\.\d{3})/g, (match, start, end) => {
+                const newStart = this.subtitles._formatVttTime(this.subtitles._parseVttTime(start) + offsetMs);
+                const newEnd = this.subtitles._formatVttTime(this.subtitles._parseVttTime(end) + offsetMs);
+                return `${newStart} --> ${newEnd}`;
+            });
+        },
+        // 重新同步并附加字幕
+        _resync: () => {
+            if (!this.subtitles._state.rawVttText) return;
+            const offsetInput = document.getElementById("tm-subtitle-offset-input");
+            this.subtitles._state.offsetMs = parseInt(offsetInput?.value || "0");
+            this.subtitles._state.vttText = this.subtitles._applyOffset(this.subtitles._state.rawVttText, this.subtitles._state.offsetMs);
+            this.subtitles._attachToAllVideos();
         },
         _isLikelyVtt: (text) => {
             const firstLine = (text || "").split(/\r?\n/)[0]?.trim();
@@ -1082,12 +1205,12 @@ class JableLinker {
                     const [, h, m, s, cs] = timeMatch;
                     return `${h.padStart(2, "0")}:${m.padStart(2, "0")}:${s.padStart(
             2,
-            "0",
+            "0"
           )}.${(parseInt(cs) * 10).toString().padStart(3, "0")}`;
                 };
                 let cleanText = textContent.replace(/\{[^}]*\}/g, "").replace(/\\N/g, "\n").replace(/\\n/g, "\n").replace(/\\h/g, " ").trim();
                 if (cleanText) vttContent += `${formatTime(startTime)} --> ${formatTime(
-            endTime,
+            endTime
           )}\n${cleanText}\n\n`;
             });
             return vttContent.trim() + "\n";
@@ -1097,9 +1220,11 @@ class JableLinker {
                 (text || "").split(/\r?\n/)[0]?.trim() === "[Script Info]" || text.includes("[Events]") || text.includes("Dialogue:"));
         },
         _toVtt: (text) => {
-            if (this.subtitles._isLikelyVtt(text)) return text;
-            if (this.subtitles._isLikelyAss(text)) return this.subtitles._convertAssToVtt(text);
-            return this.subtitles._convertSrtToVtt(text);
+            let vtt = "";
+            if (this.subtitles._isLikelyVtt(text)) vtt = text;
+            else if (this.subtitles._isLikelyAss(text)) vtt = this.subtitles._convertAssToVtt(text);
+            else vtt = this.subtitles._convertSrtToVtt(text);
+            return vtt.startsWith("WEBVTT") ? vtt : "WEBVTT\n\n" + vtt;
         },
         _revokeExistingObjectUrl: (video) => {
             try {
@@ -1118,7 +1243,7 @@ class JableLinker {
             this.subtitles._revokeExistingObjectUrl(video);
             this.subtitles._removeExistingLocalTracks(video);
             const blob = new Blob([this.subtitles._state.vttText], {
-                type: "text/vtt",
+                type: "text/vtt"
             });
             const url = URL.createObjectURL(blob);
             this.subtitles._state.objectUrlsByVideo.set(video, url);
@@ -1129,13 +1254,13 @@ class JableLinker {
                     srclang: "en",
                     src: url,
                     default: true,
-                    "data-local-subtitle": "1",
+                    "data-local-subtitle": "1"
                 },
                 events: {
                     load: () => {
                         if (track.track) track.track.mode = "showing";
-                    },
-                },
+                    }
+                }
             });
             video.appendChild(track);
             try {
@@ -1145,15 +1270,15 @@ class JableLinker {
             } catch (e) {}
         },
         _attachToAllVideos: () => {
-            const videoSelectors = ["video", 'iframe[src*="player"]', 'iframe[src*="video"]', ".video-player video", ".player video", "#player video", ".jwplayer video", ".video-js video", ".plyr video", ];
+            const videoSelectors = ["video", 'iframe[src*="player"]', 'iframe[src*="video"]', ".video-player video", ".player video", "#player video", ".jwplayer video", ".video-js video", ".plyr video"];
             let allVideos = [];
             videoSelectors.forEach((selector) => {
-                allVideos = allVideos.concat(Array.from(document.querySelectorAll(selector)), );
+                allVideos = allVideos.concat(Array.from(document.querySelectorAll(selector)));
             });
             const uniqueVideos = [...new Set(allVideos)];
             if (uniqueVideos.length === 0) return;
             let maxWidthVideo = uniqueVideos.reduce(
-                (max, vid) => vid.getBoundingClientRect().width > max.getBoundingClientRect().width ? vid : max, uniqueVideos[0], );
+                (max, vid) => vid.getBoundingClientRect().width > max.getBoundingClientRect().width ? vid : max, uniqueVideos[0]);
             if (maxWidthVideo) this.subtitles._attachSubtitleToVideo(maxWidthVideo);
         },
         _ensureUi: () => {
@@ -1163,97 +1288,109 @@ class JableLinker {
                 style: {
                     position: "fixed",
                     zIndex: "2147483647",
-                    bottom: "16px",
-                    left: "16px",
+                    top: "16px",
+                    right: "16px",
                     display: "flex",
                     gap: "8px",
                     alignItems: "center",
-                },
+                    background: "rgba(0,0,0,0.7)",
+                    padding: "6px",
+                    borderRadius: "8px",
+                    backdropFilter: "blur(6px)"
+                }
             });
+            // 文件输入
             const input = this.utils.NewElement("input", {
                 attributes: {
                     type: "file",
-                    accept: ".vtt,.srt,.ass,text/vtt,text/plain,.sub",
+                    accept: ".vtt,.srt,.ass"
                 },
                 style: {
                     display: "none"
+                }
+            });
+            const btnLoad = this.utils.NewElement("button", {
+                textContent: "📂 加载字幕",
+                style: {
+                    padding: "4px 8px",
+                    fontSize: "12px",
+                    color: "#fff",
+                    cursor: "pointer",
+                    background: "#27ae60",
+                    border: "none",
+                    borderRadius: "4px"
                 },
+                events: {
+                    click: () => input.click()
+                }
+            });
+            // 偏移输入框
+            const offsetInput = this.utils.NewElement("input", {
+                id: "tm-subtitle-offset-input",
+                attributes: {
+                    type: "number",
+                    value: "0",
+                    step: "100",
+                    title: "偏移毫秒数 (正数延迟，负数提前)"
+                },
+                style: {
+                    width: "60px",
+                    padding: "4px",
+                    fontSize: "12px",
+                    border: "1px solid #444",
+                    borderRadius: "4px",
+                    background: "#222",
+                    color: "#fff"
+                }
+            });
+            const btnSync = this.utils.NewElement("button", {
+                textContent: "🔄 同步",
+                style: {
+                    padding: "4px 8px",
+                    fontSize: "12px",
+                    color: "#fff",
+                    cursor: "pointer",
+                    background: "#2980b9",
+                    border: "none",
+                    borderRadius: "4px"
+                },
+                events: {
+                    click: () => this.subtitles._resync()
+                }
             });
             const label = this.utils.NewElement("span", {
                 id: "tm-add-local-subtitle-label",
                 style: {
-                    fontSize: "12px",
-                    color: "#fff",
-                    textShadow: "0 1px 2px rgba(0,0,0,0.6)",
-                },
-            });
-            const button = this.utils.NewElement("button", {
-                id: "tm-add-local-subtitle-btn",
-                textContent: "本地字幕",
-                attributes: {
-                    title: "为页面视频加载本地字幕 (.srt/.vtt/.ass)"
-                },
-                style: {
-                    padding: "6px 10px",
-                    fontSize: "12px",
-                    color: "#fff",
-                    background: "rgba(0,0,0,0.6)",
-                    border: "1px solid rgba(255,255,255,0.2)",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    backdropFilter: "saturate(150%) blur(6px)",
-                    userSelect: "none",
-                },
-                events: {
-                    click: () => input.click()
-                },
-            });
-            const retryButton = this.utils.NewElement("button", {
-                id: "tm-retry-subtitle-btn",
-                textContent: "重新附加",
-                attributes: {
-                    title: "重新尝试附加字幕到视频"
-                },
-                style: {
-                    padding: "6px 10px",
-                    fontSize: "12px",
-                    color: "#fff",
-                    background: "rgba(255,165,0,0.8)",
-                    border: "1px solid rgba(255,255,255,0.2)",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    backdropFilter: "saturate(150%) blur(6px)",
-                    userSelect: "none",
-                },
-                events: {
-                    click: () => this.subtitles._attachToAllVideos()
-                },
+                    fontSize: "11px",
+                    color: "#ccc",
+                    maxWidth: "100px",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap"
+                }
             });
             input.addEventListener("change", async () => {
                 const file = input.files?.[0];
                 if (!file) return;
-                this.subtitles._state.subtitleLabel = file.name;
                 try {
                     const text = await file.text();
-                    this.subtitles._state.vttText = this.subtitles._toVtt(text);
-                    this.subtitles._state.hasLoadedSubtitle = true;
+                    this.subtitles._state.rawVttText = this.subtitles._toVtt(text);
+                    this.subtitles._state.subtitleLabel = file.name;
                     label.textContent = file.name;
-                    this.subtitles._attachToAllVideos();
-                    setTimeout(() => this.subtitles._attachToAllVideos(), 3000);
+                    this.subtitles._resync(); // 加载后应用当前偏移
+                    this.subtitles._state.hasLoadedSubtitle = true;
                 } catch (err) {
-                    alert("读取字幕文件失败，请重试。");
-                } finally {
-                    input.value = "";
+                    alert("读取字幕失败");
                 }
             });
-            container.append(button, retryButton, label, input);
+            container.append(btnLoad, offsetInput, btnSync, label, input);
             document.documentElement.appendChild(container);
         },
         _ensureCueStyle: () => {
             if (document.getElementById("tm-local-subtitle-cue-style")) return;
             const style = this.utils.NewElement("style", {
                 id: "tm-local-subtitle-cue-style",
-                textContent: `\nvideo::cue {\n  -webkit-text-stroke: 2px #000000;\n  text-shadow: 1px 0 0 #000000, -1px 0 0 #000000, 0 1px 0 #000000, 0 -1px 0 #000000, 1px 1px 0 #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000;\n}`,
+                textContent: `\nvideo::cue {\n  -webkit-text-stroke: 2px #000000;\n  text-shadow: 1px 0 0 #000000, -1px 0 0 #000000, 0 1px 0 #000000, 0 -1px 0 #000000, 1px 1px 0 #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000;\n}`
             });
             document.head.appendChild(style);
         },
@@ -1272,7 +1409,7 @@ class JableLinker {
             });
             observer.observe(document.documentElement || document.body, {
                 childList: true,
-                subtree: true,
+                subtree: true
             });
         },
         init: () => {
@@ -1281,7 +1418,7 @@ class JableLinker {
             this.subtitles._ensureUi();
             // this.subtitles._ensureCueStyle();
             this.subtitles._observeNewVideos();
-        },
+        }
     };
     // ==================== 5. SITE HANDLERS ====================
     handlers = {
@@ -1293,7 +1430,7 @@ class JableLinker {
             const isDetailPage = this.utils.isValidPath(config.pathCheck);
             //针对每一个网站单独操作
             if (siteKey === this.SITES.JAVBUS) {
-                if (document.querySelector(".masonry-brick:has(.avatar-box)")) this.utils.moveElementToNextSiblingFirstChild(".masonry-brick:has(.avatar-box)", );
+                if (document.querySelector(".masonry-brick:has(.avatar-box)")) this.utils.moveElement(".masonry-brick:has(.avatar-box)",".masonry #waterfall",{mode: 'inside',position: 'start'});
                 [...document.querySelectorAll(".photo-frame img")].forEach((img) => {
                     if (img.src.includes("/pics/thumb/")) {
                         img.src = img.src.replace("/pics/thumb/", "/pics/cover/").replace(".jpg", "_b.jpg");
@@ -1304,6 +1441,19 @@ class JableLinker {
                     this.dom.replacePreviewImagesFromJAVBUS();
                     // Prevent gallery hash (e.g., #gallery-1) from altering URL on detail pages
                     this.dom.preventUrlHashChange(/#gallery-\d+/, true);
+                    this.utils.createCopyButton('h2', {
+                        copySelectors: ['h2 strong:not([class])', {
+                            primary: 'h2 .origin-title',
+                            fallback: 'h2 .current-title'
+                        }, ],
+                        buttonHTML: '<i class="icon-copy"></i>',
+                        successText: "✅",
+                        errorText: "❌",
+                    });
+                    this.utils.moveElement("body > section > div > div.video-detail > div:nth-child(3) > div","body > section > div > div.video-detail > div.video-meta-panel > div",);
+                    //body > section > div > div.video-detail > div:nth-child(3) > div
+                    //const target = document.querySelector(".meta-link");
+                    //if (target) target.click();
                 }
             } else if (siteKey === this.SITES.BTDIG) {
                 if (isDetailPage) {
@@ -1326,7 +1476,7 @@ class JableLinker {
                 this.dom.enhanceMagnetLinks(config);
             }
             if (isDetailPage) {
-                const code = this.utils.getCodeFromCurrentSite(siteKey, config.titleSelector, );
+                const code = this.utils.getCodeFromCurrentSite(siteKey, config.titleSelector);
                 if (code) {
                     // console.log(code, config.titleSelector, config.buttons);
                     this.dom.addLinkButtons(code, config.titleSelector, config.buttons);
@@ -1345,17 +1495,17 @@ class JableLinker {
                     run();
                     new MutationObserver(run).observe(document.body, {
                         childList: true,
-                        subtree: true,
+                        subtree: true
                     });
                 }
                 if (siteKey === this.SITES.JAVBUS) {
                     const run = () => this.dom.addCopyButtonsToList(".movie-box",
                         /*'.photo-info span'*/
-                        "date", );
+                        "date");
                     run();
                     new MutationObserver(run).observe(document.body, {
                         childList: true,
-                        subtree: true,
+                        subtree: true
                     });
                 }
             }
@@ -1374,8 +1524,8 @@ class JableLinker {
                         zIndex: "2147483647",
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "center",
-                    },
+                        justifyContent: "center"
+                    }
                 });
                 const panel = this.utils.NewElement("div", {
                     style: {
@@ -1385,8 +1535,8 @@ class JableLinker {
                         background: "#fff",
                         borderRadius: "10px",
                         boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-                        padding: "16px",
-                    },
+                        padding: "16px"
+                    }
                 });
                 const title = this.utils.NewElement("div", {
                     textContent: "站点与Cookie设置",
@@ -1394,14 +1544,14 @@ class JableLinker {
                         fontSize: "16px",
                         fontWeight: "600",
                         marginBottom: "10px"
-                    },
+                    }
                 });
                 const table = this.utils.NewElement("table", {
                     style: {
                         width: "100%",
                         borderCollapse: "collapse",
-                        fontSize: "13px",
-                    },
+                        fontSize: "13px"
+                    }
                 });
                 const tbody = this.utils.NewElement("tbody");
                 const makeRow = (labelText, key, value, placeholder) => {
@@ -1412,26 +1562,26 @@ class JableLinker {
                             padding: "6px 8px",
                             whiteSpace: "nowrap",
                             verticalAlign: "middle",
-                            width: "1%",
-                        },
+                            width: "1%"
+                        }
                     });
                     const tdInput = this.utils.NewElement("td", {
                         style: {
                             padding: "6px 8px"
-                        },
+                        }
                     });
                     const input = this.utils.NewElement("input", {
                         attributes: {
                             type: "text",
                             "data-key": key,
-                            placeholder: placeholder || "",
+                            placeholder: placeholder || ""
                         },
                         style: {
                             width: "100%",
                             padding: "6px 8px",
                             border: "1px solid #ddd",
-                            borderRadius: "6px",
-                        },
+                            borderRadius: "6px"
+                        }
                     });
                     input.value = value || "";
                     tdInput.appendChild(input);
@@ -1440,27 +1590,31 @@ class JableLinker {
                 };
                 // Load saved overrides in parallel
                 const siteEntries = Object.entries(this.SITES);
-                const savedPromises = siteEntries.map(([k]) => GM_getValue(`SITES.${k}`, ""), );
-                const [savedValues, savedJavdbCookie, savedJavbusCookie] = await Promise.all([
+                const savedPromises = siteEntries.map(([k]) => GM_getValue(`SITES.${k}`, ""));
+                const [
+                    savedValues,
+                    savedJavdbCookie,
+                    savedJavbusCookie
+                ] = await Promise.all([
                     Promise.all(savedPromises),
                     GM_getValue("javdb_cookie", ""),
-                    GM_getValue("javbus_cookie", ""),
+                    GM_getValue("javbus_cookie", "")
                 ]);
                 siteEntries.forEach(([key, defVal], idx) => {
                     const val = savedValues[idx] || defVal;
                     tbody.appendChild(makeRow(key, `SITES.${key}`, val, defVal));
                 });
                 // Cookie rows
-                tbody.appendChild(makeRow("JAVDB Cookie", "javdb_cookie", savedJavdbCookie, ""), );
-                tbody.appendChild(makeRow("JAVBUS Cookie", "javbus_cookie", savedJavbusCookie, ""), );
+                tbody.appendChild(makeRow("JAVDB Cookie", "javdb_cookie", savedJavdbCookie, ""));
+                tbody.appendChild(makeRow("JAVBUS Cookie", "javbus_cookie", savedJavbusCookie, ""));
                 table.appendChild(tbody);
                 const actions = this.utils.NewElement("div", {
                     style: {
                         marginTop: "12px",
                         display: "flex",
                         gap: "8px",
-                        justifyContent: "flex-end",
-                    },
+                        justifyContent: "flex-end"
+                    }
                 });
                 const btnCancel = this.utils.NewElement("button", {
                     textContent: "取消",
@@ -1469,8 +1623,8 @@ class JableLinker {
                         border: "1px solid #ddd",
                         background: "#fff",
                         borderRadius: "6px",
-                        cursor: "pointer",
-                    },
+                        cursor: "pointer"
+                    }
                 });
                 const btnSave = this.utils.NewElement("button", {
                     textContent: "保存",
@@ -1480,8 +1634,8 @@ class JableLinker {
                         background: "#1677ff",
                         color: "#fff",
                         borderRadius: "6px",
-                        cursor: "pointer",
-                    },
+                        cursor: "pointer"
+                    }
                 });
                 btnCancel.onclick = () => overlay.remove();
                 btnSave.onclick = async () => {
@@ -1504,12 +1658,12 @@ class JableLinker {
                 overlay.appendChild(panel);
                 document.documentElement.appendChild(overlay);
             });
-        },
+        }
     };
     // ==================== 6. INITIALIZATION ====================
     init() {
         this.handlers.setupCookieMenu();
-        const currentSiteKey = Object.keys(this.SITE_CONFIG).find((site) => this.utils.isIncludes(site), );
+        const currentSiteKey = Object.keys(this.SITE_CONFIG).find((site) => this.utils.isIncludes(site));
         if (currentSiteKey) {
             this.handlers.handleGenericSite(currentSiteKey);
         } else {

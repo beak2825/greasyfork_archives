@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Nhentai Tag Commander
-// @version      2.3
+// @version      2.4
 // @namespace    https://greasyfork.org/users/1261593
 // @description  A Whole new system for Storing/Blacklisting/Marking tags and other settings to support it (includes Advanced Level Blacklisting separate from the nhentai blacklists)
 // @author       john doe4
@@ -541,8 +541,22 @@
         display: none;
     }
 
+    #tag-modal,
+    #edit-tag-modal {
+    width: 95% !important;
+    max-width: 400px !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    max-height: 90vh;
+    overflow-y: auto;
+    }
+
     #settings-modal {
-        width: 800px;
+  width: 95%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
     }
 
     .modal label {
@@ -679,8 +693,9 @@
 
     .setting-row input,
     .setting-row select {
-        flex: 0 0 auto;
-        min-width: 120px;
+        flex: 0 1 auto;
+        min-width: 80px;
+        max-width: 150px;
         margin-left: auto;
     }
 
@@ -818,6 +833,8 @@
         overflow-x: auto;
         scrollbar-width: none;
         -ms-overflow-style: none;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
     .tabs::-webkit-scrollbar {
@@ -1003,22 +1020,23 @@
     pointer-events: auto;
 }
 .whitelist-floating-btn {
-    position: fixed;
-    left: 850px;
-    top: 450px;
-    z-index: 10003;
-    background-color: rgba(10, 144, 10, 0.9);
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 30px !important;
+
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    z-index: 999999 !important;
+
+    background-color: #0A900A;
     color: white;
-    border: 2px solid #0A900A;
-    border-radius: 8px;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-size: 14px;
+    padding: 12px 20px;
+    border-radius: 50px;
+    font-size: 16px;
     font-weight: bold;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    transition: all 0.3s ease;
-    filter: none !important;
-    backdrop-filter: none !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 .whitelist-floating-btn:hover {
     background-color: #0A900A;
@@ -3443,7 +3461,7 @@
         dialog.innerHTML = `
         <h3 style="margin-top: 0; color: #ff4444;">Set Blacklist Level</h3>
         <p>Tag: <strong>${tagName}</strong></p>
-        <p>Select the blacklist level (1-5):</p>
+        <p>Select the blacklist level:</p>
         <select id="blacklist-level-select" style="
             background-color: #444;
             color: #fff;
@@ -3452,11 +3470,12 @@
             border-radius: 4px;
             margin: 10px 0;
         ">
-            <option value="1">Level 1 (Normal)</option>
+            <option value="1">Level 1 (Default)</option>
             <option value="2">Level 2 (Counts as 2 tags)</option>
             <option value="3">Level 3 (Counts as 3 tags)</option>
             <option value="4">Level 4 (Counts as 4 tags)</option>
             <option value="5">Level 5 (Counts as 5 tags)</option>
+            <option value="100">Level 100 (Always Removes)</option>
         </select>
         <br>
         <button id="confirm-blacklist" style="

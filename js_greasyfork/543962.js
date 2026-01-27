@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name YouTube Enhanced
 // @namespace http://tampermonkey.net/
-// @version 1.27
+// @version 1.30
 // @description Custom volume control, rewind/fast forward buttons, enhanced YouTube player styles, and quick speed adjustment interface.
 // @match *://*.youtube.com/watch*
 // @match *://*.youtube.com/live*
@@ -47,11 +47,41 @@
  backdrop-filter: none !important;
  background: none !important;
 }
+.html5-video-player:not(.ytp-autohide)
 .ytp-left-controls,
+.html5-video-player:not(.ytp-autohide)
 .ytp-right-controls {
- backdrop-filter: blur(2px) !important;
- background: rgba(0,0,0,.3) !important;
+    backdrop-filter: blur(2px) !important;
+    background: rgba(0,0,0,.3) !important;
 }
+
+/* Ocultar controles personalizados cuando YouTube entra en autohide */
+.html5-video-player.ytp-autohide
+.ytp-rewind-button,
+.html5-video-player.ytp-autohide
+.ytp-fastforward-button,
+.html5-video-player.ytp-autohide
+.ytp-configure-button,
+.html5-video-player.ytp-autohide
+#custom-volume-buttons {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Mostrar controles personalizados cuando el player está activo */
+.html5-video-player:not(.ytp-autohide)
+.ytp-rewind-button,
+.html5-video-player:not(.ytp-autohide)
+.ytp-fastforward-button,
+.html5-video-player:not(.ytp-autohide)
+.ytp-configure-button,
+.html5-video-player:not(.ytp-autohide)
+#custom-volume-buttons {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+
 .ytp-left-controls {
 	margin-top: var(--yt-delhi-pill-top-height,12px) !important;
 	height: var(--yt-delhi-pill-height,48px) !important;
@@ -254,10 +284,35 @@ div.ytp-chapter-container:nth-child(9) {display: flex;align-items: center;paddin
     }
 
     function toggleMute() {
-        const player = document.querySelector('video');
-        if (player) {
-            player.muted = !player.muted;
-            updateVolumeDisplay(player.muted ? 0 : player.volume);
+        // Simular tecla M (mute nativo de YouTube)
+        const event = new KeyboardEvent('keydown', {
+            key: 'm',
+            code: 'KeyM',
+            keyCode: 77,
+            which: 77,
+            bubbles: true
+        });
+        document.dispatchEvent(event);
+
+        // Esperar a que YouTube procese el cambio
+        setTimeout(syncMuteDisplay, 50);
+    }
+
+    function syncMuteDisplay() {
+        const ytPlayer = document.getElementById('movie_player');
+        const volumeDisplay = document.querySelector('#volume-display');
+
+        if (!ytPlayer || !volumeDisplay) return;
+
+        const isMuted = ytPlayer.isMuted();
+
+        if (isMuted) {
+            volumeDisplay.textContent = '0%';
+            volumeDisplay.style.color = 'red';
+        } else {
+            const volume = ytPlayer.getVolume(); // 0–100
+            volumeDisplay.textContent = `${volume}%`;
+            volumeDisplay.style.color = 'white';
         }
     }
 
@@ -636,17 +691,17 @@ div.ytp-chapter-container:nth-child(9) {display: flex;align-items: center;paddin
     // *** YouTube Quick Speed Interface - Start ***
 
     // Add speed options
-function addSpeedOptions() {
-    // Check if speed options are already added
-    if (document.querySelector('.ytp-speed-options')) {
-        return;
-    }
+    function addSpeedOptions() {
+        // Check if speed options are already added
+        if (document.querySelector('.ytp-speed-options')) {
+            return;
+        }
 
-    var rightControls = document.querySelector('.ytp-right-controls');
-    if (rightControls) {
-        var speedOptions = document.createElement('div');
-        speedOptions.classList.add('ytp-speed-options');
-        speedOptions.style.cssText = `
+        var rightControls = document.querySelector('.ytp-right-controls');
+        if (rightControls) {
+            var speedOptions = document.createElement('div');
+            speedOptions.classList.add('ytp-speed-options');
+            speedOptions.style.cssText = `
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -654,14 +709,14 @@ function addSpeedOptions() {
             order: 0;
         `;
 
-        var speeds = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
-        speeds.forEach(function(speed) {
-            var option = document.createElement('div');
-            option.innerText = speed;
-            option.classList.add('ytp-speed-option');
+            var speeds = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
+            speeds.forEach(function(speed) {
+                var option = document.createElement('div');
+                option.innerText = speed;
+                option.classList.add('ytp-speed-option');
 
-            // Estilos para centrar y alinear
-            option.style.cssText = `
+                // Estilos para centrar y alinear
+                option.style.cssText = `
                 font-size: 18px;
                 width: 25px;
                 height: 30px;
@@ -674,34 +729,34 @@ function addSpeedOptions() {
                 border-radius: 5px;
             `;
 
-            option.addEventListener('click', function () {
-                const player = document.querySelector('.video-stream');
-                if (player) {
-                    player.playbackRate = speed;
-                    const ytPlayer = document.querySelector('#movie_player');
-                    if (ytPlayer) {
-                        ytPlayer.setPlaybackRate(speed);
+                option.addEventListener('click', function () {
+                    const player = document.querySelector('.video-stream');
+                    if (player) {
+                        player.playbackRate = speed;
+                        const ytPlayer = document.querySelector('#movie_player');
+                        if (ytPlayer) {
+                            ytPlayer.setPlaybackRate(speed);
+                        }
+                        localStorage.setItem('videoSpeed', speed);
+                        updateSpeedIndicator();
+                        showSpeedNotification(speed);
                     }
-                    localStorage.setItem('videoSpeed', speed);
-                    updateSpeedIndicator();
-                    showSpeedNotification(speed);
-                }
+                });
+
+                speedOptions.appendChild(option);
             });
 
-            speedOptions.appendChild(option);
-        });
+            // Append speedOptions directly to rightControls
+            rightControls.appendChild(speedOptions);
 
-        // Append speedOptions directly to rightControls
-        rightControls.appendChild(speedOptions);
-
-        // Forzar velocidad inicial a 1x
-        const initialPlayer = document.querySelector('.video-stream');
-        if (initialPlayer) {
-            localStorage.removeItem('videoSpeed');
-            initialPlayer.playbackRate = 1.0;
+            // Forzar velocidad inicial a 1x
+            const initialPlayer = document.querySelector('.video-stream');
+            if (initialPlayer) {
+                localStorage.removeItem('videoSpeed');
+                initialPlayer.playbackRate = 1.0;
+            }
         }
     }
-}
 
     // Función para mostrar la notificación de velocidad
     function showSpeedNotification(speed) {
@@ -919,24 +974,24 @@ input[type="number"]::-webkit-inner-spin-button {
         }
     }, 500);
 
-function moveLikeButton() {
-    // 1. Selecciona el contenedor del Like/Dislike (Confirmado como correcto)
-    const BotonDeLike = document.querySelector('.ytSegmentedLikeDislikeButtonViewModelSegmentedButtonsWrapper');
+    function moveLikeButton() {
+        // 1. Selecciona el contenedor del Like/Dislike (Confirmado como correcto)
+        const BotonDeLike = document.querySelector('.ytSegmentedLikeDislikeButtonViewModelSegmentedButtonsWrapper');
 
-    // 2. Selecciona el contenedor de las opciones de velocidad (CORREGIDO)
-    const ContenedorVelocidades = document.querySelector('.ytp-speed-options');
+        // 2. Selecciona el contenedor de las opciones de velocidad (CORREGIDO)
+        const ContenedorVelocidades = document.querySelector('.ytp-speed-options');
 
-    // 3. Selecciona el contenedor de controles derecho para referencia
-    const rightControls = document.querySelector('.ytp-right-controls');
+        // 3. Selecciona el contenedor de controles derecho para referencia
+        const rightControls = document.querySelector('.ytp-right-controls');
 
-    // Asegúrate de que todos los elementos existen antes de intentar mover
-    if (BotonDeLike && ContenedorVelocidades && rightControls) {
+        // Asegúrate de que todos los elementos existen antes de intentar mover
+        if (BotonDeLike && ContenedorVelocidades && rightControls) {
 
-        if (BotonDeLike.parentElement !== rightControls) {
-            rightControls.insertBefore(BotonDeLike, rightControls.firstChild);
+            if (BotonDeLike.parentElement !== rightControls) {
+                rightControls.insertBefore(BotonDeLike, rightControls.firstChild);
+            }
         }
     }
-}
 
     // MutationObserver to ensure controls are added when the player loads or changes
     const observer = new MutationObserver(() => {
@@ -956,11 +1011,11 @@ function moveLikeButton() {
                 observePlaybackRateChange();
             }
         }
-            if (document.querySelector('.html5-video-player')) {
-                if (document.querySelector('.ytp-right-controls')) {
-                    moveLikeButton();
-                }
+        if (document.querySelector('.html5-video-player')) {
+            if (document.querySelector('.ytp-right-controls')) {
+                moveLikeButton();
             }
+        }
     });
     observer.observe(document.body, { childList: true, subtree: true });
 
@@ -973,7 +1028,7 @@ function moveLikeButton() {
         observePlaybackRateChange();
     }
 
-/*     // Mantener Visibles Controles
+    /*     // Mantener Visibles Controles
     setInterval(() => {
         // Busca el contenedor principal del reproductor
         const container = document.querySelector('#movie_player');

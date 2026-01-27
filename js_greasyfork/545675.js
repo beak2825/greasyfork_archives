@@ -2,12 +2,12 @@
 // @name         ActualGUMS
 // @namespace    shmVirus-scripts
 // @description  Because the original felt more like a group project gone wrong!
-// @version      0.0.9
+// @version      0.0.11
 // @author       shmVirus
 // @license      MIT
 // @match        https://gums.green.edu.bd/*
 // @require      https://update.greasyfork.org/scripts/545671/1640830/ActualGUMS-SyllabusData.js
-// @require      https://update.greasyfork.org/scripts/545672/1709847/ActualGUMS-BatchConfig.js
+// @require      https://update.greasyfork.org/scripts/545672/1739618/ActualGUMS-BatchConfig.js
 // @match        https://*.bdren.net.bd/*
 // @require      https://update.greasyfork.org/scripts/545670/1640825/BdRENExtended.user.js
 // @grant        none
@@ -878,7 +878,7 @@
           const prm = Core.getPRM();
           if (prm && !prm._ActualGUMSRestoreSearch) {
             prm._ActualGUMSRestoreSearch = true;
-            prm.add_endRequest(() => { ensureSearchAlive(); hideAdvisorPanel(); });
+            prm.add_endRequest(() => { ensureSearchAlive();  });
           }
         } catch { }
       };
@@ -886,14 +886,14 @@
       const observeDom = () => {
         if (document.documentElement._ActualGUMSAdvSearchObs) return;
         document.documentElement._ActualGUMSAdvSearchObs = true;
-        new MutationObserver(Core.rafThrottle(() => { ensureSearchAlive(); hideAdvisorPanel(); }))
+        new MutationObserver(Core.rafThrottle(() => { ensureSearchAlive();  }))
           .observe(document.documentElement, { childList: true, subtree: true });
       };
 
       const ensure = () => { ensureStyles(); };
-      const mount = () => { ensureSearchAlive(); hideAdvisorPanel(); };
+      const mount = () => { ensureSearchAlive();  };
       const bind = () => { hookUpdatePanel(); observeDom(); };
-      const sync = () => { ensureSearchAlive(); hideAdvisorPanel(); };
+      const sync = () => { ensureSearchAlive();  };
 
       const run = () => { ensure(); mount(); bind(); sync(); };
       return { run };
@@ -5014,6 +5014,211 @@
     return { init };
   })();
 
+const PageEvaluationReport = (() => {
+  const CFG = {
+    PANEL_ID: "ctl00_MainContainer_UpdatePanel02",
+    LOAD_ID: "ctl00_MainContainer_lnkLoad",
+    QUESTION_ID: "ctl00_MainContainer_ddlQuestionMaster",
+    POSTBACK_TARGET: "ctl00$MainContainer$lnkLoad",
+    CSS_ID: "ActualGUMSEvalReportCSS",
+  };
+
+  const H = (() => {
+    const getPanel = () =>
+      document.getElementById(CFG.PANEL_ID) ||
+      Core.q(`[id$="${CFG.PANEL_ID}"]`) ||
+      null;
+
+    const getRow = (panel) =>
+      panel?.querySelector(".panel-body .row") ||
+      panel?.querySelector(".row") ||
+      null;
+
+    const getLoadBtn = () =>
+      document.getElementById(CFG.LOAD_ID) ||
+      Core.q(`#${CFG.LOAD_ID}`) ||
+      null;
+
+    const getQuestionCol = () => {
+      const q = document.getElementById(CFG.QUESTION_ID) || Core.q(`#${CFG.QUESTION_ID}`);
+      return q ? (q.closest('[class*="col-"]') || null) : null;
+    };
+
+    const waitForPanel = (cb) => {
+      const p = getPanel();
+      if (p) return cb(p);
+      Core.waitFor(`#${CFG.PANEL_ID}, [id$="${CFG.PANEL_ID}"]`, () => cb(getPanel()));
+    };
+
+    const ensureStyles = Core.once(() => {
+      Core.injectCSSOnce(
+        `
+        #${CFG.LOAD_ID}{
+          display:inline-block !important;
+          visibility:visible !important;
+          opacity:1 !important;
+          pointer-events:auto !important;
+        }
+
+        #${CFG.PANEL_ID} span.select2-container,
+        [id$="${CFG.PANEL_ID}"] span.select2-container{
+          width:100% !important;
+          max-width:100% !important;
+          box-sizing:border-box !important;
+          display:block !important;
+        }
+
+        #${CFG.PANEL_ID} .select2-container .select2-selection--single,
+        [id$="${CFG.PANEL_ID}"] .select2-container .select2-selection--single{
+          overflow:hidden !important;
+        }
+
+        #${CFG.PANEL_ID} .select2-container .select2-selection__rendered,
+        [id$="${CFG.PANEL_ID}"] .select2-container .select2-selection__rendered,
+        #${CFG.PANEL_ID} .select2-container .select2-chosen,
+        [id$="${CFG.PANEL_ID}"] .select2-container .select2-chosen{
+          overflow:hidden !important;
+          text-overflow:ellipsis !important;
+          white-space:nowrap !important;
+        }
+        `,
+        CFG.CSS_ID
+      );
+    });
+
+    const postbackHref = () => `javascript:__doPostBack('${CFG.POSTBACK_TARGET}','')`;
+
+    return {
+      getPanel,
+      getRow,
+      getLoadBtn,
+      getQuestionCol,
+      waitForPanel,
+      ensureStyles,
+      postbackHref,
+    };
+  })();
+
+  const featureKeepLoadVisible = (() => {
+    const forceVisible = (btn) => {
+      if (!btn) return;
+
+      btn.style.setProperty("display", "inline-block", "important");
+      btn.style.setProperty("visibility", "visible", "important");
+      btn.style.setProperty("opacity", "1", "important");
+      btn.style.setProperty("pointer-events", "auto", "important");
+
+      const col = btn.closest('[class*="col-"]');
+      if (col) {
+        col.style.removeProperty("display");
+        col.style.removeProperty("visibility");
+        col.style.removeProperty("opacity");
+      }
+    };
+
+    const recreateIfMissing = (panel) => {
+      let btn = H.getLoadBtn();
+      if (btn) {
+        forceVisible(btn);
+        return;
+      }
+
+      const row = H.getRow(panel);
+      if (!row) return;
+
+      const col = document.createElement("div");
+      col.className = "col-lg-2 col-md-2 col-sm-2";
+
+      const br = document.createElement("br");
+
+      btn = document.createElement("a");
+      btn.id = CFG.LOAD_ID;
+      btn.className = "btn btn-info";
+      btn.href = H.postbackHref();
+      btn.style.display = "inline-block";
+      btn.style.height = "38px";
+      btn.style.width = "100%";
+      btn.innerHTML = "<strong>Load</strong>";
+
+      col.appendChild(br);
+      col.appendChild(btn);
+
+      const qCol = H.getQuestionCol();
+      if (qCol && qCol.parentNode === row) row.insertBefore(col, qCol.nextSibling);
+      else row.appendChild(col);
+
+      forceVisible(btn);
+    };
+
+    const stabilizeSelect2 = (panel) => {
+      const containers = panel.querySelectorAll("span.select2-container");
+      for (const c of containers) {
+        c.style.setProperty("width", "100%", "important");
+        c.style.setProperty("max-width", "100%", "important");
+      }
+    };
+
+    const ensureFeature = () => {
+      const panel = H.getPanel() || document.body;
+
+      H.ensureStyles();
+
+      const btn = H.getLoadBtn();
+      if (btn) forceVisible(btn);
+      else recreateIfMissing(panel);
+
+      stabilizeSelect2(panel);
+    };
+
+    const ensure = () => {};
+    const mount = () => {};
+    const bind = () => {};
+    const sync = () => ensureFeature();
+    const run = () => { ensure(); mount(); bind(); sync(); };
+
+    return { run };
+  })();
+
+  const init = (flags = {}) => {
+    Theme.ensureBaseTheme();
+
+    const F = Object.assign({ featureKeepLoadVisible: true }, flags || {});
+
+    const run = () => {
+      if (F.featureKeepLoadVisible) featureKeepLoadVisible.run();
+    };
+
+    let t = 0;
+    const schedule = () => {
+      clearTimeout(t);
+      t = setTimeout(run, 60);
+    };
+
+    const bindPanelEventsOnce = Core.once(() => {
+      const p = H.getPanel() || document.documentElement;
+      if (!p) return;
+      p.addEventListener("change", schedule, true);
+      p.addEventListener("input", schedule, true);
+      p.addEventListener("select2:select", schedule, true);
+      p.addEventListener("select2:close", schedule, true);
+    });
+
+    schedule();
+
+    if (!Core.hookPRMOnce("_ActualGUMSEvalRptHooked", schedule)) {
+      Core.observeOnce("_ActualGUMSEvalRptObs", document.documentElement, schedule);
+    }
+
+    H.waitForPanel(() => {
+      bindPanelEventsOnce();
+      schedule();
+    });
+  };
+
+  return { init };
+})();
+
+
   const ActualGUMSFooter = (() => {
     const CFG = {
       CSS_ID: 'ActualGUMSFooterCSS',
@@ -5250,6 +5455,7 @@
     return { run };
   })();
 
+
   (function bootActualGUMS () {
     Theme.ensureBaseTheme();
     ActualGUMSFooter.run();
@@ -5280,7 +5486,10 @@
         featureCopyStudentsInfo: true,
         featureMarksPresented: true,
         featureAttendanceMarks: true,
-      }
+      },
+      PageEvaluationReport: {
+        featureKeepLoadVisible: true,
+      },
     };
 
     const ROUTES = {
@@ -5288,6 +5497,7 @@
       PageRegistrationPanel:      { match: /\/Registration\/Registration\.aspx$/i,              init: PageRegistrationPanel.init },
       PageStudentCourseHistory:   { match: /\/Student\/StudentCourseHistory\.aspx$/i,           init: PageStudentCourseHistory.init },
       PageAttendanceEntry:        { match: /\/ClassAttendance\/ClassAttendanceEntry\.aspx$/i,   init: PageAttendanceEntry.init },
+      PageEvaluationReport:       { match: /\/EvaluationReport\/RptQuestionMasterwiseEvaluationSummary\.aspx$/i, init: PageEvaluationReport.init },
     };
 
     const path = location.pathname || '';

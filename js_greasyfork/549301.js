@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DuckDuckGo AI
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      0.6
 // @description  Some auto clicks on DDG AI page
 // @author       CKMz17
 // @match        https://duckduckgo.com/?q=DuckDuckGo&ia=chat
@@ -42,22 +42,35 @@
         });
     }
 
-    async function clickIfExists(selector, expectedText) {
-        try {
+    async function clickIfExists(selector, expectedText = null)
+    {
+        try
+        {
             const element = await waitForElement(selector);
-            if (element && element.textContent.includes(expectedText)) {
+            if (!element) return;
+
+            if (expectedText === null)
+            {
+            	if ((element.querySelector && element.querySelector('svg')) || (element.textContent && element.textContent.trim()))
+                {
+                    element.click();
+                }
+            }
+            else if ((element.textContent || '').includes(expectedText))
+            {
                 element.click();
             }
-        } catch (error) {
+            }
+        catch (error)
+        {
             console.log(`Error clicking on element with selector "${selector}": ${error.message}`);
         }
     }
-
     async function runAutomation() {
         try {
             await clickIfExists('button.ffON2NH02oMAcqyoh2UU.vcOFkrrvuSYp7xsAur2Y.dkPsZgoVlwHrgASCd797.VVwKmb7llplcxyVXzHz9', "Agree and Continue");
-            await clickIfExists('button.HJbat_kWNvZlTI7RgTUo', "Hide Tips");
-            await clickIfExists('span.nrcWY09Dfq7ESacde0NN.wZ4JdaHxSAhGy1HoNVja.d26Geqs1C__RaCO7MUs2', "4o-mini");
+            await clickIfExists('button.XkSxBJ8ofSQsZmGZs6qx.ffON2NH02oMAcqyoh2UU.ffON2NH02oMAcqyoh2UU.vcOFkrrvuSYp7xsAur2Y', null);
+            await clickIfExists('button.AHrsI58GK_lguBKwmM47.ffON2NH02oMAcqyoh2UU.J6kopNnJfLRnTk4tGjvG.ti6bNKm33LKnBm2IskyD', "4o-mini");
             const radioInput = await waitForElement('#gpt-5-mini');
             const label = radioInput.closest('li').querySelector('label');
             if (label && label.textContent.includes("GPT-5 mini")) {

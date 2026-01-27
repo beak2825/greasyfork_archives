@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ActualGUMS-BatchConfig
 // @namespace    shmVirus-scripts
-// @version      0.0.4
+// @version      0.0.6
 // @description  Batch configuration for ActualGUMS
 // @author       shmVirus
 // @license      GPL-3.0-or-later
@@ -16,6 +16,31 @@
   window.ACTUAL_GUMS = window.ACTUAL_GUMS || {};
 
   window.ACTUAL_GUMS.BATCHES = Object.freeze({
+    201: {
+      syllabus: 201,
+      eap009: [],
+      mat009: []
+    },
+    202: {
+      syllabus: 201,
+      eap009: [],
+      mat009: []
+    },
+    203: {
+      syllabus: 201,
+      eap009: [],
+      mat009: []
+    },
+    211: {
+      syllabus: 201,
+      eap009: [],
+      mat009: []
+    },
+    212: {
+      syllabus: 201,
+      eap009: [],
+      mat009: []
+    },
     213: {
       syllabus: 201,
       eap009: [
@@ -39,22 +64,53 @@
         '213002243', '213902006', '213902009', '213902023', '213902051', '213902053', '213902074', '213902094', '213902101'
       ]
     },
-
-    231: {
-      syllabus: 231,
-      eap009: [],
-      mat009: []
-    },
-
-
     221: {
       syllabus: 201,
       eap009: [],
       mat009: []
     },
-
     222: {
       syllabus: 201,
+      eap009: [],
+      mat009: []
+    },
+    223: {
+      syllabus: 201,
+      eap009: [],
+      mat009: []
+    },
+    231: {
+      syllabus: 231,
+      eap009: [],
+      mat009: []
+    },
+    232: {
+      syllabus: 231,
+      eap009: [],
+      mat009: []
+    },
+    241: {
+      syllabus: 231,
+      eap009: [],
+      mat009: []
+    },
+    242: {
+      syllabus: 231,
+      eap009: [],
+      mat009: []
+    },
+    251: {
+      syllabus: 231,
+      eap009: [],
+      mat009: []
+    },
+    250: {
+      syllabus: 231,
+      eap009: [],
+      mat009: []
+    },
+    252: {
+      syllabus: 231,
       eap009: [],
       mat009: []
     }

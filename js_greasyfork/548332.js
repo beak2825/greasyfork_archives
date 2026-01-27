@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GGn Uploady
-// @version      9
+// @version      10
 // @description  Uploady library
 // @author       ingts
 // @match        https://gazellegames.net/
@@ -444,5 +444,5 @@ function createDescription(about, sysReqs) {
 }
 
 function joinAliases(aliases) {
-    return aliases.join(aliases.some(a => a.includes(',')) ? '||' : ', ')
+    return aliases ? aliases.join(aliases.some(a => a.includes(',')) ? '||' : ', ') : ''
 }

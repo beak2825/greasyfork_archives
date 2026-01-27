@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FlatMMOPlus
 // @namespace    com.dounford.flatmmo
-// @version      1.3
+// @version      1.4
 // @description  FlatMMO plugin framework
 // @author       Dounford adapted from Anwinity IPP
 // @match        *://flatmmo.com/play.php*
@@ -10,7 +10,7 @@
 
 (function() {
 	'use strict';
-	const VERSION = "1.3";
+	const VERSION = "1.4";
 
     Set.prototype.some = function(predicate) {
         for (const item of this) {
@@ -59,6 +59,7 @@
     let loggedIn = false;
     let isFighting = false;
     let original_onmessage;
+    let original_sendmessage;
     let original_switch_panels;
     let flatnotifications = {};
 
@@ -75,6 +76,7 @@
         loggedIn = window.FlatMMOPlus.loggedIn;
         isFighting = window.FlatMMOPlus.isFighting;
         original_onmessage = window.FlatMMOPlus.original_onmessage || null;
+        original_sendmessage = window.FlatMMOPlus.original_sendmessage || null;
         original_switch_panels = window.FlatMMOPlus.original_switch_panels || null;
         //This is required for users that have a FMP version lower than 1.0.0
         if (original_onmessage === null) {
@@ -150,6 +152,7 @@
         window.removeEventListener("keypress", keypress_listener, false);
         document.getElementById("chat-text-input").onkeypress = null
         original_onmessage = Globals.websocket.onmessage;
+        original_sendmessage = Globals.websocket.send;
         original_switch_panels = window.switch_panels;
     }
 
@@ -244,6 +247,7 @@
             this.in_combat_ticker = 0;
             this.currentAction = this.currentAction;
             this.original_onmessage = original_onmessage;
+            this.original_sendmessage = original_sendmessage;
             this.original_switch_panels = original_switch_panels;
             this.notifications = flatnotifications;
             this.level = [
@@ -709,6 +713,22 @@
         });
     }
 
+    FlatMMOPlus.prototype.onMessageSent = function(message) {
+        if(this.debug) {
+            console.log(`FM+ onMessageSent: ${message}`);
+        }
+        let interrupt = false;
+        this.forEachPlugin((plugin) => {
+            if(typeof plugin.onMessageSent === "function") {
+                if(plugin.onMessageSent(message)) {
+                    interrupt = true;
+                };
+            }
+        });
+
+        return interrupt;
+    }
+
     FlatMMOPlus.prototype.onMessageReceived = function(data) {
         if(this.debug) {
             console.log(`FM+ onMessageReceived: ${data}`);
@@ -1017,6 +1037,17 @@
         });
     }
 
+    FlatMMOPlus.prototype.onDamageTaken = function(hpBefore, hpAfter) {
+        if(this.debug) {
+            console.log(`FMMO+ onDamageTaken "${hpBefore}" -> "${hpAfter}"`);
+        }
+        this.forEachPlugin((plugin) => {
+            if(typeof plugin.onDamageTaken === "function") {
+                plugin.onDamageTaken(hpBefore, hpAfter);
+            }
+        });
+    }
+
     FlatMMOPlus.prototype.onFightStarted = function() {
         if(this.debug) {
             console.log(`FMMO+ onFightStarted`);
@@ -1070,9 +1101,24 @@
                             const inventoryAfter = items;
                             this.onInventoryChanged(inventoryBefore, inventoryAfter);
                             return;
+                        } else if (event.data.startsWith(`REFRESH_PLAYER_HP_BAR=${Globals.local_username}`)) {
+                            const hpBefore = players[Globals.local_username].hp;
+                            this.original_onmessage(event);
+                            const hpAfter = players[Globals.local_username].hp;
+                            if(hpAfter < hpBefore) {
+                                this.onDamageTaken(hpBefore, hpAfter);
+                            }
                         }
                         this.original_onmessage(event);
                         this.onMessageReceived(event.data);
+                    }
+                }
+                if(typeof this.original_sendmessage === "function") {
+                    Globals.websocket.send = (message) => {
+                        let canSend = !this.onMessageSent(message);
+                        if(canSend) {
+                            this.original_sendmessage.call(Globals.websocket, message);
+                        }
                     }
                 }
                 return true;

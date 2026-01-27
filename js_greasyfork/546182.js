@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         艾薇社区破解VIP视频免费看
 // @namespace    aiwei_vip_video_free_see
-// @version      1.4
+// @version      1.6
 // @description  来不及解释了，快上车！！！
 // @author       w2f
 // @match        https://avjb.com/*
 // @match        https://avjb.cc/*
+// @match        https://bav51.cc/*
+// @match        https://bav52.cc/*
 // @license      MIT
 // @grant        GM_log
 // @grant        GM_addStyle
@@ -17,8 +19,8 @@
 // @connect      supabase.co
 // @require      https://unpkg.com/@supabase/supabase-js@2.49.3/dist/umd/supabase.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.1.5/hls.min.js
-// @require      https://scriptcat.org/lib/5007/1.0.1/supabaseClientLibrary.js#sha384=An/EKSp9xaz4YGHGLWUZYfW1950+SEeQhsmfjbbAfh8GOY8dHA7ZMuwEhnEq4gVJ
-// @require      https://scriptcat.org/lib/5008/1.0.3/chatRoomLibrary.js#sha384=Rot5TRczD6A15DdM28xrwncuNdle1gd2ChGSanpvMRNQZiF62lgbqhdVI9bRYOMz
+// @require      https://scriptcat.org/lib/5007/1.0.4/supabaseClientLibrary.js#sha384=UVgc6octvKJ1F7mziyZvq8As2JOFlBP67kH/AOywBSXFrlKuyXMJCViIiNfbAjgu
+// @require      https://scriptcat.org/lib/5008/1.0.6/chatRoomLibrary.js#sha384=K75aUnIAOk8+4AgNJhFH/4Z5ouseZgL0DZxQjyMkXf8+ZLZdI2dsPWsQBEbwSptw
 // @downloadURL https://update.greasyfork.org/scripts/529208/%E8%89%BE%E8%96%87%E7%A4%BE%E5%8C%BA%E7%A0%B4%E8%A7%A3VIP%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E7%9C%8B.user.js
 // @updateURL https://update.greasyfork.org/scripts/529208/%E8%89%BE%E8%96%87%E7%A4%BE%E5%8C%BA%E7%A0%B4%E8%A7%A3VIP%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E7%9C%8B.meta.js
 // ==/UserScript==
@@ -26,19 +28,9 @@
 (async function () {
     'use strict';
 
-    // 初始化UI
-    const chatRoom = await ChatRoomLibrary.initUI();
-    chatRoom.setTitle('艾薇社区破解VIP视频免费看');
-
     // 初始化
-    const user_id = await SbCLi.init();
-    GM_log('用户ID:', user_id);
-
-    // 加载历史消息
-    let hisdata = await SbCLi.loadHistory(10);
-    if (hisdata) {
-        hisdata.reverse().forEach(msg => { chatRoom.addMsgCard(msg) });
-    }
+    await SbCLi.init('avjb');
+    const chatRoom = await ChatRoomLibrary.initUI();
 
     // 2.获取视频地址
     //const url = "https://r22.jb-aiwei.cc/contents/videos/76000/76444/index.m3u8";

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         YouTube - Extra UI tweaks (Old icons + Extra experimental features to be disabled)
-// @version      2026.01.27
+// @version      2026.01.27.100
 // @description  This is the script that tweaks extra UI stuff (that also includes old icons from the post-rounded UI changes along with other experimental features to be reverted in backend)
 // @author       Joey_JTS
 // @license MIT
@@ -10,69 +10,9 @@
 // @namespace    https://greasyfork.org/en/users/761382
 // @icon         https://www.youtube.com/favicon.ico
 // @run-at       document-idle
-// @grant        none
-// @allFrames    true
-// @inject-into  page
 // @downloadURL https://update.greasyfork.org/scripts/552336/YouTube%20-%20Extra%20UI%20tweaks%20%28Old%20icons%20%2B%20Extra%20experimental%20features%20to%20be%20disabled%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/552336/YouTube%20-%20Extra%20UI%20tweaks%20%28Old%20icons%20%2B%20Extra%20experimental%20features%20to%20be%20disabled%29.meta.js
 // ==/UserScript==
-
-// Enable strict mode to catch common coding mistakes
-"use strict";
-
-// Define the flags to assign to the EXPERIMENT_FLAGS object
-const flagsToAssign = {
-  // Disables both 'web_modern_tabs' and 'web_modern_typography' (Note: both these experimental flags have been patched since 2025)
-  web_modern_tabs: false,
-  web_modern_typography: false,
-  // More config flags to be reverted (Note: This was in part of 2024 UI changes)
-  web_player_enable_featured_product_banner_exclusives_on_desktop: false,
-  fill_view_models_on_web_vod: true,
-  live_chat_over_engagement_panels: false,
-  live_chat_scaled_height: false,
-  live_chat_smaller_min_height: false,
-  main_app_controller_extraction_batch_18: false,
-  main_app_controller_extraction_batch_19: false,
-  no_iframe_for_web_stickiness: false,
-  optimal_reading_width_comments_ep: false,
-  remove_masthead_channel_banner_on_refresh: false,
-  web_watch_log_theater_mode: false,
-  web_watch_theater_chat: false,
-  web_watch_theater_fixed_chat: false
-};
-
-const updateFlags = () => {
-  // Check if the EXPERIMENT_FLAGS object exists in the window.yt.config_ property chain
-  const expFlags = window?.yt?.config_?.EXPERIMENT_FLAGS;
-
-  // If EXPERIMENT_FLAGS is not found, exit the function
-  if (!expFlags) return;
-
-  // Assign the defined flags to the EXPERIMENT_FLAGS object
-  Object.assign(expFlags, flagsToAssign);
-};
-
-// Create a MutationObserver that calls the updateFlags function when changes occur in the document's subtree
-const mutationObserver = new MutationObserver(updateFlags);
-mutationObserver.observe(document, { subtree: true, childList: true });
-
-// Remove the tab prefix that displays the number of notifications
-// Save the original descriptor of document.title
-const originalTitleDescriptor = Object.getOwnPropertyDescriptor(Document.prototype, 'title');
-
-// Create a custom getter and setter
-Object.defineProperty(document, 'title', {
-  get: function() {
-    return originalTitleDescriptor.get.call(this);
-  },
-  set: function(newValue) {
-    // Remove the (#) with regex.
-    const interceptedValue = newValue.replace(/^\(\d+\)\s?/, "");
-
-    // Call the original setter
-    originalTitleDescriptor.set.call(this, interceptedValue);
-  }
-});
 
 (function() {
 let css = `

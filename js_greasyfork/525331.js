@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         Frozen client v3.4
+// @name         Frozen client v3.5
 // @description  Low ping, good insta, low fps, good heal.
-// @version      3.4
+// @version      3.5
 // @license      GNU
 // @icon        https://a.d-cd.net/829b21as-480.jpg
 // @author       Ultra hack
 // @match        *://*.moomoo.io/*
 // @grant        none
 // @namespace none
-// @downloadURL https://update.greasyfork.org/scripts/525331/Frozen%20client%20v34.user.js
-// @updateURL https://update.greasyfork.org/scripts/525331/Frozen%20client%20v34.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/525331/Frozen%20client%20v35.user.js
+// @updateURL https://update.greasyfork.org/scripts/525331/Frozen%20client%20v35.meta.js
 // ==/UserScript==
 document.title = "Frozen client";
 getEl('gameName').innerHTML = '❄️Frozen client❄️';
@@ -80,7 +80,7 @@ function loadScript(url, callback) {
     document.body.appendChild(script);
 }
 
-const msgpackUrl = "https://rawgit.com/kawanet/msgpack-lite/master/dist/msgpack.min.js";
+const msgpackUrl = "https://greasyfork.org/scripts/423602-msgpack/code/msgpack.js";
 const customScriptUrl = null;
 
 loadScript(msgpackUrl, () => {
@@ -7621,15 +7621,17 @@ function renderPlayer(obj, ctxt) {
     let handAngle = (Math.PI / 4) * (items.weapons[obj.weaponIndex].armS || 1);
     let oHandAngle = (obj.buildIndex < 0) ? (items.weapons[obj.weaponIndex].hndS || 1) : 1;
     let oHandDist = (obj.buildIndex < 0) ? (items.weapons[obj.weaponIndex].hndD || 1) : 1;
-
-    let katanaMusket = (obj == player && obj.weapons[0] == 3 && obj.weapons[1] == 15);
+//fuck
+    //let katanaMusket = (obj == player && obj.weapons[0] == 3 && obj.weapons[1] == 15);
 
     if (obj.tailIndex > 0) {
         renderTailTextureImage(obj.tailIndex, ctxt, obj);
     }
-
+    //penis
+let a = false;
+    //
     if (obj.buildIndex < 0 && !items.weapons[obj.weaponIndex].aboveHand) {
-        renderTool(items.weapons[katanaMusket ? 4 : obj.weaponIndex], config.weaponVariants[obj.weaponVariant].src, obj.scale, 0, ctxt);
+        renderTool(items.weapons[a ? 4 : obj.weaponIndex], config.weaponVariants[obj.weaponVariant].src, obj.scale, 0, ctxt);
         if (items.weapons[obj.weaponIndex].projectile != undefined && !items.weapons[obj.weaponIndex].hideProjectile) {
             renderProjectile(obj.scale, 0,
                              items.projectiles[items.weapons[obj.weaponIndex].projectile], mainContext);

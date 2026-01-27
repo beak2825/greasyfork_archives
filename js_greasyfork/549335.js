@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         Extra tweaks for YouTube to improve functionally
-// @version      2026.01.06
+// @name         YT - Advanced Web Tweaks (Performance Boost and More Tweaks)
+// @version      2026.01.27
 // @description  This userscript will disable and tweak some more of the functionally, forcing h.264 codec on all videos along with other tweaks to cut down on system resources.
 // @author       LegendCraftMC
 // @license MIT
@@ -18,8 +18,8 @@
 // @inject-into  page
 // @allFrames    true
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/549335/Extra%20tweaks%20for%20YouTube%20to%20improve%20functionally.user.js
-// @updateURL https://update.greasyfork.org/scripts/549335/Extra%20tweaks%20for%20YouTube%20to%20improve%20functionally.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/549335/YT%20-%20Advanced%20Web%20Tweaks%20%28Performance%20Boost%20and%20More%20Tweaks%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/549335/YT%20-%20Advanced%20Web%20Tweaks%20%28Performance%20Boost%20and%20More%20Tweaks%29.meta.js
 // ==/UserScript==
 // Add config flags to disable both animations and ambient mode functionally
 
@@ -220,6 +220,7 @@ ytd-mealbear-promo-renderer,
 ytd-video-quality-promo-renderer,
 tp-yt-iron-overlay-backdrop.opened,
 .ytShoppingTimelyShelfContentViewModelIsVisible.ytShoppingTimelyShelfContentViewModelHost,
+ytd-watch-flexy yt-lockup-view-model.yt-lockup-view-model--wrapper.lockup.ytd-item-section-renderer > .ytLockupAttachmentsViewModelHost
 #clarify-box.ytd-watch-flexy {
 display: none !important
 }
@@ -234,7 +235,8 @@ display: none !important
 }
 
 ytd-watch-metadata.ytd-watch-flexy {
-padding-bottom: 36px !important
+padding-bottom: 136px !important;
+margin-bottom: 56px !important
 }`;
 if (typeof GM_addStyle !== "undefined") {
   GM_addStyle(css);

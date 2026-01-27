@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Blaze - See Double Players
 // @namespace http://tampermonkey.net/
-// @version 1.0.9
+// @version 1.0.10
 // @description Salvar jogadores do Double.
 // @author Sr.Caveira
 // @icon https://blaze.bet.br/images/favicon.ico
@@ -230,7 +230,7 @@
             }
             // Adiciona o cabeçalho "Apostou em" para a tabela persistente
             if (id === 'userTablePersistent') {
-                 headerHtml += '<th style="padding: 5px; text-align: center; border-bottom: 1px solid #666; font-size: 0.8em; position: sticky; top: 0; background-color: #444; z-index: 1; width: 80px;">Apostou em</th>';
+                headerHtml += '<th style="padding: 5px; text-align: center; border-bottom: 1px solid #666; font-size: 0.8em; position: sticky; top: 0; background-color: #444; z-index: 1; width: 80px;">Apostou em</th>';
             }
             headerHtml += '</tr>';
             tableHead.innerHTML = headerHtml;
@@ -492,19 +492,19 @@
             // Adiciona ou atualiza à lista persistente
             // Usa Map.set para atualizar a última cor vista
             if (persistentSeenUsernames.get(username) !== columnType) { // Only update if the color is different
-                 persistentSeenUsernames.set(username, columnType);
-                 savePersistentUsernames(); // Salva após adicionar/atualizar um usuário persistente
-                 // Remove e adiciona a linha para que a ordem seja por último visto E a cor seja atualizada
-                 // Primeiro, remove a linha antiga da tabela persistente, se existir
-                 const rows = userTableBodyPersistent.getElementsByTagName('tr');
-                 for (let i = 0; i < rows.length; i++) {
-                     if (rows[i].getElementsByTagName('td')[0].textContent === username) {
-                         userTableBodyPersistent.deleteRow(i);
-                         break;
-                     }
-                 }
-                 // Em seguida, adiciona a nova linha com a cor atualizada no topo
-                 addPersistentUserToTable(userTableBodyPersistent, username, columnType);
+                persistentSeenUsernames.set(username, columnType);
+                savePersistentUsernames(); // Salva após adicionar/atualizar um usuário persistente
+                // Remove e adiciona a linha para que a ordem seja por último visto E a cor seja atualizada
+                // Primeiro, remove a linha antiga da tabela persistente, se existir
+                const rows = userTableBodyPersistent.getElementsByTagName('tr');
+                for (let i = 0; i < rows.length; i++) {
+                    if (rows[i].getElementsByTagName('td')[0].textContent === username) {
+                        userTableBodyPersistent.deleteRow(i);
+                        break;
+                    }
+                }
+                // Em seguida, adiciona a nova linha com a cor atualizada no topo
+                addPersistentUserToTable(userTableBodyPersistent, username, columnType);
             }
         });
     }
@@ -521,10 +521,10 @@
         for (const mutation of mutationsList) {
             if (mutation.type === 'childList' || mutation.type === 'characterData') {
                 mutation.addedNodes.forEach(node => {
-                    if (node.nodeType === 1 && node.matches('div.entry')) {
+                    if (node.nodeType === 1 && node.matches('div.row.columns div.body.show div.entries div.entries-table .Table-module__tableCell___ufCx1.Table-module__alignLeft___P4xda')) {
                         processUsernames([node]);
                     } else if (node.nodeType === 1) {
-                        const entries = node.querySelectorAll('div.entry');
+                        const entries = node.querySelectorAll('div.row.columns div.body.show div.entries div.entries-table .Table-module__tableCell___ufCx1.Table-module__alignLeft___P4xda');
                         if (entries.length > 0) {
                             processUsernames(entries);
                         }
@@ -553,7 +553,7 @@
 
                 // Popula a tabela de usuários persistentes com os dados carregados
                 Array.from(persistentSeenUsernames.entries()) // Obtém [username, lastColor] pares
-                     .sort((a, b) => a[0].localeCompare(b[0])) // Opcional: mantém a ordenação alfabética
+                    .sort((a, b) => a[0].localeCompare(b[0])) // Opcional: mantém a ordenação alfabética
                     .forEach(([username, lastColor]) => {
                     addPersistentUserToTable(userTableBodyPersistent, username, lastColor);
                 });
@@ -562,7 +562,7 @@
                 observer.observe(casinoElement, observerConfig);
 
                 // Processa entradas já existentes no momento da inicialização
-                const initialEntries = casinoElement.querySelectorAll('div.row.columns div.body.show div.entries div.entry');
+                const initialEntries = casinoElement.querySelectorAll('div.row.columns div.body.show div.entries div.entries-table .Table-module__tableCell___ufCx1.Table-module__alignLeft___P4xda');
                 if (initialEntries.length > 0) {
                     processUsernames(initialEntries);
                 }
