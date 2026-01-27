@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Get Clan Score
 // @namespace    http://tampermonkey.net/
-// @version      1
+// @version      2
 // @description  Send score to database
 // @author       LedFox
-// @match        https://animestars.org/clubs/boost/?id=36&interval=week
+// @match        https://animesss.com/clubs/boost/?id=36&interval=week
 // @match        https://astars.club/clubs/boost/?id=36&interval=week
 // @match        https://asstars1.astars.club/clubs/boost/?id=36&interval=week
 // @match        https://as1.astars.club/aniserials/clubs/boost/?id=36&interval=week

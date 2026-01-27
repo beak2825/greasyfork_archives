@@ -2,7 +2,7 @@
 // @name            FC2PPVDB Enhanced
 // @name:en         FC2PPVDB Enhanced
 // @namespace       https://greasyfork.org/zh-CN/scripts/552583-fc2ppvdb-enhanced
-// @version         2.0.1
+// @version         2.0.2
 // @author          Icarusle
 // @description     提供极速磁力搜索、高清预览、连拍图集、跨端历史同步与自定义过滤，重塑卡片布局丰富交互体验。极致性能，优雅动效。
 // @description:en  Magnet search, HD preview, multi-shot gallery, sync history, and more. Modern UI with smooth animations.
@@ -43,7 +43,7 @@
 
   const SCRIPT_INFO = {
     NAME: "FC2PPVDB Enhanced",
-    VERSION: typeof GM_info !== "undefined" ? GM_info.script.version : "2.0.1",
+    VERSION: typeof GM_info !== "undefined" ? GM_info.script.version : "2.0.2",
     NAMESPACE: "https://greasyfork.org/zh-CN/scripts/552583-fc2ppvdb-enhanced",
     GREASYFORK_URL: "https://greasyfork.org/scripts/552583"
   };
@@ -118,7 +118,6 @@
       XS: "4px",
       SM: "8px",
       MD: "12px",
-      LG: "16px",
       XL: "20px",
       GUTTER: "15px"
     },
@@ -820,6 +819,8 @@ emit(event, data) {
       enableFollows: false,
       loadExtraPreviews: false,
       enableQuickBar: true,
+      showViewedBtn: true,
+      showIdBadge: true,
       enableMagnets: true,
       enableExternalLinks: true,
       enableActressName: true,
@@ -849,6 +850,8 @@ language: Storage.get("language", "auto") || "auto",
       "enableFollows",
       "loadExtraPreviews",
       "enableQuickBar",
+      "showViewedBtn",
+      "showIdBadge",
       "enableMagnets",
       "enableExternalLinks",
       "enableActressName",
@@ -868,21 +871,26 @@ language: Storage.get("language", "auto") || "auto",
     };
     const store = new Proxy(rawState, {
       set(target, prop, value) {
-        if (target[prop] === value) return true;
-        target[prop] = value;
-        if (prop !== "syncStatus") {
-          saveState(target);
-          if (!skipBroadcast) {
-            __vitePreload(async () => {
-              const { MessagingService: MessagingService2, MessageType: MessageType2 } = await Promise.resolve().then(() => MessagingService$1);
-              return { MessagingService: MessagingService2, MessageType: MessageType2 };
-            }, void 0 ).then(({ MessagingService: MessagingService2, MessageType: MessageType2 }) => {
-              MessagingService2.broadcast(MessageType2.SETTING_UPDATE, { prop, value });
-            });
+        if (typeof prop === "string" && prop in target) {
+          const kProp = prop;
+          if (target[kProp] === value) return true;
+          target[kProp] = value;
+          if (kProp !== "syncStatus") {
+            saveState(target);
+            if (!skipBroadcast) {
+              __vitePreload(async () => {
+                const { MessagingService: MessagingService2, MessageType: MessageType2 } = await Promise.resolve().then(() => MessagingService$1);
+                return { MessagingService: MessagingService2, MessageType: MessageType2 };
+              }, void 0 ).then(({ MessagingService: MessagingService2, MessageType: MessageType2 }) => {
+                MessagingService2.broadcast(MessageType2.SETTING_UPDATE, { prop: kProp, value });
+              });
+            }
           }
+          CoreEvents.emit(AppEvents.STATE_CHANGED, { prop: kProp, value });
+          if (kProp === "language") CoreEvents.emit(AppEvents.LANGUAGE_CHANGED, value);
+        } else {
+          target[prop] = value;
         }
-        CoreEvents.emit(AppEvents.STATE_CHANGED, { prop, value });
-        if (prop === "language") CoreEvents.emit(AppEvents.LANGUAGE_CHANGED, value);
         return true;
       }
     });
@@ -904,8 +912,15 @@ language: Storage.get("language", "auto") || "auto",
     });
     return {
       proxy: store,
-on: (cb) => {
-        return CoreEvents.on(AppEvents.STATE_CHANGED, ({ prop, value }) => cb(prop, value));
+on: (prop, listener) => {
+        if (typeof prop === "function") {
+          return CoreEvents.on(AppEvents.STATE_CHANGED, prop);
+        }
+        return CoreEvents.on(AppEvents.STATE_CHANGED, (change) => {
+          if (change.prop === prop && listener) {
+            listener(change.value);
+          }
+        });
       }
     };
   })();
@@ -937,6 +952,8 @@ on: (cb) => {
       optionEnableHistory: "记录浏览历史",
       optionLoadExtraPreviews: "自动加载详情页预览",
       optionEnableQuickBar: "显示悬浮快捷球 (FAB)",
+      optionShowViewedBtn: "显示卡片已看按钮",
+      optionShowIdBadge: "显示卡片番号按钮",
       optionEnableMagnets: "启用磁力链接搜索",
       optionEnableExternalLinks: "显示外部资源跳转按钮",
       optionEnableActressName: "显示演员名称",
@@ -1104,6 +1121,8 @@ on: (cb) => {
       optionEnableHistory: "Track History",
       optionLoadExtraPreviews: "Preload Gallery",
       optionEnableQuickBar: "Show Quick FAB",
+      optionShowViewedBtn: "Show Card Viewed Button",
+      optionShowIdBadge: "Show Card ID Badge",
       optionEnableMagnets: "Enable Magnet Search",
       optionEnableExternalLinks: "Show External Links",
       optionEnableActressName: "Show Actress Name",
@@ -1326,7 +1345,7 @@ register(lang, newTranslations) {
   const IconLink = '<svg viewBox="0 0 640 512" width="1.2em" height="1.2em" fill="currentColor"><path fill="currentColor" d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5l112.2-112.3c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0z"/></svg>';
   const IconCaretDown = '<svg viewBox="0 0 320 512" width="1.2em" height="1.2em" fill="currentColor"><path fill="currentColor" d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9S301 191.9 288 191.9L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"/></svg>';
   const IconBolt = '<svg viewBox="0 0 448 512" width="1.2em" height="1.2em" fill="currentColor"><path fill="currentColor" d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288h111.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7H272.5z"/></svg>';
-  const IconPlayCircle = '<svg viewBox="0 0 512 512" width="1.2em" height="1.2em" fill="currentColor"><path fill="currentColor" d="M0 256a256 256 0 1 1 512 0a256 256 0 1 1-512 0m188.3-108.9c-7.6 4.2-12.3 12.3-12.3 20.9v176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"/></svg>';
+  const IconPlayCircle$1 = '<svg viewBox="0 0 512 512" width="1.2em" height="1.2em" fill="currentColor"><path fill="currentColor" d="M0 256a256 256 0 1 1 512 0a256 256 0 1 1-512 0m188.3-108.9c-7.6 4.2-12.3 12.3-12.3 20.9v176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"/></svg>';
   const IconListUl = '<svg viewBox="0 0 512 512" width="1.2em" height="1.2em" fill="currentColor"><path fill="currentColor" d="M64 144a48 48 0 1 0 0-96a48 48 0 1 0 0 96m128-80c-17.7 0-32 14.3-32 32s14.3 32 32 32h288c17.7 0 32-14.3 32-32s-14.3-32-32-32zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32h288c17.7 0 32-14.3 32-32s-14.3-32-32-32zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32h288c17.7 0 32-14.3 32-32s-14.3-32-32-32zM64 464a48 48 0 1 0 0-96a48 48 0 1 0 0 96m48-208a48 48 0 1 0-96 0a48 48 0 1 0 96 0"/></svg>';
   const IconServer = '<svg viewBox="0 0 512 512" width="1.2em" height="1.2em" fill="currentColor"><path fill="currentColor" d="M64 32C28.7 32 0 60.7 0 96v64c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64zm280 72a24 24 0 1 1 0 48a24 24 0 1 1 0-48m48 24a24 24 0 1 1 48 0a24 24 0 1 1-48 0M64 288c-35.3 0-64 28.7-64 64v64c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64v-64c0-35.3-28.7-64-64-64zm280 72a24 24 0 1 1 0 48a24 24 0 1 1 0-48m56 24a24 24 0 1 1 48 0a24 24 0 1 1-48 0"/></svg>';
   const IconMagnifyingGlass = '<svg viewBox="0 0 512 512" width="1.2em" height="1.2em" fill="currentColor"><path fill="currentColor" d="M416 208c0 45.9-14.9 88.3-40 122.7l126.6 126.7c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0s208 93.1 208 208M208 352a144 144 0 1 0 0-288a144 144 0 1 0 0 288"/></svg>';
@@ -1339,13 +1358,23 @@ register(lang, newTranslations) {
     copyButtonBehavior: (btn, textToCopy, i18nCopied) => {
       if (btn.dataset.copied === "true") return;
       Utils.copyToClipboard(textToCopy);
-      const originalText = btn.textContent;
-      btn.textContent = i18nCopied;
       btn.dataset.copied = "true";
-      setTimeout(() => {
-        btn.textContent = originalText;
-        btn.dataset.copied = "false";
-      }, 1500);
+      const tt = btn.querySelector(`.${Config.CLASSES.tooltip}`);
+      if (tt) {
+        const originalTip = tt.textContent;
+        tt.textContent = i18nCopied;
+        setTimeout(() => {
+          tt.textContent = originalTip;
+          btn.dataset.copied = "false";
+        }, Config.COPIED_BADGE_DURATION);
+      } else {
+        const originalText = btn.textContent;
+        btn.textContent = i18nCopied;
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.dataset.copied = "false";
+        }, Config.COPIED_BADGE_DURATION);
+      }
     },
     markByStatus: (id, status, el, applyVisibility) => {
       if (!State.proxy.enableHistory) return;
@@ -1374,7 +1403,7 @@ register(lang, newTranslations) {
       const spinner = cont.querySelector(`.${Config.CLASSES.btnLoading}`);
       if (show) {
         if (!spinner) {
-          const btn = btnCreator(IconSpinner, "Loading...", "#");
+          const btn = btnCreator(IconSpinner, t("labelLoading"), "#");
           btn.classList.add(Config.CLASSES.btnLoading);
           cont.appendChild(btn);
         }
@@ -1384,7 +1413,9 @@ register(lang, newTranslations) {
         cont.classList.remove("fc2-skeleton");
       }
     },
-    applyCardVisibility: (c, hasM) => c?.classList.toggle(Config.CLASSES.hideNoMagnet, State.proxy.hideNoMagnet && !hasM),
+    applyCardVisibility: (c, hasM) => {
+      c?.classList.toggle(Config.CLASSES.hideNoMagnet, State.proxy.hideNoMagnet && !hasM);
+    },
     applyCensoredFilter: (c) => {
       const isSupjav = location.hostname.includes("supjav");
       c?.classList.toggle(
@@ -1428,83 +1459,32 @@ register(lang, newTranslations) {
       const progress = duration > 0 ? h("div", {
         className: "fc2-toast-progress",
         style: {
-          position: "absolute",
-          bottom: "0",
-          left: "0",
-          height: "3px",
-          width: "100%",
           background: color,
-          transformOrigin: "left",
           animation: `fc2-toast-shrink ${duration}ms linear forwards`
         }
       }) : null;
-      const closeIcon = UIUtils.icon(IconXmark);
       const closeBtn = showClose ? h("button", {
         className: "fc2-toast-close",
         "aria-label": "关闭",
-        style: {
-          background: "none",
-          border: "none",
-          color: UI_TOKENS.COLORS.TEXT_DIM,
-          cursor: "pointer",
-          padding: `0 ${UI_TOKENS.SPACING.XS}`,
-          fontSize: "14px",
-          marginLeft: UI_TOKENS.SPACING.SM,
-          transition: "color 0.2s",
-          display: "flex",
-          alignItems: "center"
-        },
         onclick: (e) => {
           e.stopPropagation();
           this.remove(el);
-        },
-        onmouseenter: (e) => e.target.style.color = UI_TOKENS.COLORS.WHITE,
-        onmouseleave: (e) => e.target.style.color = UI_TOKENS.COLORS.TEXT_DIM
-      }, closeIcon) : null;
-      const mainIconContainer = UIUtils.icon(iconSvg);
-      Object.assign(mainIconContainer.style, {
-        color,
-        fontSize: "18px",
-        marginRight: UI_TOKENS.SPACING.MD,
-        flexShrink: "0"
-      });
+        }
+      }, UIUtils.icon(IconXmark)) : null;
+      const iconEl = h("div", { className: "fc2-toast-icon" }, UIUtils.icon(iconSvg));
       const el = h(
         "div",
         {
           className: `fc2-toast-item toast-${type}`,
-          style: {
-            borderLeft: `4px solid ${color}`,
-            position: "relative",
-            overflow: "hidden",
-            display: "flex",
-            alignItems: "center",
-            padding: `${UI_TOKENS.SPACING.MD} ${UI_TOKENS.SPACING.LG}`,
-            marginBottom: UI_TOKENS.SPACING.SM,
-            borderRadius: UI_TOKENS.RADIUS.MD,
-            background: UI_TOKENS.BACKDROP.COLOR,
-            backdropFilter: `blur(${UI_TOKENS.BACKDROP.BLUR})`,
-            boxShadow: UI_TOKENS.BACKDROP.SHADOW,
-            color: UI_TOKENS.COLORS.WHITE,
-            transform: "translateX(100%)",
-            transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-            opacity: "0",
-            pointerEvents: "auto",
-            minWidth: "200px",
-            maxWidth: "350px"
-          },
           onclick: options.onClick
         },
-        mainIconContainer,
-        h("span", { style: { flexGrow: "1", fontSize: "14px", lineHeight: "1.4" } }, message),
+        iconEl,
+        h("span", { className: "fc2-toast-content" }, message),
         closeBtn,
         progress
       );
       this.container.appendChild(el);
       this.toasts.add(el);
-      requestAnimationFrame(() => {
-        el.style.transform = "translateX(0)";
-        el.style.opacity = "1";
-      });
       if (duration > 0) {
         setTimeout(() => this.remove(el), duration);
       }
@@ -1512,12 +1492,15 @@ register(lang, newTranslations) {
     },
     remove(el) {
       if (!this.toasts.has(el)) return;
-      el.style.transform = "translateX(120%)";
-      el.style.opacity = "0";
-      setTimeout(() => {
+      el.classList.add("hiding");
+      const onEnd = () => {
         el.remove();
         this.toasts.delete(el);
-      }, 400);
+      };
+      el.addEventListener("animationend", (e) => {
+        if (e.animationName === "fc2-toast-out") onEnd();
+      }, { once: true });
+      setTimeout(onEnd, 500);
     }
   };
   const http = (url, options = {}) => {
@@ -2319,11 +2302,19 @@ DATA_EXPORTED: "data:exported",
        ============================================================ */
 
     :root {
-        /* Colors */
+        /* --- Elevation & Depth --- */
+        --fc2-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+        --fc2-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
+        --fc2-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.8);
+        --fc2-shadow-glow: 0 0 20px rgba(255, 255, 255, 0.1);
+
+        /* --- Colors (Semantic / Catppuccin Base) --- */
         --fc2-bg: #050505;
         --fc2-surface: rgba(18, 18, 20, 0.9);
+        --fc2-surface-float: rgba(30, 30, 34, 0.95);
         --fc2-text: #f0f0f0;
         --fc2-text-dim: #a1a1aa;
+        --fc2-text-muted: #71717a;
         --fc2-border: rgba(255, 255, 255, 0.1);
         --fc2-primary: #ffffff;
         --fc2-primary-rgb: 255, 255, 255;
@@ -2331,16 +2322,35 @@ DATA_EXPORTED: "data:exported",
         --fc2-danger: #f87171;
         --fc2-accent: #e4e4e7;
         
-        /* Gradients */
+        /* --- Animation Curves (The Art of Motion) --- */
+        --fc2-ease-out: cubic-bezier(0.34, 1.56, 0.64, 1);
+        --fc2-ease-in: cubic-bezier(0.36, 0, 0.66, -0.56);
+        --fc2-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+        
+        /* --- Spacing Scale (8px Grid) --- */
+        --fc2-space-xs: 4px;
+        --fc2-space-sm: 8px;
+        --fc2-space-base: 12px;
+        --fc2-space-md: 16px;
+        --fc2-space-lg: 24px;
+        --fc2-space-xl: 32px;
+
+        /* --- Gradients --- */
         --fc2-accent-grad: linear-gradient(135deg, #3f3f46, #18181b);
         --fc2-magnet-grad: linear-gradient(135deg, #52525b, #27272a);
         
-        /* Layout & Spacing */
-        --fc2-radius: 16px;
+        /* --- Layout & Shape --- */
+        --fc2-radius-sm: 6px;
+        --fc2-radius-md: 12px;
+        --fc2-radius-lg: 16px;
+        --fc2-radius: var(--fc2-radius-lg);
+        --fc2-radius-full: 9999px;
         --fc2-btn-radius: 10px;
         --fc2-blur: blur(20px);
-        --fc2-shadow: 0 12px 48px rgba(0, 0, 0, 0.8);
         --fc2-font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+        /* --- Global Component Styles --- */
+        --fc2-shadow: var(--fc2-shadow-md);
 
         /* Z-Index Scale */
         --fc2-z-toast: 10000;
@@ -2406,10 +2416,20 @@ DATA_EXPORTED: "data:exported",
         to { transform: rotate(360deg); }
     }
 
-    /* Loading Shimmer (Skeletons) */
     @keyframes fc2-shimmer {
-        0% { background-position: -200% 0; }
-        100% { background-position: 200% 0; }
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    @keyframes fc2-skeleton-pulse {
+        0% { opacity: 0.6; }
+        50% { opacity: 1; }
+        100% { opacity: 0.6; }
+    }
+
+    @keyframes fc2-skeleton-reveal {
+        from { filter: blur(10px); opacity: 0; }
+        to { filter: blur(0); opacity: 1; }
     }
 
     /* Pulse Effects */
@@ -2456,25 +2476,59 @@ DATA_EXPORTED: "data:exported",
 
     @keyframes fc2-magnet-in {
         0% {
-            transform: scale(0.5);
+            transform: scale(0.3) translateY(20px);
             opacity: 0;
+            filter: blur(5px);
         }
-        70% { transform: scale(1.1); }
+        60% {
+            transform: scale(1.1) translateY(-5px);
+            filter: blur(0);
+        }
+        85% {
+            transform: scale(0.95) translateY(2px);
+        }
         100% {
-            transform: scale(1);
+            transform: scale(1) translateY(0);
             opacity: 1;
         }
     }
 
     @keyframes fc2-pop-in {
-        from {
+        0% {
             opacity: 0;
-            transform: translate(-50%, -48%) scale(0.96);
+            transform: translate(-50%, -45%) scale(0.92);
+            filter: blur(10px);
         }
-        to {
+        70% {
+            transform: translate(-50%, -51%) scale(1.02);
+            filter: blur(0);
+        }
+        100% {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
         }
+    }
+
+    /* Gallery & Media Animations */
+    @keyframes fc2-gallery-zoom {
+        0% { opacity: 0; transform: scale(0.95); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes fc2-slide-right-in {
+        0% { opacity: 0; transform: translateX(30px); }
+        100% { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fc2-slide-left-in {
+        0% { opacity: 0; transform: translateX(-30px); }
+        100% { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fc2-skeleton-pulse {
+        0% { background-color: rgba(255, 255, 255, 0.05); }
+        50% { background-color: rgba(255, 255, 255, 0.1); }
+        100% { background-color: rgba(255, 255, 255, 0.05); }
     }
 
     @keyframes fc2-dropdown-in {
@@ -2489,14 +2543,32 @@ DATA_EXPORTED: "data:exported",
     }
 
     @keyframes fc2-tab-slide {
-        from {
+        0% {
             opacity: 0;
-            transform: translateY(12px);
+            transform: translateY(16px) scale(0.98);
         }
-        to {
+        100% {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
+    }
+
+    /* Ripple Animation for Interactive Elements */
+    @keyframes fc2-ripple {
+        0% {
+            transform: scale(0);
+            opacity: 0.5;
+        }
+        100% {
+            transform: scale(2.5);
+            opacity: 0;
+        }
+    }
+
+    /* Floating Motion for FAB when active */
+    @keyframes fc2-float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-6px); }
     }
 
     /* Enhancement Layer Animations */
@@ -2560,6 +2632,37 @@ DATA_EXPORTED: "data:exported",
         }
     }
 
+    @keyframes fc2-toast-in {
+        0% {
+            opacity: 0;
+            transform: translateX(100%) scaleX(2) scaleY(0.5);
+            filter: blur(10px);
+        }
+        40% {
+            transform: translateX(-10%) scaleX(0.8) scaleY(1.2);
+        }
+        70% {
+            transform: translateX(5%) scaleX(1.1) scaleY(0.9);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            filter: blur(0);
+        }
+    }
+
+    @keyframes fc2-toast-out {
+        0% {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+        100% {
+            opacity: 0;
+            transform: translateX(100%) scale(0.8);
+            filter: blur(10px);
+        }
+    }
+
     @keyframes fc2-toast-shrink {
         from { transform: scaleX(1); }
         to { transform: scaleX(0); }
@@ -2567,7 +2670,7 @@ DATA_EXPORTED: "data:exported",
 
     /* Helper Classes */
     .pulse-once {
-        animation: fc2-pulse-once 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        animation: fc2-pulse-once 0.6s var(--fc2-ease-out);
     }
 `;
   const getBaseStyles = (C) => `
@@ -2580,6 +2683,9 @@ DATA_EXPORTED: "data:exported",
     .enh-modal-panel,
     .fc2-fab-container {
         all: revert;
+        transition: background-color 0.4s var(--fc2-ease-standard), 
+                    color 0.4s var(--fc2-ease-standard), 
+                    border-color 0.4s var(--fc2-ease-standard);
     }
 
     .fc2-enh-settings-panel *:not(svg):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon),
@@ -2633,30 +2739,31 @@ DATA_EXPORTED: "data:exported",
     .fc2-enh-settings-panel .fc2-select {
         display: inline-block !important;
         padding: 6px 32px 6px 12px !important;
-        background: var(--fc2-enh-bg-secondary) !important;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'%3E%3Cpath fill='%23cdd6f4' d='M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z'/%3E%3C/svg%3E") !important;
+        background: var(--fc2-surface-float) !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/xml' viewBox='0 0 320 512'%3E%3Cpath fill='%23ffffff' d='M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z'/%3E%3C/svg%3E") !important;
         background-repeat: no-repeat !important;
         background-position: right 8px center !important;
         background-size: 12px !important;
-        color: var(--fc2-enh-text) !important;
-        border: 1px solid var(--fc2-enh-border) !important;
-        border-radius: 4px !important;
+        color: var(--fc2-text) !important;
+        border: 1px solid var(--fc2-border) !important;
+        border-radius: var(--fc2-radius-sm) !important;
         cursor: pointer !important;
         appearance: none !important;
         -webkit-appearance: none !important;
         color-scheme: dark !important;
         filter: invert(0) !important;
-        transition: border-color 0.2s;
+        transition: all var(--fc2-ease-standard) 0.2s;
     }
 
     .fc2-enh-settings-panel select:hover {
-        border-color: var(--fc2-primary) !important;
+        border-color: var(--fc2-text-dim) !important;
+        background-color: rgba(255, 255, 255, 0.05) !important;
     }
 
     .fc2-enh-settings-panel select:focus {
         outline: none !important;
         border-color: var(--fc2-primary) !important;
-        box-shadow: 0 0 0 2px rgba(var(--fc2-primary-rgb), 0.2) !important;
+        box-shadow: var(--fc2-shadow-glow) !important;
     }
 
     .fc2-enh-settings-panel select option {
@@ -2738,42 +2845,108 @@ DATA_EXPORTED: "data:exported",
         fill: currentColor;
     }
 
+    .fc2-icon-dropdown-caret {
+        display: inline-flex;
+        margin-left: var(--fc2-space-xs);
+        opacity: 0.6;
+        font-size: 10px;
+        width: 1em;
+        height: 1em;
+    }
+
+    .fc2-icon-dropdown-caret svg {
+        fill: currentColor;
+    }
+
     /* ============================================================
        TOAST NOTIFICATIONS
        ============================================================ */
 
     .fc2-toast-container {
         position: fixed;
-        top: 20px;
-        right: 20px;
+        top: var(--fc2-space-md);
+        right: var(--fc2-space-md);
         z-index: var(--fc2-z-toast);
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: var(--fc2-space-sm);
         pointer-events: none;
     }
 
     .fc2-toast-item {
         display: flex;
         align-items: center;
-        padding: 10px 16px;
-        background: var(--fc2-surface);
-        color: #fff;
-        border-radius: 8px;
-        border-left: 3px solid var(--fc2-primary);
-        box-shadow: var(--fc2-shadow);
-        font-size: 13px;
-        backdrop-filter: blur(8px);
-        transform: translateX(100%);
-        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        min-width: 280px;
+        padding: var(--fc2-space-sm) var(--fc2-space-md);
+        background: var(--fc2-surface-float);
+        color: var(--fc2-text);
+        border-radius: var(--fc2-radius-md);
+        box-shadow: var(--fc2-shadow-lg);
+        font-size: 14px;
+        font-weight: 500;
+        backdrop-filter: var(--fc2-blur);
+        -webkit-backdrop-filter: var(--fc2-blur);
+        border: 1px solid var(--fc2-border);
         opacity: 0;
         pointer-events: auto;
+        animation: fc2-toast-in 0.6s var(--fc2-ease-out) forwards;
+        will-change: transform, opacity;
     }
 
-    .fc2-toast-item.show {
-        transform: translateX(0);
-        opacity: 1;
+    .fc2-toast-item.hiding {
+        animation: fc2-toast-out 0.4s var(--fc2-ease-standard) forwards;
     }
+
+    .fc2-toast-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        margin-right: var(--fc2-space-sm);
+        flex-shrink: 0;
+    }
+
+    .fc2-toast-content {
+        flex-grow: 1;
+        line-height: 1.4;
+    }
+
+    .fc2-toast-close {
+        background: none;
+        border: none;
+        color: var(--fc2-text-dim);
+        cursor: pointer;
+        padding: var(--fc2-space-xs);
+        margin-left: var(--fc2-space-sm);
+        border-radius: var(--fc2-radius-full);
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+    }
+
+    .fc2-toast-close:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    .fc2-toast-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 2px;
+        width: 100%;
+        transform-origin: left;
+    }
+
+    /* TYPE COLORS */
+    .toast-success { border-left: 4px solid var(--fc2-success); }
+    .toast-success .fc2-toast-icon { color: var(--fc2-success); }
+    .toast-error { border-left: 4px solid var(--fc2-danger); }
+    .toast-error .fc2-toast-icon { color: var(--fc2-danger); }
+    .toast-warn { border-left: 4px solid #fab387; }
+    .toast-warn .fc2-toast-icon { color: #fab387; }
+    .toast-info { border-left: 4px solid #89b4fa; }
+    .toast-info .fc2-toast-icon { color: #89b4fa; }
 
     /* ============================================================
        ELEGANT FAB (UNIFIED)
@@ -2806,10 +2979,10 @@ DATA_EXPORTED: "data:exported",
         color: #fff;
         border: none;
         border-radius: 50%;
-        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        box-shadow: var(--fc2-shadow-md);
         font-size: 20px;
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: all 0.3s var(--fc2-ease-out);
         touch-action: none;
         -webkit-tap-highlight-color: transparent;
         will-change: transform;
@@ -2817,7 +2990,7 @@ DATA_EXPORTED: "data:exported",
 
     .fc2-fab-trigger:hover {
         transform: scale(1.1);
-        box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+        box-shadow: var(--fc2-shadow-lg);
     }
 
     .fc2-fab-trigger:active {
@@ -2828,20 +3001,22 @@ DATA_EXPORTED: "data:exported",
         transform: rotate(135deg);
         background: #eee;
         color: #111;
+        animation: fc2-float 3s ease-in-out infinite;
     }
 
     .fc2-fab-trigger.active:hover {
         transform: scale(1.1) rotate(135deg);
+        animation-play-state: paused;
     }
 
     .fc2-fab-actions {
         display: flex;
         flex-direction: column-reverse;
-        gap: 12px;
+        gap: var(--fc2-space-base);
         opacity: 0;
         transform: translateY(20px) scale(0.8);
         pointer-events: none;
-        transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: all 0.4s var(--fc2-ease-out);
     }
 
     .fc2-fab-actions.visible {
@@ -2849,6 +3024,12 @@ DATA_EXPORTED: "data:exported",
         transform: translateY(0) scale(1);
         pointer-events: auto;
     }
+
+    .fc2-fab-actions.visible .fc2-fab-btn:nth-child(1) { transition-delay: 0.05s; }
+    .fc2-fab-actions.visible .fc2-fab-btn:nth-child(2) { transition-delay: 0.1s; }
+    .fc2-fab-actions.visible .fc2-fab-btn:nth-child(3) { transition-delay: 0.15s; }
+    .fc2-fab-actions.visible .fc2-fab-btn:nth-child(4) { transition-delay: 0.2s; }
+    .fc2-fab-actions.visible .fc2-fab-btn:nth-child(5) { transition-delay: 0.25s; }
 
     .fc2-fab-btn {
         position: relative;
@@ -2863,9 +3044,9 @@ DATA_EXPORTED: "data:exported",
         border-radius: 50%;
         backdrop-filter: var(--fc2-blur);
         font-size: 16px;
-        box-shadow: var(--fc2-shadow);
+        box-shadow: var(--fc2-shadow-md);
         cursor: pointer;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.2s var(--fc2-ease-standard);
         -webkit-tap-highlight-color: transparent;
         will-change: transform;
     }
@@ -2875,7 +3056,7 @@ DATA_EXPORTED: "data:exported",
         color: #111;
         border-color: transparent;
         transform: translateY(-2px) scale(1.1);
-        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        box-shadow: var(--fc2-shadow-lg);
     }
 
     .fc2-fab-btn:active {
@@ -2885,7 +3066,7 @@ DATA_EXPORTED: "data:exported",
     .fc2-fab-btn.active {
         background: var(--fc2-primary);
         color: #111;
-        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        box-shadow: var(--fc2-shadow-glow);
     }
 
     .fc2-fab-btn::before {
@@ -2894,10 +3075,10 @@ DATA_EXPORTED: "data:exported",
         right: 52px;
         top: 50%;
         visibility: hidden;
-        padding: 5px 10px;
+        padding: var(--fc2-space-xs) var(--fc2-space-sm);
         background: rgba(0,0,0,0.85);
         color: #fff;
-        border-radius: 6px;
+        border-radius: var(--fc2-radius-sm);
         font-size: 12px;
         white-space: nowrap;
         opacity: 0;
@@ -2953,11 +3134,19 @@ DATA_EXPORTED: "data:exported",
     }
 
     .${C.cardRebuilt}.has-active-dropdown {
-        z-index: 100 !important;
+        z-index: 1000 !important;
     }
+
+    /* Global Visibility Toggles */
+    body.hide-viewed-btn .btn-toggle-view { display: none !important; }
+    body.hide-id-badge .${C.fc2IdBadge} { display: none !important; }
 
     body.searching .${C.cardRebuilt}:not(.search-match) {
         display: none !important;
+    }
+
+    body.searching .${C.cardRebuilt}.search-match {
+        animation: fc2-fade-in-scale 0.4s var(--fc2-ease-out);
     }
 
     .${C.processedCard} {
@@ -2969,14 +3158,14 @@ DATA_EXPORTED: "data:exported",
         border: 1px solid var(--fc2-border);
         border-radius: var(--fc2-radius);
         overflow: visible;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        will-change: transform;
+        transition: all 0.4s var(--fc2-ease-out);
+        will-change: transform, box-shadow;
     }
 
     .${C.processedCard}:hover {
-        transform: translateY(-4px);
-        border-color: rgba(255, 255, 255, 0.2);
-        box-shadow: var(--fc2-shadow);
+        transform: translateY(-6px) scale(1.01);
+        border-color: var(--fc2-primary);
+        box-shadow: var(--fc2-shadow-lg), 0 0 0 1px rgba(255,255,255,0.05);
         z-index: 5;
     }
 
@@ -3011,7 +3200,7 @@ DATA_EXPORTED: "data:exported",
     }
 
     .${C.processedCard}.is-detail .${C.infoArea} {
-        padding: 10px 12px !important;
+        padding: 10px var(--fc2-space-base) !important;
         margin-top: 0 !important;
     }
 
@@ -3024,8 +3213,8 @@ DATA_EXPORTED: "data:exported",
         width: 100%;
         aspect-ratio: 16 / 9;
         background: #0f1015;
-        border-top-left-radius: var(--fc2-radius);
-        border-top-right-radius: var(--fc2-radius);
+        border-top-left-radius: var(--fc2-radius-lg);
+        border-top-right-radius: var(--fc2-radius-lg);
         overflow: hidden;
     }
 
@@ -3034,7 +3223,13 @@ DATA_EXPORTED: "data:exported",
         width: 100%;
         height: 100%;
         object-fit: contain;
-        transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
+        transition: transform 0.5s var(--fc2-ease-out), opacity 0.4s ease;
+        opacity: 0;
+        will-change: transform, opacity, filter;
+    }
+
+    .${C.videoPreviewContainer} img.fc2-reveal-content {
+        opacity: 1;
     }
 
     .${C.processedCard}:hover .${C.videoPreviewContainer} video, 
@@ -3061,11 +3256,11 @@ DATA_EXPORTED: "data:exported",
 
     .card-top-right-controls {
         position: absolute;
-        top: 8px;
-        right: 8px;
+        top: var(--fc2-space-sm);
+        right: var(--fc2-space-sm);
         z-index: 10;
         display: flex;
-        gap: 4px;
+        gap: var(--fc2-space-xs);
         align-items: center;
     }
 
@@ -3086,7 +3281,7 @@ DATA_EXPORTED: "data:exported",
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: all 0.3s var(--fc2-ease-out);
         will-change: transform;
     }
     
@@ -3113,7 +3308,7 @@ DATA_EXPORTED: "data:exported",
         color: #fff;
         border-color: transparent;
         transform: translateY(-2px) scale(1.02);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
+        box-shadow: var(--fc2-shadow-lg);
     }
 
     .${C.resourceBtn}:active, 
@@ -3121,9 +3316,35 @@ DATA_EXPORTED: "data:exported",
         transform: translateY(0) scale(0.98);
     }
 
+    /* --- Micro-Interactions: Ripple & Elastic Feedback --- */
+    .${C.resourceBtn}::after, 
+    .fc2-fab-btn::after,
+    .fc2-enh-btn::after,
+    .fc2-btn::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        background: rgba(var(--fc2-primary-rgb), 0.2);
+        opacity: 0;
+        border-radius: inherit;
+        transform: translate(-50%, -50%) scale(1);
+        pointer-events: none;
+        transition: opacity 0.3s;
+    }
+
+    .${C.resourceBtn}:active::after,
+    .fc2-fab-btn:active::after,
+    .fc2-btn:active::after {
+        animation: fc2-ripple 0.4s var(--fc2-ease-standard);
+        opacity: 1;
+    }
+
     .verify-cf-btn {
-        margin: 4px auto;
-        padding: 4px 12px;
+        margin: var(--fc2-space-xs) auto;
+        padding: var(--fc2-space-xs) var(--fc2-space-md);
         color: #fab387 !important;
         border-color: rgba(250, 179, 135, 0.3) !important;
     }
@@ -3219,8 +3440,8 @@ DATA_EXPORTED: "data:exported",
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        margin: 4px auto;
-        padding: 4px 12px;
+        margin: var(--fc2-space-xs) auto;
+        padding: var(--fc2-space-xs) var(--fc2-space-md);
         background: rgba(0, 0, 0, 0.25);
         color: rgba(255, 255, 255, 0.9);
         border: 1px solid rgba(255, 255, 255, 0.15);
@@ -3230,7 +3451,7 @@ DATA_EXPORTED: "data:exported",
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: all 0.3s var(--fc2-ease-out);
     }
 
     .btn-actress:hover {
@@ -3238,7 +3459,7 @@ DATA_EXPORTED: "data:exported",
         color: #fff;
         border-color: transparent;
         transform: translateY(-2px) scale(1.02);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
+        box-shadow: var(--fc2-shadow-lg);
     }
 
     .${C.fc2IdBadge} {
@@ -3268,7 +3489,7 @@ DATA_EXPORTED: "data:exported",
         flex-direction: column;
         justify-content: flex-end;
         flex-grow: 1;
-        padding: 12px;
+        padding: var(--fc2-space-base);
         background: rgba(255, 255, 255, 0.03);
         border-top: 1px solid var(--fc2-border);
         border-bottom-left-radius: var(--fc2-radius);
@@ -3280,7 +3501,7 @@ DATA_EXPORTED: "data:exported",
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         height: 38px;
-        margin: 0 0 10px;
+        margin: 0 0 var(--fc2-space-sm);
         color: var(--fc2-text) !important;
         font-size: 13px;
         font-weight: 600 !important;
@@ -3299,7 +3520,7 @@ DATA_EXPORTED: "data:exported",
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        gap: 6px;
+        gap: var(--fc2-space-xs);
         margin-top: auto;
     }
 
@@ -3307,7 +3528,7 @@ DATA_EXPORTED: "data:exported",
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        gap: 6px;
+        gap: var(--fc2-space-xs);
         margin-left: auto;
     }
 
@@ -3322,22 +3543,22 @@ DATA_EXPORTED: "data:exported",
 
     .enh-dropdown-content {
         position: absolute;
-        top: calc(100% + 8px);
+        top: calc(100% + var(--fc2-space-sm));
         right: 0;
         z-index: 1000;
         display: none;
         flex-direction: column;
-        gap: 6px;
+        gap: var(--fc2-space-xs);
         min-width: 140px;
-        padding: 8px;
+        padding: var(--fc2-space-sm);
         background: rgba(0, 0, 0, 0.6);
         border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 12px;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+        border-radius: var(--fc2-radius-md);
+        box-shadow: var(--fc2-shadow-lg);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         z-index: 1001;
-        animation: fc2-dropdown-in 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: fc2-dropdown-in 0.2s var(--fc2-ease-standard);
     }
 
     .enh-dropdown.active .enh-dropdown-content {
@@ -3518,7 +3739,7 @@ DATA_EXPORTED: "data:exported",
         backdrop-filter: blur(24px);
         -webkit-backdrop-filter: blur(24px);
         overflow: hidden;
-        animation: fc2-pop-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        animation: fc2-pop-in 0.5s var(--fc2-ease-out);
         transform: translate(-50%, -50%);
     }
 
@@ -3618,16 +3839,17 @@ DATA_EXPORTED: "data:exported",
     }
 
     .fc2-tab-content-wrapper {
-        animation: fc2-tab-slide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        animation: fc2-tab-slide 0.5s var(--fc2-ease-out);
+        transform-origin: top;
     }
 
     .fc2-enh-settings-group {
-        margin-bottom: 1rem;
-        padding: 1rem;
+        margin-bottom: var(--fc2-space-md);
+        padding: var(--fc2-space-md);
         background: rgba(255, 255, 255, 0.02);
         border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 12px;
-        transition: all 0.2s ease;
+        border-radius: var(--fc2-radius-md);
+        transition: all 0.2s var(--fc2-ease-standard);
     }
 
     .fc2-enh-settings-group:hover {
@@ -3763,12 +3985,12 @@ DATA_EXPORTED: "data:exported",
         background: rgba(255, 255, 255, 0.03);
         color: #cfc9c2;
         border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 8px;
+        border-radius: var(--fc2-btn-radius);
         font-family: var(--fc2-font);
         font-size: 0.9rem;
         font-weight: 500;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: all 0.2s var(--fc2-ease-standard);
     }
 
     .fc2-enh-btn:hover, 
@@ -3790,7 +4012,7 @@ DATA_EXPORTED: "data:exported",
     .fc2-btn.primary:hover {
         background: #89b4fa;
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(122,162,247,0.3);
+        box-shadow: var(--fc2-shadow-lg);
     }
 
     .fc2-enh-btn.danger, 
@@ -3846,30 +4068,6 @@ DATA_EXPORTED: "data:exported",
         transform: translateX(-50%);
     }
 
-    /* Context Menu */
-    .context-menu {
-        z-index: 2000;
-        background: var(--fc2-surface);
-        border: 1px solid var(--fc2-border);
-        border-radius: 8px;
-        box-shadow: var(--fc2-shadow);
-        backdrop-filter: var(--fc2-blur);
-        animation: fc2-pop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .context-menu-item {
-        padding: 8px 12px;
-        color: var(--fc2-text);
-        font-size: 13px;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .context-menu-item:hover {
-        background: rgba(255, 255, 255, 0.05);
-        transform: translateX(4px);
-    }
-
     /* ============================================================
        GALLERY & VIEWER
        ============================================================ */
@@ -3898,29 +4096,124 @@ DATA_EXPORTED: "data:exported",
         border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
-    .enh-gallery-body {
+    .preview-container {
         display: flex;
-        flex: 1;
-        flex-wrap: wrap;
-        align-content: flex-start;
-        justify-content: center;
-        gap: 10px;
-        padding: 15px;
+        flex-direction: column;
+        background: var(--fc2-surface-low);
+        border-radius: var(--fc2-radius-md);
+        margin-top: var(--fc2-space-md);
+        border: 1px solid var(--fc2-border);
+        overflow: hidden;
+    }
+
+    .preview-hero-section {
+        padding: var(--fc2-space-md);
+        background: var(--fc2-surface-lowest);
+        border-bottom: 1px solid var(--fc2-border);
+    }
+
+    .preview-hero-card {
+        position: relative;
+        width: 100%;
+        max-height: 450px;
+        border-radius: var(--fc2-radius-md);
+        overflow: hidden;
+        cursor: pointer;
+        background: #000;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+        transition: transform 0.4s var(--fc2-ease-out);
+    }
+
+    .preview-hero-card:hover {
+        transform: scale(1.01);
+    }
+
+    .preview-hero-card img,
+    .preview-hero-card video {
+        width: 100%;
+        height: 100%;
+        max-height: 450px;
+        object-fit: contain;
+        display: block;
+    }
+
+    .preview-hero-badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        padding: 4px 12px;
+        background: rgba(var(--fc2-primary-rgb), 0.9);
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 4px;
+        backdrop-filter: blur(4px);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .preview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: var(--fc2-space-sm);
+        padding: var(--fc2-space-md);
+        max-height: 600px;
         overflow-y: auto;
     }
 
-    .enh-gallery-body img, 
-    .enh-gallery-body video {
-        max-width: calc(33% - 10px);
-        height: auto;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    .preview-item {
+        position: relative;
+        aspect-ratio: 16/9;
+        background: var(--fc2-surface-item);
+        border-radius: var(--fc2-radius-sm);
+        overflow: hidden;
         cursor: pointer;
-        transition: transform 0.2s;
+        transition: all 0.3s var(--fc2-ease-out);
+        border: 1px solid var(--fc2-border);
     }
 
-    .enh-gallery-body img:hover {
-        transform: scale(1.02);
+    .preview-item img,
+    .preview-item video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s var(--fc2-ease-out);
+    }
+
+    .preview-item:hover {
+        transform: translateY(-4px) scale(1.04);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        border-color: var(--fc2-primary);
+        z-index: 2;
+    }
+
+    .preview-item:hover img,
+    .preview-item:hover video {
+        transform: scale(1.1);
+    }
+
+    .preview-item.is-video::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 40%);
+        pointer-events: none;
+    }
+
+    .video-play-hint {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        color: #fff;
+        font-size: 20px;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        opacity: 0.8;
+        transition: opacity 0.3s;
+    }
+
+    .preview-item:hover .video-play-hint {
+        opacity: 1;
+        transform: scale(1.1);
     }
 
     .enh-viewer-backdrop {
@@ -3929,8 +4222,10 @@ DATA_EXPORTED: "data:exported",
         z-index: 10000;
         display: flex;
         flex-direction: column;
-        background: rgba(0, 0, 0, 0.95);
-        animation: fc2-fade-simple 0.2s ease;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        animation: fc2-gallery-zoom 0.4s var(--fc2-ease-out);
     }
 
     .enh-viewer-stage {
@@ -3940,6 +4235,7 @@ DATA_EXPORTED: "data:exported",
         align-items: center;
         justify-content: center;
         overflow: hidden;
+        padding: var(--fc2-space-md);
     }
 
     .enh-viewer-stage img, 
@@ -3949,9 +4245,26 @@ DATA_EXPORTED: "data:exported",
         height: 100%;
         max-width: 100%;
         max-height: 100%;
-        border-radius: 4px;
-        box-shadow: 0 0 40px rgba(0,0,0,0.5);
+        border-radius: var(--fc2-radius-lg);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.8), 
+                    0 0 0 1px rgba(255,255,255,0.1);
         object-fit: contain;
+        transition: transform 0.3s var(--fc2-ease-out);
+    }
+
+    .enh-viewer-stage.loading {
+        background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+        animation: fc2-skeleton-pulse 1.5s infinite linear;
+    }
+
+    .enh-viewer-stage.slide-next img,
+    .enh-viewer-stage.slide-next video {
+        animation: fc2-slide-right-in 0.4s var(--fc2-ease-out);
+    }
+
+    .enh-viewer-stage.slide-prev img,
+    .enh-viewer-stage.slide-prev video {
+        animation: fc2-slide-left-in 0.4s var(--fc2-ease-out);
     }
 
     .enh-viewer-nav {
@@ -3962,17 +4275,22 @@ DATA_EXPORTED: "data:exported",
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 15%;
-        color: rgba(255,255,255,0.3);
-        font-size: 50px;
+        width: 80px;
+        color: rgba(255,255,255,0.2);
+        font-size: 32px;
         user-select: none;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: all 0.3s var(--fc2-ease-out);
     }
 
     .enh-viewer-nav:hover {
         background: rgba(255,255,255,0.05);
-        color: #fff;
+        color: rgba(255,255,255,0.9);
+    }
+
+    .enh-viewer-nav:active {
+        background: rgba(255,255,255,0.1);
+        transform: scale(0.95);
     }
 
     .enh-viewer-nav.prev { left: 0; }
@@ -3980,44 +4298,114 @@ DATA_EXPORTED: "data:exported",
 
     .enh-viewer-close {
         position: absolute;
-        top: 20px;
-        right: 20px;
+        top: var(--fc2-space-md);
+        right: var(--fc2-space-md);
         z-index: 10002;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 50px;
-        height: 50px;
+        width: 44px;
+        height: 44px;
         background: rgba(255,255,255,0.1);
         color: #fff;
         border-radius: 50%;
-        font-size: 30px;
+        font-size: 24px;
         cursor: pointer;
-        transition: all 0.2s;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: all 0.3s var(--fc2-ease-out);
+        border: 1px solid rgba(255,255,255,0.1);
     }
 
     .enh-viewer-close:hover {
-        background: rgba(255,255,255,0.2);
-        transform: rotate(90deg);
+        background: var(--fc2-danger);
+        transform: rotate(90deg) scale(1.1);
+        border-color: transparent;
     }
 
     .enh-viewer-counter {
         position: absolute;
-        bottom: 20px;
+        bottom: var(--fc2-space-md);
         left: 50%;
         z-index: 10002;
-        padding: 6px 16px;
-        background: rgba(0,0,0,0.6);
-        color: #fff;
-        border-radius: 20px;
-        font-size: 14px;
-        backdrop-filter: blur(10px);
+        padding: 4px 12px;
+        background: rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.8);
+        border-radius: 100px;
+        font-size: 13px;
+        font-weight: 500;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         transform: translateX(-50%);
+        border: 1px solid rgba(255,255,255,0.1);
+        pointer-events: none;
     }
 
     @keyframes fc2-toast-shrink {
         from { width: 100%; }
         to { width: 0%; }
+    }
+
+    /* ============================================================
+       SKELETON 2.0 (MODERN LOADING STATES)
+       ============================================================ */
+
+    .fc2-skeleton {
+        position: relative;
+        overflow: hidden;
+        background: var(--fc2-surface-item);
+        border-radius: var(--fc2-radius-sm);
+        user-select: none;
+        pointer-events: none;
+    }
+
+    .fc2-skeleton::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        transform: translateX(-100%);
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.05),
+            transparent
+        );
+        animation: fc2-shimmer 2s infinite ease-out;
+    }
+
+    .fc2-skeleton-text {
+        height: 1.2em;
+        margin-bottom: var(--fc2-space-sm);
+        width: 100%;
+    }
+
+    .fc2-skeleton-text.short { width: 40%; }
+    .fc2-skeleton-text.medium { width: 70%; }
+
+    .fc2-skeleton-circle {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+    }
+
+    .fc2-skeleton-media {
+        aspect-ratio: 16/9;
+        width: 100%;
+        border-radius: var(--fc2-radius-md);
+    }
+
+    /* Transition for revealing actual content */
+    .fc2-reveal-content {
+        animation: fc2-skeleton-reveal 0.6s var(--fc2-ease-out) forwards;
+    }
+
+    .is-loading .fc2-skeleton-wrapper {
+        display: block;
+    }
+
+    .is-loading .fc2-content-hidden {
+        visibility: hidden;
+        position: absolute;
     }
 `;
   const getMobileStyles = (C) => `
@@ -4267,17 +4655,6 @@ DATA_EXPORTED: "data:exported",
             max-width: 95% !important;
             max-height: 90vh !important;
         }
-
-        /* Mobile Context Menu Adjustment */
-        .context-menu {
-            position: fixed !important;
-            bottom: 20px !important;
-            top: auto !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            width: 90% !important;
-            max-width: 300px !important;
-        }
         
         /* FAB Container - safely above bottom bar */
         .fc2-fab-container {
@@ -4316,6 +4693,14 @@ DATA_EXPORTED: "data:exported",
         -webkit-transform: translateZ(0);
     }
 
+    /* Card Button Toggles */
+    body.hide-viewed-btn .btn-toggle-view {
+        display: none !important;
+    }
+    body.hide-id-badge .fc2-id-badge {
+        display: none !important;
+    }
+
     /* ============================================================
        SKELETON SCREENS
        ============================================================ */
@@ -4323,12 +4708,12 @@ DATA_EXPORTED: "data:exported",
     .skeleton-container {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 20px;
-        padding: 20px;
+        gap: var(--fc2-space-md);
+        padding: var(--fc2-space-md);
     }
 
     .skeleton-card {
-        padding: 16px;
+        padding: var(--fc2-space-md);
         background: var(--fc2-surface);
         border-radius: var(--fc2-radius);
         overflow: hidden;
@@ -4338,16 +4723,16 @@ DATA_EXPORTED: "data:exported",
     .skeleton-image {
         width: 100%;
         height: 150px;
-        margin-bottom: 12px;
+        margin-bottom: var(--fc2-space-base);
         background: linear-gradient(
             90deg,
-            rgba(255, 255, 255, 0.05) 0%,
-            rgba(255, 255, 255, 0.1) 50%,
-            rgba(255, 255, 255, 0.05) 100%
+            rgba(255, 255, 255, 0.03) 0%,
+            rgba(255, 255, 255, 0.08) 50%,
+            rgba(255, 255, 255, 0.03) 100%
         );
         background-size: 1000px 100%;
         border-radius: calc(var(--fc2-radius) / 2);
-        animation: fc2-shimmer 2s infinite;
+        animation: fc2-shimmer 2.5s infinite linear;
     }
 
     .skeleton-text {
@@ -4617,7 +5002,7 @@ DATA_EXPORTED: "data:exported",
           const foundIds = new Set();
           const regexes = chunk.map((id) => ({
             id,
-            regex: new RegExp(id.toUpperCase().replace(/[-_\s]/g, "[-_\\s]"), "i"),
+regex: new RegExp(`(?<=[^0-9a-zA-Z]|^)${id.toUpperCase().replace(/[-_\s]/g, "[-_\\s]")}(?=[^0-9a-zA-Z]|$)`, "i"),
             searchId: id.toUpperCase()
           }));
           for (let i = 0; i < rows.length; i++) {
@@ -4838,12 +5223,7 @@ DATA_EXPORTED: "data:exported",
           onclick: (e) => {
             e.preventDefault();
             e.stopPropagation();
-            Utils.copyToClipboard(actress);
-            const originalText = actBtn.textContent;
-            actBtn.textContent = t("tooltipCopied");
-            setTimeout(() => {
-              actBtn.textContent = originalText;
-            }, 1500);
+            UIUtils.copyButtonBehavior(actBtn, actress, t("tooltipCopied"));
           }
         },
         actress
@@ -4858,9 +5238,7 @@ DATA_EXPORTED: "data:exported",
       if (cont && !cont.querySelector(`.${Config.CLASSES.btnMagnet}`)) {
         const btn = UIButtons.btn(IconMagnet, t("tooltipCopyMagnet"), "javascript:void(0);", (e) => {
           e.preventDefault();
-          Utils.copyToClipboard(url);
-          const tt = btn.querySelector(`.${Config.CLASSES.tooltip}`);
-          if (tt) tt.textContent = t("tooltipCopied");
+          UIUtils.copyButtonBehavior(btn, url, t("tooltipCopied"));
         });
         btn.classList.add(Config.CLASSES.btnMagnet);
         cont.appendChild(btn);
@@ -4870,44 +5248,86 @@ DATA_EXPORTED: "data:exported",
   const UIGallery = {
     createExtraPreviewsGrid: (previews) => {
       if (!previews?.length) return null;
+      const hero = previews.find((p) => p.type === "image") || previews[0];
+      const clips = previews.filter((p) => p !== hero);
       return h(
         "div",
         { className: Config.CLASSES.extraPreviewContainer },
-        h("h2", { className: Config.CLASSES.extraPreviewTitle }, t("extraPreviewTitle")),
         h(
           "div",
-          { className: Config.CLASSES.extraPreviewGrid },
-          ...previews.map(
-            (p) => p.type === "image" ? h("img", { src: p.src, loading: "lazy" }) : h("video", { src: p.src, autoplay: true, loop: true, muted: true, controls: true })
+          { className: "preview-hero-section" },
+          h(
+            "div",
+            {
+              className: "preview-hero-card",
+              onclick: () => UIGallery.openGallery("", previews, previews.indexOf(hero))
+            },
+            hero.type === "image" ? h("img", { src: hero.src, loading: "lazy" }) : h("video", { src: hero.src, autoplay: true, muted: true, loop: true }),
+            h("div", { className: "preview-hero-badge" }, t("mainPreview"))
           )
+        ),
+        clips.length > 0 && h(
+          "div",
+          { className: Config.CLASSES.extraPreviewGrid },
+          ...clips.map((p) => {
+            const idx = previews.indexOf(p);
+            const isVideo = p.type === "video";
+            return h(
+              "div",
+              {
+                className: `preview-item ${isVideo ? "is-video" : ""}`,
+                onclick: () => UIGallery.openGallery("", previews, idx)
+              },
+              isVideo ? h("video", { src: p.src, muted: true, onmouseover: (e) => e.target.play(), onmouseout: (e) => {
+                e.target.pause();
+                e.target.currentTime = 0;
+              } }) : h("img", { src: p.src, loading: "lazy" }),
+              isVideo && h("div", { className: "video-play-hint", innerHTML: IconPlayCircle })
+            );
+          })
         )
       );
     },
-    openGallery: (_id, previews) => {
-      previews.forEach((p) => {
-        if (p.type === "image") {
+    openGallery: (_id, previews, startIndex = 0) => {
+      let index = startIndex;
+      let isZoomed = false;
+      let isTransitioning = false;
+      previews.forEach((item) => {
+        if (item.type === "image") {
           const img = new Image();
-          img.src = p.src;
-        } else if (p.type === "video") {
+          img.src = item.src;
+        } else if (item.type === "video") {
           const v = document.createElement("video");
           v.preload = "auto";
-          v.src = p.src;
+          v.src = item.src;
         }
       });
-      let index = 0;
-      let isZoomed = false;
       const container = h("div", { className: "enh-viewer-backdrop" });
-      const render = () => {
+      const render = (direction = "init") => {
+        if (isTransitioning) return;
+        isTransitioning = true;
         const item = previews[index];
         container.replaceChildren();
         const closeBtn = h(
           "div",
-          { className: "enh-viewer-close", onclick: () => container.remove() },
-          h("span", { className: "fc2-icon", style: { fontSize: "24px" }, innerHTML: IconXmark })
+          {
+            className: "enh-viewer-close",
+            onclick: (e) => {
+              e.stopPropagation();
+              container.remove();
+            }
+          },
+          h("span", { className: "fc2-icon", innerHTML: IconXmark })
         );
-        const counter = h("div", { className: "enh-viewer-counter" }, `${index + 1} / ${previews.length}`);
+        const counter = h(
+          "div",
+          { className: "enh-viewer-counter" },
+          h("span", { style: { color: "#fff", fontWeight: "bold" } }, (index + 1).toString()),
+          h("span", { style: { opacity: "0.5", margin: "0 4px" } }, "/"),
+          previews.length.toString()
+        );
         const stage = h("div", {
-          className: "enh-viewer-stage",
+          className: `enh-viewer-stage slide-${direction}`,
           style: isZoomed ? "overflow: auto; align-items: flex-start; justify-content: flex-start;" : "",
           onclick: (e) => {
             if (e.target === stage) container.remove();
@@ -4915,19 +5335,20 @@ DATA_EXPORTED: "data:exported",
         });
         const media = item.type === "image" ? h("img", {
           src: item.src,
+          draggable: false,
           onclick: (e) => {
             e.stopPropagation();
             isZoomed = !isZoomed;
-            render();
+            render("init");
           },
-          style: isZoomed ? "cursor: zoom-out; max-width: none; max-height: none; width: auto; height: auto; margin: auto;" : "cursor: zoom-in; width: 100%; height: 100%; object-fit: contain;"
+          style: isZoomed ? "cursor: zoom-out; max-width: none; max-height: none; width: auto; height: auto; margin: auto; transform: scale(1);" : "cursor: zoom-in; width: 100%; height: 100%; object-fit: contain;"
         }) : h("video", {
           src: item.src,
           controls: true,
           autoplay: true,
           loop: true,
           onclick: (e) => e.stopPropagation(),
-          style: "width: 100%; height: 100%; object-fit: contain;"
+          style: "width: 100%; height: 100%; object-fit: contain; border-radius: 8px;"
         });
         stage.appendChild(media);
         if (previews.length > 1) {
@@ -4939,10 +5360,10 @@ DATA_EXPORTED: "data:exported",
                 e.stopPropagation();
                 isZoomed = false;
                 index = (index - 1 + previews.length) % previews.length;
-                render();
+                render("prev");
               }
             },
-            h("span", { className: "fc2-icon", style: { fontSize: "40px" }, innerHTML: IconChevronLeft })
+            h("span", { className: "fc2-icon", style: { transform: "scale(1.5)" }, innerHTML: IconChevronLeft })
           );
           const next = h(
             "div",
@@ -4952,14 +5373,17 @@ DATA_EXPORTED: "data:exported",
                 e.stopPropagation();
                 isZoomed = false;
                 index = (index + 1) % previews.length;
-                render();
+                render("next");
               }
             },
-            h("span", { className: "fc2-icon", style: { fontSize: "40px" }, innerHTML: IconChevronRight })
+            h("span", { className: "fc2-icon", style: { transform: "scale(1.5)" }, innerHTML: IconChevronRight })
           );
           container.append(prev, next);
         }
         container.append(stage, closeBtn, counter);
+        setTimeout(() => {
+          isTransitioning = false;
+        }, 300);
       };
       const keyHandler = ((e) => {
         if (!container.isConnected) {
@@ -4969,12 +5393,12 @@ DATA_EXPORTED: "data:exported",
         if (e.key === "ArrowLeft") {
           isZoomed = false;
           index = (index - 1 + previews.length) % previews.length;
-          render();
+          render("prev");
         } else if (e.key === "ArrowRight" || e.key === " ") {
           e.preventDefault();
           isZoomed = false;
           index = (index + 1) % previews.length;
-          render();
+          render("next");
         } else if (e.key === "Escape") {
           container.remove();
         }
@@ -4997,7 +5421,7 @@ DATA_EXPORTED: "data:exported",
           if (previews[index].type === "image") {
             e.preventDefault();
             isZoomed = !isZoomed;
-            render();
+            render("init");
           }
         }
         lastTapTime = now;
@@ -5007,9 +5431,13 @@ DATA_EXPORTED: "data:exported",
             return;
           }
           if (Math.abs(diffX) > 50 && Math.abs(diffY) < 50) {
-            if (diffX > 0) index = (index - 1 + previews.length) % previews.length;
-            else index = (index + 1) % previews.length;
-            render();
+            if (diffX > 0) {
+              index = (index - 1 + previews.length) % previews.length;
+              render("prev");
+            } else {
+              index = (index + 1) % previews.length;
+              render("next");
+            }
           }
         }
       }, { passive: false });
@@ -5167,30 +5595,45 @@ DATA_EXPORTED: "data:exported",
           onclick: (e) => {
             e.preventDefault();
             e.stopPropagation();
-            UIUtils.copyButtonBehavior(badge, id, "COPIED");
+            UIUtils.copyButtonBehavior(badge, id, t("tooltipCopied"));
             badge.classList.add("pulse-once");
-            setTimeout(() => badge.classList.remove("pulse-once"), 1200);
+            setTimeout(() => badge.classList.remove("pulse-once"), Config.COPIED_BADGE_DURATION);
           }
         },
         id
       );
       ctrls.appendChild(badge);
       const img = h("img", {
-        src: primaryImageUrl || data.imageUrl,
+        src: primaryImageUrl || data.imageUrl || "https://placehold.co/400x300?text=No+Image",
         className: `${C.staticPreview} ${C.previewElement}`,
         loading: "lazy",
         decoding: "async",
+        onload: function() {
+          this.classList.add("fc2-reveal-content");
+          const parent = this.parentElement;
+          if (parent) {
+            parent.classList.remove("fc2-skeleton");
+          }
+        },
         onerror: function() {
+          const parent = this.parentElement;
+          if (parent) {
+            parent.classList.remove("fc2-skeleton");
+          }
           if (fallbackImageUrl && !this.dataset.fallbackTried) {
             this.dataset.fallbackTried = "true";
             this.src = fallbackImageUrl;
+          } else if (!this.dataset.placeholderSet) {
+            this.dataset.placeholderSet = "true";
+            this.src = "https://placehold.co/400x300?text=No+Image";
+            this.classList.add("img-error");
           }
         }
       });
       const previewLink = h(
         "a",
         {
-          className: C.videoPreviewContainer,
+          className: `${C.videoPreviewContainer} fc2-skeleton`,
           href: articleUrl || "javascript:void(0);",
           target: "_blank",
           rel: "noopener noreferrer",
@@ -5231,12 +5674,15 @@ DATA_EXPORTED: "data:exported",
           }
         });
         trigger.classList.add("enh-dropdown-trigger");
-        trigger.appendChild(h("span", { className: "fc2-icon", innerHTML: IconCaretDown, style: { marginLeft: "4px", opacity: "0.6", fontSize: "10px" } }));
+        trigger.appendChild(h("span", {
+          className: "fc2-icon-dropdown-caret",
+          innerHTML: IconCaretDown
+        }));
         const hn = location.hostname;
         const { EXTERNAL_URLS: EXTERNAL_URLS2 } = Config;
         [
           { n: "Supjav", i: IconBolt, u: EXTERNAL_URLS2.SUPJAV.replace("{id}", id), s: !hn.includes("supjav") },
-          { n: "MissAV", i: IconPlayCircle, u: type === "fc2" ? EXTERNAL_URLS2.MISSAV_FC2.replace("{id}", id) : EXTERNAL_URLS2.MISSAV.replace("{id}", id), s: !hn.includes("missav") },
+          { n: "MissAV", i: IconPlayCircle$1, u: type === "fc2" ? EXTERNAL_URLS2.MISSAV_FC2.replace("{id}", id) : EXTERNAL_URLS2.MISSAV.replace("{id}", id), s: !hn.includes("missav") },
           { n: "JavDB", i: IconDatabase, u: EXTERNAL_URLS2.JAVDB.replace("{id}", id), s: !hn.includes("javdb") },
           { n: "FC2DB", i: IconListUl, u: EXTERNAL_URLS2.FC2DB.replace("{id}", id), s: type === "fc2" && !hn.includes("fc2ppvdb") },
           { n: "FD2", i: IconServer, u: EXTERNAL_URLS2.FD2.replace("{id}", id), s: type === "fc2" && !hn.includes("fd2ppv") },
@@ -5263,7 +5709,6 @@ DATA_EXPORTED: "data:exported",
           className: C.customTitle,
           href: articleUrl || "javascript:;",
           target: "_blank",
-          style: { textDecoration: "none", color: "var(--fc2-enh-text)", display: "block" },
           onclick: (e) => markViewed(id, e.currentTarget)
         },
         title
@@ -5334,7 +5779,7 @@ DATA_EXPORTED: "data:exported",
           onclick: (e) => {
             e.preventDefault();
             e.stopPropagation();
-            UIUtils.copyButtonBehavior(badge, id, "COPIED");
+            UIUtils.copyButtonBehavior(badge, id, t("tooltipCopied"));
           }
         },
         id
@@ -5397,7 +5842,7 @@ DATA_EXPORTED: "data:exported",
         const { EXTERNAL_URLS: EXTERNAL_URLS2 } = Config;
         [
           { n: "Supjav", i: IconBolt, u: EXTERNAL_URLS2.SUPJAV.replace("{id}", id), s: !hn.includes("supjav") },
-          { n: "MissAV", i: IconPlayCircle, u: type === "fc2" ? EXTERNAL_URLS2.MISSAV_FC2.replace("{id}", id) : EXTERNAL_URLS2.MISSAV.replace("{id}", id), s: !hn.includes("missav") },
+          { n: "MissAV", i: IconPlayCircle$1, u: type === "fc2" ? EXTERNAL_URLS2.MISSAV_FC2.replace("{id}", id) : EXTERNAL_URLS2.MISSAV.replace("{id}", id), s: !hn.includes("missav") },
           { n: "JavDB", i: IconDatabase, u: EXTERNAL_URLS2.JAVDB.replace("{id}", id), s: !hn.includes("javdb") },
           { n: "FC2DB", i: IconListUl, u: EXTERNAL_URLS2.FC2DB.replace("{id}", id), s: type === "fc2" && !hn.includes("fc2ppvdb") },
           { n: "FD2", i: IconServer, u: EXTERNAL_URLS2.FD2.replace("{id}", id), s: type === "fc2" && !hn.includes("fd2ppv") },
@@ -5431,7 +5876,11 @@ DATA_EXPORTED: "data:exported",
     addPreviewButton: (cont, id) => UIButtons.addPreviewButton(cont, id, UIGallery.openGallery),
     addActressButton: UIButtons.addActressButton,
     toggleLoading: (cont, show) => UIUtils.toggleLoading(cont, show, UIButtons.btn),
-    addMagnetButton: UIButtons.addMagnetButton,
+    addMagnetButton: (cont, url) => {
+      UIButtons.addMagnetButton(cont, url);
+      const card = cont.closest(`.${Config.CLASSES.cardRebuilt}`);
+      if (card) UIUtils.applyCardVisibility(card, true);
+    },
     applyCardVisibility: UIUtils.applyCardVisibility,
     applyCensoredFilter: UIUtils.applyCensoredFilter,
     applyHistoryVisibility: UIUtils.applyHistoryVisibility,
@@ -5523,6 +5972,7 @@ _attachLoadingEventsWithCheck(video, cont, img, checkHover, id) {
         requestAnimationFrame(() => {
           if (checkHover()) {
             video.classList.remove(Config.CLASSES.hidden);
+            video.classList.add("fc2-reveal-content");
             img.classList.add(Config.CLASSES.hidden);
             this._hideLoadingIndicator(cont);
           } else {
@@ -5934,7 +6384,7 @@ async init() {
         if (this.config.customInit) this.config.customInit();
         if (this.config.onInit) await this.config.onInit();
         if (this.config.onAfterInit) await this.config.onAfterInit();
-        State.on((prop, value) => {
+        State.on(({ prop }) => {
           if (["hideNoMagnet", "enableMagnets", "hideCensored", "hideViewed", "hideBlocked"].includes(prop)) {
             this.refreshVisibility();
           }
@@ -6440,7 +6890,7 @@ articleUrl: `/articles/${id}`,
         const info = Utils.parseVideoId(text || "", link.href);
         return info ? {
           ...info,
-          title: link.title || (card.querySelector(".video-title")?.textContent || text || "").trim(),
+          title: (card.querySelector(".video-title")?.textContent || link.title || text || "").trim(),
           imageUrl: img?.dataset?.src || img?.src,
           articleUrl: link.href,
           previewSlug: info.previewSlug || null
@@ -6478,7 +6928,7 @@ articleUrl: `/articles/${id}`,
           const { finalElement, linksContainer } = UIBuilder.createEnhancedCard({
             id: info.id,
             type: info.type,
-            title: "",
+            title: titleEl?.textContent?.trim() || "",
             primaryImageUrl: img?.src || "",
             articleUrl: location.href,
             previewSlug: info.previewSlug ?? void 0
@@ -6748,6 +7198,22 @@ articleUrl: `/articles/${id}`,
           checked: State.proxy.enableQuickBar,
           onChange: (checked) => {
             State.proxy.enableQuickBar = checked;
+          }
+        }),
+        CheckboxRow({
+          id: "showViewedBtn",
+          label: t("optionShowViewedBtn"),
+          checked: State.proxy.showViewedBtn,
+          onChange: (checked) => {
+            State.proxy.showViewedBtn = checked;
+          }
+        }),
+        CheckboxRow({
+          id: "showIdBadge",
+          label: t("optionShowIdBadge"),
+          checked: State.proxy.showIdBadge,
+          onChange: (checked) => {
+            State.proxy.showIdBadge = checked;
           }
         })
       )
@@ -7627,7 +8093,9 @@ h(
         "loadExtraPreviews",
         "enableMagnets",
         "enableExternalLinks",
-        "enableActressName"
+        "enableActressName",
+        "showViewedBtn",
+        "showIdBadge"
       ];
       boolKeys.forEach((id) => {
         const el = q(id);
@@ -7878,7 +8346,7 @@ h(
           style: { display: appState.syncMode === "none" || appState.syncStatus === "idle" ? "none" : "block" }
         })
       );
-      State.on((prop, val) => {
+      State.on(({ prop, value: val }) => {
         const dot = trigger.querySelector(".fc2-sync-dot");
         if (!dot) return;
         if (prop === "syncStatus") {
@@ -8025,6 +8493,258 @@ h(
       });
       Logger$1.info("GlobalErrorHandler", "Initialized");
     }
+  };
+  const KeyboardShortcuts = {
+    shortcuts: new Map(),
+    enabled: true,
+    init() {
+      document.addEventListener("keydown", (e) => {
+        if (!this.enabled) return;
+        const target = e.target;
+        if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) {
+          return;
+        }
+        const key = this.getKeyCombo(e);
+        const shortcut = this.shortcuts.get(key);
+        if (shortcut) {
+          e.preventDefault();
+          shortcut.handler();
+          Logger$1.log("Shortcuts", `Triggered: ${key}`);
+        }
+      });
+      this.registerDefaults();
+    },
+    getKeyCombo(e) {
+      const parts = [];
+      if (e.ctrlKey || e.metaKey) parts.push("Ctrl");
+      if (e.altKey) parts.push("Alt");
+      if (e.shiftKey) parts.push("Shift");
+      parts.push(e.key.toUpperCase());
+      return parts.join("+");
+    },
+    register(key, description, handler) {
+      this.shortcuts.set(key, { description, handler });
+    },
+    registerDefaults() {
+      this.register("/", t("shortcutFocusSearch"), () => {
+        const searchInput = document.querySelector('input[type="search"]');
+        if (searchInput) {
+          searchInput.focus();
+          searchInput.select();
+        }
+      });
+      this.register("Ctrl+S", t("shortcutOpenSettings"), () => {
+        SettingsPanel.show();
+      });
+      this.register("H", t("shortcutToggleViewed"), () => {
+        State.proxy.hideViewed = !State.proxy.hideViewed;
+        Toast$1.show(
+          `${t("statusViewed")}: ${State.proxy.hideViewed ? t("labelHidden") : t("labelVisible")}`,
+          State.proxy.hideViewed ? "info" : "success"
+        );
+      });
+      this.register("M", t("shortcutToggleMagnet"), () => {
+        State.proxy.hideNoMagnet = !State.proxy.hideNoMagnet;
+        Toast$1.show(
+          `${t("statusNoMagnet")}: ${State.proxy.hideNoMagnet ? t("labelHidden") : t("labelVisible")}`,
+          State.proxy.hideNoMagnet ? "info" : "success"
+        );
+      });
+      this.register("C", t("shortcutToggleCensored"), () => {
+        State.proxy.hideCensored = !State.proxy.hideCensored;
+        Toast$1.show(
+          `${t("statusCensored")}: ${State.proxy.hideCensored ? t("labelHidden") : t("labelVisible")}`,
+          State.proxy.hideCensored ? "info" : "success"
+        );
+      });
+      this.register("R", t("shortcutReload"), () => {
+        location.reload();
+      });
+      this.register("?", t("shortcutHelp"), () => {
+        this.showHelp();
+      });
+      this.register("ESCAPE", t("shortcutCloseModal"), () => {
+        const modal = document.querySelector(".enh-modal-backdrop");
+        if (modal) {
+          modal.remove();
+        }
+      });
+    },
+    showHelp() {
+      const shortcuts = Array.from(this.shortcuts.entries()).map(([key, { description }]) => ({ key, description }));
+      const modal = h(
+        "div",
+        {
+          className: "enh-modal-backdrop",
+          onclick: (e) => {
+            if (e.target === modal) modal.remove();
+          }
+        },
+        h(
+          "div",
+          {
+            className: "enh-modal-panel",
+            style: { width: "500px", maxWidth: "90%" },
+            onclick: (e) => e.stopPropagation()
+          },
+          h(
+            "div",
+            { className: "fc2-enh-settings-header" },
+            h("h2", {}, t("labelShortcutsTitle")),
+            h("button", {
+              className: "close-btn",
+              onclick: () => modal.remove()
+            }, "×")
+          ),
+          h(
+            "div",
+            {
+              className: "fc2-enh-settings-content",
+              style: { maxHeight: "60vh", overflowY: "auto" }
+            },
+            h(
+              "table",
+              {
+                style: "width: 100%; border-collapse: collapse;"
+              },
+              h(
+                "thead",
+                {},
+                h(
+                  "tr",
+                  {},
+                  h("th", { style: "text-align: left; padding: 10px; border-bottom: 1px solid var(--fc2-border);" }, t("labelShortcutKey")),
+                  h("th", { style: "text-align: left; padding: 10px; border-bottom: 1px solid var(--fc2-border);" }, t("labelShortcutAction"))
+                )
+              ),
+              h(
+                "tbody",
+                {},
+                ...shortcuts.map(
+                  ({ key, description }) => h(
+                    "tr",
+                    {},
+                    h(
+                      "td",
+                      {
+                        style: "padding: 10px; border-bottom: 1px solid var(--fc2-border);"
+                      },
+                      h("kbd", {
+                        style: `
+                                                background: var(--fc2-surface);
+                                                padding: 4px 8px;
+                                                border-radius: 4px;
+                                                border: 1px solid var(--fc2-border);
+                                                font-family: monospace;
+                                                font-size: 12px;
+                                            `
+                      }, key.replace(/\+/g, " + "))
+                    ),
+                    h("td", {
+                      style: "padding: 10px; border-bottom: 1px solid var(--fc2-border);"
+                    }, description)
+                  )
+                )
+              )
+            )
+          )
+        )
+      );
+      document.body.appendChild(modal);
+    }
+  };
+  const SmartTooltips = {
+    currentTooltip: null,
+    hideTimeout: null,
+    init() {
+      document.addEventListener("mouseover", (e) => {
+        const target = e.target;
+        if (!(target instanceof Element)) return;
+        const tooltipText = target.getAttribute("data-tooltip") || target.title;
+        if (tooltipText && this.shouldShowTooltip(target)) {
+          this.show(target, tooltipText);
+          target._hasTooltip = true;
+        }
+      }, true);
+      document.addEventListener("mouseout", (e) => {
+        const target = e.target;
+        if (!(target instanceof Element)) return;
+        if (target.hasAttribute("data-tooltip") || target.title) {
+          this.hide();
+        }
+      }, true);
+    },
+    shouldShowTooltip(element) {
+      if ("ontouchstart" in window) return false;
+      if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") return false;
+      return true;
+    },
+    show(element, text) {
+      this.hide();
+      const tooltip = h("div", {
+        className: "smart-tooltip",
+        style: `
+                position: fixed;
+                background: rgba(0, 0, 0, 0.9);
+                color: ${UI_TOKENS.COLORS.WHITE};
+                padding: ${UI_TOKENS.SPACING.XS} ${UI_TOKENS.SPACING.MD};
+                border-radius: ${UI_TOKENS.RADIUS.MD};
+                font-size: 12px;
+                z-index: ${UI_CONSTANTS.Z_INDEX_TOOLTIP};
+                pointer-events: none;
+                white-space: nowrap;
+                max-width: 300px;
+                backdrop-filter: blur(${UI_TOKENS.BACKDROP.BLUR});
+                box-shadow: ${UI_TOKENS.BACKDROP.SHADOW};
+                opacity: 0;
+                transition: opacity 0.2s;
+            `
+      }, text);
+      document.body.appendChild(tooltip);
+      const rect = element.getBoundingClientRect();
+      const tooltipRect = tooltip.getBoundingClientRect();
+      let top = rect.bottom + 8;
+      let left = rect.left + rect.width / 2 - tooltipRect.width / 2;
+      if (left < 8) left = 8;
+      if (left + tooltipRect.width > window.innerWidth - 8) {
+        left = window.innerWidth - tooltipRect.width - 8;
+      }
+      if (top + tooltipRect.height > window.innerHeight - 8) {
+        top = rect.top - tooltipRect.height - 8;
+      }
+      tooltip.style.top = `${top}px`;
+      tooltip.style.left = `${left}px`;
+      requestAnimationFrame(() => {
+        tooltip.style.opacity = "1";
+      });
+      this.currentTooltip = tooltip;
+    },
+    hide() {
+      if (this.currentTooltip) {
+        this.currentTooltip.style.opacity = "0";
+        setTimeout(() => {
+          if (this.currentTooltip) {
+            this.currentTooltip.remove();
+            this.currentTooltip = null;
+          }
+        }, 200);
+      }
+    }
+  };
+  const initUIEnhancements = () => {
+    KeyboardShortcuts.init();
+    SmartTooltips.init();
+    const updateGlobalClasses = () => {
+      const isShowViewed = State.proxy.showViewedBtn !== false;
+      const isShowId = State.proxy.showIdBadge !== false;
+      document.body.classList.toggle("hide-viewed-btn", !isShowViewed);
+      document.body.classList.toggle("hide-id-badge", !isShowId);
+      Logger$1.debug("UIEnhancements", "Global classes updated", { isShowViewed, isShowId });
+    };
+    State.on("showViewedBtn", updateGlobalClasses);
+    State.on("showIdBadge", updateGlobalClasses);
+    updateGlobalClasses();
+    Logger$1.success("UI/UX", "All UI enhancements initialized");
   };
   const MigrationManager = {
     init() {
@@ -8207,6 +8927,7 @@ is_deleted: 0,
         GridManager.init();
         MagnetManager.init();
         MenuManager.register();
+        initUIEnhancements();
         Logger$1.info("Main", "Emitting UI_READY...");
         CoreEvents.emit(AppEvents.UI_READY, {});
         SiteManager.registerAll(SiteConfigs);

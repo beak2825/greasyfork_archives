@@ -8,7 +8,7 @@
 // @icon         https://img.picgo.net/2024/11/15/78e8e2c67f051d15519e12911819dc9f.gif
 // @run-at       document-end
 // @license      MIT
-// @version      2025.11.29.23
+// @version      2026.01.25
 // @downloadURL https://update.greasyfork.org/scripts/552769/zmpt-check-tool.user.js
 // @updateURL https://update.greasyfork.org/scripts/552769/zmpt-check-tool.meta.js
 // ==/UserScript==
@@ -16,16 +16,20 @@
 (function () {
     'use strict';
     // 是否屏蔽详情页网络访问（设置为false 或者直接注释这一行 可以提升页面打开速度）
-    const IS_ACCESS_NETWORK = true;
+    const IS_ACCESS_NETWORK = false;
     let infoCounter = 0; // 全局信息计数器
 
     /**
      * 创建并返回一个启动按钮
-     * @returns {HTMLButtonElement} 配置好的启动按钮
+     * 该按钮用于批量审核未审核的种子，点击后会弹出输入框让用户选择要审核的种子数量
+     * @returns {HTMLButtonElement} 配置好的启动按钮，包含样式和点击事件
      */
     function createStartButton() {
+        // 创建按钮元素并设置基本属性
         const startButton = document.createElement('button');
         startButton.textContent = '启动吧，电力！';
+
+        // 设置按钮样式 - 固定在页面左上角，橙色背景，白色文字
         startButton.style.position = 'fixed';
         startButton.style.top = '5px';
         startButton.style.left = '5px';
@@ -39,13 +43,14 @@
         startButton.style.fontWeight = 'bold';
         startButton.style.fontSize = '14px';
 
+        // 添加点击事件处理器 - 弹出输入框并批量打开种子页面
         startButton.addEventListener('click', () => {
             const count = prompt('请输入要审核的种子数量:', '20');
             if (count && !isNaN(count)) {
+                // 调用获取未审核种子的函数，并在回调中打开每个种子页面
                 getNextUncheckTorrent(parseInt(count), (urls) => {
                     urls.forEach(url => {
                         window.open(url, '_blank');
-
                     });
                 });
             }
@@ -57,10 +62,15 @@
 
     /**
      * 添加回车键点击approval元素的功能
+     * 为页面添加键盘事件监听器，当用户按下回车键时自动点击审核按钮
+     * 这个功能可以提高审核效率，用户无需手动点击鼠标
      */
     function setupEnterKeyApproval() {
+        // 为整个文档添加键盘按下事件监听器
         document.addEventListener('keydown', function (e) {
+            // 检查是否按下了回车键
             if (e.key === 'Enter') {
+                // 使用XPath查询找到id为'approval'的font元素
                 const approvalElement = document.evaluate(
                     "//font[@id='approval']",
                     document,
@@ -69,6 +79,7 @@
                     null
                 ).singleNodeValue;
 
+                // 如果找到了approval元素，则触发点击事件
                 if (approvalElement) {
                     approvalElement.click();
                 }
@@ -77,37 +88,689 @@
     }
 
     /**
+     * 创建并返回一个一键拒绝按钮
+     * 该按钮用于快速拒绝审核，点击后自动选择拒绝选项并聚焦备注框
+     * @returns {HTMLButtonElement} 配置好的一键拒绝按钮
+     */
+    function createQuickRejectButton() {
+        // 创建按钮元素并设置基本属性
+        const quickRejectButton = document.createElement('button');
+        quickRejectButton.textContent = '一键拒绝';
+        quickRejectButton.id = 'quick-reject-btn';
+
+        // 设置按钮样式 - 在信息框内部右下角，红色背景，白色文字
+        quickRejectButton.style.position = 'absolute';
+        quickRejectButton.style.bottom = '0';
+        quickRejectButton.style.right = '80px'; // 在通过按钮左侧，距离减半
+        quickRejectButton.style.padding = '6px 12px';
+        quickRejectButton.style.backgroundColor = '#dc3545';
+        quickRejectButton.style.color = 'white';
+        quickRejectButton.style.border = 'none';
+        quickRejectButton.style.borderRadius = '3px';
+        quickRejectButton.style.cursor = 'pointer';
+        quickRejectButton.style.fontWeight = 'bold';
+        quickRejectButton.style.fontSize = '12px';
+        quickRejectButton.style.boxShadow = '0 1px 3px rgba(0,0,0,0.2)';
+        quickRejectButton.style.margin = '0';
+
+        // 添加点击事件处理器 - 执行一键拒绝逻辑
+        quickRejectButton.addEventListener('click', () => {
+            quickRejectButton.textContent = '处理中...';
+            quickRejectButton.disabled = true;
+            quickRejectButton.style.backgroundColor = '#6c757d';
+
+            executeQuickReject();
+        });
+
+        return quickRejectButton;
+    }
+
+    /**
+     * 创建并返回一个一键通过按钮
+     * 该按钮用于快速通过审核，点击后自动完成审核流程
+     * @returns {HTMLButtonElement} 配置好的一键通过按钮
+     */
+    function createQuickApproveButton() {
+        // 创建按钮元素并设置基本属性
+        const quickApproveButton = document.createElement('button');
+        quickApproveButton.textContent = '一键通过';
+        quickApproveButton.id = 'quick-approve-btn';
+
+        // 设置按钮样式 - 在信息框内部右下角，绿色背景，白色文字
+        quickApproveButton.style.position = 'absolute';
+        quickApproveButton.style.bottom = '0';
+        quickApproveButton.style.right = '0'; // 紧贴右下角
+        quickApproveButton.style.padding = '6px 12px';
+        quickApproveButton.style.backgroundColor = '#28a745';
+        quickApproveButton.style.color = 'white';
+        quickApproveButton.style.border = 'none';
+        quickApproveButton.style.borderRadius = '3px';
+        quickApproveButton.style.cursor = 'pointer';
+        quickApproveButton.style.fontWeight = 'bold';
+        quickApproveButton.style.fontSize = '12px';
+        quickApproveButton.style.boxShadow = '0 1px 3px rgba(0,0,0,0.2)';
+        quickApproveButton.style.margin = '0';
+
+        // 添加点击事件处理器 - 执行一键通过逻辑
+        quickApproveButton.addEventListener('click', () => {
+            quickApproveButton.textContent = '处理中...';
+            quickApproveButton.disabled = true;
+            quickApproveButton.style.backgroundColor = '#6c757d';
+
+            executeQuickApprove();
+        });
+
+        return quickApproveButton;
+    }
+
+    /**
+     * 执行一键通过审核逻辑
+     * 1. 点击审核按钮触发弹框
+     * 2. 等待弹框加载完成
+     * 3. 选择通过选项并提交
+     */
+    function executeQuickApprove() {
+        // 首先点击审核按钮触发弹框
+        const approvalElement = document.evaluate(
+            "//font[@id='approval']",
+            document,
+            null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+            null
+        ).singleNodeValue;
+
+        if (!approvalElement) {
+            alert('未找到审核按钮，请确认当前页面状态');
+            resetQuickApproveButton();
+            return;
+        }
+
+        // 点击审核按钮
+        approvalElement.click();
+
+        // 等待弹框出现并加载完成
+        waitForApprovalDialog('approve');
+    }
+
+    /**
+     * 执行一键拒绝审核逻辑
+     * 1. 点击审核按钮触发弹框
+     * 2. 等待弹框加载完成
+     * 3. 选择拒绝选项并自动聚焦备注框
+     */
+    function executeQuickReject() {
+        // 首先点击审核按钮触发弹框
+        const approvalElement = document.evaluate(
+            "//font[@id='approval']",
+            document,
+            null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+            null
+        ).singleNodeValue;
+
+        if (!approvalElement) {
+            alert('未找到审核按钮，请确认当前页面状态');
+            resetQuickRejectButton();
+            return;
+        }
+
+        // 点击审核按钮
+        approvalElement.click();
+
+        // 等待弹框出现并加载完成
+        waitForApprovalDialog('reject');
+    }
+
+    /**
+     * 等待审核弹框加载完成
+     * @param {string} action - 操作类型：'approve' 或 'reject'
+     */
+    function waitForApprovalDialog(action) {
+        let attempts = 0;
+        const maxAttempts = 100; // 最多等待10秒
+
+        const checkDialog = () => {
+            attempts++;
+
+            // 查找审核弹框
+            const approvalDialog = document.querySelector('.layui-layer-iframe');
+
+            if (approvalDialog) {
+                console.log('审核弹框已出现，开始等待iframe加载...');
+                // 弹框已出现，等待iframe加载完成
+                waitForIframeLoad(approvalDialog, action);
+            } else if (attempts < maxAttempts) {
+                // 继续等待
+                setTimeout(checkDialog, 100);
+            } else {
+                // 超时处理
+                console.log('审核弹框加载超时，尝试次数:', attempts);
+                alert('审核弹框加载超时，请手动操作');
+                if (action === 'approve') {
+                    resetQuickApproveButton();
+                } else {
+                    resetQuickRejectButton();
+                }
+            }
+        };
+
+        checkDialog();
+    }
+
+    /**
+     * 等待iframe加载完成
+     * @param {HTMLElement} dialog - 审核弹框元素
+     * @param {string} action - 操作类型：'approve' 或 'reject'
+     */
+    function waitForIframeLoad(dialog, action) {
+        const iframe = dialog.querySelector('iframe');
+
+        if (!iframe) {
+            console.log('未找到审核iframe');
+            alert('未找到审核iframe，请手动操作');
+            resetQuickApproveButton();
+            return;
+        }
+
+        console.log('找到iframe，开始智能等待内容加载...');
+
+        // 使用MutationObserver监测iframe内容变化
+        const waitForContentLoad = () => {
+            let observer = null;
+            let timeoutId = null;
+            let maxWaitTime = 10000; // 最大等待10秒
+            let startTime = Date.now();
+
+            const cleanup = () => {
+                if (observer) observer.disconnect();
+                if (timeoutId) clearTimeout(timeoutId);
+            };
+
+            const checkContent = () => {
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+                    // 检查关键审核表单元素是否存在
+                    const hasForm = iframeDoc.querySelector('form') !== null;
+                    const hasInputs = iframeDoc.querySelectorAll('input, select, textarea').length > 0;
+                    const hasButtons = iframeDoc.querySelectorAll('button, input[type="submit"], input[type="button"]').length > 0;
+
+                    // 检查是否包含审核相关的关键词
+                    const pageText = iframeDoc.body ? iframeDoc.body.textContent.toLowerCase() : '';
+                    const hasApprovalKeywords = pageText.includes('审核') || pageText.includes('通过') ||
+                                              pageText.includes('拒绝') || pageText.includes('approve');
+
+                    console.log('内容检查结果:', {
+                        hasForm,
+                        hasInputs,
+                        hasButtons,
+                        hasApprovalKeywords,
+                        bodyExists: !!iframeDoc.body,
+                        bodyChildren: iframeDoc.body ? iframeDoc.body.children.length : 0
+                    });
+
+                    // 如果检测到审核表单内容，开始处理
+                    if (hasForm && hasInputs && hasButtons && hasApprovalKeywords) {
+                        console.log('审核表单内容已完全加载');
+                        cleanup();
+                        processApprovalForm(iframe, action);
+                        return true;
+                    }
+
+                    // 检查是否超时
+                    if (Date.now() - startTime > maxWaitTime) {
+                        console.log('iframe内容加载超时，强制尝试处理');
+                        cleanup();
+                        processApprovalForm(iframe, action);
+                        return true;
+                    }
+
+                    return false;
+                } catch (error) {
+                    console.log('访问iframe内容时出错:', error);
+                    // 如果是跨域错误，尝试其他方式
+                    if (error.toString().includes('SecurityError') || error.toString().includes('Blocked a frame')) {
+                        console.log('检测到跨域限制，使用备用方案');
+                        cleanup();
+                        waitForCrossDomainIframe(iframe);
+                        return true;
+                    }
+                    return false;
+                }
+            };
+
+            // 立即检查一次
+            if (checkContent()) return;
+
+            // 设置定时检查
+            timeoutId = setInterval(() => {
+                if (checkContent()) {
+                    clearInterval(timeoutId);
+                }
+            }, 300);
+
+            // 尝试使用MutationObserver监测DOM变化
+            try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                if (iframeDoc && iframeDoc.body) {
+                    observer = new MutationObserver((mutations) => {
+                        console.log('检测到DOM变化，mutations数量:', mutations.length);
+                        if (checkContent()) {
+                            observer.disconnect();
+                        }
+                    });
+
+                    observer.observe(iframeDoc.body, {
+                        childList: true,
+                        subtree: true,
+                        attributes: true,
+                        characterData: true
+                    });
+                }
+            } catch (error) {
+                console.log('无法使用MutationObserver:', error);
+            }
+        };
+
+        // 监听iframe的load事件
+        iframe.onload = function() {
+            console.log('iframe onload事件触发，开始监测内容');
+            setTimeout(waitForContentLoad, 200);
+        };
+
+        // 如果iframe已经加载完成
+        if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+            console.log('iframe已加载完成，开始监测内容');
+            setTimeout(waitForContentLoad, 200);
+        } else {
+            // 开始监测内容
+            setTimeout(waitForContentLoad, 200);
+        }
+    }
+
+    /**
+     * 处理跨域iframe的备用方案
+     * @param {HTMLIFrameElement} iframe - iframe元素
+     */
+    function waitForCrossDomainIframe(iframe) {
+        console.log('使用跨域iframe备用方案');
+
+        // 方法1: 等待一段时间后直接尝试点击（假设审核表单在特定位置）
+        setTimeout(() => {
+            console.log('跨域方案：尝试直接模拟点击');
+
+            // 模拟点击页面上的审核按钮位置（可能需要根据实际布局调整）
+            const clickEvent = new MouseEvent('click', {
+                view: window,
+                bubbles: true,
+                cancelable: true
+            });
+
+            // 尝试触发iframe内的点击事件
+            try {
+                iframe.contentWindow.postMessage({ type: 'simulateApproval' }, '*');
+            } catch (error) {
+                console.log('跨域消息发送失败:', error);
+            }
+
+            // 等待一段时间后刷新页面
+            setTimeout(() => {
+                console.log('跨域方案：操作完成，刷新页面');
+                resetQuickApproveButton();
+                window.location.reload();
+            }, 2000);
+
+        }, 3000);
+    }
+
+    /**
+     * 处理审核表单
+     * @param {HTMLIFrameElement} iframe - 审核iframe元素
+     * @param {string} action - 操作类型：'approve' 或 'reject'
+     */
+    function processApprovalForm(iframe, action) {
+        try {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+            console.log('开始处理审核表单，操作类型:', action, 'iframe文档内容:', iframeDoc.documentElement.outerHTML.substring(0, 500));
+
+            if (action === 'approve') {
+                processApproveAction(iframeDoc);
+            } else if (action === 'reject') {
+                processRejectAction(iframeDoc);
+            }
+
+        } catch (error) {
+            console.error('处理审核表单时出错:', error);
+            alert('处理审核表单时出错，请手动操作');
+            if (action === 'approve') {
+                resetQuickApproveButton();
+            } else {
+                resetQuickRejectButton();
+            }
+        }
+    }
+
+    /**
+     * 处理通过操作
+     * @param {Document} iframeDoc - iframe文档对象
+     */
+    function processApproveAction(iframeDoc) {
+        // 多种方式查找通过选项的单选框
+        let approveRadio = null;
+
+        // 方式1: 按value="1"查找
+        approveRadio = iframeDoc.querySelector('input[type="radio"][value="1"]');
+
+        // 方式2: 按文本内容查找（包含"通过"的单选框）
+        if (!approveRadio) {
+            const radioLabels = iframeDoc.querySelectorAll('label');
+            for (let label of radioLabels) {
+                if (label.textContent.includes('通过') || label.textContent.includes('approve')) {
+                    const radioId = label.getAttribute('for');
+                    if (radioId) {
+                        approveRadio = iframeDoc.getElementById(radioId);
+                    }
+                    if (!approveRadio) {
+                        approveRadio = label.querySelector('input[type="radio"]');
+                    }
+                    if (approveRadio) break;
+                }
+            }
+        }
+
+        // 方式3: 查找所有单选框，选择第一个（假设第一个是通过）
+        if (!approveRadio) {
+            const allRadios = iframeDoc.querySelectorAll('input[type="radio"]');
+            if (allRadios.length > 0) {
+                approveRadio = allRadios[0];
+                console.log('使用第一个单选框作为通过选项');
+            }
+        }
+
+        // 查找提交按钮
+        const submitButton = findSubmitButton(iframeDoc);
+
+        console.log('找到的单选框:', approveRadio);
+        console.log('找到的提交按钮:', submitButton);
+
+        if (!approveRadio) {
+            console.log('未找到通过选项，iframe内容:', iframeDoc.documentElement.outerHTML);
+            alert('未找到通过选项，请手动操作');
+            resetQuickApproveButton();
+            return;
+        }
+
+        if (!submitButton) {
+            console.log('未找到提交按钮，iframe内容:', iframeDoc.documentElement.outerHTML);
+            alert('未找到提交按钮，请手动操作');
+            resetQuickApproveButton();
+            return;
+        }
+
+        // 选择通过选项
+        console.log('选择通过选项');
+        approveRadio.checked = true;
+        approveRadio.dispatchEvent(new Event('change', { bubbles: true }));
+        approveRadio.dispatchEvent(new Event('click', { bubbles: true }));
+
+        // 等待一下确保选项生效
+        setTimeout(() => {
+            console.log('点击提交按钮');
+            // 点击提交按钮
+            submitButton.click();
+
+            // 等待提交完成，然后刷新页面
+            setTimeout(() => {
+                console.log('审核通过操作已完成，刷新页面');
+                resetQuickApproveButton();
+                window.location.reload();
+            }, 1500);
+
+        }, 500);
+    }
+
+    /**
+     * 处理拒绝操作
+     * @param {Document} iframeDoc - iframe文档对象
+     */
+    function processRejectAction(iframeDoc) {
+        console.log('开始处理拒绝操作，iframe内容:', iframeDoc.documentElement.outerHTML.substring(0, 1000));
+
+        // 多种方式查找拒绝选项的单选框
+        let rejectRadio = null;
+
+        // 方式1: 按value="0"或"2"查找（常见的拒绝选项值）
+        rejectRadio = iframeDoc.querySelector('input[type="radio"][value="0"], input[type="radio"][value="2"]');
+
+        // 方式2: 按文本内容查找（包含"拒绝"、"不通过"的单选框）
+        if (!rejectRadio) {
+            const radioLabels = iframeDoc.querySelectorAll('label');
+            for (let label of radioLabels) {
+                if (label.textContent.includes('拒绝') || label.textContent.includes('不通过') ||
+                    label.textContent.includes('reject') || label.textContent.includes('deny') ||
+                    label.textContent.includes('不通过')) {
+                    const radioId = label.getAttribute('for');
+                    if (radioId) {
+                        rejectRadio = iframeDoc.getElementById(radioId);
+                    }
+                    if (!rejectRadio) {
+                        rejectRadio = label.querySelector('input[type="radio"]');
+                    }
+                    if (rejectRadio) break;
+                }
+            }
+        }
+
+        // 方式3: 查找所有单选框，选择第二个（假设第二个是拒绝）
+        if (!rejectRadio) {
+            const allRadios = iframeDoc.querySelectorAll('input[type="radio"]');
+            if (allRadios.length > 1) {
+                rejectRadio = allRadios[1];
+                console.log('使用第二个单选框作为拒绝选项');
+            } else if (allRadios.length === 1) {
+                // 如果只有一个单选框，可能是通过/拒绝切换的样式
+                rejectRadio = allRadios[0];
+                console.log('使用唯一单选框作为拒绝选项');
+            }
+        }
+
+        // 查找备注框 - 更灵活的查找方式
+        let remarkInput = iframeDoc.querySelector('textarea, input[type="text"], input[type="textarea"]');
+
+        // 如果没找到，尝试按placeholder查找
+        if (!remarkInput) {
+            const inputs = iframeDoc.querySelectorAll('input, textarea');
+            for (let input of inputs) {
+                const placeholder = input.getAttribute('placeholder') || '';
+                if (placeholder.includes('备注') || placeholder.includes('原因') ||
+                    placeholder.includes('说明') || placeholder.includes('remark') ||
+                    placeholder.includes('reason')) {
+                    remarkInput = input;
+                    break;
+                }
+            }
+        }
+
+        // 如果还没找到，查找第一个textarea
+        if (!remarkInput) {
+            remarkInput = iframeDoc.querySelector('textarea');
+        }
+
+        console.log('找到的拒绝单选框:', rejectRadio);
+        console.log('找到的备注框:', remarkInput);
+
+        if (!rejectRadio) {
+            console.log('未找到拒绝选项，iframe内容:', iframeDoc.documentElement.outerHTML);
+            alert('未找到拒绝选项，请手动操作');
+            resetQuickRejectButton();
+            return;
+        }
+
+        // 选择拒绝选项 - 模拟真实点击
+        console.log('模拟点击拒绝选项');
+
+        // 方法1: 直接点击单选框
+        if (rejectRadio) {
+            rejectRadio.click();
+        }
+
+        // 方法2: 如果单选框不可点击，尝试点击对应的label
+        setTimeout(() => {
+            if (!rejectRadio.checked) {
+                const labels = iframeDoc.querySelectorAll('label');
+                for (let label of labels) {
+                    if (label.textContent.includes('拒绝') || label.textContent.includes('不通过')) {
+                        label.click();
+                        console.log('通过label点击拒绝选项');
+                        break;
+                    }
+                }
+            }
+        }, 100);
+
+        // 方法3: 强制设置checked状态并触发事件
+        setTimeout(() => {
+            rejectRadio.checked = true;
+            rejectRadio.dispatchEvent(new Event('change', { bubbles: true }));
+            rejectRadio.dispatchEvent(new Event('input', { bubbles: true }));
+
+            // 模拟完整的点击事件
+            const clickEvent = new MouseEvent('click', {
+                view: window,
+                bubbles: true,
+                cancelable: true,
+                clientX: rejectRadio.getBoundingClientRect().left,
+                clientY: rejectRadio.getBoundingClientRect().top
+            });
+            rejectRadio.dispatchEvent(clickEvent);
+        }, 200);
+
+        // 等待一下确保选项生效
+        setTimeout(() => {
+            // 检查是否成功选择拒绝选项
+            console.log('拒绝选项状态:', rejectRadio.checked);
+
+            // 如果有备注框，自动聚焦
+            if (remarkInput) {
+                console.log('自动聚焦备注框');
+                remarkInput.focus();
+                remarkInput.select();
+            } else {
+                console.log('未找到备注框，iframe内容:', iframeDoc.documentElement.outerHTML);
+            }
+
+            // 不自动提交，等待用户输入备注
+            console.log('拒绝选项已选择，备注框已聚焦，等待用户输入备注');
+            resetQuickRejectButton();
+
+        }, 400);
+    }
+
+    /**
+     * 查找提交按钮
+     * @param {Document} iframeDoc - iframe文档对象
+     * @returns {HTMLElement|null} 提交按钮元素
+     */
+    function findSubmitButton(iframeDoc) {
+        let submitButton = null;
+
+        // 方式1: 按type="submit"查找
+        submitButton = iframeDoc.querySelector('input[type="submit"], button[type="submit"]');
+
+        // 方式2: 按文本内容查找（包含"提交"、"确定"、"审核"的按钮）
+        if (!submitButton) {
+            const buttons = iframeDoc.querySelectorAll('button, input[type="button"]');
+            for (let button of buttons) {
+                const buttonText = button.value || button.textContent || '';
+                if (buttonText.includes('提交') || buttonText.includes('确定') ||
+                    buttonText.includes('审核') || buttonText.includes('Submit') ||
+                    buttonText.includes('Approve')) {
+                    submitButton = button;
+                    break;
+                }
+            }
+        }
+
+        // 方式3: 查找表单中的最后一个按钮
+        if (!submitButton) {
+            const forms = iframeDoc.querySelectorAll('form');
+            if (forms.length > 0) {
+                const lastForm = forms[forms.length - 1];
+                const buttons = lastForm.querySelectorAll('button, input[type="submit"], input[type="button"]');
+                if (buttons.length > 0) {
+                    submitButton = buttons[buttons.length - 1];
+                    console.log('使用表单中的最后一个按钮作为提交按钮');
+                }
+            }
+        }
+
+        return submitButton;
+    }
+
+    /**
+     * 重置一键通过按钮状态
+     */
+    function resetQuickApproveButton() {
+        const quickApproveButton = document.getElementById('quick-approve-btn');
+        if (quickApproveButton) {
+            quickApproveButton.textContent = '一键通过';
+            quickApproveButton.disabled = false;
+            quickApproveButton.style.backgroundColor = '#28a745';
+        }
+    }
+
+    /**
+     * 重置一键拒绝按钮状态
+     */
+    function resetQuickRejectButton() {
+        const quickRejectButton = document.getElementById('quick-reject-btn');
+        if (quickRejectButton) {
+            quickRejectButton.textContent = '一键拒绝';
+            quickRejectButton.disabled = false;
+            quickRejectButton.style.backgroundColor = '#dc3545';
+        }
+    }
+
+    /**
      * 检查种子文件信息
-     * @param {HTMLElement} main_table - 主表格元素
+     * 获取种子内的文件列表，包括文件名和大小信息，用于分析种子结构
+     * @param {HTMLElement} main_table - 主表格元素，包含种子基本信息
+     * @returns {Promise<Array|null>} 返回包含文件信息的数组，如果获取失败则返回null
      */
     function checkTorrentFile(main_table) {
+        // 首先从页面中查找种子文件信息
         const torrentFileElement = queryXPathNode(`.//tr[td[1][normalize-space()='种子文件']]/td[2]`, main_table);
         if (torrentFileElement) {
+            // 解析文件数量信息
             const fileCountMatch = torrentFileElement.textContent.match(/文件数：(\d+)个文件/);
             if (fileCountMatch) {
                 addTorrentInfo(`种子文件数: ${fileCountMatch[1]} 个`);
             } else {
                 addTorrentInfo(`种子文件数: 单个文件(无外层文件夹)`);
-
             }
         }
-        // 从当前URL提取ID参数
+
+        // 从当前URL提取种子ID参数
         const currentUrl = window.location.href;
         const idMatch = currentUrl.match(/id=(\d+)/);
         const torrentId = idMatch ? idMatch[1] : null;
 
         if (torrentId) {
-            // 1. 首先触发页面点击展示文件列表
+            // 1. 首先尝试点击页面上的查看文件列表链接
             const viewLink = document.querySelector(`a[href="javascript: viewfilelist(${torrentId})"]`);
             if (viewLink) {
+                // 点击链接触发文件列表显示
                 viewLink.click();
                 return new Promise((resolve) => {
+                    // 通过API获取文件列表
                     GM_xmlhttpRequest({
                         method: "GET",
                         url: `https://zmpt.cc/viewfilelist.php?id=${torrentId}`,
                         onload: function (response) {
                             const parser = new DOMParser();
                             const doc = parser.parseFromString(response.responseText, "text/html");
+                            // 解析文件列表表格
                             const fileListTable = doc.querySelector('table.main');
                             if (fileListTable) {
                                 const files = Array.from(fileListTable.querySelectorAll('tr')).slice(1).map(row => {
@@ -129,7 +792,7 @@
                     });
                 });
             } else {
-                // console.warn('未找到查看列表链接，开始直接请求种子结构树');
+                // 如果没有找到查看链接，则直接请求种子结构信息
                 return new Promise((resolve) => {
                     GM_xmlhttpRequest({
                         method: "GET",
@@ -138,7 +801,7 @@
                             const parser = new DOMParser();
                             const doc = parser.parseFromString(response.responseText, "text/html");
 
-                            // 使用XPath获取文件名
+                            // 使用XPath获取文件名列表
                             const nameNodes = document.evaluate(
                                 "//ul[@id='torrent-structure']//div[@class='string'][span[@class='title']='[name]']/span[@class='value']/text()",
                                 doc,
@@ -148,13 +811,14 @@
                             );
 
                             const files = [];
+                            // 提取所有文件名
                             for (let i = 0; i < nameNodes.snapshotLength; i++) {
                                 files.push({
                                     name: nameNodes.snapshotItem(i).nodeValue.trim(),
                                     size: '未知' // 直接请求的结构树可能不包含大小信息
                                 });
                             }
-                            resolve(files); // 直接返回解析结果，空数组表示解析失败
+                            resolve(files); // 返回解析结果，空数组表示解析失败
                         },
                         onerror: function (error) {
                             console.error('获取文件列表失败:', error);
@@ -163,44 +827,54 @@
                     });
                 });
             }
-
-            // 2. 通过API直接获取文件列表
-
         } else {
             console.error('无法从URL中提取种子ID');
             return Promise.resolve(null);
         }
     }
     /**
-        * 获取未审核的种子
-        */
+     * 获取未审核的种子列表
+     * 通过网络请求获取指定数量的未审核种子URLs，可用于批量审核功能
+     * @param {number} count - 要获取的种子数量
+     * @param {function} callback - 获取完成后的回调函数，参数为URL数组
+     * @returns {Promise<Array<string>>} 返回包含种子URLs的Promise对象
+     */
     var XPATH = "//table[@class='torrents']//table[@class='torrentname']//td[.//span[normalize-space(@title)='未审']]//a[normalize-space(@href) and normalize-space(@title)]/@href";
 
     function getNextUncheckTorrent(count, callback) {
         return new Promise((resolve, reject) => {
+            // 使用GM_xmlhttpRequest发送网络请求获取未审核种子页面
             GM_xmlhttpRequest({
                 method: "GET",
+                // 查询参数：approval_status=0表示未审核，sort=4&type=desc按时间倒序，page=30获取更多结果
                 url: "https://zmpt.cc/torrents.php?approval_status=0&sort=4&type=desc&page=30",
                 onload: function (response) {
                     try {
                         var parser = new DOMParser();
                         var doc = parser.parseFromString(response.responseText, "text/html");
+                        // 使用XPath表达式从页面中提取未审核种子的链接
                         var snapshot = document.evaluate(XPATH, doc, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
                         var urls = [];
+
+                        // 遍历所有匹配的链接并转换为绝对URL
                         for (var i = 0; i < snapshot.snapshotLength; i++) {
                             var attr = snapshot.snapshotItem(i);
                             var raw = (attr && (attr.value || attr.nodeValue)) || '';
                             if (!raw) continue;
                             try {
+                                // 转换为绝对URL
                                 var abs = new URL(raw, doc.baseURI).href;
                                 urls.push(abs);
                             } catch (e) {
-                                // 忽略无法解析的 URL
+                                // 忽略无法解析的URL
                             }
                         }
+
+                        // 根据用户要求的数量返回URLs
                         const resultCount = Math.min(count, urls.length);
                         const resultUrls = urls.slice(0, resultCount);
                         resolve(resultUrls);
+                        // 如果提供了回调函数，则调用回调
                         if (callback) callback(resultUrls);
                     } catch (e) {
                         reject(e);
@@ -218,10 +892,12 @@
 
     /**
      * 获取种审数
-     * @returns {Promise<number>} 返回种审数
+     * 通过网络请求获取当前用户的种子审核数量，通常用于显示审核业绩
+     * @returns {Promise<number>} 返回种审数，如果获取失败则返回0
      */
     function getTorrentReviewCount() {
         return new Promise((resolve, reject) => {
+            // 使用GM_xmlhttpRequest请求站点信息页面
             GM_xmlhttpRequest({
                 method: "GET",
                 url: "https://zmpt.cc/info.php",
@@ -229,6 +905,7 @@
                     try {
                         var parser = new DOMParser();
                         var doc = parser.parseFromString(response.responseText, "text/html");
+                        // 使用XPath查找种审数信息 - 在包含"审种数"文本的tbody中查找第二行第六列
                         var result = document.evaluate(
                             "(//tbody[.//td[contains(text(), '审种数')]])[last()]/tr[2]/td[6]/text()",
                             doc,
@@ -236,6 +913,7 @@
                             XPathResult.STRING_TYPE,
                             null
                         );
+                        // 解析种审数并返回
                         const count = parseInt(result.stringValue.trim());
                         resolve(isNaN(count) ? 0 : count);
                     } catch (e) {
@@ -252,10 +930,13 @@
     }
     /**
      * 校验纯享版标签
-     * @param {Array} torrent_tags - 种子标签数组
+     * 检查种子标签中是否包含"纯享版"特殊标签，如果包含则给出人工检查提示
+     * @param {Array<string>} torrent_tags - 种子标签数组，包含所有已选择的标签
      */
     function checkCXBtag(torrent_tags) {
+        // 检查标签数组是否存在且非空，并且包含"纯享版"标签
         if (torrent_tags && torrent_tags.length > 0 && torrent_tags.includes('纯享版')) {
+            // 添加警告信息，提示用户需要人工检查纯享版标签
             addWarnInfo('[特殊标签提示]：上传者携带纯享版标签，请人工检查');
         }
     }
@@ -264,46 +945,49 @@
      * 判断逻辑：
      * 1. 如果种子已有标签且包含"原盘"，则直接返回true
      * 2. 如果种子名称包含"blu-ray"或"bluray"（不区分大小写），则应该标记为"原盘"
-     * 
-     * @param {string} torrent_name 种子名称
-     * @param {string} subtitle 副标题
-     * @param {Array<string>} torrent_tags 种子已有的标签数组
-    
+     * 3. 根据视频文件类型、种子名称和副标题综合判断是否需要添加原盘或DIY标签
+     *
+     * @param {boolean} videoIsDiyOrYP - 视频是否为DIY或原盘（基于媒体信息判断）
+     * @param {string} torrent_name - 种子名称
+     * @param {string} subtitle - 副标题
+     * @param {Array<string>} torrent_tags - 种子已有的标签数组
+     * @param {Array} torrent_files - 种子文件列表
      * @returns {boolean} 返回true表示应该标记为"原盘"，false表示不应该
      */
     function checkYPTag(videoIsDiyOrYP, torrent_name, subtitle, torrent_tags, torrent_files) {
+        // 将种子名称转换为小写以便不区分大小写检查
         const lowerName = torrent_name.toLowerCase();
         const words = lowerName.split(/\s+/);
-        // 移除种子名称的官组来源
-        // 检查words数组是否非空
+
+        // 移除种子名称的官组来源部分（处理末尾的-xxx格式）
         if (words.length > 0) {
-            // 获取最后一个元素
             let lastWord = words[words.length - 1];
-            // 找到第一个 '-' 的位置
             const dashIndex = lastWord.indexOf('-');
-            // 如果找到 '-'，则截取 '-' 之前的部分
             if (dashIndex !== -1) {
                 lastWord = lastWord.substring(0, dashIndex);
             }
-
-            // 更新words数组的最后一个元素
             words[words.length - 1] = lastWord;
         }
+
+        // 检查种子名称中是否包含blu-ray相关关键词
         const torrent_name_has_bluray = words?.some(word => ['blu-ray', 'bluray'].includes(word)) ?? false;
+
+        // 检查种子文件是否包含mkv格式（通常表示非原盘）
         let torrent_file_has_mkv = torrent_files?.some(file => file.name.toLowerCase().endsWith('.mkv')) ?? false;
-        // const torrent_name_has_x265 = words?.some(word => ['x265', 'x264'].includes(word)) ?? false;
-        const torrent_name_has_diy_yp = words?.some(word => ['diy', '原盘'].includes(word)) || /diy|原盘/.test(subtitle.lowerName);
 
+        // 检查种子名称和副标题是否包含diy或原盘关键词
+        const torrent_name_has_diy_yp = words?.some(word => ['diy', '原盘'].includes(word)) || /diy|原盘/.test(subtitle.toLowerCase());
 
-        // 标签中是否携带diy原盘标签
-        // const torrent_tag_has_yp_diy = torrent_tags?.some(tag => ['原盘', 'DIY'].includes(tag)) ?? false;
+        // 检查标签中是否已经有原盘或DIY标签
         const torrent_tag_choice = torrent_tags?.find(tag => ['原盘', 'DIY'].includes(tag));
         const torrent_tag_has_yp_diy = Boolean(torrent_tag_choice);
 
+        // 综合判断是否为原盘或DIY内容
         const isYPOrDiy = videoIsDiyOrYP || !torrent_file_has_mkv;
-        // 是否需要添加 原盘或者DIY标签
+
+        // 判断是否需要添加原盘或者DIY标签
         if ((torrent_name_has_bluray && isYPOrDiy) || torrent_name_has_diy_yp) {
-            // 种子名称包含 bluray，且没有mkv视频，需要添加原盘DIY标签
+            // 种子疑似为原盘DIY
             if (torrent_tag_has_yp_diy) {
                 addCorrectInfo(`[原盘|DIY检测]：种子疑似为原盘DIY，且已选择${torrent_tag_choice}标签，检测通过`);
             } else {
@@ -382,27 +1066,84 @@
         return title;
     }
     /**
-   * 检查视频格式
-   * @param {String} video_format_user_upload_element - 用户选择的视频格式
-   * @param {String} torrent_name 种子名称
-   */
-    function checkVidoFormat(video_format_user_upload_element, torrent_name) {
-        if (video_format_user_upload_element) {
-            // 1. 将种子名称按空格分割成单词数组，并全部转小写
-            const wordsInName = torrent_name.toLowerCase().split(/\s+/);
-
-            // 2. 将用户选择的视频格式转小写
-            const userFormat = video_format_user_upload_element.toLowerCase();
-
-            // 3. 检查用户选择的格式是否在种子名称的单词数组中出现过
-            if (wordsInName.includes(userFormat)) {
-                addCorrectInfo(`[种子标题检测]：视频格式选择跟种子名称匹配，检测通过`)
-            } else {
-                addErrorInfo(`[种子标题检测]：视频格式选择${video_format_user_upload_element}跟种子名称不匹配，请人工确认`)
-            }
+     * 检查音频格式是否匹配（空格分割后部分包含即可，全小写匹配）
+     * 验证发布者选择的音频格式是否与种子名称中的音频信息匹配
+     * @param {Object} baseInfoDic - 发布者填写的音频格式信息字典
+     * @param {String} torrent_name - 种子名称
+     */
+    function checkAudioFormat(baseInfoDic, torrent_name) {
+        // 如果发布者未选择音频格式，则不需要校验
+        if (!baseInfoDic?.audio) {
+            addCorrectInfo(`[种子标题检测]：发布者未选择音频格式，不需要主标题校验音频，检测通过`);
+            return;
         }
 
+        // 获取用户选择的音频格式并转换为小写
+        const userFormat = baseInfoDic.audio.toLowerCase();
+
+        // 转换种子标题并提取主标题部分（移除官组来源）
+        const torrentTitle = torrentNameToTorrentTitle(torrent_name)?.toLowerCase() || '';
+
+        if (!torrentTitle) {
+            addErrorInfo(`[种子标题检测]：种子标题无效，无法检测音频格式`);
+            return;
+        }
+
+        // 按空格分割种子标题，检查是否有部分包含目标格式（全小写匹配）
+        const parts = torrentTitle.split(/\s+/);
+        const isMatch = parts.some(part => part.includes(userFormat));
+
+        if (isMatch) {
+            addCorrectInfo(`[种子标题检测]：发布者选择音频格式${baseInfoDic.audio}与种子名称匹配，检测通过`);
+        } else {
+            addErrorInfo(`[种子标题检测]：发布者选择音频格式${baseInfoDic.audio}未在种子名称中找到，请人工确认`);
+        }
     }
+
+
+    /**
+     * 检查视频格式（支持字典映射匹配）
+     * @param {String} video_format_user_upload - 用户选择的视频格式
+     * @param {String} torrent_name - 种子名称
+     */
+    function checkVideoFormat(video_format_user_upload, torrent_name) {
+        if (!video_format_user_upload) {
+            addCorrectInfo('[种子标题检测]：未选择视频格式，跳过检测');
+            return;
+        }
+
+        // 1. 定义格式字典（key为用户选项，value为可匹配的格式数组）
+        const formatDict = {
+            'blu-ray': ['bluray', 'blu-ray'],
+            'web-dl': ['web-dl'],
+            'dvdr': ['dvdrip', 'dvdr'],
+            'encode': ['x264', 'x265', 'av1']
+        };
+
+        const userFormat = video_format_user_upload.toLowerCase();
+        const wordsInName = torrent_name.toLowerCase().split(/\s+/);
+
+        // 2. 检查用户选择是否在字典中
+        if (userFormat in formatDict) {
+            // 检查是否有任意一个字典值匹配到种子标题
+            const isMatch = formatDict[userFormat].some(format =>
+                wordsInName.includes(format)
+            );
+
+            if (isMatch) {
+                addCorrectInfo(`[种子标题检测]：视频格式${video_format_user_upload}匹配成功，检测通过`);
+                return;
+            }
+        } else {
+            // 3. 用户选择不在字典中，提示不做判断
+            addCorrectInfo(`[种子标题检测]：用户选择视频格式${video_format_user_upload}不在检测范围内，跳过校验`);
+            return;
+        }
+
+        // 4. 全部匹配失败
+        addErrorInfo(`[种子标题检测]：视频格式${video_format_user_upload}未在种子标题中找到（允许的格式：${formatDict[userFormat].join(', ')}）`);
+    }
+
     /**
      * 检查简介图片数量和可访问性
      * @param {HTMLElement} introduction_element - 简介元素
@@ -733,7 +1474,8 @@
             '中文（简体）',
             'Chinese Simplified',
             'Simplified',
-            'Chinese (Simplified)'
+            'Chinese (Simplified)',
+            'Mandarin'
         ];
 
         // 检查mediaInfo
@@ -1288,19 +2030,26 @@
         }
         return { mediaInfo, discInfo };
     }
+    /**
+     * 将种子名称移除来源之后获取真实的种子标题
+     * @param {String} torrentName
+     * @returns
+     */
+    function torrentNameToTorrentTitle(torrentName) {
+        if (torrentName.includes('-')) {
+            return torrentName.substring(0, torrentName.lastIndexOf('-'));
+        } else {
+            return torrentName;
+        }
 
+    }
     /**
      * 校验种子名称格式
      * @param {string} torrentName 种子名称
      */
     function validateTorrentName(torrentName) {
         const lowerName = torrentName.toLowerCase();
-        let torrentTile = null;
-        if (torrentName.includes('-')) {
-            torrentTile = torrentName.substring(0, torrentName.lastIndexOf('-'));
-        } else {
-            torrentTile = torrentName;
-        }
+        const torrentTile = torrentNameToTorrentTitle(torrentName);
         // 1. 基础校验
         // 中文检查
         if (/[\u4e00-\u9fa5\uff01-\uff60]+/.test(torrentName)) {
@@ -1383,8 +2132,8 @@
 
         // 编码顺序检查
         const audioCodecs = ['FLAC', 'DTS', 'AC3', 'DDP 2.0', 'TrueHD', 'AAC', 'LPCM'];
-        const videoCodecs = ['x264', 'x265', 'H.264', 'H.265', 'AVC', 'HEVC'];
-        const videoCodecsNonStandardized = ['H265', 'H264'];
+        const videoCodecs = ['x264', 'x265', 'H.264', 'H.265', 'AVC', 'HEVC','VC-1'];
+        const videoCodecsNonStandardized = ['H265', 'H264', 'MPEG-2'];
 
 
         //视频格式检查
@@ -1454,29 +2203,46 @@
     infoContainer.style.zIndex = '9999';
     document.body.appendChild(infoContainer);
 
-    // 在右上角添加自定义文字
+    /**
+     * 在右上角添加自定义文字
+     * 通常用于显示审核状态等重要信息，位置在信息容器的右上角
+     * @param {string} text - 要显示的文字内容
+     * @param {string} fontSize - 字体大小，默认为'14px'
+     * @param {string} color - 文字颜色，默认为'#000'（黑色）
+     */
     function addTopRightText(text, fontSize = '14px', color = '#000') {
         const element = document.createElement('div');
         element.textContent = text;
+        // 设置样式：绝对定位在容器右上角
         element.style.position = 'absolute';
         element.style.top = '5px';
         element.style.right = '5px';
         element.style.fontSize = fontSize;
         element.style.color = color;
         element.style.fontWeight = 'bold';
+        // 添加到种子信息显示容器中
         torrentInfoBox.appendChild(element);
     }
 
-    // 在右下角添加自定义文字
+    /**
+     * 在右下角添加自定义文字
+     * 通常用于显示种子类型等基本信息，位置在信息容器的右下角，按钮上方
+     * @param {string} text - 要显示的文字内容
+     * @param {string} fontSize - 字体大小，默认为'14px'
+     * @param {string} color - 文字颜色，默认为'#000'（黑色）
+     */
     function addBottomRightText(text, fontSize = '14px', color = '#000') {
         const element = document.createElement('div');
         element.textContent = text;
+        // 设置样式：绝对定位在容器右下角，紧贴按钮上方
         element.style.position = 'absolute';
-        element.style.bottom = '5px';
+        element.style.bottom = '25px'; // 紧贴按钮上方
         element.style.right = '5px';
         element.style.fontSize = fontSize;
         element.style.color = color;
         element.style.fontWeight = 'bold';
+        element.style.zIndex = '10001'; // 高于按钮的层级
+        // 添加到种子信息显示容器中
         torrentInfoBox.appendChild(element);
     }
 
@@ -1634,7 +2400,7 @@
     }
     /**
      * 解析种子基本信息HTML元素，提取关键信息
-     * 
+     *
      * @param {HTMLElement} baseInfoElement - 包含基本信息的DOM元素
      * @returns {Object} 包含解析结果的对象，结构如下：
      *   - size {string} 文件大小（如"2.86 GB"）
@@ -1642,7 +2408,7 @@
      *   - videoClass {string} 视频类型（如"WEB-DL"）
      *   - resolution {string} 分辨率（如"1080p/1080i"）
      *   - audio {string} 音频编码（如"AAC"）
-     * 
+     *
      * 注意：如果某个字段不存在，则返回的对象中不会包含该key
      */
     function parseBaseInfo(baseInfoElement) {
@@ -1656,24 +2422,27 @@
         for (let i = 0; i < nodes.length; i++) {
             const node = nodes[i];
 
-            // 1. 提取大小（格式：<b>大小：</b><b>2.86 GB</b>）
-            if (node.nodeType === 1 && node.tagName === 'B' && node.textContent.includes('大小：')) {
-                const sizeNode = nodes[i + 1];
-                if (sizeNode && sizeNode.tagName === 'B') {
-                    result.size = sizeNode.textContent.trim(); // 示例："2.86 GB"
+            // 1. 提取大小（格式：<b><b>大小：</b></b>14.95 GB）
+            if (node.nodeType === 1 && node.tagName === 'B' && node.innerHTML.includes('大小：')) {
+                const sizeText = nodes[i + 1]?.textContent;
+                if (sizeText) {
+                    result.size = sizeText.replace(/&nbsp;/g, '').trim(); // 移除&nbsp;并修剪
                 }
-                i++; // 跳过已处理的节点
-            }
-
-            // 2. 提取类型（格式：<b>类型:</b> 电影 / Movies）
-            else if (node.nodeType === 1 && node.tagName === 'B' && node.textContent.includes('类型:')) {
-                const typeText = nodes[i + 1]?.textContent;
-                if (typeText) result.type = typeText.trim(); // 示例："电影 / Movies"
                 i++;
             }
 
-            // 3. 提取视频类（格式：<b>视频类: </b><span>WEB-DL</span>）
-            else if (node.nodeType === 1 && node.tagName === 'B' && node.textContent.includes('视频类:')) {
+            // 2. 提取类型（格式：<b>类型:</b>&nbsp;电视剧 / TV Series）
+            else if (node.nodeType === 1 && node.tagName === 'B' && node.textContent.includes('类型:')) {
+                const typeText = nodes[i + 1]?.textContent;
+                if (typeText) {
+                    result.type = typeText.replace(/&nbsp;/g, '').trim(); // 示例："电视剧 / TV Series"
+                }
+                i++;
+            }
+
+            // 3. 提取视频类（格式：<b title="媒介">视频类: </b><span>WEB-DL</span>）
+            else if (node.nodeType === 1 && node.tagName === 'B' &&
+                (node.textContent.includes('视频类:') || node.getAttribute('title') === '媒介')) {
                 const videoClassNode = nodes[i + 1];
                 if (videoClassNode && videoClassNode.tagName === 'SPAN') {
                     result.videoClass = videoClassNode.textContent.trim(); // 示例："WEB-DL"
@@ -1681,20 +2450,25 @@
                 i++;
             }
 
-            // 4. 提取分辨率（格式：<b>分辨率: </b><span>1080p/1080i</span>）
-            else if (node.nodeType === 1 && node.tagName === 'B' && node.textContent.includes('分辨率:')) {
+            // 4. 提取分辨率（格式：<b title="分辨率">分辨率: </b><span>4K/2160p</span>）
+            else if (node.nodeType === 1 && node.tagName === 'B' &&
+                (node.textContent.includes('分辨率:') || node.getAttribute('title') === '分辨率')) {
                 const resolutionNode = nodes[i + 1];
                 if (resolutionNode && resolutionNode.tagName === 'SPAN') {
-                    result.resolution = resolutionNode.textContent.trim(); // 示例："1080p/1080i"
+                    result.resolution = resolutionNode.textContent.trim(); // 示例："4K/2160p"
                 }
                 i++;
             }
 
-            // 5. 提取音频类（格式：<b>音频类: </b><span>AAC</span>）
-            else if (node.nodeType === 1 && node.tagName === 'B' && node.textContent.includes('音频类:')) {
+            // 5. 提取音频类（格式：<b title="制作组">音频类: </b><span>AAC</span>）
+            else if (node.nodeType === 1 && node.tagName === 'B' &&
+                (node.textContent.includes('音频类:'))) {
                 const audioNode = nodes[i + 1];
                 if (audioNode && audioNode.tagName === 'SPAN') {
-                    result.audio = audioNode.textContent.trim(); // 示例："AAC"
+                    const audio_content = audioNode.textContent.trim(); // 示例："AAC"
+                    if ('other' != audio_content.toLowerCase()) {
+                        result.audio = audio_content
+                    }
                 }
                 i++;
             }
@@ -1708,8 +2482,16 @@
 
 
 
+
     // 创建并添加启动按钮
     document.body.appendChild(createStartButton());
+
+    // 创建并添加一键通过按钮到信息框内部
+    torrentInfoBox.appendChild(createQuickApproveButton());
+
+    // 创建并添加一键拒绝按钮到信息框内部
+    torrentInfoBox.appendChild(createQuickRejectButton());
+
     addTorrentInfo('<span style="color:#d2d0ce">脚本版本: ' + GM_info.script.version + ' (按下回车键快速审核)</span>')
 
     // 获取并显示种审数和预计工资
@@ -1750,7 +2532,11 @@
     const baseInfoDic = parseBaseInfo(base_info_element)
     // 视频类检测eg:web_dl
     const video_format_user_upload = baseInfoDic['videoClass']
-    checkVidoFormat(video_format_user_upload, torrent_name)
+    //checkVideoFormat(video_format_user_upload, torrent_name)
+    // 音频类选择（对于视频类可以不选择音频，本来是给音乐用的，但是如果选择了就不能错）
+
+    //checkAudioFormat(baseInfoDic, torrent_name)
+
     // 副标题
     const subtitle = queryXPathNode(`.//tr[td[1][normalize-space()='副标题']]/td[2]`, main_table).textContent
     // 提取类型、视频类、分辨率信息

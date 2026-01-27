@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         USPS Address Validation - Common
 // @namespace    https://github.com/nate-kean/
-// @version      2026.01.08.1
+// @version      2026.1.21
 // @description  Library used between the Add/Edit page and the View page.
 // @author       Nate Kean
 // @match        https://jamesriver.fellowshiponego.com/members/add*
@@ -142,7 +142,8 @@ document.head.insertAdjacentHTML("beforeend", `
  * 		code: typeof Validator.Code.CHECK_FAILED;
  * 		note: string;  // non-empty
  * }
- * 	| { code: typeof Validator.Code.MARKED_INVALID }} ValResult
+ * 	| { code: typeof Validator.Code.MARKED_INVALID }
+ * 	| { code: typeof Validator.Code.RATE_LIMITED }} ValResult
  */
 
 
@@ -175,10 +176,11 @@ function toTitleCase(str) {
 			return text.charAt(0).toUpperCase()
 				+ text.substring(1).toLowerCase();
 		})
-		.replace(/Po Box/i, "PO Box")
 		// Special case for repeated letters: e.g.,
 		// "CC" remains all caps
 		.replace(/\b(.)\1+\b/gi, text => text.toUpperCase())
+		// Other acronyms that we know should be caps
+		.replace(/\b((PO)|(NW)|(NE)|(SW)|(SE))\b/gi, text => text.toUpperCase())
 		// Special case for McNames
 		.replace(/\bmc\w/i, text => {
 			return text[0].toUpperCase() + text[1] + text[2].toUpperCase();
@@ -220,6 +222,7 @@ class Validator {
 		NOT_IMPL: 9,
 		CHECK_FAILED: 10,
 		MARKED_INVALID: 11,
+		RATE_LIMITED: 12,
 	});
 
 	// Here lies Nate's sanity
@@ -380,6 +383,7 @@ class Validator {
 
 		json = json ?? await response.json();
 		console.debug(json);
+		// @ts-ignore -- i know its unknown but i dont want to validate it
 		return Validator.#makeCorrectionResult(json, address, zipParts, patch);
 	}
 
@@ -399,8 +403,10 @@ class Validator {
 	/**
 	 * @param {Readonly<Response>} response
 	 * @param {Readonly<QueriedAddress>} address
-	 * (TS infers a more detailed type)
-	 * returns {Promise<{result: ValResult?, json: unknown?}>}
+	 * @returns {Promise<{
+	 * 		result: ValResult | typeof Validator.ValidateCode.CANCELLED | null,
+	 * 		json: unknown?
+	 * }>}
 	 */
 	async #parseStatus(response, address) {
 		console.debug(` ** HTTP ${response.status}`);
@@ -408,10 +414,16 @@ class Validator {
 			case 200:
 				const json = await response.json();
 				if ("error" in json) {
+					if (json?.error?.message?.includes("Exceeded quota limit")) {
+						return {
+							result: { code: Validator.Code.RATE_LIMITED },
+							json,
+						}
+					}
 					return {
 						result: {
 							code: Validator.Code.VAL_ERROR,
-							note: json.error.message ?? "Unknown error",
+							note: json?.error?.message ?? "Unknown error",
 						},
 						json,
 					}
@@ -646,6 +658,7 @@ class Validator {
 		if (
 			result.code === Validator.Code.PROG_ERROR
 			|| result.code === Validator.Code.NOT_IMPL
+			|| result.code === Validator.Code.RATE_LIMITED
 		) return;
 		const key = Validator.#serializeAddress(address);
 		const value = JSON.stringify(result);
@@ -780,6 +793,13 @@ class Indicator {
 				tooltipContent = (
 					"USPS validation skipped: Address Validation flag is set "
 					+ 'to "INVALID ADDRESS"'
+				);
+				break;
+			case Validator.Code.RATE_LIMITED:
+				this.#setIcon("fa-times");
+				tooltipContent = (
+					"TEMPORARY FAILURE: exceeded service's rate limit. Please "
+					+ "try again later."
 				);
 				break;
 			default:

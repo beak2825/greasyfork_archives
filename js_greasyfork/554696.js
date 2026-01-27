@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         国服英雄榜坐骑收藏
 // @namespace    https://greasyfork.org/zh-CN/users/1502715
-// @version      1.7.0
+// @version      1.2.7
 // @license      MIT
 // @description  在魔兽世界国服英雄榜页面展示类似于MCL插件的坐骑收藏面板
 // @author       电视卫士

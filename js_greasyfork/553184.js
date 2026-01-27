@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         智能链接工具
 // @namespace    http://tampermonkey.net/
-// @version      6.2.3
+// @version      6.2.5.1
 // @description  多功能浮动按钮工具：打开App + 复制链接 + 可视化搜索 + 阅读列表 + 链接净化，支持拖动和全局位置记忆
 // @author       YourName
 // @match        *://*/*
@@ -270,6 +270,8 @@
         // URL净化配置
         autoCleanUrl: false, // 是否自动净化URL
         autoCleanDomains: ['all'], // 默认对所有域名启用自动净化，可以设置为特定域名列表
+        // 元素选择器配置
+        elementSelectorEnabled: true, // 启用元素选择器功能
         // 快捷键配置
         hotkeys: {
             'app-open': '', // 用App打开快捷键
@@ -278,6 +280,7 @@
             'reading-list': '', // 添加到阅读列表快捷键
             'clean-url': '', // 链接净化快捷键
             'config-panel': '', // 打开配置面板快捷键
+            'element-selector': '', // 元素选择器快捷键
             'search-panel': '', // 打开搜索面板快捷键
             'reading-list-panel': '', // 打开阅读列表面板快捷键
             'direct-search-panel': '', // 直接打开搜索面板快捷键
@@ -769,11 +772,11 @@
 
         // 重新初始化按钮
         removeAllButtons();
-        
+
         // 延迟初始化以确保DOM已清理
         setTimeout(() => {
             initializeButtons();
-            
+
             // 额外验证：确保不可见的按钮确实被隐藏
             if (config.displayMode === 'separate') {
                 Object.entries(config.buttonVisibility).forEach(([buttonId, isVisible]) => {
@@ -1295,17 +1298,17 @@
                 'app-open-button', 'copy-link-button', 'visual-search-button',
                 'reading-list-button', 'clean-url-button', 'config-button',
                 'batch-links-button', 'batch-paste-button', 'batch-tools-button', 'reading-list-panel-button',
-                'input-search-button', 'html2md-button', 'auto-scroll-button', 'scroll-top-button', 
+                'input-search-button', 'html2md-button', 'auto-scroll-button', 'scroll-top-button',
                 'scroll-bottom-button', 'element-hider-button', 'element-selector-button', 'github-upload-button'
             ];
-            
+
             // 🆕 额外修复：动态查找所有以 -button 结尾的元素（通常是我们的按钮）
             // 这样可以确保不会遗漏任何按钮
             const allButtonElements = Array.from(document.querySelectorAll('[id$="-button"]'));
             allButtonElements.forEach(el => {
                 const id = el.id;
                 // 排除 combined-button（组合模式按钮）和 cancel-button 等临时按钮
-                if (id && id !== 'combined-button' && 
+                if (id && id !== 'combined-button' &&
                     !id.includes('cancel') && !id.includes('batch-link-cancel') &&
                     !id.includes('rectangle-selection-cancel') && !id.includes('visual-selection-cancel') &&
                     !buttonsToToggle.includes(id)) {
@@ -1335,7 +1338,7 @@
         });
 
         const hide = hasVisibleButton;
-        
+
         // 🆕 修复：强制设置所有按钮的显示状态，使用 important 优先级
         const buttonCreators = {
             'app-open-button': createAppOpenButton,
@@ -1361,7 +1364,7 @@
 
         buttonsToToggle.forEach(buttonId => {
             let el = document.getElementById(buttonId);
-            
+
             if (!el && !hide) {
                 // 🆕 关键修复：如果按钮不存在且要显示，则重新创建它
                 const creator = buttonCreators[buttonId];
@@ -1374,7 +1377,7 @@
                     }
                 }
             }
-            
+
             if (el) {
                 // 直接设置样式，确保覆盖所有其他样式
                 if (hide) {
@@ -1387,7 +1390,7 @@
                     el.style.setProperty('display', 'flex', 'important');
                     el.style.setProperty('visibility', 'visible', 'important');
                     el.style.setProperty('opacity', '1', 'important');
-                    
+
                     // 🆕 关键修复：显示时重新初始化位置（从保存的位置或默认位置）
                     setButtonPosition(el, buttonId);
                 }
@@ -4230,12 +4233,89 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
     .gh-label { display: block; font-size: 13px; color: #555; margin-bottom: 6px; font-weight: 700; margin-left: 4px; }
             `;
 
+    // 元素选择器专用样式 (整合自可视化元素选择器-2.0.js)
+    const elementSelectorStyles = `
+        :root {
+            --es-glass-bg: rgba(255, 255, 255, 0.72);
+            --es-glass-shadow: 0 20px 50px rgba(0,0,0,0.12), 0 0 0 1px rgba(255,255,255,0.5);
+            --es-comp-bg: rgba(255, 255, 255, 0.45);
+            --es-pri: linear-gradient(135deg, var(--smart-link-primary-color, #ff6b9d) 0%, var(--smart-link-secondary-color, #ff8fab) 100%);
+            --es-pri-line: var(--smart-link-primary-color, #ff6b9d);
+            --es-pri-light: rgba(255, 107, 157, 0.15);
+            --es-text: #1a1c1e;
+            --es-text-mut: #5f6368;
+            --es-mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+        }
+        .es-highlight { position: absolute; background: rgba(255, 107, 157, 0.15); border: 1.5px solid var(--es-pri-line); z-index: 2147483646; pointer-events: none; display: none; border-radius: 4px; }
+        .es-group-highlight { position: absolute; background: rgba(255, 107, 157, 0.08); border: 1.5px dashed var(--smart-link-primary-color, #ff6b9d); z-index: 2147483645; pointer-events: none; border-radius: 4px; }
+
+        .es-panel {
+            position: fixed; top: 30px; right: 30px; width: 400px;
+            background: var(--es-glass-bg); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-radius: 20px; box-shadow: var(--es-glass-shadow); border: 1px solid rgba(255,255,255,0.4);
+            font-family: -apple-system, system-ui, sans-serif; color: var(--es-text);
+            z-index: 2147483647; display: none; overflow: hidden;
+            animation: es-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes es-in { from { opacity: 0; transform: translateY(-20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+        .es-header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.3); border-bottom: 1px solid rgba(0,0,0,0.05); cursor: move; }
+        .es-title { font-size: 14px; font-weight: 800; display: flex; align-items: center; gap: 8px; color: var(--es-pri); letter-spacing: -0.2px; }
+        .es-badge { background: var(--es-pri); color: white; padding: 2px 8px; border-radius: 20px; font-size: 11px; display: none; }
+        .es-close { cursor: pointer; color: var(--es-text-mut); padding: 5px; border-radius: 50%; transition: 0.2s; }
+        .es-close:hover { background: rgba(255,0,0,0.1); color: #ef4444; }
+
+        .es-content { padding: 20px; }
+        .es-toolbar { display: flex; gap: 10px; margin-bottom: 20px; }
+        .es-btn {
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 9px; border: 1px solid rgba(0,0,0,0.06); border-radius: 10px;
+            background: var(--es-comp-bg); font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.15s; color: var(--es-text-mut);
+        }
+        .es-btn:hover { background: #fff; color: var(--es-pri); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .es-btn-pri { background: var(--es-pri); color: white; border: none; }
+        .es-btn-pri:hover { background: var(--smart-link-secondary-color, #ff8fab); color: white; box-shadow: 0 6px 15px rgba(255, 107, 157, 0.3); }
+
+        .es-section-label { font-size: 10px; font-weight: 800; color: var(--es-text-mut); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 5px; }
+        .es-section-label::after { content: ""; flex: 1; height: 1px; background: rgba(0,0,0,0.05); }
+
+        .es-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .es-chip {
+            font-size: 11px; font-family: var(--es-mono); padding: 5px 12px;
+            background: var(--es-comp-bg); border: 1px solid rgba(0,0,0,0.04);
+            border-radius: 8px; cursor: pointer; color: var(--es-text-mut);
+            transition: 0.2s; max-width: 100%; overflow: hidden; text-overflow: ellipsis;
+        }
+        .es-chip:hover { border-color: var(--es-pri); color: var(--es-pri); background: #fff; }
+        .es-chip.active { background: var(--es-pri); color: white; border-color: var(--es-pri); box-shadow: 0 4px 10px var(--es-pri-light); }
+
+        .es-field { margin-bottom: 16px; }
+        .es-input-wrap { position: relative; }
+        .es-input {
+            width: 100%; padding: 12px 40px 12px 14px;
+            background: var(--es-comp-bg); border: 1px solid rgba(0,0,0,0.06); border-radius: 12px;
+            font-family: var(--es-mono); font-size: 11px; color: var(--es-text); box-sizing: border-box;
+            transition: 0.2s;
+        }
+        .es-input:focus { outline: none; border-color: var(--es-pri); background: #fff; box-shadow: 0 0 0 4px var(--es-pri-light); }
+        .es-copy { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.5; padding: 6px; transition: 0.2s; }
+        .es-copy:hover { opacity: 1; color: var(--es-pri); transform: translateY(-50%) scale(1.15); }
+
+        .es-toast {
+            position: fixed; top: 40px; left: 50%; transform: translateX(-50%);
+            background: rgba(26, 28, 30, 0.9); backdrop-filter: blur(10px); color: white;
+            padding: 10px 24px; border-radius: 50px; font-size: 13px; font-weight: 600;
+            z-index: 2147483648; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+    `;
+
     // 注入全局样式
     if (typeof GM_addStyle !== 'undefined') {
         GM_addStyle(globalStyles);
+        GM_addStyle(elementSelectorStyles);
     } else {
         const style = document.createElement('style');
-        style.textContent = globalStyles;
+        style.textContent = globalStyles + elementSelectorStyles;
         document.head.appendChild(style);
         console.log('全局样式已注入'); // 添加调试信息
     }
@@ -5276,7 +5356,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
             buttonGroup.appendChild(createSubButton('🚫', '元素隐藏', toggleElementHiderPanel));
         }
 
-        
+
         // 页面滚动项
         if (config.buttonVisibility['scroll-top-button']) {
             buttonGroup.appendChild(createSubButton('⬆︎', '回到顶部', scrollPageTop));
@@ -5582,6 +5662,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
         return button;
     }
 
+    // 元素选择器按钮 (整合自可视化元素选择器)
     // 批量打开链接功能
     // 🆕 修改：支持 Command 键（Mac）和 Ctrl 键（Windows）
     function startBatchLinkOpening() {
@@ -7849,12 +7930,12 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
     function toggleButtonVisibility(buttonId, show) {
         // 🆕 先更新配置，确保后续操作使用最新状态
         config.buttonVisibility[buttonId] = show;
-        
+
         let button = document.getElementById(buttonId);
         if (button) {
             // 🆕 iOS 优化：直接设置 display 属性，不使用 cssText
             button.style.setProperty('display', show ? 'flex' : 'none', 'important');
-            
+
             // 🆕 如果显示按钮，确保位置正确
             if (show) {
                 setButtonPosition(button, buttonId);
@@ -7864,7 +7945,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
                 }
             }
         }
-        
+
         // 🆕 如果按钮不存在但需要显示，创建它
         if (show && !button) {
             let created = null;
@@ -7884,7 +7965,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
                 showExpandedButtonGroup(centerX, centerY);
             }, 0);
         }
-        
+
         // 🆕 立即保存配置
         saveConfig();
     }
@@ -8129,7 +8210,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
             'toggle-config-button': 'config-button',
             'toggle-combined-button': 'combined-button'
         };
-        
+
         Object.keys(checkboxMapping).forEach(checkboxId => {
             const checkbox = panel.querySelector('#' + checkboxId);
             if (checkbox) {
@@ -8182,7 +8263,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
                     'toggle-scroll-bottom-button': false,
                     'toggle-auto-scroll-button': false
                 };
-                
+
                 Object.keys(defaults).forEach(id => {
                     const cb = panel.querySelector('#' + id);
                     if (cb) {
@@ -10450,7 +10531,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
                         <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="as-stop" ${current.stopAtBoundary ? 'checked' : ''}> 到顶/底时自动停止</label>
                     </div>
                 </div>
-                
+
                 <div class="section-title">📱 iOS/移动端参数</div>
                 <div class="option-item">
                     <div class="option-icon">🚀</div>
@@ -10492,7 +10573,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
                         <input type="number" id="as-ios-times" class="form-input" min="1" max="1000" step="1" value="${current.iosScrollTimes || 5}">
                     </div>
                 </div>
-                
+
                 <div class="btn-group" style="margin:12px 0;justify-content:center;">
                     <button class="btn btn-secondary" id="as-test-start">开始测试</button>
                 </div>
@@ -10516,12 +10597,12 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
         const modeButtons = panel.querySelectorAll('.as-mode-btn');
         const modeInput = panel.querySelector('#as-ios-mode');
         const timesContainer = panel.querySelector('#as-ios-times-container');
-        
+
         modeButtons.forEach(btn => {
             btn.addEventListener('click', function() {
                 const mode = this.getAttribute('data-mode');
                 modeInput.value = mode;
-                
+
                 // 更新按钮样式
                 modeButtons.forEach(b => {
                     if (b.getAttribute('data-mode') === mode) {
@@ -10536,7 +10617,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
                         b.style.border = '1px solid #e5e7eb';
                     }
                 });
-                
+
                 // 显示/隐藏次数输入框
                 timesContainer.style.display = mode === 'times' ? 'flex' : 'none';
             });
@@ -11629,14 +11710,21 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
     let autoScrollIOSScrollTimes = 5; // iOS 滚动次数限制
 
     let autoScrollReturnToConfigAfterStop = false;
+    let autoScrollIsRunning = false; // 🆕 新增：状态标记，替代RAFis null检查
 
     function startAutoScroll(returnToConfig = false) {
-        if (autoScrollRAF) return;
+        // 🆕 修复iOS问题：同时检查运行状态标记和RAFid
+        if (autoScrollIsRunning || autoScrollRAF) {
+            console.log('自动滚动已在运行，忽略重复启动请求');
+            return;
+        }
 
         autoScrollReturnToConfigAfterStop = !!returnToConfig;
+        autoScrollIsRunning = true; // 🆕 立即设置运行状态
 
         autoScrollContext = createScrollContext();
         if (!autoScrollContext || !autoScrollContext.target) {
+            autoScrollIsRunning = false; // 🆕 失败时清除状态
             showNotification('无法找到可滚动的区域');
             return;
         }
@@ -11649,28 +11737,28 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
         autoScrollStuckCount = 0; // 初始化计数器
 
         // 检测是否为移动设备（仅 iOS 和 Android 移动端）
-        const isMobile = /iPhone|iPad|iPod/i.test(navigator.userAgent) || 
+        const isMobile = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
                          (/Android/i.test(navigator.userAgent) && /Mobile/i.test(navigator.userAgent));
-        
+
         if (isMobile) {
             // 🆕 iOS 优化：使用用户配置的速度和滚动距离
             autoScrollCSSMode = true;
-            
+
             // 读取 iOS 专用配置
             const iosSpeed = Number(config.autoScroll && config.autoScroll.iosSpeed) || 300;
             const iosChunkSize = Number(config.autoScroll && config.autoScroll.iosChunkSize) || 200;
             autoScrollIOSScrollMode = (config.autoScroll && config.autoScroll.iosScrollMode) || 'infinite';
             autoScrollIOSScrollTimes = Number(config.autoScroll && config.autoScroll.iosScrollTimes) || 5;
             autoScrollIOSScrollCount = 0; // 初始化滚动次数计数
-            
+
             // 计算每次滚动的间隔时间
             const chunkDuration = (iosChunkSize / iosSpeed) * 1000;
-            
+
             function smoothChunk() {
                 if (!autoScrollCSSMode || !autoScrollContext) return;
-                
+
                 const current = autoScrollContext.getTop();
-                
+
                 if (stopAtBoundary) {
                     // 🆕 修复：动态计算最大滚动值，支持滚动加载的网站
                     const currentMaxScroll = Math.max(0, autoScrollContext.getHeight() - autoScrollContext.getClient());
@@ -11679,18 +11767,18 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
                         autoScrollMaxScroll = currentMaxScroll;
                         autoScrollStuckCount = 0; // 页面高度增加，重置计数器
                     }
-                    
+
                     if (dir > 0) {
                         // 检测是否真的到底部
                         const distanceToBottom = currentMaxScroll - current;
-                        
+
                         // 如果滚动位置几乎没有变化（说明可能卡住了），增加计数器
                         if (Math.abs(current - autoScrollLastPosition) < 5) {
                             autoScrollStuckCount++;
                         } else {
                             autoScrollStuckCount = 0; // 位置有变化，重置计数器
                         }
-                        
+
                         // 如果距离底部很近（小于一个滚动块大小），且连续几次位置都没变化，说明真的到底了
                         // 或者距离底部非常近（小于10px）
                         if (distanceToBottom <= 10 || (distanceToBottom <= iosChunkSize && autoScrollStuckCount >= 3)) {
@@ -11709,36 +11797,36 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
                         }
                     }
                 }
-                
+
                 // 🆕 新增：检查滚动次数限制
                 if (autoScrollIOSScrollMode === 'times' && autoScrollIOSScrollCount >= autoScrollIOSScrollTimes) {
                     stopAutoScroll(autoScrollReturnToConfigAfterStop);
                     return;
                 }
-                
+
                 // 记录当前滚动位置
                 autoScrollLastPosition = current;
-                
+
                 const target = current + iosChunkSize * dir;
                 if (autoScrollContext.isWindow) {
                     window.scrollTo({ top: target, behavior: 'smooth' });
                 } else {
                     autoScrollContext.target.scrollTo({ top: target, behavior: 'smooth' });
                 }
-                
+
                 // 🆕 新增：增加滚动次数计数
                 autoScrollIOSScrollCount++;
             }
-            
+
             smoothChunk();
-            autoScrollRAF = setInterval(smoothChunk, chunkDuration * 0.9); // 稍微重叠确保连贯
-            
+            autoScrollRAF = setInterval(smoothChunk, chunkDuration * 0.1); // 稍微重叠确保连贯
+
         } else {
             // 桌面端：继续使用 requestAnimationFrame
             autoScrollCSSMode = false;
             autoScrollLastTs = performance.now();
             autoScrollAccumulator = 0;
-            
+
             function step(ts) {
                 if (!autoScrollContext) return;
 
@@ -11784,16 +11872,16 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
 
             autoScrollRAF = requestAnimationFrame(step);
         }
-        
+
         updateAutoScrollButtonUI(true);
         ensureAutoScrollStopOverlay(true);
     }
-    
+
     function stopAutoScroll(shouldReturnConfig = false) {
         // 清理样式元素
         const styleEl = document.getElementById('auto-scroll-keyframes');
         if (styleEl) styleEl.remove();
-        
+
         // 停止时立即停在当前位置
         if (autoScrollCSSMode && autoScrollContext) {
             const current = autoScrollContext.getTop();
@@ -11803,7 +11891,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
                 autoScrollContext.target.scrollTo({ top: current, behavior: 'instant' });
             }
         }
-        
+
         if (autoScrollRAF) {
             if (autoScrollCSSMode) {
                 clearInterval(autoScrollRAF);
@@ -11819,6 +11907,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
         autoScrollIOSScrollCount = 0; // 重置 iOS 滚动次数计数
         autoScrollIOSScrollMode = 'infinite'; // 重置滚动模式
         autoScrollIOSScrollTimes = 5; // 重置滚动次数限制
+        autoScrollIsRunning = false; // 🆕 关键修复：立即清除运行状态标记
         updateAutoScrollButtonUI(false);
         ensureAutoScrollStopOverlay(false);
         const needReturn = shouldReturnConfig && autoScrollReturnToConfigAfterStop;
@@ -11826,10 +11915,18 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
         if (needReturn) {
             showAutoScrollConfigPanel();
         }
+        // ✅ 已移除按钮禁用延迟，停止后立即可以再次点击
     }
 
     function toggleAutoScroll() {
-        if (autoScrollRAF) { stopAutoScroll(false); } else { startAutoScroll(false); }
+        // 🆕 修复iOS问题：使用状态标记而不仅仅检查RAFid
+        if (autoScrollIsRunning || autoScrollRAF) {
+            console.log('停止滚动，状态标记:', autoScrollIsRunning, 'RAFid:', autoScrollRAF);
+            stopAutoScroll(false);
+        } else {
+            console.log('启动滚动');
+            startAutoScroll(false);
+        }
     }
 
     function updateAutoScrollButtonUI(active) {
@@ -12171,193 +12268,14 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
         setupDragHandlers(button);
 
         button.clickHandler = function() {
-            toggleElementPicker();
+            // 使用增强的选择器功能
+            startElementSelection();
         };
 
         return button;
     }
 
-    function toggleElementPicker() {
-        if (isElementPicking) {
-            stopElementPicking();
-        } else {
-            startElementPicking();
-        }
-    }
-
-    function startElementPicking() {
-        if (isElementPicking) return;
-        isElementPicking = true;
-
-        // 创建或显示高亮框
-        if (!pickerHighlightDiv) {
-            pickerHighlightDiv = document.createElement('div');
-            pickerHighlightDiv.className = 'element-picker-highlight';
-            document.body.appendChild(pickerHighlightDiv);
-        }
-        pickerHighlightDiv.style.display = 'block';
-
-        showNotification('🌸 进入元素选择模式，点击元素获取选择器 (ESC 退出)');
-
-        document.addEventListener('mousemove', handlePickerMove, true);
-        document.addEventListener('click', handlePickerClick, true);
-        document.addEventListener('keydown', handlePickerKeydown, true);
-    }
-
-    function stopElementPicking() {
-        if (!isElementPicking) return;
-        isElementPicking = false;
-
-        if (pickerHighlightDiv) pickerHighlightDiv.style.display = 'none';
-
-        document.removeEventListener('mousemove', handlePickerMove, true);
-        document.removeEventListener('click', handlePickerClick, true);
-        document.removeEventListener('keydown', handlePickerKeydown, true);
-
-        showNotification('已退出选择模式');
-    }
-
-    function handlePickerMove(e) {
-        if (!isElementPicking) return;
-        const el = document.elementFromPoint(e.clientX, e.clientY);
-
-        // 忽略UI自身
-        if (!el || isOurElement(el) || el === pickerHighlightDiv) return;
-
-        if (el !== currentPickedElement) {
-            currentPickedElement = el;
-            const rect = el.getBoundingClientRect();
-            pickerHighlightDiv.style.width = rect.width + 'px';
-            pickerHighlightDiv.style.height = rect.height + 'px';
-            pickerHighlightDiv.style.left = (rect.left + window.scrollX) + 'px';
-            pickerHighlightDiv.style.top = (rect.top + window.scrollY) + 'px';
-        }
-    }
-
-    function handlePickerClick(e) {
-        if (!isElementPicking) return;
-
-        // 忽略UI点击
-        if (isOurElement(e.target) || e.target === pickerHighlightDiv) return;
-
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-
-        const el = currentPickedElement;
-        if (el) {
-            stopElementPicking();
-            const selector = getUniqueSelector(el); // 使用你提供的逻辑函数
-            const text = getElementText(el);       // 使用你提供的逻辑函数
-            showElementResultPanel(el, selector, text);
-        }
-        return false;
-    }
-
-    function handlePickerKeydown(e) {
-        if (e.key === 'Escape') {
-            stopElementPicking();
-        }
-    }
-
-    // 显示结果面板 (适配 createPanel 风格)
-    function showElementResultPanel(element, selector, text) {
-        const charCount = text.length;
-
-        const panel = createPanel('元素详情', `
-            <div class="panel-content">
-                <div class="input-group">
-                    <label class="section-title" style="font-size:13px;">标签类型</label>
-                    <input type="text" class="form-input" value="${element.tagName.toLowerCase()}" readonly>
-                </div>
-
-                <div class="input-group">
-                    <label class="section-title" style="font-size:13px;">CSS 选择器</label>
-                    <div style="display:flex; gap:8px;">
-                        <input type="text" id="res-selector" class="form-input" value="${selector}" readonly>
-                        <button class="btn btn-primary" id="btn-copy-sel">复制</button>
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label class="section-title" style="font-size:13px;">文本内容 <span style="font-weight:normal;color:#666;font-size:11px">(${charCount} 字符)</span></label>
-                    <textarea id="res-text" class="form-textarea" style="height:100px" readonly>${text}</textarea>
-                </div>
-
-                <div class="btn-group equal">
-                    <button class="btn" id="btn-copy-text">复制文本</button>
-                    <button class="btn btn-secondary" id="btn-repick">重新选择</button>
-                </div>
-            </div>
-        `);
-
-        // 绑定事件
-        panel.querySelector('#btn-copy-sel').addEventListener('click', () => {
-            copyText(selector);
-            showNotification('✅ 选择器已复制');
-        });
-
-        panel.querySelector('#btn-copy-text').addEventListener('click', () => {
-            copyText(text);
-            showNotification('✅ 文本内容已复制');
-        });
-
-        panel.querySelector('#btn-repick').addEventListener('click', () => {
-            panel.remove();
-            setTimeout(startElementPicking, 100);
-        });
-
-        addPanelButtons(panel, () => panel.remove());
-        document.body.appendChild(panel);
-    }
-
-    // === 复用你提供的核心算法函数 (直接粘贴) ===
-
-    // 获取元素的唯一选择器 (来自 css.txt)
-    function getUniqueSelector(element) {
-        if (!element || !element.tagName) return '';
-        if (element.id) return `#${CSS.escape(element.id)}`;
-
-        const path = [];
-        let current = element;
-        while (current && current.nodeType === Node.ELEMENT_NODE) {
-            let selector = current.tagName.toLowerCase();
-            if (current.id) {
-                selector = `#${CSS.escape(current.id)}`;
-                path.unshift(selector);
-                break;
-            }
-            const parent = current.parentNode;
-            if (parent) {
-                const siblings = Array.from(parent.children);
-                const sameTagSiblings = siblings.filter(s => s.tagName === current.tagName);
-                if (sameTagSiblings.length > 1) {
-                    const index = siblings.indexOf(current) + 1;
-                    selector += `:nth-child(${index})`;
-                }
-            }
-            if (current.className && typeof current.className === 'string') {
-                const classes = current.className.trim().split(/\s+/).filter(c => c);
-                if (classes.length > 0) {
-                    // 简单优化：取第一个类名即可，通常够用，避免选择器过长
-                    selector += `.${CSS.escape(classes[0])}`;
-                }
-            }
-            path.unshift(selector);
-            // 简单验证唯一性
-            if (document.querySelectorAll(path.join(' > ')).length === 1) break;
-            current = parent;
-        }
-        return path.join(' > ');
-    }
-
-    // 获取元素的文本内容 (来自 css.txt)
-    function getElementText(element) {
-        if (!element) return '';
-        if (['INPUT', 'TEXTAREA'].includes(element.tagName)) return element.value || element.placeholder || '';
-        if (element.tagName === 'IMG') return element.alt || element.title || '';
-        return (element.textContent || '').trim().replace(/\s+/g, ' ');
-    }
+    // 旧功能已被替换为增强的可视化元素选择器系统
     // ================================
     // 🆕 功能：GitHub 图片上传器 (集成版)
     // ================================
@@ -12763,6 +12681,12 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
     }
 
     function initializeButtons() {
+        // 只在最外层窗口显示按钮，iframe中不显示
+        if (window.self !== window.top) {
+            console.log('检测到iframe，跳过按钮初始化');
+            return;
+        }
+
         console.log('初始化按钮，显示模式:', config.displayMode);
 
         if (config.customStyle && config.customStyle.enabled && config.customStyle.buttonSize) {
@@ -13210,12 +13134,393 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
     }
 
     // ================================
+    // 元素选择器核心功能 (整合自可视化元素选择器-2.0.js)
+    // ================================
+
+    let esState = { isSelecting: false, isGroup: false, samples: [], currentEl: null, overlays: [] };
+    let esUI = { highlight: null, panel: null, toast: null };
+
+    // 元素选择器图标
+    const esIcons = {
+        match: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>',
+        copy: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>',
+        close: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>',
+        inspect: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>'
+    };
+
+    function esCreateSharedUI() {
+        esUI.highlight = document.createElement('div'); 
+        esUI.highlight.className = 'es-highlight'; 
+        document.body.appendChild(esUI.highlight);
+        
+        esUI.toast = document.createElement('div'); 
+        esUI.toast.className = 'es-toast'; 
+        document.body.appendChild(esUI.toast);
+    }
+
+    function esCreatePanel() {
+        esUI.panel = document.createElement('div');
+        esUI.panel.className = 'es-panel';
+        esUI.panel.innerHTML = `
+            <div class="es-header" id="es-drag">
+                <div class="es-title">${esIcons.inspect}&nbsp; 元素选择器 <span class="es-badge" id="es-count">0</span></div>
+                <div class="es-close" id="es-close">${esIcons.close}</div>
+            </div>
+            <div class="es-content">
+                <button class="es-btn es-btn-pri" id="btn-match" style="width:100%; margin-bottom:16px">${esIcons.match} 智能匹配组</button>
+                <div class="es-toolbar">
+                    <button class="es-btn" id="btn-parent">父元素</button>
+                    <button class="es-btn" id="btn-child">子元素</button>
+                    <button class="es-btn" id="btn-reset">重置</button>
+                </div>
+
+                <div id="es-suggestions-wrap" style="display:none">
+                    <div class="es-section-label">级联建议</div>
+                    <div class="es-chips" id="es-chips"></div>
+                </div>
+
+                <div class="es-field">
+                    <div class="es-section-label">CSS选择器</div>
+                    <div class="es-input-wrap">
+                        <input type="text" class="es-input" id="inp-css" placeholder="CSS Selector">
+                        <div class="es-copy" id="cp-css">${esIcons.copy}</div>
+                    </div>
+                </div>
+                <div class="es-field">
+                    <div class="es-input-wrap">
+                        <input type="text" class="es-input" id="inp-xpath" placeholder="XPath">
+                        <div class="es-copy" id="cp-xpath">${esIcons.copy}</div>
+                    </div>
+                </div>
+                <textarea class="es-input" id="inp-text" readonly style="height:54px;resize:none;margin-top:4px;padding-right:14px" placeholder="内容..."></textarea>
+            </div>
+        `;
+        document.body.appendChild(esUI.panel);
+        esSetupDraggable(esUI.panel, esUI.panel.querySelector('#es-drag'));
+
+        const $ = (s) => esUI.panel.querySelector(s);
+        $('#es-close').onclick = () => esStopSelection();
+        $('#btn-reset').onclick = () => esStart();
+        $('#btn-match').onclick = () => esStartGroupMode();
+        $('#btn-parent').onclick = () => esNav('parent');
+        $('#btn-child').onclick = () => esNav('child');
+        esBindCopy($('#cp-css'), $('#inp-css'));
+        esBindCopy($('#cp-xpath'), $('#inp-xpath'));
+    }
+
+    // 获取级联建议
+    function esGetCascadeSuggestions(el) {
+        const tag = el.tagName.toLowerCase();
+        const pool = [];
+
+        if (el.id) pool.push({ label: 'ID', val: `#${CSS.escape(el.id)}` });
+
+        ['data-testid', 'data-id', 'name', 'placeholder', 'aria-label'].forEach(attr => {
+            const val = el.getAttribute(attr);
+            if (val) pool.push({ label: 'Attribute', val: `${tag}[${attr}="${val}"]` });
+        });
+
+        if (tag === 'img' && el.alt) pool.push({ label: 'Image Alt', val: `img[alt="${el.alt}"]` });
+        if (el.title) pool.push({ label: 'Title', val: `${tag}[title="${el.title}"]` });
+
+        const clsList = Array.from(el.classList).filter(c => !c.startsWith('es-') && c.length < 20 && !/\d/.test(c));
+        if (clsList.length) {
+            pool.push({ label: 'Compact', val: `${tag}.${CSS.escape(clsList[0])}` });
+        }
+
+        if (el.parentElement) {
+            const pTag = el.parentElement.tagName.toLowerCase();
+            const index = Array.from(el.parentElement.children).indexOf(el) + 1;
+            pool.push({ label: 'Structural', val: `${pTag} > ${tag}:nth-child(${index})` });
+        }
+
+        const fullPath = esGetUniqueSelector(el);
+        if (!pool.some(p => p.val === fullPath)) pool.push({ label: 'Full Path', val: fullPath });
+
+        return pool;
+    }
+
+    // 获取XPath
+    function esGetSmartXPath(el) {
+        if (el.id) return `//*[@id="${el.id}"]`;
+        const tag = el.tagName.toLowerCase();
+        const text = el.innerText?.trim();
+        if (text && text.length > 1 && text.length < 12 && !/['"]/.test(text)) return `//${tag}[text()="${text}"]`;
+        for (let a of ['data-testid', 'name', 'placeholder', 'value']) {
+            const v = el.getAttribute(a); if (v) return `//${tag}[@${a}="${v}"]`;
+        }
+        if (text && text.length >= 12 && text.length < 30) return `//${tag}[contains(text(), "${text.substring(0, 10)}")]`;
+        return esGetFullXPath(el);
+    }
+
+    function esGetUniqueSelector(el) {
+        if (el.id) return `#${CSS.escape(el.id)}`;
+        let path = [];
+        while (el && el.nodeType === 1) {
+            let s = el.nodeName.toLowerCase();
+            const cls = Array.from(el.classList).filter(c => !c.startsWith('es-'))[0];
+            if (cls) s += `.${CSS.escape(cls)}`;
+            path.unshift(s); el = el.parentNode;
+        }
+        return path.join(' > ');
+    }
+
+    function esGetFullXPath(el) {
+        let path = [];
+        for (; el && el.nodeType === 1; el = el.parentNode) {
+            let idx = 1;
+            for (let s = el.previousSibling; s; s = s.previousSibling) {
+                if (s.nodeType === 1 && s.tagName === el.tagName) idx++;
+            }
+            path.unshift(`${el.tagName.toLowerCase()}[${idx}]`);
+        }
+        return '/' + path.join('/');
+    }
+
+    function esGetGroupSelector(elements) {
+        const first = elements[0];
+        const tag = first.tagName.toLowerCase();
+        let commonClasses = Array.from(first.classList).filter(c => !c.startsWith('es-'));
+        for (let i = 1; i < elements.length; i++) {
+            commonClasses = commonClasses.filter(c => Array.from(elements[i].classList).includes(c));
+        }
+        let sel = tag;
+        if (commonClasses.length) sel += '.' + commonClasses.join('.');
+        if (document.querySelectorAll(sel).length > elements.length * 8) {
+            const pTag = first.parentElement?.tagName.toLowerCase();
+            if (pTag) sel = `${pTag} > ${sel}`;
+        }
+        return sel;
+    }
+
+    // UI操作
+    function esHighlight(el) {
+        const r = el.getBoundingClientRect();
+        Object.assign(esUI.highlight.style, { width:r.width+'px', height:r.height+'px', top:(r.top+scrollY)+'px', left:(r.left+scrollX)+'px', display:'block'});
+    }
+
+    function esHighlightGroup(sel) {
+        esClearHighlights();
+        esUI.highlight.style.display = 'none';
+        try {
+            document.querySelectorAll(sel).forEach(el => {
+                if(el.offsetWidth===0) return;
+                const r = el.getBoundingClientRect();
+                const d = document.createElement('div');
+                d.className = 'es-group-highlight';
+                Object.assign(d.style, { width:r.width+'px', height:r.height+'px', top:(r.top+scrollY)+'px', left:(r.left+scrollX)+'px' });
+                document.body.appendChild(d);
+                esState.overlays.push(d);
+            });
+        } catch(e){}
+    }
+
+    function esStart() {
+        esState.isSelecting = true;
+        esState.isGroup = false;
+        esState.samples = [];
+        if (esUI.panel) { esUI.panel.style.display = 'none'; const b = esUI.panel.querySelector('#btn-match'); b.innerHTML = `${esIcons.match} 智能匹配组`; b.style.background = ''; }
+        esClearHighlights();
+        esToast("请选择一个元素...");
+    }
+
+    function esStartGroupMode() {
+        if (!esState.currentEl) return;
+        esState.isGroup = true;
+        esState.samples = [esState.currentEl];
+        if (esUI.panel) { const b = esUI.panel.querySelector('#btn-match'); b.innerHTML = "✨ 添加更多样本..."; b.style.background = "var(--smart-link-primary-color, #ff6b9d)"; b.style.color = "#fff"; }
+        esState.isSelecting = true;
+        if(esUI.panel) esUI.panel.style.display='none';
+        esClearHighlights();
+        esToast(`组模式: 再点击 <${esState.samples[0].tagName.toLowerCase()}>`);
+    }
+
+    function esClearHighlights() {
+        esState.overlays.forEach(o => o.remove());
+        esState.overlays = [];
+        esUI.highlight.style.display = 'none';
+    }
+
+    function esStopSelection() {
+        esState.isSelecting = false;
+        esState.isGroup = false;
+        if (esUI.panel) esUI.panel.style.display = 'none';
+        esClearHighlights();
+        
+        // 清理事件监听
+        if (window.__esEventHandlers) {
+            const { handleKeydown, handleMousemove, handleClick } = window.__esEventHandlers;
+            document.removeEventListener('keydown', handleKeydown);
+            document.removeEventListener('mousemove', handleMousemove);
+            document.removeEventListener('click', handleClick, true);
+            window.__esEventHandlers = null;
+        }
+        
+        window.__esSelectionActive = false;
+    }
+
+    function esToast(m) {
+        esUI.toast.textContent = m;
+        esUI.toast.style.display = 'block';
+        setTimeout(() => esUI.toast.style.display = 'none', 2000);
+    }
+
+    function esBindCopy(b, i) {
+        b.onclick = () => {
+            GM_setClipboard(i.value);
+            esToast("已复制!");
+        };
+    }
+
+    function esSetupDraggable(e, h) {
+        let d=false,x,y,l,t;
+        h.onmousedown=ev=>{d=true;x=ev.clientX;y=ev.clientY;let r=e.getBoundingClientRect();l=r.left;t=r.top;};
+        window.onmousemove=ev=>{if(d){e.style.left=(l+ev.clientX-x)+'px';e.style.top=(t+ev.clientY-y)+'px';e.style.right='auto';}}; 
+        window.onmouseup=()=>d=false;
+    }
+
+    function esNav(dir) {
+        if(!esState.currentEl) return;
+        const t = dir==='parent'?esState.currentEl.parentElement:esState.currentEl.firstElementChild;
+        if(t) esHandleSelect(t);
+    }
+
+    function esHandleSelect(el) {
+        if (esState.isGroup) {
+            if (esState.samples.length > 0 && el.tagName !== esState.samples[0].tagName) {
+                esToast(`严格模式: 仅限 <${esState.samples[0].tagName.toLowerCase()}>`);
+                return;
+            }
+            if (!esState.samples.includes(el)) esState.samples.push(el);
+            const sel = esGetGroupSelector(esState.samples);
+            esState.isSelecting = false;
+            esHighlightGroup(sel);
+            esUpdatePanelGroup(sel, document.querySelectorAll(sel).length);
+            // 选择完成后显示面板
+            if (esUI.panel) esUI.panel.style.display = 'block';
+            esToast('✓ 已选择');
+        } else {
+            esState.isSelecting = false;
+            esState.currentEl = el;
+            esHighlight(el);
+            esUpdatePanelSingle({
+                chips: esGetCascadeSuggestions(el),
+                xpath: esGetSmartXPath(el),
+                text: (el.innerText || el.value || '').trim().substring(0, 120)
+            });
+            // 选择完成后显示面板
+            if (esUI.panel) esUI.panel.style.display = 'block';
+            esToast('✓ 已选择');
+        }
+    }
+
+    function esUpdatePanelSingle(data) {
+        const $ = (s) => esUI.panel.querySelector(s);
+        $('#es-suggestions-wrap').style.display = 'block';
+        $('#es-count').style.display = 'none';
+        const chips = $('#es-chips'); chips.innerHTML = '';
+        data.chips.forEach((c, idx) => {
+            const chip = document.createElement('div');
+            chip.className = `es-chip ${idx === 0 ? 'active' : ''}`;
+            chip.textContent = c.val; chip.title = c.label;
+            chip.onclick = () => {
+                Array.from(chips.children).forEach(child => child.classList.remove('active'));
+                chip.classList.add('active');
+                $('#inp-css').value = c.val;
+            };
+            chips.appendChild(chip);
+        });
+        $('#inp-css').value = data.chips[0].val;
+        $('#inp-xpath').value = data.xpath;
+        $('#inp-text').value = data.text;
+        const btn = $('#btn-match');
+        btn.innerHTML = `${esIcons.match} 智能匹配组`;
+        btn.style.background = '';
+    }
+
+    function esUpdatePanelGroup(sel, count) {
+        const $ = (s) => esUI.panel.querySelector(s);
+        $('#es-suggestions-wrap').style.display = 'none';
+        $('#es-count').style.display = 'inline-block';
+        $('#es-count').textContent = count;
+        $('#inp-css').value = sel;
+        $('#inp-xpath').value = `//${sel.split(' > ').pop().split('.')[0]}[contains(@class, '${(sel.match(/\.([\w-]+)/)||[])[1]||''}')]`;
+        $('#inp-text').value = `[组模式] 基于 ${esState.samples.length} 个样本找到了 ${count} 个元素。`;
+    }
+
+    function startElementSelection() {
+        if (esState.isSelecting) return;
+        
+        // 初始化UI
+        esCreateSharedUI();
+        if (!esUI.panel) esCreatePanel();
+        esStart();
+        // 选择模式激活，先不显示面板
+        esUI.panel.style.display = 'none';
+        esToast('请将鼠标悬停在要选择的元素上...');
+        
+        // 创建事件处理的标志，避免重复绑定
+        window.__esSelectionActive = true;
+        
+        // 定义事件处理器
+        const handleKeydown = (e) => { 
+            if (e.key === 'Escape') esStopSelection(); 
+        };
+        
+        const handleMousemove = (e) => {
+            if (!esState.isSelecting) return;
+            const el = document.elementFromPoint(e.clientX, e.clientY);
+            
+            // 排除UI元素和按钮本身
+            if (!el || 
+                el === esUI.highlight || 
+                el === esUI.panel ||
+                el.id === 'element-selector-button' ||
+                el.classList.contains('es-group-highlight') ||
+                el.closest('.es-panel')) {
+                return;
+            }
+            
+            esHighlight(el);
+        };
+        
+        const handleClick = (e) => {
+            if (!esState.isSelecting) return;
+            
+            // 排除UI点击
+            if (esUI.panel.contains(e.target) || 
+                e.target === esUI.panel ||
+                e.target.closest('.es-panel') ||
+                e.target.id === 'element-selector-button') {
+                return;
+            }
+            
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            
+            // 获取元素并显示面板
+            esHandleSelect(e.target);
+        };
+        
+        // 添加事件监听
+        document.addEventListener('keydown', handleKeydown);
+        document.addEventListener('mousemove', handleMousemove, { passive: true });
+        document.addEventListener('click', handleClick, true);
+        
+        // 保存处理器以便清理
+        window.__esEventHandlers = { handleKeydown, handleMousemove, handleClick };
+    }
+    
     // 菜单命令
     // ================================
     if (typeof GM_registerMenuCommand !== 'undefined') {
         GM_registerMenuCommand('⚙️ 打开配置菜单', showConfigPanel);
         GM_registerMenuCommand('🎭 显示/隐藏所有按钮', toggleAllButtons);
         GM_registerMenuCommand('📚 打开阅读列表', showReadingListPanel);
+        if (config.elementSelectorEnabled) {
+            GM_registerMenuCommand('🎯 打开元素选择器', startElementSelection);
+        }
     }
 
     // ================================

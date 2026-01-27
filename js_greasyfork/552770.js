@@ -23,8 +23,8 @@
 // @author       Max
 // @namespace    https://greasyfork.org/zh-TW/users/1021017-max46656
 // @license MPL2.0
-// @downloadURL https://update.greasyfork.org/scripts/552770/%E4%BD%9C%E8%80%85%E8%BF%91%E6%9C%9F%E4%BD%9C%E5%93%81%E7%80%8F%E8%A6%BD.user.js
-// @updateURL https://update.greasyfork.org/scripts/552770/%E4%BD%9C%E8%80%85%E8%BF%91%E6%9C%9F%E4%BD%9C%E5%93%81%E7%80%8F%E8%A6%BD.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/552770/Artist%20Recent%20Works%20Scamper.user.js
+// @updateURL https://update.greasyfork.org/scripts/552770/Artist%20Recent%20Works%20Scamper.meta.js
 // ==/UserScript==
 
 class ArtistCardEnhancer {

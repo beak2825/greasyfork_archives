@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         enhanced ersetzer
 // @namespace    https://greasyfork.org/de/users/1516523-martink
-// @version      1.5.3
+// @version      1.5.4
 // @description  Fügt Schnellbuttons für häufige Ersetzungen hinzu + Klickbare Fehler-Icons mit Clipboard-Funktion + Maskierungs-Tool + History-Panel
 // @author       Martin Kaiser
 // @match        https://opus.geizhals.at/kalif/artikel/ersetzer*
@@ -103,9 +103,10 @@
                     const entry = entries[entryIndex];
                     const typeLabel = entry.type === 'T' ? 'Testen' : '<b>Speichern</b>';
                     const typeLabelPlain = entry.type === 'T' ? 'Testen' : 'Speichern';
-                    const sessionLink = `<a href="https://opus.geizhals.at/kalif/artikel/ersetzer?id=${sessionId}" target="_blank" style="color:inherit;">(${sessionId})</a>`;
-                    headerTitle.innerHTML = `${formatTimestamp(entry.timestamp)} - ${typeLabel} ${sessionLink}`;
-                    headerTitle.title = `${formatTimestamp(entry.timestamp)} - ${typeLabelPlain} (${sessionId})`;
+                    const sessionLink = `<a href="https://opus.geizhals.at/kalif/artikel/ersetzer?id=${sessionId}" target="_blank" style="color:inherit;">${sessionId}</a>`;
+                    const suchPlLink = entry.articleIds ? `, <a href="https://opus.geizhals.at/pv-edit/such.pl?&syntax=a.id=${entry.articleIds}" target="_blank" style="color:inherit;">such.pl</a>` : '';
+                    headerTitle.innerHTML = `${formatTimestamp(entry.timestamp)} - ${typeLabel} (${sessionLink}${suchPlLink})`;
+                    headerTitle.title = `${formatTimestamp(entry.timestamp)} - ${typeLabelPlain} (${sessionId}${entry.articleIds ? ', such.pl' : ''})`;
                 }
             }
         }
@@ -232,12 +233,16 @@
             content = content.substring(0, MAX_CONTENT_LENGTH);
         }
 
+        // Artikel-IDs aus dem URL-Hash extrahieren
+        const articleIds = window.location.hash ? window.location.hash.substring(1) : '';
+
         const timestamp = Date.now();
         const entry = {
             timestamp: timestamp,
             type: type,
             content: content,
-            sessionId: null // Session-ID wird nachträglich ergänzt
+            sessionId: null, // Session-ID wird nachträglich ergänzt
+            articleIds: articleIds // Artikel-IDs für such.pl Link
         };
 
         // Timestamp merken für nachträgliche Session-ID-Ergänzung
@@ -530,12 +535,14 @@
             const typeLabel = entry.type === 'T' ? 'Testen' : '<b>Speichern</b>';
             const typeLabelPlain = entry.type === 'T' ? 'Testen' : 'Speichern';
             if (entry.sessionId) {
-                const sessionLink = `<a href="https://opus.geizhals.at/kalif/artikel/ersetzer?id=${entry.sessionId}" target="_blank" style="color:inherit;">(${entry.sessionId})</a>`;
-                headerTitle.innerHTML = `${formatTimestamp(entry.timestamp)} - ${typeLabel} ${sessionLink}`;
-                headerTitle.title = `${formatTimestamp(entry.timestamp)} - ${typeLabelPlain} (${entry.sessionId})`;
+                const sessionLink = `<a href="https://opus.geizhals.at/kalif/artikel/ersetzer?id=${entry.sessionId}" target="_blank" style="color:inherit;">${entry.sessionId}</a>`;
+                const suchPlLink = entry.articleIds ? `, <a href="https://opus.geizhals.at/pv-edit/such.pl?&syntax=a.id=${entry.articleIds}" target="_blank" style="color:inherit;">such.pl</a>` : '';
+                headerTitle.innerHTML = `${formatTimestamp(entry.timestamp)} - ${typeLabel} (${sessionLink}${suchPlLink})`;
+                headerTitle.title = `${formatTimestamp(entry.timestamp)} - ${typeLabelPlain} (${entry.sessionId}${entry.articleIds ? ', such.pl' : ''})`;
             } else {
-                headerTitle.innerHTML = `${formatTimestamp(entry.timestamp)} - ${typeLabel}`;
-                headerTitle.title = `${formatTimestamp(entry.timestamp)} - ${typeLabelPlain}`;
+                const suchPlLink = entry.articleIds ? ` (<a href="https://opus.geizhals.at/pv-edit/such.pl?&syntax=a.id=${entry.articleIds}" target="_blank" style="color:inherit;">such.pl</a>)` : '';
+                headerTitle.innerHTML = `${formatTimestamp(entry.timestamp)} - ${typeLabel}${suchPlLink}`;
+                headerTitle.title = `${formatTimestamp(entry.timestamp)} - ${typeLabelPlain}${entry.articleIds ? ' (such.pl)' : ''}`;
             }
         }
 
@@ -6034,6 +6041,53 @@ $matchrule_untested =~ s/.*//;` },
         return false;
     }
 
+    // Content-Protection: Bewahre getippten Inhalt während die Seite lädt
+    let initialEditorContent = null;
+    let userHasTyped = false;
+    let lastKnownContent = null;
+
+    function setupContentProtection() {
+        const editor = getAceEditor();
+        if (!editor || editor._contentProtectionSetup) return;
+
+        editor._contentProtectionSetup = true;
+
+        // Initialen Inhalt speichern
+        initialEditorContent = editor.getValue();
+        lastKnownContent = initialEditorContent;
+
+        // Listener für Änderungen durch den User
+        editor.on('change', (delta) => {
+            const currentContent = editor.getValue();
+
+            // Prüfe ob der User getippt hat (Inhalt unterscheidet sich vom initialen)
+            if (currentContent !== initialEditorContent) {
+                userHasTyped = true;
+                lastKnownContent = currentContent;
+            }
+
+            // Wenn der User getippt hat und der Inhalt plötzlich auf den initialen zurückgesetzt wurde,
+            // dann hat die Seite den Editor überschrieben - stelle den User-Inhalt wieder her
+            if (userHasTyped && currentContent === initialEditorContent && lastKnownContent !== initialEditorContent) {
+                // Verzögert wiederherstellen um Race-Conditions zu vermeiden
+                setTimeout(() => {
+                    const editorNow = getAceEditor();
+                    if (editorNow && editorNow.getValue() === initialEditorContent && lastKnownContent !== initialEditorContent) {
+                        editorNow.setValue(lastKnownContent, -1);
+                        editorNow.focus();
+                        // Cursor ans Ende setzen
+                        editorNow.navigateFileEnd();
+                    }
+                }, 50);
+            }
+        });
+    }
+
+    // Content-Protection mit Verzögerung einrichten (warten bis Editor bereit ist)
+    setTimeout(setupContentProtection, 100);
+    setTimeout(setupContentProtection, 500);
+    setTimeout(setupContentProtection, 1000);
+
     // Fokus-Keeper: Halte den Fokus auf dem Editor bis die Seite fertig geladen ist
     let focusKeeperActive = true;
     const focusKeeperInterval = setInterval(() => {
@@ -6049,6 +6103,10 @@ $matchrule_untested =~ s/.*//;` },
         clearInterval(focusKeeperInterval);
         document.removeEventListener('click', onUserInteraction);
         document.removeEventListener('focusin', onUserInteraction);
+
+        // Content-Protection deaktivieren nach dem Laden
+        userHasTyped = false;
+        initialEditorContent = null;
     };
 
     // Stoppe Focus-Keeper wenn User mit anderen Elementen interagiert

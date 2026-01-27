@@ -55,9 +55,8 @@
 // @name:sw      Duolingo DuoHacker — Njia mpya salama ya zana ya ukulima wa Duolingo
 // @name:ms      Duolingo DuoHacker — Mod Selamat Baru Alat Pertanian Duolingo
 // @name:fil     Duolingo DuoHacker — Bagong Ligtas na Mode Duolingo Farming Tool
-// @name:tl      Duolingo DuoHacker — Bagong Ligtas na Mode Duolingo Farming Tool
-// @description  Best Free Duolingo Hack with XP Farming, Gems Farming, Streaks Farming, even Free Supers are here!
-// @description:en Best Free Duolingo Hack with XP Farming, Gems Farming, Streaks Farming, even Free Supers are here!
+// @name:tl      Duolingo DuoHacker — Bagong Ligtas nAUTOMATa Mode Duolingo Farming Tool
+// @description  #1 Fastest Duolingo Hack helps you farm milions of XP,Gems and Streaks.
 // @description:zh-CN  最佳免费多邻国破解版，提供经验值速刷、宝石速刷、连胜速刷，甚至还有免费超级道具！
 // @description:zh-TW  最佳免費多鄰國破解版，提供經驗值速刷、寶石速刷、連勝速刷，甚至還有免費超級道具！
 // @description:ja     XP ファーミング、宝石ファーミング、ストリーク ファーミング、さらには無料スーパーを備えた最高の無料 Duolingo ハックがここにあります!

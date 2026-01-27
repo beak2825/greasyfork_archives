@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Coursepoint Question Hints
 // @namespace    http://tampermonkey.net/
-// @version      1.7
+// @version      1.8
 // @license      MIT
 // @description  Display question rationales for Coursepoint quizzes while taking the quiz
 // @author       beepbopboop
@@ -162,7 +162,7 @@
 
     const bodyWrap = document.createElement('div');
     bodyWrap.className = 'json';
-    if (event.body.join("\n\n") === 'N/A') {
+    if ((event.body.join("\n\n") === 'N/A') || (event.body.join("\n\n") === 'NA')) {
       bodyWrap.textContent = 'No hint for this question';
     }
     else {

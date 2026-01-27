@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         enhanced alpha.pl
 // @namespace    https://greasyfork.org/de/users/1516523-martink
-// @version      1.0.5
+// @version      1.0.7
 // @description  Fügt bei Textfeldern Maskieren- und Löschen-Buttons hinzu und bietet ein Zwischeneingabefeld für schnelle DB-Feld-Suchen mit konfigurierbaren Shortcuts.
 // @author       Martin Kaiser
 // @match        https://opus.geizhals.at/pv-edit/alpha.pl*
@@ -799,23 +799,13 @@
         }
 
         addNewShortcut() {
-            // Berechne die nächste verfügbare Nummer
-            const usedNumbers = this.shortcuts
-                .map(s => parseInt(s.name))
-                .filter(n => !isNaN(n));
-
-            const nextNumber = usedNumbers.length > 0
-                ? Math.max(...usedNumbers) + 1
-                : 1;
-
             const emptyShortcut = {
-                name: nextNumber.toString(),
+                name: '•',
                 searchText: '',
                 agr: ''
             };
 
             this.shortcuts.push(emptyShortcut);
-            this.nextDefaultNumber = nextNumber + 1;
             this.updateAddButtonState();
             this.renderShortcuts();
             this.saveShortcuts();
@@ -974,11 +964,8 @@
         updateAddButtonState() {
             if (!this.addButton) return;
 
-            if (this.hasEmptyShortcut()) {
-                this.addButton.disabled = true;
-            } else {
-                this.addButton.disabled = false;
-            }
+            // Button immer aktiviert lassen - mehrere leere Shortcuts erlauben
+            this.addButton.disabled = false;
         }
 
         saveShortcuts() {

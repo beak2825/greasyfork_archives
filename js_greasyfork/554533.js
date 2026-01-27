@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         e621 播放器优化
 // @namespace    Lecrp.com
-// @version      1.13
+// @version      1.14
 // @description  隐藏原生控件，添加视频窗口外的控件，添加全局生效快捷键，支持移动设备
 // @author       jcjyids
 // @match        https://e621.net/posts*
@@ -67,7 +67,7 @@
     };
 
     // 进度条设置
-    const PROGRESS_SEGMENTS = 50000; // 固定分段
+    const PROGRESS_SEGMENTS = 10000; // 固定分段
 
     // 速度选项配置
     const SPEED_OPTIONS = [
@@ -959,12 +959,13 @@
         bindControlEvents();
     }
 
-    // 创建进度条行
+    // 创建进度条行（修正版：完美支持垂直滚动 + 水平防误触）
     function createProgressRow() {
         const row = document.createElement('div');
-        row.style.cssText = 'display: flex; align-items: center; height: 20px;';
+        // 设为 relative 以便放置覆盖层
+        row.style.cssText = 'display: flex; align-items: center; height: 24px; position: relative;';
 
-        // 进度条
+        // 1. 原生进度条 (用于显示和PC端操作)
         const progressBar = document.createElement('input');
         progressBar.type = 'range';
         progressBar.className = 'video-progress';
@@ -972,9 +973,130 @@
         progressBar.min = '0';
         progressBar.max = PROGRESS_SEGMENTS - 1;
         progressBar.step = '1';
-        progressBar.style.cssText = 'flex: 1; height: 5px; padding: 0px;';
+        progressBar.style.cssText = 'flex: 1; height: 6px; padding: 0px; display: block;';
 
         row.appendChild(progressBar);
+
+        // 获取设备能力
+        const deviceCapabilities = getDeviceCapabilities();
+
+        // ==========================================
+        // 移动端专属逻辑：添加透明手势遮罩层
+        // ==========================================
+        if (deviceCapabilities.isTouch) {
+            // 创建遮罩层覆盖在进度条上
+            const touchMask = document.createElement('div');
+            Object.assign(touchMask.style, {
+                position: 'absolute',
+                inset: '0px 0px',
+                left: '0',
+                right: '0',
+                zIndex: '10', // 确保在 input 之上
+                cursor: 'pointer',
+                touchAction: 'pan-y',
+                webkitUserSelect: 'none' // 防止长按选中文字
+            });
+
+            // 变量记录触摸状态
+            let startX = 0;
+            let startY = 0;
+            let initialVideoTime = 0;
+            let isDragging = false; // 状态：正在拖拽进度
+            let isScrolling = false; // 状态：正在滚动页面
+            let rect = null;
+
+            // 触摸开始
+            touchMask.addEventListener('touchstart', (e) => {
+                // 记录初始数据
+                const touch = e.touches[0];
+                startX = touch.clientX;
+                startY = touch.clientY;
+                initialVideoTime = videoElement.currentTime;
+                rect = progressBar.getBoundingClientRect();
+
+                // 重置状态
+                isDragging = false;
+                isScrolling = false;
+
+            }, { passive: false });
+
+            // 触摸移动
+            touchMask.addEventListener('touchmove', (e) => {
+                // 1. 如果已经判定为滚动页面，直接退出，让浏览器处理滚动
+                if (isScrolling) {
+                    return;
+                }
+
+                const touch = e.touches[0];
+                const deltaX = touch.clientX - startX;
+                const deltaY = touch.clientY - startY;
+
+                // 2. 如果状态尚未确定（即手指刚开始移动），进行方向判断
+                if (!isDragging) {
+                    // 如果垂直移动距离 > 水平移动距离，或者垂直移动绝对值超过了阈值
+                    if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                        isScrolling = true;
+                        return; // 放行，浏览器会接管后续滚动
+                    }
+
+                    // 如果水平移动超过 10px (防抖阈值)，且水平 > 垂直 -> 判定为调整进度
+                    if (Math.abs(deltaX) > 10) {
+                        isDragging = true;
+                        // 锁定方向，后续逻辑会执行 preventDefault
+                    }
+                }
+
+                // 3. 只有当确认为拖拽进度时，才拦截事件
+                if (isDragging) {
+                    // 阻止默认行为（阻止浏览器翻页或滚动）
+                    if (e.cancelable) {
+                        e.preventDefault();
+                    }
+
+                    if (videoElement.duration) {
+                        // 相对滑动逻辑 / 远程控制
+                        const sensitivity = 1.0; // 灵敏度 1:1
+                        const timeDelta = (deltaX / rect.width) * videoElement.duration * sensitivity;
+
+                        let newTime = initialVideoTime + timeDelta;
+                        newTime = Math.max(0, Math.min(newTime, videoElement.duration));
+
+                        videoElement.currentTime = newTime;
+
+                        // 更新UI
+                        lastRoundedTime = -1;
+                        checkAndUpdateTime();
+                    }
+                }
+            }, { passive: false });
+
+            // 触摸结束
+            touchMask.addEventListener('touchend', (e) => {
+                // 如果既不是滚动，也没触发拖拽，说明是一次纯粹的“点击”
+                if (!isDragging && !isScrolling) {
+                    // 阻止默认点击，手动计算跳转位置
+                    if (e.cancelable) e.preventDefault();
+
+                    const touch = e.changedTouches[0];
+                    const clickPositionRatio = (touch.clientX - rect.left) / rect.width;
+
+                    if (videoElement.duration) {
+                        // 边界保护
+                        let ratio = Math.max(0, Math.min(1, clickPositionRatio));
+                        videoElement.currentTime = ratio * videoElement.duration;
+                        lastRoundedTime = -1;
+                        checkAndUpdateTime();
+                    }
+                }
+
+                // 重置状态
+                isDragging = false;
+                isScrolling = false;
+            });
+
+            row.appendChild(touchMask);
+        }
+
         return row;
     }
 
@@ -1021,7 +1143,7 @@
             volumeSlider.max = '1';
             volumeSlider.step = '0.05';
             volumeSlider.value = videoElement.volume;
-            volumeSlider.style.cssText = 'max-width: 150px; padding: 0px;';
+            volumeSlider.style.cssText = 'max-width: 150px; height: 6px; padding: 0px;';
 
             volumeContainer.appendChild(volumeSlider);
             rightSection.appendChild(volumeContainer);

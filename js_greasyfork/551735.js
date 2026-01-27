@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name                ORANGE | Skript for me
 // @namespace           https://forum.blackrussia.online
-// @version             1.5.3
+// @version             1.5.5
 // @author              Dany_Forbs
 // @connection          https://vk.com/kwaazzi
 // @updateversion       Создан 06.10.2025
@@ -29,8 +29,8 @@
     const WAIT_PREFIX = 14; // Префикс "Ожидание"
     const PINBIO_PREFIX = 15; // Префикс "На рассмотрении" для биографий (закреплено + открыто)
     const buttons = [
-    {
-    title: '------> Раздел Жалоб на игроков <------',
+{
+    title: '------> Раздел Жалоб на Лидеров <------',
     dpstyle: 'padding: 6px 16px; font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; color: #000000; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.6); background: linear-gradient(135deg, #FFD700 0%, #D4AF37 25%, #FFD700 50%, #B8860B 75%, #D4AF37 100%); border: 2px solid #FFD700; border-radius: 10px; box-shadow: 0 0 14px rgba(255, 215, 0, 0.9), inset 0 1px 3px rgba(255, 255, 255, 0.6), 0 4px 0 #8B6914, 0 6px 12px rgba(0, 0, 0, 0.5); cursor: pointer; transition: all 0.1s ease; line-height: 1;'
 },
 {
@@ -44,7 +44,402 @@
           '[COLOR=#FFA500]▪ (Свой текст)[/COLOR]<br><br>' +
           '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
           '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br><br>' +
-          '[COLOR=#B8860B]С уважением, [B]администрация сервера![/B][/COLOR]' +
+          '[COLOR=#B8860B]С уважением, [B]Заместитель Куратора Организаций![/B][/COLOR]' +
+          '[/FONT][/CENTER]'
+},
+{
+    title: 'Запрос док-в от ЛД',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ Запрошу доказательства у лидера, не создавайте дубликатов и ожидайте ответа от администрации.[/COLOR][/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#FFFF00]▪ На рассмотрении ▪[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Ожидайте ответа.[/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: PIN_PREFIX,
+    status: true,
+},
+{
+    title: 'Беседа(пред)',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ Ваша жалоба была одобрена, с лидером будет проведена беседа.[/COLOR][/SIZE]<br><br>' +
+          '[COLOR=#E5E5E5]Наказание будет выдано в течение 24 часов.[/COLOR]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#00AA00]✓ Одобрено ✓[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: ACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Выговор',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ Ваша жалоба была одобрена, лидер получит соответствующее наказание.[/COLOR][/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#00AA00]✓ Одобрено ✓[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: ACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Снят',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ Ваша жалоба была одобрена, лидер будет снят со своего поста.[/COLOR][/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#00AA00]✓ Одобрено ✓[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: ACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Форум темы',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ Ваша жалоба была одобрена, с лидером будет проведена беседа, темы будут отредактированы.[/COLOR][/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#00AA00]✓ Одобрено ✓[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: ACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Не по форме',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana][SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +         
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +         
+          '[SIZE=4][COLOR=#FFA500]▪ Ваша жалоба составлена не по форме.[/COLOR][/SIZE]<br>' +
+          '[COLOR=#E5E5E5]Заполните данную форму и подайте новую заявку:[/COLOR]<br><br>' +          
+          '[INDENT][FONT=Courier New][SIZE=3]' +
+          '[COLOR=#FFD700]1.[/COLOR] [COLOR=#E5E5E5]Ваш Nick_Name:[/COLOR]<br>' +
+          '[COLOR=#FFD700]2.[/COLOR] [COLOR=#E5E5E5]Nick_Name лидера (описать максимально подробно и раскрыто)::[/COLOR]<br>' +
+          '[COLOR=#FFD700]3.[/COLOR] [COLOR=#E5E5E5]Суть жалобы:[/COLOR]<br>' +
+          '[COLOR=#FFD700]4.[/COLOR] [COLOR=#E5E5E5]Доказательство:[/COLOR]' +
+          '[/SIZE][/FONT][/INDENT]<br><br>' +          
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +          
+          '[SIZE=5][B][COLOR=#FF4444]✖ Отказано, закрыто ✖[/COLOR][/B][/SIZE]<br><br>' +          
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR][/FONT][/CENTER]',
+    prefix: UNACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Нарушения не найдены',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ Нарушения лидера не были обнаружены.[/COLOR][/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#FF4444]✖ Отказано, закрыто ✖[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: UNACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Нет в логах',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ Проверив систему логирования, нарушение не было обнаружено.[/COLOR][/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#FF4444]✖ Отказано, закрыто ✖[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: UNACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Не тот сервер',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana][SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +         
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +          
+          '[SIZE=4][COLOR=#FFA500]▪ При составлении жалобы, Вы ошиблись сервером.[/COLOR][/SIZE]<br>' +
+          '[COLOR=#E5E5E5]Подайте жалобу в раздел Вашего сервера.[/COLOR]<br>' +
+          '[COLOR=#E5E5E5]Свой сервер Вы можете найти на главной странице форума:[/COLOR]<br><br>' +          
+          '[URL=https://forum.blackrussia.online/][COLOR=#FFD700][U]➔ Главная страница форума[/U][/COLOR][/URL]<br><br>' +         
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +         
+          '[COLOR=#D4AF37]Приятной игры на [B][COLOR=#FFD700]BLACK RUSSIA[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR][/FONT][/CENTER]',
+    prefix: UNACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Нет тайма',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +         
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +          
+          '[SIZE=4][COLOR=#FFA500]▪ На Ваших доказательствах отсутствует /time.[/COLOR][/SIZE]<br><br>' +          
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +          
+          '[SIZE=5][B][COLOR=#FF4444]✖ Отказано, закрыто ✖[/COLOR][/B][/SIZE]<br><br>' +          
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: UNACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Нет таймкодов',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ Если видеодоказательство длится более 3 минут, Вы должны указать тайм-коды нарушений.[/COLOR][/SIZE]<br><br>' +
+          '[COLOR=#FF4444]Пример оформления тайм-кодов:[/COLOR]<br>' +
+          '[QUOTE][COLOR=#E5E5E5]' +
+          '0:25 - Начало нарушения<br>' +
+          '1:10 - Демонстрация оружия<br>' +
+          '2:30 - Угрозы в сторону игрока<br>' +
+          '3:45 - Попытка ограбления<br>' +
+          '4:20 - Конец ситуации' +
+          '[/COLOR][/QUOTE]<br>' +
+          '[COLOR=#E5E5E5]Указывайте точное время каждого нарушения для быстрого просмотра.[/COLOR]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#FF4444]✖ Отказано, закрыто ✖[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: UNACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: '3+ дня',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ Вашим доказательствам более трёх дней.[/COLOR][/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#FF4444]✖ Отказано, закрыто ✖[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: UNACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Дублирование',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ Ответ на Вашу жалобу был дан в предыдущей теме.[/COLOR][/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#FF4444]✖ Отказано, закрыто ✖[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: UNACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Нужен фрапс',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ В данном случае требуется Видеодоказательство на нарушение от игрока.[/COLOR][/SIZE]<br><br>' +
+          '[COLOR=#E5E5E5]Создайте новую тему и прикрепите доказательства в виде видео, загруженные на хостинги (Rutube, Youtube, Imgur).[/COLOR]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#FF4444]✖ Отказано, закрыто ✖[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: UNACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Док-ва в соц сетях',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ Загрузка доказательств в соц. сети (ВКонтакте, instagram) запрещается.[/COLOR][/SIZE]<br>' +
+          '[COLOR=#E5E5E5]Доказательства должны быть загружены на фото/видео хостинги (Rutube, Япикс, Imgur).[/COLOR]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#FF4444]✖ Отказано, закрыто ✖[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: UNACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Док-ва удалены',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ Доказательства удалены или недоступны для просмотра.[/COLOR][/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#FF4444]✖ Отказано, закрыто ✖[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: UNACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Недостаточно доказательств',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ В Вашей жалобе недостаточно доказательств на нарушение игрока.[/COLOR][/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#FF4444]✖ Отказано, закрыто ✖[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: UNACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Ссылка не работает',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ Ссылка с доказательствами нерабочая.[/COLOR][/SIZE]<br>' +
+          '[COLOR=#E5E5E5]Проверьте работоспособность ссылки или загрузите на фото/видео хостинги (Rutube, Япикс, imgur) и напишите новую жалобу.[/COLOR]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#FF4444]✖ Отказано, закрыто ✖[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: UNACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Док-ва отредактированы',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ Доказательства, которые были отредактированы, могут быть не рассмотрены.[/COLOR][/SIZE]<br>' +
+          '[COLOR=#E5E5E5]Доказательства с посторонней музыкой, неадекватной речью, нецензурными словами или выражениями не принимаются.[/COLOR]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#FF4444]✖ Отказано, закрыто ✖[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: UNACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Отсутвуют док-ва',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ В Вашей жалобе не загружены доказательства на нарушение игрока.[/COLOR][/SIZE]<br>' +
+          '[COLOR=#E5E5E5]Создайте новую жалобу, загрузив доказательства с нарушениями игрока.[/COLOR]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#FF4444]✖ Отказано, закрыто ✖[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: UNACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Док-ва приватны',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ В Вашей жалобе доказательства приватны.[/COLOR][/SIZE]<br>' +
+          '[COLOR=#E5E5E5]Создайте новую жалобу, загрузив доказательства с нарушениями игрока на любой другой хостинг.[/COLOR]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#FF4444]✖ Отказано, закрыто ✖[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Заместитель Куратора Организаций![/I][/COLOR]' +
+          '[/FONT][/CENTER]',
+    prefix: UNACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: '------> Раздел Жалоб на Игроков <------',
+    dpstyle: 'padding: 6px 16px; font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; color: #000000; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.6); background: linear-gradient(135deg, #FFD700 0%, #D4AF37 25%, #FFD700 50%, #B8860B 75%, #D4AF37 100%); border: 2px solid #FFD700; border-radius: 10px; box-shadow: 0 0 14px rgba(255, 215, 0, 0.9), inset 0 1px 3px rgba(255, 255, 255, 0.6), 0 4px 0 #8B6914, 0 6px 12px rgba(0, 0, 0, 0.5); cursor: pointer; transition: all 0.1s ease; line-height: 1;'
+},
+{
+    title: 'Приветствие + свой текст',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid; border-color: rgba(255, 0, 0, 0.8); font-family: UtromPressKachat',
+    content: 
+          '[CENTER][FONT=Verdana]' +
+          '[SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br>' +
+          '[COLOR=#D4AF37]{{ user.mention }}[/COLOR]![/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[COLOR=#FFA500]▪ (Свой текст)[/COLOR]<br><br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br><br>' +
+          '[COLOR=#B8860B]С уважением, [B]Главный Куратор Форума![/B][/COLOR]' +
           '[/FONT][/CENTER]'
 },
 {

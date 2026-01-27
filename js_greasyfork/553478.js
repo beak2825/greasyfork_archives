@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            HWGiftHelper
 // @namespace       HWGiftHelper
-// @version         0.4.3
+// @version         0.4.4
 // @description     Gift helper for the game Hero Wars
 // @author          FatSwan
 // @license         Copyright FatSwan
@@ -37,13 +37,6 @@ this.GM_info = GM_info;
  * Start time of the last battle in the company
  */
 let lastMissionBattleStart = 0;
-
-/**
- * Stores a history of requests
- *
- * Хранит историю запросов
- */
-let requestHistory = {};
 
 /**
  * yyyyMMdd格式的当日
@@ -142,48 +135,6 @@ I18N_G = function (constant, replace) {
     return `% ${constant} %`;
 };
 
-String.prototype.sprintf = String.prototype.sprintf ||
-    function () {
-        "use strict";
-        var str = this.toString();
-        if (arguments.length) {
-            var t = typeof arguments[0];
-            var key;
-            var args = ("string" === t || "number" === t) ?
-                Array.prototype.slice.call(arguments)
-                : arguments[0];
-
-            for (key in args) {
-                str = str.replace(new RegExp("\\{" + key + "\\}", "gi"), args[key]);
-            }
-        }
-
-        return str;
-    };
-
-/**
- * Returns the history of requests
- *
- * Возвращает историю запросов
- */
-this.getRequestHistory = function() {
-    return requestHistory;
-}
-/**
- * Clearing the request history
- *
- * Очистка истоии запросов
- */
-setInterval(function () {
-    let now = Date.now();
-    for (let i in requestHistory) {
-        const time = +i.split('_')[0];
-        if (now - time > 300000) {
-            delete requestHistory[i];
-        }
-    }
-}, 300000);
-
 /**
  * Calculates the request signature
  *
@@ -216,6 +167,44 @@ this.getSignature = function(headers, data) {
 
     return md5(sign.signature);
 }
+
+// 有输入框的popup
+async function popupInputSimple(message, btnOk='OK', btnCancel='取消') {
+    return await popup.confirm(
+        message, 
+        [
+            {
+                msg: btnOk,
+                isInput: true,
+                default: ''
+            },
+            {
+                msg: btnCancel,
+                result: false,
+                isCancel: true
+            },
+        ]
+    );
+}
+
+// 无输入框的popup
+async function popupSimple(message, btnOk='OK', btnCancel='取消') {
+    return await popup.confirm(
+        message,
+        [
+            {
+                msg: btnOk,
+                result: true
+            },
+            {
+                msg: btnCancel,
+                result: false,
+                isCancel: true
+            },
+        ]
+    );
+}
+
 
 this.HWGFuncs = {
     I18N_G,
@@ -1694,6 +1683,11 @@ class HWGH_UI {
             get title() { return '送钥匙'; },
             onClick: showGiftKeysConfirm,
         },
+        skip: {
+            get name() { return '跳过'; },
+            get title() { return '跳过当前用户'; },
+            onClick: skipConfirm,
+        },
         stop: {
             get name() { return '停止'; },
             get title() { return '并不会马上停止,等待当前用户执行完毕后停止。'; },
@@ -1806,6 +1800,40 @@ class HWGH_UI {
                             findUsersServerId();
                         },
                         get title() { return '查找用户的服务器ID'; },
+                    },
+                ];
+                popupButtons.push({ result: false, isClose: true });
+                const answer = await popup.confirm(`请选择:`, popupButtons);
+                if (typeof answer === 'function') {
+                    answer();
+                }
+            },
+        },
+        other: {
+            get name() { return '其他'; },
+            get title() { return '其他功能'; },
+            onClick: async function () {
+                const popupButtons = [
+                    {
+                        msg: '开始记录地图路径',
+                        result: function () {
+                            startRecordMapRoute();
+                        },
+                        get title() { return '开始记录地图路径'; },
+                    },
+                    {
+                        msg: '完成记录地图路径',
+                        result: function () {
+                            finishRecordMapRoute();
+                        },
+                        get title() { return '完成记录地图路径'; },
+                    },
+                    {
+                        msg: '走地图',
+                        result: function () {
+                            routeMap();
+                        },
+                        get title() { return '走地图'; },
                     },
                 ];
                 popupButtons.push({ result: false, isClose: true });
@@ -3923,26 +3951,15 @@ class WinterfestTask {
         let res = true;
 
         setProgress('开始走地图');
+        const saTask = new SeasonAdventureTask();
         for (let i = 0; i < route.length; i++) {
-            if (await this.seasonAdventureProcess(seasonAdventureId, route[i]) == false) {
+            if (await saTask.seasonAdventureProcess(seasonAdventureId, route[i]) == false) {
                 res = false;
                 break;
             }
             setProgress(`走地图 ${i+1}/${route.length}`);
         }
         setProgress('走地图' + (res ? '完成' : '失败'));
-    }
-
-    async seasonAdventureProcess(seasonAdventureId, levelId) {
-        let res = await Send(`{"calls":[{"name":"seasonAdventure_exploreLevel","args":{"seasonAdventureId": ${seasonAdventureId}, "levelId": ${levelId}},"ident":"body"}]}`);
-        if (res == null || res.error != null) {
-            return false;
-        }
-        res = await Send(`{"calls":[{"name":"seasonAdventure_processLevel","args":{"seasonAdventureId": ${seasonAdventureId}, "levelId": ${levelId}},"ident":"body"}]}`);
-        if (res == null || res.error != null) {
-            return false;
-        }
-        return true;
     }
 
     // 使用能量 可以突袭的情况下
@@ -3964,6 +3981,151 @@ class WinterfestTask {
             // 捐献所有糖果
             await Send(`{"calls":[{"name":"newYear_decorateTree","args":{"optionId": 1, "amount": ${coins[17]}},"ident":"body"}]}`);
         }
+    }
+}
+
+// 用于记录神秘岛地图路线
+let seasonAdventureId = null;
+let seasonAdventureRoute = [];
+let originalSend = null;
+const decoder = new TextDecoder("utf-8");
+
+// 显示记录神秘岛地图路线
+function showAdventureProcess(id=null, route=null) {
+    let message = '正在记录冒险岛地图路径';
+    if (id != null) {
+        message += '<br>地图ID:' + id;
+        message += '<br>路径:' + formatSeasonAdventureRoute(route);
+    }
+
+    setProgress(message, false);
+}
+
+function formatSeasonAdventureRoute(route) {
+    let count = 0;
+    let message = '';
+    
+    route.forEach(e => {
+        message += e + ',';
+        count++;
+        if (count == 10) {
+            count = 0;
+            message += '<br>';
+        }
+    })
+    return message;
+}
+
+// 神秘岛地图任务
+class SeasonAdventureTask {
+    // 开始记录地图路径
+    async startRecordMapRoute() {
+        // 初始化神秘岛地图路线
+        seasonAdventureId = null;
+        seasonAdventureRoute = [];
+
+        // 显示开始记录
+        showAdventureProcess();
+
+        // 保存原始 send 方法
+        originalSend = XMLHttpRequest.prototype.send;
+
+        Object.defineProperty(XMLHttpRequest.prototype, 'send', {
+            value: function(...args) {
+                try {
+                    let tempData = null;
+
+                    if (args[0] == '') return;
+
+                    if (getClass(args[0]) == "ArrayBuffer") {
+                        tempData = decoder.decode(args[0]);
+                    } else {
+                        tempData = args[0];
+                    }
+                    const testData = JSON.parse(tempData);
+                    // 在调用前拦截
+                    for (const call of testData.calls) {
+                        // console.log('send called with:', call);
+                        if (call.name == 'seasonAdventure_exploreLevel') {
+                            if (seasonAdventureId == null) seasonAdventureId = call.args.seasonAdventureId;
+                            seasonAdventureRoute.push(call.args.levelId);
+
+                            showAdventureProcess(seasonAdventureId, seasonAdventureRoute);
+                        }
+                    }
+                } catch (error) {
+                }
+
+                // 调用原始方法
+                return originalSend.apply(this, args);
+            }
+        });
+    }
+
+    // 完成记录地图路径
+    async finishRecordMapRoute() {
+        if (originalSend != null) {
+            XMLHttpRequest.prototype.send = originalSend;
+            originalSend = null;
+        }
+
+        // 显示地图路径
+        let message = `路径如下，请拷贝保存。<br>${seasonAdventureId}-${formatSeasonAdventureRoute(seasonAdventureRoute)}`;
+        await popupSimple(message);
+    }
+
+    // 解析地图格式
+    parseRoute(routeStr) {
+        // 分割ID和路径部分
+        const parts = routeStr.split('-');
+
+        if (parts.length !== 2) {
+            throw new Error('Invalid format: should be "ID-Route1,Route2,..."');
+        }
+
+        const [id, routes] = parts;
+        // 去除末尾的逗号
+        const cleanedRouteStr = routes.replace(/,$/, '');
+        
+        // 分割路径字符串为数组
+        const routeArray = cleanedRouteStr ? cleanedRouteStr.split(',').filter(item => item !== '') : [];
+
+        // 构建JSON对象
+        return {
+            ID: id,
+            Route: routeArray
+        };
+    }
+
+    // 走冒险岛地图
+    async routeSeasonAdventure(seasonAdventureId, route) {
+        const answer = await popupSimple(`需要${route.length}放大镜,请确认有足够的放大镜。`);
+        if (!answer) return;
+
+        let res = true;
+        setProgress('开始走地图');
+        const saTask = new SeasonAdventureTask();
+        for (let i = 0; i < route.length; i++) {
+            if (await saTask.seasonAdventureProcess(seasonAdventureId, route[i]) == false) {
+                res = false;
+                break;
+            }
+            setProgress(`走地图 ${i+1}/${route.length}`);
+        }
+        setProgress('走地图' + (res ? '完成' : '失败'));
+    }
+
+    // 在神秘岛移动一步
+    async seasonAdventureProcess(seasonAdventureId, levelId) {
+        let res = await Send(`{"calls":[{"name":"seasonAdventure_exploreLevel","args":{"seasonAdventureId": ${seasonAdventureId}, "levelId": ${levelId}},"ident":"body"}]}`);
+        if (res == null || res.error != null) {
+            return false;
+        }
+        res = await Send(`{"calls":[{"name":"seasonAdventure_processLevel","args":{"seasonAdventureId": ${seasonAdventureId}, "levelId": ${levelId}},"ident":"body"}]}`);
+        if (res == null || res.error != null) {
+            return false;
+        }
+        return true;
     }
 }
 
@@ -4489,35 +4651,9 @@ class StatusDataMana {
     }
 
     static loadStatusData() {
-        let suffix = null;
         const task = (RunningTask == RunningTaskEnum.Stop) ? LastTask : RunningTask;
-        switch (task) {
-            case RunningTaskEnum.NewUser: 
-                suffix = TaskKeyEnum.NewUser;
-                break;
-            case RunningTaskEnum.Daily: 
-                suffix = TaskKeyEnum.Daily;
-                break;
-            case RunningTaskEnum.GiftKey: 
-                suffix = TaskKeyEnum.GiftKey;
-                break;
-            case RunningTaskEnum.WinterGift: 
-                suffix = TaskKeyEnum.WinterGift;
-                break;
-            case RunningTaskEnum.JoinGuild: 
-            case RunningTaskEnum.JoinGuildAutoLogin: 
-            case RunningTaskEnum.AoCAutoUpgrade: 
-                suffix = TaskKeyEnum.JoinGuild;
-                break;
-            case RunningTaskEnum.ExtUserLogin: 
-            case RunningTaskEnum.ExtUserLoginNoLogout:
-            case RunningTaskEnum.ExtUserJoinGuild:
-                suffix = TaskKeyEnum.ExtUser;
-                break;
-            default:
-                 break;
-        }
 
+        const suffix = runningTaskToTaskKey(task);
         const key = (suffix == null) ? 'StatusData' : `StatusData:${suffix}`;
         const value = storage.get(key);
         if (value == null) {
@@ -4628,6 +4764,38 @@ async function showGiftKeysConfirm() {
         StatusDataMana.saveStatusData(TaskKeyEnum.GiftKey);
         startTask();
     });
+}
+
+// 跳过用户任务
+async function skipConfirm() {
+    const answer = await popup.confirm(
+        '是否跳过当前任务',
+        [
+            {
+                msg: I18N_G('BTN_OK'),
+                result: true,
+                isCancel: false
+            },
+            {
+                msg: I18N_G('BTN_CANCEL'),
+                result: false,
+                isCancel: true
+            },
+        ]
+    );
+
+    if (!answer) {
+        return false;
+    }
+
+    // Save status
+    StatusDataMana.saveUserTaskStatus(NXUserInfo?.email, TargetLevel);
+    StatusData = StatusDataMana.loadStatusData();
+    StatusData.doneNo = parseEmailToNo(NXUserInfo?.email);
+    StatusDataMana.saveStatusData(runningTaskToTaskKey(RunningTask));
+
+    // logout
+    logout();
 }
 
 // 停止任务
@@ -4822,6 +4990,49 @@ async function findUsersServerId() {
     );
 }
 
+// 开始记录地图路径
+async function startRecordMapRoute() {
+    const answer = await popupSimple('是否开始记录地图路径？');
+    if (!answer) return false;
+
+    // show result
+    const saTask = new SeasonAdventureTask();
+    saTask.startRecordMapRoute();
+}
+
+// 完成记录地图路径
+async function finishRecordMapRoute() {
+    if (originalSend != null) {
+        const answer = await popupSimple('是否完成记录地图路径？');
+        if (!answer) return false;
+    }
+
+    // show result
+    const saTask = new SeasonAdventureTask();
+    saTask.finishRecordMapRoute();
+}
+
+// 走地图
+async function routeMap() {
+    const answer = await popupInputSimple('请输入地图路径:');
+    if (!answer) return false;
+
+    const saTask = new SeasonAdventureTask();
+    const routeJson = saTask.parseRoute(answer);
+    
+    seasonAdventureId = routeJson.ID;
+    seasonAdventureRoute = routeJson.Route;
+
+    let res = await Send(`{"calls":[{"name":"seasonAdventure_getInfo","args":{},"ident":"body"}]}`);
+    if (res.results[0].result.response.seasonAdventure.id != routeJson.ID) {
+        await popupSimple('地图ID不正确，可能输入的并非本月地图路径。');
+        return;
+    }
+
+    // 走冒险岛地图
+    saTask.routeSeasonAdventure(routeJson.ID, routeJson.Route);
+}
+
 async function showGuildId() {
     await refreshUserInfo();
     if (userInfo == null || userInfo.clanId == null) {
@@ -4919,6 +5130,13 @@ async function confirmAoCAutoUpgrade() {
     // TODO 动作确认
     startTask();
     // startAoCAutoUpgrade();
+}
+
+/**
+ * Returns the class name of the passed object
+ */
+function getClass(obj) {
+	return {}.toString.call(obj).slice(8, -1);
 }
 
 async function doTemp() {
@@ -5073,6 +5291,38 @@ const TaskKeyEnum = {
   JoinGuild:    'AoC',
   ExtUser:      'ExtUser', 
 };
+
+function runningTaskToTaskKey(task) {
+    let suffix = null;
+    switch (task) {
+        case RunningTaskEnum.NewUser: 
+            suffix = TaskKeyEnum.NewUser;
+            break;
+        case RunningTaskEnum.Daily: 
+            suffix = TaskKeyEnum.Daily;
+            break;
+        case RunningTaskEnum.GiftKey: 
+            suffix = TaskKeyEnum.GiftKey;
+            break;
+        case RunningTaskEnum.WinterGift: 
+            suffix = TaskKeyEnum.WinterGift;
+            break;
+        case RunningTaskEnum.JoinGuild: 
+        case RunningTaskEnum.JoinGuildAutoLogin: 
+        case RunningTaskEnum.AoCAutoUpgrade: 
+            suffix = TaskKeyEnum.JoinGuild;
+            break;
+        case RunningTaskEnum.ExtUserLogin: 
+        case RunningTaskEnum.ExtUserLoginNoLogout:
+        case RunningTaskEnum.ExtUserJoinGuild:
+            suffix = TaskKeyEnum.ExtUser;
+            break;
+        default:
+            break;
+    }
+
+    return suffix;
+}
 
 /**
  * 运行状况

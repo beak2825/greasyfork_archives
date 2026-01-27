@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            HWH Tweaker
 // @namespace       http://tampermonkey.net/
-// @version         6.0.1
+// @version         6.4.0
 // @description     Extension for HeroWarsHelper by ZingerY - Adds adventure path editor, custom buttons, and tweaks
 // @author          AI Assistant
 // @license         MIT
@@ -16,7 +16,7 @@
 
 
 // Configuration at the top of the script
-const TWEAKER_VERSION = '6.0.1';
+const TWEAKER_VERSION = '6.4.0'
 const DEBUG_MODE = localStorage.getItem('hwh_debug_mode') === 'true';
 const TOURNAMENT_RETENTION_DAYS = 7;
 const TOURNAMENT_RETENTION_MS = TOURNAMENT_RETENTION_DAYS * 24 * 60 * 60 * 1000;
@@ -27,6 +27,38 @@ const ARENA_STATS_ENABLED_KEY = 'hwh_arena_stats_enabled';
 const WINTERFEST_GIFT_CACHE_KEY = 'hwh_winterfest_gift_cache';
 const WINTERFEST_CACHE_DAYS = 14; // Keep cache for 2 weeks after event ends
 const XP_POTION_KEEP_KEY = 'hwh_xp_potion_keep_amount';
+const NOTIF_MIN_TIME_KEY = 'hwh_notif_min_time';
+const NOTIF_STYLE_KEY = 'hwh_notif_style';  // 'new' or 'classic'
+const DISCORD_WEBHOOK_KEY = 'hwh_discord_webhook';
+const DISCORD_ENABLED_KEY = 'hwh_discord_enabled';
+const NOTIF_ROUTES_KEY = 'hwh_notif_routes';
+
+const DEFAULT_NOTIF_ROUTES = {
+    eventReminders: { telegram: true, discord: true },
+    // idleDetection removed
+    aocAlerts: { telegram: true, discord: true },
+    collectionComplete: { telegram: false, discord: false }
+};
+
+const NOTIF_TYPE_LABELS = {
+    eventReminders: '⏰ Event Reminders',
+    // idleDetection removed
+    aocAlerts: '🏰 AoC Alerts',
+    collectionComplete: '🎁 Collection Done'
+};
+
+function getNotifRoutes() {
+    try {
+        const saved = localStorage.getItem(NOTIF_ROUTES_KEY);
+        return saved ? { ...DEFAULT_NOTIF_ROUTES, ...JSON.parse(saved) } : DEFAULT_NOTIF_ROUTES;
+    } catch { return DEFAULT_NOTIF_ROUTES; }
+}
+
+function saveNotifRoutes(routes) {
+    localStorage.setItem(NOTIF_ROUTES_KEY, JSON.stringify(routes));
+}
+
+
 
 // Inject consolidated styles
 if (!document.getElementById('twk-styles')) {
@@ -60,14 +92,226 @@ if (!document.getElementById('twk-styles')) {
         .twk-mono { font-family: monospace; }
         .twk-icon-click { margin-left: 2px; vertical-align: middle; cursor: pointer; }
         .twk-hidden { display: none; }
+        .twk-stripe { background: rgba(139,105,20,0.1); }
     `;
     document.head.appendChild(styleEl);
+    // HWH notification integration styles
+    const notifStyle = document.createElement('style');
+    notifStyle.id = 'twk-notif-styles';
+    notifStyle.textContent = `
+    #tsb-notif-container {
+        position: absolute;
+        top: 30px;
+        left: 0;
+        right: 0;
+        z-index: 100000;
+        transition: all 0.1s ease-out;
+        overflow: hidden;
+        max-height: 0;
+    }
+    #tsb-notif-container.show {
+        max-height: 100px;
+    }
+    #tsb-notification {
+        background: rgba(42,24,16,0.95);
+        border: 1px solid #8b6914;
+        border-radius: 6px;
+        padding: 4px 15px 6px;
+        font-size: 14px;
+        font-family: sans-serif;
+        font-weight: 600;
+        color: #fce1ac;
+        text-shadow: 0px 0px 1px;
+        text-align: center;
+        cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    /* Hide original HWH status only in Stack mode */
+    body:not(.twk-classic-notif) .scriptMenu_status {
+        display: none !important;
+    }
+/* Classic mode - restyle the HWH status element */
+    body.twk-classic-notif .scriptMenu_status:not(.scriptMenu_statusHide) {
+        background: rgba(42,24,16,0.95) !important;
+        border: 1px solid #8b6914 !important;
+        border-radius: 6px !important;
+        padding: 4px 15px 6px !important;
+        font-size: 14px !important;
+        top: 30px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.5) !important;
+    }
+    body.twk-classic-notif .scriptMenu_status:empty {
+        display: none !important;
+    }
+`;
+    document.head.appendChild(notifStyle);
 }
+// ================================================================
+// CLASSIC NOTIFICATIONS - Uses HWH's native .scriptMenu_status element
+// ================================================================
+
+const ClassicNotifications = {
+    // Get the HWH status element
+    getElement() {
+        return document.querySelector('.scriptMenu_status');
+    },
+
+    // Show a notification using HWH's native element
+    show(text, options = {}) {
+        const el = this.getElement();
+        if (!el) return;
+
+        // Format with icon if provided
+        const displayText = options.icon ? `${options.icon} ${text}` : text;
+
+        el.innerHTML = displayText;
+        el.classList.remove('scriptMenu_statusHide');
+
+        // Store click handler reference for cleanup
+        if (el._twkClickHandler) {
+            el.removeEventListener('click', el._twkClickHandler);
+        }
+
+        // Add click to dismiss
+        el._twkClickHandler = () => {
+            el.classList.add('scriptMenu_statusHide');
+            el.innerHTML = '';
+        };
+        el.addEventListener('click', el._twkClickHandler, { once: true });
+
+        // Auto-dismiss
+        if (el._twkDismissTimer) clearTimeout(el._twkDismissTimer);
+        const dismissTime = options.autoDismiss !== undefined ? options.autoDismiss : 4000;
+        if (dismissTime !== false) {
+            const minTime = (parseFloat(localStorage.getItem(NOTIF_MIN_TIME_KEY)) || 1.0) * 1000;
+            el._twkDismissTimer = setTimeout(() => {
+                el.classList.add('scriptMenu_statusHide');
+                el.innerHTML = '';
+            }, Math.max(dismissTime, minTime));
+        }
+
+        return el;
+    },
+
+    dismiss() {
+        const el = this.getElement();
+        if (el) {
+            if (el._twkDismissTimer) clearTimeout(el._twkDismissTimer);
+            el.classList.add('scriptMenu_statusHide');
+            el.innerHTML = '';
+        }
+    },
+
+    // Convenience methods matching TweakerNotifications API
+    info(icon, title, text) { return this.show(text, { icon }); },
+    success(icon, title, text) { return this.show(text, { icon }); },
+    error(icon, title, text) { return this.show(text, { icon, autoDismiss: 5000 }); },
+    battle(icon, text, isWin) { return this.show(text, { icon, autoDismiss: 6000 }); }
+};
+
+// Update body class based on notification style
+function updateNotifModeClass() {
+    const isClassic = localStorage.getItem(NOTIF_STYLE_KEY) === 'classic';
+    document.body.classList.toggle('twk-classic-notif', isClassic);
+}
+// Initialize on load
+if (document.body) {
+    updateNotifModeClass();
+} else {
+    document.addEventListener('DOMContentLoaded', updateNotifModeClass);
+}
+
 
 function debugLog(...args) {
     if (DEBUG_MODE) console.log(...args);  // ✅ calls console.log
 }
 
+// Staleness indicator colors
+function getStalenessColor(lastRefreshMs) {
+    if (!lastRefreshMs) return '#ff6b6b';
+    const ageMin = (Date.now() - lastRefreshMs) / 60000;
+    if (ageMin < 1) return '#4ae29a';   // bright green
+    if (ageMin < 2) return '#7be29a';   // light green
+    if (ageMin < 5) return '#c9e29a';   // yellow-green
+    if (ageMin < 10) return '#ffd700';  // gold
+    if (ageMin < 15) return '#ffa500';  // orange
+    return '#ff6b6b';                    // red
+}
+
+function formatRefreshTime(lastRefreshMs) {
+    if (!lastRefreshMs) return 'Never';
+    return new Date(lastRefreshMs).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+}
+
+// Shared recipe resolver factory - inventory-aware crafting tree explosion
+// Usage: const { resolve, consumed } = createRecipeResolver(inv, gearToScrollMap);
+//        resolve(type, id, qty, result, useInventory, isTopLevel)
+const createRecipeResolver = (inv, gearToScrollMap) => {
+    const consumed = { gear: {}, scroll: {}, fragmentGear: {}, fragmentScroll: {} };
+
+    const getAvailable = (type, id) => {
+        const built = (inv[type]?.[id] || 0) - (consumed[type][id] || 0);
+        const fragKey = type === 'gear' ? 'fragmentGear' : 'fragmentScroll';
+        const frags = (inv[fragKey]?.[id] || 0) - (consumed[fragKey][id] || 0);
+        const mergeCost = lib.data.inventoryItem[type]?.[id]?.fragmentMergeCost?.fragmentCount || 50;
+        return { built: Math.max(0, built), fromFrags: Math.floor(Math.max(0, frags) / mergeCost), mergeCost };
+    };
+
+    const resolve = (type, id, qty = 1, result = {gear: {}, scroll: {}, composite: {}}, useInventory = true, isTopLevel = false) => {
+        const item = lib.data.inventoryItem[type]?.[id];
+        if (!item || qty <= 0) return result;
+
+        let stillNeed = qty;
+
+        if (useInventory) {
+            const avail = getAvailable(type, id);
+            if (avail.built > 0) {
+                const useBuilt = Math.min(avail.built, stillNeed);
+                consumed[type][id] = (consumed[type][id] || 0) + useBuilt;
+                stillNeed -= useBuilt;
+            }
+            if (stillNeed > 0 && avail.fromFrags > 0 && item.fragmentMergeCost) {
+                const useFromFrags = Math.min(avail.fromFrags, stillNeed);
+                const fragKey = type === 'gear' ? 'fragmentGear' : 'fragmentScroll';
+                consumed[fragKey][id] = (consumed[fragKey][id] || 0) + (useFromFrags * avail.mergeCost);
+                stillNeed -= useFromFrags;
+            }
+            if (stillNeed <= 0) return result;
+        }
+
+        if (item.craftRecipe) {
+            if (!isTopLevel && type === 'gear' && item.craftRecipe.gear) {
+                result.composite[id] = (result.composite[id] || 0) + stillNeed;
+            }
+            if (item.craftRecipe.gear) {
+                Object.entries(item.craftRecipe.gear).forEach(([gid, gqty]) => {
+                    resolve('gear', gid, stillNeed * gqty, result, useInventory, false);
+                });
+            }
+            if (item.craftRecipe.scroll) {
+                Object.entries(item.craftRecipe.scroll).forEach(([sid, sqty]) => {
+                    resolve('scroll', sid, stillNeed * sqty, result, useInventory, false);
+                });
+            }
+            if (type === 'gear' && gearToScrollMap[id]) {
+                resolve('scroll', gearToScrollMap[id], stillNeed, result, useInventory, false);
+            }
+        }
+        if (item.fragmentMergeCost) {
+            result[type][id] = (result[type][id] || 0) + stillNeed;
+        }
+        return result;
+    };
+
+    return { resolve, consumed };
+};
+
+// Visibility-aware interval - pauses when tab is hidden
 // Visibility-aware interval - pauses when tab is hidden
 const createSmartInterval = (fn, ms, name = 'unnamed') => {
     let intervalId = null;
@@ -139,18 +383,21 @@ function waitForGameReady() {
     return _gameReadyPromise;
 }
 
+// ================================================================
+// NOTIFICATION FUNCTIONS
+// ================================================================
 
 // Telegram notification helper
 async function sendTelegramNotification(message) {
     const enabled = localStorage.getItem('hwh_telegram_enabled') === 'true';
-    if (!enabled) return;
+    if (!enabled) return false;
 
     const token = localStorage.getItem('hwh_telegram_token');
     const chatId = localStorage.getItem('hwh_telegram_chatid');
 
     if (!token || !chatId) {
         console.warn('📱 Telegram not configured');
-        return;
+        return false;
     }
 
     try {
@@ -167,13 +414,179 @@ async function sendTelegramNotification(message) {
         const result = await response.json();
         if (result.ok) {
             debugLog('📱 Telegram notification sent');
+            return true;
         } else {
             console.warn('⚠️ Telegram send failed:', result);
+            return false;
         }
     } catch (error) {
         console.error('❌ Telegram error:', error);
+        return false;
     }
 }
+
+// Discord notification helper
+async function sendDiscordNotification(message, title = 'HWH Alert') {
+    const enabled = localStorage.getItem(DISCORD_ENABLED_KEY) === 'true';
+    if (!enabled) return false;
+
+    const webhook = localStorage.getItem(DISCORD_WEBHOOK_KEY);
+    if (!webhook) {
+        console.warn('🔔 Discord not configured');
+        return false;
+    }
+
+    try {
+        const response = await fetch(webhook, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: 'HWH Tweaker',
+                embeds: [{
+                    title: title,
+                    description: message.replace(/<[^>]*>/g, ''), // Strip HTML tags
+                    color: 0xffd700,
+                    timestamp: new Date().toISOString()
+                }]
+            })
+        });
+
+        if (response.status === 204 || response.ok) {
+            debugLog('🔔 Discord notification sent');
+            return true;
+        } else {
+            console.warn('⚠️ Discord send failed:', response.status);
+            return false;
+        }
+    } catch (error) {
+        console.error('❌ Discord error:', error);
+        return false;
+    }
+}
+
+// Unified notification - checks routing config
+// Usage: sendExternalNotification('message', 'Title', 'eventReminders')
+async function sendExternalNotification(message, title = 'HWH Alert', category = null) {
+    const routes = getNotifRoutes();
+    const route = category && routes[category] ? routes[category] : { telegram: true, discord: true };
+
+    const promises = [];
+    if (route.telegram) promises.push(sendTelegramNotification(message));
+    if (route.discord) promises.push(sendDiscordNotification(message, title));
+
+    if (promises.length === 0) {
+        debugLog('📋 No notification routes enabled for:', category);
+        return false;
+    }
+
+    const results = await Promise.allSettled(promises);
+    return results.some(r => r.status === 'fulfilled' && r.value);
+}
+
+// ================================================================
+// EVENT REMINDER NOTIFICATIONS - Updated to use unified system
+// ================================================================
+(function initEventReminders() {
+    const REMINDER_KEY = 'hwh_event_reminders_sent';
+
+    function getSentReminders() {
+        try {
+            return JSON.parse(localStorage.getItem(REMINDER_KEY)) || {};
+        } catch { return {}; }
+    }
+
+    function markReminderSent(key) {
+        const sent = getSentReminders();
+        sent[key] = Date.now();
+        const cutoff = Date.now() - 86400000;
+        Object.keys(sent).forEach(k => { if (sent[k] < cutoff) delete sent[k]; });
+        localStorage.setItem(REMINDER_KEY, JSON.stringify(sent));
+    }
+
+    function wasReminderSent(key) {
+        return !!getSentReminders()[key];
+    }
+
+    function getDayKey() {
+        const d = new Date();
+        return `${d.getUTCFullYear()}-${d.getUTCMonth()+1}-${d.getUTCDate()}`;
+    }
+
+    async function checkEventReminders() {
+        const c = window._tsbCache;
+        if (!c) return;
+
+        // Check if ANY external notification is enabled
+        const telegramEnabled = localStorage.getItem('hwh_telegram_enabled') === 'true';
+        const discordEnabled = localStorage.getItem(DISCORD_ENABLED_KEY) === 'true';
+        if (!telegramEnabled && !discordEnabled) return;
+
+        const now = Math.floor(Date.now() / 1000);
+        const dayKey = getDayKey();
+        const messages = [];
+
+        const getMinutesBefore = (endTime) => {
+            if (!endTime || endTime <= now) return null;
+            const secsLeft = endTime - now;
+            if (secsLeft >= 29*60 && secsLeft <= 31*60) return 30;
+            if (secsLeft >= 4*60 && secsLeft <= 6*60) return 5;
+            return null;
+        };
+
+        // --- CoW Check ---
+        if (c.cowActive && c.cowEnd) {
+            const mins = getMinutesBefore(c.cowEnd);
+            if (mins) {
+                const cowTotal = (c.cowHero || 0) + (c.cowTitan || 0);
+                const cowKey = `${dayKey}-cow-${mins}`;
+                if (cowTotal > 0 && !wasReminderSent(cowKey)) {
+                    messages.push(`⚡ <b>CoW ends in ~${mins} min!</b>\nAttempts remaining: H${c.cowHero} | T${c.cowTitan}`);
+                    markReminderSent(cowKey);
+                }
+            }
+        }
+
+        // --- GW Check ---
+        if (c.gwActive && c.gwEnd) {
+            const mins = getMinutesBefore(c.gwEnd);
+            if (mins) {
+                const gwKey = `${dayKey}-gw-${mins}`;
+                if ((c.gwTries || 0) > 0 && !wasReminderSent(gwKey)) {
+                    messages.push(`🔥 <b>Guild War ends in ~${mins} min!</b>\nAttempts remaining: ${c.gwTries}`);
+                    markReminderSent(gwKey);
+                }
+            }
+        }
+
+        // --- Arena & Grand Arena Check ---
+        if (c.rewardTime) {
+            const mins = getMinutesBefore(c.rewardTime);
+            if (mins) {
+                const arenaKey = `${dayKey}-arena-${mins}`;
+                if (!wasReminderSent(arenaKey)) {
+                    const arenaRank = parseInt(c.arenaPlace) || 999;
+                    const grandRank = parseInt(c.grandPlace) || 999;
+
+                    if (arenaRank !== 1 && grandRank !== 1) {
+                        messages.push(`⚔️ <b>Arena ends in ~${mins} min!</b>\nArena: #${c.arenaPlace} | Grand: #${c.grandPlace}`);
+                        markReminderSent(arenaKey);
+                    }
+                }
+            }
+        }
+
+        // Send using unified notification system
+        if (messages.length > 0) {
+            const fullMessage = messages.join('\n\n');
+            await sendExternalNotification(fullMessage, '⏰ Event Reminder', 'eventReminders');
+            debugLog('📱 Event reminders sent:', messages.length);
+        }
+    }
+
+    setInterval(checkEventReminders, 60000);
+    setTimeout(checkEventReminders, 15000);
+    debugLog('📱 Event reminder system initialized');
+})();
 
 // Track user activity for idle detection (throttled)
 window._lastActivity = Date.now();
@@ -238,63 +651,103 @@ async function closeSyncPopup(delay = 800) {
 }
 window.closeSyncPopup = closeSyncPopup;
 
-// Silent sync - does everything refreshGame does without the popup
+
+
+// Enhanced Silent Sync - v6 (Network Optimized)
 async function silentSync() {
     try {
-        debugLog('🔄 Silent sync starting...');
-        if (HWHFuncs?.setProgress) {
-            HWHFuncs.setProgress('🔄 Syncing...', false);
-        }
-
+        debugLog('🔄 Super Sync starting...');
         const SendFunc = HWHFuncs?.Send || window.Send || (typeof Send !== 'undefined' ? Send : null);
         if (!SendFunc) {
-            console.error('❌ silentSync: Send function not available');
+            console.error('❌ silentSync: Send function missing');
             return false;
         }
 
-        // Suppress popup temporarily
-        const GPM = selfGame['game.mediator.gui.popup.GamePopupManager'];
-        const hoMethod = Object.keys(GPM.prototype)[15];
-        const origHo = GPM.prototype[hoMethod];
-        GPM.prototype[hoMethod] = () => {};
+        // 1. Popup Suppression
+        let origHo = null;
+        let hoMethodName = null;
+        try {
+            const GPM = selfGame['game.mediator.gui.popup.GamePopupManager'];
+            const proto = GPM.prototype;
+            const keys = Object.keys(proto);
+            const targetKey = keys[15];
+            if (typeof proto[targetKey] === 'function') {
+                hoMethodName = targetKey;
+                origHo = proto[targetKey];
+                proto[targetKey] = () => { debugLog('🔇 Suppressed New Day popup'); };
+            }
+        } catch (e) {}
 
-        // Battlepass first
-        const ts = Date.now();
-        await SendFunc(JSON.stringify({
+        // 2. The Unified Batch (Sync + TopBar Data)
+        // Added 'arena' so we can feed the Top Bar without a second request
+        const response = await SendFunc(JSON.stringify({
             calls: [
-                { name: "battlePass_getInfo", args: {}, ident: "sync_bp", context: { actionTs: ts } },
-                { name: "battlePass_getSpecial", args: {}, ident: "sync_bpSpecial", context: { actionTs: ts } }
+                { name: "battlePass_getInfo", args: {}, ident: "bp" },
+                { name: "questGetAll", args: {}, ident: "quests" },
+                { name: "clanWarGetBriefInfo", args: {}, ident: "gw" },
+                { name: "crossClanWar_getBriefInfo", args: {}, ident: "cow" },
+                { name: "clanRaid_getInfo", args: {}, ident: "asgard" },
+                { name: "questGetEvents", args: {}, ident: "events" },
+                { name: "arenaGetAll", args: {}, ident: "arena" }
             ]
         }));
 
-        // Inventory
+        // Extract results map for easy access
+        const r = {};
+        response?.results?.forEach(x => { r[x.ident] = x.result?.response; });
+
+        // 3. Update HWH Internal State
+        if (r.quests && typeof questsInfo !== 'undefined') {
+            questsInfo['questGetAll'] = r.quests;
+            debugLog('✅ Updated HWH Quests');
+        }
+
+        // 4. Update Top Bar (No new network call!)
+        if (window.updateTopStatusBar) {
+            window.updateTopStatusBar(r);
+        }
+
+        // 4b. Update dock times
+        if (window.updateTournamentDockTime) window.updateTournamentDockTime();
+        if (window.updateAoCDockTime) window.updateAoCDockTime();
+
+        // 5. Trigger HWH Inventory Refresh (Fetches Inventory + Model Update)
         if (typeof cheats !== 'undefined' && cheats.refreshInventory) {
             await cheats.refreshInventory();
         }
 
-        // Then NDM triggers sync + UI update
-        const NDM = selfGame['game.model.user.NextDayUpdatedManager'];
-        const hijMethod = Object.keys(NDM.prototype)[11];
-        new NDM()[hijMethod]();
+        // 6. Force Game UI Update
+        try {
+            const NDM = selfGame['game.model.user.NextDayUpdatedManager'];
+            const ndmProto = NDM.prototype;
+            // Standard index 11, or find the parameter-less void method
+            const keys = Object.keys(ndmProto);
+            const updateMethod = keys[11] && typeof ndmProto[keys[11]] === 'function'
+            ? keys[11]
+            : keys.find(k => typeof ndmProto[k] === 'function' && ndmProto[k].length === 0);
 
-        // Restore popup after 1 second
-        setTimeout(() => { GPM.prototype[hoMethod] = origHo; }, 1000);
+            if (updateMethod) {
+                new NDM()[updateMethod]();
+                debugLog('✅ Game UI Redrawn');
+            }
+        } catch(e) { console.warn('UI Redraw skipped', e); }
 
-        debugLog('✅ Silent sync complete');
-        if (HWHFuncs?.setProgress) {
-            HWHFuncs.setProgress('✅ Data synced', true);
+        // Restore popup
+        if (origHo && hoMethodName) {
+            setTimeout(() => {
+                selfGame['game.mediator.gui.popup.GamePopupManager'].prototype[hoMethodName] = origHo;
+            }, 1000);
         }
+
+        debugLog('✅ Super Sync Complete');
+        TweakerNotifications.success('🔄', 'Sync', 'Data Synced');
         return true;
-
     } catch (e) {
-        console.error('❌ Silent sync error:', e);
-        if (HWHFuncs?.setProgress) {
-            HWHFuncs.setProgress('❌ Sync failed', true);
-        }
+        console.error('❌ Sync error:', e);
+        TweakerNotifications.error('🔄', 'Sync', 'Sync failed');
         return false;
     }
 }
-window.silentSync = silentSync;
 
 // ========== HEROIC MISSION OVERRIDE ==========
 function getPreferredHeroicMission() {
@@ -577,6 +1030,7 @@ ${eightCoinLines.join('\n')}`;
 
     // Consolidated Send function getter - used throughout the script
     const getSend = () => HWHFuncs?.Send || window.Send || (typeof Send !== 'undefined' ? Send : null);
+    unsafeWindow.getSend = getSend;
 
     // Shared fragment sell helper - used by Tab 5 and Collect More
     const executeFragmentSells = async (inventoryData, fragSellConfig) => {
@@ -1914,6 +2368,7 @@ ${eightCoinLines.join('\n')}`;
 
         // Create modal overlay
         const overlay = document.createElement('div');
+        overlay.id = 'inventory-manager-popup';
         overlay.style.cssText = `
         position: fixed;
         top: 0;
@@ -2067,6 +2522,7 @@ ${eightCoinLines.join('\n')}`;
     `;
 
         const tab6Btn = document.createElement('button');
+        tab6Btn.id = 'invTab6Craft';
         tab6Btn.textContent = '🔨 Craft';
         tab6Btn.style.cssText = `
         flex: 1;
@@ -2104,7 +2560,7 @@ ${eightCoinLines.join('\n')}`;
         padding-top: 10px;
         border-top: 2px solid rgba(139, 105, 20, 0.5);
         color: #999;
-        font-size: 10px;
+        font-size: 12px;
         text-align: center;
     `;
 
@@ -2157,11 +2613,12 @@ ${eightCoinLines.join('\n')}`;
                 </div>
             `;
             } else {
-                inStockItems.forEach(itemId => {
+                inStockItems.forEach((itemId, idx) => {   // ← added idx
                     const quantity = consumables[itemId];
                     const itemName = window.identifyItem(itemId, 'consumable');
 
                     const row = document.createElement('div');
+                    row.className = idx % 2 ? 'twk-stripe' : '';   // ← NEW
                     row.style.cssText = `
                         display: grid;
                         grid-template-columns: 70px 1fr 80px;
@@ -2169,11 +2626,9 @@ ${eightCoinLines.join('\n')}`;
                         padding: 4px 8px;
                         border-bottom: 1px solid rgba(139, 105, 20, 0.2);
                         align-items: center;
-                        font-size: 11px;
-                        transition: background 0.2s;
+                        font-size: 12px;
                     `;
-                    row.onmouseover = () => row.style.background = 'rgba(139, 105, 20, 0.1)';
-                    row.onmouseout = () => row.style.background = 'transparent';
+                    // REMOVED: row.onmouseover/onmouseout hover handlers
 
                     row.innerHTML = `
                         <div style="text-align: center; color: #999; font-family: monospace;">${itemId}</div>
@@ -2250,7 +2705,7 @@ ${eightCoinLines.join('\n')}`;
                     background: rgba(139, 105, 20, 0.3);
                     border-radius: 6px;
                     margin-bottom: 6px;
-                    font-size: 10px;
+                    font-size: 12px;
                     font-weight: bold;
                     color: #ffd700;
                 `;
@@ -2263,13 +2718,14 @@ ${eightCoinLines.join('\n')}`;
                 `;
                 scrollContent.appendChild(headerRow);
 
-                inStockItems.forEach(itemId => {
+                inStockItems.forEach((itemId, idx) => {   // ← added idx
                     const quantity = consumables[itemId];
                     const itemName = window.identifyItem(itemId, 'consumable');
                     const cached = window._lootBoxCache?.[itemId];
                     const showDropdown = cached?.hasChoice;
 
                     const row = document.createElement('div');
+                    row.className = idx % 2 ? 'twk-stripe' : '';   // ← NEW
                     row.style.cssText = `
                         display: grid;
                         grid-template-columns: 50px 1fr 25px 100px 50px;
@@ -2277,15 +2733,14 @@ ${eightCoinLines.join('\n')}`;
                         padding: 4px 8px;
                         border-bottom: 1px solid rgba(139, 105, 20, 0.2);
                         align-items: center;
-                        font-size: 11px;
+                        font-size: 12px;
                     `;
-                    row.onmouseover = () => row.style.background = 'rgba(139, 105, 20, 0.1)';
-                    row.onmouseout = () => row.style.background = 'transparent';
+                    // REMOVED: row.onmouseover/onmouseout hover handlers
 
                     // ID cell
                     const idCell = document.createElement('div');
                     idCell.textContent = itemId;
-                    idCell.style.cssText = 'text-align: center; color: #999; font-family: monospace; font-size: 10px;';
+                    idCell.style.cssText = 'text-align: center; color: #999; font-family: monospace; font-size: 12px;';
                     row.appendChild(idCell);
 
                     // Name cell
@@ -2330,7 +2785,7 @@ ${eightCoinLines.join('\n')}`;
                             border: 1px solid rgba(139,105,20,0.6);
                             border-radius: 4px;
                             padding: 2px;
-                            font-size: 10px;
+                            font-size: 12px;
                             width: 100%;
                             cursor: pointer;
                         `;
@@ -2382,7 +2837,7 @@ ${eightCoinLines.join('\n')}`;
                             border: 1px solid rgba(139,105,20,0.6);
                             border-radius: 4px;
                             padding: 2px;
-                            font-size: 10px;
+                            font-size: 12px;
                             width: 100%;
                             text-align: center;
                         `;
@@ -2467,7 +2922,7 @@ ${eightCoinLines.join('\n')}`;
 
             Object.entries(filters).forEach(([key, filter]) => {
                 const label = document.createElement('label');
-                label.style.cssText = 'display: flex; align-items: center; gap: 4px; color: #ccc; font-size: 11px; cursor: pointer;';
+                label.style.cssText = 'display: flex; align-items: center; gap: 4px; color: #ccc; font-size: 12px; cursor: pointer;';
 
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
@@ -2489,7 +2944,7 @@ ${eightCoinLines.join('\n')}`;
 
             const clearTab1Btn = document.createElement('button');
             clearTab1Btn.textContent = 'Clear Auto-Use';
-            clearTab1Btn.style.cssText = 'flex: 1; background: #ff9800; color: white; border: none; border-radius: 4px; padding: 5px 8px; font-size: 11px; cursor: pointer; font-weight: bold;';
+            clearTab1Btn.style.cssText = 'flex: 1; background: #ff9800; color: white; border: none; border-radius: 4px; padding: 5px 8px; font-size: 12px; cursor: pointer; font-weight: bold;';
             clearTab1Btn.onclick = () => {
                 if (confirm('Clear all items from Auto-Use list?')) {
                     tab1CheckedItems = {};
@@ -2500,7 +2955,7 @@ ${eightCoinLines.join('\n')}`;
 
             const clearTab2Btn = document.createElement('button');
             clearTab2Btn.textContent = 'Clear Selected';
-            clearTab2Btn.style.cssText = 'flex: 1; background: #4a90e2; color: white; border: none; border-radius: 4px; padding: 5px 8px; font-size: 11px; cursor: pointer; font-weight: bold;';
+            clearTab2Btn.style.cssText = 'flex: 1; background: #4a90e2; color: white; border: none; border-radius: 4px; padding: 5px 8px; font-size: 12px; cursor: pointer; font-weight: bold;';
             clearTab2Btn.onclick = () => {
                 if (confirm('Clear all items from Use Selected list?')) {
                     tab2CheckedItems = {};
@@ -2523,7 +2978,7 @@ ${eightCoinLines.join('\n')}`;
                 border-radius: 6px;
                 font-weight: bold;
                 margin-bottom: 6px;
-                font-size: 11px;
+                font-size: 12px;
                 color: #ffd700;
             `;
             gridHeader.innerHTML = `
@@ -2625,6 +3080,7 @@ ${eightCoinLines.join('\n')}`;
                     const itemName = window.identifyItem(itemId, 'consumable');
 
                     const row = document.createElement('div');
+                    row.className = i % 2 ? 'twk-stripe' : '';   // ← NEW
                     row.style.cssText = `
                         position: absolute;
                         top: ${i * ROW_HEIGHT}px;
@@ -2637,11 +3093,10 @@ ${eightCoinLines.join('\n')}`;
                         padding: 3px 8px;
                         border-bottom: 1px solid rgba(139, 105, 20, 0.2);
                         align-items: center;
-                        font-size: 11px;
+                        font-size: 12px;
                         box-sizing: border-box;
                     `;
-                    row.onmouseover = () => row.style.background = 'rgba(139, 105, 20, 0.15)';
-                    row.onmouseout = () => row.style.background = 'transparent';
+
 
                     // Determine item type for checkbox availability
                     const cached = window._lootBoxCache?.[itemId];
@@ -2723,7 +3178,7 @@ ${eightCoinLines.join('\n')}`;
                     // Item ID
                     const idCell = document.createElement('div');
                     idCell.textContent = itemId;
-                    idCell.style.cssText = 'text-align: center; color: #999; font-family: monospace; font-size: 10px;';
+                    idCell.style.cssText = 'text-align: center; color: #999; font-family: monospace; font-size: 12px;';
 
                     // Item Name
                     const nameCell = document.createElement('div');
@@ -2742,7 +3197,7 @@ ${eightCoinLines.join('\n')}`;
                             border: 1px solid rgba(139,105,20,0.6);
                             border-radius: 4px;
                             padding: 2px 3px;
-                            font-size: 10px;
+                            font-size: 12px;
                             width: 100%;
                             cursor: pointer;
                         `;
@@ -2975,7 +3430,7 @@ ${eightCoinLines.join('\n')}`;
             color: #ffd700;
             padding: 10px;
             border-radius: 6px;
-            font-size: 11px;
+            font-size: 12px;
             font-family: monospace;
             resize: vertical;
             flex: 1;
@@ -2994,7 +3449,7 @@ ${eightCoinLines.join('\n')}`;
             importModeLabel.textContent = 'Import mode:';
             importModeLabel.style.cssText = `
             color: #ffd700;
-            font-size: 11px;
+            font-size: 12px;
         `;
 
             const importModeSelect = document.createElement('select');
@@ -3004,7 +3459,7 @@ ${eightCoinLines.join('\n')}`;
             color: #ffd700;
             padding: 6px;
             border-radius: 4px;
-            font-size: 11px;
+            font-size: 12px;
             cursor: pointer;
         `;
             importModeSelect.innerHTML = `
@@ -3222,14 +3677,14 @@ ${eightCoinLines.join('\n')}`;
             filterRow.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;padding:8px;background:rgba(0,0,0,0.2);border-radius:6px;align-items:center;';
 
             const typeSelect = document.createElement('select');
-            typeSelect.style.cssText = 'background:rgba(0,0,0,0.5);color:#ce93d8;border:1px solid rgba(156,39,176,0.5);border-radius:4px;padding:4px 8px;font-size:11px;';
+            typeSelect.style.cssText = 'background:rgba(0,0,0,0.5);color:#ce93d8;border:1px solid rgba(156,39,176,0.5);border-radius:4px;padding:4px 8px;font-size:12px;';
             typeSelect.innerHTML = '<option value="all">All Types</option><option value="hero">🦸 Hero</option><option value="titan">🗿 Titan</option><option value="pet">🐾 Pet</option><option value="artifact">🏺 Artifact</option><option value="titanArtifact">⚡ TitanArt</option>';            filterRow.appendChild(typeSelect);
 
             const filters = { hasQty: true, zeroQty: false, sellEnabled: false };
             ['📦 In Stock|hasQty', '0️⃣ Zero|zeroQty', '☑️ Sell On|sellEnabled'].forEach(f => {
                 const [label, key] = f.split('|');
                 const lbl = document.createElement('label');
-                lbl.style.cssText = 'display:flex;align-items:center;gap:4px;color:#ccc;font-size:11px;cursor:pointer;';
+                lbl.style.cssText = 'display:flex;align-items:center;gap:4px;color:#ccc;font-size:12px;cursor:pointer;';
                 const cb = document.createElement('input');
                 cb.type = 'checkbox';
                 cb.checked = filters[key];
@@ -3250,17 +3705,17 @@ ${eightCoinLines.join('\n')}`;
 
             const selAllBtn = document.createElement('button');
             selAllBtn.textContent = '☑️ Sell All';
-            selAllBtn.style.cssText = 'flex:1;background:rgba(156,39,176,0.5);color:#ce93d8;border:none;border-radius:6px;padding:8px 12px;font-size:11px;cursor:pointer;font-weight:bold;';
+            selAllBtn.style.cssText = 'flex:1;background:rgba(156,39,176,0.5);color:#ce93d8;border:none;border-radius:6px;padding:8px 12px;font-size:12px;cursor:pointer;font-weight:bold;';
             selAllBtn.onclick = () => { filtered.forEach(f => { const k = `${f.type}_${f.id}`; if (!fragmentSellSettings[k]) fragmentSellSettings[k] = {keep:0,sell:false}; fragmentSellSettings[k].sell = true; }); saveFragmentSettings(); renderRows(); };
 
             const deselBtn = document.createElement('button');
             deselBtn.textContent = '⬜ Sell None';
-            deselBtn.style.cssText = 'flex:1;background:rgba(139,105,20,0.3);color:#ccc;border:none;border-radius:6px;padding:8px 12px;font-size:11px;cursor:pointer;font-weight:bold;';
+            deselBtn.style.cssText = 'flex:1;background:rgba(139,105,20,0.3);color:#ccc;border:none;border-radius:6px;padding:8px 12px;font-size:12px;cursor:pointer;font-weight:bold;';
             deselBtn.onclick = () => { filtered.forEach(f => { const k = `${f.type}_${f.id}`; if (fragmentSellSettings[k]) fragmentSellSettings[k].sell = false; }); saveFragmentSettings(); renderRows(); };
 
             const keepBtn = document.createElement('button');
             keepBtn.textContent = '📌 Keep=Have';
-            keepBtn.style.cssText = 'flex:1;background:rgba(76,175,80,0.5);color:#a5d6a7;border:none;border-radius:6px;padding:8px 12px;font-size:11px;cursor:pointer;font-weight:bold;';
+            keepBtn.style.cssText = 'flex:1;background:rgba(76,175,80,0.5);color:#a5d6a7;border:none;border-radius:6px;padding:8px 12px;font-size:12px;cursor:pointer;font-weight:bold;';
             keepBtn.onclick = () => { filtered.forEach(f => { const k = `${f.type}_${f.id}`; if (!fragmentSellSettings[k]) fragmentSellSettings[k] = {keep:0,sell:false}; fragmentSellSettings[k].keep = invData[f.type]?.[f.id] || 0; }); saveFragmentSettings(); renderRows(); };
 
             actionRow1.append(sellBtn, selAllBtn, deselBtn, keepBtn);
@@ -3274,7 +3729,7 @@ ${eightCoinLines.join('\n')}`;
             heroGrp.style.cssText = 'display:flex;align-items:center;gap:4px;';
             const heroBtn = document.createElement('button');
             heroBtn.textContent = '👻 6★ Hero';
-            heroBtn.style.cssText = 'background:rgba(206,147,216,0.4);color:#ce93d8;border:none;border-radius:4px;padding:4px 8px;font-size:10px;cursor:pointer;font-weight:bold;';
+            heroBtn.style.cssText = 'background:rgba(206,147,216,0.4);color:#ce93d8;border:none;border-radius:4px;padding:4px 8px;font-size:12px;cursor:pointer;font-weight:bold;';
             heroBtn.title = 'Select all 6★ hero frags to sell';
             heroBtn.onclick = async () => {
                 const origText = heroBtn.textContent;
@@ -3299,9 +3754,9 @@ ${eightCoinLines.join('\n')}`;
             };
             const heroArrow = document.createElement('span');
             heroArrow.textContent = '→';
-            heroArrow.style.cssText = 'color:#666;font-size:10px;';
+            heroArrow.style.cssText = 'color:#666;font-size:12px;';
             const heroSelect = document.createElement('select');
-            heroSelect.style.cssText = 'background:#1a0f08;color:#ffd700;border:1px solid #8b6914;border-radius:4px;padding:2px 4px;font-size:10px;';
+            heroSelect.style.cssText = 'background:#1a0f08;color:#ffd700;border:1px solid #8b6914;border-radius:4px;padding:2px 4px;font-size:12px;';
             heroSelect.title = 'Hero soul conversion mode';
             heroSelect.innerHTML = `<option value="gold" ${heroSoulMode === 'gold' ? 'selected' : ''}>🪙 Gold</option><option value="coins" ${heroSoulMode === 'coins' ? 'selected' : ''}>💀 Soul Coins</option>`;
             heroSelect.onchange = () => { heroSoulMode = heroSelect.value; localStorage.setItem('hwh_hero_soul_mode', heroSoulMode); };
@@ -3312,7 +3767,7 @@ ${eightCoinLines.join('\n')}`;
             titanGrp.style.cssText = 'display:flex;align-items:center;gap:4px;';
             const titanBtn = document.createElement('button');
             titanBtn.textContent = '🗿 6★ Titan';
-            titanBtn.style.cssText = 'background:rgba(255,152,0,0.4);color:#ff9800;border:none;border-radius:4px;padding:4px 8px;font-size:10px;cursor:pointer;font-weight:bold;';
+            titanBtn.style.cssText = 'background:rgba(255,152,0,0.4);color:#ff9800;border:none;border-radius:4px;padding:4px 8px;font-size:12px;cursor:pointer;font-weight:bold;';
             titanBtn.title = 'Select all 6★ titan frags to sell';
             titanBtn.onclick = async () => {
                 const origText = titanBtn.textContent;
@@ -3337,9 +3792,9 @@ ${eightCoinLines.join('\n')}`;
             };
             const titanArrow = document.createElement('span');
             titanArrow.textContent = '→';
-            titanArrow.style.cssText = 'color:#666;font-size:10px;';
+            titanArrow.style.cssText = 'color:#666;font-size:12px;';
             const titanSelect = document.createElement('select');
-            titanSelect.style.cssText = 'background:#1a0f08;color:#ffd700;border:1px solid #8b6914;border-radius:4px;padding:2px 4px;font-size:10px;';
+            titanSelect.style.cssText = 'background:#1a0f08;color:#ffd700;border:1px solid #8b6914;border-radius:4px;padding:2px 4px;font-size:12px;';
             titanSelect.title = 'Titan soul conversion mode';
             titanSelect.innerHTML = `<option value="gold" ${titanSoulMode === 'gold' ? 'selected' : ''}>🪙 Gold</option><option value="coins" ${titanSoulMode === 'coins' ? 'selected' : ''}>⚡ Titan Coins</option>`;
             titanSelect.onchange = () => { titanSoulMode = titanSelect.value; localStorage.setItem('hwh_titan_soul_mode', titanSoulMode); };
@@ -3350,7 +3805,7 @@ ${eightCoinLines.join('\n')}`;
             petGrp.style.cssText = 'display:flex;align-items:center;gap:4px;';
             const petBtn = document.createElement('button');
             petBtn.textContent = '🐾 6★ Pet';
-            petBtn.style.cssText = 'background:rgba(76,175,80,0.4);color:#4caf50;border:none;border-radius:4px;padding:4px 8px;font-size:10px;cursor:pointer;font-weight:bold;';
+            petBtn.style.cssText = 'background:rgba(76,175,80,0.4);color:#4caf50;border:none;border-radius:4px;padding:4px 8px;font-size:12px;cursor:pointer;font-weight:bold;';
             petBtn.title = 'Select all 6★ pet frags to sell';
             petBtn.onclick = async () => {
                 const origText = petBtn.textContent;
@@ -3376,9 +3831,9 @@ ${eightCoinLines.join('\n')}`;
             };
             const petArrow = document.createElement('span');
             petArrow.textContent = '→';
-            petArrow.style.cssText = 'color:#666;font-size:10px;';
+            petArrow.style.cssText = 'color:#666;font-size:12px;';
             const petSelect = document.createElement('select');
-            petSelect.style.cssText = 'background:#1a0f08;color:#ffd700;border:1px solid #8b6914;border-radius:4px;padding:2px 4px;font-size:10px;';
+            petSelect.style.cssText = 'background:#1a0f08;color:#ffd700;border:1px solid #8b6914;border-radius:4px;padding:2px 4px;font-size:12px;';
             petSelect.title = 'Pet soul conversion mode';
             petSelect.innerHTML = `<option value="gold" ${petSoulMode === 'gold' ? 'selected' : ''}>🪙 Gold</option><option value="coins" ${petSoulMode === 'coins' ? 'selected' : ''}>🐾 Pet Coins</option>`;
             petSelect.onchange = () => { petSoulMode = petSelect.value; localStorage.setItem('hwh_pet_soul_mode', petSoulMode); };
@@ -3388,7 +3843,7 @@ ${eightCoinLines.join('\n')}`;
 
             // Grid header
             const gridHeader = document.createElement('div');
-            gridHeader.style.cssText = 'display:grid;grid-template-columns:70px 1fr 50px 90px 60px 50px;gap:6px;padding:8px 10px;background:rgba(156,39,176,0.3);border-radius:6px;font-weight:bold;margin-bottom:6px;font-size:11px;color:#ce93d8;';
+            gridHeader.style.cssText = 'display:grid;grid-template-columns:70px 1fr 50px 90px 60px 50px;gap:6px;padding:8px 10px;background:rgba(156,39,176,0.3);border-radius:6px;font-weight:bold;margin-bottom:6px;font-size:12px;color:#ce93d8;';
             gridHeader.innerHTML = '<div style="text-align:center">Type</div><div>Name</div><div style="text-align:center" title="Complete items built">🎁</div><div style="text-align:center" title="Fragments / Needed">Frags</div><div style="text-align:center">Keep</div><div style="text-align:center">Sell</div>';
 
             // Scroll container
@@ -3400,7 +3855,7 @@ ${eightCoinLines.join('\n')}`;
 
             // Footer
             const footerEl = document.createElement('div');
-            footerEl.style.cssText = 'padding-top:8px;font-size:11px;color:#999;';
+            footerEl.style.cssText = 'padding-top:8px;font-size:12px;color:#999;';
 
             let filtered = [];
             let lastRange = [-1, -1];
@@ -3543,14 +3998,15 @@ ${eightCoinLines.join('\n')}`;
                         : `<span style="color:#555">-</span>`;
 
                     const row = document.createElement('div');
-                    row.style.cssText = `display:grid;grid-template-columns:70px 1fr 50px 90px 60px 50px;gap:6px;padding:4px 10px;align-items:center;font-size:11px;position:absolute;top:${i * ROW_H}px;left:0;right:0;height:${ROW_H}px;border-bottom:1px solid rgba(139,105,20,0.2);`;
+                    row.className = i % 2 ? 'twk-stripe' : '';   // ← NEW
+                    row.style.cssText = `display:grid;grid-template-columns:70px 1fr 50px 90px 60px 50px;gap:6px;padding:4px 10px;align-items:center;font-size:12px;position:absolute;top:${i * ROW_H}px;left:0;right:0;height:${ROW_H}px;border-bottom:1px solid rgba(139,105,20,0.2);`;
 
                     row.innerHTML = `
-                        <div style="text-align:center;font-size:10px;color:${f.color};font-weight:bold">${f.typeLabel}</div>
+                        <div style="text-align:center;font-size:12px;color:${f.color};font-weight:bold">${f.typeLabel}</div>
                         <div class="twk-gold" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="ID:${f.id}">${getName(f.type, f.id)}</div>
                         <div style="text-align:center;font-family:monospace">${builtDisplay}</div>
                         <div style="text-align:center;font-family:monospace">${fragDisplay}</div>
-                        <div style="text-align:center"><input type="number" min="0" value="${settings.keep}" style="width:45px;background:rgba(0,0,0,0.5);color:#ffd700;border:1px solid rgba(139,105,20,0.5);border-radius:4px;padding:2px;font-size:10px;text-align:center"></div>
+                        <div style="text-align:center"><input type="number" min="0" value="${settings.keep}" style="width:45px;background:rgba(0,0,0,0.5);color:#ffd700;border:1px solid rgba(139,105,20,0.5);border-radius:4px;padding:2px;font-size:12px;text-align:center"></div>
                         <div style="text-align:center"><input type="checkbox" ${settings.sell ? 'checked' : ''} style="width:16px;height:16px;cursor:pointer"></div>
                     `;
                     const keepInput = row.querySelector('input[type="number"]');
@@ -3627,7 +4083,7 @@ ${eightCoinLines.join('\n')}`;
                             <input type="checkbox" id="csm_craft" checked style="width:16px;height:16px;">
                             🔨 Craft ${totalCraft} items (${craftList.length} types)
                         </label>
-                        <div id="csm_craftList" style="max-height:100px;overflow-y:auto;padding-left:24px;margin-top:4px;font-size:10px;color:#a5d6a7;">
+                        <div id="csm_craftList" style="max-height:100px;overflow-y:auto;padding-left:24px;margin-top:4px;font-size:12px;color:#a5d6a7;">
                             ${craftList.slice(0, 20).map(i => `${i.name}: ${i.amount}`).join('<br>')}
                             ${craftList.length > 20 ? `<br><i>...and ${craftList.length - 20} more</i>` : ''}
                         </div>
@@ -3640,7 +4096,7 @@ ${eightCoinLines.join('\n')}`;
                             <input type="checkbox" id="csm_sellFrags" checked style="width:16px;height:16px;">
                             💰 Sell ${totalSellFrags.toLocaleString()} excess fragments (${sellFragList.length} types)
                         </label>
-                        <div id="csm_fragList" style="max-height:100px;overflow-y:auto;padding-left:24px;margin-top:4px;font-size:10px;color:#ffe0b2;">
+                        <div id="csm_fragList" style="max-height:100px;overflow-y:auto;padding-left:24px;margin-top:4px;font-size:12px;color:#ffe0b2;">
                             ${sellFragList.slice(0, 20).map(i => `${i.name}: ${i.amount}`).join('<br>')}
                             ${sellFragList.length > 20 ? `<br><i>...and ${sellFragList.length - 20} more</i>` : ''}
                         </div>
@@ -3653,7 +4109,7 @@ ${eightCoinLines.join('\n')}`;
                             <input type="checkbox" id="csm_sellItems" checked style="width:16px;height:16px;">
                             🗑️ Sell ${totalSellItems} excess built items (${sellItemList.length} types)
                         </label>
-                        <div id="csm_itemList" style="max-height:100px;overflow-y:auto;padding-left:24px;margin-top:4px;font-size:10px;color:#ef9a9a;">
+                        <div id="csm_itemList" style="max-height:100px;overflow-y:auto;padding-left:24px;margin-top:4px;font-size:12px;color:#ef9a9a;">
                             ${sellItemList.slice(0, 20).map(i => `${i.name}: ${i.amount}`).join('<br>')}
                             ${sellItemList.length > 20 ? `<br><i>...and ${sellItemList.length - 20} more</i>` : ''}
                         </div>
@@ -3795,7 +4251,10 @@ ${eightCoinLines.join('\n')}`;
             // Build list of craftable items
             const craftableItems = [];
             ['gear', 'scroll'].forEach(type => {
+                const processedIds = new Set();
+                // Add items with fragments
                 Object.keys(fragData[type]).forEach(id => {
+                    processedIds.add(id);
                     const itemData = lib.data?.inventoryItem?.[type]?.[id];
                     const mergeCost = itemData?.fragmentMergeCost;
                     if (mergeCost?.fragmentCount) {
@@ -3815,6 +4274,36 @@ ${eightCoinLines.join('\n')}`;
                 });
             });
 
+            // Add composite gear (crafted from other gear, not fragments)
+            Object.entries(lib.data?.inventoryItem?.gear || {}).forEach(([id, itemData]) => {
+                if (itemData.craftRecipe?.gear && !itemData.fragmentMergeCost) {
+                    const builtCount = builtData.gear[id] || 0;
+                    const name = window.identifyItem?.(id, 'gear') || `gear #${id}`;
+                    const isIngredient = usedInRecipes.has(`gear_${id}`);
+                    // Calculate how many we can make based on ingredients
+                    let canMake = Infinity;
+                    const ingredients = itemData.craftRecipe.gear;
+                    for (const [ingId, ingQty] of Object.entries(ingredients)) {
+                        const have = builtData.gear[ingId] || 0;
+                        canMake = Math.min(canMake, Math.floor(have / ingQty));
+                    }
+                    if (canMake === Infinity) canMake = 0;
+                    craftableItems.push({
+                        type: 'gear',
+                        id,
+                        name,
+                        fragCount: 0,
+                        builtCount,
+                        needed: 1,
+                        canMake,
+                        goldCost: itemData.buyCost?.gold || 0,
+                        isIngredient,
+                        color: itemData.color || 0,
+                        isComposite: true,
+                        ingredients
+                    });
+                }
+            });
             // Sort state
             let sortCol = localStorage.getItem('hwh_craft_sort_col') || 'canMake';
             let sortDir = localStorage.getItem('hwh_craft_sort_dir') || 'desc';
@@ -3856,7 +4345,7 @@ ${eightCoinLines.join('\n')}`;
             const searchInput = document.createElement('input');
             searchInput.type = 'text';
             searchInput.placeholder = '🔍 Search gear/scroll...';
-            searchInput.style.cssText = 'width:100%;background:rgba(0,0,0,0.3);border:1px solid rgba(76,175,80,0.5);color:#a5d6a7;padding:6px 10px;border-radius:6px;font-size:11px;margin-bottom:8px;';
+            searchInput.style.cssText = 'width:100%;background:rgba(0,0,0,0.3);border:1px solid rgba(76,175,80,0.5);color:#a5d6a7;padding:6px 10px;border-radius:6px;font-size:12px;margin-bottom:8px;';
             searchInput.oninput = () => {
                 searchText = searchInput.value;
                 renderRows();
@@ -3868,7 +4357,7 @@ ${eightCoinLines.join('\n')}`;
 
             const craftAllBtn = document.createElement('button');
             craftAllBtn.textContent = '🔨 Craft';
-            craftAllBtn.style.cssText = 'flex:1;background:#4caf50;color:white;border:none;border-radius:6px;padding:8px;font-size:11px;cursor:pointer;font-weight:bold;';
+            craftAllBtn.style.cssText = 'flex:1;background:#4caf50;color:white;border:none;border-radius:6px;padding:8px;font-size:12px;cursor:pointer;font-weight:bold;';
             craftAllBtn.onclick = async () => {
                 const { craftList, sellFragList, sellItemList } = calculateCraftSellLists();
                 const result = await showCraftSellConfirmModal(craftList, [], []);
@@ -3884,7 +4373,7 @@ ${eightCoinLines.join('\n')}`;
 
             const sellExcessBtn = document.createElement('button');
             sellExcessBtn.textContent = '💰 Sell Excess';
-            sellExcessBtn.style.cssText = 'flex:1;background:#9c27b0;color:white;border:none;border-radius:6px;padding:8px;font-size:11px;cursor:pointer;font-weight:bold;';
+            sellExcessBtn.style.cssText = 'flex:1;background:#9c27b0;color:white;border:none;border-radius:6px;padding:8px;font-size:12px;cursor:pointer;font-weight:bold;';
             sellExcessBtn.onclick = async () => {
                 const { craftList, sellFragList, sellItemList } = calculateCraftSellLists();
                 const result = await showCraftSellConfirmModal([], sellFragList, sellItemList);
@@ -3903,28 +4392,25 @@ ${eightCoinLines.join('\n')}`;
                 alert(`✓ Sold ${sellResults?.fragTypes || 0} frag types, ${sellResults?.itemTypes || 0} item types${goldStr}${coinStr}`);
             };
 
-            const setTargetBtn = document.createElement('button');
-            setTargetBtn.textContent = '🎯=Built';
-            setTargetBtn.style.cssText = 'background:rgba(76,175,80,0.5);color:#a5d6a7;border:none;border-radius:6px;padding:6px 8px;font-size:10px;cursor:pointer;font-weight:bold;';
-            setTargetBtn.onclick = () => {
-                craftableItems.forEach(item => {
-                    if (tab6ColorFilter === 'all' || item.color == tab6ColorFilter) {
-                        craftTargets[`${item.type}_${item.id}`] = item.builtCount;
-                    }
-                });
-                saveCraftTargets();
-                renderRows();
+            const heroesBtn = document.createElement('button');
+            heroesBtn.textContent = '🦸 Heroes';
+            heroesBtn.style.cssText = 'background:rgba(139,105,20,0.5);color:#ffd700;border:none;border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;font-weight:bold;';
+            heroesBtn.title = 'Open Heroes tab to manage building heroes and update targets';
+            heroesBtn.onclick = async (e) => {
+                e.stopPropagation();
+                document.getElementById('inventory-manager-popup')?.remove();
+                if (window.showGameDataPopup) await window.showGameDataPopup('heroes');
             };
 
             const bulkTargetInput = document.createElement('input');
             bulkTargetInput.type = 'text';
             bulkTargetInput.inputMode = 'numeric';
             bulkTargetInput.placeholder = '#';
-            bulkTargetInput.style.cssText = 'width:36px;background:rgba(0,0,0,0.5);color:#ffd700;border:1px solid rgba(76,175,80,0.5);border-radius:4px;padding:4px;font-size:10px;text-align:center;';
+            bulkTargetInput.style.cssText = 'width:36px;background:rgba(0,0,0,0.5);color:#ffd700;border:1px solid rgba(76,175,80,0.5);border-radius:4px;padding:4px;font-size:12px;text-align:center;';
 
             const bulkTargetBtn = document.createElement('button');
             bulkTargetBtn.textContent = '🎯 All';
-            bulkTargetBtn.style.cssText = 'background:rgba(76,175,80,0.5);color:#a5d6a7;border:none;border-radius:6px;padding:6px 8px;font-size:10px;cursor:pointer;font-weight:bold;';
+            bulkTargetBtn.style.cssText = 'background:rgba(76,175,80,0.5);color:#a5d6a7;border:none;border-radius:6px;padding:6px 8px;font-size:12px;cursor:pointer;font-weight:bold;';
             bulkTargetBtn.onclick = () => {
                 const val = parseInt(bulkTargetInput.value) || 0;
                 craftableItems.forEach(item => {
@@ -3938,7 +4424,7 @@ ${eightCoinLines.join('\n')}`;
 
             // Color filter
             const colorSelect = document.createElement('select');
-            colorSelect.style.cssText = 'background:#1a0f08;color:#ffd700;border:1px solid #8b6914;border-radius:4px;padding:4px;font-size:10px;';
+            colorSelect.style.cssText = 'background:#1a0f08;color:#ffd700;border:1px solid #8b6914;border-radius:4px;padding:4px;font-size:12px;';
             colorSelect.innerHTML = `
                 <option value="all" ${tab6ColorFilter==='all'?'selected':''}>All</option>
                 <option value="1" ${tab6ColorFilter==='1'?'selected':''}>⬜</option>
@@ -3956,7 +4442,7 @@ ${eightCoinLines.join('\n')}`;
 
             const refreshBtn = document.createElement('button');
             refreshBtn.textContent = '🔄';
-            refreshBtn.style.cssText = 'background:rgba(139,105,20,0.5);color:#ffd700;border:none;border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer;font-weight:bold;';
+            refreshBtn.style.cssText = 'background:rgba(139,105,20,0.5);color:#ffd700;border:none;border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;font-weight:bold;';
             refreshBtn.onclick = async () => {
                 refreshBtn.textContent = '⏳';
                 const resp = await Send(JSON.stringify({calls:[{name:'inventoryGet',args:{},ident:'inv'}]}));
@@ -3973,370 +4459,21 @@ ${eightCoinLines.join('\n')}`;
 
 
 
-            // Hero needs button (insert your full heroNeedsBtn code here)
-            const heroNeedsBtn = document.createElement('button');
-            heroNeedsBtn.textContent = '🎯 Hero';
-            heroNeedsBtn.style.cssText = 'background:rgba(255,152,0,0.5);color:#ffe0b2;border:none;border-radius:6px;padding:6px 8px;font-size:10px;cursor:pointer;font-weight:bold;';
-            heroNeedsBtn.title = 'Set targets from hero gear needs';
-            heroNeedsBtn.onclick = async () => {
-                heroNeedsBtn.textContent = '⏳';
-                const heroExcluded = JSON.parse(localStorage.getItem('hwh_hero_excluded') || '[]');
-
-                try {
-                    const resp = await Send(JSON.stringify({calls:[{name:'heroGetAll',args:{},ident:'h'}]}));
-                    const userHeroes = resp.results[0].result.response;
-
-                    // Build gearToScrollMap
-                    const gearToScrollMap = {};
-                    Object.entries(lib.data.inventoryItem.scroll).forEach(([scrollId, s]) => {
-                        const scrollName = window.identifyItem?.(scrollId, 'scroll');
-                        if (scrollName?.endsWith(' - Recipe')) {
-                            const gearName = scrollName.replace(' - Recipe', '');
-                            Object.entries(lib.data.inventoryItem.gear).forEach(([gearId, g]) => {
-                                if (window.identifyItem?.(gearId, 'gear') === gearName) {
-                                    gearToScrollMap[gearId] = scrollId;
-                                }
-                            });
-                        }
-                    });
-
-                    const resolveRecipe = (type, id, qty = 1, result = {gear: {}, scroll: {}}) => {
-                        const item = lib.data.inventoryItem[type]?.[id];
-                        if (!item) return result;
-                        if (item.craftRecipe) {
-                            if (item.craftRecipe.gear) {
-                                Object.entries(item.craftRecipe.gear).forEach(([gid, gqty]) => {
-                                    resolveRecipe('gear', gid, qty * gqty, result);
-                                });
-                            }
-                            if (item.craftRecipe.scroll) {
-                                Object.entries(item.craftRecipe.scroll).forEach(([sid, sqty]) => {
-                                    resolveRecipe('scroll', sid, qty * sqty, result);
-                                });
-                            }
-                            if (type === 'gear' && gearToScrollMap[id]) {
-                                resolveRecipe('scroll', gearToScrollMap[id], qty, result);
-                            }
-                        } else if (item.fragmentMergeCost) {
-                            result[type][id] = (result[type][id] || 0) + qty;
-                        }
-                        return result;
-                    };
-
-                    // Calculate max any single hero needs (for buffer)
-                    const maxAnyHero = {gear: {}, scroll: {}};
-                    Object.entries(lib.data.hero).forEach(([heroId, hd]) => {
-                        if (parseInt(heroId) >= 150 || !hd?.color) return;
-                        const heroNeeds = {gear: {}, scroll: {}};
-                        for (let c = 1; c <= 18; c++) {
-                            (hd.color[c]?.items || []).forEach(gearId => {
-                                resolveRecipe('gear', String(gearId), 1, heroNeeds);
-                            });
-                        }
-                        ['gear', 'scroll'].forEach(type => {
-                            Object.entries(heroNeeds[type]).forEach(([id, qty]) => {
-                                maxAnyHero[type][id] = Math.max(maxAnyHero[type][id] || 0, qty);
-                            });
-                        });
-                    });
-
-                    // Build hero list (ALL heroes id < 150)
-                    const heroList = [];
-                    Object.entries(lib.data.hero).forEach(([id, hd]) => {
-                        if (parseInt(id) >= 150) return;
-                        const userHero = userHeroes[id];
-                        const currentColor = userHero?.color || 0;
-                        const owned = !!userHero;
-                        const maxed = currentColor >= 18;
-                        heroList.push({ id, name: window.identifyItem(id, 'hero'), owned, currentColor, maxed, colorsRemaining: 18 - currentColor });
-                    });
-                    heroList.sort((a, b) => {
-                        if (a.maxed !== b.maxed) return a.maxed ? 1 : -1;
-                        if (a.owned !== b.owned) return a.owned ? -1 : 1;
-                        return b.colorsRemaining - a.colorsRemaining;
-                    });
-
-                    // Create modal
-                    const modal = document.createElement('div');
-                    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:999999999;display:flex;align-items:center;justify-content:center;';
-
-                    const box = document.createElement('div');
-                    box.style.cssText = 'background:#1a1a2e;border:2px solid #8b6914;border-radius:10px;padding:12px;max-width:440px;max-height:80vh;display:flex;flex-direction:column;';
-
-                    box.innerHTML = `
-                        <div style="color:#ffd700;font-size:14px;font-weight:bold;margin-bottom:8px;">🎯 Select Heroes to Include</div>
-                        <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap;">
-                            <button id="hm_selAll" style="background:#4caf50;color:white;border:none;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:10px;">✓ All</button>
-                            <button id="hm_selOwned" style="background:#2196f3;color:white;border:none;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:10px;">✓ Owned</button>
-                            <button id="hm_selNone" style="background:#666;color:white;border:none;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:10px;">✗ None</button>
-                            <button id="hm_selUnowned" style="background:#ff9800;color:white;border:none;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:10px;">✓ Unowned</button>
-                            <button id="hm_selUnmaxed" style="background:#9c27b0;color:white;border:none;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:10px;">✓ Unmaxed</button>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:6px;padding:6px;background:rgba(76,175,80,0.2);border-radius:4px;margin-bottom:6px;">
-                            <span style="color:#a5d6a7;font-size:11px;">🛡️ Buffer for</span>
-                            <input type="number" id="hm_buffer" value="2" min="0" max="10" style="width:32px;background:rgba(0,0,0,0.5);color:#ffd700;border:1px solid rgba(76,175,80,0.5);border-radius:3px;padding:2px;font-size:11px;text-align:center;">
-                            <span style="color:#a5d6a7;font-size:11px;">future hero(s)</span>
-                        </div>
-                        <div id="hm_list" style="overflow-y:auto;flex:1;margin-bottom:8px;max-height:350px;">
-                            ${heroList.map(h => `
-                                <div style="display:flex;align-items:center;gap:6px;padding:4px 6px;border-bottom:1px solid rgba(139,105,20,0.2);${h.maxed ? 'opacity:0.5;' : ''}${!h.owned ? 'opacity:0.7;' : ''}">
-                                    <input type="checkbox" class="hm_cb" data-id="${h.id}" data-owned="${h.owned}" data-maxed="${h.maxed}" ${!h.maxed && !heroExcluded.includes(h.id) ? 'checked' : ''} style="cursor:pointer;width:14px;height:14px;">                                    <span style="color:${h.maxed ? '#666' : (h.owned ? '#4ae29a' : '#ff9800')};font-size:10px;width:14px;">${h.maxed ? '★' : (h.owned ? '✓' : '?')}</span>
-                                    <span class="hm_name" data-id="${h.id}" style="color:#ffd700;flex:1;cursor:pointer;font-size:11px;text-decoration:underline dotted;" title="Click for details">${h.name}</span>
-                                    <span style="color:#999;font-size:10px;">${h.maxed ? 'MAX' : `C${h.currentColor}→18`}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div style="color:#999;font-size:10px;margin-bottom:6px;">Selected: <span id="hm_count">${heroList.filter(h=>!h.maxed && !heroExcluded.includes(h.id)).length}</span> / ${heroList.length}</div>
-                        <div style="display:flex;gap:6px;">
-                            <button id="hm_calc" style="flex:1;background:#4caf50;color:white;border:none;border-radius:4px;padding:8px;cursor:pointer;font-weight:bold;font-size:12px;">🎯 Calculate Targets</button>
-                            <button id="hm_cancel" style="background:#666;color:white;border:none;border-radius:4px;padding:8px 12px;cursor:pointer;font-size:12px;">Cancel</button>
-                        </div>
-                    `;
-
-                    modal.appendChild(box);
-                    document.body.appendChild(modal);
-
-                    const updateCount = () => {
-                        box.querySelector('#hm_count').textContent = box.querySelectorAll('.hm_cb:checked').length;
-                    };
-                    box.querySelectorAll('.hm_cb').forEach(cb => cb.onchange = updateCount);
-
-                    box.querySelector('#hm_selAll').onclick = () => { box.querySelectorAll('.hm_cb').forEach(cb => cb.checked = true); updateCount(); };
-                    box.querySelector('#hm_selOwned').onclick = () => { box.querySelectorAll('.hm_cb').forEach(cb => cb.checked = cb.dataset.owned === 'true'); updateCount(); };
-                    box.querySelector('#hm_selNone').onclick = () => { box.querySelectorAll('.hm_cb').forEach(cb => cb.checked = false); updateCount(); };
-                    box.querySelector('#hm_selUnowned').onclick = () => { box.querySelectorAll('.hm_cb').forEach(cb => cb.checked = cb.dataset.owned === 'false'); updateCount(); };
-                    box.querySelector('#hm_selUnmaxed').onclick = () => { box.querySelectorAll('.hm_cb').forEach(cb => cb.checked = cb.dataset.maxed === 'false'); updateCount(); };
-                    box.querySelector('#hm_cancel').onclick = () => {
-                        const uncheckedIds = [...box.querySelectorAll('.hm_cb:not(:checked)')]
-                        .filter(cb => cb.dataset.maxed === 'false')
-                        .map(cb => cb.dataset.id);
-                        saveHeroExcluded(uncheckedIds);
-                        modal.remove();
-                    };
-
-                    // Hero name click - show requirements in separate popup
-                    box.querySelectorAll('.hm_name').forEach(el => {
-                        el.onclick = (e) => {
-                            e.stopPropagation();
-                            const heroId = el.dataset.id;
-                            const hd = lib.data.hero[heroId];
-                            const userHero = userHeroes[heroId];
-                            const currentColor = userHero?.color || 0;
-                            const heroName = window.identifyItem(heroId, 'hero');
-
-                            const heroNeeds = {gear: {}, scroll: {}};
-                            let colorBreakdown = [];
-
-                            for (let c = 1; c <= 18; c++) {
-                                const items = hd.color?.[c]?.items || [];
-                                if (items.length) {
-                                    const isPast = c <= currentColor;
-                                    colorBreakdown.push(`<div style="color:${isPast ? '#666' : '#ffd700'};${isPast ? 'text-decoration:line-through;' : ''}font-size:10px;">C${c}: ${items.map(g => window.identifyItem(String(g), 'gear')).join(', ')}</div>`);
-                                    if (!isPast) {
-                                        items.forEach(gearId => resolveRecipe('gear', String(gearId), 1, heroNeeds));
-                                    }
-                                }
-                            }
-
-                            const gearList = Object.entries(heroNeeds.gear).sort((a,b) => b[1] - a[1]).map(([id, qty]) => `${window.identifyItem(id, 'gear')}: ${qty}`);
-                            const scrollList = Object.entries(heroNeeds.scroll).sort((a,b) => b[1] - a[1]).map(([id, qty]) => `${window.identifyItem(id, 'scroll')}: ${qty}`);
-
-                            document.querySelector('#hm_detail')?.remove();
-
-                            const detailPopup = document.createElement('div');
-                            detailPopup.id = 'hm_detail';
-                            detailPopup.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#252540;border:2px solid #ffd700;border-radius:8px;padding:12px;width:480px;max-width:90vw;max-height:70vh;overflow-y:auto;z-index:9999999999;box-shadow:0 4px 20px rgba(0,0,0,0.5);';
-
-                            detailPopup.innerHTML = `
-                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                                    <span style="color:#ffd700;font-weight:bold;font-size:13px;">${heroName} (C${currentColor}→18)</span>
-                                    <button id="hm_closeDetail" style="background:none;border:none;color:#999;cursor:pointer;font-size:16px;">✕</button>
-                                </div>
-                                <details style="margin-bottom:8px;">
-                                    <summary style="color:#a5d6a7;cursor:pointer;font-size:11px;">Color Breakdown</summary>
-                                    <div style="padding-left:12px;color:#ccc;max-height:150px;overflow-y:auto;">${colorBreakdown.join('')}</div>
-                                </details>
-                                <details open style="margin-bottom:8px;">
-                                    <summary style="color:#a5d6a7;cursor:pointer;font-size:11px;">Base Gear (${gearList.length})</summary>
-                                    <div style="padding-left:12px;color:#ccc;font-size:10px;max-height:120px;overflow-y:auto;">${gearList.join('<br>') || 'None'}</div>
-                                </details>
-                                <details open style="margin-bottom:8px;">
-                                    <summary style="color:#a5d6a7;cursor:pointer;font-size:11px;">Recipe Scrolls (${scrollList.length})</summary>
-                                    <div style="padding-left:12px;color:#ccc;font-size:10px;max-height:120px;overflow-y:auto;">${scrollList.join('<br>') || 'None'}</div>
-                                </details>
-                                <button id="hm_copy" style="background:#666;color:white;border:none;border-radius:4px;padding:6px 10px;font-size:10px;cursor:pointer;">📋 Copy to Clipboard</button>
-                            `;
-
-                            document.body.appendChild(detailPopup);
-
-                            detailPopup.querySelector('#hm_closeDetail').onclick = () => detailPopup.remove();
-
-                            detailPopup.querySelector('#hm_copy').onclick = () => {
-                                const text = `=== ${heroName} (C${currentColor}→18) ===\n\nBase Gear:\n${gearList.join('\n')}\n\nRecipe Scrolls:\n${scrollList.join('\n')}`;
-                                navigator.clipboard.writeText(text);
-                                alert('Copied!');
-                            };
-                        };
-                    });
-                    box.querySelector('#hm_calc').onclick = () => {
-                        document.querySelector('#hm_detail')?.remove();
-                        const selectedIds = new Set([...box.querySelectorAll('.hm_cb:checked')].map(cb => cb.dataset.id));
-                        // Save unchecked heroes (exclude maxed since they're always unchecked)
-                        const uncheckedIds = [...box.querySelectorAll('.hm_cb:not(:checked)')]
-                        .filter(cb => cb.dataset.maxed === 'false')
-                        .map(cb => cb.dataset.id);
-                        saveHeroExcluded(uncheckedIds);
-                        const bufferMultiplier = parseInt(box.querySelector('#hm_buffer')?.value) || 0;
-                        modal.remove();
-
-                        // Calculate per-hero needs for report
-                        const perHeroNeeds = [];
-                        const totalBase = {gear: {}, scroll: {}};
-
-                        selectedIds.forEach(heroId => {
-                            const hd = lib.data.hero[heroId];
-                            if (!hd?.color) return;
-                            const userHero = userHeroes[heroId];
-                            const currentColor = userHero?.color || 0;
-                            const heroName = window.identifyItem(heroId, 'hero');
-                            const heroNeeds = {gear: {}, scroll: {}};
-
-                            for (let c = currentColor + 1; c <= 18; c++) {
-                                (hd.color[c]?.items || []).forEach(gearId => {
-                                    resolveRecipe('gear', String(gearId), 1, heroNeeds);
-                                });
-                            }
-
-                            // Add to total
-                            ['gear', 'scroll'].forEach(type => {
-                                Object.entries(heroNeeds[type]).forEach(([id, qty]) => {
-                                    totalBase[type][id] = (totalBase[type][id] || 0) + qty;
-                                });
-                            });
-
-                            if (Object.keys(heroNeeds.gear).length || Object.keys(heroNeeds.scroll).length) {
-                                perHeroNeeds.push({ heroId, heroName, currentColor, heroNeeds });
-                            }
-                        });
-
-                        // Reset all craftable items to 0
-                        ['gear', 'scroll'].forEach(type => {
-                            Object.keys(lib.data.inventoryItem[type] || {}).forEach(id => {
-                                if (lib.data.inventoryItem[type][id]?.fragmentMergeCost) {
-                                    craftTargets[`${type}_${id}`] = 0;
-                                }
-                            });
-                        });
-
-                        // Set targets from selected heroes
-                        ['gear', 'scroll'].forEach(type => {
-                            Object.entries(totalBase[type]).forEach(([id, qty]) => {
-                                craftTargets[`${type}_${id}`] = qty;
-                            });
-                        });
-
-                        // Calculate buffer additions
-                        const bufferAdded = {gear: {}, scroll: {}};
-                        if (bufferMultiplier > 0) {
-                            ['gear', 'scroll'].forEach(type => {
-                                Object.entries(maxAnyHero[type]).forEach(([id, qty]) => {
-                                    const key = `${type}_${id}`;
-                                    const floor = qty * bufferMultiplier;
-                                    const current = craftTargets[key] || 0;
-                                    if (floor > current) {
-                                        bufferAdded[type][id] = floor - current;
-                                        craftTargets[key] = floor;
-                                    }
-                                });
-                            });
-                        }
-
-                        saveCraftTargets();
-
-                        // Build summary report
-                        let report = [];
-                        report.push('═══════════════════════════════════════');
-                        report.push('🎯 HERO GEAR TARGET CALCULATION');
-                        report.push('═══════════════════════════════════════');
-                        report.push(`Selected: ${selectedIds.size} heroes | Buffer: ${bufferMultiplier}x`);
-                        report.push('');
-
-                        // Per-hero breakdown
-                        report.push('───────────────────────────────────────');
-                        report.push('📋 PER-HERO NEEDS');
-                        report.push('───────────────────────────────────────');
-                        perHeroNeeds.forEach(h => {
-                            report.push(`\n${h.heroName} (C${h.currentColor}→18):`);
-                            const gearItems = Object.entries(h.heroNeeds.gear).sort((a,b) => b[1] - a[1]);
-                            const scrollItems = Object.entries(h.heroNeeds.scroll).sort((a,b) => b[1] - a[1]);
-                            if (gearItems.length) {
-                                report.push('  Gear: ' + gearItems.map(([id, qty]) => `${window.identifyItem(id, 'gear')}×${qty}`).join(', '));
-                            }
-                            if (scrollItems.length) {
-                                report.push('  Scrolls: ' + scrollItems.map(([id, qty]) => `${window.identifyItem(id, 'scroll')}×${qty}`).join(', '));
-                            }
-                        });
-
-                        // Buffer additions
-                        if (bufferMultiplier > 0 && (Object.keys(bufferAdded.gear).length || Object.keys(bufferAdded.scroll).length)) {
-                            report.push('');
-                            report.push('───────────────────────────────────────');
-                            report.push(`🛡️ BUFFER ADDITIONS (${bufferMultiplier}x max single hero)`);
-                            report.push('───────────────────────────────────────');
-                            const bufferGear = Object.entries(bufferAdded.gear).sort((a,b) => b[1] - a[1]);
-                            const bufferScroll = Object.entries(bufferAdded.scroll).sort((a,b) => b[1] - a[1]);
-                            if (bufferGear.length) {
-                                report.push('Gear: ' + bufferGear.map(([id, qty]) => `${window.identifyItem(id, 'gear')}+${qty}`).join(', '));
-                            }
-                            if (bufferScroll.length) {
-                                report.push('Scrolls: ' + bufferScroll.map(([id, qty]) => `${window.identifyItem(id, 'scroll')}+${qty}`).join(', '));
-                            }
-                        }
-
-                        // Final totals
-                        report.push('');
-                        report.push('───────────────────────────────────────');
-                        report.push('📊 FINAL TARGETS');
-                        report.push('───────────────────────────────────────');
-
-                        const finalGear = Object.entries(craftTargets)
-                        .filter(([k, v]) => k.startsWith('gear_') && v > 0)
-                        .map(([k, v]) => [k.replace('gear_', ''), v])
-                        .sort((a, b) => b[1] - a[1]);
-                        const finalScroll = Object.entries(craftTargets)
-                        .filter(([k, v]) => k.startsWith('scroll_') && v > 0)
-                        .map(([k, v]) => [k.replace('scroll_', ''), v])
-                        .sort((a, b) => b[1] - a[1]);
-
-                        report.push(`\nBase Gear (${finalGear.length} items):`);
-                        finalGear.forEach(([id, qty]) => report.push(`  ${window.identifyItem(id, 'gear')}: ${qty}`));
-
-                        report.push(`\nRecipe Scrolls (${finalScroll.length} items):`);
-                        finalScroll.forEach(([id, qty]) => report.push(`  ${window.identifyItem(id, 'scroll')}: ${qty}`));
-
-                        report.push('');
-                        report.push('═══════════════════════════════════════');
-
-                        const reportText = report.join('\n');
-                        navigator.clipboard.writeText(reportText);
-
-                        console.log(`🎯 Targets set for ${selectedIds.size} heroes (buffer: ${bufferMultiplier}x). Gear: ${finalGear.length}, Scrolls: ${finalScroll.length}`);
-                        console.log('📋 Summary copied to clipboard!');
-                        renderTab6();
-                    };
-
-                } catch (e) {
-                    console.error('Hero needs calc failed:', e);
-                }
-                heroNeedsBtn.textContent = '🎯 Hero';
-            };
 
 
-            actionRow.append(craftAllBtn, sellExcessBtn, setTargetBtn, bulkTargetInput, bulkTargetBtn, heroNeedsBtn, colorSelect, refreshBtn);
+            // Add pulse animation for flashing buttons
+            if (!document.getElementById('twkBtnPulseStyle')) {
+                const style = document.createElement('style');
+                style.id = 'twkBtnPulseStyle';
+                style.textContent = '@keyframes twkBtnPulse { 0%,100% { opacity:1; box-shadow:0 0 10px #ff9800; } 50% { opacity:0.6; box-shadow:0 0 3px #ff9800; } }';
+                document.head.appendChild(style);
+            }
+
+            actionRow.append(craftAllBtn, sellExcessBtn, heroesBtn, colorSelect, refreshBtn);
 
             // Grid header with sortable columns
             const gridHeader = document.createElement('div');
-            gridHeader.style.cssText = 'display:grid;grid-template-columns:50px 28px 1fr 50px 75px 45px 55px 36px;gap:4px;padding:8px 10px;background:rgba(76,175,80,0.3);border-radius:6px;font-weight:bold;margin-bottom:6px;font-size:10px;color:#a5d6a7;';
+            gridHeader.style.cssText = 'display:grid;grid-template-columns:50px 28px 1fr 50px 75px 45px 55px 36px;gap:4px;padding:8px 10px;background:rgba(76,175,80,0.3);border-radius:6px;font-weight:bold;margin-bottom:6px;font-size:12px;color:#a5d6a7;';
 
             const headers = [
                 { col: 'type', label: 'Type', align: 'center' },
@@ -4392,7 +4529,7 @@ ${eightCoinLines.join('\n')}`;
 
             // Footer
             const footerEl = document.createElement('div');
-            footerEl.style.cssText = 'padding-top:8px;font-size:11px;color:#999;';
+            footerEl.style.cssText = 'padding-top:8px;font-size:12px;color:#999;';
 
             const colorMap = {1:'⬜',2:'🟩',3:'🟦',4:'🟪',5:'🟧',6:'🟥'};
 
@@ -4441,17 +4578,17 @@ ${eightCoinLines.join('\n')}`;
                     const targetColor = willCraft > 0 ? '#4ae29a' : '#999';
 
                     const row = document.createElement('div');
-                    row.style.cssText = `position:absolute;top:${i * ROW_HEIGHT}px;left:0;right:0;height:${ROW_HEIGHT}px;display:grid;grid-template-columns:50px 28px 1fr 50px 75px 45px 55px 36px;gap:4px;padding:4px 10px;align-items:center;font-size:11px;border-bottom:1px solid rgba(139,105,20,0.2);box-sizing:border-box;`;
-
+                    row.className = i % 2 ? 'twk-stripe' : '';   // ← NEW
+                    row.style.cssText = `position:absolute;top:${i * ROW_HEIGHT}px;left:0;right:0;height:${ROW_HEIGHT}px;display:grid;grid-template-columns:50px 28px 1fr 50px 75px 45px 55px 36px;gap:4px;padding:4px 10px;align-items:center;font-size:12px;border-bottom:1px solid rgba(139,105,20,0.2);box-sizing:border-box;`;
                     row.innerHTML = `
                         <div style="text-align:center;color:${typeColor};font-weight:bold">${typeIcon}${ingredientFlag}</div>
-                        <div style="text-align:center;font-size:9px">${colorMap[item.color]||'⚫'}</div>
+                        <div style="text-align:center;font-size:12px">${colorMap[item.color]||'⚫'}</div>
                         <div class="twk-gold" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="ID:${item.id}">${item.name}</div>
                         <div style="text-align:center;font-weight:bold;color:#4ae29a">${item.builtCount}</div>
-                        <div style="text-align:center;font-family:monospace;color:${fragColor};font-size:10px">${item.fragCount}/${item.needed}</div>
-                        <div style="text-align:center;font-weight:bold;color:${item.canMake > 0 ? '#4ae29a' : '#666'}">${item.canMake}</div>
-                        <div style="text-align:center"><input type="text" inputmode="numeric" value="${target}" style="width:44px;background:rgba(0,0,0,0.5);color:${targetColor};border:1px solid rgba(76,175,80,0.5);border-radius:4px;padding:2px;font-size:10px;text-align:center;-moz-appearance:textfield;"></div>
-                        <div style="text-align:center">${item.canMake > 0 ? `<button style="background:#4caf50;color:white;border:none;border-radius:4px;padding:2px 5px;font-size:10px;cursor:pointer" title="Craft ${willCraft > 0 ? willCraft : item.canMake}">🔨</button>` : ''}</div>
+<div style="text-align:center;font-family:monospace;color:${item.isComposite ? '#9c27b0' : fragColor};font-size:12px">${item.isComposite ? '🔗 Comp' : `${item.fragCount}/${item.needed}`}</div>
+<div style="text-align:center;font-weight:bold;color:${item.canMake > 0 ? '#4ae29a' : '#666'}">${item.canMake}</div>
+                        <div style="text-align:center"><input type="text" inputmode="numeric" value="${target}" style="width:44px;background:rgba(0,0,0,0.5);color:${targetColor};border:1px solid rgba(76,175,80,0.5);border-radius:4px;padding:2px;font-size:12px;text-align:center;-moz-appearance:textfield;"></div>
+                        <div style="text-align:center">${item.canMake > 0 ? `<button style="background:#4caf50;color:white;border:none;border-radius:4px;padding:2px 5px;font-size:12px;cursor:pointer" title="Craft ${willCraft > 0 ? willCraft : item.canMake}">🔨</button>` : ''}</div>
                     `;
 
                     const targetInput = row.querySelector('input');
@@ -4471,7 +4608,14 @@ ${eightCoinLines.join('\n')}`;
                             if (amt > 0) {
                                 craftBtn.textContent = '⏳';
                                 try {
-                                    await Send(JSON.stringify({calls:[{name:'inventoryCraftFragments',args:{type:item.type,libId:parseInt(item.id),amount:amt},ident:'craft'}]}));
+                                    if (item.isComposite) {
+                                        // Composite gear uses inventoryCraft (one at a time)
+                                        for (let c = 0; c < amt; c++) {
+                                            await Send(JSON.stringify({calls:[{name:'inventoryCraft',args:{type:'gear',libId:parseInt(item.id)},ident:'craft'}]}));
+                                        }
+                                    } else {
+                                        await Send(JSON.stringify({calls:[{name:'inventoryCraftFragments',args:{type:item.type,libId:parseInt(item.id),amount:amt},ident:'craft'}]}));
+                                    }
                                     item.fragCount -= amt * item.needed;
                                     item.builtCount += amt;
                                     item.canMake = Math.floor(item.fragCount / item.needed);
@@ -5489,6 +5633,7 @@ ${eightCoinLines.join('\n')}`;
         debugLog(`✅ Inventory Manager opened`);
     };
 
+
     // ============================================================================
     // 🎯 FRAGMENT HUNTER v4
     // ============================================================================
@@ -5721,7 +5866,7 @@ ${eightCoinLines.join('\n')}`;
         box.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;padding-bottom:12px;border-bottom:2px solid rgba(139,105,20,0.5);">
             <div><h2 style="color:#ffd700;margin:0;font-size:20px;text-shadow:2px 2px 4px rgba(0,0,0,0.8);">🎯 Fragment Hunter</h2>
-            <div class="twk-muted" style="font-size:11px;margin-top:4px;">Farm fragments by category or hero needs</div></div>
+            <div class="twk-muted" style="font-size:12px;margin-top:4px;">Farm fragments by category or hero needs</div></div>
             <button id="fh-x" style="background:#d32f2f;color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:16px;cursor:pointer;font-weight:bold;">✖</button>
         </div>
         <div id="fh-stats" style="display:flex;gap:20px;margin-bottom:12px;padding:12px;background:rgba(0,0,0,0.3);border-radius:8px;flex-wrap:wrap;"></div>
@@ -5729,7 +5874,7 @@ ${eightCoinLines.join('\n')}`;
         <div id="fh-target" class="twk-panel" style="margin-bottom:12px;min-height:100px;"></div>
         <div id="fh-btns" class="twk-flex-gap10" style="margin-bottom:12px;"></div>
         <div id="fh-results" style="display:none;padding:15px;background:rgba(0,0,0,0.3);border-radius:8px;max-height:180px;overflow-y:auto;"></div>
-        <div class="twk-muted twk-center" style="margin-top:auto;padding-top:10px;border-top:1px solid rgba(139,105,20,0.3);font-size:10px;">Based on dimaka1256's HWHhuntFragmentExt</div>
+        <div class="twk-muted twk-center" style="margin-top:auto;padding-top:10px;border-top:1px solid rgba(139,105,20,0.3);font-size:12px;">Based on dimaka1256's HWHhuntFragmentExt</div>
     `;
 
         // Stats
@@ -5945,7 +6090,7 @@ ${eightCoinLines.join('\n')}`;
                 b.style.cssText = 'background:rgba(0,0,0,0.3);border:2px solid rgba(139,105,20,0.5);color:#fff;border-radius:8px;padding:10px;cursor:pointer;text-align:left;';
                 b.innerHTML = `<div class="twk-flex-between" style="margin-bottom:4px;"><span class="twk-gold-bold">📍 W${m.world} M${m.index}</span><span class="twk-green-bold" style="font-size:13px;">[${it?.chance}%]</span></div>
                 <div class="twk-muted" style="font-size:10px;">${e}⚡/raid</div>
-                ${others ? `<div style="margin-top:5px;padding-top:5px;border-top:1px solid #333;"><div class="twk-dim" style="font-size:9px;margin-bottom:2px;">Also drops:</div>${others}</div>` : ''}`;
+                ${others ? `<div style="margin-top:5px;padding-top:5px;border-top:1px solid #333;"><div class="twk-dim" style="font-size:12px;margin-bottom:2px;">Also drops:</div>${others}</div>` : ''}`;
                 b.onclick = () => { missionId = m.id; localStorage.setItem(FRAG_HUNT_MISSION, m.id); ov.remove(); showTarget(); };
                 missEl.appendChild(b);
             });
@@ -6560,14 +6705,14 @@ ${eightCoinLines.join('\n')}`;
                             text-align: center;
                         ">
                             <div style="color: #ffd700; font-size: 14px; font-weight: bold;">🎯 ${point.trim()}</div>
-                            <div style="color: #666; font-size: 9px;">${index + 1}/${pathArray.length}</div>
+                            <div style="color: #666; font-size: 11px;">${index + 1}/${pathArray.length}</div>
                         </div>
                     `).join('');
 
                     stopPopupDiv.innerHTML = `
                         <div id="stop-popup-header" style="padding: 10px; background: rgba(139,105,20,0.3); border-bottom: 2px solid #8b6914; cursor: move;">
                             <h3 style="margin: 0; color: #ffd700; font-size: 16px; text-align: center; font-weight: bold;">
-                                🎯 Select Stop Point <span style="font-size: 11px; color: #999;">(drag to move)</span>
+                                🎯 Select Stop Point <span style="font-size: 12px; color: #999;">(drag to move)</span>
                             </h3>
                         </div>
 
@@ -6732,7 +6877,7 @@ ${eightCoinLines.join('\n')}`;
                                         gap: 4px;
                                     ">
                                         <span style="font-size: 14px;">🎯</span>
-                                        <div style="color: #ffc107; font-size: 11px; font-weight: bold;">Stop at</div>
+                                        <div style="color: #ffc107; font-size: 12px; font-weight: bold;">Stop at</div>
                                     </div>
                                 </div>
                                 <div style="padding: 4px 8px; color: #4ae29a; font-size: 10px; font-family: monospace; line-height: 1.3; word-break: break-all;">
@@ -7031,7 +7176,7 @@ ${eightCoinLines.join('\n')}`;
                             text-align: center;
                         ">
                             <div style="color: #ffd700; font-size: 14px; font-weight: bold;">🎯 ${point.trim()}</div>
-                            <div style="color: #666; font-size: 9px;">${index + 1}/${pathArray.length}</div>
+                            <div style="color: #666; font-size: 11px;">${index + 1}/${pathArray.length}</div>
                         </div>
                     `).join('');
 
@@ -8118,7 +8263,7 @@ background: transparent;
                         grid-column: span 2;
                     ">
                         <div style="color: #7fbfff; font-size: 12px; font-weight: bold;">⛈️ Storm</div>
-                        <div style="color: #999; font-size: 9px;">${getStormPathCount()} paths</div>
+                        <div style="color: #999; font-size: 11px;">${getStormPathCount()} paths</div>
                     </div>
                 `);
 
@@ -8135,7 +8280,7 @@ background: transparent;
                         text-align: center;
                     ">
                         <div style="color: #ffd700; font-size: 12px; font-weight: bold;">Adventure ${i}</div>
-                        <div style="color: #999; font-size: 9px;">${getPathCount(i)} paths</div>
+                        <div style="color: #999; font-size: 11px;">${getPathCount(i)} paths</div>
                     </div>
                 `);
                     }
@@ -8153,7 +8298,7 @@ background: transparent;
                         text-align: center;
                     ">
                         <div style="color: #ffd700; font-size: 12px; font-weight: bold;">Adventure 13, Map ${mapNum}</div>
-                        <div style="color: #999; font-size: 9px;">${getPathCountMap13(mapNum)} paths</div>
+                        <div style="color: #999; font-size: 11px;">${getPathCountMap13(mapNum)} paths</div>
                     </div>
                 `);
                     }
@@ -8700,9 +8845,7 @@ background: transparent;
         const factor = getDelayFactor();
         const message = `Current delay factor: ${factor}x`;
         debugLog(message);
-        if (HWHFuncs && HWHFuncs.setProgress) {
-            HWHFuncs.setProgress(message, true);
-        }
+        TweakerNotifications.info('⏱️', 'Delay Factor', `${factor}x`);
         return factor;
     };
 
@@ -8776,6 +8919,1192 @@ background: transparent;
             initTweaker();
         });
     }
+
+    // ============================================================
+    // ENHANCED DUNGEON MODULE - Embed in Tweaker
+    // Based on ZingerY's HWHExtension
+    // ============================================================
+    // ==================== ENHANCED DUNGEON ====================
+
+
+    let enhancedDungeonEnabled = false;
+
+    function initEnhancedDungeon(attempt = 0) {
+        if (!HWHClasses?.executeDungeon) {
+            if (attempt < 5) {
+                console.warn(`[Enhanced Dungeon] HWHClasses.executeDungeon not found, retry ${attempt + 1}/5...`);
+                setTimeout(() => initEnhancedDungeon(attempt + 1), 2000);
+            } else {
+                console.error('[Enhanced Dungeon] Failed after 5 attempts');
+            }
+            return false;
+        }
+
+        if (enhancedDungeonEnabled) {
+            console.log('[Enhanced Dungeon] Already initialized');
+            return true;
+        }
+
+        // Store original for fallback
+        HWHClasses.executeDungeonOriginal = HWHClasses.executeDungeon;
+
+        const {
+            getInput,
+            setProgress,
+            hideProgress,
+            I18N,
+            send,
+            getTimer,
+            countdownTimer,
+        } = HWHFuncs;
+
+        function executeDungeonEnhanced(resolve, reject) {
+            let countPredictionCard = 0;
+            let dungeonActivity = 0;
+            let startDungeonActivity = 0;
+            let maxDungeonActivity = 150;
+            let end = false;
+
+            let countTeam = [];
+            let lastBattleTeam = null;
+            let timeDungeon = {
+                all: new Date().getTime(),
+                findAttack: 0,
+                attackNeutral: 0,
+                attackEarthOrFire: 0,
+            };
+
+            let titansStates = {};
+            let bestBattle = {};
+            let lastDungeonBattleData = null;
+            let titanGetAll = [];  // ADD THIS
+
+
+            let teams = {
+                neutral: [],
+                water: [],
+                earth: [],
+                fire: [],
+                hero: [],
+            };
+
+            // Rate-limited parallel execution (max 5 concurrent)
+            async function rateLimitedAll(promises, maxConcurrent = 5) {
+                const results = [];
+                for (let i = 0; i < promises.length; i += maxConcurrent) {
+                    const batch = promises.slice(i, i + maxConcurrent);
+                    const batchResults = await Promise.all(batch);
+                    results.push(...batchResults);
+                    if (i + maxConcurrent < promises.length) {
+                        await new Promise(r => setTimeout(r, 100));
+                    }
+                }
+                return results;
+            }
+
+
+
+            const userInfo = HWHFuncs?.getUserInfo?.() || {};
+            const dungeonResetTs = userInfo.nextDayTs || Math.floor(Date.now() / 1000) + 86400;
+            // Force tracking
+            const DUNGEON_FORCE_TRACK_KEY = 'hwh_dungeon_forced_elements';
+
+            const getForcedElements = () => {
+                try {
+                    const data = JSON.parse(localStorage.getItem(DUNGEON_FORCE_TRACK_KEY) || '{}');
+                    const now = Math.floor(Date.now() / 1000);
+                    // If stored reset time has passed, clear tracking
+                    if (data.nextReset && now >= data.nextReset) {
+                        return { nextReset: dungeonResetTs, elements: {} };
+                    }
+                    return { nextReset: data.nextReset || dungeonResetTs, elements: data.elements || {} };
+                } catch {
+                    return { nextReset: dungeonResetTs, elements: {} };
+                }
+            };
+
+            const markForcedElement = (element) => {
+                const data = getForcedElements();
+                data.nextReset = dungeonResetTs;
+                data.elements[element] = (data.elements[element] || 0) + 1;
+                localStorage.setItem(DUNGEON_FORCE_TRACK_KEY, JSON.stringify(data));
+                return data.elements[element];
+            };
+
+            const isElementBlocked = (element) => {
+                return (getForcedElements().elements[element] || 0) >= 2;
+            };
+            // ============ DAILY STATS TRACKING ============
+            const DUNGEON_DAILY_STATS_KEY = 'hwh_dungeon_daily_stats';
+
+            function getDailyStats() {
+                try {
+                    const data = JSON.parse(localStorage.getItem(DUNGEON_DAILY_STATS_KEY) || '{}');
+                    const now = Math.floor(Date.now() / 1000);
+                    if (data.nextReset && now >= data.nextReset) {
+                        return { nextReset: dungeonResetTs, titanite: 0, time: 0, runs: 0, teams: [] };
+                    }
+                    return { nextReset: data.nextReset || dungeonResetTs, titanite: 0, time: 0, runs: 0, teams: [], ...data };
+                } catch {
+                    return { nextReset: dungeonResetTs, titanite: 0, time: 0, runs: 0, teams: [] };
+                }
+            }
+
+            function saveDailyStats(stats) {
+                stats.nextReset = dungeonResetTs;
+                localStorage.setItem(DUNGEON_DAILY_STATS_KEY, JSON.stringify(stats));
+            }
+
+            function addRunToDaily(titanite, timeMs, teamsUsed) {
+                const stats = getDailyStats();
+                stats.titanite = (stats.titanite || 0) + titanite;
+                stats.time = (stats.time || 0) + timeMs;
+                stats.runs = (stats.runs || 0) + 1;
+                teamsUsed.forEach(t => {
+                    const existing = stats.teams.find(e => JSON.stringify(e.team) === JSON.stringify(t.team));
+                    if (existing) existing.count += t.count;
+                    else stats.teams.push({...t});
+                });
+                saveDailyStats(stats);
+                return stats;
+            }
+
+
+            let talentMsg = '';
+            let talentMsgReward = '';
+
+            const callsExecuteDungeon = {
+                calls: [
+                    { name: 'dungeonGetInfo', args: {}, ident: 'dungeonGetInfo' },
+                    { name: 'teamGetAll', args: {}, ident: 'teamGetAll' },
+                    { name: 'teamGetFavor', args: {}, ident: 'teamGetFavor' },
+                    { name: 'clanGetInfo', args: {}, ident: 'clanGetInfo' },
+                    { name: 'inventoryGet', args: {}, ident: 'inventoryGet' },
+                    { name: 'titanGetAll', args: {}, ident: 'titanGetAll' },
+                ],
+            };
+
+            // ============ START ============
+            this.start = function(titanit) {
+                maxDungeonActivity = titanit || getInput('countTitanit');
+                send(JSON.stringify(callsExecuteDungeon), startDungeon);
+            };
+
+            function startDungeon(e) {
+                if (typeof stopDung !== 'undefined') stopDung = false;
+                if (window._stopParallelTask) window._stopParallelTask['hwh_testDungeon'] = false;
+
+                const res = e.results;
+                const dungeonGetInfo = res[0].result.response;
+
+                if (!dungeonGetInfo) {
+                    endDungeon('noDungeon', res);
+                    return;
+                }
+
+                console.log('[Enhanced Dungeon] Starting:', new Date());
+
+                const teamGetAll = res[1].result.response;
+                const teamGetFavor = res[2].result.response;
+                dungeonActivity = res[3].result.response.stat.todayDungeonActivity;
+                startDungeonActivity = dungeonActivity;
+                titanGetAll = Object.values(res[5].result.response);
+                countPredictionCard = res[4].result.response.consumable[81] || 0;
+                titansStates = dungeonGetInfo.states.titans;
+
+                // Hero team
+                teams.hero = {
+                    favor: teamGetFavor.dungeon_hero,
+                    heroes: teamGetAll.dungeon_hero.filter(id => id < 6000),
+                    teamNum: 0,
+                };
+                const heroPet = teamGetAll.dungeon_hero.filter(id => id >= 6000).pop();
+                if (heroPet) teams.hero.pet = heroPet;
+
+                // Titan teams
+                teams.neutral = getTitanTeam('neutral');
+                teams.water = { favor: {}, heroes: getTitanTeam('water'), teamNum: 0 };
+                teams.earth = { favor: {}, heroes: getTitanTeam('earth'), teamNum: 0 };
+                teams.fire = { favor: {}, heroes: getTitanTeam('fire'), teamNum: 0 };
+
+                checkFloor(dungeonGetInfo);
+            }
+
+            function getTitanTeam(type) {
+                const aliveTitans = titanGetAll.filter(e => e?.id && !titansStates[e.id]?.isDead);
+                switch (type) {
+                    case 'neutral':
+                        // Prioritize damaged titans for healing opportunity
+                        const getDamageFactor = (titan) => {
+                            const state = titansStates[titan.id];
+                            if (!state) return 1;
+                            return state.hp / state.maxHp;
+                        };
+                        const isFire = (id) => id.toString().slice(2, 3) === '1';
+
+                        // Fire first, then any damaged, then by power
+                        const sorted = [...aliveTitans].sort((a, b) => {
+                            const aFire = isFire(a.id) && getDamageFactor(a) < 0.8;
+                            const bFire = isFire(b.id) && getDamageFactor(b) < 0.8;
+                            if (aFire && !bFire) return -1;
+                            if (!aFire && bFire) return 1;
+                            if (aFire && bFire) return getDamageFactor(a) - getDamageFactor(b);
+
+                            const aDamaged = getDamageFactor(a) < 0.8;
+                            const bDamaged = getDamageFactor(b) < 0.8;
+                            if (aDamaged && !bDamaged) return -1;
+                            if (!aDamaged && bDamaged) return 1;
+                            if (aDamaged && bDamaged) return getDamageFactor(a) - getDamageFactor(b);
+
+                            return b.power - a.power;
+                        });
+
+                        return sorted.slice(0, 5).map(e => e.id);
+                    case 'water':
+                        return aliveTitans.filter(e => e.id.toString().slice(2, 3) == '0').map(e => e.id);
+                    case 'earth':
+                        return aliveTitans.filter(e => e.id.toString().slice(2, 3) == '2').map(e => e.id);
+                    case 'fire':
+                        return aliveTitans.filter(e => e.id.toString().slice(2, 3) == '1').map(e => e.id);
+                }
+            }
+
+            function clone(a) {
+                return JSON.parse(JSON.stringify(a));
+            }
+
+            function findElement(floor, element) {
+                for (let i in floor) {
+                    if (floor[i].attackerType === element) return i;
+                }
+                return undefined;
+            }
+
+            // ============ FLOOR CHECKING ============
+            async function checkFloor(dungeonInfo) {
+                if (!('floor' in dungeonInfo) || dungeonInfo.floor?.state == 2) {
+                    saveProgress();
+                    return;
+                }
+
+                await checkTalent(dungeonInfo);
+                maxDungeonActivity = getInput('countTitanit');
+                setProgress(`${I18N('DUNGEON')}: ${I18N('TITANIT')} ${dungeonActivity}/${maxDungeonActivity} ${talentMsg}`);
+
+                if (dungeonActivity >= maxDungeonActivity) {
+                    endDungeon('Target reached', `${dungeonActivity}/${maxDungeonActivity}`);
+                    return;
+                }
+
+                titansStates = dungeonInfo.states.titans;
+
+                // Rebuild element teams with current alive status
+                teams.fire = { favor: {}, heroes: getTitanTeam('fire'), teamNum: 0 };
+                teams.earth = { favor: {}, heroes: getTitanTeam('earth'), teamNum: 0 };
+                teams.neutral = getTitanTeam('neutral');
+                teams.water = { favor: {}, heroes: getTitanTeam('water'), teamNum: 0 };
+
+                if ((typeof stopDung !== 'undefined' && stopDung) || window._stopParallelTask?.['hwh_testDungeon']) {
+                    endDungeon('Stopped', `${dungeonActivity}/${maxDungeonActivity}`);
+                    return;
+                }
+
+                bestBattle = {};
+                const floorChoices = dungeonInfo.floor.userData;
+
+                if (floorChoices.length > 1) {
+                    for (let element in teams) {
+                        const teamNum = findElement(floorChoices, element);
+                        if (teamNum !== undefined) {
+                            // Skip if no titans available for this element
+                            const teamHeroes = element === 'neutral' ? teams.neutral : teams[element]?.heroes;
+                            if (!teamHeroes?.length) {
+                                console.log(`[Enhanced Dungeon] Skipping ${element} - no titans available`);
+                                continue;
+                            }
+
+                            if (element === 'earth') {
+                                const selected = await chooseEarthOrFire(floorChoices);
+                                if (selected < 0) {
+                                    // Earth/Fire failed - try neutral fallback
+                                    const neutralTeamNum = findElement(floorChoices, 'neutral');
+                                    if (neutralTeamNum !== undefined) {
+                                        console.log('[Enhanced Dungeon] Earth/Fire unavailable, using neutral fallback');
+                                        chooseElement('neutral', neutralTeamNum);
+                                        return;
+                                    }
+                                    if (localStorage.getItem('hwh_allow_titan_loss') !== 'true') {
+                                        endDungeon('Cannot win without titan loss!', dungeonInfo);
+                                        return;
+                                    }
+                                    // If we get here with allow_titan_loss, chooseEarthOrFire should have forced a selection
+                                    // This shouldn't happen, but just in case:
+                                    console.warn('[Enhanced Dungeon] Force failed, skipping floor');
+                                    return;
+                                }
+                                chooseElement(floorChoices[selected].attackerType, selected);
+                            } else {
+                                chooseElement(element, teamNum);
+                            }
+                            return;
+                        }
+                    }
+                }else {
+                    chooseElement(floorChoices[0].attackerType, 0);
+                }
+            }
+
+            // ============ TMNT TALENT ============
+            async function checkTalent(dungeonInfo) {
+                const talent = dungeonInfo.talent;
+                if (!talent) return;
+
+                const dungeonFloor = +dungeonInfo.floorNumber;
+                const talentFloor = +talent.floorRandValue;
+                let doorsAmount = 3 - talent.conditions.doorsAmount;
+
+                if (dungeonFloor === talentFloor && (!doorsAmount || !talent.conditions?.farmedDoors[dungeonFloor])) {
+                    try {
+                        const reward = await Send({
+                            calls: [
+                                { name: 'heroTalent_getReward', args: { talentType: 'tmntDungeonTalent', reroll: false }, ident: 'group_0_body' },
+                                { name: 'heroTalent_farmReward', args: { talentType: 'tmntDungeonTalent' }, ident: 'group_1_body' },
+                            ],
+                        }).then(e => e.results[0].result.response);
+
+                        const type = Object.keys(reward).pop();
+                        const itemId = Object.keys(reward[type]).pop();
+                        const count = reward[type][itemId];
+                        const itemName = cheats.translate(`LIB_${type.toUpperCase()}_NAME_${itemId}`);
+                        talentMsgReward += `<br> ${count} ${itemName}`;
+                        doorsAmount++;
+                    } catch (e) {
+                        console.warn('[Enhanced Dungeon] Talent error:', e);
+                    }
+                }
+                talentMsg = `<br>TMNT Talent: ${doorsAmount}/3 ${talentMsgReward}<br>`;
+            }
+
+            // ============ EARTH/FIRE SELECTION ============
+            async function chooseEarthOrFire(floorChoices) {
+                bestBattle.recovery = -11;
+                let selectedTeamNum = -1;
+                for (let attempt = 0; selectedTeamNum < 0 && attempt < teams.earth.heroes.length; attempt++) {
+                    for (let teamNum in floorChoices) {
+                        const attackerType = floorChoices[teamNum].attackerType;
+                        selectedTeamNum = await attemptAttackEarthOrFire(teamNum, attackerType, attempt);
+                    }
+                }
+
+                // Force continue if allowed
+                if (selectedTeamNum < 0 && localStorage.getItem('hwh_allow_titan_loss') === 'true') {
+                    console.log('[Enhanced Dungeon] 💀 Attempting force, floorChoices:', floorChoices);
+                    for (let teamNum in floorChoices) {
+                        const type = floorChoices[teamNum].attackerType;
+                        console.log('[Enhanced Dungeon] 💀 Checking teamNum:', teamNum, 'type:', type);
+                        if (type === 'earth' || type === 'fire') {
+                            selectedTeamNum = parseInt(teamNum);
+                            bestBattle.team = clone(teams[type]);
+                            bestBattle.recovery = -100;
+                            console.log('[Enhanced Dungeon] 💀 Forcing:', type);
+                            break;
+                        }
+                    }
+                }
+
+                console.log('[Enhanced Dungeon] Earth/Fire choice:',
+                            selectedTeamNum < 0 ? 'none' : floorChoices[selectedTeamNum].attackerType);
+                return selectedTeamNum;
+            }
+
+            async function attemptAttackEarthOrFire(teamNum, attackerType, attempt) {
+                const start = Date.now();
+                const team = clone(teams[attackerType]);
+                const startIndex = attempt;  // Start from 0 (all titans), then 1, 2, etc.
+
+                if (startIndex >= team.heroes.length) {
+                    return -1;  // No more titans to try
+                }
+
+                team.heroes = team.heroes.slice(startIndex);
+                const recovery = await getBestRecovery(teamNum, attackerType, team, 25);
+                if (recovery > bestBattle.recovery) {
+                    bestBattle.recovery = recovery;
+                    bestBattle.selectedTeamNum = teamNum;
+                    bestBattle.team = team;
+                }
+
+                timeDungeon.attackEarthOrFire += (Date.now() - start);
+                const allowTitanLoss = localStorage.getItem('hwh_allow_titan_loss') === 'true';
+                if (bestBattle.recovery < -10 && !allowTitanLoss) {
+                    return -1;
+                }
+                return bestBattle.selectedTeamNum ?? -1;
+            }
+
+            // ============ ELEMENT ROUTER ============
+            async function chooseElement(attackerType, teamNum) {
+                let result;
+
+                switch (attackerType) {
+                    case 'hero':
+                    case 'water':
+                        result = await startBattle(teamNum, attackerType, teams[attackerType]);
+                        break;
+                    case 'earth':
+                    case 'fire':
+                        if (isElementBlocked(attackerType)) {
+                            console.log(`[Enhanced Dungeon] ⏭️ Skipping ${attackerType} - blocked until daily reset`);
+                            endDungeon(`${attackerType} blocked - titans need healing (resets at daily reset)`, attackerType);
+                            return;
+                        }
+                        result = await attackEarthOrFire(teamNum, attackerType);
+                        break;
+                    case 'neutral':
+                        result = await attackNeutral(teamNum, attackerType);
+                        break;
+                }
+
+                if (result && attackerType !== 'hero' && !result.dungeonUnavailable) {
+                    const recovery = (bestBattle.recovery || getRecovery(result) * 10) * 100;
+                    const titans = result.progress[0].attackers.heroes;
+                    console.log(`[Enhanced Dungeon] ${attackerType}: ${recovery > 0 ? '+' : ''}${Math.round(recovery)}%`, titans);
+                }
+                endBattle(result);
+            }
+
+            async function attackEarthOrFire(teamNum, attackerType) {
+                if (!bestBattle.recovery || bestBattle.recovery < -10) {
+                    bestBattle.recovery = -11;
+                    let selectedTeamNum = -1;
+
+                    for (let attempt = 0; selectedTeamNum < 0 && attempt < teams[attackerType].heroes.length; attempt++) {
+                        selectedTeamNum = await attemptAttackEarthOrFire(teamNum, attackerType, attempt);
+                    }
+
+                    if (selectedTeamNum < 0) {
+                        if (localStorage.getItem('hwh_allow_titan_loss') !== 'true') {
+                            endDungeon('Cannot win without titan loss!', attackerType);
+                            return;
+                        }
+                        // Track forced attempt
+                        const forceCount = markForcedElement(attackerType);
+                        console.log(`[Enhanced Dungeon] 💀 attackEarthOrFire forcing: ${attackerType} (attempt ${forceCount}/2)`);
+                        if (forceCount >= 2) {
+                            endDungeon(`${attackerType} blocked - no winning team (resets at daily reset)`, attackerType);
+                            return;
+                        }
+                        bestBattle.team = clone(teams[attackerType]);
+                    }
+                }
+                return findAttack(teamNum, attackerType, bestBattle.team);
+            }
+
+            // ============ NEUTRAL ATTACK (SMART SELECTION) ============
+            async function attackNeutral(teamNum, attackerType) {
+                const start = Date.now();
+                const factors = calcFactor();
+                bestBattle.recovery = -0.2;
+
+                // Quick mode
+                await findBestBattleNeutral(teamNum, attackerType, factors, true);
+
+                if (bestBattle.recovery < 0 || (bestBattle.recovery < 0.2 && factors[0]?.value < 0.5)) {
+                    const recovery = Math.round(100 * bestBattle.recovery);
+                    console.log(`[Enhanced Dungeon] Quick mode failed (${recovery}%), trying exhaustive...`);
+                    await findBestBattleNeutral(teamNum, attackerType, factors, false);
+                }
+
+                timeDungeon.attackNeutral += (Date.now() - start);
+
+                if (bestBattle.attackers) {
+                    const team = getTeam(bestBattle.attackers);
+                    return findAttack(teamNum, attackerType, team);
+                }
+
+                // Fallback: force battle if allowLoss is enabled
+                if (localStorage.getItem('hwh_allow_titan_loss') === 'true') {
+                    console.log('[Enhanced Dungeon] 💀 Forcing neutral battle despite no predicted win');
+                    const fallbackTeam = teams.water.heroes?.length ? clone(teams.water) : { heroes: teams.neutral };
+                    if (!fallbackTeam.heroes?.length) {
+                        endDungeon('No titans available for battle', 'All titans may be dead');
+                        return null;
+                    }
+                    return findAttack(teamNum, attackerType, fallbackTeam);
+                }
+
+                endDungeon('Could not find winning battle!', attackerType);
+                return undefined;
+            }
+
+            async function findBestBattleNeutral(teamNum, attackerType, factors, mode) {
+                const countFactors = Math.min(factors.length, 4);
+                const araji = !titansStates['4013']?.isDead;
+                const eden = !titansStates['4023']?.isDead;
+                const dark = [4032, 4033].filter(e => !titansStates[e]?.isDead);
+                const light = [4042].filter(e => !titansStates[e]?.isDead);
+                const actions = [];
+
+                if (mode) {
+                    // Quick mode - test top combinations
+                    for (let i = 0; i < countFactors; i++) {
+                        actions.push(startBattle(teamNum, attackerType, getNeutralTeam(factors[i].id)));
+                    }
+
+                    if (countFactors > 1) {
+                        const firstId = factors[0].id;
+                        const secondId = factors[1].id;
+                        actions.push(startBattle(teamNum, attackerType, getNeutralTeam(firstId, 4001, secondId)));
+                        actions.push(startBattle(teamNum, attackerType, getNeutralTeam(firstId, 4002, secondId)));
+                        actions.push(startBattle(teamNum, attackerType, getNeutralTeam(firstId, 4003, secondId)));
+                    }
+
+                    if (araji) {
+                        actions.push(startBattle(teamNum, attackerType, getNeutralTeam(4013)));
+                        if (countFactors > 0) {
+                            const firstId = factors[0].id;
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(firstId, 4000, 4013)));
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(firstId, 4001, 4013)));
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(firstId, 4002, 4013)));
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(firstId, 4003, 4013)));
+                        }
+                        if (eden) {
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(4023, 4000, 4013)));
+                        }
+                    }
+                } else {
+                    // Exhaustive mode
+                    const maxFactors = Math.min(factors.length, 2);
+
+                    for (let i = 0; i < maxFactors; i++) {
+                        const mainId = factors[i].id;
+
+                        if (araji && i > 0) {
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(mainId, 4000, 4013)));
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(mainId, 4001, 4013)));
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(mainId, 4002, 4013)));
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(mainId, 4003, 4013)));
+                        }
+
+                        for (const darkId of dark) {
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(mainId, 4001, darkId)));
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(mainId, 4002, darkId)));
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(mainId, 4003, darkId)));
+                        }
+
+                        for (const lightId of light) {
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(mainId, 4001, lightId)));
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(mainId, 4002, lightId)));
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(mainId, 4003, lightId)));
+                        }
+
+                        const isFull = i > 0;
+                        for (let j = isFull ? i + 1 : 2; j < factors.length; j++) {
+                            const extraId = factors[j].id;
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(mainId, 4000, extraId)));
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(mainId, 4001, extraId)));
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(mainId, 4002, extraId)));
+                        }
+                    }
+
+                    if (araji) {
+                        for (const darkId of dark) {
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(darkId, 4001, 4013)));
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(darkId, 4002, 4013)));
+                        }
+                        for (const lightId of light) {
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(lightId, 4001, 4013)));
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(lightId, 4002, 4013)));
+                        }
+                    }
+
+                    for (let i = 0; i < dark.length; i++) {
+                        const firstId = dark[i];
+                        actions.push(startBattle(teamNum, attackerType, getNeutralTeam(firstId)));
+                        for (let j = i + 1; j < dark.length; j++) {
+                            const secondId = dark[j];
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(firstId, 4001, secondId)));
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(firstId, 4002, secondId)));
+                        }
+                    }
+
+                    for (let i = 0; i < light.length; i++) {
+                        const firstId = light[i];
+                        actions.push(startBattle(teamNum, attackerType, getNeutralTeam(firstId)));
+                        for (let j = i + 1; j < light.length; j++) {
+                            const secondId = light[j];
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(firstId, 4001, secondId)));
+                            actions.push(startBattle(teamNum, attackerType, getNeutralTeam(firstId, 4002, secondId)));
+                        }
+                    }
+                }
+
+                // Evaluate all results
+                for (const result of await rateLimitedAll(actions)) {
+                    const recovery = getRecovery(result);
+                    if (recovery > bestBattle.recovery) {
+                        bestBattle.recovery = recovery;
+                        bestBattle.attackers = result.progress[0].attackers.heroes;
+                    }
+                }
+            }
+
+            function getNeutralTeam(id, swapId, addId) {
+                const neutralTeam = clone(teams.water);
+                const neutral = neutralTeam.heroes;
+
+                if (neutral.length === 4 && swapId) {
+                    for (let i in neutral) {
+                        if (neutral[i] === swapId) {
+                            neutral[i] = addId;
+                        }
+                    }
+                } else if (addId) {
+                    neutral.push(addId);
+                }
+
+                neutral.push(id);
+                return neutralTeam;
+            }
+
+            function getTeam(titans) {
+                return {
+                    favor: {},
+                    heroes: Object.keys(titans).map(id => parseInt(id)),
+                    teamNum: 0,
+                };
+            }
+
+            // ============ FACTOR CALCULATION ============
+            function calcFactor() {
+                const neutral = teams.neutral;
+                const factors = [];
+
+                for (const titanId of neutral) {
+                    const titan = titansStates[titanId];
+                    const factor = titan ? titan.hp / titan.maxHp + titan.energy / 10000.0 : 1;
+                    if (factor > 0) {
+                        factors.push({ id: titanId, value: factor });
+                    }
+                }
+
+                factors.sort((a, b) => a.value - b.value);
+                return factors;
+            }
+
+            // ============ RECOVERY CALCULATION ============
+            async function getBestRecovery(teamNum, attackerType, team, countBattle) {
+                let bestRecovery = -1000;
+                const actions = [];
+
+                for (let i = 0; i < countBattle; i++) {
+                    actions.push(startBattle(teamNum, attackerType, team));
+                }
+
+                for (const result of await Promise.all(actions)) {
+                    const recovery = getRecovery(result);
+                    if (recovery > bestRecovery) {
+                        bestRecovery = recovery;
+                    }
+                }
+
+                return bestRecovery;
+            }
+
+            function getRecovery(result) {
+                if (!result?.result || result.result.stars === 0 || result.dungeonUnavailable) {
+                    return -100;
+                }
+
+                const stars = result.result.stars;
+                const allowLoss = localStorage.getItem('hwh_allow_titan_loss') === 'true';
+
+                // Accept 1-2 star wins only if allowing loss
+                if (stars < 3) {
+                    if (allowLoss) {
+                        // Return low value so 3-star is still preferred, but better than -100
+                        return -50 + stars;  // 1-star = -49, 2-star = -48
+                    }
+                    return -100;
+                }
+
+                let beforeSumFactor = 0;
+                let afterSumFactor = 0;
+                const beforeTitans = result.battleData.attackers;
+                const afterTitans = result.progress[0].attackers.heroes;
+
+                for (const i in afterTitans) {
+                    const titan = afterTitans[i];
+                    const percentHP = titan.hp / beforeTitans[i].hp;
+                    const energy = titan.energy;
+                    const factor = checkTitan(i, energy, percentHP) ? getFactor(i, energy, percentHP) : -100;
+                    afterSumFactor += factor;
+                }
+
+                for (const i in beforeTitans) {
+                    const titan = beforeTitans[i];
+                    const state = titan.state;
+                    beforeSumFactor += state ? getFactor(i, state.energy, state.hp / titan.hp) : 1;
+                }
+
+                return afterSumFactor - beforeSumFactor;
+            }
+
+            function getFactor(id, energy, percentHP) {
+                const elementId = id.toString().slice(2, 3);
+                const isEarthOrFire = elementId === '1' || elementId === '2';
+                const energyBonus = id === '4020' && energy === 1000 ? 0.1 : energy / 20000.0;
+                const factor = percentHP + energyBonus;
+                return isEarthOrFire ? factor : factor / 10;
+            }
+
+            function checkTitan(id, energy, percentHP) {
+                switch (id) {
+                    case '4020': // Sigurd
+                        return percentHP > 0.25 || (energy === 1000 && percentHP > 0.05);
+                    case '4010': // Hyperion
+                        return percentHP + energy / 2000.0 > 0.63;
+                    case '4000': // Angus
+                        return percentHP > 0.62 || (energy < 1000 && ((percentHP > 0.45 && energy >= 400) || (percentHP > 0.3 && energy >= 670)));
+                }
+                return true;
+            }
+
+            // ============ FIND BEST ATTACK ============
+            async function findAttack(teamNum, attackerType, team) {
+                const start = Date.now();
+                let recovery = -1000;
+                let iterations = 0;
+                let result;
+                const correction = 0.01;
+                const isForced = bestBattle.recovery <= -100;
+
+                // Skip optimization loop if forcing (no 3-star win possible)
+                const maxIterations = isForced ? 1 : 100;
+
+                for (let needRecovery = bestBattle.recovery; recovery < needRecovery && iterations < maxIterations; needRecovery -= correction, iterations++) {
+                    result = await startBattle(teamNum, attackerType, team);
+                    if (result?.dungeonUnavailable) {
+                        console.warn('[Enhanced Dungeon] Dungeon unavailable - stopping');
+                        return result;  // Pass the marker through, not null
+                    }
+                    recovery = getRecovery(result);
+                }
+
+
+                bestBattle.recovery = recovery;
+                timeDungeon.findAttack += (Date.now() - start);
+
+                lastBattleTeam = team.heroes || [];
+                return result;
+            }
+
+            // ============ BATTLE START ============
+            function startBattle(teamNum, attackerType, args) {
+                return new Promise((resolve, reject) => {
+                    const battleArgs = clone(args);
+                    battleArgs.teamNum = teamNum;
+
+                    const startBattleCall = {
+                        calls: [{
+                            name: 'dungeonStartBattle',
+                            args: battleArgs,
+                            ident: 'body',
+                        }],
+                    };
+
+                    send(JSON.stringify(startBattleCall), resultBattle, {
+                        resolve,
+                        teamNum,
+                        attackerType,
+                    });
+                });
+            }
+
+            function resultBattle(resultBattles, args) {
+                console.log('[Enhanced Dungeon] resultBattle received:', resultBattles);
+                if (!resultBattles?.results) {
+                    const errorName = resultBattles?.error?.name || 'Unknown';
+                    console.warn('[Enhanced Dungeon] Battle request failed:', errorName);
+
+                    // Check for dungeon unavailable errors
+                    if (errorName === 'NotFound' || errorName === 'common\\NotFound') {
+                        args.resolve({ dungeonUnavailable: true, error: errorName });
+                        return;
+                    }
+                    args.resolve(null);
+                    return;
+                }
+
+                const battleData = resultBattles.results[0].result.response;
+                const battleType = battleData.type === 'dungeon_titan' ? 'get_titan' : 'get_tower';
+                battleData.progress = [{ attackers: { input: ['auto', 0, 0, 'auto', 0, 0] } }];
+
+                BattleCalc(battleData, battleType, result => {
+                    result.teamNum = args.teamNum;
+                    result.attackerType = args.attackerType;
+                    result.battleData = battleData;
+                    args.resolve(result);
+                });
+            }
+
+            // ============ BATTLE END ============
+            async function endBattle(battleInfo) {
+                if (!battleInfo) {
+                    endDungeon('Battle failed', battleInfo);
+                    return;
+                }
+
+
+                if (battleInfo.dungeonUnavailable) {
+                    endDungeon('Battle request rejected', 'Floor state may be out of sync - try restarting');
+                    return;
+                }
+
+                // 3-star safety check (with logging)
+                console.log('[Enhanced Dungeon] Battle result:', battleInfo.result);
+                if (battleInfo.result.stars < 3 && !battleInfo.result.win) {
+                    if (localStorage.getItem('hwh_allow_titan_loss') !== 'true') {
+                        endDungeon('Titan may have died!', battleInfo);
+                        return;
+                    }
+                    console.log('[Enhanced Dungeon] 💀 Proceeding with predicted loss (allow loss enabled)');
+                }
+
+                const args = {
+                    result: battleInfo.result,
+                    progress: battleInfo.progress,
+                };
+
+                if (countPredictionCard > 0) {
+                    args.isRaid = true;
+                    countPredictionCard--;
+                } else {
+                    const timer = getTimer(battleInfo.battleTime);
+                    console.log('[Enhanced Dungeon] Timer:', timer);
+                    await countdownTimer(timer, `${I18N('DUNGEON')}: ${I18N('TITANIT')} ${dungeonActivity}/${maxDungeonActivity} ${talentMsg}`);
+                }
+
+                const calls = [{
+                    name: 'dungeonEndBattle',
+                    args,
+                    ident: 'body',
+                }];
+
+                lastDungeonBattleData = null;
+                send(JSON.stringify({ calls }), resultEndBattle);
+            }
+
+            function resultEndBattle(e) {
+                if (!e?.results) {
+                    endDungeon('Lost server connection!', 'break');
+                    return;
+                }
+
+                const battleResult = e.results[0].result.response;
+
+                if ('error' in battleResult) {
+                    endDungeon('Battle error', battleResult);
+                    return;
+                }
+
+                // Track team only after successful battle
+                if (lastBattleTeam) {
+                    addTeam(lastBattleTeam);
+                    lastBattleTeam = null;
+                }
+
+                const dungeonGetInfo = battleResult.dungeon ?? battleResult;
+                dungeonActivity += battleResult.reward?.dungeonActivity ?? 0;
+                checkFloor(dungeonGetInfo);
+            }
+
+            // ============ SAVE PROGRESS ============
+            function saveProgress() {
+                const saveProgressCall = {
+                    calls: [{
+                        name: 'dungeonSaveProgress',
+                        args: {},
+                        ident: 'body',
+                    }],
+                };
+                send(JSON.stringify(saveProgressCall), resultEndBattle);
+            }
+
+            // ============ STATS ============
+            function addTeam(team) {
+                for (const existing of countTeam) {
+                    if (equalsTeam(existing.team, team)) {
+                        existing.count++;
+                        return;
+                    }
+                }
+                countTeam.push({ team: team, count: 1 });
+            }
+
+            function equalsTeam(team1, team2) {
+                if (team1.length !== team2.length) return false;
+                for (let i in team1) {
+                    if (team1[i] !== team2[i]) return false;
+                }
+                return true;
+            }
+
+            // ============ STATS POPUP ============
+            function showStats() {
+                const activity = dungeonActivity - startDungeonActivity;
+                const workTime = clone(timeDungeon);
+                workTime.all = Date.now() - workTime.all;
+
+                // Add to daily stats and get totals
+                const daily = addRunToDaily(activity, workTime.all, countTeam);
+
+                // Convert to seconds
+                for (const key in workTime) {
+                    workTime[key] = Math.round(workTime[key] / 1000);
+                }
+                const dailyTimeSecs = Math.round(daily.time / 1000);
+
+                const speed = workTime.all > 0 ? Math.round(3600 * activity / workTime.all) : 0;
+                const dailySpeed = dailyTimeSecs > 0 ? Math.round(3600 * daily.titanite / dailyTimeSecs) : 0;
+
+                // Format time helper
+                const formatTime = (secs) => {
+                    if (secs < 60) return `${secs}s`;
+                    if (secs < 3600) return `${Math.floor(secs/60)}m ${secs%60}s`;
+                    return `${Math.floor(secs/3600)}h ${Math.floor((secs%3600)/60)}m`;
+                };
+
+                // Titan status helper
+                const getTitanStatusHtml = () => {
+                    const getName = (id) => {
+                        if (typeof cheats !== 'undefined' && cheats.translate) {
+                            const name = cheats.translate('LIB_HERO_NAME_' + id);
+                            if (name && !name.startsWith('LIB_')) return name;
+                        }
+                        return id;
+                    };
+                    const elements = {
+                        water: {start: 4000, end: 4009, color: '#4a9eff', label: '💧'},
+                        fire: {start: 4010, end: 4019, color: '#ff6b4a', label: '🔥'},
+                        earth: {start: 4020, end: 4029, color: '#4ae29a', label: '🌿'},
+                        dark: {start: 4030, end: 4039, color: '#9966ff', label: '🌑'},
+                        light: {start: 4040, end: 4049, color: '#ffdd44', label: '☀️'}
+                    };
+                    let html = '';
+                    for (const [elem, data] of Object.entries(elements)) {
+                        const titans = [];
+                        for (let id = data.start; id <= data.end; id++) {
+                            const state = titansStates[id];
+                            const inGetAll = titanGetAll?.some(t => t.id === id);
+                            if (state !== undefined || inGetAll) {
+                                const alive = !state?.isDead;
+                                const name = getName(id);
+                                if (alive && state?.hp && state?.maxHp) {
+                                    const hpPct = Math.round(100 * state.hp / state.maxHp);
+                                    const workenPct = state.energy !== undefined ? Math.round(state.energy / 10) : null;
+                                    const hpColor = hpPct > 80 ? '#4ae29a' : hpPct > 50 ? '#ffd700' : '#ff6b4a';
+                                    const stats = workenPct !== null ? `❤️${hpPct}%⚡${workenPct}%` : `❤️${hpPct}%`;
+                                    titans.push(`<span style="color: ${hpColor}; font-size: 10px;">${name} ${stats}</span>`);
+                                } else if (alive) {
+                                    titans.push(`<span style="color: #4ae29a; font-size: 10px;">${name}</span>`);
+                                } else {
+                                    titans.push(`<span style="color: #ff4444; font-size: 10px;">${name} ✗</span>`);
+                                }
+                            }
+                        }
+                        if (titans.length > 0) {
+                            html += `<div style="margin: 3px 0;">${data.label} ${titans.join(', ')}</div>`;
+                        }
+                    }
+                    return html;
+                };
+
+                // Sort daily teams by usage for display
+                const dailyTeamsSorted = [...daily.teams].sort((a, b) => b.count - a.count);
+                let dailyTeamsHtml = '';
+                dailyTeamsSorted.slice(0, 5).forEach((t) => {
+                    const titanNames = t.team.map(id => getName(id)).join(', ');
+                    dailyTeamsHtml += `<div style="font-size: 11px; color: #ccc; margin: 2px 0;"><span style="color: #ffd700;">${t.count}x</span> ${titanNames}</div>`;
+                });
+                if (!dailyTeamsHtml) dailyTeamsHtml = '<div style="font-size: 11px; color: #666;">No titan battles</div>';
+
+                // Create popup
+                const popup = document.createElement('div');
+                popup.id = 'dungeon-stats-popup';
+                popup.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; display: flex; align-items: center; justify-content: center;">
+                    <div style="background: #2a1810; border: 3px solid #8b6914; border-radius: 10px; padding: 20px; min-width: 320px; color: #ffd700; font-family: Arial, sans-serif;">
+                        <h3 style="margin: 0 0 15px 0; text-align: center; color: #4ae29a;">🏰 Dungeon Complete</h3>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+    <div style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px; text-align: center;">
+        <div style="font-size: 20px; font-weight: bold; color: #ffd700;">${activity.toLocaleString()}</div>
+        <div style="font-size: 10px; color: #999;">This Run</div>
+    </div>
+    <div style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px; text-align: center;">
+        <div style="font-size: 20px; font-weight: bold; color: #4ae29a;">${speed.toLocaleString()}</div>
+        <div style="font-size: 10px; color: #999;">per hour</div>
+    </div>
+    <div style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px; text-align: center;">
+        <div style="font-size: 14px; font-weight: bold; color: #ff9966;">${new Date(dungeonResetTs * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+        <div style="font-size: 10px; color: #999;">Reset</div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+    <div style="background: rgba(74,226,154,0.1); padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #4ae29a;">
+        <div style="font-size: 20px; font-weight: bold; color: #ffd700;">${daily.titanite.toLocaleString()}</div>
+        <div style="font-size: 10px; color: #4ae29a;">Daily Total</div>
+    </div>
+    <div style="background: rgba(74,226,154,0.1); padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #4ae29a;">
+        <div style="font-size: 20px; font-weight: bold; color: #4ae29a;">${dailySpeed.toLocaleString()}</div>
+        <div style="font-size: 10px; color: #4ae29a;">avg/hour</div>
+    </div>
+    <div style="background: rgba(74,226,154,0.1); padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #4ae29a;">
+        <div style="font-size: 20px; font-weight: bold; color: #4ae29a;">${daily.runs}</div>
+        <div style="font-size: 10px; color: #4ae29a;">Runs</div>
+    </div>
+</div>
+
+                        <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                            <div style="font-size: 12px; font-weight: bold; color: #ccc; margin-bottom: 8px;">⏱️ Time: ${formatTime(workTime.all)} this run | ${formatTime(dailyTimeSecs)} today</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 11px;">
+                                <div style="color: #999;">Neutral:</div><div style="color: #fff;">${formatTime(workTime.attackNeutral)}</div>
+                                <div style="color: #999;">Earth/Fire:</div><div style="color: #fff;">${formatTime(workTime.attackEarthOrFire)}</div>
+                                <div style="color: #999;">Find Attack:</div><div style="color: #fff;">${formatTime(workTime.findAttack)}</div>
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                            <div style="font-size: 12px; font-weight: bold; color: #ccc; margin-bottom: 8px;">👥 Top Teams Today</div>
+                            ${dailyTeamsHtml}
+                        </div>
+
+                        <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                            <div style="font-size: 12px; font-weight: bold; color: #ccc; margin-bottom: 8px;">🏛️ Titan Status</div>
+                            ${getTitanStatusHtml()}
+                        </div>
+
+                        <button id="dungeon-stats-close" style="width: 100%; padding: 10px; background: #8b6914; color: #ffd700; border: none; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer;">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            `;
+
+                document.body.appendChild(popup);
+
+                // Close handlers
+                popup.querySelector('#dungeon-stats-close').onclick = () => popup.remove();
+                popup.querySelector('div').onclick = (e) => {
+                    if (e.target === popup.querySelector('div')) popup.remove();
+                };
+
+                // Auto-close after 30 seconds
+                // setTimeout(() => popup.remove(), 30000);
+            }
+
+            // ============ END DUNGEON ============
+            function endDungeon(reason, info) {
+                if (end) return;
+                end = true;
+
+                console.log('[Enhanced Dungeon] End:', reason, info);
+
+                if (info === 'break') {
+                    setProgress(`${I18N('DUNGEON')} stopped: ${dungeonActivity}/${maxDungeonActivity}\nConnection lost!`, false, hideProgress);
+                } else {
+                    hideProgress();
+                }
+                // Always show stats
+                showStats();
+
+                setTimeout(() => {
+                    silentSync();
+                }, 2000);
+
+                resolve();
+            }
+        }
+
+        // Replace HWH's dungeon with enhanced version
+        HWHClasses.executeDungeon = executeDungeonEnhanced;
+        enhancedDungeonEnabled = true;
+
+        console.log('%c[Enhanced Dungeon] Loaded! Smart team selection enabled.', 'color: #00ff00');
+        return true;
+    }
+
+    // Function to restore original dungeon
+    function disableEnhancedDungeon() {
+        if (HWHClasses?.executeDungeonOriginal) {
+            HWHClasses.executeDungeon = HWHClasses.executeDungeonOriginal;
+            enhancedDungeonEnabled = false;
+            console.log('[Enhanced Dungeon] Disabled, using default HWH dungeon');
+            return true;
+        }
+        return false;
+    }
+
+    // Check if enhanced dungeon is active
+    function isEnhancedDungeonActive() {
+        return enhancedDungeonEnabled;
+    }
+    // ==================== END ENHANCED DUNGEON ====================
+
+    // ToE Summary Popup
+    window.showToESummary = function(data) {
+        const tier = data.tier || '?';
+        const rank = data.rank?.toLocaleString() || '?';
+        const dailyScore = data.dailyScore?.toLocaleString() || '?';
+        const weeklyScore = data.weeklyScore?.toLocaleString() || '?';
+
+        const popup = document.createElement('div');
+        popup.innerHTML = `
+            <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                        border: 2px solid #4a9eff; border-radius: 15px; padding: 20px;
+                        z-index: 999999; min-width: 280px; box-shadow: 0 0 30px rgba(74,158,255,0.3);
+                        font-family: Arial, sans-serif; color: #fff;">
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <span style="font-size: 24px;">⚔️</span>
+                    <span style="font-size: 18px; font-weight: bold; color: #4a9eff; margin-left: 8px;">ToE Complete</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                    <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 20px; color: #ffd700; font-weight: bold;">Tier ${tier}</div>
+                        <div style="font-size: 11px; color: #888;">Current Tier</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 20px; color: #4a9eff; font-weight: bold;">#${rank}</div>
+                        <div style="font-size: 11px; color: #888;">Rank</div>
+                    </div>
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                    <div style="font-size: 13px; margin-bottom: 8px;">📊 <b>Scores</b></div>
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                        <span style="color: #aaa;">Daily:</span>
+                        <span style="color: #7fff7f;">${dailyScore}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                        <span style="color: #aaa;">Weekly:</span>
+                        <span style="color: #7fff7f;">${weeklyScore}</span>
+                    </div>
+                </div>
+                <button onclick="this.closest('div').parentElement.remove()"
+                        style="width: 100%; padding: 10px; background: linear-gradient(135deg, #4a9eff, #2d7ed9);
+                               border: none; border-radius: 8px; color: white; font-weight: bold;
+                               cursor: pointer; font-size: 14px;">Close</button>
+            </div>
+        `;
+        document.body.appendChild(popup);
+        setTimeout(() => popup.remove(), 30000);
+    }
+
+
+
+
     // ================================================================
     // SECTION 5: COLLECTION AUTOMATION FUNCTIONS
     // ================================================================
@@ -8783,8 +10112,6 @@ background: transparent;
     // Soul Shop function - CLEANED (minimal debugging)
     window.buyAllInSoulShop = async function() {
         try {
-            if (HWHFuncs.setProgress) HWHFuncs.setProgress('🛒 Checking Soul Shop...', false);
-
             const SendFunction = getSend();
             if (!SendFunction) {
                 return { success: false, error: 'No Send function available' };
@@ -8812,12 +10139,9 @@ background: transparent;
                     }
                 }
             } else {
-                if (HWHFuncs.setProgress) HWHFuncs.setProgress('❌ Soul Shop not found', true);
                 return { success: false, error: 'Soul Shop not found' };
             }
-
             if (calls.length && slots) {
-                if (HWHFuncs.setProgress) HWHFuncs.setProgress(`🛒 Buying ${calls.length} items from Soul Shop...`, false);
 
                 const results = await SendFunction(JSON.stringify({ calls }));
                 let successfulPurchases = 0;
@@ -8827,7 +10151,7 @@ background: transparent;
                     if (structuredRewards[name]) {
                         structuredRewards[name].amount += amount;
                     } else {
-                        structuredRewards[name] = { amount, source: 'S' };
+                        structuredRewards[name] = { amount, source: 'Sh' };
                     }
                 };
 
@@ -8901,9 +10225,7 @@ background: transparent;
                 const rewardCount = Object.keys(structuredRewards).length;
 
                 if (successfulPurchases > 0) {
-                    if (HWHFuncs.setProgress) {
-                        HWHFuncs.setProgress(`✅ Soul Shop: ${successfulPurchases} slots bought`, false);
-                    }
+                    console.log('ℹ️ Note: Shop UI updates on page reload');
                     return {
                         success: true,
                         items: `${successfulPurchases} items`,
@@ -8912,7 +10234,6 @@ background: transparent;
                         rewards: structuredRewards
                     };
                 } else {
-                    if (HWHFuncs.setProgress) HWHFuncs.setProgress('⚠️ Soul Shop: No purchases made', false);
                     return {
                         success: true,
                         items: 'No items to buy',
@@ -8922,7 +10243,6 @@ background: transparent;
                     };
                 }
             } else {
-                if (HWHFuncs.setProgress) HWHFuncs.setProgress('✅ Soul Shop: No items to buy', false);
                 return {
                     success: true,
                     items: 'No items to buy',
@@ -8932,7 +10252,6 @@ background: transparent;
             }
         } catch (error) {
             console.error('Soul Shop error:', error);
-            if (HWHFuncs.setProgress) HWHFuncs.setProgress('❌ Soul Shop purchase failed', true);
             return {
                 success: false,
                 error: error.message
@@ -8942,8 +10261,6 @@ background: transparent;
     // Buy gear/scrolls from Arena, Grand, Tower, Friendship, Outland shops - prioritized by craft targets
     window.buyShopsWithCraftPriority = async function() {
         try {
-            if (HWHFuncs.setProgress) HWHFuncs.setProgress('🛒 Checking shops...', false);
-
             const SendFunction = getSend();
             if (!SendFunction) return { success: false, error: 'No Send function available' };
 
@@ -8994,9 +10311,30 @@ background: transparent;
                     const mergeCost = lib.data?.inventoryItem?.[baseType]?.[rwdId]?.fragmentMergeCost?.fragmentCount || 50;
 
                     const effectiveHave = haveBuilt + Math.floor(haveFrags / mergeCost);
-                    const needItems = Math.max(0, target - effectiveHave);
+                    let needItems = Math.max(0, target - effectiveHave);
 
-                    if (needItems <= 0) continue; // Skip if at or above target
+                    // Check if this is composite gear (crafted from other gear, not fragments)
+                    const itemData = lib.data?.inventoryItem?.[baseType]?.[rwdId];
+                    const isComposite = baseType === 'gear' && itemData?.craftRecipe?.gear && !itemData.fragmentMergeCost;
+
+                    if (isComposite) {
+                        if (needItems <= 0) continue; // Don't need more
+
+                        // Need it - can we craft from excess ingredients?
+                        let canCraftFromExcess = true;
+                        for (const [ingId, ingQty] of Object.entries(itemData.craftRecipe.gear)) {
+                            const haveIng = inv.gear?.[ingId] || 0;
+                            const ingTarget = craftTargets[`gear_${ingId}`] || 0;
+                            if (haveIng - ingTarget < ingQty) {
+                                canCraftFromExcess = false;
+                                break;
+                            }
+                        }
+                        if (canCraftFromExcess) continue; // Skip - can craft it
+                        // Otherwise buy (need it but can't craft)
+                    } else {
+                        if (needItems <= 0) continue;
+                    }
 
                     const contribution = isFragment ? (rwdQty / mergeCost) : rwdQty;
                     const priority = needItems * contribution;
@@ -9015,15 +10353,10 @@ background: transparent;
             }
 
             if (!buyList.length) {
-                if (HWHFuncs.setProgress) HWHFuncs.setProgress('✅ Shops: No items to buy', false);
                 return { success: true, items: 'No items to buy', count: 0, hasItems: false, rewards: {} };
             }
-
             // Sort by priority (highest first)
             buyList.sort((a,b) => b.priority - a.priority);
-
-            if (HWHFuncs.setProgress) HWHFuncs.setProgress(`🛒 Buying ${buyList.length} items...`, false);
-
             const structuredRewards = {};
             let bought = 0;
 
@@ -9040,7 +10373,7 @@ background: transparent;
                         const icon = item.rwdType.includes('Gear') ? '⚙️' : '📜';
                         const frag = item.rwdType.startsWith('fragment') ? ' (Frag)' : '';
                         const key = `${icon} ${item.itemName}${frag}`;
-                        structuredRewards[key] = { amount: (structuredRewards[key]?.amount || 0) + item.rwdQty, source: item.shopName[0] };
+                        structuredRewards[key] = { amount: (structuredRewards[key]?.amount || 0) + item.rwdQty, source: 'Sh' };
                     }
                 } catch (e) {
                     debugLog(`Shop buy failed: ${item.itemName}`, e);
@@ -9048,8 +10381,7 @@ background: transparent;
                 await new Promise(r => setTimeout(r, 50));
             }
 
-            if (HWHFuncs.setProgress) HWHFuncs.setProgress(`✅ Shops: ${bought} items bought`, false);
-
+            if (bought > 0) console.log('ℹ️ Note: Shop UI updates on page reload');
             return {
                 success: true,
                 items: `${bought} items`,
@@ -9059,357 +10391,19 @@ background: transparent;
             };
         } catch (error) {
             console.error('Shop buy error:', error);
-            if (HWHFuncs.setProgress) HWHFuncs.setProgress('❌ Shop purchase failed', true);
             return { success: false, error: error.message };
         }
     };
 
-    window.collectAllGuildQuestRewards = async function() {
-        try {
-            if (HWHFuncs.setProgress) HWHFuncs.setProgress('🏰 Starting guild quest collection...', false);
-
-            const SendFunction = getSend();
-            let totalCollected = 0;
-            let roundNumber = 1;
-            let maxRounds = 10; // Increased from 8 to handle more iterations
-
-            while (roundNumber <= maxRounds) {
-                if (HWHFuncs.setProgress) HWHFuncs.setProgress(`🏰 Guild quests: Round ${roundNumber}/${maxRounds}...`, false);
-
-                // Get all quests
-                const questResponse = await SendFunction('{"calls":[{"name":"questGetAll","args":{},"ident":"body"}]}');
-
-                if (!questResponse?.results?.[0]?.result?.response) {
-                    debugLog('No quest data found');
-                    break;
-                }
-
-                const allQuests = questResponse.results[0].result.response;
-                let roundCollected = 0;
-
-                // Phase 1: Batch collect state 2 quests
-                const state2Quests = [];
-                for (let i = 0; i < allQuests.length; i++) {
-                    const quest = allQuests[i];
-                    if (quest.id >= 20000000 && quest.id <= 20000200) {
-                        debugLog(`Guild quest ${quest.id}: state=${quest.state}, progress=${quest.progress}`);
-                        if (quest.state === 2) {
-                            state2Quests.push(quest.id);
-                        }
-                    }
-                }
-
-                if (state2Quests.length > 0) {
-                    debugLog(`Round ${roundNumber}: Found ${state2Quests.length} state 2 quests for batch collection:`, state2Quests);
-
-                    const collectResponse = await SendFunction(JSON.stringify({
-                        calls: [{
-                            name: "quest_questsFarm",
-                            args: { questIds: state2Quests },
-                            context: { actionTs: Date.now() },
-                            ident: "body"
-                        }]
-                    }));
-
-                    if (collectResponse?.results?.[0]?.result && !collectResponse.results?.[0]?.result.error) {
-                        debugLog('🏰 Guild quest rewards:', JSON.stringify(collectResponse.results[0].result.response));
-                        roundCollected += state2Quests.length;
-                        totalCollected += state2Quests.length;
-                        debugLog(`State 2 batch: ${state2Quests.length} collected`);
-                    }
-                }
-
-                // Phase 2: Individual test state 1 quests
-                const state1Quests = [];
-                for (let i = 0; i < allQuests.length; i++) {
-                    const quest = allQuests[i];
-                    if (quest.id >= 20000000 && quest.id <= 20000200 && quest.state === 1) {
-                        state1Quests.push(quest.id);
-                    }
-                }
-
-                if (state1Quests.length > 0) {
-                    debugLog(`Testing ${state1Quests.length} state 1 quests individually...`);
-                    let state1Collected = 0;
-
-                    for (const questId of state1Quests) {
-                        try {
-                            const response = await SendFunction(`{"calls":[{"name":"quest_questsFarm","args":{"questIds":[${questId}]},"context":{"actionTs":${Date.now()}},"ident":"body"}]}`);
-                            if (response?.results?.[0]?.result && !response.results[0].result.error) {
-                                debugLog('🏰 Guild quest reward:', JSON.stringify(response.results[0].result.response));
-                                state1Collected++;
-                                totalCollected++;
-                                roundCollected++;
-                            }
-                            await new Promise(resolve => setTimeout(resolve, getAdjustedDelay(38)));
-                        } catch (error) {
-                            // Silent error handling
-                        }
-                    }
-                    debugLog(`State 1 results: ${state1Collected}/${state1Quests.length} collected`);
-                }
-
-                // If no quests were collected this round, we're done
-                if (roundCollected === 0) {
-                    debugLog(`Round ${roundNumber}: No quests collected, stopping`);
-                    break;
-                }
-
-                if (HWHFuncs.setProgress) {
-                    HWHFuncs.setProgress(`🏰 Round ${roundNumber}: +${roundCollected} quests (${totalCollected} total)`, false);
-                }
-
-                roundNumber++;
-
-                // Small delay between rounds
-                await new Promise(resolve => setTimeout(resolve, getAdjustedDelay(40)));
-            }
-
-            if (HWHFuncs.setProgress) HWHFuncs.setProgress(`✅ Guild quests: ${totalCollected} collected in ${roundNumber-1} rounds`, false);
-
-            return {
-                success: true,
-                items: totalCollected > 0 ? `${totalCollected} guild quests collected` : 'All guild quests already collected',
-                count: totalCollected,
-                hasItems: false
-            };
-
-        } catch (error) {
-            console.error('Error collecting guild quests:', error);
-            if (HWHFuncs.setProgress) HWHFuncs.setProgress('❌ Guild quest collection failed', false);
-            return {
-                success: false,
-                items: 'Guild quest collection failed',
-                count: 0
-            };
-        }
-    };
-    // Keep daily rewards as the original working version with reduced delay:
-    window.harvestDailyRewards = async function() {
-        try {
-            if (HWHFuncs.setProgress) HWHFuncs.setProgress('🎁 Starting daily rewards collection...', false);
-
-            const SendFunction = getSend();
-            const questResponse = await SendFunction('{"calls":[{"name":"questGetAll","args":{},"ident":"body"}]}');
-
-            if (!questResponse.results?.[0]?.result.response) {
-                if (HWHFuncs.setProgress) HWHFuncs.setProgress('❌ No quest data for daily rewards', false);
-                return {
-                    success: false,
-                    items: 'No quest data available',
-                    count: 0
-                };
-            }
-
-            const allQuests = questResponse.results[0].result.response;
-            const dailyRewardsToTest = [];
-            const structuredRewards = {};
-
-            // Find daily quests (20010000-20010005)
-            for (let i = 0; i <= 5; i++) {
-                const questId = 20010000 + i;
-                if (Object.values(allQuests).some(quest => quest?.id === questId)) {
-                    dailyRewardsToTest.push(questId);
-                }
-            }
-
-            if (dailyRewardsToTest.length === 0) {
-                if (HWHFuncs.setProgress) HWHFuncs.setProgress('✅ Daily rewards: No quests found', false);
-                return {
-                    success: true,
-                    items: 'All daily rewards already collected',
-                    count: 0
-                };
-            }
-
-            let successCount = 0;
-            if (HWHFuncs.setProgress) HWHFuncs.setProgress(`🎁 Testing ${dailyRewardsToTest.length} daily rewards...`, false);
-
-            // Map of daily reward items (fallback)
-            const dailyRewardItems = {
-                20010000: { name: '🏰 Guild Activity', qty: 150 },
-                20010001: { name: '🔮 Titanite', qty: 75 },
-                20010002: { name: '⚡ Energy', qty: 200 },
-                20010003: { name: '🃏 Dungeon Cards', qty: 5 },
-                20010004: { name: '💠 Soul Crystal', qty: 1 },
-                20010005: { name: '🌀 Portal Charge', qty: 1 }
-            };
-
-            for (let index = 0; index < dailyRewardsToTest.length; index++) {
-                const questId = dailyRewardsToTest[index];
-                const questPosition = index + 1;
-                const isLastQuest = questPosition === 6;
-
-                try {
-                    const response = await SendFunction(`{"calls":[{"name":"quest_questsFarm","args":{"questIds":[${questId}]},"context":{"actionTs":${Date.now()}},"ident":"body"}]}`);
-
-                    if (response?.results?.[0]?.result && !response.results[0].result.error) {
-                        debugLog('🎁 Daily reward response:', JSON.stringify(response.results[0].result.response));
-                        successCount++;
-
-                        // Parse actual rewards from response
-                        let rewardResponse = response.results[0].result.response;
-                        // Unwrap if response is an array (e.g., [{"clanActivity":150}])
-                        if (Array.isArray(rewardResponse)) {
-                            rewardResponse = rewardResponse.reduce((acc, item) => ({ ...acc, ...item }), {});
-                        }
-                        let foundReward = false;
-
-                        for (const [key, value] of Object.entries(rewardResponse)) {
-                            if (key === 'quests') continue;
-
-                            // Handle nested objects like {"refillable":{"45":"1"}} or {"consumable":{"81":5}}
-                            if (typeof value === 'object' && value !== null) {
-                                for (const [itemId, itemQty] of Object.entries(value)) {
-                                    const qty = parseInt(itemQty) || 1;
-                                    let itemName = '';
-                                    if (key === 'refillable') {
-                                        itemName = '🔋 ' + (window.identifyItem?.(itemId, 'consumable') || `Refillable #${itemId}`);
-                                    } else if (key === 'consumable') {
-                                        itemName = '📦 ' + (window.identifyItem?.(itemId, 'consumable') || `Item #${itemId}`);
-                                    } else if (key === 'coin') {
-                                        itemName = '💰 ' + (window.identifyItem?.(itemId, 'coin') || `Coin #${itemId}`);
-                                    } else {
-                                        itemName = window.identifyItem?.(itemId, key) || `${key} #${itemId}`;
-                                    }
-                                    if (!structuredRewards[itemName]) structuredRewards[itemName] = { amount: 0, source: 'D' };
-                                    structuredRewards[itemName].amount += qty;
-                                    foundReward = true;
-                                }
-                                continue;
-                            }
-
-                            let itemName = '';
-                            let qty = typeof value === 'number' ? value : parseInt(value) || 1;
-
-                            if (key === 'stamina') itemName = '⚡ Energy';
-                            else if (key === 'skillPoint') itemName = '🔮 Titanite';
-                            else if (key === 'gold') itemName = '🪙 Gold';
-                            else if (key === 'starmoney') itemName = '💎 Emeralds';
-                            else if (key === 'dungeonActivity') itemName = '🃏 Dungeon Cards';
-                            else if (key === 'soulCrystal') itemName = '💠 Soul Crystal';
-                            else if (key === 'adventure') itemName = '🌀 Portal Charge';
-                            else if (key === 'clanActivity') itemName = '🏰 Guild Activity';
-                            else itemName = key;
-
-                            if (!structuredRewards[itemName]) structuredRewards[itemName] = { amount: 0, source: 'D' };
-                            structuredRewards[itemName].amount += qty;
-                            foundReward = true;
-                        }
-
-                        // Fallback to hardcoded if no rewards parsed
-                        if (!foundReward) {
-                            const fallback = dailyRewardItems[questId] || { name: `Daily reward ${questPosition}`, qty: 1 };
-                            if (!structuredRewards[fallback.name]) structuredRewards[fallback.name] = { amount: 0, source: 'D' };
-                            structuredRewards[fallback.name].amount += fallback.qty;
-                        }
-                        const icon = isLastQuest ? '🌀' : '✅';
-                        if (HWHFuncs.setProgress) HWHFuncs.setProgress(`${icon} Daily reward ${questPosition}/6 collected (${successCount} total)`, false);
-                    }
-
-                    // Reduced delay from 100ms to 30ms
-                    //await new Promise(resolve => setTimeout(resolve, getAdjustedDelay(5)));
-                } catch (error) {
-                    // Silent error handling
-                }
-            }
-
-            if (HWHFuncs.setProgress) HWHFuncs.setProgress(`✅ Daily rewards: ${successCount}/6 collected`, false);
-
-            const rewardCount = Object.keys(structuredRewards).length;
-
-            return {
-                success: true,
-                items: rewardCount > 0 ? `${successCount} items` : 'All daily rewards already collected',
-                count: successCount,
-                hasItems: rewardCount > 0,
-                rewards: structuredRewards
-            };
-        } catch (error) {
-            console.error('Error collecting daily rewards:', error);
-            if (HWHFuncs.setProgress) HWHFuncs.setProgress('❌ Daily rewards failed', false);
-            return {
-                success: false,
-                items: 'Daily rewards collection failed',
-                count: 0
-            };
-        }
-    };
-    window.collectAllGuildRewards = async function() {
-        try {
-            // Phase 1: Guild quests (working version)
-            const guildResults = await window.collectAllGuildQuestRewards();
-            debugLog('🏰 Phase 1 results:', guildResults);
-
-            // SPEED IMPROVEMENT: Shorter wait between phases
-            //await new Promise(resolve => setTimeout(resolve, getAdjustedDelay(5)));
-
-            // Phase 2: Daily rewards (working version with items)
-            const dailyResults = await window.harvestDailyRewards();
-            debugLog('🏰 Phase 2 results:', dailyResults);
-
-            // Combine all items from both sources
-            const totalCount = guildResults.count + dailyResults.count;
-            const allItems = [];
-
-            // Add daily reward items (already in good format like "Guild Activity x150")
-            if (dailyResults.count > 0 && dailyResults.items && !dailyResults.items.includes('already collected')) {
-                allItems.push(dailyResults.items);
-            }
-
-            // Guild quests don't return specific items, just count - skip adding text for them
-
-            // Merge rewards from daily (already structured)
-            const structuredRewards = dailyResults.rewards || {};
-            const rewardCount = Object.keys(structuredRewards).length;
-
-            // Build summary text
-            let summaryItems;
-            const questCount = guildResults.count || 0;
-            const itemCount = dailyResults.count || 0;
-
-            if (questCount > 0 || itemCount > 0) {
-                const parts = [];
-                if (questCount > 0) parts.push(`${questCount} quests`);
-                if (rewardCount > 0) parts.push(`${rewardCount} items`);
-                summaryItems = parts.join(', ') || 'Done';
-            } else {
-                summaryItems = 'All guild and daily rewards already collected';
-            }
-
-            const finalResult = {
-                success: guildResults.success && dailyResults.success,
-                items: summaryItems,
-                count: totalCount,
-                hasItems: rewardCount > 0,
-                rewards: structuredRewards
-            };
-            return finalResult;
-
-        } catch (error) {
-            console.error('Error in guild rewards collection:', error);
-            if (HWHFuncs.setProgress) HWHFuncs.setProgress('❌ Guild rewards collection failed', true);
-            return {
-                success: false,
-                items: `Error: ${error.message}`,
-                count: 0
-            };
-        }
-    };
 
     // Replace the existing collectClanPrestigeRewards function with this improved version
     window.collectClanPrestigeRewards = async function() {
         try {
-            if (HWHFuncs.setProgress) HWHFuncs.setProgress('🏆 Starting clan prestige collection...', false);
-
             const SendFunction = getSend();
             window.clanPrestigeData = loadClanPrestigeData();
-
             // First, get current prestige info to see what's already collected
             const infoResponse = await SendFunction('{"calls":[{"name":"clan_prestigeGetInfo","args":{},"ident":"body"}]}');
-
             if (!infoResponse?.results?.[0]?.result?.response) {
-                if (HWHFuncs.setProgress) HWHFuncs.setProgress('❌ Could not get prestige info', true);
                 return {
                     success: false,
                     items: 'Could not get prestige info',
@@ -9460,24 +10454,17 @@ background: transparent;
                 }
             }
             if (uncollectedLevels.length === 0) {
-                if (HWHFuncs.setProgress) HWHFuncs.setProgress('✅ Clan prestige: All available rewards collected', false);
                 return {
                     success: true,
                     items: 'All prestige rewards already collected',
                     count: 0
                 };
             }
-
             debugLog(`Found ${uncollectedLevels.length} uncollected levels: ${uncollectedLevels.slice(0, 10).join(', ')}${uncollectedLevels.length > 10 ? '...' : ''}`);
-
             // Try to collect uncollected levels (limit to first 10 to avoid timeout)
             const levelsToTry = uncollectedLevels.slice(0, 10);
             const collectedRewards = [];
             let successCount = 0;
-
-            if (HWHFuncs.setProgress) {
-                HWHFuncs.setProgress(`🏆 Attempting to collect ${levelsToTry.length} prestige levels...`, false);
-            }
 
             for (const level of levelsToTry) {
                 try {
@@ -9507,13 +10494,7 @@ background: transparent;
                             items: itemsText,
                             rewards: rewards
                         });
-
                         debugLog(`🏆 Collected prestige level ${level}: ${itemsText}`);
-
-                        if (HWHFuncs.setProgress) {
-                            HWHFuncs.setProgress(`🏆 Collected level ${level}: ${itemsText}`, false);
-                        }
-
                         // Small delay between collections
                         // await new Promise(resolve => setTimeout(resolve, getAdjustedDelay(5)));
                     } else {
@@ -9554,10 +10535,6 @@ background: transparent;
                 });
                 const rewardCount = Object.keys(structuredRewards).length;
 
-                if (HWHFuncs.setProgress) {
-                    HWHFuncs.setProgress(`✅ Clan prestige: ${successCount} levels collected (${levelsList})`, false);
-                }
-
                 return {
                     success: true,
                     items: `${successCount} levels, ${rewardCount} items`,
@@ -9570,22 +10547,14 @@ background: transparent;
                 const message = remainingCount > 0 ?
                       `No prestige rewards available (${remainingCount} levels locked)` :
                 'All prestige rewards already collected';
-
-                if (HWHFuncs.setProgress) {
-                    HWHFuncs.setProgress(`✅ Clan prestige: ${message}`, false);
-                }
-
                 return {
                     success: true,
                     items: message,
                     count: 0
                 };
             }
-
         } catch (error) {
             console.error('Error collecting clan prestige:', error);
-            if (HWHFuncs.setProgress) HWHFuncs.setProgress('❌ Clan prestige failed', false);
-
             return {
                 success: false,
                 items: `Clan prestige error: ${error.message}`,
@@ -9614,9 +10583,7 @@ background: transparent;
             new clanInfoMediator(player).open();
         } catch (e) {
             console.error('Failed to open Guild Members popup:', e);
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Failed to open Guild Members', true);
-            }
+            TweakerNotifications.error('👥', 'Navigation', 'Failed to open Guild Members');
         }
     };
 
@@ -9790,9 +10757,7 @@ background: transparent;
             new clanHubMediator(player).open();
         } catch (e) {
             console.error('Failed to open Guild Overview:', e);
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Failed to open Guild Overview', true);
-            }
+            TweakerNotifications.error('🏰', 'Navigation', 'Failed to open Guild Overview');
         }
     };
 
@@ -9840,31 +10805,20 @@ background: transparent;
             }
 
             debugLog('Opened Inventory - ' + filter + ' tab');
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Opened Inventory - ' + filter + ' tab', true);
-            }
         } catch (e) {
             console.error('Failed to open Inventory:', e);
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Failed to open Inventory', true);
-            }
+            TweakerNotifications.error('📦', 'Navigation', 'Failed to open Inventory');
         }
     };
-
     window.goHeroes = function () {
         try {
             let player = getPlayer();
             let heroesMediator = selfGame['game.mediator.gui.popup.hero.HeroesHubPopupMediator'];
             new heroesMediator(player).open();
             debugLog('Opened Heroes Hub');
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Opened Heroes Hub', true);
-            }
         } catch (e) {
             console.error('Failed to open Heroes:', e);
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Failed to open Heroes', true);
-            }
+            TweakerNotifications.error('🦸', 'Navigation', 'Failed to open Heroes');
         }
     };
 
@@ -9873,7 +10827,6 @@ background: transparent;
     window.goHome = async function () {
         try {
             debugLog('Returning to city screen...');
-
             for (let i = 0; i < 20; i++) {
                 document.dispatchEvent(new KeyboardEvent('keydown', {
                     key: 'Escape',
@@ -9882,55 +10835,35 @@ background: transparent;
                 }));
                 await new Promise(resolve => setTimeout(resolve, 50));
             }
-
             debugLog('Closed all popups - should be on city screen');
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Returned to city screen', true);
-            }
-
         } catch (e) {
             console.error('Failed to return to city screen:', e);
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Failed to return to city screen', true);
-            }
+            TweakerNotifications.error('🏠', 'Navigation', 'Failed to return to city');
         }
     };
-
     window.goTitans = function () {
         try {
-
             let player = getPlayer();
             let titanListMediator = selfGame['game.mediator.gui.popup.titan.TitanListPopupMediator'];
             new titanListMediator(player).open();
             debugLog('Opened Titans Hub');
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Opened Titans Hub', true);
-            }
         } catch (e) {
             console.error('Failed to open Titans:', e);
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Failed to open Titans', true);
-            }
+            TweakerNotifications.error('⚔️', 'Navigation', 'Failed to open Titans');
         }
     };
-
     window.goTitanSpiritArtifact = function () {
         try {
-
             let player = getPlayer();
             let titanSpiritArtifactMediator = selfGame['game.mediator.gui.popup.titanspiritartifact.TitanSpiritArtifactPopupMediator'];
             new titanSpiritArtifactMediator(player).open();
             debugLog('Opened Titan Spirit Artifact');
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Opened Titan Spirit Artifact', true);
-            }
         } catch (e) {
             console.error('Failed to open Titan Spirit Artifact:', e);
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Failed to open Titan Spirit Artifact', true);
-            }
+            TweakerNotifications.error('🔮', 'Navigation', 'Failed to open Titan Spirit Artifact');
         }
     };
+
     // Cache for dynamic method names
     let _petSoulShopMethod = null;
     let _titanSoulShopMethod = null;
@@ -10790,18 +11723,13 @@ background: transparent;
     window.goPowerTournament = async function() {
         try {
             debugLog('Opening Power Tournament leaderboard...');
-
             const SendFunction = getSend();
             const response = await SendFunction('{"calls":[{"name":"powerTournament_getState","args":{},"context":{"actionTs":' + Date.now() + '},"ident":"body"},{"name":"powerTournament_getGroupInfo","args":{},"context":{"actionTs":' + Date.now() + '},"ident":"powerTournament_getGroupInfo"}]}');
-
             if (!response.results || !response.results[1] || !response.results[1].result.response) {
                 debugLog('No Power Tournament data available');
-                if (HWHFuncs && HWHFuncs.setProgress) {
-                    HWHFuncs.setProgress('No Power Tournament data available', true);
-                }
+                TweakerNotifications.info('🏆', 'Power Tournament', 'No data available');
                 return;
             }
-
             const groupData = response.results[1].result.response;
             const now = Date.now();
             const tournamentState = response.results[0]?.result?.response;
@@ -11210,8 +12138,9 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
 `;
 
             // Player rows with all columns
-            userRankings.forEach(user => {
+            userRankings.forEach((user, idx) => {   // ← added idx
                 const medal = user.rank === 1 ? '🥇' : user.rank === 2 ? '🥈' : user.rank === 3 ? '🥉' : '';
+                const stripeClass = idx % 2 ? 'twk-stripe' : '';   // ← NEW
 
                 // Helper function to format change
                 const formatChange = (change, hasData) => {
@@ -11258,7 +12187,7 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
                 }
 
                 content += `
-<div data-user-id="${user.userId}" style="display: grid; grid-template-columns: 34px 90px 30px 36px 36px 120px 58px 42px 46px 40px 46px 36px 36px 36px 36px 100px; gap: 4px; padding: 2px 2px; border-bottom: 1px solid #333; align-items: center; font-size: 11px;">
+<div data-user-id="${user.userId}" class="${stripeClass}" style="display: grid; grid-template-columns: 34px 90px 30px 36px 36px 120px 58px 42px 46px 40px 46px 36px 36px 36px 36px 100px; gap: 4px; padding: 2px 2px; border-bottom: 1px solid #333; align-items: center; font-size: 11px;">
             <div style="text-align: center; font-size: 11px; color: #999; font-weight: bold;">${user.serverId}</div>
 <div class="guild-name-link" data-clan-id="${user.clanId}" data-user-id="${user.userId}" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: #888; cursor: pointer; text-decoration: underline;">${user.clanTitle}</div>            <div class="member-count" style="text-align: center; font-size: 11px; color: #999;">${user.memberCount}</div>
             <div style="text-align: center; font-size: 11px; color: #999;">${user.lastLoginDisplay}</div>
@@ -11961,10 +12890,9 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
 
         } catch (error) {
             console.error('Error in goPowerTournament:', error);
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Error loading Power Tournament: ' + error.message, true);
-            }
+            TweakerNotifications.error('🏆', 'Power Tournament', error.message || 'Failed to load');
         }
+
     };
     // Background refresh for Power Tournament data (no popup)
     window.refreshPowerTournamentData = async function(silent = true) {
@@ -12150,8 +13078,8 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
         dock.style.cssText = `
     position: fixed; bottom: 0; left: ${dockLeft}; transform: ${dockTransform};
     width: ${dockWidth}; height: 28px; background: rgba(42,24,16,0.95);
-    border: 1px solid ${dockBorderColor};
-            z-index: 9999; display: flex; align-items: center; justify-content: space-between;
+    border: 1px solid ${dockBorderColor}; border-bottom: none; border-radius: 6px 6px 0 0;
+    z-index: 9999; display: flex; align-items: center; justify-content: space-between;
             padding: 0 10px; font-family: Arial, sans-serif; font-size: 12px;
             box-shadow: 0 -2px 8px rgba(0,0,0,0.3); transition: border-color 0.3s;
             box-sizing: border-box;
@@ -12179,11 +13107,12 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
         const dockEndTime = window._tournamentEndTime
         ? new Date(window._tournamentEndTime).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'})
         : '';
-        const dockStatusText = window._tournamentEnded
-        ? '🏁 Ended' + (dockEndTime ? ' ' + dockEndTime : '')
-        : new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        const dockStatusColor = window._tournamentEnded ? '#ff6b6b' : '#999';
-        summaryHTML += `<span id="dock-refresh-status" style="color: ${dockStatusColor}; font-size: 11px; padding: 0 8px;">${dockStatusText}</span>`;
+        if (window._tournamentEnded) {
+            summaryHTML += `<span id="dock-refresh-status" style="color: #ff6b6b; font-size: 11px; padding: 0 8px;">🏁 Ended${dockEndTime ? ' ' + dockEndTime : ''}</span>`;
+        } else {
+            window._tourneyLastRefresh = Date.now();
+            summaryHTML += `<span id="dock-refresh-status" style="cursor: pointer; font-size: 12px; padding: 0 8px;" title="Last refresh: ${formatRefreshTime(window._tourneyLastRefresh)}">🕐 <span id="dock-stale" style="color: #4ae29a;">●</span></span>`;
+        }
         summaryHTML += '<button id="close-tournament-dock" style="background: transparent; border: none; color: #666; cursor: pointer; font-size: 14px; padding: 2px 6px;">✕</button>';
         summaryHTML += '</div>';
 
@@ -12202,13 +13131,28 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
         };
         window.addEventListener('resize', repositionDock);
 
+        // Update staleness indicator every 30 seconds
+        window._tourneyStaleTimer = setInterval(() => {
+            const staleEl = document.getElementById('dock-stale');
+            if (staleEl && window._tourneyLastRefresh) {
+                staleEl.style.color = getStalenessColor(window._tourneyLastRefresh);
+            }
+        }, 30000);
+
         document.getElementById('close-tournament-dock').addEventListener('click', (e) => {
             e.stopPropagation();
             window.removeEventListener('resize', repositionDock);
             dock.remove();
             DOMCache.clear('tournamentDock');
             DOMCache.clear('dockRefreshStatus');
-            // Stop auto-refresh when dock is closed
+            // Stop staleness timer
+            if (window._tourneyStaleTimer) clearInterval(window._tourneyStaleTimer);
+            // Stop hourly dock refresh
+            if (window._dockHourlyRefresh) {
+                clearInterval(window._dockHourlyRefresh);
+                window._dockHourlyRefresh = null;
+            }
+            // Stop fast auto-refresh when dock is closed
             if (window._tournamentAutoRefresh) {
                 if (window._tournamentAutoRefresh.timer) {
                     clearInterval(window._tournamentAutoRefresh.timer);
@@ -12223,11 +13167,29 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
         });
 
         // Click dock to open full popup
+        // Click dock to open full popup
         dock.addEventListener('click', (e) => {
             if (e.target.id !== 'close-tournament-dock') {
                 window.goPowerTournament();
             }
         });
+
+        // Hourly dock refresh for data points (always runs when dock is open)
+        if (!window._tournamentEnded && !window._dockHourlyRefresh) {
+            window._dockHourlyRefresh = setInterval(async () => {
+                if (document.hidden) return;
+                const dock = document.getElementById('tournament-dock');
+                if (!dock) {
+                    clearInterval(window._dockHourlyRefresh);
+                    window._dockHourlyRefresh = null;
+                    return;
+                }
+                debugLog('🔄 Hourly dock refresh for data point...');
+                await window.refreshPowerTournamentData(true);
+                window.updateTournamentDockTime();
+            }, 60 * 60 * 1000);
+            debugLog('⏰ Dock hourly refresh scheduled');
+        }
     };
     window.hideTournamentDock = function() {
         const dock = DOMCache.get('tournamentDock', '#tournament-dock');
@@ -12235,6 +13197,21 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
             dock.remove();
             DOMCache.clear('tournamentDock');
             DOMCache.clear('dockRefreshStatus');
+        }
+    };
+
+    window.updateTournamentDockTime = function() {
+        const dock = document.getElementById('tournament-dock');
+        const staleEl = document.getElementById('dock-stale');
+        const statusEl = document.getElementById('dock-refresh-status');
+        if (dock) {
+            dock.style.borderColor = '#4ae29a';
+            setTimeout(() => dock.style.borderColor = window._tournamentEnded ? '#ff6b6b' : '#8b6914', 1500);
+        }
+        if (staleEl && !window._tournamentEnded) {
+            window._tourneyLastRefresh = Date.now();
+            staleEl.style.color = '#4ae29a';
+            if (statusEl) statusEl.title = 'Last refresh: ' + formatRefreshTime(window._tourneyLastRefresh);
         }
     };
 
@@ -12263,23 +13240,39 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
         bar.style.cssText = `
             position: fixed; top: 0; left: ${barLeft}; transform: ${barTransform};
             width: ${barWidth}; height: 28px; background: rgba(42,24,16,0.95);
-            border: 1px solid #8b6914; border-top: none;
+            border: 1px solid #8b6914; border-top: none; border-radius: 0 0 6px 6px;
             z-index: 9990; display: flex; align-items: center; justify-content: space-between;
             padding: 0 10px; font-family: Arial, sans-serif; font-size: 11px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3); box-sizing: border-box;
+            transition: border-color 0.3s; cursor: pointer;
         `;
 
         bar.innerHTML = `
             <div id="tsb-content" style="display: flex; gap: 15px; align-items: center; flex: 1; color: #ccc;">
                 <span style="color: #666;">Loading...</span>
             </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <span id="tsb-lastrefresh" style="color: #666; font-size: 10px;">—</span>
+<div style="display: flex; align-items: center; gap: 8px;">
+                <span id="tsb-lastrefresh" style="cursor: pointer; font-size: 12px;" title="Click to refresh">🕐 <span id="tsb-stale" style="color: #ff6b6b;">●</span></span>
                 <button id="tsb-close" style="background: transparent; border: none; color: #666; cursor: pointer; font-size: 14px; padding: 2px 6px;">✕</button>
             </div>
         `;
 
         document.body.appendChild(bar);
+
+        // Add notification container
+        const notifContainer = document.createElement('div');
+        notifContainer.id = 'tsb-notif-container';
+        notifContainer.innerHTML = `<div id="tsb-notification"></div>`;
+        bar.appendChild(notifContainer);
+
+        // Click notification to dismiss (and trigger HWH's onclick)
+        notifContainer.onclick = (e) => {
+            e.stopPropagation();
+            notifContainer.classList.remove('show');
+            // Also trigger the original HWH status click
+            const hwhStatus = document.querySelector('.scriptMenu_status');
+            if (hwhStatus) hwhStatus.click();
+        };
 
         // Reposition on window resize - same as tournament dock
         window._tsbResizeHandler = () => {
@@ -12301,10 +13294,620 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
             if (window._tsbRefresh) clearInterval(window._tsbRefresh);
         };
 
+        // ================================================================
+        // HOOK HWHFuncs.setProgress → TweakerNotifications
+        // ================================================================
+
+        (function hookHWHProgress() {
+            let currentProgressId = null;
+            let lastTimerId = null;
+
+            const checkAndHook = () => {
+                if (typeof HWHFuncs !== 'undefined' && HWHFuncs.setProgress) {
+
+                    HWHFuncs.setProgress = function(message, done) {
+                        // Always route to parallel task notifications if they exist
+                        const isDungeonProgress = /DUNGEON|Titanit/i.test(message);
+                        const isToEProgress = /ToE|Titan Arena/i.test(message);
+
+                        if (isDungeonProgress && TweakerNotifications.notifications['hwh_testDungeon']) {
+                            TweakerNotifications.update('hwh_testDungeon', { status: message });
+                            return;
+                        }
+                        if (isToEProgress && TweakerNotifications.notifications['hwh_testTitanArena']) {
+                            TweakerNotifications.update('hwh_testTitanArena', { status: message });
+                            return;
+                        }
+
+                        // During Collect More, suppress other HWH progress
+                        if (window._collectMoreRunning) {
+                            return;
+                        }
+
+                        // HTML content will be handled by the watcher via DOM observation
+                        // Just let it pass through to the original setStatus
+                        if (message && /<(img|svg|br|\/br)/i.test(message)) {
+                            return; // Let watcher handle it
+                        }
+
+                        if (!message) {
+                            if (currentProgressId) {
+                                TweakerNotifications.dismiss(currentProgressId);
+                                currentProgressId = null;
+                            }
+                            return;
+                        }
+
+                        // ... rest of existing code unchanged ...
+                        // Parse the message for icon and text
+                        const emojiMatch = message.match(/^([\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[✅❌⚠️⏳🔄])\s*/u);
+                        const icon = emojiMatch ? emojiMatch[1] : '📋';
+                        const text = emojiMatch ? message.slice(emojiMatch[0].length) : message;
+
+                        const isError = message.includes('❌') || message.toLowerCase().includes('fail') || message.toLowerCase().includes('error');
+                        const isSuccess = message.includes('✅') || message.includes('Done') || message.includes('done');
+
+                        if (done) {
+                            if (currentProgressId) {
+                                if (isError) {
+                                    TweakerNotifications.fail(currentProgressId, text);
+                                } else {
+                                    TweakerNotifications.complete(currentProgressId, text);
+                                }
+                                currentProgressId = null;
+                            } else {
+                                if (isError) {
+                                    TweakerNotifications.error(icon, 'HWH', text);
+                                } else if (isSuccess) {
+                                    TweakerNotifications.success(icon, 'HWH', text);
+                                } else {
+                                    TweakerNotifications.info(icon, 'HWH', text);
+                                }
+                            }
+                        } else {
+                            if (currentProgressId) {
+                                TweakerNotifications.update(currentProgressId, { status: text });
+                            } else {
+                                currentProgressId = TweakerNotifications.task(icon, text, 'hwh_progress');
+                            }
+                        }
+                    };
+
+                    debugLog('✅ Hooked HWHFuncs.setProgress → TweakerNotifications');
+                    return true;
+                }
+                return false;
+            };
+
+            if (!checkAndHook()) {
+                let attempts = 0;
+                const interval = setInterval(() => {
+                    if (checkAndHook() || ++attempts > 20) {
+                        clearInterval(interval);
+                    }
+                }, 500);
+            }
+        })();
+
+        // ================================================================
+        // FALLBACK: Watch HWH status element for direct DOM writes
+        // (Catches battle stats, startup info, etc.)
+        // ================================================================
+
+        (function watchHWHStatusElement() {
+            let lastNotifId = null;
+            let lastBattleId = null;   // Track battle notifications separately
+            let lastTimerId = null;    // Track timer notifications separately
+            let lastAdventureId = null; // Track adventure path notifications
+            let lastBrawlIds = {};  // Track brawl notifications by stage
+            let lastFixId = null;   // Track "Let's fix" notifications
+            let lastDungeonId = null; // Track dungeon progress notifications
+            let lastMissionId = null; // Track mission repeat notifications
+
+            // Check if using classic style
+            const isClassicStyle = () => localStorage.getItem(NOTIF_STYLE_KEY) === 'classic';
+
+            let lastText = '';
+            let lastNotifTime = 0;
+            const MIN_DISPLAY_MS = 1500;
+
+            const setupObserver = () => {
+                const hwhStatus = document.querySelector('.scriptMenu_status');
+                if (!hwhStatus) {
+                    setTimeout(setupObserver, 500);
+                    return;
+                }
+
+                if (window._hwhStatusObserver) return;
+
+                window._hwhStatusObserver = new MutationObserver(() => {
+                    const isHidden = hwhStatus.classList.contains('scriptMenu_statusHide');
+                    const innerHTML = hwhStatus.innerHTML || '';
+                    let text = hwhStatus.innerText?.trim() || '';
+
+                    // During Collect More, only allow dungeon/ToE progress through
+                    if (window._collectMoreRunning) {
+                        const isDungeonProgress = /DUNGEON|Titanit|ToE|Titan Arena/i.test(text);
+                        if (!isDungeonProgress) return;
+                        // Route to parallel task notification
+                        const taskId = /DUNGEON|Titanit/i.test(text) ? 'hwh_testDungeon' : 'hwh_testTitanArena';
+                        if (TweakerNotifications.notifications[taskId]) {
+                            TweakerNotifications.update(taskId, { status: text });
+                        }
+                        return;
+                    }
+
+                    if (isHidden || !text) return;
+
+                    // CLASSIC STYLE - Let HWH work natively, just ensure body class is set
+                    if (isClassicStyle()) {
+                        updateNotifModeClass();
+                        // HWH handles everything - we just watch for updates to history
+                        if (text !== lastText) {
+                            lastText = text;
+                            // Optionally log to notification history
+                            if (window.addToNotifHistory) {
+                                const emojiMatch = text.match(/^([\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[✅❌⚠️⏳🔄⚔️🛡️])\s*/u);
+                                window.addToNotifHistory({
+                                    icon: emojiMatch ? emojiMatch[1] : '📋',
+                                    title: 'HWH',
+                                    status: text,
+                                    type: 'INFO'
+                                });
+                            }
+                        }
+                        return;
+                    }
+
+                    // NEW STYLE - Full TweakerNotifications processing continues below...
+
+                    // Handle timer updates FIRST - always update, skip lastText check
+                    const isTimer = /Timer[:\s]*[\d.]+/i.test(text);
+                    if (isTimer) {
+                        if (lastTimerId && TweakerNotifications.notifications[lastTimerId]) {
+                            TweakerNotifications.update(lastTimerId, { status: text });
+                        } else {
+                            lastTimerId = TweakerNotifications.create({
+                                icon: '⏱️',
+                                title: 'Countdown',
+                                status: text.replace(/Timer[:\s]*/i, ''),
+                                type: 'INFO',
+                                onClick: (id) => {
+                                    const hwhStatus = document.querySelector('.scriptMenu_status');
+                                    if (hwhStatus) hwhStatus.click();
+                                    TweakerNotifications.dismiss(id);
+                                    lastTimerId = null;
+                                }
+                            });
+                        }
+                        lastText = text;
+                        return;
+                    }
+
+                    // Clear timer when non-timer message arrives
+                    if (lastTimerId) {
+                        TweakerNotifications.dismiss(lastTimerId);
+                        lastTimerId = null;
+                    }
+
+                    const isAdventure = / > /.test(text) && /(Moves|Ходы)[:\s]*\d+/i.test(text);
+                    const isAutobot = /(Autobot|АвтоБой)[:\s]*\d+\/\d+/i.test(text);
+
+                    if (isAdventure || isAutobot) {
+                        if (lastAdventureId && TweakerNotifications.notifications[lastAdventureId]) {
+                            TweakerNotifications.update(lastAdventureId, { status: text });
+                        } else {
+                            lastAdventureId = TweakerNotifications.create({
+                                icon: '🗺️',
+                                title: 'Adventure',
+                                status: text,
+                                type: 'PROGRESS',
+                                showSpinner: true,
+                                onClick: (id) => {
+                                    const hwhStatus = document.querySelector('.scriptMenu_status');
+                                    if (hwhStatus) hwhStatus.click();
+                                    TweakerNotifications.dismiss(id);
+                                    lastAdventureId = null;
+                                }
+                            });
+                        }
+                        lastText = text;
+                        return;
+                    }
+
+                    // Handle Asgard Boss Damage updates
+                    const isBossDamage = /Boss Damage/i.test(text);
+                    if (isBossDamage) {
+                        lastNotifId = TweakerNotifications.create({
+                            icon: '💀',
+                            title: 'Asgard',
+                            status: text,
+                            type: 'PROGRESS',  // Changed from ASGARD to persist
+                            onClick: (id) => {
+                                TweakerNotifications.dismiss(id);
+                            }
+                        });
+                        lastNotifTime = Date.now();
+                        lastText = text;
+                        return;
+                    }
+
+                    // Handle "Let's fix" updates - consolidate into one notification
+                    const isFixMessage = /Let's fix \d+\/\d+/i.test(text) || /No chance of winning/i.test(text);
+                    if (isFixMessage) {
+                        if (lastFixId && TweakerNotifications.notifications[lastFixId]) {
+                            TweakerNotifications.update(lastFixId, { status: text });
+                        } else {
+                            lastFixId = TweakerNotifications.create({
+                                id: 'hwh_fix_progress',
+                                icon: '🔧',
+                                title: 'Fix Battle',
+                                status: text,
+                                type: 'PROGRESS',
+                                showSpinner: true,
+                                onClick: (id) => {
+                                    const hwhStatus = document.querySelector('.scriptMenu_status');
+                                    if (hwhStatus) hwhStatus.click();
+                                    TweakerNotifications.dismiss(id);
+                                    lastFixId = null;
+                                }
+                            });
+                        }
+                        lastText = text;
+                        return;
+                    }
+
+                    // Clear fix notification when non-fix message arrives
+                    if (lastFixId) {
+                        TweakerNotifications.dismiss(lastFixId);
+                        lastFixId = null;
+                    }
+                    // Handle Mission repeat progress - consolidate into one notification
+                    const isMissionProgress = /(Missions passed|Миссий пройдено)/i.test(text);
+                    if (isMissionProgress) {
+                        if (lastMissionId && TweakerNotifications.notifications['hwh_mission']) {
+                            TweakerNotifications.update('hwh_mission', { status: text });
+                        } else {
+                            lastMissionId = TweakerNotifications.create({
+                                id: 'hwh_mission',
+                                icon: '🔄',
+                                title: 'Mission Repeat',
+                                status: text,
+                                type: 'PROGRESS',
+                                showSpinner: true,
+                                onClick: (id) => {
+                                    const hwhStatus = document.querySelector('.scriptMenu_status');
+                                    if (hwhStatus) hwhStatus.click();
+                                    TweakerNotifications.dismiss(id);
+                                    lastMissionId = null;
+                                }
+                            });
+                        }
+                        lastText = text;
+                        return;
+                    }
+
+                    // Clear mission notification when non-mission message arrives
+                    if (lastMissionId) {
+                        TweakerNotifications.dismiss(lastMissionId);
+                        lastMissionId = null;
+                    }
+
+                    // Handle Dungeon progress - consolidate into one notification
+                    // Match progress (5/10) OR completion (Titanit 10, Titanit: 10)
+                    const isDungeonProgress = /(DUNGEON|Dungeon|Titanit)/i.test(text) && (/\d+\/\d+/.test(text) || /Titanit[:\s]*\d+/i.test(text));
+                    if (isDungeonProgress) {
+                        if (lastDungeonId && TweakerNotifications.notifications['hwh_dungeon']) {
+                            TweakerNotifications.update('hwh_dungeon', { status: text });
+                        } else {
+                            lastDungeonId = TweakerNotifications.create({
+                                id: 'hwh_dungeon',
+                                icon: '🏰',
+                                title: 'Dungeon',
+                                status: text,
+                                type: 'PROGRESS',
+                                showSpinner: true,
+                                onClick: (id) => {
+                                    const hwhStatus = document.querySelector('.scriptMenu_status');
+                                    if (hwhStatus) hwhStatus.click();
+                                    TweakerNotifications.dismiss(id);
+                                    lastDungeonId = null;
+                                }
+                            });
+                        }
+                        lastText = text;
+                        return;
+                    }
+
+                    // Clear dungeon notification when non-dungeon message arrives
+                    if (lastDungeonId) {
+                        TweakerNotifications.dismiss(lastDungeonId);
+                        lastDungeonId = null;
+                    }
+
+                    // Handle brawl stage updates - group by stage number
+                    const brawlMatch = text.match(/Stage\s*(\d+):/i);
+                    if (brawlMatch) {
+                        const stage = brawlMatch[1];
+                        const brawlId = `brawl_stage_${stage}`;
+
+                        if (lastBrawlIds[stage] && TweakerNotifications.notifications[brawlId]) {
+                            TweakerNotifications.update(brawlId, { status: text });
+                        } else {
+                            Object.keys(lastBrawlIds).forEach(s => {
+                                if (s !== stage && lastBrawlIds[s]) {
+                                    TweakerNotifications.dismiss(lastBrawlIds[s]);
+                                    delete lastBrawlIds[s];
+                                }
+                            });
+                            lastBrawlIds[stage] = brawlId;
+                            TweakerNotifications.create({
+                                id: brawlId,
+                                icon: '🥊',
+                                title: 'Brawl',
+                                status: text,
+                                type: 'PROGRESS',
+                                showSpinner: true,
+                                onClick: (id) => {
+                                    const hwhStatus = document.querySelector('.scriptMenu_status');
+                                    if (hwhStatus) hwhStatus.click();
+                                    TweakerNotifications.dismiss(id);
+                                    delete lastBrawlIds[stage];
+                                }
+                            });
+                        }
+                        lastText = text;
+                        return;
+                    }
+
+                    // Clear brawl notifications when non-brawl message arrives
+                    if (Object.keys(lastBrawlIds).length > 0) {
+                        Object.values(lastBrawlIds).forEach(id => {
+                            TweakerNotifications.dismiss(id);
+                        });
+                        lastBrawlIds = {};
+                    }
+
+                    // Clear adventure notification when non-adventure message arrives
+                    if (lastAdventureId) {
+                        TweakerNotifications.dismiss(lastAdventureId);
+                        lastAdventureId = null;
+                    }
+
+                    // Clear timer when non-timer message arrives
+                    if (lastTimerId) {
+                        TweakerNotifications.dismiss(lastTimerId);
+                        lastTimerId = null;
+                    }
+
+
+                    if (text === lastText) return;
+                    lastText = text;
+                    // Check if this is HTML content (images, SVGs, line breaks)
+                    const hasHTML = /<(img|svg|br|\/br)/i.test(innerHTML);
+
+                    const now = Date.now();
+                    const elapsed = now - lastNotifTime;
+
+                    // Dismiss previous non-battle notification
+                    if (lastNotifId) {
+                        if (elapsed < MIN_DISPLAY_MS) {
+                            const remaining = MIN_DISPLAY_MS - elapsed;
+                            setTimeout(() => {
+                                TweakerNotifications.dismiss(lastNotifId, false);
+                            }, remaining);
+                        } else {
+                            TweakerNotifications.dismiss(lastNotifId, true);
+                        }
+                        lastNotifId = null;
+                    }
+
+                    // Handle HTML content with special parsing
+                    if (hasHTML) {
+                        // Convert line breaks to separator, then clean up extra spaces
+                        text = text.replace(/\n+/g, ' | ').replace(/\s+/g, ' ').replace(/\| \|/g, '|').trim();
+
+                        // Startup info: Portal spheres + Guild War tries
+                        // Pattern: "5 Guild War: 3" or "5 Война гильдий: 3"
+                        // Startup info: Portal spheres + Guild War tries
+                        if (innerHTML.includes('imgPortal') || innerHTML.includes('base64,R0lGODlhLwAvAH') ||
+                            text.includes('Guild War') || text.includes('Война гильдий')) {
+                            const match = text.match(/(\d+)\s*(?:Guild War|Война гильдий|GW)[:\s]*(\d+)/i);
+                            if (match) {
+                                TweakerNotifications.create({
+                                    icon: '🌀',
+                                    title: 'Startup Info',
+                                    status: `🔮 ${match[1]} portals | ⚔️ ${match[2]} GW`,
+                                    type: 'INFO'
+                                });
+                                // Don't set lastNotifId - let it live its full 4 seconds
+                            } else {
+                                TweakerNotifications.info('🌀', 'Startup', text);
+                            }
+                            lastNotifTime = now;
+                            return;
+                        }
+                        // Loot box / Stamina progress
+                        // Pattern: "Open: 5/10 Stamina: 120" or "Open: 5/10 Energy: 120"
+                        if (text.includes('Open:') || text.includes('Открыто:')) {
+                            lastNotifId = TweakerNotifications.create({
+                                icon: '📦',
+                                title: 'Loot Box',
+                                status: text,
+                                type: 'TASK',
+                                showSpinner: true
+                            });
+                            lastNotifTime = now;
+                            return;
+                        }
+
+                        // Not enough emeralds
+                        if (innerHTML.includes('iVBORw0KGgoAAAANSUhEUgAAABkAAAAX') ||
+                            text.toLowerCase().includes('emerald') || text.toLowerCase().includes('изумруд')) {
+                            lastNotifId = TweakerNotifications.error('💎', 'Emeralds', text);
+                            lastNotifTime = now;
+                            return;
+                        }
+
+                        // Titan Arena info
+                        // Pattern: "ToE: Level 5 Battles: 3/10 - 500"
+                        if (text.includes('ToE') || text.includes('Titan Arena') || text.includes('Турн.Стихий') ||
+                            (text.includes('Level') && text.includes('Battles'))) {
+                            lastNotifId = TweakerNotifications.create({
+                                icon: '🏟️',
+                                title: 'Titan Arena',
+                                status: text,
+                                type: 'INFO'
+                            });
+                            lastNotifTime = now;
+                            return;
+                        }
+
+                        // Boss/Asgard fight info (has SVG icons stripped, leaving just numbers)
+                        // Pattern from: svgBoss + bossLvl + svgJustice + justice + svgAttempt + count
+                        // innerText would be something like: "120 5000 45/100"
+                        if (innerHTML.includes('<svg') && (innerHTML.includes('viewBox') || text.match(/^\d+\s+\d+\s+\d+\/\d+/))) {
+                            const parts = text.match(/(\d+)\s+(\d+)\s+(\d+)\/(\d+)/);
+                            if (parts) {
+                                lastNotifId = TweakerNotifications.create({
+                                    icon: '💀',
+                                    title: 'Asgard Boss',
+                                    status: `Boss ${parts[1]} | ⚖️ ${parts[2]} | 🎯 ${parts[3]}/${parts[4]}`,
+                                    type: 'INFO'
+                                });
+                            } else {
+                                lastNotifId = TweakerNotifications.info('💀', 'Boss', text);
+                            }
+                            lastNotifTime = now;
+                            return;
+                        }
+
+                        // Task completion with <br>
+                        if (text.includes('Performed!') || text.includes('Done!') ||
+                            text.includes('Выполнено!') || text.includes('Готово!')) {
+                            lastNotifId = TweakerNotifications.success('✅', 'Task', text.replace(/\s*(Performed!|Done!|Выполнено!|Готово!)/, ''));
+                            lastNotifTime = now;
+                            return;
+                        }
+
+                        // Generic HTML content - just show as info
+                        lastNotifId = TweakerNotifications.info('📋', 'HWH', text);
+                        lastNotifTime = now;
+                        return;
+                    }
+
+
+                    // Non-HTML content handling (existing code)
+                    const emojiMatch = text.match(/^([\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[✅❌⚠️⏳🔄⚔️🛡️])\s*/u);
+                    const icon = emojiMatch ? emojiMatch[1] : '📋';
+                    const cleanText = emojiMatch ? text.slice(emojiMatch[0].length) : text;
+
+                    const isBattle = text.includes('Win') || text.includes('Victory') || text.includes('VICTORY') || text.includes('Loss') || text.includes('DEFEAT') || text.includes('vs') || text.includes('⚔️');
+                    const isStartup = text.includes('raids') || text.includes('GW') || text.includes('attempts') || text.includes('available');
+                    const isError = text.includes('❌') || text.toLowerCase().includes('fail');
+                    const isSuccess = text.includes('✅');
+
+                    if (isBattle) {
+                        // Dismiss previous battle notification
+                        if (lastBattleId) {
+                            TweakerNotifications.dismiss(lastBattleId, true);
+                            lastBattleId = null;
+                        }
+
+                        const isWin = text.includes('Win') || text.includes('Victory') || text.includes('VICTORY');
+
+                        let formattedText = cleanText;
+                        const battleMatch = cleanText.match(/This time (VICTORY|DEFEAT|Victory|Defeat|Win|Loss).*?(\d+)%\s*\((\d+)\),?\s*(\d{2}:\d{2})/i);
+
+                        if (battleMatch) {
+                            const result = battleMatch[1].toUpperCase();
+                            const chance = battleMatch[2];
+                            const count = battleMatch[3];
+                            const time = battleMatch[4];
+                            const coloredResult = result.includes('VICTORY') || result.includes('WIN')
+                            ? `<span style="color:#4ae29a;font-weight:bold">${result}</span>`
+                        : `<span style="color:#e24a4a;font-weight:bold">${result}</span>`;
+                            formattedText = `${chance}% chance of ${coloredResult} for the ATTACKER at ${time} (${count} sims) `;
+                        } else {
+                            formattedText = cleanText
+                                .replace(/VICTORY/g, '<span style="color:#4ae29a;font-weight:bold">VICTORY</span>')
+                                .replace(/Victory/g, '<span style="color:#4ae29a;font-weight:bold">Victory</span>')
+                                .replace(/Win/g, '<span style="color:#4ae29a;font-weight:bold">Win</span>')
+                                .replace(/DEFEAT/g, '<span style="color:#e24a4a;font-weight:bold">DEFEAT</span>')
+                                .replace(/Defeat/g, '<span style="color:#e24a4a;font-weight:bold">Defeat</span>')
+                                .replace(/Loss/g, '<span style="color:#e24a4a;font-weight:bold">Loss</span>');
+                        }
+
+                        lastBattleId = TweakerNotifications.create({
+                            icon: isWin ? '⚔️' : '🛡️',
+                            title: 'Battle',
+                            status: formattedText,
+                            type: 'BATTLE',
+                            showClose: true,
+                            onClick: (id) => {
+                                const hwhStatus = document.querySelector('.scriptMenu_status');
+                                if (hwhStatus) hwhStatus.click();
+                                TweakerNotifications.dismiss(id);
+                                lastBattleId = null;
+                            }
+                        });
+
+                        const notif = TweakerNotifications.notifications[lastBattleId];
+                        if (notif?.element) {
+                            notif.element.classList.add(isWin ? 'battle-win' : 'battle-loss');
+                        }
+                    } else if (isStartup) {
+                        lastNotifId = TweakerNotifications.create({
+                            icon: '📊',
+                            title: 'Status',
+                            status: cleanText,
+                            type: 'INFO'
+                        });
+                        lastNotifTime = now;
+                    } else if (isError) {
+                        lastNotifId = TweakerNotifications.error(icon, 'HWH', cleanText);
+                        lastNotifTime = now;
+                    } else if (isSuccess) {
+                        lastNotifId = TweakerNotifications.success(icon, 'HWH', cleanText);
+                        lastNotifTime = now;
+                    } else {
+                        lastNotifId = TweakerNotifications.info(icon, 'HWH', cleanText);
+                        lastNotifTime = now;
+                    }
+                });
+
+                window._hwhStatusObserver.observe(hwhStatus, {
+                    childList: true,
+                    subtree: true,
+                    characterData: true,
+                    attributes: true,
+                    attributeFilter: ['class']
+                });
+
+                debugLog('✅ Watching HWH status element for direct writes');
+            };
+
+            setupObserver();
+        })();
+
+        // Click bar to refresh with green flash
+        bar.onclick = async (e) => {
+            if (e.target.id === 'tsb-close') return;
+            await updateTopStatusBar();
+        };
+
         await updateTopStatusBar();
 
         // Update timers every second
         window._tsbTimer = setInterval(updateTopStatusBarTimers, 1000);
+
+        // Update staleness indicator every 30 seconds
+        window._tsbStaleTimer = setInterval(() => {
+            const staleEl = document.getElementById('tsb-stale');
+            if (staleEl && window._tsbLastRefresh) {
+                staleEl.style.color = getStalenessColor(window._tsbLastRefresh);
+            }
+        }, 30000);
 
         // Refresh API data every 5 minutes
         window._tsbRefresh = setInterval(async () => {
@@ -12318,7 +13921,25 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
                 return;
             }
             await updateTopStatusBar();
+            bar.style.borderColor = '#4ae29a';
+            setTimeout(() => bar.style.borderColor = '#8b6914', 1500);
         }, 5 * 60 * 1000);
+
+        // Refresh when tab becomes active (if stale)
+        window._tsbVisibilityHandler = async () => {
+            if (!document.hidden) {
+                const bar = document.getElementById('hwh-top-statusbar');
+                if (!bar) return;
+                const age = Date.now() - (window._tsbLastRefresh || 0);
+                if (age > 60000) { // Stale if >1 min
+                    debugLog('👁️ Tab active - refreshing top status bar');
+                    await updateTopStatusBar();
+                    bar.style.borderColor = '#4ae29a';
+                    setTimeout(() => bar.style.borderColor = '#8b6914', 1500);
+                }
+            }
+        };
+        document.addEventListener('visibilitychange', window._tsbVisibilityHandler);
     };
 
     window.hideTopStatusBar = function() {
@@ -12327,68 +13948,193 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
         if (window._tsbTimer) clearInterval(window._tsbTimer);
         if (window._tsbRefresh) clearInterval(window._tsbRefresh);
         if (window._tsbResizeHandler) window.removeEventListener('resize', window._tsbResizeHandler);
+        if (window._tsbVisibilityHandler) document.removeEventListener('visibilitychange', window._tsbVisibilityHandler);
     };
 
     window._tsbCache = {};
-
-    async function updateTopStatusBar() {
+    // Enhanced Top Bar Update - Robust Timer Detection
+    async function updateTopStatusBar(preloadedData = null) {
         try {
-            const SendFunction = getSend();
-            const response = await SendFunction(JSON.stringify({
-                calls: [
-                    { name: "arenaGetAll", args: {}, ident: "arena" },
-                    { name: "clanWarGetBriefInfo", args: {}, ident: "gw" },
-                    { name: "crossClanWar_getBriefInfo", args: {}, ident: "cow" },
-                    { name: "clanRaid_getInfo", args: {}, ident: "asgard" },
-                    { name: "questGetEvents", args: {}, ident: "events" },
-                    { name: "questGetAll", args: {}, ident: "quests" }
-                ]
-            }));
+            // Setup Click-to-Refresh
+            const bar = document.getElementById('hwh-top-statusbar');
+            if (!bar) return;
+            // Flash green on update
+            bar.style.borderColor = '#4ae29a';
+            setTimeout(() => bar.style.borderColor = '#8b6914', 1500);
 
-            const r = {};
-            response?.results?.forEach(x => { r[x.ident] = x.result?.response; });
+            if (bar && !bar.hasAttribute('data-click-listener')) {
+                bar.setAttribute('data-click-listener', 'true');
+                bar.style.cursor = 'pointer';
+                bar.title = 'Click to Refresh Data';
+            }
 
+            let r = {};
             const c = window._tsbCache;
-            c.arenaPlace = r.arena?.arenaPlace || '?';
-            c.grandPlace = r.arena?.grandPlace || '?';
-            c.rewardTime = r.arena?.rewardTime || 0;
+            const now = Math.floor(Date.now() / 1000);
 
-            c.gwActive = r.gw?.hasActiveWar;
-            c.gwTries = r.gw?.tries || 0;
-            c.gwEnd = r.gw?.nearestWarEndTime || 0;
-
-            c.cowActive = r.cow?.hasActiveWar;
-            c.cowHero = r.cow?.heroTries || 0;
-            c.cowTitan = r.cow?.titanTries || 0;
-            c.cowEnd = r.cow?.endTime || 0;
-
-            c.asgardEnd = r.asgard?.boss?.timestamps?.end || 0;
-            c.asgardLevel = r.asgard?.boss?.level || 0;
-
-            const events = r.events || [];
-            const now = Date.now() / 1000;
-            const activeEvents = events.filter(e => e.endTime > now).sort((a, b) => a.endTime - b.endTime);
-            if (activeEvents[0]) {
-                c.eventName = cheats?.translate(activeEvents[0].name_localeKey) || 'Event';
-                c.eventEnd = activeEvents[0].endTime || 0;
+            // Skip API call if sidebar recently refreshed everything
+            if (c?.lastRefresh && (Date.now() - c.lastRefresh) < 60000) {
+                debugLog('⏩ Top bar using cached data from sidebar');
+                updateTopStatusBarTimers();
+                return;
             }
 
-            c.questTotal = Array.isArray(r.quests) ? r.quests.filter(q => q.state === 1).length : 0;
+            if (preloadedData) {
+                r = preloadedData;
+            } else {
+                const SendFunction = getSend();
+                if (!SendFunction) return;
 
-            // Update last refresh time
+                const response = await SendFunction(JSON.stringify({
+                    calls: [
+                        { name: "arenaGetAll", args: {}, ident: "arena" },
+                        { name: "clanWarGetInfo", args: {}, ident: "gw" },
+                        { name: "crossClanWar_getInfo", args: {}, ident: "cow" },
+                        { name: "clanRaid_getInfo", args: {}, ident: "asgard" },
+                        { name: "questGetEvents", args: {}, ident: "events" },
+                        { name: "questGetAll", args: {}, ident: "quests" }
+                    ]
+                }));
+                response?.results?.forEach(x => { r[x.ident] = x.result?.response; });
+            }
+
+            // --- HELPER: DYNAMIC SCHEDULE CALCULATOR ---
+            const getNextWarTime = (type) => {
+                const d = new Date();
+                const day = d.getUTCDay();
+                const hour = d.getUTCHours();
+
+                // GW: 9:00 UTC | CoW: 8:00 UTC
+                let startHour = (type === 'gw') ? 9 : 8;
+                try {
+                    if (typeof lib !== 'undefined' && lib.data) {
+                        let config = type === 'gw' ? lib.data.clanWar?.config : lib.data.crossClanWar?.config;
+                        if (config?.dailyWarStartTime) startHour = Math.floor(config.dailyWarStartTime / 3600);
+                    }
+                } catch(e) {}
+
+                let targetDay = day;
+                // Calculate next occurrence
+                if (type === 'gw') {
+                    if (day <= 1) targetDay = 2; // Sun/Mon -> Tue
+                    else if (day === 6 && hour >= startHour) targetDay = 9; // Sat done -> Next Tue
+                    else if (hour >= startHour) targetDay = day + 1; // Done today -> Tmrw
+                } else { // CoW
+                    if (day === 0) targetDay = 1; // Sun -> Mon
+                    else if (day === 6 && hour >= startHour) targetDay = 8; // Sat done -> Next Mon
+                    else if (hour >= startHour) targetDay = day + 1;
+                }
+
+                const target = new Date(d);
+                target.setUTCDate(d.getUTCDate() + (targetDay - day));
+                target.setUTCHours(startHour, 0, 0, 0);
+                return Math.floor(target.getTime() / 1000);
+            };
+
+            // --- UPDATE STATS ---
+
+            // Arena
+            if (r.arena) {
+                c.arenaPlace = r.arena.arenaPlace || '?';
+                c.grandPlace = r.arena.grandPlace || '?';
+                c.rewardTime = r.arena.rewardTime || 0;
+            }
+            // GW - Full Info with Scores (handles both full and brief)
+            if (r.gw) {
+                c.gwActive = !!(r.gw.enemyId || r.gw.hasActiveWar);
+                c.gwTries = r.gw.myTries ?? r.gw.tries ?? 0;
+                c.gwPoints = parseInt(r.gw.points) || c.gwPoints || 0;
+                c.gwEnemyPoints = parseInt(r.gw.enemyPoints) || c.gwEnemyPoints || 0;
+                // Prefer endTime/nearestWarEndTime when active
+                const endTime = r.gw.endTime || r.gw.nearestWarEndTime;
+                if (c.gwActive && endTime && endTime > now) {
+                    c.gwEnd = endTime;
+                } else {
+                    c.gwEnd = (r.gw.nextWarTime && r.gw.nextWarTime > now) ? r.gw.nextWarTime : getNextWarTime('gw');
+                }
+            }
+
+            // CoW - Full Info with Scores (handles both full and brief)
+            if (r.cow?.war) {
+                // Full response
+                c.cowActive = !!r.cow.war.enemyClan;
+                c.cowHero = r.cow.war.myTries?.heroes ?? 0;
+                c.cowTitan = r.cow.war.myTries?.titans ?? 0;
+                c.cowPoints = parseInt(r.cow.war.points) || 0;
+                c.cowEnemyPoints = parseInt(r.cow.war.enemyPoints) || 0;
+                const endTime = r.cow.war.endTime;
+                if (c.cowActive && endTime && endTime > now) {
+                    c.cowEnd = endTime;
+                } else {
+                    c.cowEnd = (r.cow.nextWarTime && r.cow.nextWarTime > now) ? r.cow.nextWarTime : getNextWarTime('cow');
+                }
+            } else if (r.cow) {
+                // Brief response - data at root level
+                c.cowActive = r.cow.hasActiveWar || r.cow.status === 'active';
+                c.cowHero = r.cow.heroTries ?? c.cowHero ?? 0;
+                c.cowTitan = r.cow.titanTries ?? c.cowTitan ?? 0;
+                // Brief doesn't have scores, preserve existing
+                c.cowPoints = c.cowPoints || 0;
+                c.cowEnemyPoints = c.cowEnemyPoints || 0;
+                const endTime = r.cow.currentWarEndTime;
+                if (c.cowActive && endTime && endTime > now) {
+                    c.cowEnd = endTime;
+                } else {
+                    c.cowEnd = (r.cow.nextWarTime && r.cow.nextWarTime > now) ? r.cow.nextWarTime : getNextWarTime('cow');
+                }
+            }
+
+            // Asgard
+            if (r.asgard) {
+                c.asgardEnd = r.asgard.boss?.timestamps?.end || 0;
+                c.asgardLevel = r.asgard.boss?.level || 0;
+            }
+
+            // Events
+            if (r.events) {
+                const events = r.events || [];
+                const active = events.filter(e => e.endTime > now).sort((a,b) => a.endTime - b.endTime);
+                if (active[0]) {
+                    c.eventName = cheats?.translate(active[0].name_localeKey) || 'Event';
+                    c.eventEnd = active[0].endTime;
+                }
+            }
+
+            // Quests
+            if (r.quests) {
+                const quests = r.quests || [];
+                c.questDaily = 0; c.questWeekly = 0; c.questGuild = 0;
+                c.questS1 = 0; c.questS3 = 0; c.questS7 = 0; c.questTotal = 0;
+                quests.filter(q => q.state === 1).forEach(q => {
+                    c.questTotal++;
+                    const id = q.id;
+                    if (id >= 10000 && id < 11000) c.questDaily++;
+                    else if (id >= 11000 && id < 12000) c.questWeekly++;
+                    else if (id >= 20000000 && id < 30000000) c.questGuild++;
+                    else if (id >= 1000000 && id < 2000000) {
+                        const chain = lib?.data?.quest?.battlePass?.[id]?.chain;
+                        if ([1,2,3,4,9,10].includes(chain)) c.questS1++;
+                        else if ([5,6].includes(chain)) c.questS3++;
+                        else if ([7,8].includes(chain)) c.questS7++;
+                    }
+                });
+            }
+
             c.lastRefresh = Date.now();
+            window._tsbLastRefresh = Date.now();
+            const staleEl = document.getElementById('tsb-stale');
             const refreshEl = document.getElementById('tsb-lastrefresh');
-            if (refreshEl) {
-                refreshEl.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                refreshEl.style.color = '#4ae29a';
-                setTimeout(() => { refreshEl.style.color = '#666'; }, 1500);
+            if (staleEl) {
+                staleEl.style.color = '#4ae29a';
             }
-
+            if (refreshEl) {
+                refreshEl.title = 'Last refresh: ' + formatRefreshTime(window._tsbLastRefresh);
+            }
             updateTopStatusBarTimers();
-        } catch (e) {
-            console.error('Top status bar error:', e);
-        }
+
+        } catch (e) { console.error('Top bar update failed:', e); }
     }
+    window.updateTopStatusBar = updateTopStatusBar;
 
     function updateTopStatusBarTimers() {
         const content = document.getElementById('tsb-content');
@@ -12397,56 +14143,79 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
         const c = window._tsbCache;
         const now = Math.floor(Date.now() / 1000);
 
-        const fmt = (secs) => {
-            if (secs <= 0) return '—';
-            if (secs < 3600) return Math.floor(secs / 60) + 'm';
-            if (secs < 86400) return Math.floor(secs / 3600) + 'h' + (Math.floor((secs % 3600) / 60) + '').padStart(2, '0') + 'm';
-            return Math.floor(secs / 86400) + 'd' + Math.floor((secs % 86400) / 3600) + 'h';
+        // Safe format function - handles NaNs and negative times
+        const fmt = (s) => {
+            if (!s || isNaN(s) || s <= 0) return '—';
+            if (s < 3600) return Math.floor(s/60)+'m';
+            if (s < 86400) return Math.floor(s/3600)+'h'+Math.floor((s%3600)/60).toString().padStart(2,'0')+'m';
+            return Math.floor(s/86400)+'d'+Math.floor(s/3600)%24+'h';
         };
 
         const click = 'cursor:pointer;';
+        const base = 'font-size: 12px; margin-right: 8px;';
+        const activeC = '#ffffff';
+        const inactiveC = '#888888'; // Gray text for inactive
+        const timerC = '#999999';    // Active timer (muted)
+
         let html = '';
         const arenaTime = fmt(c.rewardTime - now);
 
-        // Arena/Grand - clickable
-        html += `<span style="${click}" onclick="cheats.goNavigtor('ARENA')">⚔️ A:<span class="twk-gold">#${c.arenaPlace}</span> <span class="twk-muted">${arenaTime}</span></span>`;
-        html += `<span style="${click}" onclick="cheats.goNavigtor('GRAND')">G:<span class="twk-gold">#${c.grandPlace}</span> <span class="twk-muted">${arenaTime}</span></span>`;
+        // Arena/Grand combined
+        html += `<span style="${base} color:${activeC};"><span style="${click}" onclick="cheats.goNavigtor('ARENA')">⚔️A:<span class="twk-gold">#<span id="tsb-arena-place">${c.arenaPlace}</span></span></span>`;
+        html += ` <span style="${click}" onclick="cheats.goNavigtor('GRAND')">G:<span class="twk-gold">#<span id="tsb-grand-place">${c.grandPlace}</span></span></span> <span style="color:${timerC}">${arenaTime}</span></span>`;
 
-        // GW
+        // GW - With Score Differential
         if (c.gwActive) {
-            html += `<span style="${click}" onclick="cheats.goNavigtor('CLAN_PVP')">🏰 GW:<span class="twk-green">${c.gwTries}</span> <span class="twk-muted">${fmt(c.gwEnd - now)}</span></span>`;
+            const gwDiff = c.gwPoints - c.gwEnemyPoints;
+            const gwDiffStr = gwDiff >= 0 ? `+${gwDiff}` : `${gwDiff}`;
+            const gwDiffColor = gwDiff >= 0 ? '#4ae29a' : '#ff6b6b';
+            const gwTriesDisplay = c.gwTries === 0 ? '<span class="twk-green">✓</span>' : `<span class="twk-orange">${c.gwTries}</span>`;
+            html += `<span style="${click} ${base} color:${activeC};" onclick="cheats.goNavigtor('CLAN_PVP')">🔥GW:<span style="color:${gwDiffColor}">${gwDiffStr}</span> ${gwTriesDisplay} <span style="color:${timerC}">${fmt(c.gwEnd - now)}</span></span>`;
         } else {
-            html += `<span style="color:#666;${click}" onclick="cheats.goNavigtor('CLAN_PVP')">🏰 GW:—</span>`;
+            html += `<span style="${click} ${base} color:${inactiveC};" onclick="cheats.goNavigtor('CLAN_PVP')">GW: ${fmt(c.gwEnd - now)}</span>`;
         }
 
-        // CoW
+        // CoW - With Score Differential
         if (c.cowActive) {
-            html += `<span style="${click}" onclick="cheats.goNavigtor('CLAN_GLOBAL_PVP')">🌍 CoW:H<span class="twk-green">${c.cowHero}</span>/T<span class="twk-green">${c.cowTitan}</span> <span class="twk-muted">${fmt(c.cowEnd - now)}</span></span>`;
+            const cowDiff = c.cowPoints - c.cowEnemyPoints;
+            const cowDiffStr = cowDiff >= 0 ? `+${cowDiff}` : `${cowDiff}`;
+            const cowDiffColor = cowDiff >= 0 ? '#4ae29a' : '#ff6b6b';
+            const cowTotal = c.cowHero + c.cowTitan;
+            const cowTriesDisplay = cowTotal === 0 ? '<span class="twk-green">✓</span>' : `H<span class="twk-orange">${c.cowHero}</span>|T<span class="twk-orange">${c.cowTitan}</span>`;
+            html += `<span style="${click} ${base} color:${activeC};" onclick="cheats.goNavigtor('CLAN_GLOBAL_PVP')">⚡CoW:<span style="color:${cowDiffColor}">${cowDiffStr}</span> ${cowTriesDisplay} <span style="color:${timerC}">${fmt(c.cowEnd - now)}</span></span>`;
         } else {
-            html += `<span style="color:#666;${click}" onclick="cheats.goNavigtor('CLAN_GLOBAL_PVP')">🌍 CoW:—</span>`;
+            html += `<span style="${click} ${base} color:${inactiveC};" onclick="cheats.goNavigtor('CLAN_GLOBAL_PVP')">CoW: ${fmt(c.cowEnd - now)}</span>`;
         }
 
         // Asgard
         if (c.asgardEnd > now) {
-            const bossName = c.asgardLevel >= 100 ? 'Maes' : 'Osh';
-            html += `<span style="${click}" onclick="cheats.goNavigtor('CLAN_RAID')">🐉 ${bossName} <span class="twk-muted">${fmt(c.asgardEnd - now)}</span></span>`;
+            const boss = c.asgardLevel >= 100 ? 'Maes' : 'Osh';
+            html += `<span style="${click} ${base} color:${activeC};" onclick="cheats.goNavigtor('CLAN_RAID')">🌌${boss} <span style="color:${timerC}">${fmt(c.asgardEnd - now)}</span></span>`;
         } else {
-            html += `<span style="color:#666;${click}" onclick="cheats.goNavigtor('CLAN_RAID')">🐉 Asgard:—</span>`;
+            html += `<span style="${click} ${base} color:${inactiveC};" onclick="cheats.goNavigtor('CLAN_RAID')">Asgard:—</span>`;
         }
 
         // Event
         if (c.eventEnd > now) {
             const name = (c.eventName || 'Event').substring(0, 12);
-            html += `<span style="${click}" onclick="window.goSpecialEvents()">🎯 <span class="twk-gold">${name}</span> <span class="twk-muted">${fmt(c.eventEnd - now)}</span></span>`;
+            html += `<span style="${click} ${base}" onclick="window.goSpecialEvents()">🎯 <span class="twk-gold">${name}</span> <span style="color:${timerC}">${fmt(c.eventEnd - now)}</span></span>`;
         }
 
         // Quests
-        if (c.questTotal > 0) {
-            html += `<span style="${click}" onclick="window.goSpecialEvents()">📋 <span class="twk-orange">${c.questTotal}</span></span>`;
-        }
+        const qParts = [];
+        if (c.questDaily > 0) qParts.push(`D<span class="twk-orange">${c.questDaily}</span>`);
+        if (c.questWeekly > 0) qParts.push(`W<span class="twk-orange">${c.questWeekly}</span>`);
+        if (c.questGuild > 0) qParts.push(`G<span class="twk-orange">${c.questGuild}</span>`);
+        if (c.questS1 > 0) qParts.push(`S1<span class="twk-orange">${c.questS1}</span>`);
+        if (c.questS3 > 0) qParts.push(`S2<span class="twk-orange">${c.questS3}</span>`);
+        if (c.questS7 > 0) qParts.push(`S7<span class="twk-orange">${c.questS7}</span>`);
+
+        if (qParts.length > 0) html += `<span style="${click} ${base} color:#ccc;" onclick="window.goSpecialEvents()">📋 ${qParts.join(' ')}</span>`;
+        else if (c.questTotal > 0) html += `<span style="${click} ${base} color:#ccc;" onclick="window.goSpecialEvents()">📋 <span class="twk-orange">${c.questTotal}</span></span>`;
 
         content.innerHTML = html;
     }
+
     ModuleTracker.register('Top Status Bar');
 
     // Initialize top status bar when game ready
@@ -12470,11 +14239,9 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
             let specialQuestMediator = selfGame['game.view.popup.activity.SpecialQuestEventPopupMediator'];
             new specialQuestMediator(player).open();
             debugLog('Opened Special Events');
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Opened Special Events', true);
-            }
         } catch (e) {
             console.error('Failed to open Special Events:', e);
+            TweakerNotifications.error('🎉', 'Navigation', 'Failed to open Special Events');
         }
     };
     window.goPets = async function() {
@@ -12482,6 +14249,7 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
             cheats.goNavigtor('PET_LIST');
         } catch (e) {
             console.error('Failed to handle Merchant:', e);
+            TweakerNotifications.error('🐾', 'Navigation', 'Failed to open Pets');
         }
     };
     // ===================================================================
@@ -12554,12 +14322,8 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
                 setTimeout(() => {
                     window.showCastleUserExpPopup();
                 }, 200);
-
                 debugLog(`✅ Updated ${username} (${userId}) experience: ${currentExp} → ${parsedExp}`);
-
-                if (HWHFuncs && HWHFuncs.setProgress) {
-                    HWHFuncs.setProgress(`✅ Updated ${username} experience to ${parsedExp.toLocaleString()}`, false);
-                }
+                TweakerNotifications.success('🏰', 'Castle', `Updated ${username} to ${parsedExp.toLocaleString()} exp`);
             }
 
         } catch (error) {
@@ -12862,9 +14626,6 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
     window.updateGuildMembersFromAPI = async function() {
         try {
             debugLog('🔍 Fetching guild member data...');
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('🔍 Fetching guild member data...', false);
-            }
 
             const SendFunction = getSend();
 
@@ -12873,45 +14634,30 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
             if (response && response.results && response.results[0] && response.results[0].result.response.clan.members) {
                 const members = response.results[0].result.response.clan.members;
                 debugLog('👥 Found members:', Object.keys(members).length);
-
                 const memberEntries = [];
-
                 Object.entries(members).forEach(([userId, memberData]) => {
                     memberEntries.push([userId, memberData.name]);
                 });
-
                 // Execute the batch update
                 if (typeof window.batchUpdateUsernames === 'function') {
                     debugLog('✅ Executing batch update for', memberEntries.length, 'members...');
                     const result = window.batchUpdateUsernames(memberEntries);
-
-                    if (HWHFuncs && HWHFuncs.setProgress) {
-                        HWHFuncs.setProgress(`✅ Updated ${memberEntries.length} guild member usernames!`, false);
-                    }
-
+                    TweakerNotifications.success('👥', 'Guild Members', `Updated ${memberEntries.length} usernames`);
                     debugLog(`✅ Successfully updated ${memberEntries.length} guild members`);
                     return result;
                 } else {
                     console.error('❌ batchUpdateUsernames function not found');
-                    if (HWHFuncs && HWHFuncs.setProgress) {
-                        HWHFuncs.setProgress('❌ batchUpdateUsernames function not found', true);
-                    }
+                    TweakerNotifications.error('👥', 'Guild Members', 'batchUpdateUsernames not found');
                     return false;
                 }
-
             } else {
                 console.error('❌ Could not find member data in response');
-                if (HWHFuncs && HWHFuncs.setProgress) {
-                    HWHFuncs.setProgress('❌ Could not fetch guild member data', true);
-                }
+                TweakerNotifications.error('👥', 'Guild Members', 'Could not fetch data');
                 return false;
             }
-
         } catch (error) {
             console.error('❌ Error updating guild members:', error);
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress(`❌ Error updating guild members: ${error.message}`, true);
-            }
+            TweakerNotifications.error('👥', 'Guild Members', error.message || 'Update failed');
             return false;
         }
     };
@@ -13001,10 +14747,6 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
             }
 
 
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('📊 Loading AoC stats...', false);
-            }
-
             const liveData = await window.fetchLiveCastleData();
             if (!liveData) {
                 // Event ended or API failed - show historical data
@@ -13019,22 +14761,15 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
                     ident: "body"
                 }]
             }));
-
             // Attach guild members to liveData
             liveData.guildMembers = guildResponse?.results?.[0]?.result?.response?.clan?.members || {};
-
             // Save castle/contributor data for when event ends
             localStorage.setItem('hwh_aoc_last_castle', JSON.stringify({
                 timestamp: Date.now(),
                 castleInfo: liveData.castleInfo,
                 guildMembers: liveData.guildMembers
             }));
-
             displayUnifiedAoCWindow(liveData);
-
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('✅ AoC stats loaded', 3000);
-            }
 
         } catch (error) {
             // Silently handle - likely event ended
@@ -13078,7 +14813,6 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
                                 title: guildInfo.title
                             };
                         }
-
                         // Load last castle/contributor data
                         const lastCastle = localStorage.getItem('hwh_aoc_last_castle');
                         if (lastCastle) {
@@ -13086,21 +14820,15 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
                             fakeLiveData.castleInfo = parsed.castleInfo || fakeLiveData.castleInfo;
                             fakeLiveData.guildMembers = parsed.guildMembers || {};
                         }
-
                         displayUnifiedAoCWindow(fakeLiveData);
-                        if (HWHFuncs && HWHFuncs.setProgress) {
-                            HWHFuncs.setProgress('📊 Showing last AoC data (event ended)', 5000);
-                        }
+                        TweakerNotifications.info('📊', 'AoC Stats', 'Showing last data (event ended)');
                         return;
                     }
                 }
             } catch (historyError) {
                 console.error('Failed to load AoC history:', historyError);
             }
-
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress(`❌ Error: ${error.message}`, true);
-            }
+            TweakerNotifications.error('📊', 'AoC Stats', error.message || 'Failed to load');
         }
     };
 
@@ -13212,15 +14940,11 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
         // IMPORTANT: Add the clipboard copy code that was missing
         const text = data.join('\n');
         navigator.clipboard.writeText(text).then(() => {
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('📋 Copied to clipboard! Ready to paste into Google Sheets', true);
-            }
+            TweakerNotifications.success('📋', 'Export', 'Copied to clipboard!');
             debugLog('✅ Exported data copied to clipboard');
         }).catch(err => {
             console.error('Failed to copy:', err);
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('❌ Failed to copy to clipboard', true);
-            }
+            TweakerNotifications.error('📋', 'Export', 'Failed to copy to clipboard');
         });
     }
 
@@ -13345,26 +15069,17 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
 
         const text = allData.join('\n');
         navigator.clipboard.writeText(text).then(() => {
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('📋 All data copied to clipboard! Ready to paste into Google Sheets', true);
-            }
+            TweakerNotifications.success('📋', 'Export', 'All data copied to clipboard!');
             debugLog('✅ All data exported to clipboard');
         }).catch(err => {
             console.error('Failed to copy:', err);
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('❌ Failed to copy to clipboard', true);
-            }
+            TweakerNotifications.error('📋', 'Export', 'Failed to copy to clipboard');
         });
     }
-
     // Function to manually fetch the data
     // Find the fetchGameData function and replace the Send call with:
     async function fetchGameData() {
         try {
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('📊 Loading game data...', false);
-            }
-
             const response = await Send({
                 calls: [
                     { name: 'heroGetAll', args: {}, ident: 'heroGetAll' },
@@ -13394,19 +15109,14 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
                     }
                 });
                 window.gameLoadData.timestamp = Date.now();
-
-                if (HWHFuncs && HWHFuncs.setProgress) {
-                    HWHFuncs.setProgress('✅ Game data loaded successfully', true);
-                }
+                TweakerNotifications.success('📊', 'Game Data', 'Loaded successfully');
                 return true;
             } else {
                 throw new Error('Invalid response from server');
             }
         } catch (error) {
             console.error('Error fetching game data:', error);
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('❌ Failed to load game data', true);
-            }
+            TweakerNotifications.error('📊', 'Game Data', 'Failed to load');
             return false;
         }
     }
@@ -13601,9 +15311,9 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
                 const isMaxed = xp >= 43750;
                 return `
                             <div style="background: rgba(0,0,0,0.3); padding: 6px 4px; border-radius: 5px; text-align: center;">
-                                <div style="color: #999; font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${glyphNames[idx]}">${glyphNames[idx]}</div>
+                                <div style="color: #999; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${glyphNames[idx]}">${glyphNames[idx]}</div>
                                 <div style="color: ${isMaxed ? '#4ae29a' : '#ffd700'}; font-size: 14px; font-weight: bold;">${isMaxed ? '✓' : lvl + '/50'}</div>
-                                <div style="color: #999; font-size: 9px;">${xp.toLocaleString()}</div>
+                                <div style="color: #999; font-size: 11px;">${xp.toLocaleString()}</div>
                             </div>
                         `}).join('')}
                     </div>
@@ -13734,42 +15444,39 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
                 let heroEntry = cols.heroes?.[unitId];
                 if (!heroEntry) {
                     console.error(`Hero ${unitId} not found`);
-                    if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`Hero ${unitId} not found`, true);
+                    TweakerNotifications.error('🦸', 'Navigation', `Hero ${unitId} not found`);
                     return;
                 }
                 let HeroPopupMediator = selfGame['game.mediator.gui.popup.hero.HeroPopupMediator'];
                 new HeroPopupMediator(player, heroEntry).open();
                 debugLog(`Opened hero ${unitId}`);
-                if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`Opened hero ${unitId}`, true);
             } else if (unitType === 'titan') {
                 let titanEntry = cols.titans?.[unitId];
                 if (!titanEntry) {
                     console.error(`Titan ${unitId} not found`);
-                    if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`Titan ${unitId} not found`, true);
+                    TweakerNotifications.error('⚔️', 'Navigation', `Titan ${unitId} not found`);
                     return;
                 }
                 let TitanPopupMediator = selfGame['game.mediator.gui.popup.titan.TitanPopupMediator'];
                 new TitanPopupMediator(player, titanEntry).open();
                 debugLog(`Opened titan ${unitId}`);
-                if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`Opened titan ${unitId}`, true);
             } else if (unitType === 'pet') {
                 let petEntry = cols.pets?.[unitId];
                 if (!petEntry) {
                     console.error(`Pet ${unitId} not found`);
-                    if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`Pet ${unitId} not found`, true);
+                    TweakerNotifications.error('🐾', 'Navigation', `Pet ${unitId} not found`);
                     return;
                 }
                 let PetPopupMediator = selfGame['game.mediator.gui.popup.pet.PetPopupMediator'];
                 new PetPopupMediator(player, petEntry).open();
                 debugLog(`Opened pet ${unitId}`);
-                if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`Opened pet ${unitId}`, true);
             } else if (unitType === 'flag') {
                 debugLog(`Flag ${unitId} - mediator TBD`);
-                if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`Flag popup not yet implemented`, true);
+                TweakerNotifications.info('🚩', 'Navigation', 'Flag popup not yet implemented');
             }
         } catch (e) {
             console.error('Failed to open unit in game:', e);
-            if (HWHFuncs?.setProgress) HWHFuncs.setProgress('Failed to open unit in game', true);
+            TweakerNotifications.error('❌', 'Navigation', 'Failed to open unit');
         }
     };
     // Convenience functions for direct console/script access
@@ -13801,17 +15508,15 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
 
             if (!heroEntry) {
                 console.error(`Hero "${heroIdOrName}" not found`);
-                if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`Hero "${heroIdOrName}" not found`, true);
+                TweakerNotifications.error('🦸', 'Navigation', `Hero "${heroIdOrName}" not found`);
                 return;
             }
-
             let HeroPopupMediator = selfGame['game.mediator.gui.popup.hero.HeroPopupMediator'];
             new HeroPopupMediator(player, heroEntry).open();
             debugLog(`Opened ${heroName}`);
-            if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`Opened ${heroName}`, true);
         } catch(e) {
             console.error('Failed to open hero:', e);
-            if (HWHFuncs?.setProgress) HWHFuncs.setProgress('Failed to open hero', true);
+            TweakerNotifications.error('🦸', 'Navigation', 'Failed to open hero');
         }
     };
 
@@ -13843,17 +15548,15 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
 
             if (!titanEntry) {
                 console.error(`Titan "${titanIdOrName}" not found`);
-                if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`Titan "${titanIdOrName}" not found`, true);
+                TweakerNotifications.error('⚔️', 'Navigation', `Titan "${titanIdOrName}" not found`);
                 return;
             }
-
             let TitanPopupMediator = selfGame['game.mediator.gui.popup.titan.TitanPopupMediator'];
             new TitanPopupMediator(player, titanEntry).open();
             debugLog(`Opened ${titanName}`);
-            if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`Opened ${titanName}`, true);
         } catch(e) {
             console.error('Failed to open titan:', e);
-            if (HWHFuncs?.setProgress) HWHFuncs.setProgress('Failed to open titan', true);
+            TweakerNotifications.error('⚔️', 'Navigation', 'Failed to open titan');
         }
     };
 
@@ -13885,17 +15588,15 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
 
             if (!petEntry) {
                 console.error(`Pet "${petIdOrName}" not found`);
-                if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`Pet "${petIdOrName}" not found`, true);
+                TweakerNotifications.error('🐾', 'Navigation', `Pet "${petIdOrName}" not found`);
                 return;
             }
-
             let PetPopupMediator = selfGame['game.mediator.gui.popup.pet.PetPopupMediator'];
             new PetPopupMediator(player, petEntry).open();
             debugLog(`Opened ${petName}`);
-            if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`Opened ${petName}`, true);
         } catch(e) {
             console.error('Failed to open pet:', e);
-            if (HWHFuncs?.setProgress) HWHFuncs.setProgress('Failed to open pet', true);
+            TweakerNotifications.error('🐾', 'Navigation', 'Failed to open pet');
         }
     };
 
@@ -14332,7 +16033,6 @@ ${heroRunes.map((xp, idx) => {
 
                 resultDiv.innerHTML = `<span class="twk-green">✔ Glyph ${tier + 1}: Level ${lvl}/50</span><br>
                     <span style="color: #fff; font-size: 15px;">XP: ${newXP.toLocaleString()} / 43,750 ${isMaxed ? '⭐ MAX!' : `(${progressInLevel}/${xpForLevel})`}</span>`;
-                if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`Glyph ${tier + 1}: Lv${lvl}`, true);
             } else {
                 resultDiv.innerHTML = `<span class="twk-red">✗ Error: ${result?.results?.[0]?.result?.error || 'Unknown'}</span>`;
             }
@@ -14466,14 +16166,11 @@ ${heroRunes.map((xp, idx) => {
                 return; // fetchGameData already showed error message
             }
         }
-
         // Now the data should be available
         const updatedData = window.gameLoadData;
         if (!updatedData.heroes || !updatedData.titans || !updatedData.pets || !updatedData.flags) {
             console.error('Failed to load game data');
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('❌ Could not load game data', true);
-            }
+            TweakerNotifications.error('📊', 'Game Data', 'Could not load game data');
             return;
         }
 
@@ -14774,6 +16471,16 @@ scrollbar-color: #8b6914 #1a0f08;
         const isMax = filledCount === 6;
         return isMax ? '<span class="twk-green">✓</span>' : `<span class="twk-dim">${filledCount}/6</span>`;
     }
+    function hasAllSlots(slots) {
+        let filledCount = 0;
+        if (Array.isArray(slots)) {
+            filledCount = slots.filter(s => s === 0).length;
+        } else if (slots && typeof slots === 'object') {
+            filledCount = Object.keys(slots).length;
+        }
+        return filledCount === 6;
+    }
+
     function getSkinsDisplay(skins, heroId) {
         if (!skins || typeof skins !== 'object') return '-';
 
@@ -14948,6 +16655,7 @@ scrollbar-color: #8b6914 #1a0f08;
         if (!window.heroDisplayCache || window.heroDisplayCacheTime !== window.gameLoadData.timestamp) {
             window.heroDisplayCache = {};
             window.heroDisplayCacheTime = window.gameLoadData.timestamp;
+            const heroExcluded = JSON.parse(localStorage.getItem('hwh_hero_excluded') || '[]');
             heroArray.forEach(h => {
                 window.heroDisplayCache[h.id] = {
                     name: getName(h.id, 'hero'),
@@ -14959,19 +16667,20 @@ scrollbar-color: #8b6914 #1a0f08;
                     skills: getSkillsDisplay(h.skills, h.level),
                     glyphs: getGlyphsDisplay(h.runes),
                     asc: getAscensionsDisplay(h.ascensions),
-                    ascPlus: getAscPlusDisplay(h.ascensions)
+                    ascPlus: getAscPlusDisplay(h.ascensions),
+                    building: (h.color < 18 || (h.color === 18 && !hasAllSlots(h.slots))) && !heroExcluded.includes(String(h.id))
                 };
             });
         }
         const cache = window.heroDisplayCache;
 
         if (!window.heroTableState) {
-            window.heroTableState = { hideMaxed: false, sortBy: 'power', sortDir: 'desc', nameSearch: '' };
+            window.heroTableState = { hideMaxed: false, sortBy: 'building', sortDir: 'desc', nameSearch: '' };
         }
         const state = window.heroTableState;
 
         if (!window.heroHideMax) {
-            window.heroHideMax = { core: false, stars: false, skins: false, artStars: false, artLevels: false, skills: false, glyph: false, asc: false, goe: false };
+            window.heroHideMax = { build: false, core: true, stars: false, skins: false, artStars: false, artLevels: false, skills: false, glyph: false, asc: false, goe: false };
         }
 
         const isStarsMxd = h => h.star >= 6;
@@ -14985,7 +16694,7 @@ scrollbar-color: #8b6914 #1a0f08;
 
         let filtered = heroArray.filter(h => {
             if (state.nameSearch && !cache[h.id].name.toLowerCase().includes(state.nameSearch.toLowerCase())) return false;
-
+            if (window.heroHideMax.build && !cache[h.id].building) return false;
             if (window.heroHideMax.core && isCoreMxd(h)) return false;
             if (window.heroHideMax.stars && isStarsMxd(h)) return false;
             if (window.heroHideMax.skins && isSkinsMxd(h)) return false;
@@ -15006,6 +16715,12 @@ scrollbar-color: #8b6914 #1a0f08;
                 return state.sortDir === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
             } else if (state.sortBy === 'id') {
                 aVal = a.id; bVal = b.id;
+            } else if (state.sortBy === 'building') {
+                aVal = cache[a.id].building ? 1 : 0;
+                bVal = cache[b.id].building ? 1 : 0;
+                if (aVal !== bVal) return state.sortDir === 'asc' ? aVal - bVal : bVal - aVal;
+                // Secondary sort by power when building status is same
+                return b.power - a.power;
             } else {
                 aVal = a.power; bVal = b.power;
             }
@@ -15017,23 +16732,38 @@ scrollbar-color: #8b6914 #1a0f08;
             return state.sortDir === 'asc' ? ' ▲' : ' ▼';
         };
 
+        // Count building heroes
+        const buildingCount = heroArray.filter(h => cache[h.id].building).length;
+        const needsUpdate = window.heroBuildTargetsNeedUpdate;
+        const savedBuffer = parseInt(localStorage.getItem('hwh_hero_buffer') || '0');
+        const updateBtnStyle = needsUpdate
+        ? 'background:#ff9800;color:#000;animation:twkPulse 1s infinite;'
+        : 'background:rgba(76,175,80,0.4);color:#a5d6a7;';
+
         // HEADER: totals + thead
         const header = `
-            <div style="padding: 6px; background: rgba(139,105,20,0.2); border-radius: 5px; font-size: 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <style>@keyframes twkPulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }</style>
+            <div style="padding: 6px; background: rgba(139,105,20,0.2); border-radius: 5px; font-size: 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
                 <div>
                     <strong class="twk-gold">Total:</strong> <span class="twk-green">${totalPower.toLocaleString()}</span> |
                     <strong class="twk-gold">Avg Lvl:</strong> <span class="twk-green">${avgLevel}</span> |
-                    <strong class="twk-gold">Showing:</strong> <span class="twk-green">${filtered.length}/${heroArray.length}</span>
+                    <strong class="twk-gold">Showing:</strong> <span class="twk-green">${filtered.length}/${heroArray.length}</span> |
+                    <strong class="twk-gold">🎯 Building:</strong> <span class="twk-green">${buildingCount}</span>
                 </div>
-                <div>
-                    <input type="text" id="heroNameSearch" placeholder="Search name..." value="${state.nameSearch || ''}" style="padding: 3px 6px; border: 1px solid #8b6914; border-radius: 3px; background: #1a0f08; color: #ffd700; font-size: 11px; width: 120px;">
+                <div style="display:flex;gap:6px;align-items:center;">
+                    <span style="color:#a5d6a7;font-size:10px;">Buffer:</span>
+                    <input type="number" id="heroBuildBuffer" value="${savedBuffer}" min="0" max="10" style="width:32px;background:#1a0f08;color:#ffd700;border:1px solid #8b6914;border-radius:3px;padding:2px;font-size:10px;text-align:center;">
+<button onclick="window.updateBuildTargets()" style="border:none;border-radius:4px;padding:3px 8px;font-size:10px;cursor:pointer;font-weight:bold;${updateBtnStyle}" title="Calculate craft targets for building heroes">🎯 Update Targets</button>
+                    <button onclick="window.showBuildingHeroGearNeeds()" style="border:none;border-radius:4px;padding:3px 8px;font-size:10px;cursor:pointer;font-weight:bold;background:rgba(156,39,176,0.5);color:#e1bee7;" title="Show gear needs for all building heroes">📊 Gear Needs</button>
+                    <input type="text" id="heroNameSearch" placeholder="Search name..." value="${state.nameSearch || ''}" style="padding: 3px 6px; border: 1px solid #8b6914; border-radius: 3px; background: #1a0f08; color: #ffd700; font-size: 11px; width: 100px;">
                 </div>
             </div>
             <table style="width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed;">
 <thead>
     <tr class="twk-th" style="background: #8b6914;">
-        <th style="padding: 5px; width: 35px;">🎮</th>
-        <th style="padding: 5px; text-align: left; width: 100px; cursor: pointer;" onclick="window.sortHeroTable('name')">Name${sortIcon('name')}</th>
+<th style="padding: 5px; width: 20px;" title="Gear needs">⚙️</th>
+<th style="padding: 5px; width: 25px; cursor: pointer;" onclick="window.sortHeroTable('building')" title="Building (gear targets)">🎯${sortIcon('building')}</th>
+<th style="padding: 5px; text-align: left; width: 100px; cursor: pointer;" onclick="window.sortHeroTable('name')">Name${sortIcon('name')}</th>
         <th style="padding: 5px; width: 30px; cursor: pointer;" onclick="window.sortHeroTable('id')">ID${sortIcon('id')}</th>
         <th style="padding: 5px; width: 35px;">Lvl</th>
         <th style="padding: 5px; width: 50px;">Color</th>
@@ -15050,8 +16780,9 @@ scrollbar-color: #8b6914 #1a0f08;
         <th style="padding: 5px; width: 30px;" title="Bonus ascension slots (node 9)">Asc+</th>
         <th style="padding: 5px; width: 40px;">GoE</th>
     </tr>
-    <tr style="background: #6b5010; font-size: 10px;">
-        <th></th>
+<tr style="background: #6b5010; font-size: 10px;">
+<th></th>
+        <th><input type="checkbox" id="heroHideBuild" ${window.heroHideMax.build ? 'checked' : ''} title="Show only building"></th>
         <th></th>
         <th></th>
         <th></th>
@@ -15077,8 +16808,8 @@ scrollbar-color: #8b6914 #1a0f08;
         let body = `
             <table style="width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed;">
 <colgroup>
-    <col style="width: 35px;"><col style="width: 100px;"><col style="width: 30px;"><col style="width: 35px;">
-    <col style="width: 50px;"><col style="width: 40px;"><col style="width: 30px;"><col style="width: 65px;">
+<col style="width: 20px;"><col style="width: 25px;"><col style="width: 100px;"><col style="width: 30px;"><col style="width: 35px;">
+<col style="width: 50px;"><col style="width: 40px;"><col style="width: 30px;"><col style="width: 65px;">
     <col style="width: 45px;"><col style="width: 45px;"><col style="width: 55px;"><col style="width: 45px;"><col style="width: 35px;">
     <col style="width: 50px;"><col style="width: 45px;"><col style="width: 30px;"><col style="width: 40px;">
 </colgroup>
@@ -15086,14 +16817,15 @@ scrollbar-color: #8b6914 #1a0f08;
         `;
 
         filtered.forEach((hero, index) => {
-            const bgColor = index % 2 === 0 ? 'rgba(0, 0, 0, 0.15)' : 'rgba(0, 0, 0, 0.25)';
-            const levelDisplay = hero.level >= 130 ? '<span class="twk-green">✓</span>' : `<span class="twk-dim">${hero.level}</span>`;
+            const stripeClass = index % 2 ? 'twk-stripe' : '';
+            const levelDisplay = hero.level >= 130 ? '<span class="twk-green">✔</span>' : `<span class="twk-dim">${hero.level}</span>`;
             const starsDisplay = hero.star >= 6 ? '<span class="twk-green">✓</span>' : `<span class="twk-gold">${hero.star}</span>`;
             const perksCount = Array.isArray(hero.perks) ? hero.perks.length : 0;
 
             body += `
-                <tr style="background: ${bgColor}; border-bottom: 1px solid #333;">
-                    <td class="twk-cell"><button onclick="event.stopPropagation(); window.openUnitInGame('hero', ${hero.id})" style="background: #2a5a2a; color: #fff; border: 1px solid #1a4a1a; border-radius: 3px; padding: 2px 6px; cursor: pointer; font-size: 10px;">Go</button></td>
+ <tr class="${stripeClass}" style="border-bottom: 1px solid #333;">
+<td class="twk-cell" style="cursor:pointer;color:#9c27b0;" onclick="window.showHeroGearNeeds([${hero.id}])" title="View gear needs">⚙️</td>
+<td class="twk-cell"><input type="checkbox" ${cache[hero.id].building ? 'checked' : ''} onchange="window.toggleHeroBuilding(${hero.id})" style="cursor:pointer;width:14px;height:14px;accent-color:#4ae29a;"></td>
 <td style="padding: 3px; font-weight: bold; color: #ffd700; cursor: pointer; text-decoration: underline; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" onclick="window.openUnitInGame('hero', ${hero.id})">${cache[hero.id].name}</td>
                     <td style="padding: 3px; text-align: center; color: #999; font-size: 10px;">${hero.id}</td>
                     <td class="twk-cell">${levelDisplay}</td>
@@ -15118,7 +16850,7 @@ scrollbar-color: #8b6914 #1a0f08;
 
         // Event listeners
         setTimeout(() => {
-            const keyMap = { Stars: 'stars', Skins: 'skins', ArtStars: 'artStars', ArtLevels: 'artLevels', Skills: 'skills', Glyph: 'glyph', Asc: 'asc', Goe: 'goe' };
+            const keyMap = { Build: 'build', Stars: 'stars', Skins: 'skins', ArtStars: 'artStars', ArtLevels: 'artLevels', Skills: 'skills', Glyph: 'glyph', Asc: 'asc', Goe: 'goe' };
             Object.keys(keyMap).forEach(key => {
                 const cb = document.getElementById('heroHide' + key);
                 if (cb) {
@@ -15160,7 +16892,7 @@ scrollbar-color: #8b6914 #1a0f08;
 
     unsafeWindow.sortHeroTable = window.sortHeroTable = function(column) {
         if (!window.heroTableState) {
-            window.heroTableState = { sortBy: 'power', sortDir: 'desc', nameSearch: '' };
+            window.heroTableState = { sortBy: 'building', sortDir: 'desc', nameSearch: '' };
         }
         if (window.heroTableState.sortBy === column) {
             window.heroTableState.sortDir = window.heroTableState.sortDir === 'asc' ? 'desc' : 'asc';
@@ -15172,6 +16904,472 @@ scrollbar-color: #8b6914 #1a0f08;
         document.getElementById('tab-header').innerHTML = parts.header;
         document.getElementById('tab-content').innerHTML = parts.body;
     };
+
+    unsafeWindow.toggleHeroBuilding = window.toggleHeroBuilding = function(heroId) {
+        const heroExcluded = JSON.parse(localStorage.getItem('hwh_hero_excluded') || '[]');
+        const idStr = String(heroId);
+        const idx = heroExcluded.indexOf(idStr);
+        if (idx >= 0) {
+            heroExcluded.splice(idx, 1); // Was excluded, now include (building)
+        } else {
+            heroExcluded.push(idStr); // Was included, now exclude (not building)
+        }
+        localStorage.setItem('hwh_hero_excluded', JSON.stringify(heroExcluded));
+
+        // Flag that targets need updating
+        window.heroBuildTargetsNeedUpdate = true;
+
+        // Clear cache to force rebuild with new building status
+        window.heroDisplayCacheTime = null;
+
+        const parts = generateHeroesTable(window.gameLoadData.heroes);
+        document.getElementById('tab-header').innerHTML = parts.header;
+        document.getElementById('tab-content').innerHTML = parts.body;
+    };
+
+    unsafeWindow.updateBuildTargets = window.updateBuildTargets = async function() {
+        const btn = document.querySelector('button[onclick*="updateBuildTargets"]');
+        if (btn) { btn.textContent = '⏳'; btn.disabled = true; }
+
+        try {
+            const bufferInput = document.getElementById('heroBuildBuffer');
+            const bufferMultiplier = parseInt(bufferInput?.value || '0');
+            localStorage.setItem('hwh_hero_buffer', bufferMultiplier);
+
+            const heroExcluded = JSON.parse(localStorage.getItem('hwh_hero_excluded') || '[]');
+            const resp = await Send(JSON.stringify({calls:[
+                {name:'heroGetAll',args:{},ident:'h'},
+                {name:'inventoryGet',args:{},ident:'i'}
+            ]}));
+            const userHeroes = resp.results[0].result.response;
+            const inv = resp.results[1].result.response;
+
+            // Build gearToScrollMap
+            const gearToScrollMap = {};
+            Object.entries(lib.data.inventoryItem.scroll).forEach(([scrollId, s]) => {
+                const scrollName = window.identifyItem?.(scrollId, 'scroll');
+                if (scrollName?.endsWith(' - Recipe')) {
+                    const gearName = scrollName.replace(' - Recipe', '');
+                    Object.entries(lib.data.inventoryItem.gear).forEach(([gearId, g]) => {
+                        if (window.identifyItem?.(gearId, 'gear') === gearName) {
+                            gearToScrollMap[gearId] = scrollId;
+                        }
+                    });
+                }
+            });
+
+            // Create shared resolver using factory
+            const { resolve: resolveRecipe } = createRecipeResolver(inv, gearToScrollMap);
+
+
+            // Calculate max any hero needs (for buffer) - theoretical, no inventory
+            const maxAnyHero = {gear: {}, scroll: {}};
+            if (bufferMultiplier > 0) {
+                Object.entries(lib.data.hero).forEach(([heroId, hd]) => {
+                    if (parseInt(heroId) >= 150 || !hd?.color) return;
+                    const heroNeeds = {gear: {}, scroll: {}, composite: {}};
+                    for (let c = 1; c <= 18; c++) {
+                        (hd.color[c]?.items || []).forEach(gearId => {
+                            resolveRecipe('gear', String(gearId), 1, heroNeeds, false);                        });
+                    }
+                    ['gear', 'scroll'].forEach(type => {
+                        Object.entries(heroNeeds[type]).forEach(([id, qty]) => {
+                            maxAnyHero[type][id] = Math.max(maxAnyHero[type][id] || 0, qty);
+                        });
+                    });
+                });
+            }
+
+            // Calculate targets for building heroes
+            const craftTargets = {};
+            // Reset all craftable items to 0 first (including composites)
+            ['gear', 'scroll'].forEach(type => {
+                Object.keys(lib.data.inventoryItem[type] || {}).forEach(id => {
+                    const item = lib.data.inventoryItem[type][id];
+                    if (item?.fragmentMergeCost || (type === 'gear' && item?.craftRecipe?.gear && !item?.fragmentMergeCost)) {
+                        craftTargets[`${type}_${id}`] = 0;
+                    }
+                });
+            });
+            let heroCount = 0;
+
+            Object.entries(lib.data.hero).forEach(([heroId, hd]) => {
+                if (parseInt(heroId) >= 150 || !hd?.color) return;
+                if (heroExcluded.includes(heroId)) return;
+                const userHero = userHeroes[heroId];
+                const currentColor = userHero?.color || 0;
+                const userSlots = Object.keys(userHero?.slots || {}).length;
+                if (currentColor >= 18 && userSlots >= 6) return;
+                heroCount++;
+                const heroNeeds = {gear: {}, scroll: {}, composite: {}};
+                for (let c = currentColor + 1; c <= 18; c++) {
+                    (hd.color[c]?.items || []).forEach(gearId => {
+                        resolveRecipe('gear', String(gearId), 1, heroNeeds, false);
+                    });
+                }
+                // Current rank unfilled slots
+                if (userSlots < 6 && hd.color[currentColor]?.items) {
+                    const equipped = Object.values(userHero?.slots || {});
+                    hd.color[currentColor].items.forEach(gearId => {
+                        if (!equipped.includes(gearId)) {
+                            resolveRecipe('gear', String(gearId), 1, heroNeeds, false);
+                        }
+                    });
+                }
+                ['gear', 'scroll'].forEach(type => {
+                    Object.entries(heroNeeds[type]).forEach(([id, qty]) => {
+                        const key = `${type}_${id}`;
+                        craftTargets[key] = (craftTargets[key] || 0) + qty;
+                    });
+                });
+            });
+
+            // Apply buffer
+            if (bufferMultiplier > 0) {
+                ['gear', 'scroll'].forEach(type => {
+                    Object.entries(maxAnyHero[type]).forEach(([id, qty]) => {
+                        const key = `${type}_${id}`;
+                        const floor = qty * bufferMultiplier;
+                        if (floor > (craftTargets[key] || 0)) {
+                            craftTargets[key] = floor;
+                        }
+                    });
+                });
+            }
+
+            localStorage.setItem('hwh_craft_targets', JSON.stringify(craftTargets));
+            window.heroBuildTargetsNeedUpdate = false;
+
+            const gearCount = Object.keys(craftTargets).filter(k => k.startsWith('gear_') && craftTargets[k] > 0).length;
+            const scrollCount = Object.keys(craftTargets).filter(k => k.startsWith('scroll_') && craftTargets[k] > 0).length;
+            console.log(`🎯 Targets updated: ${heroCount} heroes (buffer: ${bufferMultiplier}x) → ${gearCount} gear, ${scrollCount} scrolls`);
+
+            // Refresh heroes table
+            window.heroDisplayCacheTime = null;
+            const parts = generateHeroesTable(window.gameLoadData.heroes);
+            document.getElementById('tab-header').innerHTML = parts.header;
+            document.getElementById('tab-content').innerHTML = parts.body;
+
+            // Open Inventory Manager → Craft tab
+            await window.showInventoryManager();
+            await new Promise(r => setTimeout(r, 100));
+            const craftBtn = document.getElementById('invTab6Craft');
+            if (craftBtn) craftBtn.click();
+
+        } catch (e) {
+            console.error('Update targets failed:', e);
+            if (btn) btn.textContent = '❌ Error';
+        }
+    };
+
+    // Show gear needs for all building heroes
+    unsafeWindow.showBuildingHeroGearNeeds = window.showBuildingHeroGearNeeds = function() {
+        const heroExcluded = JSON.parse(localStorage.getItem('hwh_hero_excluded') || '[]');
+        const buildingIds = [];
+        Object.keys(window.gameLoadData?.heroes || {}).forEach(id => {
+            const hero = window.gameLoadData.heroes[id];
+            if ((hero.color < 18 || (hero.color === 18 && Object.keys(hero.slots || {}).length < 6)) && !heroExcluded.includes(String(id))) {
+                buildingIds.push(id);
+            }
+        });
+        if (buildingIds.length === 0) {
+            alert('No building heroes selected');
+            return;
+        }
+        window.showHeroGearNeeds(buildingIds);
+    };
+
+    // Show gear needs popup for specified hero IDs
+    unsafeWindow.showHeroGearNeeds = window.showHeroGearNeeds = async function(heroIds) {
+        if (!lib?.data?.hero) {
+            console.error('Library not loaded');
+            return;
+        }
+
+        const resp = await Send(JSON.stringify({calls:[
+            {name:'heroGetAll',args:{},ident:'h'},
+            {name:'inventoryGet',args:{},ident:'i'}
+        ]}));
+        const userHeroes = resp.results[0].result.response;
+        const inv = resp.results[1].result.response;
+
+        // Build gearToScrollMap
+        const gearToScrollMap = {};
+        Object.entries(lib.data.inventoryItem.gear || {}).forEach(([gearId, gearData]) => {
+            if (gearData.craftRecipe?.scroll) {
+                const scrollId = Object.keys(gearData.craftRecipe.scroll)[0];
+                if (scrollId) gearToScrollMap[gearId] = scrollId;
+            }
+        });
+
+        const getRawNeeds = (heroId, currentColor, userHero) => {
+            const hd = lib.data.hero[heroId];
+            const needs = {};
+            // Future ranks
+            for (let c = currentColor + 1; c <= 18; c++) {
+                (hd.color[c]?.items || []).forEach(gearId => {
+                    needs[String(gearId)] = (needs[String(gearId)] || 0) + 1;
+                });
+            }
+            // Current rank unfilled slots (for R2 or any incomplete rank)
+            const filledSlots = Object.keys(userHero?.slots || {}).length;
+            if (filledSlots < 6 && hd.color[currentColor]?.items) {
+                const equipped = Object.values(userHero?.slots || {});
+                hd.color[currentColor].items.forEach(gearId => {
+                    if (!equipped.includes(gearId)) {
+                        needs[String(gearId)] = (needs[String(gearId)] || 0) + 1;
+                    }
+                });
+            }
+            return needs;
+        };
+        // Create shared resolver (consumed inventory shared across all heroes)
+        const { resolve: resolveRecipe } = createRecipeResolver(inv, gearToScrollMap);
+
+        const getExplodedNeeds = (heroId, currentColor, userHero) => {
+            const hd = lib.data.hero[heroId];
+            const needs = {gear: {}, scroll: {}, composite: {}};
+            // Future ranks
+            for (let c = currentColor + 1; c <= 18; c++) {
+                (hd.color[c]?.items || []).forEach(gearId => {
+                    resolveRecipe('gear', String(gearId), 1, needs, false, true);
+                });
+            }
+            // Current rank unfilled slots
+            const filledSlots = Object.keys(userHero?.slots || {}).length;
+            if (filledSlots < 6 && hd.color[currentColor]?.items) {
+                const equipped = Object.values(userHero?.slots || {});
+                hd.color[currentColor].items.forEach(gearId => {
+                    if (!equipped.includes(gearId)) {
+                        resolveRecipe('gear', String(gearId), 1, needs, false, true);
+                    }
+                });
+            }
+            return needs;
+        };
+
+        // Calculate remaining
+        const calcRemaining = (type, id, needed) => {
+            const builtHave = inv[type]?.[id] || 0;
+            const fragKey = type === 'gear' ? 'fragmentGear' : 'fragmentScroll';
+            const fragHave = inv[fragKey]?.[id] || 0;
+            const mergeCost = lib.data.inventoryItem[type]?.[id]?.fragmentMergeCost?.fragmentCount || 50;
+            return Math.max(0, needed - builtHave - Math.floor(fragHave / mergeCost));
+        };
+
+        const calcRawRemaining = (id, needed) => {
+            const item = lib.data.inventoryItem.gear?.[id];
+            const builtHave = inv.gear?.[id] || 0;
+            if (item?.fragmentMergeCost) {
+                const fragHave = inv.fragmentGear?.[id] || 0;
+                const mergeCost = item.fragmentMergeCost.fragmentCount || 50;
+                return Math.max(0, needed - builtHave - Math.floor(fragHave / mergeCost));
+            }
+            return Math.max(0, needed - builtHave);
+        };
+
+        // Collect data
+        const perHeroData = [];
+        const totalRaw = {};
+        const totalExploded = {gear: {}, scroll: {}, composite: {}};
+
+        heroIds.forEach(heroId => {
+            const hd = lib.data.hero[heroId];
+            if (!hd?.color) return;
+            const userHero = userHeroes[heroId];
+            const currentColor = userHero?.color || 0;
+            const userSlots = Object.keys(userHero?.slots || {}).length;
+            if (currentColor >= 18 && userSlots >= 6) return;
+            const heroName = window.identifyItem(heroId, 'hero');
+
+            const rawNeeds = getRawNeeds(heroId, currentColor, userHero);
+            const explodedNeeds = getExplodedNeeds(heroId, currentColor, userHero);
+
+            const rawRemaining = {};
+            Object.entries(rawNeeds).forEach(([id, qty]) => {
+                const rem = calcRawRemaining(id, qty);
+                rawRemaining[id] = rem;
+                totalRaw[id] = (totalRaw[id] || 0) + qty;
+            });
+
+            ['gear', 'scroll', 'composite'].forEach(type => {
+                Object.entries(explodedNeeds[type] || {}).forEach(([id, qty]) => {
+                    totalExploded[type][id] = (totalExploded[type][id] || 0) + qty;
+                });
+            });
+
+            if (Object.keys(rawRemaining).length) {
+                perHeroData.push({ heroName, currentColor, rawRemaining, rawNeeds });
+            }
+        });
+
+        // Calculate remaining for totals
+        const totalRawRemaining = {};
+        Object.entries(totalRaw).forEach(([id, qty]) => {
+            const rem = calcRawRemaining(id, qty);
+            totalRawRemaining[id] = rem;
+        });
+
+        const totalExplodedRemaining = {gear: {}, scroll: {}};
+        ['gear', 'scroll'].forEach(type => {
+            Object.entries(totalExploded[type]).forEach(([id, qty]) => {
+                const rem = calcRemaining(type, id, qty);
+                totalExplodedRemaining[type][id] = rem;
+            });
+        });
+
+        // Build report
+        const title = heroIds.length === 1 ? perHeroData[0]?.heroName || 'Hero' : `${heroIds.length} Heroes`;
+        const color = '#9c27b0';
+
+        const formatItems = (remaining, total, type) => {
+            if (!Object.keys(remaining).length) return [];
+            const items = Object.entries(remaining).sort((a,b) => b[1] - a[1]);
+            const maxNeed = Math.max(...items.map(([id]) => String(total[id] || 0).length));
+            const maxRem = Math.max(...items.map(([,q]) => String(q).length));
+            return items.map(([id, rem]) => `  ${String(total[id] || rem).padStart(maxNeed)}  ${rem === 0 ? '✓'.padStart(maxRem) : String(rem).padStart(maxRem)}   ${window.identifyItem(id, type)}`);
+        };
+
+        let report = [];
+        report.push(`══════════════════════════════════════════`);
+        report.push(`📊 GEAR NEEDS - ${title}`);
+        report.push(`══════════════════════════════════════════`);
+
+        report.push('');
+        report.push('📦 TOTAL RAW (Composite Items)');
+        report.push('  Need  Rem   Item');
+        if (Object.keys(totalRawRemaining).length) {
+            formatItems(totalRawRemaining, totalRaw, 'gear').forEach(line => report.push(line));
+        } else {
+            report.push('  ✓ All in inventory!');
+        }
+
+        report.push('');
+        report.push('🔧 TOTAL EXPLODED (Base Craftables)');
+        report.push('  Need  Rem   Item');
+        if (Object.keys(totalExplodedRemaining.gear).length) {
+            report.push('Gear:');
+            formatItems(totalExplodedRemaining.gear, totalExploded.gear, 'gear').forEach(line => report.push(line));
+        }
+        if (Object.keys(totalExplodedRemaining.scroll).length) {
+            report.push('Scrolls:');
+            formatItems(totalExplodedRemaining.scroll, totalExploded.scroll, 'scroll').forEach(line => report.push(line));
+        }
+        if (!Object.keys(totalExplodedRemaining.gear).length && !Object.keys(totalExplodedRemaining.scroll).length) {
+            report.push('  ✓ All in inventory!');
+        }
+
+        if (Object.keys(totalExploded.composite || {}).length) {
+            report.push('');
+            report.push('🔗 INTERMEDIATE COMPOSITES');
+            report.push('  Need  Rem   Item');
+            const compRemaining = {};
+            Object.entries(totalExploded.composite).forEach(([id, qty]) => {
+                const have = inv.gear?.[id] || 0;
+                const rem = Math.max(0, qty - have);
+                compRemaining[id] = rem;
+            });
+            if (Object.keys(compRemaining).length) {
+                formatItems(compRemaining, totalExploded.composite, 'gear').forEach(line => report.push(line));
+            } else {
+                report.push('  ✓ All in inventory!');
+            }
+        }
+
+        if (heroIds.length > 1) {
+            report.push('');
+            report.push('───────────────────────────────────────────');
+            report.push('📋 PER-HERO RAW NEEDS');
+            report.push('───────────────────────────────────────────');
+            perHeroData.forEach(h => {
+                report.push(`${h.heroName} (C${h.currentColor}):`);
+                formatItems(h.rawRemaining, h.rawNeeds || h.rawRemaining, 'gear').forEach(line => report.push(line));
+            });
+            if (!perHeroData.length) {
+                report.push('  ✓ All heroes have items in inventory!');
+            }
+        }
+
+        report.push('');
+        report.push('══════════════════════════════════════════');
+
+        const reportText = report.join('\n');
+        const rawCount = Object.values(totalRawRemaining).reduce((s, q) => s + q, 0);
+        const expCount = Object.values(totalExplodedRemaining.gear).reduce((s, q) => s + q, 0) + Object.values(totalExplodedRemaining.scroll).reduce((s, q) => s + q, 0);
+
+        // Remove existing popup if any
+        document.querySelector('#heroGearNeedsPopup')?.remove();
+
+        // Results popup
+        const resultBox = document.createElement('div');
+        resultBox.id = 'heroGearNeedsPopup';
+        resultBox.style.cssText = `position:fixed;top:120px;left:50%;transform:translateX(-50%);background:#1a1a2e;border:2px solid ${color};border-radius:10px;padding:12px;width:420px;max-height:70vh;display:flex;flex-direction:column;z-index:999999999;box-shadow:0 4px 20px rgba(0,0,0,0.5);`;
+
+        const resultHeader = document.createElement('div');
+        resultHeader.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;cursor:move;';
+        resultHeader.innerHTML = `
+            <span style="color:${color};font-size:14px;font-weight:bold;">📊 Gear Needs - ${title}</span>
+            <button id="gn_close" style="background:none;border:none;color:#999;cursor:pointer;font-size:18px;">✕</button>
+        `;
+        resultBox.appendChild(resultHeader);
+
+        // Make draggable
+        let isDrag = false, dX, dY;
+        resultHeader.onmousedown = (e) => {
+            if (e.target.tagName === 'BUTTON') return;
+            isDrag = true;
+            dX = e.clientX - resultBox.offsetLeft;
+            dY = e.clientY - resultBox.offsetTop;
+            resultBox.style.transform = 'none';
+        };
+        document.addEventListener('mousemove', (e) => {
+            if (!isDrag) return;
+            resultBox.style.left = (e.clientX - dX) + 'px';
+            resultBox.style.top = (e.clientY - dY) + 'px';
+        });
+        document.addEventListener('mouseup', () => isDrag = false);
+
+        const statsRow = document.createElement('div');
+        statsRow.style.cssText = 'display:flex;gap:15px;margin-bottom:8px;';
+        statsRow.innerHTML = `
+            <div style="background:rgba(156,39,176,0.2);padding:5px 10px;border-radius:6px;text-align:center;">
+                <div style="color:#e1bee7;font-size:10px;">Raw</div>
+                <div style="color:#ffd700;font-size:15px;font-weight:bold;">${rawCount}</div>
+            </div>
+            <div style="background:rgba(156,39,176,0.2);padding:5px 10px;border-radius:6px;text-align:center;">
+                <div style="color:#e1bee7;font-size:10px;">Exploded</div>
+                <div style="color:#ffd700;font-size:15px;font-weight:bold;">${expCount}</div>
+            </div>
+        `;
+        resultBox.appendChild(statsRow);
+
+        const pre = document.createElement('pre');
+        pre.style.cssText = 'background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;font-size:10px;color:#ccc;max-height:350px;overflow-y:auto;white-space:pre-wrap;font-family:monospace;flex:1;';
+        pre.textContent = reportText;
+        resultBox.appendChild(pre);
+
+        const actionRow = document.createElement('div');
+        actionRow.style.cssText = 'display:flex;gap:6px;margin-top:8px;';
+        actionRow.innerHTML = `
+            <button id="gn_copy" style="flex:1;background:${color};color:white;border:none;border-radius:4px;padding:6px;cursor:pointer;font-size:11px;">📋 Copy</button>
+            <button id="gn_console" style="flex:1;background:#666;color:white;border:none;border-radius:4px;padding:6px;cursor:pointer;font-size:11px;">📤 Console</button>
+        `;
+        resultBox.appendChild(actionRow);
+
+        document.body.appendChild(resultBox);
+
+        resultBox.querySelector('#gn_close').onclick = () => resultBox.remove();
+        resultBox.querySelector('#gn_copy').onclick = () => {
+            navigator.clipboard.writeText(reportText);
+            resultBox.querySelector('#gn_copy').textContent = '✓ Copied!';
+        };
+        resultBox.querySelector('#gn_console').onclick = () => {
+            console.log(reportText);
+            resultBox.querySelector('#gn_console').textContent = '✓ Logged!';
+        };
+    };
+
+
     function generateTitansTable(titans) {
         if (!window.titanTableState) {
             window.titanTableState = { sortBy: 'power', sortDir: 'desc' };
@@ -15285,7 +17483,7 @@ scrollbar-color: #8b6914 #1a0f08;
         `;
 
         filtered.forEach((titan, index) => {
-            const bgColor = index % 2 === 0 ? 'rgba(0, 0, 0, 0.15)' : 'rgba(0, 0, 0, 0.25)';
+            const stripeClass = index % 2 ? 'twk-stripe' : '';   // ← CHANGED from bgColor
             const levelDisplay = titan.level >= 130 ? '<span class="twk-green">✓</span>' : `<span class="twk-dim">${titan.level}</span>`;
             const starsDisplay = titan.star >= 6 ? '<span class="twk-green">✓</span>' : `<span class="twk-gold">${titan.star}</span>`;
 
@@ -15303,7 +17501,7 @@ scrollbar-color: #8b6914 #1a0f08;
             const skillsDisplay = skillsMaxed ? '<span class="twk-green">✓</span>' : `<span class="twk-dim">${skillVals.filter(s => s >= 130).length}/${skillVals.length}</span>`;
 
             body += `
-                <tr style="background: ${bgColor}; border-bottom: 1px solid #333;">
+                <tr class="${stripeClass}" style="border-bottom: 1px solid #333;">
                     <td class="twk-cell"><button onclick="window.openUnitInGame('titan', ${titan.id})" style="background: #2a5a2a; color: #fff; border: 1px solid #1a4a1a; border-radius: 3px; padding: 2px 6px; cursor: pointer; font-size: 10px;">Go</button></td>
                     <td style="padding: 3px; font-weight: bold; color: #ffd700; cursor: pointer; text-decoration: underline; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" onclick="window.openUnitInGame('titan', ${titan.id})">${getName(titan.id, 'titan')}</td>
                     <td style="padding: 3px; text-align: center; color: #999; font-size: 10px;">${titan.id}</td>
@@ -15483,7 +17681,7 @@ scrollbar-color: #8b6914 #1a0f08;
         `;
 
         filtered.forEach((pet, index) => {
-            const bgColor = index % 2 === 0 ? 'rgba(0, 0, 0, 0.15)' : 'rgba(0, 0, 0, 0.25)';
+            const stripeClass = index % 2 ? 'twk-stripe' : '';   // ← CHANGED from bgColor
             const levelDisplay = pet.level >= 130 ? '<span class="twk-green">✓</span>' : `<span class="twk-dim">${pet.level}</span>`;
             const colorDisplay = pet.color >= 10 ? '<span class="twk-green">✓</span>' : `<span class="twk-dim">${colorNames[pet.color] || pet.color}</span>`;
 
@@ -15507,7 +17705,7 @@ scrollbar-color: #8b6914 #1a0f08;
             const skillsDisplay = skillsMaxed ? '<span class="twk-green">✓</span>' : `<span class="twk-dim">${skillVals.filter(s => s >= 130).length}/${skillVals.length}</span>`;
 
             body += `
-                <tr style="background: ${bgColor}; border-bottom: 1px solid #333;">
+                <tr class="${stripeClass}" style="border-bottom: 1px solid #333;">
                     <td class="twk-cell"><button onclick="window.openUnitInGame('pet', ${pet.id})" style="background: #2a5a2a; color: #fff; border: 1px solid #1a4a1a; border-radius: 3px; padding: 2px 6px; cursor: pointer; font-size: 10px;">Go</button></td>
                     <td style="padding: 3px; font-weight: bold; color: #ffd700; cursor: pointer; text-decoration: underline; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" onclick="window.openUnitInGame('pet', ${pet.id})">${getName(pet.id, 'pet')}</td>
                     <td style="padding: 3px; text-align: center; color: #999; font-size: 10px;">${pet.id}</td>
@@ -15625,10 +17823,10 @@ scrollbar-color: #8b6914 #1a0f08;
         let body = `<table style="width: 100%; border-collapse: collapse; font-size: 12px;"><tbody>`;
 
         allSlots.forEach((slot, index) => {
-            const bgColor = index % 2 === 0 ? 'rgba(0, 0, 0, 0.15)' : 'rgba(0, 0, 0, 0.25)';
+            const stripeClass = index % 2 ? 'twk-stripe' : '';   // ← CHANGED from bgColor
             const pctColor = slot.pctRaw !== undefined && slot.pctRaw < 0 ? '#ff6b6b' : '#4ae29a';
             body += `
-                <tr style="background: ${bgColor}; border-bottom: 1px solid #333;">
+                <tr class="${stripeClass}" style="border-bottom: 1px solid #333;">
                     <td style="padding: 5px; color: #ffd700; cursor: pointer; text-decoration: underline; font-weight: bold;" onclick="window.openUnitInGame('flag', ${slot.bannerId})">${slot.bannerName}</td>
                     <td style="padding: 5px; text-align: center; font-family: monospace; color: #fff; width: 50px;">${slot.slotKey !== undefined ? slot.slotKey : '-'}</td>
                     <td style="padding: 5px; color: #4ae29a; font-weight: bold;">${slot.patternName}</td>
@@ -16014,18 +18212,12 @@ display: flex; flex-direction: column;
 🗺️ Guilds Tracked: ${Object.keys(data.dominationStats || {}).length}
             `.trim();
 
-                if (HWHFuncs && HWHFuncs.setProgress) {
-                    HWHFuncs.setProgress('✅ Data exported to console (F12)', false);
-                }
-
+                TweakerNotifications.success('📋', 'Export', 'Data exported to console (F12)');
                 alert(summary + '\n\n✅ Full data exported to console (F12)');
             } catch (error) {
-                if (HWHFuncs && HWHFuncs.setProgress) {
-                    HWHFuncs.setProgress(`❌ Export error: ${error.message}`, true);
-                }
+                TweakerNotifications.error('📋', 'Export', error.message || 'Export failed');
             }
         };
-
         // Reset Names button handler
         document.getElementById('reset-names-btn').onclick = async function() {
             const confirmed = await HWHFuncs.popup.confirm(
@@ -16035,7 +18227,6 @@ display: flex; flex-direction: column;
                     { msg: 'Cancel', result: false, isClose: true }
                 ]
             );
-
             if (confirmed) {
                 if (resetPositionNamesToDefaults()) {
                     await HWHFuncs.popup.confirm(
@@ -16346,7 +18537,7 @@ display: flex; flex-direction: column;
             dock.style.cssText = `
                 position: fixed; bottom: 0; left: ${dockLeft}; transform: ${dockTransform};
                 width: ${dockWidth}; height: 28px; background: rgba(42,24,16,0.95);
-                border: 1px solid #8b6914; border-bottom: none;
+                border: 1px solid #8b6914; border-bottom: none; border-radius: 6px 6px 0 0;
                 z-index: 9998; display: flex; align-items: center; justify-content: space-between;
                 padding: 0 10px; font-family: Arial, sans-serif; font-size: 12px;
                 box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
@@ -16481,7 +18672,8 @@ display: flex; flex-direction: column;
             const giftStyle = giftSoon ? 'color: #4ae29a; font-size: 10px; font-weight: bold; animation: blink 1s infinite;' : 'color: #ffa500; font-size: 10px;';
             dockHTML += `<span style="${giftStyle}">🎁 ${giftCountdown}</span>`;
 
-            dockHTML += `<span style="color: #999; font-size: 11px;">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>`;
+            window._aocLastRefresh = Date.now();
+            dockHTML += `<span id="aoc-dock-time" style="cursor: pointer; font-size: 12px;" title="Last refresh: ${formatRefreshTime(window._aocLastRefresh)}">🕐 <span id="aoc-stale" style="color: #4ae29a;">●</span></span>`;
             dockHTML += '<button id="close-aoc-dock" style="background: transparent; border: none; color: #666; cursor: pointer; font-size: 14px; padding: 2px 6px;">✕</button>';
             dockHTML += '</div>';
 
@@ -16714,9 +18906,33 @@ display: flex; flex-direction: column;
             window.addEventListener('resize', repositionDock);
 
             // Close button
+            // Update staleness indicator every 30 seconds
+            window._aocStaleTimer = setInterval(() => {
+                const staleEl = document.getElementById('aoc-stale');
+                if (staleEl && window._aocLastRefresh) {
+                    staleEl.style.color = getStalenessColor(window._aocLastRefresh);
+                }
+            }, 30000);
+
+            window.updateAoCDockTime = function() {
+                const dock = document.getElementById('aoc-dock');
+                const staleEl = document.getElementById('aoc-stale');
+                const timeEl = document.getElementById('aoc-dock-time');
+                if (dock) {
+                    dock.style.borderColor = '#4ae29a';
+                    setTimeout(() => dock.style.borderColor = '#8b6914', 1500);
+                }
+                if (staleEl) {
+                    window._aocLastRefresh = Date.now();
+                    staleEl.style.color = '#4ae29a';
+                    if (timeEl) timeEl.title = 'Last refresh: ' + formatRefreshTime(window._aocLastRefresh);
+                }
+            };
+
             document.getElementById('close-aoc-dock').addEventListener('click', (e) => {
                 e.stopPropagation();
-                window.removeEventListener('resize', repositionDock);
+                window.removeEventListener('resize', repositionAoCDock);
+                if (window._aocStaleTimer) clearInterval(window._aocStaleTimer);
                 dock.remove();
             });
 
@@ -16727,15 +18943,9 @@ display: flex; flex-direction: column;
                     window.showAoCStatsUnified();
                 }
             });
-
         } catch (error) {
             console.error('Error showing AoC dock:', error);
         }
-    };
-
-    window.hideAoCDock = function() {
-        const dock = document.getElementById('aoc-dock');
-        if (dock) dock.remove();
     };
 
     // === CASTLE TAB CONTENT - 3 COLUMN LAYOUT ===
@@ -17819,25 +20029,15 @@ display: flex; flex-direction: column;
         try {
             const SendFunction = getSend();
             const amount = parseInt(coinAmount);
-
             if (isNaN(amount) || amount <= 0) {
                 console.error('Invalid coin amount:', coinAmount);
                 return false;
             }
-
             debugLog(`Upgrading castle with ${amount} coins...`);
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress(`🏰 Upgrading castle with ${amount} coins...`, false);
-            }
-
             const response = await SendFunction(`{"calls":[{"name":"clanCastle_upgrade","args":{"optionId":1,"amount":${amount}},"context":{"actionTs":${Date.now()}},"ident":"body"}]}`);
-
             if (response?.results?.[0]?.result && !response.results[0].result.error) {
                 debugLog(`✅ Castle upgraded successfully with ${amount} coins`);
-                if (HWHFuncs && HWHFuncs.setProgress) {
-                    HWHFuncs.setProgress(`✅ Castle upgraded with ${amount} coins`, false);
-                }
-
+                TweakerNotifications.success('🏰', 'Castle', `Upgraded with ${amount} coins`);
                 // Show enhanced AoC stats popup after successful contribution
                 // Refresh inventory after contribution
                 try {
@@ -17845,25 +20045,19 @@ display: flex; flex-direction: column;
                         await cheats.refreshInventory();
                     }
                 } catch(e) { debugLog('Inventory refresh skipped:', e); }
-
                 setTimeout(() => {
                     window.showAoCStatsEnhanced();  // ← CHANGED FROM showCastleContributorsLive
                 }, 500);
-
                 return true;
             } else {
                 const error = response?.results?.[0]?.result?.error || 'Unknown error';
                 console.error('Castle upgrade error:', error);
-                if (HWHFuncs && HWHFuncs.setProgress) {
-                    HWHFuncs.setProgress(`❌ Castle upgrade failed: ${error}`, true);
-                }
+                TweakerNotifications.error('🏰', 'Castle', `Upgrade failed: ${error}`);
                 return false;
             }
         } catch (error) {
             console.error('Error upgrading castle:', error);
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress(`❌ Castle upgrade error: ${error.message}`, true);
-            }
+            TweakerNotifications.error('🏰', 'Castle', error.message || 'Upgrade error');
             return false;
         }
     };
@@ -17960,6 +20154,323 @@ display: flex; flex-direction: column;
         debugLog('📤 Sent Escape keypresses to close game popup');
         return true;
     }
+    // ================================================================
+    // HWH DIRECT TASKS - Replaces "Do All" with individual controls
+    // ================================================================
+
+    const hwhTaskDefinitions = {
+
+        // ============ SIMPLE TASKS - Full reward capture ============
+
+        hwh_getOutland: {
+            icon: '⚔️',
+            label: 'Outland',
+            desc: 'Raid & collect outland boss chests',
+            group: 'hwh',
+            default: false,
+            disabled: false,
+            action: async () => {
+                const rewards = {};
+                const bosses = await Caller.send('bossGetAll');
+                const calls = [];
+
+                for (const boss of bosses) {
+                    if (boss.mayRaid) {
+                        calls.push({ name: 'bossRaid', args: { bossId: boss.id }, ident: `raid_${boss.id}` });
+                        calls.push({ name: 'bossOpenChest', args: { bossId: boss.id, amount: 1, starmoney: 0 }, ident: `chest_${boss.id}` });
+                    } else if (boss.chestId == 1) {
+                        calls.push({ name: 'bossOpenChest', args: { bossId: boss.id, amount: 1, starmoney: 0 }, ident: `chest_${boss.id}` });
+                    }
+                }
+
+                if (calls.length === 0) {
+                    return { success: true, items: 'Nothing to collect', count: 0, hasItems: false, rewards: {} };
+                }
+
+                const caller = new Caller(calls);
+                await caller.send();
+
+                calls.filter(c => c.name === 'bossOpenChest').forEach(c => {
+                    const result = caller.result(c.ident);
+                    if (result) {
+                        const parsed = window.parseRewardResponse?.(result) || [];
+                        parsed.forEach(r => {
+                            const key = r.name || r.display;
+                            if (!rewards[key]) rewards[key] = { amount: 0, source: 'O' };
+                            rewards[key].amount += r.quantity || 1;
+                        });
+                    }
+                });
+
+                const chestCount = calls.filter(c => c.name === 'bossOpenChest').length;
+                return { success: true, items: `${chestCount} chests`, count: Object.keys(rewards).length, hasItems: Object.keys(rewards).length > 0, rewards };
+            }
+        },
+
+
+
+        hwh_dailyBonus: {
+            icon: '🎯',
+            label: 'Daily Bonus',
+            desc: 'Collect daily login bonus',
+            group: 'hwh',
+            default: false,
+            disabled: false,
+            action: async () => {
+                const info = await Caller.send('dailyBonusGetInfo');
+                debugLog('Daily bonus info:', info);
+
+                if (!info.availableToday) {
+                    return { success: true, items: 'Already collected', count: 0, hasItems: false, rewards: {} };
+                }
+
+                const result = await Caller.send({ name: 'dailyBonusFarm', args: { vip: 0 } });
+                const rewards = {};
+                const parsed = window.parseRewardResponse?.(result) || [];
+                parsed.forEach(r => {
+                    const key = r.name || r.display;
+                    if (!rewards[key]) rewards[key] = { amount: 0, source: 'DB' };
+                    rewards[key].amount += r.quantity || 1;
+                });
+
+                return { success: true, items: 'Bonus collected', count: Object.keys(rewards).length, hasItems: Object.keys(rewards).length > 0, rewards };
+            }
+        },
+
+        hwh_collectMisc: {
+            icon: '🎁',
+            label: 'Collect Misc',
+            desc: 'Zeppelin, gacha refill, subscriptions',
+            group: 'hwh',
+            default: false,
+            disabled: false,
+            action: async () => {
+                const rewards = {};
+
+                try {
+                    const r = await Caller.send('subscriptionFarm');
+                    (window.parseRewardResponse?.(r) || []).forEach(i => {
+                        const k = i.display || i.name;
+                        if (k) rewards[k] = { amount: (rewards[k]?.amount || 0) + (i.quantity || 1), source: 'CM' };
+                    });
+                } catch (e) {}
+
+                try {
+                    const r = await Caller.send('zeppelinGiftFarm');
+                    (window.parseRewardResponse?.(r) || []).forEach(i => {
+                        const k = i.display || i.name;
+                        if (k) rewards[k] = { amount: (rewards[k]?.amount || 0) + (i.quantity || 1), source: 'CM' };
+                    });
+                } catch (e) {}
+
+                try {
+                    const r = await Caller.send('grandFarmCoins');
+                    (window.parseRewardResponse?.(r) || []).forEach(i => {
+                        const k = i.display || i.name;
+                        if (k) rewards[k] = { amount: (rewards[k]?.amount || 0) + (i.quantity || 1), source: 'CM' };
+                    });
+                } catch (e) {}
+
+                try {
+                    const r = await Caller.send({ name: 'gacha_refill', args: { ident: 'heroGacha' } });
+                    (window.parseRewardResponse?.(r) || []).forEach(i => {
+                        const k = i.display || i.name;
+                        if (k) rewards[k] = { amount: (rewards[k]?.amount || 0) + (i.quantity || 1), source: 'CM' };
+                    });
+                } catch (e) {}
+                // Skin Sale / Free Offers
+                try {
+                    const offerGetAll = await Caller.send('offerGetAll');
+                    const freeOffers = offerGetAll.filter(e => e.type == 'reward' && !e?.freeRewardObtained && e.reward);
+                    if (freeOffers.length) {
+                        const results = await Caller.send(freeOffers.map(o => ({
+                            name: 'offerFarmReward',
+                            args: { offerId: o.id },
+                        })));
+                        debugLog('Free offers collected:', results.length);
+                    }
+                } catch (e) {}
+
+                return { success: true, items: 'Misc collected', count: Object.keys(rewards).length, hasItems: Object.keys(rewards).length > 0, rewards };
+            }
+        },
+
+        hwh_rollAscension: {
+            icon: '🔮',
+            label: 'Seer (Free Roll)',
+            desc: 'Roll free ascension chest',
+            group: 'hwh',
+            default: false,
+            disabled: false,
+            action: async () => {
+                // Check for seer tokens (refillable item 47)
+                const user = await Caller.send('userGetInfo');
+                const seerTokens = user?.refillable?.find(i => i.id == 47);
+
+                if (!seerTokens?.amount) {
+                    return { success: true, items: 'No free roll available', count: 0, hasItems: false, rewards: {} };
+                }
+
+                const result = await Caller.send({ name: 'ascensionChest_open', args: { paid: false, amount: 1 } });
+                const rewards = {};
+                const parsed = window.parseRewardResponse?.(result) || [];
+                parsed.forEach(r => {
+                    const key = r.name || r.display;
+                    if (!rewards[key]) rewards[key] = { amount: 0, source: 'Se' };
+                    rewards[key].amount += r.quantity || 1;
+                });
+
+                return { success: true, items: 'Seer rolled', count: Object.keys(rewards).length, hasItems: Object.keys(rewards).length > 0, rewards };
+            }
+        },
+
+        hwh_expeditionFarm: {
+            icon: '🚀',
+            label: 'Expeditions (Collect)',
+            desc: 'Collect finished expeditions only',
+            group: 'hwh',
+            default: false,
+            disabled: false,
+            action: async () => {
+                const rewards = {};
+                const expedInfo = await Caller.send('expeditionGet');
+                const calls = [];
+
+                const dateNow = Date.now() / 1000;
+                for (const exped of Object.values(expedInfo)) {
+                    if (exped.status == 2 && exped.endTime != 0 && dateNow > exped.endTime) {
+                        calls.push({ name: 'expeditionFarm', args: { expeditionId: exped.id }, ident: `exp_${exped.id}` });
+                    }
+                }
+
+                if (calls.length === 0) {
+                    return { success: true, items: 'None ready', count: 0, hasItems: false, rewards: {} };
+                }
+
+                const caller = new Caller(calls);
+                await caller.send();
+
+                calls.forEach(c => {
+                    const result = caller.result(c.ident);
+                    if (result) {
+                        const parsed = window.parseRewardResponse?.(result) || [];
+                        parsed.forEach(r => {
+                            const key = r.name || r.display;
+                            if (!rewards[key]) rewards[key] = { amount: 0, source: 'Ex' };
+                            rewards[key].amount += r.quantity || 1;
+                        });
+                    }
+                });
+
+                return { success: true, items: `${calls.length} expeditions`, count: Object.keys(rewards).length, hasItems: Object.keys(rewards).length > 0, rewards };
+            }
+        },
+
+        // ============ COMPLEX TASKS - Use HWHClasses ============
+
+        hwh_testTower: {
+            icon: '🗼',
+            label: 'Tower',
+            desc: 'Auto-complete tower floors',
+            group: 'hwh',
+            default: false,
+            disabled: false,
+            action: () => new Promise((resolve, reject) => {
+                if (!HWHClasses?.executeTower) { reject(new Error('executeTower not available')); return; }
+                const tower = new HWHClasses.executeTower(
+                    () => resolve({ success: true, items: 'Tower completed', count: 0, hasItems: false, rewards: {} }),
+                    (err) => reject(err)
+                );
+                tower.start();
+            })
+        },
+
+        hwh_testTitanArena: {
+            icon: '⚔️',
+            label: 'ToE',
+            desc: 'Auto-complete Tournament of Elements',
+            group: 'hwh_parallel',
+            default: false,
+            disabled: false,
+            action: (progressCallback) => new Promise((resolve, reject) => {
+                if (!HWHClasses?.executeTitanArena) { reject(new Error('executeTitanArena not available')); return; }
+
+                const origSetProgress = typeof setProgress !== 'undefined' ? setProgress : null;
+                if (progressCallback && typeof window.setProgress === 'function') {
+                    window.setProgress = (msg, done) => {
+                        progressCallback(msg);
+                        if (done) {
+                            if (origSetProgress) window.setProgress = origSetProgress;
+                        }
+                    };
+                }
+
+                const toe = new HWHClasses.executeTitanArena(
+                    async () => {
+                        // Fetch final status and show summary
+                        try {
+                            const status = await Send({ calls: [{ name: 'titanArenaGetStatus', args: {}, ident: 'body' }] });
+                            const data = status?.results?.[0]?.result?.response;
+                            if (data) showToESummary(data);
+                        } catch (e) { console.warn('[ToE] Could not fetch summary:', e); }
+                        resolve({ success: true, items: 'ToE completed', count: 0, hasItems: false, rewards: {} });
+                    },
+                    (err) => reject(err)
+                );
+                toe.start();
+            })
+        },
+
+
+        hwh_testDungeon: {
+            icon: '🏰',
+            label: 'Dungeon',
+            desc: 'Auto-complete dungeon',
+            group: 'hwh_parallel',  // NEW GROUP for parallel tasks
+            default: false,
+            disabled: false,
+            action: (progressCallback) => new Promise((resolve, reject) => {
+                if (!HWHClasses?.executeDungeon) { reject(new Error('executeDungeon not available')); return; }
+
+                const dung = new HWHClasses.executeDungeon(
+                    () => resolve({ success: true, items: 'Dungeon done', count: 0, hasItems: false, rewards: {} }),
+                    (err) => reject(err)
+                );
+                dung.start(0);
+            })
+        },
+
+        hwh_dailyQuests: {
+            icon: '📋',
+            label: 'Daily Quests',
+            desc: 'Auto-complete (skips rune enchant)',
+            group: 'hwh',
+            default: false,
+            disabled: false,
+            action: async () => {
+                if (!HWHClasses?.dailyQuests) throw new Error('dailyQuests not available');
+
+                return new Promise((resolve, reject) => {
+                    const quests = new HWHClasses.dailyQuests(
+                        () => resolve({ success: true, items: 'Quests done', count: 0, hasItems: false, rewards: {} }),
+                        (err) => reject(err)
+                    );
+
+                    // Disable enchant rune quest (10047)
+                    if (quests.questDefs?.[10047]) {
+                        quests.questDefs[10047].isWeCanDo = () => false;
+                    }
+
+                    quests.autoInit(true).then(() => quests.start());
+                });
+            }
+        }
+    };
+
+    // Shared inventory counts between collect tasks (autoUseInventory → buyTitanShopGold → sellXPPotions)
+    let sharedCollectCounts = null;
+
+
     // Function mapping for Collect More - Fixed for 2.403
     function createFunctionMap() {
         return {
@@ -17973,14 +20484,256 @@ display: flex; flex-direction: column;
                 return window.buyShopsWithCraftPriority();
             },
             collectGuildRewards: async () => {
-                if (!window.collectAllGuildRewards) throw new Error('Guild Rewards function not available');
-                const results = await window.collectAllGuildRewards();
+                if (typeof Caller === 'undefined') throw new Error('Caller not available');
+
+                const rewards = {};
+                let countQuests = 0;
+                const farmedQuestIds = [];
+
+                // Nice names for daily rewards
+                const dailyRewardNames = {
+                    stamina: '⚡ Energy',
+                    skillPoint: '🔮 Titanite',
+                    gold: '🪙 Gold',
+                    starmoney: '💎 Emeralds',
+                    dungeonActivity: '🃏 Dungeon Cards',
+                    soulCrystal: '💠 Soul Crystal',
+                    adventure: '🌀 Portal Charge',
+                    clanActivity: '🏰 Guild Activity',
+                    clanQuestsPoints: '🏰 Guild Quest Points',
+                    prestige: '🅰️ Prestige'
+                };
+
+                // Helper to parse rewards with nice names
+                const parseRewardsNice = (result, source) => {
+                    if (!result || typeof result !== 'object') return;
+
+                    // Handle array responses (e.g., guild quest returns array)
+                    if (Array.isArray(result)) {
+                        result.forEach(item => parseRewardsNice(item, source));
+                        return;
+                    }
+
+                    // Try standard parseRewardResponse first
+                    const parsed = window.parseRewardResponse?.(result) || [];
+                    if (parsed.length > 0) {
+                        parsed.forEach(r => {
+                            const key = r.name || r.display;
+                            if (key) rewards[key] = { amount: (rewards[key]?.amount || 0) + (r.quantity || 1), source };
+                        });
+                        return;
+                    }
+
+                    // Fallback: parse raw response with nice names
+                    for (const [key, value] of Object.entries(result)) {
+                        if (key === 'quests') continue;
+
+                        // Handle nested objects (refillable, consumable, coin)
+                        if (typeof value === 'object' && value !== null) {
+                            for (const [itemId, itemQty] of Object.entries(value)) {
+                                const qty = parseInt(itemQty) || 1;
+                                let itemName = '';
+                                if (key === 'refillable') itemName = '🔋 ' + (window.identifyItem?.(itemId, 'consumable') || `Refillable #${itemId}`);
+                                else if (key === 'consumable') itemName = '📦 ' + (window.identifyItem?.(itemId, 'consumable') || `Item #${itemId}`);
+                                else if (key === 'coin') itemName = '💰 ' + (window.identifyItem?.(itemId, 'coin') || `Coin #${itemId}`);
+                                else itemName = window.identifyItem?.(itemId, key) || `${key} #${itemId}`;
+
+                                rewards[itemName] = { amount: (rewards[itemName]?.amount || 0) + qty, source };
+                            }
+                            continue;
+                        }
+
+                        // Handle flat values with nice names
+                        const qty = typeof value === 'number' ? value : parseInt(value) || 1;
+                        const itemName = dailyRewardNames[key] || key;
+                        rewards[itemName] = { amount: (rewards[itemName]?.amount || 0) + qty, source };
+                    }
+                };
+
+                // Get quests + offers in one call
+                const [questGetAll, specialOffers] = await Caller.send(['questGetAll', 'specialOffer_getAll']);
+
+                // Guild quests - handle separately with try/catch and loop until done
+                let guildRound = 0;
+                let guildCollected = 0;
+                while (guildRound < 10) {
+                    const freshQuests = await Caller.send('questGetAll');
+                    // FIX: Only get READY guild quests (state === 2) OR always-farmable skip quests
+                    const alwaysFarmable = [20000010, 20000011, 20000012, 20000042, 20000043, 20000044, 20000110, 20000111, 20000112];
+                    const guildQuests = freshQuests.filter(e =>
+                                                           e.id >= 20000000 && e.id <= 20000200 &&
+                                                           (e.state === 2 || alwaysFarmable.includes(e.id))
+                                                          );
+                    debugLog(`Guild round ${guildRound}: found ${guildQuests.length} ready quests`);
+
+                    if (guildQuests.length === 0) {
+                        debugLog(`Guild round ${guildRound}: no ready quests, stopping`);
+                        break;
+                    }
+
+                    let roundCollected = 0;
+
+                    for (const quest of guildQuests) {
+                        if (farmedQuestIds.includes(+quest.id)) continue;
+                        try {
+                            debugLog(`Trying guild quest ${quest.id}...`);
+                            const result = await Caller.send({ name: 'quest_questsFarm', args: { questIds: [+quest.id] } });
+                            debugLog(`Success ${quest.id}:`, result);
+                            farmedQuestIds.push(+quest.id);
+                            roundCollected++;
+                            guildCollected++;
+                            parseRewardsNice(result, 'G');
+                        } catch (e) {
+                            debugLog(`Failed ${quest.id}:`, e.message);
+                        }
+                    }
+
+                    debugLog(`Guild round ${guildRound}: collected ${roundCollected}`);
+                    if (roundCollected === 0) break;
+                    guildRound++;
+                }
+                countQuests += guildCollected;
+
+                // Now handle other quests (exclude guild quests)
+                const questsFarm = questGetAll.filter(e => e.state == 2 && (e.id < 20000000 || e.id > 20000200));
+                debugLog('Ready quests:', questsFarm.length);
+
+                // Special offer free stages
+                const stagesOffers = (specialOffers || []).filter(e =>
+                                                                  e.offerType === "stagesOffer" && e.farmedStage === -1
+                                                                 );
+                debugLog('Stage offers:', stagesOffers.length);
+
+                const farmCaller = new Caller();
+
+                // Add special offer rewards
+                for (const offer of stagesOffers) {
+                    for (const stage of offer.offerData?.stages || []) {
+                        if (stage.billingId) break;
+                        farmCaller.add({ name: 'specialOffer_farmReward', args: { offerId: offer.id } });
+                    }
+                }
+
+                // Categorize ready quests
+                const questIds = [];
+                for (const quest of questsFarm) {
+                    const questId = +quest.id;
+
+                    // Batch: daily milestones (>= 2e7 but < 14e8, skip BP quests)
+                    if (questId >= 2e7 && questId < 14e8) {
+                        questIds.push(questId);
+                        farmedQuestIds.push(questId);
+                        continue;
+                    }
+
+                    // Individual: regular quests (< 1e6)
+                    if (questId < 1e6) {
+                        farmCaller.add({ name: 'questFarm', args: { questId } });
+                        farmedQuestIds.push(questId);
+                        countQuests++;
+                    }
+                }
+
+                debugLog('Regular quests:', countQuests, 'Batch quests:', questIds.length);
+
+                // Add batch call for daily quests
+                if (questIds.length) {
+                    farmCaller.add({ name: 'quest_questsFarm', args: { questIds } });
+                    countQuests += questIds.length;
+                }
+
+                if (!farmCaller.isEmpty()) {
+                    // Send main batch
+                    const farmResults = await farmCaller.send();
+
+                    // Parse rewards from questFarm
+                    farmResults.result('questFarm', true).forEach(result => {
+                        parseRewardsNice(result, 'Q');
+                    });
+
+                    // Parse rewards from quest_questsFarm (daily rewards)
+                    farmResults.result('quest_questsFarm', true).flat().forEach(result => {
+                        parseRewardsNice(result, 'D');
+                    });
+
+                    // Parse rewards from special offers
+                    farmResults.result('specialOffer_farmReward', true).forEach(result => {
+                        parseRewardsNice(result, 'O');
+                    });
+
+                    // Check sideResult for chain-unlocked quests
+                    let questsIds = [];
+                    const sideResult = farmResults.sideResult('questFarm', true);
+                    sideResult.push(...farmResults.sideResult('quest_questsFarm', true));
+
+                    for (const side of sideResult) {
+                        const quests = [...(side.newQuests || []), ...(side.quests || [])];
+                        for (const quest of quests) {
+                            const qid = +quest.id;
+                            if ((qid < 1e6 || (qid >= 2e7 && qid < 14e8)) && quest.state == 2) {
+                                questsIds.push(qid);
+                            }
+                        }
+                    }
+                    questsIds = [...new Set(questsIds)];
+
+                    // Recursive loop for chain-unlocked quests
+                    while (questsIds.length) {
+                        const recursiveCaller = new Caller();
+                        const newQuestIds = [];
+
+                        for (const questId of questsIds) {
+                            if (farmedQuestIds.includes(questId)) continue;
+
+                            if (questId < 1e6) {
+                                recursiveCaller.add({ name: 'questFarm', args: { questId } });
+                                farmedQuestIds.push(questId);
+                                countQuests++;
+                            } else if (questId >= 2e7 && questId < 14e8) {
+                                farmedQuestIds.push(questId);
+                                newQuestIds.push(questId);
+                                countQuests++;
+                            }
+                        }
+
+                        if (newQuestIds.length) {
+                            recursiveCaller.add({ name: 'quest_questsFarm', args: { questIds: newQuestIds } });
+                        }
+
+                        questsIds = [];
+                        if (recursiveCaller.isEmpty()) break;
+
+                        const recResults = await recursiveCaller.send();
+
+                        recResults.result('questFarm', true).forEach(result => {
+                            parseRewardsNice(result, 'Q');
+                        });
+                        recResults.result('quest_questsFarm', true).flat().forEach(result => {
+                            parseRewardsNice(result, 'D');
+                        });
+
+                        const sideResult2 = recResults.sideResult('questFarm', true);
+                        sideResult2.push(...recResults.sideResult('quest_questsFarm', true));
+
+                        for (const side of sideResult2) {
+                            const quests = [...(side.newQuests || []), ...(side.quests || [])];
+                            for (const quest of quests) {
+                                const qid = +quest.id;
+                                if ((qid < 1e6 || (qid >= 2e7 && qid < 14e8)) && quest.state == 2) {
+                                    questsIds.push(qid);
+                                }
+                            }
+                        }
+                        questsIds = [...new Set(questsIds)];
+                    }
+                }
+
                 return {
-                    success: results.success,
-                    items: results.items,
-                    count: results.count,
-                    hasItems: results.hasItems,
-                    rewards: results.rewards
+                    success: true,
+                    items: `${countQuests} quests`,
+                    count: Object.keys(rewards).length,
+                    hasItems: Object.keys(rewards).length > 0,
+                    rewards
                 };
             },
 
@@ -17995,7 +20748,7 @@ display: flex; flex-direction: column;
                     rewards: result.rewards
                 };
             },
-            collectMail: async () => {
+            collectMail: async (collectAll = false) => {
                 try {
                     debugLog('📬 Starting mail collection...');
                     const SendFunction = getSend();
@@ -18017,23 +20770,24 @@ display: flex; flex-direction: column;
                         const reward = letter?.reward;
                         if (!reward || !Object.keys(reward).length) continue;
 
-                        const shouldSkip = (
-                            reward?.refillable?.[45] ||
-                            reward?.stamina ||
-                            reward?.buff ||
-                            reward?.vipPoints ||
-                            reward?.fragmentHero ||
-                            reward?.bundleHeroReward
-                        );
-
-                        if (!shouldSkip) letterIds.push(~~letter.id);
+                        if (collectAll) {
+                            letterIds.push(~~letter.id);
+                        } else {
+                            const shouldSkip = (
+                                reward?.refillable?.[45] ||
+                                reward?.stamina ||
+                                reward?.buff ||
+                                reward?.vipPoints ||
+                                reward?.fragmentHero ||
+                                reward?.bundleHeroReward
+                            );
+                            if (!shouldSkip) letterIds.push(~~letter.id);
+                        }
                     }
 
                     if (!letterIds.length) {
-                        return { success: true, items: 'No safe mail to collect', count: 0, hasItems: false };
+                        return { success: true, items: collectAll ? 'No mail to collect' : 'No safe mail to collect', count: 0, hasItems: false };
                     }
-
-                    if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`📬 Collecting ${letterIds.length} letters...`, false);
 
                     // Collect filtered mail
                     const collectResponse = await SendFunction(JSON.stringify({
@@ -18074,9 +20828,6 @@ display: flex; flex-direction: column;
                     for (const [name, amount] of Object.entries(collectedRewards)) {
                         structuredRewards[name] = { amount, source: 'M' };
                     }
-
-                    if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`✅ Mail: ${count} letters collected`, false);
-
                     return {
                         success: true,
                         items: rewardCount > 0 ? `${count} letters` : `${count} letters collected`,
@@ -18090,6 +20841,12 @@ display: flex; flex-direction: column;
                     return { success: false, items: 'Error: ' + error.message, count: 0, hasItems: false };
                 }
             },
+            collectMailAll: async () => {
+                // Reuse collectMail with collectAll=true
+                const fn = createFunctionMap();
+                return fn.collectMail(true);
+            },
+
             collectBattlePass: async () => {
                 try {
                     debugLog('🎫 Starting Battle Pass (Season Rewards) collection...');
@@ -18173,10 +20930,6 @@ display: flex; flex-direction: column;
 
                         if (bpReady.length > 0) {
                             debugLog(`🎫 Harvesting ${bpReady.length} BP quests first (for XP)...`);
-                            if (HWHFuncs?.setProgress) {
-                                HWHFuncs.setProgress(`🎫 Harvesting ${bpReady.length} BP quests...`, false);
-                            }
-
                             const bpCalls = bpReady.map((q, i) => ({
                                 name: 'questFarm',
                                 args: { questId: +q.id },
@@ -18194,7 +20947,7 @@ display: flex; flex-direction: column;
                                         const rewards = window.parseRewardResponse?.(result.result.response) || [];
                                         rewards.forEach(r => {
                                             if (r.name && r.quantity) {
-                                                if (!bpQuestRewards[r.name]) bpQuestRewards[r.name] = { amount: 0, source: 'B' };
+                                                if (!bpQuestRewards[r.name]) bpQuestRewards[r.name] = { amount: 0, source: 'SR' };
                                                 bpQuestRewards[r.name].amount += r.quantity;
                                             }
                                         });
@@ -18226,21 +20979,14 @@ display: flex; flex-direction: column;
                     allPasses.push(...specialPasses);
 
                     const calls = allPasses.map(p => battlePassProcess(p)).flat();
-
                     if (!calls.length) {
-                        if (HWHFuncs?.setProgress) HWHFuncs.setProgress('✅ Season Rewards: All already collected', false);
                         return { success: true, items: 'All season rewards already collected', count: 0, hasItems: false };
                     }
-
-                    if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`🎫 Collecting ${calls.length} season rewards...`, false);
-
                     const results = await SendFunction(JSON.stringify({ calls }));
-
                     if (results.error) {
                         console.error('Season rewards collection error:', results.error);
                         return { success: false, items: 'Season rewards collection failed', count: 0, hasItems: false };
                     }
-
                     let freeCollected = 0, paidCollected = 0;
                     const structuredRewards = {};
 
@@ -18255,7 +21001,7 @@ display: flex; flex-direction: column;
                                 rewards.forEach(r => {
                                     if (r.name && r.quantity) {
                                         const name = r.name;
-                                        if (!structuredRewards[name]) structuredRewards[name] = { amount: 0, source: 'B' };
+                                        if (!structuredRewards[name]) structuredRewards[name] = { amount: 0, source: 'SR' };
                                         structuredRewards[name].amount += r.quantity;
                                     }
                                 });
@@ -18267,23 +21013,15 @@ display: flex; flex-direction: column;
 
                     // Merge BP quest rewards into structuredRewards
                     Object.entries(bpQuestRewards).forEach(([name, data]) => {
-                        if (!structuredRewards[name]) structuredRewards[name] = { amount: 0, source: 'B' };
+                        if (!structuredRewards[name]) structuredRewards[name] = { amount: 0, source: 'SR' };
                         structuredRewards[name].amount += data.amount;
                     });
-
                     const totalCount = count + bpQuestCount;
                     const rewardCount = Object.keys(structuredRewards).length;
-
                     // Refresh local state
                     if (bpQuestCount > 0 && typeof silentSync === 'function') {
                         await silentSync();
                     }
-
-                    if (HWHFuncs?.setProgress) {
-                        const questMsg = bpQuestCount > 0 ? `, ${bpQuestCount} quests` : '';
-                        HWHFuncs.setProgress(`✅ Season Rewards: ${totalCount} collected (${freeCollected} free, ${paidCollected} premium${questMsg})`, false);
-                    }
-
                     return {
                         success: true,
                         items: rewardCount > 0 ? `${totalCount} items` : `${totalCount} rewards`,
@@ -18291,7 +21029,6 @@ display: flex; flex-direction: column;
                         hasItems: rewardCount > 0,
                         rewards: structuredRewards
                     };
-
                 } catch (error) {
                     console.error('Error in collectBattlePass:', error);
                     return { success: false, items: 'Error: ' + error.message, count: 0, hasItems: false };
@@ -18299,31 +21036,39 @@ display: flex; flex-direction: column;
             },
             buyTitanShopGold: async () => {
                 try {
-                    debugLog('🔱 Buying gold from Titan Soul Shop...');
+                    debugLog('📱 Buying gold from Titan Soul Shop...');
                     const SendFunction = getSend();
 
-                    // Check for cached inventory
-                    const cachedInventory = cheats?.inventory;
-                    const needInventory = !cachedInventory || !cachedInventory.coin;
+                    let titanCoins;
+                    if (sharedCollectCounts?.titanCoins !== undefined) {
+                        // Use count from autoUseInventory (includes received coins)
+                        titanCoins = sharedCollectCounts.titanCoins;
+                        debugLog('📱 Using shared Titan Soul Coin count from autoUseInventory');
+                    } else {
+                        // Standalone run - fetch inventory
+                        const cachedInventory = cheats?.inventory;
+                        if (cachedInventory?.coin?.[15] !== undefined) {
+                            titanCoins = cachedInventory.coin[15];
+                        } else {
+                            const invResult = await SendFunction(JSON.stringify({
+                                calls: [{ name: 'inventoryGet', args: {}, ident: 'inventory' }]
+                            }));
+                            titanCoins = invResult?.results?.[0]?.result?.response?.coin?.[15] || 0;
+                        }
+                    }
 
-                    const getCalls = needInventory ? [
-                        { name: 'shopGetAll', args: {}, ident: 'shops' },
-                        { name: 'inventoryGet', args: {}, ident: 'inventory' }
-                    ] : [
-                        { name: 'shopGetAll', args: {}, ident: 'shops' }
-                    ];
+                    if (titanCoins < 100) {
+                        return { success: true, items: 'Not enough Titan Soul Coins', count: 0, hasItems: false };
+                    }
 
-                    const result = await SendFunction(JSON.stringify({ calls: getCalls }));
-                    const shops = result?.results?.[0]?.result?.response;
-                    const inventory = needInventory ? result?.results?.[1]?.result?.response : cachedInventory;
+                    // Get shop data
+                    const shopResult = await SendFunction(JSON.stringify({
+                        calls: [{ name: 'shopGetAll', args: {}, ident: 'shops' }]
+                    }));
+                    const shops = shopResult?.results?.[0]?.result?.response;
 
                     if (!shops?.[12]) {
                         return { success: false, items: 'Titan Soul Shop not found', count: 0, hasItems: false };
-                    }
-
-                    const titanCoins = inventory?.coin?.[15] || 0;
-                    if (titanCoins < 100) {
-                        return { success: true, items: 'Not enough Titan Soul Coins', count: 0, hasItems: false };
                     }
 
                     // Find the 100-coin gold slot
@@ -18343,11 +21088,7 @@ display: flex; flex-direction: column;
                     if (!goldSlot) {
                         return { success: false, items: 'Gold slot not found', count: 0, hasItems: false };
                     }
-
                     const buyCount = Math.floor(titanCoins / 100);
-
-                    if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`🔱 Buying gold ${buyCount}x...`, false);
-
                     // Single call with amount
                     const buyResult = await SendFunction(JSON.stringify({
                         calls: [{
@@ -18385,45 +21126,48 @@ display: flex; flex-direction: column;
                     const SendFunction = getSend();
 
                     const keepLargest = parseInt(localStorage.getItem(XP_POTION_KEEP_KEY)) || 484;
+                    const XP_POTION_KEEP = { 9: 0, 10: 0, 11: 0, 12: keepLargest };
 
-                    const XP_POTIONS = [
-                        { libId: 9, keep: 0, name: 'Small' },
-                        { libId: 10, keep: 0, name: 'Medium' },
-                        { libId: 11, keep: 0, name: 'Large' },
-                        { libId: 12, keep: keepLargest, name: 'Huge' }
-                    ];
-
-                    const invResponse = await SendFunction(JSON.stringify({
-                        calls: [{ name: 'inventoryGet', args: {}, ident: 'inventory' }]
-                    }));
-
-                    const inventory = invResponse?.results?.[0]?.result?.response;
-                    const consumables = inventory?.consumable || {};
+                    let consumables;
+                    if (sharedCollectCounts?.xpPotions) {
+                        // Use counts from autoUseInventory (includes received potions)
+                        consumables = sharedCollectCounts.xpPotions;
+                        sharedCollectCounts = null; // Clear after final use
+                        debugLog('🧪 Using shared XP potion counts from autoUseInventory');
+                    } else {
+                        // Standalone run - fetch inventory
+                        const invResponse = await SendFunction(JSON.stringify({
+                            calls: [{ name: 'inventoryGet', args: {}, ident: 'inventory' }]
+                        }));
+                        const inventory = invResponse?.results?.[0]?.result?.response;
+                        consumables = {};
+                        [9, 10, 11, 12].forEach(id => {
+                            consumables[id] = inventory?.consumable?.[id] || 0;
+                        });
+                    }
 
                     const sellCalls = [];
                     const potionInfo = [];
 
-                    for (const potion of XP_POTIONS) {
-                        const owned = consumables[potion.libId] || 0;
-                        const toSell = Math.max(0, owned - potion.keep);
+                    for (const id of [9, 10, 11, 12]) {
+                        const owned = consumables[id] || 0;
+                        const toSell = Math.max(0, owned - XP_POTION_KEEP[id]);
 
                         if (toSell > 0) {
                             sellCalls.push({
                                 name: 'inventorySell',
-                                args: { type: 'consumable', libId: potion.libId, amount: toSell, fragment: false },
-                                ident: `sell_potion_${potion.libId}`
+                                args: { type: 'consumable', libId: id, amount: toSell, fragment: false },
+                                ident: `sell_potion_${id}`
                             });
-                            potionInfo.push({ libId: potion.libId, name: potion.name, amount: toSell });
-                            debugLog(`🧪 Will sell ${toSell}x ${potion.name} XP potions`);
+                            const name = ['', '', '', '', '', '', '', '', '', 'Small', 'Medium', 'Large', 'Huge'][id] || `#${id}`;
+                            potionInfo.push({ libId: id, name, amount: toSell });
+                            debugLog(`🧪 Will sell ${toSell}x ${name} XP potions`);
                         }
                     }
 
                     if (!sellCalls.length) {
                         return { success: true, items: 'No XP potions to sell', count: 0, hasItems: false };
                     }
-
-                    if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`🧪 Selling ${sellCalls.length} potion types...`, false);
-
                     const sellResponse = await SendFunction(JSON.stringify({ calls: sellCalls }));
                     let totalGold = 0;
 
@@ -18545,10 +21289,6 @@ display: flex; flex-direction: column;
                             rewards: fragRewards
                         };
                     }
-
-                    if (HWHFuncs?.setProgress) {
-                        HWHFuncs.setProgress(`📦 Using ${itemsToUse.length} inventory item types...`, false);
-                    }
                     // Save and disable countControl to skip quantity popups
                     wasCountControl = HWHData?.checkboxes?.countControl?.cbox?.checked;
                     if (wasCountControl) {
@@ -18561,6 +21301,16 @@ display: flex; flex-direction: column;
                     let iterationCount = 0;
                     const maxIterations = 50;
                     const aggregatedRewards = {};
+
+                    // Track items: initial counts + any received during item use
+                    const xpPotionIds = [9, 10, 11, 12];
+                    const trackedCounts = {
+                        xpPotions: {},
+                        titanCoins: inventoryData.coin?.[15] || 0
+                    };
+                    for (const id of xpPotionIds) {
+                        trackedCounts.xpPotions[id] = inventoryData.consumable?.[id] || 0;
+                    }
 
                     // Process with nesting (same logic as Use All button)
                     while (iterationCount < maxIterations) {
@@ -18674,11 +21424,19 @@ display: flex; flex-direction: column;
                                                             aggregatedRewards['⚡ Energy'] = (aggregatedRewards['⚡ Energy'] || 0) + rewardData;
                                                         } else if (rewardType === 'coin' && typeof rewardData === 'object') {
                                                             for (const [coinId, coinAmt] of Object.entries(rewardData)) {
+                                                                // Track Titan Soul Coins
+                                                                if (parseInt(coinId) === 15) {
+                                                                    trackedCounts.titanCoins += parseInt(coinAmt);
+                                                                }
                                                                 const coinName = window.identifyItem?.(coinId, 'coin') || `Coin #${coinId}`;
                                                                 aggregatedRewards[`💰 ${coinName}`] = (aggregatedRewards[`💰 ${coinName}`] || 0) + parseInt(coinAmt);
                                                             }
                                                         } else if (typeof rewardData === 'object') {
                                                             for (const [itemId, qty] of Object.entries(rewardData)) {
+                                                                // Track XP potions received
+                                                                if (rewardType === 'consumable' && xpPotionIds.includes(parseInt(itemId))) {
+                                                                    trackedCounts.xpPotions[parseInt(itemId)] += parseInt(qty);
+                                                                }
                                                                 let name = '';
                                                                 if (rewardType === 'consumable') name = '📦 ' + (window.identifyItem?.(itemId, 'consumable') || `Item #${itemId}`);
                                                                 else if (rewardType === 'fragmentHero') name = '👤 ' + (window.identifyItem?.(itemId, 'hero') || `Hero #${itemId}`) + ' (SS)';
@@ -18699,6 +21457,10 @@ display: flex; flex-direction: column;
                                                 // coin: {id: amount} - direct ID to amount mapping
                                                 if (key === 'coin') {
                                                     for (const [coinId, amount] of Object.entries(value)) {
+                                                        // Track Titan Soul Coins
+                                                        if (parseInt(coinId) === 15) {
+                                                            trackedCounts.titanCoins += parseInt(amount);
+                                                        }
                                                         const coinName = window.identifyItem?.(coinId, 'coin') || `Coin #${coinId}`;
                                                         aggregatedRewards[`💰 ${coinName}`] = (aggregatedRewards[`💰 ${coinName}`] || 0) + parseInt(amount);
                                                     }
@@ -18707,6 +21469,10 @@ display: flex; flex-direction: column;
 
                                                 // Other type: {id: amount} direct mapping
                                                 for (const [itemId, itemValue] of Object.entries(value)) {
+                                                    // Track XP potions received
+                                                    if (key === 'consumable' && xpPotionIds.includes(parseInt(itemId))) {
+                                                        trackedCounts.xpPotions[parseInt(itemId)] += parseInt(itemValue);
+                                                    }
                                                     if (typeof itemValue === 'number') {
                                                         let name = '';
                                                         if (key === 'consumable') name = '📦 ' + (window.identifyItem?.(itemId, 'consumable') || `Item #${itemId}`);
@@ -18739,9 +21505,13 @@ display: flex; flex-direction: column;
                         // Small delay between rounds
                         await new Promise(resolve => setTimeout(resolve, 100));
                     }
+
+                    // Share counts for subsequent collect tasks
+                    sharedCollectCounts = { ...trackedCounts };
+
                     // Add fragment sell rewards to aggregated rewards
                     if (fragSellGold > 0) {
-                        aaggregatedRewards['🪙 Gold'] = (aggregatedRewards['🪙 Gold'] || 0) + fragSellGold;
+                        aggregatedRewards['🪙 Gold'] = (aggregatedRewards['🪙 Gold'] || 0) + fragSellGold;
                     }
                     if (Object.keys(fragSellCoins).length > 0) {
                         Object.entries(fragSellCoins).forEach(([coinId, amount]) => {
@@ -18845,10 +21615,6 @@ display: flex; flex-direction: column;
                         return { success: true, items: 'No excess to sell', count: 0, hasItems: false };
                     }
 
-                    // Update progress
-                    if (HWHFuncs?.setProgress) {
-                        HWHFuncs.setProgress(`⚙️ Selling ${toSellFrags.length + toSellItems.length} excess types...`, false);
-                    }
 
                     let totalGold = 0;
                     let soldCount = 0;
@@ -18891,12 +21657,12 @@ display: flex; flex-direction: column;
                     // Build rewards object
                     const rewards = {};
                     if (totalGold > 0) {
-                        rewards['🪙 Gold'] = { amount: totalGold, source: 'Craft' };
+                        rewards['🪙 Gold'] = { amount: totalGold, source: 'GS' };
                     }
                     Object.entries(coinRewards).forEach(([coinId, amount]) => {
                         if (amount > 0) {
                             const coinName = window.identifyItem?.(coinId, 'coin') || `Coin #${coinId}`;
-                            rewards[`💰 ${coinName}`] = { amount, source: 'Craft' };
+                            rewards[`💰 ${coinName}`] = { amount, source: 'GS' };
                         }
                     });
 
@@ -18991,6 +21757,17 @@ display: flex; flex-direction: column;
                     throw error;
                 }
             },
+            // HWH Direct Tasks
+            hwh_getOutland: hwhTaskDefinitions.hwh_getOutland.action,
+            hwh_dailyBonus: hwhTaskDefinitions.hwh_dailyBonus.action,
+            hwh_collectMisc: hwhTaskDefinitions.hwh_collectMisc.action,
+            hwh_rollAscension: hwhTaskDefinitions.hwh_rollAscension.action,
+            hwh_expeditionFarm: hwhTaskDefinitions.hwh_expeditionFarm.action,
+            hwh_testTower: hwhTaskDefinitions.hwh_testTower.action,
+            hwh_testTitanArena: hwhTaskDefinitions.hwh_testTitanArena.action,
+            hwh_testDungeon: hwhTaskDefinitions.hwh_testDungeon.action,
+            hwh_dailyQuests: hwhTaskDefinitions.hwh_dailyQuests.action,
+
 
             // Sync game data (runs last)
             syncGameData: async () => {
@@ -19014,6 +21791,8 @@ display: flex; flex-direction: column;
             }
         };
     }
+
+
     // Helper to get current currency values
     async function getCurrentCurrencies() {
         try {
@@ -19062,6 +21841,14 @@ display: flex; flex-direction: column;
                 default: false,
                 disabled: false
             },
+            collectMailAll: {
+                icon: '📬',
+                label: 'Collect ALL Mail',
+                desc: 'Collect ALL mail including energy, portal, hero souls',
+                group: 'collect',
+                default: false,
+                disabled: false
+            },
             collectSoulShop: {
                 icon: '👻',
                 label: 'Soul Shop',
@@ -19079,16 +21866,16 @@ display: flex; flex-direction: column;
                 disabled: false
             },
             collectGuildRewards: {
-                icon: '🏰',
-                label: 'Guild Rewards',
-                desc: 'Collect guild quests and daily rewards',
+                icon: '🏆',
+                label: 'Quest Rewards',
+                desc: 'All quests, guild, daily milestones, BP quests, offers',
                 group: 'collect',
                 default: true,
                 disabled: false
             },
             collectClanPrestige: {
                 icon: '🅰',
-                label: 'Clan Prestige',
+                label: 'Guild Prestige',
                 desc: 'Collect 5 levels of prestige rewards',
                 group: 'collect',
                 default: false,
@@ -19096,7 +21883,7 @@ display: flex; flex-direction: column;
             },
             collectBattlePass: {
                 icon: '🎫',
-                label: 'Battle Pass',
+                label: 'Season Rewards',
                 desc: 'Collect silver and gold battle pass rewards',
                 group: 'collect',
                 default: false,
@@ -19133,7 +21920,7 @@ display: flex; flex-direction: column;
                 desc: 'Sell gear & scroll frags/items above Tab 6 targets',
                 group: 'collect',
                 default: false,
-                disabled: false
+                disabled: true
             },
             syncGameData: {
                 icon: '🔄',
@@ -19144,6 +21931,21 @@ display: flex; flex-direction: column;
                 disabled: !(typeof cheats !== 'undefined' && cheats.refreshGame)
             }
         };
+
+        // Merge HWH direct tasks (replaces doAllHWH)
+        Object.entries(hwhTaskDefinitions).forEach(([key, def]) => {
+            taskDefinitions[key] = {
+                icon: def.icon,
+                label: def.label,
+                desc: def.desc,
+                group: def.group,
+                default: def.default,
+                disabled: def.disabled
+            };
+        });
+
+        // Remove old doAllHWH since we have individual tasks now
+        delete taskDefinitions.doAllHWH;
 
         // Load saved preferences
         let savedPrefs = {};
@@ -19183,14 +21985,12 @@ display: flex; flex-direction: column;
         await executeCollectMoreTasks(selectedTasks, showSummary);
     };
 
-    // Custom popup for Collect More
+    // Custom popup for Collect More - TWO COLUMN VERSION
     async function showCollectMorePopup(tasks) {
-        // Get currencies BEFORE the Promise
         const currencies = await getCurrentCurrencies();
         const formatNum = n => n >= 1000000 ? (n/1000000).toFixed(1) + 'M' : n >= 1000 ? (n/1000).toFixed(1) + 'K' : n.toLocaleString();
 
         return new Promise((resolve) => {
-            // Remove existing popup
             const existing = document.getElementById('collect-more-popup');
             if (existing) existing.remove();
 
@@ -19198,7 +21998,8 @@ display: flex; flex-direction: column;
             popup.id = 'collect-more-popup';
 
             // Group tasks
-            const preTasks = tasks.filter(t => t.group === 'pre');
+            const parallelTasks = tasks.filter(t => t.group === 'hwh_parallel');
+            const hwhTasks = tasks.filter(t => t.group === 'hwh');
             const collectTasks = tasks.filter(t => t.group === 'collect');
             const postTasks = tasks.filter(t => t.group === 'post');
 
@@ -19206,6 +22007,26 @@ display: flex; flex-direction: column;
             const enabledCount = tasks.filter(t => !t.disabled).length;
             const checkedCount = tasks.filter(t => t.checked && !t.disabled).length;
 
+            function createTaskRow(task) {
+                const checkedClass = task.checked ? 'cm-task-checked' : '';
+                const disabledClass = task.disabled ? 'cm-task-disabled' : '';
+
+                // Special case for dungeon - add titanite input
+                let extraContent = '';
+                if (task.name === 'hwh_testDungeon') {
+                    const currentTitanite = HWHFuncs?.getInput?.('countTitanit') || 150;
+                    extraContent = `<input type="number" class="cm-titanite-input" id="cm-dungeon-titanite" value="${currentTitanite}" min="0" max="9999" title="Titanite limit" onclick="event.stopPropagation()">`;
+                }
+
+                return `
+                    <div class="cm-task ${checkedClass} ${disabledClass}" data-task="${task.name}" title="${task.desc}">
+                        <div class="cm-task-checkbox"></div>
+                        <div class="cm-task-icon">${task.icon}</div>
+                        <div class="cm-task-label">${task.label}</div>
+                        ${extraContent}
+                    </div>
+                `;
+            }
             popup.innerHTML = `
                 <div class="cm-overlay">
                     <div class="cm-modal">
@@ -19219,54 +22040,73 @@ display: flex; flex-direction: column;
                             <span class="cm-currency" title="Soul Coins">👻 ${formatNum(currencies.soulCoins)}</span>
                         </div>
                         <div class="cm-body">
-${preTasks.length ? `
-<div class="cm-section">
-                                <div class="cm-section-header">
-                                    <span class="cm-section-icon">▶️</span>
-                                    <span>Pre-Collection</span>
-                                </div>
-                                <div class="cm-tasks">
-                                    ${preTasks.map(t => createTaskRow(t)).join('')}
-                                </div>
-                            </div>
-                            ` : ''}
+                            <div class="cm-columns">
+<!-- Left Column: HWH Actions -->
+                                <div class="cm-column">
+                                    ${parallelTasks.length ? `
+                                    <div class="cm-section-header cm-parallel-header">
+                                        <span class="cm-section-icon">⚡</span>
+                                        <span>Parallel (Run Together)</span>
+                                        <div class="cm-section-actions">
+                                            <button class="cm-link-btn" data-action="select-all" data-group="hwh_parallel">All</button>
+                                            <button class="cm-link-btn" data-action="select-none" data-group="hwh_parallel">None</button>
+                                        </div>
+                                    </div>
+                                    <div class="cm-tasks">
+                                        ${parallelTasks.map(t => createTaskRow(t)).join('')}
+                                    </div>
+                                    ` : ''}
 
-                                <div class="cm-section">
+                                    <div class="cm-section-header">
+                                        <span class="cm-section-icon">🔄</span>
+                                        <span>Sequential</span>
+                                        <div class="cm-section-actions">
+                                            <button class="cm-link-btn" data-action="select-all" data-group="hwh">All</button>
+                                            <button class="cm-link-btn" data-action="select-none" data-group="hwh">None</button>
+                                        </div>
+                                    </div>
+                                    <div class="cm-tasks">
+                                        ${hwhTasks.map(t => createTaskRow(t)).join('')}
+                                    </div>
+                                </div>
+
+                                <!-- Right Column: Collection -->
+                                <div class="cm-column">
                                     <div class="cm-section-header">
                                         <span class="cm-section-icon">📥</span>
-                                <span>Collection Tasks</span>
-                                <div class="cm-section-actions">
-                                    <button class="cm-link-btn" data-action="select-all" data-group="collect">All</button>
-                                <button class="cm-link-btn" data-action="select-none" data-group="collect">None</button>
+                                        <span>Collection</span>
+                                        <div class="cm-section-actions">
+                                            <button class="cm-link-btn" data-action="select-all" data-group="collect">All</button>
+                                            <button class="cm-link-btn" data-action="select-none" data-group="collect">None</button>
+                                        </div>
+                                    </div>
+                                    <div class="cm-tasks">
+                                        ${collectTasks.map(t => createTaskRow(t)).join('')}
+                                    </div>
                                 </div>
-                                </div>
-                                <div class="cm-tasks">
-                                    ${collectTasks.map(t => createTaskRow(t)).join('')}
-                                </div>
-                                </div>
+                            </div>
 
-                                ${postTasks.length ? `
-                            <div class="cm-section">
+                            ${postTasks.length ? `
+                            <div class="cm-section cm-section-full">
                                 <div class="cm-section-header">
                                     <span class="cm-section-icon">✨</span>
                                     <span>Post-Collection</span>
                                 </div>
-                                <div class="cm-tasks">
+                                <div class="cm-tasks cm-tasks-row">
                                     ${postTasks.map(t => createTaskRow(t)).join('')}
                                 </div>
                             </div>
                             ` : ''}
-                                </div>
+                        </div>
 
-                                <div class="cm-footer">
-                                    <button class="cm-btn cm-btn-cancel" data-action="cancel">Cancel</button>
-                                <button class="cm-btn cm-btn-primary" data-action="run">▶️ Run</button>
-                                </div>
-                                </div>
-                                </div>
-                                `;
+                        <div class="cm-footer">
+                            <button class="cm-btn cm-btn-cancel" data-action="cancel">Cancel</button>
+                            <button class="cm-btn cm-btn-primary" data-action="run">▶️ Run</button>
+                        </div>
+                    </div>
+                </div>
+            `;
 
-            // Add styles - COMPACT VERSION
             const style = document.createElement('style');
             style.textContent = `
                 .cm-overlay {
@@ -19279,213 +22119,237 @@ ${preTasks.length ? `
                     justify-content: center;
                     font-family: Arial, sans-serif;
                 }
-                                .cm-modal {
-                                    background: linear-gradient(180deg, #3d2817 0%, #2a1810 100%);
-                                    border: 3px solid #8b6914;
-                                    border-radius: 10px;
-                                    width: 340px;
-                                    display: flex;
-                                    flex-direction: column;
-                                    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-                                }
-                                .cm-header {
-                                    padding: 10px 14px;
-                                    border-bottom: 2px solid #8b6914;
-                                    display: flex;
-                                    justify-content: space-between;
-                                    align-items: center;
-                                }
-                                .cm-title {
-                                    font-size: 14px;
-                                    font-weight: bold;
-                                    color: #ffd700;
-                                }
-                                .cm-subtitle {
-                                    font-size: 10px;
-                                    color: #999;
-                                    background: rgba(0,0,0,0.3);
-                                    padding: 2px 7px;
-                                    border-radius: 8px;
+                .cm-modal {
+                    background: linear-gradient(180deg, #3d2817 0%, #2a1810 100%);
+                    border: 3px solid #8b6914;
+                    border-radius: 10px;
+                    width: 580px;
+                    max-height: 90vh;
+                    display: flex;
+                    flex-direction: column;
+                    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+                }
+                .cm-header {
+                    padding: 10px 14px;
+                    border-bottom: 2px solid #8b6914;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                .cm-title {
+                    font-size: 14px;
+                    font-weight: bold;
+                    color: #ffd700;
+                }
+                .cm-subtitle {
+                    font-size: 10px;
+                    color: #999;
+                    background: rgba(0,0,0,0.3);
+                    padding: 2px 7px;
+                    border-radius: 8px;
+                }
+                .cm-currencies {
+                    display: flex;
+                    justify-content: space-around;
+                    padding: 6px 10px;
+                    background: rgba(0,0,0,0.3);
+                    border-bottom: 1px solid #5a4a2a;
+                    font-size: 11px;
+                }
+                .cm-currency {
+                    color: #ffd700;
+                    padding: 2px 8px;
+                    background: rgba(139,105,20,0.2);
+                    border-radius: 4px;
+                }
+                .cm-body {
+                    padding: 10px;
+                    overflow-y: auto;
+                    flex: 1;
+                }
+                .cm-columns {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 10px;
+                }
+                .cm-column {
+                    display: flex;
+                    flex-direction: column;
+                }
+                .cm-section {
+                    margin-top: 8px;
+                }
+                .cm-section-full {
+                    grid-column: 1 / -1;
+                }
+                .cm-section-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    padding: 4px 8px;
+                    background: rgba(139,105,20,0.3);
+                    border-radius: 4px;
+                    margin-bottom: 4px;
+                    font-size: 11px;
+                    font-weight: bold;
+                    color: #ffd700;
+                }
+                .cm-section-icon {
+                    font-size: 11px;
+                }
+                .cm-section-actions {
+                    margin-left: auto;
+                    display: flex;
+                    gap: 6px;
+                }
+                .cm-link-btn {
+                    background: none;
+                    border: none;
+                    color: #4ae29a;
+                    cursor: pointer;
+                    font-size: 10px;
+                    padding: 1px 4px;
+                    border-radius: 2px;
+                    transition: background 0.2s;
+                }
+                .cm-link-btn:hover {
+                    background: rgba(74,226,154,0.2);
+                }
+                .cm-tasks {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 2px;
+                }
+                .cm-tasks-row {
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                }
+                .cm-tasks-row .cm-task {
+                    flex: 0 0 auto;
+                }
+                .cm-task {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 4px 6px;
+                    background: rgba(0,0,0,0.2);
+                    border-radius: 4px;
+                    cursor: pointer;
+                    transition: all 0.15s;
+                    border: 1px solid transparent;
+                }
+                .cm-task:hover:not(.cm-task-disabled) {
+                    background: rgba(139,105,20,0.2);
+                    border-color: rgba(139,105,20,0.5);
+                }
+                .cm-task.cm-task-checked {
+                    background: rgba(74,226,154,0.1);
+                    border-color: rgba(74,226,154,0.3);
+                }
+                .cm-task.cm-task-disabled {
+                    opacity: 0.4;
+                    cursor: not-allowed;
+                }
+                .cm-task-checkbox {
+                    width: 12px;
+                    height: 12px;
+                    border: 2px solid #8b6914;
+                    border-radius: 3px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                    background: rgba(0,0,0,0.3);
+                    transition: all 0.15s;
+                }
+                .cm-task-checked .cm-task-checkbox {
+                    background: #4ae29a;
+                    border-color: #4ae29a;
+                }
+                .cm-task-checkbox::after {
+                    content: '✓';
+                    color: #1a1a1a;
+                    font-size: 9px;
+                    font-weight: bold;
+                    opacity: 0;
+                    transition: opacity 0.15s;
+                }
+                .cm-task-checked .cm-task-checkbox::after {
+                    opacity: 1;
+                }
+                .cm-task-icon {
+                    font-size: 12px;
+                    width: 16px;
+                    text-align: center;
+                }
+                .cm-task-label {
+                    font-size: 10px;
+                    font-weight: 600;
+                    color: #ffd700;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
 }
-                                .cm-currencies {
-                                    display: flex;
-                                    justify-content: space-around;
-                                    padding: 6px 10px;
-                                    background: rgba(0,0,0,0.3);
-                                    border-bottom: 1px solid #5a4a2a;
-                                    font-size: 11px;
-                                }
-                                .cm-currency {
-                                    color: #ffd700;
-                                    padding: 2px 8px;
-                                    background: rgba(139,105,20,0.2);
-                                    border-radius: 4px;
-                                }
-                                .cm-body {
-                                    padding: 8px 10px;
-                                }
-                                .cm-section {
-                                    margin-bottom: 6px;
-                                }
-                                .cm-section:last-child {
-                                    margin-bottom: 0;
-                                }
-                                .cm-section-header {
-                                    display: flex;
-                                    align-items: center;
-                                    gap: 5px;
-                                    padding: 4px 8px;
-                                    background: rgba(139,105,20,0.3);
-                                    border-radius: 4px;
-                                    margin-bottom: 4px;
-                                    font-size: 11px;
-                                    font-weight: bold;
-                                    color: #ffd700;
-                                }
-                                .cm-section-icon {
-                                    font-size: 11px;
-                                }
-                                .cm-section-actions {
-                                    margin-left: auto;
-                                    display: flex;
-                                    gap: 6px;
-                                }
-                                .cm-link-btn {
-                                    background: none;
-                                    border: none;
-                                    color: #4ae29a;
-                                    cursor: pointer;
-                                    font-size: 10px;
-                                    padding: 1px 4px;
-                                    border-radius: 2px;
-                                    transition: background 0.2s;
-                                }
-                                .cm-link-btn:hover {
-                                    background: rgba(74,226,154,0.2);
-                                }
-                                .cm-tasks {
-                                    display: flex;
-                                    flex-direction: column;
-                                    gap: 2px;
-                                }
-                                .cm-task {
-                                    display: flex;
-                                    align-items: center;
-                                    gap: 6px;
-                                    padding: 5px 8px;
-                                    background: rgba(0,0,0,0.2);
-                                    border-radius: 4px;
-                                    cursor: pointer;
-                                    transition: all 0.15s;
-                                    border: 1px solid transparent;
-                                }
-                                .cm-task:hover:not(.cm-task-disabled) {
-                                    background: rgba(139,105,20,0.2);
-                                    border-color: rgba(139,105,20,0.5);
-                                }
-                                .cm-task.cm-task-checked {
-                                    background: rgba(74,226,154,0.1);
-                                    border-color: rgba(74,226,154,0.3);
-                                }
-                                .cm-task.cm-task-disabled {
-                                    opacity: 0.4;
-                                    cursor: not-allowed;
-                                }
-                                .cm-task-checkbox {
-                                    width: 14px;
-                                    height: 14px;
-                                    border: 2px solid #8b6914;
-                                    border-radius: 3px;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    flex-shrink: 0;
-                                    background: rgba(0,0,0,0.3);
-                                    transition: all 0.15s;
-                                }
-                                .cm-task-checked .cm-task-checkbox {
-                                    background: #4ae29a;
-                                    border-color: #4ae29a;
-                                }
-                                .cm-task-checkbox::after {
-                                    content: '✓';
-                                    color: #1a1a1a;
-                                    font-size: 10px;
-                                    font-weight: bold;
-                                    opacity: 0;
-                                    transition: opacity 0.15s;
-                                }
-                                .cm-task-checked .cm-task-checkbox::after {
-                                    opacity: 1;
-                                }
-                                .cm-task-icon {
-                                    font-size: 14px;
-                                    width: 18px;
-                                    text-align: center;
-                                }
-                                .cm-task-info {
-                                    flex: 1;
-                                    min-width: 0;
-                                }
-                                .cm-task-label {
-                                    font-size: 11px;
-                                    font-weight: 600;
-                                    color: #ffd700;
-                                }
-                                .cm-task-desc {
-                                    display: none;
-                                }
-                                .cm-footer {
-                                    padding: 10px 12px;
-                                    border-top: 2px solid #8b6914;
-                                    display: flex;
-                                    justify-content: space-between;
-                                    align-items: center;
-                                    gap: 8px;
-                                }
-
-                                .cm-btn {
-                                    padding: 7px 12px;
-                                    border: none;
-                                    border-radius: 5px;
-                                    cursor: pointer;
-                                    font-size: 11px;
-                                    font-weight: bold;
-                                    transition: all 0.15s;
-                                }
-                                .cm-btn-cancel {
-                                    background: rgba(255,255,255,0.1);
-                                    color: #ccc;
-                                }
-                                .cm-btn-cancel:hover {
-                                    background: rgba(255,255,255,0.2);
-                                }
-
-                                .cm-btn-primary {
-                                    background: linear-gradient(180deg, #4ae29a 0%, #2ecc71 100%);
-                                    color: #1a1a1a;
-                                }
-                                .cm-btn-primary:hover {
-                                    transform: translateY(-1px);
-                                    box-shadow: 0 3px 10px rgba(74,226,154,0.4);
-                                }
-                                `;
+                .cm-titanite-input {
+                    width: 45px;
+                    padding: 2px 4px;
+                    background: rgba(0,0,0,0.5);
+                    border: 1px solid #8b6914;
+                    border-radius: 3px;
+                    color: #ffd700;
+                    font-size: 10px;
+                    font-weight: 600;
+                    text-align: center;
+                    margin-left: auto;
+                    -moz-appearance: textfield;
+                }
+                .cm-titanite-input::-webkit-outer-spin-button,
+                .cm-titanite-input::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+                .cm-titanite-input:focus {
+                    outline: none;
+                    border-color: #ffd700;
+                }
+                .cm-footer {
+                    padding: 10px 12px;
+                    border-top: 2px solid #8b6914;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 8px;
+                }
+                .cm-btn {
+                    padding: 7px 12px;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 11px;
+                    font-weight: bold;
+                    transition: all 0.15s;
+                }
+                .cm-btn-cancel {
+                    background: rgba(255,255,255,0.1);
+                    color: #ccc;
+                }
+                .cm-btn-cancel:hover {
+                    background: rgba(255,255,255,0.2);
+                }
+                .cm-btn-primary {
+                    background: linear-gradient(180deg, #4ae29a 0%, #2ecc71 100%);
+                    color: #1a1a1a;
+                }
+                .cm-btn-primary:hover {
+                    transform: translateY(-1px);
+                    box-shadow: 0 3px 10px rgba(74,226,154,0.4);
+                }
+                .cm-parallel-header {
+                    background: rgba(74,226,154,0.2);
+                    border: 1px solid rgba(74,226,154,0.3);
+                }
+            `;
             popup.appendChild(style);
-
-            function createTaskRow(task) {
-                const checkedClass = task.checked ? 'cm-task-checked' : '';
-                const disabledClass = task.disabled ? 'cm-task-disabled' : '';
-                return `
-                    <div class="cm-task ${checkedClass} ${disabledClass}" data-task="${task.name}">
-                        <div class="cm-task-checkbox"></div>
-                        <div class="cm-task-icon">${task.icon}</div>
-                        <div class="cm-task-info">
-                            <div class="cm-task-label">${task.label}</div>
-                            <div class="cm-task-desc">${task.desc}</div>
-                        </div>
-                    </div>
-                `;
-            }
 
             function updateSubtitle() {
                 const checked = popup.querySelectorAll('.cm-task-checked:not(.cm-task-disabled)').length;
@@ -19495,33 +22359,30 @@ ${preTasks.length ? `
 
             // Event handlers
             popup.addEventListener('click', (e) => {
-                // Task toggle
                 const taskRow = e.target.closest('.cm-task:not(.cm-task-disabled)');
                 if (taskRow) {
                     const taskName = taskRow.dataset.task;
                     const task = tasks.find(t => t.name === taskName);
                     if (!task) return;
 
-                    const willBeChecked = !taskRow.classList.contains('cm-task-checked');
+                    taskRow.classList.toggle('cm-task-checked');
+                    task.checked = taskRow.classList.contains('cm-task-checked');
 
-                    // Handle mutual exclusivity
-                    if (willBeChecked && task.exclusive) {
-                        tasks.forEach(t => {
-                            if (t.name !== taskName && t.exclusive === task.exclusive && t.checked) {
-                                t.checked = false;
-                                const otherRow = popup.querySelector(`.cm-task[data-task="${t.name}"]`);
-                                if (otherRow) otherRow.classList.remove('cm-task-checked');
-                            }
-                        });
+                    // Mutual exclusion for mail options
+                    if (task.checked && (taskName === 'collectMail' || taskName === 'collectMailAll')) {
+                        const otherName = taskName === 'collectMail' ? 'collectMailAll' : 'collectMail';
+                        const otherTask = tasks.find(t => t.name === otherName);
+                        const otherRow = popup.querySelector(`.cm-task[data-task="${otherName}"]`);
+                        if (otherTask && otherRow) {
+                            otherTask.checked = false;
+                            otherRow.classList.remove('cm-task-checked');
+                        }
                     }
 
-                    taskRow.classList.toggle('cm-task-checked');
-                    task.checked = willBeChecked;
                     updateSubtitle();
                     return;
                 }
 
-                // Action buttons
                 const action = e.target.dataset.action;
                 if (action === 'cancel') {
                     popup.remove();
@@ -19530,7 +22391,7 @@ ${preTasks.length ? `
                     popup.remove();
                     resolve({
                         selectedTasks: tasks,
-                        showSummary: true  // Always show summary
+                        showSummary: true
                     });
                 } else if (action === 'select-all' || action === 'select-none') {
                     const group = e.target.dataset.group;
@@ -19538,6 +22399,8 @@ ${preTasks.length ? `
                     popup.querySelectorAll(`.cm-task[data-task]`).forEach(row => {
                         const task = tasks.find(t => t.name === row.dataset.task);
                         if (task && task.group === group && !task.disabled) {
+                            // Skip collectMail when selecting all (use collectMailAll instead)
+                            if (checked && task.name === 'collectMail') return;
                             task.checked = checked;
                             row.classList.toggle('cm-task-checked', checked);
                         }
@@ -19546,7 +22409,6 @@ ${preTasks.length ? `
                 }
             });
 
-            // Close on overlay click
             popup.querySelector('.cm-overlay').addEventListener('click', (e) => {
                 if (e.target === e.currentTarget) {
                     popup.remove();
@@ -19554,7 +22416,6 @@ ${preTasks.length ? `
                 }
             });
 
-            // ESC to close
             const escHandler = (e) => {
                 if (e.key === 'Escape') {
                     popup.remove();
@@ -19563,74 +22424,975 @@ ${preTasks.length ? `
                 }
             };
             document.addEventListener('keydown', escHandler);
-
+            // Titanite input handler - syncs with HWH setting
+            const titaniteInput = popup.querySelector('#cm-dungeon-titanite');
+            if (titaniteInput) {
+                titaniteInput.addEventListener('change', (e) => {
+                    const hwhInput = document.querySelector('input[data-name="countTitanit"]');
+                    if (hwhInput) {
+                        hwhInput.value = e.target.value;
+                        hwhInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                });
+            }
             document.body.appendChild(popup);
         });
     }
+    // ================================================================
+    // MINI PROGRESS POPUPS - Shows at bottom of screen for parallel tasks
+    // ================================================================
+
+    const MiniProgressPopups = {
+        popups: {},
+        styleAdded: false,
+
+        addStyles() {
+            if (this.styleAdded) return;
+            this.styleAdded = true;
+
+            const style = document.createElement('style');
+            style.textContent = `
+                .mpp-popup {
+                    position: fixed;
+                    right: 20px;
+                    background: linear-gradient(180deg, #3d2817 0%, #2a1810 100%);
+                    border: 2px solid #8b6914;
+                    border-radius: 8px;
+                    padding: 8px 12px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    font-family: Arial, sans-serif;
+                    z-index: 10001;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+                    transition: all 0.3s ease;
+                    min-width: 180px;
+                }
+                .mpp-popup.mpp-success {
+                    border-color: #4ae29a;
+                    background: linear-gradient(180deg, #1a3d2a 0%, #0d2618 100%);
+                }
+                .mpp-popup.mpp-error {
+                    border-color: #e24a4a;
+                    background: linear-gradient(180deg, #3d1a1a 0%, #2a0d0d 100%);
+                }
+                .mpp-icon {
+                    font-size: 16px;
+                }
+                .mpp-content {
+                    flex: 1;
+                }
+                .mpp-label {
+                    font-size: 11px;
+                    font-weight: bold;
+                    color: #ffd700;
+                    display: block;
+                }
+                .mpp-status {
+                    font-size: 10px;
+                    color: #ccc;
+                }
+                .mpp-spinner {
+                    width: 14px;
+                    height: 14px;
+                    border: 2px solid rgba(255,215,0,0.3);
+                    border-top-color: #ffd700;
+                    border-radius: 50%;
+                    animation: mpp-spin 1s linear infinite;
+                }
+                @keyframes mpp-spin {
+                    to { transform: rotate(360deg); }
+                }
+                .mpp-check {
+                    color: #4ae29a;
+                    font-size: 14px;
+                    font-weight: bold;
+                }
+                .mpp-x {
+                    color: #e24a4a;
+                    font-size: 14px;
+                    font-weight: bold;
+                }
+            `;
+            document.head.appendChild(style);
+        },
+
+        create(id, icon, label) {
+            this.addStyles();
+
+            // Remove existing if any
+            if (this.popups[id]) {
+                this.popups[id].remove();
+            }
+
+            const popup = document.createElement('div');
+            popup.id = `mpp-${id}`;
+            popup.className = 'mpp-popup';
+            popup.innerHTML = `
+                <span class="mpp-icon">${icon}</span>
+                <div class="mpp-content">
+                    <span class="mpp-label">${label}</span>
+                    <span class="mpp-status">Starting...</span>
+                </div>
+                <div class="mpp-spinner"></div>
+            `;
+            document.body.appendChild(popup);
+            this.popups[id] = popup;
+            this.reposition();
+            return popup;
+        },
+
+        update(id, status) {
+            const popup = this.popups[id];
+            if (popup) {
+                const statusEl = popup.querySelector('.mpp-status');
+                if (statusEl) statusEl.textContent = status;
+            }
+        },
+
+        complete(id, success, finalStatus) {
+            const popup = this.popups[id];
+            if (popup) {
+                popup.classList.add(success ? 'mpp-success' : 'mpp-error');
+                const statusEl = popup.querySelector('.mpp-status');
+                if (statusEl) statusEl.textContent = finalStatus || (success ? 'Done!' : 'Failed');
+
+                // Replace spinner with check/x
+                const spinner = popup.querySelector('.mpp-spinner');
+                if (spinner) {
+                    spinner.outerHTML = success ?
+                        '<span class="mpp-check">✓</span>' :
+                    '<span class="mpp-x">✗</span>';
+                }
+
+                // Remove after delay
+                setTimeout(() => {
+                    popup.style.opacity = '0';
+                    popup.style.transform = 'translateX(100px)';
+                    setTimeout(() => {
+                        popup.remove();
+                        delete this.popups[id];
+                        this.reposition();
+                    }, 300);
+                }, 3000);
+            }
+        },
+
+        reposition() {
+            const ids = Object.keys(this.popups);
+            ids.forEach((id, i) => {
+                const popup = this.popups[id];
+                if (popup) {
+                    popup.style.bottom = `${20 + (i * 55)}px`;
+                }
+            });
+        }
+    };
+
+
+    // ================================================================
+    // TWEAKER NOTIFICATIONS - Stacking notifications at bottom-right
+    // ================================================================
+
+    const TweakerNotifications = {
+        notifications: {},
+        counter: 0,
+        styleAdded: false,
+
+        // Notification types with different behaviors
+        TYPES: {
+            TASK: { autoDismiss: 3000, color: '#8b6914' },
+            SUCCESS: { autoDismiss: 3000, color: '#4ae29a' },
+            ERROR: { autoDismiss: 5000, color: '#e24a4a' },
+            BATTLE: { autoDismiss: false, color: null },        // CSS handles win/loss border
+            PROGRESS: { autoDismiss: false, color: '#3498db' },
+            ASGARD: { autoDismiss: 4000, color: '#9b59b6' },
+            INFO: { autoDismiss: 4000, color: '#f39c12' }
+        },
+
+        addStyles() {
+            if (this.styleAdded) return;
+            this.styleAdded = true;
+
+            const style = document.createElement('style');
+            style.id = 'tweaker-notifications-style';
+            style.textContent = `
+                .twk-notif {
+                    position: fixed;
+                    right: 20px;
+                    background: linear-gradient(180deg, #3d2817 0%, #2a1810 100%);
+                    border: 2px solid #8b6914;
+                    border-radius: 8px;
+                    padding: 10px 14px;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    font-family: Arial, sans-serif;
+                    z-index: 10001;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+                    transition: all 0.3s ease;
+                    min-width: 200px;
+                    max-width: 320px;
+                    cursor: default;
+                    opacity: 0;
+                    transform: translateX(100px);
+                }
+
+
+                .twk-notif.twk-notif-visible {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+                .twk-notif.twk-notif-dismissing {
+                    opacity: 0;
+                    transform: translateX(100px);
+                }
+                .twk-notif.twk-notif-clickable {
+                    cursor: pointer;
+                }
+                .twk-notif.twk-notif-clickable:hover {
+                    filter: brightness(1.1);
+                }
+                .twk-notif-icon {
+                    font-size: 18px;
+                    flex-shrink: 0;
+                }
+                .twk-notif-content {
+                    flex: 1;
+                    min-width: 0;
+                }
+                .twk-notif-title {
+                    font-size: 12px;
+                    font-weight: bold;
+                    color: #ffd700;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                .twk-notif-status {
+                    font-size: 10px;
+                    color: #ccc;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                .twk-notif-right {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    flex-shrink: 0;
+                }
+                .twk-notif-spinner {
+                    width: 16px;
+                    height: 16px;
+                    border: 2px solid rgba(255,215,0,0.3);
+                    border-top-color: #ffd700;
+                    border-radius: 50%;
+                    animation: twk-spin 1s linear infinite;
+                }
+                @keyframes twk-spin {
+                    to { transform: rotate(360deg); }
+                }
+                .twk-notif-badge {
+                    font-size: 14px;
+                    font-weight: bold;
+                }
+                .twk-notif-badge.success { color: #4ae29a; }
+                .twk-notif-badge.error { color: #e24a4a; }
+                .twk-notif-time {
+                    font-size: 9px;
+                    color: #888;
+                }
+                .twk-notif-close {
+                    font-size: 14px;
+                    color: #888;
+                    cursor: pointer;
+                    padding: 2px;
+                    line-height: 1;
+                }
+                .twk-notif-close:hover {
+                    color: #fff;
+                }
+.twk-notif-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: #4ae29a;
+    border-radius: 0 0 6px 6px;
+    transition: width 0.3s ease;
+}
+
+/* Battle-specific styles */
+                .twk-notif-battle {
+                    background: linear-gradient(180deg, #3d2817 0%, #2a1810 100%);
+                    max-width: none;
+                    white-space: nowrap;
+                    border-color: #8b6914; /* default, will be overridden */
+                }
+                .twk-notif-battle.battle-win {
+                    border-color: #4ae29a !important;
+                }
+                .twk-notif-battle.battle-loss {
+                    border-color: #e24a4a !important;
+                }
+                .twk-notif-battle .twk-notif-title {
+                    color: #ffd700;
+                    overflow: visible;
+                    text-overflow: unset;
+                    white-space: nowrap;
+                }
+                .twk-notif-battle .twk-notif-content {
+                    flex-shrink: 0;
+                }
+
+                /* Type-specific border colors */
+.twk-notif-success {
+    border-color: #4ae29a;
+    background: linear-gradient(180deg, #1a3d2a 0%, #0d2618 100%);
+}
+                .twk-notif-error { border-color: #e24a4a; }
+                                .twk-notif-warning { border-color: #f39c12; background: linear-gradient(180deg, #3d3520 0%, #2a2410 100%); }
+                .twk-notif-info { border-color: #f39c12; }
+.twk-notif-progress { border-color: #3498db; max-width: none; }
+/* Top-center notification container */
+                #twk-notif-top-container {
+                    position: fixed;
+                    top: 31px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    display: flex;
+                    gap: 6px;
+                    z-index: 10001;
+                    max-width: calc(100vw - 40px);
+                    pointer-events: none;
+                }
+                #twk-notif-top-container .twk-notif {
+                    position: relative;
+                    right: auto;
+                    bottom: auto;
+                    padding: 4px 10px;
+                    border-radius: 6px;
+                    min-width: 80px;
+                    max-width: none;
+                    flex-shrink: 1;
+                    transform: translateY(-30px);
+                    pointer-events: auto;
+                    gap: 8px;
+                }
+                #twk-notif-top-container .twk-notif.twk-notif-visible {
+                    transform: translateY(0);
+                }
+                #twk-notif-top-container .twk-notif.twk-notif-dismissing {
+                    transform: translateY(-30px);
+                }
+                #twk-notif-top-container .twk-notif-icon {
+                    font-size: 14px;
+                }
+                #twk-notif-top-container .twk-notif-content {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 6px;
+                }
+                #twk-notif-top-container .twk-notif-title {
+                    font-size: 11px;
+                    font-weight: bold;
+                    color: #ccc;
+                    white-space: nowrap;
+                }
+                #twk-notif-top-container .twk-notif-status {
+                    font-size: 13px;
+                    font-weight: bold;
+                    color: #ffd700;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                #twk-notif-top-container .twk-notif-battle .twk-notif-title {
+                    font-size: 13px;
+                    color: #ffd700;
+                }
+                #twk-notif-top-container .twk-notif-spinner {
+                    width: 12px;
+                    height: 12px;
+                }
+                #twk-notif-top-container .twk-notif-badge {
+                    font-size: 12px;
+                }
+                #twk-notif-top-container .twk-notif-close {
+                    font-size: 12px;
+                }
+`;
+            document.head.appendChild(style);
+        },
+
+        // Get appropriate container based on notification type
+        getContainer(type, id) {
+            // All notifications go to top
+            const containerId = 'twk-notif-top-container';
+
+            let container = document.getElementById(containerId);
+            if (!container) {
+                container = document.createElement('div');
+                container.id = containerId;
+                document.body.appendChild(container);
+            }
+            return container;
+        },
+
+        /**
+         * Create a notification
+         * @param {Object} options
+         * @param {string} options.id - Unique ID (auto-generated if not provided)
+         * @param {string} options.icon - Emoji icon
+         * @param {string} options.title - Title text
+         * @param {string} options.status - Status text (optional)
+         * @param {string} options.type - TASK, SUCCESS, ERROR, BATTLE, PROGRESS, INFO
+         * @param {boolean} options.showSpinner - Show loading spinner
+         * @param {boolean} options.showClose - Show close button
+         * @param {function} options.onClick - Click handler
+         * @param {Object} options.data - Custom data to store
+         * @returns {string} Notification ID
+         */
+        create(options = {}) {
+            this.addStyles();
+
+            const id = options.id || `notif_${++this.counter}`;
+            const type = options.type || 'TASK';
+            const typeConfig = this.TYPES[type] || this.TYPES.TASK;
+
+            // Remove existing notification with same ID
+            if (this.notifications[id]) {
+                this.dismiss(id, true);
+            }
+
+            const notif = document.createElement('div');
+            notif.id = `twk-notif-${id}`;
+            notif.className = `twk-notif twk-notif-${type.toLowerCase()}`;
+            if (options.onClick || !typeConfig.autoDismiss) {
+                notif.classList.add('twk-notif-clickable');
+            }
+
+            notif.innerHTML = `
+                <span class="twk-notif-icon">${options.icon || '📋'}</span>
+                <div class="twk-notif-content">
+                    <div class="twk-notif-title">${options.title || 'Task'}</div>
+                    <div class="twk-notif-status">${options.status || ''}</div>
+                </div>
+                <div class="twk-notif-right">
+                    ${options.showSpinner ? '<div class="twk-notif-spinner"></div>' : ''}
+                    <span class="twk-notif-badge"></span>
+                    ${options.showClose ? '<span class="twk-notif-close">✕</span>' : ''}
+                </div>
+            `;
+
+            if (typeConfig.color) {
+                notif.style.borderColor = typeConfig.color;
+            }
+
+            this.getContainer(type, id).appendChild(notif);
+
+
+            // Store reference
+            this.notifications[id] = {
+                element: notif,
+                type,
+                typeConfig,
+                options,
+                startTime: Date.now(),
+                data: options.data || {}
+            };
+
+            // Position and animate in
+            this.reposition();
+            requestAnimationFrame(() => {
+                notif.classList.add('twk-notif-visible');
+            });
+
+            // Event handlers
+            if (options.onClick) {
+                notif.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('twk-notif-close')) {
+                        options.onClick(id, this.notifications[id]);
+                    }
+                });
+            }
+
+            const closeBtn = notif.querySelector('.twk-notif-close');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => this.dismiss(id));
+            }
+
+            // Auto-dismiss
+            if (typeConfig.autoDismiss) {
+                this.notifications[id].dismissTimer = setTimeout(() => {
+                    this.dismiss(id);
+                }, typeConfig.autoDismiss);
+            }
+
+
+
+            return id;
+        },
+
+        /**
+         * Update notification
+         */
+        update(id, updates = {}) {
+            const notif = this.notifications[id];
+            if (!notif) return;
+
+            if (updates.title !== undefined) {
+                notif.element.querySelector('.twk-notif-title').textContent = updates.title;
+            }
+            if (updates.status !== undefined) {
+                notif.element.querySelector('.twk-notif-status').textContent = updates.status;
+            }
+            if (updates.icon !== undefined) {
+                notif.element.querySelector('.twk-notif-icon').textContent = updates.icon;
+            }
+            if (updates.showSpinner !== undefined) {
+                const right = notif.element.querySelector('.twk-notif-right');
+                const spinner = right.querySelector('.twk-notif-spinner');
+                if (updates.showSpinner && !spinner) {
+                    right.insertAdjacentHTML('afterbegin', '<div class="twk-notif-spinner"></div>');
+                } else if (!updates.showSpinner && spinner) {
+                    spinner.remove();
+                }
+            }
+            if (updates.badge !== undefined) {
+                const badge = notif.element.querySelector('.twk-notif-badge');
+                badge.textContent = updates.badge;
+                badge.className = 'twk-notif-badge ' + (updates.badgeClass || '');
+            }
+            if (updates.data) {
+                Object.assign(notif.data, updates.data);
+            }
+
+            // Grow but don't shrink - track max width
+            requestAnimationFrame(() => {
+                const el = notif.element;
+                const currentWidth = el.offsetWidth;
+                const currentMin = parseInt(el.style.minWidth) || 0;
+                if (currentWidth > currentMin) {
+                    el.style.minWidth = currentWidth + 'px';
+                }
+            });
+        },
+
+        /**
+         * Complete a notification (success state)
+         */
+        complete(id, finalStatus) {
+            const notif = this.notifications[id];
+            if (!notif) return;
+
+            const duration = ((Date.now() - notif.startTime) / 1000).toFixed(1);
+
+            this.update(id, {
+                status: finalStatus || `Done (${duration}s)`,
+                showSpinner: false,
+                badge: '✓',
+                badgeClass: 'success'
+            });
+
+            notif.element.classList.add('twk-notif-success');
+
+            // Clear existing timer and set new auto-dismiss
+            if (notif.dismissTimer) clearTimeout(notif.dismissTimer);
+            notif.dismissTimer = setTimeout(() => this.dismiss(id), 3000);
+        },
+
+        /**
+         * Fail a notification (error state)
+         */
+        fail(id, errorStatus) {
+            const notif = this.notifications[id];
+            if (!notif) return;
+
+            this.update(id, {
+                status: errorStatus || 'Failed',
+                showSpinner: false,
+                badge: '✗',
+                badgeClass: 'error'
+            });
+
+            notif.element.classList.add('twk-notif-error');
+
+            // Clear existing timer and set new auto-dismiss (longer for errors)
+            if (notif.dismissTimer) clearTimeout(notif.dismissTimer);
+            notif.dismissTimer = setTimeout(() => this.dismiss(id), 5000);
+        },
+
+        /**
+         * Dismiss a notification
+         */
+        dismiss(id, immediate = false) {
+            const notif = this.notifications[id];
+            if (!notif) return;
+
+            if (notif.dismissTimer) clearTimeout(notif.dismissTimer);
+
+            // Add to history with FINAL state before removing
+            if (window.addToNotifHistory) {
+                const titleEl = notif.element.querySelector('.twk-notif-title');
+                const statusEl = notif.element.querySelector('.twk-notif-status');
+                const iconEl = notif.element.querySelector('.twk-notif-icon');
+                console.log('📝 History:', id, 'type:', notif.type, 'title:', titleEl?.textContent?.substring(0,30));
+
+                window.addToNotifHistory({
+                    icon: iconEl?.textContent || notif.options?.icon || '📋',
+                    title: titleEl?.textContent || notif.options?.title || '',
+                    status: statusEl?.textContent || '',
+                    type: notif.type || 'TASK'
+                });
+            }
+
+            if (immediate) {
+                notif.element.remove();
+                delete this.notifications[id];
+                this.reposition();
+            } else {
+                notif.element.classList.add('twk-notif-dismissing');
+                notif.element.classList.remove('twk-notif-visible');
+                setTimeout(() => {
+                    notif.element.remove();
+                    delete this.notifications[id];
+                    this.reposition();
+                }, 300);
+            }
+        },
+
+        /**
+         * Dismiss all notifications
+         */
+        dismissAll(immediate = false) {
+            Object.keys(this.notifications).forEach(id => this.dismiss(id, immediate));
+        },
+
+        /**
+         * Reposition all notifications (stack from bottom)
+         */
+        reposition() {
+            // Only reposition bottom-right notifications (top-center uses flexbox)
+            const ids = Object.keys(this.notifications);
+            let bottomOffset = 20;
+
+            ids.forEach(id => {
+                const notif = this.notifications[id];
+                if (notif && notif.element) {
+                    if (notif.element.parentElement?.id === 'twk-notif-top-container') return;
+                    notif.element.style.bottom = `${bottomOffset}px`;
+                    bottomOffset += notif.element.offsetHeight + 8;
+                }
+            });
+        },
+
+        // ============ CONVENIENCE METHODS ============
+
+        /**
+         * Show a task notification (with spinner, auto-dismiss on complete)
+         */
+        task(icon, title, id) {
+            return this.create({
+                id,
+                icon,
+                title,
+                status: 'Starting...',
+                type: 'TASK',
+                showSpinner: true
+            });
+        },
+
+        /**
+         * Show a success notification
+         */
+        success(icon, title, message) {
+            return this.create({
+                icon,
+                title,
+                status: message,
+                type: 'SUCCESS',
+                badge: '✓',
+                badgeClass: 'success'
+            });
+        },
+
+        /**
+         * Show an error notification
+         */
+        error(icon, title, message) {
+            return this.create({
+                icon,
+                title,
+                status: message,
+                type: 'ERROR',
+                badge: '✗',
+                badgeClass: 'error',
+                showClose: true
+            });
+        },
+
+        /**
+         * Show a battle result notification (persists until clicked)
+         */
+        battle(options = {}) {
+            const {
+                arena = 'Arena',
+                win = true,
+                attackerName = 'You',
+                defenderName = 'Opponent',
+                onClick
+            } = options;
+
+            const icon = win ? '⚔️' : '🛡️';
+            const resultClass = win ? 'twk-notif-battle-win' : 'twk-notif-battle-loss';
+            const resultText = win ? 'Victory!' : 'Defeat';
+
+            const id = this.create({
+                id: `battle_${Date.now()}`,
+                icon,
+                title: arena,
+                status: `${attackerName} vs ${defenderName}`,
+                type: 'BATTLE',
+                showClose: true,
+                onClick: (notifId) => {
+                    if (onClick) onClick(notifId);
+                    this.dismiss(notifId);
+                }
+            });
+
+            // Add result badge
+            this.update(id, {
+                badge: resultText,
+                badgeClass: win ? 'success' : 'error'
+            });
+
+            return id;
+        },
+
+        /**
+         * Show a progress notification (for multi-step operations)
+         */
+        progress(icon, title, id) {
+            return this.create({
+                id: id || `progress_${Date.now()}`,
+                icon,
+                title,
+                status: '0%',
+                type: 'PROGRESS',
+                showSpinner: true
+            });
+        },
+
+        /**
+         * Update progress notification
+         */
+        setProgress(id, current, total, statusText) {
+            const pct = Math.round((current / total) * 100);
+            this.update(id, {
+                status: statusText || `${current}/${total} (${pct}%)`
+            });
+        },
+
+        /**
+         * Show an info notification
+         */
+        info(icon, title, message) {
+            return this.create({
+                icon,
+                title,
+                status: message,
+                type: 'INFO'
+            });
+        }
+    };
+
+    // Expose globally
+    window.TweakerNotifications = TweakerNotifications;
+
+    // Make notif history function available
+    window.addToNotifHistory = null; // Will be set by sidebar
+
+    // ================================================================
+    // PARALLEL TASK RUNNERS - For ToE and Dungeon
+    // ================================================================
+    async function runParallelBattleTasks(tasks) {
+        console.log('🚀 runParallelBattleTasks called with:', tasks.map(t => t.name));
+        const promises = [];
+
+        // Create stop flags for parallel tasks
+        window._stopParallelTask = window._stopParallelTask || {};
+
+        // Wrap Send to check stop flags
+        const originalSend = HWHFuncs?.Send;
+        if (originalSend && !window._sendWrappedForStop) {
+            window._sendWrappedForStop = true;
+            HWHFuncs.Send = function(data) {
+                // Check if any parallel task wants to stop
+                const taskFlags = window._stopParallelTask || {};
+                for (const [taskKey, shouldStop] of Object.entries(taskFlags)) {
+                    if (shouldStop) {
+                        return Promise.reject(new Error('Stopped by user'));
+                    }
+                }
+                return originalSend.call(this, data);
+            };
+        }
+
+        for (const task of tasks) {
+            const taskKey = task.name;
+            window._stopParallelTask[taskKey] = false;
+
+            const promise = (async () => {
+                const startTime = Date.now();
+
+                // Create notification with click-to-stop
+                const notifId = TweakerNotifications.create({
+                    id: taskKey,
+                    icon: task.icon,
+                    title: task.label,
+                    status: 'Starting... (click to stop)',
+                    type: 'TASK',
+                    showSpinner: true,
+                    showClose: true,
+                    onClick: (id) => {
+                        if (window._stopParallelTask && !window._stopParallelTask[taskKey]) {
+                            window._stopParallelTask[taskKey] = true;
+                            TweakerNotifications.update(id, {
+                                status: 'Stopping...',
+                                showSpinner: true
+                            });
+                        }
+                    }
+                });
+
+                try {
+                    const result = await task.action();
+                    const duration = ((Date.now() - startTime) / 1000).toFixed(1);
+
+                    // Success - auto-dismiss quick ones (nothing to do), persist longer runs
+                    const notif = TweakerNotifications.notifications[notifId];
+                    if (notif) {
+                        TweakerNotifications.update(notifId, {
+                            status: `Done (${duration}s)`,
+                            showSpinner: false,
+                            badge: '✔',
+                            badgeClass: 'success',
+                            showClose: true
+                        });
+                        notif.element.classList.add('twk-notif-success');
+                        if (notif.dismissTimer) clearTimeout(notif.dismissTimer);
+                        // Auto-dismiss if under 2 seconds (nothing to do)
+                        if (parseFloat(duration) < 2) {
+                            notif.dismissTimer = setTimeout(() => TweakerNotifications.dismiss(notifId), 3000);
+                        }
+                    }
+
+                    return {
+                        name: task.label,
+                        icon: task.icon,
+                        success: true,
+                        duration,
+                        count: result?.count || 0,
+                        items: result?.items || 'Completed',
+                        hasItems: result?.hasItems || false,
+                        rewards: result?.rewards || {}
+                    };
+                } catch (error) {
+                    console.error(`Error in parallel task ${task.name}:`, error);
+                    const duration = ((Date.now() - startTime) / 1000).toFixed(1);
+                    const wasStopped = window._stopParallelTask?.[taskKey];
+
+                    // Error/stopped - persist until clicked
+                    const notif = TweakerNotifications.notifications[notifId];
+                    if (notif) {
+                        TweakerNotifications.update(notifId, {
+                            status: wasStopped ? `Stopped (${duration}s)` : (error.message?.substring(0, 30) || 'Error'),
+                            showSpinner: false,
+                            badge: wasStopped ? '⏹' : '✗',
+                            badgeClass: wasStopped ? 'warning' : 'error',
+                            showClose: true
+                        });
+                        notif.element.classList.add(wasStopped ? 'twk-notif-warning' : 'twk-notif-error');
+                        if (notif.dismissTimer) clearTimeout(notif.dismissTimer);
+                    }
+
+                    return {
+                        name: task.label,
+                        icon: task.icon,
+                        success: false,
+                        stopped: wasStopped,
+                        items: wasStopped ? 'Stopped' : error.message
+                    };
+                }
+            })();
+
+            promises.push(promise);
+        }
+
+        const parallelResults = await Promise.all(promises);
+
+        // Restore original Send and clean up
+        if (originalSend && window._sendWrappedForStop) {
+            HWHFuncs.Send = originalSend;
+            window._sendWrappedForStop = false;
+        }
+        delete window._stopParallelTask;
+
+        return parallelResults;
+    }
+
 
     // Execute the tasks
     async function executeCollectMoreTasks(tasks, showSummary) {
+        // Suppress HWH progress notifications during Collect More
+        window._collectMoreRunning = true;
         const functionMap = createFunctionMap();
         const selectedTasks = tasks.filter(t => t.checked && !t.disabled);
 
         if (selectedTasks.length === 0) {
             if (HWHFuncs?.setProgress) {
-                HWHFuncs.setProgress('No tasks selected', true);
+                TweakerNotifications.info('📦', 'Collect More', 'No tasks selected')
             }
             return;
         }
 
         let completedTasks = 0;
-        const totalTasks = selectedTasks.length;
+        const totalTasks = selectedTasks.filter(t => t.group !== 'hwh_parallel').length;
         const collectionResults = [];
 
         // Capture "before" currencies for summary comparison
         const currenciesBefore = await getCurrentCurrencies();
 
         // Separate by group
-        const doAllTask = selectedTasks.find(t => t.name === 'doAllHWH');
+        const parallelTasks = selectedTasks.filter(t => t.group === 'hwh_parallel');
+        const hwhTasks = selectedTasks.filter(t => t.group === 'hwh');
         const collectionTasks = selectedTasks.filter(t => t.group === 'collect');
         const postTasks = selectedTasks.filter(t => t.group === 'post');
 
-        // Phase 1: Pre-collection (Do All)
-        if (doAllTask) {
-            try {
-                if (HWHFuncs?.setProgress) {
-                    HWHFuncs.setProgress(`${doAllTask.icon} ${doAllTask.label}...`, false);
-                }
-                const func = functionMap[doAllTask.name];
-                if (func) {
-                    await func();
-                    completedTasks++;
-                    if (HWHFuncs?.setProgress) {
-                        HWHFuncs.setProgress(`✅ ${doAllTask.label} done (${completedTasks}/${totalTasks})`, false);
-                    }
-                }
-            } catch (error) {
-                console.error('Error in Do All:', error);
-                if (HWHFuncs?.setProgress) {
-                    HWHFuncs.setProgress(`❌ ${doAllTask.label} failed`, true);
-                }
-            }
+        // Create single progress notification for Collect More
+        const collectMoreId = TweakerNotifications.progress('📦', 'Collect More', 'collect_more');
 
-            // Wait for rewards to generate
-            if (collectionTasks.length > 0) {
-                for (let i = 5; i > 0; i--) {
-                    if (HWHFuncs?.setProgress) {
-                        HWHFuncs.setProgress(`⏳ Starting collection in ${i}s...`, false);
-                    }
-                    await new Promise(r => setTimeout(r, 1000));
-                }
-            }
+
+        // Phase 0: Start parallel battle tasks (ToE & Dungeon) - fire and forget
+        if (parallelTasks.length > 0) {
+            const tasksToRun = parallelTasks.map(t => ({
+                name: t.name,
+                icon: t.icon,
+                label: t.label,
+                action: functionMap[t.name]
+            }));
+            runParallelBattleTasks(tasksToRun).catch(err => console.error('Parallel tasks error:', err));
         }
 
-        // Phase 2: Collection tasks
-        for (const task of collectionTasks) {
-            try {
-                if (HWHFuncs?.setProgress) {
-                    HWHFuncs.setProgress(`${task.icon} ${task.label}...`, false);
-                }
 
+        // Phase 1: HWH Sequential Tasks (runs WHILE ToE/Dungeon are running)
+        for (const task of hwhTasks) {
+            TweakerNotifications.update(collectMoreId, { status: `${task.icon} ${task.label}...` });
+
+            try {
                 const func = functionMap[task.name];
                 if (func) {
                     const startTime = Date.now();
@@ -19649,9 +23411,7 @@ ${preTasks.length ? `
                         rewards: result?.rewards || {}
                     });
 
-                    if (HWHFuncs?.setProgress) {
-                        HWHFuncs.setProgress(`✅ ${task.label} done (${completedTasks}/${totalTasks})`, false);
-                    }
+                    TweakerNotifications.update(collectMoreId, { status: `${completedTasks}/${totalTasks} done` });
                 }
             } catch (error) {
                 console.error(`Error in ${task.name}:`, error);
@@ -19663,19 +23423,58 @@ ${preTasks.length ? `
                 });
                 completedTasks++;
             }
-            await new Promise(r => setTimeout(r, 500));
+            await new Promise(r => setTimeout(r, 300));
         }
 
-        // Phase 3: Post-collection tasks
-        for (const task of postTasks) {
-            try {
-                if (HWHFuncs?.setProgress) {
-                    HWHFuncs.setProgress(`${task.icon} ${task.label}...`, false);
-                }
+        // Phase 2: Collection tasks (also runs WHILE ToE/Dungeon might still be running)
+        for (const task of collectionTasks) {
+            TweakerNotifications.update(collectMoreId, { status: `${task.icon} ${task.label}...` });
 
+            try {
                 const func = functionMap[task.name];
                 if (func) {
+                    const startTime = Date.now();
                     const result = await func();
+                    const duration = ((Date.now() - startTime) / 1000).toFixed(1);
+                    completedTasks++;
+
+                    collectionResults.push({
+                        name: task.label,
+                        icon: task.icon,
+                        success: result?.success !== false,
+                        duration,
+                        count: result?.count || 0,
+                        items: result?.items || 'Completed',
+                        hasItems: result?.hasItems || false,
+                        rewards: result?.rewards || {}
+                    });
+
+                    TweakerNotifications.update(collectMoreId, { status: `${completedTasks}/${totalTasks} done` });
+                }
+            } catch (error) {
+                console.error(`Error in ${task.name}:`, error);
+                collectionResults.push({
+                    name: task.label,
+                    icon: task.icon,
+                    success: false,
+                    items: error.message
+                });
+                completedTasks++;
+            }
+            await new Promise(r => setTimeout(r, 300));
+        }
+
+
+        // Phase 3: Post-collection tasks (after everything else)
+        for (const task of postTasks) {
+            TweakerNotifications.update(collectMoreId, { status: `${task.icon} ${task.label}...` });
+
+            try {
+                const func = functionMap[task.name];
+                if (func) {
+                    const startTime = Date.now();
+                    const result = await func();
+                    const duration = ((Date.now() - startTime) / 1000).toFixed(1);
                     completedTasks++;
 
                     collectionResults.push({
@@ -19684,31 +23483,30 @@ ${preTasks.length ? `
                         success: result?.success !== false,
                         items: result?.items || 'Completed'
                     });
-
-                    if (HWHFuncs?.setProgress) {
-                        HWHFuncs.setProgress(`✅ ${task.label} done (${completedTasks}/${totalTasks})`, false);
-                    }
                 }
             } catch (error) {
                 console.error(`Error in ${task.name}:`, error);
                 completedTasks++;
             }
         }
+
+        // Complete the progress notification
+        const successCount = collectionResults.filter(r => r.success).length;
+        const failCount = collectionResults.length - successCount;
+        TweakerNotifications.complete(collectMoreId, `${successCount} done${failCount > 0 ? `, ${failCount} failed` : ''}`);
         debugLog('📊 All collection results:', JSON.stringify(collectionResults, null, 2));
+
         // Show summary if requested
         if (showSummary && collectionResults.length > 0) {
             const currenciesAfter = await getCurrentCurrencies();
             await showCollectMoreSummary(collectionResults, currenciesBefore, currenciesAfter);
         }
 
-        // Final notification
-        if (HWHFuncs?.setProgress) {
-            HWHFuncs.setProgress(`🎉 Done! ${completedTasks}/${totalTasks} tasks completed`, false);
-            setTimeout(() => HWHFuncs?.setProgress?.('', false), 3000);
-        }
-
         debugLog('✅ Collect More finished');
+        window._collectMoreRunning = false;
+
     }
+
 
     // Summary popup - READABLE VERSION with grouped items
     async function showCollectMoreSummary(results, currenciesBefore = null, currenciesAfter = null) {
@@ -19932,19 +23730,12 @@ ${preTasks.length ? `
             if (typeof selfGame === 'undefined') {
                 selfGame = Game;
             }
-
             let player = getPlayer();
             let aocMediator = selfGame['game.mechanics.clanDomination.mediator.ClanDominationMapPopupMediator'];
             new aocMediator(player).open();
             debugLog('Opened Clan Domination Map');
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Opened Clan Domination Map', true);
-            }
         } catch (e) {
             console.error('Failed to open Clan Domination Map:', e);
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Failed to open Clan Domination Map', true);
-            }
         }
     };
     window.goGuildChat = function (tabName = 'CLAN_TAB') {
@@ -19952,22 +23743,38 @@ ${preTasks.length ? `
             let player = getPlayer();
             let chatPopupMediator = selfGame['game.mediator.gui.popup.chat.ChatPopupMediator'];
             let mediator = new chatPopupMediator(player);
-
             // Set the tab before opening
             let chatProps = chatPopupMediator.prototype.__properties__;
             let setTabMethod = Object.entries(chatProps).find(e => e[1] === 'set_selectedTab')?.[0];
             if (setTabMethod && tabName) {
                 mediator[setTabMethod](tabName);
             }
-
             mediator.open();
         } catch (e) {
             console.error('Failed to open Chat:', e);
-            if (HWHFuncs && HWHFuncs.setProgress) {
-                HWHFuncs.setProgress('Failed to open Chat', true);
-            }
+            TweakerNotifications.error('💬', 'Navigation', 'Failed to open Chat');
         }
     };
+    // Global PM function - opens game chat to specific user
+    window._chatDockPM = function(userId, userName) {
+        try {
+            const player = getPlayer();
+            const chatPopupMediator = selfGame['game.mediator.gui.popup.chat.ChatPopupMediator'];
+            const mediator = new chatPopupMediator(player);
+            mediator.open();
+            setTimeout(() => {
+                const chatProps = chatPopupMediator.prototype.__properties__;
+                if (chatProps) {
+                    const popup = Object.values(chatProps).find(p => p?.setCurrentTab);
+                    if (popup) popup.setCurrentTab('PRIVATE_TAB');
+                }
+            }, 300);
+            debugLog(`💬 Opening PM to ${userName} (${userId})`);
+        } catch(e) {
+            console.error('PM error:', e);
+        }
+    };
+
 
 
     function createBackHomeSyncButton(templateWrapper, buttonContainer, insertionPoint) {
@@ -19992,9 +23799,6 @@ ${preTasks.length ? `
                     bubbles: true
                 }));
                 debugLog('Sent single Escape press');
-                if (HWHFuncs && HWHFuncs.setProgress) {
-                    HWHFuncs.setProgress('Back', true);
-                }
             };
 
             const homeButton = document.createElement('div');
@@ -20404,10 +24208,8 @@ ${preTasks.length ? `
         }
     };
     // ================================================================
-    // SECTION 10: SETTINGS POPUPS
+    // REFACTORED SETTINGS PANEL
     // ================================================================
-    // HWH SETTINGS EDITOR - WITH TOP-LEVEL TABS
-    // Replace your showTweakerSettings function with this version
 
     window.showTweakerSettings = function() {
         debugLog('Opening HWH Tweaker Settings...');
@@ -20424,226 +24226,183 @@ ${preTasks.length ? `
             '<div style="background: #2a1810; border: 3px solid #8b6914; border-radius: 10px; padding: 20px; min-width: 900px; max-width: 1000px; color: #ffd700; font-family: Arial, sans-serif; max-height: 90vh; overflow-y: auto;">' +
             '<h2 style="margin: 0 0 15px 0; text-align: center; color: #ffd700;">HWH Tweaker Settings v' + TWEAKER_VERSION + '</h2>' +
 
-            // Top-level Tab bar
+            // Top-level Tab bar - NEW STRUCTURE
             '<div style="display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 2px solid #8b6914; padding-bottom: 10px;">' +
-            '<button id="tab-settings" class="tweaker-tab" style="flex: 1; padding: 10px 16px; border: none; border-radius: 6px 6px 0 0; cursor: pointer; font-size: 14px; font-weight: bold; background: #8b6914; color: #ffd700;">⚙️ Settings</button>' +
-            '<button id="tab-data" class="tweaker-tab" style="flex: 1; padding: 10px 16px; border: none; border-radius: 6px 6px 0 0; cursor: pointer; font-size: 14px; font-weight: bold; background: #3a2a1a; color: #999;">📊 Data</button>' +
-            '<button id="tab-prefs" class="tweaker-tab" style="flex: 1; padding: 10px 16px; border: none; border-radius: 6px 6px 0 0; cursor: pointer; font-size: 14px; font-weight: bold; background: #3a2a1a; color: #999;">⭐ Preferences</button>' +
+            '<button id="tab-config" class="tweaker-tab" style="flex: 1; padding: 10px 16px; border: none; border-radius: 6px 6px 0 0; cursor: pointer; font-size: 14px; font-weight: bold; background: #8b6914; color: #ffd700;">⚙️ Config</button>' +
+            '<button id="tab-notifs" class="tweaker-tab" style="flex: 1; padding: 10px 16px; border: none; border-radius: 6px 6px 0 0; cursor: pointer; font-size: 14px; font-weight: bold; background: #3a2a1a; color: #999;">🔔 External Notifs</button>' +
+            '<button id="tab-data" class="tweaker-tab" style="flex: 1; padding: 10px 16px; border: none; border-radius: 6px 6px 0 0; cursor: pointer; font-size: 14px; font-weight: bold; background: #3a2a1a; color: #999;">💾 Data</button>' +
             '</div>' +
 
-            // ==================== SETTINGS TAB CONTENT ====================
-            '<div id="tab-content-settings" style="display: block;">' +
+            // ==================== CONFIG TAB CONTENT ====================
+            '<div id="tab-content-config" style="display: block;">' +
+            '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">' +
 
-            // Two column layout for Settings
-            '<div style="display: grid; grid-template-columns: 1.5fr 0.8fr; gap: 20px;">' +
-
-            // LEFT BOX - HW Helper Settings & Values (two columns inside)
+            // LEFT - HW Helper Settings & Values
             '<div class="twk-panel">' +
-            '<h3 style="margin: 0 0 15px 0; color: #4ae29a; text-align: center;">HW Helper Settings & Values</h3>' +
+            '<h3 style="margin: 0 0 15px 0; color: #4ae29a; text-align: center;">HW Helper Settings</h3>' +
             '<div style="display: grid; grid-template-columns: 1fr auto; gap: 20px;">' +
-            '<div id="checkbox-container" style="max-height: 400px; overflow-y: auto; padding-right: 5px;"></div>' +
+            '<div id="checkbox-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px 15px;"></div>' +
             '<div id="values-container" style="display: flex; flex-direction: column; gap: 12px; min-width: 100px;"></div>' +
             '</div>' +
             '</div>' +
 
-            // RIGHT COLUMN - Tweaker Settings
+            // RIGHT - Tweaker Settings (single column)
             '<div class="twk-panel">' +
-            '<h3 style="margin: 0 0 15px 0; color: #4ae29a; text-align: center;">Tweaker</h3>' +
+            '<h3 style="margin: 0 0 12px 0; color: #4ae29a; text-align: center;">Tweaker</h3>' +
 
-            // Delay Factor
-            '<div class="twk-mb-15">' +
-            '<label style="display: block; margin-bottom: 8px; font-weight: bold; font-size: 13px;">Performance:</label>' +
-            '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">' +
-            '<label style="min-width: 85px; font-size: 12px;">Delay Factor:</label>' +
-            '<input type="number" id="delay-input" min="0.1" max="10.0" step="0.1" value="' + delayFactor + '"' +
-            ' style="width: 55px; padding: 4px; background: #1a1a1a; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; font-size: 12px;">' +
-            '<span style="font-size: 11px; color: #ccc;">' + delayFactor + 'x</span>' +
-            '</div>' +
-            '<div style="font-size: 10px; color: #999; line-height: 1.3;">Speed of multi-step collections<br>(0.5=faster, 2.0=slower)</div>' +
-            '</div>' +
+            // All settings in single column with inline descriptions
+            '<div style="display: flex; flex-direction: column; gap: 8px;">' +
 
-            // Guild Members Auto-Refresh
-            '<div class="twk-mb-15">' +
-            '<label style="display: block; margin-bottom: 8px; font-weight: bold; font-size: 13px;">Guild Members:</label>' +
-            '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">' +
-            '<label style="min-width: 85px; font-size: 12px;">Auto-Refresh:</label>' +
-            '<input type="number" id="autorefresh-input" min="60" max="600" step="30" value="' + autoRefreshInterval + '"' +
-            ' style="width: 55px; padding: 4px; background: #1a1a1a; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; font-size: 12px;">' +
-            '<span style="font-size: 11px; color: #ccc;">seconds</span>' +
-            '</div>' +
-            '<div style="font-size: 10px; color: #999; line-height: 1.3;">Speed of multi-step collections<br>(0.5=faster, 2.0=slower)</div>' +
-            '</div>' +
+            '<div style="display: flex; align-items: center; justify-content: space-between;"><span style="font-size: 11px;">Delay Factor</span><div style="display: flex; align-items: center; gap: 4px;"><input type="number" id="delay-input" min="0.1" max="10.0" step="0.1" value="' + delayFactor + '" style="width: 50px; padding: 3px; background: #1a1a1a; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; font-size: 11px; text-align: center;"><span style="font-size: 10px; color: #666;">collection speed</span></div></div>' +
 
-            '<div class="twk-mb-15">' +
-            '<div style="display: flex; align-items: center; gap: 8px;">' +
-            '<label style="display: flex; align-items: center; cursor: pointer; font-size: 12px;">' +
-            '<input type="checkbox" id="arena-stats-enabled" ' + (localStorage.getItem('hwh_arena_stats_enabled') !== 'false' ? 'checked' : '') + ' style="margin-right: 6px; cursor: pointer;">' +
-            '<span>Arena Stats Tracking</span>' +
-            '</label>' +
-            '</div>' +
-            '<div style="font-size: 10px; color: #999; line-height: 1.3; margin-top: 4px;">Disable to reduce CPU usage<br>(requires page reload)</div>' +
-            '</div>' +
+            '<div style="display: flex; align-items: center; justify-content: space-between;"><span style="font-size: 11px;">Auto Refresh</span><div style="display: flex; align-items: center; gap: 4px;"><input type="number" id="autorefresh-input" min="60" max="600" step="30" value="' + autoRefreshInterval + '" style="width: 50px; padding: 3px; background: #1a1a1a; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; font-size: 11px; text-align: center;"><span style="font-size: 10px; color: #666;">guild members</span></div></div>' +
 
-            '<div class="twk-mb-15">' +
-            '<div style="display: flex; align-items: center; gap: 8px;">' +
-            '<label style="display: flex; align-items: center; cursor: pointer; font-size: 12px;">' +
-            '<input type="checkbox" id="debug-mode-enabled" ' + (localStorage.getItem('hwh_debug_mode') === 'true' ? 'checked' : '') + ' style="margin-right: 6px; cursor: pointer;">' +
-            '<span>Debug Mode</span>' +
-            '</label>' +
-            '</div>' +
-            '<div style="font-size: 10px; color: #999; line-height: 1.3; margin-top: 4px;">Show debug logs in console<br>(requires page reload)</div>' +
-            '</div>' +
-            '</div>' + // end right column
+            '<div style="display: flex; align-items: center; justify-content: space-between;"><span style="font-size: 11px;">Notif Style</span><div style="display: flex; align-items: center; gap: 4px;"><select id="notif-style-select" style="padding: 3px; background: #1a1a1a; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; font-size: 11px;"><option value="new"' + (localStorage.getItem(NOTIF_STYLE_KEY) !== 'classic' ? ' selected' : '') + '>Modern</option><option value="classic"' + (localStorage.getItem(NOTIF_STYLE_KEY) === 'classic' ? ' selected' : '') + '>Classic</option></select><span style="font-size: 10px; color: #666;">internal alerts</span></div></div>' +
 
+            '<div style="display: flex; align-items: center; justify-content: space-between;"><span style="font-size: 11px;">Notif Min Time</span><div style="display: flex; align-items: center; gap: 4px;"><input type="number" id="notif-min-time-input" min="0.5" max="5" step="0.5" value="' + (parseFloat(localStorage.getItem(NOTIF_MIN_TIME_KEY)) || 1.0) + '" style="width: 50px; padding: 3px; background: #1a1a1a; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; font-size: 11px; text-align: center;"><span style="font-size: 10px; color: #666;">seconds visible</span></div></div>' +
+
+            '<div style="border-top: 1px solid #8b6914; margin: 4px 0;"></div>' +
+
+            '<div style="display: flex; align-items: center; justify-content: space-between;"><label style="display: flex; align-items: center; cursor: pointer; font-size: 11px;"><input type="checkbox" id="arena-stats-enabled" ' + (localStorage.getItem('hwh_arena_stats_enabled') !== 'false' ? 'checked' : '') + ' style="margin-right: 6px;">Arena Stats</label><span style="font-size: 10px; color: #666;">track battles</span></div>' +
+
+            '<div style="display: flex; align-items: center; justify-content: space-between;"><label style="display: flex; align-items: center; cursor: pointer; font-size: 11px;"><input type="checkbox" id="debug-mode-enabled" ' + (localStorage.getItem('hwh_debug_mode') === 'true' ? 'checked' : '') + ' style="margin-right: 6px;">Debug Mode</label><span style="font-size: 10px; color: #666;">console logs</span></div>' +
+
+            '<div style="display: flex; align-items: center; justify-content: space-between;"><label style="display: flex; align-items: center; cursor: pointer; font-size: 11px;"><input type="checkbox" id="enhanced-dungeon-enabled" ' + (localStorage.getItem('hwh_enhanced_dungeon') !== 'false' ? 'checked' : '') + ' style="margin-right: 6px;">🏰 Dungeon+</label><span style="font-size: 10px; color: #666;">smart teams</span></div>' +
+
+            '<div style="display: flex; align-items: center; justify-content: space-between;"><label style="display: flex; align-items: center; cursor: pointer; font-size: 11px;"><input type="checkbox" id="allow-titan-loss-enabled" ' + (localStorage.getItem('hwh_allow_titan_loss') === 'true' ? 'checked' : '') + ' style="margin-right: 6px;">💀 Allow Loss</label><span style="font-size: 10px; color: #666;">force continue</span></div>' +
+
+            '<div style="border-top: 1px solid #8b6914; margin: 4px 0;"></div>' +
+
+            '<div style="display: flex; align-items: center; justify-content: space-between;"><label style="display: flex; align-items: center; cursor: pointer; font-size: 11px;"><input type="checkbox" id="heroic-override-enabled" ' + (localStorage.getItem(HEROIC_OVERRIDE_ENABLED_KEY) === 'true' ? 'checked' : '') + ' style="margin-right: 6px;">Heroic Override</label><div style="display: flex; align-items: center; gap: 4px;"><input type="number" id="heroic-mission-id" min="1" max="500" value="' + (localStorage.getItem(HEROIC_OVERRIDE_MISSION_KEY) || '116') + '" style="width: 50px; padding: 3px; background: #1a1a1a; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; font-size: 11px; text-align: center;"><span style="font-size: 10px; color: #666;">mission ID</span></div></div>' +
+
+            '<div style="display: flex; align-items: center; justify-content: space-between;"><span style="font-size: 11px;">🧪 XP Potions</span><div style="display: flex; align-items: center; gap: 4px;"><input type="number" id="xp-potion-keep" min="0" max="9999" value="' + (localStorage.getItem(XP_POTION_KEEP_KEY) || '484') + '" style="width: 55px; padding: 3px; background: #1a1a1a; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; font-size: 11px; text-align: center;"><span style="font-size: 10px; color: #666;">keep huge</span></div></div>' +
+
+            '</div>' +
+            '</div>' + // end Tweaker panel
             '</div>' + // end grid
-            '</div>' + // end Settings tab content
+            '</div>' + // end Config tab content
 
-            // ==================== DATA TAB CONTENT ====================
-            '<div id="tab-content-data" class="twk-hidden">' +
-
-            // Two column layout for Data
+            // ==================== EXTERNAL NOTIFS TAB CONTENT ====================
+            '<div id="tab-content-notifs" class="twk-hidden">' +
             '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">' +
 
-            // LEFT COLUMN - Storage & History
-            '<div class="twk-panel">' +
-            '<h3 style="margin: 0 0 15px 0; color: #4ae29a; text-align: center;">Storage</h3>' +
+            // LEFT COLUMN - Telegram + Discord stacked
+            '<div style="display: flex; flex-direction: column; gap: 15px;">' +
 
-            // Storage Report
-            '<div class="twk-mb-15">' +
-            '<label style="display: block; margin-bottom: 8px; font-weight: bold; font-size: 13px;">💾 localStorage:</label>' +
-            '<button id="show-storage-btn" style="background: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; width: 100%;">' +
-            '📊 Show Storage Report' +
-            '</button>' +
-            '<div id="storage-display" style="margin-top: 8px; font-size: 10px; color: #ccc; display: none; max-height: 150px; overflow-y: auto;"></div>' +
+            // Telegram
+            '<div class="twk-panel">' +
+            '<h3 style="margin: 0 0 12px 0; color: #4ae29a; text-align: center;">📱 Telegram</h3>' +
+            '<label style="display: flex; align-items: center; cursor: pointer; font-size: 12px; margin-bottom: 10px;">' +
+            '<input type="checkbox" id="telegram-enabled" ' + (localStorage.getItem('hwh_telegram_enabled') === 'true' ? 'checked' : '') + ' style="margin-right: 8px;">' +
+            '<span>Enable Telegram</span>' +
+            '</label>' +
+            '<div style="margin-bottom: 8px;">' +
+            '<label style="display: block; font-size: 11px; color: #ccc; margin-bottom: 3px;">Bot Token:</label>' +
+            '<input type="text" id="telegram-token" placeholder="1234567890:ABC..." value="' + (localStorage.getItem('hwh_telegram_token') || '') + '"' +
+            ' style="width: 100%; padding: 5px; background: #1a1a1a; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; font-size: 11px; box-sizing: border-box;">' +
+            '</div>' +
+            '<div style="margin-bottom: 8px;">' +
+            '<label style="display: block; font-size: 11px; color: #ccc; margin-bottom: 3px;">Chat ID:</label>' +
+            '<input type="text" id="telegram-chatid" placeholder="123456789" value="' + (localStorage.getItem('hwh_telegram_chatid') || '') + '"' +
+            ' style="width: 100%; padding: 5px; background: #1a1a1a; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; font-size: 11px; box-sizing: border-box;">' +
+            '</div>' +
+            '<div style="font-size: 10px; color: #666; line-height: 1.3;">' +
+            'Get token from <span style="color:#0088cc;">@BotFather</span><br>' +
+            'Get chat ID from <span style="color:#0088cc;">@userinfobot</span>' +
+            '</div>' +
             '</div>' +
 
-            // History Data Management
-            '<div class="twk-mb-15">' +
-            '<label style="display: block; margin-bottom: 8px; font-weight: bold; font-size: 13px;">📜 History Data:</label>' +
-            '<div id="history-data-list" style="font-size: 11px; color: #ccc; margin-bottom: 8px;"></div>' +
-            '<button id="clear-all-history-btn" style="background: #c0392b; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; width: 100%; margin-top: 8px;">' +
-            '🗑️ Clear All History' +
-            '</button>' +
+            // Discord
+            '<div class="twk-panel">' +
+            '<h3 style="margin: 0 0 12px 0; color: #4ae29a; text-align: center;">🔔 Discord</h3>' +
+            '<label style="display: flex; align-items: center; cursor: pointer; font-size: 12px; margin-bottom: 10px;">' +
+            '<input type="checkbox" id="discord-enabled" ' + (localStorage.getItem(DISCORD_ENABLED_KEY) === 'true' ? 'checked' : '') + ' style="margin-right: 8px;">' +
+            '<span>Enable Discord</span>' +
+            '</label>' +
+            '<div style="margin-bottom: 8px;">' +
+            '<label style="display: block; font-size: 11px; color: #ccc; margin-bottom: 3px;">Webhook URL:</label>' +
+            '<input type="text" id="discord-webhook" placeholder="https://discord.com/api/webhooks/..." value="' + (localStorage.getItem(DISCORD_WEBHOOK_KEY) || '') + '"' +
+            ' style="width: 100%; padding: 5px; background: #1a1a1a; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; font-size: 11px; box-sizing: border-box;">' +
+            '</div>' +
+            '<div style="font-size: 10px; color: #666; line-height: 1.3;">' +
+            'Server Settings → Integrations<br>' +
+            '→ Webhooks → New Webhook → Copy URL' +
+            '</div>' +
             '</div>' +
 
             '</div>' + // end left column
 
-            // RIGHT COLUMN - Notifications & Diagnostics
-            '<div style="display: flex; flex-direction: column; gap: 15px;">' +
-
-            // Notifications box
+            // RIGHT COLUMN - Routing table
             '<div class="twk-panel">' +
-            '<h3 style="margin: 0 0 15px 0; color: #4ae29a; text-align: center;">Notifications</h3>' +
+            '<h3 style="margin: 0 0 10px 0; color: #4ae29a; text-align: center; font-size: 13px;">📋 Notification Routing</h3>' +
+            '<div style="font-size: 10px; color: #666; margin-bottom: 10px; text-align: center;">Choose which alerts go where</div>' +
 
-            // Telegram Notifications
-            '<div class="twk-mb-15">' +
-            '<label style="display: block; margin-bottom: 8px; font-weight: bold; font-size: 13px;">📱 Telegram:</label>' +
-            '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">' +
-            '<label style="display: flex; align-items: center; cursor: pointer; font-size: 12px;">' +
-            '<input type="checkbox" id="telegram-enabled" ' + (localStorage.getItem('hwh_telegram_enabled') === 'true' ? 'checked' : '') + ' style="margin-right: 6px; cursor: pointer;">' +
-            '<span>Enable Notifications</span>' +
-            '</label>' +
-            '</div>' +
-            '<div style="margin-bottom: 12px;">' +
-            '<label style="display: block; font-size: 11px; color: #ccc; margin-bottom: 3px;">Bot Token:</label>' +
-            '<input type="text" id="telegram-token" placeholder="1234567890:ABC..." value="' + (localStorage.getItem('hwh_telegram_token') || '') + '"' +
-            ' style="width: 100%; padding: 6px; background: #1a1a1a; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; font-size: 11px; box-sizing: border-box;">' +
-            '</div>' +
-            '<div style="margin-bottom: 12px;">' +
-            '<label style="display: block; font-size: 11px; color: #ccc; margin-bottom: 3px;">Chat ID:</label>' +
-            '<input type="text" id="telegram-chatid" placeholder="123456789" value="' + (localStorage.getItem('hwh_telegram_chatid') || '') + '"' +
-            ' style="width: 100%; padding: 6px; background: #1a1a1a; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; font-size: 11px; box-sizing: border-box;">' +
-            '</div>' +
-            '<button id="test-telegram-btn" style="background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; width: 100%;">' +
-            '📱 Test Notification' +
+            '<table style="width: 100%; font-size: 11px; border-collapse: collapse;">' +
+            '<thead><tr>' +
+            '<th style="text-align: left; padding: 6px; border-bottom: 1px solid #8b6914; color: #ffd700;">Alert Type</th>' +
+            '<th style="text-align: center; padding: 6px; border-bottom: 1px solid #8b6914; color: #ffd700;">📱</th>' +
+            '<th style="text-align: center; padding: 6px; border-bottom: 1px solid #8b6914; color: #ffd700;">🔔</th>' +
+            '</tr></thead>' +
+            '<tbody id="notif-routing-table"></tbody>' +
+            '</table>' +
+
+            // Test button inside routing panel
+            '<div style="margin-top: 15px; padding-top: 12px; border-top: 1px solid #8b6914; text-align: center;">' +
+            '<button id="test-notifs-btn" style="background: #3498db; color: white; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;">' +
+            '🔔 Test Notifications' +
             '</button>' +
-            '<div style="font-size: 10px; color: #999; line-height: 1.3; margin-top: 8px;">Get bot token from @BotFather<br>Get chat ID from @userinfobot</div>' +
+            '<div style="font-size: 10px; color: #666; margin-top: 5px;">Sends to all enabled services</div>' +
             '</div>' +
 
-            '</div>' + // end Notifications box
+            '</div>' + // end right column (routing)
 
-            // Diagnostics box
+            '</div>' + // end grid
+            '</div>' + // end Notifs tab content
+
+            // ==================== DATA TAB CONTENT ====================
+            '<div id="tab-content-data" class="twk-hidden">' +
+            '<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">' +
+
+            // LEFT - Storage
             '<div class="twk-panel">' +
-            '<h3 style="margin: 0 0 15px 0; color: #4ae29a; text-align: center;">Diagnostics</h3>' +
-            '<button id="show-performance-btn" style="background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; width: 100%;">' +
-            '📊 Show Performance Stats' +
+            '<h3 style="margin: 0 0 12px 0; color: #4ae29a; text-align: center; font-size: 13px;">💾 Storage</h3>' +
+            '<button id="show-storage-btn" style="background: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; width: 100%;">' +
+            '📊 Show Report' +
             '</button>' +
-            '<div id="performance-display" style="margin-top: 8px; font-size: 11px; color: #ccc; display: none;"></div>' +
-            '</div>' + // end Diagnostics box
+            '<div id="storage-display" style="margin-top: 8px; font-size: 10px; color: #ccc; display: none; max-height: 200px; overflow-y: auto;"></div>' +
+            '</div>' +
 
-            '</div>' + // end right column
+            // MIDDLE - History
+            '<div class="twk-panel">' +
+            '<h3 style="margin: 0 0 12px 0; color: #4ae29a; text-align: center; font-size: 13px;">📜 History</h3>' +
+            '<div id="history-data-list" style="font-size: 10px; color: #ccc; max-height: 150px; overflow-y: auto;"></div>' +
+            '<button id="clear-all-history-btn" style="background: #c0392b; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold; width: 100%; margin-top: 10px;">' +
+            '🗑️ Clear All' +
+            '</button>' +
+            '</div>' +
+
+            // RIGHT - Diagnostics
+            '<div class="twk-panel">' +
+            '<h3 style="margin: 0 0 12px 0; color: #4ae29a; text-align: center; font-size: 13px;">🔧 Diagnostics</h3>' +
+            '<button id="show-performance-btn" style="background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; width: 100%;">' +
+            '📊 Performance' +
+            '</button>' +
+            '<div id="performance-display" style="margin-top: 8px; font-size: 10px; color: #ccc; display: none;"></div>' +
+            '</div>' +
 
             '</div>' + // end grid
             '</div>' + // end Data tab content
 
-            // ==================== PREFERENCES TAB CONTENT ====================
-            '<div id="tab-content-prefs" class="twk-hidden">' +
-            '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">' +
-
-            // LEFT COLUMN - Daily Quest Preferences
-            '<div class="twk-panel">' +
-            '<h3 style="margin: 0 0 15px 0; color: #4ae29a; text-align: center;">🎯 Daily Quest Preferences</h3>' +
-
-            // Heroic Mission Override
-            '<div class="twk-mb-15">' +
-            '<label style="display: block; margin-bottom: 8px; font-weight: bold; font-size: 13px;">Heroic Mission Override:</label>' +
-            '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">' +
-            '<label style="display: flex; align-items: center; cursor: pointer; font-size: 12px;">' +
-            '<input type="checkbox" id="heroic-override-enabled" ' + (localStorage.getItem(HEROIC_OVERRIDE_ENABLED_KEY) === 'true' ? 'checked' : '') + ' style="margin-right: 6px; cursor: pointer;">' +
-            '<span>Enable Override</span>' +
-            '</label>' +
-            '</div>' +
-            '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">' +
-            '<label style="min-width: 100px; font-size: 12px;">Mission ID:</label>' +
-            '<input type="number" id="heroic-mission-id" min="1" max="500" value="' + (localStorage.getItem(HEROIC_OVERRIDE_MISSION_KEY) || '116') + '"' +
-            ' style="width: 70px; padding: 4px; background: #1a1a1a; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; font-size: 12px;">' +
-            '</div>' +
-            '<div style="font-size: 10px; color: #999; line-height: 1.3;">Override the heroic mission for daily quest.<br>Default: 116 (Aurora Ch.9)<br>Useful when all heroes are 6⭐</div>' +
-            '<button id="test-heroic-btn" style="background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; width: 100%; margin-top: 10px;">' +
-            '🧪 Test Override' +
-            '</button>' +
-            '</div>' +
-
-            '</div>' + // end left column
-
-            // RIGHT COLUMN - Collect More Preferences
-            '<div class="twk-panel">' +
-            '<h3 style="margin: 0 0 15px 0; color: #4ae29a; text-align: center;">📦 Collect More</h3>' +
-
-            // XP Potion Keep Amount
-            '<div class="twk-mb-15">' +
-            '<label style="display: block; margin-bottom: 8px; font-weight: bold; font-size: 13px;">🧪 Sell XP Potions:</label>' +
-            '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">' +
-            '<label style="min-width: 100px; font-size: 12px;">Keep Huge:</label>' +
-            '<input type="number" id="xp-potion-keep" min="0" max="9999" value="' + (localStorage.getItem(XP_POTION_KEEP_KEY) || '484') + '"' +
-            ' style="width: 70px; padding: 4px; background: #1a1a1a; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; font-size: 12px;">' +
-            '</div>' +
-            '<div style="font-size: 10px; color: #999; line-height: 1.3;">Sells all Small/Medium/Large potions.<br>Keeps this many Huge (libId 12).<br>Default: 484 (for hero 1→130)</div>' +
-            '</div>' +
-
-            '</div>' + // end right column
-
-            '</div>' + // end grid
-            '</div>' + // end Preferences tab content
-
-            // Buttons section - all on one row
+            // Buttons section
             '<div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #8b6914;">' +
             '<div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">' +
 
             // Left side - Backup/Restore buttons
             '<div style="display: flex; gap: 6px;">' +
-            '<button id="backup-download-btn" style="background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; white-space: nowrap;">' +
-            '💾 Download' +
-            '</button>' +
-            '<button id="backup-clipboard-btn" style="background: #3498db; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; white-space: nowrap;">' +
-            '📋 Copy' +
-            '</button>' +
-            '<button id="restore-upload-btn" style="background: #e67e22; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; white-space: nowrap;">' +
-            '📂 Upload' +
-            '</button>' +
-            '<button id="restore-clipboard-btn" style="background: #9b59b6; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; white-space: nowrap;">' +
-            '📄 Paste' +
-            '</button>' +
+            '<button id="backup-download-btn" style="background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">💾 Download</button>' +
+            '<button id="backup-clipboard-btn" style="background: #3498db; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">📋 Copy</button>' +
+            '<button id="restore-upload-btn" style="background: #e67e22; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">📂 Upload</button>' +
+            '<button id="restore-clipboard-btn" style="background: #9b59b6; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">🔄 Paste</button>' +
             '</div>' +
 
             // Right side - Close button
@@ -20656,25 +24415,156 @@ ${preTasks.length ? `
 
         document.body.appendChild(popup);
 
-        // Tab switching logic
-        const tabSettings = popup.querySelector('#tab-settings');
+        // ==================== TAB SWITCHING ====================
+        const tabConfig = popup.querySelector('#tab-config');
+        const tabNotifs = popup.querySelector('#tab-notifs');
         const tabData = popup.querySelector('#tab-data');
-        const tabPrefs = popup.querySelector('#tab-prefs');
-        const contentSettings = popup.querySelector('#tab-content-settings');
+        const contentConfig = popup.querySelector('#tab-content-config');
+        const contentNotifs = popup.querySelector('#tab-content-notifs');
         const contentData = popup.querySelector('#tab-content-data');
-        const contentPrefs = popup.querySelector('#tab-content-prefs');
 
         const switchTab = (activeTab, activeContent, inactiveTabs, inactiveContents) => {
             activeTab.style.background = '#8b6914';
             activeTab.style.color = '#ffd700';
+            activeContent.classList.remove('twk-hidden');
             activeContent.style.display = 'block';
             inactiveTabs.forEach(t => { t.style.background = '#3a2a1a'; t.style.color = '#999'; });
             inactiveContents.forEach(c => { c.style.display = 'none'; });
         };
 
-        tabSettings.onclick = () => switchTab(tabSettings, contentSettings, [tabData, tabPrefs], [contentData, contentPrefs]);
-        tabData.onclick = () => switchTab(tabData, contentData, [tabSettings, tabPrefs], [contentSettings, contentPrefs]);
-        tabPrefs.onclick = () => switchTab(tabPrefs, contentPrefs, [tabSettings, tabData], [contentSettings, contentData]);
+        tabConfig.onclick = () => switchTab(tabConfig, contentConfig, [tabNotifs, tabData], [contentNotifs, contentData]);
+        tabNotifs.onclick = () => switchTab(tabNotifs, contentNotifs, [tabConfig, tabData], [contentConfig, contentData]);
+        tabData.onclick = () => switchTab(tabData, contentData, [tabConfig, tabNotifs], [contentConfig, contentNotifs]);
+        // ==================== NOTIFICATION HANDLERS ====================
+
+        // Telegram handlers
+        document.getElementById('telegram-enabled').addEventListener('change', function() {
+            localStorage.setItem('hwh_telegram_enabled', this.checked ? 'true' : 'false');
+        });
+
+        document.getElementById('telegram-token').addEventListener('input', function() {
+            localStorage.setItem('hwh_telegram_token', this.value.trim());
+        });
+
+        document.getElementById('telegram-chatid').addEventListener('input', function() {
+            localStorage.setItem('hwh_telegram_chatid', this.value.trim());
+        });
+
+        // Discord handlers
+        document.getElementById('discord-enabled').addEventListener('change', function() {
+            localStorage.setItem(DISCORD_ENABLED_KEY, this.checked ? 'true' : 'false');
+        });
+
+        document.getElementById('discord-webhook').addEventListener('input', function() {
+            localStorage.setItem(DISCORD_WEBHOOK_KEY, this.value.trim());
+        });
+
+        // Notification routing table
+        const routingTable = document.getElementById('notif-routing-table');
+        if (routingTable) {
+            const routes = getNotifRoutes();
+
+            Object.keys(NOTIF_TYPE_LABELS).forEach(type => {
+                const route = routes[type] || { telegram: false, discord: false };
+                const row = document.createElement('tr');
+                row.innerHTML =
+                    '<td style="padding: 8px 6px; border-bottom: 1px solid #3a2a1a;">' + NOTIF_TYPE_LABELS[type] + '</td>' +
+                    '<td style="text-align: center; padding: 8px 6px; border-bottom: 1px solid #3a2a1a;">' +
+                    '<input type="checkbox" class="notif-route-cb" data-type="' + type + '" data-service="telegram"' + (route.telegram ? ' checked' : '') + ' style="cursor: pointer; width: 16px; height: 16px;">' +
+                    '</td>' +
+                    '<td style="text-align: center; padding: 8px 6px; border-bottom: 1px solid #3a2a1a;">' +
+                    '<input type="checkbox" class="notif-route-cb" data-type="' + type + '" data-service="discord"' + (route.discord ? ' checked' : '') + ' style="cursor: pointer; width: 16px; height: 16px;">' +
+                    '</td>';
+                routingTable.appendChild(row);
+            });
+
+            // Handle routing changes
+            routingTable.querySelectorAll('.notif-route-cb').forEach(cb => {
+                cb.onchange = function() {
+                    const routes = getNotifRoutes();
+                    const type = this.dataset.type;
+                    const service = this.dataset.service;
+                    if (!routes[type]) routes[type] = { telegram: false, discord: false };
+                    routes[type][service] = this.checked;
+                    saveNotifRoutes(routes);
+                    debugLog('📋 Notification route updated:', type, service, this.checked);
+                };
+            });
+        }
+
+        // Unified test button
+        document.getElementById('test-notifs-btn').addEventListener('click', async function() {
+            const telegramEnabled = document.getElementById('telegram-enabled').checked;
+            const discordEnabled = document.getElementById('discord-enabled').checked;
+
+            if (!telegramEnabled && !discordEnabled) {
+                alert('Please enable at least one notification service');
+                return;
+            }
+
+            this.disabled = true;
+            this.textContent = '⏳ Sending...';
+
+            const results = [];
+            const testMessage = '🏰 HWH Tweaker test notification!\n\nExternal notifications are working! ✅';
+
+            // Test Telegram
+            if (telegramEnabled) {
+                const token = document.getElementById('telegram-token').value.trim();
+                const chatId = document.getElementById('telegram-chatid').value.trim();
+
+                if (!token || !chatId) {
+                    results.push('📱 Telegram: ⚠️ Missing token or chat ID');
+                } else {
+                    try {
+                        const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({ chat_id: chatId, text: testMessage })
+                        });
+                        const result = await response.json();
+                        results.push(result.ok ? '📱 Telegram: ✅ Sent!' : '📱 Telegram: ❌ ' + (result.description || 'Failed'));
+                    } catch (e) {
+                        results.push('📱 Telegram: ❌ ' + e.message);
+                    }
+                }
+            }
+
+            // Test Discord
+            if (discordEnabled) {
+                const webhook = document.getElementById('discord-webhook').value.trim();
+
+                if (!webhook) {
+                    results.push('🔔 Discord: ⚠️ Missing webhook URL');
+                } else if (!webhook.startsWith('https://discord.com/api/webhooks/')) {
+                    results.push('🔔 Discord: ⚠️ Invalid webhook URL');
+                } else {
+                    try {
+                        const response = await fetch(webhook, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                username: 'HWH Tweaker',
+                                embeds: [{
+                                    title: '🏰 Test Notification',
+                                    description: 'External notifications are working! ✅',
+                                    color: 0xffd700,
+                                    timestamp: new Date().toISOString()
+                                }]
+                            })
+                        });
+                        results.push(response.status === 204 || response.ok ? '🔔 Discord: ✅ Sent!' : '🔔 Discord: ❌ Status ' + response.status);
+                    } catch (e) {
+                        results.push('🔔 Discord: ❌ ' + e.message);
+                    }
+                }
+            }
+
+            this.disabled = false;
+            this.textContent = '🔔 Test Notifications';
+            alert(results.join('\n'));
+        });
+
 
         // Storage report button handler
         const showStorageBtn = popup.querySelector('#show-storage-btn');
@@ -20852,8 +24742,7 @@ ${preTasks.length ? `
                 const realCheckbox = settingsDetails.querySelector(`input[type="checkbox"][data-name="${item.name}"]`);
                 if (realCheckbox) {
                     const wrapper = document.createElement('label');
-                    wrapper.style.cssText = 'display: flex; align-items: center; cursor: pointer; padding: 3px; margin-bottom: 4px; font-size: 12px;';
-
+                    wrapper.style.cssText = 'display: flex; align-items: center; cursor: pointer; padding: 2px; font-size: 11px;';
                     const clonedCheckbox = document.createElement('input');
                     clonedCheckbox.type = 'checkbox';
                     clonedCheckbox.checked = realCheckbox.checked;
@@ -20950,41 +24839,7 @@ ${preTasks.length ? `
             localStorage.setItem('hwh_telegram_chatid', this.value.trim());
         });
 
-        document.getElementById('test-telegram-btn').addEventListener('click', async function() {
-            const enabled = document.getElementById('telegram-enabled').checked;
-            const token = document.getElementById('telegram-token').value.trim();
-            const chatId = document.getElementById('telegram-chatid').value.trim();
 
-            if (!enabled) {
-                alert('Please enable Telegram notifications first');
-                return;
-            }
-
-            if (!token || !chatId) {
-                alert('Please enter both Bot Token and Chat ID');
-                return;
-            }
-
-            try {
-                const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        chat_id: chatId,
-                        text: '🏰 HW Tweaker test notification!\n\nTelegram notifications are working! ✅'
-                    })
-                });
-
-                const result = await response.json();
-                if (result.ok) {
-                    alert('✅ Test notification sent successfully!');
-                } else {
-                    alert('❌ Failed to send: ' + (result.description || 'Unknown error'));
-                }
-            } catch (error) {
-                alert('❌ Error: ' + error.message);
-            }
-        });
 
         // Arena stats toggle handler
         document.getElementById('arena-stats-enabled').addEventListener('change', function() {
@@ -20997,6 +24852,51 @@ ${preTasks.length ? `
             localStorage.setItem('hwh_debug_mode', this.checked ? 'true' : 'false');
             console.log('🔧 Debug mode:', this.checked ? 'enabled' : 'disabled', '(reload required)');
         });
+
+        // Enhanced Dungeon toggle handler
+        document.getElementById('enhanced-dungeon-enabled').addEventListener('change', function() {
+            localStorage.setItem('hwh_enhanced_dungeon', this.checked ? 'true' : 'false');
+            if (this.checked) {
+                if (typeof initEnhancedDungeon === 'function') {
+                    initEnhancedDungeon();
+                    debugLog('🏰 Enhanced Dungeon: enabled');
+                }
+            } else {
+                if (typeof disableEnhancedDungeon === 'function') {
+                    disableEnhancedDungeon();
+                    debugLog('🏰 Enhanced Dungeon: disabled (using default)');
+                }
+            }
+        });
+        // Allow Titan Loss toggle handler
+        document.getElementById('allow-titan-loss-enabled')?.addEventListener('change', function() {
+            localStorage.setItem('hwh_allow_titan_loss', this.checked ? 'true' : 'false');
+            debugLog('💀 Allow Titan Loss:', this.checked ? 'enabled' : 'disabled');
+        });
+
+        // Notification min time handler
+        const notifMinTimeInput = document.getElementById('notif-min-time-input');
+        if (notifMinTimeInput) {
+            notifMinTimeInput.addEventListener('wheel', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+
+            notifMinTimeInput.addEventListener('blur', function() {
+                const val = parseFloat(this.value);
+                if (!isNaN(val) && val >= 0.5 && val <= 5) {
+                    localStorage.setItem(NOTIF_MIN_TIME_KEY, val.toString());
+                    debugLog('✅ Notification min time:', val + 's');
+                }
+            });
+        }
+        const notifStyleSelect = popup.querySelector('#notif-style-select');
+        if (notifStyleSelect) {
+            notifStyleSelect.onchange = function() {
+                localStorage.setItem(NOTIF_STYLE_KEY, this.value);
+                updateNotifModeClass();  // Add this line
+                debugLog('📋 Notification style:', this.value);
+            };
+        }
 
         // Heroic Override handlers
         const heroicOverrideCheckbox = popup.querySelector('#heroic-override-enabled');
@@ -21181,11 +25081,10 @@ ${preTasks.length ? `
             };
         }
 
-        document.getElementById('close-tweaker-popup').onclick = closeDialog;
-
+        document.getElementById('close-tweaker-popup').onclick = () => popup.remove();
         popup.onclick = function(e) {
             if (e.target === popup) {
-                closeDialog();
+                popup.remove();
             }
         };
     };
@@ -21220,9 +25119,7 @@ ${preTasks.length ? `
             if (totalBytes > WARNING_THRESHOLD_MB * 1024 * 1024) {
                 console.warn(`⚠️ HWH Tweaker: localStorage at ${totalMB} MB (limit ~5 MB)`);
                 setTimeout(() => {
-                    if (HWHFuncs?.setProgress) {
-                        HWHFuncs.setProgress(`⚠️ Storage: ${totalMB} MB - Clear old data in Settings`, 8000);
-                    }
+                    TweakerNotifications.error('⚠️', 'Storage Warning', `${totalMB} MB - Clear old data in Settings`);
                 }, 5000);
             }
             localStorage.setItem(STORAGE_CHECK_KEY, Date.now().toString());
@@ -21290,6 +25187,17 @@ ${preTasks.length ? `
                     initializeAdventureExtension();
                 } catch (error) {
                     console.error('Error initializing adventure extension:', error);
+                }
+            }),
+
+            // Enhanced Dungeon  <-- ADD THIS BLOCK
+            Promise.resolve().then(() => {
+                try {
+                    if (typeof initEnhancedDungeon === 'function') {
+                        initEnhancedDungeon();
+                    }
+                } catch (error) {
+                    console.error('Error initializing enhanced dungeon:', error);
                 }
             }),
 
@@ -26139,11 +30047,17 @@ transition: all 0.2s;
                         return originalSend.call(this, data);
                     }
 
-                    // Quick string check before expensive JSON parse
-                    const dataStr = typeof data === 'string' ? data : '';
-                    const mightBeRelevant = TRACKED_CALLS.some(t => dataStr.includes(t));
-
-                    if (!mightBeRelevant) {
+                    // Decode ArrayBuffer if needed, then quick string check
+                    let dataStr = '';
+                    if (typeof data === 'string') {
+                        dataStr = data;
+                    } else if (data instanceof ArrayBuffer || (data && data.buffer instanceof ArrayBuffer)) {
+                        try {
+                            dataStr = new TextDecoder().decode(data);
+                        } catch(e) {}
+                    }
+                    const hasTrackedCall = TRACKED_CALLS.some(name => dataStr.includes(name));
+                    if (!hasTrackedCall) {
                         return originalSend.call(this, data);
                     }
 
@@ -26234,6 +30148,14 @@ transition: all 0.2s;
                                                     addBattleToHistory(arenaHistory, STORAGE_KEY_ARENA, battleRecord, 1);
                                                 }
                                             }
+                                            // Update arena place from state object
+                                            const newArenaPlace = responseData?.state?.arenaPlace;
+                                            if (newArenaPlace !== undefined && window._tsbCache) {
+                                                window._tsbCache.arenaPlace = newArenaPlace;
+                                                const arenaEl = document.getElementById('tsb-arena-place');
+                                                if (arenaEl) arenaEl.textContent = newArenaPlace;
+                                                debugLog('🏟️ Arena rank updated:', newArenaPlace);
+                                            }
                                         }
 
                                         // Grand arena battle completed
@@ -26258,6 +30180,14 @@ transition: all 0.2s;
                                                     debugLog('💾 Saving grand arena battle');
                                                     addBattleToHistory(grandHistory, STORAGE_KEY_GRAND, battleRecord, 2);
                                                 }
+                                            }
+                                            // Update grand place from state object
+                                            const newGrandPlace = responseData?.state?.grandPlace;
+                                            if (newGrandPlace !== undefined && window._tsbCache) {
+                                                window._tsbCache.grandPlace = newGrandPlace;
+                                                const grandEl = document.getElementById('tsb-grand-place');
+                                                if (grandEl) grandEl.textContent = newGrandPlace;
+                                                debugLog('🏆 Grand arena rank updated:', newGrandPlace);
                                             }
                                         }
                                     });
@@ -26527,15 +30457,41 @@ transition: all 0.2s;
 
             const savedUsers = JSON.parse(localStorage.getItem('quickChatUsers') || '[]');
             let guildMembers = [];
-            let selectedRecipient = null;
-            let selectedMembers = new Set();
+
+            // Make guildMembers accessible to chat dock
+            window.liveData = window.liveData || {};
+            window.liveData.guildMembers = {};
+            window.liveData.userInfo = window.liveData.userInfo || {};
+
+            // Make getCountryFlag globally available
+            window.getCountryFlag = function(country) {
+                if (!country) return '';
+                const flags = {
+                    'usa': '🇺🇸', 'united states': '🇺🇸', 'us': '🇺🇸', 'america': '🇺🇸',
+                    'uk': '🇬🇧', 'united kingdom': '🇬🇧', 'england': '🇬🇧', 'britain': '🇬🇧',
+                    'canada': '🇨🇦', 'germany': '🇩🇪', 'france': '🇫🇷', 'spain': '🇪🇸',
+                    'italy': '🇮🇹', 'russia': '🇷🇺', 'china': '🇨🇳', 'japan': '🇯🇵',
+                    'south korea': '🇰🇷', 'korea': '🇰🇷', 'brazil': '🇧🇷', 'mexico': '🇲🇽',
+                    'australia': '🇦🇺', 'india': '🇮🇳', 'netherlands': '🇳🇱', 'poland': '🇵🇱',
+                    'sweden': '🇸🇪', 'norway': '🇳🇴', 'denmark': '🇩🇰', 'finland': '🇫🇮',
+                    'ukraine': '🇺🇦', 'turkey': '🇹🇷', 'israel': '🇮🇱', 'argentina': '🇦🇷',
+                    'portugal': '🇵🇹', 'ireland': '🇮🇪', 'switzerland': '🇨🇭', 'austria': '🇦🇹',
+                    'belgium': '🇧🇪', 'greece': '🇬🇷', 'czech': '🇨🇿', 'romania': '🇷🇴',
+                    'hungary': '🇭🇺', 'philippines': '🇵🇭', 'indonesia': '🇮🇩', 'thailand': '🇹🇭',
+                    'vietnam': '🇻🇳', 'singapore': '🇸🇬', 'malaysia': '🇲🇾', 'new zealand': '🇳🇿',
+                    'south africa': '🇿🇦', 'egypt': '🇪🇬', 'saudi arabia': '🇸🇦', 'uae': '🇦🇪',
+                    'colombia': '🇨🇴', 'chile': '🇨🇱', 'peru': '🇵🇪'
+                };
+                return flags[country.toLowerCase()] || '';
+            };
+
             let currentSortMode = 'alphabetical'; // Default sort mode (A-Z within groups)
 
             let sidebarWidth = parseInt(localStorage.getItem('hwh_chat_sidebar_width') || '224');
 
             let warStatus = {
-                gw: { active: false, tries: 0, targets: 0 },
-                cow: { active: false, heroTries: 0, titanTries: 0, heroTargets: 0, titanTargets: 0 }
+                gw: { active: false, tries: 0, targets: 0, points: 0, enemyPoints: 0 },
+                cow: { active: false, heroTries: 0, titanTries: 0, heroTargets: 0, titanTargets: 0, points: 0, enemyPoints: 0 }
             };
 
             const sidebar = document.createElement('div');
@@ -26773,23 +30729,7 @@ transition: all 0.2s;
                 line-height: 1.1;
             }
 
-            .members-header {
-                display: flex;
-                justify-content: flex-end;
-                align-items: center;
-                padding: 2px 0;
-                border-bottom: 1px solid #8b6914;
-                margin-bottom: 1px;
-                font-size: 10px;
-            }
-            /* Hide the entire header when PM all button is not visible */
-.members-header:has(.pm-all-btn[style*="display: none"]) {
-    display: none;
-}
-            .members-header-buttons {
-                display: flex;
-                gap: 4px;
-            }
+
 .members-list {
     flex: 1;
     overflow-y: auto;
@@ -26804,11 +30744,12 @@ transition: all 0.2s;
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 2px 2px 2px 6px;  /* CHANGED: reduced from 3px to 2px */
+    padding: 2px 2px 2px 6px;
     border-bottom: 1px solid #333;
     border-left: 3px solid transparent;
     cursor: pointer;
     transition: all 0.2s ease;
+    min-height: 22px;  /* ADD THIS */
 }
             .member-item:hover {
                 background: rgba(139,105,20,0.2);
@@ -26817,48 +30758,7 @@ transition: all 0.2s;
             .member-item.online {
                 border-left-color: #4ae29a;
             }
-.member-checkbox {
-    width: 14px;              /* CHANGED: reduced from 16px to 14px */
-    height: 14px;             /* CHANGED: reduced from 16px to 14px */
-    cursor: pointer;
-    flex-shrink: 0;
-    appearance: none;
-    -webkit-appearance: none;
-    background: #8b6914;
-    border: 2px solid #a67c16;
-    border-radius: 3px;
-    position: relative;
-}
 
-.member-checkbox:checked::after {
-    content: '✓';
-    position: absolute;
-    top: -3px;               /* CHANGED: adjusted for smaller size */
-    left: 1px;               /* CHANGED: adjusted for smaller size */
-    font-size: 12px;         /* CHANGED: reduced from 14px to 12px */
-    font-weight: bold;
-    color: #ffd700;
-}
-
-#select-all-members {
-    width: 14px;             /* CHANGED: reduced from 16px to 14px */
-    height: 14px;            /* CHANGED: reduced from 16px to 14px */
-    appearance: none;
-    -webkit-appearance: none;
-    background: #8b6914;
-    border: 2px solid #ffd700;
-    border-radius: 3px;
-    position: relative;
-}
-#select-all-members:checked::after {
-    content: '✓';
-    position: absolute;
-    top: -3px;               /* CHANGED: adjusted for smaller size */
-    left: 1px;               /* CHANGED: adjusted for smaller size */
-    font-size: 12px;         /* CHANGED: reduced from 14px to 12px */
-    font-weight: bold;
-    color: #ffd700;
-}
             .member-info {
                 flex: 1;
                 display: flex;
@@ -26909,27 +30809,8 @@ transition: all 0.2s;
     flex-shrink: 0;
 }
 
-            .mass-pm-btn {
-                width: 100%;
-                margin-top: 8px;
-                background: linear-gradient(135deg, #4ae29a 0%, #2d8f5f 100%);
-                color: #fff;
-                border: 1px solid #5ef3a8;
-                padding: 10px;
-                border-radius: 5px;
-                cursor: pointer;
-                font-weight: bold;
-                font-size: 12px;
-                transition: all 0.2s ease;
-                display: none;
-            }
-            .mass-pm-btn:hover {
-                background: linear-gradient(135deg, #5ef3a8 0%, #4ae29a 100%);
-                transform: translateY(-1px);
-                box-shadow: 0 3px 6px rgba(0,0,0,0.3);
-            }
 
-.refresh-btn, .pm-all-btn {
+.refresh-btn {
                 background: #8b6914;
                 color: #ffd700;
                 border: 1px solid #8b6914;
@@ -27052,29 +30933,24 @@ transition: all 0.2s;
     </div>
 </div>
 
-        <!-- Tabs - NOW WITH STATS -->
+<!-- Tabs - Guild + Notifications -->
         <div class="chat-tabs">
             <button class="tab-btn members-tab active" data-tab="members">
                 👥 Guild
             </button>
-            <button class="tab-btn chat-tab" data-tab="chat">
-                💬 Chat
-            </button>
-            <button class="tab-btn stats-tab" data-tab="stats">
-                📊 Arena
+            <button class="tab-btn notifs-tab" data-tab="notifs">
+                🔔 Notifs
             </button>
         </div>
 
 <!-- Members Tab with Mass PM -->
 <div class="tab-content members-content active">
-    <div class="select-all-container">
+<div class="select-all-container">
         <div class="select-all-left">
-            <input type="checkbox" id="select-all-members" class="member-checkbox">
-            <label for="select-all-members">PM all</label>
+            <button id="openChatDockBtn" style="background: #6d5210; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; padding: 2px 8px; font-size: 10px; cursor: pointer;">💬 Chat</button>
         </div>
   <div style="display: flex; align-items: center; gap: 6px;">
             <span class="online-count"><span>Online</span><span><span id="onlineCount">0</span>/<span id="totalCount">0</span></span></span>
-            <span id="warStatusDisplay" style="font-size: 10px; font-weight: bold;"></span>
 
 <!-- Compact Sort & Refresh Buttons -->
           <button class="refresh-btn" id="refreshMembersBtn">🔄</button>
@@ -27082,11 +30958,7 @@ transition: all 0.2s;
         </div>
     </div>
 
-    <div class="members-header">
-        <div class="members-header-buttons">
-<button class="pm-all-btn" id="pmAllBtn" style="display: none;">📤 PM All</button>
-        </div>
-    </div>
+
 
             <div class="members-list" id="membersList" style="overflow-y: visible;">
                 <div style="text-align: center; color: #999; font-size: 10px; padding: 20px;">
@@ -27095,62 +30967,116 @@ transition: all 0.2s;
             </div>
         </div>
 
-        <!-- Chat Tab -->
-        <div class="tab-content chat-content">
-            <div class="chat-section">
-                <h4 style="margin: 0 0 8px; font-size: 11px; color: #ffd700;">SEND MESSAGE TO:</h4>
-                <button class="open-game-chat-btn" id="openGameChatBtn" style="width: 100%; padding: 8px; margin-bottom: 8px; background: #6d5210; color: #ffd700; border: 1px solid #8b6914; border-radius: 4px; cursor: pointer; font-size: 10px;">
-                    💬 Open Game Chat
-                </button>
-                <button class="recipient-btn guild-chat-btn" data-type="guild" style="width: 100%; padding: 8px; background: #8b6914; color: #ffd700; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 10px;">
-                    📢 Guild Chat (Quick)
-                </button>
 
-<!-- Direct User ID Input -->
-                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #8b6914;">
-                    <h4 style="margin: 0 0 8px; font-size: 11px; color: #ffd700;">DIRECT USER ID:</h4>
-                    <div style="display: flex; gap: 4px; margin-bottom: 8px;">
-                        <input type="text" id="directUserIdInput" placeholder="Enter User ID..." style="flex: 1; padding: 6px; background: rgba(0,0,0,0.3); border: 1px solid #8b6914; border-radius: 4px; color: #ffd700; font-size: 10px;">
-                        <button id="selectUserIdBtn" style="padding: 6px 12px; background: #8b6914; color: #ffd700; border: none; border-radius: 4px; cursor: pointer; font-size: 10px; white-space: nowrap;">✓ Select</button>
-                    </div>
-                    <div id="recentUsersContainer" style="display: none; margin-top: 8px;">
-                        <h5 style="margin: 0 0 6px; font-size: 10px; color: #ccc;">Recent:</h5>
-                        <div id="recentUsersList" style="max-height: 120px; overflow-y: auto;"></div>
-                    </div>
-                </div>
-
-                <div id="selectedRecipientDisplay" style="display: none; margin-top: 8px;">
-                    <div class="selected-recipient" style="background: rgba(139,105,20,0.3); padding: 6px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
-                        <span id="selectedRecipientName" style="font-size: 10px;">👤 Selected</span>
-                        <button class="clear-btn" style="background: #d32f2f; color: #fff; border: none; padding: 3px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;">✕</button>
-                    </div>
+                <!-- Notifications Tab -->
+        <div class="tab-content notifs-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; border-bottom: 1px solid #444;">
+                <span style="color: #ffd700; font-weight: bold; font-size: 12px;">Message History</span>
+                <div style="display: flex; gap: 4px; align-items: center;">
+                    <select id="notifFilterType" style="background: #333; color: #ccc; border: 1px solid #555; border-radius: 3px; font-size: 9px; padding: 2px;">
+                        <option value="ALL">All</option>
+                        <option value="SUCCESS">✓ Success</option>
+                        <option value="ERROR">✗ Error</option>
+                        <option value="INFO">ℹ Info</option>
+                        <option value="PROGRESS">⟳ Progress</option>
+                        <option value="BATTLE">⚔ Battle</option>
+                        <option value="TASK">◉ Task</option>
+                    </select>
+                    <button id="copyNotifsBtn" style="background: #2a4a6a; color: #8cf; border: none; padding: 2px 6px; border-radius: 3px; font-size: 9px; cursor: pointer;">Copy</button>
+                    <button id="clearNotifsBtn" style="background: #6d3a3a; color: #faa; border: none; padding: 2px 6px; border-radius: 3px; font-size: 9px; cursor: pointer;">Clear</button>
                 </div>
             </div>
-
-            <div class="message-compose" style="margin-top: 12px; flex: 1; display: flex; flex-direction: column;">
-                <textarea id="messageInput" placeholder="Select recipient first..." style="flex: 1; width: 100%; min-height: 80px; padding: 6px; background: rgba(0,0,0,0.3); border: 1px solid #8b6914; border-radius: 4px; color: #ffd700; font-family: Arial; font-size: 10px; resize: vertical;" disabled></textarea>
-<button class="send-btn" id="sendBtn" disabled style="width: 100%; margin-top: 8px; padding: 8px; background: #8b6914; color: #ffd700; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;">📤 Send Message</button>
-</div>
-</div>
-
-<!-- Stats Tab (Arena Stats) - LAZY LOADED -->
-<div class="tab-content stats-content">
-    <div style="padding: 8px;">
-        <div style="text-align: center; color: #ffd700; font-size: 11px; margin-bottom: 8px; font-weight: bold;">
-            📊 Arena Battle Stats
-                </div>
-<div id="stats-tab-content" style="font-size: 10px; color: #ccc;">
-    <div style="text-align: center; padding: 20px 10px; color: #999;">
-        Click to load stats...
+            <div id="notifsList" style="overflow-y: auto; max-height: 400px; padding: 4px;">
+                <div style="text-align: center; color: #888; font-size: 10px; padding: 20px;">No notifications yet</div>
             </div>
-</div>
-</div>
-</div>
+        </div>
+  
 `;
 
             document.body.appendChild(sidebar);
-            document.getElementById('refreshMembersBtn').addEventListener('click', loadGuildMembers);
+            // Notification History Storage
+            const NOTIF_HISTORY_KEY = 'hwh_notif_history';
+            const MAX_NOTIF_HISTORY = 50;
 
+            function addToNotifHistory(notif) {
+                try {
+                    let history = JSON.parse(localStorage.getItem(NOTIF_HISTORY_KEY)) || [];
+                    history.unshift({
+                        time: Date.now(),
+                        icon: notif.icon,
+                        title: notif.title,
+                        status: notif.status,
+                        type: notif.type
+                    });
+                    if (history.length > MAX_NOTIF_HISTORY) history = history.slice(0, MAX_NOTIF_HISTORY);
+                    localStorage.setItem(NOTIF_HISTORY_KEY, JSON.stringify(history));
+                    renderNotifHistory();
+                } catch(e) {}
+            }
+            window.addToNotifHistory = addToNotifHistory;  // <-- ADD THIS LINE
+
+            function renderNotifHistory() {
+                const list = document.getElementById('notifsList');
+                if (!list) return;
+                try {
+                    const history = JSON.parse(localStorage.getItem(NOTIF_HISTORY_KEY)) || [];
+                    const filterType = document.getElementById('notifFilterType')?.value || 'ALL';
+                    const filtered = filterType === 'ALL' ? history : history.filter(n => n.type === filterType);
+
+                    if (filtered.length === 0) {
+                        list.innerHTML = '<div style="text-align:center;color:#888;font-size:10px;padding:20px;">No notifications</div>';
+                        return;
+                    }
+                    const typeColors = {
+                        SUCCESS: '#4ae29a',
+                        ERROR: '#e24a4a',
+                        INFO: '#f39c12',
+                        PROGRESS: '#3498db',
+                        BATTLE: '#9b59b6',
+                        TASK: '#8b6914'
+                    };
+                    list.innerHTML = filtered.map(n => {
+                        const time = new Date(n.time);
+                        const timeStr = time.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',hour12:false});
+                        const fullText = n.status ? `${n.title}\n${n.status}` : n.title;
+                        const edgeColor = typeColors[n.type] || '#8b6914';
+                        return `<div style="padding:2px 6px;margin:1px 0;background:rgba(0,0,0,0.2);border-radius:3px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default;border-left:3px solid ${edgeColor};" title="${fullText.replace(/"/g, '&quot;')}">
+                            <span style="color:#888;">${timeStr}</span> ${n.icon} <span style="color:${edgeColor};">${n.title}</span> ${n.status ? `<span style="color:#666;">- ${n.status}</span>` : ''}
+                        </div>`;
+                    }).join('');
+                } catch(e) {
+                    list.innerHTML = '<div style="color:#f66;font-size:10px;padding:10px;">Error loading history</div>';
+                }
+            }
+            document.getElementById('refreshMembersBtn').addEventListener('click', loadGuildMembers);
+            document.getElementById('openChatDockBtn')?.addEventListener('click', () => {
+                window.showChatDock();
+            });
+            document.getElementById('clearNotifsBtn')?.addEventListener('click', () => {
+                localStorage.removeItem(NOTIF_HISTORY_KEY);
+                renderNotifHistory();
+            });
+            renderNotifHistory();  // Load on init
+
+            let filterTimeout;
+            document.getElementById('notifFilterType')?.addEventListener('change', () => {
+                clearTimeout(filterTimeout);
+                filterTimeout = setTimeout(renderNotifHistory, 50);
+            });
+            document.getElementById('copyNotifsBtn')?.addEventListener('click', () => {
+                try {
+                    const history = JSON.parse(localStorage.getItem(NOTIF_HISTORY_KEY)) || [];
+                    const filterType = document.getElementById('notifFilterType')?.value || 'ALL';
+                    const filtered = filterType === 'ALL' ? history : history.filter(n => n.type === filterType);
+                    const text = filtered.map(n => {
+                        const time = new Date(n.time);
+                        const timeStr = time.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',hour12:false});
+                        return `${timeStr} ${n.icon} ${n.title}${n.status ? ' - ' + n.status : ''}`;
+                    }).join('\n');
+                    navigator.clipboard.writeText(text);
+                    TweakerNotifications?.info('📋', 'Copied', `${filtered.length} notifications`);
+                } catch(e) {}
+            });
             let currentTab = 'members';
             let customMessage = '';
 
@@ -27246,47 +31172,6 @@ transition: all 0.2s;
                 }
             }
 
-            // Select All checkbox
-            const selectAllCheckbox = document.getElementById('select-all-members');
-            const pmAllBtn = document.getElementById('pmAllBtn');
-            const selectedCountSpan = document.getElementById('selected-count');
-
-            selectAllCheckbox.addEventListener('change', (e) => {
-                const checked = e.target.checked;
-                selectedMembers.clear();
-
-                sidebar.querySelectorAll('.member-checkbox:not(#select-all-members)').forEach(cb => {
-                    cb.checked = checked;
-                    if (checked) {
-                        selectedMembers.add(cb.dataset.userId);
-                    }
-                });
-
-                updateMassPmButton();
-            });
-
-            function updateMassPmButton() {
-                pmAllBtn.style.display = selectedMembers.size > 0 ? 'block' : 'none';
-            }
-
-            // Mass PM Send - FIXED with correct chatType
-            pmAllBtn.addEventListener('click', () => {
-                if (selectedMembers.size === 0) return;
-
-                // NEW: Instead of prompt, switch to Chat tab and set recipient
-                selectRecipient({
-                    type: 'mass-pm',
-                    count: selectedMembers.size,
-                    members: Array.from(selectedMembers)
-                });
-
-                // Switch to Chat tab
-                currentTab = 'chat';
-                sidebar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                sidebar.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                sidebar.querySelector('.chat-tab').classList.add('active');
-                sidebar.querySelector('.chat-content').classList.add('active');
-            });
 
             function sortGuildMembers(mode) {
                 currentSortMode = mode;
@@ -27317,8 +31202,12 @@ transition: all 0.2s;
 
                 displayMembers();
             }
-            // Load guild members
+
+            // Full refresh - everything (every 5 min or manual) ~246 KB
             async function loadGuildMembers() {
+                if (!window.liveData.userInfo?.id) {
+                    window.liveData.userInfo = { id: cheats?.getPlayerId?.() || getPlayer()?.id };
+                }
                 const refreshBtn = document.getElementById('refreshMembersBtn');
                 if (refreshBtn) {
                     refreshBtn.textContent = '⏳';
@@ -27329,20 +31218,206 @@ transition: all 0.2s;
 
                     const response = await SendFunction(JSON.stringify({
                         calls: [
-                            {name: "clanGetInfo", args: {}, context: {actionTs: Date.now()}, ident: "group_0_body"},
-                            {name: "clanGetOnline", args: {}, context: {actionTs: Date.now() + 1}, ident: "group_1_body"},
-                            {name: "clanWarGetBriefInfo", args: {}, context: {actionTs: Date.now() + 2}, ident: "gw_status"},
-                            {name: "crossClanWar_getBriefInfo", args: {}, context: {actionTs: Date.now() + 3}, ident: "cow_status"},
-                            {name: "clanWarGetInfo", args: {}, context: {actionTs: Date.now() + 4}, ident: "gw_member_tries"}
+                            // Sidebar needs
+                            {name: "clanGetInfo", args: {}, context: {actionTs: Date.now()}, ident: "clanInfo"},
+                            {name: "clanGetOnline", args: {}, context: {actionTs: Date.now() + 1}, ident: "online"},
+                            {name: "clanWarGetInfo", args: {}, context: {actionTs: Date.now() + 2}, ident: "gw"},
+                            {name: "crossClanWar_getInfo", args: {}, context: {actionTs: Date.now() + 3}, ident: "cow"},
+                            // Top bar needs
+                            {name: "arenaGetAll", args: {}, context: {actionTs: Date.now() + 4}, ident: "arena"},
+                            {name: "clanRaid_getInfo", args: {}, context: {actionTs: Date.now() + 5}, ident: "asgard"},
+                            {name: "questGetEvents", args: {}, context: {actionTs: Date.now() + 6}, ident: "events"},
+                            {name: "questGetAll", args: {}, context: {actionTs: Date.now() + 7}, ident: "quests"}
                         ]
                     }));
 
-                    if (response?.results?.[0]?.result?.response?.clan?.members) {
-                        const members = response.results[0].result.response.clan.members;
-                        const onlineData = response.results[1]?.result?.response || {};
+                    const r = {};
+                    response?.results?.forEach(x => { r[x.ident] = x.result?.response; });
 
+                    // === PROCESS GUILD MEMBERS ===
+                    if (r.clanInfo?.clan?.members) {
+                        const members = r.clanInfo.clan.members;
+                        const onlineData = r.online || {};
                         const now = Math.floor(Date.now() / 1000);
-                        const AWAY_THRESHOLD = 120; // 2 minutes in seconds
+                        const AWAY_THRESHOLD = 120;
+                        const myId = String(cheats?.getPlayerId?.() || window.liveData?.userInfo?.id || '');
+
+                        guildMembers = Object.entries(members).map(([userId, memberData]) => {
+                            const lastActionTime = onlineData[userId]?.lastAction || memberData.lastLoginTime || 0;
+                            const isOnlineAPI = onlineData[userId]?.online === true;
+                            const isRecent = (now - lastActionTime) < AWAY_THRESHOLD;
+                            return {
+                                id: userId,
+                                name: memberData.name,
+                                online: (userId === myId) || (isOnlineAPI && isRecent),
+                                away: isOnlineAPI && !isRecent,
+                                lastAction: lastActionTime,
+                                role: memberData.clanRole === '255' ? 'owner' : ''
+                            };
+                        });
+                        window.liveData.guildMembers = members;
+
+                        // === EXTRACT WAR STATUS FOR SIDEBAR ===
+                        if (r.gw) {
+                            warStatus.gw = {
+                                active: !!r.gw.enemyId,
+                                tries: r.gw.myTries ?? 0,
+                                targets: r.gw.targets || 0
+                            };
+                            window.gwMemberTries = r.gw.clanTries || {};
+                            window.gwMyTries = r.gw.myTries ?? 0;
+                            window.gwActive = !!r.gw.enemyId;
+                            debugLog('🔥GW Status:', warStatus.gw);
+                        }
+
+                        if (r.cow?.war) {
+                            warStatus.cow = {
+                                active: !!r.cow.war.enemyClan,
+                                heroTries: r.cow.war.myTries?.heroes ?? 0,
+                                titanTries: r.cow.war.myTries?.titans ?? 0,
+                                heroTargets: 0,
+                                titanTargets: 0
+                            };
+                            window.cowMemberTries = r.cow.war.clanTries || {};
+                            window.cowActive = !!r.cow.war.enemyClan;
+                            debugLog('⚡CoW Status:', warStatus.cow);
+                        }
+
+                        // === UPDATE TOP STATUS BAR CACHE ===
+                        const c = window._tsbCache = window._tsbCache || {};
+                        const nowTs = Math.floor(Date.now() / 1000);
+
+                        const getNextWarTime = (type) => {
+                            const d = new Date();
+                            const day = d.getUTCDay();
+                            const hour = d.getUTCHours();
+                            let startHour = (type === 'gw') ? 9 : 8;
+                            let targetDay = day;
+                            if (type === 'gw') {
+                                if (day <= 1) targetDay = 2;
+                                else if (day === 6 && hour >= startHour) targetDay = 9;
+                                else if (hour >= startHour) targetDay = day + 1;
+                            } else {
+                                if (day === 0) targetDay = 1;
+                                else if (day === 6 && hour >= startHour) targetDay = 8;
+                                else if (hour >= startHour) targetDay = day + 1;
+                            }
+                            const target = new Date(d);
+                            target.setUTCDate(d.getUTCDate() + (targetDay - day));
+                            target.setUTCHours(startHour, 0, 0, 0);
+                            return Math.floor(target.getTime() / 1000);
+                        };
+
+                        // Arena
+                        if (r.arena) {
+                            c.arenaPlace = r.arena.arenaPlace || '?';
+                            c.grandPlace = r.arena.grandPlace || '?';
+                            c.rewardTime = r.arena.rewardTime || 0;
+                        }
+
+                        // GW with scores
+                        if (r.gw) {
+                            c.gwActive = !!r.gw.enemyId;
+                            c.gwTries = r.gw.myTries ?? 0;
+                            c.gwPoints = parseInt(r.gw.points) || 0;
+                            c.gwEnemyPoints = parseInt(r.gw.enemyPoints) || 0;
+                            const serverTime = [r.gw.endTime, r.gw.nearestWarEndTime, r.gw.nextWarTime].find(t => t && t > now);
+                            c.gwEnd = serverTime || getNextWarTime('gw');
+                        }
+
+                        // CoW with scores
+                        if (r.cow?.war) {
+                            c.cowActive = !!r.cow.war.enemyClan;
+                            c.cowHero = r.cow.war.myTries?.heroes ?? 0;
+                            c.cowTitan = r.cow.war.myTries?.titans ?? 0;
+                            c.cowPoints = parseInt(r.cow.war.points) || 0;
+                            c.cowEnemyPoints = parseInt(r.cow.war.enemyPoints) || 0;
+                            const serverTime = [r.cow.war?.endTime, r.cow.currentWarEndTime, r.cow.nextWarTime].find(t => t && t > now);
+                            c.cowEnd = serverTime || getNextWarTime('cow');
+                        }
+
+                        // Asgard
+                        if (r.asgard) {
+                            c.asgardEnd = r.asgard.boss?.timestamps?.end || 0;
+                            c.asgardLevel = r.asgard.boss?.level || 0;
+                        }
+
+                        // Events
+                        if (r.events) {
+                            const active = (r.events || []).filter(e => e.endTime > nowTs).sort((a,b) => a.endTime - b.endTime);
+                            if (active[0]) {
+                                c.eventName = cheats?.translate(active[0].name_localeKey) || 'Event';
+                                c.eventEnd = active[0].endTime;
+                            }
+                        }
+
+                        // Quests
+                        if (r.quests) {
+                            c.questDaily = 0; c.questWeekly = 0; c.questGuild = 0;
+                            c.questS1 = 0; c.questS3 = 0; c.questS7 = 0; c.questTotal = 0;
+                            (r.quests || []).filter(q => q.state === 1).forEach(q => {
+                                c.questTotal++;
+                                const id = q.id;
+                                if (id >= 10000 && id < 11000) c.questDaily++;
+                                else if (id >= 11000 && id < 12000) c.questWeekly++;
+                                else if (id >= 20000000 && id < 30000000) c.questGuild++;
+                                else if (id >= 1000000 && id < 2000000) {
+                                    const chain = lib?.data?.quest?.battlePass?.[id]?.chain;
+                                    if ([1,2,3,4,9,10].includes(chain)) c.questS1++;
+                                    else if ([5,6].includes(chain)) c.questS3++;
+                                    else if ([7,8].includes(chain)) c.questS7++;
+                                }
+                            });
+                        }
+
+                        c.lastRefresh = Date.now();
+
+                        // Update top bar display
+                        if (typeof updateTopStatusBarTimers === 'function') {
+                            updateTopStatusBarTimers();
+                        }
+                        window._tsbLastRefresh = Date.now();
+                        const staleEl = document.getElementById('tsb-stale');
+                        const refreshEl = document.getElementById('tsb-lastrefresh');
+                        if (staleEl) {
+                            staleEl.style.color = '#4ae29a';
+                        }
+                        if (refreshEl) {
+                            refreshEl.title = 'Last refresh: ' + formatRefreshTime(window._tsbLastRefresh);
+                        }
+
+                        sortGuildMembers(currentSortMode);
+                        displayMembers();
+                        debugLog('🔄 Full refresh complete - sidebar + top bar updated');
+                    }
+                } catch (error) {
+                    console.error('Full refresh failed:', error);
+                } finally {
+                    if (refreshBtn) {
+                        refreshBtn.textContent = '🔄';
+                    }
+                }
+            }
+
+            // Light refresh - just online status (every 1 min) ~19 KB
+            async function lightRefreshMembers() {
+                try {
+                    const SendFunction = getSend();
+                    const response = await SendFunction(JSON.stringify({
+                        calls: [
+                            {name: "clanGetInfo", args: {}, context: {actionTs: Date.now()}, ident: "clanInfo"},
+                            {name: "clanGetOnline", args: {}, context: {actionTs: Date.now() + 1}, ident: "online"}
+                        ]
+                    }));
+
+                    const r = {};
+                    response?.results?.forEach(x => { r[x.ident] = x.result?.response; });
+
+                    if (r.clanInfo?.clan?.members) {
+                        const members = r.clanInfo.clan.members;
+                        const onlineData = r.online || {};
+                        const now = Math.floor(Date.now() / 1000);
+                        const AWAY_THRESHOLD = 120;
 
                         guildMembers = Object.entries(members).map(([userId, memberData]) => {
                             const lastActionTime = onlineData[userId]?.lastAction || memberData.lastLoginTime || 0;
@@ -27358,46 +31433,14 @@ transition: all 0.2s;
                                 role: memberData.clanRole === '255' ? 'owner' : ''
                             };
                         });
-                        // Extract war status
-                        const gwData = response.results[2]?.result?.response;
-                        const cowData = response.results[3]?.result?.response;
+                        window.liveData.guildMembers = members;
 
-                        if (gwData) {
-                            warStatus.gw = {
-                                active: gwData.hasActiveWar,  // Just check if war is active
-                                tries: gwData.tries || 0,
-                                targets: gwData.targets || 0
-                            };
-                            debugLog('⚔️ GW Status:', warStatus.gw);
-                        }
-                        if (cowData) {
-                            warStatus.cow = {
-                                active: cowData.hasActiveWar,  // Just check if war is active
-                                heroTries: cowData.heroTries || 0,
-                                titanTries: cowData.titanTries || 0,
-                                heroTargets: cowData.heroTargets || 0,
-                                titanTargets: cowData.titanTargets || 0
-                            };
-                            debugLog('🌍 CoW Status:', warStatus.cow);
-                        }
-                        // Extract per-member GW tries
-                        const gwMemberData = response.results[4]?.result?.response;
-                        if (gwMemberData) {
-                            window.gwMemberTries = gwMemberData.clanTries || {};
-                            window.gwMyTries = gwMemberData.myTries ?? 0;
-                            window.gwActive = !!gwMemberData.enemyId;
-                            debugLog('⚔️ GW Member Tries:', Object.keys(window.gwMemberTries).length, 'members, active:', window.gwActive);
-                        }
                         sortGuildMembers(currentSortMode);
-
                         displayMembers();
+                        debugLog('🔄 Light refresh complete - online status only');
                     }
                 } catch (error) {
-                    console.error('Failed to load guild members:', error);
-                } finally {
-                    if (refreshBtn) {
-                        refreshBtn.textContent = '🔄';
-                    }
+                    console.error('Light refresh failed:', error);
                 }
             }
 
@@ -27407,117 +31450,77 @@ transition: all 0.2s;
                 const membersList = document.getElementById('membersList');
                 const onlineCount = document.getElementById('onlineCount');
                 const totalCount = document.getElementById('totalCount');
-                // Update war status in header
-                const warDisplay = document.getElementById('warStatusDisplay');
-                if (warDisplay) {
-                    warDisplay.innerHTML = getWarIndicators();
-                }
 
                 onlineCount.textContent = guildMembers.filter(m => m.online).length;
                 totalCount.textContent = guildMembers.length;
 
+                // Parse contacts ONCE outside the loop (was causing lag - parsed 30x per render)
+                const contacts = JSON.parse(localStorage.getItem('hwh_saved_contacts') || '[]');
+                const contactMap = {};
+                contacts.forEach(c => { if (c.id) contactMap[c.id] = c; });
+
+                // Cache current time once
+                const nowSeconds = Date.now() / 1000;
+
                 // Helper function to format time
                 function formatTime(timestamp) {
                     if (!timestamp) return '?';
-                    const now = Date.now() / 1000;
-                    const diff = now - timestamp;
+                    const diff = nowSeconds - timestamp;
                     if (diff < 60) return 'now';
                     if (diff < 3600) return Math.floor(diff / 60) + 'm';
                     if (diff < 86400) return Math.floor(diff / 3600) + 'h';
                     return Math.floor(diff / 86400) + 'd';
                 }
-                // Helper function to build war indicators
-                function getWarIndicators() {
-                    let indicators = '';
-
-                    // GW indicator - orange/gold color
-                    if (warStatus.gw.active) {
-                        if (warStatus.gw.tries === 0) {
-                            indicators += ' <span style="color:#4ae29a;font-size:10px;" title="GW: Done">✓</span>';
-                        } else {
-                            indicators += ` <span style="color:#ffa500;font-size:10px;font-weight:bold;" title="GW: ${warStatus.gw.tries} attacks left">${warStatus.gw.tries}</span>`;
-                        }
-                    }
-
-                    // CoW indicator - cyan/blue color
-                    if (warStatus.cow.active) {
-                        const cowTotal = warStatus.cow.heroTries + warStatus.cow.titanTries;
-                        if (cowTotal === 0) {
-                            indicators += ' <span style="color:#4ae29a;font-size:10px;" title="CoW: Done">✓</span>';
-                        } else {
-                            // Show hero|titan format if both have tries
-                            if (warStatus.cow.heroTries > 0 && warStatus.cow.titanTries > 0) {
-                                indicators += ` <span style="color:#00bfff;font-size:10px;font-weight:bold;" title="CoW: ${warStatus.cow.heroTries}H ${warStatus.cow.titanTries}T left">${warStatus.cow.heroTries}|${warStatus.cow.titanTries}</span>`;
-                            } else if (warStatus.cow.heroTries > 0) {
-                                indicators += ` <span style="color:#00bfff;font-size:10px;font-weight:bold;" title="CoW: ${warStatus.cow.heroTries} hero attacks left">${warStatus.cow.heroTries}H</span>`;
-                            } else {
-                                indicators += ` <span style="color:#00bfff;font-size:10px;font-weight:bold;" title="CoW: ${warStatus.cow.titanTries} titan attacks left">${warStatus.cow.titanTries}T</span>`;
-                            }
-                        }
-                    }
-
-                    return indicators;
-                }
-                // Helper function to get individual member's GW tries
                 function getMemberWarIndicator(memberId) {
                     if (!window.gwActive) return '';
-
                     const tries = window.gwMemberTries?.[memberId];
                     if (tries === undefined) return '';
-
                     if (tries === 0) {
-                        return ' <span style="color:#4ae29a;font-size:10px;" title="GW: Done">✓</span>';
-                    } else {
-                        return ` <span style="color:#ffa500;font-size:10px;font-weight:bold;" title="GW: ${tries} attacks left">${tries}</span>`;
+                        return ' <span style="color:#4ae29a;font-size:10px;" title="GW: Done">✔</span>';
                     }
+                    return ` <span style="color:#ffa500;font-size:10px;" title="GW: ${tries} left">${tries}</span>`;
+                }
+                function getMemberCoWIndicator(memberId) {
+                    if (!window.cowActive) return '';
+                    const tries = window.cowMemberTries?.[memberId];
+                    if (!tries) return '';
+                    const h = tries.heroes || 0;
+                    const t = tries.titans || 0;
+                    if (h === 0 && t === 0) {
+                        return ' <span style="color:#4ae29a;font-size:10px;" title="CoW: Done">✔</span>';
+                    }
+                    return ` <span style="color:#00bfff;font-size:10px;" title="CoW: H${h} T${t}">${h}|${t}</span>`;
+                }
+
+                // Get flag from pre-built contactMap (O(1) lookup instead of O(n) find)
+                function getMemberFlag(memberId) {
+                    const contact = contactMap[memberId];
+                    if (!contact?.country || !window.getCountryFlag) return '';
+                    const flag = window.getCountryFlag(contact.country);
+                    return flag ? `<span style="font-size:14px;text-shadow: 0 0 2px #fff, 0 0 2px #fff;line-height:0;margin-right:4px;">${flag}</span>` : '';
                 }
 
                 membersList.innerHTML = guildMembers.map(member => `
                         <div class="member-item ${member.online ? 'online' : member.away ? 'away' : ''}" data-user-id="${member.id}" data-user-name="${member.name}">
-                            <input type="checkbox" class="member-checkbox" data-user-id="${member.id}">
                                 <div class="member-info">
                                     <div class="status-dot ${member.online ? 'online' : member.away ? 'away' : ''}"></div>
 <div class="member-name ${member.role === 'owner' ? 'owner' : ''}">${member.name}</div>
 ${member.role === 'owner' ? '<span style="font-size: 9px;">👑</span>' : ''}
 </div>
-<div class="member-stats">
-    ${formatTime(member.lastAction)}${getMemberWarIndicator(member.id)}
+<div class="member-stats" style="display:flex;gap:1px;font-size:10px;justify-content:flex-end;align-items:center;">
+    ${getMemberFlag(member.id)}
+    <span style="min-width:18px;text-align:right;">${formatTime(member.lastAction)}</span>
+    ${window.gwActive ? `<span style="min-width:12px;text-align:center;">${getMemberWarIndicator(member.id)}</span>` : ''}
+    ${window.cowActive ? `<span style="min-width:16px;text-align:center;">${getMemberCoWIndicator(member.id)}</span>` : ''}
 </div>
 </div>
 `).join('');
-                // Restore checkbox selections
-                membersList.querySelectorAll('.member-checkbox').forEach(cb => {
-                    if (selectedMembers.has(cb.dataset.userId)) {
-                        cb.checked = true;
-                    }
-                });
-
-                membersList.querySelectorAll('.member-checkbox').forEach(cb => {
-                    cb.addEventListener('change', (e) => {
-                        const userId = e.target.dataset.userId;
-                        if (e.target.checked) {
-                            selectedMembers.add(userId);
-                        } else {
-                            selectedMembers.delete(userId);
-                            selectAllCheckbox.checked = false;
-                        }
-                        updateMassPmButton();
-                    });
-                });
 
                 membersList.querySelectorAll('.member-item').forEach(item => {
                     item.addEventListener('click', (e) => {
-                        if (e.target.classList.contains('member-checkbox')) return;
-
                         const userId = item.dataset.userId;
                         const userName = item.dataset.userName;
-                        selectRecipient({ id: userId, name: userName, type: 'member' });
-
-                        currentTab = 'chat';
-                        sidebar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                        sidebar.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                        sidebar.querySelector('.chat-tab').classList.add('active');
-                        sidebar.querySelector('.chat-content').classList.add('active');
+                        window.showChatDock(userId, userName);  // Pass user to pre-select
                     });
                 });
             }
@@ -27568,504 +31571,36 @@ ${member.role === 'owner' ? '<span style="font-size: 9px;">👑</span>' : ''}
 
 
 
-            function selectRecipient(recipient) {
-                selectedRecipient = recipient;
 
-                const display = document.getElementById('selectedRecipientDisplay');
-                const nameSpan = document.getElementById('selectedRecipientName');
-                const messageInput = document.getElementById('messageInput');
-                const sendBtn = document.getElementById('sendBtn');
 
-                if (recipient) {
-                    if (recipient.type === 'guild') {
-                        nameSpan.textContent = '💬 Guild Chat';
-                        messageInput.placeholder = 'Message to guild...';
-                    } else if (recipient.type === 'mass-pm') {
-                        // NEW: Handle mass PM recipient type
-                        nameSpan.textContent = `📤 PM All (${recipient.count} members)`;
-                        messageInput.placeholder = `Message to ${recipient.count} guild members...`;
-                    } else {
-                        nameSpan.textContent = `👤 ${recipient.name}`;
-                        messageInput.placeholder = `Message to ${recipient.name}...`;
-                    }
-                    display.style.display = 'block';
-                    messageInput.disabled = false;
-                    messageInput.focus(); // Auto-focus for better UX
-                    updateSendButton();
-                }
-            }
-
-            function clearRecipient() {
-                selectedRecipient = null;
-                document.getElementById('selectedRecipientDisplay').style.display = 'none';
-                document.getElementById('messageInput').placeholder = 'Select recipient first...';
-                document.getElementById('messageInput').disabled = true;
-                document.getElementById('sendBtn').disabled = true;
-            }
-
-            sidebar.querySelector('.guild-chat-btn').addEventListener('click', () => {
-                selectRecipient({ type: 'guild', name: 'Guild Chat' });
-            });
-
-            sidebar.querySelector('#openGameChatBtn').addEventListener('click', () => {
-                if (window.goGuildChat) {
-                    window.goGuildChat();
-                } else {
-                    alert('Chat function not available');
-                }
-            });
-
-            sidebar.querySelector('.clear-btn').addEventListener('click', clearRecipient);
-
-            // Direct User ID functionality
-            const MAX_RECENT_USERS = 10;
-
-            function getRecentUsers() {
-                const stored = localStorage.getItem('hwh_recent_user_ids');
-                return stored ? JSON.parse(stored) : [];
-            }
-
-            function saveRecentUser(userId, userName) {
-                let recent = getRecentUsers();
-                // Remove if already exists
-                recent = recent.filter(u => u.id !== userId);
-                // Add to beginning with name
-                recent.unshift({ id: userId, name: userName || `User ${userId}`, timestamp: Date.now() });
-                // Keep only MAX_RECENT_USERS
-                recent = recent.slice(0, MAX_RECENT_USERS);
-                localStorage.setItem('hwh_recent_user_ids', JSON.stringify(recent));
-                displayRecentUsers();
-            }
-
-            function deleteRecentUser(userId) {
-                let recent = getRecentUsers();
-                recent = recent.filter(u => u.id !== userId);
-                localStorage.setItem('hwh_recent_user_ids', JSON.stringify(recent));
-                displayRecentUsers();
-            }
-            function displayRecentUsers() {
-                const recent = getRecentUsers();
-                const container = document.getElementById('recentUsersContainer');
-                const list = document.getElementById('recentUsersList');
-
-                if (recent.length === 0) {
-                    container.style.display = 'none';
-                    return;
-                }
-
-                container.style.display = 'block';
-                list.innerHTML = recent.map(user => {
-                    const displayName = user.name || `User ${user.id}`;
-                    return `
-            <div class="recent-user-item" style="padding: 4px 6px; margin-bottom: 2px; background: rgba(139,105,20,0.2); border-radius: 3px; font-size: 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
-                <span style="color: #ffd700; cursor: pointer; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" data-userid="${user.id}" title="${displayName} (${user.id})">👤 ${displayName}</span>
-                <button class="delete-user-btn" data-userid="${user.id}" style="background: #d32f2f; color: #fff; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 9px; flex-shrink: 0;">✕</button>
-            </div>
-        `;
-                }).join('');
-
-                // Add click handlers for selecting user
-                list.querySelectorAll('.recent-user-item span[data-userid]').forEach(span => {
-                    span.addEventListener('click', () => {
-                        const userId = span.dataset.userid;
-                        const userName = span.textContent.replace('👤 ', '').trim();
-                        selectRecipient({ id: userId, name: userName, type: 'direct' });
-                    });
-                });
-
-                // Add click handlers for delete buttons
-                list.querySelectorAll('.delete-user-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const userId = btn.dataset.userid;
-                        deleteRecentUser(userId);
-                    });
-                });
-            }
-
-            async function selectDirectUserId() {
-                const input = document.getElementById('directUserIdInput');
-                const userId = input.value.trim();
-
-                if (!userId) {
-                    alert('Please enter a user ID');
-                    return;
-                }
-
-                if (!/^\d+$/.test(userId)) {
-                    alert('User ID must be a number');
-                    return;
-                }
-
-                const selectBtn = document.getElementById('selectUserIdBtn');
-                selectBtn.disabled = true;
-                selectBtn.textContent = '⏳';
-
-                try {
-                    const SendFunction = getSend();
-
-                    // First get user's clan info to find their name
-                    const response = await SendFunction(JSON.stringify({
-                        calls: [{
-                            name: "userGetInfo",
-                            args: { userId: userId },
-                            context: { actionTs: Math.floor(performance.now()) },
-                            ident: "body"
-                        }]
-                    }));
-
-                    let userName = `User ${userId}`;
-                    let clanId = null;
-
-                    if (response?.results?.[0]?.result?.response) {
-                        const userInfo = response.results[0].result.response;
-                        clanId = userInfo.clanId;
-
-                        // If user has a clan, get their name from clan info
-                        if (clanId) {
-                            const clanResponse = await SendFunction(JSON.stringify({
-                                calls: [{
-                                    name: "clanGetInfo",
-                                    args: { clanId: clanId },
-                                    context: { actionTs: Math.floor(performance.now()) },
-                                    ident: "body"
-                                }]
-                            }));
-
-                            if (clanResponse?.results?.[0]?.result?.response?.clan?.members?.[userId]) {
-                                const memberData = clanResponse.results[0].result.response.clan.members[userId];
-                                userName = memberData.name || userName;
-                            }
-                        }
-                    }
-
-                    selectRecipient({ id: userId, name: userName, type: 'direct' });
-                    saveRecentUser(userId, userName);
-                    input.value = '';
-
-                } catch (e) {
-                    console.error('Failed to fetch user info:', e);
-                    // Fallback
-                    selectRecipient({ id: userId, name: `User ${userId}`, type: 'direct' });
-                    saveRecentUser(userId, `User ${userId}`);
-                    input.value = '';
-                } finally {
-                    selectBtn.disabled = false;
-                    selectBtn.textContent = '✓ Select';
-                }
-            }
-            // Event listeners for direct user ID
-            document.getElementById('selectUserIdBtn').addEventListener('click', selectDirectUserId);
-
-            document.getElementById('directUserIdInput').addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    selectDirectUserId();
-                }
-            });
-
-            // Display recent users on load
-            displayRecentUsers();
-
-            const messageInput = document.getElementById('messageInput');
-            messageInput.addEventListener('input', (e) => {
-                customMessage = e.target.value;
-                updateSendButton();
-            });
-
-            messageInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    if (selectedRecipient && customMessage.trim()) {
-                        sendMessage();
-                    }
-                }
-            });
-
-            function updateSendButton() {
-                const sendBtn = document.getElementById('sendBtn');
-                sendBtn.disabled = !selectedRecipient || !customMessage.trim();
-            }
-
-            document.getElementById('sendBtn').addEventListener('click', sendMessage);
-
-            async function sendMessage() {
-                if (!selectedRecipient || !customMessage.trim()) return;
-
-                // NEW: Handle mass PM sending
-                if (selectedRecipient.type === 'mass-pm') {
-                    const total = selectedRecipient.count;
-                    const confirmed = confirm(
-                        `📤 Send this message to ${total} guild members?\n\n` +
-                        `"${customMessage.trim()}"\n\n` +
-                        `This will send ${total} individual PMs.`
-                    );
-
-                    if (!confirmed) return;
-
-                    // Helper to get member name from ID
-                    const getMemberName = (userId) => {
-                        const member = guildMembers.find(m => String(m.id) === String(userId));
-                        return member ? member.name : userId;
-                    };
-
-                    // Create progress popup
-                    const progressPopup = document.createElement('div');
-                    progressPopup.id = 'mass-pm-progress';
-                    progressPopup.style.cssText = `
-                        position: fixed;
-                        top: 10px;
-                        right: 320px;
-                        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-                        border: 2px solid #8b6914;
-                        border-radius: 8px;
-                        padding: 12px 16px;
-                        color: #fff;
-                        font-size: 13px;
-                        z-index: 100000;
-                        min-width: 180px;
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-                    `;
-                    document.body.appendChild(progressPopup);
-
-                    const updateProgress = (current, total, status = 'sending') => {
-                        progressPopup.innerHTML = `<span style="color: #ffd700;">📤</span> Sending ${current} of ${total}...`;
-                    };
-
-                    // Disable send button during mass send
-                    const sendBtn = document.getElementById('sendBtn');
-                    sendBtn.disabled = true;
-                    sendBtn.textContent = '📤 Sending...';
-
-                    let successCount = 0;
-                    let failCount = 0;
-                    const failedUsers = [];
-
-                    debugLog('📤 Starting Mass PM to', total, 'members');
-
-                    let current = 0;
-                    for (const userId of selectedRecipient.members) {
-                        current++;
-                        updateProgress(current, total);
-
-                        try {
-                            const SendFunction = getSend();
-
-                            const response = await SendFunction(JSON.stringify({
-                                calls: [{
-                                    name: "chatSendText",
-                                    args: {
-                                        chatType: "personal",
-                                        text: customMessage.trim(),
-                                        userId: userId
-                                    },
-                                    context: { actionTs: Math.floor(performance.now()) },
-                                    ident: "body"
-                                }]
-                            }));
-
-                            if (response?.results?.[0]?.result?.response) {
-                                debugLog(`✅ PM sent to ${getMemberName(userId)}`);
-                                successCount++;
-                            } else {
-                                console.error(`❌ Failed to send to ${getMemberName(userId)}:`, response);
-                                failCount++;
-                                failedUsers.push(userId);
-                            }
-
-                            // Delay between messages
-                            await new Promise(resolve => setTimeout(resolve, 1000));
-                        } catch (e) {
-                            console.error(`❌ Exception sending to ${getMemberName(userId)}:`, e);
-                            failCount++;
-                            failedUsers.push(userId);
-                        }
-                    }
-
-                    // Show results in popup
-                    let resultHTML;
-                    if (failCount === 0) {
-                        resultHTML = `<div style="color: #4ae29a; margin-bottom: 10px;">✅ All ${successCount} messages sent!</div>`;
-                    } else {
-                        const failedNames = failedUsers.map(id => getMemberName(id)).join(', ');
-                        resultHTML = `
-                            <div style="color: #4ae29a; margin-bottom: 8px;">✅ Sent: ${successCount} of ${total}</div>
-                            <div style="color: #ffa500; margin-bottom: 6px;">⚠️ Failed (${failCount}):</div>
-                            <div style="color: #ff6b6b; font-size: 11px; max-width: 250px; word-wrap: break-word;">${failedNames}</div>
-                        `;
-                        console.warn('⚠️ Mass PM failed for:', failedUsers.map(id => `${getMemberName(id)} (${id})`));
-                    }
-
-                    progressPopup.innerHTML = `
-                        ${resultHTML}
-                        <button id="mass-pm-ok-btn" style="
-                            margin-top: 10px;
-                            padding: 6px 20px;
-                            background: #8b6914;
-                            border: none;
-                            border-radius: 4px;
-                            color: #fff;
-                            cursor: pointer;
-                            width: 100%;
-                            font-weight: bold;
-                        ">OK</button>
-                    `;
-
-                    document.getElementById('mass-pm-ok-btn').addEventListener('click', () => {
-                        progressPopup.remove();
-                    });
-
-                    // Clear selection and reset
-                    messageInput.value = '';
-                    customMessage = '';
-                    clearRecipient();
-
-                    // Clear member checkboxes
-                    selectedMembers.clear();
-                    selectAllCheckbox.checked = false;
-                    sidebar.querySelectorAll('.member-checkbox:not(#select-all-members)').forEach(cb => {
-                        cb.checked = false;
-                    });
-                    updateMassPmButton();
-
-                    // Re-enable send button
-                    sendBtn.disabled = false;
-                    sendBtn.textContent = '📤 Send Message';
-
-                    return;
-                }
-
-                // Regular single message sending (guild or member)
-                const data = {
-                    calls: [{
-                        name: "chatSendText",
-                        args: selectedRecipient.type === 'guild'
-                        ? { chatType: "clan", text: customMessage.trim() }
-                        : { chatType: "personal", text: customMessage.trim(), userId: selectedRecipient.id },
-                        context: { actionTs: Math.floor(performance.now()) },
-                        ident: "body"
-                    }]
-                };
-
-                try {
-                    const SendFunction = getSend();
-                    const response = await SendFunction(JSON.stringify(data));
-
-                    if (response?.results?.[0]?.result?.response) {
-                        messageInput.value = '';
-                        customMessage = '';
-                        updateSendButton();
-                        alert('✅ Message sent!');
-                    }
-                } catch (e) {
-                    console.error('Failed to send message:', e);
-                    alert('❌ Failed to send message');
-                }
-            }
-            // Stats Tab Loader - LAZY LOADED on tab click
-            function loadStatsTab() {
-                const statsContent = document.getElementById('stats-tab-content');
-                if (!statsContent) return;
-
-                const totalArenaBattles = arenaHistory.reduce((sum, s) => sum + s.battles.length, 0);
-                const totalGrandBattles = grandHistory.reduce((sum, s) => sum + s.battles.length, 0);
-
-                let arenaWins = 0;
-                let grandWins = 0;
-
-                arenaHistory.forEach(session => {
-                    session.battles.forEach(battle => {
-                        if (battle.win) arenaWins++;
-                    });
-                });
-
-                grandHistory.forEach(session => {
-                    session.battles.forEach(battle => {
-                        if (battle.win) grandWins++;
-                    });
-                });
-
-                const arenaWinRate = totalArenaBattles > 0 ? ((arenaWins / totalArenaBattles) * 100).toFixed(1) : '0.0';
-                const grandWinRate = totalGrandBattles > 0 ? ((grandWins / totalGrandBattles) * 100).toFixed(1) : '0.0';
-
-                statsContent.innerHTML = `
-            <div style="background: rgba(139,105,20,0.15); padding: 8px; border-radius: 4px; margin-bottom: 8px;">
-                <div style="color: #ffd700; font-weight: bold; font-size: 10px; margin-bottom: 6px;">⚔️ Arena</div>
-<div style="font-size: 12px; line-height: 1.6;">
-    Total Battles: <span class="twk-green">${totalArenaBattles}</span><br>
-Wins: <span class="twk-green">${arenaWins}</span> / Losses: <span class="twk-red">${totalArenaBattles - arenaWins}</span><br>
-Win Rate: <span class="twk-gold">${arenaWinRate}%</span>
-</div>
-</div>
-
-<div style="background: rgba(139,105,20,0.15); padding: 8px; border-radius: 4px; margin-bottom: 8px;">
-    <div style="color: #ffd700; font-weight: bold; font-size: 10px; margin-bottom: 6px;">🏆 Grand Arena</div>
-<div style="font-size: 12px; line-height: 1.6;">
-    Total Battles: <span class="twk-green">${totalGrandBattles}</span><br>
-Wins: <span class="twk-green">${grandWins}</span> / Losses: <span class="twk-red">${totalGrandBattles - grandWins}</span><br>
-Win Rate: <span class="twk-gold">${grandWinRate}%</span>
-</div>
-</div>
-
-<div style="text-align: center; margin-top: 12px;">
-    <button id="clear-stats-btn" style="background: #d32f2f; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 9px; font-weight: bold;">🗑️ Clear All History</button>
-</div>
-
-<div style="font-size: 8px; color: #666; text-align: center; margin-top: 12px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 4px;">
-    Stats automatically track when you battle in Arena or Grand Arena
-        </div>
-`;
-
-                document.getElementById('clear-stats-btn').addEventListener('click', () => {
-                    if (confirm('⚠️ Clear all arena battle history?\n\nThis will permanently delete all saved battle records and cannot be undone.')) {
-                        arenaHistory = [];
-                        grandHistory = [];
-                        saveArenaHistory(STORAGE_KEY_ARENA, arenaHistory);
-                        saveArenaHistory(STORAGE_KEY_GRAND, grandHistory);
-
-                        statsContent.innerHTML = '<div style="color: #4ae29a; text-align: center; padding: 20px; font-size: 10px;">✅ History cleared!</div>';
-
-                        setTimeout(() => {
-                            loadStatsTab();
-                        }, 1500);
-                    }
-                });
-            }
 
             initializeSortButtons();
             loadGuildMembers();
             setTimeout(loadGuildMembers, 2000);
 
-            // Smart refresh - skip when page not visible or sidebar not showing relevant tab
+            // Light refresh every interval (online status only ~19 KB)
             const refreshInterval = (parseInt(localStorage.getItem('hwh_autorefresh_interval')) || 60) * 1000;
             setInterval(() => {
-                // Skip if browser tab is hidden/minimized
-                if (document.hidden) {
-                    debugLog('⏸️ Guild refresh skipped - tab not visible');
-                    return;
-                }
-
+                if (document.hidden) return;
                 const sidebar = DOMCache.get('quickChatSidebar', '#quickChatSidebar');
-                if (!sidebar) return;
-
-                // Skip if sidebar collapsed
-                if (sidebar.classList.contains('collapsed')) {
-                    debugLog('⏸️ Guild refresh skipped - sidebar collapsed');
-                    return;
-                }
-
-                // Skip if not on members or stats tab
+                if (!sidebar || sidebar.classList.contains('collapsed')) return;
                 const activeTab = sidebar.querySelector('.tab-btn.active');
                 const tabName = activeTab?.dataset?.tab;
-                if (tabName !== 'members' && tabName !== 'stats') {
-                    debugLog('⏸️ Guild refresh skipped - not on members/stats tab');
-                    return;
-                }
+                if (tabName !== 'members' && tabName !== 'stats') return;
+
+                lightRefreshMembers();
+            }, refreshInterval);
+
+
+            // Full refresh every 5x interval (war data + top bar ~246 KB)
+            setInterval(() => {
+                if (document.hidden) return;
+                const sidebar = DOMCache.get('quickChatSidebar', '#quickChatSidebar');
+                if (!sidebar || sidebar.classList.contains('collapsed')) return;
 
                 loadGuildMembers();
-            }, refreshInterval);
+            }, refreshInterval * 5);
         };
-
         /* KEYBOARD SHORTCUTS REMOVED
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
@@ -28119,6 +31654,1376 @@ Win Rate: <span class="twk-gold">${grandWinRate}%</span>
         waitForGameReady().then(() => createChatPopup());
 
         debugLog('✅ Enhanced Sidebar loaded - Compact 40px buttons, Arena Stats tab, Mass PM, Green highlights');
+
+        // ===== FLOATING CHAT DOCK =====
+        window.showChatDock = function(preSelectUserId, preSelectUserName) {
+            const CONTACTS_KEY = 'hwh_saved_contacts';
+            let selectedForPM = new Set();
+
+            function getContacts() {
+                try { return JSON.parse(localStorage.getItem(CONTACTS_KEY)) || []; }
+                catch { return []; }
+            }
+
+            function saveContacts(contacts) {
+                localStorage.setItem(CONTACTS_KEY, JSON.stringify(contacts));
+            }
+            function getCountryFlag(country) {
+                const flags = {
+                    'usa': '🇺🇸', 'united states': '🇺🇸', 'us': '🇺🇸', 'america': '🇺🇸',
+                    'uk': '🇬🇧', 'united kingdom': '🇬🇧', 'england': '🇬🇧', 'britain': '🇬🇧',
+                    'canada': '🇨🇦', 'ca': '🇨🇦',
+                    'germany': '🇩🇪', 'de': '🇩🇪',
+                    'france': '🇫🇷', 'fr': '🇫🇷',
+                    'spain': '🇪🇸', 'es': '🇪🇸',
+                    'italy': '🇮🇹', 'it': '🇮🇹',
+                    'russia': '🇷🇺', 'ru': '🇷🇺',
+                    'china': '🇨🇳', 'cn': '🇨🇳',
+                    'japan': '🇯🇵', 'jp': '🇯🇵',
+                    'korea': '🇰🇷', 'south korea': '🇰🇷', 'kr': '🇰🇷',
+                    'brazil': '🇧🇷', 'br': '🇧🇷',
+                    'mexico': '🇲🇽', 'mx': '🇲🇽',
+                    'australia': '🇦🇺', 'au': '🇦🇺',
+                    'india': '🇮🇳', 'in': '🇮🇳',
+                    'netherlands': '🇳🇱', 'nl': '🇳🇱', 'holland': '🇳🇱',
+                    'poland': '🇵🇱', 'pl': '🇵🇱',
+                    'sweden': '🇸🇪', 'se': '🇸🇪',
+                    'norway': '🇳🇴', 'no': '🇳🇴',
+                    'denmark': '🇩🇰', 'dk': '🇩🇰',
+                    'finland': '🇫🇮', 'fi': '🇫🇮',
+                    'ukraine': '🇺🇦', 'ua': '🇺🇦',
+                    'turkey': '🇹🇷', 'tr': '🇹🇷',
+                    'israel': '🇮🇱', 'il': '🇮🇱',
+                    'argentina': '🇦🇷', 'ar': '🇦🇷',
+                    'portugal': '🇵🇹', 'pt': '🇵🇹',
+                    'ireland': '🇮🇪', 'ie': '🇮🇪',
+                    'switzerland': '🇨🇭', 'ch': '🇨🇭',
+                    'austria': '🇦🇹', 'at': '🇦🇹',
+                    'belgium': '🇧🇪', 'be': '🇧🇪',
+                    'greece': '🇬🇷', 'gr': '🇬🇷',
+                    'czech': '🇨🇿', 'czechia': '🇨🇿', 'cz': '🇨🇿',
+                    'romania': '🇷🇴', 'ro': '🇷🇴',
+                    'hungary': '🇭🇺', 'hu': '🇭🇺',
+                    'philippines': '🇵🇭', 'ph': '🇵🇭',
+                    'indonesia': '🇮🇩', 'id': '🇮🇩',
+                    'thailand': '🇹🇭', 'th': '🇹🇭',
+                    'vietnam': '🇻🇳', 'vn': '🇻🇳',
+                    'singapore': '🇸🇬', 'sg': '🇸🇬',
+                    'malaysia': '🇲🇾', 'my': '🇲🇾',
+                    'new zealand': '🇳🇿', 'nz': '🇳🇿',
+                    'south africa': '🇿🇦', 'za': '🇿🇦',
+                    'egypt': '🇪🇬', 'eg': '🇪🇬',
+                    'saudi arabia': '🇸🇦', 'sa': '🇸🇦',
+                    'uae': '🇦🇪', 'united arab emirates': '🇦🇪',
+                    'colombia': '🇨🇴', 'co': '🇨🇴',
+                    'chile': '🇨🇱', 'cl': '🇨🇱',
+                    'peru': '🇵🇪', 'pe': '🇵🇪'
+                };
+                return flags[country.toLowerCase()] || '🌍';
+            }
+
+            // ADD THIS FUNCTION HERE:
+            function editContactNotes(contactId) {
+                const contacts = getContacts();
+                const contact = contacts.find(c => c.id === contactId) || { id: contactId, name: `User ${contactId}` };
+
+                const popup = document.createElement('div');
+                popup.id = 'contact-edit-popup';
+                popup.innerHTML = `
+                    <style>
+                        #contact-edit-popup {
+                            position: fixed;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            background: linear-gradient(135deg, #1a1207 0%, #2d1f0f 100%);
+                            border: 2px solid #8b6914;
+                            border-radius: 8px;
+                            padding: 16px;
+                            z-index: 10001;
+                            width: 280px;
+                            box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+                        }
+                        #contact-edit-popup .edit-title {
+                            color: #ffd700;
+                            font-weight: bold;
+                            font-size: 13px;
+                            margin-bottom: 12px;
+                            border-bottom: 1px solid #8b6914;
+                            padding-bottom: 6px;
+                        }
+                        #contact-edit-popup label {
+                            display: block;
+                            color: #999;
+                            font-size: 10px;
+                            margin-top: 8px;
+                            margin-bottom: 2px;
+                        }
+#contact-edit-popup input, #contact-edit-popup textarea, #contact-edit-popup select {
+                            width: 100%;
+                            padding: 6px;
+                            background: #1a1207;
+                            border: 1px solid #8b6914;
+                            border-radius: 4px;
+                            color: #ffd700;
+                            font-size: 11px;
+                            box-sizing: border-box;
+                        }
+                        #contact-edit-popup select option {
+                            background: #1a1207;
+                            color: #ffd700;
+                        }
+                        #contact-edit-popup .btn-row {
+                            display: flex;
+                            gap: 8px;
+                            margin-top: 12px;
+                        }
+                        #contact-edit-popup .btn {
+                            flex: 1;
+                            padding: 8px;
+                            border: none;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            font-weight: bold;
+                            font-size: 11px;
+                        }
+                        #contact-edit-popup .btn-save {
+                            background: #8b6914;
+                            color: #fff;
+                        }
+                        #contact-edit-popup .btn-cancel {
+                            background: #444;
+                            color: #ccc;
+                        }
+                    </style>
+                    <div class="edit-title">📝 ${contact.name || 'Contact'}</div>
+                    <label>Real Name</label>
+                    <input type="text" id="edit-realname" value="${contact.realName || ''}" placeholder="John Doe">
+<label>Country</label>
+                    <input type="text" id="edit-country" list="country-list" value="${contact.country || ''}" placeholder="Start typing...">
+                    <datalist id="country-list">
+                        <option value="USA">
+                        <option value="United Kingdom">
+                        <option value="Canada">
+                        <option value="Germany">
+                        <option value="France">
+                        <option value="Spain">
+                        <option value="Italy">
+                        <option value="Russia">
+                        <option value="China">
+                        <option value="Japan">
+                        <option value="South Korea">
+                        <option value="Brazil">
+                        <option value="Mexico">
+                        <option value="Australia">
+                        <option value="India">
+                        <option value="Netherlands">
+                        <option value="Poland">
+                        <option value="Sweden">
+                        <option value="Norway">
+                        <option value="Denmark">
+                        <option value="Finland">
+                        <option value="Ukraine">
+                        <option value="Turkey">
+                        <option value="Israel">
+                        <option value="Argentina">
+                        <option value="Portugal">
+                        <option value="Ireland">
+                        <option value="Switzerland">
+                        <option value="Austria">
+                        <option value="Belgium">
+                        <option value="Greece">
+                        <option value="Czech">
+                        <option value="Romania">
+                        <option value="Hungary">
+                        <option value="Philippines">
+                        <option value="Indonesia">
+                        <option value="Thailand">
+                        <option value="Vietnam">
+                        <option value="Singapore">
+                        <option value="Malaysia">
+                        <option value="New Zealand">
+                        <option value="South Africa">
+                        <option value="Egypt">
+                        <option value="Saudi Arabia">
+                        <option value="UAE">
+                        <option value="Colombia">
+                        <option value="Chile">
+                        <option value="Peru">
+                    </datalist>
+                    <label>City</label>
+                    <input type="text" id="edit-city" value="${contact.city || ''}" placeholder="New York">
+                    <label>Language</label>
+                    <input type="text" id="edit-language" list="language-list" value="${contact.language || ''}" placeholder="Start typing...">
+                    <datalist id="language-list">
+                        <option value="English">
+                        <option value="Spanish">
+                        <option value="French">
+                        <option value="German">
+                        <option value="Italian">
+                        <option value="Portuguese">
+                        <option value="Russian">
+                        <option value="Chinese">
+                        <option value="Japanese">
+                        <option value="Korean">
+                        <option value="Arabic">
+                        <option value="Hindi">
+                        <option value="Dutch">
+                        <option value="Polish">
+                        <option value="Swedish">
+                        <option value="Norwegian">
+                        <option value="Danish">
+                        <option value="Finnish">
+                        <option value="Ukrainian">
+                        <option value="Turkish">
+                        <option value="Hebrew">
+                        <option value="Greek">
+                        <option value="Czech">
+                        <option value="Romanian">
+                        <option value="Hungarian">
+                        <option value="Thai">
+                        <option value="Vietnamese">
+                        <option value="Indonesian">
+                        <option value="Tagalog">
+                        <option value="Malay">
+                    </datalist>
+<label>Timezone</label>
+                    <div style="display:flex;gap:4px;">
+                        <select id="edit-timezone" style="flex:1;">
+                            <option value="">-- Unknown --</option>
+                        </select>
+                        <input type="text" id="edit-timezone-custom" style="width:60px;" placeholder="±0" value="${contact.timezone !== undefined && contact.timezone !== '' ? contact.timezone : ''}" title="Custom UTC offset">
+                    </div>
+<label>Notes</label>
+                    <textarea id="edit-notes" placeholder="Any notes about this player...">${contact.notes || ''}</textarea>
+                    <label style="display:flex;align-items:center;gap:6px;margin-top:8px;cursor:pointer;">
+                        <input type="checkbox" id="edit-favorite" ${contact.favorite ? 'checked' : ''} style="width:auto;">
+                        <span>⭐ Favorite</span>
+                    </label>
+                    <div class="btn-row">
+                        <button class="btn btn-cancel" id="edit-cancel">Cancel</button>
+                        <button class="btn btn-save" id="edit-save">Save</button>
+                    </div>
+                `;
+
+                // Country to timezone mapping
+                const countryTimezones = {
+                    'usa': [{ offset: -5, label: 'Eastern (UTC-5)' }, { offset: -6, label: 'Central (UTC-6)' }, { offset: -7, label: 'Mountain (UTC-7)' }, { offset: -8, label: 'Pacific (UTC-8)' }, { offset: -9, label: 'Alaska (UTC-9)' }, { offset: -10, label: 'Hawaii (UTC-10)' }],
+                    'united states': [{ offset: -5, label: 'Eastern (UTC-5)' }, { offset: -6, label: 'Central (UTC-6)' }, { offset: -7, label: 'Mountain (UTC-7)' }, { offset: -8, label: 'Pacific (UTC-8)' }, { offset: -9, label: 'Alaska (UTC-9)' }, { offset: -10, label: 'Hawaii (UTC-10)' }],
+                    'canada': [{ offset: -4, label: 'Atlantic (UTC-4)' }, { offset: -5, label: 'Eastern (UTC-5)' }, { offset: -6, label: 'Central (UTC-6)' }, { offset: -7, label: 'Mountain (UTC-7)' }, { offset: -8, label: 'Pacific (UTC-8)' }],
+                    'united kingdom': [{ offset: 0, label: 'GMT (UTC+0)' }],
+                    'uk': [{ offset: 0, label: 'GMT (UTC+0)' }],
+                    'germany': [{ offset: 1, label: 'CET (UTC+1)' }],
+                    'france': [{ offset: 1, label: 'CET (UTC+1)' }],
+                    'spain': [{ offset: 1, label: 'CET (UTC+1)' }],
+                    'italy': [{ offset: 1, label: 'CET (UTC+1)' }],
+                    'netherlands': [{ offset: 1, label: 'CET (UTC+1)' }],
+                    'belgium': [{ offset: 1, label: 'CET (UTC+1)' }],
+                    'austria': [{ offset: 1, label: 'CET (UTC+1)' }],
+                    'switzerland': [{ offset: 1, label: 'CET (UTC+1)' }],
+                    'poland': [{ offset: 1, label: 'CET (UTC+1)' }],
+                    'czech': [{ offset: 1, label: 'CET (UTC+1)' }],
+                    'sweden': [{ offset: 1, label: 'CET (UTC+1)' }],
+                    'norway': [{ offset: 1, label: 'CET (UTC+1)' }],
+                    'denmark': [{ offset: 1, label: 'CET (UTC+1)' }],
+                    'hungary': [{ offset: 1, label: 'CET (UTC+1)' }],
+                    'romania': [{ offset: 2, label: 'EET (UTC+2)' }],
+                    'greece': [{ offset: 2, label: 'EET (UTC+2)' }],
+                    'finland': [{ offset: 2, label: 'EET (UTC+2)' }],
+                    'ukraine': [{ offset: 2, label: 'EET (UTC+2)' }],
+                    'israel': [{ offset: 2, label: 'IST (UTC+2)' }],
+                    'turkey': [{ offset: 3, label: 'TRT (UTC+3)' }],
+                    'russia': [{ offset: 3, label: 'Moscow (UTC+3)' }, { offset: 4, label: 'Samara (UTC+4)' }, { offset: 5, label: 'Yekaterinburg (UTC+5)' }, { offset: 7, label: 'Krasnoyarsk (UTC+7)' }, { offset: 8, label: 'Irkutsk (UTC+8)' }, { offset: 9, label: 'Yakutsk (UTC+9)' }, { offset: 10, label: 'Vladivostok (UTC+10)' }],
+                    'saudi arabia': [{ offset: 3, label: 'AST (UTC+3)' }],
+                    'uae': [{ offset: 4, label: 'GST (UTC+4)' }],
+                    'india': [{ offset: 5.5, label: 'IST (UTC+5:30)' }],
+                    'thailand': [{ offset: 7, label: 'ICT (UTC+7)' }],
+                    'vietnam': [{ offset: 7, label: 'ICT (UTC+7)' }],
+                    'indonesia': [{ offset: 7, label: 'WIB (UTC+7)' }, { offset: 8, label: 'WITA (UTC+8)' }, { offset: 9, label: 'WIT (UTC+9)' }],
+                    'singapore': [{ offset: 8, label: 'SGT (UTC+8)' }],
+                    'malaysia': [{ offset: 8, label: 'MYT (UTC+8)' }],
+                    'philippines': [{ offset: 8, label: 'PHT (UTC+8)' }],
+                    'china': [{ offset: 8, label: 'CST (UTC+8)' }],
+                    'japan': [{ offset: 9, label: 'JST (UTC+9)' }],
+                    'south korea': [{ offset: 9, label: 'KST (UTC+9)' }],
+                    'korea': [{ offset: 9, label: 'KST (UTC+9)' }],
+                    'australia': [{ offset: 8, label: 'Perth (UTC+8)' }, { offset: 9.5, label: 'Adelaide (UTC+9:30)' }, { offset: 10, label: 'Sydney/Melbourne (UTC+10)' }],
+                    'new zealand': [{ offset: 12, label: 'NZST (UTC+12)' }],
+                    'brazil': [{ offset: -3, label: 'Brasilia (UTC-3)' }, { offset: -4, label: 'Amazon (UTC-4)' }],
+                    'argentina': [{ offset: -3, label: 'ART (UTC-3)' }],
+                    'mexico': [{ offset: -6, label: 'Central (UTC-6)' }, { offset: -7, label: 'Mountain (UTC-7)' }, { offset: -8, label: 'Pacific (UTC-8)' }],
+                    'colombia': [{ offset: -5, label: 'COT (UTC-5)' }],
+                    'chile': [{ offset: -4, label: 'CLT (UTC-4)' }],
+                    'peru': [{ offset: -5, label: 'PET (UTC-5)' }],
+                    'south africa': [{ offset: 2, label: 'SAST (UTC+2)' }],
+                    'egypt': [{ offset: 2, label: 'EET (UTC+2)' }],
+                    'portugal': [{ offset: 0, label: 'WET (UTC+0)' }],
+                    'ireland': [{ offset: 0, label: 'GMT (UTC+0)' }]
+                };
+
+                function updateTimezoneOptions(country, currentTz, autoSelect = false) {
+                    const select = document.getElementById('edit-timezone');
+                    const customInput = document.getElementById('edit-timezone-custom');
+                    const timezones = countryTimezones[country?.toLowerCase()] || null;
+
+                    if (timezones) {
+                        let options = '<option value="">-- Select --</option>' +
+                            timezones.map(tz =>
+                                          `<option value="${tz.offset}" ${currentTz == tz.offset ? 'selected' : ''}>${tz.label}</option>`
+                            ).join('');
+                        select.innerHTML = options;
+
+                        // Auto-select only if exactly one timezone
+                        if (timezones.length === 1 && autoSelect && !currentTz) {
+                            select.value = timezones[0].offset;
+                            customInput.value = timezones[0].offset;
+                        } else if (currentTz !== undefined && currentTz !== '') {
+                            select.value = currentTz;
+                        }
+                    } else {
+                        // Fallback to all timezones
+                        select.innerHTML = '<option value="">-- Unknown --</option>' +
+                            [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11,12].map(tz =>
+                                                                                                      `<option value="${tz}" ${currentTz == tz ? 'selected' : ''}>UTC${tz >= 0 ? '+' : ''}${tz}</option>`
+                            ).join('');
+                    }
+                }
+
+
+                document.body.appendChild(popup);
+
+                // Initialize timezone based on existing country
+                updateTimezoneOptions(contact.country, contact.timezone, false);
+
+                // Update timezone when country changes
+                document.getElementById('edit-country').addEventListener('change', function() {
+                    updateTimezoneOptions(this.value, null, true);
+                });
+                document.getElementById('edit-country').addEventListener('input', function() {
+                    updateTimezoneOptions(this.value, null, true);
+                });
+
+                // Sync select to custom input
+                document.getElementById('edit-timezone').addEventListener('change', function() {
+                    document.getElementById('edit-timezone-custom').value = this.value;
+                });
+
+                // Close on escape
+                const escHandler = (e) => {
+                    if (e.key === 'Escape') {
+                        popup.remove();
+                        document.removeEventListener('keydown', escHandler);
+                    }
+                };
+                document.addEventListener('keydown', escHandler);
+
+                document.getElementById('edit-cancel').onclick = () => popup.remove();
+                document.getElementById('edit-save').onclick = () => {
+                    const updated = {
+                        ...contact,
+                        realName: document.getElementById('edit-realname').value.trim(),
+                        country: document.getElementById('edit-country').value.trim(),
+                        city: document.getElementById('edit-city').value.trim(),
+                        language: document.getElementById('edit-language').value.trim(),
+                        timezone: document.getElementById('edit-timezone-custom').value.trim() || document.getElementById('edit-timezone').value,
+                        notes: document.getElementById('edit-notes').value.trim(),
+                        favorite: document.getElementById('edit-favorite').checked  // ADD HERE
+                    };
+                    // Check if any data was entered - if so, mark as permanent
+                    const hasData = updated.realName || updated.country || updated.city ||
+                          updated.language || updated.timezone || updated.notes;
+                    if (hasData) {
+                        updated.permanent = true;
+                    }
+                    const contacts = getContacts();
+                    const idx = contacts.findIndex(c => c.id === contactId);
+                    if (idx >= 0) contacts[idx] = updated;
+                    else contacts.push(updated);
+                    saveContacts(contacts);
+                    renderContacts();
+                    renderGuildList();
+                    updateRecipients();
+                    popup.remove();
+                };
+            }
+
+
+            // Remove existing dock
+            const existing = document.getElementById('hwh-chat-dock');
+            if (existing) existing.remove();
+
+            const dock = document.createElement('div');
+            dock.id = 'hwh-chat-dock';
+            dock.innerHTML = `
+        <style>
+          #hwh-chat-dock {
+                position: fixed;
+                top: 50px;
+                right: 250px;
+                width: 300px;
+                height: calc(100vh - 70px);
+                background: linear-gradient(135deg, #1a1207 0%, #2d1f0f 100%);
+                border: 2px solid #8b6914;
+                border-radius: 8px;
+                z-index: 10000;
+                font-family: Arial, sans-serif;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+                display: flex;
+                flex-direction: column;
+            }
+            #hwh-chat-dock .dock-header {
+                background: linear-gradient(90deg, #8b6914, #6d5210);
+                padding: 8px 10px;
+                cursor: move;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-radius: 6px 6px 0 0;
+            }
+            #hwh-chat-dock .dock-title {
+                color: #ffd700;
+                font-weight: bold;
+                font-size: 13px;
+            }
+            #hwh-chat-dock .dock-close {
+                background: none;
+                border: none;
+                color: #ffd700;
+                font-size: 18px;
+                cursor: pointer;
+                padding: 0 4px;
+                line-height: 1;
+            }
+            #hwh-chat-dock .dock-close:hover { color: #fff; }
+            #hwh-chat-dock .dock-tabs {
+                display: flex;
+                background: rgba(0,0,0,0.3);
+            }
+            #hwh-chat-dock .dock-tab {
+                flex: 1;
+                padding: 8px;
+                background: #3a2a1a;
+                border: none;
+                color: #999;
+                font-size: 11px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            #hwh-chat-dock .dock-tab.active {
+                background: #5a4020;
+                color: #ffd700;
+            }
+            #hwh-chat-dock .dock-tab:hover:not(.active) { background: #4a3520; }
+            #hwh-chat-dock .dock-content {
+                display: none;
+                padding: 8px;
+                flex: 1;
+                overflow-y: auto;
+            }
+            #hwh-chat-dock .dock-content.active { display: flex; flex-direction: column; }
+            #hwh-chat-dock .dock-btn {
+                width: 100%;
+                padding: 6px;
+                margin-bottom: 4px;
+                background: linear-gradient(135deg, #6d5210, #5a4010);
+                color: #ffd700;
+                border: 1px solid #8b6914;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 10px;
+                font-weight: bold;
+                transition: all 0.2s;
+            }
+            #hwh-chat-dock .dock-btn:hover { background: linear-gradient(135deg, #8b6914, #6d5210); }
+            #hwh-chat-dock .dock-btn.primary {
+                background: linear-gradient(135deg, #4a90e2, #2d5f8f);
+                border-color: #5ea8f3;
+            }
+            #hwh-chat-dock .dock-btn.primary:hover { background: linear-gradient(135deg, #5ea8f3, #4a90e2); }
+            #hwh-chat-dock .dock-btn:disabled {
+                background: #333;
+                color: #666;
+                cursor: not-allowed;
+                border-color: #444;
+            }
+            #hwh-chat-dock .section-label {
+                font-size: 9px;
+                color: #888;
+                margin: 6px 0 2px;
+                padding-bottom: 2px;
+                border-bottom: 1px solid #444;
+            }
+            #hwh-chat-dock .member-row {
+                display: flex;
+                align-items: center;
+                padding: 2px 4px;
+                margin: 1px 0;
+                background: rgba(0,0,0,0.2);
+                border-radius: 3px;
+                font-size: 10px;
+                color: #ccc;
+                gap: 4px;
+            }
+            #hwh-chat-dock .member-row:hover { background: rgba(139,105,20,0.3); }
+            #hwh-chat-dock .member-row input[type="checkbox"] {
+                width: 12px;
+                height: 12px;
+                cursor: pointer;
+            }
+            #hwh-chat-dock .member-row .member-name {
+                flex: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            #hwh-chat-dock .member-row .member-actions {
+                display: flex;
+                gap: 2px;
+            }
+            #hwh-chat-dock .member-row .pm-btn {
+                background: #8b6914;
+                border: none;
+                color: #fff;
+                padding: 1px 4px;
+                border-radius: 3px;
+                font-size: 8px;
+                cursor: pointer;
+            }
+            #hwh-chat-dock .member-row .pm-btn:hover { background: #a67c16; }
+#hwh-chat-dock .contact-row {
+                display: flex;
+                align-items: center;
+                padding: 2px 4px;
+                margin: 1px 0;
+                background: rgba(0,0,0,0.2);
+                border-radius: 3px;
+                font-size: 10px;
+                color: #ccc;
+                gap: 4px;
+                min-height: 20px;
+            }
+            #hwh-chat-dock .member-row {
+                display: flex;
+                align-items: center;
+                padding: 2px 4px;
+                margin: 1px 0;
+                background: rgba(0,0,0,0.2);
+                border-radius: 3px;
+                font-size: 10px;
+                color: #ccc;
+                gap: 4px;
+                min-height: 20px;
+            }
+            #hwh-chat-dock .contact-row:hover { background: rgba(139,105,20,0.3); }
+            #hwh-chat-dock .contact-row .contact-name {
+                flex: 1;
+                cursor: pointer;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            #hwh-chat-dock .contact-row .contact-name:hover { color: #ffd700; }
+            #hwh-chat-dock .contact-row .pm-btn {
+                background: #8b6914;
+                border: none;
+                color: #fff;
+                padding: 1px 4px;
+                border-radius: 3px;
+                font-size: 8px;
+                cursor: pointer;
+            }
+            #hwh-chat-dock .contact-row .edit-btn {
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-size: 9px;
+                padding: 0 2px;
+            }
+            #hwh-chat-dock .select-all-row {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 4px;
+                background: rgba(139,105,20,0.2);
+                border-radius: 4px;
+                margin-bottom: 4px;
+                font-size: 10px;
+                color: #ffd700;
+            }
+            #hwh-chat-dock .pm-input {
+                width: 100%;
+                padding: 4px;
+                background: rgba(0,0,0,0.3);
+                border: 1px solid #8b6914;
+                border-radius: 4px;
+                color: #ffd700;
+                font-size: 10px;
+                margin-bottom: 4px;
+            }
+            #hwh-chat-dock .pm-input::placeholder { color: #666; }
+            #hwh-chat-dock .message-area {
+                width: 100%;
+                min-height: 60px;
+                flex: 1;
+                padding: 6px;
+                background: rgba(0,0,0,0.3);
+                border: 1px solid #8b6914;
+                border-radius: 4px;
+                color: #ffd700;
+                font-size: 11px;
+                font-family: Arial, sans-serif;
+                resize: vertical;
+                margin-bottom: 6px;
+            }
+            #hwh-chat-dock .selected-count {
+                font-size: 9px;
+                color: #4ae29a;
+                margin-left: auto;
+            }
+        </style>
+        <div class="dock-header">
+            <span class="dock-title">💬 Chat & PM</span>
+            <button class="dock-close">×</button>
+        </div>
+        <div class="dock-tabs">
+            <button class="dock-tab active" data-tab="guild">👥 Guild</button>
+            <button class="dock-tab" data-tab="contacts">📋 Contacts</button>
+            <button class="dock-tab" data-tab="send">📤 Send</button>
+        </div>
+
+        <!-- Guild Tab -->
+        <div class="dock-content active" data-content="guild">
+            <button class="dock-btn" id="dock-guild-chat">📢 Open Guild Chat</button>
+            <button class="dock-btn" id="dock-game-pm">💬 Open Game PMs</button>
+            <div class="section-label">Select members to PM</div>
+            <div class="select-all-row">
+                <input type="checkbox" id="dock-select-all">
+                <label for="dock-select-all">Select All</label>
+                <span class="selected-count" id="dock-selected-count">0 selected</span>
+            </div>
+<div id="dock-guild-list" style="flex:1; overflow-y: auto; min-height: 0;"></div>
+            <button class="dock-btn primary" id="dock-pm-selected" disabled>📤 PM Selected (0)</button>
+        </div>
+
+<!-- Contacts Tab -->
+        <div class="dock-content" data-content="contacts">
+            <button class="dock-btn" id="dock-sync-contacts">🔄 Sync Contacts from PMs</button>
+                        <button class="dock-btn" id="dock-export-contacts">📋 Export All Notes</button>
+
+            <input type="text" class="pm-input" id="dock-contact-search" placeholder="🔍 Search contacts...">
+            <div class="section-label">⭐ Favorites</div>
+            <div id="dock-favorites"></div>
+            <div class="section-label">📋 Saved Contacts</div>
+<div id="dock-contacts" style="flex:1; overflow-y: auto; min-height: 0;"></div>
+<div class="section-label">Direct PM by User ID</div>
+            <input type="text" class="pm-input" id="dock-direct-id" placeholder="Enter User ID...">
+            <button class="dock-btn" id="dock-direct-pm">PM User</button>
+        </div>
+
+        <!-- Send Tab -->
+        <div class="dock-content" data-content="send">
+            <div class="section-label">Recipients</div>
+            <div id="dock-recipients" style="font-size: 11px; color: #ccc; padding: 6px; background: rgba(0,0,0,0.2); border-radius: 4px; margin-bottom: 8px; min-height: 30px;">
+                No recipients selected
+            </div>
+            <div class="section-label">Message</div>
+            <textarea class="message-area" id="dock-message" placeholder="Type your message..."></textarea>
+            <button class="dock-btn primary" id="dock-send-btn" disabled>📤 Send Message</button>
+            <div id="dock-send-status" style="font-size: 10px; color: #888; text-align: center; margin-top: 4px;"></div>
+        </div>
+    `;
+
+            document.body.appendChild(dock);
+
+            // Make draggable
+            let isDragging = false, offsetX, offsetY;
+            const header = dock.querySelector('.dock-header');
+            header.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                offsetX = e.clientX - dock.offsetLeft;
+                offsetY = e.clientY - dock.offsetTop;
+            });
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                dock.style.left = (e.clientX - offsetX) + 'px';
+                dock.style.top = (e.clientY - offsetY) + 'px';
+                dock.style.right = 'auto';
+            });
+            document.addEventListener('mouseup', () => isDragging = false);
+
+            // Close button
+            dock.querySelector('.dock-close').onclick = () => dock.remove();
+
+            // Tab switching
+            dock.querySelectorAll('.dock-tab').forEach(tab => {
+                tab.onclick = () => {
+                    dock.querySelectorAll('.dock-tab').forEach(t => t.classList.remove('active'));
+                    dock.querySelectorAll('.dock-content').forEach(c => c.classList.remove('active'));
+                    tab.classList.add('active');
+                    dock.querySelector(`[data-content="${tab.dataset.tab}"]`).classList.add('active');
+                };
+            });
+
+            // Update selected count display
+            function updateSelectedCount() {
+                const count = selectedForPM.size;
+                document.getElementById('dock-selected-count').textContent = `${count} selected`;
+                document.getElementById('dock-pm-selected').textContent = `📤 PM Selected (${count})`;
+                document.getElementById('dock-pm-selected').disabled = count === 0;
+                updateRecipients();
+            }
+
+
+            // Update recipients display
+            function updateRecipients() {
+                const el = document.getElementById('dock-recipients');
+                const members = window.liveData?.guildMembers || {};
+                const contacts = getContacts();
+
+                if (selectedForPM.size === 0) {
+                    el.innerHTML = '<span style="color:#666;">No recipients selected</span>';
+                    document.getElementById('dock-send-btn').disabled = true;
+                } else if (selectedForPM.size === 1) {
+                    // Single recipient - show full details
+                    const id = Array.from(selectedForPM)[0];
+                    const m = members[id];
+                    const contact = contacts.find(c => c.id === id);
+                    const name = m?.name || contact?.name || `User ${id}`;
+                    const flag = contact?.country ? getCountryFlag(contact.country) : '';
+                    const isFavorite = contact?.favorite || false;
+
+                    let html = `<div style="display:flex;justify-content:space-between;align-items:center;">
+<span style="color:#ffd700;font-weight:bold;">👤 ${name} ${flag ? `<span style="font-size:14px;text-shadow: 0 0 2px #fff, 0 0 2px #fff;line-height:0;margin-left:4px;">${flag}</span>` : ''}</span>
+<span style="display:flex;gap:6px;align-items:center;">
+    <span class="recipient-star-btn" data-id="${id}" style="cursor:pointer;font-size:12px;" title="Toggle favorite">${isFavorite ? '⭐' : '☆'}</span>
+    <span class="recipient-edit-btn" data-id="${id}" data-name="${name.replace(/"/g, '&quot;')}" style="cursor:pointer;font-size:10px;">✏️</span>
+</span>
+            </div>`;
+                    if (contact && (contact.realName || contact.country || contact.language || contact.timezone || contact.notes)) {
+                        // Calculate their local time
+                        let localTimeStr = '';
+                        if (contact.timezone !== undefined && contact.timezone !== '') {
+                            const now = new Date();
+                            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+                            const theirTime = new Date(utc + (parseFloat(contact.timezone) * 3600000));
+                            const hours = theirTime.getHours();
+                            const mins = theirTime.getMinutes().toString().padStart(2, '0');
+                            const ampm = hours >= 12 ? 'PM' : 'AM';
+                            const hour12 = hours % 12 || 12;
+                            localTimeStr = `${hour12}:${mins} ${ampm}`;
+                        }
+
+                        const details = [
+                            contact.realName ? `<div style="color:#ccc;font-size:10px;">👤 ${contact.realName}</div>` : '',
+                            contact.country ? `<div style="color:#ccc;font-size:10px;">📍 ${contact.city ? contact.city + ', ' : ''}${contact.country}</div>` : '',
+                            contact.language ? `<div style="color:#ccc;font-size:10px;">🗣️ ${contact.language}</div>` : '',
+                            contact.timezone !== undefined && contact.timezone !== '' ? `<div style="color:#ccc;font-size:10px;">🕐 ${localTimeStr} <span style="color:#888;font-size:9px;">(UTC${contact.timezone >= 0 ? '+' : ''}${contact.timezone})</span></div>` : '',
+                            contact.notes ? `<div style="color:#aaa;font-size:9px;margin-top:4px;padding:4px;background:rgba(0,0,0,0.2);border-radius:3px;">📝 ${contact.notes}</div>` : ''
+                        ].filter(Boolean).join('');
+                        html += details;
+                    }
+                    el.innerHTML = html;
+
+                    // Star toggle handler
+                    el.querySelector('.recipient-star-btn')?.addEventListener('click', () => {
+                        const contacts = getContacts();
+                        let contact = contacts.find(c => c.id === id);
+                        if (!contact) {
+                            // Create contact if doesn't exist
+                            contact = { id: id, name: name, favorite: true };
+                            contacts.push(contact);
+                        } else {
+                            contact.favorite = !contact.favorite;
+                        }
+                        saveContacts(contacts);
+                        updateRecipients();  // Refresh to show new star state
+                        renderContacts();    // Refresh contacts list too
+                    });
+
+                    // Edit button handler
+                    el.querySelector('.recipient-edit-btn')?.addEventListener('click', () => {
+                        const contacts = getContacts();
+                        if (!contacts.find(c => c.id === id)) {
+                            contacts.push({ id: id, name: name, favorite: false });
+                            saveContacts(contacts);
+                        }
+                        editContactNotes(id);
+                    });
+
+                    updateSendButton();
+                } else {
+                    // Multiple recipients
+                    const names = Array.from(selectedForPM).map(id => {
+                        const m = members[id];
+                        const contact = contacts.find(c => c.id === id);
+                        return m?.name || contact?.name || `User ${id}`;
+                    });
+                    if (names.length <= 5) {
+                        el.innerHTML = names.map(n => `<span style="color:#ffd700;">👤 ${n}</span>`).join(', ');
+                    } else {
+                        el.innerHTML = `<span style="color:#ffd700;">${names.length} members selected</span>`;
+                    }
+                    updateSendButton();
+                }
+            }
+
+            function updateSendButton() {
+                const msg = document.getElementById('dock-message').value.trim();
+                document.getElementById('dock-send-btn').disabled = selectedForPM.size === 0 || !msg;
+            }
+            // ===== EVENT DELEGATION - Guild List =====
+            document.getElementById('dock-guild-list').addEventListener('click', (e) => {
+                const pmBtn = e.target.closest('.pm-btn');
+                if (pmBtn) {
+                    selectedForPM.clear();
+                    selectedForPM.add(pmBtn.dataset.id);
+                    updateSelectedCount();
+                    dock.querySelectorAll('.dock-tab').forEach(t => t.classList.remove('active'));
+                    dock.querySelectorAll('.dock-content').forEach(c => c.classList.remove('active'));
+                    dock.querySelector('[data-tab="send"]').classList.add('active');
+                    dock.querySelector('[data-content="send"]').classList.add('active');
+                    document.getElementById('dock-message').focus();
+                    return;
+                }
+
+                const editBtn = e.target.closest('.edit-btn');
+                if (editBtn) {
+                    const contacts = getContacts();
+                    if (!contacts.find(c => c.id === editBtn.dataset.id)) {
+                        contacts.push({ id: editBtn.dataset.id, name: editBtn.dataset.name, favorite: false });
+                        saveContacts(contacts);
+                    }
+                    editContactNotes(editBtn.dataset.id);
+                    return;
+                }
+            });
+
+            document.getElementById('dock-guild-list').addEventListener('change', (e) => {
+                const cb = e.target.closest('.member-cb');
+                if (cb) {
+                    if (cb.checked) selectedForPM.add(cb.dataset.id);
+                    else selectedForPM.delete(cb.dataset.id);
+                    updateSelectedCount();
+                }
+            });
+
+            // ===== EVENT DELEGATION - Favorites & Contacts =====
+            ['dock-favorites', 'dock-contacts'].forEach(containerId => {
+                document.getElementById(containerId)?.addEventListener('click', (e) => {
+                    const starBtn = e.target.closest('.star-btn');
+                    if (starBtn) {
+                        const contacts = getContacts();
+                        const contact = contacts.find(c => c.id === starBtn.dataset.id);
+                        if (contact) {
+                            contact.favorite = !contact.favorite;
+                            saveContacts(contacts);
+                            renderContacts(document.getElementById('dock-contact-search')?.value || '');
+                        }
+                        return;
+                    }
+
+                    const contactName = e.target.closest('.contact-name');
+                    if (contactName) {
+                        selectedForPM.clear();
+                        selectedForPM.add(contactName.dataset.id);
+                        updateSelectedCount();
+                        dock.querySelectorAll('.dock-tab').forEach(t => t.classList.remove('active'));
+                        dock.querySelectorAll('.dock-content').forEach(c => c.classList.remove('active'));
+                        dock.querySelector('[data-tab="send"]').classList.add('active');
+                        dock.querySelector('[data-content="send"]').classList.add('active');
+                        document.getElementById('dock-message').focus();
+                        return;
+                    }
+
+                    const editBtn = e.target.closest('.edit-btn');
+                    if (editBtn) {
+                        editContactNotes(editBtn.dataset.id);
+                        return;
+                    }
+                });
+            });
+
+
+            // Render guild members with checkboxes
+            function renderGuildList() {
+                const list = document.getElementById('dock-guild-list');
+                const members = window.liveData?.guildMembers || {};
+                const myId = String(cheats?.getPlayerId?.() || window.liveData?.userInfo?.id || '');
+                const contacts = getContacts();
+                let entries = Object.entries(members).filter(([id]) => id !== myId);
+
+                if (entries.length === 0) {
+                    list.innerHTML = '<div style="color:#666;font-size:10px;padding:10px;text-align:center;">No guild data - open sidebar first</div>';
+                    return;
+                }
+
+                // Sort alphabetically
+                entries.sort((a, b) => (a[1].name || '').localeCompare(b[1].name || ''));
+
+                list.innerHTML = entries.map(([id, m]) => {
+                    const contact = contacts.find(c => c.id === id);
+                    const hasNotes = contact && (contact.realName || contact.country || contact.notes);
+                    const tooltip = contact ? [
+                        contact.realName ? `Name: ${contact.realName}` : '',
+                        contact.country ? `${contact.city ? contact.city + ', ' : ''}${contact.country}` : '',
+                        contact.timezone ? `UTC${contact.timezone >= 0 ? '+' : ''}${contact.timezone}` : '',
+                        contact.language ? `Lang: ${contact.language}` : '',
+                        contact.notes ? `Notes: ${contact.notes}` : ''
+                    ].filter(Boolean).join(' | ') : '';
+                    return `
+            <div class="member-row" title="${tooltip.replace(/"/g, '&quot;')}">
+                <input type="checkbox" class="member-cb" data-id="${id}" ${selectedForPM.has(id) ? 'checked' : ''}>
+<span class="member-name">${m.name || 'Unknown'}${contact?.country ? ` <span style="text-shadow: 0 0 2px #fff, 0 0 2px #fff;">${getCountryFlag(contact.country)}</span>` : ''}${hasNotes ? ' 📝' : ''}</span>
+                <div class="member-actions">
+                    <button class="pm-btn" data-id="${id}" data-name="${(m.name || '').replace(/"/g, '&quot;')}">PM</button>
+                    <span class="edit-btn" data-id="${id}" data-name="${(m.name || '').replace(/"/g, '&quot;')}" style="cursor:pointer;font-size:9px;">✏️</span>
+                </div>
+            </div>
+        `;
+                }).join('');
+            }
+
+            // Render contacts
+            function renderContacts(searchTerm = '') {
+                const contacts = getContacts();
+                const guildIds = new Set(Object.keys(window.liveData?.guildMembers || {}));
+                const search = searchTerm.toLowerCase();
+
+                const filtered = search ? contacts.filter(c =>
+                                                          (c.name || '').toLowerCase().includes(search) ||
+                                                          (c.realName || '').toLowerCase().includes(search) ||
+                                                          (c.country || '').toLowerCase().includes(search) ||
+                                                          (c.notes || '').toLowerCase().includes(search)
+                                                         ) : contacts;
+
+                // Favorites: include all (even guild members if favorited)
+                const favorites = filtered.filter(c => c.favorite);
+
+                // Regular contacts: exclude guild members (they're in Guild tab)
+                const regular = filtered.filter(c => !c.favorite && !guildIds.has(c.id));
+
+                // Sort both by lastPmTime (most recent first)
+                favorites.sort((a, b) => (b.lastPmTime || 0) - (a.lastPmTime || 0));
+                regular.sort((a, b) => (b.lastPmTime || 0) - (a.lastPmTime || 0));
+
+                const favEl = document.getElementById('dock-favorites');
+                const contEl = document.getElementById('dock-contacts');
+
+                const renderList = (list, container) => {
+                    if (list.length === 0) {
+                        container.innerHTML = '<div style="color:#666;font-size:9px;padding:2px;">None</div>';
+                        return;
+                    }
+                    container.innerHTML = list.map(c => {
+                        const hasNotes = c.realName || c.country || c.notes;
+                        const tooltip = [
+                            c.realName ? `Name: ${c.realName}` : '',
+                            c.country ? `${c.city ? c.city + ', ' : ''}${c.country}` : '',
+                            c.timezone ? `UTC${c.timezone >= 0 ? '+' : ''}${c.timezone}` : '',
+                            c.language ? `Lang: ${c.language}` : '',
+                            c.notes ? `Notes: ${c.notes}` : '',
+                            c.lastPmTime ? `Last PM: ${new Date(c.lastPmTime * 1000).toLocaleDateString()}` : ''
+                        ].filter(Boolean).join(' | ');
+                        return `
+                <div class="contact-row" title="${tooltip.replace(/"/g, '&quot;')}">
+                    <span class="star-btn" data-id="${c.id}" style="cursor:pointer;">${c.favorite ? '⭐' : '☆'}</span>
+<span class="contact-name" data-id="${c.id}" data-name="${(c.name || '').replace(/"/g, '&quot;')}" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;">${c.name}${c.country ? ` <span style="text-shadow: 0 0 2px #fff, 0 0 2px #fff;">${getCountryFlag(c.country)}</span>` : ''}${hasNotes ? ' 📝' : ''}</span>
+                    <span class="edit-btn" data-id="${c.id}" style="cursor:pointer;">✏️</span>
+                </div>
+            `;
+                    }).join('');
+                };
+
+                renderList(favorites, favEl);
+                renderList(regular, contEl);
+            }
+
+            // Select All handler
+            document.getElementById('dock-select-all').onchange = function() {
+                const members = window.liveData?.guildMembers || {};
+                const checkboxes = document.querySelectorAll('#dock-guild-list .member-cb');
+                if (this.checked) {
+                    Object.keys(members).forEach(id => selectedForPM.add(id));
+                    checkboxes.forEach(cb => cb.checked = true);
+                } else {
+                    selectedForPM.clear();
+                    checkboxes.forEach(cb => cb.checked = false);
+                }
+                updateSelectedCount();
+            };
+
+            // PM Selected button -> go to Send tab
+            document.getElementById('dock-pm-selected').onclick = () => {
+                if (selectedForPM.size === 0) return;
+                dock.querySelectorAll('.dock-tab').forEach(t => t.classList.remove('active'));
+                dock.querySelectorAll('.dock-content').forEach(c => c.classList.remove('active'));
+                dock.querySelector('[data-tab="send"]').classList.add('active');
+                dock.querySelector('[data-content="send"]').classList.add('active');
+                document.getElementById('dock-message').focus();
+            };
+
+            // Guild chat button
+            document.getElementById('dock-guild-chat').onclick = () => window.goGuildChat('CLAN_TAB');
+
+            // Game PM button
+            document.getElementById('dock-game-pm').onclick = () => window.goGuildChat('PRIVATE_TAB');
+
+            // Message input handler
+            const dockMessage = document.getElementById('dock-message');
+            dockMessage.oninput = updateSendButton;
+
+            // Enter to send (Shift+Enter for newline)
+            dockMessage.onkeydown = function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    const sendBtn = document.getElementById('dock-send-btn');
+                    if (!sendBtn.disabled) {
+                        sendBtn.click();
+                    }
+                }
+            };
+
+            // Send button
+            document.getElementById('dock-send-btn').onclick = async function() {
+                const msg = document.getElementById('dock-message').value.trim();
+                if (!msg || selectedForPM.size === 0) return;
+
+                const total = selectedForPM.size;
+                const statusEl = document.getElementById('dock-send-status');
+                this.disabled = true;
+                this.textContent = '📤 Sending...';
+
+                const members = window.liveData?.guildMembers || {};
+                let sent = 0, failed = 0;
+
+                for (const userId of selectedForPM) {
+                    statusEl.textContent = `Sending ${sent + failed + 1}/${total}...`;
+                    try {
+                        const SendFunction = unsafeWindow.getSend ? unsafeWindow.getSend() : null;
+                        const response = await SendFunction(JSON.stringify({
+                            calls: [{
+                                name: "chatSendText",
+                                args: { chatType: "personal", text: msg, userId: userId },
+                                ident: "body"
+                            }]
+                        }));
+                        if (response?.results?.[0]?.result?.response) sent++;
+                        else failed++;
+                    } catch(e) {
+                        failed++;
+                    }
+                    await new Promise(r => setTimeout(r, 800));
+                }
+
+                statusEl.innerHTML = `<span style="color:#4ae29a;">✅ Sent: ${sent}</span>${failed ? ` <span style="color:#ff6b6b;">❌ Failed: ${failed}</span>` : ''}`;
+                this.textContent = '📤 Send Message';
+                this.disabled = false;
+
+                // Clear after success
+                if (failed === 0) {
+                    document.getElementById('dock-message').value = '';
+                    selectedForPM.clear();
+                    updateSelectedCount();
+                    renderGuildList();
+                    document.getElementById('dock-select-all').checked = false;
+                }
+            };
+
+            // Sync contacts
+            document.getElementById('dock-sync-contacts').onclick = async function() {
+                this.textContent = '⏳ Syncing...';
+                this.disabled = true;
+                try {
+                    const SendFunction = unsafeWindow.getSend ? unsafeWindow.getSend() : null;
+                    const response = await SendFunction(JSON.stringify({
+                        calls: [{ name: "chatGetTalks", args: {}, ident: "talks" }]
+                    }));
+                    const data = response?.results?.[0]?.result?.response;
+                    if (!data?.talks) throw new Error('No data');
+
+                    const guildIds = new Set(Object.keys(window.liveData?.guildMembers || {}));
+                    const myId = String(window.liveData?.userInfo?.id || '');
+                    const contacts = getContacts();
+                    const existingIds = new Set(contacts.map(c => c.id));
+                    let added = 0;
+
+                    data.talks.forEach(talk => {
+                        const oderId = String(talk.userId);
+                        if (!oderId || oderId === myId) return;
+
+                        const isGuildMember = guildIds.has(oderId);
+                        const userName = data.users?.[oderId]?.name || `User ${oderId}`;
+                        const lastPmTime = talk.lastMessageTime || talk.ctime || 0;
+
+                        // Update existing contact
+                        const existing = contacts.find(c => c.id === oderId);
+                        if (existing) {
+                            existing.name = userName;
+                            existing.lastPmTime = lastPmTime;
+                            existing.isGuildMember = isGuildMember;
+                            return;
+                        }
+
+                        // Skip guild members for new contacts (they show in Guild tab)
+                        if (isGuildMember) return;
+
+                        contacts.push({ id: oderId, name: userName, favorite: false, lastPmTime: lastPmTime, isGuildMember: false });
+                        added++;
+                    });
+
+                    saveContacts(contacts);
+                    renderContacts();
+                    this.textContent = `✅ +${added} contacts`;
+                } catch(e) {
+                    console.error('Sync error:', e);
+                    this.textContent = '❌ Failed';
+                }
+                setTimeout(() => { this.textContent = '🔄 Sync Contacts from PMs'; this.disabled = false; }, 2000);
+            };
+
+            // Export contacts
+            document.getElementById('dock-export-contacts').onclick = function() {
+                const contacts = getContacts();
+                const members = window.liveData?.guildMembers || {};
+
+                // Merge contacts with guild member names
+                const all = contacts.map(c => ({
+                    id: c.id,
+                    name: members[c.id]?.name || c.name || `User ${c.id}`,
+                    realName: c.realName || '',
+                    country: c.country || '',
+                    city: c.city || '',
+                    language: c.language || '',
+                    timezone: c.timezone ? `UTC${c.timezone >= 0 ? '+' : ''}${c.timezone}` : '',
+                    notes: c.notes || '',
+                    favorite: c.favorite ? '⭐' : ''
+                })).filter(c => c.realName || c.country || c.notes); // Only those with data
+
+                if (all.length === 0) {
+                    alert('No contacts with notes found');
+                    return;
+                }
+
+                // Build table
+                const headers = ['ID', 'Name', 'Real Name', 'Country', 'City', 'Language', 'Timezone', 'Notes', 'Fav'];
+                const rows = all.map(c => [c.id, c.name, c.realName, c.country, c.city, c.language, c.timezone, c.notes, c.favorite]);
+
+                // TSV format for easy paste to spreadsheet
+                const tsv = [headers.join('\t'), ...rows.map(r => r.join('\t'))].join('\n');
+
+                // Copy to clipboard
+                navigator.clipboard.writeText(tsv).catch(() => {});
+
+                // Show popup
+                const popup = document.createElement('div');
+                popup.id = 'export-popup';
+                popup.innerHTML = `
+                    <style>
+                        #export-popup {
+                            position: fixed;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            background: linear-gradient(135deg, #1a1207 0%, #2d1f0f 100%);
+                            border: 2px solid #8b6914;
+                            padding: 16px;
+                            z-index: 10002;
+                            border-radius: 8px;
+                            width: 600px;
+                            max-width: 90vw;
+                            height: 80vh;
+                            display: flex;
+                            flex-direction: column;
+                            box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+                        }
+                        #export-popup .export-header {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin-bottom: 10px;
+                            padding-bottom: 8px;
+                            border-bottom: 1px solid #8b6914;
+                        }
+                        #export-popup .export-title {
+                            color: #ffd700;
+                            font-weight: bold;
+                            font-size: 14px;
+                        }
+                        #export-popup .export-copied {
+                            color: #4ae29a;
+                            font-size: 11px;
+                        }
+                        #export-popup .export-table-wrapper {
+                            flex: 1;
+                            overflow-y: auto;
+                            overflow-x: auto;
+                            min-height: 0;
+                        }
+                        #export-popup table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            font-size: 10px;
+                        }
+                        #export-popup th {
+                            background: #8b6914;
+                            color: #fff;
+                            padding: 6px 4px;
+                            text-align: left;
+                            position: sticky;
+                            top: 0;
+                            white-space: nowrap;
+                        }
+                        #export-popup td {
+                            padding: 4px;
+                            border-bottom: 1px solid #333;
+                            color: #ccc;
+                            vertical-align: top;
+                        }
+                        #export-popup tr:hover td {
+                            background: rgba(139,105,20,0.2);
+                        }
+                        #export-popup .notes-cell {
+                            max-width: 200px;
+                            word-wrap: break-word;
+                        }
+                        #export-popup .close-btn {
+                            background: #8b6914;
+                            color: #fff;
+                            border: none;
+                            padding: 8px 20px;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            font-weight: bold;
+                            margin-top: 10px;
+                        }
+                        #export-popup .close-btn:hover {
+                            background: #a67c16;
+                        }
+                    </style>
+                    <div class="export-header">
+                        <span class="export-title">📋 Contact Notes (${all.length})</span>
+                        <span class="export-copied">✅ Copied to clipboard!</span>
+                    </div>
+                    <div class="export-table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    ${headers.map(h => `<th>${h}</th>`).join('')}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${all.map(c => `
+                                    <tr>
+                                        <td>${c.id}</td>
+                                        <td>${c.name}</td>
+                                        <td>${c.realName}</td>
+                                        <td>${c.country}</td>
+                                        <td>${c.city}</td>
+                                        <td>${c.language}</td>
+                                        <td>${c.timezone}</td>
+                                        <td class="notes-cell">${c.notes}</td>
+                                        <td>${c.favorite}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="close-btn" id="export-close">Close</button>
+                `;
+                document.body.appendChild(popup);
+
+                document.getElementById('export-close').onclick = () => popup.remove();
+
+                // Close on escape
+                const escHandler = (e) => {
+                    if (e.key === 'Escape') {
+                        popup.remove();
+                        document.removeEventListener('keydown', escHandler);
+                    }
+                };
+                document.addEventListener('keydown', escHandler);
+            };
+
+            // Direct PM - send message and resolve user name
+            document.getElementById('dock-direct-pm').onclick = async function() {
+                const id = document.getElementById('dock-direct-id').value.trim();
+                if (!id) return;
+
+                this.disabled = true;
+                this.textContent = '⏳...';
+
+                try {
+                    // First, try to get user info by sending a minimal API call
+                    const SendFunction = getSend();
+
+                    // Switch to send tab with placeholder name
+                    selectedForPM.clear();
+                    selectedForPM.add(String(id));
+                    updateSelectedCount();
+
+                    // Check if we already have this contact with a name
+                    const contacts = getContacts();
+                    const existingContact = contacts.find(c => c.id === String(id));
+
+                    if (!existingContact || existingContact.name === `User ${id}`) {
+                        // Try to resolve name via chatGetTalks (returns users we've chatted with)
+                        const response = await SendFunction(JSON.stringify({
+                            calls: [{ name: "chatGetTalks", args: {}, ident: "talks" }]
+                        }));
+
+                        const userData = response?.results?.[0]?.result?.response?.users?.[id];
+                        if (userData?.name) {
+                            // Found the user - update contact
+                            const newName = userData.name;
+                            if (existingContact) {
+                                existingContact.name = newName;
+                            } else {
+                                contacts.push({ id: String(id), name: newName, favorite: false });
+                            }
+                            saveContacts(contacts);
+                            updateRecipients();
+                            debugLog(`✅ Resolved user ${id} → ${newName}`);
+                        }
+                    }
+
+                    // Switch to Send tab
+                    dock.querySelectorAll('.dock-tab').forEach(t => t.classList.remove('active'));
+                    dock.querySelectorAll('.dock-content').forEach(c => c.classList.remove('active'));
+                    dock.querySelector('[data-tab="send"]').classList.add('active');
+                    dock.querySelector('[data-content="send"]').classList.add('active');
+                    document.getElementById('dock-message').focus();
+
+                } catch(e) {
+                    console.error('Error resolving user:', e);
+                }
+
+                this.disabled = false;
+                this.textContent = 'PM User';
+            };
+
+            // Contact search
+            document.getElementById('dock-contact-search').oninput = function() {
+                renderContacts(this.value);
+            };
+
+
+            // Initialize
+            renderGuildList();
+            renderContacts();
+
+            // Pre-select user if provided
+            if (preSelectUserId) {
+                selectedForPM.add(String(preSelectUserId));
+                updateSelectedCount();
+                renderGuildList();
+                // Go to send tab
+                dock.querySelectorAll('.dock-tab').forEach(t => t.classList.remove('active'));
+                dock.querySelectorAll('.dock-content').forEach(c => c.classList.remove('active'));
+                dock.querySelector('[data-tab="send"]').classList.add('active');
+                dock.querySelector('[data-content="send"]').classList.add('active');
+            }
+        };
 
 
 
@@ -34181,20 +39086,20 @@ overflow-y: auto;
 z-index: 1000;
 ">
 ${[
-    {val: '', label: 'Default (Gold)', color: '#ffd700'},
-    {val: 'green', label: 'Green', color: '#4ae29a'},
-    {val: 'blue', label: 'Blue', color: '#4a9eff'},
-    {val: 'purple', label: 'Purple', color: '#b84aff'},
-    {val: 'orange', label: 'Orange', color: '#ff9d4a'},
-    {val: 'red', label: 'Red', color: '#ff4a4a'},
-    {val: 'yellow', label: 'Yellow', color: '#ffe44a'},
-    {val: 'pink', label: 'Pink', color: '#ff69b4'},
-    {val: 'cyan', label: 'Cyan', color: '#4affff'},
-    {val: 'graphite', label: 'Graphite', color: '#8a8a8a'},
-    {val: 'black', label: 'Black', color: '#262626'},
-    {val: 'lightgrey', label: 'Light Grey', color: '#e6e6e6'},
-    {val: 'custom', label: 'Custom Color...', color: '#ffd700'}  // ⭐ NEW - Add this line
-].map(c => `
+                    {val: '', label: 'Default (Gold)', color: '#ffd700'},
+                    {val: 'green', label: 'Green', color: '#4ae29a'},
+                    {val: 'blue', label: 'Blue', color: '#4a9eff'},
+                    {val: 'purple', label: 'Purple', color: '#b84aff'},
+                    {val: 'orange', label: 'Orange', color: '#ff9d4a'},
+                    {val: 'red', label: 'Red', color: '#ff4a4a'},
+                    {val: 'yellow', label: 'Yellow', color: '#ffe44a'},
+                    {val: 'pink', label: 'Pink', color: '#ff69b4'},
+                    {val: 'cyan', label: 'Cyan', color: '#4affff'},
+                    {val: 'graphite', label: 'Graphite', color: '#8a8a8a'},
+                    {val: 'black', label: 'Black', color: '#262626'},
+                    {val: 'lightgrey', label: 'Light Grey', color: '#e6e6e6'},
+                    {val: 'custom', label: 'Custom Color...', color: '#ffd700'}  // ⭐ NEW - Add this line
+                ].map(c => `
                                     <div class="hwh-color-option" data-value="${c.val}" data-color="${c.color}" data-label="${c.label}" style="
                                         padding: 8px 10px;
                                         cursor: pointer;
@@ -35618,7 +40523,7 @@ font-weight: bold;
                         { name: '📊 Game Data', action: () => window.showGameDataPopup && window.showGameDataPopup() },
                         { name: '🗺️ Edit Adventure Paths', action: () => window.editAdventurePathsStandalone && window.editAdventurePathsStandalone() },
                         { name: '📦 Inventory Manager', action: () => window.showInventoryManager && window.showInventoryManager() },
-                            { name: '🎯 Fragment Hunter', action: () => window.showFragmentHunter && window.showFragmentHunter() },
+                        { name: '🎯 Fragment Hunter', action: () => window.showFragmentHunter && window.showFragmentHunter() },
                         { name: '⚙️ HW Settings', action: () => { try { new (selfGame['game.mechanics.settings.popup.SettingsPopupMediator'])().open(); } catch(e){} } },
                     ]},
                     { name: '📋 Others', items: [

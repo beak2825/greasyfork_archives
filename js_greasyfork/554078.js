@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         Penza | Скрипт для ЗГС/ГС ГОСС
 // @namespace    https://forum.blackrussia.online
-// @version      1.0.2
+// @version      1.0.3
 // @description  Скрипт для руковоства ГОСС сервера Penza
 // @author       Yuri_Germany
 // @match        https://forum.blackrussia.online/*
 // @include      https://forum.blackrussia.online/
 // @grant        none
 // @license      none
-// @copyright    2024,
+// @copyright    2026,
 // @icon https://avatars.mds.yandex.net/i?id=2e5b30b9c5657d05784ad9708e8c9b3597a65679-12890014-images-thumbs&n=13
 // @downloadURL
 // @updateURL
@@ -29,20 +29,8 @@
     const CLOSED_PREFIX = 7;
     const HA_PREFIX = 12;
   const COMMAND_PREFIX = 10;
-      // Конфигурация - можно легко настроить
-    const CONFIG = {
-        maxSnowflakes: 30,          // Максимальное количество снежинок одновременно
-        snowflakeCreationInterval: 500, // Интервал создания новых снежинок (мс)
-        columns: 12,                 // Количество колонок для распределения
-        minSize: 12,                 // Минимальный размер снежинки (px)
-        maxSize: 20,                 // Максимальный размер снежинки (px)
-        minDuration: 15,             // Минимальная длительность анимации (сек)
-        maxDuration: 25,             // Максимальная длительность анимации (сек)
-        minOpacity: 0.3,             // Минимальная прозрачность
-        maxOpacity: 0.7              // Максимальная прозрачность
-    };
 
-    const START_COLOR_1 = `<font color=#00FF7F>`
+    const START_COLOR_1 = `<font color=#7CFC00>`
     const START_COLOR_2 = `<font color=#F0FFFF>`
     const END_COLOR = `</font>`
 
@@ -52,7 +40,7 @@
         {
           title: 'Приветствие',
           content:
-         `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+         `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
          `${START_COLOR_2}*Ваш текст*${END_COLOR}<br><br>` +
          `${START_COLOR_1}На рассмотрении${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
@@ -64,11 +52,11 @@
             {
           title: 'Заявки на рассмотрение',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}Здравствуйте уважаемые игроки${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Заявки были взяты${END_COLOR} ${START_COLOR_1}на рассмотрение!${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Ожидайте расмотрения от ГС/ЗГС ГОСС${END_COLOR}<br><br>` +
-          `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}На расмотрение${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: WAIT_PREFIX,
           status: true,
@@ -77,11 +65,11 @@
         {
           title: 'Донабор',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1},Здравствуйте уважаемые игроки${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2} Заявки открыты на ${END_COLOR} ${START_COLOR_1}донабор!${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Скорее подавайте!${END_COLOR}<br><br>` +
-          `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Ожидание...${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: WAIT_PREFIX,
           status: true,
@@ -90,11 +78,11 @@
             {
           title: 'Жалобу на рассмотрение',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Ваша жалоба взята${END_COLOR} ${START_COLOR_1}на рассмотрение${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-          `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Ожидайте ответа${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: WAIT_PREFIX,
           status: true,
@@ -103,11 +91,11 @@
             {
           title: 'Запрос док-ва у лд',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Запросил доказательства у${END_COLOR} ${START_COLOR_1}лидера.${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-          `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Ожидайте ответа${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: WAIT_PREFIX,
           status: true,
@@ -121,11 +109,11 @@
       {
           title: 'Проинструкировать',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
           `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Благодарим за ваше обращение! Лидер будет${END_COLOR}${START_COLOR_1} проинструктирован${END_COLOR}${START_COLOR_2}.<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Одобрено, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: WATCHED_PREFIX,
           status: false,
@@ -134,12 +122,12 @@
       {
           title: 'Ошибка лд',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
           `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}В следствие беседы с лидером, было выяснено, наказание было выдано${END_COLOR}${START_COLOR_1} по ошибке${END_COLOR}${START_COLOR_2}.<br><br>` +
           `${START_COLOR_2}Ваше наказание будет снято в ближайшее время, если оно еще не снято.${END_COLOR}<br><br>` +
         `${START_COLOR_2}Приносим извинения за предоставленные неудобства.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Одобрено, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: WATCHED_PREFIX,
           status: false,
@@ -152,11 +140,11 @@
       {
           title: 'Нет нарушений',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}После проверки Ваших доказательств, было принято решение, что${END_COLOR} ${START_COLOR_1}от лидера нет нарушений${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -165,11 +153,11 @@
             {
           title: 'Лд прав',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Лидер предоставил ${END_COLOR} ${START_COLOR_1}доказательства${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -178,11 +166,11 @@
      {
           title: 'Доказательства в соц. сетях',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Загрузка доказательств в соц. сети (ВКонтакте, instagram)${END_COLOR} ${START_COLOR_1}запрещается${END_COLOR}${START_COLOR_2}. Доказательства должны быть загружены на фото/видео хостинги (YouTube, Япикс, imgur).${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -191,11 +179,11 @@
             {
           title: 'Не является лд',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Данный игрок не является${END_COLOR} ${START_COLOR_1}лидером организации.${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -204,11 +192,11 @@
    {
           title: 'Не по форме',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
           `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
-          `${START_COLOR_2}Ваша жалоба составлена${END_COLOR}${START_COLOR_1}не по форме${END_COLOR}${START_COLOR_2}.<br><br>` +
+          `${START_COLOR_2}Ваша жалоба составлена ${END_COLOR}${START_COLOR_1}не по форме${END_COLOR}${START_COLOR_2}.<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -217,11 +205,11 @@
           {
           title: 'Не логируется',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
           `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}По данным доказательствам нельзя выдать наказание игроку. Все нарушения должны быть подтверждены через определенные ресурсы, а не только по предоставленным доказательствам.${START_COLOR_1}${END_COLOR}${START_COLOR_2}${END_COLOR}.<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -230,11 +218,11 @@
       {
           title: 'Некоректный заголовок / содержание темы',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Жалоба в таком виде рассмотрена${END_COLOR} ${START_COLOR_1}не будет${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -243,11 +231,11 @@
       {
           title: 'Нет доказательств',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}В вашей жалобе${END_COLOR} ${START_COLOR_1}отсутствуют доказательства${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -256,11 +244,11 @@
       {
           title: 'Недостаточно доказательств',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}После проверки Ваших доказательств, было принято решение, что${END_COLOR} ${START_COLOR_1}их недостаточно для выдачи наказания игроку${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -269,11 +257,11 @@
       {
           title: 'Доказательства обрываются',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Ваши доказательства${END_COLOR} ${START_COLOR_1}обрываются${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -282,11 +270,11 @@
       {
           title: 'Доказательства отредактированы',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Видеодоказательства, которые были отредактированы и на которых присутствует посторонняя музыка, неадекватная речь, нецензурные слова или выражения,${END_COLOR} ${START_COLOR_1}могут быть не рассмотрены в качестве доказательств${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -295,11 +283,11 @@
       {
           title: 'Доказательства подделаны',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Ваш форумный аккаунт${END_COLOR} ${START_COLOR_1}будет заблокирован${END_COLOR}${START_COLOR_2}за поделку доказательств и обман администрации.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: CLOSED_PREFIX,
           status: false,
@@ -308,11 +296,11 @@
       {
           title: 'Доказательства в плохом качестве',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Ваши доказательства в${END_COLOR} ${START_COLOR_1}плохом качестве${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -321,11 +309,11 @@
       {
           title: 'Доказательства в соц. сетях',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Загрузка доказательств в соц. сети (ВКонтакте, instagram)${END_COLOR} ${START_COLOR_1}запрещается${END_COLOR}${START_COLOR_2}. Доказательства должны быть загружены на фото/видео хостинги (YouTube, Япикс, imgur).${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -334,11 +322,11 @@
       {
           title: 'Нерабочая ссылка',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Ссылка на Ваши доказательства${END_COLOR} ${START_COLOR_1}не работает либо доступ по ссылке закрыт${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -347,11 +335,11 @@
       {
           title: 'Доказательствам более 72 часов',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Вашим доказательствам${END_COLOR} ${START_COLOR_1}более 72 часов${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -360,11 +348,11 @@
       {
           title: 'Нужен фрапс',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}На подобные виды нарушений необходимо предоставить${END_COLOR} ${START_COLOR_1}видео доказательства${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -373,11 +361,11 @@
       {
           title: 'Нет /time',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}В ваших доказательствах отсутствует${END_COLOR} ${START_COLOR_1}/time${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -386,11 +374,11 @@
       {
           title: 'Нет иконки сервера',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}В ваших доказательствах отсутствует${END_COLOR} ${START_COLOR_1}иконка сервера${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -399,11 +387,11 @@
       {
           title: 'Нет тайм-кодов',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Если видео доказательства длятся более трёх минут, то вы должны указать${END_COLOR} ${START_COLOR_1}тайм-коды их ключевых моментов${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -412,11 +400,11 @@
       {
           title: 'Ответ в прошлой теме',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Ответ Вам был дан в одной из${END_COLOR} ${START_COLOR_1}предыдущих жалоб${END_COLOR}${START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -425,10 +413,10 @@
       {
           title: 'Дубликат темы',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Вам уже был дан конкретный ответ в одной из${END_COLOR} ${START_COLOR_1}предыдущих жалоб${END_COLOR}${START_COLOR_2}. За создание дубликатов этой темы Ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -437,11 +425,11 @@
       {
           title: 'Не тот сервер',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Вы${END_COLOR} ${START_COLOR_1}ошиблись сервером${END_COLOR}${START_COLOR_2}. Пересоздайте свою жалобу в разделе нужного вам сервера - *<a href='https://forum.blackrussia.online/#igrovye-servera.12'>Кликабельно</a>*.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -450,11 +438,11 @@
       {
           title: 'В жб на администрацию',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
           `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Вы${END_COLOR} ${START_COLOR_1}ошиблись разделом${END_COLOR}${START_COLOR_2}.<br>Обратитесь в раздел жалоб на администрацию - *<a href='https://forum.blackrussia.online/forums/Жалобы-на-администрацию.2414/'>Кликабельно</a>*${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -463,11 +451,11 @@
       {
           title: 'В жб на сотрудников фракций',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
           `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Вы${END_COLOR} ${START_COLOR_1}ошиблись разделом${END_COLOR}${START_COLOR_2}.<br>Обратитесь в раздел жалоб на сотрудников организаций.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -476,11 +464,11 @@
             {
           title: 'В жб на СС фракций',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
           `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Вы${END_COLOR} ${START_COLOR_1}ошиблись разделом${END_COLOR}${START_COLOR_2}.<br>Обратитесь в раздел жалоб на Страший состав вашей организации.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.${END_COLOR}<br><br>` +
-        `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+        `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Отказано, закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: DECLINED_PREFIX,
           status: false,
@@ -493,11 +481,11 @@
          {
           title: 'Еженедельник +50',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}Здравствуйте уважаемый лидер${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Еженедельный отчет был успешно${END_COLOR} ${START_COLOR_1}просмотрен${END_COLOR}${START_COLOR_2}!${END_COLOR}<br><br>` +
           `${START_COLOR_2}Вы получаете +50 баллов в таблицу лидеров.${END_COLOR}<br><br>` +
-          `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Рассмотрено${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: WATCHED_PREFIX,
           status: false,
@@ -506,11 +494,11 @@
                {
           title: 'Еженедельник +20',
           content:
-          `${START_DECOR}<img src="https://i.ibb.co/Nd2GMnyr/1000039677.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/P52NzDxb/Verh.png"><br>` +
          `${START_COLOR_1}Здравствуйте уважаемый лидер${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
           `${START_COLOR_2}Еженедельный отчет был успешно${END_COLOR} ${START_COLOR_1}просмотрен${END_COLOR}${START_COLOR_2}!${END_COLOR}<br><br>` +
           `${START_COLOR_2}Вы получаете +20 баллов в таблицу лидеров.${END_COLOR}<br><br>` +
-          `${START_DECOR}<img src="https://i.ibb.co/5g8DHg4j/1000039734.png"><br>` +
+          `${START_DECOR}<img src="https://i.postimg.cc/m2SrB97X/Niz.png"><br>` +
           `${START_COLOR_1}Рассмотрено${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
           prefix: WATCHED_PREFIX,
           status: false,
@@ -553,7 +541,7 @@
         $('body').append('<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>');
 
         addButton('На рассмотрение', 'pin', 'border-radius: 13px; margin-right: 5px; border: 2px solid; background-color: #000000; border-color: #FFA500');
-        addButton('Тех. специалисту', 'tech', 'border-radius: 13px; margin-right: 5px; border: 2px solid; background-color: #000000; border-color: #0000FF');
+        addButton('Рассмотрено', 'tech', 'border-radius: 13px; margin-right: 5px; border: 2px solid; background-color: #000000; border-color: #0000FF');
         addButton('Одобрено', 'accepted', 'border-radius: 13px; margin-right: 5px; border: 2px solid; background-color: #000000; border-color: #008000');
         addButton('Отказано', 'unaccept', 'border-radius: 13px; margin-right: 5px; border: 2px solid; background-color: #000000; border-color: #FF0000');
         addButton('Меню ГОСС', 'selectCatsAnswer', 'border-radius: 13px; margin-right: 5px; border: 2px solid; background-color: #000000; border-color: #E9967A')
@@ -562,7 +550,7 @@
         const threadData = getThreadData();
 
         $('button#pin').click(() => editThreadData(0, WAIT_PREFIX, true));
-        $('button#tech').click(() => editThreadData(0, TECH_PREFIX, true));
+        $('button#tech').click(() => editThreadData(0, WATCHED_PREFIX, true));
         $('button#accepted').click(() => editThreadData(0, APPROVED_PREFIX, false));
         $('button#watch').click(() => editThreadData(0, WATCHED_PREFIX, false));
         $('button#teamProject').click(() => editThreadData(COMMAND_PREFIX, true));
@@ -749,286 +737,4 @@
         Object.entries(data).forEach(i => formData.append(i[0], i[1]));
         return formData;
     }
-    // Функция для сохранения состояния
-    function saveSnowState(isActive) {
-        if (typeof GM_setValue !== 'undefined') {
-            GM_setValue('snowfallActive', isActive);
-        } else {
-            localStorage.setItem('snowfallActive', isActive);
-        }
-    }
-
-    // Функция для загрузки состояния
-    function loadSnowState() {
-        if (typeof GM_getValue !== 'undefined') {
-            return GM_getValue('snowfallActive', false);
-        } else {
-            return localStorage.getItem('snowfallActive') === 'true';
-        }
-    }
-
-    // Создаем кнопку для включения/выключения снега
-    function createSnowButton() {
-        const button = document.createElement('button');
-        button.innerHTML = '❄️';
-        button.id = 'snow-toggle-button';
-        button.title = 'Включить/выключить снегопад';
-        button.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10000;
-            width: 35px;
-            height: 35px;
-            border: none;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.95);
-            cursor: pointer;
-            font-size: 16px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        `;
-
-        button.addEventListener('mouseover', function() {
-            this.style.transform = 'scale(1.15)';
-            this.style.background = 'rgba(255, 255, 255, 1)';
-            this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
-        });
-
-        button.addEventListener('mouseout', function() {
-            this.style.transform = 'scale(1)';
-            this.style.background = 'rgba(255, 255, 255, 0.95)';
-            this.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
-        });
-
-        let snowActive = loadSnowState();
-        let snowInterval = null;
-        let currentSnowflakes = 0;
-
-        // Восстанавливаем состояние при загрузке
-        if (snowActive) {
-            setTimeout(() => {
-                startSnowfall();
-                updateButtonStyle(true);
-            }, 1500);
-        }
-
-        button.addEventListener('click', function() {
-            snowActive = !snowActive;
-            saveSnowState(snowActive);
-
-            if (snowActive) {
-                startSnowfall();
-                updateButtonStyle(true);
-            } else {
-                stopSnowfall();
-                updateButtonStyle(false);
-            }
-        });
-
-        function updateButtonStyle(isActive) {
-            if (isActive) {
-                button.style.background = 'rgba(173, 216, 230, 0.95)';
-                button.style.boxShadow = '0 2px 12px rgba(173, 216, 230, 0.4)';
-                button.style.color = '#2c3e50';
-            } else {
-                button.style.background = 'rgba(255, 255, 255, 0.95)';
-                button.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
-                button.style.color = 'inherit';
-            }
-        }
-
-        function startSnowfall() {
-            stopSnowfall();
-            currentSnowflakes = 0;
-
-            // Создаем контейнер для снежинок
-            let snowContainer = document.getElementById('snow-container');
-            if (!snowContainer) {
-                snowContainer = document.createElement('div');
-                snowContainer.id = 'snow-container';
-                snowContainer.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    pointer-events: none;
-                    z-index: 9999;
-                    overflow: hidden;
-                `;
-                document.body.appendChild(snowContainer);
-            }
-
-            // Очищаем старые снежинки
-            snowContainer.innerHTML = '';
-
-            const columnWidth = window.innerWidth / CONFIG.columns;
-
-            // Функция создания одной снежинки
-            function createSnowflake() {
-                if (!document.getElementById('snow-container') ||
-                    currentSnowflakes >= CONFIG.maxSnowflakes) {
-                    return;
-                }
-
-                const snowflake = document.createElement('div');
-                snowflake.innerHTML = '❄';
-
-                // Стили снежинки
-                const size = Math.random() * (CONFIG.maxSize - CONFIG.minSize) + CONFIG.minSize;
-                const opacity = Math.random() * (CONFIG.maxOpacity - CONFIG.minOpacity) + CONFIG.minOpacity;
-
-                snowflake.style.cssText = `
-                    position: absolute;
-                    top: -50px;
-                    color: white;
-                    text-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
-                    font-size: ${size}px;
-                    opacity: ${opacity};
-                    user-select: none;
-                    pointer-events: none;
-                    z-index: 9999;
-                    will-change: transform;
-                `;
-
-                // Равномерное распределение по колонкам
-                const columnIndex = Math.floor(Math.random() * CONFIG.columns);
-                const baseX = columnIndex * columnWidth + Math.random() * columnWidth;
-                const startX = Math.max(10, Math.min(window.innerWidth - 10, baseX));
-
-                const animationDuration = Math.random() * (CONFIG.maxDuration - CONFIG.minDuration) + CONFIG.minDuration;
-                const swayAmplitude = Math.random() * 20 + 15;
-                const rotationSpeed = (Math.random() - 0.5) * 3;
-
-                snowflake.style.left = startX + 'px';
-
-                let startTime = null;
-                let animationId = null;
-
-                currentSnowflakes++;
-
-                function animateSnowflake(timestamp) {
-                    if (!startTime) startTime = timestamp;
-                    const progress = (timestamp - startTime) / (animationDuration * 1000);
-
-                    if (progress >= 1 || !document.getElementById('snow-container')) {
-                        if (animationId) {
-                            cancelAnimationFrame(animationId);
-                        }
-                        if (snowflake.parentNode) {
-                            snowflake.parentNode.removeChild(snowflake);
-                        }
-                        currentSnowflakes = Math.max(0, currentSnowflakes - 1);
-                        return;
-                    }
-
-                    // Плавное движение вниз
-                    const y = progress * (window.innerHeight + 100);
-
-                    // Легкие колебания
-                    const xSway = Math.sin(progress * Math.PI * 4) * swayAmplitude * progress;
-
-                    // Плавное вращение
-                    const rotation = progress * 180 * rotationSpeed;
-
-                    snowflake.style.transform = `translate(${xSway}px, ${y}px) rotate(${rotation}deg)`;
-
-                    // Плавное исчезновение в конце
-                    if (progress > 0.8) {
-                        snowflake.style.opacity = (opacity * (1 - progress) / 0.2).toString();
-                    }
-
-                    animationId = requestAnimationFrame(animateSnowflake);
-                }
-
-                animationId = requestAnimationFrame(animateSnowflake);
-                snowContainer.appendChild(snowflake);
-            }
-
-            // Запускаем создание снежинок с интервалом
-            snowInterval = setInterval(() => {
-                if (snowActive && document.getElementById('snow-container')) {
-                    createSnowflake();
-                }
-            }, CONFIG.snowflakeCreationInterval);
-
-            // Создаем первую партию снежинок
-            setTimeout(() => {
-                for (let i = 0; i < Math.min(5, CONFIG.maxSnowflakes); i++) {
-                    setTimeout(createSnowflake, i * 200);
-                }
-            }, 100);
-        }
-
-        function stopSnowfall() {
-            const snowContainer = document.getElementById('snow-container');
-            if (snowContainer) {
-                // Плавное исчезновение
-                snowContainer.style.opacity = '0';
-                snowContainer.style.transition = 'opacity 0.8s ease';
-                setTimeout(() => {
-                    if (snowContainer.parentNode) {
-                        snowContainer.parentNode.removeChild(snowContainer);
-                    }
-                }, 800);
-            }
-
-            if (snowInterval) {
-                clearInterval(snowInterval);
-                snowInterval = null;
-            }
-
-            currentSnowflakes = 0;
-        }
-
-        // Обработчик изменения размера окна
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                if (snowActive) {
-                    stopSnowfall();
-                    setTimeout(() => startSnowfall(), 300);
-                }
-            }, 250);
-        });
-
-        document.body.appendChild(button);
-    }
-
-    // Инициализация
-    function init() {
-        if (!document.getElementById('snow-toggle-button')) {
-            createSnowButton();
-        }
-    }
-
-    // Запускаем при загрузке DOM
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        setTimeout(init, 1000);
-    }
-
-    // Для SPA-навигации
-    let lastUrl = location.href;
-    new MutationObserver(() => {
-        const url = location.href;
-        if (url !== lastUrl) {
-            lastUrl = url;
-            setTimeout(init, 1500);
-        }
-    }).observe(document, { subtree: true, childList: true });
-
 })();
-// ==UserScript==
-// @name        New script
-// @namespace   Violentmonkey Scripts
-// @match       *://example.org/*
-// @grant       none
-// @version     1.0
-// @author      -
-// @description 21.10.2025, 16:20:57
-// ==/UserScript==

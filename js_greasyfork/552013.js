@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name        Open2ch Kome UID Display
+// @name        Open2ch Kome UID Display dev
 // @namespace   https://greasyfork.org/ja/users/864059
-// @version     3.0.6
+// @version     3.1.2
 // @description Open2chのkomeチャットの発言にUIDを明示的に表示し、UIDごとに色を付けて表示します。
 // @author      七色の彩り
 // @match       https://*.open2ch.net/test/read.cgi/*
@@ -12,10 +12,9 @@
 // @grant       GM.info
 // @grant       GM_listValues
 // @run-at      document-idle
-// @exclude       https://open.open2ch.net/test/ad.cgi/*
 // @license MIT
-// @downloadURL https://update.greasyfork.org/scripts/552013/Open2ch%20Kome%20UID%20Display.user.js
-// @updateURL https://update.greasyfork.org/scripts/552013/Open2ch%20Kome%20UID%20Display.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/552013/Open2ch%20Kome%20UID%20Display%20dev.user.js
+// @updateURL https://update.greasyfork.org/scripts/552013/Open2ch%20Kome%20UID%20Display%20dev.meta.js
 // ==/UserScript==
 
 (async function() {
@@ -547,64 +546,67 @@
         return komeScrollElement;
     }
     /**
-     * 既に<a>タグになっているが、'='記号が抜けているなど不正なURLを修正します。
-     * @param {Node} node 処理対象のDOMノード
+     * 既に<a>タグになっているが、'='記号が抜けている不正なURLを修正します。
+     */
+    const PROCESSED_ATTR = 'data-kome-fixed';
+
+    /**
+     * 動画IDと追加パラメータから正しいYouTube URLを生成します。
+     */
+    function reconstructYoutubeUrl(videoId, extraParams) {
+        let finalUrl = `https://www.youtube.com/watch?v=${videoId}`;
+        if (extraParams) {
+            let extra = extraParams.replace(/&amp;/g, '&');
+            // 2つ目の'?'が来た場合は'&'に置換して結合
+            if (extra.startsWith('?')) {
+                extra = '&' + extra.substring(1);
+            }
+            finalUrl += extra;
+        }
+        return finalUrl;
+    }
+
+    /**
+     * 既に<a>タグになっているが不正なURLを修正します。
      */
     function fixYoutubeUrlsInNode(node) {
-        const links = node.querySelectorAll('a[href]');
+        if (!(node instanceof Element)) return;
+        const links = node.querySelectorAll(`a[href]:not([${PROCESSED_ATTR}])`);
 
         links.forEach(link => {
             const href = link.href;
             let videoId = null;
+            let extra = '';
 
-            // 1. youtube.com/watch?v の形式からIDを抽出
-            const watchIdRegex = /watch\?v(=)?([a-zA-Z0-9_-]{11})/;
-            const watchMatch = href.match(watchIdRegex);
+            const watchMatch = href.match(/watch\?v(?:=)?([a-zA-Z0-9_-]{11})([&?#].*)?/);
+            const shortMatch = href.match(/youtu\.be\/([a-zA-Z0-9_-]{11})([&?#].*)?/);
 
-            // 2. youtu.be/ の形式からIDを抽出
-            const shortIdRegex = /youtu\.be\/([a-zA-Z0-9_-]{11})/;
-            const shortMatch = href.match(shortIdRegex);
-
-            // 抽出ロジックをシンプルに
             if (watchMatch) {
-                videoId = watchMatch[2];
+                videoId = watchMatch[1];
+                extra = watchMatch[2] || '';
             } else if (shortMatch) {
                 videoId = shortMatch[1];
+                extra = shortMatch[2] || '';
             }
 
             if (videoId) {
-                let finalUrl = `https://www.youtube.com/watch?v=${videoId}`;
-
-                // クエリパラメータ抽出を動画IDの直後を対象に限定
-                const extraMatch = href.match(/([a-zA-Z0-9_-]{11})([&?#].*)/);
-
-                if (extraMatch) {
-                    let extra = extraMatch[2];
-                    // クエリパラメータとして正しい形式になるよう修正
-                    extra = extra.replace(/&amp;/g, '&');
-                    // 既にv=があるため、追加パラメータの先頭が?の場合は&に修正
-                    if (extra.startsWith('?')) {
-                        extra = extra.replace('?', '&');
-                    }
-                    finalUrl += extra;
-                }
-
+                const finalUrl = reconstructYoutubeUrl(videoId, extra);
                 link.href = finalUrl;
-                link.textContent = finalUrl;
+                if (link.textContent.includes('youtube.com') || link.textContent.includes('youtu.be')) {
+                    link.textContent = finalUrl;
+                }
+                link.setAttribute(PROCESSED_ATTR, 'true');
             }
         });
     }
 
     /**
-     * テキストノード内のYouTube URLを検索し、リンクに変換して修正します。
-     * @param {Node} node 処理対象のDOMノード
+     * テキストノード内のURLを検索し、リンクに変換します。
      */
     function parseAndReplaceUrl(node) {
         if (node.nodeType === Node.TEXT_NODE) {
             const text = node.textContent;
-            // watch?v(=)? or youtu.be/ の後に11文字ID、その後にクエリパラメータが続く場合も許可
-            // 1: プロトコルとホスト名, 2: =（あれば）, 3: 動画ID, 4: クエリパラメータ
-            const youtuBeRegex = /(https:\/\/(?:youtu\.be\/|www\.youtube\.com\/watch\??v(=)?))([a-zA-Z0-9_-]{11})([&?#].*)?/g;
+            const youtuBeRegex = /https:\/\/(?:youtu\.be\/|www\.youtube\.com\/watch\??v=?)([a-zA-Z0-9_-]{11})([&?#][^\s]*)?/g;
             const matches = [...text.matchAll(youtuBeRegex)];
 
             if (matches.length > 0) {
@@ -612,40 +614,24 @@
                 let lastIndex = 0;
 
                 matches.forEach(match => {
-                    const matchStart = match.index;
-                    const matchEnd = match.index + match[0].length;
-
-                    if (matchStart > lastIndex) {
-                        fragment.appendChild(document.createTextNode(text.substring(lastIndex, matchStart)));
+                    if (match.index > lastIndex) {
+                        fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
                     }
 
-                    const videoId = match[3];
-
-                    let finalUrl = `https://www.youtube.com/watch?v=${videoId}`;
-
-                    // タイムスタンプなどの追加クエリパラメータを保持
-                    const extraParams = match[4] || '';
-                    if (extraParams) {
-                        // クエリパラメータとして正しい形式になるよう修正
-                        let extra = extraParams.replace(/&amp;/g, '&');
-
-                        // v=の後に続く情報が?の場合は&に修正（重複防止）
-                        if (extra.startsWith('?')) {
-                            extra = extra.replace('?', '&');
-                        }
-
-                        // 既にv=があるため、追加パラメータを連結
-                        finalUrl += extra;
-                    }
+                    const videoId = match[1];
+                    const extra = match[2] || '';
+                    const finalUrl = reconstructYoutubeUrl(videoId, extra);
 
                     const a = document.createElement('a');
                     a.href = finalUrl;
                     a.textContent = finalUrl;
+                    a.style.color = '#3399ff';
                     a.target = '_blank';
                     a.rel = 'noopener noreferrer';
+                    a.setAttribute(PROCESSED_ATTR, 'true');
                     fragment.appendChild(a);
 
-                    lastIndex = matchEnd;
+                    lastIndex = match.index + match[0].length;
                 });
 
                 if (lastIndex < text.length) {
@@ -655,11 +641,10 @@
                 node.parentNode.replaceChild(fragment, node);
             }
         } else if (node.nodeType === Node.ELEMENT_NODE) {
-            // スクリプトとスタイルタグをスキップ対象に追加することで、より安全に（Kome UID display側には不要かもしれませんが念のため）
-            if (node.tagName !== 'A' && node.tagName !== 'BUTTON' && node.tagName !== 'SCRIPT' && node.tagName !== 'STYLE') {
-                for (const childNode of node.childNodes) {
-                    parseAndReplaceUrl(childNode);
-                }
+            if (node.hasAttribute(PROCESSED_ATTR)) return;
+            const skipTags = ['A', 'BUTTON', 'SCRIPT', 'STYLE', 'TEXTAREA', 'INPUT'];
+            if (!skipTags.includes(node.tagName)) {
+                Array.from(node.childNodes).forEach(parseAndReplaceUrl);
             }
         }
     }
@@ -1691,30 +1676,32 @@
         }
 
         targetElement.addEventListener('scroll', () => checkScrollPosition(targetElement));
-        checkScrollPosition(targetElement); // 引数を渡す
+        checkScrollPosition(targetElement);
 
         observer = new MutationObserver((mutations) => {
             let needsUidProcessing = false;
             for (const mutation of mutations) {
-                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                if (mutation.addedNodes.length > 0) {
                     for (const node of mutation.addedNodes) {
-                        if (node.nodeType === 1) { // 要素ノードの場合
-                            // 追加されたノードと、その子孫ノードを対象にURL修正を試みる
-                            if (node.classList.contains('kcomm_base') || node.querySelector('.kcomm_base')) {
-                                fixYoutubeUrlsInNode(node);
-                                parseAndReplaceUrl(node);
-                            }
-                            // UID処理のフラグは維持
-                            if (node.classList.contains('kcomm_wrap') || node.querySelector('.kcomm_wrap')) {
+                        // 1. YouTube URLの修正（要素でもテキストでも実行）
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            fixYoutubeUrlsInNode(node);
+                            parseAndReplaceUrl(node);
+                        } else if (node.nodeType === Node.TEXT_NODE) {
+                            parseAndReplaceUrl(node);
+                        }
+
+                        // 2. UID表示が必要な発言かどうかをチェック
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            if (node.classList?.contains('kcomm_wrap') || node.querySelector?.('.kcomm_wrap')) {
                                 needsUidProcessing = true;
-                                // break はせずに全ての追加ノードをチェック
                             }
                         }
                     }
                 }
             }
             if (needsUidProcessing) {
-                displayUids(); // 遅延させずに即時実行
+                displayUids();
             }
         });
         observer.observe(targetElement, { childList: true, subtree: true });

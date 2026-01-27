@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         enhanced todo
 // @namespace    https://greasyfork.org/de/users/1516523-martink
-// @version      1.3.6
+// @version      1.3.7
 // @description  Todo-Panel mit Tag-Verwaltung
 // @author       Martin Kaiser
 // @match        https://opus.geizhals.at/kalif/eintrag*
@@ -4592,6 +4592,48 @@
     }, true);
   }
 
+  // ==================== PAGINATION SCROLL-TO-TOP ====================
+
+  function setupPaginationScrollTop() {
+    // Event-Delegation für Pagination-Buttons
+    document.addEventListener('click', (e) => {
+      const pageItem = e.target.closest('.page-item');
+      if (pageItem) {
+        // Speichere den aktuellen Inhalt der ersten Zeile (ctimes_id aus Link)
+        const firstRowLink = document.querySelector('#haendler_count-0 a');
+        const currentCtimesId = firstRowLink ? firstRowLink.href : '';
+
+        console.log('[Pagination] Klick erkannt, aktuelle ctimes_id:', currentCtimesId);
+
+        const scrollToTop = () => {
+          console.log('[Pagination] scrollToTop ausgeführt');
+          window.scrollTo(0, 0);
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+        };
+
+        // Warte bis sich der Inhalt der ersten Zeile ändert
+        const checkContentChange = setInterval(() => {
+          const newFirstRowLink = document.querySelector('#haendler_count-0 a');
+          const newCtimesId = newFirstRowLink ? newFirstRowLink.href : '';
+
+          if (newCtimesId !== currentCtimesId && newCtimesId !== '') {
+            console.log('[Pagination] Inhalt geändert, neue ctimes_id:', newCtimesId);
+            clearInterval(checkContentChange);
+            // Kurzes Delay für vollständiges Rendering
+            setTimeout(scrollToTop, 50);
+          }
+        }, 50);
+
+        // Timeout nach 30 Sekunden
+        setTimeout(() => {
+          console.log('[Pagination] Timeout erreicht');
+          clearInterval(checkContentChange);
+        }, 30000);
+      }
+    });
+  }
+
   // ==================== INITIALIZATION ====================
 
   let panelResizeObserver = null;
@@ -4702,6 +4744,7 @@
     mutationObserver.observe(document.body, { childList: true, subtree: true });
     watchPageSizeChanges();
     handleMasterCheckbox();
+    setupPaginationScrollTop();
 
     // Escape-Taste schließt alle UI-Elemente
     document.addEventListener('keydown', (e) => {

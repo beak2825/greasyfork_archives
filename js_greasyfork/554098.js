@@ -1,13 +1,10 @@
 // ==UserScript==
 // @name         到店取组合脚本（互联）
 // @namespace    http://tampermonkey.net/
-// @version      5.5.3
-// @description  泡泡玛特库存监测和下单助手的组合脚本，支持模式切换 [v5.4.3新增: 支付流程自动处理错误弹窗并重试,最多3次] [v5.4.2修复: 详情模式支付流程添加确认弹窗处理，与下单模式保持一致] [v5.4.1关键修复: 店铺列表在所有模式下都能恢复，解决切换模式后店铺列表丢失问题] [v5.4.0状态持久化: 刷新页面保持详情模式/刷新间隔等所有设置；详情模式启动优化-自动跳过当前店铺避免重复检测] [v5.2.0重大重构: 统一店铺切换逻辑-购物车和详情页模式共用同一套店铺遍历、选择、切换逻辑，只在检测和下单环节有区别]
+// @version      5.4.7
+// @description  泡泡玛特库存监测和下单助手的组合脚本，支持模式切换 [v5.4.7紧急修复: 1.优化确认弹窗检测机制，增加轮询检测解决识别延迟问题 2.修复模拟点击时的MouseEvent报错] [v5.4.6紧急修复: 解决页面存在隐藏弹窗导致无法识别真实确认弹窗的问题，增加可见性检测] [v5.4.5关键修复: 1.统一确认弹窗处理-适配最新HTML格式,先点击"无提示"再确认,覆盖所有支付流程 2.定时手动下单执行完成后自动停止定时模式] [v5.4.4优化: 升级精准后台定时器(Web Worker)，确保后台运行毫秒级精度] 
 // @author       You
-// @match        https://www.popmart.com/*/*
-// @match        https://www.popmart.com/hk/order-confirmation?isStore=true
-// @match        https://www.popmart.com/hk/largeShoppingCart?origin=pickup
-// @match        https://www.popmart.com/hk/store-pickup/*
+// @match        https://www.popmart.com/hk/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addStyle
@@ -80,7 +77,7 @@
 
     // API拦截相关
     let latestCartApiResponse = null; // 购物车API响应
-    let latestProductApiResponse = null; // 商品详情API响应
+    let latestProductApiResponse = null; // 商品详情API响应  
     let latestCartAddApiResponse = null; // 加购API响应
     let cartApiResponseResolvers = []; // API响应的Promise解析器
     let productApiResponseResolvers = []; // 商品API响应的Promise解析器
@@ -1537,13 +1534,13 @@
             </div>
             <div class="collapsed-info-container" style="display: none;">
                 <div class="monitor-collapsed-info">
-                    状态: <span id="monitor-status-collapsed">已停止</span> |
+                    状态: <span id="monitor-status-collapsed">已停止</span> | 
                     当前: <span id="monitor-store-collapsed">-</span>
                     <br>
                     下单窗口: <span id="window-collapsed-info">无在线窗口</span>
                 </div>
                 <div class="order-collapsed-info">
-                    店铺: <span id="order-store-collapsed">-</span> |
+                    店铺: <span id="order-store-collapsed">-</span> | 
                     <span id="order-info-collapsed">-</span>
                 </div>
             </div>
@@ -2481,7 +2478,7 @@
                         <span class="value" id="ws-instance-prefix">-</span>
                     </div>
                 </div>
-
+                
                 <div class="quick-open-section">
                     <div class="quick-open-header">快速开窗</div>
                     <div class="quick-open-content">
@@ -2497,7 +2494,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="auto-mode-section">
                     <div class="auto-mode-header">自动模式配置</div>
                     <div class="auto-mode-content">
@@ -2515,7 +2512,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="manual-section">
                     <div class="manual-header" id="manual-header">
                         <div class="manual-title-row">
@@ -2526,7 +2523,7 @@
                             定时: <span style="color: #999">未开启</span>
                         </div>
                     </div>
-
+                    
                     <div class="manual-content" style="display: none;">
                         <div class="schedule-section">
                             <div class="schedule-header">
@@ -2551,7 +2548,7 @@
                                 <div>定时时间: <span id="order-scheduled-time">--:--:--.---</span></div>
                             </div>
                         </div>
-
+                        
                         <div class="duration-section">
                             <div class="duration-header">持续时间</div>
                             <div class="duration-controls">
@@ -2563,7 +2560,7 @@
                                 <div>剩余时间: <span id="remaining-time">-</span></div>
                             </div>
                         </div>
-
+                        
                         <div class="speed-section">
                             <div class="speed-header">提交速度</div>
                             <div class="speed-controls">
@@ -2575,13 +2572,13 @@
                                 <div>当前速度: <span id="speed-display">5000ms</span></div>
                             </div>
                         </div>
-
+                        
                         <div class="button-section">
                             <button id="manual-pay-btn" class="pay-button">手动点击去支付</button>
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="log-section">
                     <div class="log-header">日志:</div>
                     <div class="log-content" id="log-content"></div>
@@ -3108,39 +3105,88 @@
         }
     }
 
-    // 处理二次确认弹窗（部分账号需要确认取货门店）
+    // v5.4.7: 统一的确认弹窗处理函数 (修复识别延迟和报错)
     async function handleStoreConfirmModal() {
         try {
-            // 使用较短超时检测弹窗（800ms）
-            const modal = await waitForElement('.index_storeConfirmModalTitle__jtuIE', 800);
+            const startTime = Date.now();
+            const timeout = 2000; // 2秒轮询超时
 
-            if (!modal) return false; // 未检测到弹窗
+            // 轮询检测
+            while (Date.now() - startTime < timeout) {
+                // Step 1: 获取所有弹窗容器
+                const modals = document.querySelectorAll('.ant-modal-content');
+                let targetModal = null;
 
-            console.log('检测到二次确认弹窗，开始处理');
-            addLog('检测到门店确认弹窗');
+                // Step 2: 遍历查找目标弹窗（可见 且 包含特定标题）
+                for (const modal of modals) {
+                    // 检查可见性
+                    const style = window.getComputedStyle(modal);
+                    if (style.display === 'none' || style.visibility === 'hidden' || modal.offsetParent === null) {
+                        continue;
+                    }
 
-            // 1. 先勾选"无提示"复选框
-            const checkbox = document.querySelector('.index_unNoticeCheckbox__lebkx input[type="checkbox"]');
-            if (checkbox && !checkbox.checked) {
-                checkbox.click();
-                await new Promise(resolve => setTimeout(resolve, 100));
-                addLog('已勾选"无提示"');
-            }
+                    // 检查标题
+                    const titleEl = modal.querySelector('.index_storeConfirmModalTitle__jtuIE') ||
+                        modal.querySelector('.ant-modal-title');
 
-            // 2. 点击确认按钮
-            const confirmBtn = document.querySelector('.index_pickUpStoreBtn__cf1_Z');
-            if (confirmBtn) {
-                confirmBtn.click();
-                addLog('已点击确认按钮');
-                // 等待弹窗消失
-                await waitForElementDisappear('.index_storeConfirmModalTitle__jtuIE', 2000);
+                    if (titleEl && titleEl.innerText.includes('請確認自取門店')) {
+                        targetModal = modal;
+                        break;
+                    }
+                }
+
+                if (targetModal) {
+                    console.log('✓ 锁定目标确认弹窗');
+                    if (currentMode === 'order') {
+                        addLog('检测到门店确认弹窗');
+                    }
+
+                    // Step 3: 先勾选"无提示"复选框
+                    const checkbox = targetModal.querySelector('.index_unNoticeCheckbox__lebkx input');
+                    if (checkbox && !checkbox.checked) {
+                        checkbox.click();
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        console.log('✓ 已勾选"无提示"');
+                        if (currentMode === 'order') {
+                            addLog('已勾选"无提示"');
+                        }
+                    }
+
+                    // Step 4: 点击确认按钮
+                    const btn = targetModal.querySelector('.index_pickUpStoreBtn__cf1_Z') ||
+                        targetModal.querySelector('.ant-btn-primary');
+
+                    if (btn) {
+                        btn.click();
+                        // 双重保险：模拟鼠标点击 (修复报错: 使用 unsafeWindow)
+                        try {
+                            btn.dispatchEvent(new MouseEvent('click', {
+                                bubbles: true,
+                                cancelable: true,
+                                view: unsafeWindow
+                            }));
+                        } catch (err) {
+                            console.warn('模拟点击报错(已忽略):', err);
+                        }
+
+                        console.log('✓ 已点击确认按钮');
+                        if (currentMode === 'order') {
+                            addLog('已点击确认按钮');
+                        }
+
+                        // Step 5: 等待弹窗消失
+                        await waitForElementDisappear('.ant-modal-content', 2000);
+                        return true;
+                    }
+                }
+
+                // 未检测到，等待后重试
                 await new Promise(resolve => setTimeout(resolve, 200));
-                return true; // 成功处理
             }
 
             return false;
         } catch (e) {
-            // 超时或未找到弹窗，直接返回false
+            console.error('弹窗处理异常:', e);
             return false;
         }
     }
@@ -3402,7 +3448,11 @@
         executeAutoPayment_V2();
     }
 
+    // v5.4.5: 手动支付模式 (支持定时自动停止)
     async function executeManualPayment() {
+        // v5.4.5: 检查是否为定时触发
+        const isScheduledTrigger = order_isScheduledEnabled && !order_isRunning;
+
         if (order_isRunning) {
             order_isRunning = false;
             order_isExecuting = false;
@@ -3423,8 +3473,43 @@
         saveUserRunningState(true, 'order');
         updateOrderPayButtonState();
         addLog('手动模式: 开始支付流程');
+
+        // 执行支付流程
         await executePaymentProcess(order_submitSpeed, order_durationSeconds);
+
         order_isExecuting = false;
+
+        // v5.4.5: 如果是定时触发,自动关闭定时模式
+        if (isScheduledTrigger) {
+            order_isScheduledEnabled = false;
+            const scheduleToggle = document.getElementById('order-schedule-toggle');
+            if (scheduleToggle) {
+                scheduleToggle.checked = false;
+            }
+
+            // 保存设置
+            const settings = {
+                enabled: false,
+                hour: order_scheduledTime.hour,
+                minute: order_scheduledTime.minute,
+                second: order_scheduledTime.second,
+                millisecond: order_scheduledTime.millisecond
+            };
+            saveUserScheduleSettings(settings, 'order');
+
+            // 停止定时器
+            stopOrderScheduleChecker();
+
+            addLog('✓ 定时手动下单已完成，定时模式已自动关闭');
+
+            // 更新UI
+            if (isManualCollapsed) {
+                updateManualCollapsedInfo();
+            }
+            if (isCollapsed) {
+                updateCollapsedInfo();
+            }
+        }
     }
 
     function updateOrderPayButtonState() {
@@ -4376,25 +4461,71 @@
         if (millisecondInput) millisecondInput.value = order_scheduledTime.millisecond;
     }
 
+    // Web Worker 计时器实例
+    let scheduleWorker = null;
+
     function startOrderScheduleChecker() {
-        if (order_scheduleInterval) {
-            clearInterval(order_scheduleInterval);
-        }
-        order_scheduleInterval = setInterval(() => {
-            if (!order_isScheduledEnabled) return;
-            const beijingTime = getServerTimeFromPage();
-            if (beijingTime.getHours() === order_scheduledTime.hour &&
-                beijingTime.getMinutes() === order_scheduledTime.minute &&
-                beijingTime.getSeconds() === order_scheduledTime.second &&
-                beijingTime.getMilliseconds() >= order_scheduledTime.millisecond &&
-                !order_isRunning) {
-                addLog('定时时间到达，开始运行');
-                executeManualPayment();
+        stopOrderScheduleChecker();
+
+        if (!order_isScheduledEnabled || order_isRunning) return;
+
+        // 创建内联 Web Worker
+        const workerBlob = new Blob([`
+            let intervalId = null;
+            self.onmessage = function(e) {
+                if (e.data === 'start') {
+                    if (intervalId) clearInterval(intervalId);
+                    intervalId = setInterval(() => {
+                        self.postMessage('tick');
+                    }, 50); // 50ms 高频检查
+                } else if (e.data === 'stop') {
+                    if (intervalId) clearInterval(intervalId);
+                    intervalId = null;
+                }
+            };
+        `], { type: 'text/javascript' });
+
+        const workerUrl = URL.createObjectURL(workerBlob);
+        scheduleWorker = new Worker(workerUrl);
+
+        scheduleWorker.onmessage = function (e) {
+            if (e.data === 'tick') {
+                checkScheduleTime();
             }
-        }, 100);
+        };
+
+        scheduleWorker.postMessage('start');
+        console.log('已启动后台高精度定时器 (Web Worker)');
+    }
+
+    function checkScheduleTime() {
+        if (!order_isScheduledEnabled || order_isRunning) {
+            stopOrderScheduleChecker();
+            return;
+        }
+
+        const now = getServerTimeFromPage();
+        const target = new Date(now);
+        target.setHours(order_scheduledTime.hour, order_scheduledTime.minute, order_scheduledTime.second, order_scheduledTime.millisecond);
+
+        const diff = now - target;
+
+        // 触发条件: 
+        // 1. 时间已到 (diff >= 0)
+        // 2. 误差极小 (diff < 1000) - 由于Worker不被节流，我们可以要求更高的精度
+        if (diff >= 0 && diff < 1000) {
+            addLog(`定时触发! (误差 ${diff}ms)`);
+            executeManualPayment();
+            stopOrderScheduleChecker(); // 触发后停止
+        }
     }
 
     function stopOrderScheduleChecker() {
+        if (scheduleWorker) {
+            scheduleWorker.postMessage('stop');
+            scheduleWorker.terminate();
+            scheduleWorker = null;
+        }
         if (order_scheduleInterval) {
             clearInterval(order_scheduleInterval);
             order_scheduleInterval = null;
@@ -4538,7 +4669,7 @@
         .log-content { max-height: 150px; overflow-y: auto; background: #fafafa; border: 1px solid #f0f0f0; border-radius: 4px; padding: 6px; font-size: 11px; font-family: 'Courier New', monospace; }
         .log-entry { margin-bottom: 4px; color: #333; word-break: break-all; }
         .log-entry:last-child { margin-bottom: 0; }
-
+        
         /* 窗口监控样式 */
         .window-monitor-section { margin-bottom: 10px; padding: 8px; border: 1px solid #f0f0f0; border-radius: 4px; background: #f0f9ff; }
         .window-monitor-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
@@ -4570,7 +4701,7 @@
         .success-text { color: #52c41a; font-weight: bold; }
         .failed-text { color: #ff4d4f; font-weight: bold; }
         .window-offline { opacity: 0.5; }
-
+        
         /* WebSocket状态样式 */
         .ws-info-row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: #f0f5ff; border-top: 1px solid #d6e4ff; font-size: 11px; }
         .ws-label { color: #666; font-weight: normal; }
@@ -5327,65 +5458,13 @@
         return false;
     }
 
-    // v5.5.0: 辅助函数 - 点击所有支付按钮（兼容新旧按钮）
-    function clickAllPayButtons() {
-        const selectors = [
-            '.index_placeOrderBtn__30ZOe',  // 旧按钮
-            '.placeOrderBtn'                 // 新按钮
-        ];
-
-        let clickedCount = 0;
-        selectors.forEach(selector => {
-            const buttons = document.querySelectorAll(selector);
-            buttons.forEach(btn => {
-                btn.click();
-                clickedCount++;
-                console.log(`点击支付按钮: ${selector}`);
-            });
-        });
-
-        return clickedCount > 0;
-    }
-
-    // v5.5.0: 辅助函数 - 检查所有支付按钮是否都消失
-    function arePayButtonsGone() {
-        const selectors = [
-            '.index_placeOrderBtn__30ZOe',
-            '.placeOrderBtn'
-        ];
-
-        const gone = selectors.every(selector =>
-            !document.querySelector(selector)
-        );
-
-        return gone;
-    }
-
-    // v5.5.0: 辅助函数 - 查找任意一个支付按钮
-    function findAnyPayButton() {
-        const selectors = [
-            '.index_placeOrderBtn__30ZOe',
-            '.placeOrderBtn'
-        ];
-
-        for (const selector of selectors) {
-            const btn = document.querySelector(selector);
-            if (btn) {
-                return btn;
-            }
-        }
-
-        return null;
-    }
-
     // 等待订单页面加载
     async function waitForOrderPageLoad(timeout = 10000) {
         const startTime = Date.now();
 
         while (Date.now() - startTime < timeout) {
             if (window.location.pathname.includes('order-confirmation')) {
-                // v5.5.0: 使用辅助函数查找任意支付按钮
-                const payBtn = findAnyPayButton();
+                const payBtn = document.querySelector('.index_placeOrderBtn__30ZOe');
                 if (payBtn) {
                     console.log('订单页面加载完成');
                     return true;
@@ -5394,168 +5473,228 @@
 
             await new Promise(resolve => setTimeout(resolve, 200));
         }
+
         console.error('订单页面加载超时');
         return false;
     }
 
-    // v5.5.3: 极速处理弹窗（合并确认弹窗和错误弹窗处理，移除延时）
-    // canAct: 是否允许执行操作（用于频率控制）
-    async function handleModalsFast(canAct = true) {
-        const modal = document.querySelector('.ant-modal-content');
-        if (!modal) return { detected: false, acted: false };
+    // v5.4.7: 统一的确认弹窗处理函数 (修复识别延迟和报错)
+    async function handleStoreConfirmModal() {
+        try {
+            const startTime = Date.now();
+            const timeout = 2000; // 2秒轮询超时
 
-        // 1. 检查是否为确认弹窗 (通过复选框特征)
-        const checkbox = modal.querySelector('.index_unNoticeCheckbox__lebkx input') ||
-            modal.querySelector('.ant-checkbox-input');
+            // 轮询检测
+            while (Date.now() - startTime < timeout) {
+                // Step 1: 获取所有弹窗容器
+                const modals = document.querySelectorAll('.ant-modal-content');
+                let targetModal = null;
 
-        if (checkbox) {
-            // === 确认弹窗处理 ===
-            if (!canAct) return { detected: true, acted: false, type: 'confirm' };
+                // Step 2: 遍历查找目标弹窗（可见 且 包含特定标题）
+                for (const modal of modals) {
+                    // 检查可见性
+                    const style = window.getComputedStyle(modal);
+                    if (style.display === 'none' || style.visibility === 'hidden' || modal.offsetParent === null) {
+                        continue;
+                    }
 
-            if (!checkbox.checked) {
-                checkbox.click();
+                    // 检查标题
+                    const titleEl = modal.querySelector('.index_storeConfirmModalTitle__jtuIE') ||
+                        modal.querySelector('.ant-modal-title');
+
+                    if (titleEl && titleEl.innerText.includes('請確認自取門店')) {
+                        targetModal = modal;
+                        break;
+                    }
+                }
+
+                if (targetModal) {
+                    console.log('✓ 锁定目标确认弹窗');
+
+                    // Step 3: 先勾选"无提示"复选框
+                    const checkbox = targetModal.querySelector('.index_unNoticeCheckbox__lebkx input');
+                    if (checkbox && !checkbox.checked) {
+                        checkbox.click();
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        console.log('✓ 已勾选"无提示"');
+                    }
+
+                    // Step 4: 点击确认按钮
+                    const btn = targetModal.querySelector('.index_pickUpStoreBtn__cf1_Z') ||
+                        targetModal.querySelector('.ant-btn-primary');
+
+                    if (btn) {
+                        btn.click();
+                        // 双重保险：模拟鼠标点击 (修复报错: 使用 unsafeWindow)
+                        try {
+                            btn.dispatchEvent(new MouseEvent('click', {
+                                bubbles: true,
+                                cancelable: true,
+                                view: unsafeWindow
+                            }));
+                        } catch (err) {
+                            console.warn('模拟点击报错(已忽略):', err);
+                        }
+
+                        console.log('✓ 已点击确认按钮');
+
+                        // Step 5: 等待弹窗消失
+                        await waitForElementDisappear('.ant-modal-content', 2000);
+                        return true;
+                    }
+                }
+
+                // 未检测到，等待后重试
+                await new Promise(resolve => setTimeout(resolve, 200));
             }
 
-            // 立即点击确认按钮
-            const confirmBtn = modal.querySelector('.index_pickUpStoreBtn__cf1_Z') ||
-                modal.querySelector('.ant-btn-primary');
-            if (confirmBtn) {
-                confirmBtn.click();
-                console.log('⚡ 已极速处理确认弹窗');
-                return { detected: true, acted: true, type: 'confirm' };
-            }
-        } else if (modal.querySelector('.layout_limitTokenModalText__ay2Wq') ||
-            modal.textContent.includes('Too popular')) {
-            // === 限流弹窗处理 (Too Popular) ===
-            if (!canAct) return { detected: true, acted: false, type: 'limit' };
-
-            console.log('⚡ 检测到限流弹窗 (Too Popular)');
-
-            const keepTryingBtn = modal.querySelector('.ant-btn-primary');
-            if (keepTryingBtn) {
-                keepTryingBtn.click();
-                console.log('⚡ 已点击 Keep Trying 按钮');
-                return { detected: true, acted: true, type: 'limit' };
-            }
-
-            // 如果找不到按钮，则回退到移除策略
-            modal.remove();
-            return { detected: true, acted: true, type: 'limit_remove' };
-        } else {
-            // === 普通错误弹窗处理 ===
-            if (!canAct) return { detected: true, acted: false, type: 'error' };
-
-            const modalBody = modal.querySelector('.ant-modal-body');
-            const msg = modalBody ? modalBody.textContent.trim().substring(0, 50) : 'Unknown error';
-            console.log(`⚡ 极速移除错误弹窗: ${msg}...`);
-
-            // 1. 移除内容
-            modal.remove();
-
-            // 2. 移除遮罩层和外层容器 (防止挡住支付按钮)
-            const mask = document.querySelector('.ant-modal-mask');
-            if (mask) mask.remove();
-
-            const wrap = document.querySelector('.ant-modal-wrap');
-            if (wrap) wrap.remove();
-
-            return { detected: true, acted: true, type: 'error_remove' };
+            return false;
+        } catch (e) {
+            console.error('弹窗处理异常:', e);
+            return false;
         }
-
-        return { detected: true, acted: false };
     }
 
-    // v5.5.3: 极速支付流程中的弹窗监控
-    // 在点击支付按钮后，高频检测弹窗 (持续 monitorDuration 毫秒)
-    async function monitorModalsFast(monitorDuration = 2000) {
-        const startTime = Date.now();
-        let handledCount = 0;
-        let lastActionTime = 0;
-        const MIN_ACTION_INTERVAL = 300; // 最小动作间隔 300ms (防止疯狂提交)
-        const MAX_FAST_RETRIES = 5;      // 最大极速重试次数
+    // v5.4.3: 处理错误弹窗并自动重试支付
+    async function handleErrorModalsAndRetry(maxRetries = 3) {
+        let retryCount = 0;
 
-        while (Date.now() - startTime < monitorDuration) {
-            // 检查是否达到最大重试次数
-            if (handledCount >= MAX_FAST_RETRIES) {
-                // console.log('⚠️ 达到极速重试上限，停止监控');
-                break;
+        while (retryCount < maxRetries) {
+            // 等待弹窗可能出现
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            // 检测是否有弹窗
+            const modal = document.querySelector('.ant-modal-content');
+            if (!modal) {
+                // 没有弹窗,返回成功
+                return { hasError: false, retryCount };
             }
 
-            const now = Date.now();
-            const canAct = (now - lastActionTime > MIN_ACTION_INTERVAL);
+            // 提取弹窗内容
+            const modalBody = modal.querySelector('.ant-modal-body');
+            const errorMessage = modalBody ? modalBody.textContent.trim() : '';
 
-            // 极速处理弹窗
-            const result = await handleModalsFast(canAct);
+            console.log(`检测到错误弹窗 (第${retryCount + 1}次): ${errorMessage}`);
 
-            if (result.detected && result.acted) {
-                handledCount++;
-                lastActionTime = now;
-
-                // 只有在移除错误弹窗后才需要重试支付
-                // 确认弹窗和Keep Trying按钮点击后，通常不需要再次点击支付按钮
-                if (result.type === 'error_remove') {
-                    const payBtn = findAnyPayButton();
-                    if (payBtn) {
-                        payBtn.click();
-                        console.log(`⚡ 弹窗移除后立即重试支付 (${handledCount}/${MAX_FAST_RETRIES})`);
-                    }
+            // 关闭弹窗 - 优先点击关闭按钮
+            const closeBtn = modal.querySelector('.ant-modal-close');
+            if (closeBtn) {
+                console.log('点击关闭按钮');
+                closeBtn.click();
+            } else {
+                // 如果没有关闭按钮,点击OK按钮
+                const okBtn = modal.querySelector('.ant-btn-primary');
+                if (okBtn) {
+                    console.log('点击OK按钮');
+                    okBtn.click();
                 }
             }
 
-            // 极速轮询：10ms 间隔
-            await new Promise(resolve => setTimeout(resolve, 10));
+            // 等待弹窗关闭
+            await new Promise(resolve => setTimeout(resolve, 500));
 
-            // 如果支付按钮消失，说明可能成功了，提前结束
-            if (arePayButtonsGone()) {
-                return true;
+            // 重新点击支付按钮
+            const payBtn = document.querySelector('.index_placeOrderBtn__30ZOe');
+            if (payBtn) {
+                console.log(`重新点击支付按钮 (第${retryCount + 1}次重试)`);
+                payBtn.click();
+
+                // 等待处理
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                retryCount++;
+            } else {
+                // 支付按钮消失,可能已成功
+                console.log('支付按钮已消失,可能支付成功');
+                return { hasError: false, retryCount, reason: '支付按钮消失' };
             }
         }
-        return handledCount > 0;
+
+        // 达到最大重试次数
+        return { hasError: true, retryCount, reason: '达到最大重试次数' };
     }
 
-    // v5.5.3: 兼容旧函数的空实现，防止报错
-    async function handleStoreConfirmModal() { return false; }
-    async function handleErrorModalsAndRetry() { return { hasError: false }; }
-
-    // v5.5.3: 执行支付流程（优化：极速模式）
+    // v5.4.2: 执行支付流程（优化：添加确认弹窗处理）
     async function executePaymentProcess() {
         console.log('开始支付流程...');
 
-        // v5.5.0: 使用辅助函数查找任意支付按钮
-        const payBtn = findAnyPayButton();
+        const payBtn = document.querySelector('.index_placeOrderBtn__30ZOe');
         if (!payBtn) {
             console.error('找不到支付按钮');
             return { success: false, reason: '找不到支付按钮' };
         }
 
-        // 第1次点击支付按钮 - v5.5.0: 同时点击所有按钮
+        // 第1次点击支付按钮
         console.log('点击支付按钮（第1次）...');
-        clickAllPayButtons();
+        payBtn.click();
 
-        // v5.5.3: 立即启动极速弹窗监控 (持续1.5秒)
-        // 这会处理确认弹窗或错误弹窗，并在处理后自动重试
-        await monitorModalsFast(1500);
+        // v5.4.2: 立即处理确认弹窗
+        const hasModal1 = await handleStoreConfirmModal();
+        if (hasModal1) {
+            console.log('已处理确认弹窗（第1次点击后）');
+        }
 
-        // v5.5.0: 检查是否已成功（所有按钮消失）
-        if (arePayButtonsGone()) {
+        // 检测错误
+        await new Promise(resolve => setTimeout(resolve, 500));
+        let errorNotification = document.querySelector('.ant-notification-notice');
+        if (errorNotification) {
+            const errorMsg = errorNotification.textContent;
+            console.warn('第1次点击检测到错误:', errorMsg);
+            // 移除错误通知
+            errorNotification.remove();
+        }
+
+        // 检查是否已成功（按钮消失）
+        if (!document.querySelector('.index_placeOrderBtn__30ZOe')) {
             console.log('✓ 支付成功！（第1次点击后按钮已消失）');
             return { success: true, reason: '支付成功' };
         }
 
-        // 如果按钮还在，尝试第2次点击
-        console.log('点击支付按钮（第2次）...');
-        const clicked2 = clickAllPayButtons();
+        // 等待1秒后第2次点击
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
-        if (!clicked2) {
+        // 第2次点击支付按钮
+        console.log('点击支付按钮（第2次）...');
+        const payBtn2 = document.querySelector('.index_placeOrderBtn__30ZOe');
+        if (!payBtn2) {
             console.log('✓ 支付成功！（第2次点击前按钮已消失）');
             return { success: true, reason: '支付成功' };
         }
+        payBtn2.click();
 
-        // 再次启动极速监控 (持续2秒)
-        await monitorModalsFast(2000);
+        // v5.4.2: 再次处理确认弹窗
+        const hasModal2 = await handleStoreConfirmModal();
+        if (hasModal2) {
+            console.log('已处理确认弹窗（第2次点击后）');
+        }
 
-        // 最终检查所有按钮是否消失
-        if (arePayButtonsGone()) {
+        // v5.4.3: 处理错误弹窗并自动重试
+        console.log('检测是否有错误弹窗...');
+        const retryResult = await handleErrorModalsAndRetry(3);
+
+        if (retryResult.hasError) {
+            console.error(`支付失败: ${retryResult.reason} (重试${retryResult.retryCount}次)`);
+            return { success: false, reason: retryResult.reason };
+        }
+
+        if (retryResult.retryCount > 0) {
+            console.log(`经过${retryResult.retryCount}次重试后继续检测...`);
+        }
+
+        // 等待2秒检测最终结果
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        console.log('等待2秒检测最终结果...');
+
+        // 检查是否有错误提示
+        errorNotification = document.querySelector('.ant-notification-notice');
+        if (errorNotification) {
+            const errorMsg = errorNotification.textContent;
+            console.error('支付失败:', errorMsg);
+            return { success: false, reason: errorMsg };
+        }
+
+        // 最终检查按钮是否消失
+        if (!document.querySelector('.index_placeOrderBtn__30ZOe')) {
             console.log('✓ 支付成功！（按钮已消失）');
             return { success: true, reason: '支付成功' };
         }

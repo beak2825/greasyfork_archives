@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Faster Vault Deposits
 // @namespace    https://greasyfork.org/en/users/1469540-davrone
-// @version      1.0
+// @version      1.1
 // @description  Draggable button that deposits all cash to faction vault - opens in new window and autofills amount to max
 // @author       Tornholio
 // @match        https://www.torn.com/*
@@ -17,9 +17,33 @@
     // Configuration
     const POSITION_KEY = 'tornVaultButtonPosition';
     const DEPOSIT_AMOUNT_KEY = 'tornVaultDepositAmount';
+    const DEBUG = true;
 
-    // Get position from storage
+    function log(...args) {
+        if (DEBUG) console.log('[Vault Script]', ...args);
+    }
+
+    // Get position from storage with safety check
     let buttonPosition = GM_getValue(POSITION_KEY, { top: 20, right: 20 });
+    
+    // Validate position is on-screen
+    function validatePosition(pos) {
+        const maxWidth = window.innerWidth;
+        const maxHeight = window.innerHeight;
+        
+        if (pos.left && pos.left > maxWidth - 100) return false;
+        if (pos.right && pos.right > maxWidth - 100) return false;
+        if (pos.top && pos.top > maxHeight - 100) return false;
+        if (pos.bottom && pos.bottom > maxHeight - 100) return false;
+        
+        return true;
+    }
+    
+    if (!validatePosition(buttonPosition)) {
+        log('Saved position invalid, resetting to default');
+        buttonPosition = { top: 20, right: 20 };
+        GM_setValue(POSITION_KEY, buttonPosition);
+    }
 
     // Dragging state
     let isDragging = false;
@@ -27,11 +51,17 @@
 
     // Create the floating button
     function createDepositButton() {
+        if (document.getElementById('quick-vault-deposit')) {
+            log('Button already exists');
+            return;
+        }
+
+        log('Creating vault button...');
+
         const button = document.createElement('button');
         button.id = 'quick-vault-deposit';
         button.innerHTML = 'VAULT';
 
-        // Apply saved position
         const pos = buttonPosition;
         button.style.cssText = `
             position: fixed;
@@ -56,7 +86,6 @@
             font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
         `;
 
-        // Hover effect
         button.onmouseenter = () => {
             if (!isDragging) {
                 button.style.background = '#374151';
@@ -67,20 +96,30 @@
 
         button.onmouseleave = () => {
             if (!isDragging) {
-                button.style.background = '#2d3748';
-                button.style.borderColor = '#4a5568';
-                button.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+                button.style.background = '#1f2937';
+                button.style.borderColor = '#374151';
+                button.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3)';
             }
         };
 
-        // Left click - deposit
         button.onclick = (e) => {
             if (!isDragging) {
                 handleDeposit();
             }
         };
 
-        // Dragging functionality
+        button.oncontextmenu = (e) => {
+            e.preventDefault();
+            buttonPosition = { top: 20, right: 20 };
+            GM_setValue(POSITION_KEY, buttonPosition);
+            button.style.top = '20px';
+            button.style.right = '20px';
+            button.style.left = 'auto';
+            button.style.bottom = 'auto';
+            log('Position reset to default');
+            return false;
+        };
+
         button.onmousedown = (e) => {
             if (e.button === 0) {
                 isDragging = true;
@@ -115,7 +154,6 @@
                 button.style.transition = 'all 0.2s ease';
                 button.style.opacity = '1';
 
-                // Save new position
                 const rect = button.getBoundingClientRect();
                 const windowWidth = window.innerWidth;
                 const windowHeight = window.innerHeight;
@@ -149,56 +187,70 @@
             }
         });
 
-        document.body.appendChild(button);
-    }
-
-    // Format number with commas
-    function formatMoney(amount) {
-        return '$' + amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        try {
+            document.body.appendChild(button);
+            log('Button created and appended successfully');
+        } catch (error) {
+            log('Error appending button:', error);
+        }
     }
 
     // Get current cash from page
     function getCashOnHand() {
-        // Try multiple selector patterns for Torn's various layouts
-        const selectors = [
-            // Top user bar
-            'li[id^="user-money"] span.bold',
-            'li[id*="money"] span.bold',
-            '#user-money span',
-            'li.user-money span',
-            // Generic money containers
-            'div[class*="money"] span.bold',
-            'div[class*="money"] span',
-            'div[class*="userInfo"] span.bold',
-            'span[class*="money"]',
-            // User info bar variations
-            'ul.user-info span.bold',
-            '.user-info-value',
-            // Direct text search as fallback
-            'li:has([class*="money"])',
-        ];
-
-        for (const selector of selectors) {
-            try {
-                const elements = document.querySelectorAll(selector);
-                for (const element of elements) {
-                    const text = element.textContent || '';
-                    // Look for dollar amounts
-                    if (text.includes('$') || /^\d{1,3}(,\d{3})*$/.test(text.replace(/[$,]/g, ''))) {
-                        const cashText = text.replace(/[$,]/g, '');
-                        const cash = parseInt(cashText);
-                        if (!isNaN(cash) && cash > 0 && cash < 1000000000000) { // Sanity check
-                            console.log(`Found cash: $${cash} using selector: ${selector}`);
-                            return cash;
+        log('Attempting to find cash on hand...');
+        
+        try {
+            const userInfo = document.querySelector('[class*="user-information"]') || 
+                           document.querySelector('[class*="userInfo"]') ||
+                           document.querySelector('.user-info');
+            
+            if (userInfo) {
+                log('Found user info container');
+                const moneyElements = userInfo.querySelectorAll('span, div, li');
+                for (const el of moneyElements) {
+                    const text = el.textContent.trim();
+                    if (text.includes('$')) {
+                        const match = text.match(/\$([0-9,]+)/);
+                        if (match) {
+                            const amount = parseInt(match[1].replace(/,/g, ''));
+                            if (!isNaN(amount) && amount >= 0) {
+                                log('Found cash via user info:', amount);
+                                return amount;
+                            }
                         }
                     }
                 }
-            } catch (e) {
-                // Selector might not work, continue to next
             }
+        } catch (e) {
+            log('Strategy 1 failed:', e);
         }
 
-        console.log('Could not find cash amount on page');
+        try {
+            if (window.torn && window.torn.user && window.torn.user.money) {
+                const amount = parseInt(window.torn.user.money);
+                if (!isNaN(amount)) {
+                    log('Found cash via torn API:', amount);
+                    return amount;
+                }
+            }
+        } catch (e) {
+            log('Strategy 2 failed:', e);
+        }
+
+        try {
+            const moneyEl = document.querySelector('[data-money], [data-cash], [data-amount]');
+            if (moneyEl) {
+                const amount = parseInt(moneyEl.dataset.money || moneyEl.dataset.cash || moneyEl.dataset.amount);
+                if (!isNaN(amount)) {
+                    log('Found cash via data attribute:', amount);
+                    return amount;
+                }
+            }
+        } catch (e) {
+            log('Strategy 3 failed:', e);
+        }
+
+        log('Could not find cash amount on page');
         return null;
     }
 
@@ -210,18 +262,17 @@
         button.disabled = true;
 
         try {
-            // Get current cash from the page
             let cashOnHand = getCashOnHand();
-
-            if (cashOnHand && cashOnHand > 0) {
-                // Save the amount to deposit if we found it
+            
+            if (cashOnHand !== null && cashOnHand >= 0) {
+                log('Storing cash amount:', cashOnHand);
                 GM_setValue(DEPOSIT_AMOUNT_KEY, cashOnHand);
+                GM_setValue('tornVaultDepositTimestamp', Date.now());
             } else {
-                // Still open the page, but user will need to enter amount manually
+                log('No cash amount found, will try to read from faction page');
                 GM_setValue(DEPOSIT_AMOUNT_KEY, null);
             }
 
-            // Always open faction armory page in new window
             window.open('https://www.torn.com/factions.php?step=your#/tab=armoury', '_blank');
 
             setTimeout(() => {
@@ -230,7 +281,7 @@
             }, 1500);
 
         } catch (error) {
-            console.error('Vault deposit error:', error);
+            log('Vault deposit error:', error);
             button.innerHTML = originalText;
             button.disabled = false;
         }
@@ -238,143 +289,145 @@
 
     // Auto-fill and submit if we're on the faction deposit page
     function checkAndAutoDeposit() {
-        // Check if we're on the faction page
-        if (window.location.href.includes('factions.php?step=your')) {
-            let depositAmount = GM_getValue(DEPOSIT_AMOUNT_KEY, null);
-
-            // If we didn't get amount from previous page, try to read it from this page
-            if (!depositAmount) {
-                console.log('No stored amount, trying to read from faction page...');
-
-                // Try multiple times to find the balance text
-                let attempts = 0;
-                const maxAttempts = 10;
-
-                const findBalance = () => {
-                    attempts++;
-
-                    // Look for "You have $X,XXX and a balance of" text on faction page
-                    const pageText = document.body.textContent;
-                    const match = pageText.match(/You have \$([0-9,]+)/i);
-
-                    if (match) {
-                        depositAmount = parseInt(match[1].replace(/,/g, ''));
-                        console.log('Found balance on faction page:', depositAmount);
-
-                        // Clear the stored amount
-                        GM_setValue(DEPOSIT_AMOUNT_KEY, null);
-
-                        // Wait a moment for input field to be fully rendered
-                        setTimeout(() => {
-                            fillAndSubmitDepositForm(depositAmount);
-                        }, 400);
-                    } else if (attempts < maxAttempts) {
-                        console.log(`Attempt ${attempts}: Balance text not found yet, retrying...`);
-                        setTimeout(findBalance, 200);
-                    } else {
-                        console.log('Could not find balance amount after 10 attempts');
-                    }
-                };
-
-                // Start immediately
-                findBalance();
-            } else {
-                // We have stored amount from previous page
-                // Clear the stored amount
-                GM_setValue(DEPOSIT_AMOUNT_KEY, null);
-
-                // Fill the form quickly
-                setTimeout(() => {
-                    fillAndSubmitDepositForm(depositAmount);
-                }, 500);
-            }
+        if (!window.location.href.includes('factions.php?step=your')) {
+            return;
         }
-    }
 
-    // Fill and submit the deposit form
-    function fillAndSubmitDepositForm(amount) {
-        // Try multiple times in case the page is still loading
+        log('On faction page, checking for deposit...');
+
+        let depositAmount = GM_getValue(DEPOSIT_AMOUNT_KEY, null);
+        const timestamp = GM_getValue('tornVaultDepositTimestamp', 0);
+        const timeSinceClick = Date.now() - timestamp;
+
+        if (timeSinceClick > 10000) {
+            log('No recent vault button click detected');
+            return;
+        }
+
+        log('Recent vault click detected, deposit amount:', depositAmount);
+
+        if (depositAmount !== null && depositAmount >= 0) {
+            log('Using stored amount:', depositAmount);
+            GM_setValue(DEPOSIT_AMOUNT_KEY, null);
+            setTimeout(() => fillAndSubmitDepositForm(depositAmount), 800);
+            return;
+        }
+
+        log('No stored amount, trying to read from faction page...');
+        
         let attempts = 0;
-        const maxAttempts = 20;
-
-        const tryFillAndSubmit = () => {
+        const maxAttempts = 15;
+        
+        const findBalance = () => {
             attempts++;
+            log(`Attempt ${attempts} to find balance...`);
 
-            console.log(`Attempt ${attempts}: Looking for money input field...`);
+            let foundAmount = null;
 
-            // Look for money input field with various selectors
-            let moneyInput = null;
+            const pageText = document.body.textContent;
+            let match = pageText.match(/You have \$([0-9,]+)/i);
+            if (match) {
+                foundAmount = parseInt(match[1].replace(/,/g, ''));
+                log('Found via "You have" text:', foundAmount);
+            }
 
-            // Try different selectors
-            const selectors = [
-                'input[name="money"]',
-                'input[type="number"]',
-                'input[placeholder*="money" i]',
-                'input[placeholder*="amount" i]',
-                'div:has(button:contains("DEPOSIT MONEY")) input',
-                'input[class*="input"]',
-                'input[type="text"]'
-            ];
-
-            for (const selector of selectors) {
-                try {
-                    const input = document.querySelector(selector);
-                    if (input && input.offsetParent !== null) { // Check if visible
-                        console.log(`Found input with selector: ${selector}`);
-                        moneyInput = input;
-                        break;
-                    }
-                } catch (e) {
-                    // Continue to next selector
+            if (!foundAmount) {
+                match = pageText.match(/balance[:\s]+\$([0-9,]+)/i);
+                if (match) {
+                    foundAmount = parseInt(match[1].replace(/,/g, ''));
+                    log('Found via balance text:', foundAmount);
                 }
             }
 
-            // Fallback: find any input near the "DEPOSIT MONEY" button
+            if (!foundAmount) {
+                foundAmount = getCashOnHand();
+                if (foundAmount) {
+                    log('Found via getCashOnHand:', foundAmount);
+                }
+            }
+
+            if (foundAmount !== null && !isNaN(foundAmount)) {
+                log('Successfully found amount:', foundAmount);
+                setTimeout(() => fillAndSubmitDepositForm(foundAmount), 400);
+            } else if (attempts < maxAttempts) {
+                setTimeout(findBalance, 300);
+            } else {
+                log('Could not find balance amount after', maxAttempts, 'attempts');
+            }
+        };
+
+        findBalance();
+    }
+
+    // Fill deposit form with AGGRESSIVE React state manipulation
+    function fillAndSubmitDepositForm(amount) {
+        log('Attempting to fill deposit form with amount:', amount);
+
+        let attempts = 0;
+        const maxAttempts = 25;
+
+        const tryFillAndSubmit = () => {
+            attempts++;
+            log(`Fill attempt ${attempts}...`);
+
+            let moneyInput = null;
+
+            const depositElements = Array.from(document.querySelectorAll('*')).filter(el => 
+                el.textContent.includes('DEPOSIT MONEY') && el.offsetParent !== null
+            );
+
+            for (const depositEl of depositElements) {
+                log('Found DEPOSIT MONEY element');
+                let parent = depositEl;
+                for (let i = 0; i < 5; i++) {
+                    parent = parent.parentElement;
+                    if (!parent) break;
+                    
+                    const input = parent.querySelector('input[type="number"], input[type="text"], input:not([type])');
+                    if (input && input.offsetParent !== null && !input.placeholder?.toLowerCase().includes('search')) {
+                        log('Found input near DEPOSIT MONEY');
+                        moneyInput = input;
+                        break;
+                    }
+                }
+                if (moneyInput) break;
+            }
+
             if (!moneyInput) {
-                const depositButtons = Array.from(document.querySelectorAll('button, a'));
-                for (const btn of depositButtons) {
-                    if (btn.textContent.includes('DEPOSIT MONEY')) {
-                        // Look for input near this button
-                        const parent = btn.closest('div');
-                        if (parent) {
-                            const nearbyInput = parent.querySelector('input');
-                            if (nearbyInput) {
-                                console.log('Found input near DEPOSIT MONEY button');
-                                moneyInput = nearbyInput;
-                                break;
-                            }
-                        }
+                const inputs = document.querySelectorAll('input[type="number"], input[name*="money" i], input[name*="amount" i]');
+                for (const input of inputs) {
+                    if (input.offsetParent !== null && !input.disabled && !input.readOnly) {
+                        log('Found candidate input:', input.name || input.id || 'unnamed');
+                        moneyInput = input;
+                        break;
+                    }
+                }
+            }
+
+            if (!moneyInput) {
+                const armorySection = document.querySelector('[class*="armoury"], [class*="armory"], [id*="armoury"], [id*="armory"]');
+                if (armorySection) {
+                    log('Found armory section');
+                    const input = armorySection.querySelector('input[type="number"], input[type="text"]');
+                    if (input && input.offsetParent !== null) {
+                        log('Found input in armory section');
+                        moneyInput = input;
                     }
                 }
             }
 
             if (moneyInput) {
-                // Fill the input
-                moneyInput.value = amount;
-                moneyInput.dispatchEvent(new Event('input', { bubbles: true }));
-                moneyInput.dispatchEvent(new Event('change', { bubbles: true }));
-                moneyInput.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
-
-                console.log('Successfully filled deposit amount:', amount);
-
-                // Highlight the input briefly
-                moneyInput.style.transition = 'border-color 0.3s, box-shadow 0.3s';
-                moneyInput.style.borderColor = '#10b981';
-                moneyInput.style.boxShadow = '0 0 10px rgba(16, 185, 129, 0.5)';
-                setTimeout(() => {
-                    moneyInput.style.borderColor = '';
-                    moneyInput.style.boxShadow = '';
-                }, 2000);
-
-                // Focus the input
-                moneyInput.focus();
-
+                log('Successfully found input field, filling with:', amount);
+                
+                // NUCLEAR OPTION: Character-by-character typing with React event simulation
+                simulateUserTyping(moneyInput, amount.toString());
+                
             } else {
-                console.log(`Attempt ${attempts}: Money input not found yet`);
+                log(`Attempt ${attempts}: Money input not found yet`);
                 if (attempts < maxAttempts) {
                     setTimeout(tryFillAndSubmit, 250);
                 } else {
-                    console.error('Could not find deposit input field after 20 attempts');
+                    log('ERROR: Could not find deposit input field after', maxAttempts, 'attempts');
                 }
             }
         };
@@ -382,18 +435,117 @@
         tryFillAndSubmit();
     }
 
-    // Initialize when page loads
-    function init() {
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                createDepositButton();
-                checkAndAutoDeposit();
-            });
-        } else {
-            createDepositButton();
-            checkAndAutoDeposit();
-        }
+    // Simulate realistic user typing to trigger React's state updates
+    function simulateUserTyping(input, text) {
+        log('Starting character-by-character typing simulation');
+        
+        // Get the native setter
+        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+            window.HTMLInputElement.prototype,
+            'value'
+        ).set;
+
+        // Focus the input first
+        input.focus();
+        input.click();
+        
+        // Clear the field
+        nativeInputValueSetter.call(input, '');
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        
+        let index = 0;
+        
+        const typeNextChar = () => {
+            if (index < text.length) {
+                // Get current value and add next character
+                const currentValue = input.value;
+                const newValue = currentValue + text[index];
+                
+                // Set value using native setter
+                nativeInputValueSetter.call(input, newValue);
+                
+                // Create and dispatch input event
+                const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+                
+                // Set the inputType to simulate keyboard input
+                Object.defineProperty(inputEvent, 'inputType', {
+                    value: 'insertText',
+                    writable: false
+                });
+                Object.defineProperty(inputEvent, 'data', {
+                    value: text[index],
+                    writable: false
+                });
+                
+                input.dispatchEvent(inputEvent);
+                
+                // Also dispatch keydown/keyup for good measure
+                const keyCode = text[index].charCodeAt(0);
+                input.dispatchEvent(new KeyboardEvent('keydown', { 
+                    key: text[index], 
+                    keyCode: keyCode,
+                    bubbles: true 
+                }));
+                input.dispatchEvent(new KeyboardEvent('keyup', { 
+                    key: text[index], 
+                    keyCode: keyCode,
+                    bubbles: true 
+                }));
+                
+                index++;
+                
+                // Continue typing with small delay
+                setTimeout(typeNextChar, 30);
+                
+            } else {
+                // Finished typing
+                log('Finished typing, final value:', input.value);
+                
+                // Fire change event
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                
+                // Blur then focus to ensure React updates
+                input.blur();
+                setTimeout(() => {
+                    input.focus();
+                    
+                    // Highlight the input
+                    input.style.transition = 'border-color 0.3s, box-shadow 0.3s';
+                    input.style.borderColor = '#10b981';
+                    input.style.boxShadow = '0 0 10px rgba(16, 185, 129, 0.5)';
+                    
+                    setTimeout(() => {
+                        input.style.borderColor = '';
+                        input.style.boxShadow = '';
+                    }, 2000);
+                    
+                    log('Deposit form filled successfully');
+                }, 50);
+            }
+        };
+        
+        // Start typing after small delay
+        setTimeout(typeNextChar, 100);
     }
 
-    init();
+    // Initialize when page loads
+    function init() {
+        log('Initializing Vault Deposit script...');
+        
+        const waitForBody = setInterval(() => {
+            if (document.body) {
+                clearInterval(waitForBody);
+                createDepositButton();
+                checkAndAutoDeposit();
+            }
+        }, 100);
+        
+        setTimeout(() => clearInterval(waitForBody), 5000);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 })();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Moon UI
 // @namespace    http://tampermonkey.net/
-// @version      2.8.3
+// @version      2.8.6
 // @description  Melhorias para interface e jogabilidade, incluindo agendamento, favoritos avançados e backup.
 // @author       crazyphantombr & Gemini
 // @license      MIT
@@ -18,13 +18,11 @@
 // ==/UserScript==
 //
 // --- HISTÓRICO DE VERSÕES (CHANGELOG) ---
-// v2.8.3 (2026-01-11) [Stable Fix]:
-// - [FIX] Fluxo de Lançamento: Retorno à lógica estável (v2.8.0) com adição de uma visita única prévia à página de frotas para atualização de cache antes da confirmação.
-// - [FIX] Botão de Emergência: Agora interrompe fisicamente o ciclo de auto-submit verificando a existência da sessão ativa.
-// - [UI] Manutenção das melhorias visuais (Alerta Amarelo, Title Case, sem contador em edifícios).
+// v2.8.6 (2026-01-22) [Development]:
+// - [FIX] Correção na Paginação Infinita: O script agora lê o parâmetro 'side=' das URLs dos botões de paginação em vez do texto visível. Isso permite detectar corretamente o número total de páginas (ex: 21) mesmo quando o jogo exibe apenas "1 2 3 4 5 ... »".
 //
-// v2.8.2 (2026-01-11) [Development]:
-// - [UI] Ajustes estéticos e correções de redundância.
+// v2.8.5 (2026-01-22) [Development]:
+// - [FIX] Paginação Infinita Robusta: Implementada lógica de "resfriamento" (pausas de segurança) para evitar bloqueios do servidor ao carregar muitas páginas.
 // --- FIM DO HISTÓRICO ---
 
 
@@ -34,7 +32,8 @@
     // --- PAINEL DE CONTROLE E CONSTANTES ---
     const CONFIG = {
         MODO_DEBUG: false,
-        INTERVALO_VERIFICACAO_AGENDADOR: 5000
+        INTERVALO_VERIFICACAO_AGENDADOR: 5000,
+        REMOVER_PAGINACAO: false // <--- EDITE AQUI: 'true' para ativar, 'false' para desativar
     };
 
     const webAppUrl = 'https://script.google.com/macros/s/AKfycbwS-bmTcD5JLwGGP6F8QOYxzTYzMLPIO8eV2X5bXeCtxAmUn6YeCEVgWgIfWY9bDWY/exec';
@@ -60,7 +59,7 @@
     // Chaves de sessão
     const DRAFT_SCHEDULE_PARAMS_KEY = 'moon_draft_params';
     const DRAFT_SCHEDULE_ACTIVE_KEY = 'moon_draft_active';
-    const PENDING_CACHE_UPDATE_KEY = 'moon_pending_cache_update'; // Chave para o fluxo de visita única
+    const PENDING_CACHE_UPDATE_KEY = 'moon_pending_cache_update';
 
     function getAttackQueueKey() {
         const planetId = getPlanetaOrigemId();
@@ -90,7 +89,7 @@
         const cleanText = text.trim();
 
         const matchColons = cleanText.match(/(\d+):(\d+):(\d+)/);
-        
+
         if (matchColons) {
             seconds += parseInt(matchColons[1], 10) * 3600;
             seconds += parseInt(matchColons[2], 10) * 60;
@@ -115,10 +114,10 @@
     function getCoordenadasOrigem() {
         const planetSelector = document.getElementById('planetSelector');
         if (!planetSelector || planetSelector.selectedIndex < 0) return null;
-        
+
         const optionText = planetSelector.options[planetSelector.selectedIndex].text;
         const match = optionText.match(/\[(\d+):(\d+):(\d+)\]/);
-        
+
         if (match) {
             return { g: parseInt(match[1]), s: parseInt(match[2]), p: parseInt(match[3]) };
         }
@@ -136,6 +135,114 @@
         } catch (e) {
             return { g: 0, s: 0, p: 0 };
         }
+    }
+
+    // --- FUNÇÕES DE LÓGICA DE MENSAGENS (PAGINAÇÃO INFINITA ROBUSTA) ---
+    async function carregarTodasMensagensEspionagem() {
+        // Verifica Config e se já foi processado
+        if (!CONFIG.REMOVER_PAGINACAO || window.moonPaginationProcessed) return;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        // Aplica apenas em messages + category=0 (Espionagem)
+        if (urlParams.get('page') !== 'messages' || urlParams.get('category') !== '0') return;
+
+        // Marca como processado para evitar loops
+        window.moonPaginationProcessed = true;
+
+        // Encontra os links de paginação
+        const paginationLinks = document.querySelectorAll('#messagestable td.right a');
+        if (paginationLinks.length === 0) return; // Só tem 1 página
+
+        // Descobre a última página LENDO A URL (href), não o texto
+        let maxPage = 1;
+        paginationLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href) {
+                // Procura por side=XX na url
+                const match = href.match(/side=(\d+)/);
+                if (match) {
+                    const num = parseInt(match[1], 10);
+                    if (!isNaN(num) && num > maxPage) maxPage = num;
+                }
+            }
+        });
+
+        log(`Máximo de páginas detectado: ${maxPage}`);
+
+        if (maxPage <= 1) return;
+
+        const table = document.querySelectorAll('#messagestable')[1]; // A segunda tabela é a de mensagens
+        if (!table) return;
+
+        // Cria indicador de carregamento
+        const statusDiv = document.createElement('div');
+        statusDiv.style.cssText = "background: #222; color: #FFD700; padding: 8px; text-align: center; font-weight: bold; border: 1px solid #555; margin: 5px 0; transition: all 0.3s;";
+        statusDiv.innerText = `Iniciando leitura de páginas (Total: ${maxPage})...`;
+        table.parentNode.insertBefore(statusDiv, table);
+
+        // Encontra o ponto de inserção (antes da linha de paginação inferior)
+        const rows = Array.from(table.rows);
+        const insertPoint = rows.find(r => r.cells[0] && r.cells[0].className.includes('right') && r.textContent.includes('Page:'));
+
+        let pagesLoadedCount = 0;
+
+        // Loop de fetch
+        for (let i = 2; i <= maxPage; i++) {
+
+            // Lógica de Resfriamento (Cooldown) a cada 5 páginas
+            if (pagesLoadedCount > 0 && pagesLoadedCount % 5 === 0) {
+                statusDiv.innerText = `Resfriando motores... Pausa de segurança de 5s...`;
+                statusDiv.style.color = '#FFA500'; // Laranja
+                await new Promise(r => setTimeout(r, 5000));
+                statusDiv.style.color = '#FFD700'; // Volta para Amarelo
+            }
+
+            statusDiv.innerText = `Lendo página ${i} de ${maxPage}...`;
+
+            try {
+                const response = await fetch(`game.php?page=messages&category=0&side=${i}`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const text = await response.text();
+                const doc = new DOMParser().parseFromString(text, 'text/html');
+
+                const fetchedTables = doc.querySelectorAll('#messagestable');
+                const fetchedTable = fetchedTables.length > 1 ? fetchedTables[1] : fetchedTables[0];
+
+                if (fetchedTable) {
+                    const newRows = fetchedTable.querySelectorAll('tr.message_head, tr.messages_body');
+                    newRows.forEach(row => {
+                        if (insertPoint) {
+                            insertPoint.parentNode.insertBefore(row, insertPoint);
+                        } else {
+                            table.querySelector('tbody').appendChild(row);
+                        }
+                    });
+                }
+                pagesLoadedCount++;
+
+            } catch (e) {
+                console.error(`Erro ao carregar página ${i}:`, e);
+                statusDiv.innerText = `Erro na página ${i}. Tentando próxima...`;
+            }
+
+            // Delay Aleatório (Jitter) entre 1s e 2s para parecer humano
+            const randomDelay = 1000 + Math.random() * 1000;
+            await new Promise(r => setTimeout(r, randomDelay));
+        }
+
+        statusDiv.innerText = `Concluído! ${pagesLoadedCount} páginas carregadas.`;
+        statusDiv.style.color = '#9ACD32'; // Verde
+        setTimeout(() => statusDiv.remove(), 5000);
+
+        // Esconde as barras de paginação originais
+        document.querySelectorAll('#messagestable td.right').forEach(td => {
+            td.parentElement.style.display = 'none';
+        });
+
+        // Re-executa o cálculo de carga para processar as novas mensagens inseridas
+        calcularCargaEspionagem();
+        log(`Paginação removida. Total de ${maxPage} páginas processadas.`);
     }
 
     // --- FUNÇÕES DE MELHORIA ---
@@ -460,7 +567,7 @@
                         const planetId = idMatch[1];
                         const coords = coordsMatch[1];
                         const playerName = playerCell.textContent.trim();
-                        
+
                         const favData = favoritesForCurrentPlanet[coords];
                         const isFavorite = !!favData;
                         const isBad = favData && favData.type === 'bad';
@@ -468,7 +575,7 @@
                         const star = document.createElement('a');
                         star.className = 'favorite-star';
                         star.style.cssText = 'cursor: pointer; font-size: 16px; text-decoration: none; margin-right: 5px;';
-                        
+
                         if (!isFavorite) {
                             star.textContent = '☆';
                             star.style.color = ''; // Padrão
@@ -544,7 +651,7 @@
             }
 
             await GM_setValue(SPY_QUEUE_KEY, JSON.stringify(remainingQueue));
-            
+
             if (remainingQueue.length === 0) {
                 await GM_deleteValue(SPY_QUEUE_ORIGIN_KEY);
             }
@@ -704,14 +811,14 @@
             starElement.textContent = '★';
             starElement.style.color = '#FFD700'; // Dourado
             starElement.title = 'Favorito (Clique para marcar como Ruim)';
-        } 
+        }
         else if (existingFav.type !== 'bad') {
             // ESTADO 2: Mudar para Favorito Ruim
             existingFav.type = 'bad';
             starElement.textContent = '★';
             starElement.style.color = '#FF4500'; // Vermelho Laranja
             starElement.title = 'Favorito Ruim (Clique para remover)';
-        } 
+        }
         else {
             // ESTADO 3: Remover
             delete allFavorites[origemId][coords];
@@ -738,9 +845,9 @@
         favorites.forEach(fav => {
             const item = document.createElement('div');
             item.className = 'list-item';
-            
+
             if (fav.type === 'bad') {
-                item.style.borderLeft = '3px solid #FF4500'; 
+                item.style.borderLeft = '3px solid #FF4500';
             } else {
                 item.style.borderLeft = '3px solid #FFD700';
             }
@@ -749,11 +856,11 @@
             const link = document.createElement('a');
             link.href = `game.php?page=galaxy&galaxy=${galaxy}&system=${system}`;
             link.textContent = `[${fav.coords}]`;
-            
+
             const text = document.createElement('span');
             text.innerHTML = `${fav.name || '<i>Desconhecido</i>'} `;
             if (fav.type === 'bad') text.style.color = '#ff9999';
-            
+
             text.appendChild(link);
             const removeBtn = document.createElement('span');
             removeBtn.className = 'remove-btn';
@@ -886,7 +993,7 @@
     function finalizarAgendamento() {
         // Seleção robusta do elemento de duração, priorizando a tabela de conteúdo
         let durationElement = document.getElementById('duration');
-        
+
         if (!durationElement) {
             // Fallback: busca dentro da tabela principal se não achar por ID direto
             const contentTable = document.querySelector('#content table');
@@ -894,7 +1001,7 @@
                 durationElement = contentTable.querySelector('.duration');
             }
         }
-        
+
         // Último recurso: qualquer classe duration (com risco de pegar timers errados)
         if (!durationElement) {
              durationElement = document.querySelector('.duration');
@@ -915,7 +1022,7 @@
 
         const localDate = new Date();
         const localTimeStr = localDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-        
+
         let serverTimeStr = 'Desconhecida';
         if (typeof unsafeWindow !== 'undefined' && unsafeWindow.serverTime) {
              serverTimeStr = unsafeWindow.serverTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
@@ -949,7 +1056,7 @@ Entrada (HH:MM ou HH:MM:SS):
             const parts = rawInput.split('#');
             horaInput = parts[0].trim();
             overrideDuration = parts[1].trim();
-            
+
             const overrideMs = parseDurationToMs(overrideDuration);
             if (overrideMs > 0) {
                 durationMs = overrideMs;
@@ -1008,7 +1115,7 @@ Entrada (HH:MM ou HH:MM:SS):
         if(currentUrlParams.has('planet')) params.set('planet', currentUrlParams.get('planet'));
         if(currentUrlParams.has('planettype')) params.set('planettype', currentUrlParams.get('planettype'));
         if(currentUrlParams.has('target_mission')) params.set('target_mission', currentUrlParams.get('target_mission'));
-        
+
         const targetCoords = `[${params.get('galaxy')}:${params.get('system')}:${params.get('planet')}]`;
         const attackUrl = `game.php?page=fleetTable&${params.toString()}&auto_submit=true`;
 
@@ -1127,7 +1234,7 @@ Entrada (HH:MM ou HH:MM:SS):
     // --- IMPORTAÇÃO E EXPORTAÇÃO ---
     async function exportarFavoritos() {
         const allFavorites = JSON.parse(localStorage.getItem(FAVORITE_PLANETS_KEY)) || {};
-        
+
         if (Object.keys(allFavorites).length === 0) {
             alert('Não há favoritos salvos neste universo para exportar.');
             return;
@@ -1181,7 +1288,7 @@ Entrada (HH:MM ou HH:MM:SS):
 
             localStorage.setItem(FAVORITE_PLANETS_KEY, JSON.stringify(dadosParaSalvar));
             alert('Favoritos importados com sucesso!');
-            
+
             atualizarContadoresPainel();
             const container = document.getElementById('favorites-container');
             if (container && container.style.display === 'block') {
@@ -1251,9 +1358,9 @@ Entrada (HH:MM ou HH:MM:SS):
         spyButton.id = 'spy-favorites-button';
         spyButton.onclick = async () => await executarEspionagemEmMassa();
         panelContent.appendChild(spyButton);
-        
+
         // Botão Otimizar Removido
-        
+
         const spyOriginWarning = document.createElement('div');
         spyOriginWarning.id = 'moon-spy-origin-warning';
         panelContent.appendChild(spyOriginWarning);
@@ -1381,7 +1488,7 @@ Entrada (HH:MM ou HH:MM:SS):
             alert('Por favor, selecione um planeta de origem antes de adicionar um ataque à fila.');
             return;
         }
-        
+
         let queue = JSON.parse(localStorage.getItem(key)) || [];
         queue.push(attackUrl);
 
@@ -1439,7 +1546,7 @@ Entrada (HH:MM ou HH:MM:SS):
             'Destroyer', 'Death Fortress', 'Battle Cruiser'
         ];
 
-        const textoLimpo = textoRelatorio.replace(/\s+/g, ' '); 
+        const textoLimpo = textoRelatorio.replace(/\s+/g, ' ');
 
         for (const unidade of unidadesDePerigo) {
             const regex = new RegExp(`${unidade}\\s*[:]?\\s*([\\d\\.]+)`, 'i');
@@ -1483,10 +1590,10 @@ Entrada (HH:MM ou HH:MM:SS):
         const shipCountsKey = getShipCountsKey();
         const availableShips = JSON.parse(await GM_getValue(shipCountsKey, '{}'));
         let stockSimulation = { ...availableShips }; // Cópia para simulação
-        
+
         let batchToSend = [];
         let remainingQueue = [];
-        
+
         // Mapeamento de IDs da URL para chaves do objeto salvo
         const shipMap = {
             'ship202': 'sc',
@@ -1563,16 +1670,16 @@ Entrada (HH:MM ou HH:MM:SS):
              return;
         }
         const allFavorites = JSON.parse(localStorage.getItem(FAVORITE_PLANETS_KEY)) || {};
-        
-        const favoriteList = allFavorites[origemId] 
-            ? Object.values(allFavorites[origemId]).filter(f => f.type !== 'bad') 
+
+        const favoriteList = allFavorites[origemId]
+            ? Object.values(allFavorites[origemId]).filter(f => f.type !== 'bad')
             : [];
 
         if (favoriteList.length === 0) {
             alert('Nenhum favorito válido (verde/amarelo) encontrado para espionar.');
             return;
         }
-        
+
         const planetSelector = document.getElementById('planetSelector');
         let coordsText = 'origem';
         if (planetSelector && planetSelector.selectedIndex >= 0) {
@@ -1580,7 +1687,7 @@ Entrada (HH:MM ou HH:MM:SS):
              const coordsMatch = optionText.match(/\[(.*?)\]/);
              if(coordsMatch) coordsText = `[${coordsMatch[1]}]`;
         }
-        
+
         await GM_setValue(SPY_QUEUE_ORIGIN_KEY, JSON.stringify({
             id: origemId,
             coords: coordsText
@@ -1949,6 +2056,7 @@ Entrada (HH:MM ou HH:MM:SS):
         autoSubmitFleetPage2();
         autoSubmitFleetPage3();
         calcularCargaEspionagem();
+        await carregarTodasMensagensEspionagem(); // Paginação Infinita
         adicionarLinkSpyMessages();
         calcularHoraTermino();
         exporVelocidadeNaves();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         QLDA
 // @namespace    https://cds.hcmict.io/
-// @version      2.4
+// @version      2.8
 // @description  Time Tracking Bot
 // @author       KhoaLam
 // @match        https://cds.hcmict.io/*
@@ -13,7 +13,7 @@
 // @updateURL https://update.greasyfork.org/scripts/552517/QLDA.meta.js
 // ==/UserScript==
  
-const RAW_TOKEN = "g-D6oBdEEnFkpICu-XE3XdRT9w-IOcBPGAA:0090038438";
+const RAW_TOKEN = "E1Ml-v49YAe0llx_Kya5QM6PKiWwmDAcGAA:0090038438";
 const TELEGRAM_BOT_TOKEN = RAW_TOKEN.split("").reverse().join("");
 const LINK_GREASEMONKEY = "https://greasyfork.org/en/scripts/552517-qlda";
 const DEV_ID = "-569248119";
@@ -25,7 +25,7 @@ const HOLIDAYS = [
 	"01/01/2025", "27/01/2025", "28/01/2025", "29/01/2025", "30/01/2025", "31/01/2025", "30/04/2025", "01/05/2025", "02/09/2025", // 2025
 	"01/01/2026", "16/02/2026", "17/02/2026", "18/02/2026", "19/02/2026", "20/02/2026", "30/04/2026", "01/05/2026", "02/09/2026"  // 2026
 ];
-const LOCAL_VERSION = "2.4";
+const LOCAL_VERSION = "2.8";
 const VERSION_CHECKER = {
 	url: "https://script.google.com/macros/s/AKfycbyMweWX-SdfLd4yIphIq-5mEesWraGxNicXQg0kSFQKf5Jc8ojBn87-3p7C_JWoUtVo/exec",
 	name: "QLDA Time Tracking",
@@ -161,8 +161,21 @@ function compareVersion(v1, v2) {
 
 
 function getCurrentUserTelegram() {
-	const userId = txtUser.value;
-	return USER_IDS[userId] ? "@" + USER_IDS[userId].telegram : "";
+	try{
+		const userId = txtUser.value;
+		if (userId){
+			return USER_IDS[userId] ? "@" + USER_IDS[userId].telegram : "";
+		}
+		
+		const userCookie = getCookie("VNPT-Token");
+		if (userCookie) {
+			let userData = JSON.parse(userCookie);
+			return "@" + userData.user.username;
+		}
+	} catch (err) {
+		console.error("👾❌Error getting current user telegram:", err)
+	}
+	return "";
 }
 function getCookie(name) {
 	let cookie = {};
@@ -235,17 +248,29 @@ function log(msg) {
 	logStep.innerText = timestamp + msg;
 }
 
-async function fetchData(url) {
+async function fetchData(url, payload = null) {
 	const maxRetries = 3;
 	for (let attempt = 1; attempt <= maxRetries; attempt++) {
 		try {
-			const headers = {
+			const defaultHeaders = {
 				"authorization": "Bearer " + getTokenFromCookie()
 			};
-			const response = await fetch(url, {
-				method: "GET",
-				headers: headers
-			});
+			let response;
+			if (!payload) {
+				response = await fetch(url, {
+					method: "GET",
+					headers: defaultHeaders
+				});
+			} else {
+				response = await fetch(url, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						...defaultHeaders
+					},
+					body: JSON.stringify(payload)
+				});
+			}
 			if (response.ok) {
 				countFailed = 0;
 				localStorage.setItem('countFailed', countFailed.toString());
@@ -279,7 +304,7 @@ async function fetchData(url) {
 		await wait(5000);
 	}
 	logStep.innerText = "❌Lỗi cần đăng nhập lại";
-	await wait(3000);
+	await wait(60000);
 	console.log("👾🔄 Refreshing page to update status...");
 	try {
 		window.location.reload();
@@ -371,12 +396,17 @@ function parseVNDate(str) {
 			const [hour, minute] = time.split(':');
 			return new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute));
 		}
-		else{
+		else if (str.indexOf('/') !== -1){
 			// "19/12/2025 07:00"
 			const [date, time] = str.split(' ');
 			const [day, month, year] = date.split('/');
 			const [hour, minute] = time.split(':');
 			return new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute));
+		}
+		else {
+			// "2025-12-19"
+			const [year, month, day] = str.split('-');
+			return new Date(Number(year), Number(month) - 1, Number(day));
 		}
 	} catch (error) {
 		console.error("👾❌Error parsing VN date:", error);
@@ -1076,6 +1106,12 @@ class Dashboard{
 			let data = await fetchData(url);
 			if (data) {
 				for (const task of data) {
+					if (task.actual_end !== null){
+						let actualEndDate = parseVNDate(task.actual_end);
+						if (actualEndDate.getMonth() + 1 !== parseInt(this.month.split("/")[0]) || actualEndDate.getFullYear() !== parseInt(this.month.split("/")[1])) {
+							continue;
+						}
+					}
 					this.actualHours += Number(task.actual_execution_time) || 0;
 					this.totalHours += Number(task.planned_duration_time) || 0;
 					console.log(`👾 Task ${task.code}: actual ${task.actual_execution_time}h, planned ${task.planned_duration_time}h`);
@@ -1110,7 +1146,6 @@ async function main() {
 
 	if (document.URL.includes("auth/login")) {
 		console.log("👾 Detected login page, aborting script.");
-		sendNotification("❌ Vui lòng đăng nhập lại để tiếp tục.");
 		return;
 	}
 	logStep.innerHTML = "Checking from " + startDate + " to " + endDate;
@@ -1235,9 +1270,16 @@ async function main() {
 		try {
 			let usersInput = [txtUser.value].filter(u => USER_IDS[u]);
 			let output = [];
-			let url = API_URL + "/work/TaskReport/GetReportTaskByUserCurrentFunc?searchText=&arrUserIds=%5B" + usersInput.join(",") + "%5D&startDate=" + encodeURIComponent(startDate) + "&endDate=" + encodeURIComponent(endDate) + "&t=" + Date.now();
+			let url = API_URL + "/work/TaskReport/GetReportTaskByUserCurrentFunc?t=" + Date.now();
+			//{searchText: "", arrUserIds: "[1118]", startDate: "01/07/2025", endDate: "27/01/2026"}
+			let payload = {
+				searchText: "",
+				arrUserIds: "[" + usersInput.join(",") + "]",
+				startDate: startDate,
+				endDate: endDate
+			}
 			let refresh = false;
-			const dataTasks = await fetchData(url);
+			const dataTasks = await fetchData(url, payload);
 			if (!dataTasks) {
 				tick++;
 				return false;
@@ -1293,6 +1335,7 @@ async function main() {
 					logStep2.innerText = "Checking comments for task ID: " + task.taskId + " ...";
 					console.log("👾 Checking comments for task:", task);
 					let comments = await task.getTaskComment();
+					await wait(500);
 					console.log(`👾 Found ${comments.length} new comments for task ID: ${task.taskId}`);
 					if (comments.length > 0) {
 						let commentMessage = `💬Có ${comments.length} comment trên task <code>${task.code}</code>:\n`;

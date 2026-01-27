@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Optimized Bar-I Suite
 // @namespace    https://greasyfork.org/users/1516265
-// @version      5.05.07
+// @version      5.06.01
 // @description  Optimized
 // @author       Nicolai Mihaic
 // @license      MIT
@@ -30,17 +30,18 @@
             textareaSelection: false, // Keep disabled for now
             commTableVesselSort: true, // Communication table vessel sorting
             clickToCopy: true, // Click to copy table cells/rows
-            comparisonsCopy: true // Copy data from Accountability, Liquor Cost, and Weekly Sales tabs
+            comparisonsCopy: true, // Copy data from Accountability, Liquor Cost, and Weekly Sales tabs
+            productQuickSearch: true // Click product cell to search in Adjustments tab
         },
         // Click-to-copy table configurations
         // Format: { elementSelector: string, clickColumnIndex: number, copyMode: 0 (cell only) | 1 (entire row) }
         CLICK_TO_COPY_TABLES: [
             { elementSelector: 'app-review-variance-items', clickColumnIndex: 0, copyMode: 0 },
-            { elementSelector: 'app-sub-category-wise-analysis', clickColumnIndex: 2, copyMode: 1 },
+            //{ elementSelector: 'app-sub-category-wise-analysis', clickColumnIndex: 2, copyMode: 1 },
             { elementSelector: 'app-communication-detials', clickColumnIndex: 2, copyMode: 0 },
             // Add more table configurations here as needed
             // Example: { elementSelector: 'app-other-table', clickColumnIndex: 2, copyMode: 0 },
-            
+
         ]
     };
 
@@ -53,6 +54,7 @@
     let qfBusy = false; // Quick filters busy state
     let qfButtonStates = { 1: false, 2: false, 5: false, 6: false }; // Quick filters button states
     let collectedTableData = null; // Store collected table data from all pages
+    let productSearchRefreshButton = null; // Product search refresh button
 
     console.log('[NxTweaks] Starting with minimal DOM interference...');
 
@@ -1115,7 +1117,7 @@
                 }
                 return parseFloat(str.replace(/^[\*\$\s]+/, '').replace(/[\s%]+$/, '')) || 0;
             };
-            
+
             const numA = cleanNum(textA);
             const numB = cleanNum(textB);
 
@@ -1215,11 +1217,11 @@
         // Helper to add click-to-copy to a cell
         const setupCell = (cell, getCells) => {
             cell.style.cssText = 'cursor:pointer;position:relative';
-            
+
             cell.addEventListener('mouseenter', () => cell.style.backgroundColor = '#e3f2fd');
             cell.addEventListener('mouseleave', () => cell.style.backgroundColor = '');
             cell.addEventListener('click', () => {
-                const text = copyMode === 0 
+                const text = copyMode === 0
                     ? extractCellText(cell)
                     : getCells().map(c => extractCellText(c)).join('\t');
                 copyToClipboard(text, cell);
@@ -1229,7 +1231,7 @@
         // Handle traditional HTML tables
         element.querySelectorAll('table').forEach(table => {
             if (table._conservativeUBIESClickToCopyEnabled) return;
-            
+
             const tbody = table.querySelector('tbody');
             if (!tbody) return;
 
@@ -1321,10 +1323,10 @@
         feedback.className = 'conservative-ubies-copy-feedback';
         feedback.textContent = success ? '✓ Copied!' : '✗ Failed';
         feedback.style.background = success ? '#4caf50' : '#f44336';
-        
+
         element.style.position = 'relative';
         element.appendChild(feedback);
-        
+
         setTimeout(() => feedback.remove(), 1000);
     }
 
@@ -1668,7 +1670,7 @@
                     beforeFirstProduct = cells.slice(1, 3).join('|'); // Col 2 + Col 3
                 }
             }
-            
+
             pageCount++;
             console.log(`[NxTweaks] Current first product: ${beforeFirstProduct.substring(0, 50)}...`);
             console.log(`[NxTweaks] Clicking to load page ${pageCount + 1}...`);
@@ -1743,7 +1745,7 @@
                         }
                     });
                     console.log(`[NxTweaks] Collected page ${pageCount + 1}: ${newRowsOnPage} new unique rows, ${skippedRowsOnPage} duplicates skipped (total unique: ${rowMap.size})`);
-                    
+
                     // Update progress indicator
                     progressIndicator.textContent = `Page ${pageCount + 1} collected ✓\n${rowMap.size} total rows`;
                 }
@@ -2236,12 +2238,12 @@
                 }, 2000);
             } catch (error) {
                 console.error('[NxTweaks] Comparisons copy failed:', error);
-                
+
                 // Remove indicator on error
                 if (progressIndicator.parentNode) {
                     progressIndicator.remove();
                 }
-                
+
                 alert('Failed to copy comparisons: ' + error.message);
                 btn.textContent = '✗ Failed';
                 btn.style.backgroundColor = '#dc3545';
@@ -2358,7 +2360,7 @@
         for (let i = 0; i < tabs.length; i++) {
             const tab = tabs[i];
             console.log(`[NxTweaks] Collecting data from ${tab.name} tab...`);
-            
+
             // Update progress indicator
             progressIndicator.textContent = `Collecting ${tab.name}...`;
 
@@ -2502,7 +2504,223 @@
         return lines.join('\n');
     }
 
-    // FEATURE 12: Dark Theme Toggle
+    // FEATURE 12: Product Quick Search (Click product to search in Adjustments)
+    function initProductQuickSearch() {
+        if (!CONFIG.FEATURES.productQuickSearch) return;
+
+        console.log('[NxTweaks] Product quick search initializing...');
+
+        // Check for tables periodically
+        setTimeout(() => setupProductQuickSearch(), 1000);
+        setTimeout(() => setupProductQuickSearch(), 3000);
+        setTimeout(() => setupProductQuickSearch(), 5000);
+
+        // Monitor for new tables every 3 seconds
+        setInterval(setupProductQuickSearch, 3000);
+
+        // Monitor URL for button visibility
+        monitorUrlPattern(/\/accountability-analysis\/?/i, isMatch => {
+            isMatch ? createProductSearchRefreshButton() : removeProductSearchRefreshButton();
+        });
+    }
+
+    function setupProductQuickSearch() {
+        // Setup for app-review-variance-items
+        const varianceElement = document.querySelector('app-review-variance-items');
+        if (varianceElement && !varianceElement._conservativeUBIESProductSearchEnabled) {
+            setupProductColumnClickHandlers(varianceElement, 'app-review-variance-items');
+        }
+
+        // Setup for app-sub-category-wise-analysis
+        const subCatElement = document.querySelector('app-sub-category-wise-analysis');
+        if (subCatElement && !subCatElement._conservativeUBIESProductSearchEnabled) {
+            setupProductColumnClickHandlers(subCatElement, 'app-sub-category-wise-analysis');
+        }
+    }
+
+    function setupProductColumnClickHandlers(element, componentName) {
+        const table = element.querySelector('table');
+        if (!table) return;
+
+        // Find the "Product" column index
+        const headers = table.querySelectorAll('thead th');
+        let productColumnIndex = -1;
+
+        headers.forEach((th, index) => {
+            const headerText = th.textContent.trim();
+            if (headerText === 'Product') {
+                productColumnIndex = index;
+            }
+        });
+
+        if (productColumnIndex === -1) {
+            console.log(`[NxTweaks] Product column not found in ${componentName}`);
+            return;
+        }
+
+        console.log(`[NxTweaks] Found Product column at index ${productColumnIndex} in ${componentName}`);
+
+        // Add click handlers to all Product column cells
+        const tbody = table.querySelector('tbody');
+        if (!tbody) return;
+
+        const rows = tbody.querySelectorAll('tr');
+        rows.forEach(row => {
+            const productCell = row.cells[productColumnIndex];
+            if (productCell && !productCell._conservativeUBIESProductSearchHandler) {
+                // Style the cell to show it's clickable
+                productCell.style.cursor = 'pointer';
+                productCell.title = 'Click to search in Adjustments tab';
+
+                // Add hover effect
+                productCell.addEventListener('mouseenter', () => {
+                    productCell.style.backgroundColor = '#fff3cd';
+                });
+                productCell.addEventListener('mouseleave', () => {
+                    productCell.style.backgroundColor = '';
+                });
+
+                // Add click handler
+                const clickHandler = async () => {
+                    await handleProductCellClick(productCell);
+                };
+                productCell.addEventListener('click', clickHandler);
+                productCell._conservativeUBIESProductSearchHandler = clickHandler;
+            }
+        });
+
+        // Mark element as processed
+        element._conservativeUBIESProductSearchEnabled = true;
+        console.log(`[NxTweaks] Product quick search enabled for ${componentName}`);
+    }
+
+    function createProductSearchRefreshButton() {
+        if (productSearchRefreshButton || document.getElementById('conservative_ubies_product_search_refresh_btn')) return;
+
+        const btn = document.createElement('button');
+        btn.id = 'conservative_ubies_product_search_refresh_btn';
+        btn.textContent = '🔄 Refresh Search';
+
+        Object.assign(btn.style, {
+            position: 'fixed',
+            bottom: '20px',
+            left: '470px',
+            zIndex: '2147483647',
+            padding: '8px 16px',
+            backgroundColor: '#6c757d',
+            color: '#fff',
+            border: '2px solid #fff',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+            font: 'bold 14px/1.2 system-ui,-apple-system,Segoe UI,Roboto,sans-serif',
+            minWidth: '150px',
+            textAlign: 'center'
+        });
+
+        btn.addEventListener('click', () => {
+            btn.textContent = '🔄 Refreshing...';
+            btn.style.backgroundColor = '#5a6268';
+            btn.disabled = true;
+
+            // Clear previous listeners by removing the flag
+            document.querySelectorAll('app-review-variance-items, app-sub-category-wise-analysis').forEach(el => {
+                el._conservativeUBIESProductSearchEnabled = false;
+            });
+
+            // Re-setup listeners
+            setupProductQuickSearch();
+
+            // Provide feedback
+            btn.textContent = '✓ Refreshed!';
+            btn.style.backgroundColor = '#28a745';
+            setTimeout(() => {
+                btn.textContent = '🔄 Refresh Search';
+                btn.style.backgroundColor = '#6c757d';
+                btn.disabled = false;
+            }, 1500);
+
+            console.log('[NxTweaks] Product search listeners refreshed');
+        });
+
+        document.body.appendChild(btn);
+        productSearchRefreshButton = btn;
+        console.log('[NxTweaks] Product search refresh button created');
+    }
+
+    function removeProductSearchRefreshButton() {
+        const existingButton = document.getElementById('conservative_ubies_product_search_refresh_btn');
+        if (existingButton) {
+            existingButton.remove();
+            productSearchRefreshButton = null;
+            console.log('[NxTweaks] Product search refresh button removed');
+        }
+    }
+
+    async function handleProductCellClick(cell) {
+        // Extract product name from cell
+        const productName = extractCellText(cell);
+        if (!productName) {
+            console.log('[NxTweaks] No product name found in cell');
+            return;
+        }
+
+        console.log(`[NxTweaks] Product clicked: ${productName}`);
+
+        // Show feedback
+        const feedback = document.createElement('div');
+        feedback.className = 'conservative-ubies-copy-feedback';
+        feedback.textContent = '🔍 Searching...';
+        feedback.style.background = '#17a2b8';
+        cell.style.position = 'relative';
+        cell.appendChild(feedback);
+
+        try {
+            // Find and click the Adjustments tab
+            const adjustmentsTab = document.querySelector('.tab-radio > label:nth-child(5)');
+            if (!adjustmentsTab) {
+                throw new Error('Adjustments tab not found');
+            }
+
+            console.log('[NxTweaks] Clicking Adjustments tab...');
+            adjustmentsTab.click();
+
+            // Wait for tab to load
+            await sleep(800);
+
+            // Find the search input
+            const searchInput = document.querySelector('input[type="text"][placeholder="Search"].bg-fa');
+            if (!searchInput) {
+                throw new Error('Search input not found in Adjustments tab');
+            }
+
+            console.log('[NxTweaks] Found search input, entering product name...');
+
+            // Clear and set the search value
+            searchInput.value = '';
+            searchInput.focus();
+
+            // Type the value with proper events
+            fireEvents(searchInput, productName);
+
+            // Wait a moment for search to execute
+            await sleep(300);
+
+            // Update feedback
+            feedback.textContent = '✓ Searched!';
+            feedback.style.background = '#28a745';
+            setTimeout(() => feedback.remove(), 1500);
+
+            console.log(`[NxTweaks] Successfully searched for: ${productName}`);
+        } catch (error) {
+            console.error('[NxTweaks] Product search failed:', error);
+            feedback.textContent = '✗ Failed';
+            feedback.style.background = '#dc3545';
+            setTimeout(() => feedback.remove(), 2000);
+        }
+    }
+
+    // FEATURE 13: Dark Theme Toggle
     function initDarkTheme() {
         if (!CONFIG.FEATURES.darkTheme) return;
 
@@ -2551,6 +2769,7 @@
         initCommTableVesselSort(); // Communication table vessel sorting
         initTableCollection(); // Auto-load all pages and copy table
         initProductLossReportCopyButton(); // Product loss report copy button
+        initProductQuickSearch(); // Click product cell to search in Adjustments tab
         initComparisonsCopy(); // Copy Accountability, Liquor Cost, and Weekly Sales comparisons
         initGlobalNavigation(); // Handle SPA navigation for dashboard features
 

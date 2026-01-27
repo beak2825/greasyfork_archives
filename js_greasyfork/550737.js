@@ -2,11 +2,11 @@
 // @name         AnimeStars Clan Highlighter
 // @namespace    animestars
 // @author       LedFox
-// @version      2.0
+// @version      2.3
 // @description  Shows a clan icon next to any username on the site that belongs to your clan
 // @match        https://astars.club/*
 // @match        https://asstars1.astars.club/*
-// @match        https://animestars.org/*
+// @match        https://animesss.com/*
 // @match        https://as1.astars.club/*
 // @match        https://asstars.tv/*
 // @grant        none

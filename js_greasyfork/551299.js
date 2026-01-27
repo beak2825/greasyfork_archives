@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UTFPR Power-Up
 // @namespace    http://tampermonkey.net/
-// @version      2.1.0
+// @version      2.1.2
 // @description  Melhorias de interface para sistemas corporativos e utilitários acadêmicos
 // @author       Gemini & Você
 // @match        https://sistemas2.utfpr.edu.br/*
@@ -407,18 +407,25 @@
         console.log('Power-Up: Módulo Assistente do Processo Seletivo ativado.');
         const idDoCampoMotivo = 'P4_CSDOCOBSCANDIDATOVC';
         const motivos = {
-            'Documento Ilegível': 'O documento enviado está ilegível, cortado ou com baixa qualidade, impossibilitando a análise das informações.', 'Falta Assinatura': 'A declaração enviada não está assinada. É necessário que o candidato assine o documento.',
-            'Dados Divergentes': 'Os dados presentes no documento (nome, CPF, etc.) divergem das informações fornecidas no ato da inscrição.', 'Documento Inválido': 'O tipo de documento enviado não corresponde ao solicitado no edital.',
-            'Documento incompleto': 'Documento incompleto, faltando páginas, frente ou verso.', 'Documento aberto': 'O candidato precisa tirar o documento do plástico de proteção, abri-lo, e enviar a foto da frente e verso.',
+            'Doc. Ilegível': 'O documento enviado está ilegível, cortado ou com baixa qualidade, impossibilitando a análise das informações.',
+            'Falta Assinatura': 'O documento enviado não contém assinatura digital, hash de validação, ou assinatura impressa válida.',
+            'Dados Divergentes': 'Os dados presentes no documento (nome, CPF, etc.) divergem das informações fornecidas no ato da inscrição.',
+            'Doc. Inválido': 'O tipo de documento enviado não corresponde ao solicitado no edital.',
+            'Doc. incompleto': 'Documento incompleto, faltando páginas, frente ou verso.',
+            'Doc. aberto': 'O candidato precisa tirar o documento do plástico de proteção, abri-lo, e enviar a foto da frente e verso.',
             'Modelo Incompatível': 'Documento apresentado não está de acordo com a declaração modelo disponível em https://www.utfpr.edu.br/cursos/estudenautfpr/sisu/modelos-de-declaracoes',
-            'Assinatura ou Hash': 'Documento apresentado não possuiu assinatura física nem digital, tampouco código hash de validação'
+            'Assinatura ou Hash': 'Documento apresentado não possuiu assinatura física nem digital, tampouco código hash de validação',
+            'Histórico ausente': 'É necessário juntar ao arquivo o HISTÓRICO ESCOLAR. Caso não o tenha, para o candidato COTISTA aceita-se uma declaração emitida pela Instituição de Ensino, que deverá conter a informação de que o candidato "cursou e concluiu com êxito todas as séries do Ensino Médio regular ou equivalente em escola(s) pública(s) federal(is), estaduais ou municipais, no Brasil".'
         };
         function executar(campoMotivo) {
             if (document.getElementById('botoes-motivos-container')) return;
             const etiquetaFlutuante = campoMotivo.previousElementSibling;
             if (etiquetaFlutuante) { etiquetaFlutuante.style.display = 'none'; }
             const containerBotoes = document.createElement('div'); containerBotoes.id = 'botoes-motivos-container';
-            Object.entries(motivos).forEach(([nomeBotao, texto]) => {
+            // ORDENAÇÃO ALFABÉTICA
+            const motivosOrdenados = Object.entries(motivos).sort((a, b) => a[0].localeCompare(b[0]));
+            
+            motivosOrdenados.forEach(([nomeBotao, texto]) => {
                 const button = document.createElement('button'); button.innerText = nomeBotao; button.type = 'button'; button.className = 't-Button t-Button--small t-Button--hot';
                 button.onclick = () => { campoMotivo.value = texto; campoMotivo.dispatchEvent(new Event('input', { bubbles: true })); };
                 containerBotoes.appendChild(button);

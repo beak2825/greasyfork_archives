@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn City Chain Watch Alert (persistent flash + controls)
 // @namespace    http://tampermonkey.net/
-// @version      1.1.3
+// @version      1.1.4
 // @description  Flash screen and play sound when chain timer drops below threshold, with UI controls.
 // @author       DarthRevan
 // @match        https://www.torn.com/*
@@ -14,10 +14,14 @@
 (function() {
     'use strict';
 
-    const TIMER_SELECTORS = [
-        "#react-root > div > div.appHeaderWrapper___uyPti.disableLinksRightMargin___gY7V5 > div.topSection___U7sVi > div.labelsContainer___Oz6Su > div > span.labelTitle___ZtfnD > div > span:nth-child(2) > span",
-        "#sidebar > div:nth-child(1) > div > div.user-information___VBSOk > div > div.toggle-content___BJ9Q9 > div > div:nth-child(4) > a.chain-bar___vjdPL.bar-desktop___F8PEF > div.bar-stats___E_LqA > p.bar-timeleft___B9RGV"
-    ];
+      ///Killed the selector due to it now being illegal, will be making it API based when I get the chance. 
+
+
+
+    ///const TIMER_SELECTORS = [
+       /// "#react-root > div > div.appHeaderWrapper___uyPti.disableLinksRightMargin___gY7V5 > div.topSection___U7sVi > div.labelsContainer___Oz6Su > div > span.labelTitle___ZtfnD > div > span:nth-child(2) > span",
+   ///     "#sidebar > div:nth-child(1) > div > div.user-information___VBSOk > div > div.toggle-content___BJ9Q9 > div > div:nth-child(4) > a.chain-bar___vjdPL.bar-desktop___F8PEF > div.bar-stats___E_LqA > p.bar-timeleft___B9RGV"
+///    ];
 
     let enabled = true;
     let flashThreshold = 60;
