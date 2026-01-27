@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WTFightArmouryTracker
 // @namespace    http://tampermonkey.net/
-// @version      4.3
+// @version      4.4
 // @description  Tracks Faction Armory Ownership with WTFight API Integration
 // @match        https://www.torn.com/factions.php?*
 // @grant        GM.xmlHttpRequest
@@ -322,32 +322,35 @@
         li.dataset.bonuses = JSON.stringify(bonuses);
 
         let ownerLabel = li.querySelector(".wtfight-owner-label");
+
         if (ownerId) {
             const user = factionUsers.find(u => String(u.playerID) === ownerId);
-            if (user) {
-                if (!ownerLabel) {
-                    ownerLabel = document.createElement("div");
-                    ownerLabel.className = "wtfight-owner-label";
-                    ownerLabel.style.cssText = `
-                        position:absolute;
-                        top:-2px;
-                        left:50%;
-                        transform:translateX(-50%);
-                        background:rgba(0,0,0,0.55);
-                        padding:1px 4px;
-                        font-size:10px;
-                        color:#00aaff;
-                        border-radius:3px;
-                        pointer-events:none;
-                        text-shadow:0 0 3px #000;
-                        white-space:nowrap;
-                        z-index:99;
-                    `;
-                    li.style.position = "relative";
-                    li.insertBefore(ownerLabel, li.firstChild);
-                }
-                ownerLabel.textContent = `Owned by: ${user.PlayerName}`;
+
+            if (!ownerLabel) {
+                ownerLabel = document.createElement("div");
+                ownerLabel.className = "wtfight-owner-label";
+                ownerLabel.style.cssText = `
+            position:absolute;
+            top:-2px;
+            left:50%;
+            transform:translateX(-50%);
+            background:rgba(0,0,0,0.55);
+            padding:1px 4px;
+            font-size:10px;
+            color:#00aaff;
+            border-radius:3px;
+            pointer-events:none;
+            text-shadow:0 0 3px #000;
+            white-space:nowrap;
+            z-index:99;
+        `;
+                li.style.position = "relative";
+                li.insertBefore(ownerLabel, li.firstChild);
             }
+
+            ownerLabel.textContent = user
+                ? `Owned by: ${user.PlayerName}`
+            : `Owned by: ID ${ownerId}`;
         } else if (ownerLabel) {
             ownerLabel.remove();
         }

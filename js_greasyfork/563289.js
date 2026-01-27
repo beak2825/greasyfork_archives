@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Auto-extend ATI module sessions
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @license      MIT
-// @description  Redirect navigation to ATI modules into a new tab instead of the current one
+// @description  Click on 'continue' button to keep ATI module sessions active
 // @author       beepbopboop
 // @match        *://lms.atitesting.com/*
 // @match        *://tutorials.atitesting.com/*

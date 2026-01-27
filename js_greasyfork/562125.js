@@ -1,12 +1,14 @@
 // ==UserScript==
-// @name         FV - test Claw Machine
+// @name         FV - Claw Machine Mini-game
 // @namespace    https://greasyfork.org/en/users/1535374-necroam
-// @version      6.6
+// @version      6.9
 // @description  Play the claw machine and win rewards! (yes really)
 // @match        https://www.furvilla.com/villager/455945
-// @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/562125/FV%20-%20test%20Claw%20Machine.user.js
-// @updateURL https://update.greasyfork.org/scripts/562125/FV%20-%20test%20Claw%20Machine.meta.js
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_deleteValue
+// @downloadURL https://update.greasyfork.org/scripts/562125/FV%20-%20Claw%20Machine%20Mini-game.user.js
+// @updateURL https://update.greasyfork.org/scripts/562125/FV%20-%20Claw%20Machine%20Mini-game.meta.js
 // ==/UserScript==
 
 (function() {
@@ -31,10 +33,223 @@
     let userHasPlayedToday = false;
     let currentUserID = "";
     let currentUsername = "";
+    let verifiedFurvillaTime = null;
+    let timeVerificationStatus = "pending";
+    let lastVerifiedTime = null;
+    let timeCheckAttempts = 0;
 
-    // -------------------------
-    // CSV
-    // -------------------------
+    async function verifyFurvillaTime() {
+        timeCheckAttempts++;
+
+        try {
+            const furvillaDisplayedTime = getFurvillaDisplayedTime();
+            if (!furvillaDisplayedTime) {
+                console.log("Could not get Furvilla displayed time");
+                timeVerificationStatus = "failed";
+                return null;
+            }
+
+            const storedTimeData = GM_getValue ? GM_getValue("fv_time_data") : localStorage.getItem("fv_time_data");
+            if (storedTimeData) {
+                try {
+                    const data = JSON.parse(storedTimeData);
+                    const storedTime = new Date(data.timestamp);
+                    const storedHash = data.hash;
+
+                    // Verify the hash to prevent tampering
+                    const expectedHash = calculateTimeHash(storedTime, data.userAgent);
+                    if (storedHash === expectedHash) {
+                        const timeDiff = furvillaDisplayedTime.getTime() - storedTime.getTime();
+                        const expectedMinDiff = (Date.now() - data.clientTime) - 5000;
+                        const expectedMaxDiff = (Date.now() - data.clientTime) + 5000;
+
+                        if (timeDiff > 0 && timeDiff >= expectedMinDiff && timeDiff <= expectedMaxDiff) {
+                            console.log("Time verification passed - normal progression");
+                            verifiedFurvillaTime = furvillaDisplayedTime;
+                            timeVerificationStatus = "verified";
+
+                            // Update stored time
+                            storeVerifiedTime(furvillaDisplayedTime);
+                            return furvillaDisplayedTime;
+                        } else if (timeDiff < -300000) {
+                            console.log("Time went backwards significantly - possible tampering");
+                            timeVerificationStatus = "tampered";
+                            verifiedFurvillaTime = furvillaDisplayedTime;
+                            return furvillaDisplayedTime;
+                        }
+                    } else {
+                        console.log("Stored time hash mismatch - possible tampering");
+                        timeVerificationStatus = "tampered";
+                    }
+                } catch (e) {
+                    console.log("Error parsing stored time data:", e);
+                }
+            }
+
+            console.log("Establishing time baseline");
+            storeVerifiedTime(furvillaDisplayedTime);
+
+            if (timeCheckAttempts <= 3) {
+                try {
+                    await verifyWithFurvillaHomepage(furvillaDisplayedTime);
+                } catch (e) {
+                    console.log("Homepage verification failed:", e);
+                }
+            }
+
+            verifiedFurvillaTime = furvillaDisplayedTime;
+            timeVerificationStatus = "baseline";
+            return furvillaDisplayedTime;
+
+        } catch (error) {
+            console.log("Time verification error:", error);
+            timeVerificationStatus = "error";
+            return null;
+        }
+    }
+
+    function storeVerifiedTime(time) {
+        const timeData = {
+            timestamp: time.getTime(),
+            clientTime: Date.now(),
+            userAgent: navigator.userAgent,
+            hash: calculateTimeHash(time, navigator.userAgent),
+            version: "1.0"
+        };
+
+        if (GM_setValue) {
+            GM_setValue("fv_time_data", JSON.stringify(timeData));
+        } else {
+            localStorage.setItem("fv_time_data", JSON.stringify(timeData));
+        }
+
+        lastVerifiedTime = time;
+    }
+
+    function calculateTimeHash(time, userAgent) {
+        const str = time.getTime().toString() + userAgent + "furvilla_time_salt";
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash;
+        }
+        return hash.toString(36);
+    }
+
+    async function verifyWithFurvillaHomepage(currentTime) {
+        return new Promise((resolve, reject) => {
+            // Fetch Furvilla server time
+            fetch("https://www.furvilla.com/", {
+                method: 'GET',
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const timeElement = doc.querySelector('.float-left i.fa-clock-o');
+
+                if (timeElement) {
+                    const clockText = timeElement.parentNode.textContent.trim();
+                    const dateMatch = clockText.match(/(\d{1,2}\s+\w+\s+\d{4},\s+\d{1,2}:\d{2}\s+(?:am|pm))/i);
+
+                    if (dateMatch) {
+                        const serverTime = new Date(dateMatch[1]);
+                        const timeDiff = Math.abs(serverTime.getTime() - currentTime.getTime());
+
+                        if (timeDiff < 60000) { 
+                            console.log("Homepage verification successful");
+                            timeVerificationStatus = "verified";
+                            resolve(true);
+                        } else {
+                            console.log("Homepage time mismatch:", timeDiff/1000, "seconds");
+                            timeVerificationStatus = "mismatch";
+                            resolve(false);
+                        }
+                    }
+                }
+                resolve(false);
+            })
+            .catch(reject);
+        });
+    }
+
+    function getFurvillaDisplayedTime() {
+        try {
+            const clockElement = document.querySelector('.float-left i.fa-clock-o');
+            if (!clockElement) {
+                console.log("Clock element not found");
+                return null;
+            }
+            const clockText = clockElement.parentNode.textContent.trim();
+
+            // Extract date string
+            const dateMatch = clockText.match(/(\d{1,2}\s+\w+\s+\d{4},\s+\d{1,2}:\d{2}\s+(?:am|pm))/i);
+
+            if (dateMatch) {
+                const dateString = dateMatch[1];
+
+                // Parse the date
+                const parsedDate = new Date(dateString);
+
+                if (isNaN(parsedDate.getTime())) {
+                    console.log("Failed to parse date");
+                    return null;
+                }
+
+                return parsedDate;
+            } else {
+                console.log("Date pattern not found");
+                return null;
+            }
+        } catch (error) {
+            console.log("Error parsing Furvilla date:", error);
+            return null;
+        }
+    }
+
+    function getVerifiedTime() {
+        if (verifiedFurvillaTime) {
+            return verifiedFurvillaTime;
+        } else {
+            const furvillaTime = getFurvillaDisplayedTime();
+            if (furvillaTime) {
+                return furvillaTime;
+            }
+            console.log("Using system time as fallback");
+            return new Date();
+        }
+    }
+
+    function checkDayOfWeek() {
+        const currentTime = getVerifiedTime();
+        const dayOfWeek = currentTime.getDay();
+
+        const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
+
+        let verificationNote = "";
+        if (timeVerificationStatus === "tampered") {
+            verificationNote = " (Time tampering detected!)";
+        } else if (timeVerificationStatus === "mismatch") {
+            verificationNote = " (Time mismatch)";
+        } else if (timeVerificationStatus === "unverified") {
+            verificationNote = " (Unverified)";
+        }
+
+        return {
+            isWeekday: isWeekday,
+            dayName: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayOfWeek],
+            date: currentTime,
+            isVerified: timeVerificationStatus === "verified" || timeVerificationStatus === "baseline",
+            verificationStatus: timeVerificationStatus,
+            verificationNote: verificationNote
+        };
+    }
+
     function parseCSV(text) {
         const rows = [];
         let row = [], cell = "", insideQuotes = false;
@@ -135,7 +350,8 @@
             const resp = await fetch(SHEET_CSV);
             const csv = await resp.text();
             const rows = parseCSV(csv).slice(1);
-            const today = new Date().toDateString();
+            const currentTime = getVerifiedTime();
+            const today = currentTime.toDateString();
 
             return rows.some(r => {
                 const entryUserID = r[2];
@@ -147,9 +363,6 @@
         }
     }
 
-    // -------------------------
-    // UI Loader Music Toggle
-    // -------------------------
     const target = document.querySelector(".villager-data-info-wide.villager-data-desc.villager-description .profanity-filter");
     if (!target) return;
 
@@ -166,7 +379,7 @@
         padding-bottom: 15px;
         box-sizing: border-box;
         overflow: hidden;
-        min-height: 620px;
+        min-height: 700px;
         border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.8);
     }
@@ -625,14 +838,6 @@
         border-radius: 12px;
     }
 
-    #clawGame #startScreen h2 {
-        color: #ffd700;
-        font-size: 28px;
-        margin-bottom: 20px;
-        font-weight: bold;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    }
-
     #clawGame #startScreenContent {
         max-width: 500px;
         background: rgba(0, 0, 0, 0.7);
@@ -810,6 +1015,61 @@
         border-radius: 10px 10px 0 0;
         z-index: 4;
     }
+
+    #clawGame .time-status {
+        font-size: 12px;
+        padding: 3px 8px;
+        border-radius: 4px;
+        margin-left: 5px;
+        font-weight: normal;
+    }
+
+    #clawGame .time-status.verified {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    #clawGame .time-status.baseline {
+        background-color: #2196F3;
+        color: white;
+    }
+
+    #clawGame .time-status.unverified {
+        background-color: #FF9800;
+        color: white;
+    }
+
+    #clawGame .time-status.tampered {
+        background-color: #F44336;
+        color: white;
+        animation: pulse 1s infinite;
+    }
+
+    #clawGame .time-status.mismatch {
+        background-color: #FF5722;
+        color: white;
+    }
+
+    #clawGame .time-status.failed {
+        background-color: #9E9E9E;
+        color: white;
+    }
+
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 1; }
+    }
+
+    #clawGame .time-warning {
+        background-color: #FFF3CD;
+        border: 1px solid #FFEEBA;
+        color: #856404;
+        padding: 10px;
+        border-radius: 4px;
+        margin: 10px 0;
+        font-size: 13px;
+    }
     `;
 
     document.head.appendChild(style);
@@ -834,6 +1094,9 @@
                     </ul>
                     <p>Good luck, and have fun! Remember, only your first successful grab today will be recorded.</p>
                 </div>
+                <div id="dayIndicator" style="margin-bottom: 10px; color: #ffd700; font-style: italic; font-size: 14px;"></div>
+                <div id="timeStatus" style="margin-bottom: 10px; font-size: 12px;"></div>
+                <div id="timeWarning" style="display: none;"></div>
                 <button id="startGameBtn">Start Playing!</button>
             </div>
         </div>
@@ -914,13 +1177,13 @@
     const gambitText = document.getElementById("gambitText");
     const bonusContainer = document.getElementById("bonusContainer");
     const closePrizeBtn = document.getElementById("closePrizeBtn");
+    const dayIndicator = document.getElementById("dayIndicator");
+    const timeStatus = document.getElementById("timeStatus");
+    const timeWarning = document.getElementById("timeWarning");
 
     let timer = null, timeLeft = 20, grabbed = false, gameActive = false;
     let clawPosition = 240;
 
-    // -------------------------
-    // Audio
-    // -------------------------
     const bgMusic = new Audio();
     bgMusic.src = "https://file.garden/ZSFPeOjepzq6H2X5/FurvillaSong/PAOKAI2.mp3";
     bgMusic.preload = "auto";
@@ -962,9 +1225,6 @@
         }
     }
 
-    // -------------------------
-    // Helper
-    // -------------------------
     function showLoader(){
         loaderOverlay.style.display = "flex";
     }
@@ -1008,15 +1268,21 @@
         prizeTitle.className = title === "Success!" ? "success" : "miss";
         bonusContainer.innerHTML = "";
 
+        const dayInfo = checkDayOfWeek();
+
         if (plushData) {
             prizeImage.src = plushData.url;
             prizeImage.style.display = "block";
             prizeName.textContent = plushData.name;
             prizeRarity.textContent = `Rarity: ${plushData.rarity}`;
 
-            gambitText.textContent = alreadyPlayed
-                ? "You've already grabbed a plush today! Come back tomorrow for another chance to win. Waiting on your plush? It's on the way!"
-                : "Wow, you did it! I knew you had the skills! That's an awesome catch! Your plush will be on its way soon!";
+            if (dayInfo.isWeekday) {
+                gambitText.innerHTML = "Nice catch! Since it's a weekday, this is just for practice. Come back on the weekend to win real prizes!";
+            } else {
+                gambitText.textContent = alreadyPlayed
+                    ? "You've already grabbed a plush today! Come back tomorrow for another chance to win. Waiting on your plush? It's on the way!"
+                    : "Wow, you did it! I knew you had the skills! That's an awesome catch! Your plush will be on its way soon!";
+            }
 
             if (bonusWon) {
                 const bonusDiv = document.createElement("div");
@@ -1049,7 +1315,6 @@
         const superRarePlushes = PLUSHIES.filter(p => p.rarity === "super rare");
         const otherPlushes = PLUSHIES.filter(p => p.rarity !== "limited" && p.rarity !== "super rare");
 
-        // Shuffle array
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -1216,13 +1481,35 @@
     }
 
     function submitWinToForm(userID, username, plushName, bonus) {
+        const dayInfo = checkDayOfWeek();
+
+        if (dayInfo.isWeekday) {
+            const gambitText = document.getElementById("gambitText");
+            if (gambitText) {
+                gambitText.innerHTML += `<br><br><em>Note: Since it's ${dayInfo.dayName}, this win won't be recorded. Come back on the weekend for real prizes!</em>`;
+            }
+            return;
+        } else if (timeVerificationStatus === "tampered") {
+            const gambitText = document.getElementById("gambitText");
+            if (gambitText) {
+                gambitText.innerHTML += `<br><br><em style="color: red;">WARNING: Time tampering detected! This win will not be recorded.</em>`;
+            }
+            return;
+        } else if (timeVerificationStatus !== "verified" && timeVerificationStatus !== "baseline") {
+            const gambitText = document.getElementById("gambitText");
+            if (gambitText) {
+                gambitText.innerHTML += `<br><br><em style="color: orange;">Warning: Time not verified. This win may not be recorded.</em>`;
+            }
+            return;
+        }
+
         const plushNameToSubmit = bonus ? `${plushName}*` : plushName;
 
         const formData = new FormData();
         formData.append("entry.1820079592", username);
         formData.append("entry.1423943877", userID);
         formData.append("entry.486195404", plushNameToSubmit);
-        formData.append("entry.1183255409", new Date().toLocaleString());
+        formData.append("entry.1183255409", getVerifiedTime().toLocaleString());
 
         fetch("https://docs.google.com/forms/d/e/1FAIpQLSeBksG1fotDo4ZufbRMoH03tUxov3tOzHNq6aUiwbvnbj6PzA/formResponse", {
             method: "POST",
@@ -1237,7 +1524,8 @@
             const resp = await fetch(SHEET_CSV);
             const csv = await resp.text();
             const rows = parseCSV(csv).slice(1);
-            const now = new Date();
+            const currentTime = getVerifiedTime();
+            const now = currentTime;
 
             const recent24h = rows.filter(r => {
                 const d = new Date(r[4]);
@@ -1279,8 +1567,11 @@
 
         startScreen.style.display = "none";
         showLoader();
-        updateLoader(0, "Loading configuration...");
+        updateLoader(0, "Verifying time...");
 
+        await verifyFurvillaTime();
+
+        updateLoader(25, "Loading configuration...");
         await Promise.all([
             loadConfig(),
             loadPlushList()
@@ -1336,8 +1627,95 @@
         }, 1000);
     }
 
+    function updateTimeStatusDisplay() {
+        const dayInfo = checkDayOfWeek();
+
+        let statusText = "";
+        let statusClass = "";
+        let warningText = "";
+        let showWarning = false;
+
+        switch(timeVerificationStatus) {
+            case "verified":
+                statusText = "Time Verified ✓";
+                statusClass = "verified";
+                break;
+            case "baseline":
+                statusText = "Time Baseline Established";
+                statusClass = "baseline";
+                break;
+            case "tampered":
+                statusText = "TIME TAMPERING DETECTED!";
+                statusClass = "tampered";
+                warningText = "Time manipulation detected! Weekend prizes will not be recorded.";
+                showWarning = true;
+                break;
+            case "mismatch":
+                statusText = "Time Mismatch";
+                statusClass = "mismatch";
+                warningText = "Time verification failed. Please refresh the page.";
+                showWarning = true;
+                break;
+            case "failed":
+                statusText = "Time Check Failed";
+                statusClass = "failed";
+                warningText = "Unable to verify time. Weekend prizes may not be recorded.";
+                showWarning = true;
+                break;
+            default:
+                statusText = "Checking time...";
+                statusClass = "unverified";
+        }
+
+        if (timeStatus) {
+            timeStatus.innerHTML = `Status: <span class="time-status ${statusClass}">${statusText}</span>`;
+        }
+
+        if (timeWarning) {
+            if (showWarning) {
+                timeWarning.innerHTML = `<div class="time-warning">⚠ ${warningText}</div>`;
+                timeWarning.style.display = "block";
+            } else {
+                timeWarning.style.display = "none";
+            }
+        }
+
+        if (dayIndicator) {
+            dayIndicator.textContent = `Furvilla Time: ${dayInfo.date.toLocaleString()}${dayInfo.verificationNote || ''}`;
+            if (dayInfo.isWeekday) {
+                dayIndicator.innerHTML += ' <span style="color: #ff9999;">(Weekday Practice Mode)</span>';
+            } else {
+                dayIndicator.innerHTML += ' <span style="color: #99ff99;">(Weekend Prize Mode)</span>';
+            }
+        }
+    }
+
+    setTimeout(async () => {
+        updateTimeStatusDisplay();
+        await verifyFurvillaTime();
+        updateTimeStatusDisplay();
+    }, 100);
+
     musicToggleBtn.addEventListener("click", toggleMusic);
-    startGameBtn.addEventListener("click", startGame);
+
+    startGameBtn.addEventListener("click", function() {
+        const dayInfo = checkDayOfWeek();
+
+        if (dayInfo.isWeekday) {
+            // Show the busy message on weekdays
+            document.getElementById("gambitIntroImg").style.display = "none";
+            document.getElementById("gambitIntroText").innerHTML = `
+                <p><strong>I'm currently very busy!</strong></p>
+                <p>It's ${dayInfo.dayName}, and I'm swamped with work and other responsibilities.</p>
+                <p>But don't worry! Feel free to practice your claw machine skills anyway.</p>
+                <p>I'll be back during Saturday and Sunday to properly manage the game and distribute prizes!</p>
+                <p>Until then, you can still play for fun!</p>
+            `;
+            document.getElementById("startGameBtn").textContent = "Practice Anyway!";
+        }
+
+        startGame();
+    });
 
     document.getElementById("leftBtn").addEventListener("click", () => {
         if (gameActive && !grabbed) {

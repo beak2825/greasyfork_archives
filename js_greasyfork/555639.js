@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Buy All Bazaar
 // @namespace    buy_all_bazaar.biscuitius
-// @version      1.1
+// @version      1.2
 // @description  Adds a big one-click "Buy All" button to each item in a bazaar
 // @author       Biscuitius [1936433]
 // @match        https://www.torn.com/bazaar.php?userId=*
@@ -20,29 +20,46 @@ async function mainLoop() {
 
   // === Highlight the wanted item in the bazaar ===
 
-  // Get the current URL
-  let currentURL = window.location.href;
-
-  // Extract the item name from the URL
-  // https://www.torn.com/bazaar.php?userId=2978602&item=Can_of_Santa_Shooters#/
-  let item_name = currentURL.split("item=")[1].replace(/_/g, " ").split("#")[0];
-
-  // Loop through each bazaar listing to find the matching item
+  // Get the bazaar listings first
   let bazaarListings = $(".itemDescription___j4EfE");
 
-  if (!$("#highlighted-item").length) {
-    bazaarListings.each(function () {
-      // Get the item name from this listing
-      let listingItemName = $(this).find("p.name___B0RW3").text().trim();
+  try {
+    // Get the current URL
+    let currentURL = window.location.href;
 
-      // Compare with the item name from the URL (case-insensitive)
-      if (listingItemName.toLowerCase() === item_name.toLowerCase()) {
-        // Highlight this listing if the name matches
-        $(this).css("background-color", "rgba(255, 255, 0, 0.2)");
-        // Add an ID to the listing to prevent searching for selected item again
-        $(this).attr("id", "highlighted-item");
+    // Extract the item ID from the URL
+    // https://www.torn.com/bazaar.php?userId=4011984&itemId=1249#/
+    if (currentURL.includes("itemId=")) {
+      let itemId = currentURL.split("itemId=")[1].split("#")[0].split("&")[0];
+      console.log("Looking for item ID:", itemId);
+
+      // Loop through each bazaar listing to find the matching item by ID
+      if (!$("#highlighted-item").length) {
+        bazaarListings.each(function () {
+          // Get the item ID from this listing's image src
+          let listingElement = $(this);
+          let itemImg = listingElement.find("img").attr("src");
+          console.log("Checking listing item image src:", itemImg);
+          if (itemImg && itemImg.includes("/images/items/")) {
+            console.log("Found item image src:", itemImg);
+            // Extract item ID from src like "/images/items/1269/large.png"
+            let listingItemId = itemImg.split("/images/items/")[1].split("/")[0];
+            
+            // Compare with the item ID from the URL
+            if (listingItemId === itemId) {
+              // Highlight this listing if the ID matches
+              listingElement.css("background-color", "rgba(255, 255, 0, 0.2)");
+              // Add an ID to the listing to prevent searching for selected item again
+              listingElement.attr("id", "highlighted-item");
+            }
+          } else {
+            console.log("No valid item image src found for this listing.");
+          }
+        });
       }
-    });
+    }
+  } catch (e) {
+    // Skip highlighting if there's an error parsing the URL
   }
 
   // === Add "Buy All" buttons to each bazaar listing ===

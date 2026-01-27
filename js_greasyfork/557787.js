@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站视频、直播、音乐解析
 // @namespace    Eruru
-// @version      1.0.4
+// @version      1.0.5
 // @description  获取视频、直播直链，下载音乐
 // @author       Eruru
 // @match        https://www.bilibili.com/video/*
@@ -31,7 +31,7 @@
     panel.append(topElement)
     const button = $(`<button style="font-size:12px;width:28px;height:20px;padding:0px;margin:0px;">解析</button>`)
     topElement.append(button)
-    const showButton = $(`<button style="font-size:12px;width:28px;height:20px;padding:0px;margin:0px;">收起</button>`)
+    const showButton = $(`<button style="font-size:12px;width:28px;height:20px;padding:0px;margin:0px;">展开</button>`)
     topElement.append(showButton)
     const resultElement = $(`<div style="overflow:auto;height:calc(100vh - 64px - 20px - 30px)">`)
     panel.append(resultElement)
@@ -45,6 +45,7 @@
         resultElement.show()
     })
     showButton.hide()
+    showButton.text("展开")
     resultElement.hide()
     $(window).scroll(function() {
         if($(this).scrollTop()===0){
@@ -52,10 +53,13 @@
             return
         }
         panel.hide()
+        showButton.text("展开")
+        resultElement.hide()
     })
     button.click(async () => {
         try{
             showButton.hide()
+            showButton.text("展开")
             resultElement.hide()
             const url = window.location.href
             if(url.startsWith("https://live.bilibili.com/")){
@@ -117,8 +121,10 @@
                 return
             }
             showButton.show()
+            showButton.text("收起")
             resultElement.show()
-            for (const item of items) {
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i]
                 const itemElement = $(`<div></div>`)
                 resultElement.append(itemElement)
                 const button = $(`<button style="width:100%;text-align:left;" data-cid="${item.cid}" data-part="${item.part}" data-bvid="${bvid}">${item.page} - ${item.part}</button>`)
@@ -130,6 +136,9 @@
                     navigator.clipboard.writeText(await getVideoUrlAsync(cid, bvid, part))
                     await notifyAsync("已复制到剪贴板")
                 })
+                if (i == 0) {
+                    button.click ()
+                }
             }
         }catch(exception){
             console.error(exception)

@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         chenyeye-yuanlin
+// @name         zhangjiayi
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  修改电子票姓名、生日、期满日期（详情页只修改英文名字，主页/我的信息页不变，无闪烁）
 // @author       You
 // @match        *://*.interpark.com/*
@@ -12,17 +12,17 @@
 // @license      MIT
 // @grant        none
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/563430/chenyeye-yuanlin.user.js
-// @updateURL https://update.greasyfork.org/scripts/563430/chenyeye-yuanlin.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563430/zhangjiayi.user.js
+// @updateURL https://update.greasyfork.org/scripts/563430/zhangjiayi.meta.js
 // ==/UserScript==
  
 (function () {
     'use strict';
  
     /************ 配置区 ************/
-    const OLD_NAME = "chentianyi"; // 英文名字
-    const NEW_NAME = "chen yeye"; // 新名字
-    const NEW_BIRTHDAY = "(**1012)";
+    const OLD_NAME = "장영미"; // 英文名字
+    const NEW_NAME = "ZHANG JIAYI"; // 新名字
+    const NEW_BIRTHDAY = "(**1017)";
     const NEW_EXPIRE_DATE = "2033-05-23";
  
     const DATE_RE = /\d{4}-\d{2}-\d{2}/g;

@@ -1,15 +1,16 @@
 // ==UserScript==
 // @name          Tampermonkey Video Filter v4.1
 // @namespace    http://tampermonkey.net/
-// @version      1.2.1
-// @description  Filters posts with videos/GIFs using dynamic content detection. Extended video format support (mkv, avi, wmv, etc.), GIF thumbnails, caching, and performance optimizations.
-// @author       harryangstrom, xdegeneratex, remuru, [YourUsername]
+// @version      1.2.3
+// @description  Filters posts with videos/GIFs using dynamic content detection. Extended video format support (mkv, avi, wmv, etc.), GIF thumbnails, caching, performance optimizations, and thumbnail retry functionality.
+// @author       harryangstrom, xdegeneratex, remuru, ImTrep, DeepSeek
 // @match        https://*.coomer.party/*
 // @match        https://*.coomer.su/*
 // @match        https://*.coomer.st/*
 // @match        https://*.kemono.su/*
 // @match        https://*.kemono.party/*
 // @match        https://*.kemono.cr/*
+// @icon         https://i.imgur.com/7TPAb7F.png
 // @grant        GM_setClipboard
 // @grant        GM_xmlhttpRequest
 // @run-at       document-idle
@@ -28,13 +29,13 @@
         'm2ts', 'mts', 'ogv', 'qt', 'rm', 'rmvb', 'vob', 'asf', '3gp', 'f4v',
         'mxf', 'swf', 'ts', 'm4a', 'm4b', 'm4p', 'm4r', 'm4v'
     ]);
-    
+
     // GIF extension
     const GIF_EXTENSION = 'gif';
-    
+
     // Image extensions
     const IMAGE_EXTENSIONS = new Set(['jpg', 'jpeg', 'png', 'bmp', 'webp', 'svg']);
-    
+
     // Performance constants
     const POSTS_PER_PAGE = 50;
     const API_DELAY = 1500; // Increased to avoid rate limiting
@@ -44,7 +45,12 @@
     const LS_PAGES_KEY = 'videoFilterPageRange_v1';
     const LS_CACHE_KEY = 'videoFilterCache_v1';
     const CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache TTL
-    
+
+    // Thumbnail retry constants
+    const MAX_THUMBNAIL_RETRIES = 3;
+    const THUMBNAIL_RETRY_DELAY = 1000; // 1 second between retries
+    const VIDEO_LOAD_TIMEOUT = 10000; // 10 seconds timeout for video loading
+
     let currentDomain = window.location.hostname;
     let allFoundVideoUrls = [];
     let videoIntersectionObserver = null;
@@ -52,7 +58,16 @@
     let isFiltering = false; // Prevent multiple filter operations
     let activeRequests = 0; // Track active requests
     let requestQueue = []; // Queue for API requests
-    
+
+    // Track thumbnail retries
+    const thumbnailRetryMap = new Map(); // Map of video element ID -> retry count
+    const failedThumbnails = new Set(); // Track permanently failed thumbnails
+
+    // Track video loading progress
+    let totalVideosToLoad = 0;
+    let videosLoadedCount = 0;
+    let allMediaLoadedShown = false;
+
     // Create UI container
     const uiContainer = document.createElement('div');
     uiContainer.id = 'video-filter-ui';
@@ -71,7 +86,7 @@
         borderRadius: '4px',
         transition: 'width 0.2s ease-in-out, height 0.2s ease-in-out, padding 0.2s ease-in-out'
     });
-    
+
     // Collapse button
     const collapseButton = document.createElement('button');
     collapseButton.id = 'video-filter-collapse-button';
@@ -95,12 +110,12 @@
         cursor: 'pointer',
         zIndex: '1'
     });
-    
+
     // Main content panel
     const panelMainContent = document.createElement('div');
     panelMainContent.id = 'video-filter-main-content';
     panelMainContent.style.marginLeft = '30px';
-    
+
     // Page range input
     const pageRangeInput = document.createElement('input');
     pageRangeInput.type = 'text';
@@ -116,18 +131,18 @@
         border: '1px solid #555555',
         borderRadius: '3px'
     });
-    
+
     // Filter button
     const filterButton = document.createElement('button');
     filterButton.id = 'video-filter-button';
     filterButton.textContent = 'Filter Videos/GIFs';
-    
+
     // Copy URLs button
     const copyUrlsButton = document.createElement('button');
     copyUrlsButton.id = 'video-copy-urls-button';
     copyUrlsButton.textContent = 'Copy URLs';
     copyUrlsButton.disabled = true;
-    
+
     // Status message
     const statusMessage = document.createElement('div');
     statusMessage.id = 'video-filter-status';
@@ -137,13 +152,13 @@
         minHeight: '15px',
         color: '#cccccc'
     });
-    
+
     // Button styling
     const baseButtonBg = '#3a3a3c';
     const hoverButtonBg = '#4a4a4c';
     const disabledButtonBg = '#303030';
     const disabledButtonColor = '#777777';
-    
+
     function styleButton(button, disabled = false) {
         if (disabled) {
             button.style.backgroundColor = disabledButtonBg;
@@ -161,7 +176,7 @@
             borderRadius: '3px'
         });
     }
-    
+
     // Apply button styling
     [filterButton, copyUrlsButton].forEach(btn => {
         styleButton(btn, btn.disabled);
@@ -172,19 +187,19 @@
             if (!btn.disabled) btn.style.backgroundColor = baseButtonBg;
         });
     });
-    
+
     collapseButton.addEventListener('mouseenter', () => {
         if (collapseButton.style.backgroundColor !== disabledButtonBg) {
             collapseButton.style.backgroundColor = hoverButtonBg;
         }
     });
-    
+
     collapseButton.addEventListener('mouseleave', () => {
         if (collapseButton.style.backgroundColor !== disabledButtonBg) {
             collapseButton.style.backgroundColor = '#4a4a4c';
         }
     });
-    
+
     // Assemble UI
     panelMainContent.appendChild(document.createTextNode('Pages: '));
     panelMainContent.appendChild(pageRangeInput);
@@ -194,14 +209,14 @@
     uiContainer.appendChild(collapseButton);
     uiContainer.appendChild(panelMainContent);
     document.body.appendChild(uiContainer);
-    
+
     // Cache management
     const cache = {
         get: function(key) {
             try {
                 const item = localStorage.getItem(`${LS_CACHE_KEY}_${key}`);
                 if (!item) return null;
-                
+
                 const { data, timestamp } = JSON.parse(item);
                 if (Date.now() - timestamp > CACHE_TTL) {
                     this.delete(key);
@@ -212,7 +227,7 @@
                 return null;
             }
         },
-        
+
         set: function(key, data) {
             try {
                 const item = JSON.stringify({
@@ -224,7 +239,7 @@
                 console.warn('Video Filter: Cache set failed', e);
             }
         },
-        
+
         delete: function(key) {
             try {
                 localStorage.removeItem(`${LS_CACHE_KEY}_${key}`);
@@ -233,7 +248,7 @@
             }
         }
     };
-    
+
     function togglePanelCollapse() {
         isPanelCollapsed = !isPanelCollapsed;
         if (isPanelCollapsed) {
@@ -251,19 +266,44 @@
         }
         localStorage.setItem(LS_COLLAPSE_KEY, isPanelCollapsed.toString());
     }
-    
+
     function setupVideoIntersectionObserver() {
         if (videoIntersectionObserver) {
             videoIntersectionObserver.disconnect();
         }
-        
+
         videoIntersectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const videoElement = entry.target;
+                    const videoId = videoElement.dataset.videoId || Math.random().toString(36).substr(2, 9);
+
+                    if (!thumbnailRetryMap.has(videoId)) {
+                        thumbnailRetryMap.set(videoId, 0);
+                    }
+
+                    if (failedThumbnails.has(videoId)) {
+                        // Skip permanently failed thumbnails
+                        videoIntersectionObserver.unobserve(videoElement);
+                        return;
+                    }
+
                     const sourceElement = videoElement.querySelector('source[data-src]');
                     if (sourceElement) {
                         const videoUrl = sourceElement.getAttribute('data-src');
+
+                        // Set up error handling before loading
+                        setupVideoErrorHandling(videoElement, videoId, videoUrl);
+
+                        // Set a loading timeout
+                        const loadTimeout = setTimeout(() => {
+                            if (!videoElement.hasAttribute('data-loaded')) {
+                                handleVideoLoadError(videoElement, videoId, videoUrl, 'Timeout loading video');
+                            }
+                        }, VIDEO_LOAD_TIMEOUT);
+
+                        videoElement.dataset.loadTimeout = loadTimeout;
+
                         sourceElement.setAttribute('src', videoUrl);
                         videoElement.load();
                         sourceElement.removeAttribute('data-src');
@@ -277,7 +317,167 @@
             threshold: 0.01
         });
     }
-    
+
+    function setupVideoErrorHandling(videoElement, videoId, videoUrl) {
+        // Remove any existing event listeners
+        videoElement.onerror = null;
+        videoElement.onloadeddata = null;
+
+        videoElement.onerror = function() {
+            const errorDetails = videoElement.error ? videoElement.error.message : 'Unknown video error';
+            handleVideoLoadError(videoElement, videoId, videoUrl, errorDetails);
+        };
+
+        videoElement.onloadeddata = function() {
+            clearTimeout(videoElement.dataset.loadTimeout);
+            videoElement.setAttribute('data-loaded', 'true');
+
+            // Track video load completion
+            videosLoadedCount++;
+
+            // Check if all videos are loaded (only show once)
+            if (!allMediaLoadedShown && totalVideosToLoad > 0 && videosLoadedCount >= totalVideosToLoad) {
+                showAllMediaLoadedMessage();
+            }
+        };
+    }
+
+    function showAllMediaLoadedMessage() {
+        if (allMediaLoadedShown) return;
+
+        allMediaLoadedShown = true;
+        showStatus('All media loaded successfully!', 'success');
+
+        // Optional: Log to console for debugging
+        console.log('Video Filter: All media loaded. Total:', totalVideosToLoad, 'Loaded:', videosLoadedCount);
+    }
+
+    function handleVideoLoadError(videoElement, videoId, videoUrl, errorDetails) {
+        clearTimeout(videoElement.dataset.loadTimeout);
+
+        const retryCount = thumbnailRetryMap.get(videoId) || 0;
+
+        if (retryCount >= MAX_THUMBNAIL_RETRIES) {
+            // Max retries reached
+            failedThumbnails.add(videoId);
+            showThumbnailWarning(videoElement, videoUrl, `Failed after ${MAX_THUMBNAIL_RETRIES} retries: ${errorDetails}`);
+            console.warn(`Video Filter: Video failed permanently after ${MAX_THUMBNAIL_RETRIES} retries:`, videoUrl, errorDetails);
+
+            // Still count as loaded (but failed) for progress tracking
+            videosLoadedCount++;
+            if (!allMediaLoadedShown && totalVideosToLoad > 0 && videosLoadedCount >= totalVideosToLoad) {
+                showAllMediaLoadedMessage();
+            }
+            return;
+        }
+
+        // Increment retry count
+        thumbnailRetryMap.set(videoId, retryCount + 1);
+
+        // Show warning
+        const warningMsg = `Retry ${retryCount + 1}/${MAX_THUMBNAIL_RETRIES} for thumbnail`;
+        showStatus(warningMsg, 'warning');
+
+        // Schedule retry
+        setTimeout(() => {
+            if (!failedThumbnails.has(videoId) && videoElement.isConnected) {
+                const sourceElement = videoElement.querySelector('source');
+                if (sourceElement) {
+                    sourceElement.setAttribute('src', '');
+                    sourceElement.setAttribute('src', videoUrl);
+                    videoElement.load();
+
+                    // Set new timeout for retry
+                    const newTimeout = setTimeout(() => {
+                        if (!videoElement.hasAttribute('data-loaded')) {
+                            handleVideoLoadError(videoElement, videoId, videoUrl, 'Retry timeout');
+                        }
+                    }, VIDEO_LOAD_TIMEOUT);
+
+                    videoElement.dataset.loadTimeout = newTimeout;
+                }
+            }
+        }, THUMBNAIL_RETRY_DELAY * (retryCount + 1));
+    }
+
+    function showThumbnailWarning(videoElement, videoUrl, message) {
+        // Create warning overlay
+        const warningOverlay = document.createElement('div');
+        warningOverlay.className = 'thumbnail-warning-overlay';
+        Object.assign(warningOverlay.style, {
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            color: '#ffcc00',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            padding: '10px',
+            fontSize: '12px',
+            zIndex: '10',
+            pointerEvents: 'none'
+        });
+
+        // Create retry button
+        const retryButton = document.createElement('button');
+        retryButton.textContent = 'Retry';
+        Object.assign(retryButton.style, {
+            backgroundColor: '#4a4a4c',
+            color: '#f0f0f0',
+            border: '1px solid #555555',
+            borderRadius: '3px',
+            padding: '4px 8px',
+            marginTop: '8px',
+            cursor: 'pointer',
+            pointerEvents: 'auto'
+        });
+
+        retryButton.onclick = function(e) {
+            e.stopPropagation();
+            warningOverlay.remove();
+            const videoId = videoElement.dataset.videoId || Math.random().toString(36).substr(2, 9);
+            thumbnailRetryMap.delete(videoId);
+            failedThumbnails.delete(videoId);
+            videoElement.removeAttribute('data-loaded');
+
+            const sourceElement = videoElement.querySelector('source');
+            if (sourceElement) {
+                sourceElement.setAttribute('src', '');
+                sourceElement.setAttribute('src', videoUrl);
+                videoElement.load();
+                showStatus('Manual retry initiated', 'info');
+            }
+        };
+
+        warningOverlay.innerHTML = `
+            <div style="max-width: 100%;">
+                <div style="color: #ff6b6b; margin-bottom: 5px; font-weight: bold;">Thumbnail Failed</div>
+                <div style="font-size: 11px; margin-bottom: 10px; color: #cccccc;">${message}</div>
+            </div>
+        `;
+
+        const container = warningOverlay.querySelector('div');
+        container.appendChild(retryButton);
+
+        // Position video element relatively if not already
+        if (getComputedStyle(videoElement).position === 'static') {
+            videoElement.style.position = 'relative';
+        }
+
+        videoElement.appendChild(warningOverlay);
+    }
+
+    function getShortUrl(url) {
+        if (!url) return 'Unknown URL';
+        const urlObj = new URL(url);
+        const pathParts = urlObj.pathname.split('/');
+        return pathParts[pathParts.length - 1] || urlObj.pathname;
+    }
+
     function showStatus(message, type = 'info') {
         statusMessage.textContent = message;
         switch (type) {
@@ -295,7 +495,7 @@
                 statusMessage.style.color = '#cccccc';
                 break;
         }
-        
+
         if (type === 'success' && message.includes("Copied")) {
             setTimeout(() => {
                 if (statusMessage.textContent === message) {
@@ -305,14 +505,14 @@
             }, 3000);
         }
     }
-    
+
     function parsePageRange(inputStr) {
         const pages = new Set();
         if (!inputStr || inputStr.trim() === '') {
             showStatus('Error: Page range cannot be empty.', 'error');
             return null;
         }
-        
+
         const parts = inputStr.split(',');
         for (const part of parts) {
             const trimmedPart = part.trim();
@@ -334,21 +534,21 @@
                 pages.add(page);
             }
         }
-        
+
         if (pages.size === 0) {
             showStatus('Error: No valid pages specified.', 'error');
             return null;
         }
-        
+
         return Array.from(pages).sort((a, b) => a - b);
     }
-    
+
     function determinePageContext() {
         const pathname = window.location.pathname;
         const searchParams = new URLSearchParams(window.location.search);
         const query = searchParams.get('q');
         const userProfileMatch = pathname.match(/^\/([^/]+)\/user\/([^/]+)$/);
-        
+
         // Posts search page - the main issue
         if (pathname === '/posts' && query) {
             return {
@@ -356,7 +556,7 @@
                 query: query
             };
         }
-        
+
         // Posts search page without query (shows all posts)
         if (pathname === '/posts') {
             return {
@@ -364,7 +564,7 @@
                 query: null
             };
         }
-        
+
         // Popular posts
         if (pathname === '/posts/popular') {
             return {
@@ -373,7 +573,7 @@
                 period: searchParams.get('period') || 'recent'
             };
         }
-        
+
         // User profile pages
         if (userProfileMatch && !query) {
             return {
@@ -382,7 +582,7 @@
                 userId: userProfileMatch[2]
             };
         }
-        
+
         if (userProfileMatch && query) {
             return {
                 type: 'user_search',
@@ -391,15 +591,15 @@
                 query
             };
         }
-        
+
         console.warn('Video Filter: Unknown page structure for context.', pathname, window.location.search);
         return null;
     }
-    
+
     function buildApiUrl(context, offset) {
         let baseApiUrl = `https://${currentDomain}/api/v1`;
         let queryParams = [`o=${offset}`];
-        
+
         switch (context.type) {
             case 'profile':
                 return `${baseApiUrl}/${context.service}/user/${context.userId}/posts?${queryParams.join('&')}`;
@@ -417,7 +617,7 @@
                 return null;
         }
     }
-    
+
     function fetchData(apiUrl, useCache = true) {
         // Try cache first
         if (useCache) {
@@ -427,7 +627,7 @@
                 return Promise.resolve(cachedData);
             }
         }
-        
+
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
                 method: "GET",
@@ -458,15 +658,15 @@
             });
         });
     }
-    
+
     function processRequestQueue() {
         if (activeRequests >= MAX_CONCURRENT_REQUESTS || requestQueue.length === 0) {
             return;
         }
-        
+
         const nextRequest = requestQueue.shift();
         activeRequests++;
-        
+
         fetchData(nextRequest.apiUrl, nextRequest.useCache)
             .then(data => {
                 nextRequest.resolve(data);
@@ -479,7 +679,7 @@
                 setTimeout(processRequestQueue, API_DELAY); // Delay between requests
             });
     }
-    
+
     function queueApiRequest(apiUrl, useCache = true) {
         return new Promise((resolve, reject) => {
             requestQueue.push({
@@ -491,59 +691,61 @@
             processRequestQueue();
         });
     }
-    
+
     function isVideoFile(filenameOrPath) {
         if (!filenameOrPath) return false;
         const lowerName = filenameOrPath.toLowerCase();
         const extension = lowerName.split('.').pop();
         return VIDEO_EXTENSIONS.has(extension);
     }
-    
+
     function isGifFile(filenameOrPath) {
         if (!filenameOrPath) return false;
         const lowerName = filenameOrPath.toLowerCase();
         return lowerName.endsWith('.gif');
     }
-    
+
     function isImageFile(filenameOrPath) {
         if (!filenameOrPath) return false;
         const lowerName = filenameOrPath.toLowerCase();
         const extension = lowerName.split('.').pop();
         return IMAGE_EXTENSIONS.has(extension);
     }
-    
+
     function getBestMediaUrlFromPost(post) {
         const domain = `https://${currentDomain}/data`;
-        
-        // Priority 1: Video files
+
+        // Priority 1: Video files (main file)
         if (post.file && isVideoFile(post.file.path)) {
             return { type: 'video', url: domain + post.file.path };
         }
-        
-        // Priority 2: GIF files
-        if (post.file && isGifFile(post.file.path)) {
-            return { type: 'gif', url: domain + post.file.path };
-        }
-        
-        // Check attachments for videos and gifs
+
+        // Priority 2: Check attachments for videos FIRST (before GIFs)
         if (post.attachments) {
-            // First check for videos in attachments
             for (const att of post.attachments) {
                 if (isVideoFile(att.path)) {
                     return { type: 'video', url: domain + att.path };
                 }
             }
-            // Then check for gifs in attachments
+        }
+
+        // Priority 3: GIF files (main file) - only if no video found yet
+        if (post.file && isGifFile(post.file.path)) {
+            return { type: 'gif', url: domain + post.file.path };
+        }
+
+        // Priority 4: Check attachments for GIFs - only if no video found yet
+        if (post.attachments) {
             for (const att of post.attachments) {
                 if (isGifFile(att.path)) {
                     return { type: 'gif', url: domain + att.path };
                 }
             }
         }
-        
+
         return null;
     }
-    
+
     function getPostPreviewUrl(post, apiPreviewsEntry) {
         if (apiPreviewsEntry && apiPreviewsEntry.length > 0 && apiPreviewsEntry[0] && apiPreviewsEntry[0].server && apiPreviewsEntry[0].path) {
             return `${apiPreviewsEntry[0].server}${apiPreviewsEntry[0].path}`;
@@ -556,45 +758,46 @@
         }
         return null;
     }
-    
+
     function createPostCardHtml(post, mediaInfo, previewUrl) {
         const postDate = new Date(post.published || post.added);
         const formattedDate = postDate.toLocaleString();
         const dateTimeAttr = postDate.toISOString();
         const attachmentCount = post.attachments ? post.attachments.length : 0;
         const attachmentText = attachmentCount === 1 ? "1 Attachment" : `${attachmentCount} Attachments`;
-        
+
         let displayTitle = (post.title || '').trim();
         if (!displayTitle && post.content) {
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = post.content;
             let contentForTitle = (tempDiv.textContent || "").trim();
             if (contentForTitle) {
-                displayTitle = contentForTitle.substring(0, SUBSTRING_TITLE_LENGTH) + 
+                displayTitle = contentForTitle.substring(0, SUBSTRING_TITLE_LENGTH) +
                              (contentForTitle.length > SUBSTRING_TITLE_LENGTH ? '...' : '');
             }
         }
         displayTitle = displayTitle || 'No Title';
-        
+
         const postLink = `/${post.service}/user/${post.user}/post/${post.id}`;
-        
+        const videoId = `video_${post.id}_${Date.now()}`;
+
         let mediaHtml = '';
-        
+
         if (mediaInfo.type === 'video') {
             const posterAttribute = previewUrl ? `poster="${previewUrl}"` : '';
             mediaHtml = `
-                <div style="text-align: center; margin-bottom: 5px; background-color: #000;">
-                    <video class="lazy-load-video" controls preload="none" width="100%" style="max-height: 300px; display: block;" ${posterAttribute}>
+                <div style="text-align: center; margin-bottom: 5px; background-color: #000; position: relative;">
+                    <video class="lazy-load-video" controls preload="none" width="100%" style="max-height: 300px; display: block;" ${posterAttribute} data-video-id="${videoId}">
                         <source data-src="${mediaInfo.url}" type="video/mp4">
                     </video>
                 </div>`;
         } else if (mediaInfo.type === 'gif') {
             mediaHtml = `
-                <div style="text-align: center; margin-bottom: 5px; background-color: #000; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                <div style="text-align: center; margin-bottom: 5px; background-color: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
                     <img src="${mediaInfo.url}" alt="GIF" style="width: 100%; height: auto; max-height: 300px; object-fit: contain; display: block;">
                 </div>`;
         }
-        
+
         return `
         <article class="post-card post-card--preview">
           <a class="fancy-link fancy-link--kemono" href="${postLink}" target="_blank" rel="noopener noreferrer">
@@ -611,13 +814,13 @@
           </a>
         </article>`;
     }
-    
+
     async function handleFilter() {
         if (isFiltering) {
             showStatus('Already filtering, please wait...', 'warning');
             return;
         }
-        
+
         showStatus('');
         isFiltering = true;
         filterButton.textContent = 'Filtering...';
@@ -625,100 +828,109 @@
         filterButton.disabled = true;
         styleButton(copyUrlsButton, true);
         copyUrlsButton.disabled = true;
-        
+
         allFoundVideoUrls = [];
         requestQueue = [];
         activeRequests = 0;
+        thumbnailRetryMap.clear();
+        failedThumbnails.clear();
+
+        // Reset video tracking
+        totalVideosToLoad = 0;
+        videosLoadedCount = 0;
+        allMediaLoadedShown = false;
+
         setupVideoIntersectionObserver();
-        
+
         const pagesToFetch = parsePageRange(pageRangeInput.value);
         if (!pagesToFetch) {
             resetFilterButton();
             return;
         }
-        
+
         localStorage.setItem(LS_PAGES_KEY, pageRangeInput.value);
-        
+
         const context = determinePageContext();
         if (!context) {
             showStatus('Error: Page context invalid for filtering.', 'error');
             resetFilterButton();
             return;
         }
-        
+
         const postListContainer = document.querySelector('.card-list__items');
         if (!postListContainer) {
             showStatus('Error: Post container not found.', 'error');
             resetFilterButton();
             return;
         }
-        
+
         // Clear container and set up
         postListContainer.style.setProperty('--card-size', '350px');
         postListContainer.innerHTML = '';
-        
+
         // Hide pagination
         document.querySelectorAll('.paginator menu, .content > menu.Paginator').forEach(menu => {
             menu.style.display = 'none';
         });
-        
+
         const paginatorInfo = document.querySelector('.paginator > small, .content > div > small.subtle-text');
         if (paginatorInfo) {
             paginatorInfo.textContent = `Filtering posts...`;
         }
-        
+
         let totalVideoPostsFound = 0;
         let totalGifPostsFound = 0;
         let errors = 0;
         const maxErrors = 3; // Stop after too many errors
-        
+
         // Process pages in batches
         for (let i = 0; i < pagesToFetch.length; i++) {
             if (errors >= maxErrors) {
                 showStatus('Stopped due to too many errors.', 'error');
                 break;
             }
-            
+
             const pageNum = pagesToFetch[i];
             const offset = (pageNum - 1) * POSTS_PER_PAGE;
             const apiUrl = buildApiUrl(context, offset);
-            
+
             if (!apiUrl) {
                 showStatus('Error: Could not build API URL.', 'error');
                 errors++;
                 continue;
             }
-            
+
             filterButton.textContent = `Filtering Page ${i + 1}/${pagesToFetch.length}...`;
             showStatus(`Fetching page ${pageNum}...`, 'info');
-            
+
             try {
                 // Use queued request with caching
                 const apiResponse = await queueApiRequest(apiUrl, true);
-                
+
                 let posts = Array.isArray(apiResponse) ? apiResponse : (apiResponse.results || apiResponse.posts);
                 if (!Array.isArray(posts)) {
                     console.warn("Video Filter: Could not extract a valid posts array from API response:", apiResponse);
                     showStatus(`Warning: Unexpected API structure on page ${pageNum}.`, 'warning');
                     continue;
                 }
-                
+
                 // Process posts
                 const fragment = document.createDocumentFragment();
                 let pageVideoCount = 0;
                 let pageGifCount = 0;
-                
+
                 for (const post of posts) {
                     const mediaInfo = getBestMediaUrlFromPost(post);
                     if (mediaInfo) {
                         if (mediaInfo.type === 'video') {
                             totalVideoPostsFound++;
                             pageVideoCount++;
+                            totalVideosToLoad++; // Count videos for loading tracking
                         } else if (mediaInfo.type === 'gif') {
                             totalGifPostsFound++;
                             pageGifCount++;
                         }
-                        
+
                         allFoundVideoUrls.push(mediaInfo.url);
                         const cardHtml = createPostCardHtml(post, mediaInfo, null);
                         const tempDiv = document.createElement('div');
@@ -726,12 +938,12 @@
                         fragment.appendChild(tempDiv.firstElementChild);
                     }
                 }
-                
+
                 // Append all cards at once for better performance
                 if (fragment.children.length > 0) {
                     postListContainer.appendChild(fragment);
                 }
-                
+
                 // Update status
                 const totalFound = totalVideoPostsFound + totalGifPostsFound;
                 if (paginatorInfo) {
@@ -745,42 +957,47 @@
                     }
                     paginatorInfo.textContent = `Showing ${totalFound} media posts${typeText}.`;
                 }
-                
+
             } catch (error) {
                 console.error("Video Filter error:", error);
                 showStatus(`Error on page ${pageNum}: ${error.message || error}`, 'error');
                 errors++;
-                
+
                 // Don't wait too long if we're getting errors
                 if (errors >= maxErrors) {
                     break;
                 }
             }
         }
-        
+
         // Setup lazy loading for video elements
         postListContainer.querySelectorAll('video.lazy-load-video').forEach(videoEl => {
             if (videoEl.querySelector('source[data-src]')) {
                 videoIntersectionObserver.observe(videoEl);
             }
         });
-        
+
+        // Check if there are no videos to load (immediate completion)
+        if (totalVideosToLoad === 0) {
+            showStatus('Filter complete. No videos to load.', 'info');
+        }
+
         finishFiltering(totalVideoPostsFound, totalGifPostsFound);
     }
-    
+
     function resetFilterButton() {
         isFiltering = false;
         filterButton.textContent = 'Filter Videos/GIFs';
         styleButton(filterButton, false);
         filterButton.disabled = false;
     }
-    
+
     function finishFiltering(videoCount, gifCount) {
         isFiltering = false;
         filterButton.textContent = 'Filter Videos/GIFs';
         styleButton(filterButton, false);
         filterButton.disabled = false;
-        
+
         const totalFound = videoCount + gifCount;
         if (totalFound > 0) {
             let statusText = `Filter complete. Found ${totalFound} media posts`;
@@ -788,11 +1005,15 @@
                 statusText += ` (${videoCount} videos, ${gifCount} GIFs)`;
             } else if (videoCount > 0) {
                 statusText += ` (${videoCount} videos)`;
+                // Show initial loading status for videos
+                showStatus(`Loading ${videoCount} videos...`, 'info');
             } else if (gifCount > 0) {
                 statusText += ` (${gifCount} GIFs)`;
+                // GIFs load instantly, so show completion
+                showStatus('All media loaded!', 'success');
             }
             statusText += '.';
-            showStatus(statusText, 'success');
+
             styleButton(copyUrlsButton, false);
             copyUrlsButton.disabled = false;
         } else {
@@ -801,37 +1022,44 @@
             copyUrlsButton.disabled = true;
         }
     }
-    
+
     function handleCopyUrls() {
         if (allFoundVideoUrls.length === 0) {
             showStatus("No URLs to copy.", 'error');
             return;
         }
-        
+
         const uniqueUrls = [...new Set(allFoundVideoUrls)];
         GM_setClipboard(uniqueUrls.join('\n'));
         copyUrlsButton.textContent = `Copied ${uniqueUrls.length} URLs!`;
         showStatus(`Copied ${uniqueUrls.length} unique media URLs!`, 'success');
-        
+
         setTimeout(() => {
             copyUrlsButton.textContent = 'Copy URLs';
         }, 3000);
     }
-    
+
     function handleUrlChangeAndSetStatus() {
         console.log("Video Filter: URL change detected or initial load.");
         const currentContext = determinePageContext();
         allFoundVideoUrls = [];
         requestQueue = [];
         activeRequests = 0;
-        
+        thumbnailRetryMap.clear();
+        failedThumbnails.clear();
+
+        // Reset video tracking
+        totalVideosToLoad = 0;
+        videosLoadedCount = 0;
+        allMediaLoadedShown = false;
+
         styleButton(copyUrlsButton, true);
         copyUrlsButton.disabled = true;
-        
+
         if (videoIntersectionObserver) {
             videoIntersectionObserver.disconnect();
         }
-        
+
         if (currentContext) {
             showStatus("Filter ready.", 'info');
             styleButton(filterButton, false);
@@ -842,52 +1070,58 @@
             filterButton.disabled = true;
         }
     }
-    
+
     function loadSettings() {
         const savedPages = localStorage.getItem(LS_PAGES_KEY);
         if (savedPages) {
             pageRangeInput.value = savedPages;
         }
     }
-    
+
     // --- SCRIPT INITIALIZATION ---
-    
+
     filterButton.addEventListener('click', handleFilter);
     copyUrlsButton.addEventListener('click', handleCopyUrls);
     collapseButton.addEventListener('click', togglePanelCollapse);
-    
+
     // History state tracking
     const originalPushState = history.pushState;
     const originalReplaceState = history.replaceState;
-    
+
     history.pushState = function() {
         originalPushState.apply(this, arguments);
         window.dispatchEvent(new Event('custompushstate'));
     };
-    
+
     history.replaceState = function() {
         originalReplaceState.apply(this, arguments);
         window.dispatchEvent(new Event('customreplacestate'));
     };
-    
+
     window.addEventListener('popstate', handleUrlChangeAndSetStatus);
     window.addEventListener('custompushstate', handleUrlChangeAndSetStatus);
     window.addEventListener('customreplacestate', handleUrlChangeAndSetStatus);
-    
+
     // Initialize
     const initiallyCollapsed = localStorage.getItem(LS_COLLAPSE_KEY) === 'true';
     if (initiallyCollapsed) {
         togglePanelCollapse();
     }
-    
+
     loadSettings();
     handleUrlChangeAndSetStatus();
-    
+
     // Add cleanup on page unload
     window.addEventListener('beforeunload', () => {
         if (videoIntersectionObserver) {
             videoIntersectionObserver.disconnect();
         }
+        // Clear all timeouts
+        document.querySelectorAll('video.lazy-load-video').forEach(videoEl => {
+            if (videoEl.dataset.loadTimeout) {
+                clearTimeout(videoEl.dataset.loadTimeout);
+            }
+        });
     });
 
 })();

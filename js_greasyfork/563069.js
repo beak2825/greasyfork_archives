@@ -1,8 +1,12 @@
 // ==UserScript==
 // @name         C6 直播辅助
 // @namespace    ui-preview-enhanced
-// @version      1.3.6
-// @match        *://*/*
+// @version      2.9527.8192
+// @match        http*://*/htm_data/*/*/*
+// @match        http*://*/htm_mob/*/*/*
+// @match        http*://*/thread0806.php?*
+// @match        http*://*/read.php?*
+// @match        http*://*/index.php*
 // @description  C6 直播辅助+盘口助手+直播助手
 // @grant        GM_setClipboard
 // @grant        GM_xmlhttpRequest
@@ -19,6 +23,7 @@
   if (!window[NS]) window[NS] = {};
   const C6 = window[NS];
 
+  // =1. 全局配置 (CONFIG)= //
   C6.CONFIG = {
     HOURS_LIMIT: 24,
     DELAY: 500,
@@ -35,7 +40,8 @@
       HOME: /主隊|主队|主/,
       HANDICAP: /讓球|让球|让|讓|盘口|平局/,
       AWAY: /客隊|客队|客/,
-      IMG_MATCH: /賽馬|\[F1|波胆|分差/
+      IMG_MATCH: /賽馬|\[F1|波胆|分差/,
+      IS_OVER_UNDER: /总分|大小球|大小/
     },
     WORDS: {
       FINISHED: ['完', '完结', '结束'],
@@ -43,6 +49,7 @@
     }
   };
 
+  // =2. 本地存储管理 (Storage)= //
   C6.storage = (function () {
     function loadData(key, def) {
       try {
@@ -63,6 +70,7 @@
     return { loadData, saveData };
   })();
 
+  // =3. 状态管理 (State)= //
   C6.State = (function (CONFIG, storage) {
     return {
       panel: null,
@@ -82,18 +90,22 @@
     };
   })(C6.CONFIG, C6.storage);
 
+  // =4. 工具函数 (Utils)= //
   C6.utils = (function (CONFIG) {
     function escapeHtml(str) {
       if (!str && str !== 0) return '';
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
+
     function generateUUID() {
       if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        var r = Math.random() * 16 | 0, v = c === 'x' ?
+          r : (r & 0x3 | 0x8);
         return v.toString(16);
       });
     }
+
     function parseTimeStr(str) {
       if (!str) return null;
       str = String(str).trim();
@@ -103,30 +115,24 @@
         d.setHours(parts[0], parts[1], 0, 0);
         return d;
       }
-      if (/^\d{4}[-/]\d{1,2}[-/]\d{1,2}\s+\d{1,2}[:.]\d{1,2}$/.test(str) || /^\d{4}[-/]\d{1,2}[-/]\d{1,2}\s+\d{3,4}$/.test(str)) {
-        let s = str.replace(/-/g, '/').replace(/：/g, ':').replace(/[．。]/g, '.');
-        s = s.replace(/(\d{4}\/\d{1,2}\/\d{1,2})\s+(\d{3,4})$/, (_, d, hm) => {
-          const hh = hm.slice(0, hm.length - 2);
-          const mm = hm.slice(-2);
-          return `${d} ${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
-        });
-        const d = new Date(s);
-        return isNaN(d.getTime()) ? null : d;
-      }
-      const safe = str.replace(/-/g, '/');
+      const safe = str.replace(/[年月]/g, '-').replace(/日/g, '').replace(/：/g, ':').replace(/[．。]/g, '.');
       const d = new Date(safe);
       return isNaN(d.getTime()) ? null : d;
     }
+
     function parseDeadline(str) {
       if (!str) return null;
-      const m = String(str).match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})/);
+      const safeStr = String(str).replace(/(\d{4})年(\d{1,2})月(\d{1,2})日/g, '$1-$2-$3');
+      const m = safeStr.match(/(\d{4})-(\d{1,2})-(\d{1,2})\s+(\d{2}):(\d{2})/);
       if (m) {
         return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]), Number(m[4]), Number(m[5])).getTime();
       }
       return null;
     }
+
     function getDeadlinePlus15Min(deadlineTs) {
-      const d = deadlineTs ? new Date(deadlineTs + 15 * 60 * 1000) : new Date();
+      const d = deadlineTs ?
+        new Date(deadlineTs + 15 * 60 * 1000) : new Date();
       const y = d.getFullYear();
       const m = String(d.getMonth() + 1).padStart(2, '0');
       const day = String(d.getDate()).padStart(2, '0');
@@ -134,36 +140,56 @@
       const mm = String(d.getMinutes()).padStart(2, '0');
       return `${y}-${m}-${day} ${hh}:${mm}`;
     }
+
     function normalizeStartTime(str) {
       if (!str) return '';
       let s = String(str).trim();
+      s = s.replace(/(\d{4})年(\d{1,2})月(\d{1,2})日\s*(\d{1,2})[:：](\d{1,2})/, (m, y, M, d, h, min) => {
+        return `${y}-${String(M).padStart(2, '0')}-${String(d).padStart(2, '0')} ${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+      });
       s = s.replace(/：/g, ':').replace(/[．。]/g, '.');
       s = s.replace(/(\d{4}-\d{2}-\d{2})\s+(\d{2})(\d{2})$/, (_, d, h, m) => `${d} ${h}:${m}`);
       s = s.replace(/(\d{4}-\d{2}-\d{2})\s+(\d{1,2})[:.](\d{1,2})$/, (_, d, h, m) => `${d} ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
       return s;
     }
+
     function isValidStartTimeStrict(str) {
-      return /^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$/.test(String(str || ''));
+      return /^\d{4}-\d{1,2}-\d{1,2}\s+\d{2}:\d{2}$/.test(String(str || ''));
     }
+
     function extractFirstBracket(title) {
       if (!title) return '';
-      const m = String(title).match(/^\s*\[([^\]]+)\]/);
-      return m ? m[1] : '';
+      const s = String(title).trim();
+      if (s.indexOf('[對賭]') !== -1) {
+        const mOne = s.match(/^(\[[^\]]+\])/);
+        return mOne ? mOne[1].trim() : '';
+      }
+
+      if (s.indexOf('[開盤]') !== -1) {
+        const mTwo = s.match(/^(\[[^\]]+\]\s*\[[^\]]+\])/);
+        if (mTwo) return mTwo[1].trim();
+      }
+
+      const m = s.match(/^(\[[^\]]+\]\s*)+/);
+      return m ? m[0].trim() : '';
     }
+
     function extractTitleBrackets(title) {
       if (!title) return '';
-      const all = String(title).match(/\[[^\]]+]/g) || [];
-      if (!all.length) return '';
-      if (/[场次|場次]/.test(title) && all.length >= 2) return all[0] + all[1];
-      return all[0];
+      const m = String(title).match(/^(\[[^\]]+\]\s*)+/);
+      return m ? m[0].trim() : '';
     }
+
     function extractDeadlineTsFromTitle(title) {
       if (!title) return 0;
-      const m = title.match(/下注截止(?:时间|時間)[：:]\s*(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2})/);
+      let processedTitle = title.replace(/(\d{4})年(\d{1,2})月(\d{1,2})日/g, '$1-$2-$3');
+      const m = processedTitle.match(/下注截止(?:时间|時間)[：:]\s*(\d{4}-\d{1,2}-\d{1,2}\s+\d{2}:\d{2})/);
       if (!m) return 0;
-      const ts = Date.parse(m[1].replace(/-/g, '/'));
+      const dateStr = m[1].replace(/-/g, '/');
+      const ts = Date.parse(dateStr);
       return isNaN(ts) ? 0 : ts;
     }
+
     function sortPreviewDataByTitleDeadline() {
       C6.State.previewData.sort((a, b) => {
         const ta = extractDeadlineTsFromTitle(a.title);
@@ -182,6 +208,7 @@
     };
   })(C6.CONFIG);
 
+  // =5. 比赛逻辑 (Match Logic)= //
   C6.match = (function (CONFIG, utils) {
     function calcMatchStatus(m) {
       if (!m) return '未开赛';
@@ -191,7 +218,8 @@
       const started = !!(startTime && now >= startTime.getTime());
       const rawProgress = (m.progress || '').trim();
       const progress = rawProgress || '';
-      const urlStat = (m.scoreUrlStatus || '').trim();
+      const urlStat
+        = (m.scoreUrlStatus || '').trim();
 
       const manualTouched = m._manualProgress || m._manualScore || m._manualResult;
       const norm = s => (s == null ? '' : String(s).trim());
@@ -199,7 +227,8 @@
       const isExact = (val, arr) => {
         if (!val) return false;
         for (const x of (arr || [])) { if (eqIgnoreCase(val, x)) return true; }
-        return false;
+        return
+        false;
       };
 
       if (isExact(progress, CONFIG.WORDS.VOIDED)) return '走盘';
@@ -213,42 +242,51 @@
       if (!m) return '';
       if (m.isImageMatch) return '';
       if (m.status === '走盘') return '走盘';
-      if (m.homeScore === '' || m.awayScore === '' || m.homeScore == null || m.awayScore == null) return '';
-      const hs = Number(m.homeScore);
-      const as = Number(m.awayScore);
-      if (isNaN(hs) || isNaN(as)) return '';
+
+      let hs = Number(m.homeScore);
+      let as = Number(m.awayScore);
+
+      const isOverUnder = CONFIG.REGEX.IS_OVER_UNDER.test(m.league || '');
+      if (isOverUnder) {
+        if (m.homeScore !== '' && m.homeScore != null) {
+          if (m.awayScore === '' || m.awayScore == null) {
+            as = 0;
+          }
+        }
+      }
+
+      if (m.homeScore === '' || m.homeScore == null) return '';
+      if (!isOverUnder && (m.awayScore === '' || m.awayScore == null)) return '';
+      if (isNaN(hs)) hs = 0;
+      if (isNaN(as)) as = 0;
 
       const leagueText = m.league || '';
       const pk = String(m.handicap || '').trim();
-
-      // 大小球逻辑
-      if (/总分|大小球|大小/.test(leagueText) && /^(\d+(\.\d+)?)(\/\d+(\.\d+)?)?$/.test(pk)) {
+      if (isOverUnder && /^(\d+(\.\d+)?)(\/\d+(\.\d+)?)?$/.test(pk)) {
         const total = hs + as;
         const parts = pk.includes('/') ? pk.split('/').map(Number) : [Number(pk)];
         const bigTeam = m.home || '大球';
         const smallTeam = m.away || '小球';
-        // 不再前缀 [赔率]
         let bigWin = 0, smallWin = 0;
         parts.forEach(p => {
           if (total > p) bigWin++;
           else if (total < p) smallWin++;
         });
         if (bigWin === 0 && smallWin === 0) return '走盘';
-        if (bigWin > smallWin) return `${bigTeam}${bigWin < parts.length ? '（赢半）' : ''}`;
+        if (bigWin > smallWin) return `${bigTeam}${bigWin < parts.length ?
+          '（赢半）' : ''}`;
         if (smallWin > bigWin) return `${smallTeam}${smallWin < parts.length ? '（赢半）' : ''}`;
         return '';
       }
       return judgeHandicapResultWithHalf(m, hs, as);
     }
 
-    // 子盘口专用赛果计算（视为平手盘）
     function autoBuildSubResult(sub, mainM) {
       if (!sub) return '';
       if (sub.status === '走盘') return '走盘';
       const hs = Number(sub.homeScore);
       const as = Number(sub.awayScore);
       if (isNaN(hs) || isNaN(as)) return '';
-      // 子盘口不计算盘口，直接比较比分
       if (hs > as) return (mainM.home || '主队');
       if (as > hs) return (mainM.away || '客队');
       return '平';
@@ -256,13 +294,11 @@
 
     function judgeHandicapResultWithHalf(m, hs, as) {
       const line = String(m.handicap || '').trim();
-      if (!line && line !== '0') return ''; // 允许0盘口
+      if (!line && line !== '0') return '';
 
       const homeTeam = m.home || '主队';
       const awayTeam = m.away || '客队';
-      // 不再前缀 [赔率]
       const isHomeGive = line.startsWith('-');
-
       const raw = line.replace(/[+-]/g, '');
       const parts = raw.includes('/') ? raw.split('/').map(Number) : [Number(raw)];
       let homeWin = 0, awayWin = 0;
@@ -289,19 +325,56 @@
       if (m.status === '走盘') return '走';
       if (m.status === '已完结') {
         let r = (m.result || autoBuildResult(m) || '').trim();
+        if (r === '走盘') return '走';
         if (!r) return '*';
         const isHalf = /赢半/.test(r);
         const clean = r.replace(/（.*?）/g, '');
-        if (m.home && clean.includes(m.home)) return isHalf ? '主(半)' : '主';
-        if (m.away && clean.includes(m.away)) return isHalf ? '客(半)' : '客';
+        const isOverUnder = CONFIG.REGEX.IS_OVER_UNDER.test(m.league || '');
+
+        if (m.home && clean.includes(m.home)) {
+          if (isOverUnder) return isHalf ?
+            '大(半)' : '大';
+          return isHalf ? '主(半)' : '主';
+        }
+        if (m.away && clean.includes(m.away)) {
+          if (isOverUnder) return isHalf ?
+            '小(半)' : '小';
+          return isHalf ? '客(半)' : '客';
+        }
         return '*';
       }
       return '*';
     }
 
-    return { calcMatchStatus, autoBuildResult, autoBuildSubResult, judgeHandicapResultWithHalf, resultChar };
+    function processOverUnderLogic(matches) {
+      if (!matches || !matches.length) return;
+      for (let i = 0; i < matches.length; i++) {
+        const m = matches[i];
+        if (CONFIG.REGEX.IS_OVER_UNDER.test(m.league) && i > 0) {
+          const prevM = matches[i - 1];
+          if (!m.progress && prevM.progress) {
+            m.progress = prevM.progress;
+          }
+
+          if (prevM.homeScore !== '' && prevM.awayScore !== '' && prevM.homeScore != null && prevM.awayScore != null) {
+            const sum = (Number(prevM.homeScore) || 0) + (Number(prevM.awayScore) || 0);
+            if (m.homeScore != sum) {
+              m.homeScore = sum;
+              m.awayScore = '';
+            }
+          }
+
+          if (m.homeScore !== '' && m.homeScore != null) {
+            m.result = autoBuildResult(m);
+          }
+        }
+      }
+    }
+
+    return { calcMatchStatus, autoBuildResult, autoBuildSubResult, judgeHandicapResultWithHalf, resultChar, processOverUnderLogic };
   })(C6.CONFIG, C6.utils);
 
+  // =6. 数据抓取 (Fetcher)= //
   C6.fetcher = (function () {
     function fetchRawHTML(url) {
       return new Promise((resolve, reject) => {
@@ -322,12 +395,16 @@
             onerror: err => reject(err),
             ontimeout: () => reject(new Error('timeout'))
           });
-        } catch (e) { reject(e); }
+        } catch (e) {
+          reject(e);
+        }
       });
     }
+
     function checkUrlStatus(url) {
       return new Promise(resolve => {
-        if (!url || !/^https?:\/\//i.test(url)) { resolve(''); return; }
+        if (!url ||
+          !/^https?:\/\//i.test(url)) { resolve(''); return; }
         try {
           GM_xmlhttpRequest({
             method: 'GET', url: url, timeout: 5000,
@@ -338,11 +415,12 @@
         } catch (e) { resolve('异常'); }
       });
     }
+
     function fetchRandomPoem() {
       return new Promise(resolve => {
         try {
           GM_xmlhttpRequest({
-            method: 'GET', url: 'https://v1.jinrishici.com/rensheng.txt', timeout: 5000,
+            method: 'GET', url: 'https://v1.hitokoto.cn/?encode=text&c=a&c=b&c=c&c=d&c=e&c=f&c=g&c=h&c=i&c=j&c=k&c=l', timeout: 5000,
             onload: res => {
               const text = (res.responseText || '').trim();
               resolve(text.replace(/\s+/g, ' '));
@@ -356,6 +434,7 @@
     return { fetchRawHTML, checkUrlStatus, fetchRandomPoem };
   })();
 
+  // =7. 解析器 (Parser)= //
   C6.parser = (function (utils, CONFIG) {
     function extractTidsFromTodayHTML(html) {
       const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -368,7 +447,7 @@
         const tdTal = tr.querySelector('td.tal');
         if (!tdTal) return;
         const typeText = tdTal.textContent || '';
-        if (!/\[(開盤|对赌)\]/.test(typeText)) return;
+        if (!/\[(開盤|對賭)\]/.test(typeText)) return;
         const timeEl = tr.querySelector('span[data-timestamp]');
         if (!timeEl) return;
         const ts = parseInt((timeEl.dataset.timestamp || '').replace(/\D/g, ''), 10);
@@ -390,6 +469,7 @@
       });
       return list;
     }
+
     function parseReadPageMeta(html) {
       const doc = new DOMParser().parseFromString(html, 'text/html');
       const meta = { title: '', author: '', deadline: null };
@@ -406,6 +486,7 @@
       }
       return meta;
     }
+
     function extractRawTablesFromHTML(html) {
       const doc = new DOMParser().parseFromString(html, 'text/html');
       const contentDiv = doc.querySelector('#conttpc');
@@ -426,6 +507,7 @@
             else if (CONFIG.REGEX.HANDICAP.test(text)) role = 'handicap';
             else if (CONFIG.REGEX.AWAY.test(text)) role = 'away';
           }
+
           return { index: i, text, role };
         });
         if (!headers.some(h => h.role === 'home') || !headers.some(h => h.role === 'away')) return;
@@ -440,7 +522,8 @@
         rawTables.push({ tableIndex, headers, rows, rawHTML: table.outerHTML });
       });
       if (rawTables.length === 0) {
-        const contentDivText = contentDiv.textContent || '';
+        const contentDivText = contentDiv.textContent ||
+          '';
         const hasKeyword = (CONFIG && CONFIG.REGEX && CONFIG.REGEX.IMG_MATCH.test(contentDivText));
         const img = contentDiv.querySelector('img[data-link]');
         if (hasKeyword && img) {
@@ -450,11 +533,11 @@
       }
       return rawTables;
     }
+
     function rawTablesToMatches(rawTables, title) {
       const items = [];
       const titleDeadlineTs = utils.extractDeadlineTsFromTitle(title);
       const defaultStartTime = utils.getDeadlinePlus15Min(titleDeadlineTs);
-
       if (rawTables.length === 1 && rawTables[0].isImage) {
         items.push({
           _mid: utils.generateUUID(), isImageMatch: true, league: '图片盘口',
@@ -464,7 +547,6 @@
         return items;
       }
       const parseTeamCell = (rawText) => {
-        // [修正] 不再拆分赔率，直接返回原始文本作为队名
         return { odd: '', name: String(rawText || '').trim() };
       };
       rawTables.forEach(rt => {
@@ -473,18 +555,22 @@
           row.forEach(cell => {
             if (cell.role === 'league') league = cell.text;
             else if (cell.role === 'time') rawTime = cell.text;
-            else if (cell.role === 'home') homeRaw = cell.text;
-            else if (cell.role === 'handicap') handicap = cell.text;
-            else if (cell.role === 'away') awayRaw = cell.text;
+            else
+              if (cell.role === 'home') homeRaw = cell.text;
+              else if (cell.role === 'handicap') handicap = cell.text;
+              else if (cell.role === 'away') awayRaw = cell.text;
           });
           if (!homeRaw && !awayRaw && !league) return;
           const homeObj = parseTeamCell(homeRaw);
           const awayObj = parseTeamCell(awayRaw);
+
+          const formattedTime = utils.normalizeStartTime(rawTime) || defaultStartTime;
+
           items.push({
             _mid: utils.generateUUID(),
             league, home: homeObj.name, homeOdd: '', handicap,
             away: awayObj.name, awayOdd: '',
-            startTime: rawTime || defaultStartTime, status: '未开赛',
+            startTime: formattedTime, status: '未开赛',
             roundTag: utils.extractFirstBracket(title)
           });
         });
@@ -494,6 +580,7 @@
     return { extractTidsFromTodayHTML, parseReadPageMeta, extractRawTablesFromHTML, rawTablesToMatches };
   })(C6.utils, C6.CONFIG);
 
+  // =8. 数据操作 (Data Actions)= //
   C6.dataActions = (function (State, parser, fetcher, utils, storage, CONFIG, match) {
     async function rebuildTodayOddsLogic() {
       State.previewData.length = 0;
@@ -509,15 +596,17 @@
       }
       const tids = parser.extractTidsFromTodayHTML(listHtml);
       if (!tids.length) {
-        alert('未抓取到符合条件(类别/时间)的今日 TID');
+        alert('未抓取到符合条件(类别/时间)的今日Tid');
         return;
       }
       for (const item of tids) {
         try {
-          const readHtml = await fetcher.fetchRawHTML(`/read.php?tid=${item.tid}&toread=1`);
+          const readHtml = await
+            fetcher.fetchRawHTML(`/read.php?tid=${item.tid}&toread=1`);
           const meta = parser.parseReadPageMeta(readHtml);
           const rawTables = parser.extractRawTablesFromHTML(readHtml);
           const unifiedItems = parser.rawTablesToMatches(rawTables, meta.title);
+          match.processOverUnderLogic(unifiedItems);
           State.previewData.push({
             tid: item.tid, title: meta.title, author: meta.author || item.author || '未知',
             deadline: meta.deadline || item.deadline, extra: { items: unifiedItems }
@@ -539,12 +628,14 @@
         const meta = parser.parseReadPageMeta(html);
         const rawTables = parser.extractRawTablesFromHTML(html);
         const matches = parser.rawTablesToMatches(rawTables, meta.title || item.title);
+        match.processOverUnderLogic(matches);
+
         item.extra.items = matches;
         storage.saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
         const ev = new Event('render-preview');
         window.dispatchEvent(ev);
       } catch (e) {
-        alert(`TID ${tid} 刷新失败`);
+        alert(`Tid ${tid} 刷新失败`);
       }
     }
 
@@ -555,7 +646,7 @@
       let manualInput = null;
       let manualTitle = null;
       if (!tid) {
-        tid = prompt("无法获取当前TID，请输入TID：", "");
+        tid = prompt("无法获取当前Tid，请输入Tid：", "");
         if (!tid) {
           manualTitle = prompt("请输入标题：", "手动添加比赛");
           if (!manualTitle) return;
@@ -566,7 +657,7 @@
         }
       }
       if (State.previewData.find(d => String(d.tid) === String(tid))) {
-        alert('该 TID 已存在列表中！');
+        alert('该 Tid 已存在列表中！');
         return;
       }
       if (manualInput) {
@@ -581,7 +672,6 @@
             startTime: defaultStartTime, status: '未开赛', _isManual: true, roundTag: ''
           });
         } else {
-          // [修正] 弱化正则匹配，不再强行拆分[0.95]，而是整体匹配
           const regex = /^(.*?)\s+([+-]?\d+(?:\.\d+)?(?:\/[+-]?\d+(?:\.\d+)?)?)\s+(.*)$/;
           const mm = manualInput.match(regex);
           if (mm) {
@@ -592,7 +682,6 @@
               startTime: defaultStartTime, status: '未开赛', _isManual: true, roundTag: ''
             });
           } else {
-            // 如果完全不匹配格式，就整个当做主队，其他留空
             matches.push({
               _mid: uuid, league: '手动',
               home: manualInput, homeOdd: '', handicap: '', away: '', awayOdd: '',
@@ -600,6 +689,7 @@
             });
           }
         }
+        match.processOverUnderLogic(matches);
         State.previewData.push({
           tid: String(tid), title: manualTitle || `手动 ${tid}`, author: '手动',
           deadline: deadlineTs, extra: { items: matches }
@@ -610,8 +700,9 @@
           const meta = parser.parseReadPageMeta(html);
           const rawTables = parser.extractRawTablesFromHTML(html);
           const matches = parser.rawTablesToMatches(rawTables, meta.title);
+          match.processOverUnderLogic(matches);
           State.previewData.push({
-            tid: String(tid), title: meta.title || `TID ${tid}`, author: meta.author || '未知',
+            tid: String(tid), title: meta.title || `Tid ${tid}`, author: meta.author || '未知',
             deadline: meta.deadline, extra: { items: matches }
           });
         } catch (e) {
@@ -627,10 +718,18 @@
     return { rebuildTodayOddsLogic, refreshSingleTid, addCurrentPageSmart };
   })(C6.State, C6.parser, C6.fetcher, C6.utils, C6.storage, C6.CONFIG, C6.match);
 
+  // =9. 辅助功能 (Aux Actions)= //
   C6.auxActions = (function (State, utils, match, storage, CONFIG, fetcher) {
     async function buildAutoPostTitle() {
       const dateStr = (State.previewPanel && State.previewPanel.querySelector('#liveDateInput')?.value) || '';
-      const poem = await fetcher.fetchRandomPoem();
+      const randomTitleCheckbox = document.getElementById('chk_random_title');
+      const useRandomPoem = randomTitleCheckbox ? randomTitleCheckbox.checked : true;
+
+      let poem = '';
+      if (useRandomPoem) {
+        poem = await fetcher.fetchRandomPoem();
+      }
+
       const parts = [];
       State.previewData.forEach(item => {
         const tag = utils.extractTitleBrackets(item.title);
@@ -645,63 +744,68 @@
 
     function buildLiveReplyHeader(m) {
       const round = m.roundTag ? `[${m.roundTag}]` : '';
-      const league = m.league ? `[${m.league}]` : '';
+      const league = m.league ?
+        `[${m.league}]` : '';
       return round + league;
     }
 
-    // 生成直播回复：主盘 + 子盘
     function buildLiveReplyBBCode(m) {
       if (m.isImageMatch) {
         return `[img]${m.home}[/img]\n状态：${m.status}`;
       }
-      // [修正] 移除 homeOdd/awayOdd 单独处理，直接使用 home/away
       const homeVal = m.home || '';
       const awayVal = m.away || '';
       const homeScore = m.homeScore ?? '';
       const awayScore = m.awayScore ?? '';
-
+      const hasAwayScore = (awayScore !== '' && awayScore != null);
       let text = (
         `[color=green]${homeVal}[/color]　` +
         `[color=#FF6600]${m.handicap || ''}[/color]　` +
         `[color=green]${awayVal}[/color] ` +
         `[color=orange]${m.progress || ''}[/color]\n` +
         `[size=4]` +
-        `[backcolor=blue][color=white]　${homeScore}　[/color][/backcolor]` +
-        `　-　` +
-        `[backcolor=blue][color=white]　${awayScore}　[/color][/backcolor]` +
-        `[/size]`
+        `[backcolor=blue][color=white]　${homeScore}　[/color][/backcolor]`
       );
+      if (hasAwayScore) {
+        text += `　-　[backcolor=blue][color=white]　${awayScore}　[/color][/backcolor]`;
+      }
 
-      // 如果有子盘口，追加子盘口信息
+      text += `[/size]`;
+
       if (m.subMatches && m.subMatches.length > 0) {
         m.subMatches.forEach(sub => {
           const subHs = sub.homeScore || '0';
           const subAs = sub.awayScore || '0';
           text += `\n${sub.league || '分盘'} ${subHs}-${subAs}`;
         });
-        text += '\n'; // 尾部换行分隔
+        text += '\n';
       }
-
       return text;
     }
 
-    function generateLiveReplyText(matchList) {
-      const groups = new Map();
-      matchList.forEach(m => {
-        const header = buildLiveReplyHeader(m);
-        if (!groups.has(header)) groups.set(header, []);
-        groups.get(header).push(m);
-      });
+    function generateLiveReplyText(previewData) {
       const out = [];
-      groups.forEach((matches, header) => {
-        out.push(header);
-        matches.forEach(m => out.push(buildLiveReplyBBCode(m)));
+      previewData.forEach(item => {
+        const validMatches = (item.extra.items || []).filter(m => m.status === '自动' || m.status === '手动');
+        if (validMatches.length === 0) return;
+
+        const tag = utils.extractFirstBracket(item.title);
+
+        if (tag) {
+          out.push(tag);
+        }
+
+        validMatches.forEach(m => {
+          if (m.homeScore === '' || m.homeScore == null) return;
+          out.push(buildLiveReplyBBCode(m));
+        });
       });
       return out.join('\n');
     }
 
     function buildTidTitle(item) {
-      const d = item.deadline ? new Date(item.deadline) : null;
+      const d = item.deadline ?
+        new Date(item.deadline) : null;
       const ym = d ? String(d.getFullYear()).slice(2) + String(d.getMonth() + 1).padStart(2, '0') : '';
       let body = (item.title || '').replace(/^Tid：\d+\s*/i, '').replace(/@\S+$/, '').trim();
       if (body.indexOf('[') !== -1) body = body.slice(body.indexOf('['));
@@ -709,7 +813,8 @@
     }
 
     function buildOddsBBCode(item) {
-      const matches = item.extra.items || [];
+      const matches = item.extra.items ||
+        [];
       if (!matches.length) return '';
       const tidTitle = buildTidTitle(item);
       const tidTag = (tidTitle.match(/^\[tid=[^\]]+\][^\[]+\[\/tid\]/) || [''])[0];
@@ -725,7 +830,6 @@
         const n = idx + 1;
         const timeText = m.startTime || `${item.date || ''} 待定${n}`;
         const leagueText = m.league || '';
-        // [修正] 移除 homeOdd 处理
         const homeText = m.home || '';
         const awayText = m.away || '';
         const handicapText = m.handicap || '';
@@ -733,12 +837,25 @@
         let scoreText = `比分${n}`;
         let winText = `赢盘${n}`;
 
-        // 只有完结或走盘才显示比分和赛果
-        if (m.status === '已完结' || m.status === '走盘') {
-          scoreText = (m.homeScore !== '' && m.awayScore !== '') ? `${m.homeScore}:${m.awayScore}` : `比分${n}`;
-          winText = m.result || match.autoBuildResult(m) || `赢盘${n}`;
-        }
+       if (m.status === '已完结' || m.status === '走盘') {
+          if (m.status === '走盘') {
+            scoreText = m.progress || '走盘';
+            winText = '走盘';
+          } else {
+            const isOverUnder = CONFIG.REGEX.IS_OVER_UNDER.test(leagueText);
+            const hasHome = (m.homeScore !== '' && m.homeScore != null);
+            const hasAway = (m.awayScore !== '' && m.awayScore != null);
 
+            if (hasHome && hasAway) {
+              scoreText = `${m.homeScore}:${m.awayScore}`;
+            } else if (isOverUnder && hasHome) {
+              scoreText = `${m.homeScore}`;
+            } else {
+              scoreText = `比分${n}`;
+            }
+            winText = m.result || match.autoBuildResult(m) || `赢盘${n}`;
+          }
+        }
         bb += `[tr]` +
           `[td][align=center][b][color=green][size=3]${timeText}\n[/size][/color][/b][/align][/td]` +
           `[td][align=center][b][color=orange][size=3]${leagueText}\n[/size][/color][/b][/align][/td]` +
@@ -754,18 +871,7 @@
 
     async function updateAuxDataSmart(forceReply = false) {
       if (forceReply) {
-        const matchList = [];
-        State.previewData.forEach(item => {
-          const all = item.extra.items || [];
-          all.forEach(m => {
-            // 只有 自动 或 手动 状态的盘口才生成直播回复
-            if (m.status === '自动' || m.status === '手动') {
-              if (!m.roundTag && item.title) m.roundTag = utils.extractFirstBracket(item.title);
-              matchList.push(m);
-            }
-          });
-        });
-        const replyText = generateLiveReplyText(matchList);
+        const replyText = generateLiveReplyText(State.previewData);
         State.auxData.reply = replyText;
       }
       const content = State.previewData.map(item => buildOddsBBCode(item)).join('\n\n');
@@ -776,6 +882,7 @@
     return { buildAutoPostTitle, buildLiveReplyHeader, buildLiveReplyBBCode, generateLiveReplyText, buildTidTitle, buildOddsBBCode, updateAuxDataSmart };
   })(C6.State, C6.utils, C6.match, C6.storage, C6.CONFIG, C6.fetcher);
 
+  // =10. 用户界面 (UI)= //
   C6.ui = (function (State, storage, CONFIG, utils, dataActions, auxActions, match, fetcher) {
 
     function buildClickableTidTag(text, tid) {
@@ -810,28 +917,90 @@
       if (State.panel) return;
       const style = document.createElement('style');
       style.textContent = `
-        #__c6_float_btn, .preview-panel, .live-content, .tid-block, .odds-table, .odds-table input, .odds-table select, .odds-table textarea { box-sizing: border-box; }
-        .c6-tid-tag { background: #e5e5e5; color: #333; padding: 2px 6px; border-radius: 6px; font-size: 12px; font-weight: bold; display: inline-block; white-space: nowrap; }
-        .odds-table { table-layout: fixed; width: 100%; border-collapse: collapse; font-size: 12px; }
-        .odds-table th, .odds-table td { padding: 6px 6px; vertical-align: middle; text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        .odds-table .col-status { width: 70px; }
-        .odds-table .col-time { width: 120px; }
-        .odds-table .col-league { width: 140px; text-align: left; padding-left: 8px; }
-        .odds-table .col-score { width: 48px; }
-        .odds-table .col-progress { width: 60px; }
-        .odds-table .col-result { width: 120px; }
-        .odds-table .col-score-url { width: 160px; }
-        .odds-table input, .odds-table select, .odds-table textarea { width: 100%; max-width: 100%; padding: 4px 6px; font-size: 12px; border: 1px solid #ddd; background: #fff; }
-        .col-score-url { display: flex; gap: 6px; align-items: center; justify-content: center; padding: 4px; }
-        .col-score-url .sel-score-site { flex: 0 0 110px; min-width: 90px; }
-        .col-score-url .ipt-score-manual { flex: 1 1 auto; display: none; }
-        .col-score-url.manual-mode .sel-score-site { display: none; }
-        .col-score-url.manual-mode .ipt-score-manual { display: block; }
-        .edit-ctrl-btn, .preview-header-btn, .aux-btn-group button { display: inline-flex; align-items: center; justify-content: center; gap: 4px; padding: 4px 8px; white-space: nowrap; height: 28px; line-height: 1; border-radius: 4px; cursor: pointer; }
-        .tid-block > div:first-child { display: flex; align-items: center; gap: 8px; padding: 8px; }
-        @media (max-width: 900px) {
-          .preview-panel, .live-panel { width: calc(100vw - 20px); left: 10px; transform: none; }
-          .odds-table { display: block; overflow-x: auto; white-space: nowrap; }
+        /* ===== 基础样式 ===== */
+        .c6-panel {
+          position: fixed;
+          top: 10px; right: 10px; z-index: 99999;
+          background: #fff; border: 1px solid #ccc; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+          border-radius: 4px;
+          font-family: sans-serif; font-size: 12px; color: #333;
+          max-height: 90vh; display: flex; flex-direction: column; width: auto; max-width: 1000px;
+        }
+        .c6-panel-content { padding: 0; overflow-y: auto; overflow-x: auto; flex-grow: 1;
+        }
+
+        /* ===== 表格样式 ===== */
+        .odds-table { width: 100%;
+          border-collapse: collapse; min-width: 600px; table-layout: fixed; }
+        .odds-table th, .odds-table td { padding: 6px 8px;
+          border-bottom: 1px solid #eee; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .odds-table th { background: #fafafa; position: sticky; top: 0; z-index: 10;
+        }
+        .odds-table tr:hover { background: #f0f8ff;
+        }
+
+        /* ===== [可配置] 列宽定义区 ===== */
+        .col-status     { width: 60px;
+        }
+        .col-time       { width: 120px;
+        }
+        .col-league     { width: 100px;
+        }
+        .col-home       { width: 120px;
+        }
+        .col-handicap   { width: 60px;
+        }
+        .col-away       { width: 120px;
+        }
+        .col-progress   { width: 80px;
+        }
+        .col-score      { width: 40px;
+        }
+        .col-result     { width: 100px;
+        }
+        .col-url-status { width: 40px;
+        }
+        .col-score-url  { width: 70px;
+        }
+        .col-op         { width: 80px;
+        }
+
+        /* 列具体样式 */
+        .col-league { color: #666;
+        }
+        .col-time { color: #888;
+        }
+        .col-home, .col-away { font-weight: bold;
+        }
+        .col-home { text-align: right;
+        }
+        .col-away { text-align: left;
+        }
+        .col-score { font-weight: bold; color: #d00;
+        }
+        .col-handicap { color: #007bff;
+        }
+
+        /* 输入框适配 */
+        .odds-table input { width: 100%;
+          box-sizing: border-box; text-align: center; }
+        .ipt-home { text-align: right !important;
+        }
+        .ipt-away { text-align: left !important;
+        }
+
+        /* 移动端适配 */
+        @media screen and (max-width: 768px) {
+            .c6-panel { top: 0 !important;
+              right: 0 !important; left: 0 !important; bottom: 0 !important; width: 100% !important; max-width: 100% !important; max-height: 100vh !important; border-radius: 0;
+            }
+            .c6-panel-content { padding-bottom: 50px;
+            }
+            .odds-table { width: max-content !important; min-width: 100%;
+            }
+            .col-home, .col-away { min-width: 90px !important;
+              white-space: normal !important; }
         }
       `;
       document.head.appendChild(style);
@@ -840,24 +1009,38 @@
         position: 'fixed', right: '20px', top: '20px', width: '380px', background: '#f9f9f9',
         border: '1px solid #999', fontSize: '13px', zIndex: 999998, display: 'none', boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
       });
-      const renderInputBlock = (label, key) => `
+      if (window.innerWidth < 600) {
+        State.panel.style.width = '90%';
+        State.panel.style.right = '5%';
+      }
+
+      const renderInputBlock = (label, key, extraHtml = '') => `
         <div style="padding:6px;border-bottom:1px solid #ddd;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-            <b>${label}</b>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <div style="display:flex;align-items:center;">
+                <b>${label}</b>
+                ${extraHtml}
+              </div>
             <div class="aux-btn-group" data-key="${key}">
+              <button data-action="clear" style="margin-right:2px;color:red;">清除</button>
               <button data-action="load">刷新</button>
               <button data-action="copy">复制</button>
             </div>
           </div>
-          <textarea id="aux_${key}" style="width:100%;height:50px;resize:vertical;">${State.auxData[key] || ''}</textarea>
+          <textarea id="aux_${key}" style="width:100%;height:50px;resize:vertical;">${State.auxData[key] ||
+        ''}</textarea>
         </div>
       `;
       State.panel.innerHTML = `
-        <div style="padding:8px;font-weight:bold;background:#ddd;border-bottom:1px solid #aaa;">直播辅助控制台</div>
-        ${renderInputBlock('发帖标题', 'title')}
+        <div style="padding:8px;font-weight:bold;background:#ddd;border-bottom:1px solid #aaa;display:flex;justify-content:space-between;">
+            <span>直播辅助控制台</span>
+            <button onclick="this.parentElement.parentElement.style.display='none'" style="font-size:16px;">×</button>
+        </div>
+        ${renderInputBlock('发帖标题', 'title', '<label style="margin-left:10px;font-weight:normal;"><input type="checkbox" id="chk_random_title" checked> 随机诗句</label>')}
         ${renderInputBlock('发帖内容', 'content')}
         ${renderInputBlock('直播回复', 'reply')}
-        <div style="padding:8px;border-bottom:1px solid #ddd;display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
+       <div style="padding:8px;border-bottom:1px solid #ddd;display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
+
           <div>每 <input id="refreshSec" type="number" value="${State.auxConfig.refreshSec}" style="width:70px;text-align:center;"> 秒自动刷新</div>
           <button disabled style="padding:2px 10px;">停止</button><button disabled style="padding:2px 10px;">运行</button>
           <div style="width:100%;height:1px;"></div>
@@ -865,8 +1048,8 @@
           <button disabled style="padding:2px 10px;">停止</button><button disabled style="padding:2px 10px;">运行</button>
         </div>
         <div style="padding:8px;display:flex;gap:8px;">
-          <button data-action="open-preview" style="flex:1;padding:8px;background:#17a2b8;color:white;border:none;cursor:pointer;">打开盘口助手</button>
-          <button data-action="open-live-from-panel" style="flex:1;padding:8px;background:#6f42c1;color:white;border:none;cursor:pointer;">打开直播助手</button>
+          <button data-action="open-preview" style="flex:1;padding:8px;background:#17a2b8;color:white;border:none;cursor:pointer;border-radius:4px;">打开盘口助手</button>
+          <button data-action="open-live-from-panel" style="flex:1;padding:8px;background:#6f42c1;color:white;border:none;cursor:pointer;border-radius:4px;">打开直播助手</button>
         </div>
       `;
       State.panel.addEventListener('click', (e) => {
@@ -877,7 +1060,15 @@
           const group = btn.closest('.aux-btn-group');
           const key = group.dataset.key;
           const textarea = State.panel.querySelector(`#aux_${key}`);
-          if (btn.dataset.action === 'load') {
+
+          if (btn.dataset.action
+            === 'clear') {
+            if (textarea) {
+              textarea.value = '';
+              State.auxData[key] = '';
+              storage.saveData(CONFIG.KEYS.AUX_DATA, State.auxData);
+            }
+          } else if (btn.dataset.action === 'load') {
             (async () => {
               let result = '';
               if (key === 'title') {
@@ -885,17 +1076,7 @@
               } else if (key === 'content') {
                 result = State.previewData.map(item => auxActions.buildOddsBBCode(item)).join('\n\n');
               } else if (key === 'reply') {
-                const matchList = [];
-                State.previewData.forEach(item => {
-                  const all = item.extra.items || [];
-                  all.forEach(m => {
-                    if (m.status === '自动' || m.status === '手动') {
-                      if (!m.roundTag && item.title) m.roundTag = utils.extractFirstBracket(item.title);
-                      matchList.push(m);
-                    }
-                  });
-                });
-                result = auxActions.generateLiveReplyText(matchList);
+                result = auxActions.generateLiveReplyText(State.previewData);
               }
               if (result !== undefined) {
                 textarea.value = result;
@@ -904,7 +1085,10 @@
               }
             })();
           } else if (btn.dataset.action === 'copy') {
-            if (textarea) { textarea.select(); document.execCommand('copy'); }
+            if (textarea) {
+              textarea.select();
+              document.execCommand('copy');
+            }
           }
           return;
         }
@@ -951,11 +1135,14 @@
             <button class="preview-header-btn" data-action="add-page">添加本页</button>
             <span style="border-left:1px solid #ccc;margin:0 6px;"></span>
             <button class="preview-header-btn" data-action="reload-ui">刷新界面</button>
-            <button class="preview-header-btn" style="background:#28a745;color:white;" data-action="save-all">保存全部</button>
-            <button class="preview-header-btn" style="background:#6f42c1;color:white;" data-action="open-live">打开直播助手</button>
+            <button class="preview-header-btn" style="background:#28a745;color:white;"
+                data-action="save-all">保存全部</button>
+            <button class="preview-header-btn" style="background:#6f42c1;color:white;"
+                data-action="open-live">打开直播助手</button>
           </div>
           <div style="margin-left:auto;">
-            <button class="preview-header-btn" style="background:#dc3545;color:white;" data-action="close-preview">关闭</button>
+            <button class="preview-header-btn" style="background:#dc3545;color:white;"
+                data-action="close-preview">关闭</button>
           </div>
         </div>`;
       State.previewPanel.appendChild(header);
@@ -966,7 +1153,8 @@
 
       const scoreMgr = document.createElement('div');
       scoreMgr.id = 'scoreManager';
-      scoreMgr.style.cssText = `display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:520px; max-width:90vw; background:white; border:1px solid #888; padding:12px; box-shadow:0 8px 25px rgba(0,0,0,0.35); z-index:1000000; border-radius:6px;`;
+      scoreMgr.style.cssText = `display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:520px; max-width:90vw; background:white; border:1px solid #888; padding:12px; box-shadow:0 8px 25px rgba(0,0,0,0.35); z-index:1000000;
+        border-radius:6px;`;
       scoreMgr.innerHTML = `
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
           <strong>比分地址管理</strong>
@@ -1030,13 +1218,15 @@
     }
 
     class SubMatchManager {
-      static init(match) { if (!match.subMatches) match.subMatches = []; }
+      static init(match) { if (!match.subMatches) match.subMatches = [];
+      }
       static add(match) {
         this.init(match);
         const newSub = {
           _sid: (typeof utils !== 'undefined' && utils.generateUUID) ?
             utils.generateUUID() : (typeof crypto !== 'undefined' ? crypto.randomUUID() : Math.random().toString(36).slice(2)),
-          status: match.status || '未开赛',
+          status: match.status ||
+            '未开赛',
           league: `第${match.subMatches.length + 1}盘`,
           home: match.home,
           away: match.away,
@@ -1048,27 +1238,33 @@
         return newSub;
       }
 
-      // 生成子盘口行HTML - 适配主表列布局以支持完全编辑
       static createRowHTML(tidIdx, matchIdx, sub, subIdx, isEditMode) {
+        const roAttr = isEditMode ?
+          '' : 'readonly style="background:#f9f9f9;color:#666;"';
+
         return `
           <tr class="sub-match-row" data-tid-idx="${tidIdx}" data-match-idx="${matchIdx}" data-sub-idx="${subIdx}">
             <td>
                <div style="display:flex;align-items:center;">
                   <span style="color:#888;margin-right:2px;">↳</span>
                   <select class="ipt-status" style="flex:1;min-width:0;">
-                    ${['自动','手动','未开赛','已完结','走盘'].map(v => `<option value="${v}" ${v === sub.status ? 'selected' : ''}>${v}</option>`).join('')}
+                     ${['自动','手动','未开赛','已完结','走盘'].map(v => `<option value="${v}" ${v === sub.status ? 'selected' : ''}>${v}</option>`).join('')}
                   </select>
                </div>
             </td>
             <td><input class="ipt-time" value="${sub.startTime || ''}"></td>
-            <td><input class="ipt-league" value="${sub.league || `第${subIdx + 1}盘`}"></td>
-            <td><input class="ipt-home" value="${sub.home || ''}"></td>
-            <td><input class="ipt-handicap" value="${sub.handicap || ''}"></td>
-            <td><input class="ipt-away" value="${sub.away || ''}"></td>
-            <td><input class="ipt-progress" value="${sub.progress || ''}"></td>
-            <td><input class="ipt-hscore" value="${sub.homeScore || ''}"></td>
-            <td><input class="ipt-ascore" value="${sub.awayScore || ''}"></td>
-            <td><input class="ipt-result" value="${sub.result || ''}"></td>
+            <td><input class="ipt-league" value="${sub.league || `第${subIdx + 1}盘`}" ${roAttr}></td>
+            <td><input class="ipt-home" value="${sub.home || ''}" ${roAttr}></td>
+            <td><input class="ipt-handicap" value="${sub.handicap || ''}" ${roAttr}></td>
+            <td><input class="ipt-away" value="${sub.away || ''}" ${roAttr}></td>
+            <td><input class="ipt-progress" value="${sub.progress ||
+              ''}"></td>
+            <td><input class="ipt-hscore" value="${sub.homeScore ||
+              ''}"></td>
+            <td><input class="ipt-ascore" value="${sub.awayScore ||
+              ''}"></td>
+            <td><input class="ipt-result" value="${sub.result ||
+              ''}"></td>
             <td></td>
             <td>
               ${isEditMode ? `<button data-action="del-sub-match" style="color:red;">删</button>` : ''}
@@ -1086,7 +1282,10 @@
             <td>
               <select class="ipt-status">
                 <option value="未开赛" ${m.status === '未开赛' ? 'selected' : ''}>未开赛</option>
-                <option value="已完结" ${m.status === '已完结' ? 'selected' : ''}>已完结</option>
+                <option value="已完结" ${m.status === '已完结' ?
+            'selected'
+            :
+            ''}>已完结</option>
                 <option value="走盘" ${m.status === '走盘' ? 'selected' : ''}>走盘</option>
               </select>
             </td>
@@ -1105,6 +1304,7 @@
       });
       siteOpts += `<option value="__manual__">手动输入</option>`;
 
+      const roAttr = 'data-lock="' + (State.isEditMode ? '0' : '1') + '"';
       let html = `
         <tr class="main-match-row" data-idx="${matchIdx}">
           <td>
@@ -1113,18 +1313,20 @@
             </select>
           </td>
           <td><input class="ipt-time" value="${m.startTime || ''}"></td>
-          <td><input class="ipt-league" value="${m.league || ''}"></td>
-          <td><input class="ipt-home" value="${homeVal}"></td>
-          <td><input class="ipt-handicap" value="${m.handicap || ''}"></td>
-          <td><input class="ipt-away" value="${awayVal}"></td>
+          <td><input class="ipt-league" value="${m.league || ''}" ${roAttr}></td>
+          <td><input class="ipt-home" value="${homeVal}" ${roAttr}></td>
+          <td><input class="ipt-handicap" value="${m.handicap || ''}" ${roAttr}></td>
+          <td><input class="ipt-away" value="${awayVal}" ${roAttr}></td>
           <td><input class="ipt-progress" value="${m.progress || ''}"></td>
           <td><input class="ipt-hscore" value="${m.homeScore || ''}"></td>
           <td><input class="ipt-ascore" value="${m.awayScore || ''}"></td>
           <td><input class="ipt-result" value="${m.result || ''}"></td>
-          <td><input class="ipt-score-url-status" value="${m.scoreUrlStatus || ''}"></td>
+          <td><input class="ipt-score-url-status" value="${m.scoreUrlStatus ||
+        ''}"></td>
           <td class="col-score-url">
             <select class="sel-score-site">${siteOpts}</select>
-            <input class="ipt-score-manual" value="${m.scoreUrl || ''}" placeholder="http://.">
+            <input class="ipt-score-manual" value="${m.scoreUrl ||
+        ''}" placeholder="http://.">
           </td>
           ${State.isEditMode ? `<td><button data-action="add-sub-match" style="color:blue;">分</button><button data-action="match-del" style="color:red;">删</button><button data-action="url-test" style="color:green;">测</button></td>` : `<td></td>`}
         </tr>
@@ -1169,15 +1371,18 @@
             <button class="edit-ctrl-btn" data-action="tid-up">↑</button>
             <button class="edit-ctrl-btn" data-action="tid-down">↓</button>
             <button class="edit-ctrl-btn" data-action="tid-batch-sub" style="color:#007bff;">分</button>
-            <button class="edit-ctrl-btn" style="color:red;" data-action="tid-del">删</button>
-            <button class="edit-ctrl-btn" style="color:green;" data-action="tid-test">测</button>
+            <button class="edit-ctrl-btn" style="color:red;"
+                data-action="tid-del">删</button>
+            <button class="edit-ctrl-btn" style="color:green;"
+                data-action="tid-test">测</button>
           `;
           header.appendChild(ctrl);
         }
         block.appendChild(header);
 
         const allMatches = item.extra.items || [];
-        let rowsHtml = allMatches.length === 0 ? `<tr><td colspan="13" style="padding:10px;color:#999;">无盘口数据</td></tr>` : allMatches.map((m, mIdx) => createMatchRowHTML(m, index, mIdx)).join('');
+        let rowsHtml = allMatches.length === 0 ?
+          `<tr><td colspan="13" style="padding:10px;color:#999;">无盘口数据</td></tr>` : allMatches.map((m, mIdx) => createMatchRowHTML(m, index, mIdx)).join('');
         const contentDiv = document.createElement('div');
         contentDiv.style.padding = '5px';
         contentDiv.innerHTML = `
@@ -1187,21 +1392,23 @@
                 <th class="col-status">状态</th>
                 <th class="col-time">开赛时间</th>
                 <th class="col-league">赛事</th>
-                <th>主队</th>
-                <th style="width:50px;">盘口</th>
-                <th>客队</th>
+                <th class="col-home">主队</th>
+                <th class="col-handicap">盘口</th>
+                <th class="col-away">客队</th>
                 <th class="col-progress">进度</th>
                 <th class="col-score">主</th>
                 <th class="col-score">客</th>
                 <th class="col-result">赛果</th>
-                <th style="width:50px;">地址状态</th>
+                <th class="col-url-status">地址状态</th>
                 <th class="col-score-url">比分地址</th>
-                ${State.isEditMode ? `<th class="col-op">操作</th>` : ''}
+                ${State.isEditMode ?
+            `<th class="col-op">操作</th>` : ''}
               </tr>
             </thead>
             <tbody>${rowsHtml}</tbody>
           </table>
-          ${State.isEditMode ? `<button style="margin-top:5px;font-size:12px;" data-action="match-add">+ 添加比分</button>` : ''}
+          ${State.isEditMode ?
+            `<button style="margin-top:5px;font-size:12px;" data-action="match-add">+ 添加比分</button>` : ''}
         `;
         block.appendChild(contentDiv);
         container.appendChild(block);
@@ -1212,9 +1419,7 @@
     function createLiveRowHTML(m, isSub, tidIdx, matchIdx, subIdx) {
       if (m.isImageMatch) return '';
       const dataMid = m._mid ? `data-mid="${m._mid}"` : '';
-      // 子盘口属性
       const extraData = isSub ? `data-tid-idx="${tidIdx}" data-match-idx="${matchIdx}" data-sub-idx="${subIdx}"` : `data-tid-idx="${tidIdx}" data-match-idx="${matchIdx}"`;
-
       if (isSub) {
         const label = m.league || '分盘';
         return `
@@ -1254,7 +1459,8 @@
         block.style.marginBottom = '12px';
         const liveHeader = document.createElement('div');
         liveHeader.style.cssText = 'background:#fafafa;padding:6px;font-weight:bold;display:flex; align-items:center; gap:8px;';
-        const tidText = C6.auxActions.buildTidTitle(item);
+        const
+          tidText = C6.auxActions.buildTidTitle(item);
         const tidTagEl = buildClickableTidTag(tidText, item.tid);
         liveHeader.appendChild(tidTagEl);
         block.appendChild(liveHeader);
@@ -1263,15 +1469,22 @@
           <table class="live-table odds-table">
             <thead>
               <tr>
-                <th>状态</th><th>主队</th><th>盘口</th><th>客队</th><th>进度</th><th>主</th><th>客</th><th>赛果</th>
+                 <th class="col-status">状态</th>
+                 <th class="col-home">主队</th>
+                 <th class="col-handicap">盘口</th>
+                 <th class="col-away">客队</th>
+                 <th class="col-progress">进度</th>
+                 <th class="col-score">主</th>
+                 <th class="col-score">客</th>
+                 <th class="col-result">赛果</th>
               </tr>
             </thead>
             <tbody>
               ${matchesWithIdx.map(obj => {
-                const mainHtml = createLiveRowHTML(obj.m, false, tidIdx, obj.originalIdx);
-                const subsHtml = (obj.m.subMatches || []).map((s, subIdx) => createLiveRowHTML(s, true, tidIdx, obj.originalIdx, subIdx)).join('');
-                return mainHtml + subsHtml;
-              }).join('')}
+          const mainHtml = createLiveRowHTML(obj.m, false, tidIdx, obj.originalIdx);
+          const subsHtml = (obj.m.subMatches || []).map((s, subIdx) => createLiveRowHTML(s, true, tidIdx, obj.originalIdx, subIdx)).join('');
+          return mainHtml + subsHtml;
+        }).join('')}
             </tbody>
           </table>
         `;
@@ -1283,20 +1496,23 @@
     function updatePreviewRowUI(tr, m) {
       if (!tr || !m) return;
       const sel = tr.querySelector('.ipt-status');
-      if (sel) { sel.value = m.status; sel.className = 'ipt-status'; }
+      if (sel) { sel.value = m.status; sel.className = 'ipt-status';
+      }
       const res = tr.querySelector('.ipt-result');
       if (res) res.value = m.result || '';
       const urlStat = tr.querySelector('.ipt-score-url-status');
       if (urlStat) urlStat.value = m.scoreUrlStatus || '';
 
       const hs = tr.querySelector('.ipt-hscore');
-      if(hs) hs.value = m.homeScore || '';
+      if(hs) hs.value = m.homeScore ||
+        '';
       const as = tr.querySelector('.ipt-ascore');
       if(as) as.value = m.awayScore || '';
     }
 
     function togglePreview(show) {
-      State.previewVisible = typeof show === 'boolean' ? show : !State.previewVisible;
+      State.previewVisible = typeof show === 'boolean' ?
+        show : !State.previewVisible;
       State.previewPanel.style.display = State.previewVisible ? 'flex' : 'none';
       if (State.previewVisible) {
         State.previewData.forEach(item => { (item.extra.items || []).forEach(m => { m.status = match.calcMatchStatus(m); }); });
@@ -1304,12 +1520,28 @@
       }
     }
 
+    document.addEventListener('input', e => {
+      const el = e.target;
+      if (!el.matches('input[data-lock], textarea[data-lock]')) return;
+
+      if (el.dataset.lock === '1') {
+        el.value = el.dataset.oldValue ?? el.value;
+      } else {
+        el.dataset.oldValue = el.value;
+      }
+    });
+    document.addEventListener('focusin', e => {
+      const el = e.target;
+      if (!el.matches('input[data-lock], textarea[data-lock]')) return;
+      el.dataset.oldValue = el.value;
+    });
     return {
       createFloatButton, createMainPanel, createPreviewUI, createLiveUI,
       renderScoreSiteList, renderPreviewData, renderLiveData, updatePreviewRowUI, togglePreview
     };
   })(C6.State, C6.storage, C6.CONFIG, C6.utils, C6.dataActions, C6.auxActions, C6.match, C6.fetcher);
 
+  // =11. 事件处理 (Events)= //
   C6.events = (function (State, storage, CONFIG, utils, dataActions, auxActions, match, fetcher) {
     async function handlePreviewClick(e) {
       const target = e.target || (e && e.target) || e;
@@ -1317,8 +1549,11 @@
       if (!btn) return;
       const action = btn.dataset.action || btn.getAttribute('data-action');
       const tidBlock = btn.closest('.tid-block');
+
+
       const tidIdx = tidBlock ? parseInt(tidBlock.dataset.index) : -1;
-      const tr = btn.closest('tr');
+      const tr
+        = btn.closest('tr');
       const trIdx = tr ? parseInt(tr.dataset.idx) : -1;
 
       switch (action) {
@@ -1328,6 +1563,7 @@
           break;
         case 'toggle-edit':
           State.isEditMode = !State.isEditMode;
+
           btn.textContent = State.isEditMode ? '退出编辑' : '编辑盘口';
           btn.style.background = State.isEditMode ? '#ffc107' : '';
           if (!State.isEditMode) {
@@ -1337,12 +1573,22 @@
           C6.ui.renderPreviewData();
           break;
         case 'refresh-all':
-          if (!confirm('将清空列表并重新抓取今日所有开盘帖，确定？')) return;
+          if (!confirm('将清空列表并重新抓取今日所有开盘帖，确定？\n注意：这也会清空直播辅助控制台的内容！')) return;
           State.previewPanel.querySelector('.preview-content').innerHTML = '<div style="padding:20px;text-align:center;">正在抓取中...</div>';
           await dataActions.rebuildTodayOddsLogic();
+          if (State.panel) {
+            const auxKeys = ['title', 'content', 'reply'];
+            auxKeys.forEach(key => {
+              const el = State.panel.querySelector(`#aux_${key}`);
+              if (el) el.value = '';
+            });
+            State.auxData = { title: '', content: '', reply: '' };
+            storage.saveData(CONFIG.KEYS.AUX_DATA, State.auxData);
+          }
           const today = new Date();
           const dateStr = String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
-          State.previewPanel.querySelector('#liveDateInput').value = dateStr;
+          const dateInput = State.previewPanel.querySelector('#liveDateInput');
+          if (dateInput) dateInput.value = dateStr;
           storage.saveData(CONFIG.KEYS.LIVE_DATE, dateStr);
           C6.ui.renderPreviewData();
           break;
@@ -1351,13 +1597,17 @@
           C6.ui.renderPreviewData();
           break;
         case 'reload-ui':
+          State.previewData = storage.loadData(CONFIG.KEYS.PREVIEW_DATA, []);
           C6.ui.renderPreviewData();
           break;
         case 'save-all':
-          if (!canCommitPreviewUI()) { alert('存在不合法的时间格式，请修正后再保存'); return; }
+          if (!canCommitPreviewUI()) {
+            alert('存在不合法的时间格式，请修正后再保存'); return;
+          }
           syncPreviewDataFromUI();
           State.previewData.forEach(item => (item.extra.items || []).forEach(m => m.status = match.calcMatchStatus(m)));
           State.previewData.forEach(item => (item.extra.items || []).forEach(m => { if (m.status === '已完结') m.result = match.autoBuildResult(m) || m.result; }));
+          State.previewData.forEach(item => match.processOverUnderLogic(item.extra.items));
           storage.saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
           storage.saveData(CONFIG.KEYS.LIVE_DATE, State.previewPanel.querySelector('#liveDateInput').value);
           await auxActions.updateAuxDataSmart(false);
@@ -1388,7 +1638,7 @@
           }
           break;
         case 'tid-refresh':
-          if (!confirm('确认重新获取？(将清空当前TID所有盘口)')) return;
+          if (!confirm('确认重新获取？(将清空当前Tid所有盘口)')) return;
           syncPreviewDataFromUI();
           await dataActions.refreshSingleTid(State.previewData[tidIdx].tid);
           C6.ui.renderPreviewData();
@@ -1410,7 +1660,7 @@
           }
           break;
         case 'tid-del':
-          if (!confirm('确认删除该 TID 及其所有盘口吗？')) return;
+          if (!confirm('确认删除该 Tid 及其所有盘口吗？')) return;
           syncPreviewDataFromUI();
           State.previewData.splice(tidIdx, 1);
           storage.saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
@@ -1515,8 +1765,12 @@
           }
           break;
         case 'open-live':
-          if (State.previewPanel) { State.previewPanel.style.display = 'none'; State.previewVisible = false; }
-          if (State.livePanel) { State.livePanel.style.display = 'flex'; State.liveVisible = true; }
+          if (State.previewPanel) {
+            State.previewPanel.style.display = 'none'; State.previewVisible = false;
+          }
+          if (State.livePanel) {
+            State.livePanel.style.display = 'flex'; State.liveVisible = true;
+          }
           C6.ui.renderLiveData();
           break;
         case 'url-test':
@@ -1543,7 +1797,6 @@
       if (!tr) return;
       syncPreviewDataFromUI();
 
-      // 主盘状态改变同步子盘
       if (tr.classList.contains('main-match-row') && el.classList.contains('ipt-status')) {
         const tidIdx = parseInt(tr.closest('.tid-block').dataset.index);
         const matchIdx = parseInt(tr.dataset.idx);
@@ -1566,20 +1819,20 @@
       const item = State.previewData[tidIdx];
       const m = item.extra.items[matchIdx];
       if (tr.classList.contains('main-match-row')) {
-          if (el.classList.contains('ipt-progress')) m._manualProgress = true;
-          if (el.classList.contains('ipt-hscore') || el.classList.contains('ipt-ascore')) m._manualScore = true;
-          if (el.classList.contains('ipt-result')) m._manualResult = true;
-          if (!['已完结', '走盘'].includes(m.status)) {
-            m.status = match.calcMatchStatus(m);
+        if (el.classList.contains('ipt-progress')) m._manualProgress = true;
+        if (el.classList.contains('ipt-hscore') || el.classList.contains('ipt-ascore')) m._manualScore = true;
+        if (el.classList.contains('ipt-result')) m._manualResult = true;
+        if (!['已完结', '走盘'].includes(m.status)) {
+          m.status = match.calcMatchStatus(m);
+        }
+        if (el.classList.contains('ipt-hscore') || el.classList.contains('ipt-ascore')) {
+          const r = match.autoBuildResult(m);
+          if (r && m.result !== r) {
+            m.result = r;
+            const resultInput = tr.querySelector('.ipt-result');
+            if (resultInput) resultInput.value = r;
           }
-          if (el.classList.contains('ipt-hscore') || el.classList.contains('ipt-ascore')) {
-            const r = match.autoBuildResult(m);
-            if (r && m.result !== r) {
-              m.result = r;
-              const resultInput = tr.querySelector('.ipt-result');
-              if (resultInput) resultInput.value = r;
-            }
-          }
+        }
       }
     }
 
@@ -1588,7 +1841,6 @@
       const tr = ipt.closest('tr');
       if (!tr) return;
 
-      // 时间格式化逻辑
       if (ipt.classList.contains('ipt-time')) {
         const fixed = utils.normalizeStartTime(ipt.value);
         if (fixed !== ipt.value) {
@@ -1598,43 +1850,51 @@
         return;
       }
 
-      // 如果修改的是子盘口的比分，进行累加计算
       if (tr.classList.contains('sub-match-row') && (ipt.classList.contains('ipt-hscore') || ipt.classList.contains('ipt-ascore'))) {
-         syncPreviewDataFromUI();
-         const tidIdx = Number(tr.dataset.tidIdx);
-         const matchIdx = Number(tr.dataset.matchIdx);
-         const subIdx = Number(tr.dataset.subIdx);
-         const m = State.previewData[tidIdx].extra.items[matchIdx];
-         const sub = m.subMatches[subIdx];
-         // 计算子盘结果
-         const subRes = match.autoBuildSubResult(sub, m);
-         sub.result = subRes;
-         // 自动累加主盘比分
-         let totalH = 0, totalA = 0;
-         m.subMatches.forEach(s => {
-             totalH += Number(s.homeScore) || 0;
-             totalA += Number(s.awayScore) || 0;
-         });
-         m.homeScore = totalH;
-         m.awayScore = totalA;
-         m.result = match.autoBuildResult(m);
+        syncPreviewDataFromUI();
+        const tidIdx = Number(tr.dataset.tidIdx);
+        const matchIdx = Number(tr.dataset.matchIdx);
+        const subIdx = Number(tr.dataset.subIdx);
+        const m = State.previewData[tidIdx].extra.items[matchIdx];
+        const sub = m.subMatches[subIdx];
+        const subRes = match.autoBuildSubResult(sub, m);
+        sub.result = subRes;
 
-         storage.saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
-         C6.ui.renderPreviewData(); // 重新渲染以更新主盘UI
-         return;
+        const subResInput = tr.querySelector('.ipt-result');
+        if (subResInput) subResInput.value = subRes;
+
+        let totalH = 0, totalA = 0;
+        m.subMatches.forEach(s => {
+          totalH += Number(s.homeScore) || 0;
+          totalA += Number(s.awayScore) || 0;
+        });
+        m.homeScore = totalH;
+        m.awayScore = totalA;
+        m.result = match.autoBuildResult(m);
+
+        const block = tr.closest('.tid-block');
+        if (block) {
+          const mainTr = block.querySelector(`tr.main-match-row[data-idx="${matchIdx}"]`);
+          if (mainTr) C6.ui.updatePreviewRowUI(mainTr, m);
+        }
+
+        storage.saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
+        return;
       }
 
-      // 主盘口比分/进度修改逻辑
       if (tr.classList.contains('main-match-row')) {
-          if (!ipt.classList.contains('ipt-hscore') && !ipt.classList.contains('ipt-ascore') && !ipt.classList.contains('ipt-progress')) return;
-          syncPreviewDataFromUI();
-          const tidIdx = Number(tr.closest('.tid-block').dataset.index);
-          const matchIdx = Number(tr.dataset.idx);
-          const m = State.previewData[tidIdx].extra.items[matchIdx];
+        if (!ipt.classList.contains('ipt-hscore') && !ipt.classList.contains('ipt-ascore') && !ipt.classList.contains('ipt-progress')) return;
+        syncPreviewDataFromUI();
+        const tidIdx = Number(tr.closest('.tid-block').dataset.index);
+        const matchIdx = Number(tr.dataset.idx);
+        const m = State.previewData[tidIdx].extra.items[matchIdx];
 
-          const r = match.autoBuildResult(m);
-          if (r) m.result = r;
-          C6.ui.updatePreviewRowUI(tr, m);
+        const r = match.autoBuildResult(m);
+        if (r) m.result = r;
+
+        match.processOverUnderLogic(State.previewData[tidIdx].extra.items);
+        storage.saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
+        C6.ui.updatePreviewRowUI(tr, m);
       }
     }
 
@@ -1645,14 +1905,20 @@
         State.liveVisible = false;
         if (State.panel) State.panel.style.display = 'block';
       }
-      if (action === 'live-reload') { C6.ui.renderLiveData(); }
+      if (action === 'live-reload') {
+        State.previewData = storage.loadData(CONFIG.KEYS.PREVIEW_DATA, []);
+        C6.ui.renderLiveData();
+      }
       if (action === 'live-save') {
         syncLiveDataToPreview();
         State.previewData.forEach(item => (item.extra.items || []).forEach(m => m.status = match.calcMatchStatus(m)));
         State.previewData.forEach(item => (item.extra.items || []).forEach(m => { if (m.status === '已完结') m.result = match.autoBuildResult(m) || m.result; }));
+        State.previewData.forEach(item => match.processOverUnderLogic(item.extra.items));
+
         storage.saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
+        alert('数据已保存');
         auxActions.updateAuxDataSmart(true);
-        alert('已保存');
+        C6.ui.renderLiveData();
         return;
       }
       if (action === 'live-open-preview') {
@@ -1669,43 +1935,55 @@
       const el = e.target;
       const tr = el.closest('tr');
       if (!tr) return;
-      // 实时保存输入，但不一定触发重绘
     }
 
     function handleLiveBlur(e) {
       const ipt = e.target;
       if (!ipt.matches('.live-hs, .live-as, .live-progress, .live-result')) return;
-      syncLiveDataToPreview(); // 先同步当前输入到内存
+      syncLiveDataToPreview();
 
-      // 如果是子盘口，触发累加逻辑
       const tr = ipt.closest('tr');
       if (tr && tr.classList.contains('live-sub-row')) {
-         const tidIdx = Number(tr.dataset.tidIdx);
-         const matchIdx = Number(tr.dataset.matchIdx);
-         const m = State.previewData[tidIdx].extra.items[matchIdx];
+        const tidIdx = Number(tr.dataset.tidIdx);
+        const matchIdx = Number(tr.dataset.matchIdx);
+        const m = State.previewData[tidIdx].extra.items[matchIdx];
 
-         // 重新计算主盘比分
-         let totalH = 0, totalA = 0;
-         (m.subMatches || []).forEach(s => {
-             totalH += Number(s.homeScore) || 0;
-             totalA += Number(s.awayScore) || 0;
-             // 子盘赛果
-             s.result = match.autoBuildSubResult(s, m);
-         });
-         m.homeScore = totalH;
-         m.awayScore = totalA;
-         m.result = match.autoBuildResult(m);
+        const subIdx = Number(tr.dataset.subIdx);
+        const sub = m.subMatches[subIdx];
+        if (sub) {
+          sub.result = match.autoBuildSubResult(sub, m);
+          const resIpt = tr.querySelector('.live-result');
+          if (resIpt) resIpt.value = sub.result;
+        }
 
-         C6.ui.renderLiveData(); // 重新渲染直播界面
+        let totalH = 0, totalA = 0;
+        (m.subMatches || []).forEach(s => {
+          totalH += Number(s.homeScore) || 0;
+          totalA += Number(s.awayScore) || 0;
+          s.result = match.autoBuildSubResult(s, m);
+        });
+        m.homeScore = totalH;
+        m.awayScore = totalA;
+        m.result = match.autoBuildResult(m);
+
+        const mainTr = State.livePanel.querySelector(`tr:not(.live-sub-row)[data-tid-idx="${tidIdx}"][data-match-idx="${matchIdx}"]`);
+        if (mainTr) {
+          const h = mainTr.querySelector('.live-hs');
+          const a = mainTr.querySelector('.live-as');
+          const r = mainTr.querySelector('.live-result');
+          if (h) h.value = m.homeScore;
+          if (a) a.value = m.awayScore;
+          if (r) r.value = m.result;
+        }
       } else {
-         // 主盘逻辑
-         const tidIdx = Number(tr.dataset.tidIdx);
-         const matchIdx = Number(tr.dataset.matchIdx);
-         const m = State.previewData[tidIdx].extra.items[matchIdx];
-         m.result = match.autoBuildResult(m);
-         // 更新UI显示
-         const resIpt = tr.querySelector('.live-result');
-         if (resIpt) resIpt.value = m.result;
+        const tidIdx = Number(tr.dataset.tidIdx);
+        const matchIdx = Number(tr.dataset.matchIdx);
+        const m = State.previewData[tidIdx].extra.items[matchIdx];
+
+        match.processOverUnderLogic(State.previewData[tidIdx].extra.items);
+        m.result = match.autoBuildResult(m);
+        const resIpt = tr.querySelector('.live-result');
+        if (resIpt) resIpt.value = m.result;
       }
 
       storage.saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
@@ -1724,7 +2002,8 @@
 
         const getVal = (sel) => tr.querySelector(sel)?.value || '';
 
-        if (tr.classList.contains('main-match-row')) {
+        if
+          (tr.classList.contains('main-match-row')) {
           m.status = getVal('.ipt-status') || m.status;
           m.startTime = getVal('.ipt-time');
           m.league = getVal('.ipt-league');
@@ -1753,38 +2032,42 @@
           }
         }
       });
+      State.previewData.forEach(item => match.processOverUnderLogic(item.extra.items));
     }
 
     function syncLiveDataToPreview() {
       if (!State.livePanel) return;
       const trs = State.livePanel.querySelectorAll('tbody tr');
       trs.forEach(tr => {
-         const tidIdx = Number(tr.dataset.tidIdx);
-         const matchIdx = Number(tr.dataset.matchIdx);
-         const item = State.previewData[tidIdx];
-         if (!item) return;
-         const m = item.extra.items[matchIdx];
-         if (!m) return;
+        const tidIdx = Number(tr.dataset.tidIdx);
+        const matchIdx = Number(tr.dataset.matchIdx);
+        const item = State.previewData[tidIdx];
+        if (!item) return;
+        const m = item.extra.items[matchIdx];
+        if (!m) return;
 
-         const get = sel => tr.querySelector(sel)?.value.trim() || '';
+        const get = sel => tr.querySelector(sel)?.value.trim() || '';
 
-         if (tr.classList.contains('live-sub-row')) {
-             const subIdx = Number(tr.dataset.subIdx);
-             const sub = m.subMatches[subIdx];
-             if (sub) {
-                 sub.progress = get('.live-progress');
-                 sub.homeScore = get('.live-hs');
-                 sub.awayScore = get('.live-as');
-                 sub.result = get('.live-result');
-             }
-         } else {
-             m.progress = get('.live-progress');
-             m.homeScore = get('.live-hs');
-             m.awayScore = get('.live-as');
-             m.result = get('.live-result');
-             m.status = match.calcMatchStatus(m);
-         }
+        if (tr.classList.contains('live-sub-row')) {
+
+          const subIdx = Number(tr.dataset.subIdx);
+          const sub = m.subMatches[subIdx];
+          if (sub) {
+            sub.progress = get('.live-progress');
+            sub.homeScore = get('.live-hs');
+            sub.awayScore = get('.live-as');
+            sub.result = get('.live-result');
+          }
+
+        } else {
+          m.progress = get('.live-progress');
+          m.homeScore = get('.live-hs');
+          m.awayScore = get('.live-as');
+          m.result = get('.live-result');
+          m.status = match.calcMatchStatus(m);
+        }
       });
+      State.previewData.forEach(item => match.processOverUnderLogic(item.extra.items));
     }
 
     function canCommitPreviewUI() {
@@ -1807,6 +2090,7 @@
     };
   })(C6.State, C6.storage, C6.CONFIG, C6.utils, C6.dataActions, C6.auxActions, C6.match, C6.fetcher);
 
+  // =12. 初始化与绑定 (Init)= //
   function initUI() {
     try {
       C6.ui.createFloatButton();
@@ -1825,9 +2109,6 @@
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') {
           C6.State.previewData.forEach(item => (item.extra.items || []).forEach(m => m.status = C6.match.calcMatchStatus(m)));
-          C6.storage.saveData(C6.CONFIG.KEYS.PREVIEW_DATA, C6.State.previewData);
-          if (C6.State.previewVisible) C6.ui.renderPreviewData();
-          if (C6.State.liveVisible) C6.ui.renderLiveData();
         }
       });
     } catch (err) { console.error('C6 initUI error', err); }
@@ -1851,7 +2132,8 @@
         if (manualInput) manualInput.style.display = 'block';
       } else {
         col.classList.remove('manual-mode');
-        if (manualInput) manualInput.style.display = 'none';
+        if (manualInput) manualInput.style.display
+          = 'none';
       }
       sel.addEventListener('change', () => {
         if (sel.value === '__manual__') {
@@ -1864,9 +2146,4 @@
       });
     });
   }
-
-  C6._debug = C6._debug || {};
-  C6._debug.getState = () => C6.State;
-  C6._debug.CONFIG = C6.CONFIG;
-  console.info('C6 规则修正版 IIFE 完整实现已加载。');
 })();

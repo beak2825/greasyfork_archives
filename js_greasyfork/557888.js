@@ -12,9 +12,9 @@
 // @grant        GM_addStyle
 // @run-at       document-start
 // @license      MIT
-// @namespace http://tampermonkey.net/
-// @downloadURL https://update.greasyfork.org/scripts/557888/%E7%BD%91%E9%A1%B5%E5%AD%97%E4%BD%93%E6%9B%BF%E6%8D%A2.user.js
-// @updateURL https://update.greasyfork.org/scripts/557888/%E7%BD%91%E9%A1%B5%E5%AD%97%E4%BD%93%E6%9B%BF%E6%8D%A2.meta.js
+// @namespace https://greasyfork.org/users/1544496
+// @downloadURL https://update.greasyfork.org/scripts/564144/%E7%BD%91%E9%A1%B5%E5%AD%97%E4%BD%93%E6%9B%BF%E6%8D%A2.user.js
+// @updateURL https://update.greasyfork.org/scripts/564144/%E7%BD%91%E9%A1%B5%E5%AD%97%E4%BD%93%E6%9B%BF%E6%8D%A2.meta.js
 // ==/UserScript==
 
 (function() {

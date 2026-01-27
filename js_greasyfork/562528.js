@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         YMS Note Assistance
 // @namespace    http://tampermonkey.net/
-// @version      1.7
-// @description  Dodaje przyciski do opisywania assetow w yms, oraz opisuje kolejność assetów na polach
+// @version      1.9
+// @description  Adds form templates for creating standardized Amazon notes on YMS.
 // @author       @nowaratn
 // @match        https://trans-logistics-eu.amazon.com/yms/shipclerk/*
 // @match        https://jwmjkz3dsd.execute-api.eu-west-1.amazonaws.com*
@@ -102,30 +102,38 @@ const CONFIG = {
             { value: "IBVEND", desc_en: "For any inbound sellable freight that comes directly from the vendor. Use for sellable stow and for site types that do not stow goods use for IB parcels or palletize freight.", desc_pl: "Dla każdego przychodzącego towaru sprzedażnego, który pochodzi bezpośrednio od dostawcy." },
             { value: "IBUNSELL", desc_en: "Graded customer returns with a disposition unsellable.", desc_pl: "Ocenione zwroty klientów z dyspozycją niesprzedawalne." },
             { value: "IBPROBSOLV", desc_en: "Known problem solve such as unmanifested load that TOM team will update in YMS Notes to flag to DND to investigate and assist to resolve.", desc_pl: "Znane problemy do rozwiązania, takie jak niezamanifestowany ładunek." },
+            { value: "IBCRET", desc_en: "This should only be used in RELO locations. Customer returns that are not graded yet.", desc_pl: "Powinno być używane tylko w lokalizacjach RELO. Zwroty klientów, które nie zostały jeszcze ocenione." },
             { value: "IBTRANS", desc_en: "One site is transferring to a second site for processing or stowing.", desc_pl: "Jedna lokalizacja przekazuje do drugiej lokalizacji w celu przetworzenia lub składowania." },
+            { value: "IBUNDELIV", desc_en: "Packages being returned to Amazon that were not successfully delivered to their end destination. Brand new, unopened freight returned without successful delivery.", desc_pl: "Paczki zwracane do Amazon, które nie zostały pomyślnie dostarczone do miejsca docelowego." },
             { value: "IBMISSHIP", desc_en: "Requires \"Case xxxxxxxx\" documented in notes. When product is not able to be processed and need to be sent to another location.", desc_pl: "Wymaga \"Case xxxxxxxx\" udokumentowanego w notatkach. Gdy produkt nie może być przetworzony i musi zostać wysłany do innej lokalizacji." },
             { value: "IBREJECT", desc_en: "Requires \"Case xxxxxxxx\" documented in notes. Trailer cannot be unloaded due to unsafe product, or trailer condition is not safe to unload.", desc_pl: "Wymaga \"Case xxxxxxxx\" udokumentowanego w notatkach. Naczepa nie może być rozładowana z powodu niebezpiecznego produktu lub stan naczepy nie jest bezpieczny." },
             { value: "IBDONATE", desc_en: "Trailer loaded with contents for donation purpose.", desc_pl: "Naczepa załadowana zawartością przeznaczoną do darowizny." },
-            { value: "IBFOUNDLOADED", desc_en: "To be utilized when a trailer is found loaded but was previously marked empty, and the content of the trailer is unknown.", desc_pl: "Do użycia, gdy naczepa zostanie znaleziona załadowana, ale wcześniej była oznaczona jako pusta, a zawartość naczepy jest nieznana." }
+            { value: "IBFOUNDLOADED", desc_en: "To be utilized when a trailer is found loaded but was previously marked empty, and the content of the trailer is unknown.", desc_pl: "Do użycia, gdy naczepa zostanie znaleziona załadowana, ale wcześniej była oznaczona jako pusta, a zawartość naczepy jest nieznana." },
+            { value: "IBEMPTY", desc_en: "Inbound Empty 3P trailer dwelling over 24 hours onsite or offsite + Case xxxxxxxx.", desc_pl: "Inbound, pusta naczepa zewnętrznego przewoźnika dwellująca ponad 24h. + Case xxxxxxxx" }
+
         ],
         outbound: [
             { value: "OBSCHED", desc_en: "Outbound trailer not past SDT (loading status is in progress on dock door). This applies to any trailer on time, that will be departing the yard.", desc_pl: "Naczepa wychodząca nie przekroczyła SDT (status ładowania jest w toku na bramie dokowej)." },
             { value: "OBLATE", desc_en: "Any trailer dwelling past SDT with a VRID is considered late.", desc_pl: "Każda naczepa przebywająca po SDT z VRID jest uważana za spóźnioną." },
+            { value: "OBMISLOAD", desc_en: "Incorrect trailer being attached to a VRID or load (3P to AZNG or 3P to 3P or AZNG to 3P).", desc_pl: "Nieprawidłowa naczepa podłączona do VRID (3P do AZNG , 3P do 3P, AZNG do 3P)." },
             { value: "OBVRET", desc_en: "For all trailers assigned for outbound VRET loads.", desc_pl: "Dla wszystkich naczep przypisanych do ładunków wychodzących VRET." },
             { value: "OBTHO", desc_en: "THO load that was dropped off for the next driver to pick up.", desc_pl: "Ładunek THO, który został pozostawiony dla następnego kierowcy do odbioru." },
-            { value: "FULLPOD", desc_en: "Loaded trailer for Launch site.", desc_pl: "Załadowana naczepa dla punktu startowego." },
             { value: "OBRTD", desc_en: "Completed loads in the yard less than 24 hours from time of completion.", desc_pl: "Ukończone ładunki na placu krócej niż 24 godziny od czasu zakończenia." },
             { value: "OBTRANSLOAD", desc_en: "Outbound loads that need to be transloaded into the correct trailer type.", desc_pl: "Ładunki wychodzące wymagające przeładunku do odpowiedniego typu naczepy." },
             { value: "OBDEPARTED", desc_en: "Outbound loads that have been virtually departed and require further action.", desc_pl: "Ładunki wychodzące wirtualnie odjechane, wymagające dalszych działań." },
             { value: "OBRECOVERY", desc_en: "Outbound recovery loads booked and waiting to depart the yard.", desc_pl: "Zarezerwowane ładunki odzyskowe oczekujące na wyjazd z placu." },
+            { value: "OBEMPTY", desc_en: "Outbound Empty 3P trailer dwelling over 24 hours onsite or offsite.", desc_pl: "Outbound, pusta naczepa zewnętrznego przewoźnika dwellująca ponad 24h." }
         ],
         relo: [
-            { value: "IBCRET", desc_en: "This should only be used in RELO locations. Customer returns that are not graded yet.", desc_pl: "Powinno być używane tylko w lokalizacjach RELO. Zwroty klientów, które nie zostały jeszcze ocenione." },
-            { value: "IBUNDELIV", desc_en: "Packages being returned to Amazon that were not successfully delivered to their end destination. Brand new, unopened freight returned without successful delivery.", desc_pl: "Paczki zwracane do Amazon, które nie zostały pomyślnie dostarczone do miejsca docelowego." },
             { value: "RMVLIQ", desc_en: "Indicates the trailer is a liquidation drop trailer ready for pickup.", desc_pl: "Wskazuje, że naczepa jest naczepą likwidacyjną gotową do odbioru." },
             { value: "RMVREC", desc_en: "Indicates the trailer is a recycle drop trailer ready for pickup.", desc_pl: "Wskazuje, że naczepa jest naczepą recyklingową gotową do odbioru." },
             { value: "RMVLTL", desc_en: "Indicates the trailer is a LTL drop trailer is ready for pickup.", desc_pl: "Wskazuje, że naczepa jest naczepą LTL gotową do odbioru." },
-            { value: "RMVDON", desc_en: "Indicates the trailer is a donation drop trailer ready for pickup.", desc_pl: "Wskazuje, że naczepa jest naczepą darowizny gotową do odbioru." }
+            { value: "RMVDON", desc_en: "Indicates the trailer is a donation drop trailer ready for pickup.", desc_pl: "Wskazuje, że naczepa jest naczepą darowizny gotową do odbioru." },
+
+            { value: "RMVLIQEMPTY", desc_en: "Indicates the trailer is an empty liquidation drop trailer.", desc_pl: "Oznacza, że przyczepa jest pustą przyczepą do załadunku odpadów." },
+            { value: "RMVRECEMPTY", desc_en: "Indicates the trailer is an empty recycle drop trailer.", desc_pl: "Oznacza, że przyczepa jest pustą przyczepą do załadunku odpadów." },
+            { value: "RMVLTLEMPTY", desc_en: "Indicates the trailer is an empty LTL drop trailer.", desc_pl: "Oznacza, że przyczepa jest pustą przyczepą LTL." },
+            { value: "RMVDONEMPTY", desc_en: "Indicates the trailer is an empty donation drop trailer.", desc_pl: "Oznacza, że przyczepa jest pustą przyczepą do załadunku darowizn." },
         ],
         sortType: [
             { value: "TTS", desc_en: "transit-time-sensitive", desc_pl: "wrażliwy na czas tranzytu" },
@@ -133,64 +141,78 @@ const CONFIG = {
             { value: "MIX", desc_en: "Mixed sorting", desc_pl: "Sortowanie mieszane" }
         ],
         neqpType: [
-            { value: "NIOPS", desc_en: "OBCARTS/IBCARTS/WALL or anything related to OPS.", desc_pl: "OBCARTS/IBCARTS/WALL lub cokolwiek związanego z OPS." },
-            { value: "NIASST", desc_en: "Empty: TOTES, PALLETS; SLEEVE.", desc_pl: "Puste: POJEMNIKI, PALETY, OSŁONY." },
-            { value: "NICONSUM", desc_en: "Trailer holding consumables (Examples: corrugate or shuttle).", desc_pl: "Naczepa z materiałami eksploatacyjnymi (np. tektura falista lub shuttle)." },
-            { value: "NIRECY", desc_en: "Scrap metal, recyclable equipment.", desc_pl: "Złom metalowy, sprzęt do recyklingu." },
-            { value: "NISTORAGE", desc_en: "UTR equipment that is being held in the yard until needed.", desc_pl: "Sprzęt UTR przechowywany na placu do czasu potrzeby." },
+            { value: "NICARTS", desc_en: "GoCarts that are used for package transfers.", desc_pl: "OB Carty." },
+            { value: "NIBADCARTS", desc_en: "Damaged GoCarts needing repair.", desc_pl: "Uszkodzone OB Carty." },
+            { value: "NITOTES", desc_en: "Yellow (color plastic) totes that are used for package transfers.", desc_pl: "Żółte (plastikowe) pojemniki używane do przenoszenia paczek." },
+            { value: "NIBADTOTES", desc_en: "Damaged Totes Needing Repair - create a SIM: https://optimus-internal.amazon.com/wims/report/05feecba-81e3-4964-b78d-2e35f01da935", desc_pl: "Uszkodzone toty wymagające naprawy - stwórz SIM: https://optimus-internal.amazon.com/wims/report/05feecba-81e3-4964-b78d-2e35f01da935" },
+            { value: "NIUPP", desc_en: "Universal Plastic Pallets (UPP) are blue. Include in the notes the number pallets for (Topps (T), Bottom (B) or Sleeves (S) pallets. Example: (NIUPP T-10 pallets, B-10 pallets, S-4 pallets) ", desc_pl: "Universal Plastic Pallets (UPP) są niebieskie. Dodaj w opisie ilość palet dla (Topps (T), Bottom (B) or Sleeves (S) pallets. Przykład: (NIUPP T-10 pallets, B-10 pallets, S-4 pallets)" },
+            { value: "NIBADUPP", desc_en: "Damaged UPP needing repair. VRID will automatically be scheduled within 24 hours of notes being added.", desc_pl: "Uszkodzone UPP wymagające naprawy. VRID zostanie automatycznie zaplanowany w ciągu 24h od dodania notatki." },
+            { value: "NIUSPS", desc_en: "United States Postal Service (USPS) pallets are black with an orange stripe across.", desc_pl: "Palety United States Postal Service (USPS) są czarne z pomarańczowym paskiem w poprzek." },
+            { value: "NIAMXL", desc_en: "Oversized 4x6 pallets meant for AMXL locations.", desc_pl: "Ponadgabarytowe palety 4x6 przeznaczone dla lokalizacji AMXL." },
+            { value: "NIWOOD", desc_en: "Non-AMXL wood pallets (Good Wood).", desc_pl: "Palety drewniane inne niż AMXL (dobre)." },
+            { value: "NIBADWOOD", desc_en: "Broken non-AMXL wood pallets. Case is required.", desc_pl: "Uszkodzone drewniane palety inne niż AMXL. Wymagany Case." },
+            { value: "NICONSUM", desc_en: "Trailer holding consumables (Examples: corrugate, cardboard/gaylord or shuttle).", desc_pl: "Przyczepa przewożąca materiały eksploatacyjne (przykłady: kartony/gaylordy)." },
+            { value: "NIRECY", desc_en: "Scrap metal, recyclable equipment.", desc_pl: "Złom, sprzęt nadający się do recyklingu." },
+            { value: "NIFRESHGUPP", desc_en: "Grocery Universal Plastic Pallets (G-UPPs) are green food-grade plastic pallets exclusive to the Amazon Grocery Logistics (AGL) network.", desc_pl: "Uniwersalne palety plastikowe na artykuły spożywcze (G-UPP) to ekologiczne palety plastikowe dopuszczone do kontaktu z żywnością, dostępne wyłącznie w sieci Amazon Grocery Logistics (AGL)." },
+            { value: "NITURBO", desc_en: "This will be used to identify trailers containing empty TurboTotes. Shipper account: TransferTurboTotes . Queue: roc-na-turbo-totes@amazon.com.", desc_pl: "Naczepa zawierające puste TurboTotes. Shipper account: TransferTurboTotes . Queue: roc-na-turbo-totes@amazon.com" },
             { value: "WASTE", desc_en: "Waste Management contracted lane.", desc_pl: "Trasa kontraktowa zarządzania odpadami." },
-            { value: "EMPTYPOD", desc_en: "Empty trailer for Launch site.", desc_pl: "Pusta naczepa dla punktu startowego." }
+            { value: "NIEMPTY", desc_en: "Vendor Empty trailer that will be utilized by Non-inventory.", desc_pl: "Pusta naczepa z przeznaczeniem na załadunek Non-inventory." },
+            { value: "EMPTYPOD", desc_en: "Empty trailer for Launch site.", desc_pl: "Pusta naczepa dla uruchamianego magazynu." },
+            { value: "FULLPOD", desc_en: "Loaded trailer for Launch site.", desc_pl: "Załadowana naczepa dla uruchamianego magazynu." },
+            { value: "APSTORAGE", desc_en: "Approved Non-AZNG storage trailer.", desc_pl: "Zatwierdzona przyczepa magazynowa Non-AZNG." },
+            { value: "NONAPSTORAGE", desc_en: "Identified AZNG/AZNU trailer that is loaded with storage that needs to be transloaded and or offloaded by the site.", desc_pl: "Zidentyfikowano przyczepę AZNG/AZNU załadowaną materiałami magazynowymi, które należy przeładować i/lub rozładować na miejscu.." },
+            { value: "LEGALHOLD", desc_en: "On hold for legal resolution, FBI hold.", desc_pl: "Wstrzymane do czasu rozstrzygnięcia kwestii prawnych, wstrzymane przez FBI." }
         ],
         defectsSwapBody: [
-            { value_en: "Bent support bearing", value_pl: "Krzywy uchwyt na nogę" },
-            { value_en: "Bent crossbeam", value_pl: "Wygięta poprzeczka" },
-            { value_en: "Bent support leg", value_pl: "Krzywa noga" },
-            { value_en: "Defective crossbeam", value_pl: "Uszkodzona poprzeczka" },
-            { value_en: "Defective hitch", value_pl: "Uszkodzony trzpień" },
-            { value_en: "Defective ladder", value_pl: "Uszkodzona drabina" },
-            { value_en: "Defective leg support", value_pl: "Uszkodzone zabezpieczenie nogi" },
-            { value_en: "Defective locking handle", value_pl: "Uszkodzona klamka blokująca" },
-            { value_en: "Defective rolldoor cable", value_pl: "Uszkodzona linka rolety" },
-            { value_en: "Defective rolldoor handle", value_pl: "Uszkodzona klamka rolety" },
-            { value_en: "Defective rolldoor lock", value_pl: "Uszkodzony zamek rolety" },
-            { value_en: "Defective rolldoor panel", value_pl: "Uszkodzony panel rolety" },
-            { value_en: "Defective rubber gasket", value_pl: "Uszkodzona uszczelka" },
-            { value_en: "Defective support bearing", value_pl: "Uszkodzony uchwyt na nogę" },
-            { value_en: "Defective support leg", value_pl: "Uszkodzona noga podporowa" },
-            { value_en: "Missing hitch", value_pl: "Brak trzpienia" },
-            { value_en: "Missing ladder", value_pl: "Brak drabiny" },
-            { value_en: "Missing leg pin", value_pl: "Brak zawleczki" },
-            { value_en: "Missing leg support", value_pl: "Brak zabezpieczenia nogi" },
-            { value_en: "Missing locking handle", value_pl: "Brak klamki blokującej" },
-            { value_en: "Missing rolldoor cable", value_pl: "Brak linki rolety" },
-            { value_en: "Missing rolldoor handle", value_pl: "Brak klamki rolety" },
-            { value_en: "Missing rolldoor strap", value_pl: "Brak paska rolety" },
-            { value_en: "Missing rubber gasket", value_pl: "Brak uszczelki" },
-            { value_en: "Missing support bearing", value_pl: "Brak uchwytu na nogę" }
+            { desc_en: "Bent support bearing", desc_pl: "Krzywy uchwyt na nogę" },
+            { desc_en: "Bent crossbeam", desc_pl: "Wygięta poprzeczka" },
+            { desc_en: "Bent support leg", desc_pl: "Krzywa noga" },
+            { desc_en: "Defective crossbeam", desc_pl: "Uszkodzona poprzeczka" },
+            { desc_en: "Defective hitch", desc_pl: "Uszkodzony trzpień" },
+            { desc_en: "Defective ladder", desc_pl: "Uszkodzona drabina" },
+            { desc_en: "Defective leg support", desc_pl: "Uszkodzone zabezpieczenie nogi" },
+            { desc_en: "Defective locking handle", desc_pl: "Uszkodzona klamka blokująca" },
+            { desc_en: "Defective rolldoor cable", desc_pl: "Uszkodzona linka rolety" },
+            { desc_en: "Defective rolldoor handle", desc_pl: "Uszkodzona klamka rolety" },
+            { desc_en: "Defective rolldoor lock", desc_pl: "Uszkodzony zamek rolety" },
+            { desc_en: "Defective rolldoor panel", desc_pl: "Uszkodzony panel rolety" },
+            { desc_en: "Defective rubber gasket", desc_pl: "Uszkodzona uszczelka" },
+            { desc_en: "Defective support bearing", desc_pl: "Uszkodzony uchwyt na nogę" },
+            { desc_en: "Defective support leg", desc_pl: "Uszkodzona noga podporowa" },
+            { desc_en: "Missing hitch", desc_pl: "Brak trzpienia" },
+            { desc_en: "Missing ladder", desc_pl: "Brak drabiny" },
+            { desc_en: "Missing leg pin", desc_pl: "Brak zawleczki" },
+            { desc_en: "Missing leg support", desc_pl: "Brak zabezpieczenia nogi" },
+            { desc_en: "Missing locking handle", desc_pl: "Brak klamki blokującej" },
+            { desc_en: "Missing rolldoor cable", desc_pl: "Brak linki rolety" },
+            { desc_en: "Missing rolldoor handle", desc_pl: "Brak klamki rolety" },
+            { desc_en: "Missing rolldoor strap", desc_pl: "Brak paska rolety" },
+            { desc_en: "Missing rubber gasket", desc_pl: "Brak uszczelki" },
+            { desc_en: "Missing support bearing", desc_pl: "Brak uchwytu na nogę" }
         ],
         defectsTrailer: [
-            { value_en: "Air socket", value_pl: "Gniazda powietrza" },
-            { value_en: "Air System", value_pl: "Układ pneumatyczny" },
-            { value_en: "Front", value_pl: "Przód" },
-            { value_en: "Holes - punctures", value_pl: "Dziury - wgniecenia" },
-            { value_en: "Landing Gear", value_pl: "Nogi" },
-            { value_en: "Left side guard", value_pl: "Osłona lewa" },
-            { value_en: "Left Sidewall", value_pl: "Ściana - lewa" },
-            { value_en: "Lights - Left side", value_pl: "Światła - lewe" },
-            { value_en: "Lights - Right side", value_pl: "Światła - prawe" },
-            { value_en: "Mud flaps", value_pl: "Błotniki" },
-            { value_en: "Rear bumper", value_pl: "Zderzak" },
-            { value_en: "Rear lights", value_pl: "Światła tył" },
-            { value_en: "Right side guard", value_pl: "Osłona prawa" },
-            { value_en: "Right Sidewall", value_pl: "Ściana - prawa" },
-            { value_en: "Roof", value_pl: "Dach" },
-            { value_en: "Roll doors", value_pl: "Roleta" },
-            { value_en: "Swing doors", value_pl: "Drzwi" },
-            { value_en: "Suspension", value_pl: "Zawieszenie" },
-            { value_en: "Wheels - Left side", value_pl: "Koła - lewe" },
-            { value_en: "Wheels - Right side", value_pl: "Koła - prawe" },
-            { value_en: "MOT", value_pl: "MOT" },
-            { value_en: "Missing documents", value_pl: "Brak dokumentów" }
+            { desc_en: "Air socket", desc_pl: "Gniazda powietrza" },
+            { desc_en: "Air System", desc_pl: "Układ pneumatyczny" },
+            { desc_en: "Front", desc_pl: "Przód" },
+            { desc_en: "Holes - punctures", desc_pl: "Dziury - wgniecenia" },
+            { desc_en: "Landing Gear", desc_pl: "Nogi" },
+            { desc_en: "Left side guard", desc_pl: "Osłona lewa" },
+            { desc_en: "Left Sidewall", desc_pl: "Ściana - lewa" },
+            { desc_en: "Lights - Left side", desc_pl: "Światła - lewe" },
+            { desc_en: "Lights - Right side", desc_pl: "Światła - prawe" },
+            { desc_en: "Mud flaps", desc_pl: "Błotniki" },
+            { desc_en: "Rear bumper", desc_pl: "Zderzak" },
+            { desc_en: "Rear lights", desc_pl: "Światła tył" },
+            { desc_en: "Right side guard", desc_pl: "Osłona prawa" },
+            { desc_en: "Right Sidewall", desc_pl: "Ściana - prawa" },
+            { desc_en: "Roof", desc_pl: "Dach" },
+            { desc_en: "Roll doors", desc_pl: "Roleta" },
+            { desc_en: "Swing doors", desc_pl: "Drzwi" },
+            { desc_en: "Suspension", desc_pl: "Zawieszenie" },
+            { desc_en: "Wheels - Left side", desc_pl: "Koła - lewe" },
+            { desc_en: "Wheels - Right side", desc_pl: "Koła - prawe" },
+            { desc_en: "MOT", desc_pl: "MOT" },
+            { desc_en: "Missing documents", desc_pl: "Brak dokumentów" }
         ]
     }
 };
@@ -638,18 +660,18 @@ const CONFIG = {
     // Funkcja pomocnicza do pobierania wartości defektu w odpowiednim języku
     function getDefectValue(category, item) {
         const lang = CONFIG.currentLanguage;
-        return lang === 'en' ? item.value_en : item.value_pl;
+        return lang === 'en' ? item.desc_en : item.desc_pl;
     }
 
     // Funkcja pomocnicza do pobierania wartości defektu w odpowiednim języku (do wyświetlenia)
     function getDefectDisplay(item) {
         const lang = CONFIG.currentLanguage;
-        return lang === 'en' ? item.value_en : item.value_pl;
+        return lang === 'en' ? item.desc_en : item.desc_pl;
     }
 
     // Funkcja pomocnicza do pobierania wartości defektu dla raportu (zawsze EN)
     function getDefectValueForReport(item) {
-        return item.value_en;
+        return item.desc_en;
     }
 
     // Funkcja pomocnicza do pobierania tłumaczenia
@@ -1087,7 +1109,7 @@ const CONFIG = {
 
                     // Dodaj opcjonalny CONTENT jeśli wybrano
                     if (CONTENT) {
-                        report += `\n${CONTENT}`;
+                        report += `${CONTENT}\n`;
                     }
 
                     // Dodaj opcjonalny ISA/VRID jeśli wpisano
@@ -1785,8 +1807,8 @@ const CONFIG = {
                     // Tekst wyświetlany w zależności od języka
                     defectOption.textContent = getDefectDisplay(item);
                     // Dodaj data attribute z polską wersją dla debugowania
-                    defectOption.setAttribute('data-value-pl', item.value_pl);
-                    defectOption.setAttribute('data-value-en', item.value_en);
+                    defectOption.setAttribute('data-value-pl', item.desc_pl);
+                    defectOption.setAttribute('data-value-en', item.desc_en);
                     defectListSelect.appendChild(defectOption);
                 });
             });
@@ -1925,7 +1947,7 @@ const CONFIG = {
             modal_noninv.style.border = "10px silver solid";
 
             const title = document.createElement("h1");
-            title.textContent = t('nonInv').toUpperCase() + "-INVENTORY";
+            title.textContent = t('nonInv').toUpperCase();
             title.id = "modal_noninv_idheader";
             title.style.cursor = "move";
             title.style.fontSize = "32px";
@@ -1945,8 +1967,8 @@ const CONFIG = {
             const radioButtonsData = [
                 { label: "Inbound", value: "IB" },
                 { label: "Outbound", value: "OB" },
-                { label: "C-RET", value: "C-RET" },
-                { label: "CD", value: "CD" }
+                { label: "CRET", value: "CRET" },
+                { label: "CD", value: "CLEAN DECANT" }
             ];
 
             let department = "";
@@ -2096,7 +2118,7 @@ const CONFIG = {
                 } else if (!storeTrailer) {
                     report = t('errorNoStoreTrailer');
                 } else if (storeTrailer === "EMPTY") {
-                    report = `STORE ${department} EMPTY`;
+                    report = `STORE ${department}`;
                 } else {
                     if (!neqpType) {
                         report = t('errorNoNEQPType');
@@ -2105,7 +2127,7 @@ const CONFIG = {
                     } else if (storeTrailer === "YES") {
                         report = `STORE ${department}\n${neqpType}\nUnloading date: ${unloadingDate}\nDescr: ${descr}\n${login}`;
                     } else if (storeTrailer === "NO") {
-                        report = `${department}\n${neqpType}\nUnloading date: ${unloadingDate}\nDescr: ${descr}\n${login}`;
+                        report = `${neqpType}\n${department}\nUnloading date: ${unloadingDate}\nDescr: ${descr}\n${login}`;
                     }
                 }
 

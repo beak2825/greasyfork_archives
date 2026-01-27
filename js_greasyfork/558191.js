@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         可视化元素选择器
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  可视化选择网页元素并获取唯一CSS选择器，显示元素文本
+// @version      2.0
+// @description  UI极致重构：小巧悬浮球+可拖动面板。修复点击动画导致的位移Bug，完美交互体验。
 // @author       pipi
 // @match        *://*/*
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
+// @grant        GM_setClipboard
 // @downloadURL https://update.greasyfork.org/scripts/558191/%E5%8F%AF%E8%A7%86%E5%8C%96%E5%85%83%E7%B4%A0%E9%80%89%E6%8B%A9%E5%99%A8.user.js
 // @updateURL https://update.greasyfork.org/scripts/558191/%E5%8F%AF%E8%A7%86%E5%8C%96%E5%85%83%E7%B4%A0%E9%80%89%E6%8B%A9%E5%99%A8.meta.js
 // ==/UserScript==
@@ -14,749 +15,429 @@
 (function() {
     'use strict';
 
-    // 添加粉红色渐变主题样式
+    // 💎 CSS 变量
+    const cssVariables = `
+        :root {
+            --es-glass-bg: rgba(255, 255, 255, 0.72);
+            --es-glass-shadow: 0 20px 50px rgba(0,0,0,0.12), 0 0 0 1px rgba(255,255,255,0.5);
+            --es-comp-bg: rgba(255, 255, 255, 0.45);
+            --es-pri: linear-gradient(135deg, #c78fff 0%, #8b77ff 100%);
+            --es-pri-line:#c78fff;
+            --es-pri-light: rgba(99, 102, 241, 0.15);
+            --es-text: #1a1c1e;
+            --es-text-mut: #5f6368;
+            --es-mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+        }
+    `;
+
     GM_addStyle(`
-        .element-selector-highlight {
-            position: absolute;
-            background: transparent;
-            border: 2px solid #ff69b4;
-            border-radius: 4px;
-            box-shadow: 0 0 0 1px white, 0 0 10px rgba(255, 105, 180, 0.7);
-            pointer-events: none;
-            z-index: 999999;
-            display: none;
+        ${cssVariables}
+        .es-highlight { position: absolute; background:#cba0ff30; border: 1.5px solid var(--es-pri-line); z-index: 2147483646; pointer-events: none; display: none; border-radius: 4px; }
+        .es-group-highlight { position: absolute; background: rgba(245, 158, 11, 0.08); border: 1.5px dashed #f59e0b; z-index: 2147483645; pointer-events: none; border-radius: 4px; }
+
+        .es-panel {
+            position: fixed; top: 30px; right: 30px; width: 380px;
+            background: var(--es-glass-bg); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-radius: 16px; box-shadow: var(--es-glass-shadow); border: 1px solid rgba(255,255,255,0.4);
+            font-family: -apple-system, system-ui, sans-serif; color: var(--es-text);
+            z-index: 2147483647; display: none; overflow: hidden;
+            animation: es-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
-        .element-selector-panel {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 420px;
-            max-width: calc(100vw - 40px);
-            background: linear-gradient(135deg, #ffb6c1, #ff69b4);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(255, 105, 180, 0.3);
-            z-index: 1000000;
-            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
-            color: white;
-            padding: 20px;
-            display: none;
-            max-height: 85vh;
-            overflow-y: auto;
+        @keyframes es-in { from { opacity: 0; transform: translateY(-10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+        .es-fab {
+            position: fixed; bottom: 80px; right: 40px;
+            width: 36px; height: 36px;
+            background: var(--es-glass-bg); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            border-radius: 50%; cursor: move; z-index: 2147483648;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--es-pri); transition: background 0.2s, box-shadow 0.2s; /* ✨ 移除了 transform 动画 */
+            user-select: none;
         }
-        
-        .element-selector-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        .es-fab:hover { background: #fff; box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+        .es-fab:active { background: rgba(255,255,255,0.9); } /* 点击时背景微变 */
+
+        .es-fab svg {
+            pointer-events: none; color: #8b77ff; width: 18px; height: 18px;
+            transition: transform 0.15s ease; /* ✨ 动画交给图标 */
         }
-        
-        .element-selector-title {
-            font-size: 18px;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        .es-fab:active svg { transform: scale(0.85); } /* ✨ 只缩放图标，不缩放容器 */
+
+        .es-header {
+            padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0.4); border-bottom: 1px solid rgba(0,0,0,0.05);
+            cursor: move; user-select: none;
         }
-        
-        .element-selector-close {
-            background: rgba(255, 255, 255, 0.3);
-            border: none;
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
+        .es-title { font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 8px; color: var(--es-pri); }
+        .es-badge { background: var(--es-pri); color: white; padding: 1px 6px; border-radius: 10px; font-size: 10px; display: none; }
+        .es-close { cursor: pointer; color: var(--es-text-mut); padding: 4px; border-radius: 50%; }
+        .es-close:hover { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+        .es-content { padding: 16px; }
+        .es-toolbar { display: flex; gap: 8px; margin-bottom: 16px; }
+        .es-btn {
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 4px;
+            padding: 8px; border: 1px solid rgba(0,0,0,0.06); border-radius: 8px;
+            background: var(--es-comp-bg); font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.15s; color: var(--es-text-mut);
         }
-        
-        .element-selector-close:hover {
-            background: rgba(255, 255, 255, 0.5);
-            transform: rotate(90deg);
+        .es-btn:hover { background: #fff; color: var(--es-pri); transform: translateY(-1px); }
+        .es-btn-pri { background: var(--es-pri); color: white; border: none; }
+        .es-btn-pri:hover { background: linear-gradient(135deg, #7577ff 0%, #ac9dff 100%); color: white; }
+
+        .es-section-label { font-size: 10px; font-weight: 800; color: var(--es-text-mut); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; }
+        .es-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+        .es-chip {
+            font-size: 11px; font-family: var(--es-mono); padding: 4px 10px;
+            background: var(--es-comp-bg); border: 1px solid rgba(0,0,0,0.04);
+            border-radius: 6px; cursor: pointer; color: var(--es-text-mut);
+            max-width: 100%; overflow: hidden; text-overflow: ellipsis;
         }
-        
-        .element-selector-content {
-            margin-bottom: 15px;
+        .es-chip:hover { border-color: var(--es-pri); color: var(--es-pri-line); background: #fff; }
+        .es-chip.active { background: var(--es-pri); color: white; border-color: var(--es-pri); }
+
+        .es-field { margin-bottom: 12px; }
+        .es-input-wrap { position: relative; }
+        .es-input {
+            width: 100%; padding: 10px 36px 10px 12px;
+            background: var(--es-comp-bg); border: 1px solid rgba(0,0,0,0.06); border-radius: 10px;
+            font-family: var(--es-mono); font-size: 11px; color: var(--es-text); box-sizing: border-box;
         }
-        
-        .element-selector-field {
-            margin-bottom: 15px;
-        }
-        
-        .element-selector-label {
-            display: block;
-            font-size: 14px;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-        
-        .element-selector-input {
-            width: 100%;
-            padding: 10px 12px;
-            border: none;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.9);
-            font-size: 14px;
-            color: #333;
-            box-sizing: border-box;
-            font-family: monospace;
-        }
-        
-        .element-selector-textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: none;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.9);
-            font-size: 14px;
-            color: #333;
-            box-sizing: border-box;
-            font-family: inherit;
-            resize: vertical;
-            min-height: 60px;
-            max-height: 150px;
-        }
-        
-        .element-selector-text-counter {
-            font-size: 12px;
-            text-align: right;
-            margin-top: 4px;
-            opacity: 0.8;
-        }
-        
-        .element-selector-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .element-selector-btn {
-            flex: 1;
-            min-width: 120px;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .element-selector-copy {
-            background: white;
-            color: #ff69b4;
-        }
-        
-        .element-selector-copy:hover {
-            background: #f8f8f8;
-            transform: translateY(-2px);
-        }
-        
-        .element-selector-copy-text {
-            background: rgba(255, 255, 255, 0.9);
-            color: #ff69b4;
-        }
-        
-        .element-selector-copy-text:hover {
-            background: rgba(255, 255, 255, 1);
-            transform: translateY(-2px);
-        }
-        
-        .element-selector-reselect {
-            background: rgba(255, 255, 255, 0.8);
-            color: #ff69b4;
-        }
-        
-        .element-selector-reselect:hover {
-            background: rgba(255, 255, 255, 0.9);
-            transform: translateY(-2px);
-        }
-        
-        .element-selector-close-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-        
-        .element-selector-close-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        .element-selector-tag {
-            display: inline-block;
-            padding: 3px 8px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 4px;
-            font-size: 12px;
-            margin-right: 6px;
-            margin-bottom: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .element-selector-tag:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
-        
-        .element-selector-hint {
-            font-size: 12px;
-            margin-top: 10px;
-            opacity: 0.8;
-        }
-        
-        /* 移动端适配 */
-        @media (max-width: 768px) {
-            .element-selector-panel {
-                top: 10px;
-                right: 10px;
-                left: 10px;
-                width: auto;
-                padding: 15px;
-                max-height: 80vh;
-            }
-            
-            .element-selector-title {
-                font-size: 16px;
-            }
-            
-            .element-selector-btn {
-                min-width: 100px;
-                font-size: 13px;
-                padding: 8px;
-            }
-            
-            .element-selector-buttons {
-                gap: 8px;
-            }
-            
-            .element-selector-input, .element-selector-textarea {
-                font-size: 13px;
-                padding: 8px 10px;
-            }
-            
-            .element-selector-textarea {
-                min-height: 50px;
-                max-height: 120px;
-            }
+        .es-input:focus { outline: none; border-color: var(--es-pri); background: #fff; box-shadow: 0 0 0 3px var(--es-pri-light); }
+        .es-copy { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.5; padding: 4px; }
+        .es-copy:hover { opacity: 1; color: var(--es-pri); }
+
+        .es-toast {
+            position: fixed; top: 40px; left: 50%; transform: translateX(-50%);
+            background: rgba(26, 28, 30, 0.9); backdrop-filter: blur(10px); color: white;
+            padding: 8px 20px; border-radius: 50px; font-size: 12px; font-weight: 600;
+            z-index: 2147483648; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
     `);
 
-    // 脚本状态变量
-    let isSelecting = false;
-    let currentElement = null;
-    let highlightDiv = null;
-    let panelDiv = null;
-    let mouseX = 0;
-    let mouseY = 0;
+    // --- 核心变量 ---
+    const isTop = window.self === window.top;
+    let state = { isSelecting: false, isGroup: false, samples: [], currentEl: null, overlays: [] };
+    let ui = { highlight: null, panel: null, toast: null, fab: null };
 
-    // 初始化UI
-    function initUI() {
-        // 创建高亮框（初始隐藏）
-        highlightDiv = document.createElement('div');
-        highlightDiv.className = 'element-selector-highlight';
-        highlightDiv.id = 'element-selector-highlight';
-        document.body.appendChild(highlightDiv);
-        
-        // 创建控制面板（初始隐藏）
-        panelDiv = document.createElement('div');
-        panelDiv.className = 'element-selector-panel';
-        panelDiv.innerHTML = `
-            <div class="element-selector-header">
-                <div class="element-selector-title">🌸 元素选择器</div>
-                <button class="element-selector-close">×</button>
+    const icons = {
+        match: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>',
+        copy: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>',
+        close: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>',
+        inspect: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>'
+    };
+
+    function init() {
+        createSharedUI();
+        if (isTop) {
+            createPanel();
+            createFAB();
+            window.addEventListener('message', handleFrameMessage);
+        } else {
+            window.addEventListener('message', handleTopMessage);
+        }
+        setupEvents();
+    }
+
+    function createSharedUI() {
+        ui.highlight = document.createElement('div'); ui.highlight.className = 'es-highlight'; document.body.appendChild(ui.highlight);
+        ui.toast = document.createElement('div'); ui.toast.className = 'es-toast'; document.body.appendChild(ui.toast);
+    }
+
+    // --- 创建悬浮球 ---
+    function createFAB() {
+        ui.fab = document.createElement('div');
+        ui.fab.className = 'es-fab';
+        ui.fab.innerHTML = icons.inspect;
+        ui.fab.title = '拖拽移动 / 点击开始选择';
+        document.body.appendChild(ui.fab);
+
+        // 绑定拖拽
+        setupDraggable(ui.fab, ui.fab);
+
+        // 区分拖拽和点击
+        let isDragging = false;
+        ui.fab.addEventListener('mousedown', () => isDragging = false);
+        ui.fab.addEventListener('mousemove', () => isDragging = true);
+        ui.fab.addEventListener('mouseup', () => {
+            if (!isDragging) {
+                if (state.isSelecting || ui.panel.style.display === 'block') broadcast('CLOSE');
+                else broadcast('RESET');
+            }
+        });
+    }
+
+    // --- 创建面板 ---
+    function createPanel() {
+        ui.panel = document.createElement('div');
+        ui.panel.className = 'es-panel';
+        ui.panel.innerHTML = `
+            <div class="es-header" id="es-drag-handle">
+                <div class="es-title">${icons.inspect}&nbsp; PRO SELECTOR <span class="es-badge" id="es-count">0</span></div>
+                <div class="es-close" id="es-close">${icons.close}</div>
             </div>
-            <div class="element-selector-content">
-                <div class="element-selector-field">
-                    <label class="element-selector-label">元素标签</label>
-                    <input type="text" class="element-selector-input" id="selector-tag" readonly>
+            <div class="es-content">
+                <button class="es-btn es-btn-pri" id="btn-match" style="width:100%; margin-bottom:12px">${icons.match} Smart Match</button>
+                <div class="es-toolbar">
+                    <button class="es-btn" id="btn-parent">Parent</button>
+                    <button class="es-btn" id="btn-child">Child</button>
+                    <button class="es-btn" id="btn-reset">Reset</button>
                 </div>
-                <div class="element-selector-field">
-                    <label class="element-selector-label">CSS选择器</label>
-                    <input type="text" class="element-selector-input" id="selector-css" readonly>
+
+                <div id="es-suggestions-wrap" style="display:none">
+                    <div class="es-section-label">Suggestions</div>
+                    <div class="es-chips" id="es-chips"></div>
                 </div>
-                <div class="element-selector-field">
-                    <label class="element-selector-label">元素文本内容</label>
-                    <textarea class="element-selector-textarea" id="selector-text" readonly></textarea>
-                    <div class="element-selector-text-counter" id="selector-text-counter">字符数: 0</div>
+
+                <div class="es-field">
+                    <div class="es-section-label">CSS Selector</div>
+                    <div class="es-input-wrap">
+                        <input type="text" class="es-input" id="inp-css" placeholder="CSS Selector">
+                        <div class="es-copy" id="cp-css">${icons.copy}</div>
+                    </div>
                 </div>
-                <div class="element-selector-field">
-                    <label class="element-selector-label">其他可能选择器</label>
-                    <div id="selector-alternatives"></div>
+                <div class="es-field">
+                    <div class="es-input-wrap">
+                        <input type="text" class="es-input" id="inp-xpath" placeholder="Smart XPath">
+                        <div class="es-copy" id="cp-xpath">${icons.copy}</div>
+                    </div>
                 </div>
-                <div class="element-selector-hint">
-                    提示：按 ESC 键退出选择模式
-                </div>
-            </div>
-            <div class="element-selector-buttons">
-                <button class="element-selector-btn element-selector-copy">复制选择器</button>
-                <button class="element-selector-btn element-selector-copy-text">复制文本</button>
-                <button class="element-selector-btn element-selector-reselect">重新选择</button>
-                <button class="element-selector-btn element-selector-close-btn">关闭面板</button>
+                <textarea class="es-input" id="inp-text" readonly style="height:48px;resize:none;margin-top:4px;" placeholder="Content..."></textarea>
             </div>
         `;
-        document.body.appendChild(panelDiv);
-        
-        // 绑定面板事件
-        const closeBtn = panelDiv.querySelector('.element-selector-close');
-        const closePanelBtn = panelDiv.querySelector('.element-selector-close-btn');
-        const copyBtn = panelDiv.querySelector('.element-selector-copy');
-        const copyTextBtn = panelDiv.querySelector('.element-selector-copy-text');
-        const reselectBtn = panelDiv.querySelector('.element-selector-reselect');
-        
-        closeBtn.addEventListener('click', () => {
-            panelDiv.style.display = 'none';
-            stopSelecting();
+        document.body.appendChild(ui.panel);
+
+        // 绑定拖拽
+        setupDraggable(ui.panel, ui.panel.querySelector('#es-drag-handle'));
+
+        const $ = (s) => ui.panel.querySelector(s);
+        $('#es-close').onclick = () => broadcast('CLOSE');
+        $('#btn-reset').onclick = () => broadcast('RESET');
+        $('#btn-match').onclick = () => broadcast('START_GROUP');
+        $('#btn-parent').onclick = () => nav('parent');
+        $('#btn-child').onclick = () => nav('child');
+        bindCopy($('#cp-css'), $('#inp-css'));
+        bindCopy($('#cp-xpath'), $('#inp-xpath'));
+    }
+
+    // --- 核心通用功能 ---
+    function setupEvents() {
+        GM_registerMenuCommand('👁️ 显示/隐藏悬浮球', () => {
+            if(!ui.fab) return;
+            const isHidden = ui.fab.style.display === 'none';
+            ui.fab.style.display = isHidden ? 'flex' : 'none';
+            toast(isHidden ? '悬浮球已显示' : '悬浮球已隐藏');
         });
-        
-        closePanelBtn.addEventListener('click', () => {
-            panelDiv.style.display = 'none';
-            stopSelecting();
-        });
-        
-        copyBtn.addEventListener('click', () => {
-            const cssInput = document.getElementById('selector-css');
-            cssInput.select();
-            
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(cssInput.value).then(() => {
-                    showCopyFeedback(copyBtn, '✓ 选择器已复制');
-                });
-            } else {
-                document.execCommand('copy');
-                showCopyFeedback(copyBtn, '✓ 选择器已复制');
+        GM_registerMenuCommand('🚀 强制开启', () => broadcast('RESET'));
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') broadcast('CLOSE'); });
+        document.addEventListener('mousemove', e => {
+            if (!state.isSelecting) return;
+            const el = document.elementFromPoint(e.clientX, e.clientY);
+            if (el && isValid(el)) highlight(el);
+        }, { passive: true });
+        document.addEventListener('click', e => {
+            if (!state.isSelecting) return;
+            if (isTop && (ui.panel.contains(e.target) || ui.fab.contains(e.target))) return;
+            e.preventDefault(); e.stopPropagation();
+            handleSelect(e.target);
+        }, true);
+    }
+
+    function handleSelect(el) {
+        if (state.isGroup) {
+            if (state.samples.length > 0 && el.tagName !== state.samples[0].tagName) {
+                toast(`Strict Mode: <${state.samples[0].tagName.toLowerCase()}> only.`); return;
             }
-        });
-        
-        copyTextBtn.addEventListener('click', () => {
-            const textArea = document.getElementById('selector-text');
-            textArea.select();
-            
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(textArea.value).then(() => {
-                    showCopyFeedback(copyTextBtn, '✓ 文本已复制');
-                });
-            } else {
-                document.execCommand('copy');
-                showCopyFeedback(copyTextBtn, '✓ 文本已复制');
-            }
-        });
-        
-        reselectBtn.addEventListener('click', () => {
-            panelDiv.style.display = 'none';
-            startSelecting();
-        });
-    }
-
-    // 显示复制反馈
-    function showCopyFeedback(button, message) {
-        const originalText = button.textContent;
-        button.textContent = message;
-        button.style.background = '#e8f5e9';
-        button.style.color = '#2e7d32';
-        
-        setTimeout(() => {
-            button.textContent = originalText;
-            button.style.background = '';
-            button.style.color = '';
-        }, 1500);
-    }
-
-    // 开始选择模式
-    function startSelecting() {
-        if (isSelecting) return;
-        
-        isSelecting = true;
-        console.log('🌸 元素选择模式已启动，移动鼠标选择元素');
-        
-        // 添加事件监听
-        document.addEventListener('mousemove', handleMouseMove, true);
-        document.addEventListener('click', handleClick, true);
-        document.addEventListener('keydown', handleKeyDown);
-    }
-
-    // 停止选择模式
-    function stopSelecting() {
-        if (!isSelecting) return;
-        
-        isSelecting = false;
-        highlightDiv.style.display = 'none';
-        
-        // 移除事件监听
-        document.removeEventListener('mousemove', handleMouseMove, true);
-        document.removeEventListener('click', handleClick, true);
-        document.removeEventListener('keydown', handleKeyDown);
-        
-        console.log('🌸 元素选择模式已停止');
-    }
-
-    // 处理鼠标移动
-    function handleMouseMove(e) {
-        if (!isSelecting) return;
-        
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        
-        requestAnimationFrame(() => {
-            const element = document.elementFromPoint(mouseX, mouseY);
-            
-            if (!element || element === highlightDiv || panelDiv.contains(element)) {
-                return;
-            }
-            
-            if (element && element !== currentElement) {
-                currentElement = element;
-                highlightElement(element);
-            }
-        });
-    }
-
-    // 处理点击
-    function handleClick(e) {
-        if (!isSelecting) return;
-        
-        if (e.target === highlightDiv || panelDiv.contains(e.target)) {
-            return;
-        }
-        
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        
-        const element = document.elementFromPoint(mouseX, mouseY);
-        
-        if (!element || element === highlightDiv) {
-            return;
-        }
-        
-        currentElement = element;
-        
-        // 获取CSS选择器并显示面板
-        const selector = getUniqueSelector(element);
-        showPanel(element, selector);
-        
-        stopSelecting();
-        
-        return false;
-    }
-
-    // 处理键盘事件
-    function handleKeyDown(e) {
-        if (e.key === 'Escape') {
-            stopSelecting();
-        }
-    }
-
-    // 高亮显示元素
-    function highlightElement(element) {
-        if (!element || !element.getBoundingClientRect) return;
-        
-        const rect = element.getBoundingClientRect();
-        
-        highlightDiv.style.display = 'block';
-        highlightDiv.style.width = `${rect.width}px`;
-        highlightDiv.style.height = `${rect.height}px`;
-        highlightDiv.style.left = `${rect.left + window.scrollX}px`;
-        highlightDiv.style.top = `${rect.top + window.scrollY}px`;
-    }
-
-    // 获取元素的唯一选择器
-    function getUniqueSelector(element) {
-        if (!element || !element.tagName) return '';
-        
-        if (element === highlightDiv || element.id === 'element-selector-highlight') {
-            return '错误：选择了高亮框本身';
-        }
-        
-        if (element.id && element.id !== 'element-selector-highlight') {
-            return `#${CSS.escape(element.id)}`;
-        }
-        
-        const path = [];
-        let current = element;
-        
-        while (current && current.nodeType === Node.ELEMENT_NODE) {
-            let selector = current.tagName.toLowerCase();
-            
-            if (current.id && current.id !== 'element-selector-highlight') {
-                selector = `#${CSS.escape(current.id)}`;
-                path.unshift(selector);
-                break;
-            }
-            
-            const parent = current.parentNode;
-            if (parent) {
-                const siblings = Array.from(parent.children);
-                const sameTagSiblings = siblings.filter(s => s.tagName === current.tagName);
-                
-                if (sameTagSiblings.length > 1) {
-                    const index = sameTagSiblings.indexOf(current) + 1;
-                    
-                    const allSiblingsIndex = siblings.indexOf(current) + 1;
-                    const isLast = allSiblingsIndex === siblings.length;
-                    const isFirst = allSiblingsIndex === 1;
-                    
-                    if (isLast) {
-                        selector += ':last-child';
-                    } else if (isFirst) {
-                        selector += ':first-child';
-                    } else {
-                        selector += `:nth-child(${allSiblingsIndex})`;
-                    }
-                }
-            }
-            
-            if (current.className && typeof current.className === 'string') {
-                const classes = current.className.trim().split(/\s+/).filter(c => c.length > 0);
-                if (classes.length > 0) {
-                    const shortestClass = classes.reduce((a, b) => a.length < b.length ? a : b);
-                    selector += `.${CSS.escape(shortestClass)}`;
-                }
-            }
-            
-            path.unshift(selector);
-            
-            const testSelector = path.join(' > ');
-            const matches = document.querySelectorAll(testSelector);
-            
-            let validMatches = 0;
-            matches.forEach(match => {
-                if (match !== highlightDiv && match.id !== 'element-selector-highlight') {
-                    validMatches++;
-                }
+            if (!state.samples.includes(el)) state.samples.push(el);
+            const sel = getGroupSelector(state.samples);
+            state.isSelecting = false;
+            highlightGroup(sel);
+            sendUpdate({ mode: 'group', selector: sel, count: document.querySelectorAll(sel).length });
+        } else {
+            state.isSelecting = false;
+            state.currentEl = el;
+            highlight(el);
+            sendUpdate({
+                mode: 'single',
+                chips: getCascadeSuggestions(el),
+                xpath: getSmartXPath(el),
+                text: (el.innerText || el.value || '').trim().substring(0, 100)
             });
-            
-            if (validMatches === 1) {
-                return testSelector;
-            }
-            
-            current = parent;
         }
-        
+    }
+
+    // --- 拖拽核心逻辑 (稳定版) ---
+    function setupDraggable(element, handle) {
+        let isDragging = false;
+        let startX, startY, initialLeft, initialTop;
+
+        handle.onmousedown = (e) => {
+            if (e.button !== 0) return;
+
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            const rect = element.getBoundingClientRect();
+            initialLeft = rect.left;
+            initialTop = rect.top;
+
+            // 锁定坐标，防止跳动
+            element.style.left = initialLeft + 'px';
+            element.style.top = initialTop + 'px';
+            element.style.right = 'auto';
+            element.style.bottom = 'auto';
+
+            if (element === ui.panel) {
+                element.style.width = rect.width + 'px';
+            }
+        };
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+            element.style.left = (initialLeft + dx) + 'px';
+            element.style.top = (initialTop + dy) + 'px';
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+    }
+
+    // --- 其他辅助逻辑 ---
+    function getCascadeSuggestions(el) {
+        const tag = el.tagName.toLowerCase();
+        const pool = [];
+        if (el.id) pool.push({ label: 'ID', val: `#${CSS.escape(el.id)}` });
+        ['data-testid', 'name', 'placeholder', 'aria-label'].forEach(attr => {
+            const val = el.getAttribute(attr);
+            if (val) pool.push({ label: 'Attr', val: `${tag}[${attr}="${val}"]` });
+        });
+        const clsList = Array.from(el.classList).filter(c => !c.startsWith('es-') && c.length < 20 && !/\d/.test(c));
+        if (clsList.length) pool.push({ label: 'Class', val: `${tag}.${CSS.escape(clsList[0])}` });
+        if (el.parentElement) {
+            const index = Array.from(el.parentElement.children).indexOf(el) + 1;
+            pool.push({ label: 'Nth', val: `${tag}:nth-child(${index})` });
+        }
+        pool.push({ label: 'Path', val: getUniqueSelector(el) });
+        return pool;
+    }
+
+    function getSmartXPath(el) {
+        if (el.id) return `//*[@id="${el.id}"]`;
+        return getFullXPath(el);
+    }
+
+    function handleFrameMessage(e) {
+        if (e.data?.type === 'ES_UPDATE') {
+            broadcast('MUTEX_HL');
+            ui.panel.style.display = 'block';
+            e.data.payload.mode === 'group' ? updatePanelGroup(e.data.payload.selector, e.data.payload.count) : updatePanelSingle(e.data.payload);
+        }
+    }
+
+    function handleTopMessage(e) {
+        const c = e.data?.cmd;
+        if (c === 'RESET') start();
+        if (c === 'CLOSE') closeLocal();
+        if (c === 'START_GROUP') startGroupModeLocal();
+        if (c === 'MUTEX_HL') ui.highlight.style.display = 'none';
+    }
+
+    function broadcast(cmd) {
+        if (cmd === 'CLOSE') closeLocal();
+        if (cmd === 'RESET') start();
+        if (cmd === 'START_GROUP') startGroupModeLocal();
+        if (cmd === 'MUTEX_HL') ui.highlight.style.display = 'none';
+        document.querySelectorAll('iframe').forEach(f => f.contentWindow.postMessage({type:'ES_CMD', cmd}, '*'));
+    }
+
+    function sendUpdate(payload) {
+        if (isTop) handleFrameMessage({data:{type:'ES_UPDATE', payload}});
+        else window.top.postMessage({type:'ES_UPDATE', payload}, '*');
+    }
+
+    function updatePanelSingle(data) {
+        const $ = (s) => ui.panel.querySelector(s);
+        $('#es-suggestions-wrap').style.display = 'block';
+        $('#es-count').style.display = 'none';
+        const chips = $('#es-chips'); chips.innerHTML = '';
+        data.chips.forEach((c, idx) => {
+            const chip = document.createElement('div');
+            chip.className = `es-chip ${idx === 0 ? 'active' : ''}`;
+            chip.textContent = c.val;
+            chip.onclick = () => {
+                Array.from(chips.children).forEach(ch => ch.classList.remove('active'));
+                chip.classList.add('active'); $('#inp-css').value = c.val;
+            };
+            chips.appendChild(chip);
+        });
+        $('#inp-css').value = data.chips[0].val;
+        $('#inp-xpath').value = data.xpath;
+        $('#inp-text').value = data.text;
+    }
+
+    function updatePanelGroup(sel, count) {
+        const $ = (s) => ui.panel.querySelector(s);
+        $('#es-suggestions-wrap').style.display = 'none';
+        $('#es-count').style.display = 'inline-block'; $('#es-count').textContent = count;
+        $('#inp-css').value = sel;
+    }
+
+    function getUniqueSelector(el) {
+        if (el.id) return `#${CSS.escape(el.id)}`;
+        let path = [];
+        while (el && el.nodeType === 1) {
+            let s = el.nodeName.toLowerCase();
+            const cls = Array.from(el.classList).filter(c => !c.startsWith('es-'))[0];
+            if (cls) s += `.${CSS.escape(cls)}`;
+            path.unshift(s); el = el.parentNode;
+        }
         return path.join(' > ');
     }
 
-    // 获取元素的文本内容
-    function getElementText(element) {
-        if (!element) return '';
-        
-        // 如果是input、textarea、select等表单元素
-        if (element.tagName === 'INPUT') {
-            return element.value || element.placeholder || element.getAttribute('aria-label') || '';
+    function getFullXPath(el) {
+        let path = [];
+        for (; el && el.nodeType === 1; el = el.parentNode) {
+            let idx = 1;
+            for (let s = el.previousSibling; s; s = s.previousSibling) if (s.nodeType===1 && s.tagName===el.tagName) idx++;
+            path.unshift(`${el.tagName.toLowerCase()}[${idx}]`);
         }
-        if (element.tagName === 'TEXTAREA') {
-            return element.value || element.placeholder || '';
-        }
-        if (element.tagName === 'SELECT') {
-            return element.options[element.selectedIndex]?.text || '';
-        }
-        if (element.tagName === 'IMG') {
-            return element.alt || element.title || element.getAttribute('aria-label') || '';
-        }
-        if (element.tagName === 'A') {
-            const text = element.textContent.trim();
-            return text || element.title || '';
-        }
-        
-        // 对于其他元素，获取文本内容
-        let text = element.textContent;
-        
-        // 清理文本：移除多余空格和换行
-        if (text) {
-            text = text.replace(/\s+/g, ' ').trim();
-            
-            // 如果文本太长，截断并添加省略号
-            if (text.length > 500) {
-                text = text.substring(0, 500) + '...';
-            }
-        }
-        
-        // 如果没有文本内容，尝试获取其他属性
-        if (!text || text.length === 0) {
-            const attrs = ['placeholder', 'title', 'aria-label', 'alt', 'value'];
-            for (const attr of attrs) {
-                const value = element.getAttribute(attr);
-                if (value && value.trim()) {
-                    return value.trim();
-                }
-            }
-            
-            // 检查是否有关联的label
-            if (element.id) {
-                const label = document.querySelector(`label[for="${element.id}"]`);
-                if (label && label.textContent) {
-                    return label.textContent.trim();
-                }
-            }
-            
-            // 获取子元素的alt或title
-            const childWithAlt = element.querySelector('[alt], [title], [aria-label]');
-            if (childWithAlt) {
-                const alt = childWithAlt.getAttribute('alt') || 
-                           childWithAlt.getAttribute('title') || 
-                           childWithAlt.getAttribute('aria-label');
-                if (alt && alt.trim()) {
-                    return alt.trim();
-                }
-            }
-            
-            return '(无文本内容)';
-        }
-        
-        return text;
+        return '/' + path.join('/');
     }
 
-    // 获取替代选择器
-    function getAlternativeSelectors(element) {
-        const alternatives = [];
-        
-        if (element === highlightDiv || element.id === 'element-selector-highlight') {
-            return alternatives;
-        }
-        
-        if (element.id && element.id !== 'element-selector-highlight') {
-            alternatives.push(`#${CSS.escape(element.id)}`);
-        }
-        
-        if (element.className && typeof element.className === 'string') {
-            const classes = element.className.trim().split(/\s+/).filter(c => c.length > 0);
-            classes.forEach(className => {
-                const selector = `${element.tagName.toLowerCase()}.${CSS.escape(className)}`;
-                const matches = document.querySelectorAll(selector);
-                
-                let validMatches = 0;
-                matches.forEach(match => {
-                    if (match !== highlightDiv && match.id !== 'element-selector-highlight') {
-                        validMatches++;
-                    }
-                });
-                
-                if (validMatches === 1) {
-                    alternatives.push(selector);
-                }
-            });
-        }
-        
-        const attrs = ['name', 'type', 'href', 'src', 'alt', 'title', 'value', 'placeholder'];
-        attrs.forEach(attr => {
-            if (element.hasAttribute(attr)) {
-                const value = element.getAttribute(attr);
-                if (value && value.trim()) {
-                    const selector = `${element.tagName.toLowerCase()}[${attr}="${CSS.escape(value)}"]`;
-                    const matches = document.querySelectorAll(selector);
-                    
-                    let validMatches = 0;
-                    matches.forEach(match => {
-                        if (match !== highlightDiv && match.id !== 'element-selector-highlight') {
-                            validMatches++;
-                        }
-                    });
-                    
-                    if (validMatches === 1) {
-                        alternatives.push(selector);
-                    }
-                }
-            }
-        });
-        
-        return alternatives.slice(0, 3);
+    function getGroupSelector(elements) {
+        const first = elements[0];
+        const tag = first.tagName.toLowerCase();
+        let commonClasses = Array.from(first.classList).filter(c => !c.startsWith('es-'));
+        for (let i = 1; i < elements.length; i++) commonClasses = commonClasses.filter(c => Array.from(elements[i].classList).includes(c));
+        return tag + (commonClasses.length ? '.' + commonClasses.join('.') : '');
     }
 
-    // 显示结果面板
-    function showPanel(element, selector) {
-        const tagInput = document.getElementById('selector-tag');
-        const cssInput = document.getElementById('selector-css');
-        const textArea = document.getElementById('selector-text');
-        const textCounter = document.getElementById('selector-text-counter');
-        const alternativesDiv = document.getElementById('selector-alternatives');
-        
-        // 设置值
-        tagInput.value = element.tagName.toLowerCase();
-        cssInput.value = selector;
-        
-        // 获取并设置文本内容
-        const elementText = getElementText(element);
-        textArea.value = elementText;
-        
-        // 更新字符计数
-        const charCount = elementText.length;
-        textCounter.textContent = `字符数: ${charCount}`;
-        
-        // 自动调整文本区域高度
-        textArea.style.height = 'auto';
-        const newHeight = Math.min(Math.max(textArea.scrollHeight, 60), 150);
-        textArea.style.height = `${newHeight}px`;
-        
-        // 获取并显示替代选择器
-        const alternatives = getAlternativeSelectors(element);
-        alternativesDiv.innerHTML = '';
-        
-        if (alternatives.length > 0) {
-            alternatives.forEach(alt => {
-                const tag = document.createElement('span');
-                tag.className = 'element-selector-tag';
-                tag.textContent = alt;
-                tag.title = '点击复制';
-                
-                tag.addEventListener('click', () => {
-                    if (navigator.clipboard && navigator.clipboard.writeText) {
-                        navigator.clipboard.writeText(alt).then(() => {
-                            const originalText = tag.textContent;
-                            tag.textContent = '✓ 已复制';
-                            setTimeout(() => {
-                                tag.textContent = originalText;
-                            }, 1000);
-                        });
-                    } else {
-                        const tempInput = document.createElement('input');
-                        tempInput.value = alt;
-                        document.body.appendChild(tempInput);
-                        tempInput.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(tempInput);
-                        
-                        const originalText = tag.textContent;
-                        tag.textContent = '✓ 已复制';
-                        setTimeout(() => {
-                            tag.textContent = originalText;
-                        }, 1000);
-                    }
-                });
-                
-                alternativesDiv.appendChild(tag);
-            });
-        } else {
-            alternativesDiv.innerHTML = '<span style="font-size:12px;opacity:0.7;">无其他简短选择器</span>';
-        }
-        
-        // 显示面板
-        panelDiv.style.display = 'block';
+    function highlight(el) {
+        const r = el.getBoundingClientRect();
+        Object.assign(ui.highlight.style, { width:r.width+'px', height:r.height+'px', top:(r.top+scrollY)+'px', left:(r.left+scrollX)+'px', display:'block'});
     }
+    function highlightGroup(sel) {
+        clearHighlights();
+        try { document.querySelectorAll(sel).forEach(el => {
+            const r = el.getBoundingClientRect();
+            if(r.width===0) return;
+            const d = document.createElement('div'); d.className = 'es-group-highlight';
+            Object.assign(d.style, { width:r.width+'px', height:r.height+'px', top:(r.top+scrollY)+'px', left:(r.left+scrollX)+'px' });
+            document.body.appendChild(d); state.overlays.push(d);
+        }); } catch(e){}
+    }
+    function start() { state.isSelecting = true; state.isGroup = false; state.samples = []; if (isTop) ui.panel.style.display = 'none'; clearHighlights(); toast("Select element..."); }
+    function startGroupModeLocal() { if (!state.currentEl) return; state.isGroup = true; state.samples = [state.currentEl]; state.isSelecting = true; if(isTop) ui.panel.style.display='none'; clearHighlights(); toast("Click another element..."); }
+    function clearHighlights() { state.overlays.forEach(o => o.remove()); state.overlays = []; ui.highlight.style.display = 'none'; }
+    function closeLocal() { state.isSelecting = false; state.isGroup = false; if (isTop) ui.panel.style.display = 'none'; clearHighlights(); }
+    function toast(m) { ui.toast.textContent = m; ui.toast.style.display = 'block'; setTimeout(() => ui.toast.style.display = 'none', 2000); }
+    function isValid(el) { return el !== ui.highlight && (!isTop || !ui.panel.contains(el)) && (!ui.fab || !ui.fab.contains(el)) && !el.classList.contains('es-group-highlight'); }
+    function bindCopy(b, i) { b.onclick = () => { GM_setClipboard(i.value); toast("Copied!"); }; }
+    function nav(dir) { if(!state.currentEl) return; const t = dir==='parent'?state.currentEl.parentElement:state.currentEl.firstElementChild; if(t) handleSelect(t); }
 
-    // 初始化
-    function init() {
-        initUI();
-        
-        // 注册菜单命令
-        GM_registerMenuCommand('🌸 开始选择元素', startSelecting);
-        
-        console.log('🌸 元素选择器已加载（带文本显示）');
-        console.log('🌸 使用方式:');
-        console.log('  1. 点击油猴图标，选择"开始选择元素"');
-        console.log('  2. 移动鼠标选择元素，元素会有粉色边框');
-        console.log('  3. 点击元素确认选择');
-        console.log('  4. 面板会显示CSS选择器和元素文本内容');
-    }
-
-    // 页面加载完成后初始化
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    init();
 })();

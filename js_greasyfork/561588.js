@@ -13,7 +13,7 @@
     // ★新規追加: jsonbin.io の設定
     // ここに取得した BIN_ID と API_KEY を入力してください
     const JSONBIN_CONFIG = {
-        BIN_ID: "6963dd9043b1c97be9292cb1",      // 例: "65a1b2..."
+        BIN_ID: "6976f6caae596e708ff65042",      // 例: "65a1b2..."
         API_KEY: "$2a$10$RGLr4Eo/GYLCm.lcxSYSUOQuCfiJwE5lrEw7/3mX2wfDWGs/FE/HK"  // 例: "$2a$10$..."
     };
 

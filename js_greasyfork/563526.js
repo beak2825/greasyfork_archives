@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         nhentai Quick Peek
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0
-// @description  Shows language, page count, artist, upload date, and copyable manga code when hovering over thumbnails
+// @version      1.2.0
+// @description  Shows language, page count, artist, upload date, and copyable manga code/link when hovering over thumbnails
 // @author       Snow2122
 // @icon         https://nhentai.net/favicon.ico
 // @match        *://nhentai.net/*
@@ -13,22 +13,22 @@
 // @updateURL https://update.greasyfork.org/scripts/563526/nhentai%20Quick%20Peek.meta.js
 // ==/UserScript==
 
-(function() {
-    'use strict';
+(function () {
+  "use strict";
 
-    // ============================================
-    // CONFIGURATION
-    // ============================================
-    const LANGUAGE_TAGS = {
-        '12227': { name: 'English', flag: '🇬🇧', code: 'EN' },
-        '6346': { name: 'Japanese', flag: '🇯🇵', code: 'JP' },
-        '29963': { name: 'Chinese', flag: '🇨🇳', code: 'CN' }
-    };
+  // ============================================
+  // CONFIGURATION
+  // ============================================
+  const LANGUAGE_TAGS = {
+    12227: { name: "English", flag: "🇬🇧", code: "EN" },
+    6346: { name: "Japanese", flag: "🇯🇵", code: "JP" },
+    29963: { name: "Chinese", flag: "🇨🇳", code: "CN" },
+  };
 
-    // ============================================
-    // STYLES
-    // ============================================
-    const styles = `
+  // ============================================
+  // STYLES
+  // ============================================
+  const styles = `
         .nhi-overlay {
             position: absolute;
             bottom: 0;
@@ -81,40 +81,65 @@
             font-size: 14px;
         }
 
-        .nhi-code-row {
+        .nhi-copy-container {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .nhi-copy-btn {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 4px;
+            flex: 1;
             background: rgba(237, 37, 83, 0.15);
             border: 1px solid rgba(237, 37, 83, 0.3);
             border-radius: 4px;
             padding: 6px 8px;
-            margin-top: 4px;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .nhi-code-row:hover {
+        .nhi-copy-btn:hover {
             background: rgba(237, 37, 83, 0.3);
             border-color: rgba(237, 37, 83, 0.5);
         }
 
-        .nhi-code-value {
+        .nhi-copy-btn.nhi-link-btn {
+            background: rgba(37, 99, 237, 0.15);
+            border-color: rgba(37, 99, 237, 0.3);
+        }
+
+        .nhi-copy-btn.nhi-link-btn:hover {
+            background: rgba(37, 99, 237, 0.3);
+            border-color: rgba(37, 99, 237, 0.5);
+        }
+
+        .nhi-copy-value {
             font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 700;
             color: #ed2553;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+        }
+
+        .nhi-link-btn .nhi-copy-value {
+            color: #2563ed;
         }
 
         .nhi-copy-icon {
-            font-size: 12px;
+            font-size: 11px;
             color: #888;
             transition: color 0.2s ease;
         }
 
-        .nhi-code-row:hover .nhi-copy-icon {
+        .nhi-copy-btn:hover .nhi-copy-icon {
             color: #ed2553;
+        }
+
+        .nhi-link-btn:hover .nhi-copy-icon {
+            color: #2563ed;
         }
 
         .nhi-copied {
@@ -122,7 +147,7 @@
             border-color: rgba(76, 175, 80, 0.5) !important;
         }
 
-        .nhi-copied .nhi-code-value,
+        .nhi-copied .nhi-copy-value,
         .nhi-copied .nhi-copy-icon {
             color: #4caf50 !important;
         }
@@ -164,141 +189,149 @@
         }
     `;
 
-    // Inject styles
-    if (typeof GM_addStyle !== 'undefined') {
-        GM_addStyle(styles);
+  // Inject styles
+  if (typeof GM_addStyle !== "undefined") {
+    GM_addStyle(styles);
+  } else {
+    const styleElement = document.createElement("style");
+    styleElement.textContent = styles;
+    document.head.appendChild(styleElement);
+  }
+
+  // ============================================
+  // HELPER FUNCTIONS
+  // ============================================
+
+  /**
+   * Extract manga code from gallery element
+   */
+  function getMangaCode(gallery) {
+    const link = gallery.querySelector("a.cover") || gallery.querySelector("a");
+    if (!link) return null;
+
+    const href = link.getAttribute("href");
+    const match = href.match(/\/g\/(\d+)\/?/);
+    return match ? match[1] : null;
+  }
+
+  /**
+   * Get language from data-tags attribute
+   */
+  function getLanguage(gallery) {
+    const dataTags = gallery.getAttribute("data-tags");
+    if (!dataTags) return { name: "Unknown", flag: "🏳️", code: "??" };
+
+    const tagIds = dataTags.split(" ");
+
+    for (const tagId of tagIds) {
+      if (LANGUAGE_TAGS[tagId]) {
+        return LANGUAGE_TAGS[tagId];
+      }
+    }
+
+    return { name: "Other", flag: "🌐", code: "OT" };
+  }
+
+  /**
+   * Cache for gallery info to avoid repeated API calls
+   */
+  const galleryInfoCache = new Map();
+
+  /**
+   * Format Unix timestamp to readable date
+   */
+  function formatDate(timestamp) {
+    if (!timestamp) return "Unknown";
+    const date = new Date(timestamp * 1000);
+    const options = { year: "numeric", month: "short", day: "numeric" };
+    return date.toLocaleDateString("en-US", options);
+  }
+
+  /**
+   * Extract artist name from tags
+   */
+  function extractArtist(tags) {
+    if (!tags || !Array.isArray(tags)) return null;
+    const artistTag = tags.find((tag) => tag.type === "artist");
+    return artistTag ? artistTag.name : null;
+  }
+
+  /**
+   * Fetch gallery info from API or cache
+   */
+  async function getGalleryInfo(mangaCode) {
+    if (galleryInfoCache.has(mangaCode)) {
+      return galleryInfoCache.get(mangaCode);
+    }
+
+    try {
+      const response = await fetch(
+        `https://nhentai.net/api/gallery/${mangaCode}`,
+      );
+      if (!response.ok) throw new Error("API request failed");
+
+      const data = await response.json();
+      const info = {
+        pageCount: data.num_pages || data.images?.pages?.length || "?",
+        uploadDate: formatDate(data.upload_date),
+        artist: extractArtist(data.tags),
+      };
+
+      galleryInfoCache.set(mangaCode, info);
+      return info;
+    } catch (error) {
+      console.error(
+        "[nhentai Hover Info] Failed to fetch gallery info:",
+        error,
+      );
+      return { pageCount: "?", uploadDate: "Unknown", artist: null };
+    }
+  }
+
+  /**
+   * Copy text to clipboard
+   */
+  function copyToClipboard(text, element) {
+    if (typeof GM_setClipboard !== "undefined") {
+      GM_setClipboard(text, "text");
+      showCopiedFeedback(element);
     } else {
-        const styleElement = document.createElement('style');
-        styleElement.textContent = styles;
-        document.head.appendChild(styleElement);
+      // Fallback for browsers without GM_setClipboard
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
+          showCopiedFeedback(element);
+        })
+        .catch((err) => {
+          console.error("[nhentai Hover Info] Failed to copy:", err);
+        });
     }
+  }
 
-    // ============================================
-    // HELPER FUNCTIONS
-    // ============================================
+  /**
+   * Show visual feedback when code is copied
+   */
+  function showCopiedFeedback(element) {
+    const copyBtn = element.closest(".nhi-copy-btn");
+    const copyIcon = copyBtn.querySelector(".nhi-copy-icon");
+    const originalIcon = copyIcon.textContent;
 
-    /**
-     * Extract manga code from gallery element
-     */
-    function getMangaCode(gallery) {
-        const link = gallery.querySelector('a.cover') || gallery.querySelector('a');
-        if (!link) return null;
-        
-        const href = link.getAttribute('href');
-        const match = href.match(/\/g\/(\d+)\/?/);
-        return match ? match[1] : null;
-    }
+    copyBtn.classList.add("nhi-copied");
+    copyIcon.textContent = "✓";
 
-    /**
-     * Get language from data-tags attribute
-     */
-    function getLanguage(gallery) {
-        const dataTags = gallery.getAttribute('data-tags');
-        if (!dataTags) return { name: 'Unknown', flag: '🏳️', code: '??' };
+    setTimeout(() => {
+      copyBtn.classList.remove("nhi-copied");
+      copyIcon.textContent = originalIcon;
+    }, 1500);
+  }
 
-        const tagIds = dataTags.split(' ');
-        
-        for (const tagId of tagIds) {
-            if (LANGUAGE_TAGS[tagId]) {
-                return LANGUAGE_TAGS[tagId];
-            }
-        }
-        
-        return { name: 'Other', flag: '🌐', code: 'OT' };
-    }
-
-    /**
-     * Cache for gallery info to avoid repeated API calls
-     */
-    const galleryInfoCache = new Map();
-
-    /**
-     * Format Unix timestamp to readable date
-     */
-    function formatDate(timestamp) {
-        if (!timestamp) return 'Unknown';
-        const date = new Date(timestamp * 1000);
-        const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        return date.toLocaleDateString('en-US', options);
-    }
-
-    /**
-     * Extract artist name from tags
-     */
-    function extractArtist(tags) {
-        if (!tags || !Array.isArray(tags)) return null;
-        const artistTag = tags.find(tag => tag.type === 'artist');
-        return artistTag ? artistTag.name : null;
-    }
-
-    /**
-     * Fetch gallery info from API or cache
-     */
-    async function getGalleryInfo(mangaCode) {
-        if (galleryInfoCache.has(mangaCode)) {
-            return galleryInfoCache.get(mangaCode);
-        }
-
-        try {
-            const response = await fetch(`https://nhentai.net/api/gallery/${mangaCode}`);
-            if (!response.ok) throw new Error('API request failed');
-            
-            const data = await response.json();
-            const info = {
-                pageCount: data.num_pages || data.images?.pages?.length || '?',
-                uploadDate: formatDate(data.upload_date),
-                artist: extractArtist(data.tags)
-            };
-            
-            galleryInfoCache.set(mangaCode, info);
-            return info;
-        } catch (error) {
-            console.error('[nhentai Hover Info] Failed to fetch gallery info:', error);
-            return { pageCount: '?', uploadDate: 'Unknown', artist: null };
-        }
-    }
-
-    /**
-     * Copy text to clipboard
-     */
-    function copyToClipboard(text, element) {
-        if (typeof GM_setClipboard !== 'undefined') {
-            GM_setClipboard(text, 'text');
-            showCopiedFeedback(element);
-        } else {
-            // Fallback for browsers without GM_setClipboard
-            navigator.clipboard.writeText(text).then(() => {
-                showCopiedFeedback(element);
-            }).catch(err => {
-                console.error('[nhentai Hover Info] Failed to copy:', err);
-            });
-        }
-    }
-
-    /**
-     * Show visual feedback when code is copied
-     */
-    function showCopiedFeedback(element) {
-        const codeRow = element.closest('.nhi-code-row');
-        const copyIcon = codeRow.querySelector('.nhi-copy-icon');
-        const originalIcon = copyIcon.textContent;
-        
-        codeRow.classList.add('nhi-copied');
-        copyIcon.textContent = '✓';
-        
-        setTimeout(() => {
-            codeRow.classList.remove('nhi-copied');
-            copyIcon.textContent = originalIcon;
-        }, 1500);
-    }
-
-    /**
-     * Create info overlay element
-     */
-    function createOverlay(mangaCode, language) {
-        const overlay = document.createElement('div');
-        overlay.className = 'nhi-overlay';
-        overlay.innerHTML = `
+  /**
+   * Create info overlay element
+   */
+  function createOverlay(mangaCode, language) {
+    const overlay = document.createElement("div");
+    overlay.className = "nhi-overlay";
+    overlay.innerHTML = `
             <div class="nhi-row">
                 <span class="nhi-label">Artist</span>
                 <span class="nhi-value nhi-artist nhi-artist-name nhi-loading">Loading...</span>
@@ -318,120 +351,139 @@
                 <span class="nhi-label">Uploaded</span>
                 <span class="nhi-value nhi-date nhi-upload-date nhi-loading">Loading...</span>
             </div>
-            <div class="nhi-code-row" title="Click to copy manga code">
-                <span class="nhi-code-value">#${mangaCode}</span>
-                <span class="nhi-copy-icon">📋</span>
+            <div class="nhi-copy-container">
+                <div class="nhi-copy-btn nhi-code-btn" title="Copy manga code">
+                    <span class="nhi-copy-value">#${mangaCode}</span>
+                    <span class="nhi-copy-icon">📋</span>
+                </div>
+                <div class="nhi-copy-btn nhi-link-btn" title="Copy manga link">
+                    <span class="nhi-copy-value">🔗 Link</span>
+                    <span class="nhi-copy-icon">📋</span>
+                </div>
             </div>
         `;
 
-        // Add click handler for copying
-        const codeRow = overlay.querySelector('.nhi-code-row');
-        codeRow.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            copyToClipboard(mangaCode, codeRow);
-        });
+    const mangaLink = `https://nhentai.net/g/${mangaCode}/`;
 
-        return overlay;
-    }
+    // Add click handler for copying code
+    const codeBtn = overlay.querySelector(".nhi-code-btn");
+    codeBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      copyToClipboard(mangaCode, codeBtn);
+    });
 
-    /**
-     * Initialize overlay for a gallery element
-     */
-    async function initGallery(gallery) {
-        // Skip if already initialized
-        if (gallery.dataset.nhiInitialized) return;
-        gallery.dataset.nhiInitialized = 'true';
+    // Add click handler for copying link
+    const linkBtn = overlay.querySelector(".nhi-link-btn");
+    linkBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      copyToClipboard(mangaLink, linkBtn);
+    });
 
-        const mangaCode = getMangaCode(gallery);
-        if (!mangaCode) return;
+    return overlay;
+  }
 
-        const language = getLanguage(gallery);
-        const overlay = createOverlay(mangaCode, language);
-        
-        // Find the cover link and append overlay to it
-        const coverLink = gallery.querySelector('a.cover') || gallery.querySelector('a');
-        if (coverLink) {
-            coverLink.style.position = 'relative';
-            coverLink.appendChild(overlay);
-        } else {
-            gallery.appendChild(overlay);
-        }
+  /**
+   * Initialize overlay for a gallery element
+   */
+  async function initGallery(gallery) {
+    // Skip if already initialized
+    if (gallery.dataset.nhiInitialized) return;
+    gallery.dataset.nhiInitialized = "true";
 
-        // Fetch gallery info asynchronously
-        const info = await getGalleryInfo(mangaCode);
-        
-        // Update pages
-        const pagesElement = overlay.querySelector('.nhi-pages-count');
-        if (pagesElement) {
-            pagesElement.textContent = info.pageCount;
-            pagesElement.classList.remove('nhi-loading');
-            pagesElement.classList.add('nhi-pages-badge');
-        }
+    const mangaCode = getMangaCode(gallery);
+    if (!mangaCode) return;
 
-        // Update artist
-        const artistElement = overlay.querySelector('.nhi-artist-name');
-        if (artistElement) {
-            artistElement.textContent = info.artist || 'Unknown';
-            artistElement.classList.remove('nhi-loading');
-            if (info.artist) {
-                artistElement.title = info.artist; // Full name on hover
-            }
-        }
+    const language = getLanguage(gallery);
+    const overlay = createOverlay(mangaCode, language);
 
-        // Update upload date
-        const dateElement = overlay.querySelector('.nhi-upload-date');
-        if (dateElement) {
-            dateElement.textContent = info.uploadDate;
-            dateElement.classList.remove('nhi-loading');
-        }
-    }
-
-    /**
-     * Initialize all galleries on the page
-     */
-    function initAllGalleries() {
-        const galleries = document.querySelectorAll('.gallery');
-        galleries.forEach(gallery => initGallery(gallery));
-    }
-
-    /**
-     * Observe for dynamically loaded galleries (infinite scroll, etc.)
-     */
-    function observeNewGalleries() {
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                mutation.addedNodes.forEach((node) => {
-                    if (node.nodeType === Node.ELEMENT_NODE) {
-                        if (node.classList && node.classList.contains('gallery')) {
-                            initGallery(node);
-                        }
-                        // Also check for galleries within added nodes
-                        const nestedGalleries = node.querySelectorAll ? node.querySelectorAll('.gallery') : [];
-                        nestedGalleries.forEach(gallery => initGallery(gallery));
-                    }
-                });
-            });
-        });
-
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    }
-
-    // ============================================
-    // MAIN INITIALIZATION
-    // ============================================
-    function init() {
-        initAllGalleries();
-        observeNewGalleries();
-    }
-
-    // Run initialization
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+    // Find the cover link and append overlay to it
+    const coverLink =
+      gallery.querySelector("a.cover") || gallery.querySelector("a");
+    if (coverLink) {
+      coverLink.style.position = "relative";
+      coverLink.appendChild(overlay);
     } else {
-        init();
+      gallery.appendChild(overlay);
     }
+
+    // Fetch gallery info asynchronously
+    const info = await getGalleryInfo(mangaCode);
+
+    // Update pages
+    const pagesElement = overlay.querySelector(".nhi-pages-count");
+    if (pagesElement) {
+      pagesElement.textContent = info.pageCount;
+      pagesElement.classList.remove("nhi-loading");
+      pagesElement.classList.add("nhi-pages-badge");
+    }
+
+    // Update artist
+    const artistElement = overlay.querySelector(".nhi-artist-name");
+    if (artistElement) {
+      artistElement.textContent = info.artist || "Unknown";
+      artistElement.classList.remove("nhi-loading");
+      if (info.artist) {
+        artistElement.title = info.artist; // Full name on hover
+      }
+    }
+
+    // Update upload date
+    const dateElement = overlay.querySelector(".nhi-upload-date");
+    if (dateElement) {
+      dateElement.textContent = info.uploadDate;
+      dateElement.classList.remove("nhi-loading");
+    }
+  }
+
+  /**
+   * Initialize all galleries on the page
+   */
+  function initAllGalleries() {
+    const galleries = document.querySelectorAll(".gallery");
+    galleries.forEach((gallery) => initGallery(gallery));
+  }
+
+  /**
+   * Observe for dynamically loaded galleries (infinite scroll, etc.)
+   */
+  function observeNewGalleries() {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.classList && node.classList.contains("gallery")) {
+              initGallery(node);
+            }
+            // Also check for galleries within added nodes
+            const nestedGalleries = node.querySelectorAll
+              ? node.querySelectorAll(".gallery")
+              : [];
+            nestedGalleries.forEach((gallery) => initGallery(gallery));
+          }
+        });
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+  }
+
+  // ============================================
+  // MAIN INITIALIZATION
+  // ============================================
+  function init() {
+    initAllGalleries();
+    observeNewGalleries();
+  }
+
+  // Run initialization
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 })();

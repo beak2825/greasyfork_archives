@@ -2,7 +2,7 @@
 // @name     Pirateship Pick list/Packing list
 // @description A basic script that generates pick lists and pack lists based on the current filtered view.
 // @author kurapixel
-// @version  1
+// @version  1.1
 // @license MIT
 // @grant       GM_registerMenuCommand
 // @grant       GM_addElement
@@ -125,7 +125,7 @@ function PackinglistClickAction(e) {
 }
 
 function urlBlobifiedText(str) {
-  const blob = new Blob([str], { type: "text/html" });
+  const blob = new Blob([str], { type: "text/html;charset=utf8" });
   var url = URL.createObjectURL(blob);
   return url;
 }

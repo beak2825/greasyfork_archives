@@ -283,6 +283,8 @@
             });
         };
         const titleLink = document.querySelector('#gallery-brand a');
+        
+        // const titleLink = document.querySelector('#gallery-brand a') || document.querySelector('#gallery-brand');
         if (titleLink) appendLinks(titleLink, titleLink.textContent.trim());
         const artistLinks = document.querySelectorAll('#artists a');
         artistLinks.forEach(link => appendLinks(link, link.textContent.trim()));

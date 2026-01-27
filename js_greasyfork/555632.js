@@ -2,7 +2,7 @@
 // @name         GT Material Price Inserter
 // @namespace    https://greasyfork.org/users/1304483
 // @icon         https://galactictycoons.com/favicon.ico
-// @version      1.1
+// @version      1.2
 // @description  监控页面变化，在指定位置插入 material_price 信息
 // @match        https://g2.galactictycoons.com/*
 // @license MIT
@@ -400,8 +400,8 @@ function insertProfit(){
         let profit;
         let inputsTotalCost;
         let consumablesCost;
-        let allCost;
         let outputWeight;
+        let outputCost;
         if (tds.length === 5) {
             // ========= 1. 获取产品图标名称（use 中的 #PrefabPlant） =========
             const firstTdUse = tds[0].querySelector('use');
@@ -443,18 +443,13 @@ function insertProfit(){
             if (hasNone) {
                 inputsTotalCost = null;
             }
-            if (inputsTotalCost===null||consumablesCost===null){
-                allCost=null;
-            }else{
-                allCost=inputsTotalCost+consumablesCost;
-            }
 
             // ========= 3. 第四个 td：时间文本（例如“1小时 45分钟”） =========
             const timeText = tds[3].innerText.trim();
             time=ConvertTimeToHours(timeText);
 
             // ========= 4. 第五个 td：产品 data-number（产出） =========
-            let outputCost = null;
+            outputCost = null;
             hasNone = false;
             const outputBtn = tds[4].querySelector('button[data-number]');
             if (outputBtn) {
@@ -482,10 +477,10 @@ function insertProfit(){
                     outputCost = null;
                 }
             }
-            if (outputCost===null||allCost===null){
+            if (outputCost===null||inputsTotalCost===null){
                 profit=null;
             }else{
-                profit=outputCost-allCost;
+                profit=outputCost-inputsTotalCost;
             }
         }else if (tds.length === 4) {
             // ========= 1. 获取产品图标名称（use 中的 #PrefabPlant） =========
@@ -526,18 +521,13 @@ function insertProfit(){
             if (hasNone) {
                 inputsTotalCost = null;
             }
-            if (inputsTotalCost===null||consumablesCost===null){
-                allCost=null;
-            }else{
-                allCost=inputsTotalCost+consumablesCost;
-            }
 
             // ========= 3. 第三个 td：时间文本（例如“1小时 45分钟”） =========
             const timeText = tds[2].innerText.trim();
             time=ConvertTimeToHours(timeText);
 
             // ========= 4. 第四个 td：产品 data-number（产出） =========
-            let outputCost = null;
+            outputCost = null;
             hasNone = false;
             const outputBtn = tds[3].querySelector('button[data-number]');
             if (outputBtn) {
@@ -565,10 +555,10 @@ function insertProfit(){
                     outputCost = null;
                 }
             }
-            if (outputCost===null||allCost===null){
+            if (outputCost===null||inputsTotalCost===null){
                 profit=null;
             }else{
-                profit=outputCost-allCost;
+                profit=outputCost-inputsTotalCost;
             }
         }else if(tds.length === 3){//手机端
             // ========= 1. 获取产品图标名称（use 中的 #PrefabPlant） =========
@@ -609,17 +599,12 @@ function insertProfit(){
             if (hasNone) {
                 inputsTotalCost = null;
             }
-            if (inputsTotalCost===null||consumablesCost===null){
-                allCost=null;
-            }else{
-                allCost=inputsTotalCost+consumablesCost;
-            }
             // ========= 4. 第3个 td：产品 data-number（产出） =========
             const timeElement = tds[2].querySelector('.btn-h2.bg-dark.mt-1 div');
             const timeText = timeElement.textContent.trim();
             time=ConvertTimeToHours(timeText);
 
-            let outputCost = null;
+            outputCost = null;
             hasNone = false;
             const outputBtn = tds[2].querySelector('button[data-number]');
             if (outputBtn) {
@@ -647,10 +632,10 @@ function insertProfit(){
                     outputCost = null;
                 }
             }
-            if (outputCost===null||allCost===null){
+            if (outputCost===null||inputsTotalCost===null){
                 profit=null;
             }else{
-                profit=outputCost-allCost;
+                profit=outputCost-inputsTotalCost;
             }
 
         }else if(tds.length === 2){//手机端
@@ -692,17 +677,12 @@ function insertProfit(){
             if (hasNone) {
                 inputsTotalCost = null;
             }
-            if (inputsTotalCost===null||consumablesCost===null){
-                allCost=null;
-            }else{
-                allCost=inputsTotalCost+consumablesCost;
-            }
             // ========= 4. 第3个 td：产品 data-number（产出） =========
             const timeElement = tds[1].querySelector('.btn-h2.bg-dark.mt-1 div');
             const timeText = timeElement.textContent.trim();
             time=ConvertTimeToHours(timeText);
 
-            let outputCost = null;
+            outputCost = null;
             hasNone = false;
             const outputBtn = tds[1].querySelector('button[data-number]');
             if (outputBtn) {
@@ -730,10 +710,10 @@ function insertProfit(){
                     outputCost = null;
                 }
             }
-            if (outputCost===null||allCost===null){
+            if (outputCost===null||inputsTotalCost===null){
                 profit=null;
             }else{
-                profit=outputCost-allCost;
+                profit=outputCost-inputsTotalCost;
             }
 
         }else{
@@ -749,14 +729,14 @@ function insertProfit(){
             hourProfit='None';
             hourTonProfit='None';
         }else{
-            hourProfit='$'+formatThousands(profit/time/100);
-            hourTonProfit='$'+formatThousands(profit/time/outputWeight/100);
+            hourProfit='$'+formatThousands((profit/time-consumablesCost)/100);
+            hourTonProfit='$'+formatThousands((profit/time-consumablesCost)/outputWeight/100);
         }
         var consumerCost;
         if (consumablesCost===null||time===null||time===0){
             consumerCost='None';
         }else{
-            consumerCost='$'+formatThousands(consumablesCost/time/100);
+            consumerCost='$'+formatThousands(consumablesCost/100);
         }
         var materialCost;
         if (inputsTotalCost===null||time===null||time===0){
@@ -764,28 +744,30 @@ function insertProfit(){
         }else{
             materialCost='$'+formatThousands(inputsTotalCost/time/100);
         }
-        var AllCost;
-        if (allCost===null||time===null||time===0){
-            AllCost='None';
+        var outputValue;
+        if (outputCost===null||time===null||time===0){
+            outputValue='None';
         }else{
-            AllCost='$'+formatThousands(allCost/time/100);
+            outputValue='$'+formatThousands(outputCost/time/100);
         }
         var profitRate;
-        if (profit===null||allCost===null||time===null||time===0){
+        if (outputCost===null||time===null||time===0||profit===null){
             profitRate='None';
         }else{
-            profitRate=formatThousands(profit/(profit+allCost)*100)+"%";
+            profitRate=(profit/time/(inputsTotalCost/time+consumablesCost)*100).toFixed(2)+"%";
         }
+
 
         const profitColor = hourProfit === "None" ? "#6c757d" : profit >= 0 ? "#28a745": "#dc3545";
 
         const fullInfo = `
+利润率: ${profitRate}
 每时利润: ${hourProfit}
 每时每吨利润: ${hourTonProfit}
-消耗品: ${consumerCost}
-原料: ${materialCost}
-总成本: ${AllCost}
-利润率: ${profitRate}`;
+每小时消耗品: ${consumerCost}
+每小时原料: ${materialCost}
+每小时生产: ${outputValue}
+`;
 
         newTd.innerHTML = newTd.innerHTML = `
         <span
@@ -806,32 +788,34 @@ function insertProfit(){
 function ConvertTimeToHours(_time) {
     if (!_time || typeof _time !== "string") return null;
 
-    let days = 0, hours = 0, minutes = 0;
+    let days = 0, hours = 0, minutes = 0, seconds = 0;
 
     // ========== 1. 英文格式统一处理 ==========
-    // 例如： "3d 4h 5m"
-    const englishRegex = /(\d+)\s*d|(\d+)\s*h|(\d+)\s*m/gi;
+    // 支持：3d 4h 5m 6s（顺序不限）
+    const englishRegex = /(\d+)\s*d|(\d+)\s*h|(\d+)\s*m|(\d+)\s*s/gi;
     let match;
 
     while ((match = englishRegex.exec(_time)) !== null) {
         if (match[1]) days += Number(match[1]);
         if (match[2]) hours += Number(match[2]);
         if (match[3]) minutes += Number(match[3]);
+        if (match[4]) seconds += Number(match[4]);
     }
 
     // ========== 2. 中文格式处理 ==========
-    // 适配：1天2小时30分钟（无空格也可）
     const chineseDay = /(\d+)\s*天/g;
     const chineseHour = /(\d+)\s*小时/g;
-    const chineseMinute = /(\d+)\s*分钟/g;
+    const chineseMinute = /(\d+)\s*分/g;
+    const chineseSecond = /(\d+)\s*秒/g;
 
     let m2;
     while ((m2 = chineseDay.exec(_time)) !== null) days += Number(m2[1]);
     while ((m2 = chineseHour.exec(_time)) !== null) hours += Number(m2[1]);
     while ((m2 = chineseMinute.exec(_time)) !== null) minutes += Number(m2[1]);
+    while ((m2 = chineseSecond.exec(_time)) !== null) seconds += Number(m2[1]);
 
     // ========== 3. 统一换算为总小时 ==========
-    return days * 24 + hours + minutes / 60;
+    return days * 24 + hours + minutes / 60 + seconds / 3600;
 }
 
 (function() {

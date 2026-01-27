@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GT Flight Calculator
 // @namespace    https://greasyfork.org/users/1304483
-// @version      1.7
+// @version      1.8
 // @description  Calculate best power
 // @match        https://g2.galactictycoons.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=galactictycoons.com
@@ -82,7 +82,7 @@ document.addEventListener('focusin', e => {
      ********************************/
     const btn = document.createElement("div");
     btn.id = "ftl-open-btn";
-    btn.innerHTML = '<svg class="iu me-1"><use xlink:href="/assets/atlas-COH0u1U7.svg#rocket-launch"></use></svg>';
+    btn.innerHTML = '<svg class="iu me-1"><use xlink:href="/assets/atlas-lTxsB2l2.svg#rocket-launch"></use></svg>';
     Object.assign(btn.style, {
         position: "fixed",
         bottom: "60px",
@@ -121,6 +121,8 @@ document.addEventListener('focusin', e => {
                            placeholder="Preset name">
                     <button class="btn btn-sm btn-success" id="addPresetBtn">Save Preset</button>
                 </div>
+            <!-- GetShip Button -->
+            <button class="btn btn-primary w-100 mt-3" id="getShip">Get Ships</button>
             </div>
 
             <!-- Reactor -->
@@ -132,7 +134,7 @@ document.addEventListener('focusin', e => {
                                 id="reactorDropdown"
                                 data-bs-toggle="dropdown">
                             <span>
-                                <svg class="ai-d"><use xlink:href="/assets/sprite-BB7gYHjf.svg#HydrogenGenerator"></use></svg>
+                                <svg class="ai-d"><use xlink:href="/assets/sprite-BAyyILFt.svg#HydrogenGenerator"></use></svg>
                                 <span class="ms-2 fw-light">Hydrogen Generator</span>
                             </span>
                         </button>
@@ -141,7 +143,7 @@ document.addEventListener('focusin', e => {
 
                             <li class="dropdown-item text-wrap d-flex active" value="1" role="button">
                                 <svg class="ai-st me-2 mt-1 flex-shrink-0">
-                                    <use xlink:href="/assets/sprite-BB7gYHjf.svg#HydrogenGenerator"></use>
+                                    <use xlink:href="/assets/sprite-BAyyILFt.svg#HydrogenGenerator"></use>
                                 </svg>
                                 <div>
                                     <span class="fw-semibold">Hydrogen Generator</span>
@@ -150,7 +152,7 @@ document.addEventListener('focusin', e => {
 
                             <li class="dropdown-item text-wrap d-flex" value="2" role="button">
                                 <svg class="ai-st me-2 mt-1 flex-shrink-0">
-                                    <use xlink:href="/assets/sprite-BB7gYHjf.svg#FissionReactor"></use>
+                                    <use xlink:href="/assets/sprite-BAyyILFt.svg#FissionReactor"></use>
                                 </svg>
                                 <div>
                                     <span class="fw-semibold">Fission Reactor</span>
@@ -159,7 +161,7 @@ document.addEventListener('focusin', e => {
 
                             <li class="dropdown-item text-wrap d-flex" value="3" role="button">
                                 <svg class="ai-st me-2 mt-1 flex-shrink-0">
-                                    <use xlink:href="/assets/sprite-BB7gYHjf.svg#AntimatterReactor"></use>
+                                    <use xlink:href="/assets/sprite-BAyyILFt.svg#AntimatterReactor"></use>
                                 </svg>
                                 <div>
                                     <span class="fw-semibold">Antimatter Reactor</span>
@@ -181,7 +183,7 @@ document.addEventListener('focusin', e => {
                                 data-bs-toggle="dropdown">
                             <span>
                                 <svg class="ai-d">
-                                    <use xlink:href="/assets/sprite-DLZpwR1V.svg#BasicFTLEmitter"></use>
+                                    <use xlink:href="/assets/sprite-BAyyILFt.svg#BasicFTLEmitter"></use>
                                 </svg>
                                 <span class="ms-2 fw-light">Basic</span>
                             </span>
@@ -191,49 +193,49 @@ document.addEventListener('focusin', e => {
 
                             <li class="dropdown-item text-wrap d-flex active" value="1" role="button">
                                 <svg class="ai-st me-2 mt-1 flex-shrink-0">
-                                    <use xlink:href="/assets/sprite-DLZpwR1V.svg#BasicFTLEmitter"></use>
+                                    <use xlink:href="/assets/sprite-BAyyILFt.svg#BasicFTLEmitter"></use>
                                 </svg>
                                 <span class="fw-semibold">Basic</span>
                             </li>
 
                             <li class="dropdown-item text-wrap d-flex" value="2" role="button">
                                 <svg class="ai-st me-2 mt-1 flex-shrink-0">
-                                    <use xlink:href="/assets/sprite-DLZpwR1V.svg#AdvancedFTLEmitter"></use>
+                                    <use xlink:href="/assets/sprite-BAyyILFt.svg#AdvancedFTLEmitter"></use>
                                 </svg>
                                 <span class="fw-semibold">Advanced Short Range</span>
                             </li>
 
                         <li class="dropdown-item text-wrap d-flex" value="3" role="button">
                                 <svg class="ai-st me-2 mt-1 flex-shrink-0">
-                                    <use xlink:href="/assets/sprite-DLZpwR1V.svg#AdvancedFTLEmitter"></use>
+                                    <use xlink:href="/assets/sprite-BAyyILFt.svg#AdvancedFTLEmitter"></use>
                                 </svg>
                                 <span class="fw-semibold">Advanced Efficient</span>
                             </li>
 
                             <li class="dropdown-item text-wrap d-flex" value="4" role="button">
                                 <svg class="ai-st me-2 mt-1 flex-shrink-0">
-                                    <use xlink:href="/assets/sprite-DLZpwR1V.svg#AdvancedFTLEmitter"></use>
+                                    <use xlink:href="/assets/sprite-BAyyILFt.svg#AdvancedFTLEmitter"></use>
                                 </svg>
                                 <span class="fw-semibold">Advanced Long Range</span>
                             </li>
 
                             <li class="dropdown-item text-wrap d-flex" value="5" role="button">
                                 <svg class="ai-st me-2 mt-1 flex-shrink-0">
-                                    <use xlink:href="/assets/sprite-DLZpwR1V.svg#SuperiorFTLEmitter"></use>
+                                    <use xlink:href="/assets/sprite-BAyyILFt.svg#SuperiorFTLEmitter"></use>
                                 </svg>
                                 <span class="fw-semibold">Superior Short Range</span>
                             </li>
 
                             <li class="dropdown-item text-wrap d-flex" value="6" role="button">
                                 <svg class="ai-st me-2 mt-1 flex-shrink-0">
-                                    <use xlink:href="/assets/sprite-DLZpwR1V.svg#SuperiorFTLEmitter"></use>
+                                    <use xlink:href="/assets/sprite-BAyyILFt.svg#SuperiorFTLEmitter"></use>
                                 </svg>
                                 <span class="fw-semibold">Superior Efficient</span>
                             </li>
 
                             <li class="dropdown-item text-wrap d-flex" value="7" role="button">
                                 <svg class="ai-st me-2 mt-1 flex-shrink-0">
-                                    <use xlink:href="/assets/sprite-DLZpwR1V.svg#SuperiorFTLEmitter"></use>
+                                    <use xlink:href="/assets/sprite-BAyyILFt.svg#SuperiorFTLEmitter"></use>
                                 </svg>
                                 <span class="fw-semibold">Superior Long Range</span>
                             </li>
@@ -399,7 +401,7 @@ document.addEventListener('focusin', e => {
         const list = document.getElementById(listId);
 
         const btnIcon = btn.querySelector("svg use");
-        const btnText = btn.querySelector("span span");   // 按钮右侧文字
+        const btnText = btn.querySelector("span span");  // 按钮右侧文字
 
         list.querySelectorAll("li").forEach(li => {
             li.onclick = () => {
@@ -572,6 +574,47 @@ document.addEventListener('focusin', e => {
         });
 
     };
+
+    document.getElementById("getShip").onclick = () => {
+        let company_info;
+        const info = localStorage.getItem("company_info");
+        if (!info) return null;
+        try {
+            company_info=JSON.parse(info);
+        } catch {
+            throw new Error("company_info不存在或格式错误！");
+        }
+        const ships=company_info.ships;
+        let all = loadAllPresets();
+        company_info.ships.forEach(ship => {
+        const bp = ship.blueprint;
+        if (!bp || !bp.name) return;
+
+        const name = bp.name;
+
+        if (!all[name]) {
+            all[name] = {
+                reactor: bp.reactorType ?? 1,
+                ftl: bp.emitterType ?? 1,
+                cargoSize: bp.cargoCapacity ?? 0,
+                engineCount: bp.emittersCount ?? 0,
+                tankSize: bp.tankType ?? 1,
+                heatShield: bp.heatShielding ?? 1,
+                radiationShield: bp.radiationShielding ?? 1
+            };
+        } else {
+            all[name].cargoSize = bp.cargoCapacity;
+            all[name].engineCount = bp.emittersCount;
+            all[name].ftl = bp.emitterType;
+            all[name].heatShield = bp.heatShielding;
+            all[name].radiationShield = bp.radiationShielding;
+            all[name].reactor = bp.reactorType;
+            all[name].tankSize = bp.tankType;
+        }
+    });
+        saveAllPresets(all);
+        renderPresetButtons();
+    }
 
 })();
 
@@ -1072,7 +1115,7 @@ function renderPresetButtons() {
         const editIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         editIcon.setAttribute("width", "14");
         editIcon.setAttribute("height", "14");
-        editIcon.innerHTML = `<use xlink:href="/assets/atlas-COH0u1U7.svg#pencil"></use>`;
+        editIcon.innerHTML = `<use xlink:href="/assets/atlas-lTxsB2l2.svg#pencil"></use>`;
         editIcon.style.cursor = "pointer";
 
         // --- 名称 (可编辑) ---

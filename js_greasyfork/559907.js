@@ -5,7 +5,7 @@
 // @name:zh-CN         在Kemono中打开
 // @name:zh-TW         在Kemono中打開
 // @namespace          https://greasyfork.org/zh-CN/users/667968-pyudng
-// @version            1.10.0
+// @version            1.11.0
 // @author             PY-DNG
 // @description        Open corresponding kemono page from multiple services
 // @description:en     Open corresponding kemono page from multiple services
@@ -4849,6 +4849,19 @@ i18n2[DatetimePartsSymbol](...args)
     },
     theme: Vue.ref("light"),
     pages: {
+      posts: {
+        mode: "or",
+        checker: [{
+          type: "regpath",
+          value: /^(\/@[^\/]+)?\/posts\/(\d+)$/
+        }],
+        async url() {
+          const userName = extractUsername();
+          const userID = await getUserID(userName);
+          const postID = location.pathname.match(/^(\/@[^\/]+)?\/posts\/(\d+)$/)[2];
+          return `https://${domain}/fanbox/user/${userID}/post/${postID}`;
+        }
+      },
       creator: {
         mode: "or",
         checker: [{
@@ -4861,24 +4874,31 @@ i18n2[DatetimePartsSymbol](...args)
           type: "path",
           value: "/plans"
         }, {
-          type: "startpath",
-          value: "/posts/"
+          type: "regpath",
+          value: /^\/@[^\/]+\/((posts|plans)\/?)?/
         }],
         async url() {
-          const userName = location.hostname.split(".", 1)[0];
-          const response = await fetch(`https://api.fanbox.cc/creator.get?creatorId=${userName}`, {
-            method: "GET",
-            headers: {
-              accept: "application/json, text/plain, */*"
-            }
-          });
-          const data = await response.json();
-          const userID = data.body.user.userId;
+          const userName = extractUsername();
+          const userID = await getUserID(userName);
           return `https://${domain}/fanbox/user/${userID}`;
         }
       }
     }
   });
+  function extractUsername() {
+    return location.pathname.startsWith("/@") ? location.pathname.substring(2, location.pathname.indexOf("/", 1)) : location.hostname.split(".", 1)[0];
+  }
+  async function getUserID(userName) {
+    const response = await fetch(`https://api.fanbox.cc/creator.get?creatorId=${userName}`, {
+      method: "GET",
+      headers: {
+        accept: "application/json, text/plain, */*"
+      }
+    });
+    const data = await response.json();
+    const userID = data.body.user.userId;
+    return userID;
+  }
   const patreon = defineWebsite({
     checker: {
       type: "endhost",

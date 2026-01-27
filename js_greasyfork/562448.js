@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torrent Mod Toolkit
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.3.2
 // @description  Common actions for torrent mods
 // @icon         https://raw.githubusercontent.com/xzin-CoRK/torrent-mod-toolkit/refs/heads/main/hammer.png
 // @author       xzin
@@ -10,6 +10,8 @@
 // @match        https://*/details.php*
 // @match        https://*/torrents.php*
 // @match        https://*/details*
+// @match        https://*/requests*
+// @exclude      https://*.roku.com*
 // @exclude      https://redacted.sh/*
 // @exclude      https://gazellegames.net/*
 // @exclude      https://orpheus.network/*
@@ -29,7 +31,7 @@
 (function () {
     "use strict";
 
-    const version = "1.3";
+    const version = "1.3.1";
 
     var mediainfo;
     var uniqueId;
@@ -65,7 +67,7 @@
     const AB_SEARCH_URL = "https://animebytes.tv/torrents.php?searchstr=";
     const CAPY_SEARCH_URL = "https://capybara.cc/torrents?imdbId=";
     const FNP_SEARCH_URL = "https://fearnopeer.com/torrents?imdbId=";
-    const SPL_SEARCH_URL = "https://sportscult.org/browse.php?search=";
+    const SPL_SEARCH_URL = "https://seedpool.org/torrents?imdbId=";
     const GPW_SEARCH_URL = "https://greatposterwall.com/torrents.php?searchstr=";
     const PTER_SEARCH_URL = "https://pterclub.net/torrents.php?search=";
     const OMG_SEARCH_URL = "https://omgwtfnzbs.org/browse.php?search=";
@@ -633,13 +635,39 @@
                     home_tracker_link += trackerConfig.extraParams;
                 }
 
-                // Add filter parameters if enabled and tracker supports them
+                // BHD uses search parameter for filters (format: ?search=1080p+FLUX&imdb=tt3283556)
+                const trackerCode = getTrackerCodeFromUrl(trackerConfig.url);
+                if (trackerCode === 'BHD') {
+                    const useResolutionFilter = GM_getValue('tmt_filter_resolution', false);
+                    const useReleaseGroupFilter = GM_getValue('tmt_filter_release_group', false);
+
+                    if (useResolutionFilter || useReleaseGroupFilter) {
+                        const filterParts = [];
+
+                        if (useResolutionFilter) {
+                            const resolution = currentResolution || extractResolutionFromTitle();
+                            if (resolution) {
+                                filterParts.push(resolution);
+                            }
+                        }
+
+                        if (useReleaseGroupFilter && release_group) {
+                            filterParts.push(release_group);
+                        }
+
+                        if (filterParts.length > 0) {
+                            const filterString = filterParts.join(' ');
+                            home_tracker_link = home_tracker_link.replace('search=&', 'search=' + encodeURIComponent(filterString) + '&');
+                        }
+                    }
+                }
+
+                // Add filter parameters if enabled and tracker supports them (UNIT3D trackers)
                 const useResolutionFilter = GM_getValue('tmt_filter_resolution', false);
                 const useReleaseGroupFilter = GM_getValue('tmt_filter_release_group', false);
 
                 // Determine if tracker supports &name= parameter (UNIT3D trackers)
                 const unit3dTrackers = ['LST', 'BLU', 'ATH', 'HUNO', 'ULCX', 'CAPY', 'FNP', 'OLDT'];
-                const trackerCode = getTrackerCodeFromUrl(trackerConfig.url);
                 const supportsNameParam = unit3dTrackers.includes(trackerCode);
 
                 if (supportsNameParam && (useResolutionFilter || useReleaseGroupFilter)) {
@@ -1338,7 +1366,7 @@
             .sort((a, b) => TRACKER_CONFIGS[a].displayOrder - TRACKER_CONFIGS[b].displayOrder);
 
         if (sortedTrackers.length > 0) {
-            container.style.display = ''; 
+            container.style.display = '';
             sortedTrackers.forEach(code => {
                 const config = TRACKER_CONFIGS[code];
                 const tracker = availableTrackers[code];
@@ -1798,6 +1826,32 @@
 
         let finalUrl = baseUrl + id;
 
+        // BHD uses search parameter for filters (format: ?search=1080p+FLUX&imdb=tt3283556)
+        if (trackerCode === 'BHD') {
+            const useResolutionFilter = GM_getValue('tmt_filter_resolution', false);
+            const useReleaseGroupFilter = GM_getValue('tmt_filter_release_group', false);
+
+            if (useResolutionFilter || useReleaseGroupFilter) {
+                const filterParts = [];
+
+                if (useResolutionFilter) {
+                    const resolution = currentResolution || extractResolutionFromTitle();
+                    if (resolution) {
+                        filterParts.push(resolution);
+                    }
+                }
+
+                if (useReleaseGroupFilter && currentReleaseGroup) {
+                    filterParts.push(currentReleaseGroup);
+                }
+
+                if (filterParts.length > 0) {
+                    const filterString = filterParts.join(' ');
+                    finalUrl = finalUrl.replace('search=&', 'search=' + encodeURIComponent(filterString) + '&');
+                }
+            }
+        }
+
         // Add filter parameters if enabled and tracker supports them
         const useResolutionFilter = GM_getValue('tmt_filter_resolution', false);
         const useReleaseGroupFilter = GM_getValue('tmt_filter_release_group', false);
@@ -2130,7 +2184,7 @@
     const siteTemplates = [
         {
             name: "General UNIT3D Template",
-            domains: ["aither.cc", "blutopia.cc", "lst.gg", "upload.cx", "oldtoons.world", "hawke.uno", "fearnopeer.com", "capybarabr.com"],
+            domains: ["aither.cc", "blutopia.cc", "lst.gg", "upload.cx", "oldtoons.world", "hawke.uno", "fearnopeer.com", "capybarabr.com", "seedpool.org"],
             matches: function(url) { return matchDomains(url, this.domains); },
             extractMediainfo: () => {
                 let el = document.querySelector(".torrent-mediainfo-dump pre code[x-ref='mediainfo']");

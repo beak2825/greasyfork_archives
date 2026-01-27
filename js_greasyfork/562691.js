@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name          Bazaar Ultimate Suite by srsbsns (Refactored)
 // @namespace     http://torn.com/
-// @version       50.2
-// @description   Combined bazaar tool: Listed/Unlisted tracker + Bulk pricing helper with API sync (Performance Optimized)
+// @version       50.3
+// @description   Combined bazaar tool: Listed/Unlisted tracker + Bulk pricing helper with API sync (Performance Optimized) - Fixed Select All
 // @author        srsbsns
 // @match         *://www.torn.com/bazaar.php*
 // @grant         GM_setValue
@@ -103,6 +103,27 @@
     const onBazaar = () => /\/bazaar\.php$/i.test(location.pathname);
     const onManage = () => onBazaar() && /^#\/manage\b/i.test(location.hash || '');
     const onAdd = () => onBazaar() && /^#\/add\b/i.test(location.hash || '');
+
+    // ============================================================================
+    // HELPER: Check if element is visible
+    // ============================================================================
+    function isElementVisible(element) {
+        if (!element) return false;
+
+        // Check if element or any parent has display: none
+        let current = element;
+        while (current && current !== document.body) {
+            const style = window.getComputedStyle(current);
+            if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
+                return false;
+            }
+            current = current.parentElement;
+        }
+
+        // Check if element has dimensions
+        const rect = element.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0;
+    }
 
     // ============================================================================
     // STORAGE HELPERS
@@ -1121,9 +1142,18 @@
         const saCb = document.createElement('input');
         saCb.type = 'checkbox';
         saCb.id = 'jp-master-toggle';
+
+        // FIXED: Only select/deselect VISIBLE checkboxes
         saCb.addEventListener('change', (e) => {
-            document.querySelectorAll('.jp-item-checkbox').forEach(cb => cb.checked = e.target.checked);
+            const allCheckboxes = document.querySelectorAll('.jp-item-checkbox');
+            allCheckboxes.forEach(cb => {
+                // Only check/uncheck if the checkbox's parent row is visible
+                if (isElementVisible(cb)) {
+                    cb.checked = e.target.checked;
+                }
+            });
         });
+
         const saLb = document.createElement('label');
         saLb.textContent = 'ALL';
         selectAllWrap.append(saCb, saLb);
@@ -1420,6 +1450,18 @@
     window.addEventListener('hashchange', () => {
         document.querySelector('.jp-action-row')?.remove();
         document.querySelector('.jp-pct-box')?.remove();
+
+        // ADDED: Uncheck all checkboxes when switching categories
+        document.querySelectorAll('.jp-item-checkbox').forEach(cb => {
+            cb.checked = false;
+        });
+
+        // ADDED: Reset master toggle
+        const masterToggle = document.getElementById('jp-master-toggle');
+        if (masterToggle) {
+            masterToggle.checked = false;
+        }
+
         annotate();
     });
 

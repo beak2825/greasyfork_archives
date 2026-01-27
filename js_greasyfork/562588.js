@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         gibbon-ui-tweaks
 // @namespace    http://tampermonkey.net/
-// @version      3.4.675
+// @version      3.4.679
 // @description  A script written with Copilot AI to customize the look of gibbonedu, features are manually tested and refined.
 // @match        https://gibbon.ichk.edu.hk/*
 // @grant        none
@@ -13,7 +13,7 @@
 (function () {
   'use strict';
 
-  const CURRENT_VERSION = '3.4.673';
+  const CURRENT_VERSION = '3.4.679';
 
   const LS = {
     masterToggle: 'gibbon_masterToggle',
@@ -35,7 +35,8 @@
     slidingTabs: 'gibbon_slidingTabs',
     unloadImages: 'gibbon_unloadImages',
     autoScroll: 'gibbon_autoScroll',
-    scrollSpeed: 'gibbon_scrollSpeed'
+    scrollSpeed: 'gibbon_scrollSpeed',
+    lessonTextColor: 'gibbon_lessonTextColor',
   };
 
   const DEFAULTS = {
@@ -58,7 +59,8 @@
     slidingTabs: false,
     unloadImages: false,
     autoScroll: false,
-    scrollSpeed: 5
+    scrollSpeed: 5,
+    lessonTextColor: '#333333'
   };
 
   function setLS(key, value) { localStorage.setItem(key, value); }
@@ -126,7 +128,8 @@
 
 // Apply site styles
 function applyAllStyles() {
-  const s = document.getElementById('customStyles'); if (s) s.remove();
+  const s = document.getElementById('customStyles');
+  if (s) s.remove();
   if (getLS(LS.masterToggle, DEFAULTS.masterToggle.toString()) === 'false') return;
 
   const linkColor = getLS(LS.linkColor, DEFAULTS.linkColor);
@@ -138,6 +141,7 @@ function applyAllStyles() {
   const gamerParty = getLS(LS.gamerParty, DEFAULTS.gamerParty.toString()) === 'true';
   const betterTables = getLS(LS.betterTables, DEFAULTS.betterTables.toString()) === 'true';
   const ttBackground = getLS(LS.ttBackground, DEFAULTS.ttBackground);
+  const lessonTextColor = getLS(LS.lessonTextColor, DEFAULTS.lessonTextColor);
 
   let css = `
     p,
@@ -163,6 +167,14 @@ function applyAllStyles() {
     }
     main a, .content a, article a, p a { text-decoration: none !important; }
     main a:hover, .content a:hover, article a:hover, p a:hover { text-decoration: underline !important; }
+
+    /* Lesson Plan Text Color */
+    .unit-block p,
+    .unit-block span,
+    .unit-block td,
+    .unit-block a {
+      color: ${lessonTextColor} !important;
+    }
   `;
 
   if (gamerParty) {
@@ -180,7 +192,6 @@ function applyAllStyles() {
         animation: rgbCycle 6s linear infinite !important;
         display: inline-block;
       }
-      /* Timetable blocks in gamer party mode */
       .ttItem.bg-blue-200 {
         --rgbHue: 0;
         background-color: hsl(var(--rgbHue), 90%, 60%) !important;
@@ -203,12 +214,14 @@ function applyAllStyles() {
       }
       main a, .content a, article a, p a { color: ${linkColor} !important; }
 
-      /* Timetable blocks only if originally blue */
       .ttItem.bg-blue-200 {
         background-color: ${ttBackground} !important;
       }
       .ttItem.bg-blue-200 .tag {
         background-color: ${ttBackground} !important;
+      }
+      .unit-block.border-t-4 {
+        border-top-color: ${barAccent} !important;
       }
     `;
   }
@@ -252,6 +265,7 @@ function applyAllStyles() {
 
   upsertStyle('customStyles', css);
 }
+
 applyAllStyles();
 
 
@@ -326,6 +340,36 @@ applyAllStyles();
   accentRow.appendChild(accentSize);
   accentGroup.appendChild(accentLabel);
   accentGroup.appendChild(accentRow);
+
+ // Lesson Plan Text Color
+ const lessonColorGroup = document.createElement('div');
+ lessonColorGroup.className = 'group';
+
+ const lessonColorLabel = document.createElement('span');
+ lessonColorLabel.textContent = 'Lesson Plan Text Color';
+
+ const lessonColorPicker = document.createElement('input');
+ lessonColorPicker.type = 'color';
+ lessonColorPicker.value = getLS(LS.lessonTextColor, DEFAULTS.lessonTextColor);
+
+ lessonColorGroup.appendChild(lessonColorLabel);
+ lessonColorGroup.appendChild(lessonColorPicker);
+
+ // Optional hint text
+ const lessonColorHint = document.createElement('div');
+ lessonColorHint.className = 'hint';
+ lessonColorHint.textContent = 'Changes only text inside lesson content blocks.';
+ lessonColorGroup.appendChild(lessonColorHint);
+
+ // Event handler
+ lessonColorPicker.addEventListener('input', () => {
+   setLS(LS.lessonTextColor, lessonColorPicker.value);
+   if (masterToggleEl.checked) applyAllStyles();
+ });
+
+ // Append to Global section
+ globalSection.appendChild(lessonColorGroup);
+
 
   // Paragraph font (+ Comic Sans MS) with Apply
   const fontGroup = document.createElement('div');
@@ -443,34 +487,18 @@ applyAllStyles();
   slidingTabsHint.textContent = 'Drag left/right across tab buttons with animation.';
   slidingTabsGroup.appendChild(slidingTabsHint);
 
-  // Complete/Uncomplete all checkboxes
-  const completeGroup = document.createElement('div');
-  completeGroup.className = 'group';
-  const completeRow = document.createElement('div');
-  completeRow.className = 'row';
-  const completeBtn = document.createElement('button');
-  completeBtn.textContent = 'Complete all';
-  const uncompleteBtn = document.createElement('button');
-  uncompleteBtn.textContent = 'Uncomplete all';
-  completeRow.appendChild(completeBtn);
-  completeRow.appendChild(uncompleteBtn);
-  completeGroup.appendChild(completeRow);
-  const completeHint = document.createElement('div');
-  completeHint.className = 'hint';
-  completeHint.textContent = 'Checks or unchecks all "mark-complete" checkboxes.';
-  completeGroup.appendChild(completeHint);
 
   // Append Global section items
   globalSection.appendChild(globalHeader);
   globalSection.appendChild(linkGroup);
   globalSection.appendChild(accentGroup);
+  globalSection.appendChild(lessonColorGroup);
   globalSection.appendChild(fontGroup);
   globalSection.appendChild(gamerGroup);
   globalSection.appendChild(betterTablesGroup);
   globalSection.appendChild(pfpGroup);
   globalSection.appendChild(nameGroup);
   globalSection.appendChild(slidingTabsGroup);
-  globalSection.appendChild(completeGroup);
 
   // TIMETABLE SECTION
   const timetableSection = document.createElement('div');
@@ -570,7 +598,7 @@ ttBgPicker.addEventListener('input', () => {
   unloadGroup.appendChild(unloadRow);
   const unloadHint = document.createElement('div');
   unloadHint.className = 'hint';
-  unloadHint.textContent = 'Replaces images with a button. Click to load the image in-place. Unloads images you scroll past.';
+  unloadHint.textContent = 'Unloads images in stream, made for low-power devices';
   unloadGroup.appendChild(unloadHint);
 
   // Auto Scroll toggle + speed slider
@@ -747,6 +775,22 @@ ttBgPicker.addEventListener('input', () => {
     }
   };
   updateBtn.addEventListener('click', updateBtnHandler);
+
+    document.addEventListener('keydown', e => {
+  const keybind = getLS(LS.keybind, DEFAULTS.keybind);
+  if (e.key.toLowerCase() === keybind) {
+    const menu = document.getElementById('controlMenu');
+    if (menu) {
+      if (menu.style.display === 'none') {
+        menu.style.display = 'flex';
+        setLS(LS.menuVisible, true);
+      } else {
+        menu.style.display = 'none';
+        setLS(LS.menuVisible, false);
+      }
+    }
+  }
+});
 
   // Custom PFP replacement
   let originalPFP = null;

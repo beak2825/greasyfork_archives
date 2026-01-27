@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torrent Mod Toolkit - Non stable
 // @namespace    http://tampermonkey.net/
-// @version      1.3.1
+// @version      1.3.2
 // @description  Common actions for torrent mods
 // @icon         https://raw.githubusercontent.com/xzin-CoRK/torrent-mod-toolkit/refs/heads/main/hammer.png
 // @author       xzin
@@ -67,7 +67,7 @@
     const AB_SEARCH_URL = "https://animebytes.tv/torrents.php?searchstr=";
     const CAPY_SEARCH_URL = "https://capybara.cc/torrents?imdbId=";
     const FNP_SEARCH_URL = "https://fearnopeer.com/torrents?imdbId=";
-    const SPL_SEARCH_URL = "https://sportscult.org/browse.php?search=";
+    const SPL_SEARCH_URL = "https://seedpool.org/torrents?imdbId=";
     const GPW_SEARCH_URL = "https://greatposterwall.com/torrents.php?searchstr=";
     const PTER_SEARCH_URL = "https://pterclub.net/torrents.php?search=";
     const OMG_SEARCH_URL = "https://omgwtfnzbs.org/browse.php?search=";
@@ -2184,7 +2184,7 @@
     const siteTemplates = [
         {
             name: "General UNIT3D Template",
-            domains: ["aither.cc", "blutopia.cc", "lst.gg", "upload.cx", "oldtoons.world", "hawke.uno", "fearnopeer.com", "capybarabr.com"],
+            domains: ["aither.cc", "blutopia.cc", "lst.gg", "upload.cx", "oldtoons.world", "hawke.uno", "fearnopeer.com", "capybarabr.com", "seedpool.org"],
             matches: function(url) { return matchDomains(url, this.domains); },
             extractMediainfo: () => {
                 let el = document.querySelector(".torrent-mediainfo-dump pre code[x-ref='mediainfo']");

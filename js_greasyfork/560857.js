@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          LANraragi EHentai 评论区
 // @namespace     https://github.com/Kelcoin
-// @version       4.2
+// @version       4.2.1
 // @description   在 LANraragi 阅读器底部显示 EH 评论
 // @author        Kelcoin
 // @match         *://*/reader?id=*
@@ -953,8 +953,41 @@
                 const scoreText = scoreBlock ? scoreBlock.textContent : "0";
                 const score = parseInt(scoreText.replace(/[^0-9+-]/g, '')) || 0;
 
+                // --- 评论内容清洗与安全处理 ---
                 const contentBlock = el.querySelector('.c6');
-                let contentHtml = contentBlock ? contentBlock.innerHTML : "";
+                let contentHtml = "";
+
+                if (contentBlock) {
+                    // 克隆节点以进行清洗，避免影响原 DOM（虽然此处是独立的 doc，但保持好习惯）
+                    const safeClone = contentBlock.cloneNode(true);
+
+                    // 1. 移除危险或可能破坏布局的标签
+                    const tagsToRemove = safeClone.querySelectorAll('script, style, link, iframe, frame, object, embed, applet, meta, form, input, button, textarea');
+                    tagsToRemove.forEach(node => node.remove());
+
+                    // 2. 清洗所有剩余元素的属性，防止 CSS 污染和 JS 执行
+                    const allDescendants = safeClone.querySelectorAll('*');
+                    allDescendants.forEach(node => {
+                        // 移除内联样式，防止大字体、颜色污染等
+                        node.removeAttribute('style');
+                        // 移除 class 和 id，防止与阅读器 CSS 冲突
+                        node.removeAttribute('class');
+                        node.removeAttribute('id');
+                        // 移除所有 on 开头的事件属性 (onclick, onerror 等)
+                        Array.from(node.attributes).forEach(attr => {
+                            if (attr.name.toLowerCase().startsWith('on')) {
+                                node.removeAttribute(attr.name);
+                            }
+                        });
+                        // 强制链接在新标签页打开，增强体验并防止覆盖当前页
+                        if (node.tagName === 'A') {
+                            node.setAttribute('target', '_blank');
+                            node.setAttribute('rel', 'noopener noreferrer');
+                        }
+                    });
+
+                    contentHtml = safeClone.innerHTML;
+                }
 
                 const isUploader = !!(el.querySelector('a[name="ulcomment"]'));
 

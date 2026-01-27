@@ -5,19 +5,20 @@
 // @name:de      E-Hentai Bild automatisch anpassen
 // @name:cs      E-Hentai Automatické přizpůsobení obrázků
 // @name:lt      E-Hentai Vaizdų automatinis prisitaikymas
-// @description  將 E-Hentai / ExHentai 單頁圖片 #img 高度固定為螢幕高度，並在維持原圖比例的前提下盡可能填滿寬度
-// @description:en Resize #img to screen height while preserving aspect ratio and maximizing width on E-Hentai/ExHentai viewer pages
-// @description:ja E-Hentai/ExHentai閱覧ページで#imgを畫面高さに固定し、アスペクト比を保持したまま幅を最大化
-// @description:de Passt #img an Bildschirmhöhe an, behält das Seitenverhältnis bei und maximiert die Breite auf E-Hentai/ExHentai-Seiten
-// @description:cs Na stránkách prohlížeče E-Hentai/ExHentai nastaví výšku obrázku #img na výšku obrazovky, zachová poměr stran a maximalizuje šířku
-// @description:lt E-Hentai/ExHentai peržiūros puslapiuose nustato #img aukštį pagal ekrano aukštį, išlaiko proporcijas ir maksimaliai išnaudoja plotį
+// @description         可將 E-Hentai / ExHentai 的圖片大小更改為適合視窗/適合高度/適合寬度與原始大小4種模式
+// @description:en      Allows changing E-Hentai / ExHentai image size to 4 modes: Fit Window / Fit Height / Fit Width / Original Size
+// @description:ja      E-Hentai / ExHentai の画像サイズを「ウィンドウに合わせる」「高さに合わせる」「幅に合わせる」「オリジナルサイズ」の4モードに変更可能
+// @description:de      Ermöglicht das Ändern der Bildgröße bei E-Hentai / ExHentai in 4 Modi: An Fenster anpassen / An Höhe anpassen / An Breite anpassen / Originalgröße
+// @description:cs      Umožňuje změnit velikost obrázků na E-Hentai / ExHentai do 4 režimů: Přizpůsobit oknu / Přizpůsobit výšce / Přizpůsobit šířce / Původní velikost
+// @description:lt      Leidžia keisti E-Hentai / ExHentai paveikslėlių dydį į 4 režimus: Tinkinti langui / Tinkinti aukščiui / Tinkinti pločiui / Originalus dydis
+// @description:uk      Дозволяє змінювати розмір зображень E-Hentai / ExHentai на 4 режими: Підігнати під вікно / Підігнати під висоту / Підігнати під ширину / Оригінальний розмір
 //
 // @author       Max
 // @namespace    https://github.com/Max46656
 // @supportURL   https://github.com/Max46656/EverythingInGreasyFork/issues
 // @license      MPL2.0
 //
-// @version      1.5.1
+// @version      1.5.2
 // @match        https://exhentai.org/s/*/*
 // @match        https://e-hentai.org/s/*/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=e-hentai.org

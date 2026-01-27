@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         淘金币红包自动领取
 // @namespace    http://tampermonkey.net/
-// @version      10.0
+// @version      11.0
 // @description  自动检索淘金币兑换按钮并点击
 // @author       mattpower
 // @match        https://huodong.taobao.com/wow/z/tbhome/pc-growth/tao-coin*
@@ -23,8 +23,8 @@
     const RECEIVE_SELECTOR = 'body > div:nth-child(46) > div > div > div:nth-child(2) > div > div > div'; // 领取按钮选择器
 
     // 执行时间范围（北京时间）
-    const TIME_START_SECONDS = 9 * 3600 + 59 * 60 + 53;  // 9:59:50
-    const TIME_END_SECONDS = TIME_START_SECONDS + 20;   // 10:00:15
+    const TIME_START_SECONDS = 9 * 3600 + 59 * 60 + 53;  // 9:59:53
+    const TIME_END_SECONDS = TIME_START_SECONDS + 15;   // 10:00:08
 
     // 需要移除的元素类名列表（用于资源拦截）
     const REMOVE_CLASSES = [

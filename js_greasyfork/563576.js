@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JAV-FORUM
-// @description  Alt+左|右键 激活菜单; 支持以图识图、磁力聚合...
-// @version      0.0.5
+// @description  默认Q键激活菜单; 支持以图识图、磁力聚合、页面磁力提取...
+// @version      0.1.1
 // @author       JAV-FORUM
 // @namespace    JAV-FORUM
 // @license      MIT
@@ -24,7 +24,6 @@
 // @connect      btsow.lol
 // @connect      btdig.com
 // @connect      cld139.buzz
-// @connect      bt4gprx.com
 // @connect      api.imgur.com
 // @connect      115.com
 // @connect      *
@@ -65,14 +64,14 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 const result = await fun();
                 runCount > 0 && console.debug(`[重试] 成功，共发起 ${runCount + 1} 次。`);
                 return result;
-            } catch (e2) {
-                let errorString = String(e2);
+            } catch (e) {
+                let errorString = String(e);
                 errorString.startsWith("Error: ") && (errorString = errorString.replace("Error: ", ""));
-                if (errorString.includes("Just a moment") || errorString.includes("重定向") || errorString.toLowerCase().includes("404 page not found") || errorString.toLowerCase().includes("沒有您要的結果") || errorString.toLowerCase().includes("状态码:4") || errorString.toLowerCase().includes("404 not found")) throw e2;
+                if (errorString.includes("Just a moment") || errorString.includes("重定向") || errorString.toLowerCase().includes("404 page not found") || errorString.toLowerCase().includes("沒有您要的結果") || errorString.toLowerCase().includes("状态码:4") || errorString.toLowerCase().includes("404 not found")) throw e;
                 runCount++;
                 if (runCount === tryCount) {
-                    errorString.length > 200 ? console.debug(`[重试] 达到最大重试次数 (${tryCount})，最终失败`) : console.debug(`[重试] 达到最大重试次数 (${tryCount})，最终失败：`, e2);
-                    throw e2;
+                    errorString.length > 200 ? console.debug(`[重试] 达到最大重试次数 (${tryCount})，最终失败`) : console.debug(`[重试] 达到最大重试次数 (${tryCount})，最终失败：`, e);
+                    throw e;
                 }
                 errorString.length > 200 ? console.debug(`[重试] 准备第 ${runCount + 1} 次重试`) : console.debug(`[重试] 准备第 ${runCount + 1} 次重试, 错误信息: ${errorString}`);
             }
@@ -117,7 +116,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             if (null === rawData) return defaultValue;
             try {
                 return JSON.parse(rawData);
-            } catch (e2) {
+            } catch (e) {
                 return rawData;
             }
         }
@@ -164,7 +163,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                             noRedirect && response.finalUrl !== url && reject(`请求被重定向了, URL是: ${response.finalUrl} 内容:${response.responseText}`);
                             if (response.status >= 200 && response.status < 300) if (response.responseText) try {
                                 resolve(JSON.parse(response.responseText));
-                            } catch (e2) {
+                            } catch (e) {
                                 resolve(response.responseText);
                             } else resolve(response.responseText || response); else {
                                 console.error("请求失败,状态码:", response.status, url);
@@ -181,8 +180,8 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                                     reject(new Error(finalMsg || `请求发生错误 ${response.status}`));
                                 } else reject(new Error(`请求发生错误 ${response.status}`));
                             }
-                        } catch (e2) {
-                            reject(e2);
+                        } catch (e) {
+                            reject(e);
                         }
                     },
                     onerror: error => {
@@ -195,6 +194,75 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 });
             }))), httpRetryCount);
         }
+    };
+    document.head.insertAdjacentHTML("beforeend", "\n<style>\n/* 弹窗主容器样式 */\n.layui-layer {\n    border-radius: 6px !important;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);\n    border: 1px solid #ddd;\n}\n\n/* 弹窗标题栏样式 */\n.layui-layer-title {\n    background-color: #f2f2f2 !important;\n    color: #333 !important;\n    font-size: 14px;\n    font-weight: 500;\n    border-radius: 6px 6px 0 0;\n    border-bottom: 1px solid #eee;\n}\n\n/* 弹窗内容区域 */\n.layui-layer-content {\n    font-size: 14px;\n    color: #444;\n}\n\n/* 弹窗底部按钮的容器 暂不需要美化 */\n.layui-layer-btn {\n}\n\n\n/* 确定按钮 */\n.layui-layer-btn a.layui-layer-btn0 { \n    background-color: #1E9FFF;\n    color: white;\n    border: none;\n    border-radius: 3px;\n}\n.layui-layer-btn a.layui-layer-btn0:hover {\n    background-color: #0081cc;\n}\n\n/* 取消按钮 */\n.layui-layer-btn a.layui-layer-btn1 { \n    background-color: #fff;\n    color: #666;\n    border: 1px solid #ccc;\n    border-radius: 3px;\n    margin-right: 10px;\n}\n.layui-layer-btn a.layui-layer-btn1:hover {\n    background-color: #f5f5f5;\n    color: #333;\n}\n\n.jhs-multi-confirm .layui-layer-btn a.layui-layer-btn0 { \n    background-color: #fff;\n    color: #666;\n    border: 1px solid #ccc;\n    border-radius: 3px;\n    margin-right: 10px;\n}\n.jhs-multi-confirm .layui-layer-btn a.layui-layer-btn0:hover {\n    background-color: #f5f5f5;\n    color: #333;\n}\n\n/* 第三个 */\n.layui-layer-btn a.layui-layer-btn2 { \n    background-color: #fff;\n    color: #666;\n    border: 1px solid #ccc;\n    border-radius: 3px;\n    margin-right: 10px;\n}\n.layui-layer-btn a.layui-layer-btn2:hover {\n    background-color: #f5f5f5;\n    color: #333;\n}\n\n.layui-layer-load {\n    background: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80'%3E%3Cstyle%3Erect%7Banimation:m 1.8s ease-in-out infinite%7D@keyframes m%7B0%25,100%25%7Btransform:translateX(20px)%7D50%25%7Btransform:translateX(-20px)%7D%3C/style%3E%3Crect x='40' y='14' width='40' height='12' rx='6' fill='%23ff758c'/%3E%3Crect x='30' y='34' width='60' height='12' rx='6' fill='%234facfe' style='animation-delay:-0.45s'/%3E%3Crect x='42' y='54' width='35' height='12' rx='6' fill='%23ff9a9e' style='animation-delay:-0.9s'/%3E%3C/svg%3E\") no-repeat center !important;\n    background-size: 120px auto !important;\n}\n</style>\n");
+    const layerEscManager = {
+        layerIndexStack: [],
+        initialized: !1,
+        init() {
+            if (this.initialized) return;
+            $(document).on("keydown.layerEsc", (e => this.handleKey(e)));
+            this.initialized = !0;
+        },
+        handleKey(e) {
+            if ("Escape" !== e.key && 27 !== e.keyCode) return;
+            if (window.viewerManager && window.viewerManager.isShowing()) {
+                window.viewerManager.close();
+                return;
+            }
+            if (0 === this.layerIndexStack.length) return;
+            if (this.layerIndexStack.length > 0) {
+                const topLayerIndex2 = this.layerIndexStack[this.layerIndexStack.length - 1];
+                try {
+                    const $iframe = $(`#layui-layer-iframe${topLayerIndex2}`);
+                    let hasNestedLayer = !1;
+                    if ($iframe.length > 0) {
+                        const iframeDoc = $iframe[0].contentDocument || $iframe[0].contentWindow.document;
+                        hasNestedLayer = $(iframeDoc).find(".layui-layer").length > 0;
+                    } else {
+                        hasNestedLayer = $(`#layui-layer${topLayerIndex2}`).find(".layui-layer").length > 0;
+                    }
+                    if (hasNestedLayer) return;
+                } catch (err) {
+                    console.warn("[EscManager] 无法探测子窗口 (跨域限制)");
+                }
+            }
+            const topLayerIndex = this.layerIndexStack.pop();
+            layer.close(topLayerIndex);
+        },
+        push(layerIndex) {
+            var _a;
+            this.init();
+            -1 === this.layerIndexStack.indexOf(layerIndex) && this.layerIndexStack.push(layerIndex);
+            try {
+                const $iframe = $(`#layui-layer-iframe${layerIndex}`), eventNamespace = "keydown.layerEscProxy", iframeDocument = null == (_a = $iframe[0]) ? void 0 : _a.contentDocument;
+                iframeDocument && $(iframeDocument).off(eventNamespace).on(eventNamespace, (e => this.handleKey(e)));
+            } catch (e) {
+                console.error("[EscManager] Iframe 内部监听绑定失败 (可能是跨域):", e);
+            }
+        }
+    }, originalLayerOpen = layer.open;
+    layer.open = function(options) {
+        if (!(options = options || {}).offset && 4 !== options.type && options.area) {
+            const area = options.area, w = (Array.isArray(area) ? area[0] : area) || "50%", calculateOffset = (val, defaultPos) => val && "auto" !== val ? -1 !== val.indexOf("%") ? (100 - parseInt(val)) / 2 + "%" : -1 !== val.indexOf("px") ? `calc(50% - ${parseInt(val) / 2}px)` : defaultPos : defaultPos, top = calculateOffset((Array.isArray(area) ? area[1] : "") || "auto", "15%"), left = calculateOffset(w, "50%");
+            options.offset = [ top, left ];
+            options.fixed = !0;
+        }
+        const originalSuccess = options.success;
+        options.success = function(layero, index) {
+            "function" == typeof originalSuccess && originalSuccess.call(this, layero, index);
+            layerEscManager.push(index);
+            window.clog && window.clog.handleFrameClogZIndex();
+        };
+        return originalLayerOpen.call(this, options);
+    };
+    const originalLayerClose = layer.close;
+    layer.close = function(index) {
+        "function" == typeof originalLayerClose && originalLayerClose.call(this, index);
+        setTimeout((() => {
+            const openLayerCount = document.querySelectorAll(".layui-layer-shade").length;
+            document.documentElement.style.overflow = openLayerCount > 0 ? "hidden" : "";
+        }), 10);
     };
     const _DomUtil = class {
         constructor() {
@@ -216,6 +284,14 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
         static htmlTo$dom(html, filterAvatarBox = !0) {
             const parser = new DOMParser;
             return $(parser.parseFromString(html, "text/html"));
+        }
+        static xmlTo$dom(xmlString) {
+            const parser = new DOMParser, xmlDoc = parser.parseFromString(xmlString, "application/xml"), parseError = xmlDoc.getElementsByTagName("parsererror");
+            if (parseError.length > 0) {
+                console.error("XML Parse Error:", parseError[0].textContent);
+                return $(parser.parseFromString(xmlString, "text/html"));
+            }
+            return $(xmlDoc);
         }
     };
     __publicField(_DomUtil, "insertStyle", ((css, id) => {
@@ -315,7 +391,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     if (part instanceof Error) return part.message;
                     if ("object" == typeof part && null !== part) try {
                         return JSON.stringify(part);
-                    } catch (e2) {}
+                    } catch (e) {}
                     return String(part);
                 })).join(" ");
                 msg.length > 500 && (msg = msg.substring(0, 500) + "... (内容超长已省略)");
@@ -430,8 +506,8 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     prev: 1,
                     next: 1
                 },
-                render: function(e2) {
-                    const $scrollBtn = $(e2.currentTarget).find(".viewer-scrollDown");
+                render: function(e) {
+                    const $scrollBtn = $(e.currentTarget).find(".viewer-scrollDown");
                     $scrollBtn.html("↓");
                     $scrollBtn.attr("title", "向下滚动");
                 },
@@ -474,17 +550,17 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             };
             this.viewerInstance = new Viewer(this.$container[0], options);
         }
-        _handleWheel(e2) {
-            if (!e2.ctrlKey) return;
-            e2.preventDefault();
+        _handleWheel(e) {
+            if (!e.ctrlKey) return;
+            e.preventDefault();
             const now = Date.now();
             if (this._lastZoomTime && now - this._lastZoomTime < 50) return;
             this._lastZoomTime = now;
-            const ratio = e2.deltaY < 0 ? .1 : -.1;
+            const ratio = e.deltaY < 0 ? .1 : -.1;
             requestAnimationFrame((() => {
                 this.viewerInstance.zoom(ratio, !0, {
-                    x: e2.pageX,
-                    y: e2.pageY
+                    x: e.pageX,
+                    y: e.pageY
                 });
             }));
         }
@@ -499,9 +575,9 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 document.documentElement.style.overflow = hasShade ? "hidden" : "";
             }), waitTime);
         }
-        _handleKeydown(e2) {
-            if ("Escape" === e2.key || " " === e2.key) {
-                e2.preventDefault();
+        _handleKeydown(e) {
+            if ("Escape" === e.key || " " === e.key) {
+                e.preventDefault();
                 this.close();
             }
         }
@@ -565,12 +641,12 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                         name: name2,
                         status: "skipped"
                     };
-                } catch (e2) {
-                    console.error(`插件 ${name2} 加载 CSS 失败`, e2);
+                } catch (e) {
+                    console.error(`插件 ${name2} 加载 CSS 失败`, e);
                     return {
                         name: name2,
                         status: "rejected",
-                        error: e2
+                        error: e
                     };
                 }
             })))).filter((r => "rejected" === r.status));
@@ -580,8 +656,8 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             await Promise.all(Array.from(this.plugins).map((async ([name2, instance]) => {
                 try {
                     "function" == typeof instance.handle && await instance.handle();
-                } catch (e2) {
-                    console.error(`插件 ${name2} 执行失败`, e2);
+                } catch (e) {
+                    console.error(`插件 ${name2} 执行失败`, e);
                 }
             })));
         }
@@ -691,6 +767,9 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             }));
             return confirmIndex;
         }
+        static getResponsiveArea(defaultArea = [ "85%", "90%" ]) {
+            return window.innerWidth >= 1200 ? defaultArea : [ "90%", "90%" ];
+        }
     };
     _intervalContainer = new WeakMap;
     __privateAdd(_CommonUtil, _intervalContainer, {});
@@ -698,47 +777,97 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
     class MagnetHubPlugin extends BasePlugin {
         constructor() {
             super(...arguments);
+            __publicField(this, "fileEmoji", "📄");
+            __publicField(this, "folderEmoji", "📁");
+            __publicField(this, "maxHistoryCount", 20);
+            __publicField(this, "currentSort", "");
+            __publicField(this, "currentSearchTicket", 0);
+            __publicField(this, "highlightKeywords", [ "-c", "破解", "流出", "-AI", "无码", "4k", "8k", "-uc", "-u" ]);
             __publicField(this, "engineConfig", [ {
-                id: "cldcld",
+                engineId: "cldcld",
                 label: "磁力帝",
                 targetPage: "https://www.cld139.buzz/search-{keyword}-0-0-1.html",
                 url: "https://www.cld139.buzz/search-{keyword}-0-0-1.html",
                 handler: (url, keyword) => this.parseCld(url, keyword)
             }, {
-                id: "btdig",
+                engineId: "btdig",
                 label: "BTDIG",
                 targetPage: "https://btdig.com/search?q={keyword}",
                 url: "https://btdig.com/search?q={keyword}",
                 handler: (url, keyword) => this.parseBtdig(url, keyword)
             }, {
-                id: "bt4g",
-                label: "BT4G",
-                targetPage: "https://bt4gprx.com/search?q={keyword}&orderby=relevance",
-                url: "https://bt4gprx.com/search?q={keyword}&orderby=relevance",
-                handler: (url, keyword) => this.parseBt4g(url, keyword)
-            }, {
-                id: "u9a9",
+                engineId: "u9a9",
                 label: "U9A9",
                 targetPage: "https://u9a9.com/?type=2&search={keyword}",
                 url: "https://u9a9.com/?type=2&search={keyword}",
-                handler: (url, keyword) => this.commonParse(url, keyword)
+                handler: (url, keyword) => this.commonParse(url, keyword),
+                parseDetailPage: async detailUrl => {
+                    const html = await gmHttp.get(detailUrl), $nodes = DomUtil.htmlTo$dom(html).find("#torrent-description p");
+                    let fileListHtml = "", fileCount = 0;
+                    for (let i = 0; i < $nodes.length; i++) {
+                        const text = $($nodes[i]).text().trim();
+                        if (text) {
+                            fileListHtml += `<div class="file-item" title="${text}">${this.fileEmoji} ${text} </div>`;
+                            fileCount++;
+                        }
+                    }
+                    return {
+                        fileListHtml: fileListHtml,
+                        fileCount: fileCount
+                    };
+                }
             }, {
-                id: "sukebei",
+                engineId: "sukebei",
                 label: "Sukebei",
                 targetPage: "https://sukebei.nyaa.si/?f=0&c=0_0&q={keyword}",
                 url: "https://sukebei.nyaa.si/?f=0&c=0_0&q={keyword}",
-                handler: (url, keyword) => this.commonParse(url, keyword)
+                handler: (url, keyword) => this.commonParse(url, keyword),
+                parseDetailPage: async detailUrl => {
+                    const html = await gmHttp.get(detailUrl), $liNodes = DomUtil.htmlTo$dom(html).find(".torrent-file-list.panel-body").find("li");
+                    let fileListHtml = "", fileCount = 0;
+                    for (let i = 0; i < $liNodes.length; i++) {
+                        const $li = $($liNodes[i]), $folderLink = $li.children("a.folder"), paddingLeft = 12 * ($li.parents("ul").length - 1);
+                        if ($folderLink.length > 0) {
+                            const folderName = $folderLink.text().trim();
+                            fileListHtml += `<div class="file-item file-item-folder" style="padding-left: ${paddingLeft}px;">${this.folderEmoji} ${folderName}</div>`;
+                        } else {
+                            let text = $li.contents().filter((function() {
+                                return 3 === this.nodeType;
+                            })).text().trim();
+                            text || (text = $li.text().trim());
+                            if (!text) continue;
+                            fileListHtml += `<div class="file-item" style="padding-left: ${paddingLeft}px;" title="${text}">${this.fileEmoji} ${text}</div>`;
+                            fileCount++;
+                        }
+                    }
+                    return {
+                        fileListHtml: fileListHtml,
+                        fileCount: fileCount
+                    };
+                }
             }, {
-                id: "btsow",
+                engineId: "btsow",
                 label: "BTSOW",
                 targetPage: "https://btsow.lol/search/{keyword}",
                 url: "https://btsow.lol/bts/data/api/search",
-                handler: (url, keyword) => this.parseBTSOW(url, keyword)
+                handler: (url, keyword) => this.parseBTSOW(url, keyword),
+                parseDetailPage: async detailUrl => {
+                    const hashMatch = detailUrl.match(/detail\/([A-F0-9]{40})/i), hashId = hashMatch ? hashMatch[1] : "";
+                    if (!hashId) throw new Error("无法从URL解析Hash ID");
+                    const res = await gmHttp.postJson("https://btsow.lol/bts/data/api/magnet", [ hashId ]);
+                    if (!res || 200 !== res.code || !res.data) throw new Error(`API 请求失败: ${res ? res.code : "无响应"}`);
+                    const files = res.data.files || [];
+                    if (0 === files.length) throw new Error("该资源暂无文件明细");
+                    let fileListHtml = "";
+                    files.forEach((file => {
+                        fileListHtml += `<div class="file-item">${this.fileEmoji} ${file.filename}</div>`;
+                    }));
+                    return {
+                        fileListHtml: fileListHtml,
+                        fileCount: files.length
+                    };
+                }
             } ]);
-            __publicField(this, "currentSort", "");
-            __publicField(this, "currentSearchTicket", 0);
-            __publicField(this, "highlightKeywords", [ "-c", "破解", "流出", "-AI", "无码", "4k", "8k", "-uc", "-u" ]);
-            __publicField(this, "maxHistoryCount", 20);
         }
         getName() {
             return "MagnetHubPlugin";
@@ -747,7 +876,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             return !0;
         }
         async initCss() {
-            return '\n            <style>\n                .magnet-container {\n                    margin: 0 auto;\n                    padding: 10px 20px;\n                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;\n                    width: 100%;             \n                    box-sizing: border-box;\n                }\n    \n                .magnet-engine-selector {\n                    display: flex;\n                    justify-content: space-between;\n                    align-items: center;\n                    background: #f8fafc;\n                    padding: 10px 15px;\n                    border-radius: 8px;\n                    margin-bottom: 15px;\n                    border: 1px solid #e2e8f0;\n                }\n                \n                .engine-group {\n                    display: flex;\n                    flex-wrap: wrap;\n                    gap: 15px;\n                    flex: 1;\n                }\n                \n                .engine-actions {\n                    display: flex;\n                    align-items: center;\n                    gap: 15px;\n                    padding-left: 20px;\n                }\n                \n                .magnet-results {\n                    min-height: 150px;\n                }\n                .magnet-result {\n                    background: #fff;\n                    border-radius: 10px;\n                    padding: 16px;\n                    margin-bottom: 12px;\n                    border: 1px solid #e2e8f0;\n                    transition: transform 0.2s, box-shadow 0.2s;\n                    display: flex;\n                    justify-content: space-between;\n                    flex-direction: column; \n                    border-left-color: #2563eb;\n                }\n                .magnet-result:hover {\n                    transform: translateY(-2px);\n                    box-shadow: 0 4px 12px rgba(0,0,0,0.08);\n                }\n                \n                .magnet-info {\n                    display: flex; \n                    justify-content: space-between; \n                    align-items: flex-start;\n                    flex-wrap: wrap;\n                }\n    \n                .magnet-content {\n                    flex: 1;\n                    min-width: 0;\n                }\n                .magnet-title {\n                    font-size: 14px;\n                    font-weight: 500;\n                    color: #334155;\n                    margin-bottom: 6px;\n                    text-decoration: none !important;\n                    overflow: hidden;\n                    text-overflow: ellipsis;\n                    line-height: 1.4;\n                    word-wrap: break-word; \n                    overflow-wrap: break-word;\n                    white-space: normal;\n                }\n                .magnet-title:hover {\n                    color: #2563eb;\n                    text-decoration: underline !important;\n                }\n                .magnet-meta {\n                    display: flex;\n                    gap: 12px;\n                    font-size: 12px;\n                    color: #94a3b8;\n                    font-weight: 400;\n                    margin-top: 10px;\n                    flex-wrap: wrap;\n                }\n                .magnet-meta a:hover {\n                    text-decoration: underline !important;\n                    opacity: 0.8;\n                }\n\n    \n                .magnet-actions {\n                    display: flex;\n                    gap: 2px;\n                    flex-shrink: 0;\n                }\n                \n                .magnet-loading {\n                    display: flex;\n                    flex-direction: column;\n                    align-items: center;\n                    justify-content: center;\n                    padding: 40px 0;\n                    color: #94a3b8;\n                    font-size: 14px;\n                }\n\n                .magnet-error {\n                    text-align: center;\n                    padding: 20px;\n                    color: #ef4444;\n                    background: #fef2f2;\n                    border-radius: 8px;\n                    font-size: 13px;\n                    margin: 10px 0;\n                }\n    \n                .magnet-tools {\n                    display: flex;\n                    gap: 15px;\n                    padding: 0 5px 10px;\n                    font-size: 12px;\n                    color: #64748b;\n                    align-items: center;\n                }\n                .sort-item {\n                    cursor: pointer;\n                    transition: color 0.2s;\n                }\n                .sort-item.active {\n                    color: #2563eb;\n                    font-weight: bold;\n                }\n                .sort-item:hover {\n                    color: #2563eb;\n                }\n\n                .magnet-search-bar {\n                    display: flex;\n                    gap: 8px;\n                    margin-bottom: 15px;\n                    padding: 0 5px;\n                }\n                .magnet-input {\n                    flex: 1;\n                    padding: 8px 12px;\n                    border: 1px solid #e2e8f0;\n                    border-radius: 6px;\n                    font-size: 13px;\n                    outline: none;\n                    transition: border-color 0.2s;\n                }\n                .magnet-input:focus {\n                    border-color: #2563eb;\n                    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);\n                }\n                .search-submit-btn {\n                    background-color: #2563eb;\n                    color: white;\n                    border: none;\n                    padding: 0 16px;\n                    border-radius: 6px;\n                    cursor: pointer;\n                    font-size: 13px;\n                    font-weight: 500;\n                }\n                .search-submit-btn:hover {\n                    background-color: #1d4ed8;\n                }\n\n                .engine-checkbox-wrapper {\n                    font-size: 13px;\n                    cursor: pointer;\n                    display: flex;\n                    align-items: center;\n                    gap: 6px;\n                    color: #475569;\n                    user-select: none;\n                    transition: all 0.3s;\n                    padding: 2px 6px;\n                    border-radius: 4px;\n                    border: 1px solid transparent;\n                }\n                .engine-loading {\n                    color: #2563eb !important;\n                    background: #eff6ff;\n                    border-color: #bfdbfe;\n                    animation: magnet-pulse 1.5s infinite;\n                }\n                .engine-success {\n                    color: #16a34a !important;\n                    background: #f0fdf4;\n                }\n                .engine-error {\n                    color: #dc2626 !important;\n                    background: #fef2f2;\n                }\n                @keyframes magnet-pulse {\n                    0% { opacity: 1; }\n                    50% { opacity: 0.5; }\n                    100% { opacity: 1; }\n                }\n                \n                .file-list-container {\n                    background: #f8fafc; border-radius: 6px; padding: 10px; margin-top: 12px; \n                    max-height: 300px; overflow-y: auto; border: 1px solid #e2e8f0; width: 100%; box-sizing: border-box;\n                }\n                .file-list-container::-webkit-scrollbar {\n                    width: 4px;\n                }\n                .file-list-container::-webkit-scrollbar-thumb {\n                    background: #e2e8f0;\n                    border-radius: 10px;\n                }\n                .file-list-container::-webkit-scrollbar-track {\n                    background: transparent;\n                }\n                \n                \n                .magnet-history-list {\n                    display: flex;\n                    flex-wrap: wrap;\n                    gap: 8px;\n                    margin: 0 5px 12px;\n                    align-items: center;\n                }\n                .history-item {\n                    display: inline-flex;\n                    align-items: center;\n                    background: #f1f5f9;\n                    color: #475569;\n                    padding: 1px 8px;\n                    border-radius: 4px;\n                    font-size: 11px;\n                    cursor: pointer;\n                    transition: all 0.2s;\n                }\n                .history-del-btn {\n                    margin-left: 5px;\n                    padding: 0 2px;\n                    color: #94a3b8;\n                    font-weight: bold;\n                    font-size: 12px;\n                    cursor: pointer;\n                }\n                .history-del-btn:hover {\n                    color: #ef4444;\n                }\n                .history-item:hover {\n                    background: #e2e8f0;\n                    color: #2563eb;\n                    border-color: #bfdbfe;\n                }\n                .clear-history {\n                    color: #94a3b8;\n                    font-size: 11px;\n                    cursor: pointer;\n                    align-self: center;\n                    margin-left:auto;\n                    user-select:none;\n                }\n                .clear-history:hover {\n                    color: #ef4444;\n                }\n                \n                @media (max-width: 1000px) {\n                    .magnet-info {\n                        flex-direction: column; /* 纵向排列，使子元素各自占据一行 */\n                        align-items: stretch;   /* 让子元素拉伸占满宽度 */\n                    }\n                \n                    .magnet-content {\n                        width: 100%;\n                        min-width: 100%;       /* 覆盖之前的 300px 设置 */\n                        margin-bottom: 12px;   /* 与下方的按钮组保持间距 */\n                    }\n                \n                    .magnet-actions {\n                        justify-content: flex-start; /* 按钮靠左对齐 */\n                        flex-wrap: wrap;             /* 如果按钮还是太多，允许按钮内部换行 */\n                        gap: 8px;                    /* 加大按钮间距方便点击 */\n                    }\n                }\n            </style>\n        ';
+            return '\n            <style>\n                .magnet-container {\n                    margin: 0 auto;\n                    padding: 10px 20px;\n                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;\n                    width: 100%;             \n                    box-sizing: border-box;\n                }\n    \n                .magnet-engine-selector {\n                    display: flex;\n                    justify-content: space-between;\n                    align-items: center;\n                    background: #f8fafc;\n                    padding: 10px 15px;\n                    border-radius: 8px;\n                    margin-bottom: 15px;\n                    border: 1px solid #e2e8f0;\n                }\n                \n                .engine-group {\n                    display: flex;\n                    flex-wrap: wrap;\n                    gap: 15px;\n                    flex: 1;\n                }\n                \n                .engine-actions {\n                    display: flex;\n                    align-items: center;\n                    gap: 15px;\n                    padding-left: 20px;\n                }\n                \n                .magnet-results {\n                    min-height: 150px;\n                }\n                .magnet-result {\n                    background: #fff;\n                    border-radius: 10px;\n                    padding: 16px;\n                    margin-bottom: 12px;\n                    border: 1px solid #e2e8f0;\n                    transition: transform 0.2s, box-shadow 0.2s;\n                    display: flex;\n                    justify-content: space-between;\n                    flex-direction: column; \n                    border-left-color: #2563eb;\n                }\n                .magnet-result:hover {\n                    box-shadow: 0 4px 12px rgba(0,0,0,0.08);\n                }\n                \n                .magnet-info {\n                    display: flex; \n                    justify-content: space-between; \n                    align-items: flex-start;\n                    flex-wrap: wrap;\n                }\n    \n                .magnet-content {\n                    flex: 1;\n                    min-width: 0;\n                }\n                .magnet-title {\n                    font-size: 14px;\n                    font-weight: 500;\n                    color: #334155;\n                    margin-bottom: 6px;\n                    text-decoration: none !important;\n                    overflow: hidden;\n                    text-overflow: ellipsis;\n                    line-height: 1.4;\n                    word-wrap: break-word; \n                    overflow-wrap: break-word;\n                    white-space: normal;\n                }\n                .magnet-title:hover {\n                    color: #2563eb;\n                    text-decoration: underline !important;\n                }\n                .magnet-meta {\n                    display: flex;\n                    gap: 12px;\n                    font-size: 12px;\n                    color: #94a3b8;\n                    font-weight: 400;\n                    margin-top: 10px;\n                    flex-wrap: wrap;\n                }\n                .magnet-meta a:hover {\n                    text-decoration: underline !important;\n                    opacity: 0.8;\n                }\n\n    \n                .magnet-actions {\n                    display: flex;\n                    gap: 2px;\n                    flex-shrink: 0;\n                }\n                \n                .magnet-loading {\n                    display: flex;\n                    flex-direction: column;\n                    align-items: center;\n                    justify-content: center;\n                    padding: 40px 0;\n                    color: #94a3b8;\n                    font-size: 14px;\n                }\n\n                .magnet-error {\n                    text-align: center;\n                    padding: 20px;\n                    color: #ef4444;\n                    background: #fef2f2;\n                    border-radius: 8px;\n                    font-size: 13px;\n                    margin: 10px 0;\n                }\n    \n                .magnet-tools {\n                    display: flex;\n                    gap: 15px;\n                    padding: 0 5px 10px;\n                    font-size: 12px;\n                    color: #64748b;\n                    align-items: center;\n                }\n                .sort-item {\n                    cursor: pointer;\n                    transition: color 0.2s;\n                }\n                .sort-item.active {\n                    color: #2563eb;\n                    font-weight: bold;\n                }\n                .sort-item:hover {\n                    color: #2563eb;\n                }\n\n                .magnet-search-bar {\n                    display: flex;\n                    gap: 8px;\n                    margin-bottom: 15px;\n                    padding: 0 5px;\n                }\n                .magnet-input {\n                    flex: 1;\n                    padding: 8px 12px;\n                    border: 1px solid #e2e8f0;\n                    border-radius: 6px;\n                    font-size: 13px;\n                    outline: none;\n                    transition: border-color 0.2s;\n                }\n                .magnet-input:focus {\n                    border-color: #2563eb;\n                    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);\n                }\n                .search-submit-btn {\n                    background-color: #2563eb;\n                    color: white;\n                    border: none;\n                    padding: 0 16px;\n                    border-radius: 6px;\n                    cursor: pointer;\n                    font-size: 13px;\n                    font-weight: 500;\n                }\n                .search-submit-btn:hover {\n                    background-color: #1d4ed8;\n                }\n\n                .engine-checkbox-wrapper {\n                    font-size: 13px;\n                    cursor: pointer;\n                    display: flex;\n                    align-items: center;\n                    gap: 6px;\n                    color: #475569;\n                    user-select: none;\n                    transition: all 0.3s;\n                    padding: 2px 6px;\n                    border-radius: 4px;\n                    border: 1px solid transparent;\n                }\n                .engine-loading {\n                    color: #2563eb !important;\n                    background: #eff6ff;\n                    border-color: #bfdbfe;\n                    animation: magnet-pulse 1.5s infinite;\n                }\n                .engine-success {\n                    color: #16a34a !important;\n                    background: #f0fdf4;\n                }\n                .engine-error {\n                    color: #dc2626 !important;\n                    background: #fef2f2;\n                }\n                @keyframes magnet-pulse {\n                    0% { opacity: 1; }\n                    50% { opacity: 0.5; }\n                    100% { opacity: 1; }\n                }\n                \n                .file-list-container {\n                    background: #f8fafc; border-radius: 6px; padding: 10px; margin-top: 12px; \n                    max-height: 300px; overflow-y: auto; border: 1px solid #e2e8f0; width: 100%; box-sizing: border-box;\n                }\n                .file-list-container::-webkit-scrollbar {\n                    width: 4px;\n                }\n                .file-list-container::-webkit-scrollbar-thumb {\n                    background: #e2e8f0;\n                    border-radius: 10px;\n                }\n                .file-list-container::-webkit-scrollbar-track {\n                    background: transparent;\n                }\n                .file-item {\n                    font-size: 12px; \n                    color: #475569; \n                    overflow: hidden; \n                    text-overflow: ellipsis; \n                    white-space: nowrap;\n                    padding: 2px 0;\n                }\n                .file-item-folder {\n                    font-weight: bold; \n                    color: #1e293b;\n                }\n                \n                .magnet-history-list {\n                    display: flex;\n                    flex-wrap: wrap;\n                    gap: 8px;\n                    margin: 0 5px 12px;\n                    align-items: center;\n                }\n                .history-item {\n                    display: inline-flex;\n                    align-items: center;\n                    background: #f1f5f9;\n                    color: #475569;\n                    padding: 1px 8px;\n                    border-radius: 4px;\n                    font-size: 11px;\n                    cursor: pointer;\n                    transition: all 0.2s;\n                }\n                .history-del-btn {\n                    margin-left: 5px;\n                    padding: 0 2px;\n                    color: #94a3b8;\n                    font-weight: bold;\n                    font-size: 12px;\n                    cursor: pointer;\n                }\n                .history-del-btn:hover {\n                    color: #ef4444;\n                }\n                .history-item:hover {\n                    background: #e2e8f0;\n                    color: #2563eb;\n                    border-color: #bfdbfe;\n                }\n                .clear-history {\n                    color: #94a3b8;\n                    font-size: 11px;\n                    cursor: pointer;\n                    align-self: center;\n                    margin-left:auto;\n                    user-select:none;\n                }\n                .clear-history:hover {\n                    color: #ef4444;\n                }\n                \n                @media (max-width: 1000px) {\n                    .magnet-info {\n                        flex-direction: column; /* 纵向排列，使子元素各自占据一行 */\n                        align-items: stretch;   /* 让子元素拉伸占满宽度 */\n                    }\n                \n                    .magnet-content {\n                        width: 100%;\n                        min-width: 100%;       /* 覆盖之前的 300px 设置 */\n                        margin-bottom: 12px;   /* 与下方的按钮组保持间距 */\n                    }\n                \n                    .magnet-actions {\n                        justify-content: flex-start; /* 按钮靠左对齐 */\n                        flex-wrap: wrap;             /* 如果按钮还是太多，允许按钮内部换行 */\n                        gap: 8px;                    /* 加大按钮间距方便点击 */\n                    }\n                }\n            </style>\n        ';
         }
         async handle() {}
         openMagnetHubDialog(carNum) {
@@ -755,7 +884,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 type: 1,
                 title: "磁力搜索",
                 content: '<div id="magnetHubBox"></div>',
-                area: [ "70%", "95%" ],
+                area: CommonUtil.getResponsiveArea([ "70%", "95%" ]),
                 shadeClose: !0,
                 scrollbar: !1,
                 anim: -1,
@@ -768,7 +897,12 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             if (!$hubContainer) throw new Error("未传入容器");
             let currentKeyword = (keyword || "").trim().replace("FC2-", "");
             this.currentSort = cacheManager.getItem(cacheManager.magnetHubSortType_key, this.currentSort);
-            const allEngineIds = this.engineConfig.map((engine => engine.id)), savedEngines = cacheManager.getItem(cacheManager.magnetHubEngines_key, allEngineIds), tabsHtml = this.engineConfig.map((engine => `\n            <label class="engine-checkbox-wrapper" data-engine-id="${engine.id}">\n                <input type="checkbox" class="engine-checkbox" value="${engine.id}" ${savedEngines.includes(engine.id) ? "checked" : ""}>\n                <span class="engine-label-text" data-url="${engine.targetPage || ""}" data-tip="右键点击，可前往原站">${engine.label}</span>\n            </label>\n        `)).join(""), $container = $(`\n            <div class="magnet-container">\n                <div class="magnet-search-bar">\n                    <input type="text" class="magnet-input" placeholder="输入番号或关键词..." value="${currentKeyword}">\n                    <button class="search-submit-btn">搜索</button>\n                </div>\n                \n                <div id="specialHint" style="display:none;"></div>\n                \n                <div class="magnet-history-list" id="magnetHistory"></div>\n                \n                <div class="magnet-engine-selector">\n                    <div class="engine-group">${tabsHtml}</div>\n                    <div class="engine-actions">\n                        <span class="select-all" style="cursor:pointer; color:#2563eb; font-size:12px;">全选</span>\n                    </div>\n                </div>\n                <div class="magnet-tools">\n                    <span>排序方式：</span>\n                    <span class="sort-item ${"" === this.currentSort ? "active" : ""}" data-sort="">默认</span>\n                    <span class="sort-item ${"date" === this.currentSort ? "active" : ""}" data-sort="date">日期最新</span>\n                    <span class="sort-item ${"size" === this.currentSort ? "active" : ""}" data-sort="size">文件最大</span>\n                    <div style="margin-left: auto; text-align: right;">\n                        <span id="resultCount" style="color: #94a3b8; font-weight: 500;"></span>\n                        <span id="dedupTip" style="display: none; font-size: 11px; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; margin-left: 5px;"></span>\n                    </div>\n                </div>\n                <div class="magnet-results"></div>\n            </div>\n        `), $resultsContainer = $container.find(".magnet-results"), $searchInput = $container.find(".magnet-input"), $historyBox = $container.find("#magnetHistory"), renderHistory = () => {
+            const savedEngines = cacheManager.getItem(cacheManager.magnetHubEngines_key, [ this.engineConfig[0].engineId ]), tabsHtml = this.engineConfig.map((engine => `\n            <label class="engine-checkbox-wrapper" data-engine-id="${engine.engineId}">\n                <input type="checkbox" class="engine-checkbox" value="${engine.engineId}" ${savedEngines.includes(engine.engineId) ? "checked" : ""}>\n                <span class="engine-label-text" data-url="${engine.targetPage || ""}" data-tip="右键点击，可前往原站">${engine.label}</span>\n            </label>\n        `)).join(""), $container = $(`\n            <div class="magnet-container">\n                <div class="magnet-search-bar">\n                    <input type="text" class="magnet-input" placeholder="输入番号或关键词..." value="${currentKeyword}">\n                    <button class="search-submit-btn">搜索</button>\n                </div>\n                \n                <div id="specialHint" style="display:none;"></div>\n                \n                <div class="magnet-history-list" id="magnetHistory"></div>\n                \n                <div class="magnet-engine-selector">\n                    <div class="engine-group">${tabsHtml}</div>\n                    <div class="engine-actions">\n                        <span class="select-all" style="cursor:pointer; color:#2563eb; font-size:12px;">全选</span>\n                    </div>\n                </div>\n                <div class="magnet-tools">\n                    <span>排序方式：</span>\n                    <span class="sort-item ${"" === this.currentSort ? "active" : ""}" data-sort="">默认</span>\n                    <span class="sort-item ${"date" === this.currentSort ? "active" : ""}" data-sort="date">日期最新</span>\n                    <span class="sort-item ${"size" === this.currentSort ? "active" : ""}" data-sort="size">文件最大</span>\n                    <div style="margin-left: auto; text-align: right;">\n                        <span id="resultCount" style="color: #94a3b8; font-weight: 500;"></span>\n                        <span id="dedupTip" style="display: none; font-size: 11px; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; margin-left: 5px;"></span>\n                    </div>\n                </div>\n                <div class="magnet-results"></div>\n            </div>\n        `);
+            $hubContainer.append($container);
+            this.bindMagnetEvents($container);
+        }
+        bindMagnetEvents($container) {
+            const $resultsContainer = $container.find(".magnet-results"), $searchInput = $container.find(".magnet-input"), $historyBox = $container.find("#magnetHistory"), renderHistory = () => {
                 const history = cacheManager.getItem(cacheManager.magnetHubHistory_key, []);
                 if (!history.length) {
                     $historyBox.hide();
@@ -811,14 +945,14 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     this.searchAllSelected($container, newKeyword);
                 } else $resultsContainer.html('<div class="magnet-loading">请输入关键词进行搜索</div>');
             };
-            $container.on("click", ".history-item", (e2 => {
-                const $target = $(e2.currentTarget);
+            $container.on("click", ".history-item", (e => {
+                const $target = $(e.currentTarget);
                 $searchInput.val($target.data("val"));
                 performSearch();
             }));
-            $container.on("click", ".history-del-btn", (e2 => {
-                e2.stopPropagation();
-                const valToRemove = $(e2.currentTarget).parent().data("val");
+            $container.on("click", ".history-del-btn", (e => {
+                e.stopPropagation();
+                const valToRemove = $(e.currentTarget).parent().data("val");
                 let history = cacheManager.getItem(cacheManager.magnetHubHistory_key, []);
                 history = history.filter((item => item !== valToRemove));
                 cacheManager.setItem(cacheManager.magnetHubHistory_key, history);
@@ -829,11 +963,11 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 renderHistory();
             }));
             $container.find(".search-submit-btn").on("click", performSearch);
-            $searchInput.on("keypress", (e2 => {
-                13 === e2.which && performSearch();
+            $searchInput.on("keypress", (e => {
+                13 === e.which && performSearch();
             }));
-            $container.on("click", ".sort-item", (e2 => {
-                const $target = $(e2.target);
+            $container.on("click", ".sort-item", (e => {
+                const $target = $(e.target);
                 this.currentSort = $target.data("sort");
                 cacheManager.setItem(cacheManager.magnetHubSortType_key, this.currentSort);
                 $container.find(".sort-item").removeClass("active");
@@ -848,11 +982,8 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 $container.find(".engine-checkbox").prop("checked", !allChecked);
                 performSearch();
             }));
-            renderHistory();
-            performSearch();
-            $hubContainer.append($container);
-            $container.off("click.copy").on("click.copy", ".magnet-copy-btn", (function(e2) {
-                e2.preventDefault();
+            $container.off("click.copy").on("click.copy", ".magnet-copy-btn", (function(e) {
+                e.preventDefault();
                 const $btn = $(this), magnet = $btn.data("magnet");
                 CommonUtil.copyToClipboard(magnet, (() => {
                     const originalText = $btn.text();
@@ -862,9 +993,9 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     }), 1e3);
                 }));
             }));
-            $container.off("click.preview").on("click.preview", ".magnet-preview-btn", (async e2 => {
-                e2.preventDefault();
-                const magnet = $(e2.currentTarget).data("magnet"), cacheKey = "whatslink_" + magnet, cacheData = tempCacheManager.getItem(cacheKey, []);
+            $container.off("click.preview").on("click.preview", ".magnet-preview-btn", (async e => {
+                e.preventDefault();
+                const magnet = $(e.currentTarget).data("magnet"), cacheKey = "whatslink_" + magnet, cacheData = tempCacheManager.getItem(cacheKey, []);
                 if (CommonUtil.isNotNull(cacheData)) {
                     window.viewerManager.showImageViewer(cacheData, {
                         toTop: !1,
@@ -890,21 +1021,22 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                         toTop: !1,
                         initZoom: !1
                     });
-                } catch (e3) {
-                    show.error(e3);
-                    console.error(e3);
+                } catch (e2) {
+                    clog.errorAndShow(e2);
                 } finally {
                     loadObj.close();
                 }
             }));
-            $container.on("contextmenu", ".engine-label-text", (e2 => {
-                let targetUrl = $(e2.currentTarget).attr("data-url");
+            $container.on("contextmenu", ".engine-label-text", (e => {
+                let targetUrl = $(e.currentTarget).attr("data-url");
                 if (!targetUrl) return;
-                e2.preventDefault();
+                e.preventDefault();
                 const currentKw = $searchInput.val().trim();
                 targetUrl = currentKw ? targetUrl.replace("{keyword}", encodeURIComponent(currentKw)) : targetUrl.replace("{keyword}", "");
                 window.open(targetUrl, "_blank");
             }));
+            renderHistory();
+            performSearch();
         }
         async searchAllSelected($container, keyword) {
             const ticket = ++this.currentSearchTicket, selectedIds = [];
@@ -918,40 +1050,36 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             }
             $resultsContainer.html('<div class="magnet-loading">正在聚合搜索中...</div>');
             let allResults = [], duplicateCount = 0;
-            const searchPromises = selectedIds.map((async id => {
-                const engine = this.engineConfig.find((e2 => e2.id === id)), $engineWrapper = $container.find(`.engine-checkbox-wrapper[data-engine-id="${id}"]`);
+            const searchPromises = selectedIds.map((async engineId => {
+                const engine = this.engineConfig.find((e => e.engineId === engineId)), $engineWrapper = $container.find(`.engine-checkbox-wrapper[data-engine-id="${engineId}"]`);
                 $engineWrapper.addClass("engine-loading");
                 try {
-                    const cacheKey = `${engine.id}_${keyword}`;
+                    let isFromFetch = !1;
+                    const cacheKey = `${engine.engineId}_${keyword}`;
+                    this.cacheKey = cacheKey;
                     let results = tempCacheManager.getItem(cacheKey, []);
                     if (CommonUtil.isNull(results)) {
                         const url = engine.url.replace("{keyword}", encodeURIComponent(keyword));
                         results = await engine.handler(url, keyword);
-                        tempCacheManager.setItem(cacheKey, results);
+                        isFromFetch = !0;
                     }
                     if (ticket !== this.currentSearchTicket) return;
                     results.forEach((item => {
+                        item.source = engine.label;
+                        item.engineId = engine.engineId;
                         const hash = this._getMagnetHash(item.magnet), existingIndex = allResults.findIndex((existing => this._getMagnetHash(existing.magnet) === hash));
-                        if (-1 === existingIndex) {
-                            item.source = engine.label;
-                            allResults.push(item);
-                        } else {
+                        if (-1 === existingIndex) allResults.push(item); else {
                             duplicateCount++;
                             const existingItem = allResults[existingIndex], currentHasFileList = item.fileListHtml && item.fileListHtml.length > 0, existingHasFileList = existingItem.fileListHtml && existingItem.fileListHtml.length > 0, currentFileCount = item.fileCount || 0, existingFileCount = existingItem.fileCount || 0;
-                            if (currentHasFileList && !existingHasFileList) {
-                                item.source = engine.label;
-                                allResults[existingIndex] = item;
-                            } else if (currentFileCount > existingFileCount) {
-                                item.source = engine.label;
-                                allResults[existingIndex] = item;
-                            }
+                            (currentHasFileList && !existingHasFileList || currentFileCount > existingFileCount) && (allResults[existingIndex] = item);
                         }
                     }));
+                    isFromFetch && CommonUtil.isNotNull(results) && tempCacheManager.setItem(cacheKey, results);
                     $engineWrapper.removeClass("engine-loading").addClass("engine-success");
                     this.displayResults($resultsContainer, allResults, duplicateCount);
-                } catch (e2) {
-                    console.error(`${engine.label} 搜索失败:`, e2);
-                    const errorMessage = e2.message || "未知错误（可能是跨域或网络问题）";
+                } catch (e) {
+                    console.error(`${engine.label} 搜索失败:`, e);
+                    const errorMessage = e.message || "未知错误（可能是跨域或网络问题）";
                     $engineWrapper.removeClass("engine-loading").addClass("engine-error").attr("title", `错误详情: ${errorMessage}`);
                 }
             }));
@@ -977,15 +1105,59 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 const timeA = this._parseRelativeDate(a.date);
                 return this._parseRelativeDate(b.date) - timeA;
             })) : "size" === this.currentSort && sortedResults.sort(((a, b) => b.sizeByte - a.sizeByte));
-            sortedResults.forEach((result => {
-                let highlightedTitle = result.title;
+            sortedResults.forEach((item => {
+                let canFetch = !1, engineCfg = null;
+                if (!item.fileListHtml) {
+                    engineCfg = this.engineConfig.find((e => e.engineId === item.engineId));
+                    engineCfg && "function" == typeof engineCfg.parseDetailPage && (canFetch = !0);
+                }
+                let highlightedTitle = item.title;
                 this.highlightKeywords.forEach((word => {
                     const reg = new RegExp(`(${word})`, "gi");
                     highlightedTitle = highlightedTitle.replace(reg, '<span style="color: #ef4444; font-weight: bold; background: #fee2e2; padding: 0 2px; border-radius: 2px;">$1</span>');
                 }));
-                const $result = $(`\n                <div class="magnet-result">\n                    <div class="magnet-info">\n                        <div class="magnet-content">\n                            <a class="magnet-title" href="${result.detailPageUrl}" target="_blank" title="${result.title}">\n                                ${highlightedTitle}\n                            </a>\n                            <div class="magnet-meta">\n                                <span style="color: #007bff; font-weight: bold;">[ ${result.source} ]</span>\n                                <span style="margin: 0 4px;">|</span>\n                                <span>📦 ${result.size || "未知"}</span>\n                                <span style="margin: 0 4px;">|</span>\n                                <span>📅 ${result.date || "未知"}</span>\n                                ${result.fileCount ? `<span style="margin: 0 4px;">|</span><span>📂 文件数 ${result.fileCount}</span>` : ""}\n                            </div>\n                        </div>\n            \n                        <div class="magnet-actions">\n                            <jhs-btn type="aliceBlue" class="magnet-preview-btn" data-magnet="${result.magnet}">预览</jhs-btn>\n                            <jhs-btn type="white" class="magnet-copy-btn" data-magnet="${result.magnet}">复制</jhs-btn>\n                            <jhs-btn type="royalBlue" class="magnet-btn-download"><a href="${result.magnet}">立即下载</a></jhs-btn>\n                            <jhs-btn type="denimBlue" class="magnet-115-btn magnet-down-115" data-magnet="${result.magnet}">115离线</jhs-btn>\n                        </div>\n                    </div>\n\n                    ${result.fileListHtml ? `<div class="file-list-container"> ${result.fileListHtml} </div> ` : ""}\n                </div>\n            `);
+                const $result = $(`\n                <div class="magnet-result">\n                    <div class="magnet-info">\n                        <div class="magnet-content">\n                            <a class="magnet-title" href="${item.detailPageUrl}" target="_blank" title="${item.title}">\n                                ${highlightedTitle}\n                            </a>\n                            <div class="magnet-meta">\n                                <span style="color: #007bff; font-weight: bold;">[ ${item.source} ]</span>\n                                <span style="margin: 0 4px;">|</span>\n                                <span>📦 ${item.size || "未知"}</span>\n                                <span style="margin: 0 4px;">|</span>\n                                <span>📅 ${item.date || "未知"}</span>\n                                <span class="file-count-wrapper">\n                                    ${item.fileCount ? `\n                                        <span style="margin: 0 4px;">|</span>\n                                        <span class="file-count-label">${this.fileEmoji} 文件数 ${item.fileCount}</span>\n                                    ` : ""}\n                                </span>\n                            </div>\n                        </div>\n            \n                        <div class="magnet-actions">\n                            <jhs-btn type="aliceBlue" class="magnet-preview-btn" data-magnet="${item.magnet}">预览</jhs-btn>\n                            <jhs-btn type="white" class="magnet-copy-btn" data-magnet="${item.magnet}">复制</jhs-btn>\n                            <jhs-btn type="royalBlue" class="magnet-btn-download"><a href="${item.magnet}">立即下载</a></jhs-btn>\n                            <jhs-btn type="denimBlue" class="magnet-115-btn magnet-down-115" data-magnet="${item.magnet}">115离线</jhs-btn>\n                        </div>\n                    </div>\n\n                    <div class="file-list-area" style="margin-top: 10px;">\n                        ${item.fileListHtml ? `<div class="file-list-container">${item.fileListHtml}</div>` : canFetch ? '<div class="fetch-placeholder"></div>' : ""}\n                    </div>\n                </div>\n            `);
+                canFetch && this.renderLoadBtn($result.find(".fetch-placeholder"), item, engineCfg);
                 $container.append($result);
             }));
+        }
+        renderLoadBtn($placeholder, item, engineCfg, isRetry = !1) {
+            const $btnWrapper = $(`\n            <div class="fetch-action-container" style="padding: 12px; border: 1px dashed ${isRetry ? "#f87171" : "#e2e8f0"}; border-radius: 8px; background: ${isRetry ? "#fef2f2" : "#f8fafc"}; transition: all 0.3s;">\n                <jhs-btn type="white" class="load-files-btn" style="font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">\n                    ${isRetry ? "<span>❌ 加载失败，点击重试</span>" : "<span>🔍 查看文件列表</span>"}\n                </jhs-btn>\n            </div>\n        `);
+            $btnWrapper.find(".load-files-btn").on("click", (async e => {
+                $(e.currentTarget).prop("disabled", !0).html("<span>⏳ 正在努力加载中...</span>");
+                $btnWrapper.css("border-color", "#cbd5e1");
+                try {
+                    const detailData = await engineCfg.parseDetailPage(item.detailPageUrl);
+                    if (detailData.fileListHtml) {
+                        Object.assign(item, detailData);
+                        let cachedResults = tempCacheManager.getItem(this.cacheKey, []);
+                        if (cachedResults && cachedResults.length > 0) {
+                            const targetIdx = cachedResults.findIndex((r => r.magnet === item.magnet));
+                            if (-1 !== targetIdx) {
+                                Object.assign(cachedResults[targetIdx], detailData);
+                                tempCacheManager.setItem(this.cacheKey, cachedResults);
+                            }
+                        }
+                        $placeholder.html(`<div class="file-list-container" style="animation: fadeIn 0.3s;">${item.fileListHtml}</div>`);
+                    } else $placeholder.html('<div style="font-size: 12px; color: #94a3b8; text-align: center; padding: 10px;">暂无文件列表</div>');
+                    if (detailData.fileCount) {
+                        const $wrapper = $placeholder.closest(".magnet-result").find(".file-count-wrapper"), $label = $wrapper.find(".file-count-label");
+                        $label.length > 0 ? $label.html(`${this.fileEmoji} 文件数 ${item.fileCount}`) : $wrapper.html(`<span style="margin: 0 4px;">|</span> <span class="file-count-label">${this.fileEmoji} 文件数 ${item.fileCount}</span> `);
+                        $wrapper.find(".file-count-label").css("color", "#10b981").fadeOut(400).fadeIn(800, (function() {
+                            setTimeout((() => {
+                                $(this).css({
+                                    color: "",
+                                    transition: "color 0.5s"
+                                });
+                            }), 1e3);
+                        }));
+                    }
+                } catch (err) {
+                    console.error(`[${engineCfg.label}] 详情解析异常:`, err);
+                    this.renderLoadBtn($placeholder, item, engineCfg, !0);
+                }
+            }));
+            $placeholder.empty().append($btnWrapper);
         }
         async commonParse(url, keyword) {
             const baseUrl = NetUtil.getBaseUrl(url), html = await gmHttp.get(url), $dom = DomUtil.htmlTo$dom(html), results = [];
@@ -1012,10 +1184,10 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             }, 50, 1 ], dataList = (await gmHttp.postJson(url, data)).data, baseUrl = NetUtil.getBaseUrl(url), results = [];
             for (let i = 0; i < dataList.length; i++) {
                 let item = dataList[i];
-                const size = (item.size / 1073741824).toFixed(2) + " GB", detailPageUrl = `${baseUrl}/magnet/detail/${item.hash}`;
-                results.push({
+                const size = (item.size / 1073741824).toFixed(2) + " GB", detailPageUrl = `${baseUrl}/magnet/detail/${item.hash}`, title = item.name.replace(/<[^>]*>?/gm, "");
+                title.toLowerCase().includes(keyword.toLowerCase()) && results.push({
                     detailPageUrl: detailPageUrl,
-                    title: item.name.replace(/<[^>]*>?/gm, ""),
+                    title: title,
                     magnet: "magnet:?xt=urn:btih:" + item.hash,
                     size: size,
                     sizeByte: this._quickParseSize(size),
@@ -1030,12 +1202,24 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 const $el = $(el), $link = $el.find(".torrent_name a"), detailPageUrl = $link.attr("href"), title = $link.text().trim();
                 if (!title.toLowerCase().includes(keyword.toLowerCase())) return;
                 const magnet = $el.find(".fa-magnet a[href^='magnet:']").attr("href"), size = $el.find(".torrent_size").text().trim(), fileCount = $el.find(".torrent_files").text().trim();
-                const dateChinese = $el.find(".torrent_age").text().trim().replace(/found\s+/g, "").replace(/years?/g, "年").replace(/months?/g, "个月").replace(/weeks?/g, "周").replace(/days?/g, "天").replace(/hours?/g, "小时").replace(/minutes?/g, "分钟").replace(/ago/g, "前").replace(/\s+/g, ""), fileListHtml = $el.find(".torrent_excerpt div[class*='fa-']").map(((_, div) => {
+                const dateChinese = $el.find(".torrent_age").text().trim().replace(/found\s+/g, "").replace(/years?/g, "年").replace(/months?/g, "个月").replace(/weeks?/g, "周").replace(/days?/g, "天").replace(/hours?/g, "小时").replace(/minutes?/g, "分钟").replace(/ago/g, "前").replace(/\s+/g, ""), $fileNodes = $el.find(".torrent_excerpt div[class*='fa-']"), fileItems = [];
+                let minPadding = 999;
+                $fileNodes.each(((_, div) => {
                     const $div = $(div), text = $div.text().trim();
-                    if (!text) return null;
-                    const isFolder = $div.hasClass("fa-folder-open");
-                    return `<div class="file-item" style="font-size: 12px; ${isFolder ? "font-weight: bold; color: #1e293b;" : "color: #475569;"} overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">\n                ${isFolder ? "📁" : "📄"} ${text}\n            </div>`;
-                })).get().join("") || '<div style="font-size: 12px; color: #94a3b8;">暂无文件列表</div>';
+                    if (!text) return;
+                    const paddingMatch = ($div.attr("style") || "").match(/padding-left:\s*([\d.]+)em/), emValue = paddingMatch ? parseFloat(paddingMatch[1]) : 0;
+                    emValue < minPadding && (minPadding = emValue);
+                    const isFolder = $div.hasClass("fa-folder-open") || $div.hasClass("fa-folder"), $nextSpan = $div.next("span"), sizeText = $nextSpan.length ? $nextSpan.text().trim() : "", fullText = sizeText ? `${text} (${sizeText})` : text;
+                    fileItems.push({
+                        text: fullText,
+                        isFolder: isFolder,
+                        em: emValue
+                    });
+                }));
+                const fileListHtml = fileItems.map((item => {
+                    const finalPadding = Math.max(0, 12 * (item.em - minPadding));
+                    return `<div class="file-item ${item.isFolder ? "file-item-folder" : ""}" style="padding-left: ${finalPadding}px;" title="${item.text}">\n                            ${item.isFolder ? this.folderEmoji : this.fileEmoji} ${item.text}\n                        </div>`;
+                })).join("");
                 magnet && results.push({
                     detailPageUrl: detailPageUrl,
                     title: title,
@@ -1043,8 +1227,8 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     size: size,
                     date: dateChinese,
                     fileCount: fileCount,
-                    fileListHtml: fileListHtml,
-                    sizeByte: this._quickParseSize(size)
+                    fileListHtml: fileListHtml || '<div class="file-item">暂无文件列表</div>',
+                    sizeByte: this._quickParseSize ? this._quickParseSize(size) : 0
                 });
             }));
             return results;
@@ -1054,31 +1238,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             $dom.find(".ssbox").each(((i, el) => {
                 const $el = $(el), $link = $el.find(".title h3 a"), detailPageUrl = `${baseUrl}${$link.attr("href")}`, title = $link.text().trim();
                 if (!title.toLowerCase().includes(keyword.toLowerCase())) return;
-                const magnet = $el.find(".sbar a[href^='magnet:']").attr("href"), date = $el.find(".sbar span:contains('添加时间') b").text().trim(), size = $el.find(".sbar span:contains('大小') b").text().trim(), fileCount = $el.find(".slist ul li").length, fileList = $el.find(".slist ul li").map(((_, li) => $(li).text().trim())).get(), fileListHtml = fileList.length > 0 ? fileList.map((name2 => `<div class="file-item" style="font-size: 12px; color: #475569; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">📄 ${name2}</div>`)).join("") : '<div style="font-size: 12px; color: #94a3b8;">暂无文件列表</div>';
-                magnet && results.push({
-                    detailPageUrl: detailPageUrl,
-                    title: title,
-                    magnet: magnet,
-                    size: size,
-                    date: date,
-                    fileListHtml: fileListHtml,
-                    fileCount: fileCount,
-                    sizeByte: this._quickParseSize(size)
-                });
-            }));
-            return results;
-        }
-        async parseBt4g(url, keyword) {
-            const html = await gmHttp.get(url), $dom = DomUtil.htmlTo$dom(html), results = [], baseUrl = NetUtil.getBaseUrl(url);
-            $dom.find(".list-group-item.result-item").each(((i, el) => {
-                const $el = $(el), $link = $el.find("h5.mb-1 a"), title = $link.attr("title") || $link.text().trim(), relativeHref = $link.attr("href"), detailPageUrl = `${baseUrl}${relativeHref}`;
-                if (keyword && !title.toLowerCase().includes(keyword.toLowerCase())) return;
-                let magnet = relativeHref.startsWith("/magnet/") ? `magnet:?xt=urn:btih:${relativeHref.split("/").pop()}` : relativeHref;
-                const date = $el.find("span:contains('Creation Time:')").text().replace(/Creation Time:\s*/i, "").trim(), size = $el.find("span:contains('Total Size:') b.cpill").text().trim(), fileCountRaw = $el.find("span:contains('Files:')").text(), fileCount = parseInt(fileCountRaw.replace(/Files:\s*/i, "").trim()) || 0, fileList = $el.find("ul li").map(((_, li) => {
-                    const $li = $(li).clone();
-                    $li.find("span").remove();
-                    return $li.text().trim();
-                })).get(), fileListHtml = fileList.length > 0 ? fileList.map((name2 => `<div class="file-item" style="font-size: 12px; color: #475569; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">📄 ${name2}</div>`)).join("") : '<div style="font-size: 12px; color: #94a3b8;">暂无文件列表</div>';
+                const magnet = $el.find(".sbar a[href^='magnet:']").attr("href"), date = $el.find(".sbar span:contains('添加时间') b").text().trim(), size = $el.find(".sbar span:contains('大小') b").text().trim(), fileCount = $el.find(".slist ul li").length, fileList = $el.find(".slist ul li").map(((_, li) => $(li).text().trim())).get(), fileListHtml = fileList.length > 0 ? fileList.map((name2 => `<div class="file-item">${this.fileEmoji} ${name2}</div>`)).join("") : '<div class="file-item">暂无文件列表</div>';
                 magnet && results.push({
                     detailPageUrl: detailPageUrl,
                     title: title,
@@ -1096,7 +1256,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             if (!dateStr) return 0;
             try {
                 return DateUtil.toTimestamp(dateStr);
-            } catch (e2) {}
+            } catch (e) {}
             const match = dateStr.match(/^(\d+)(年|个月|周|天|小时|分钟)前$/);
             if (match) {
                 const value = parseInt(match[1]), unit = match[2], now = Date.now();
@@ -1176,6 +1336,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
     __publicField(_HotkeyManager, "isMac", 0 === navigator.platform.indexOf("Mac"));
     __publicField(_HotkeyManager, "registerHotKeyMap", new Map);
     __publicField(_HotkeyManager, "handleKeydown", (event => {
+        if (!(event instanceof KeyboardEvent)) return;
         const activeElement = document.activeElement;
         if (!("INPUT" === activeElement.tagName || "TEXTAREA" === activeElement.tagName || activeElement.isContentEditable)) for (const [id, data] of _HotkeyManager.registerHotKeyMap) {
             let hotkeyString = data.hotkeyString, callback = data.callback;
@@ -1199,7 +1360,8 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
         constructor() {
             super(...arguments);
             __publicField(this, "settings", {
-                triggerHotkey: "Q"
+                triggerHotkey: "Q",
+                blacklist: []
             });
             __publicField(this, "mousePos", {
                 x: 0,
@@ -1212,10 +1374,10 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 index: 1,
                 label: "🖼️ 以图识图",
                 handler: async () => {
-                    const src = this.$currentTarget.attr("src");
+                    var _a;
+                    const src = null == (_a = this.$currentTarget) ? void 0 : _a.attr("src");
                     this.getBean("ImageRecognitionPlugin").openRecognition(src);
-                },
-                condition: () => this.$currentTarget && this.$currentTarget.is("img")
+                }
             }, {
                 id: "magnetSearch",
                 index: 2,
@@ -1223,18 +1385,13 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 handler: async () => {
                     const selectedText = window.getSelection().toString().trim();
                     this.getBean("MagnetHubPlugin").openMagnetHubDialog(selectedText);
-                },
-                condition: () => window.getSelection().toString().trim().length > 0
+                }
             }, {
                 id: "magnetExtractor",
                 index: 3,
                 label: "🔍 提取本页磁力",
                 handler: async () => {
                     this.getBean("MagnetExtractorPlugin").startExtractor();
-                },
-                condition: () => {
-                    const selectedText = window.getSelection().toString().trim(), isImage = this.$currentTarget && this.$currentTarget.is("img");
-                    return !selectedText && !isImage;
                 }
             } ]);
         }
@@ -1252,12 +1409,15 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             this.bindEvents();
         }
         async loadSettings() {
-            const saved = await cacheManager.getItem(cacheManager.menuSetting_key);
-            saved && (this.settings = saved);
+            const saved = cacheManager.getItem(cacheManager.menuSetting_key);
+            saved && (this.settings = {
+                ...this.settings,
+                ...saved
+            });
         }
         refreshHotkey() {
             this.hotkeyId && HotkeyManager.unregisterHotkey(this.hotkeyId);
-            this.hotkeyId = HotkeyManager.recordHotkey(this.settings.triggerHotkey, (event => {
+            this.hotkeyId = HotkeyManager.registerHotkey(this.settings.triggerHotkey, (event => {
                 if (this.$menu && this.$menu.is(":visible")) {
                     const elementAtMouse = document.elementFromPoint(this.mousePos.x, this.mousePos.y), $hoveredItem = $(elementAtMouse).closest(".plugin-alt-menu li");
                     if ($hoveredItem.length > 0) {
@@ -1268,15 +1428,58 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 } else {
                     event.preventDefault();
                     this.hideMenu();
-                    this.showMenu(this.mousePos.x, this.mousePos.y);
+                    this.showMenu();
                 }
             }));
         }
         registerGMMenu() {
-            this.gmMenuId && GM_unregisterMenuCommand(this.gmMenuId);
-            this.gmMenuId = GM_registerMenuCommand(`⚙️ 设置触发快捷键 (当前: ${this.settings.triggerHotkey})`, (() => {
+            var _a;
+            this.gmMenuIds && this.gmMenuIds.forEach((id => GM_unregisterMenuCommand(id)));
+            this.gmMenuIds = [];
+            const host = window.location.host, toggleLabel = (this.settings.blacklist || []).includes(host) ? "❌ 已禁用 (点击启用)" : "✅ 已启用 (点击禁用)";
+            this.gmMenuIds.push(GM_registerMenuCommand(toggleLabel, (() => {
+                this.toggleSite(host);
+            })));
+            this.gmMenuIds.push(GM_registerMenuCommand(`管理禁用列表 (${(null == (_a = this.settings.blacklist) ? void 0 : _a.length) || 0})`, (() => {
+                this.openBlacklistManager();
+            })));
+            this.gmMenuIds.push(GM_registerMenuCommand(`设置触发快捷键 (${this.settings.triggerHotkey})`, (() => {
                 this.openHotkeySetter();
-            }));
+            })));
+        }
+        toggleSite(host) {
+            if (this.settings.blacklist.includes(host)) {
+                this.settings.blacklist = this.settings.blacklist.filter((h => h !== host));
+                show.ok("已启用，刷新页面后生效");
+            } else {
+                this.settings.blacklist.push(host);
+                show.error("已禁用，刷新页面后生效");
+            }
+            cacheManager.setItem(cacheManager.menuSetting_key, this.settings);
+            window.location.reload();
+        }
+        openBlacklistManager() {
+            const list = this.settings.blacklist || [], content = `\n        <div class="blacklist-container" style="padding:15px; max-height:300px; overflow-y:auto;">\n            ${list.length > 0 ? list.map((site => `\n            <div class="blacklist-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #eee;">\n                <span style="font-size:14px; color:#333;">${site}</span>\n                <button class="remove-site-btn" data-site="${site}" style="color:#ff4d4f; border:1px solid #ff4d4f; background:none; padding:2px 8px; border-radius:4px; cursor:pointer;">移除</button>\n            </div>\n        `)).join("") : '<div style="text-align:center; padding:20px; color:#999;">黑名单为空</div>'}\n        </div>\n    `;
+            layer.open({
+                type: 1,
+                title: "📋 禁用网站管理",
+                area: [ "350px", "400px" ],
+                content: content,
+                btn: [ "关闭" ],
+                success: (layero, index) => {
+                    layero.find(".remove-site-btn").on("click", (e => {
+                        const siteToRemove = $(e.currentTarget).data("site");
+                        this.settings.blacklist = this.settings.blacklist.filter((s => s !== siteToRemove));
+                        cacheManager.setItem(cacheManager.menuSetting_key, this.settings);
+                        $(e.currentTarget).closest(".blacklist-item").fadeOut(300, (function() {
+                            $(this).remove();
+                            0 === layero.find(".blacklist-item").length && layero.find(".blacklist-container").html('<div style="text-align:center; padding:20px; color:#999;">黑名单为空</div>');
+                        }));
+                        this.registerGMMenu();
+                        show.ok(`已移除 ${siteToRemove}`);
+                    }));
+                }
+            });
         }
         openHotkeySetter() {
             const content = `\n            <style>\n                .hotkey-container {\n                    padding: 24px;\n                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;\n                    background-color: #fff;\n                }\n                .hotkey-label {\n                    margin-bottom: 12px;\n                    color: #8c8c8c;\n                    font-size: 13px;\n                    line-height: 1.5;\n                }\n                .hotkey-input-group {\n                    display: flex;\n                    align-items: center;\n                    gap: 12px;\n                }\n                #triggerHotkey {\n                    flex: 1;\n                    height: 40px;\n                    text-align: center;\n                    font-weight: 600;\n                    font-size: 14px;\n                    color: #409eff;\n                    background-color: #f5f7fa;\n                    border: 1px solid #dcdfe6;\n                    border-radius: 6px;\n                    cursor: pointer;\n                    transition: all 0.2s cubic-bezier(.645,.045,.355,1);\n                    outline: none;\n                }\n                #triggerHotkey:hover {\n                    border-color: #c0c4cc;\n                }\n                #triggerHotkey:focus {\n                    border-color: #409eff;\n                    background-color: #ecf5ff;\n                    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);\n                }\n                #triggerHotkey::placeholder {\n                    color: #a8abb2;\n                    font-weight: normal;\n                }\n                #clearHotkey {\n                    height: 40px;\n                    padding: 0 16px;\n                    font-size: 13px;\n                    color: #606266;\n                    background: #fff;\n                    border: 1px solid #dcdfe6;\n                    border-radius: 6px;\n                    cursor: pointer;\n                    transition: all 0.2s;\n                }\n                #clearHotkey:hover {\n                    color: #ff4d4f;\n                    border-color: #ff4d4f;\n                    background-color: #fff1f0;\n                }\n                #clearHotkey:active {\n                    background-color: #ffccc7;\n                }\n            </style>\n            <div class="hotkey-container">\n                <div class="hotkey-label">\n                    快捷键录入：请直接在方框内按下组合键<br>\n                    <span style="font-size: 11px; color: #c0c4cc;">支持 Ctrl, Shift, Alt, Meta 与普通键组合</span>\n                </div>\n                <div class="hotkey-input-group">\n                    <input type="text" id="triggerHotkey" \n                        value="${this.settings.triggerHotkey}" \n                        readonly \n                        placeholder="点击此处按下按键..."\n                        autocomplete="off">\n                    <button type="button" id="clearHotkey">清空</button>\n                </div>\n            </div>\n        `;
@@ -1286,6 +1489,9 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 area: [ "400px", "250px" ],
                 content: content,
                 btn: [ "确定", "取消" ],
+                shadeClose: !0,
+                scrollbar: !1,
+                anim: -1,
                 success: (layero, index) => {
                     const $input = layero.find("#triggerHotkey"), $clearBtn = layero.find("#clearHotkey");
                     $input.focus();
@@ -1339,7 +1545,6 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     return;
                 }
                 const $li = $(`<li class="${item.children ? "has-children" : ""}" \n                        data-id="${item.id || ""}" \n                        data-index="${item.index}"> \n                        <span>${item.label}</span> \n                      </li>`);
-                item.condition && $li.data("menu-condition", item.condition);
                 item.handler && $li.data("menu-handler", item.handler);
                 if (item.children) {
                     const $submenu = $('<ul class="plugin-submenu"></ul>');
@@ -1357,80 +1562,59 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
         }
         bindEvents() {
             let ticking = !1;
-            $(document).on("mousemove", (e2 => {
+            $(document).on("mousemove", (e => {
                 if (!ticking) {
                     window.requestAnimationFrame((() => {
-                        this.mousePos.x = e2.clientX;
-                        this.mousePos.y = e2.clientY;
+                        this.mousePos.x = e.clientX;
+                        this.mousePos.y = e.clientY;
                         ticking = !1;
                     }));
                     ticking = !0;
                 }
             }));
-            const debouncedEntry = DomUtil.debounce((e2 => {
-                const $target = $(e2.target);
+            const debouncedEntry = DomUtil.debounce((e => {
+                const $target = $(e.target);
                 $target.closest(".plugin-alt-menu").length || (this.$currentTarget = $target);
-            }), 200);
-            $(document).on("mouseenter", "*", (e2 => {
-                e2.stopPropagation();
-                debouncedEntry(e2);
-            })).on("mouseleave", "*", (() => {
-                $(e.target).closest(".plugin-alt-menu").length || (this.$currentTarget = null);
+            }), 100);
+            $(document).on("mouseenter", "*", (e => {
+                debouncedEntry(e);
             }));
-            document.addEventListener("mousedown", (e2 => {
-                $(e2.target).closest(".plugin-alt-menu").length || this.hideMenu();
+            $(document).on("mouseleave", "img", (e => {
+                const nextElement = e.relatedTarget || e.originalEvent.relatedTarget;
+                this.$menu && (this.$menu.is(nextElement) || this.$menu.has(nextElement).length > 0) || (this.$currentTarget = null);
             }));
-            $(document).on("mouseup", (e2 => {
-                $(e2.target).closest(".plugin-alt-menu").length || setTimeout((() => {
-                    const selection = window.getSelection();
-                    if (selection.toString().trim() && selection.rangeCount > 0) {
-                        const rect = selection.getRangeAt(0).getBoundingClientRect();
-                        this.$currentTarget = $(selection.anchorNode.parentElement);
-                        const x = rect.left, y = rect.bottom + 5;
-                        this.showMenu(x, y);
-                    }
-                }), 10);
+            document.addEventListener("mousedown", (e => {
+                $(e.target).closest(".plugin-alt-menu").length || this.hideMenu();
             }));
-            this.$menu.off("click").on("click", "li", (e2 => {
-                e2.stopPropagation();
-                const handler = $(e2.currentTarget).data("menu-handler");
+            this.$menu.off("click").on("click", "li", (e => {
+                e.stopPropagation();
+                const handler = $(e.currentTarget).data("menu-handler");
                 if (handler && "function" == typeof handler) {
                     handler();
                     this.hideMenu();
                 }
             }));
             window.addEventListener("scroll", (() => {
-                this.$menu && this.$menu.is(":visible") && this.hideMenu();
+                this.hideMenu();
             }), {
                 capture: !0,
                 passive: !0
             });
         }
-        showMenu(x, y) {
+        showMenu() {
             if (!this.$menu) return;
-            const selectedText = window.getSelection().toString().trim(), isImage = this.$currentTarget && this.$currentTarget.is("img"), $items = this.$menu.children("li").get();
-            $items.sort(((a, b) => $(a).data("index") - $(b).data("index")));
-            this.$menu.append($items);
-            if (isImage) {
-                const $imageItem = this.$menu.find('[data-id="imageSearch"]');
-                this.$menu.prepend($imageItem);
-            } else if (selectedText) {
-                const $magnetItem = this.$menu.find('[data-id="magnetSearch"]');
-                this.$menu.prepend($magnetItem);
-            }
-            const noContext = !selectedText && !isImage;
-            this.$menu.find("li").each(((index, el) => {
-                const $el = $(el), condition = $el.data("menu-condition");
-                noContext ? $el.show() : condition ? condition() ? $el.show() : $el.hide() : $el.show();
-            }));
+            const selectedText = window.getSelection().toString().trim(), isImage = this.$currentTarget && this.$currentTarget.is("img");
+            this.$menu.find("li").hide();
+            isImage ? this.$menu.find('[data-id="imageSearch"]').show() : selectedText ? this.$menu.find('[data-id="magnetSearch"]').show() : this.$menu.find("li").show();
+            this.renderPosition();
+        }
+        renderPosition() {
             this.$menu.css({
                 visibility: "hidden",
                 display: "block"
             });
-            const menuWidth = this.$menu.outerWidth(), menuHeight = this.$menu.outerHeight();
-            let finalX = x, finalY = y;
-            finalX + menuWidth > window.innerWidth && (finalX = window.innerWidth - menuWidth - 10);
-            finalY + menuHeight > window.innerHeight && (finalY = y - menuHeight - 10);
+            const menuWidth = this.$menu.outerWidth(), menuHeight = this.$menu.outerHeight(), winWidth = window.innerWidth, winHeight = window.innerHeight, x = this.mousePos.x, y = this.mousePos.y;
+            let finalX = x + menuWidth > winWidth ? winWidth - menuWidth - 10 : x, finalY = y + menuHeight > winHeight ? y - menuHeight - 10 : y;
             this.$menu.css({
                 top: Math.max(0, finalY),
                 left: Math.max(0, finalX),
@@ -1438,7 +1622,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             }).show();
         }
         hideMenu() {
-            this.$menu && this.$menu.hide();
+            this.$menu && this.$menu.is(":visible") && this.$menu.hide();
         }
     }
     const currentHref = window.location.href;
@@ -1460,7 +1644,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             } ]);
             __publicField(this, "isUploading", !1);
             __publicField(this, "MAX_HISTORY", 12);
-            __publicField(this, "autoOpenEnabled", cacheManager.getItem(cacheManager.image_recognition_auto_open_key, "yes"));
+            __publicField(this, "autoOpenEnabled", cacheManager.getItem(cacheManager.image_recognition_auto_open_key, "no"));
         }
         getName() {
             return "ImageRecognitionPlugin";
@@ -1469,7 +1653,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             return !0;
         }
         async initCss() {
-            return "\n            <style>\n                #upload-area {\n                    border: 2px dashed #85af68;\n                    border-radius: 8px;\n                    padding: 40px;\n                    text-align: center;\n                    margin-bottom: 20px;\n                    transition: all 0.3s;\n                    background-color: #f9f9f9;\n                }\n                #upload-area:hover {\n                    border-color: #76b947;\n                    background-color: #f0f0f0;\n                }\n                /* 拖拽进入 */\n                #upload-area.highlight {\n                    border-color: #2196F3;\n                    background-color: #e3f2fd;\n                }\n                \n                \n                #select-image-btn {\n                    background-color: #4CAF50;\n                    color: white;\n                    border: none;\n                    padding: 10px 20px;\n                    border-radius: 4px;\n                    cursor: pointer;\n                    font-size: 16px;\n                    transition: background-color 0.3s;\n                }\n                #select-image-btn:hover {\n                    background-color: #45a049;\n                }\n                \n                .search-img-site-btns-container {\n                    display: flex;\n                    flex-wrap: wrap;\n                    gap: 10px;\n                    margin-top: 15px;\n                }\n                .search-img-site-btn {\n                    display: flex;\n                    align-items: center;\n                    padding: 8px 12px;\n                    background-color: #f5f5f5;\n                    border-radius: 4px;\n                    text-decoration: none;\n                    color: #333;\n                    transition: all 0.2s;\n                    font-size: 14px;\n                    border: 1px solid #ddd;\n                }\n                .search-img-site-btn:hover {\n                    background-color: #e0e0e0;\n                    transform: translateY(-2px);\n                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);\n                }\n                .search-img-site-btn img {\n                    width: 16px;\n                    height: 16px;\n                    margin-right: 6px;\n                }\n                .search-img-site-btn span {\n                    white-space: nowrap;\n                }\n                \n                .history-title { font-weight: bold; margin-bottom: 10px; display: flex; justify-content: space-between; }\n\n                .history-container { \n                    margin-top: 25px; \n                    border-top: 1px solid #eee; \n                    padding-top: 15px; \n                }\n                .history-title {\n                    font-weight: bold;\n                    font-size: 15px;\n                    color: #333;\n                    margin-bottom: 15px;\n                    display: flex;\n                    justify-content: space-between;\n                    align-items: center;\n                }\n                .history-list { \n                    display: grid;\n                    grid-template-columns: repeat(4, 1fr); \n                    gap: 10px; /* 图片之间的间距 */\n                }\n                .recognition-history-item { \n                    aspect-ratio: 1 / 1; /* 保持正方形 */\n                    border-radius: 8px; \n                    cursor: pointer; \n                    border: 1px solid #ddd; \n                    background-color: #f9f9f9; \n                    overflow: hidden; \n                    transition: all 0.2s ease-in-out;\n                    display: flex;\n                    align-items: center;\n                    justify-content: center;\n                    position: relative;\n                }\n                .recognition-history-item:hover { \n                    border-color: #2196F3; \n                    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);\n                    transform: translateY(-3px);\n                }\n                .recognition-history-item img { \n                    width: 100%; \n                    height: 100%; \n                    object-fit: contain; /* 保证图片完整显示 */\n                    display: block;\n                }\n                .delete-recognition-history-item {\n                    position: absolute;\n                    top: 2px;\n                    right: 2px;\n                    width: 20px;\n                    height: 20px;\n                    background: rgba(0, 0, 0, 0.5);\n                    color: white;\n                    border-radius: 50%;\n                    display: flex;\n                    align-items: center;\n                    justify-content: center;\n                    font-size: 16px;\n                    line-height: 1;\n                    cursor: pointer;\n                    opacity: 0;\n                    transition: opacity 0.2s;\n                    z-index: 10;\n                }\n                .recognition-history-item:hover .delete-recognition-history-item {\n                    opacity: 1;\n                }\n                .delete-recognition-history-item:hover {\n                    background: #f44336;\n                }\n                .clear-history {\n                    color: #f44336;\n                    cursor: pointer;\n                    font-size: 13px;\n                    font-weight: normal;\n                    padding: 2px 8px;\n                    border-radius: 4px;\n                }\n                .clear-history:hover {\n                    background-color: #ffebee;\n                }\n                \n                #search-results {\n                    margin-top: 20px;\n                    padding: 15px;\n                    background: #fcfcfc;\n                    border-radius: 8px;\n                    border: 1px solid #eee;\n                }\n                .search-header {\n                    display: flex;\n                    justify-content: space-between;\n                    align-items: center;\n                    margin-bottom: 12px;\n                    padding: 0 5px;\n                }\n                .search-header-title {\n                    font-size: 14px;\n                    color: #666;\n                    font-weight: 500;\n                }\n                #openAll {\n                    color: #2196F3;\n                    font-size: 13px;\n                    text-decoration: none;\n                    padding: 4px 10px;\n                    border: 1px solid #2196F3;\n                    border-radius: 4px;\n                    transition: all 0.2s;\n                }\n                #openAll:hover {\n                    background-color: #2196F3;\n                    color: #fff !important;\n                }\n                .search-img-site-btn {\n                    user-select: none;\n                }\n                .site-checkbox {\n                    cursor: pointer;\n                    width: 14px;\n                    height: 14px;\n                    margin-right: 5px;\n                    accent-color: #2196F3; /* 现代浏览器自定义勾选颜色 */\n                }\n                \n                .auto-open-wrapper {\n                    display: flex;\n                    align-items: center;\n                    cursor: pointer;\n                    user-select: none;\n                    font-size: 13px;\n                    color: #666;\n                    margin-right: 12px;\n                }\n                .auto-open-wrapper input {\n                    cursor: pointer;\n                    width: 14px;\n                    height: 14px;\n                    margin-right: 5px;\n                    accent-color: #2196F3; /* 现代浏览器自定义勾选颜色 */\n                }\n                .auto-open-wrapper:hover {\n                    color: #2196F3;\n                }\n            </style>\n        ";
+            return "\n            <style>\n                #upload-area {\n                    border: 2px dashed #85af68;\n                    border-radius: 8px;\n                    padding: 40px;\n                    text-align: center;\n                    margin-bottom: 20px;\n                    transition: all 0.3s;\n                    background-color: #f9f9f9;\n                }\n                #upload-area:hover {\n                    border-color: #76b947;\n                    background-color: #f0f0f0;\n                }\n                /* 拖拽进入 */\n                #upload-area.highlight {\n                    border-color: #2196F3;\n                    background-color: #e3f2fd;\n                }\n                \n                \n                #select-image-btn {\n                    background-color: #4CAF50;\n                    color: white;\n                    border: none;\n                    padding: 10px 20px;\n                    border-radius: 4px;\n                    cursor: pointer;\n                    font-size: 16px;\n                    transition: background-color 0.3s;\n                }\n                #select-image-btn:hover {\n                    background-color: #45a049;\n                }\n                \n                .search-img-site-btns-container {\n                    display: flex;\n                    flex-wrap: wrap;\n                    gap: 10px;\n                    margin-top: 15px;\n                }\n                .search-img-site-btn {\n                    display: flex;\n                    align-items: center;\n                    padding: 8px 12px;\n                    background-color: #f5f5f5;\n                    border-radius: 4px;\n                    text-decoration: none;\n                    color: #333;\n                    transition: all 0.2s;\n                    font-size: 14px;\n                    border: 1px solid #ddd;\n                }\n                .search-img-site-btn:hover {\n                    background-color: #e0e0e0;\n                    transform: translateY(-2px);\n                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);\n                }\n                .search-img-site-btn img {\n                    width: 16px;\n                    height: 16px;\n                    margin-right: 6px;\n                }\n                .search-img-site-btn span {\n                    white-space: nowrap;\n                }\n                \n                .history-title { font-weight: bold; margin-bottom: 10px; display: flex; justify-content: space-between; }\n\n                .history-container { \n                    margin-top: 25px; \n                    border-top: 1px solid #eee; \n                    padding-top: 15px; \n                }\n                .history-title {\n                    font-weight: bold;\n                    font-size: 15px;\n                    color: #333;\n                    margin-bottom: 15px;\n                    display: flex;\n                    justify-content: space-between;\n                    align-items: center;\n                }\n                .history-list { \n                    display: grid;\n                    grid-template-columns: repeat(4, 1fr); \n                    gap: 10px; /* 图片之间的间距 */\n                }\n                .recognition-history-item { \n                    aspect-ratio: 1 / 1; /* 保持正方形 */\n                    border-radius: 8px; \n                    cursor: pointer; \n                    border: 1px solid #ddd; \n                    background-color: #f9f9f9; \n                    overflow: hidden; \n                    transition: all 0.2s ease-in-out;\n                    display: flex;\n                    align-items: center;\n                    justify-content: center;\n                    position: relative;\n                }\n                .recognition-history-item:hover { \n                    border-color: #2196F3; \n                    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);\n                    transform: translateY(-3px);\n                }\n                .recognition-history-item img { \n                    width: 100%; \n                    height: 100%; \n                    object-fit: contain; /* 保证图片完整显示 */\n                    display: block;\n                }\n                .delete-recognition-history-item {\n                    position: absolute;\n                    top: 2px;\n                    right: 2px;\n                    width: 20px;\n                    height: 20px;\n                    background: rgba(0, 0, 0, 0.5);\n                    color: white;\n                    border-radius: 50%;\n                    display: flex;\n                    align-items: center;\n                    justify-content: center;\n                    font-size: 16px;\n                    line-height: 1;\n                    cursor: pointer;\n                    opacity: 0;\n                    transition: opacity 0.2s;\n                    z-index: 10;\n                }\n                .recognition-history-item:hover .delete-recognition-history-item {\n                    opacity: 1;\n                }\n                .delete-recognition-history-item:hover {\n                    background: #f44336;\n                }\n                .clear-history {\n                    color: #f44336;\n                    cursor: pointer;\n                    font-size: 13px;\n                    font-weight: normal;\n                    padding: 2px 8px;\n                    border-radius: 4px;\n                }\n                .clear-history:hover {\n                    background-color: #ffebee;\n                }\n                \n                #search-results {\n                    margin-top: 20px;\n                    padding: 15px;\n                    background: #fcfcfc;\n                    border-radius: 8px;\n                    border: 1px solid #eee;\n                }\n                .search-header {\n                    display: flex;\n                    justify-content: space-between;\n                    align-items: center;\n                    margin-bottom: 12px;\n                    padding: 0 5px;\n                }\n                .search-header-title {\n                    font-size: 14px;\n                    color: #666;\n                    font-weight: 500;\n                }\n                #openAll {\n                    color: #2196F3;\n                    font-size: 13px;\n                    text-decoration: none;\n                    padding: 4px 10px;\n                    border: 1px solid #2196F3;\n                    border-radius: 4px;\n                    transition: all 0.2s;\n                    cursor: pointer;\n                }\n                #openAll:hover {\n                    background-color: #2196F3;\n                    color: #fff !important;\n                }\n                .search-img-site-btn {\n                    user-select: none;\n                }\n                .site-checkbox {\n                    cursor: pointer;\n                    width: 14px;\n                    height: 14px;\n                    margin-right: 5px;\n                    accent-color: #2196F3; /* 现代浏览器自定义勾选颜色 */\n                }\n                \n                .auto-open-wrapper {\n                    display: flex;\n                    align-items: center;\n                    cursor: pointer;\n                    user-select: none;\n                    font-size: 13px;\n                    color: #666;\n                    margin-right: 12px;\n                }\n                .auto-open-wrapper input {\n                    cursor: pointer;\n                    width: 14px;\n                    height: 14px;\n                    margin-right: 5px;\n                    accent-color: #2196F3; /* 现代浏览器自定义勾选颜色 */\n                }\n                .auto-open-wrapper:hover {\n                    color: #2196F3;\n                }\n            </style>\n        ";
         }
         getFullUrl(path) {
             if (!path) return "";
@@ -1503,20 +1687,20 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
         }
         initEventListeners($layero) {
             const $fileInput = $("#image-file");
-            $layero.on("dragover", "#upload-area", (e2 => {
-                e2.preventDefault();
-                $(e2.currentTarget).addClass("highlight");
+            $layero.on("dragover", "#upload-area", (e => {
+                e.preventDefault();
+                $(e.currentTarget).addClass("highlight");
             }));
-            $layero.on("dragleave drop", "#upload-area", (e2 => {
-                e2.preventDefault();
-                $(e2.currentTarget).removeClass("highlight");
-                if ("drop" === e2.type) {
-                    const files = e2.originalEvent.dataTransfer.files;
+            $layero.on("dragleave drop", "#upload-area", (e => {
+                e.preventDefault();
+                $(e.currentTarget).removeClass("highlight");
+                if ("drop" === e.type) {
+                    const files = e.originalEvent.dataTransfer.files;
                     files && files[0] && this.handleImageFile(files[0]);
                 }
             }));
-            $layero.on("click", (e2 => {
-                const $target = $(e2.target).closest("button, a, #clear-history, #retry-btn, #select-image-btn, #openAll");
+            $layero.on("click", (e => {
+                const $target = $(e.target).closest("button, a, #clear-history, #retry-btn, #select-image-btn, #openAll");
                 if (!$target.length) return;
                 const id = $target.attr("id");
                 if ("select-image-btn" === id) $fileInput.trigger("click"); else if ("openAll" === id) {
@@ -1537,30 +1721,26 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                         }
                     }));
                 } else if ("clear-history" === id) {
-                    e2.stopPropagation();
-                    layer.confirm("确认清空所有搜索历史吗？", {
-                        icon: 3,
-                        title: "提示"
-                    }, (index => {
+                    e.stopPropagation();
+                    CommonUtil.q(e, "确认清空所有搜索历史吗？", (() => {
                         cacheManager.setItem(cacheManager.image_recognition_history_key, []);
                         this.renderHistory();
-                        layer.close(index);
                     }));
                 } else "retry-btn" === id && this.searchByImage().then();
             }));
-            $layero.on("change", "#image-file", (e2 => {
-                e2.target.files && e2.target.files[0] && this.handleImageFile(e2.target.files[0]);
+            $layero.on("change", "#image-file", (e => {
+                e.target.files && e.target.files[0] && this.handleImageFile(e.target.files[0]);
             }));
-            $(document).off("paste.searchImg").on("paste.searchImg", (async e2 => {
-                const items = e2.originalEvent.clipboardData.items;
+            $(document).off("paste.searchImg").on("paste.searchImg", (async e => {
+                const items = e.originalEvent.clipboardData.items;
                 for (let i = 0; i < items.length; i++) if (-1 !== items[i].type.indexOf("image")) {
                     const blob = items[i].getAsFile();
                     this.handleImageFile(blob);
                     break;
                 }
             }));
-            $layero.on("change", "#auto-open-toggle", (e2 => {
-                this.autoOpenEnabled = $(e2.target).is(":checked") ? "yes" : "no";
+            $layero.on("change", "#auto-open-toggle", (e => {
+                this.autoOpenEnabled = $(e.target).is(":checked") ? "yes" : "no";
                 cacheManager.setItem(cacheManager.image_recognition_auto_open_key, this.autoOpenEnabled);
             }));
         }
@@ -1571,9 +1751,9 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 return;
             }
             const reader = new FileReader;
-            reader.onload = e2 => {
-                $previewImage.attr("src", e2.target.result);
-                $previewImage.attr("data-original", e2.target.result);
+            reader.onload = e => {
+                $previewImage.attr("src", e.target.result);
+                $previewImage.attr("data-original", e.target.result);
                 this.searchByImage().then();
             };
             reader.readAsDataURL(file);
@@ -1625,8 +1805,8 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     const siteUrl = site.url.replace("{占位符}", encodeURIComponent(finalImgUrl)), isChecked = !1 !== selectedSites[site.name], $btn = $(`\n                <a href="${siteUrl}" class="search-img-site-btn" target="_blank" title="${site.name}">\n                    <input type="checkbox" class="site-checkbox" data-site-name="${site.name}" \n                           style="margin-right: 5px" ${isChecked ? "checked" : ""}>\n                    <img src="${site.ico}" alt="${site.name}">\n                    <span>${site.name}</span>\n                </a>\n            `);
                     $siteBtnsContainer.append($btn);
                 }));
-                $siteBtnsContainer.off("change").on("change", ".site-checkbox", (function(e2) {
-                    e2.stopPropagation();
+                $siteBtnsContainer.off("change").on("change", ".site-checkbox", (function(e) {
+                    e.stopPropagation();
                     const siteName = $(this).data("site-name"), currentSelected = cacheManager.getItem(cacheManager.image_recognition_site_key, {});
                     currentSelected[siteName] = $(this).is(":checked");
                     cacheManager.setItem(cacheManager.image_recognition_site_key, currentSelected);
@@ -1698,24 +1878,20 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                         $("#preview-image").attr("src", item.uploaded).attr("data-original", item.original);
                         this.searchByImage().then();
                     }));
-                    $item.find(".delete-recognition-history-item").on("click", (e2 => {
-                        e2.stopPropagation();
-                        this.deleteHistoryItem(item);
+                    $item.find(".delete-recognition-history-item").on("click", (e => {
+                        e.stopPropagation();
+                        this.deleteHistoryItem(e, item);
                     }));
                     $list.append($item);
                 }));
             } else $container.hide();
         }
-        deleteHistoryItem(item) {
-            layer.confirm("确认删除这条搜索记录吗？", {
-                icon: 3,
-                title: "提示"
-            }, (index => {
+        deleteHistoryItem(e, item) {
+            CommonUtil.q(e, "确认删除这条搜索记录吗？", (() => {
                 let history = cacheManager.getItem(cacheManager.image_recognition_history_key, []);
                 history = history.filter((data => data.original !== item.original));
                 cacheManager.setItem(cacheManager.image_recognition_history_key, history);
                 this.renderHistory();
-                layer.close(index);
             }));
         }
     }
@@ -1791,8 +1967,8 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                         allArticleImages[articleUrl] = fullHTML;
                         localStorage.setItem("articleImagesCache", JSON.stringify(allArticleImages));
                         $tbody.append(fullHTML);
-                    } catch (e2) {
-                        console.error("Error:", articleUrl, e2);
+                    } catch (e) {
+                        console.error("Error:", articleUrl, e);
                     }
                 }
             }));
@@ -1831,9 +2007,43 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             this.createNavigateBtn();
         }
     }
-    const getDownPathList = async () => {
-        const res = await gmHttp.get("https://webapi.115.com/offine/downpath");
-        return "object" == typeof res ? res.data : null;
+    const cloud115Api_getSign = async () => {
+        const res = await gmHttp.get("https://115.com/?ct=offline&ac=space&_=" + (new Date).getTime());
+        return "object" == typeof res ? res : null;
+    }, cloud115Api_getDownPathList = async () => await gmHttp.get("https://webapi.115.com/offine/downpath"), cloud115Api_saveDownPath = async dirId => {
+        const formData = new FormData;
+        formData.append("file_id", dirId);
+        return await gmHttp.postFormData("https://webapi.115.com/offine/downpath", formData);
+    }, cloud115Api_addTaskUrl = async (magnet, downPathId, uid, sign, time) => {
+        const formData = new FormData;
+        formData.append("url", magnet);
+        formData.append("wp_path_id", downPathId);
+        formData.append("uid", uid);
+        formData.append("sign", sign);
+        formData.append("time", time);
+        return await gmHttp.postFormData("https://115.com/web/lixian/?ct=lixian&ac=add_task_url", formData);
+    }, cloud115Api_addTaskUrls = async (magnets, downPathId, uid, sign, time) => {
+        const formData = new FormData;
+        formData.append("wp_path_id", downPathId);
+        formData.append("uid", uid);
+        formData.append("sign", sign);
+        formData.append("time", time);
+        magnets.forEach(((url, index) => {
+            formData.append(`url[${index}]`, url);
+        }));
+        return await gmHttp.postFormData("https://115.com/web/lixian/?ct=lixian&ac=add_task_urls", formData);
+    }, cloud115Api_getTaskLists = async (uid, sign, time) => {
+        const formData = new FormData;
+        formData.append("page", "1");
+        formData.append("uid", uid);
+        formData.append("sign", sign);
+        formData.append("time", time);
+        return (await gmHttp.postFormData("https://115.com/web/lixian/?ct=lixian&ac=task_lists", formData)).tasks;
+    }, cloud115Api_addDir = async (dirName, pid = 0) => {
+        const formData = new FormData;
+        formData.append("pid", pid);
+        formData.append("cname", dirName);
+        return await gmHttp.postFormData("https://webapi.115.com/files/add", formData);
     };
     class WangPan115TaskPlugin extends BasePlugin {
         getName() {
@@ -1848,9 +2058,9 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 let loadObj = loading();
                 try {
                     await this.handleAddTask(magnet);
-                } catch (e2) {
-                    show.error("发生错误:" + e2);
-                    console.error(e2);
+                } catch (e) {
+                    show.error("发生错误:" + e);
+                    console.error(e);
                 } finally {
                     loadObj.close();
                 }
@@ -1863,10 +2073,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 show.error("未发现有效的磁力链接");
                 return;
             }
-            const singInfo = await (async () => {
-                const res = await gmHttp.get("https://115.com/?ct=offline&ac=space&_=" + (new Date).getTime());
-                return "object" == typeof res ? res : null;
-            })();
+            const singInfo = await cloud115Api_getSign();
             if (!singInfo) {
                 show.error("未登录115网盘", {
                     close: !0,
@@ -1875,73 +2082,42 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 });
                 return;
             }
-            const {sign: sign, time: time} = singInfo, userId = await this.getUserId();
+            const sign = singInfo.sign, time = singInfo.time, {downPathId: downPathId, userId: userId} = await this.getDownPathInfo();
             let result;
             const isBatch = magnets.length > 1;
-            result = isBatch ? await (async (magnets, wp_path_id = "", uid, sign, time) => {
-                const formData = new FormData;
-                formData.append("wp_path_id", wp_path_id);
-                formData.append("uid", uid);
-                formData.append("sign", sign);
-                formData.append("time", time);
-                magnets.forEach(((url, index) => {
-                    formData.append(`url[${index}]`, url);
-                }));
-                return await gmHttp.postFormData("https://115.com/web/lixian/?ct=lixian&ac=add_task_urls", formData);
-            })(magnets, userId, "", sign, time) : await (async (magnet, wp_path_id = "", uid, sign, time) => {
-                const formData = new FormData;
-                formData.append("url", magnet);
-                formData.append("wp_path_id", wp_path_id);
-                formData.append("uid", uid);
-                formData.append("sign", sign);
-                formData.append("time", time);
-                return await gmHttp.postFormData("https://115.com/web/lixian/?ct=lixian&ac=add_task_url", formData);
-            })(magnets[0], userId, sign, time);
-            console.log(isBatch ? "批量离线返回值:" : "单条离线返回值:", result);
-            if (!1 === result.state) {
-                show.error("添加失败: " + result.error_msg);
-                return;
-            }
-            let openUrl = "https://115.com/?tab=offline&mode=wangpan", title = isBatch ? `成功添加 ${magnets.length} 个任务，是否前往查看?` : "添加成功, 是否前往查看?";
-            if (!isBatch) {
-                const infoHash = result.info_hash, fileId = await this.getFileId(userId, sign, time, infoHash);
-                fileId && (openUrl = `https://115.com/?cid=${fileId}&offset=0&mode=wangpan`);
-            }
+            result = isBatch ? await cloud115Api_addTaskUrls(magnets, downPathId, userId, sign, time) : await cloud115Api_addTaskUrl(magnets[0], downPathId, userId, sign, time);
+            console.log(isBatch ? "[115] 批量离线返回值:" : "[115] 单条离线返回值:", result);
+            let title;
+            title = !1 === result.state ? result.error_msg + " 是否前往查看?" : isBatch ? `成功添加 ${magnets.length} 个任务，是否前往查看?` : "添加成功, 是否前往查看?";
             CommonUtil.q(null, title, (async () => {
-                window.open(openUrl);
+                let targetUrl = "https://115.com/?tab=offline&mode=wangpan";
+                if (!isBatch) {
+                    const fileId = await this.getFileId(userId, sign, time, result.info_hash);
+                    console.log("[115] 获取文件id:", fileId);
+                    fileId && (targetUrl = `https://115.com/?cid=${fileId}&offset=0&mode=wangpan`);
+                }
+                window.open(targetUrl);
             }));
         }
-        async getUserId() {
-            let downPathList = await getDownPathList();
-            if (downPathList && downPathList.length > 0) return downPathList[0].id;
-            {
-                show.info("没有默认离线目录, 正在创建中...");
-                const dirId = (await (async (dirName, pid = 0) => {
-                    const formData = new FormData;
-                    formData.append("pid", pid);
-                    formData.append("cname", dirName);
-                    return await gmHttp.postFormData("https://webapi.115.com/files/add", formData);
-                })("云下载")).file_id;
-                await (async dirId => {
-                    const formData = new FormData;
-                    formData.append("file_id", dirId);
-                    return await gmHttp.postFormData("https://webapi.115.com/offine/downpath", formData);
-                })(dirId);
-                show.info("创建完成, 开始执行离线下载");
-                downPathList = await getDownPathList();
-                if (downPathList && downPathList.length > 0) return downPathList[0].id;
-                throw new Error("获取115用户Id失败");
-            }
+        async getDownPathInfo() {
+            let res = await cloud115Api_getDownPathList(), downPathList = res.data;
+            const mapInfo = item => ({
+                downPathId: item.file_id,
+                userId: item.user_id
+            });
+            if (downPathList && downPathList.length > 0) return mapInfo(downPathList[0]);
+            show.info("没有默认离线目录, 正在创建中...");
+            const dirId = (await cloud115Api_addDir("云下载")).file_id;
+            await cloud115Api_saveDownPath(dirId);
+            show.info("创建完成, 开始执行离线下载");
+            res = await cloud115Api_getDownPathList();
+            downPathList = res.data;
+            if (downPathList && downPathList.length > 0) return mapInfo(downPathList[0]);
+            throw new Error("获取115离线目录信息失败:" + res.error);
         }
         async getFileId(userId, sign, time, infoHash) {
-            const taskList = await (async (uid, sign, time) => {
-                const formData = new FormData;
-                formData.append("page", "1");
-                formData.append("uid", uid);
-                formData.append("sign", sign);
-                formData.append("time", time);
-                return (await gmHttp.postFormData("https://115.com/web/lixian/?ct=lixian&ac=task_lists", formData)).tasks;
-            })(userId, sign, time);
+            const taskList = await cloud115Api_getTaskLists(userId, sign, time);
+            console.log("[115] 离线任务列表", taskList);
             let fileId = null;
             for (let i = 0; i < taskList.length; i++) {
                 let task = taskList[i];
@@ -1960,8 +2136,12 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             __publicField(this, "links", []);
             __publicField(this, "isCollapsed", !1);
             __publicField(this, "position", {
-                top: 50,
-                left: window.innerWidth - 400
+                top: 0,
+                right: 0
+            });
+            __publicField(this, "panelConfig", {
+                expandedWidth: 350,
+                collapsedWidth: 220
             });
         }
         getName() {
@@ -1971,22 +2151,17 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             return !0;
         }
         async initCss() {
-            return "\n            <style>\n                .magnet-extractor-side-panel {\n                    position: fixed;\n                    width: 380px;\n                    max-height: 85vh;\n                    background: #fff;\n                    box-shadow: 0 8px 32px rgba(0,0,0,0.2);\n                    border-radius: 12px;\n                    display: flex;\n                    flex-direction: column;\n                    z-index: 500;\n                    border: 1px solid #eee;\n                    font-family: system-ui, -apple-system, sans-serif;\n                    overscroll-behavior: contain;\n                    user-select: none;\n                }\n                \n                \n                /* 折叠状态样式 */\n                .magnet-extractor-side-panel.collapsed {\n                    max-height: 48px; /* 只保留 header 的高度 */\n                    width: 200px;\n                    overflow: hidden;\n                    padding-bottom: 0; \n                }\n\n\n                .magnet-header {\n                    padding: 12px 15px;\n                    background: #f8f9fa;\n                    border-bottom: 1px solid #eee;\n                    display: flex;\n                    justify-content: space-between;\n                    align-items: center;\n                    border-radius: 12px 12px 0 0;\n                    flex-shrink: 0;\n                    cursor: pointer; /* 点击 header 也可以折叠 */\n                }\n                .magnet-header h3 { margin: 0; font-size: 14px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n                \n                .magnet-controls {\n                    display: flex;\n                    gap: 12px;\n                    align-items: center;\n                }\n                .magnet-toggle-btn, .magnet-close { \n                    cursor: pointer; \n                    font-size: 18px; \n                    color: #666; \n                    line-height: 1;\n                    user-select: none;\n                }\n                .magnet-toggle-btn:hover { color: #2562ff; }\n\n                .magnet-list-container {\n                    flex: 1;\n                    overflow-y: auto;\n                    padding: 10px;\n                    overscroll-behavior: contain; \n                }\n                \n                /* 折叠时隐藏主体内容 */\n                .magnet-extractor-side-panel.collapsed .magnet-list-container,\n                .magnet-extractor-side-panel.collapsed .magnet-panel-footer {\n                    display: none;\n                }\n                \n\n                /* 列表项样式保持不变... */\n                .magnet-item { padding: 12px; border-bottom: 1px solid #f5f5f5; }\n                .magnet-link-text { font-size: 12px; color: #0066cc; word-break: break-all; margin-bottom: 10px; display: block; user-select: all; }\n                .magnet-item-footer { display: flex; flex-wrap: wrap; gap: 8px; }\n                .m-btn { padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; border: 1px solid #ddd; background: #fff; transition: all 0.2s; min-width: 60px; }\n                .m-btn-copy { color: #4CAF50; border-color: #4CAF50; }\n                .m-btn-locate { color: #2196F3; border-color: #2196F3; }\n                .magnet-down-115 { background-color: #2562ff; color: #fff; border: none; }\n                .magnet-down-115:hover { background-color: #1a4cd8; }\n\n                .magnet-panel-footer { padding: 15px; border-top: 1px solid #eee; flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; }\n                .copy-all-btn { width: 100%; padding: 10px; background: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }\n                .down-all-115-btn { width: 100%; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; }\n\n                @keyframes magnet-highlight {\n                    0% { outline: 3px solid transparent; }\n                    50% { outline: 3px solid #ffeb3b; background: #fffde7; }\n                    100% { outline: 3px solid transparent; }\n                }\n                .magnet-target-highlight { animation: magnet-highlight 2s ease-in-out; }\n                \n                \n                /* 磁力插件控制按钮通用样式 */\n                .magnet-ctrl-icon {\n                    width: 24px;\n                    height: 24px;\n                    display: flex;\n                    align-items: center;\n                    justify-content: center;\n                    border-radius: 6px;\n                    cursor: pointer;\n                    transition: all 0.2s ease;\n                    color: #666;\n                    background: transparent;\n                }\n                \n                .magnet-ctrl-icon:hover {\n                    background-color: rgba(0, 0, 0, 0.05);\n                    color: #2562ff;\n                }\n                \n                .magnet-close:hover {\n                    background-color: #ff4d4f1a;\n                    color: #ff4d4f;\n                }\n                \n                .magnet-ctrl-icon svg {\n                    width: 16px;\n                    height: 16px;\n                    stroke-width: 2;\n                }\n                \n                /* 折叠时 Header 的圆角微调 */\n                .magnet-extractor-side-panel.collapsed {\n                    max-height: 48px;\n                    width: 220px;\n                    border-radius: 12px;\n                }\n            </style>\n        ";
+            const prefix = "#magnet-extractor-side";
+            return `\n            <style>\n                /* 基础容器：增加 ID 权重并强制重置 */\n                ${prefix} {\n                    all: initial; /* 清除继承样式 */\n                    position: fixed !important;\n                    width: ${this.panelConfig.expandedWidth}px !important;\n                    max-height: 85vh !important;\n                    background: #ffffff !important;\n                    box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;\n                    border-radius: 12px !important;\n                    display: flex !important;\n                    flex-direction: column !important;\n                    z-index: 1989101 !important; /* 置于顶层 */\n                    border: 1px solid #eeeeee !important;\n                    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;\n                    overscroll-behavior: contain !important;\n                    user-select: none !important;\n                    box-sizing: border-box !important;\n                    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;\n                }\n    \n                ${prefix} * {\n                    box-sizing: border-box !important;\n                    font-family: inherit !important;\n                }\n                \n                /* 折叠状态 */\n                ${prefix}.collapsed {\n                    max-height: 48px !important;\n                    width: ${this.panelConfig.collapsedWidth}px !important;\n                    overflow: hidden !important;\n                }\n    \n                /* 头部区域 */\n                ${prefix} .magnet-header {\n                    padding: 12px 15px !important;\n                    background: #f8f9fa !important;\n                    border-bottom: 1px solid #eeeeee !important;\n                    display: flex !important;\n                    justify-content: space-between !important;\n                    align-items: center !important;\n                    border-radius: 12px 12px 0 0 !important;\n                    cursor: move !important;\n                    height: 48px !important;\n                }\n    \n                ${prefix} .magnet-header h3 {\n                    margin: 0 !important;\n                    padding: 0 !important;\n                    font-size: 14px !important;\n                    font-weight: bold !important;\n                    color: #333333 !important;\n                    white-space: nowrap !important;\n                    overflow: hidden !important;\n                    text-overflow: ellipsis !important;\n                    background: transparent !important;\n                }\n                \n                /* 控件组 */\n                ${prefix} .magnet-controls {\n                    display: flex !important;\n                    gap: 8px !important;\n                    align-items: center !important;\n                    background: transparent !important;\n                }\n    \n                /* 列表容器 */\n                ${prefix} .magnet-list-container {\n                    flex: 1 !important;\n                    overflow-y: auto !important;\n                    padding: 10px !important;\n                    background: #ffffff !important;\n                }\n                \n                /* 列表项 */\n                ${prefix} .magnet-item {\n                    padding: 8px 12px !important;\n                    border-bottom: 1px solid #f5f5f5 !important;\n                    display: flex !important;\n                    align-items: center !important;\n                    justify-content: space-between !important;\n                    background: #ffffff !important;\n                    gap: 5px;\n                }\n    \n                ${prefix} .magnet-link-text {\n                    font-size: 12px !important;\n                    color: #0066cc !important;\n                    \n                    display: inline-block !important;\n                    white-space: nowrap !important;\n                    overflow: hidden !important;\n                    text-overflow: ellipsis !important;\n                    \n                    vertical-align: middle !important;\n                    flex-grow: 1;\n                    cursor: pointer;\n                }\n                \n                /* 按钮组容器 */\n                ${prefix} .magnet-item-footer {\n                    display: flex !important;\n                    gap: 4px !important;\n                    flex-shrink: 0 !important;\n                }\n    \n                /* 按钮通用样式重置 */\n                ${prefix} .m-btn, \n                ${prefix} .copy-all-btn, \n                ${prefix} .down-all-115-btn {\n                    appearance: none !important;\n                    border: 1px solid #ddd !important;\n                    background: #fff !important;\n                    border-radius: 4px !important;\n                    cursor: pointer !important;\n                    font-size: 12px !important;\n                    line-height: 1 !important;\n                    padding: 6px 10px !important;\n                    text-align: center !important;\n                    transition: all 0.2s !important;\n                    outline: none !important;\n                }\n    \n                ${prefix} .m-btn-copy { color: #4CAF50 !important; border-color: #4CAF50 !important; }\n                ${prefix} .m-btn-copy:hover { background: #4CAF50 !important; color: #fff !important; }\n                \n                ${prefix} .magnet-down-115 { \n                    background-color: #2562ff !important; \n                    color: #ffffff !important; \n                    border: none !important; \n                    font-weight: bold !important;\n                }\n                ${prefix} .magnet-down-115:hover { background-color: #1a4cd8 !important; }\n    \n                /* 页脚 */\n                ${prefix} .magnet-panel-footer {\n                    padding: 12px !important;\n                    border-top: 1px solid #eeeeee !important;\n                    background: #ffffff !important;\n                    display: flex !important;\n                    flex-direction: column !important;\n                    gap: 8px !important;\n                }\n    \n                ${prefix} .copy-all-btn {\n                    background: #4CAF50 !important;\n                    color: white !important;\n                    padding: 10px !important;\n                    font-weight: bold !important;\n                }\n    \n                /* 图标样式 */\n                ${prefix} .magnet-ctrl-icon {\n                    width: 28px !important;\n                    height: 28px !important;\n                    display: flex !important;\n                    align-items: center !important;\n                    justify-content: center !important;\n                    border-radius: 6px !important;\n                    color: #666 !important;\n                    background: transparent !important;\n                }\n                \n                ${prefix} .magnet-ctrl-icon svg {\n                    width: 18px !important;\n                    height: 18px !important;\n                    stroke: currentColor !important;\n                    fill: none !important;\n                }\n    \n                /* 动画 */\n                @keyframes magnet-focus-elegant {\n                    0% { \n                        box-shadow: 0 0 0 0px rgba(33, 150, 243, 0.8);\n                        background-color: rgba(33, 150, 243, 0.1);\n                    }\n                    50% { \n                        box-shadow: 0 0 0 10px rgba(33, 150, 243, 0);\n                        background-color: rgba(33, 150, 243, 0.3);\n                    }\n                    100% { \n                        box-shadow: 0 0 0 0px rgba(33, 150, 243, 0);\n                        background-color: transparent;\n                    }\n                }\n\n                .magnet-target-highlight {\n                    /* 蓝色底色 + 粗下划线 */\n                    border-bottom: 3px solid #2196f3 !important;\n                    border-radius: 2px;\n                    animation: magnet-focus-elegant 1s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;\n                    transition: all 0.2s ease;\n                }\n            </style>\n        `;
         }
         async handle() {
-            const cachedStatus = await cacheManager.getItem(cacheManager.magnetExtractorCollapsed_key);
+            const cachedStatus = cacheManager.getItem(cacheManager.magnetExtractorCollapsed_key);
             this.isCollapsed = !0 === cachedStatus;
-            const cachedPos = await cacheManager.getItem("magnet_extractor_pos_key"), winW = window.innerWidth, winH = window.innerHeight;
-            if (cachedPos) {
-                const safeLeft = Math.max(0, Math.min(cachedPos.left, winW - 50)), safeTop = Math.max(0, Math.min(cachedPos.top, winH - 50));
-                this.position = {
-                    top: safeTop,
-                    left: safeLeft
-                };
-            } else this.position = {
-                top: 50,
-                left: winW - 400
-            };
+            const cachedPos = cacheManager.getItem("magnet_extractor_pos_key");
+            cachedPos && (this.position = {
+                top: cachedPos.top,
+                right: cachedPos.right
+            });
             this.startExtractor(!0);
         }
         startExtractor(isSilent = !1) {
@@ -1994,43 +2169,32 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             0 !== this.links.length ? this.renderPanel() : isSilent || show.info("本页未发现磁力或 ed2k 链接");
         }
         extractLinks() {
-            const magnetRegex = /magnet:\?xt=urn:btih:[a-zA-Z0-9]{32,40}/gi, ed2kRegex = /ed2k:\/\/\|file\|[^|]+\|\d+\|[a-fA-F0-9]{32}\|/gi, foundMap = new Map;
-            $("a").each(((i, el) => {
-                const href = $(el).attr("href") || "";
-                (href.match(magnetRegex) || href.match(ed2kRegex)) && (foundMap.has(href) || foundMap.set(href, el));
-            }));
-            [ "div.blockcode", "pre", "code", "td.t_f", "div.pcb" ].forEach((selector => {
-                $(selector).each(((i, box) => {
-                    const fullText = box.innerText;
-                    [ magnetRegex, ed2kRegex ].forEach((reg => {
-                        const matches = fullText.match(reg);
-                        matches && matches.forEach((m => {
-                            const url = m.replace(/[\r\n]/g, "").trim();
-                            foundMap.has(url) || foundMap.set(url, box);
-                        }));
-                    }));
-                }));
-            }));
-            const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, !1);
-            let node;
-            for (;node = walker.nextNode(); ) {
-                const text = node.nodeValue;
-                [ magnetRegex, ed2kRegex ].forEach((reg => {
-                    const matches = text.match(reg);
-                    matches && matches.forEach((m => {
+            const regexes = [ /magnet:\?xt=urn:btih:[a-zA-Z0-9]{32,40}/gi, /ed2k:\/\/\|file\|[^|]+\|\d+\|[a-fA-F0-9]{32}\|/gi ], foundMap = new Map, collectMatches = (str, element) => {
+                if (str) for (const reg of regexes) {
+                    const matches = str.match(reg);
+                    if (matches) for (const m of matches) {
                         const url = m.replace(/[\r\n]/g, "").trim();
-                        foundMap.has(url) || foundMap.set(url, node.parentElement);
-                    }));
-                }));
-            }
-            this.links = Array.from(foundMap.entries()).map((([url, el]) => ({
+                        foundMap.has(url) || foundMap.set(url, element);
+                    }
+                }
+            };
+            $("a[href]").each(((i, el) => collectMatches($(el).attr("href"), el)));
+            const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+                acceptNode: node2 => {
+                    const parentTag = node2.parentElement.tagName;
+                    return [ "A", "SCRIPT", "STYLE" ].includes(parentTag) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+                }
+            });
+            let node;
+            for (;node = walker.nextNode(); ) collectMatches(node.nodeValue, node);
+            this.links = Array.from(foundMap.entries()).map((([url, element]) => ({
                 url: url,
-                element: el
+                element: element
             })));
         }
         renderPanel() {
             $("#magnet-extractor-side").length && $("#magnet-extractor-side").remove();
-            const allLinksCombined = this.links.map((m => m.url)).join("\n"), html = `\n            <div id="magnet-extractor-side" class="magnet-extractor-side-panel ${this.isCollapsed ? "collapsed" : ""}"\n                style="top: ${this.position.top}px; left: ${this.position.left}px;">\n                <div class="magnet-header" style="cursor: move;">\n                    <h3>🧲 已提取 (${this.links.length})</h3>\n                    <div class="magnet-controls">\n                        <div class="magnet-ctrl-icon magnet-toggle-btn" title="折叠/展开">\n                            ${this.isCollapsed ? ICON_UNFOLD : ICON_FOLD}\n                        </div>\n                        <div class="magnet-ctrl-icon magnet-close" title="关闭">\n                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>\n                        </div>\n                    </div>\n                </div>\n                <div class="magnet-list-container">\n                    ${this.links.map(((item, index) => `\n                        <div class="magnet-item">\n                            <span class="magnet-link-text">${item.url}</span>\n                            <div class="magnet-item-footer">\n                                <button class="m-btn m-btn-locate" data-index="${index}">定位</button>\n                                <button class="m-btn m-btn-copy" data-index="${index}">复制</button>\n                                <button class="m-btn magnet-down-115" data-magnet="${item.url}">115离线</button>\n                            </div>\n                        </div>\n                    `)).join("")}\n                </div>\n                <div class="magnet-panel-footer">\n                    <button class="down-all-115-btn magnet-down-115" data-magnet="${allLinksCombined}">一键离线所有</button>\n                    <button class="copy-all-btn">复制所有链接</button>\n                    <button class="m-btn go-115-btn" style="width: 100%; padding: 8px; margin-top: 5px; color: #2562ff; border-color: #2562ff;">前往 115 网页版</button>\n                </div>\n            </div>\n        `;
+            const allLinksCombined = this.links.map((m => m.url)).join("\n"), html = `\n            <div id="magnet-extractor-side" class="magnet-extractor-side-panel ${this.isCollapsed ? "collapsed" : ""}"\n                style="top: ${this.position.top}px; right: ${this.position.right}px;">\n                <div class="magnet-header">\n                    <h3>🧲 已提取 (${this.links.length})</h3>\n                    <div class="magnet-controls">\n                        <div class="magnet-ctrl-icon magnet-toggle-btn" title="折叠/展开">\n                            ${this.isCollapsed ? ICON_UNFOLD : ICON_FOLD}\n                        </div>\n                        <div class="magnet-ctrl-icon magnet-close" title="关闭">\n                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>\n                        </div>\n                    </div>\n                </div>\n                <div class="magnet-list-container">\n                    ${this.links.map(((item, index) => `\n                        <div class="magnet-item">\n                            <span class="magnet-link-text m-btn-locate" title="点击定位所在位置" data-index="${index}">${item.url}</span>\n                            <div class="magnet-item-footer">\n                                <button class="m-btn m-btn-copy" data-index="${index}">复制</button>\n                                <button class="m-btn magnet-down-115" data-magnet="${item.url}">115离线</button>\n                            </div>\n                        </div>\n                    `)).join("")}\n                </div>\n                <div class="magnet-panel-footer">\n                    <button class="down-all-115-btn magnet-down-115" data-magnet="${allLinksCombined}">一键离线所有</button>\n                    <button class="copy-all-btn">复制所有链接</button>\n                    <button class="m-btn go-115-btn" style="width: 100%; padding: 8px; margin-top: 5px; color: #2562ff; border-color: #2562ff;">前往 115 网页版</button>\n                </div>\n            </div>\n        `;
             $("body").append(html);
             this.initPanelEvents();
             this.initDragEvents();
@@ -2042,37 +2206,46 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 $panel.toggleClass("collapsed", this.isCollapsed);
                 $panel.find(".magnet-toggle-btn").html(this.isCollapsed ? ICON_UNFOLD : ICON_FOLD);
             };
-            $panel.find(".magnet-toggle-btn").on("click", (e2 => {
-                e2.stopPropagation();
+            $panel.find(".magnet-toggle-btn").on("click", (e => {
+                e.stopPropagation();
                 toggleFold();
             }));
             $panel.on("click", ".go-115-btn", (() => {
                 window.open("https://115.com/?cid=0&offset=0&mode=wangpan", "_blank");
             }));
-            $panel.find(".magnet-close").on("click", (e2 => {
-                e2.stopPropagation();
+            $panel.find(".magnet-close").on("click", (e => {
+                e.stopPropagation();
                 $panel.remove();
             }));
-            $panel.on("click", ".m-btn-locate", (e2 => {
-                const idx = $(e2.currentTarget).data("index"), target = this.links[idx].element;
+            $panel.on("click", ".m-btn-locate", (e => {
+                const idx = $(e.currentTarget).data("index");
+                let target = this.links[idx].element;
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center"
-                    });
-                    $(target).addClass("magnet-target-highlight");
-                    setTimeout((() => $(target).removeClass("magnet-target-highlight")), 2e3);
+                    if (3 === target.nodeType) {
+                        const span = document.createElement("span");
+                        target.before(span);
+                        span.appendChild(target);
+                        this.links[idx].element = span;
+                        target = span;
+                    }
+                    const $target = $(target), offset = $target.offset().top - $(window).height() / 2;
+                    $("html, body").stop().animate({
+                        scrollTop: offset
+                    }, 500, (() => {
+                        $target.addClass("magnet-target-highlight");
+                        setTimeout((() => $target.removeClass("magnet-target-highlight")), 1e3);
+                    }));
                 }
             }));
-            $panel.on("click", ".m-btn-copy", (e2 => {
-                const $btn = $(e2.currentTarget);
+            $panel.on("click", ".m-btn-copy", (e => {
+                const $btn = $(e.currentTarget);
                 this.copyToClipboard(this.links[$btn.data("index")].url);
                 const originalText = $btn.text();
                 $btn.text("已复制 ✅");
                 setTimeout((() => $btn.text(originalText)), 1500);
             }));
-            $panel.on("click", ".copy-all-btn", (e2 => {
-                const $btn = $(e2.currentTarget);
+            $panel.on("click", ".copy-all-btn", (e => {
+                const $btn = $(e.currentTarget);
                 this.copyToClipboard(this.links.map((m => m.url)).join("\n"));
                 const originalText = $btn.text();
                 $btn.text("全部复制成功！ ✅");
@@ -2085,32 +2258,36 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 x: 0,
                 y: 0
             };
-            $header.on("mousedown", (e2 => {
-                if ($(e2.target).closest(".magnet-controls").length) return;
+            $header.on("mousedown", (e => {
+                if ($(e.target).closest(".magnet-controls").length) return;
                 isDragging = !0;
                 const rect = $panel[0].getBoundingClientRect();
                 offset = {
-                    x: e2.clientX - rect.left,
-                    y: e2.clientY - rect.top
+                    x: rect.right - e.clientX,
+                    y: e.clientY - rect.top
                 };
+                $panel.css("transition", "none");
                 $(document).on("mousemove.magnet_drag", (de => {
                     if (!isDragging) return;
-                    let newLeft = de.clientX - offset.x, newTop = de.clientY - offset.y;
-                    newLeft = Math.max(0, Math.min(window.innerWidth - $panel.outerWidth(), newLeft));
-                    newTop = Math.max(0, Math.min(window.innerHeight - $panel.outerHeight(), newTop));
+                    const winW = window.innerWidth, winH = window.innerHeight, panelW = $panel.outerWidth(), panelH = $panel.outerHeight();
+                    let newRight = winW - de.clientX - offset.x, newTop = de.clientY - offset.y;
+                    newRight = Math.max(0, Math.min(newRight, winW - panelW));
+                    newTop = Math.max(0, Math.min(newTop, winH - panelH));
                     $panel.css({
-                        left: newLeft,
-                        top: newTop
+                        right: newRight + "px",
+                        top: newTop + "px",
+                        left: "auto"
                     });
                     this.position = {
                         top: newTop,
-                        left: newLeft
+                        right: newRight
                     };
                 }));
                 $(document).on("mouseup.magnet_drag", (() => {
                     if (isDragging) {
                         isDragging = !1;
                         $(document).off(".magnet_drag");
+                        $panel.css("transition", "width 0.3s cubic-bezier(0.4, 0, 0.2, 1)");
                         cacheManager.setItem("magnet_extractor_pos_key", this.position);
                     }
                 }));
@@ -2125,9 +2302,37 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             document.body.removeChild(input);
         }
     }
+    class Hjd2048Plugin extends BasePlugin {
+        getName() {
+            return "Hjd2048Plugin";
+        }
+        getRegisterCondition() {
+            return $("title").text().includes("人人为我论坛");
+        }
+        async handle() {
+            this.hookJs();
+        }
+        hookJs() {
+            document.getElementsByClassName = function(className, oBox) {
+                this.d = oBox && document.getElementById(oBox) || document;
+                for (var children = this.d.getElementsByTagName("*") || document.all, elements = [], ii = 0; ii < children.length; ii++) for (var child = children[ii], classNames = ("string" == typeof child.className ? child.className : child.getAttribute("class") || "").split(" "), j = 0; j < classNames.length; j++) if (classNames[j] === className) {
+                    elements.push(child);
+                    break;
+                }
+                return elements;
+            };
+        }
+    }
     !async function() {
         DomUtil.importResource("https://cdn.jsdelivr.net/npm/toastify-js@1.12.0/src/toastify.min.css");
         DomUtil.importResource("https://cdn.jsdelivr.net/npm/viewerjs@1.11.1/dist/viewer.min.css");
+        const savedSettings = cacheManager.getItem(cacheManager.menuSetting_key), blacklist = (null == savedSettings ? void 0 : savedSettings.blacklist) || [], host = window.location.host;
+        if (blacklist.includes(host)) {
+            const menuPlugin = new MenuPlugin;
+            await menuPlugin.loadSettings();
+            menuPlugin.registerGMMenu();
+            return;
+        }
         const pluginManager = new PluginManager;
         pluginManager.register(MenuPlugin);
         pluginManager.register(ImageRecognitionPlugin);
@@ -2135,6 +2340,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
         pluginManager.register(MagnetHubPlugin);
         pluginManager.register(MagnetExtractorPlugin);
         pluginManager.register(SeHuaTangPlugin);
+        pluginManager.register(Hjd2048Plugin);
         pluginManager.processCss().then();
         pluginManager.processPlugins().then();
     }();

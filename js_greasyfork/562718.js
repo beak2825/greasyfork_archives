@@ -2,7 +2,7 @@
 // @name         FPL Faces
 // @namespace    https://greasyfork.org/
 // @author       Chris Musson
-// @version      1.0.0
+// @version      1.0.1
 // @description  Replace FPL kits with player faces (PL or FPLReview) with optional caching.
 // @match        https://fantasy.premierleague.com/*
 // @grant        GM_getValue
@@ -143,7 +143,7 @@
                 fplreview: { default: -16, transfers: -8 },  // px offsets to make images fit well
             },
             face_cache_enabled: true,
-            face_cache_ttl_days: 30,
+            face_cache_ttl_days: 1,
             face_cache_max_entries: 1200,
         };
 

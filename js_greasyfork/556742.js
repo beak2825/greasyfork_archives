@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         GGN Enhanced Gallery with API & Sorting
-// @version      2.2.0
+// @version      2.3.0
 // @namespace    https://github.com/midniteryder
 // @match        https://gazellegames.net/torrents.php
 // @match        https://gazellegames.net/torrents.php?*
 // @exclude      /[?&](id|groupid)=/
 // @exclude      /[?&]action=(notify|delete_notify)/
 // @exclude      /[?&]type=(seeding|uploaded|leeching|snatched|snatched_not_seeding|extlink|downloaded|hitnrun|viewseed)/
-// @description  Enhanced gallery view with cover art, sorting, adjustable columns, and hover preview
+// @description  Enhanced gallery view with cover art, sorting, adjustable columns, hover-zoom preview, and gallery bookmark SAVE toggle
 // @grant        GM.getValue
 // @grant        GM.setValue
 // @grant        GM.xmlHttpRequest
@@ -21,30 +21,31 @@
 (async () => {
     'use strict';
 
-    // Configuration with defaults
+    // -----------------------------
+    // Config / Settings
+    // -----------------------------
     const config = {
-        async get(key, defaultValue) {
-            return await GM.getValue(key, defaultValue);
-        },
-        async set(key, value) {
-            return await GM.setValue(key, value);
-        }
+        async get(key, defaultValue) { return await GM.getValue(key, defaultValue); },
+        async set(key, value) { return await GM.setValue(key, value); }
     };
 
-    // Load saved settings
     const settings = {
         apikey: await config.get('ggn_apikey', ''),
         enabled: await config.get('ggn_enabled', false),
         columns: await config.get('ggn_columns', 6),
         sortBy: await config.get('ggn_sort_by', 'relevance'),
-        sortDirection: await config.get('ggn_sort_direction', 'desc')
+        sortDirection: await config.get('ggn_sort_direction', 'desc'),
+
+        // NEW: Hover zoom + backdrop transparency controls
+        hoverZoomPercent: await config.get('ggn_hover_zoom_percent', 180), // 100–350
+        hoverDimPercent: await config.get('ggn_hover_dim_percent', 15)     // 0–80
     };
 
-    // CSS Styles
+    // -----------------------------
+    // Styles
+    // -----------------------------
     const styles = `
-        .gallery-hidden {
-            display: none !important;
-        }
+        .gallery-hidden { display: none !important; }
 
         /* Control Panel - Match GGN's native styling */
         #ggn-controls {
@@ -61,12 +62,7 @@
             -webkit-backdrop-filter: blur(12px);
         }
 
-        .ggn-control-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
+        .ggn-control-group { display: flex; align-items: center; gap: 8px; }
         .ggn-control-group label {
             color: #cccccc;
             font-weight: 600;
@@ -94,62 +90,26 @@
             justify-content: center;
             vertical-align: middle;
         }
-
-        .ggn-btn:hover {
-            background: #3d3d3d;
-            border-color: #666;
-        }
-
-        .ggn-btn-active {
-            background: #4a9eff !important;
-            border-color: #4a9eff !important;
-            color: #ffffff !important;
-        }
-
-        .ggn-btn-warning {
-            background: #d9534f !important;
-            border-color: #d9534f !important;
-            color: #ffffff !important;
-        }
-
-        .ggn-btn-warning:hover {
-            background: #c9302c !important;
-            border-color: #c9302c !important;
-        }
-
-        .ggn-btn-success {
-            background: #2d2d2d !important;
-            border-color: #555 !important;
-            color: #5cb85c !important;
-            font-size: 16px;
-        }
-
-        .ggn-btn-success:hover {
-            background: #3d3d3d !important;
-            border-color: #666 !important;
-        }
+        .ggn-btn:hover { background: #3d3d3d; border-color: #666; }
+        .ggn-btn-active { background: #4a9eff !important; border-color: #4a9eff !important; color: #ffffff !important; }
+        .ggn-btn-warning { background: #d9534f !important; border-color: #d9534f !important; color: #ffffff !important; }
+        .ggn-btn-warning:hover { background: #c9302c !important; border-color: #c9302c !important; }
+        .ggn-btn-success { background: #2d2d2d !important; border-color: #555 !important; color: #5cb85c !important; font-size: 16px; }
+        .ggn-btn-success:hover { background: #3d3d3d !important; border-color: #666 !important; }
 
         .ggn-status-light {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-left: 10px;
+            width: 12px; height: 12px; border-radius: 50%;
+            display: inline-block; margin-left: 10px;
             box-shadow: 0 0 8px currentColor;
             vertical-align: middle;
-            position: relative;
-            top: -1px;
+            position: relative; top: -1px;
         }
-
         .ggn-status-light-green {
-            background: #5cb85c;
-            color: #5cb85c;
+            background: #5cb85c; color: #5cb85c;
             box-shadow: 0 0 8px #5cb85c, inset 0 0 4px rgba(255,255,255,0.5);
         }
-
         .ggn-status-light-red {
-            background: #d9534f;
-            color: #d9534f;
+            background: #d9534f; color: #d9534f;
             box-shadow: 0 0 8px #d9534f, inset 0 0 4px rgba(255,255,255,0.5);
         }
 
@@ -166,15 +126,8 @@
             line-height: 1.4;
             height: 30px;
         }
-
-        .ggn-select:hover {
-            border-color: #666;
-        }
-
-        .ggn-select:focus {
-            outline: none;
-            border-color: #4a9eff;
-        }
+        .ggn-select:hover { border-color: #666; }
+        .ggn-select:focus { outline: none; border-color: #4a9eff; }
 
         .ggn-input {
             padding: 6px 10px;
@@ -183,18 +136,14 @@
             background: #2d2d2d;
             color: #e0e0e0;
             font-size: 12px;
-            width: 50px;
+            width: 70px;
             text-align: center;
             font-family: Helvetica, Arial, sans-serif;
             line-height: 1.4;
             height: 30px;
             box-sizing: border-box;
         }
-
-        .ggn-input:focus {
-            outline: none;
-            border-color: #4a9eff;
-        }
+        .ggn-input:focus { outline: none; border-color: #4a9eff; }
 
         /* Gallery Container */
         #gallery-container {
@@ -205,13 +154,7 @@
             max-width: 100%;
         }
 
-        gallery-item {
-            width: 100%;
-            position: relative;
-            cursor: pointer;
-            max-width: 400px;
-            margin: 0 auto;
-        }
+        gallery-item { width: 100%; position: relative; cursor: pointer; max-width: 400px; margin: 0 auto; }
 
         .gallery-item-link {
             display: block;
@@ -223,19 +166,13 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
             border: 1px solid #3a3a3a;
         }
-
         .gallery-item-link:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
             border-color: #4a9eff;
         }
 
-        .gallery-item-image-container {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-        }
-
+        .gallery-item-image-container { position: relative; width: 100%; overflow: hidden; }
         .gallery-item-image {
             width: 100%;
             height: auto;
@@ -244,29 +181,17 @@
             object-fit: cover;
         }
 
-        .lazy {
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .lazy.lazy-loaded {
-            opacity: 1;
-        }
+        .lazy { opacity: 0; transition: opacity 0.3s; }
+        .lazy.lazy-loaded { opacity: 1; }
 
         .blur-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
             background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
             filter: blur(10px);
             z-index: 1;
         }
-
-        .blur-image.lazy-loaded {
-            display: none;
-        }
+        .blur-image.lazy-loaded { display: none; }
 
         .gallery-item-title {
             padding: 10px;
@@ -283,51 +208,82 @@
             font-family: Helvetica, Arial, sans-serif;
         }
 
-        /* Hover Cover Display */
-        #cover_container {
-            position: fixed;
-            right: 20px;
-            top: 80px;
-            z-index: 999999;
-            display: none;
-            pointer-events: none;
-        }
-
-        #cover_container > img {
-            max-width: 350px;
-            max-height: 500px;
-            border: 3px solid #4a9eff;
-            border-radius: 4px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
-        }
-
-        /* Loading Indicator */
-        .ggn-loading {
-            text-align: center;
-            padding: 40px;
-            color: #cccccc;
-            font-size: 16px;
+        /* --- SAVE / Bookmark button (used on zoom overlay) --- */
+        .ggn-save-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 9px;
+            border-radius: 7px;
+            border: 1px solid rgba(255,255,255,0.18);
+            background: rgba(0,0,0,0.55);
+            color: rgba(255,255,255,0.95);
             font-family: Helvetica, Arial, sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            cursor: pointer;
+            user-select: none;
+            transition: border-color 0.18s ease, transform 0.12s ease;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+        .ggn-save-btn:hover { border-color: rgba(74, 158, 255, 0.7); transform: translateY(-1px); }
+        .ggn-save-icon { width: 16px; height: 16px; display: inline-flex; }
+        .ggn-save-svg {
+            width: 16px; height: 16px;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+        .ggn-save-btn.ggn-save-active { border-color: rgba(245, 208, 0, 0.55); }
+
+        /* -----------------------------
+           Hover Zoom Overlay (replaces right/left popup)
+           ----------------------------- */
+        #ggn-zoom-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0, var(--ggn-dim-alpha, 0.15));
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 160ms ease;
+            z-index: 999998;
+        }
+        #ggn-zoom-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
         }
 
-        .ggn-loading::after {
-            content: '...';
-            animation: ellipsis 1.5s infinite;
+        #ggn-zoom-overlay {
+            position: fixed;
+            display: none;
+            z-index: 999999;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #111;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.75);
+            border: 2px solid rgba(74,158,255,0.65);
+            transition: left 200ms ease, top 200ms ease, width 200ms ease, height 200ms ease, opacity 120ms ease;
+            opacity: 0;
         }
-
-        @keyframes ellipsis {
-            0% { content: '.'; }
-            33% { content: '..'; }
-            66% { content: '...'; }
+        #ggn-zoom-overlay.active {
+            opacity: 1;
+        }
+        #ggn-zoom-overlay img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
         /* API Key Input Modal */
         #ggn-api-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85);
             display: flex;
             justify-content: center;
@@ -360,14 +316,8 @@
             font-family: Helvetica, Arial, sans-serif;
         }
 
-        #ggn-api-modal a {
-            color: #4a9eff;
-            text-decoration: none;
-        }
-
-        #ggn-api-modal a:hover {
-            text-decoration: underline;
-        }
+        #ggn-api-modal a { color: #4a9eff; text-decoration: none; }
+        #ggn-api-modal a:hover { text-decoration: underline; }
 
         #ggn-api-modal input {
             width: 100%;
@@ -382,34 +332,271 @@
             font-family: Helvetica, Arial, sans-serif;
         }
 
-        #ggn-api-modal input:focus {
-            outline: none;
-            border-color: #4a9eff;
-        }
+        #ggn-api-modal input:focus { outline: none; border-color: #4a9eff; }
 
-        #ggn-api-modal-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
+        #ggn-api-modal-buttons { display: flex; gap: 10px; justify-content: flex-end; }
+        #ggn-api-modal .ggn-btn { padding: 8px 16px; font-size: 13px; }
 
-        #ggn-api-modal .ggn-btn {
-            padding: 8px 16px;
-            font-size: 13px;
+        /* Loading Indicator */
+        .ggn-loading {
+            text-align: center;
+            padding: 40px;
+            color: #cccccc;
+            font-size: 16px;
+            font-family: Helvetica, Arial, sans-serif;
         }
+        .ggn-loading::after { content: '...'; animation: ellipsis 1.5s infinite; }
+        @keyframes ellipsis { 0% { content: '.'; } 33% { content: '..'; } 66% { content: '...'; } }
     `;
 
-    // Add styles to page
     const styleElement = document.createElement('style');
     styleElement.textContent = styles;
     document.head.appendChild(styleElement);
 
-    // Create hover cover container
-    const coverContainer = document.createElement('div');
-    coverContainer.id = 'cover_container';
-    document.body.appendChild(coverContainer);
+    // -----------------------------
+    // Hover Zoom Overlay Elements
+    // -----------------------------
+    const zoomBackdrop = document.createElement('div');
+    zoomBackdrop.id = 'ggn-zoom-backdrop';
+    document.body.appendChild(zoomBackdrop);
 
-    // API Key Input Modal
+    const zoomOverlay = document.createElement('div');
+    zoomOverlay.id = 'ggn-zoom-overlay';
+    zoomOverlay.innerHTML = `
+        <img alt="">
+        <button class="ggn-save-btn" type="button" aria-pressed="false" title="Add bookmark">
+            <span class="ggn-save-icon"></span>
+            <span class="ggn-save-text">SAVE</span>
+        </button>
+    `;
+    document.body.appendChild(zoomOverlay);
+
+    const zoomImg = zoomOverlay.querySelector('img');
+    const zoomSaveBtn = zoomOverlay.querySelector('.ggn-save-btn');
+    const zoomSaveIcon = zoomOverlay.querySelector('.ggn-save-icon');
+
+    // Apply dim alpha CSS var
+    function applyDimVar() {
+        const a = Math.max(0, Math.min(80, Number(settings.hoverDimPercent))) / 100;
+        document.documentElement.style.setProperty('--ggn-dim-alpha', String(a));
+    }
+    applyDimVar();
+
+    function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
+    // -----------------------------
+    // Bookmark helpers (uses site's existing bookmark link in hidden table)
+    // -----------------------------
+    const bookmarkLinkCache = new Map(); // groupId -> <a id="bookmarklink_torrent_...">
+
+    function findBookmarkLinkForGroupId(groupId) {
+        const key = String(groupId);
+        if (bookmarkLinkCache.has(key)) return bookmarkLinkCache.get(key);
+
+        const table = document.getElementById('torrent_table');
+        if (!table) return null;
+
+        const groupHrefNeedle = `torrents.php?id=${encodeURIComponent(key)}`;
+
+        let groupLink = table.querySelector(`a[href*="${CSS.escape(groupHrefNeedle)}"]`);
+        if (!groupLink) {
+            const anchors = table.querySelectorAll('a[href*="torrents.php?id="]');
+            for (const a of anchors) {
+                const href = a.getAttribute('href') || '';
+                if (href.includes(`torrents.php?id=${key}`)) {
+                    groupLink = a;
+                    break;
+                }
+            }
+        }
+
+        if (!groupLink) {
+            bookmarkLinkCache.set(key, null);
+            return null;
+        }
+
+        const row = groupLink.closest('tr');
+        if (!row) {
+            bookmarkLinkCache.set(key, null);
+            return null;
+        }
+
+        const bookmarkLink = row.querySelector(`a[id^="bookmarklink_torrent_"]`);
+        bookmarkLinkCache.set(key, bookmarkLink || null);
+        return bookmarkLink || null;
+    }
+
+    function isBookmarkedFromLink(bookmarkLinkEl) {
+        if (!bookmarkLinkEl) return false;
+        const title = (bookmarkLinkEl.getAttribute('title') || '').toLowerCase();
+        const cls = bookmarkLinkEl.classList;
+        if (title.includes('remove')) return true;
+        if (cls.contains('removebookmark')) return true;
+        return false;
+    }
+
+    // IMPORTANT FIX: use .click() first (many sites bind handlers expecting a real click),
+    // fallback to dispatchEvent if needed.
+    function clickSiteBookmarkLink(bookmarkLinkEl) {
+        if (!bookmarkLinkEl) return;
+        try {
+            bookmarkLinkEl.click();
+        } catch (_) {
+            bookmarkLinkEl.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+        }
+    }
+
+    const SAVE_SVG_EMPTY = `
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false" class="ggn-save-svg" shape-rendering="crispEdges">
+            <rect x="6" y="4" width="20" height="24" rx="0" ry="0" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="2"/>
+            <rect x="9" y="6" width="14" height="8" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+            <rect x="10" y="18" width="12" height="8" fill="rgba(0,0,0,0.25)" stroke="rgba(255,255,255,0.45)" stroke-width="1"/>
+            <rect x="7" y="26" width="18" height="4" fill="rgba(0,0,0,0.55)"/>
+        </svg>
+    `;
+
+    const SAVE_SVG_FILLED = `
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false" class="ggn-save-svg" shape-rendering="crispEdges">
+            <rect x="6" y="4" width="20" height="24" rx="0" ry="0" fill="#f5d000" stroke="rgba(0,0,0,0.55)" stroke-width="2"/>
+            <rect x="9" y="6" width="14" height="8" fill="rgba(255,255,255,0.35)" stroke="rgba(0,0,0,0.35)" stroke-width="1"/>
+            <rect x="10" y="18" width="12" height="8" fill="rgba(0,0,0,0.20)" stroke="rgba(0,0,0,0.35)" stroke-width="1"/>
+            <rect x="7" y="26" width="18" height="4" fill="rgba(0,0,0,0.55)"/>
+        </svg>
+    `;
+
+    function setSaveButtonState(btnEl, iconEl, bookmarked) {
+        if (!btnEl || !iconEl) return;
+        btnEl.classList.toggle('ggn-save-active', !!bookmarked);
+        iconEl.innerHTML = bookmarked ? SAVE_SVG_FILLED : SAVE_SVG_EMPTY;
+        btnEl.setAttribute('aria-pressed', bookmarked ? 'true' : 'false');
+        btnEl.title = bookmarked ? 'Remove bookmark' : 'Add bookmark';
+    }
+
+    // -----------------------------
+    // Hover Zoom Logic
+    // -----------------------------
+    let activeHover = null; // { groupId, link, imageSrc, sourceRect }
+    let hideTimer = null;
+
+    function clearHideTimer() {
+        if (hideTimer) {
+            clearTimeout(hideTimer);
+            hideTimer = null;
+        }
+    }
+
+    function scheduleHide() {
+        clearHideTimer();
+        hideTimer = setTimeout(() => hideZoom(), 80);
+    }
+
+    function hideZoom() {
+        activeHover = null;
+        zoomOverlay.classList.remove('active');
+        zoomBackdrop.classList.remove('active');
+        // Let transition fade, then fully hide
+        setTimeout(() => {
+            if (!activeHover) zoomOverlay.style.display = 'none';
+        }, 140);
+    }
+
+    function showZoomFor(linkEl, groupId, imageSrc, groupLinkHref) {
+        clearHideTimer();
+
+        const rect = linkEl.querySelector('.gallery-item-image-container').getBoundingClientRect();
+        const scale = clamp(Number(settings.hoverZoomPercent) || 180, 100, 350) / 100;
+
+        const baseW = rect.width;
+        const baseH = rect.height;
+
+        const targetW = baseW * scale;
+        const targetH = baseH * scale;
+
+        const centerX = rect.left + baseW / 2;
+        const centerY = rect.top + baseH / 2;
+
+        const margin = 16;
+        const left = clamp(centerX - targetW / 2, margin, window.innerWidth - targetW - margin);
+        const top  = clamp(centerY - targetH / 2, margin, window.innerHeight - targetH - margin);
+
+        activeHover = { groupId: String(groupId), groupLinkHref };
+
+        // Set initial position equal to source rect (so it "grows" smoothly)
+        zoomOverlay.style.display = 'block';
+        zoomOverlay.style.left = `${Math.round(rect.left)}px`;
+        zoomOverlay.style.top = `${Math.round(rect.top)}px`;
+        zoomOverlay.style.width = `${Math.round(baseW)}px`;
+        zoomOverlay.style.height = `${Math.round(baseH)}px`;
+        zoomOverlay.classList.remove('active');
+
+        // Set image
+        zoomImg.src = imageSrc;
+        zoomImg.alt = `Preview`;
+
+        // Backdrop
+        zoomBackdrop.classList.add('active');
+
+        // Set save icon state
+        const bookmarkLinkEl = findBookmarkLinkForGroupId(groupId);
+        const bookmarked = isBookmarkedFromLink(bookmarkLinkEl);
+        setSaveButtonState(zoomSaveBtn, zoomSaveIcon, bookmarked);
+
+        // Animate to target size/pos next frame
+        requestAnimationFrame(() => {
+            if (!activeHover || activeHover.groupId !== String(groupId)) return;
+            zoomOverlay.classList.add('active');
+            zoomOverlay.style.left = `${Math.round(left)}px`;
+            zoomOverlay.style.top = `${Math.round(top)}px`;
+            zoomOverlay.style.width = `${Math.round(targetW)}px`;
+            zoomOverlay.style.height = `${Math.round(targetH)}px`;
+        });
+    }
+
+    // Keep overlay open when hovering it
+    zoomOverlay.addEventListener('mouseenter', () => clearHideTimer());
+    zoomOverlay.addEventListener('mouseleave', () => scheduleHide());
+
+    // Clicking backdrop closes
+    zoomBackdrop.addEventListener('click', () => hideZoom());
+
+    // Click on zoom image navigates to group page (not the save button)
+    zoomImg.addEventListener('click', (e) => {
+        if (!activeHover) return;
+        window.location.href = activeHover.groupLinkHref;
+    });
+
+    // Save button click toggles bookmark
+    zoomSaveBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!activeHover) return;
+
+        const bookmarkLinkEl = findBookmarkLinkForGroupId(activeHover.groupId);
+        if (!bookmarkLinkEl) return;
+
+        clickSiteBookmarkLink(bookmarkLinkEl);
+
+        // Refresh state after site's JS updates
+        setTimeout(() => {
+            const updated = isBookmarkedFromLink(bookmarkLinkEl);
+            setSaveButtonState(zoomSaveBtn, zoomSaveIcon, updated);
+        }, 250);
+
+        setTimeout(() => {
+            const updated = isBookmarkedFromLink(bookmarkLinkEl);
+            setSaveButtonState(zoomSaveBtn, zoomSaveIcon, updated);
+        }, 900);
+    });
+
+    window.addEventListener('resize', () => {
+        if (!activeHover) return;
+        // On resize, just hide to avoid awkward positioning
+        hideZoom();
+    });
+
+    // -----------------------------
+    // API Key Modal
+    // -----------------------------
     const showAPIKeyModal = () => {
         return new Promise((resolve) => {
             const modal = document.createElement('div');
@@ -448,33 +635,24 @@
                 }
             });
 
-            cancelBtn.addEventListener('click', () => {
-                modal.remove();
-                resolve(false);
-            });
+            cancelBtn.addEventListener('click', () => { modal.remove(); resolve(false); });
 
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    okBtn.click();
-                }
-            });
+            input.addEventListener('keypress', (e) => { if (e.key === 'Enter') okBtn.click(); });
         });
     };
 
+    // -----------------------------
     // API Handler
+    // -----------------------------
     class API {
-        constructor(apiKey) {
-            this.apiKey = apiKey;
-        }
+        constructor(apiKey) { this.apiKey = apiKey; }
 
         async search(searchString) {
             return new Promise((resolve, reject) => {
                 GM.xmlHttpRequest({
                     method: 'GET',
                     url: `https://gazellegames.net/api.php?request=search&search_type=torrents${searchString ? '&' + searchString : ''}`,
-                    headers: {
-                        'X-API-Key': this.apiKey
-                    },
+                    headers: { 'X-API-Key': this.apiKey },
                     onload: (response) => {
                         if (response.status >= 200 && response.status < 300) {
                             try {
@@ -482,10 +660,8 @@
                                 const modifiedString = response.responseText.replace(regex, (match, digits) => {
                                     return match.replace(digits, `key${digits}`);
                                 });
-
                                 const apiResult = JSON.parse(modifiedString)?.response;
-                                const groupData = this.mapGroups(apiResult);
-                                resolve(groupData);
+                                resolve(this.mapGroups(apiResult));
                             } catch (error) {
                                 reject(error);
                             }
@@ -524,15 +700,11 @@
         }
     }
 
+    // -----------------------------
     // Gallery Item Custom Element
+    // -----------------------------
     class GalleryItem extends HTMLElement {
-        constructor() {
-            super();
-        }
-
-        connectedCallback() {
-            this.render();
-        }
+        connectedCallback() { this.render(); }
 
         render() {
             const groupName = this.getAttribute('groupName');
@@ -554,7 +726,7 @@
 
             const img = this.querySelector('.gallery-item-image');
             const blur = this.querySelector('.blur-image');
-            
+
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -572,34 +744,33 @@
             observer.observe(img);
 
             const linkEl = this.querySelector('.gallery-item-link');
+
+            // Hover in: show zoom overlay that "grows" from this cover
             linkEl.addEventListener('mouseenter', () => {
-                const coverImg = document.createElement('img');
-                coverImg.src = image;
-                coverContainer.innerHTML = '';
-                coverContainer.appendChild(coverImg);
-                coverContainer.style.display = 'block';
+                // Ensure bookmark cache matches current table
+                // (table is hidden, but still present; cache cleared on new gallery loads)
+                showZoomFor(linkEl, groupId, image, link);
             });
 
-            linkEl.addEventListener('mouseleave', () => {
-                coverContainer.style.display = 'none';
-                coverContainer.innerHTML = '';
-            });
+            // Hover out: hide unless the user moved into the overlay
+            linkEl.addEventListener('mouseleave', () => scheduleHide());
         }
     }
     customElements.define('gallery-item', GalleryItem);
 
+    // -----------------------------
     // Main Gallery Class
+    // -----------------------------
     class Gallery {
         constructor() {
             this.api = settings.apikey ? new API(settings.apikey) : null;
             this.container = null;
-            this.currentPage = 1;
         }
 
         async init() {
             await this.waitForElements();
             this.createControls();
-            
+
             if (settings.enabled && settings.apikey) {
                 await this.loadGallery();
             }
@@ -609,11 +780,8 @@
             return new Promise((resolve) => {
                 const check = () => {
                     const table = document.getElementById('torrent_table');
-                    if (table) {
-                        resolve();
-                    } else {
-                        setTimeout(check, 100);
-                    }
+                    if (table) resolve();
+                    else setTimeout(check, 100);
                 };
                 check();
             });
@@ -622,12 +790,12 @@
         createControls() {
             const controls = document.createElement('div');
             controls.id = 'ggn-controls';
-            
+
             const apiButtonContent = settings.apikey ? '🔑' : '🔑 Setup API Key';
             const apiButtonClass = settings.apikey ? 'ggn-btn-success' : 'ggn-btn-warning';
             const apiButtonTitle = settings.apikey ? 'Change API Key' : 'Setup API Key';
             const statusLightClass = settings.apikey ? 'ggn-status-light-green' : 'ggn-status-light-red';
-            
+
             controls.innerHTML = `
                 <div class="ggn-control-group">
                     <label>View:</label>
@@ -635,19 +803,29 @@
                         ${settings.enabled ? 'Gallery' : 'List'}
                     </button>
                 </div>
-                
+
                 <div class="ggn-control-group">
                     <button id="ggn-api-setup" class="ggn-btn ${apiButtonClass}" title="${apiButtonTitle}">
                         ${apiButtonContent}
                     </button>
                     <span id="ggn-status-light" class="ggn-status-light ${statusLightClass}"></span>
                 </div>
-                
+
                 <div class="ggn-control-group" id="ggn-column-control" style="${settings.enabled ? '' : 'display: none;'}">
                     <label>Columns:</label>
                     <input type="number" id="ggn-columns" class="ggn-input" min="2" max="12" value="${settings.columns}">
                 </div>
-                
+
+                <div class="ggn-control-group" id="ggn-hover-control" style="${settings.enabled ? '' : 'display: none;'}">
+                    <label>Hover Zoom %:</label>
+                    <input type="number" id="ggn-hover-zoom" class="ggn-input" min="100" max="350" value="${settings.hoverZoomPercent}">
+                </div>
+
+                <div class="ggn-control-group" id="ggn-dim-control" style="${settings.enabled ? '' : 'display: none;'}">
+                    <label>Backdrop %:</label>
+                    <input type="number" id="ggn-hover-dim" class="ggn-input" min="0" max="80" value="${settings.hoverDimPercent}">
+                </div>
+
                 <div class="ggn-control-group">
                     <label>Sort:</label>
                     <select id="ggn-sort-by" class="ggn-select">
@@ -664,7 +842,7 @@
                         <option value="ignrating">IGN Score</option>
                         <option value="gsrating">GameSpot Score</option>
                     </select>
-                    <select id="ggn-sort-direction" class="ggn-select" style="min-width: auto; width: 70px;">
+                    <select id="ggn-sort-direction" class="ggn-select" style="min-width: auto; width: 90px;">
                         <option value="desc">Descending</option>
                         <option value="asc">Ascending</option>
                     </select>
@@ -682,26 +860,37 @@
             document.getElementById('ggn-api-setup').addEventListener('click', () => this.setupAPIKey());
             document.getElementById('ggn-columns').addEventListener('change', (e) => this.changeColumns(e.target.value));
             document.getElementById('ggn-apply-sort').addEventListener('click', () => this.applySort());
+
+            document.getElementById('ggn-hover-zoom').addEventListener('change', async (e) => {
+                const v = clamp(parseInt(e.target.value, 10) || 180, 100, 350);
+                e.target.value = v;
+                settings.hoverZoomPercent = v;
+                await config.set('ggn_hover_zoom_percent', v);
+            });
+
+            document.getElementById('ggn-hover-dim').addEventListener('change', async (e) => {
+                const v = clamp(parseInt(e.target.value, 10) || 15, 0, 80);
+                e.target.value = v;
+                settings.hoverDimPercent = v;
+                await config.set('ggn_hover_dim_percent', v);
+                applyDimVar();
+            });
         }
 
         async setupAPIKey() {
             const hasKey = await showAPIKeyModal();
             if (hasKey && settings.apikey) {
                 this.api = new API(settings.apikey);
-                
-                // Update button to show green key icon
+
                 const btn = document.getElementById('ggn-api-setup');
                 btn.textContent = '🔑';
                 btn.className = 'ggn-btn ggn-btn-success';
                 btn.title = 'Change API Key';
-                
-                // Update status light to green
+
                 const statusLight = document.getElementById('ggn-status-light');
                 statusLight.className = 'ggn-status-light ggn-status-light-green';
-                
-                if (settings.enabled) {
-                    await this.loadGallery();
-                }
+
+                if (settings.enabled) await this.loadGallery();
             }
         }
 
@@ -716,19 +905,30 @@
 
             const btn = document.getElementById('ggn-view-toggle');
             const columnControl = document.getElementById('ggn-column-control');
+            const hoverControl = document.getElementById('ggn-hover-control');
+            const dimControl = document.getElementById('ggn-dim-control');
             const table = document.getElementById('torrent_table');
 
             if (settings.enabled) {
                 btn.textContent = 'Gallery';
                 btn.classList.add('ggn-btn-active');
                 columnControl.style.display = 'flex';
+                hoverControl.style.display = 'flex';
+                dimControl.style.display = 'flex';
                 table.classList.add('gallery-hidden');
+
+                bookmarkLinkCache.clear();
                 await this.loadGallery();
             } else {
                 btn.textContent = 'List';
                 btn.classList.remove('ggn-btn-active');
                 columnControl.style.display = 'none';
+                hoverControl.style.display = 'none';
+                dimControl.style.display = 'none';
                 table.classList.remove('gallery-hidden');
+
+                hideZoom();
+
                 if (this.container) {
                     this.container.remove();
                     this.container = null;
@@ -737,7 +937,7 @@
         }
 
         async changeColumns(value) {
-            settings.columns = parseInt(value);
+            settings.columns = parseInt(value, 10);
             await config.set('ggn_columns', settings.columns);
             if (this.container) {
                 this.container.style.gridTemplateColumns = `repeat(${settings.columns}, 1fr)`;
@@ -762,9 +962,7 @@
                 return;
             }
 
-            if (this.container) {
-                this.container.remove();
-            }
+            if (this.container) this.container.remove();
 
             this.container = document.createElement('div');
             this.container.id = 'gallery-container';
@@ -786,6 +984,8 @@
                     return;
                 }
 
+                bookmarkLinkCache.clear();
+
                 const fragment = document.createDocumentFragment();
                 games.forEach(game => {
                     const item = document.createElement('gallery-item');
@@ -800,19 +1000,18 @@
             } catch (error) {
                 console.error('Gallery load error:', error);
                 this.container.innerHTML = `<div class="ggn-loading">Error loading gallery: ${error.message}<br>Check console for details.</div>`;
-                
-                // Update status light to red if there's an error
+
                 const statusLight = document.getElementById('ggn-status-light');
-                if (statusLight) {
-                    statusLight.className = 'ggn-status-light ggn-status-light-red';
-                }
+                if (statusLight) statusLight.className = 'ggn-status-light ggn-status-light-red';
             }
         }
     }
 
-    // Initialize
+    // -----------------------------
+    // Init
+    // -----------------------------
     const gallery = new Gallery();
-    
+
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => gallery.init());
     } else {

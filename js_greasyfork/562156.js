@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NH ↔ EH Crosslinker
 // @namespace    github.com/longkidkoolstar
-// @version      0.1
+// @version      0.2.1
 // @description  Adds cross-links between nhentai and e-hentai/exhentai galleries
 // @author       longkidkoolstar
 // @match        https://nhentai.net/g/*
@@ -13,33 +13,24 @@
 // @downloadURL https://update.greasyfork.org/scripts/562156/NH%20%E2%86%94%20EH%20Crosslinker.user.js
 // @updateURL https://update.greasyfork.org/scripts/562156/NH%20%E2%86%94%20EH%20Crosslinker.meta.js
 // ==/UserScript==
-
-
 (function () {
     'use strict';
-
     const url = location.href;
 
     /* ---------------- NHENTAI → E-HENTAI ---------------- */
     if (url.includes('nhentai.net/g/')) {
         const titleEl = document.querySelector('#info h1');
         if (!titleEl) return;
-
-        let title = titleEl.innerText
-            .replace(/\[[^\]]*\]/g, '')
-            .replace(/\s+/g, ' ')
-            .trim();
+        let title = titleEl.innerText;
+        title = cleanTitle(title);
 
         const artistEl = document.querySelector(
             '.tag-container.field-name a[href^="/artist/"] .name'
         );
         const artist = artistEl ? artistEl.textContent.trim() : '';
-
         let query = title;
         if (artist) query += ` artist:${artist}`;
-
         const ehUrl = 'https://e-hentai.org/?f_search=' + encodeURIComponent(query);
-
         addButton('#info', '🔗 Search on e-hentai', ehUrl);
         return;
     }
@@ -49,27 +40,20 @@
         let title = '';
         const gj = document.querySelector('#gj');
         const gn = document.querySelector('#gn');
-
-        if (gj) title = gj.innerText;
-        else if (gn) title = gn.innerText;
+        if (gn) title = gn.innerText;
+        else if (gj) title = gj.innerText;
         else return;
 
-        title = title
-            .replace(/\[[^\]]*\]/g, '')
-            .replace(/\s+/g, ' ')
-            .trim();
+        title = cleanTitle(title);
 
         const artistEl = document.querySelector(
             '#taglist a[href^="https://e-hentai.org/tag/artist:"]'
         );
         const artist = artistEl ? artistEl.textContent.trim() : '';
-
         let query = title;
         if (artist) query += ` ${artist}`;
-
         const nhUrl =
             'https://nhentai.net/search/?q=' + encodeURIComponent(query);
-
         addButton('#gd2', '🔗 Search on nhentai', nhUrl);
     }
 
@@ -83,10 +67,27 @@
     }
 
     /* ---------------- Helpers ---------------- */
+    function cleanTitle(title) {
+        // If title contains |, take only the left part
+        if (title.includes('|')) {
+            title = title.split('|')[0];
+        }
+
+        // Remove bracketed content
+        title = title.replace(/\[[^\]]*\]/g, '');
+
+        // Remove numbers (standalone digits and sequences)
+        title = title.replace(/\b\d+\b/g, '');
+
+        // Clean up extra whitespace
+        title = title.replace(/\s+/g, ' ').trim();
+
+        return title;
+    }
+
     function addButton(parentSelector, text, link) {
         const parent = document.querySelector(parentSelector);
         if (!parent) return;
-
         const a = document.createElement('a');
         a.href = link;
         a.target = '_blank';
@@ -94,7 +95,6 @@
         a.style.display = 'block';
         a.style.marginTop = '10px';
         a.style.fontSize = '16px';
-
         parent.appendChild(a);
     }
 
@@ -112,7 +112,6 @@
         a.style.fontSize = '14px';
         a.style.zIndex = '9999';
         a.style.textDecoration = 'none';
-
         document.body.appendChild(a);
     }
 })();

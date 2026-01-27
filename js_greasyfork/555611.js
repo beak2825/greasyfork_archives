@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GT API get
-// @version      0.7
+// @version      0.9
 // @description  get mp per minute
 // @icon         https://galactictycoons.com/favicon.ico
 // @include      https://g2.galactictycoons.com*
@@ -16,13 +16,15 @@
 const FETCH_KEYS = {
     MATERIAL: "last_fetch_material",
     GAMEDATA: "last_fetch_gamedata",
-    COMPANY:  "last_fetch_company"
+    COMPANY:  "last_fetch_company",
+    BASES:  "last_fetch_bases",
 };
 
 const INTERVALS = {
     MATERIAL: 1 * 2 * 60 * 1000,//2m
     GAMEDATA: 12 * 60 * 60 * 1000,//12h
-    COMPANY:  12 * 60 * 60 * 1000//12h
+    COMPANY:  1 * 60 * 60 * 1000,//1h
+    BASES: 1 * 30 * 60 * 1000,//30m
 };
 
 GM_registerMenuCommand("设置自定义Limit API", () => {
@@ -70,6 +72,53 @@ function fetchCompany() {
             }
         }
     });
+}
+
+function fetchBases() {
+    if (!canFetch(FETCH_KEYS.BASES, INTERVALS.BASES)) {
+        console.log("[Bases] 未到刷新时间，跳过");
+        return;
+    }
+
+    const apikey = localStorage.getItem("custom_api");
+    if (!apikey) {
+        console.warn("[Bases] 未设置 API Key");
+        return;
+    }
+
+    var company_info;
+    const s = localStorage.getItem('company_info');
+    if (!s) return null;
+    try {
+        company_info=JSON.parse(s);
+    } catch {
+        throw new Error("company_info不存在或格式错误！");
+    }
+    for(let i=0;i<company_info.bases.length;i++){
+        getBase(company_info.bases[i].id,apikey)
+    }
+}
+
+function getBase(baseid,apikey){
+    GM_xmlhttpRequest({
+        method: "GET",
+        url: "https://api.g2.galactictycoons.com/public/company/base/"+baseid+"?apikey=" + apikey,
+        onload(res) {
+            if (res.status !== 200) {
+                console.warn(`[Bases] 非200: ${res.status}`);
+                return;
+            }
+            try {
+                const data = JSON.parse(res.responseText);
+                localStorage.setItem("base_info_" + baseid, JSON.stringify(data));
+                markFetched(FETCH_KEYS.COMPANY);
+                console.log("[Bases] 更新成功", data);
+            } catch (e) {
+                console.error("[Bases] JSON 解析失败", e);
+            }
+        }
+    });
+
 }
 
 function fetchMaterialPrices() {
@@ -141,3 +190,6 @@ setInterval(fetchGameData, INTERVALS.GAMEDATA);
 
 fetchCompany();
 setInterval(fetchCompany, INTERVALS.COMPANY);
+
+fetchBases();
+setInterval(fetchBases, INTERVALS.BASES);

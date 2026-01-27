@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Attack Helper
 // @namespace    http://swervelord.dev/
-// @version      1.0.2
+// @version      1.0.5
 // @description  Refresher + Button Stacker
 // @author       Swervelord
 // @match        https://www.torn.com/loader.php?sid=attack&user2ID=*
@@ -24,7 +24,7 @@
         holdAttack: false, // Require manual reload to finish
         autoRetry: false, // Auto-retry starting fight after failure
         storageKeys: {
-            apiKey: "ultimata-key",
+            apiKey: "attack-helper-key",
             attackType: "torn-attack-type",
             weaponSlot: "torn-attack-slot",
         },
@@ -81,6 +81,29 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
             border: 1px solid var(--ar-border);
+        }
+
+        /* Paused overlay */
+        .ar-container.ar-paused {
+            opacity: 0.7;
+        }
+
+        .ar-paused-indicator {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: rgba(255, 193, 7, 0.15);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: var(--ar-radius-sm);
+            color: var(--ar-warning);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .ar-container.ar-paused .ar-paused-indicator {
+            display: flex;
         }
 
         /* Header */
@@ -549,6 +572,36 @@
             this.weaponSlot = this.loadWeaponSlot();
             this.countdownInterval = null;
             this.apiTimestamp = null;
+            this.tabFocused = !document.hidden && document.hasFocus();
+            this.focusCallbacks = [];
+
+            this.initFocusTracking();
+        }
+
+        initFocusTracking() {
+            // Visibility API - detects tab switching
+            document.addEventListener("visibilitychange", () => {
+                this.tabFocused = !document.hidden && document.hasFocus();
+                console.log("[Attack Helper] Visibility changed:", this.tabFocused ? "focused" : "hidden");
+                this.focusCallbacks.forEach(cb => cb(this.tabFocused));
+            });
+
+            // Window focus/blur - detects clicking to another window
+            window.addEventListener("blur", () => {
+                this.tabFocused = false;
+                console.log("[Attack Helper] Window blur - paused");
+                this.focusCallbacks.forEach(cb => cb(this.tabFocused));
+            });
+
+            window.addEventListener("focus", () => {
+                this.tabFocused = true;
+                console.log("[Attack Helper] Window focus - resumed");
+                this.focusCallbacks.forEach(cb => cb(this.tabFocused));
+            });
+        }
+
+        onFocusChange(callback) {
+            this.focusCallbacks.push(callback);
         }
 
         extractUserId() {
@@ -619,6 +672,9 @@
                     <span class="ar-title">⚔️ Attack Helper</span>
                     <button class="ar-settings-btn" id="ar-settings-toggle" title="Settings">⚙️</button>
                 </div>
+                <div class="ar-paused-indicator" id="ar-paused-indicator">
+                    ⏸️ Paused (tab not focused)
+                </div>
                 <div class="ar-settings" id="ar-settings" style="display: none;">
                     <div class="ar-api-row">
                         <label class="ar-select-label">API Key ${hasApiKey ? '✓' : '(Required for countdown)'}</label>
@@ -677,6 +733,21 @@
             this.healthEl = this.container.querySelector("#ar-health");
 
             this.bindEvents();
+
+            // Set up focus change listener for UI updates
+            this.state.onFocusChange((focused) => {
+                if (focused) {
+                    this.container.classList.remove("ar-paused");
+                } else {
+                    this.container.classList.add("ar-paused");
+                }
+            });
+
+            // Set initial state
+            if (!this.state.tabFocused) {
+                this.container.classList.add("ar-paused");
+            }
+
             return this.container;
         }
 
@@ -968,6 +1039,9 @@
             this.ui = new UI(this.state);
             this.api = new TornAPI(this.state);
             this.apiTimeOffset = 0;
+            this.countdownPaused = false;
+            this.countdownTargetTime = null;
+            this.countdownGetServerTime = null;
         }
 
         async init() {
@@ -1028,6 +1102,15 @@
                 return;
             }
 
+            // Set up focus change listener for countdown pause/resume
+            this.state.onFocusChange((focused) => {
+                if (focused && this.countdownPaused) {
+                    this.resumeCountdown();
+                } else if (!focused && this.state.countdownInterval) {
+                    this.pauseCountdown();
+                }
+            });
+
             this.ui.setButtonState("refresh", "Check Status", () => this.handleRefresh());
             await this.checkApiStatus();
         }
@@ -1065,6 +1148,17 @@
         }
 
         async checkApiStatus() {
+            // Skip if tab not focused
+            if (!this.state.tabFocused) {
+                this.ui.setStatus("Waiting for tab focus...", "warning");
+                this.state.onFocusChange((focused) => {
+                    if (focused && this.ui.statusEl.textContent === "Waiting for tab focus...") {
+                        this.checkApiStatus();
+                    }
+                });
+                return;
+            }
+
             if (!this.state.apiKey) {
                 this.ui.setStatus("No API key - manual refresh only", "warning");
                 return;
@@ -1112,11 +1206,24 @@
 
             const adjustedTarget = targetTime - CONFIG.countdownReduction;
 
+            // Store for pause/resume
+            this.countdownTargetTime = adjustedTarget;
+            this.countdownGetServerTime = getServerTime;
+            this.countdownPaused = false;
+
             this.state.countdownInterval = setInterval(() => {
+                // Skip updates if tab not focused
+                if (!this.state.tabFocused) {
+                    return;
+                }
+
                 const remaining = adjustedTarget - getServerTime();
 
                 if (remaining <= 0) {
                     clearInterval(this.state.countdownInterval);
+                    this.state.countdownInterval = null;
+                    this.countdownTargetTime = null;
+                    this.countdownGetServerTime = null;
                     this.ui.showCountdown(false);
                     this.setReadyState();
                 } else {
@@ -1128,6 +1235,32 @@
             this.ui.actionBtn.disabled = true;
         }
 
+        pauseCountdown() {
+            if (this.state.countdownInterval) {
+                console.log("[Attack Helper] Pausing countdown");
+                this.countdownPaused = true;
+                // Keep interval running but it will skip updates due to focus check
+            }
+        }
+
+        resumeCountdown() {
+            if (this.countdownPaused && this.countdownTargetTime && this.countdownGetServerTime) {
+                console.log("[Attack Helper] Resuming countdown");
+                this.countdownPaused = false;
+
+                // Check if countdown already expired while paused
+                const remaining = this.countdownTargetTime - this.countdownGetServerTime();
+                if (remaining <= 0) {
+                    clearInterval(this.state.countdownInterval);
+                    this.state.countdownInterval = null;
+                    this.countdownTargetTime = null;
+                    this.countdownGetServerTime = null;
+                    this.ui.showCountdown(false);
+                    this.setReadyState();
+                }
+            }
+        }
+
         setReadyState() {
             this.ui.setStatus("Target is available!", "success");
             this.ui.setButtonState("start", "⚔️ Start Fight", () => this.handleStartFight());
@@ -1135,6 +1268,13 @@
 
         async handleRefresh() {
             if (!this.state.canAct) return;
+
+            // Block if tab not focused
+            if (!this.state.tabFocused) {
+                this.ui.setStatus("Focus tab to continue", "warning");
+                return;
+            }
+
             this.state.lock();
 
             this.ui.setButtonLoading("Checking...");
@@ -1166,6 +1306,13 @@
 
         async handleStartFight() {
             if (!this.state.canAct) return;
+
+            // Block if tab not focused
+            if (!this.state.tabFocused) {
+                this.ui.setStatus("Focus tab to start fight", "warning");
+                return;
+            }
+
             this.state.lock();
 
             this.ui.setButtonLoading("Starting Fight...");
@@ -1182,7 +1329,7 @@
                     this.ui.setStatus(error, "error");
                     this.ui.setButtonState("start", "Retry Start", () => this.handleStartFight());
 
-                    if (CONFIG.autoRetry) {
+                    if (CONFIG.autoRetry && this.state.tabFocused) {
                         setTimeout(() => this.handleStartFight(), 100);
                     }
                 }
@@ -1197,6 +1344,13 @@
 
         async handleAttack() {
             if (!this.state.canAct) return;
+
+            // Block if tab not focused
+            if (!this.state.tabFocused) {
+                this.ui.setStatus("Focus tab to attack", "warning");
+                return;
+            }
+
             this.state.lock();
 
             this.ui.setButtonLoading("Attacking...");
@@ -1255,6 +1409,13 @@
 
         async handleFinish() {
             if (!this.state.canAct) return;
+
+            // Block if tab not focused
+            if (!this.state.tabFocused) {
+                this.ui.setStatus("Focus tab to finish", "warning");
+                return;
+            }
+
             this.state.lock();
 
             this.ui.setButtonLoading("Finishing...");

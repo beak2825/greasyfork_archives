@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         YouTube Channel Watchlist Manager
 // @namespace    http://tampermonkey.net/
-// @version      2.4
-// @description  Quản lý watchlist các channel YouTube được phép xem
+// @version      2.51
+// @description  Quản lý watchlist các channel YouTube được phép xem, chặn Shorts, cho phép embed
 // @author       You
 // @license      thaieibvn@gmail.com
 // @match        https://www.youtube.com/*
@@ -22,7 +22,7 @@
     const CONFIG = {
         // URL của file JSON chứa whitelist (GitHub Gist raw, Pastebin raw, etc.)
         // Nếu có URL, script sẽ tự động lấy khi load
-        REMOTE_WHITELIST_URL: 'https://raw.githubusercontent.com/huytq1976/youtube-blocker/refs/heads/main/youtube-whitelist.json', // VD: 'https://gist.githubusercontent.com/user/id/raw/file.json'
+        REMOTE_WHITELIST_URL: 'https://raw.githubusercontent.com/huytq1976/youtube-blocker/refs/heads/main/youtube-whitelist.json',
         
         // Danh sách channel được phép (tên chính xác như trên YouTube)
         // Chỉ dùng nếu không có REMOTE_WHITELIST_URL
@@ -38,10 +38,64 @@
         CACHE_DURATION: 3600000, // 1 giờ
         
         // Độ trễ kiểm tra (cho YouTube SPA load)
-        CHECK_DELAY: 1000
+        CHECK_DELAY: 1000,
+        
+        // TÍNH NĂNG MỚI: Chặn Shorts
+        BLOCK_SHORTS: true,
+        
+        // TÍNH NĂNG MỚI: Cho phép xem khi là embed (học hành, LMS)
+        ALLOW_EMBED: true
     };
 
     let isBlocking = false;
+
+    // TÍNH NĂNG MỚI: Kiểm tra xem có phải đang ở chế độ embed không
+    function isEmbedMode() {
+        // Cách 1: Kiểm tra URL có chứa /embed/
+        if (window.location.pathname.startsWith('/embed/')) {
+            console.log('[YT Watchlist] ✅ Phát hiện chế độ EMBED qua URL');
+            return true;
+        }
+        
+        // Cách 2: Kiểm tra xem trang có được load trong iframe không
+        if (window.self !== window.top) {
+            console.log('[YT Watchlist] ✅ Phát hiện đang chạy trong IFRAME (embed)');
+            return true;
+        }
+        
+        // Cách 3: Kiểm tra referrer từ trang học hành
+        const referrer = document.referrer.toLowerCase();
+        const educationDomains = [
+            'lms',
+            'moodle',
+            'canvas',
+            'blackboard',
+            'coursera',
+            'udemy',
+            'edx',
+            'khanacademy',
+            'edu',
+            'school',
+            'university',
+            'hocmai',
+            'vietjack',
+            'tuyensinh247',
+            'violet'
+        ];
+        
+        if (referrer && educationDomains.some(domain => referrer.includes(domain))) {
+            console.log('[YT Watchlist] ✅ Phát hiện referrer từ trang học hành:', referrer);
+            return true;
+        }
+        
+        return false;
+    }
+
+    // TÍNH NĂNG MỚI: Kiểm tra xem có phải trang Shorts không
+    function isShortsPage() {
+        const url = window.location.href;
+        return url.includes('/shorts/');
+    }
 
     // Lấy whitelist từ storage
     function getWhitelist() {
@@ -214,11 +268,11 @@
     }
 
     // Tạo overlay chặn (dùng DOM thay vì innerHTML để tránh Trusted Types)
-    function createBlockOverlay(channelName) {
+    function createBlockOverlay(channelName, reason = 'channel') {
         if (isBlocking) return;
         isBlocking = true;
         
-        console.log('[YT Watchlist] Tạo overlay chặn...');
+        console.log('[YT Watchlist] Tạo overlay chặn...', 'Lý do:', reason);
         
         // Xóa body hiện tại
         while (document.body.firstChild) {
@@ -255,25 +309,34 @@
         
         // Icon
         const icon = document.createElement('div');
-        icon.textContent = '🚫';
+        icon.textContent = reason === 'shorts' ? '⛔' : '🚫';
         icon.style.cssText = 'font-size: 80px; margin-bottom: 20px;';
         
         // Tiêu đề
         const title = document.createElement('h1');
-        title.textContent = 'Con không được phép truy cập trang này';
+        title.textContent = reason === 'shorts' 
+            ? 'YouTube Shorts bị chặn' 
+            : 'Con không được phép truy cập trang này';
         title.style.cssText = 'color: #e74c3c; font-size: 32px; margin-bottom: 15px; font-weight: 700;';
         
-        // Channel name
+        // Channel name hoặc lý do
         const channelInfo = document.createElement('p');
         channelInfo.style.cssText = 'color: #555; margin-bottom: 10px; font-size: 18px;';
-        channelInfo.textContent = 'Kênh: ';
-        const channelStrong = document.createElement('strong');
-        channelStrong.textContent = channelName || 'Không xác định';
-        channelInfo.appendChild(channelStrong);
+        
+        if (reason === 'shorts') {
+            channelInfo.textContent = 'Tất cả video Shorts đều bị chặn';
+        } else {
+            channelInfo.textContent = 'Kênh: ';
+            const channelStrong = document.createElement('strong');
+            channelStrong.textContent = channelName || 'Không xác định';
+            channelInfo.appendChild(channelStrong);
+        }
         
         // Mô tả
         const desc = document.createElement('p');
-        desc.textContent = 'Kênh này không có trong danh sách được phép xem.';
+        desc.textContent = reason === 'shorts'
+            ? 'Để tập trung học tập, Shorts không được phép xem.'
+            : 'Kênh này không có trong danh sách được phép xem.';
         desc.style.cssText = 'color: #888; margin-bottom: 30px; font-size: 14px;';
         
         // Box đếm ngược
@@ -337,6 +400,20 @@
     // Kiểm tra và chặn nếu cần
     function checkAndBlock(retryCount = 0) {
         if (isBlocking) return;
+        
+        // TÍNH NĂNG MỚI: Bypass nếu đang ở chế độ embed
+        if (CONFIG.ALLOW_EMBED && isEmbedMode()) {
+            console.log('[YT Watchlist] 🎓 Chế độ EMBED - Cho phép xem (học hành)');
+            return;
+        }
+        
+        // TÍNH NĂNG MỚI: Chặn Shorts
+        if (CONFIG.BLOCK_SHORTS && isShortsPage()) {
+            console.log('[YT Watchlist] ⛔ Phát hiện SHORTS - Chặn ngay lập tức');
+            createBlockOverlay(null, 'shorts');
+            return;
+        }
+        
         if (!isChannelOrVideoPage()) {
             console.log('[YT Watchlist] Không phải trang channel/video');
             return;
@@ -350,7 +427,7 @@
             
             if (!isChannelAllowed(channelName)) {
                 console.log('[YT Watchlist] ❌ Channel BỊ CHẶN:', channelName);
-                createBlockOverlay(channelName);
+                createBlockOverlay(channelName, 'channel');
             } else {
                 console.log('[YT Watchlist] ✅ Channel được phép:', channelName);
             }
@@ -368,7 +445,10 @@
 
     // Khởi động
     async function init() {
-        console.log('[YT Watchlist] Script đã khởi động');
+        console.log('[YT Watchlist] Script đã khởi động v2.5');
+        console.log('[YT Watchlist] Cấu hình:');
+        console.log('  - Block Shorts:', CONFIG.BLOCK_SHORTS);
+        console.log('  - Allow Embed:', CONFIG.ALLOW_EMBED);
         
         // Tự động cập nhật từ remote nếu có URL
         if (CONFIG.REMOTE_WHITELIST_URL && CONFIG.REMOTE_WHITELIST_URL.trim() !== '') {

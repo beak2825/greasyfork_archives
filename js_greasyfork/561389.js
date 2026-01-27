@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Asylum Script
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Helper script for Asylum members
 // @author       You
 // @match        https://www.torn.com/properties.php?step=rentalmarket*
@@ -18,7 +18,6 @@
 
     const SETTINGS_KEY_API_KEY = 'asylum_api_key';
     const SETTINGS_KEY_SERVER_URL = 'asylum_server_url';
-    const SETTINGS_KEY_IS_SCRAPING = 'asylum_is_scraping'; // Re-added scraping state
     const DEFAULT_SERVER_URL = 'https://asylum.badfor.biz/api/external/property';
 
     // Styles for the button and settings
@@ -214,29 +213,6 @@
         });
     }
 
-    function startScraping() {
-        if (confirm('This will clear the server and start scanning. Continue?')) {
-            GM_setValue(SETTINGS_KEY_IS_SCRAPING, true);
-            updateUIState(true);
-            // First scrape clears the server
-            scrapeAndSend(true);
-        }
-    }
-
-    function stopScraping() {
-        GM_setValue(SETTINGS_KEY_IS_SCRAPING, false);
-        updateUIState(false);
-        showToast('Scanning stopped.');
-    }
-
-    function updateUIState(isScraping) {
-        const btn = document.getElementById('asylum-scrape-btn');
-        if (btn) {
-            btn.textContent = isScraping ? 'Stop Scanning' : 'Start Scanning';
-            btn.style.backgroundColor = isScraping ? '#ff4444' : '#6a00ff';
-        }
-    }
-
     function injectControlPanel() {
         if (document.getElementById('asylum-control-panel')) return;
 
@@ -250,25 +226,6 @@
         settingsBtn.textContent = 'Settings';
         settingsBtn.addEventListener('click', window.openAsylumSettings);
         
-        // Scrape Button
-        const scrapeBtn = document.createElement('button');
-        scrapeBtn.id = 'asylum-scrape-btn';
-        scrapeBtn.className = 'asylum-btn';
-        
-        const isScraping = GM_getValue(SETTINGS_KEY_IS_SCRAPING, false);
-        scrapeBtn.textContent = isScraping ? 'Stop Scanning' : 'Start Scanning';
-        if (isScraping) scrapeBtn.style.backgroundColor = '#ff4444';
-        
-        scrapeBtn.addEventListener('click', () => {
-            const currentStatus = GM_getValue(SETTINGS_KEY_IS_SCRAPING, false);
-            if (currentStatus) {
-                stopScraping();
-            } else {
-                startScraping();
-            }
-        });
-
-        panel.appendChild(scrapeBtn);
         panel.appendChild(settingsBtn);
 
         document.body.appendChild(panel);
@@ -475,8 +432,14 @@
         });
     }
 
+    function isPiRentalScreen() {
+        const hasRentalStep = window.location.search.includes('step=rentalmarket');
+        const hasPiProperty = window.location.hash.includes('property=13');
+        return hasRentalStep && hasPiProperty;
+    }
+
     function checkAndScrape() {
-        if (!GM_getValue(SETTINGS_KEY_IS_SCRAPING, false)) return;
+        if (!isPiRentalScreen()) return;
         
         const now = Date.now();
         if (now - lastScrapeTime < 1000) return; // 1 second throttle
@@ -553,7 +516,7 @@
     }
 
     function scrapeAndSend(shouldClear) {
-         // This function is now mostly for the manual button click or first run
+         // This function is now mostly for first run
          const rentLis = document.querySelectorAll('ul.users-list.rental > li');
          const properties = [];
          rentLis.forEach(li => {
@@ -834,24 +797,10 @@
             }
             
             // Check if we need to auto-scrape new content
-            if (GM_getValue(SETTINGS_KEY_IS_SCRAPING, false)) {
-                 // Simple check: if mutation involves the rental list
-                 let shouldScrape = false;
-                 for (const mutation of mutations) {
-                     if (mutation.target.classList && mutation.target.classList.contains('rental-market-list')) {
-                         shouldScrape = true;
-                     }
-                     // Or if main container changed (pagination)
-                     if (mutation.target.id === 'mainContainer' || mutation.target.classList.contains('content-wrapper')) {
-                         shouldScrape = true;
-                     }
-                 }
-                 
-                 // Fallback: Just try to scrape periodically if ANY substantial change happened,
-                 // but rely on throttle in checkAndScrape to prevent spam.
-                 if (mutations.length > 0) {
-                      checkAndScrape();
-                 }
+            // Fallback: Just try to scrape periodically if ANY substantial change happened,
+            // but rely on throttle in checkAndScrape to prevent spam.
+            if (mutations.length > 0) {
+                 checkAndScrape();
             }
             
             // Mugbot Injection Check
@@ -864,6 +813,11 @@
 
         const target = document.querySelector('#mainContainer') || document.body;
         observer.observe(target, { childList: true, subtree: true });
+
+        // Initial scan after load (no button)
+        setTimeout(() => {
+            checkAndScrape();
+        }, 500);
     }
 
     // Wait for load

@@ -24,8 +24,8 @@
 // @author Max
 // @namespace https://github.com/Max46656
 // @license MPL2.0
-// @downloadURL https://update.greasyfork.org/scripts/557130/KemonoCoomer%20grid%20layout%20for%20post.user.js
-// @updateURL https://update.greasyfork.org/scripts/557130/KemonoCoomer%20grid%20layout%20for%20post.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/557130/KemonoCoomer%20%E6%8A%95%E7%A8%BF%E3%82%B0%E3%83%AA%E3%83%83%E3%83%89%E3%83%AC%E3%82%A4%E3%82%A2%E3%82%A6%E3%83%88.user.js
+// @updateURL https://update.greasyfork.org/scripts/557130/KemonoCoomer%20%E6%8A%95%E7%A8%BF%E3%82%B0%E3%83%AA%E3%83%83%E3%83%89%E3%83%AC%E3%82%A4%E3%82%A2%E3%82%A6%E3%83%88.meta.js
 // ==/UserScript==
 
 class ImageGridEnhancer {

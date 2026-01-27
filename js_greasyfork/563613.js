@@ -1,64 +1,97 @@
 // ==UserScript==
-// @name         Quotation Text Corrector All Users
+// @name         HEADER Corrector SSC All Users
 // @namespace    http://tampermonkey.net/
-// @version      1.2
-// @description  Change specific text on car edit page by Mufty Pro
+// @version      1.6
+// @description  Change specific text and forced focus on "To" field
 // @author       Your Name
 // @match        https://salsabeelcars.site/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/563613/Quotation%20Text%20Corrector%20All%20Users.user.js
-// @updateURL https://update.greasyfork.org/scripts/563613/Quotation%20Text%20Corrector%20All%20Users.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563613/HEADER%20Corrector%20SSC%20All%20Users.user.js
+// @updateURL https://update.greasyfork.org/scripts/563613/HEADER%20Corrector%20SSC%20All%20Users.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // Define the new text for the first target element (previous correction)
-    const newText0 = "<strong>OFFER/</strong><br>QUOTATION";
-    const targetSelector0 = 'body > div.wrapper > div.content-wrapper > section > div > div > div.panel-body > div:nth-child(1) > div > div.col-sm-3.top_left > p';
+    const replacements = [
+        {
+            selector: 'body > div.wrapper > div.content-wrapper > section > div > div > div.panel-body > div:nth-child(1) > div > div.col-sm-3.top_left > p',
+            newHTML: "<strong>OFFER/</strong><br>QUOTATION"
+        },
+        {
+            selector: 'body > div.wrapper > div.content-wrapper > section > div > div > div.panel-body > div:nth-child(1) > div > div.col-sm-3.top_right > p:nth-child(1) > strong',
+            newHTML: "<strong>Tel &nbsp;:&nbsp; +880-2-222293331-5</strong>"
+        },
+        {
+            selector: 'body > div.wrapper > div.content-wrapper > section > div > div > div.panel-body > div:nth-child(2) > div > p > b',
+            newHTML: "<b>QUOTATION FOR BRAND NEW/RECONDITIONED MOTOR VEHICLE</b>"
+        },
+        {
+            selector: 'body > div.wrapper > div.content-wrapper > section > div > div > div.panel-body > div:nth-child(1) > div > div.col-sm-3.top_right > p:nth-child(2)',
+            newHTML: ""
+        }
+    ];
 
-    // Define the new text for the second target element (new correction)
-    const newText1 = "<strong>Tel &nbsp;:&nbsp; +880-2-222293331-5</strong>";
-    const targetSelector1 = 'body > div.wrapper > div.content-wrapper > section > div > div > div.panel-body > div:nth-child(1) > div > div.col-sm-3.top_right > p:nth-child(1) > strong';
+    const updatedPaths = new Set();
+    let hasFocused = false;
 
-    // Define the new text for the third target element (new correction)
-    const newText2 = "<b>QUOTATION FOR RECONDITIONED MOTOR VEHICLE</b>";
-    const targetSelector2 = 'body > div.wrapper > div.content-wrapper > section > div > div > div.panel-body > div:nth-child(2) > div > p > b';
+    function forceFocus(el) {
+        if (!el || hasFocused) return;
 
-        // Define the new text for fax
-    const newText3 = "<b> </b>";
-    const targetSelector3 = 'body > div.wrapper > div.content-wrapper > section > div > div > div.panel-body > div:nth-child(1) > div > div.col-sm-3.top_right > p:nth-child(2) > strong';
-
-    // Function to update the text of a target element
-    function updateText(targetSelector, newText) {
-        const targetElement = document.querySelector(targetSelector);
-        if (targetElement) {
-            targetElement.innerHTML = newText; // Use innerHTML to allow HTML formatting
-        } else {
-            console.error('Target element not found:', targetSelector);
+        // Set focus and try to trigger keyboard
+        el.focus();
+        
+        // Mobile browsers often require a "click" to show keyboard
+        const clickEvt = new MouseEvent('click', {
+            view: window,
+            bubbles: true,
+            cancelable: true
+        });
+        el.dispatchEvent(clickEvt);
+        
+        // Double-check focus
+        if (document.activeElement === el) {
+            hasFocused = true;
         }
     }
 
-    // Create a MutationObserver to wait for the elements to be available in the DOM
-    const observer = new MutationObserver((mutationsList, observer) => {
-        // Check if all target elements are present
-        const targetElement0 = document.querySelector(targetSelector0);
-        const targetElement1 = document.querySelector(targetSelector1);
-        const targetElement2 = document.querySelector(targetSelector2);
-        const targetElement3 = document.querySelector(targetSelector3);
+    function applyUpdates() {
+        // 1. Handle Text Replacements
+        replacements.forEach((item, index) => {
+            if (updatedPaths.size === replacements.length) return;
+            const target = document.querySelector(item.selector);
+            if (target && !updatedPaths.has(index)) {
+                target.innerHTML = item.newHTML;
+                updatedPaths.add(index);
+            }
+        });
 
-        if (targetElement0 && targetElement1 && targetElement2) {
-            // Update the text for all elements
-            updateText(targetSelector0, newText0); // Previous correction
-            updateText(targetSelector1, newText1); // New correction
-            updateText(targetSelector2, newText2); // New correction
-            updateText(targetSelector3, newText3); // DELETE FAX
+        // 2. Target the specific ID you provided
+        const toField = document.getElementById('to');
+        if (toField && !hasFocused) {
+            // Short delay helps ensure the browser is ready to accept focus
+            setTimeout(() => forceFocus(toField), 100);
+        }
 
-            // Disconnect the observer after the updates are done
+        // Clean up observer if everything is done
+        if (updatedPaths.size === replacements.length && hasFocused) {
             observer.disconnect();
         }
+    }
+
+    // Run on window load to ensure everything is rendered
+    window.addEventListener('load', applyUpdates);
+
+    // Also use MutationObserver for dynamic content
+    const observer = new MutationObserver(() => {
+        applyUpdates();
     });
 
-    // Start observing the document with the configured parameters
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    // Final fallback: try once more after a brief moment
+    setTimeout(applyUpdates, 500);
 })();

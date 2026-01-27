@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         DGA Digital ID Helper
 // @namespace    iFantz7E.DgaDigitalIdHelper
-// @version      0.2
+// @version      0.4
 // @description  Improve DGA Digital ID
 // @author       7-elephant
 // @match        https://connect.egov.go.th/Account/Login*
+// @match        https://connect.dga.or.th/Account/Login*
 // @icon         https://connect.egov.go.th/favicon.ico
 // @grant        none
 // @run-at       document-start
@@ -17,10 +18,10 @@
 // Since 22 Dev 2025
 // https://greasyfork.org/en/scripts/559820-dga-digital-id-helper
 
-(function() {
+(function () {
     "use strict";
     function attachOnReady(callback) {
-        document.addEventListener("DOMContentLoaded", function(e) {
+        document.addEventListener("DOMContentLoaded", function (e) {
             callback();
         });
     }
@@ -34,8 +35,7 @@
         }
         let eleToggle = document.querySelector("#ToggleMask");
         if (eleToggle) {
-            eleToggle.addEventListener("click", function()
-			{
+            eleToggle.addEventListener("click", function () {
                 let eleText = document.querySelector("#MaskedInput");
                 if (eleText) {
                     if (eleText.type == "password") {
@@ -44,6 +44,13 @@
                 }
             });
         }
+
+        setTimeout(function () {
+            let eleButton = document.querySelector("#mdlAnnouncementStyle button.cancel");
+            if (eleButton) {
+                eleButton.click();
+            }
+        }, 1000);
     }
 
     attachOnReady(main);

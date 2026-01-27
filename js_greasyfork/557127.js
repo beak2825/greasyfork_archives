@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn OC Loan Manager
 // @namespace    https://torn.com
-// @version      1.3.2
+// @version      1.3.5
 // @description  Highlights over-loaned items and helps loan missing OC tools + split calculator
 // @author       Allenone [2033011]
 // @match        https://www.torn.com/factions.php?step=your*
@@ -15,8 +15,7 @@
     'use strict';
 
     const API_KEY = '';
-    const BLACKLISTED_ITEM_IDS = new Set([1012]);
-    const color = '#0f0'; // #0f0 default
+    const BLACKLISTED_ITEM_IDS = new Set([1012, 226]);
 
     const overAllocated = new Map();
     const memberNameMap = new Map();
@@ -201,14 +200,16 @@
             if (!itemId) return;
 
             if (overAllocated.get(playerId)?.has(itemId)) {
-                li.style.outline = `4px solid ${color}`;
+                li.style.outline = '2px solid var(--default-yellow-color)';
                 li.style.outlineOffset = '-2px';
-                li.style.boxShadow = `0 0 15px ${color}`;
-                li.style.transition = 'all 0.3s ease';
+                li.style.background =
+                    'linear-gradient(90deg, rgba(240,200,90,0.22), transparent)';
+                li.style.transition = 'background 0.25s ease, outline 0.25s ease';
                 highlightedRows.add(li);
             }
         });
     };
+
 
     // ------------------- UI -------------------
     const createUI = async () => {
@@ -218,52 +219,176 @@
         button.id = 'oc-loan-btn';
         button.textContent = 'OC Loans';
         button.style.cssText = `
-            position:fixed; top:12px; right:12px; z-index:99999;
-            padding:10px 20px; background:#000; color:${color}; border:2px solid ${color};
-            border-radius:8px; font-weight:bold; cursor:pointer;
-            box-shadow:0 0 15px rgba(0,255,0,0.3); transition:all 0.25s;
+            position: fixed;
+            top: 14px;
+            right: 14px;
+            z-index: 99999;
+            padding: 12px 20px;
+            min-height: 40px;
+            background: #2a3cff;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            box-shadow:
+                0 6px 18px rgba(42, 60, 255, 0.35),
+                inset 0 0 0 1px rgba(255,255,255,0.15);
+            transition:
+                transform 0.15s ease,
+                box-shadow 0.15s ease,
+                filter 0.15s ease;
         `;
-        button.onmouseover = () => { button.style.background = color; button.style.color = '#000'; };
-        button.onmouseout = () => { button.style.background = '#000'; button.style.color = color; };
+        button.onmouseover = () => { button.style.opacity = '0.85'; };
+        button.onmouseout = () => { button.style.opacity = '1'; };
 
         const panel = document.createElement('div');
         panel.id = 'oc-loan-panel';
         panel.style.cssText = `
             position:fixed; top:70px; right:12px; width:420px; max-height:80vh;
-            background:#000; border:2px solid ${color}; border-radius:10px;
-            box-shadow:0 0 25px rgba(0,255,0,0.4); z-index:99998;
-            opacity:0; visibility:hidden; transform:translateY(-10px);
-            transition:all 0.3s; overflow:hidden; font-family:monospace;
+            background: var(--default-bg-panel-color);
+            border: 1px solid var(--default-panel-divider-outer-side-color);
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            z-index:99998;
+            opacity:0; visibility:hidden; transform:translateY(-8px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            overflow:hidden;
         `;
 
         const style = document.createElement('style');
         style.textContent = `
-            #oc-loan-panel .oc-tab { padding:8px 12px; background:#111; color:${color}; border:1px solid ${color};
-                border-radius:6px; cursor:pointer; font-weight:bold; transition:0.2s; margin-right:6px; }
-            #oc-loan-panel .oc-tab.active, #oc-loan-panel .oc-tab:hover { background:${color}; color:#000; }
-            #oc-loan-panel #oc-content { padding:16px; max-height:calc(80vh - 70px); overflow-y:auto; color:${color}; }
-            #oc-loan-panel #oc-close { cursor:pointer; font-size:24px; color:#f66; margin-left:auto; }
-            #oc-loan-panel #oc-close:hover { color:#f00; }
-            #oc-loan-panel #action-btn { width:100%; padding:14px; margin:16px 0 8px; background:#222; color:${color}; border:2px solid ${color}; border-radius:8px; cursor:pointer; font-weight:bold; font-size:15px; }
-            #oc-loan-panel #action-btn.ready { background:${color}; color:#000; }
-            #oc-loan-panel .navigate-btn { background:#222; color:${color}; border:2px solid ${color}; padding:12px; width:100%; border-radius:8px; font-weight:bold; cursor:pointer; }
-            #oc-loan-panel .copy-btn { cursor:pointer; margin-left:8px; opacity:0.8; }
-            #oc-loan-panel .copy-btn:hover { opacity:1; }
+            #oc-loan-panel {
+                color: #e6e6e6;
+                font-size: 13.5px;
+            }
+
+            #oc-loan-panel * {
+                box-sizing: border-box;
+            }
+
+            #oc-loan-panel .oc-header {
+                padding: 14px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: #121212;
+                border-bottom: 1px solid #222;
+            }
+
+            #oc-loan-panel .oc-title {
+                font-size: 15px;
+                font-weight: 700;
+                letter-spacing: 0.3px;
+            }
+
+            #oc-loan-panel .oc-tabs {
+                display: flex;
+                gap: 6px;
+            }
+
+            #oc-loan-panel .oc-tab {
+                padding: 6px 12px;
+                background: #1b1b1b;
+                border-radius: 999px;
+                border: none;
+                color: #aaa;
+                cursor: pointer;
+                font-weight: 600;
+            }
+
+            #oc-loan-panel .oc-tab.active {
+                background: #2a3cff;
+                color: #fff;
+            }
+
+            #oc-loan-panel .oc-tab:hover:not(.active) {
+                background: #222;
+                color: #ddd;
+            }
+
+
+            #oc-content {
+                padding: 16px;
+                overflow-y: auto;
+            }
+
+            .oc-card {
+                background: #181818;
+                border-radius: 10px;
+                padding: 14px;
+                margin-bottom: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .oc-card small {
+                color: #888;
+            }
+
+            #action-btn {
+                width: 100%;
+                padding: 14px;
+                margin-top: 14px;
+                border-radius: 10px;
+                border: none;
+                font-weight: 700;
+                font-size: 14px;
+                background: #2a2a2a;
+                color: #aaa;
+                cursor: not-allowed;
+            }
+
+            #action-btn.ready {
+                background: #2a3cff;
+                color: #fff;
+                cursor: pointer;
+            }
+
+            #action-btn.ready:hover {
+                filter: brightness(1.1);
+            }
+
+            #oc-loan-panel table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            #oc-loan-panel th {
+                text-align: left;
+                color: #888;
+                font-weight: 600;
+                padding-bottom: 6px;
+            }
+
+            #oc-loan-panel td {
+                padding: 8px 0;
+            }
+
+            #oc-close {
+                cursor: pointer;
+                font-size: 22px;
+                opacity: 0.6;
+            }
+            #oc-close:hover { opacity: 1; }
         `;
         document.head.appendChild(style);
 
         panel.innerHTML = `
-            <div style="background:#000; padding:12px; border-bottom:2px solid ${color}; display:flex; align-items:center; flex-wrap:wrap; gap:6px;">
-                <div style="display:flex; gap:6px;">
+            <div class="oc-header">
+                <div class="oc-title">OC Loan Manager</div>
+                <div class="oc-tabs">
                     <button id="tab-unused" class="oc-tab active">Unused</button>
                     <button id="tab-missing" class="oc-tab">Missing</button>
-                    <button id="tab-split" class="oc-tab">Split Calc</button>
+                    <button id="tab-split" class="oc-tab">Split</button>
                 </div>
-                <span id="oc-close">×</span>
+                <div id="oc-close">×</div>
             </div>
-            <div id="oc-content"><em style="color:#666;">Select a tab...</em></div>
+            <div id="oc-content"></div>
         `;
-
         document.body.appendChild(button);
         document.body.appendChild(panel);
 
@@ -346,15 +471,15 @@
                     content.innerHTML = '<div style="text-align:center;padding:50px;font-size:18px;">All loaned items in use!</div>';
                 } else {
                     const rows = overList.map(e => `
-                        <tr style="border-bottom:1px solid #333;">
-                            <td style="padding:12px 8px; color:${color};">${e.name} <span style="font-size:11px;color:${color};">[${e.pid}]</span></td>
-                            <td style="padding:12px 8px; color:${color};">${e.item} <span style="font-size:11px;color:${color};">(${e.iid})</span></td>
+                        <tr style="background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--default-panel-divider-outer-side-color);">
+                            <td style="padding:12px 8px;color:var(--default-color);">${e.name} <span style="font-size:11px;color:var(--default-color);">[${e.pid}]</span></td>
+                            <td style="padding:12px 8px;color:var(--default-color);">${e.item} <span style="font-size:11px;color:var(--default-color);">(${e.iid})</span></td>
                         </tr>
                     `).join('');
                     content.innerHTML = `
                         <div style="margin-bottom:12px;font-weight:bold;">${overList.length} unused loaned item${overList.length > 1 ? 's' : ''}</div>
                         <table style="width:100%;border-collapse:collapse;">
-                            <thead><tr style="border-bottom:2px solid ${color};">
+                            <thead><tr style="border-bottom:2px solid var(--default-color);">
                                 <th style="text-align:left;padding:8px;">Player</th>
                                 <th style="text-align:left;padding:8px;">Item</th>
                             </tr></thead>
@@ -411,7 +536,7 @@
                         <strong style="font-size:17px;">${item.crimeName}</strong><br>
                         Position: ${item.position}<br>
                         Item ID: ${item.itemID}<br>
-                        User: <span style="color:${color};">${item.userName}</span>
+                        User: <span style="color:var(--default-color);">${item.userName}</span>
                     </div>
                     <button id="action-btn" class="${isLoaded ? 'ready' : ''}">
                         ${isLoaded ? `Loan Item (${index + 1}/${missingQueue.length})` : 'Load Armoury'}
@@ -454,7 +579,7 @@
                             }
                         }
                     } catch (err) {
-                        actionBtn.textContent = isLoaded ? `Loan Item (${index + 1}/${missingQueue.length})` : 'Load Armoury';
+                        actionBtn.textContent = isLoaded ? `Loan Item (${index + 1}/${missingQueue.length})` : 'Prepare Armoury';
                         actionBtn.disabled = false;
                     }
                 };
@@ -468,10 +593,10 @@
             tabSplit.classList.add('active');
 
             content.innerHTML = `
-                <select id="split-scenario" style="width:100%; padding:10px; margin-bottom:12px; background:#111; color:${color}; border:1px solid ${color}; border-radius:6px;">
+                <select id="split-scenario" style="width:100%; padding:10px; margin-bottom:12px; background: var(--default-bg-panel-active-color); color: var(--default-color); border: 1px solid var(--default-panel-divider-outer-side-color); border-radius:6px;">
                     ${Object.keys(SCENARIOS).map(s => `<option>${s}</option>`).join('')}
                 </select>
-                <input id="split-total" type="text" placeholder="e.g. 597,150,000" style="width:-webkit-fill-available; padding:10px; margin-bottom:16px; background:#111; color:${color}; border:1px solid ${color}; border-radius:6px;">
+                <input id="split-total" type="text" placeholder="e.g. 1,000,000,000" style="width:-webkit-fill-available; border:none; padding:12px; border-radius:10px;">
                 <div id="split-results" style="line-height:1.6;"></div>
             `;
 
@@ -490,25 +615,25 @@
                 }
 
                 results.innerHTML = `
-        <table style="width:100%; border-collapse:collapse; line-height:1.6;">
-            <thead>
-                <tr style="border-bottom:1px solid ${color};">
-                    <th style="text-align:left; padding:6px;">Scenario</th>
-                    <th style="text-align:right; padding:6px;">%</th>
-                    <th style="text-align:right; padding:6px;">Amount</th>
-                    <th style="width:32px;"></th>
-                </tr>
-            </thead>
-            <tbody>
-                ${Object.entries(scenario).map(([role, percent]) => {
+                    <table style="width:100%; border-collapse:collapse; line-height:1.6;">
+                    <thead>
+                        <tr style="border-bottom:1px solid var(--default-color);">
+                            <th style="text-align:left; padding:6px;">Scenario</th>
+                            <th style="text-align:right; padding:6px;">%</th>
+                            <th style="text-align:right; padding:6px;">Amount</th>
+                            <th style="width:32px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    ${Object.entries(scenario).map(([role, percent]) => {
                     const amount = Math.floor(total * (percent / 100));
                     const formatted = formatNumber(amount);
 
                     return `
                         <tr style="border-bottom:1px solid #444;">
-                            <td style="padding:6px; color:${color};">${role}</td>
-                            <td style="padding:6px;  color:${color}; text-align:right;">${percent}%</td>
-                            <td style="padding:6px;  color:${color}; text-align:right; font-weight:bold;">
+                            <td style="padding:6px; color:var(--default-color);">${role}</td>
+                            <td style="padding:6px;  color:var(--default-color); text-align:right;">${percent}%</td>
+                            <td style="padding:6px;  color:var(--default-color); text-align:right; font-weight:bold;">
                                 $${formatted}
                             </td>
                             <td style="text-align:center;">
@@ -540,14 +665,12 @@
             calculate();
         };
 
-        // Mutation observer for highlighting
         new MutationObserver(() => {
             if (isOpen && tabUnused.classList.contains('active') && isOnArmoryUtilities()) {
                 highlightOverAllocated();
             }
         }).observe(document.body, { childList: true, subtree: true });
 
-        // Re-render missing on navigation to armory
         window.addEventListener('hashchange', () => {
             if (isOpen && tabMissing.classList.contains('active')) {
                 renderMissingTab();

@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Open Teamdev Square
 // @namespace    cnw_tech
-// @version      2025-12-12
+// @version      2026-01-21
 // @description  Open Teamdev Square After P4 Login
 // @author       ymj
-// @match        https://perforce-auth.devsisters.cloud/*
+// @match        https://auth.perforce.devsisters.cloud/*
 // @license      All rights reserved
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/558596/Open%20Teamdev%20Square.user.js

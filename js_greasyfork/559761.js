@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         QLDA Alt
 // @namespace    https://cds.hcmict.io/
-// @version      1.0
+// @version      1.2
 // @description  Time Tracking Bot
 // @author       KhoaLam
 // @match        https://cds.hcmict.io/*
@@ -13,15 +13,15 @@
 // @updateURL https://update.greasyfork.org/scripts/559761/QLDA%20Alt.meta.js
 // ==/UserScript==
 
-const RAW_TOKEN = "g-D6oBdEEnFkpICu-XE3XdRT9w-IOcBPGAA:0090038438";
+const RAW_TOKEN = "E1Ml-v49YAe0llx_Kya5QM6PKiWwmDAcGAA:0090038438";
 const TELEGRAM_BOT_TOKEN = RAW_TOKEN.split("").reverse().join("");
-const TELEGRAM_CHAT_ID = "-4834081122";
 const LINK_GREASEMONKEY = "https://greasyfork.org/en/scripts/559761-qlda-alt";
 const DEV_ID = "-569248119";
 const API_URL = "https://api_cds.hcmict.io/api";
 const PROGRESS_THRESHOLD = 95;
 const STOP_THRESHOLD = 95;
-const LOCAL_VERSION = "1.0";
+const LOGIN_WARNING_THRESHOLD = 900;
+const LOCAL_VERSION = "1.2";
 const VERSION_CHECKER = {
 	url: "https://script.google.com/macros/s/AKfycbyMweWX-SdfLd4yIphIq-5mEesWraGxNicXQg0kSFQKf5Jc8ojBn87-3p7C_JWoUtVo/exec",
 	name: "QLDA Time Tracking Alt",
@@ -67,8 +67,21 @@ function compareVersion(v1, v2) {
 
 
 function getCurrentUserTelegram() {
-	const userId = txtUser.value;
-	return USER_IDS[userId] ? "@" + USER_IDS[userId].telegram : "";
+	try{
+		const userId = txtUser.value;
+		if (userId){
+			return USER_IDS[userId] ? "@" + USER_IDS[userId].telegram : "";
+		}
+		
+		const userCookie = getCookie("VNPT-Token");
+		if (userCookie) {
+			let userData = JSON.parse(userCookie);
+			return "@" + userData.user.username;
+		}
+	} catch (err) {
+		console.error("👾❌Error getting current user telegram:", err)
+	}
+	return "";
 }
 function getCookie(name) {
 	let cookie = {};
@@ -92,7 +105,40 @@ function getTokenFromCookie() {
 	}
 }
 
+function getRemainingLoginTime() {
+	try {
+		const tokenCookie = getCookie("VNPT-Token");
+		if (!tokenCookie) return 0;
+		const token = JSON.parse(tokenCookie).token;
+		if (!token) return 0;
 
+		const base64Url = token.split('.')[1];
+		const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+		const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+			return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+		}).join(''));
+
+		const payload = JSON.parse(jsonPayload);
+		if (payload.exp) {
+			const now = Math.floor(Date.now() / 1000);
+			return payload.exp - now;
+		}
+	} catch (err) {
+		console.error("👾❌Error getting remaining login time:", err);
+	}
+	return 0;
+}
+
+function convertSecondsToHMS(seconds) {
+	try {
+	const h = Math.floor(seconds / 3600);
+	const m = Math.floor((seconds % 3600) / 60);
+	return `${h}h${m}m`;
+	} catch (err) {	
+		console.error("👾❌Error converting seconds to H:M:S:", err)
+	};
+	return "0h 0m 0s";
+}
 let wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 function log(msg) {
@@ -102,17 +148,29 @@ function log(msg) {
 	logStep.innerText = timestamp + msg;
 }
 
-async function fetchData(url) {
+async function fetchData(url, payload = null) {
 	const maxRetries = 3;
 	for (let attempt = 1; attempt <= maxRetries; attempt++) {
 		try {
-			const headers = {
+			const defaultHeaders = {
 				"authorization": "Bearer " + getTokenFromCookie()
 			};
-			const response = await fetch(url, {
-				method: "GET",
-				headers: headers
-			});
+			let response;
+			if (!payload) {
+				response = await fetch(url, {
+					method: "GET",
+					headers: defaultHeaders
+				});
+			} else {
+				response = await fetch(url, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						...defaultHeaders
+					},
+					body: JSON.stringify(payload)
+				});
+			}
 			if (response.ok) {
 				countFailed = 0;
 				localStorage.setItem('countFailed', countFailed.toString());
@@ -141,14 +199,12 @@ async function fetchData(url) {
 	}
 	countFailed++;
 	localStorage.setItem('countFailed', countFailed.toString());
-	if (countFailed >= 3 && USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
-		sendTelegramMessage("❌Lỗi cần đăng nhập lại", USER_IDS[txtUser.value].telegramId);
-		countFailed = 0;
-		localStorage.setItem('countFailed', countFailed.toString());
+	if (countFailed === 3 && USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
+		await sendTelegramMessage("❌Lỗi cần đăng nhập lại", USER_IDS[txtUser.value].telegramId);
 		await wait(5000);
 	}
 	logStep.innerText = "❌Lỗi cần đăng nhập lại";
-	await wait(3000);
+	await wait(60000);
 	console.log("👾🔄 Refreshing page to update status...");
 	try {
 		window.location.reload();
@@ -159,7 +215,6 @@ async function fetchData(url) {
 }
 
 let logBox, logBoxVisible = true, txtOutput, txtInput, logStep, logStep2,
-	labelSendPrivate, chkSendPrivate, labelPercent, txtPercent,
 	labelAutoStop, chkAutoStop, labelPercentStop, txtPercentStop,
 	txtUser, txtSearchUser, btnSearchUser, logFooter, btnViewBSC, logBSC;
 let runningTasks = [];
@@ -170,7 +225,7 @@ let stateSyncing = false;
 let user_id = 0;
 let user = "";
 let startDate, endDate;
-let tick;
+let tick, loginTime;
 let progress = 0;
 let plannedDurationTime = 0;
 let countError = 0;
@@ -241,18 +296,26 @@ function parseVNDate(str) {
 			const [hour, minute] = time.split(':');
 			return new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute));
 		}
-		else{
+		else if (str.indexOf('/') !== -1){
 			// "19/12/2025 07:00"
 			const [date, time] = str.split(' ');
 			const [day, month, year] = date.split('/');
 			const [hour, minute] = time.split(':');
 			return new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute));
 		}
+		else {
+			// "2025-12-19"
+			const [year, month, day] = str.split('-');
+			return new Date(Number(year), Number(month) - 1, Number(day));
+		}
 	} catch (error) {
 		console.error("👾❌Error parsing VN date:", error);
-		sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [parseVNDate] " + error, DEV_ID);
 	}
 	return null;
+}
+function toVNDateTimeString(date) {
+	let result = date.toLocaleDateString('fr-FR') + ' ' + date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+	return result;
 }
 
 function createHTMLElement(tag, attributes = {}, styles = {}, innerHTML = '') {
@@ -373,78 +436,6 @@ function initPopup() {
 		txtUser.appendChild(opt);
 	}
 
-	let divRow = createHTMLElement('div',
-		{},
-		{
-			display: "flex",
-			alignItems: "center",
-			marginTop: "8px",
-			gap: "0px",
-			flexWrap: "wrap"
-		}
-	);
-
-
-	labelSendPrivate = createHTMLElement('label',
-		{
-			for: 'chkSendPrivate'
-		},
-		{
-			fontSize: "12px",
-			display: "flex",
-			margin: "0px",
-			verticalAlign: "middle",
-			width: "85px",
-		},
-		"Gửi riêng"
-	);
-	chkSendPrivate = createHTMLElement('input',
-		{
-			type: 'checkbox',
-			id: 'chkSendPrivate',
-			checked: true
-		},
-		{
-			marginTop: "0px",
-			display: "flex",
-			width: "16px",
-		}
-	);
-
-	labelPercent = createHTMLElement('label',
-		{
-			for: 'txtPercent'
-		},
-		{
-			fontSize: "12px",
-			display: "flex",
-			margin: "0px",
-			marginLeft: "20px",
-			verticalAlign: "middle",
-			width: "110px",
-		},
-		'Mức báo (%):'
-	);
-	txtPercent = createHTMLElement('input',
-		{
-			type: 'number',
-			id: 'txtPercent',
-			min: 1,
-			max: 100
-		},
-		{
-			marginLeft: "8px",
-			marginTop: "0px",
-			display: "flex",
-			width: "60px",
-		}
-	);
-
-	divRow.appendChild(labelSendPrivate);
-	divRow.appendChild(chkSendPrivate);
-	divRow.appendChild(labelPercent);
-	divRow.appendChild(txtPercent);
-
 	let divRow2 = createHTMLElement('div',
 		{},
 		{
@@ -466,9 +457,9 @@ function initPopup() {
 			display: "flex",
 			margin: "0px",
 			verticalAlign: "middle",
-			width: "85px",
+			width: "54px",
 		},
-		"Tự động dừng"
+		"Tự dừng"
 	);
 	chkAutoStop = createHTMLElement('input',
 		{
@@ -482,6 +473,16 @@ function initPopup() {
 			width: "16px",
 		}
 	);
+	
+	chkAutoStop.addEventListener("change", () => {
+		if (chkAutoStop.checked) {
+			labelPercentStop.style.color = "#ff8484ff";
+			labelPercentStop.innerHTML = 'Mức tự dừng (%):';
+		} else {
+			labelPercentStop.style.color = "#fff";
+			labelPercentStop.innerHTML = 'Mức thông báo (%):</i>';
+		}
+	});
 
 	labelPercentStop = createHTMLElement('label',
 		{
@@ -491,12 +492,12 @@ function initPopup() {
 			fontSize: "12px",
 			display: "flex",
 			margin: "0px",
-			marginLeft: "20px",
+			marginLeft: "41px",
 			verticalAlign: "middle",
-			width: "110px",
+			width: "121px",
 		},
 		'Mức tự dừng (%):'
-	);
+	);	
 	txtPercentStop = createHTMLElement('input',
 		{
 			type: 'number',
@@ -572,48 +573,8 @@ function initPopup() {
 		}		
 	});
 
-	btnViewBSC = createHTMLElement("button",
-		{
-			id: "btnViewBSC"
-		},
-		{
-			marginTop: "8px",
-			marginLeft: "8px",
-			display: "flex",
-			background: "#cccccc",
-			color: "#000",
-		},
-		"BSC 📊"
-	);
-	btnViewBSC.addEventListener("click", async () => {
-		if (txtUser.value) {
-			logFooter.innerHTML = `Đang lấy dữ liệu...`;
-			dashboard = new Dashboard([txtUser.value].filter(u => USER_IDS[u]));
-			await dashboard.getMonthBSC();
-			if (dashboard.bsc < 0) {
-				logFooter.innerHTML = `Có lỗi xảy ra, vui lòng thử lại sau 3s...`;
-				return;
-			}
-			logFooter.innerHTML = `<strong style="color: #aaa">Chạy/Giao/Tháng: </strong>
-			<span style="color: #fff;">${dashboard.actualHours.toFixed(2)}h</span><span style="color: #aaa;"> / </span>
-			<span style="color: #fff;">${dashboard.totalHours.toFixed(2)}h</span> <span style="color: #aaa;">/</span>
-			<span style="color: #fff;">${dashboard.standardHours}h</span><br>
-			<strong style="color: #aaa">BSC mục C1 tháng ${dashboard.month}: </strong>${dashboard.bsc.toFixed(2)}						
-		`;
-		if (dashboard.standardHours * 0.75 >= dashboard.actualHours) {
-			logFooter.innerHTML += `<br><strong style="color: #aaa">Giờ Chạy còn thiếu: </strong>${(dashboard.standardHours * 0.75 - dashboard.actualHours).toFixed(2)}h`;
-		}
-		if (dashboard.totalHours < dashboard.actualHours) {
-			logFooter.innerHTML += `<br><strong style="color: #aaa">Giờ Giao còn thiếu: </strong>${(dashboard.actualHours - dashboard.totalHours).toFixed(2)}h`
-		}
-		}
-		else {
-			logFooter.innerHTML = `Vui lòng thử lại sau 3s...`;
-		}
-	});
-
+	
 	divRow3.appendChild(btnSearchUser);
-	//divRow3.appendChild(btnViewBSC);
 	logFooter = createHTMLElement('label',
 		{
 			id: "logFooter"
@@ -632,9 +593,11 @@ function initPopup() {
 	bindTextareaToLocalStorage(txtInput, 'extTextareaInput');
 	bindTextareaToLocalStorage(txtOutput, 'extTextareaOutput');
 	bindSelectToLocalStorage(txtUser, 'extUser');
-	bindCheckboxToLocalStorage(chkSendPrivate, 'extSendPrivate', true);
-	bindTextareaToLocalStorage(txtPercent, 'extPercent', PROGRESS_THRESHOLD);
 	bindCheckboxToLocalStorage(chkAutoStop, 'extAutoStop', true);
+	if (!chkAutoStop.checked) {
+		labelPercentStop.style.color = "#fff";
+		labelPercentStop.innerHTML = 'Mức thông báo (%):</i>';
+	}
 	bindTextareaToLocalStorage(txtPercentStop, 'extPercentStop', STOP_THRESHOLD);
 
 	
@@ -642,7 +605,6 @@ function initPopup() {
 	logBox.appendChild(logStep);
 	logBox.appendChild(logStep2);
 	logBox.appendChild(txtUser);
-	logBox.appendChild(divRow);
 	logBox.appendChild(divRow2);
 	logBox.appendChild(txtOutput);
 	logBox.appendChild(divRow3);
@@ -672,7 +634,7 @@ class TaskUser {
 		}
 		catch (err) {
 			console.error("👾❌Error fetching user info:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getUserInfo] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getUserInfo]", DEV_ID);
 		}
 	}
 	static getCurrentUserId() {
@@ -760,9 +722,9 @@ class TaskData {
 			let timeProgress = (this.actualExecutionTime / planned) * 100;
 			//sendTelegramMessage("👾 "+ this.actualExecutionTime.toFixed(2) + "h / " + planned.toFixed(2) + "h" + "<pre>" + debug.join("\n") + "</pre>", DEV_ID);
 
-			if (timeProgress > txtPercent.value + (100 - txtPercent.value) / 2) {
+			if (timeProgress > txtPercentStop.value + (100 - txtPercentStop.value) / 2) {
 				prefix = "🔴";
-			} else if (timeProgress > txtPercent.value) {
+			} else if (timeProgress > txtPercentStop.value) {
 				prefix = "🟡";
 			} else {
 				prefix = "🟢";
@@ -777,7 +739,7 @@ class TaskData {
 		}
 		catch (err) {
 			console.error("👾❌Error in getActualExecutionTime:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getActualExecutionTime] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getActualExecutionTime]", DEV_ID);
 		}
 		return {
 			timeProgress: -1,
@@ -786,6 +748,50 @@ class TaskData {
 			html: `${prefix} <code>${this.code}</code> Vui lòng tải lại trang. Mã lỗi: <code>TASK_03</code> ${this.assigneeId in USER_IDS ? "@" + USER_IDS[this.assigneeId].telegram : ""}`
 		};
 	}
+	async getTaskComment(){
+		try {
+			let resultComments = [];
+			let storageKey = 'lastCommentCheck_' + this.taskId;
+			let lastCommentCheck;
+			if (!localStorage.getItem(storageKey)) {
+				lastCommentCheck = new Date();
+				localStorage.setItem(storageKey, lastCommentCheck.toISOString());
+			}
+			else {
+				lastCommentCheck = new Date(localStorage.getItem(storageKey));
+			}
+			let maxDate = lastCommentCheck;
+			let urlTaskComment = API_URL + "/work/TaskComment/GetTaskComment?taskId=" + this.taskId + "&t=" + Date.now();			
+			let dataTaskComment = await fetchData(urlTaskComment);
+			if (!dataTaskComment) {
+				console.error("👾❌Error fetching task comment data");
+				return {
+					message: `${prefix} [${this.code}] Vui lòng tải lại trang. Mã lỗi: TASK_04 ${this.assigneeId in USER_IDS ? "@" + USER_IDS[this.assigneeId].telegram : ""}`,
+					html: `${prefix} <code>${this.code}</code> Vui lòng tải lại trang. Mã lỗi: <code>TASK_04</code> ${this.assigneeId in USER_IDS ? "@" + USER_IDS[this.assigneeId].telegram : ""}`
+				};
+			}
+			// console.log("👾📌", this.taskId, "::", toVNDateTimeString(lastCommentCheck));
+			for(let i=0; i<dataTaskComment.length; i++){
+				let comment = dataTaskComment[i];
+				let commentDate = parseVNDate(comment.create_day);		
+				if (USER_IDS[this.assigneeId] && comment.user_comment != USER_IDS[this.assigneeId].name && commentDate > lastCommentCheck){					
+					resultComments.push(comment);
+					if(commentDate > maxDate) maxDate = commentDate;
+				}
+			}
+			// console.log("👾📅", toVNDateTimeString(maxDate));
+			if (maxDate > lastCommentCheck) {
+				localStorage.setItem(storageKey, maxDate.toISOString());
+			}
+			return resultComments;
+
+		}
+		catch (err) {
+			console.error("👾❌Error in getTaskComment:", err);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getTaskComment]", DEV_ID);
+		}
+	}
+
 	async setStop() {
 		try {
 			let url = API_URL + "/work/Task/DoingTask?t=" + Date.now();
@@ -816,7 +822,7 @@ class TaskData {
 		}
 		catch (err) {
 			console.error("👾❌Error in setStop:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [setStop] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [setStop]", DEV_ID);
 		}
 		return false;
 	}
@@ -830,7 +836,7 @@ class TaskData {
 		}
 		catch (err) {
 			console.error("👾❌Error in getBoardId:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getBoardId] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getBoardId]", DEV_ID);
 		}
 	}
 	async getParentTask() {
@@ -849,7 +855,7 @@ class TaskData {
 		}
 		catch (err) {
 			console.error("👾❌Error in getTaskInfo:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getTaskInfo] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getTaskInfo]", DEV_ID);
 		}
 		return null;
 	}
@@ -900,7 +906,7 @@ class Dashboard{
 		}
 		catch (err) {
 			console.error("👾❌Error getting month:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getMonth] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getMonth]", DEV_ID);
 		}
 		return -1;
 	}
@@ -914,7 +920,7 @@ class Dashboard{
 		}
 		catch (err) {
 			console.error("👾❌Error fetching standard hours:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [fetchStandardHours] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [fetchStandardHours]", DEV_ID);
 		}
 	}
 	async fetchActualHours(){
@@ -923,6 +929,12 @@ class Dashboard{
 			let data = await fetchData(url);
 			if (data) {
 				for (const task of data) {
+					if (task.actual_end !== null){
+						let actualEndDate = parseVNDate(task.actual_end);
+						if (actualEndDate.getMonth() + 1 !== parseInt(this.month.split("/")[0]) || actualEndDate.getFullYear() !== parseInt(this.month.split("/")[1])) {
+							continue;
+						}
+					}
 					this.actualHours += Number(task.actual_execution_time) || 0;
 					this.totalHours += Number(task.planned_duration_time) || 0;
 					console.log(`👾 Task ${task.code}: actual ${task.actual_execution_time}h, planned ${task.planned_duration_time}h`);
@@ -931,7 +943,7 @@ class Dashboard{
 		}
 		catch (err) {
 			console.error("👾❌Error fetching actual hours:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [fetchActualHours] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [fetchActualHours]", DEV_ID);
 		}
 
 	}
@@ -940,6 +952,7 @@ class Dashboard{
 
 async function main() {
 	console.log('🎨Init');
+	let isLoginWarned = false;
 	initPopup();
 	await checkForUpdate();
 	const now = new Date();
@@ -954,6 +967,10 @@ async function main() {
 	startDate = `${pastDay}/${pastMonth}/${pastYear}`;
 	endDate = `${day}/${month}/${year}`;
 
+	if (document.URL.includes("auth/login")) {
+		console.log("👾 Detected login page, aborting script.");
+		return;
+	}
 	logStep.innerHTML = "Checking from " + startDate + " to " + endDate;
 
 	// actionButton.addEventListener("click", async () => {
@@ -998,12 +1015,10 @@ async function main() {
 		const delta = now - lastTick;
 		lastTick = now;
 
-		/* If more than 60 seconds have passed since last tick, something is wrong */
-		if (delta > 60000) {
-			if (USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
-				sendTelegramMessage("❌Lỗi dừng thời gian, cần tải lại trang", USER_IDS[txtUser.value].telegramId);
-				await wait(5000);
-			}
+		/* If more than 180 seconds have passed since last tick, something is wrong */
+		if (delta > 180000) {
+			await sendNotification("❌Lỗi dừng thời gian, cần tải lại trang");
+			await wait(5000);
 		}
 
 		/* If a previous run is still executing, skip this tick to avoid overlap */
@@ -1027,10 +1042,8 @@ async function main() {
 				countError++;
 				if (countError >= 3) {
 					countError = 0;
-					if (USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
-						sendTelegramMessage("❌Lỗi ko lấy được dữ liệu, cần tải lại trang", USER_IDS[txtUser.value].telegramId);
-						await wait(5000);
-					}
+					await sendNotification("❌Lỗi ko lấy được dữ liệu, cần tải lại trang");
+					await wait(5000);
 				}
 				console.error("👾❌Error in runTick");
 			}
@@ -1061,9 +1074,18 @@ async function main() {
 			toggleButton.style.color = "#fff";
 		}
 		document.title =generateDocTitle(tick);
+		loginTime = getRemainingLoginTime();		
+		if (loginTime < LOGIN_WARNING_THRESHOLD && loginTime > 0 && !isLoginWarned) {
+			await sendNotification("⚠️ Còn 15 phút nữa hết phiên đăng nhập, vui lòng chủ động đăng nhập lại.");
+			isLoginWarned = true;
+		}
+		if (loginTime > LOGIN_WARNING_THRESHOLD) {
+			isLoginWarned = false;
+		}
+
 		if (tick < 60) {
 			tick++;
-			logStep2.innerText = "Next check in " + (60 - (tick % 60)) + " seconds";
+			logStep2.innerText = "Next check: " + (60 - (tick % 60)) + "s. Login expired: " + convertSecondsToHMS(loginTime--) + ".";
 			return true;
 		}
 		console.log("👾🔄 [" + new Date(lastTick).toLocaleString("fr-FR") + "] Running main check...");
@@ -1071,9 +1093,16 @@ async function main() {
 		try {
 			let usersInput = [txtUser.value].filter(u => USER_IDS[u]);
 			let output = [];
-			let url = API_URL + "/work/TaskReport/GetReportTaskByUserCurrentFunc?searchText=&arrUserIds=%5B" + usersInput.join(",") + "%5D&startDate=" + encodeURIComponent(startDate) + "&endDate=" + encodeURIComponent(endDate) + "&t=" + Date.now();
+			let url = API_URL + "/work/TaskReport/GetReportTaskByUserCurrentFunc?t=" + Date.now();
+			//{searchText: "", arrUserIds: "[1118]", startDate: "01/07/2025", endDate: "27/01/2026"}
+			let payload = {
+				searchText: "",
+				arrUserIds: "[" + usersInput.join(",") + "]",
+				startDate: startDate,
+				endDate: endDate
+			}
 			let refresh = false;
-			const dataTasks = await fetchData(url);
+			const dataTasks = await fetchData(url, payload);
 			if (!dataTasks) {
 				tick++;
 				return false;
@@ -1084,51 +1113,67 @@ async function main() {
 				console.log("👾✅ Successful:", runningTasks);
 
 				let toSendTelegram = "Có task sắp quá thời gian chạy:\n";
-				let count = 0;
-				for (const task of runningTasks) {
-					logStep2.innerText = "Processing task ID: " + task.taskId + " ...";
-					console.log("👾 Processing task:", task);
-					let result = await task.getActualExecutionTime();
+				
+				if (runningTasks.length > 0) {
+					logStep2.innerText = "Processing task ID: " + runningTasks[0].taskId + " ...";
+					console.log("👾 Processing task:", runningTasks[0]);
+					let result = await runningTasks[0].getActualExecutionTime();
 					output.push(result.message);
 					progress = result.timeProgress;
 					plannedDurationTime = result.plannedDurationTime;
-					if (result.timeProgress >= txtPercent.value || result.timeProgress === -1) {
+					if (result.timeProgress >= txtPercentStop.value || result.timeProgress === -1) {
 						toSendTelegram += result.html;
-						count++;
-					}
-					if (chkAutoStop.checked && result.timeProgress >= txtPercentStop.value) {
-						let stopResult = await task.setStop();
-						if (stopResult) {
-							toSendTelegram += ` <b>✅ Đã tự động dừng</b>`;
-							refresh = true;
+
+						if (chkAutoStop.checked) {
+							let stopResult = await runningTasks[0].setStop();
+							if (stopResult) {
+								toSendTelegram += ` <b>✅ Đã tự động dừng</b>`;
+								refresh = true;
+								progress = 0;
+								plannedDurationTime = 0;
+							}
+							await wait(3000);
 						}
-						await wait(3000);
-					}
-					toSendTelegram += "\n";
-				}
-				if (count > 0) {
-					let telegramRecipient = TELEGRAM_CHAT_ID;
-					if (chkSendPrivate.checked && USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
-						telegramRecipient = USER_IDS[txtUser.value].telegramId;
-					}
-					await sendTelegramMessage(toSendTelegram, telegramRecipient);
-					await wait(1000);
-					if (refresh) {
-						await wait(3000);
-						console.log("👾🔄 Refreshing page to update status...");
-						try {
-							window.location.reload();
-						} catch (err) {
-							window.location.href = window.location.href;
+
+						await sendNotification(toSendTelegram);
+						await wait(1000);
+
+						if (refresh) {
+							await wait(3000);
+							console.log("👾🔄 Refreshing page to update status...");
+							try {
+								location.reload();
+							} catch (e) {
+								window.location.href = location.href;
+							}
 						}
 					}
 				}
+				else {
+					progress = 0;
+					plannedDurationTime = 0;
+				}
+				// Check comments for all tasks
+				// for (const task of [...runningTasks, ...pendingTasks]) {
+				// 	logStep2.innerText = "Checking comments for task ID: " + task.taskId + " ...";
+				// 	console.log("👾 Checking comments for task:", task);
+				// 	let comments = await task.getTaskComment();
+				// 	await wait(400);
+				// 	console.log(`👾 Found ${comments.length} new comments for task ID: ${task.taskId}`);
+				// 	if (comments.length > 0) {
+				// 		let commentMessage = `💬Có ${comments.length} comment trên task <code>${task.code}</code>:\n`;
+				// 		for (const comment of comments) {
+				// 			commentMessage += `- ${comment.user_comment ? `<b>${comment.user_comment}</b>: ` : ""}${comment.comment}\n`;
+				// 		}
+				// 		await sendNotification(commentMessage);
+				// 	}
+				// }
 			}
 			txtOutput.value = output.join("\n");
 		}
 		catch (err) {
 			console.error("👾❌Error in main:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [main] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [main]", DEV_ID);
 		}
 		tick = 0;
 		return true;
@@ -1136,20 +1181,56 @@ async function main() {
 
 }
 
+async function sendNotification(message) {
+	// Strip HTML for system notification
+	let plainMessage = message;
+	try {
+		let div = document.createElement("div");
+		div.innerHTML = message;
+		plainMessage = div.textContent || div.innerText || message;
+	} catch (e) {
+		plainMessage = message.replace(/<[^>]*>?/gm, '');
+	}
 
+	if (typeof GM_notification === 'function') {
+		try {
+			GM_notification({
+				text: plainMessage,
+				title: "QLDA Bot",
+				timeout: 5000,
+			});
+		} catch (e) {
+			console.error("👾❌ GM_notification Error:", e);
+		}
+	}
+
+	let telegramRecipient = DEV_ID;
+	if (USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
+		telegramRecipient = USER_IDS[txtUser.value].telegramId;
+	}
+
+	await sendTelegramMessage(message, telegramRecipient);
+}
 
 async function sendTelegramMessage(message, chatId) {
-	await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: JSON.stringify({
-			chat_id: chatId,
-			text: message,
-			parse_mode: "HTML"
-		})
-	});
+	try {
+		const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+		const params = new URLSearchParams();
+		params.append('chat_id', chatId);
+		params.append('text', message);
+		params.append('parse_mode', 'HTML');
+
+		await fetch(url, {
+			method: "POST",
+			mode: "no-cors",
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			},
+			body: params
+		});
+	} catch (e) {
+		console.error("👾❌ Telegram Fetch Error:", e);
+	}
 }
 
 function addPasteEvent(element) {
@@ -1234,7 +1315,4 @@ function bindCheckboxToLocalStorage(checkbox, storageKey, defaultValue = false) 
 		checkbox.checked = defaultValue;
 	}
 }
-
-if (!document.URL.includes("auth/login")) {
-	main();
-}
+main();

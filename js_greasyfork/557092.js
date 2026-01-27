@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Hírstart admin - üres Robot kategória kitöltés
 // @namespace    http://tampermonkey.net/
-// @version      1.41
-// @description  Kitölti az üres "Robot kategória" cellákat, ha a mellette lévő cella nem speciális beállítású, vizuális visszajelzéssel. v1.3: Refaktorált kód - utility függvények, jobb hibakezelés, toast notification, lock mechanizmus, robusztusabb popup keresés.
+// @version      1.50
+// @description  Kitölti az üres "Robot kategória" cellákat, ha a mellette lévő cella nem speciális beállítású, vizuális visszajelzéssel. v1.5: Kategória- gomb hozzáadva a "[hirdetés], [N/A]" kategóriák törléséhez.
 // @author       attila.virag@centralmediacsoport.hu
 // @match        https://admin.hirstart.hu/?pid=*&fid=*
 // @grant        none
@@ -19,6 +19,7 @@
     const CONFIG = {
         BUTTON_CLASS: 'custom-admin-button',
         START_BUTTON_ID: 'robot-kategoria-start',
+        REMOVE_BUTTON_ID: 'robot-kategoria-remove',
         VISUAL_FEEDBACK_SIZE: '16px',
         VISUAL_FEEDBACK_DURATION: 400
     };
@@ -47,6 +48,7 @@
     };
 
     let isProcessing = false;
+    let isRemoving = false;
 
     // --- Utility függvények ---
 
@@ -245,33 +247,63 @@
      * Indító gomb beszúrása az oldalra.
      */
     function insertButtons() {
-        if (document.getElementById(CONFIG.START_BUTTON_ID)) return;
+        // Kategória+ gomb
+        if (!document.getElementById(CONFIG.START_BUTTON_ID)) {
+            const startBtn = document.createElement('button');
+            startBtn.id = CONFIG.START_BUTTON_ID;
+            startBtn.className = CONFIG.BUTTON_CLASS;
+            startBtn.setAttribute('data-source', 'robotkategoria');
+            startBtn.textContent = 'Kategória+';
+            
+            Object.assign(startBtn.style, {
+                position: 'fixed',
+                top: '55px',
+                right: '4px',
+                zIndex: '1001',
+                margin: '0',
+                padding: '2px 4px',
+                background: 'rgb(0, 123, 255)',
+                color: 'white',
+                border: 'none',
+                cursor: 'pointer',
+                borderRadius: '3px',
+                fontSize: '12px',
+                fontFamily: 'system-ui'
+            });
+            
+            startBtn.onclick = startProcessing;
+            document.body.appendChild(startBtn);
+            logInfo('Kategória+ gomb beszúrva');
+        }
         
-        const startBtn = document.createElement('button');
-        startBtn.id = CONFIG.START_BUTTON_ID;
-        startBtn.className = CONFIG.BUTTON_CLASS;
-        startBtn.setAttribute('data-source', 'robotkategoria');
-        startBtn.textContent = 'Kategória+';
-        
-        Object.assign(startBtn.style, {
-            position: 'fixed',
-            top: '55px',
-            right: '4px',
-            zIndex: '1001',
-            margin: '0',
-            padding: '2px 4px',
-            background: 'rgb(0, 123, 255)',
-            color: 'white',
-            border: 'none',
-            cursor: 'pointer',
-            borderRadius: '3px',
-            fontSize: '12px',
-            fontFamily: 'system-ui'
-        });
-        
-        startBtn.onclick = startProcessing;
-        document.body.appendChild(startBtn);
-        logInfo('Kategória+ gomb beszúrva');
+        // Kategória- gomb
+        if (!document.getElementById(CONFIG.REMOVE_BUTTON_ID)) {
+            const removeBtn = document.createElement('button');
+            removeBtn.id = CONFIG.REMOVE_BUTTON_ID;
+            removeBtn.className = CONFIG.BUTTON_CLASS;
+            removeBtn.setAttribute('data-source', 'robotkategoria-remove');
+            removeBtn.textContent = 'Kategória-';
+            
+            Object.assign(removeBtn.style, {
+                position: 'fixed',
+                top: '55px',
+                right: '85px', // Balra a Kategória+ gombtól
+                zIndex: '1001',
+                margin: '0',
+                padding: '2px 4px',
+                background: 'rgb(220, 53, 69)',
+                color: 'white',
+                border: 'none',
+                cursor: 'pointer',
+                borderRadius: '3px',
+                fontSize: '12px',
+                fontFamily: 'system-ui'
+            });
+            
+            removeBtn.onclick = startRemoving;
+            document.body.appendChild(removeBtn);
+            logInfo('Kategória- gomb beszúrva');
+        }
     }
 
     // --- Fő feldolgozási logika ---
@@ -511,6 +543,154 @@
         }
     }
 
+    // --- Kategória törlés logika ---
+
+    /**
+     * Kategória törlés indítása (gomb eseménykezelő).
+     */
+    async function startRemoving() {
+        if (isRemoving) {
+            showToast('Már fut egy törlés!', 'warning');
+            logInfo('Törlés már folyamatban van, kérés figyelmen kívül hagyva');
+            return;
+        }
+        
+        if (isProcessing) {
+            showToast('Várja meg a feldolgozás befejezését!', 'warning');
+            return;
+        }
+        
+        isRemoving = true;
+        const removeBtn = document.getElementById(CONFIG.REMOVE_BUTTON_ID);
+        if (removeBtn) {
+            removeBtn.disabled = true;
+            removeBtn.style.opacity = '0.6';
+        }
+        
+        try {
+            await processNextCategoryToRemove();
+        } catch (e) {
+            logError('Törlés megszakadt:', e);
+            showToast('Hiba történt a törlés során', 'error');
+        } finally {
+            isRemoving = false;
+            if (removeBtn) {
+                removeBtn.disabled = false;
+                removeBtn.style.opacity = '1';
+            }
+        }
+    }
+
+    /**
+     * Következő törlendő kategória megkeresése és feldolgozása.
+     * @returns {Promise<void>}
+     */
+    async function processNextCategoryToRemove() {
+        const tables = Array.from(document.querySelectorAll('table'));
+        let found = false;
+        
+        outer: for (const table of tables) {
+            const rows = Array.from(table.querySelectorAll('tbody > tr'));
+            
+            for (const row of rows) {
+                const robotCell = row.querySelector('td:nth-child(3) > div');
+                
+                if (!robotCell) continue;
+                
+                const robotValue = robotCell.textContent.trim();
+                
+                // Keresés: olyan cellák, amelyek értéke "[hirdetés], [N/A]"
+                if (robotValue === '[hirdetés], [N/A]') {
+                    logInfo('Törlendő kategória találva:', { robotValue });
+                    
+                    try {
+                        await removeCategoryFromCell(row);
+                        found = true;
+                        
+                        // Rekurzív folytatás a következő törlendő cellával
+                        await processNextCategoryToRemove();
+                        break outer;
+                    } catch (err) {
+                        logError('Kategória törlési hiba:', err);
+                        showToast(`Hiba a kategória törlésekor: ${err.message}`, 'error');
+                        throw err;
+                    }
+                }
+            }
+        }
+        
+        if (!found) {
+            showToast('Nincs több "[hirdetés], [N/A]" kategória', 'success');
+            logInfo('Törlés befejezve: nincs több törlendő kategória');
+        }
+    }
+
+    /**
+     * Kategória törlése egy cellából.
+     * @param {HTMLElement} row - A táblázat sora, amely a cellát tartalmazza
+     * @returns {Promise<void>}
+     */
+    async function removeCategoryFromCell(row) {
+        // 1. Kattintás a td elemre
+        const td = row.querySelector('td:nth-child(3)');
+        if (!td) throw new Error('Robot kategória td nem található');
+        
+        showVisualFeedback(td, COLORS.CELL_CLICK);
+        simulateClick(td);
+        await sleep(TIMING.CELL_CLICK_WAIT);
+        
+        // 2. Popup keresése
+        const popup = await findPopup();
+        if (!popup) {
+            throw new Error('Szerkesztő popup nem található');
+        }
+        logInfo('Popup megtalálva törléshez');
+        
+        // 3. Törlő gombok megkeresése és kattintása
+        await removeAllCategoriesFromPopup(popup);
+        
+        // 4. Popup bezárása/mentése
+        await closePopup(popup);
+        
+        logInfo('Kategóriák sikeresen törölve a cellából');
+    }
+
+    /**
+     * Összes kategória törlése a popupból a törlő gombok használatával.
+     * @param {HTMLElement} popup - A popup elem
+     * @returns {Promise<void>}
+     */
+    async function removeAllCategoriesFromPopup(popup) {
+        // Az XPath-ok alapján keresünk törlő gombokat
+        // /html/body/div[28]/div[2]/div[1]/div/div/div/div/div/form/div[1]/div/div/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[2]/em/button
+        // /html/body/div[28]/div[2]/div[1]/div/div/div/div/div/form/div[2]/div/div/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[2]/em/button
+        
+        // Általánosítva: form/div[N]/div/div/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[2]/em/button
+        const form = popup.querySelector('form');
+        if (!form) {
+            throw new Error('Form elem nem található a popupban');
+        }
+        
+        // Keresünk minden törlő gombot
+        const deleteButtons = form.querySelectorAll('table tbody tr td:nth-child(2) table tbody tr td:nth-child(2) em button');
+        
+        if (deleteButtons.length === 0) {
+            logError('Nem találhatók törlő gombok');
+            return;
+        }
+        
+        logInfo(`${deleteButtons.length} törlő gomb találva`);
+        
+        // Törlő gombok kattintása (fordított sorrendben, hogy az indexek ne változzanak)
+        for (let i = deleteButtons.length - 1; i >= 0; i--) {
+            const btn = deleteButtons[i];
+            showVisualFeedback(btn, 'red');
+            simulateClick(btn);
+            await sleep(TIMING.CELL_CLICK_WAIT);
+            logInfo(`Törlő gomb ${i + 1}/${deleteButtons.length} kattintva`);
+        }
+    }
+
     // --- Inicializálás ---
 
     /**
@@ -541,8 +721,9 @@
         
         // Gomb jelenlét ellenőrzése és újraszúrása (dinamikus DOM esetén)
         setInterval(() => {
-            const existingButton = document.getElementById(CONFIG.START_BUTTON_ID);
-            if (!existingButton) {
+            const existingStartButton = document.getElementById(CONFIG.START_BUTTON_ID);
+            const existingRemoveButton = document.getElementById(CONFIG.REMOVE_BUTTON_ID);
+            if (!existingStartButton || !existingRemoveButton) {
                 insertButtons();
             }
         }, TIMING.BUTTON_CHECK_INTERVAL);

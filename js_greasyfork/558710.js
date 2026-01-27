@@ -11,8 +11,8 @@
 // @author      Max
 // @namespace   https://github.com/Max46656
 // @license     MPL2.0
-// @downloadURL https://update.greasyfork.org/scripts/558710/%E5%B7%B4%E5%93%88%E5%A7%86%E7%89%B9%E6%96%87%E7%AB%A0%E5%9C%96%E7%89%87%E6%9B%BF%E4%BB%A3%E6%96%87%E5%AD%97%E4%BF%AE%E6%AD%A3.user.js
-// @updateURL https://update.greasyfork.org/scripts/558710/%E5%B7%B4%E5%93%88%E5%A7%86%E7%89%B9%E6%96%87%E7%AB%A0%E5%9C%96%E7%89%87%E6%9B%BF%E4%BB%A3%E6%96%87%E5%AD%97%E4%BF%AE%E6%AD%A3.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/558710/Bahamut%20Image%20Alt%20Text%20Fixer.user.js
+// @updateURL https://update.greasyfork.org/scripts/558710/Bahamut%20Image%20Alt%20Text%20Fixer.meta.js
 // ==/UserScript==
 
 class ImageAltFiller {

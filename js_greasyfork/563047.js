@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Platesmania Gallery Moderator Mode Toolbox
-// @version      2.3.1
+// @version      2.3.3
 // @description  Couple enhancements for moderator workflow.
 // @match        https://platesmania.com/*gallery*
 // @match        https://platesmania.com/*/nomer*
@@ -30,11 +30,11 @@
     margin-right: 6px;
   }
     .row > .col-xs-6.vcenter:first-child {
-    width: 45%;
+    width: 30%;
   }
 
   .row > .col-xs-6.vcenter:last-child {
-    width: 55%;
+    width: 70%;
   }
   i.sprite.pull-right {
   margin-left: 8px;
@@ -746,24 +746,24 @@
     function isGermanOrDutchPage() {
         const pathname = window.location.pathname || "";
         const search = window.location.search || "";
-        
+
         const deNlMatch = pathname.match(/^\/(de|nl)\//i);
         if (deNlMatch) return deNlMatch[1].toLowerCase();
-        
+
         const countryMatch = search.match(/country(?:\[0\]|%5B0%5D)=([0-9]+)/i);
         if (countryMatch) {
             const countryId = countryMatch[1];
             if (countryId === "6") return "de";
             if (countryId === "24") return "nl";
         }
-        
+
         try {
             const searchParams = new URLSearchParams(search);
             const countryParam = searchParams.get("country[0]");
             if (countryParam === "6") return "de";
             if (countryParam === "24") return "nl";
         } catch (e) {}
-        
+
         return null;
     }
 
@@ -778,10 +778,10 @@
             console.log("[New Letter Check] No nomer URL provided");
             return null;
         }
-        
+
         const isCurrentPage = window.location.href === nomerUrl || window.location.href.replace(/\/$/, '') === nomerUrl.replace(/\/$/, '');
         let nomerDoc;
-        
+
         if (isCurrentPage) {
             console.log("[New Letter Check] Using current page document (already on nomer page)");
             nomerDoc = document;
@@ -790,7 +790,7 @@
             try {
                 const nomerHtml = await httpGetText(nomerUrl);
                 console.log("[New Letter Check] Nomer page fetched, length:", nomerHtml.length);
-                
+
                 const nomerParser = new DOMParser();
                 nomerDoc = nomerParser.parseFromString(nomerHtml, "text/html");
             } catch (e) {
@@ -798,10 +798,10 @@
                 return null;
             }
         }
-        
+
         try {
             const allTableIcons = nomerDoc.querySelectorAll('i.fa-table, i.fa.fa-table, i[class*="fa-table"]');
-            
+
             if (allTableIcons.length === 0) {
                 console.log("[New Letter Check] No fa-table icon found on nomer page");
                 const fallbackLink = nomerDoc.querySelector('a[href*="result_"]');
@@ -824,19 +824,19 @@
                 }
                 return { error: "no_table" };
             }
-            
+
             console.log("[New Letter Check] Found", allTableIcons.length, "fa-table icon(s)");
-            
+
             let tableLink = null;
-            
+
             for (const tableIcon of allTableIcons) {
                 let candidateLink = null;
-                
+
                 const parent = tableIcon.parentElement;
                 if (parent) {
                     candidateLink = parent.querySelector('a[href*="result"]');
                 }
-                
+
                 if (!candidateLink) {
                     let next = tableIcon.nextElementSibling;
                     while (next && (next.nodeType !== 1 || next.tagName !== 'A')) {
@@ -850,16 +850,16 @@
                         candidateLink = next;
                     }
                 }
-                
+
                 if (!candidateLink) {
                     candidateLink = tableIcon.closest('a');
                 }
-                
+
                 if (candidateLink && candidateLink.tagName === 'A') {
                     const href = candidateLink.getAttribute("href") || "";
                     const hrefLower = href.toLowerCase();
-                    
-                    if (href.includes("result") || 
+
+                    if (href.includes("result") ||
                         (href.includes("series-") && !href.includes("series.php")) ||
                         (href.match(/^[^\/]*-[^\/]+$/) && !href.includes("series.php"))) {
                         tableLink = candidateLink;
@@ -871,43 +871,43 @@
                     }
                 }
             }
-            
+
             if (!tableLink || tableLink.tagName !== 'A') {
                 console.log("[New Letter Check] No valid table link found");
                 return { error: "no_table" };
             }
-            
+
             console.log("[New Letter Check] Found table link element:", tableLink.outerHTML?.substring(0, 200));
-            
+
             const tableHref = tableLink.getAttribute("href");
             if (!tableHref) {
                 console.log("[New Letter Check] Table link found but no href attribute");
                 return { error: "no_table" };
             }
-            
+
             console.log("[New Letter Check] Found table link href:", tableHref);
-            
+
             const tableUrl = new URL(tableHref, nomerUrl).href;
             console.log("[New Letter Check] Resolved table URL:", tableUrl);
-            
+
             console.log("[New Letter Check] Fetching table page:", tableUrl);
             const tableHtml = await httpGetText(tableUrl);
             console.log("[New Letter Check] Table page fetched, length:", tableHtml.length);
-            
+
             const tableParser = new DOMParser();
             const tableDoc = tableParser.parseFromString(tableHtml, "text/html");
-            
+
             const numberElement = tableDoc.querySelector("span.text-highlights.text-highlights-light-green");
             const photoCount = numberElement ? parseInt(numberElement.textContent) : null;
-            
+
             console.log("[New Letter Check] Photo count found:", photoCount);
-            
+
             const isNewCombination = photoCount === 1;
             console.log("[New Letter Check] Is new combination:", isNewCombination);
-            
+
             const tableLinkText = (tableLink.textContent || "").trim();
             const tableName = tableLinkText.replace(/^Table of\s+/i, "").trim();
-            
+
             return { isNewCombination, tableUrl, tableName };
         } catch (e) {
             console.error("[New Letter Check] Error checking letter combination:", e);
@@ -919,14 +919,14 @@
     function getUserInfo() {
         const loginbar = qs("ul.loginbar");
         if (!loginbar) return null;
-        
+
         const userLink = qs('a[href^="/user"]', loginbar);
         if (!userLink) return null;
-        
+
         const userHref = userLink.getAttribute("href") || "";
         const userId = (userHref.match(/^\/user(\d+)/) || [])[1] || "";
         const username = (userLink.textContent || "").trim();
-        
+
         return { username, userId };
     }
 
@@ -934,13 +934,13 @@
         const tags = qsa('span.label.rounded.label-light > a[href*="tags="]');
         const tagTexts = Array.from(tags).map(a => (a.textContent || "").trim().toLowerCase());
         const hasInLabels = tagTexts.some(t => t.includes("new letter combination"));
-        
+
         const tagsIcon = qs('i.fa.fa-tags.tooltips');
         if (tagsIcon) {
             const tooltip = (tagsIcon.getAttribute("data-original-title") || tagsIcon.getAttribute("title") || "").toLowerCase();
             if (tooltip.includes("new letter combination")) return true;
         }
-        
+
         return hasInLabels;
     }
 
@@ -952,12 +952,36 @@
             user: user,
             userid: userid
         };
-        
+
+        // Fetch the edit form to get existing checked tags
+        const param = `/${table}/nomer${nomer}`;
+        const html = await fetchEditForm(nomer, param);
+
+        if (html) {
+            // Parse the HTML to extract all checked checkboxes
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+
+            // Find all checked checkboxes in the tags section
+            const checkedCheckboxes = doc.querySelectorAll('input[type="checkbox"][name^="CheckBox"]:checked');
+            checkedCheckboxes.forEach((checkbox) => {
+                const name = checkbox.getAttribute("name");
+                if (name) {
+                    data[name] = "on";
+                }
+            });
+        } else {
+            console.warn("Could not fetch edit form to preserve existing tags. Existing tags may be removed.");
+        }
+
+        // If shouldHaveTag is true, ensure CheckBox[13] is included
         if (shouldHaveTag) {
             data["CheckBox[13]"] = "on";
+        } else {
+            // If shouldHaveTag is false, remove CheckBox[13] if it was included from existing tags
+            delete data["CheckBox[13]"];
         }
-        // If shouldHaveTag is false, we don't include CheckBox[13] at all
-        
+
         try {
             const response = await httpPost(url, data);
             return true;
@@ -1039,37 +1063,37 @@
     function injectNewLetterCombinationCheckGallery(tileInfo) {
         const tile = tileInfo.tile;
         if (!tile) return;
-        
+
         // Check if icon already exists
         if (tile.querySelector(".pmx-newletter-check")) return;
-        
+
         const listInline = qs("ul.list-inline", tile);
         if (!listInline) return;
-        
+
         const imgLink = qs('a[href*="/nomer"] > img.img-responsive.center-block', tile)?.closest('a[href*="/nomer"]');
         if (!imgLink) {
             console.log("[New Letter Check] No image link found in tile");
             return;
         }
-        
+
         const nomerHref = imgLink.getAttribute("href");
         if (!nomerHref) {
             console.log("[New Letter Check] Image link found but no href attribute");
             return;
         }
-        
+
         // Resolve to full URL
         const nomerUrl = new URL(nomerHref, window.location.origin).href;
         console.log("[New Letter Check] Extracted nomer URL from gallery tile:", nomerUrl);
-        
+
         const photoId = tileInfo.photoId;
         if (!photoId) return;
-        
+
         const country = tileInfo.country;
-        
+
         const li = document.createElement("li");
         li.className = "pmx-newletter-check";
-        
+
         const icon = document.createElement("i");
         icon.className = "fa fa-check-circle tooltips";
         icon.setAttribute("data-toggle", "tooltip");
@@ -1077,30 +1101,30 @@
         icon.setAttribute("data-original-title", "Check if first in table");
         icon.style.cursor = "pointer";
         icon.style.color = "#999";
-        
+
         const statusSpan = document.createElement("span");
         statusSpan.className = "pmx-newletter-status";
         statusSpan.style.marginLeft = "5px";
         statusSpan.style.fontSize = "12px";
-        
+
         let isChecking = false;
-        
+
         icon.addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
-            
+
             if (isChecking) return;
             isChecking = true;
-            
+
             console.log("[New Letter Check] Starting check for gallery tile, nomerUrl:", nomerUrl);
-            
+
             icon.style.color = "#999";
             statusSpan.textContent = "Checking...";
             statusSpan.style.color = "#999";
-            
+
             const result = await checkNewLetterCombination(nomerUrl);
             isChecking = false;
-            
+
             if (result === null) {
                 statusSpan.textContent = "Error";
                 statusSpan.style.color = "#d9534f";
@@ -1110,7 +1134,7 @@
                 if (existingTableLink) existingTableLink.remove();
                 return;
             }
-            
+
             if (result.error === "no_table") {
                 icon.style.color = "#d9534f";
                 statusSpan.textContent = "No letter combination table found.";
@@ -1121,12 +1145,12 @@
                 if (existingTableLink) existingTableLink.remove();
                 return;
             }
-            
+
             const isNew = result.isNewCombination;
             const tableUrl = result.tableUrl;
             const tableName = result.tableName || "table";
             const hasTag = tileInfo.hasNewLetterTag;
-            
+
             if (isNew) {
                 icon.style.color = "#5cb85c";
                 statusSpan.textContent = `First in ${tableName} table`;
@@ -1136,12 +1160,12 @@
                 statusSpan.textContent = `Not first in ${tableName} table`;
                 statusSpan.style.color = "#d9534f";
             }
-            
+
             const existingFix = li.querySelector(".pmx-newletter-fix");
             if (existingFix) existingFix.remove();
             const existingTableLink = li.querySelector(".pmx-newletter-table-link");
             if (existingTableLink) existingTableLink.remove();
-            
+
             if (tableUrl) {
                 const tableLink = document.createElement("a");
                 tableLink.className = "pmx-newletter-table-link";
@@ -1154,7 +1178,7 @@
                 tableLink.textContent = "⎘ Letter combination table";
                 li.appendChild(tableLink);
             }
-            
+
             if (isNew && !hasTag) {
                 const fixLink = document.createElement("a");
                 fixLink.className = "pmx-newletter-fix";
@@ -1164,22 +1188,22 @@
                 fixLink.style.textDecoration = "underline";
                 fixLink.style.cursor = "pointer";
                 fixLink.textContent = "Add new letter combination tag";
-                
+
                 fixLink.addEventListener("click", async (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    
+
                     const userInfo = getUserInfo();
                     if (!userInfo) {
                         alert("Could not get user information");
                         return;
                     }
-                    
+
                     fixLink.textContent = "Updating...";
                     fixLink.style.pointerEvents = "none";
-                    
+
                     const success = await updateTag(photoId, country, userInfo.username, userInfo.userId, true);
-                    
+
                     if (success) {
                         fixLink.textContent = "Updated!";
                         fixLink.style.color = "#5cb85c";
@@ -1195,7 +1219,7 @@
                         fixLink.style.pointerEvents = "auto";
                     }
                 });
-                
+
                 li.appendChild(fixLink);
             } else if (!isNew && hasTag) {
                 const messageSpan = document.createElement("span");
@@ -1207,7 +1231,7 @@
                 li.appendChild(messageSpan);
             }
         });
-        
+
         li.appendChild(icon);
         li.appendChild(statusSpan);
         listInline.appendChild(li);
@@ -1216,41 +1240,41 @@
     function injectNewLetterCombinationCheckNomer() {
         const pageInfo = getCurrentPageInfo();
         if (!pageInfo.isNomerPage || !pageInfo.id) return;
-        
+
         const buttonContainer = qs("div.col-xs-8.no-padding");
         if (!buttonContainer) return;
-        
+
         if (buttonContainer.querySelector(".pmx-newletter-check-btn")) return;
-        
+
         const nomerUrl = window.location.href;
-        
+
         const button = document.createElement("button");
         button.className = "btn-u pmx-newletter-check-btn";
         button.type = "button";
         button.innerHTML = '<i data-toggle="tooltip" class="fa fa-check-circle tooltips" data-original-title="Check if first in table"></i>';
-        
+
         const statusSpan = document.createElement("span");
         statusSpan.className = "pmx-newletter-status";
         statusSpan.style.marginLeft = "8px";
         statusSpan.style.fontSize = "12px";
-        
+
         let isChecking = false;
-        
+
         button.addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
-            
+
             if (isChecking) return;
             isChecking = true;
-            
+
             console.log("[New Letter Check] Starting check for nomer page, nomerUrl:", nomerUrl);
-            
+
             statusSpan.textContent = "Checking...";
             statusSpan.style.color = "#999";
-            
+
             const result = await checkNewLetterCombination(nomerUrl);
             isChecking = false;
-            
+
             if (result === null) {
                 statusSpan.textContent = "Error";
                 statusSpan.style.color = "#d9534f";
@@ -1260,7 +1284,7 @@
                 if (existingTableLink) existingTableLink.remove();
                 return;
             }
-            
+
             if (result.error === "no_table") {
                 statusSpan.textContent = "No letter combination table found.";
                 statusSpan.style.color = "#d9534f";
@@ -1270,12 +1294,12 @@
                 if (existingTableLink) existingTableLink.remove();
                 return;
             }
-            
+
             const isNew = result.isNewCombination;
             const tableUrl = result.tableUrl;
             const tableName = result.tableName || "table";
             const hasTag = getTagsFromNomerPage();
-            
+
             if (isNew) {
                 statusSpan.textContent = `First in ${tableName} table`;
                 statusSpan.style.color = "#5cb85c";
@@ -1283,12 +1307,12 @@
                 statusSpan.textContent = `Not first in ${tableName} table`;
                 statusSpan.style.color = "#d9534f";
             }
-            
+
             const existingFix = buttonContainer.querySelector(".pmx-newletter-fix");
             if (existingFix) existingFix.remove();
             const existingTableLink = buttonContainer.querySelector(".pmx-newletter-table-link");
             if (existingTableLink) existingTableLink.remove();
-            
+
             if (tableUrl) {
                 const tableLink = document.createElement("a");
                 tableLink.className = "pmx-newletter-table-link";
@@ -1301,7 +1325,7 @@
                 tableLink.textContent = "⎘ Letter combination table";
                 buttonContainer.appendChild(tableLink);
             }
-            
+
             if (isNew && !hasTag) {
                 const fixLink = document.createElement("a");
                 fixLink.className = "pmx-newletter-fix";
@@ -1311,22 +1335,22 @@
                 fixLink.style.textDecoration = "underline";
                 fixLink.style.cursor = "pointer";
                 fixLink.textContent = "Add new letter combination tag";
-                
+
                 fixLink.addEventListener("click", async (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    
+
                     const userInfo = getUserInfo();
                     if (!userInfo) {
                         alert("Could not get user information");
                         return;
                     }
-                    
+
                     fixLink.textContent = "Updating...";
                     fixLink.style.pointerEvents = "none";
-                    
+
                     const success = await updateTag(pageInfo.id, pageInfo.country, userInfo.username, userInfo.userId, true);
-                    
+
                     if (success) {
                         fixLink.textContent = "Updated!";
                         fixLink.style.color = "#5cb85c";
@@ -1339,7 +1363,7 @@
                         fixLink.style.pointerEvents = "auto";
                     }
                 });
-                
+
                 buttonContainer.appendChild(fixLink);
             } else if (!isNew && hasTag) {
                 const messageSpan = document.createElement("span");
@@ -1351,7 +1375,7 @@
                 buttonContainer.appendChild(messageSpan);
             }
         });
-        
+
         buttonContainer.appendChild(button);
         buttonContainer.appendChild(statusSpan);
     }
@@ -2653,7 +2677,7 @@
             const info = parseTile(tile);
             injectNewLetterCombinationCheckGallery(info);
         }
-        
+
         // Also watch for new tiles
         const moGallery = new MutationObserver(() => {
             const tiles = qsa(".col-sm-6.col-xs-12");
@@ -2665,7 +2689,7 @@
             }
         });
         moGallery.observe(document.documentElement, { childList: true, subtree: true });
-        
+
         if (!moderatorEnabled) return;
 
         runModeratorPass();

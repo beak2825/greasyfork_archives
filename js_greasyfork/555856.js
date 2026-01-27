@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Euridis - Script Trame d'Entretien Tool4Staffing
 // @namespace    http://tampermonkey.net/
-// @version      4.2
-// @description  Ajoute un formulaire structuré pour la trame d'entretien Euridis dans Tool4Staffing + Remplace les badges de scoring par des émojis + Historique des versions
+// @version      4.6
+// @description  Ajoute un formulaire structuré pour la trame d'entretien Euridis dans Tool4Staffing + Remplace les badges de scoring par des émojis + Historique des versions + Compteur de postes + Sélection rapide étendue + Filtre par âge
 // @author       Euridis Business School
 // @match        https://eureka.tool4staffing.com/*
 // @grant        none
@@ -14,8 +14,8 @@
 
 /**
  * @fileoverview Script Tampermonkey pour améliorer l'interface Tool4Staffing d'Euridis
- * @version 4.0
- * @description Fonctionnalités : Formulaire trame d'entretien, émojis scoring, standardisation téléphones, sélection rapide formations, historique des versions
+ * @version 4.6
+ * @description Fonctionnalités : Formulaire trame d'entretien, émojis scoring, standardisation téléphones (phone + phone3), sélection rapide formations/programmes/types entreprises, historique des versions, compteur de postes, filtre par âge
  */
 
 (function() {
@@ -153,6 +153,7 @@
             nomEvaluateur: { id: 'nomEvaluateur', type: 'text' },
             noteEntretien: { id: 'noteEntretien', type: 'text' },
             admisNonAdmis: { id: 'admisNonAdmis', type: 'text' },
+            birthDate: { id: 'birthDate', type: 'date' },
             profilMotivation: { id: 'profilMotivation', type: 'textarea' },
             maitriseFrancais: { id: 'maitriseFrancais', type: 'checkbox' },
             projetPro: { id: 'projetPro', type: 'textarea' },
@@ -221,6 +222,7 @@
     const FormationModule = (() => {
         const SEL = {
             dropdown: '.bootstrap-select .dropdown-menu ul.inner',
+            actionsBox: '.bootstrap-select .dropdown-menu .bs-actionsbox',
             category: 'li.disabled',
             btn: '.euridis-quick-select-btn',
             text: '.text'
@@ -229,8 +231,12 @@
         const FORMATION_KEYWORDS = ['Business School', 'Sales Academy'];
         // Mots-clés pour les statuts (catégories du dropdown statut)
         const STATUS_KEYWORDS = ['Cycle Prospect', 'Cycle Concours', 'Campus à distance', 'Cycle FC'];
+        // Mots-clés pour les programmes (PB, PB2, etc.)
+        const PROGRAM_KEYWORDS = ['PB', 'PB2', 'Anciennes formations'];
+        // Mots-clés pour les types d'entreprises
+        const ENTERPRISE_KEYWORDS = ['Vente complexe HT', 'Vente classique'];
         // Tous les mots-clés combinés
-        const ALL_KEYWORDS = [...FORMATION_KEYWORDS, ...STATUS_KEYWORDS];
+        const ALL_KEYWORDS = [...FORMATION_KEYWORDS, ...STATUS_KEYWORDS, ...PROGRAM_KEYWORDS, ...ENTERPRISE_KEYWORDS];
 
         /** Vérifie si un dropdown contient des catégories supportées */
         const isSupportedDropdown = (dd) => {
@@ -335,7 +341,7 @@
      */
     const PhoneModule = (() => {
         const SEL = {
-            containers: '[id^="control_group_phone-"], .fieldtype-phonenumber',
+            containers: '[id^="control_group_phone-"], [id^="control_group_phone3-"], .fieldtype-phonenumber',
             telLink: 'a[href^="tel:"]'
         };
         const CLS = { std: 'euridis-phone-standardized', flag: 'euridis-phone-flag', num: 'euridis-phone-number', invalid: 'euridis-phone-invalid' };
@@ -520,10 +526,10 @@
         const isPhoneMutation = (m) => {
             const t = m.target;
             if (t.nodeType !== Node.ELEMENT_NODE) return false;
-            if (t.id?.startsWith('control_group_phone-') || t.classList?.contains('fieldtype-phonenumber') ||
-                t.closest('[id^="control_group_phone-"]') || t.closest('.fieldtype-phonenumber')) return true;
+            if (t.id?.startsWith('control_group_phone-') || t.id?.startsWith('control_group_phone3-') || t.classList?.contains('fieldtype-phonenumber') ||
+                t.closest('[id^="control_group_phone-"]') || t.closest('[id^="control_group_phone3-"]') || t.closest('.fieldtype-phonenumber')) return true;
             return [...m.addedNodes].some(n => n.nodeType === Node.ELEMENT_NODE &&
-                (n.id?.startsWith('control_group_phone-') || n.classList?.contains('fieldtype-phonenumber') || n.querySelector?.(SEL.containers)));
+                (n.id?.startsWith('control_group_phone-') || n.id?.startsWith('control_group_phone3-') || n.classList?.contains('fieldtype-phonenumber') || n.querySelector?.(SEL.containers)));
         };
 
         const debouncedStd = debounce(standardizeAll, 150);
@@ -833,7 +839,10 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
 /* Form Fields */
   .euridis-field{margin:8px 0}
   .euridis-field label{display:block;font-weight:600;margin-bottom:3px;color:#333;font-size:12px}
-.euridis-field input[type=text],.euridis-field input[type=number],.euridis-field select,.euridis-field textarea{width:100%;padding:5px 8px;border:1px solid #ddd;border-radius:4px;font-family:inherit;font-size:12px}
+.euridis-field input[type=text],.euridis-field input[type=number],.euridis-field input[type=date],.euridis-field select,.euridis-field textarea{width:100%;padding:5px 8px;border:1px solid #ddd;border-radius:4px;font-family:inherit;font-size:12px}
+  .euridis-date-input{cursor:pointer;width:auto;min-width:140px;max-width:160px;padding:4px 8px;height:28px}
+  .euridis-date-input::-webkit-calendar-picker-indicator{cursor:pointer;padding:2px;border-radius:3px}
+  .euridis-date-input::-webkit-calendar-picker-indicator:hover{background:#e8f0fe}
 .euridis-field textarea{resize:vertical}
   .euridis-field textarea.textarea-small{min-height:90px;height:90px}
   .euridis-field textarea.textarea-medium{min-height:55px;height:55px}
@@ -1026,6 +1035,14 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
             params.set('modulename', 'agents');
             params.set(CONFIG.form.targetField, finalHtml);
 
+            // Ajouter la date de naissance si renseignée
+            const birthDate = document.getElementById('birthDate')?.value;
+            if (birthDate) {
+                const [y, m, d] = birthDate.split('-');
+                params.set('birthDate', `${d}/${m}/${y}`);
+                params.set('args[birthDate]', Math.floor(new Date(birthDate).getTime() / 1000).toString());
+            }
+
             try {
                 State.isSaving = true;
                 const res = await fetch(form.getAttribute('action') || location.href, {
@@ -1058,6 +1075,39 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
                 if (rt) { lbl = document.createElement('label'); lbl.className = 'readonly-label'; lbl.setAttribute('for', CONFIG.form.targetField); rt.appendChild(lbl); }
             }
             if (lbl) lbl.innerHTML = html;
+
+            this.updateBirthDateDisplay();
+        },
+
+        /** Met à jour l'affichage de la date de naissance et de l'âge dans Tool4Staffing */
+        updateBirthDateDisplay() {
+            const iso = document.getElementById('birthDate')?.value;
+            if (!iso) return;
+            const [y, m, d] = iso.split('-');
+            if (!y || !m || !d) return;
+
+            // Mettre à jour le champ date de naissance
+            const frDate = `${d}/${m}/${y}`;
+            [document.querySelector('#control_group_birthDate .readonly-label'),
+             document.querySelector('.readonly-label[for="birthDate"]')]
+                .filter(Boolean).forEach(el => el.textContent = frDate);
+
+            // Mettre à jour l'âge dans le breadcrumb
+            const birth = new Date(iso), now = new Date();
+            let age = now.getFullYear() - birth.getFullYear();
+            if (now.getMonth() < birth.getMonth() || (now.getMonth() === birth.getMonth() && now.getDate() < birth.getDate())) age--;
+
+            const crumb = document.querySelector('li.breadcrumb-title');
+            if (crumb) {
+                const walker = document.createTreeWalker(crumb, NodeFilter.SHOW_TEXT);
+                let node;
+                while (node = walker.nextNode()) {
+                    if (/\(\d+\s*ans\)/.test(node.textContent)) {
+                        node.textContent = node.textContent.replace(/\(\d+\s*ans\)/, `(${age} ans)`);
+                        break;
+                    }
+                }
+            }
         },
 
         /** Planifie une sauvegarde debounced */
@@ -1128,6 +1178,7 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
                 <h4>Questions suggérées :</h4>
           <ul style="margin:5px 0;padding-left:20px"><li>Peux-tu me présenter ton parcours d'études actuel ?</li><li>Pourquoi avoir choisi ce parcours ?</li><li>Qu'as-tu retenu ou appris de plus utile pour la formation que tu vises ?</li><li>Quelles compétences ou connaissances penses-tu pouvoir valoriser ?</li><li>Pourquoi avoir choisi de candidater pour cette formation ?</li><li>Quels sont les défis que tu vas devoir relever pour réussir dans cette formation ?</li><li>Quelles sont selon toi tes qualités et axes d'amélioration par rapport à cette formation ?</li><li>Quels sont tes centres d'intérêt ou tes passions ?</li></ul>
             </div>
+        <div class="euridis-field euridis-field-inline"><label for="birthDate">Date de naissance :</label><input type="date" id="birthDate" class="euridis-date-input"></div>
         <div class="euridis-field"><label for="profilMotivation">Notes - Profil & Motivation :</label><textarea id="profilMotivation" class="textarea-medium" placeholder="Entrez vos observations sur le profil et la motivation du candidat..."></textarea></div>
         <div class="euridis-toggle-wrapper"><span class="euridis-toggle-label">✓ Maîtrise du français (comprendre et parler)</span><label class="euridis-toggle"><input type="checkbox" id="maitriseFrancais" checked><span class="euridis-toggle-slider"></span></label><span class="euridis-toggle-text" id="maitriseFrancaisText">Oui</span></div>
             </div>
@@ -1409,23 +1460,25 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
             ContentModule.refreshSnapshots();
             const obs = ContentModule.readObservations(true);
 
+            State.isApplying = true;
             if (obs?.includes(CONFIG.text.markerPrefix)) {
                 const parsed = DataModule.parseObservations(obs);
-                if (parsed) {
-                    State.isApplying = true;
-                    DataModule.applyData(parsed);
-                    State.isApplying = false;
-                    updateToggleTexts();
-                    updateConditionalSections();
-                    return;
-                }
+                if (parsed) DataModule.applyData(parsed);
+                else DataModule.ensureDefaultCheckboxes();
+            } else {
+                DataModule.ensureDefaultCheckboxes();
             }
-
-            State.isApplying = true;
-            DataModule.ensureDefaultCheckboxes();
             State.isApplying = false;
             updateToggleTexts();
             updateConditionalSections();
+
+            // Pré-remplir la date de naissance depuis Tool4Staffing si vide
+            const bd = document.getElementById('birthDate');
+            if (bd && !bd.value) {
+                const lbl = document.querySelector('#control_group_birthDate .readonly-label, .readonly-label[for="birthDate"]');
+                const m = lbl?.textContent?.trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+                if (m) bd.value = `${m[3]}-${m[2]}-${m[1]}`;
+            }
         };
 
         /** Snapshot des données à l'ouverture pour détecter les changements */
@@ -2605,6 +2658,455 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
     })();
 
     // ============================================
+    // 🎂 MODULE : FILTRE PAR ÂGE
+    // ============================================
+
+    /**
+     * Module pour filtrer les candidats par âge
+     * Convertit un âge en date de naissance et applique le filtre via le système de recherche T4S
+     * @namespace AgeFilterModule
+     */
+    const AgeFilterModule = (() => {
+        const IDS = {
+            wrapper: 'euridis-age-filter',
+            ageInput: 'euridis-age-input',
+            comparator: 'euridis-age-comparator',
+            applyBtn: 'euridis-age-apply',
+            result: 'euridis-age-result'
+        };
+        let stylesInjected = false;
+
+        /** Vérifie si on est sur la page agents avec le panneau de recherche */
+        const isSearchPage = () => {
+            return location.pathname.includes('/agents') && document.getElementById('puzzle-main-search');
+        };
+
+        /** Injecte les styles CSS */
+        const injectStyles = () => {
+            if (stylesInjected) return;
+            stylesInjected = true;
+            const style = document.createElement('style');
+            style.id = 'euridis-age-filter-styles';
+            style.textContent = `
+#${IDS.wrapper}{display:inline-flex;align-items:center;gap:8px;margin-left:20px;font-size:14px;font-weight:600;color:#333;vertical-align:middle}
+#${IDS.wrapper} .age-label{color:#555}
+#${IDS.ageInput},#${IDS.comparator}{padding:3px 8px;border:1px solid #aaa;border-radius:3px;font-size:14px;font-weight:600;background:#fff;color:#333;cursor:pointer}
+#${IDS.applyBtn}{padding:3px 12px;background:#337ab7;color:#fff;border:none;border-radius:3px;font-size:14px;font-weight:600;cursor:pointer}
+#${IDS.applyBtn}:hover{background:#286090}
+#${IDS.result}{font-size:14px;font-weight:600;color:#5cb85c;margin-left:8px}
+#${IDS.result}.error{color:#d9534f}`;
+            document.head.appendChild(style);
+        };
+
+        /** Génère les options d'âge (16-65 ans) */
+        const generateAgeOptions = () => {
+            let options = '';
+            for (let age = 16; age <= 65; age++) {
+                const selected = age === 25 ? ' selected' : '';
+                options += `<option value="${age}"${selected}>${age}</option>`;
+            }
+            return options;
+        };
+
+        /**
+         * Calcule la date de naissance pour un âge donné
+         * @param {number} age - Âge en années
+         * @param {string} comparator - 'equal', 'inferiorto' (plus jeune), 'superiorto' (plus vieux)
+         * @returns {string} Date au format DD/MM/YYYY
+         */
+        const calculateBirthDate = (age, comparator) => {
+            const today = new Date();
+            let targetDate = new Date(today);
+
+            // Pour un âge donné, la date de naissance est aujourd'hui - age années
+            targetDate.setFullYear(today.getFullYear() - age);
+
+            // Ajustements selon le comparateur :
+            // - "superiorto" (après cette date) = plus jeune que l'âge
+            // - "inferiorto" (avant cette date) = plus vieux que l'âge
+            // - "equal" = exactement cet âge (± quelques jours)
+
+            if (comparator === 'inferiorto') {
+                // Plus vieux : né avant cette date (donc on prend la date telle quelle)
+                // Quelqu'un né avant cette date a plus que cet âge
+            } else if (comparator === 'superiorto') {
+                // Plus jeune : né après cette date (donc on prend la date telle quelle)
+                // Quelqu'un né après cette date a moins que cet âge
+            }
+            // Pour "equal", on utilisera une plage de dates (1 an)
+
+            const day = String(targetDate.getDate()).padStart(2, '0');
+            const month = String(targetDate.getMonth() + 1).padStart(2, '0');
+            const year = targetDate.getFullYear();
+
+            return `${day}/${month}/${year}`;
+        };
+
+        /**
+         * Applique le filtre d'âge en modifiant les critères de recherche existants
+         * @param {number} age - Âge à filtrer
+         * @param {string} mode - 'younger' (plus jeune), 'older' (plus vieux), 'exact' (exactement)
+         */
+        const applyAgeFilter = async (age, mode) => {
+            const resultEl = document.getElementById(IDS.result);
+
+            if (!age || age < 1 || age > 120) {
+                if (resultEl) {
+                    resultEl.textContent = '❌ Âge invalide (1-120)';
+                    resultEl.classList.add('error');
+                }
+                return;
+            }
+
+            // Trouver le formulaire de critère vide ou le premier critère
+            const searchPanel = document.getElementById('puzzle-main-search');
+            if (!searchPanel) {
+                if (resultEl) {
+                    resultEl.textContent = '❌ Panneau de recherche non trouvé';
+                    resultEl.classList.add('error');
+                }
+                return;
+            }
+
+            // Calculer la date de naissance correspondante
+            let comparator, dateStr, description;
+            const birthDate = calculateBirthDate(age, mode === 'younger' ? 'superiorto' : 'inferiorto');
+
+            if (mode === 'younger') {
+                comparator = 'superiorto'; // Né APRÈS cette date = plus jeune
+                dateStr = birthDate;
+                description = `Moins de ${age} ans (né après le ${dateStr})`;
+            } else if (mode === 'older') {
+                comparator = 'inferiorto'; // Né AVANT cette date = plus vieux
+                dateStr = birthDate;
+                description = `Plus de ${age} ans (né avant le ${dateStr})`;
+            } else {
+                // Exactement cet âge : entre age et age+1 ans
+                comparator = 'equal';
+                dateStr = birthDate;
+                description = `${age} ans exactement`;
+            }
+
+            // Chercher un critère existant avec birthDate ou un critère vide
+            const existingCriteria = searchPanel.querySelectorAll('.puzzle-div-custom');
+            let targetCriteria = null;
+
+            // D'abord, chercher un critère vide (col vide)
+            for (const criteria of existingCriteria) {
+                const colSelect = criteria.querySelector('select[name="col"]');
+                if (colSelect && (!colSelect.value || colSelect.value === '')) {
+                    targetCriteria = criteria;
+                    break;
+                }
+            }
+
+            // Si pas de critère vide, chercher un critère birthDate existant
+            if (!targetCriteria) {
+                for (const criteria of existingCriteria) {
+                    const colSelect = criteria.querySelector('select[name="col"]');
+                    if (colSelect && colSelect.value === 'birthDate') {
+                        targetCriteria = criteria;
+                        break;
+                    }
+                }
+            }
+
+            if (!targetCriteria) {
+                if (resultEl) {
+                    resultEl.textContent = '❌ Aucun critère disponible. Ajoutez un critère vide.';
+                    resultEl.classList.add('error');
+                }
+                return;
+            }
+
+            // Configurer le critère
+            const colSelect = targetCriteria.querySelector('select[name="col"]');
+            const comparatorSelect = targetCriteria.querySelector('select[name="comparator"]');
+            const dateInput = targetCriteria.querySelector('input[name="date"]');
+
+            if (colSelect) {
+                colSelect.value = 'birthDate';
+                // Déclencher le changement pour mettre à jour l'UI Bootstrap Select
+                $(colSelect).selectpicker('val', 'birthDate');
+                colSelect.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+
+            // Attendre que le formulaire se mette à jour
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // Re-sélectionner les éléments après mise à jour du DOM
+            const updatedComparator = targetCriteria.querySelector('select[name="comparator"]');
+            const updatedDateInput = targetCriteria.querySelector('input[name="date"]');
+
+            if (updatedComparator && mode !== 'exact') {
+                updatedComparator.value = comparator;
+                if (typeof $ !== 'undefined' && $.fn.selectpicker) {
+                    $(updatedComparator).selectpicker('val', comparator);
+                }
+                updatedComparator.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+
+            if (updatedDateInput) {
+                updatedDateInput.value = dateStr;
+                updatedDateInput.dispatchEvent(new Event('change', { bubbles: true }));
+                updatedDateInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+
+            // Cliquer sur le bouton de soumission du critère
+            const submitBtn = targetCriteria.querySelector('.submitBtn');
+            if (submitBtn) {
+                submitBtn.click();
+            }
+
+            if (resultEl) {
+                resultEl.textContent = `✅ ${description}`;
+                resultEl.classList.remove('error');
+            }
+        };
+
+        /** Crée l'interface utilisateur du filtre par âge */
+        const createUI = () => {
+            injectStyles();
+
+            const searchPanel = document.getElementById('puzzle-main-search');
+            if (!searchPanel || document.getElementById(IDS.wrapper)) return;
+
+            // Trouver un bon emplacement (à côté du titre "Résultats")
+            const resultsH3 = searchPanel.querySelector('#resultsNb');
+
+            const wrapper = document.createElement('span');
+            wrapper.id = IDS.wrapper;
+            wrapper.innerHTML = `<span class="age-label">Âge</span><select id="${IDS.comparator}"><option value="younger">moins de</option><option value="older">plus de</option><option value="exact">exactement</option></select><select id="${IDS.ageInput}">${generateAgeOptions()}</select><span class="age-label">ans</span><button type="button" id="${IDS.applyBtn}">Filtrer</button><span id="${IDS.result}"></span>`;
+
+            if (resultsH3) {
+                resultsH3.appendChild(wrapper);
+            } else {
+                const clearfix = searchPanel.querySelector('.clearfix');
+                if (clearfix) clearfix.parentNode.insertBefore(wrapper, clearfix);
+            }
+
+            // Event listeners
+            document.getElementById(IDS.applyBtn)?.addEventListener('click', () => {
+                const age = parseInt(document.getElementById(IDS.ageInput)?.value, 10);
+                const mode = document.getElementById(IDS.comparator)?.value || 'younger';
+                applyAgeFilter(age, mode);
+            });
+
+            // Permettre d'appuyer sur Entrée dans le champ âge
+            document.getElementById(IDS.ageInput)?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById(IDS.applyBtn)?.click();
+                }
+            });
+        };
+
+        /** Observe les changements pour recréer l'UI si nécessaire */
+        const startObserver = () => {
+            const debouncedCreate = debounce(() => {
+                if (isSearchPage() && !document.getElementById(IDS.wrapper)) {
+                    createUI();
+                }
+            }, 300);
+
+            new MutationObserver(debouncedCreate)
+                .observe(document.body, { childList: true, subtree: true });
+        };
+
+        /** Initialise le module */
+        const init = () => {
+            if (isSearchPage()) {
+                createUI();
+            }
+            startObserver();
+        };
+
+        return { init, createUI, applyAgeFilter };
+    })();
+
+    // ============================================
+    // 🔢 MODULE : COMPTEUR DE POSTES (PAGE JOBS)
+    // ============================================
+
+    /**
+     * Module pour compter le nombre total de postes dans le tableau jobs
+     * @namespace JobsCounterModule
+     */
+    const JobsCounterModule = (() => {
+        const SELECTORS = { table: 'table.puzzle-table', lineCount: 'tfoot .line-count', content: 'section#content' };
+        const IDS = { wrapper: 'euridis-jobs-counter', btn: 'euridis-jc-btn', loading: 'euridis-jc-loading', result: 'euridis-jc-result' };
+        let isRunning = false, stylesInjected = false;
+
+        /** Vérifie si on est sur la page jobs */
+        const isJobsPage = () => {
+            const path = location.pathname;
+            return (path.includes('/jobs') || path.includes('/module/m/jobs')) && document.querySelector(SELECTORS.table);
+        };
+
+        /** Injecte les styles CSS (une seule fois) */
+        const injectStyles = () => {
+            if (stylesInjected) return;
+            stylesInjected = true;
+            const style = document.createElement('style');
+            style.textContent = `
+#${IDS.wrapper}{display:inline-flex!important;align-items:center!important;margin-left:15px;font-size:13px;position:relative;top:12px}
+#${IDS.btn}{width:auto!important;min-width:auto!important;max-width:none!important;height:auto!important;padding:6px 14px!important;font-size:12px!important;font-weight:500!important;color:#fff!important;background:linear-gradient(135deg,#0d6efd 0%,#0b5ed7 100%)!important;border:none!important;border-radius:4px!important;cursor:pointer!important;transition:all .2s ease!important;box-shadow:0 2px 4px rgba(13,110,253,.2)!important;white-space:nowrap!important;display:inline-block!important;box-sizing:content-box!important}
+#${IDS.btn}:hover:not(:disabled){background:linear-gradient(135deg,#0b5ed7 0%,#0a58ca 100%)!important;transform:translateY(-1px);box-shadow:0 3px 6px rgba(13,110,253,.3)}
+#${IDS.btn}:active:not(:disabled){transform:translateY(0);box-shadow:0 1px 3px rgba(13,110,253,.2)}
+#${IDS.btn}:disabled{background:#6c757d!important;cursor:not-allowed!important;opacity:.7;box-shadow:none!important}
+#${IDS.loading},#${IDS.result}{display:none;align-items:center;margin-left:20px}
+#${IDS.loading}.visible,#${IDS.result}.visible{display:inline-flex}
+.jc-pages{font-size:12px;color:#495057;font-weight:500;white-space:nowrap;margin-right:10px}
+.jc-wrap{display:inline-flex;align-items:center}
+.jc-bar{width:80px;height:6px;background:#dee2e6;border-radius:3px;overflow:hidden;margin-right:8px}
+.jc-fill{display:block!important;height:100%!important;min-width:0;background:linear-gradient(90deg,#198754 0%,#20c997 100%)!important;border-radius:3px!important;transition:width .3s ease!important}
+.jc-pct{font-size:11px;color:#6c757d;min-width:32px;margin-right:10px}
+.jc-cur{font-size:12px;color:#198754;font-weight:600;white-space:nowrap}
+.jc-cur strong{font-size:13px}
+.jc-badge{display:inline-flex;align-items:center;padding:4px 10px;background:linear-gradient(135deg,#d1e7dd 0%,#badbcc 100%);border:1px solid #a3cfbb;border-radius:4px;color:#0f5132;font-size:12px;font-weight:600}
+.jc-badge strong{font-size:14px;margin:0 4px}
+.jc-detail{font-size:11px;color:#6c757d;margin-left:8px}
+.jc-error{padding:4px 10px;background:#f8d7da;border:1px solid #f1aeb5;border-radius:4px;color:#842029;font-size:12px}`;
+            document.head.appendChild(style);
+        };
+
+        /** Récupère les filtres actuellement appliqués */
+        const getFilters = () => {
+            const filters = {};
+            document.querySelectorAll('[id$="-filter"]').forEach(f => {
+                const name = f.name || f.id.replace('-filter', '');
+                if (f.tagName === 'SELECT' && f.multiple) {
+                    const vals = [...f.selectedOptions].map(o => o.value).filter(v => v);
+                    if (vals.length) filters[name] = vals;
+                } else if (f.tagName === 'INPUT' && f.value) {
+                    filters[name] = f.value;
+                }
+            });
+            return filters;
+        };
+
+        /** Effectue une requête AJAX pour récupérer une page */
+        const fetchPage = async (page, filters) => {
+            const params = new URLSearchParams({
+                'data-module': 'news', 'data-script': 'table', 'data-id': 'table', 'data-get': '',
+                'data-targetmodule': 'jobs', 'data-limit': '500', 'data-page': page.toString()
+            });
+            Object.entries(filters).forEach(([k, v]) => {
+                Array.isArray(v) ? v.forEach(x => params.append(`${k}[]`, x)) : params.append(k, v);
+            });
+            const res = await fetch('/fr/m/news/ajax/table', {
+                method: 'POST', body: params.toString(),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return new DOMParser().parseFromString(await res.text(), 'text/html');
+        };
+
+        /** Compte les postes dans un document */
+        const countJobs = (doc) => {
+            let total = 0;
+            doc.querySelectorAll('tbody tr.inlineEdition').forEach(row => {
+                const cell = row.querySelector('[data-name="jobsAmount"]');
+                if (cell) total += parseInt(cell.getAttribute('data-value') || cell.textContent, 10) || 0;
+            });
+            return total;
+        };
+
+        /** Obtient le nombre total d'éléments */
+        const getTotal = (doc) => {
+            const lc = doc.querySelector('.line-count');
+            return lc ? parseInt(lc.textContent.replace(/\D/g, ''), 10) || 0 : 0;
+        };
+
+        /** Met à jour l'affichage du chargement */
+        const updateLoading = (cur, total, postes) => {
+            const el = document.getElementById(IDS.loading);
+            if (!el) return;
+            const pct = Math.round((cur / total) * 100);
+            el.innerHTML = `<span class="jc-pages">${cur}/${total}</span><span class="jc-wrap"><span class="jc-bar"><span class="jc-fill" style="width:${pct}%"></span></span><span class="jc-pct">${pct}%</span></span><span class="jc-cur"><strong>${postes.toLocaleString('fr-FR')}</strong> postes</span>`;
+        };
+
+        /** Affiche le résultat ou une erreur */
+        const showResult = (total, jobs, error = null) => {
+            const el = document.getElementById(IDS.result);
+            if (!el) return;
+            el.innerHTML = error
+                ? `<span class="jc-error">✗ ${escapeHtml(error)}</span>`
+                : `<span class="jc-badge">✓<strong>${total.toLocaleString('fr-FR')}</strong>postes</span><span class="jc-detail">(${jobs.toLocaleString('fr-FR')} offres)</span>`;
+            el.classList.add('visible');
+        };
+
+        /** Lance le comptage */
+        const startCounting = async () => {
+            if (isRunning) return;
+            isRunning = true;
+            const btn = document.getElementById(IDS.btn), loading = document.getElementById(IDS.loading), result = document.getElementById(IDS.result);
+            if (btn) btn.disabled = true;
+            if (loading) loading.classList.add('visible');
+            if (result) result.classList.remove('visible');
+
+            try {
+                const filters = getFilters();
+                const firstPage = await fetchPage(1, filters);
+                const totalElements = getTotal(firstPage);
+                const totalPages = Math.ceil(totalElements / 500);
+                let grandTotal = countJobs(firstPage), totalJobsCount = firstPage.querySelectorAll('tbody tr.inlineEdition').length;
+                updateLoading(1, totalPages, grandTotal);
+
+                for (let page = 2; page <= totalPages; page++) {
+                    await new Promise(r => setTimeout(r, 300));
+                    const doc = await fetchPage(page, filters);
+                    grandTotal += countJobs(doc);
+                    totalJobsCount += doc.querySelectorAll('tbody tr.inlineEdition').length;
+                    updateLoading(page, totalPages, grandTotal);
+                }
+                showResult(grandTotal, totalJobsCount);
+            } catch (e) {
+                showResult(0, 0, e.message || 'Erreur lors du comptage');
+            } finally {
+                isRunning = false;
+                if (btn) btn.disabled = false;
+                if (loading) loading.classList.remove('visible');
+            }
+        };
+
+        /** Crée le bouton de comptage */
+        const createButton = () => {
+            injectStyles();
+            const lineCount = document.querySelector(SELECTORS.lineCount);
+            if (!lineCount || document.getElementById(IDS.wrapper)) return;
+
+            const wrapper = document.createElement('div');
+            wrapper.id = IDS.wrapper;
+            wrapper.innerHTML = `<button type="button" id="${IDS.btn}">Calculer nbr total de postes</button><span id="${IDS.loading}"></span><span id="${IDS.result}"></span>`;
+            lineCount.parentNode.insertBefore(wrapper, lineCount.nextSibling);
+            document.getElementById(IDS.btn)?.addEventListener('click', startCounting);
+        };
+
+        /** Observe les changements pour recréer le bouton si nécessaire */
+        const startObserver = () => {
+            const target = document.querySelector(SELECTORS.content) || document.body;
+            new MutationObserver(() => {
+                if (isJobsPage() && document.querySelector(SELECTORS.lineCount) && !document.getElementById(IDS.wrapper)) createButton();
+            }).observe(target, { childList: true, subtree: true });
+        };
+
+        /** Initialise le module */
+        const init = () => {
+            let attempts = 0;
+            const check = setInterval(() => {
+                attempts++;
+                if (isJobsPage() && document.querySelector(SELECTORS.lineCount)) {
+                    clearInterval(check);
+                    createButton();
+                    startObserver();
+                } else if (attempts >= 30) clearInterval(check);
+            }, 500);
+        };
+
+        return { init };
+    })();
+
+    // ============================================
     // 🚀 MODULE : INITIALISATION ET WATCHERS
     // ============================================
 
@@ -2752,9 +3254,15 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
     // 🏁 DÉMARRAGE
     // ============================================
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', AppModule.init);
-    } else {
+    const bootstrap = () => {
         AppModule.init();
+        JobsCounterModule.init();
+        AgeFilterModule.init();
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bootstrap);
+    } else {
+        bootstrap();
     }
-  })();
+})();

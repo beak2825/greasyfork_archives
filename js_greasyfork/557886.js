@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         猫猫放置生活质量
 // @namespace    http://tampermonkey.net/
-// @version      0.2.15
+// @version      0.2.15.1
 // @description  共享配方、自动种植、公会buff、续约酒馆专家
 // @match        https://www.moyu-idle.com/*
 // @match        https://moyu-idle.com/*
@@ -340,17 +340,13 @@
         }
         // tavern:getMyExperts
         static sendGetMyExpertsMessage() {
-            taskQueue.add(() => {
-                sendMessage('tavern:getMyExperts', null)
-            })
+            sendMessage('tavern:getMyExperts', null)
         }
 
         // tavern:renewExpert
         static sendTavernRenewExpertMessage(catId, hour) {
             console.log('[生活质量] 自动续费专家 ', experts[catId], hour, '小时')
-            taskQueue.add(() => {
-                sendMessage('tavern:renewExpert', { "catId": catId, "hours": hour })
-            })
+            sendMessage('tavern:renewExpert', { "catId": catId, "hours": hour })
         }
 
         static handleTavernGetMyExperts(data) {
@@ -469,9 +465,9 @@
         }
 
         /**
-         * 
-         * @param {string} guildUuid 
-         * @returns 
+         *
+         * @param {string} guildUuid
+         * @returns
          */
         static claimGuildGrandBathhouse(guildUuid) {
             const bathHouseType = GuildHandler.getGuildBuffGrandBathhouseType();
@@ -578,16 +574,12 @@
          * @param {*} type String 类型 "all" | "hp" | "mp"
          */
         static sendGuildBuildingEffectVitalityCatStatueMessage(guildUuid, type) {
-            taskQueue.add(() => {
-                sendMessage("guildBuildingEffect:vitalityCatStatue", { guildUuid: guildUuid, type: type });
-            })
+            sendMessage("guildBuildingEffect:vitalityCatStatue", { guildUuid: guildUuid, type: type });
         }
         // guildBuildingEffect:wishingPool
         // 公会buff 许愿池
         static sendGuildBuildingEffectWishingPoolMessage(guildUuid) {
-            taskQueue.add(() => {
-                sendMessage("guildBuildingEffect:wishingPool", { guildUuid: guildUuid });
-            })
+            sendMessage("guildBuildingEffect:wishingPool", { guildUuid: guildUuid });
         }
         // guildBuildingEffect:denseFogLighthouse
         // 公会buff 迷雾图腾
@@ -597,16 +589,12 @@
          * @param {*} type String 类型 "aggressive" | "conservative" | "alone"
          */
         static sendGuildBuildingEffectDenseFogLighthouseMessage(guildUuid, type) {
-            taskQueue.add(() => {
-                sendMessage("guildBuildingEffect:denseFogLighthouse", { guildUuid: guildUuid, type: type });
-            })
+            sendMessage("guildBuildingEffect:denseFogLighthouse", { guildUuid: guildUuid, type: type });
         }
         // guildBuildingEffect:guildGrandBathhouse
         // 公会buff 猫猫大澡堂
         static sendGuildBuildingEffectGuildGrandBathhouseMessage(guildUuid, type) {
-            taskQueue.add(() => {
-                sendMessage("guildBuildingEffect:guildGrandBathhouse", { guildUuid: guildUuid, type: type });
-            })
+            sendMessage("guildBuildingEffect:guildGrandBathhouse", { guildUuid: guildUuid, type: type });
         }
 
 
@@ -646,11 +634,15 @@
         // alchemy:atlas:success
         static replaceAlchemyAtlasData(data) {
             if (!data?.data?.data?.goldRecipe) {
-                console.warn('配方数据异常 无法替换', data)
+                console.warn('[生活质量] 配方数据异常 无法替换', data)
                 return data;
             }
-
-            data.data.data = Object.assign({}, configs.recipes, data.data.data);
+            Object.keys(configs.recipes)
+                .filter(k => !/^ul_\d+$/.test(k))
+                .filter(k => !(k in data.data.data))
+                .forEach(k => {
+                    data.data.data[k] = configs.recipes[k]
+                })
             return data;
         }
     }
@@ -676,9 +668,7 @@
 
         // "harvestBox:claimAll"
         static sendClaimAllHarvestBoxMessage() {
-            taskQueue.add(() => {
-                sendMessage("harvestBox:claimAll");
-            })
+            sendMessage("harvestBox:claimAll");
         }
     }
 
@@ -734,22 +724,16 @@
 
         // "farm:plot:autoReplant"
         static sendAutoReplantPlotMessage(plotIndex) {
-            taskQueue.add(() => {
-                sendMessage("farm:plot:autoReplant", { plotIndex: plotIndex, value: true });
-            })
+            sendMessage("farm:plot:autoReplant", { plotIndex: plotIndex, value: true });
         }
 
         // "farm:plot:harvest"
         static sendHarvestPlotMessage(plotIndex) {
-            taskQueue.add(() => {
-                sendMessage("farm:plot:harvest", { plotIndex: plotIndex });
-            })
+            sendMessage("farm:plot:harvest", { plotIndex: plotIndex });
         }
         // "farm:plots"
         static sendGetFarmPlotsMessage() {
-            taskQueue.add(() => {
-                sendMessage("farm:plots")
-            })
+            sendMessage("farm:plots")
         }
 
 
@@ -809,9 +793,7 @@
             if (Array.isArray(fertilizers) && fertilizers.length > 0) {
                 data.fertilizers = fertilizers;
             }
-            taskQueue.add(() => {
-                sendMessage("farm:plot:plant", data);
-            })
+            sendMessage("farm:plot:plant", data);
         }
     }
 
@@ -831,7 +813,7 @@
         }
 
         static sendEnhanceCurrent() {
-            taskQueue.add(() => { sendMessage('enhance:current', null) })
+            sendMessage('enhance:current', null)
         }
 
     }
@@ -847,7 +829,7 @@
 
         // battleRoom:getCurrentRoom
         static sendGetCurrentRoom() {
-            taskQueue.add(() => { sendMessage('battleRoom:getCurrentRoom', null) })
+            sendMessage('battleRoom:getCurrentRoom', null)
         }
 
         // 重置自身战斗掉落数据
@@ -859,7 +841,7 @@
                 return;
             }
 
-            BattleHandler.sendRestSelfBattleRewardInfoMessage(battleRoomUuid);
+            BattleHandler.sendResetSelfBattleRewardInfoMessage(battleRoomUuid);
         }
 
         // 有战斗信息才能判断是不是房主
@@ -868,7 +850,7 @@
         }
 
         // battleRoom:resetSelfBattleRewardInfo
-        static sendRestSelfBattleRewardInfoMessage(battleRoomUuid) {
+        static sendResetSelfBattleRewardInfoMessage(battleRoomUuid) {
             taskQueue.add(() => {
                 sendMessage('battleRoom:resetSelfBattleRewardInfo', { 'roomId': battleRoomUuid })
             })
@@ -877,7 +859,7 @@
 
     let _hasWatchWorldBoss = true;
     class WorldBossHandler {
-        static hasWatchWordBoss() {
+        static hasWatchWorldBoss() {
             return _hasWatchWorldBoss
         }
 
@@ -914,9 +896,7 @@
 
         // worldBoss:listAvailable
         static sendGetWorldBossListMessage() {
-            taskQueue.add(() => {
-                sendMessage('worldBoss:listAvailable', null)
-            });
+            sendMessage('worldBoss:listAvailable', null)
         }
     }
 
@@ -1234,10 +1214,10 @@
 
 
         /**
-         * 
-         * @param {*} message 
+         *
+         * @param {*} message
          * @param {options} options duration 默认3000ms onClick closeOnClick 默认true
-         * @returns 
+         * @returns
          */
         toast(message, options = {}) {
             this._createToastContainer();
@@ -1375,6 +1355,13 @@
         hide() { this.panel.style.display = "none"; }
         show() { this.panel.style.display = "flex"; }
         remove() { this.panel.remove(); }
+        setTitle(title) {
+            this.title = title;
+            const titleSpan = this.panel.querySelector("div > span");
+            if (titleSpan) {
+                titleSpan.innerText = title;
+            }
+        }
     }
 
     class ConfigItem {
@@ -1472,22 +1459,22 @@
         return WS_DEBUG_MODE
     }
 
+    function _sendMessageCore(method, data, user) {
+        const msg = "42" + JSON.stringify([method, { user: user, data: data }]);
+        WsWarpper.sendCustomWsMessage(msg);
+    }
+
     /**
      *
      * @param {string} method 方法名
      * @param {Object} data 可空 不传时请求时的 data 为 {}
-     * @param {any} user 用户信息
+     * @param {any} user 用户信息 默认为 userInfo
      * @returns
      */
-    function sendMessage(method, data, user) {
-        if (data === undefined) {
-            data = {};
-        }
-        if (user === null || user === undefined) {
-            user = userInfo
-        }
-        const msg = "42" + JSON.stringify([method, { user: user, data: data }]);
-        return WsWarpper.sendCustomWsMessage(msg);
+    function sendMessage(method, data = {}, user = userInfo) {
+        taskQueue.add(() => {
+            _sendMessageCore(method, data, user);
+        })
     }
 
     function newGMC(fields) {
@@ -1510,6 +1497,9 @@
                         taskQueue.defaultInterval = getSendInterval()
                         EVENT_DEBUG_MODE = cfg.EVENT_DEBUG_MODE.get()
                         WS_DEBUG_MODE = cfg.WS_DEBUG_MODE.get()
+                        if (fp) {
+                            fp.setTitle(WS_DEBUG_MODE ? "生活质量工具栏[WSDEBUG]" : "生活质量工具栏")
+                        }
                         // 校验 empty_plot_plant_config 是否是 json
                         const empty_plot_plant_config = cfg.empty_plot_plant_config.get();
                         try {
@@ -1800,14 +1790,14 @@
                   width: 8px;
                 }
                 ::-webkit-scrollbar-track {
-                  background: transparent; 
+                  background: transparent;
                 }
                 ::-webkit-scrollbar-thumb {
-                  background: rgba(255, 255, 255, 0.2); 
+                  background: rgba(255, 255, 255, 0.2);
                   border-radius: 4px;
                 }
                 ::-webkit-scrollbar-thumb:hover {
-                  background: rgba(255, 255, 255, 0.3); 
+                  background: rgba(255, 255, 255, 0.3);
                 }
                 `
             }
@@ -1905,7 +1895,7 @@
                 if (!cfg.ENABLE_REPLACE_RECIPES.get()) {
                     break;
                 }
-                data = AlchemyHandler.replaceAlchemyAtlasData(data)
+                AlchemyHandler.replaceAlchemyAtlasData(data)
                 break;
             case 'harvestBox:list:success':
                 if (!cfg.ENABLE_HARVEST_BOX_CLAIMALL.get()) {
@@ -2209,6 +2199,9 @@
             onClick: () => {
                 WS_DEBUG_MODE = !WS_DEBUG_MODE
                 cfg.WS_DEBUG_MODE.set(WS_DEBUG_MODE)
+                if (fp) {
+                    fp.setTitle(WS_DEBUG_MODE ? "生活质量工具栏[WSDEBUG]" : "生活质量工具栏")
+                }
             }
         }
     ]
@@ -2221,7 +2214,7 @@
     window.addEventListener("load", () => {
         setTimeout(async () => {
             fp = new FloatingPanel({
-                title: "生活质量工具栏",
+                title: isWsDebugMode() ? "生活质量工具栏[WSDEBUG]" : "生活质量工具栏",
                 onClick: () => {
                     gmc.open()
                 },
@@ -2241,7 +2234,7 @@
                             console.log('[生活质量] dataInput 非空 且不是合法的json', dataInput)
                         }
                     }
-                    let parsedUserInfo = null;
+                    let parsedUserInfo;
                     if (userInfoInput !== "") {
                         try {
                             let u = JSON.parse(userInfoInput)
@@ -2251,9 +2244,7 @@
                             return;
                         }
                     }
-                    taskQueue.add(() => {
-                        sendMessage(methodInput, parsedData, parsedUserInfo)
-                    })
+                    sendMessage(methodInput, parsedData, parsedUserInfo)
                     console.log(`[生活质量] 已发送请求 method:${methodInput} data: ${JSON.stringify(parsedData)} user:${parsedUserInfo}`)
                 }
             });

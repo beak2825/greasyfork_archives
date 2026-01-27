@@ -1,13 +1,16 @@
 // ==UserScript==
 // @name         UpsBounty
 // @namespace    https://upsilon-cloud.uk/
-// @version      1.0
+// @version      1.4
 // @description  Create a button to auto assign bounties.
 // @author       Upsilon [3212478]
 // @match        https://www.torn.com/factions.php*
 // @match        https://www.torn.com/bounties.php*
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @grant        GM_xmlhttpRequest
+// @connect      api.torn.com
+// @connect      ffscouter.com
 // @license      All Rights Reserved
 // @downloadURL https://update.greasyfork.org/scripts/563801/UpsBounty.user.js
 // @updateURL https://update.greasyfork.org/scripts/563801/UpsBounty.meta.js
@@ -21,10 +24,12 @@
         storeKeys: {
             factionId: "bh_faction_id",
             apiKey: "bh_api_key",
+            ffscouterApiKey: "bh_ffscouter_api_key",
             lastActiveMinutes: "bh_last_active_minutes",
             rules: "bh_rules",
             stats: "bh_stats",
             detectionActive: "bh_detection_active",
+            onlyOkayStatus: "bh_only_okay_status",
         },
 
         // ---- runtime state ----
@@ -41,13 +46,18 @@
             rulesRows: null,
             statsTableBody: null,
             statsInput: null,
+            ffscouterImportWrap: null,
+            ffscouterAutoImportBtn: null,
 
             factionId: null,
             apiKey: null,
+            ffscouterApiKey: null,
             lastActiveValue: null,
             lastActiveUnit: null,
             detectionActive: null,
             detectionLabel: null,
+            onlyOkayToggle: null,
+            onlyOkayLabel: null,
 
             targetCards: null,
         },
@@ -224,10 +234,22 @@
           </div>
 
           <div class="bh-content" id="bh-stats">
+          <div id="bh-ffscouter-import" style="display:none;">
+  <div class="bh-card-title">FFScouter Import</div>
+  <div class="bh-muted">Auto import stats from FFScouter (requires Torn API key + FFScouter API key).</div>
+
+  <div class="bh-actions" style="margin-top:10px;">
+    <button class="bh-primary" id="bh-ffscouter-auto-import">Auto import from ffscouter</button>
+  </div>
+
+  <div class="bh-sep"></div>
+</div>
             <div class="bh-card">
               <div class="bh-card-title">Paste Player Stats</div>
               <div class="bh-muted">
                 Formats (TAB):
+                <br/><br/>
+                <code>tornstats row</code>
                 <br/><br/>
                 <code>username[userid]		stats</code>
                 <br/><br/>
@@ -235,7 +257,7 @@
               </div>
 
               <textarea class="bh-textarea" id="bh-stats-input"
-                placeholder="SomePlayer[123456]	3000000&#10;SomePlayer	123456	3000000"></textarea>
+                placeholder="Tornstats row&#10;SomePlayer[123456]	3000000&#10;SomePlayer	123456	3000000"></textarea>
 
               <div class="bh-actions">
                 <button class="bh-primary" id="bh-add-player-stats">Add to Table</button>
@@ -292,6 +314,7 @@
     <span class="bh-slider"></span>
   </label>
 </div>
+
               <div class="bh-sep"></div>
 
               <div class="bh-card-title">Faction ID</div>
@@ -310,6 +333,15 @@
 
               <div class="bh-sep"></div>
 
+<div class="bh-card-title">FFScouter API Key</div>
+<div class="bh-muted">Auto import estimated stats from your faction.</div>
+<div class="bh-inline">
+  <input class="bh-input" id="bh-ffscouter-api-key" type="password" placeholder="Your FFScouter API key" />
+  <button class="bh-primary" id="bh-save-ffscouter-api">Save</button>
+</div>
+
+              <div class="bh-sep"></div>
+
               <div class="bh-card-title">Last Active Trigger</div>
               <div class="bh-muted">Select bounty targets only if last action is within this duration.</div>
 
@@ -322,6 +354,19 @@
                 </select>
                 <button class="bh-primary" id="bh-save-last-active">Save</button>
               </div>
+              <div class="bh-sep"></div>
+
+<div class="bh-card-title">Only Get In Okay Status</div>
+<div class="bh-muted">Only include faction members whose status is "Okay".</div>
+
+<div class="bh-inline" style="justify-content:space-between;">
+  <div class="bh-muted" id="bh-only-okay-label">Off</div>
+
+  <label class="bh-switch" title="Toggle only Okay status">
+    <input type="checkbox" id="bh-only-okay-toggle" />
+    <span class="bh-slider"></span>
+  </label>
+</div>
             </div>
           </div>
         `;
@@ -335,13 +380,18 @@
                 App.el.rulesRows = root.querySelector("#bh-rules-rows");
                 App.el.statsInput = root.querySelector("#bh-stats-input");
                 App.el.statsTableBody = root.querySelector("#bh-stats-table tbody");
+                App.el.ffscouterImportWrap = root.querySelector("#bh-ffscouter-import");
+                App.el.ffscouterAutoImportBtn = root.querySelector("#bh-ffscouter-auto-import");
 
                 App.el.factionId = root.querySelector("#bh-faction-id");
                 App.el.apiKey = root.querySelector("#bh-api-key");
+                App.el.ffscouterApiKey = root.querySelector("#bh-ffscouter-api-key");
                 App.el.lastActiveValue = root.querySelector("#bh-last-active-value");
                 App.el.lastActiveUnit = root.querySelector("#bh-last-active-unit");
                 App.el.detectionActive = root.querySelector("#bh-detection-active");
                 App.el.detectionLabel = root.querySelector("#bh-detection-label");
+                App.el.onlyOkayToggle = root.querySelector("#bh-only-okay-toggle");
+                App.el.onlyOkayLabel = root.querySelector("#bh-only-okay-label");
 
                 App.el.targetCards = root.querySelector("#bh-target-cards");
             },
@@ -359,7 +409,6 @@
             },
 
             injectStyles() {
-                // Tu peux remettre ton CSS tel quel ici
                 const style = document.createElement("style");
                 style.textContent = `#torn-bounty-helper{
         margin-top:10px;
@@ -764,6 +813,7 @@
             init() {
                 App.stats.load();
                 App.stats.render();
+                App.stats.updateFFScouterImportUI();
 
                 App.el.root.querySelector("#bh-add-player-stats").addEventListener("click", () => {
                     const lines = App.utils.parseLines(App.el.statsInput.value);
@@ -787,6 +837,100 @@
                     App.stats.persist();
                     App.stats.render();
                 });
+
+                if (App.el.ffscouterAutoImportBtn) {
+                    App.el.ffscouterAutoImportBtn.addEventListener("click", async () => {
+                        try {
+                            App.el.ffscouterAutoImportBtn.disabled = true;
+                            App.el.ffscouterAutoImportBtn.textContent = "Importing...";
+
+                            const res = await App.stats.autoImportFromFFScouter();
+
+                            alert(
+                                `FFScouter import done.\n` +
+                                `Imported: ${res.imported}\n` +
+                                `Missing/null: ${res.missing}\n` +
+                                `Total members: ${res.totalMembers}`
+                            );
+                        } catch (e) {
+                            alert(`FFScouter import error: ${String(e?.message || e)}`);
+                        } finally {
+                            App.el.ffscouterAutoImportBtn.disabled = false;
+                            App.el.ffscouterAutoImportBtn.textContent = "Auto import from ffscouter";
+                        }
+                    });
+                }
+            },
+
+            hasFFScouterKeys() {
+                const tornKey = (App.storage.get(App.storeKeys.apiKey, "") || "").trim();
+                const ffKey = (App.storage.get(App.storeKeys.ffscouterApiKey, "") || "").trim();
+                return Boolean(tornKey && ffKey);
+            },
+
+            updateFFScouterImportUI() {
+                if (!App.el.ffscouterImportWrap) return;
+                App.el.ffscouterImportWrap.style.display = App.stats.hasFFScouterKeys() ? "block" : "none";
+            },
+
+            getTornApiKey() {
+                return (App.storage.get(App.storeKeys.apiKey, "") || "").trim();
+            },
+
+            getFactionId() {
+                return (App.storage.get(App.storeKeys.factionId, "") || "").trim();
+            },
+
+            async autoImportFromFFScouter() {
+                const factionId = App.stats.getFactionId();
+                const tornKey = App.stats.getTornApiKey();
+
+                if (!factionId || !tornKey) throw new Error("Missing factionId or Torn API key in settings.");
+
+                const factionData = await App.api.fetchFactionBasic();
+                const membersObj = factionData?.members || {};
+
+                const members = Object.entries(membersObj).map(([userId, m]) => ({
+                    userId: String(userId),
+                    username: String(m?.name || "").trim(),
+                })).filter((m) => m.userId && m.username);
+
+                const ids = members.map((m) => m.userId);
+
+                const CHUNK_SIZE = 200;
+                const statsById = new Map();
+
+                for (let i = 0; i < ids.length; i += CHUNK_SIZE) {
+                    const chunk = ids.slice(i, i + CHUNK_SIZE);
+                    const ffRows = await App.api.fetchFFScouterStats(chunk);
+
+                    for (const row of ffRows) {
+                        const id = String(row?.player_id ?? "").trim();
+                        const bs = row?.bs_estimate;
+
+                        if (id && Number.isFinite(Number(bs))) {
+                            statsById.set(id, Math.floor(Number(bs)));
+                        }
+                    }
+                }
+
+                let imported = 0;
+                let missing = 0;
+
+                for (const m of members) {
+                    const bs = statsById.get(m.userId);
+                    if (Number.isFinite(bs)) {
+                        App.stats.upsert({ username: m.username, userId: m.userId, stats: bs });
+                        imported++;
+                    } else {
+                        missing++;
+                    }
+                }
+
+                App.stats.persist();
+                App.stats.render();
+
+                return { imported, missing, totalMembers: members.length };
             },
 
             load() {
@@ -838,26 +982,45 @@
             },
 
             parseStatLine(line) {
-                const parts = line.split("\t").map((p) => p.trim()).filter(Boolean);
+                const parts = line
+                .split("\t")
+                .map(p => p.trim())
+                .filter(Boolean);
+
                 if (parts.length < 2) return null;
 
                 let username = "";
                 let userId = "";
                 let stats = null;
 
-                const bracketMatch = parts[0].match(/^(.+)\[(\d+)\]$/);
-                if (bracketMatch && parts.length >= 2) {
-                    username = bracketMatch[1].trim();
-                    userId = bracketMatch[2].trim();
-                    stats = App.utils.parseNumberLoose(parts[1]);
+                if (parts.length >= 8) {
+                    const namePart = parts[1];
+                    const match = namePart.match(/^(.+?)\s*\[(\d+)\]$/);
+
+                    if (match) {
+                        username = match[1].trim();
+                        userId = match[2];
+                        stats = App.utils.parseNumberLoose(parts[7]);
+                    }
                 }
-                else if (parts.length >= 3) {
-                    username = parts[0];
-                    userId = parts[1];
-                    stats = App.utils.parseNumberLoose(parts[2]);
+
+                if (!username || !userId || stats === null) {
+                    const bracketMatch = parts[0].match(/^(.+?)\s*\[(\d+)\]$/);
+
+                    if (bracketMatch && parts.length >= 2) {
+                        username = bracketMatch[1].trim();
+                        userId = bracketMatch[2];
+                        stats = App.utils.parseNumberLoose(parts[1]);
+                    }
+                    else if (parts.length >= 3) {
+                        username = parts[0];
+                        userId = parts[1];
+                        stats = App.utils.parseNumberLoose(parts[2]);
+                    }
                 }
 
                 if (!username || !userId || stats === null) return null;
+
                 return { username, userId, stats };
             },
         },
@@ -867,6 +1030,7 @@
             init() {
                 App.el.factionId.value = App.storage.get(App.storeKeys.factionId, "");
                 App.el.apiKey.value = App.storage.get(App.storeKeys.apiKey, "");
+                App.el.ffscouterApiKey.value = App.storage.get(App.storeKeys.ffscouterApiKey, "");
 
                 const saved = App.storage.get(App.storeKeys.detectionActive, "true");
                 App.el.detectionActive.checked = (saved !== "false");
@@ -891,10 +1055,30 @@
                     App.storage.set(App.storeKeys.apiKey, (App.el.apiKey.value || "").trim());
                 });
 
+                App.el.root.querySelector("#bh-save-ffscouter-api").addEventListener("click", () => {
+                    App.storage.set(App.storeKeys.ffscouterApiKey, (App.el.ffscouterApiKey.value || "").trim());
+                });
+
                 App.el.root.querySelector("#bh-save-last-active").addEventListener("click", () => {
                     const v = Math.max(1, Number(App.el.lastActiveValue.value || 0));
                     const minutes = Math.floor(v * App.utils.unitToMinutes(App.el.lastActiveUnit.value));
                     App.storage.set(App.storeKeys.lastActiveMinutes, String(minutes));
+                });
+
+                const onlyOkaySaved = App.storage.get(App.storeKeys.onlyOkayStatus, "false");
+                App.el.onlyOkayToggle.checked = (onlyOkaySaved === "true");
+
+                const updateOnlyOkayLabel = () => {
+                    App.el.onlyOkayLabel.textContent = App.el.onlyOkayToggle.checked ? "On" : "Off";
+                };
+                updateOnlyOkayLabel();
+
+                App.el.onlyOkayToggle.addEventListener("change", () => {
+                    App.storage.set(
+                        App.storeKeys.onlyOkayStatus,
+                        App.el.onlyOkayToggle.checked ? "true" : "false"
+                    );
+                    updateOnlyOkayLabel();
                 });
 
                 App.el.lastActiveValue.addEventListener("input", () => App.settings.previewFromUI());
@@ -960,10 +1144,14 @@
                 card.className = "bh-card-item";
                 card.dataset.userid = String(userId);
 
-                const outText =
-                      outOfHospSeconds <= 60
-                ? `Out of hosp in ${outOfHospSeconds}s`
-                : `Out of hosp in ${Math.ceil(outOfHospSeconds / 60)}m`;
+                let outText = "Okay";
+
+                if (outOfHospSeconds > 0) {
+                    outText =
+                        outOfHospSeconds <= 60
+                        ? `Out of hosp in ${outOfHospSeconds}s`
+                    : `Out of hosp in ${Math.ceil(outOfHospSeconds / 60)}m`;
+                }
 
                 card.innerHTML = `
       <div class="bh-card-line1">
@@ -987,10 +1175,8 @@
             },
 
             async refreshFromApi() {
-                // respect du toggle
                 if (!App.engine.isDetectionActive()) {
                     App.summary.clear();
-                    // petit placeholder utile
                     App.summary.addTargetCard({
                         username: "Detection disabled",
                         userId: "—",
@@ -1003,7 +1189,6 @@
 
                 App.summary.clear();
 
-                // petit feedback visuel simple
                 App.summary.addTargetCard({
                     username: "Loading...",
                     userId: "—",
@@ -1036,8 +1221,7 @@
                     const statsById = new Map(
                         (Array.isArray(savedStats) ? savedStats : []).map((s) => [String(s.userId), Number(s.stats)])
                     );
-                    // ⚠️ totalStats : pour l’instant on ne l’a pas via faction/basic
-                    // Donc placeholder 0. Plus tard on joindra avec App.stats.state (table stats)
+
                     for (const t of targets) {
                         const totalStats = statsById.get(String(t.userId)) ?? 0;
 
@@ -1078,12 +1262,32 @@
 
         api: {
             baseUrl: "https://api.torn.com",
+            ffscouterBaseUrl: "https://ffscouter.com/api/v1",
+
+            gmGet(url, timeout = 20000) {
+                return new Promise((resolve, reject) => {
+                    GM_xmlhttpRequest({
+                        method: "GET",
+                        url,
+                        timeout,
+                        onload: (res) => {
+                            try {
+                                const data = JSON.parse(res.responseText);
+                                resolve({ status: res.status, data });
+                            } catch (e) {
+                                reject(new Error("Invalid JSON response"));
+                            }
+                        },
+                        onerror: () => reject(new Error("Network error")),
+                        ontimeout: () => reject(new Error("Request timeout")),
+                    });
+                });
+            },
 
             buildFactionBasicUrl({ factionId, apiKey }) {
                 const id = encodeURIComponent(String(factionId || "").trim());
                 const key = encodeURIComponent(String(apiKey || "").trim());
 
-                // comment=UpsBounty (comme demandé)
                 return `${App.api.baseUrl}/faction/${id}?key=${key}&comment=UpsBounty&selections=basic`;
             },
 
@@ -1097,19 +1301,52 @@
 
                 const url = App.api.buildFactionBasicUrl({ factionId, apiKey });
 
-                const res = await fetch(url, { method: "GET" });
-                const data = await res.json().catch(() => null);
+                const res = await App.api.gmGet(url);
 
-                if (!res.ok) {
+                if (res.status !== 200) {
                     throw new Error(`HTTP ${res.status} while calling Torn API.`);
                 }
 
-                // Torn API renvoie souvent { error: { code, error } }
-                if (data && data.error) {
-                    throw new Error(`Torn API error ${data.error.code}: ${data.error.error}`);
+                if (res.data && res.data.error) {
+                    throw new Error(`Torn API error ${res.data.error.code}: ${res.data.error.error}`);
                 }
 
-                return data;
+                return res.data;
+            },
+
+            buildFFScouterStatsUrl({ apiKey, targets }) {
+                const key = encodeURIComponent(String(apiKey || "").trim());
+                const t = encodeURIComponent(String(targets || "").trim()); // targets: "1,2,3"
+                return `${App.api.ffscouterBaseUrl}/get-stats?key=${key}&targets=${t}`;
+            },
+
+            async fetchFFScouterStats(targetIds) {
+                const ffKey = App.storage.get(App.storeKeys.ffscouterApiKey, "");
+                if (!ffKey) throw new Error("Missing FFScouter API key in settings.");
+
+                const targets = (Array.isArray(targetIds) ? targetIds : [])
+                .map((x) => String(x).trim())
+                .filter(Boolean)
+                .join(",");
+
+                if (!targets) return [];
+
+                const url = App.api.buildFFScouterStatsUrl({
+                    apiKey: ffKey,
+                    targets
+                });
+
+                const res = await App.api.gmGet(url);
+
+                if (res.status !== 200) {
+                    throw new Error(`HTTP ${res.status} while calling FFScouter API.`);
+                }
+
+                if (!Array.isArray(res.data)) {
+                    throw new Error("Unexpected FFScouter response (expected array).");
+                }
+
+                return res.data;
             },
         },
 
@@ -1125,20 +1362,24 @@
             },
 
             isDetectionActive() {
-                // ton toggle “Bounty Detection Active”
                 return App.storage.get(App.storeKeys.detectionActive, "true") !== "false";
             },
 
-            // Convertit members -> tableau normalisé
+            onlyOkayStatusEnabled() {
+                return App.storage.get(App.storeKeys.onlyOkayStatus, "false") === "true";
+            },
+
             normalizeFactionMembers(apiData) {
                 const now = App.engine.nowSec();
                 const membersObj = apiData?.members || {};
+                const onlyOkay = App.engine.onlyOkayStatusEnabled();
 
-                return Object.entries(membersObj).map(([userId, m]) => {
+                return Object.entries(membersObj)
+                    .map(([userId, m]) => {
                     const lastTs = Number(m?.last_action?.timestamp || 0);
                     const lastActionSecondsAgo = lastTs > 0 ? (now - lastTs) : Number.POSITIVE_INFINITY;
 
-                    const state = m?.status?.state || ""; // "Okay" / "Hospital" etc.
+                    const state = String(m?.status?.state || "").trim();
                     const hospUntil = Number(m?.status?.until || 0);
                     const outOfHospSeconds = state === "Hospital" && hospUntil > now ? (hospUntil - now) : 0;
 
@@ -1147,26 +1388,26 @@
                         username: String(m?.name || ""),
                         level: Number(m?.level || 0),
 
-                        lastActionStatus: String(m?.last_action?.status || ""), // "Offline" / "Online" etc
+                        lastActionStatus: String(m?.last_action?.status || ""),
                         lastActionSecondsAgo,
 
                         statusState: state,
                         hospUntil,
                         outOfHospSeconds,
                     };
+                })
+                    .filter((m) => {
+                    if (!m.userId || !m.username) return false;
+                    if (!onlyOkay) return true;
+                    return m.statusState === "Okay";
                 });
             },
 
-            // Filtre selon tes règles actuelles :
-            // - si last active <= delimiter minutes => summary
-            // - et plus tard: si hospital soon + offline => summary (on prépare le hook)
             filterForSummary(members) {
                 const lastActiveMin = App.engine.getLastActiveMinutes();
                 const lastActiveSec = lastActiveMin * 60;
 
-                // param futur : on le met en dur pour l’instant (tu m’as dit "plus tard")
-                // quand tu voudras, on le sortira en setting: bh_hosp_window_minutes
-                const hospWindowSec = null; // ex: 15 * 60 si tu veux activer maintenant
+                const hospWindowSec = null;
 
                 return members.filter((m) => {
                     const recentlyActive = m.lastActionSecondsAgo >= lastActiveSec;
@@ -1178,14 +1419,10 @@
                           m.outOfHospSeconds <= hospWindowSec &&
                           m.lastActionStatus === "Offline";
 
-                    // Ta phrase : "si last active > delimiter ... on l'envoie"
-                    // Interprétation standard : "dernier actif il y a moins que le seuil"
                     return recentlyActive || hospSoonAndOffline;
                 });
             },
 
-            // Tri utile pour l’affichage : ceux qui sortent de l’hosp bientôt d’abord,
-            // sinon ceux qui sont le plus récemment actifs
             sortForSummary(targets) {
                 return [...targets].sort((a, b) => {
                     const aHosp = a.statusState === "Hospital" && a.outOfHospSeconds > 0;
@@ -1249,7 +1486,6 @@
                 for (const ch of String(text)) {
                     el.value += ch;
 
-                    // événements typiques clavier / input
                     el.dispatchEvent(new Event("keydown", { bubbles: true }));
                     el.dispatchEvent(new Event("keypress", { bubbles: true }));
                     el.dispatchEvent(new Event("input", { bubbles: true }));
@@ -1403,35 +1639,28 @@
             isFactionMembersControls() {
                 const url = new URL(window.location.href);
 
-                // Path + query stricts
                 const okPath = url.pathname === "/factions.php";
                 const okStep = url.searchParams.get("step") === "your";
-                const okType = url.searchParams.get("type") === "1";
 
-                // Hash strict: "#/tab=controls&option=members"
-                // Torn peut parfois ajouter d'autres params -> on parse et on vérifie au moins ceux-là
                 const hash = (url.hash || "").trim();
                 if (!hash.startsWith("#/")) return false;
 
-                const paramsStr = hash.slice(2); // remove "#/"
+                const paramsStr = hash.slice(2);
                 const params = new URLSearchParams(paramsStr);
 
                 const okTab = params.get("tab") === "controls";
 
-                return okPath && okStep && okType && okTab;
+                return okPath && okStep && okTab;
             },
 
-            // Observe les changements de hash/SPA
             watch(onChange) {
                 const fire = () => onChange();
 
                 window.addEventListener("hashchange", fire);
 
-                // Torn peut modifier l’URL sans hashchange -> on observe aussi DOM + history
                 const mo = new MutationObserver(() => fire());
                 mo.observe(document.documentElement, { childList: true, subtree: true });
 
-                // Hook history API (SPA)
                 const _pushState = history.pushState;
                 const _replaceState = history.replaceState;
 
@@ -1444,7 +1673,6 @@
                     fire();
                 };
 
-                // first run
                 fire();
 
                 return () => {
@@ -1457,13 +1685,9 @@
         },
 
         mountUI() {
-            if (App.el.root) return; // déjà monté
+            if (App.el.root) return;
 
-            // ⚠️ choisis un anchor stable sur cette page
-            // Tu utilisais hr.delimiter-999.m-top10. Si c’est stable sur factions members, OK.
-            // Sinon remplace le selector par un élément présent sur cette page.
             App.utils.waitForElement("hr.delimiter-999.m-top10").then((anchor) => {
-                // recheck route (on peut avoir changé entre-temps)
                 if (!App.route.isFactionMembersControls()) return;
                 if (App.el.root) return;
 
@@ -1476,7 +1700,6 @@
                 App.settings.init();
                 App.summary.init();
 
-                // Accordion (voir section suivante)
                 App.ui.initAccordion();
             });
         },
@@ -1487,7 +1710,6 @@
             root.remove();
             App.el.root = null;
 
-            // (Optionnel) si tu veux aussi reset certains caches :
             App.el.rulesRows = null;
             App.el.statsTableBody = null;
             App.el.statsInput = null;
@@ -1500,7 +1722,7 @@
             if (App.state.initialized) return;
             App.state.initialized = true;
 
-            // AutoBounty doit rester indépendant de l’UI factions
+            // AutoBounty independant
             App.autobounty?.init?.();
 
             App.route.watch(() => {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Monsters Wrath Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.1.0
+// @version      0.1.3
 // @description  Helper tool for Monsters Wrath game - autofill, calculations, and more
 // @author       You
 // @match        https://www.monsterswrath.com/*
@@ -294,16 +294,25 @@
      * Get all feature toggles (defaults to all enabled)
      */
     function getFeatureToggles() {
-        const toggles = GM_getValue(FEATURE_TOGGLES_KEY, {
+        const defaults = {
             'armoryAutofill': true,
             'upgradeCalculator': true,
-            'legendsTimer': true
-        });
-        // Ensure all features have a value (for backwards compatibility)
+            'legendsTimer': true,
+            'incomeUpSnapshot': true,
+            'commandCenterStats': true,
+            'headToHeadStats': true
+        };
+        const stored = GM_getValue(FEATURE_TOGGLES_KEY, {});
+        // Merge stored values with defaults, ensuring all features have a value
+        const toggles = { ...defaults, ...stored };
+        // Return all features, preserving explicit false values
         return {
             'armoryAutofill': toggles.armoryAutofill !== false,
             'upgradeCalculator': toggles.upgradeCalculator !== false,
-            'legendsTimer': toggles.legendsTimer !== false
+            'legendsTimer': toggles.legendsTimer !== false,
+            'incomeUpSnapshot': toggles.incomeUpSnapshot !== false,
+            'commandCenterStats': toggles.commandCenterStats !== false,
+            'headToHeadStats': toggles.headToHeadStats !== false
         };
     }
     
@@ -312,16 +321,35 @@
      */
     function isFeatureEnabled(featureName) {
         const toggles = getFeatureToggles();
-        return toggles[featureName] !== false; // Default to true if not set
+        // Check if the toggle exists and is explicitly set
+        if (toggles.hasOwnProperty(featureName)) {
+            return toggles[featureName] !== false;
+        }
+        // Default to true if not set
+        return true;
     }
     
     /**
      * Set a feature toggle
      */
     function setFeatureToggle(featureName, enabled) {
-        const toggles = getFeatureToggles();
+        // Get the raw stored values (not processed)
+        const defaults = {
+            'armoryAutofill': true,
+            'upgradeCalculator': true,
+            'legendsTimer': true,
+            'incomeUpSnapshot': true,
+            'commandCenterStats': true,
+            'headToHeadStats': true
+        };
+        const stored = GM_getValue(FEATURE_TOGGLES_KEY, {});
+        // Merge with defaults to ensure all features exist
+        const toggles = { ...defaults, ...stored };
+        // Update the specific feature
         toggles[featureName] = enabled;
+        // Save the updated toggles
         GM_setValue(FEATURE_TOGGLES_KEY, toggles);
+        console.log(`Saved feature toggle: ${featureName} = ${enabled}, all toggles:`, toggles);
     }
     
     /**
@@ -331,7 +359,9 @@
         'armoryAutofill': 'Automatically fills weapon purchase quantities based on your saved preferences and available gold. Set your preferred weapon percentages in the preferences section below.',
         'upgradeCalculator': 'Displays recommendations on the upgrades page showing when it\'s more efficient to buy upgrades versus weapons. Also calculates sell-off options if you need to sell weapons to afford an upgrade.',
         'incomeUpSnapshot': 'Captures income and unit production data from the battlefield by comparing values between two consecutive turns. Displays the calculated values on the Top Stats page. Note: Income shown is only displayed gold stashed (not banked income), but stashed gold is a good proxy for understanding total income.',
-        'legendsTimer': 'Displays time overlays on the Legends page showing total time needed and a live countdown for each unsought legend. Requires mana production data from Command Center.'
+        'legendsTimer': 'Displays time overlays on the Legends page showing total time needed and a live countdown for each unsought legend. Requires mana production data from Command Center.',
+        'commandCenterStats': 'Displays a compact overlay on the Command Center page showing Total Gold Revenue, Total Unit Revenue, and Mana Produced in one convenient location.',
+        'headToHeadStats': 'Tracks gold stolen from and lost to each player in battle logs. Provides head-to-head statistics and attack summaries.'
     };
     
     // ============================================================================
@@ -339,6 +369,7 @@
     // ============================================================================
     
     const PREF_KEY = 'armoryPreferences';
+    const SNAPSHOT_DISPLAY_PREF_KEY = 'snapshotDisplayPreferences';
     
     /**
      * Get saved armory preferences
@@ -354,6 +385,21 @@
      */
     function savePreferences(prefs) {
         GM_setValue(PREF_KEY, prefs);
+    }
+    
+    /**
+     * Get snapshot display preferences
+     * Returns: { showOnBattlefield: boolean, showOnTopStats: boolean }
+     */
+    function getSnapshotDisplayPreferences() {
+        return GM_getValue(SNAPSHOT_DISPLAY_PREF_KEY, { showOnBattlefield: true, showOnTopStats: true });
+    }
+    
+    /**
+     * Save snapshot display preferences
+     */
+    function saveSnapshotDisplayPreferences(prefs) {
+        GM_setValue(SNAPSHOT_DISPLAY_PREF_KEY, prefs);
     }
 
     /**
@@ -384,7 +430,16 @@
      * Get input element for a weapon purchase
      */
     function getWeaponInput(type, htmlTag) {
-        const inputId = `buy-${type}-${htmlTag}`;
+        // Map our internal type names to HTML type names
+        // Security weapons use "magic" in the HTML, not "security"
+        const htmlTypeMap = {
+            'security': 'magic',
+            'attack': 'attack',
+            'defense': 'defense',
+            'stealth': 'stealth'
+        };
+        const htmlType = htmlTypeMap[type] || type;
+        const inputId = `buy-${htmlType}-${htmlTag}`;
         return document.getElementById(inputId);
     }
 
@@ -563,7 +618,7 @@
             container.id = 'mwh-notification-container';
             container.style.cssText = `
                 position: fixed;
-                top: 20px;
+                top: 120px;
                 right: 20px;
                 z-index: 10000;
                 display: flex;
@@ -825,6 +880,21 @@
                 if (panel) {
                     const isVisible = panel.style.display === 'block';
                     panel.style.display = isVisible ? 'none' : 'block';
+                    
+                    // Hide/show Key Stats overlay when opening/closing settings
+                    const keyStatsOverlay = document.getElementById('mwh-command-center-stats');
+                    if (keyStatsOverlay) {
+                        if (!isVisible) {
+                            // Opening settings - hide overlay
+                            keyStatsOverlay.style.display = 'none';
+                        } else {
+                            // Closing settings - show overlay if feature is enabled
+                            if (isFeatureEnabled('commandCenterStats')) {
+                                keyStatsOverlay.style.display = 'block';
+                            }
+                        }
+                    }
+                    
                     if (!isVisible) {
                         // Reload preferences when opening the dashboard
                         reloadPreferencesUI();
@@ -894,7 +964,8 @@
         const features = [
             { key: 'armoryAutofill', label: 'Armory Autofill' },
             { key: 'upgradeCalculator', label: 'Upgrade Calculator' },
-            { key: 'legendsTimer', label: 'Legends Timer' }
+            { key: 'legendsTimer', label: 'Legends Timer' },
+            { key: 'commandCenterStats', label: 'Command Center Stats' }
         ];
         
         // Helper function to create help button with tooltip
@@ -1023,6 +1094,11 @@
                 toggleSlider.style.backgroundColor = enabled ? '#4CAF50' : '#ccc';
                 toggleCircle.style.transform = `translateX(${enabled ? '26px' : '0'})`;
                 showNotification(`${feature.label} ${enabled ? 'enabled' : 'disabled'}`);
+                
+                // Immediately update Command Center stats overlay if toggled
+                if (feature.key === 'commandCenterStats' && window.location.pathname.includes('base.php')) {
+                    displayCommandCenterStatsOverlay();
+                }
             });
             
             toggleContainer.appendChild(toggleInput);
@@ -1234,6 +1310,112 @@
         snapshotFeatureRow.appendChild(snapshotLabelContainer);
         snapshotFeatureRow.appendChild(snapshotActionBtn);
         snapshotFeatureContainer.appendChild(snapshotFeatureRow);
+        
+        // Add collapsible preferences section for Snapshot Display
+        const snapshotPrefsContainer = document.createElement('div');
+        snapshotPrefsContainer.id = 'mwh-snapshot-prefs';
+        snapshotPrefsContainer.style.cssText = `
+            display: none;
+            padding: 10px;
+            background: #fafafa;
+            border-radius: 5px;
+            margin-top: 10px;
+        `;
+        
+        const snapshotPrefsTitle = document.createElement('div');
+        snapshotPrefsTitle.textContent = 'Display Options:';
+        snapshotPrefsTitle.style.cssText = 'font-weight: bold; margin-bottom: 10px; font-size: 12px;';
+        snapshotPrefsContainer.appendChild(snapshotPrefsTitle);
+        
+        // Load current preferences
+        const snapshotPrefs = getSnapshotDisplayPreferences();
+        
+        // Battlefield checkbox
+        const battlefieldCheckboxContainer = document.createElement('div');
+        battlefieldCheckboxContainer.style.cssText = 'display: flex; align-items: center; margin-bottom: 8px;';
+        const battlefieldCheckbox = document.createElement('input');
+        battlefieldCheckbox.type = 'checkbox';
+        battlefieldCheckbox.id = 'snapshot-battlefield';
+        battlefieldCheckbox.checked = snapshotPrefs.showOnBattlefield !== false; // Default to true
+        battlefieldCheckbox.style.cssText = 'margin-right: 8px;';
+        const battlefieldLabel = document.createElement('label');
+        battlefieldLabel.htmlFor = 'snapshot-battlefield';
+        battlefieldLabel.textContent = 'Show on Battlefield';
+        battlefieldLabel.style.cssText = 'font-size: 12px; cursor: pointer;';
+        battlefieldCheckboxContainer.appendChild(battlefieldCheckbox);
+        battlefieldCheckboxContainer.appendChild(battlefieldLabel);
+        snapshotPrefsContainer.appendChild(battlefieldCheckboxContainer);
+        
+        // Top Stats checkbox
+        const topStatsCheckboxContainer = document.createElement('div');
+        topStatsCheckboxContainer.style.cssText = 'display: flex; align-items: center; margin-bottom: 8px;';
+        const topStatsCheckbox = document.createElement('input');
+        topStatsCheckbox.type = 'checkbox';
+        topStatsCheckbox.id = 'snapshot-topstats';
+        topStatsCheckbox.checked = snapshotPrefs.showOnTopStats !== false; // Default to true
+        topStatsCheckbox.style.cssText = 'margin-right: 8px;';
+        const topStatsLabel = document.createElement('label');
+        topStatsLabel.htmlFor = 'snapshot-topstats';
+        topStatsLabel.textContent = 'Show on Top Stats';
+        topStatsLabel.style.cssText = 'font-size: 12px; cursor: pointer;';
+        topStatsCheckboxContainer.appendChild(topStatsCheckbox);
+        topStatsCheckboxContainer.appendChild(topStatsLabel);
+        snapshotPrefsContainer.appendChild(topStatsCheckboxContainer);
+        
+        // Save button
+        const saveSnapshotPrefsBtn = document.createElement('button');
+        saveSnapshotPrefsBtn.textContent = 'Save Display Preferences';
+        saveSnapshotPrefsBtn.style.cssText = `
+            padding: 6px 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-top: 5px;
+        `;
+        saveSnapshotPrefsBtn.addEventListener('click', () => {
+            const newPrefs = {
+                showOnBattlefield: battlefieldCheckbox.checked,
+                showOnTopStats: topStatsCheckbox.checked
+            };
+            saveSnapshotDisplayPreferences(newPrefs);
+            showNotification('Snapshot display preferences saved!');
+            // Refresh displays if on relevant pages
+            if (window.location.pathname.includes('battlefield2.php')) {
+                displaySnapshotOnBattlefield();
+            }
+            if (window.location.pathname.includes('toplist.php')) {
+                displaySnapshotOverlays();
+            }
+        });
+        snapshotPrefsContainer.appendChild(saveSnapshotPrefsBtn);
+        
+        // Toggle button
+        const toggleSnapshotPrefsBtn = document.createElement('button');
+        toggleSnapshotPrefsBtn.textContent = '▼ Display Preferences';
+        toggleSnapshotPrefsBtn.style.cssText = `
+            width: 100%;
+            padding: 4px;
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            text-align: left;
+            margin-top: 10px;
+        `;
+        let snapshotPrefsExpanded = false;
+        toggleSnapshotPrefsBtn.addEventListener('click', () => {
+            snapshotPrefsExpanded = !snapshotPrefsExpanded;
+            snapshotPrefsContainer.style.display = snapshotPrefsExpanded ? 'block' : 'none';
+            toggleSnapshotPrefsBtn.textContent = snapshotPrefsExpanded ? '▲ Display Preferences' : '▼ Display Preferences';
+        });
+        snapshotFeatureContainer.appendChild(toggleSnapshotPrefsBtn);
+        snapshotFeatureContainer.appendChild(snapshotPrefsContainer);
+        
         featuresSection.appendChild(snapshotFeatureContainer);
         
         // Intelligence Display Feature
@@ -1282,10 +1464,344 @@
         intelFeatureContainer.appendChild(intelFeatureRow);
         featuresSection.appendChild(intelFeatureContainer);
         
+        // Head to Head Stats Feature
+        const h2hFeatureContainer = document.createElement('div');
+        h2hFeatureContainer.style.cssText = 'margin-bottom: 15px;';
+        
+        const h2hFeatureRow = document.createElement('div');
+        h2hFeatureRow.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 10px; background: #f5f5f5; border-radius: 5px;';
+        
+        const h2hLabelContainer = document.createElement('div');
+        h2hLabelContainer.style.cssText = 'display: flex; align-items: center; gap: 8px; flex: 1;';
+        
+        const h2hLabel = document.createElement('div');
+        h2hLabel.textContent = 'Head to Head Stats';
+        h2hLabel.style.cssText = 'font-weight: bold; font-size: 14px; flex: 1;';
+        
+        const h2hHelpBtn = createHelpButton(FEATURE_DESCRIPTIONS['headToHeadStats']);
+        h2hLabelContainer.appendChild(h2hLabel);
+        h2hLabelContainer.appendChild(h2hHelpBtn);
+        
+        const h2hUpdateBtn = document.createElement('button');
+        h2hUpdateBtn.textContent = 'Update Head to Head Stats';
+        h2hUpdateBtn.style.cssText = `
+            padding: 6px 12px;
+            background: #FF9800;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        `;
+        h2hUpdateBtn.addEventListener('click', () => {
+            container.style.display = 'none';
+            updateHeadToHeadStats();
+        });
+        h2hUpdateBtn.addEventListener('mouseenter', () => {
+            h2hUpdateBtn.style.background = '#F57C00';
+        });
+        h2hUpdateBtn.addEventListener('mouseleave', () => {
+            h2hUpdateBtn.style.background = '#FF9800';
+        });
+        
+        const h2hViewBtn = document.createElement('button');
+        h2hViewBtn.textContent = 'View Stats';
+        h2hViewBtn.style.cssText = `
+            padding: 6px 12px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 8px;
+        `;
+        h2hViewBtn.addEventListener('click', () => {
+            container.style.display = 'none';
+            showHeadToHeadStats();
+        });
+        h2hViewBtn.addEventListener('mouseenter', () => {
+            h2hViewBtn.style.background = '#1976D2';
+        });
+        h2hViewBtn.addEventListener('mouseleave', () => {
+            h2hViewBtn.style.background = '#2196F3';
+        });
+        
+        const h2hFreshBtn = document.createElement('button');
+        h2hFreshBtn.textContent = 'Fresh Scrape';
+        h2hFreshBtn.style.cssText = `
+            padding: 6px 12px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 8px;
+        `;
+        h2hFreshBtn.addEventListener('click', () => {
+            const shouldRescrape = confirm(
+                'This will clear all existing Head to Head data and re-scrape everything from scratch.\n\n' +
+                'This may take a while if you have many pages of data.\n\n' +
+                'Continue?'
+            );
+            if (shouldRescrape) {
+                container.style.display = 'none';
+                // Clear existing data
+                saveH2HData({ battleDefenses: [], battleAttacks: [] });
+                GM_deleteValue('mwh_h2h_scraping');
+                GM_deleteValue('mwh_h2h_update_pending');
+                // Set fresh scrape flag
+                GM_setValue('mwh_h2h_fresh_scrape', true);
+                showNotification('Starting fresh scrape...', 2000);
+                updateHeadToHeadStats();
+            }
+        });
+        h2hFreshBtn.addEventListener('mouseenter', () => {
+            h2hFreshBtn.style.background = '#d32f2f';
+        });
+        h2hFreshBtn.addEventListener('mouseleave', () => {
+            h2hFreshBtn.style.background = '#f44336';
+        });
+        
+        const h2hButtonContainer = document.createElement('div');
+        h2hButtonContainer.style.cssText = 'display: flex; gap: 8px; flex-wrap: wrap;';
+        h2hButtonContainer.appendChild(h2hUpdateBtn);
+        h2hButtonContainer.appendChild(h2hViewBtn);
+        h2hButtonContainer.appendChild(h2hFreshBtn);
+        
+        h2hFeatureRow.appendChild(h2hLabelContainer);
+        h2hFeatureRow.appendChild(h2hButtonContainer);
+        h2hFeatureContainer.appendChild(h2hFeatureRow);
+        featuresSection.appendChild(h2hFeatureContainer);
+        
         container.appendChild(featuresSection);
+        
+        // Changelog Section
+        const changelogSection = document.createElement('div');
+        changelogSection.style.marginTop = '30px';
+        changelogSection.style.marginBottom = '20px';
+        changelogSection.style.paddingTop = '20px';
+        changelogSection.style.borderTop = '2px solid #eee';
+        
+        const changelogTitle = document.createElement('h3');
+        changelogTitle.textContent = 'What\'s New';
+        changelogTitle.style.cssText = 'margin-top: 0; margin-bottom: 15px; color: #555; font-size: 16px;';
+        changelogSection.appendChild(changelogTitle);
+        
+        const changelogBtn = document.createElement('button');
+        changelogBtn.textContent = '📋 View Changelog';
+        changelogBtn.style.cssText = `
+            padding: 10px 20px;
+            background: #9C27B0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            width: 100%;
+        `;
+        changelogBtn.addEventListener('click', () => {
+            showChangelog();
+        });
+        changelogBtn.addEventListener('mouseenter', () => {
+            changelogBtn.style.background = '#7B1FA2';
+        });
+        changelogBtn.addEventListener('mouseleave', () => {
+            changelogBtn.style.background = '#9C27B0';
+        });
+        changelogSection.appendChild(changelogBtn);
+        
+        container.appendChild(changelogSection);
         
         document.body.appendChild(container);
         return container;
+    }
+    
+    /**
+     * Show changelog in a modal overlay
+     */
+    function showChangelog() {
+        // Remove existing changelog if present
+        const existing = document.getElementById('mwh-changelog-overlay');
+        if (existing) {
+            existing.remove();
+        }
+        
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'mwh-changelog-overlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 20000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        `;
+        
+        // Create modal
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            font-family: Arial, sans-serif;
+            position: relative;
+        `;
+        
+        // Close button
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = '✕';
+        closeBtn.style.cssText = `
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `;
+        closeBtn.addEventListener('click', () => {
+            overlay.remove();
+        });
+        modal.appendChild(closeBtn);
+        
+        // Title
+        const title = document.createElement('h2');
+        title.textContent = '📋 Changelog';
+        title.style.cssText = 'margin-top: 0; margin-bottom: 25px; color: #333; border-bottom: 2px solid #eee; padding-bottom: 15px;';
+        modal.appendChild(title);
+        
+        // Changelog content
+        const changelogContent = document.createElement('div');
+        changelogContent.style.cssText = 'line-height: 1.8; color: #555;';
+        
+        const changelog = `
+            <div style="margin-bottom: 40px;">
+                <h2 style="color: #4CAF50; margin-bottom: 20px; font-size: 20px; border-bottom: 2px solid #4CAF50; padding-bottom: 10px;">✨ Major Changes</h2>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #2196F3; margin-bottom: 10px; font-size: 18px;">⚔️ Head to Head Stats</h3>
+                    <p><strong>New Feature:</strong> Track gold stolen from and lost to each player! Comprehensive battle log analysis with:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Head to Head table showing gold differentials with each opponent</li>
+                        <li>Your Attack Stats with breakdowns by time period (24h, 3 days, all age)</li>
+                        <li>Separate stats for attacks vs players vs farms</li>
+                        <li>Automatic data collection from war logs with smart pagination</li>
+                        <li>Fresh scrape option for complete data collection</li>
+                    </ul>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #2196F3; margin-bottom: 10px; font-size: 18px;">📸 Snapshot Feature Enhancements</h3>
+                    <p><strong>New:</strong> Snapshot data now appears on the battlefield page! See income and unit production rates directly on the battlefield list.</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Unit Production appears as "+X" next to each player's army size</li>
+                        <li>Income appears as "+X/turn" with hourly estimate near the gold display</li>
+                        <li>New settings to control where snapshot data appears (battlefield, top stats, or both)</li>
+                    </ul>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #2196F3; margin-bottom: 10px; font-size: 18px;">📈 Command Center Stats Overlay</h3>
+                    <p><strong>New Feature:</strong> A convenient overlay on the Command Center page showing your key stats in one place:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Total Gold Revenue</li>
+                        <li>Total Unit Revenue</li>
+                        <li>Mana Produced</li>
+                    </ul>
+                    <p style="margin-top: 10px;">Can be toggled on/off in settings. Positioned to avoid blocking other UI elements.</p>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #2196F3; margin-bottom: 10px; font-size: 18px;">📊 Upgrade Calculator Enhancements</h3>
+                    <p>Added efficiency percentage display to help you see how close an upgrade is to being worthwhile. Shows "Efficiency: X%" with color coding - green when it's better than weapons, yellow when it's getting close. This helps you make better upgrade decisions!</p>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 40px;">
+                <h2 style="color: #FF9800; margin-bottom: 20px; font-size: 20px; border-bottom: 2px solid #FF9800; padding-bottom: 10px;">🔧 Minor Changes & Fixes</h2>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #2196F3; margin-bottom: 10px; font-size: 18px;">⚙️ Feature Toggle Persistence</h3>
+                    <p>Fixed an issue where feature toggles (like Command Center Stats) weren't saving properly. All toggle switches now save their state automatically and persist across page reloads.</p>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #2196F3; margin-bottom: 10px; font-size: 18px;">⏱️ Legends Summary Calculation Fix</h3>
+                    <p>Fixed the Legends summary to properly account for current mana on hand when calculating time until completion. The summary now shows both:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Time from 0 mana (theoretical full time)</li>
+                        <li>Time with current mana (actual remaining time, highlighted in green)</li>
+                    </ul>
+                    <p style="margin-top: 10px;">Also displays current mana on hand and remaining mana needed for better visibility.</p>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #2196F3; margin-bottom: 10px; font-size: 18px;">🔧 Intelligence System Fixes</h3>
+                    <p>Fixed a bug where "???" values from new recon missions were overwriting older valid data. Now the system preserves your existing data when new recon returns "???" values, preventing undercounting of player stats.</p>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #2196F3; margin-bottom: 10px; font-size: 18px;">⚔️ Armory Autofill Improvements</h3>
+                    <p>Fixed security weapon autofill! Security weapons (like Devastating Staff) now work correctly. The game uses "magic" in the HTML instead of "security", and the helper now handles this properly.</p>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: #2196F3; margin-bottom: 10px; font-size: 18px;">🎨 UI Improvements</h3>
+                    <p>Various improvements to make the interface cleaner and less cluttered:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Notifications moved lower to avoid blocking the settings box</li>
+                        <li>Better positioning of overlays to prevent conflicts</li>
+                        <li>Improved visual hierarchy and spacing throughout</li>
+                    </ul>
+                </div>
+            </div>
+        `;
+        
+        changelogContent.innerHTML = changelog;
+        modal.appendChild(changelogContent);
+        
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+        
+        // Close on overlay click (outside modal)
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.remove();
+            }
+        });
+        
+        // Close on Escape key
+        const escapeHandler = (e) => {
+            if (e.key === 'Escape') {
+                overlay.remove();
+                document.removeEventListener('keydown', escapeHandler);
+            }
+        };
+        document.addEventListener('keydown', escapeHandler);
     }
 
     /**
@@ -1718,6 +2234,14 @@
         const isUpgradeBetter = inventoryValue > 0 && upgradeCost < equivalentWeaponCost;
         const savings = Math.abs(equivalentWeaponCost - upgradeCost);
         
+        // Calculate efficiency percentage: how close the upgrade is to being worthwhile
+        // If equivalentWeaponCost = 1000 and upgradeCost = 900, efficiency = 111% (better than weapons)
+        // If equivalentWeaponCost = 1000 and upgradeCost = 1111, efficiency = 90% (90% as effective, 10% away)
+        let efficiencyPercentage = null;
+        if (inventoryValue > 0 && equivalentWeaponCost > 0 && upgradeCost > 0) {
+            efficiencyPercentage = (equivalentWeaponCost / upgradeCost) * 100;
+        }
+        
         // Calculate how much more inventory value is needed to make upgrade worthwhile
         // If upgradeCost > equivalentWeaponCost, we need more inventory
         // equivalentWeaponCost = inventoryValue * (percentIncrease / 100)
@@ -1739,7 +2263,8 @@
             savings: savings,
             nextName: upgradeData.nextName,
             inventoryValue: inventoryValue,
-            neededMoreValue: neededMoreValue
+            neededMoreValue: neededMoreValue,
+            efficiencyPercentage: efficiencyPercentage
         };
     }
 
@@ -1948,12 +2473,19 @@
                     
                     // Calculate needed more value properly
                     let neededMoreValue = upgradeData.nextCost;
+                    let equivalentWeaponCost = 0;
                     if (percentIncrease > 0 && inventoryValue > 0) {
                         // Calculate equivalent weapon cost
-                        const equivalentWeaponCost = inventoryValue * (percentIncrease / 100);
+                        equivalentWeaponCost = inventoryValue * (percentIncrease / 100);
                         // Calculate needed inventory value
                         const neededInventoryValue = upgradeData.nextCost / (percentIncrease / 100);
                         neededMoreValue = Math.max(0, neededInventoryValue - inventoryValue);
+                    }
+                    
+                    // Calculate efficiency percentage
+                    let efficiencyPercentage = null;
+                    if (inventoryValue > 0 && equivalentWeaponCost > 0 && upgradeData.nextCost > 0) {
+                        efficiencyPercentage = (equivalentWeaponCost / upgradeData.nextCost) * 100;
                     }
                     
                     displayRec = {
@@ -1964,11 +2496,12 @@
                         isUpgradeBetter: false,
                         inventoryValue: inventoryValue,
                         neededMoreValue: neededMoreValue,
-                        equivalentWeaponCost: percentIncrease > 0 && inventoryValue > 0 ? inventoryValue * (percentIncrease / 100) : 0,
+                        equivalentWeaponCost: equivalentWeaponCost,
                         savings: 0,
                         currentMultiplier: upgradeData.currentMultiplier || 1,
                         nextMultiplier: upgradeData.nextMultiplier || 1,
-                        nextName: upgradeData.nextName || ''
+                        nextName: upgradeData.nextName || '',
+                        efficiencyPercentage: efficiencyPercentage
                     };
                 }
                 
@@ -2124,6 +2657,16 @@
                 messageHtml += `${percentIncrease}% increase for ${displayRec.statName}<br>`;
                 messageHtml += `Upgrade: ${upgradeCostFormatted} Gold<br>`;
                 
+                // Efficiency percentage display
+                if (displayRec.efficiencyPercentage !== null && displayRec.efficiencyPercentage !== undefined) {
+                    const efficiencyFormatted = displayRec.efficiencyPercentage.toFixed(1);
+                    if (displayRec.efficiencyPercentage >= 100) {
+                        messageHtml += `<span style="color: #4CAF50; font-weight: bold;">Efficiency: ${efficiencyFormatted}% (Better than weapons)</span><br>`;
+                    } else {
+                        messageHtml += `<span style="color: #FFC107; font-weight: bold;">Efficiency: ${efficiencyFormatted}% (${(100 - displayRec.efficiencyPercentage).toFixed(1)}% away from worthwhile)</span><br>`;
+                    }
+                }
+                
                 // Outright Purchase Section
                 messageHtml += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.3);"><strong>Outright Purchase:</strong><br>`;
                 if (totalGold >= displayRec.upgradeCost) {
@@ -2226,6 +2769,1399 @@
                 }
             }
         });
+    }
+
+    // ============================================================================
+    // HEAD TO HEAD STATS
+    // ============================================================================
+    
+    const H2H_DATA_KEY = 'headToHeadStatsData';
+    
+    /**
+     * Get all Head to Head stats data
+     * Returns: { battleDefenses: [...], battleAttacks: [...] }
+     */
+    function getH2HData() {
+        return GM_getValue(H2H_DATA_KEY, { battleDefenses: [], battleAttacks: [] });
+    }
+    
+    /**
+     * Save Head to Head stats data
+     */
+    function saveH2HData(data) {
+        GM_setValue(H2H_DATA_KEY, data);
+    }
+    
+    /**
+     * Extract attack ID from details link
+     */
+    function extractAttackId(detailsLink) {
+        if (!detailsLink) return null;
+        const href = detailsLink.getAttribute('href');
+        if (!href) return null;
+        const match = href.match(/battlelog\.php\?id=(\d+)/);
+        return match ? match[1] : null;
+    }
+    
+    /**
+     * Parse gold amount from gold span
+     */
+    function parseGoldFromSpan(goldSpan) {
+        if (!goldSpan) return 0;
+        const goldText = goldSpan.textContent.trim();
+        const match = goldText.match(/([\d,]+)\s*Gold/);
+        return match ? parseNumber(match[1]) : 0;
+    }
+    
+    /**
+     * Parse relative time string to timestamp
+     * Examples: "40 Minutes", "2 Hours", "3 Days", "1 Hour, 30 Minutes"
+     */
+    function parseRelativeTime(timeText) {
+        const now = Date.now();
+        let minutesAgo = 0;
+        
+        // Parse days
+        const dayMatch = timeText.match(/(\d+)\s*Day/i);
+        if (dayMatch) {
+            minutesAgo += parseInt(dayMatch[1], 10) * 24 * 60;
+        }
+        
+        // Parse hours
+        const hourMatch = timeText.match(/(\d+)\s*Hour/i);
+        if (hourMatch) {
+            minutesAgo += parseInt(hourMatch[1], 10) * 60;
+        }
+        
+        // Parse minutes
+        const minuteMatch = timeText.match(/(\d+)\s*Minute/i);
+        if (minuteMatch) {
+            minutesAgo += parseInt(minuteMatch[1], 10);
+        }
+        
+        return now - (minutesAgo * 60 * 1000);
+    }
+    
+    /**
+     * Scrape Battle Defense table from current page (attacks against user)
+     */
+    function scrapeBattleDefensesFromPage(knownIds = new Set()) {
+        // Find Battle Defense table - look for the header with colspan="11"
+        const defenseHeader = Array.from(document.querySelectorAll('th')).find(th => 
+            th.textContent.trim().includes('Battle Defense') && th.getAttribute('colspan') === '11'
+        );
+        if (!defenseHeader) {
+            console.warn('Battle Defense header not found');
+            return { attacks: [], hasMore: false, foundKnown: false, totalExpected: 0 };
+        }
+        
+        // Find the table - the header is in a thead, and data is in tbody
+        const table = defenseHeader.closest('table') || defenseHeader.closest('tbody') || defenseHeader.parentElement;
+        const rows = table.querySelectorAll('tbody tr.r1, tbody tr.r2, tr.r1, tr.r2');
+        
+        console.log(`Found ${rows.length} defense rows in table`);
+        
+        const attacks = [];
+        let foundKnown = false;
+        let skippedCount = 0;
+        
+        rows.forEach((row, index) => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length < 11) {
+                skippedCount++;
+                return;
+            }
+            
+            // Extract attack ID from details link
+            const detailsLink = cells[10].querySelector('a.link-stats');
+            const attackId = extractAttackId(detailsLink);
+            if (!attackId) {
+                skippedCount++;
+                return;
+            }
+            
+            // Check if we've seen this attack before
+            // Since logs are in chronological order (newest first), if we find one known ID,
+            // all subsequent entries are also known, so we can stop
+            if (knownIds.has(attackId)) {
+                foundKnown = true;
+                console.log(`Found known defense attack ID: ${attackId} - reached old data (chronological order)`);
+                return; // Stop processing this page
+            }
+            
+            // Extract enemy name
+            const enemyLink = cells[1].querySelector('a.link-battle');
+            const enemyName = enemyLink ? enemyLink.textContent.trim() : cells[1].textContent.trim();
+            
+            // Extract gold stolen (from user)
+            const goldSpan = cells[3].querySelector('span.gold');
+            const goldStolen = parseGoldFromSpan(goldSpan);
+            
+            // Extract timestamp (for filtering by date)
+            const timeText = cells[0].textContent.trim();
+            const timestamp = parseRelativeTime(timeText);
+            
+            attacks.push({
+                id: attackId,
+                enemy: enemyName,
+                goldStolen: goldStolen,
+                time: timeText,
+                timestamp: timestamp
+            });
+        });
+        
+        if (skippedCount > 0) {
+            console.log(`Skipped ${skippedCount} defense rows (invalid format)`);
+        }
+        
+        // Check if there's a next page and get total expected count
+        // Footer might be in tfoot, or in a td with colspan, or in the table itself
+        let footer = table.querySelector('tfoot td[colspan]');
+        if (!footer) {
+            footer = table.querySelector('td[colspan]');
+        }
+        if (!footer) {
+            // Try finding any td with colspan in the table's parent
+            const parent = table.parentElement;
+            if (parent) {
+                footer = parent.querySelector('td[colspan]');
+            }
+        }
+        // Also try finding by text content - look for "Attacks On You" or "page X of Y"
+        if (!footer) {
+            const allTds = Array.from(document.querySelectorAll('td[colspan]'));
+            footer = allTds.find(td => {
+                const text = td.textContent;
+                return text.includes('Attacks On You') || text.includes('Attacks On') || /page \d+ of \d+/.test(text);
+            });
+        }
+        
+        // Also check for next page link as fallback
+        const nextPageLink = document.querySelector('a[href*="warlogs.php?dp="]');
+        
+        let hasMore = false;
+        let currentPage = 1;
+        let totalPages = 1;
+        let totalExpected = 0;
+        if (footer) {
+            const footerText = footer.textContent.trim();
+            console.log('Defense footer text:', footerText);
+            // Match: "11 Attacks On You | page 1 of 1"
+            const countMatch = footerText.match(/(\d+)\s+Attacks?\s+On\s+You/i);
+            if (countMatch) {
+                totalExpected = parseInt(countMatch[1], 10);
+            }
+            const pageMatch = footerText.match(/page (\d+) of (\d+)/);
+            if (pageMatch) {
+                currentPage = parseInt(pageMatch[1], 10);
+                totalPages = parseInt(pageMatch[2], 10);
+                hasMore = currentPage < totalPages && !foundKnown;
+                console.log(`Defense pagination: page ${currentPage} of ${totalPages}, hasMore: ${hasMore}, foundKnown: ${foundKnown}`);
+            } else {
+                console.warn('Could not parse defense page info from footer:', footerText);
+            }
+        } else {
+            console.warn('Defense footer not found!');
+            // Fallback: if we found a next page link, there are more pages
+            if (nextPageLink) {
+                hasMore = !foundKnown;
+                console.log('Defense footer not found, but next page link exists, assuming hasMore:', hasMore);
+            }
+        }
+        
+        console.log(`Defense scraping: Found ${attacks.length} new attacks, page ${currentPage}/${totalPages}, total expected: ${totalExpected}`);
+        
+        return { attacks, hasMore, foundKnown, currentPage, totalPages, totalExpected };
+    }
+    
+    /**
+     * Scrape Battle Attacks table from current page (attacks by user)
+     */
+    function scrapeBattleAttacksFromPage(knownIds = new Set()) {
+        // Find Battle Attacks table - look for the header with colspan="11"
+        const attackHeader = Array.from(document.querySelectorAll('th')).find(th => 
+            th.textContent.trim().includes('Battle Attacks') && th.getAttribute('colspan') === '11'
+        );
+        if (!attackHeader) {
+            console.warn('Battle Attacks header not found');
+            return { attacks: [], hasMore: false, foundKnown: false, totalExpected: 0 };
+        }
+        
+        // Find the table - the header is in a thead, and data is in tbody
+        let table = attackHeader.closest('table');
+        if (!table) {
+            // Try to find table by going up the DOM
+            let parent = attackHeader.parentElement;
+            while (parent && parent.tagName !== 'TABLE') {
+                parent = parent.parentElement;
+            }
+            table = parent;
+        }
+        if (!table) {
+            console.error('Could not find table element');
+            return { attacks: [], hasMore: false, foundKnown: false, currentPage: 1, totalPages: 1, totalExpected: 0 };
+        }
+        
+        const rows = table.querySelectorAll('tbody tr.r1, tbody tr.r2, tr.r1, tr.r2');
+        
+        console.log(`Found ${rows.length} attack rows in table`);
+        
+        const attacks = [];
+        let foundKnown = false;
+        let skippedCount = 0;
+        
+        rows.forEach((row, index) => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length < 11) {
+                skippedCount++;
+                return;
+            }
+            
+            // Extract attack ID from details link
+            const detailsLink = cells[10].querySelector('a.link-stats');
+            const attackId = extractAttackId(detailsLink);
+            if (!attackId) {
+                skippedCount++;
+                return;
+            }
+            
+            // Check if we've seen this attack before
+            // Since logs are in chronological order (newest first), if we find one known ID,
+            // all subsequent entries are also known, so we can stop
+            if (knownIds.has(attackId)) {
+                foundKnown = true;
+                console.log(`Found known attack ID: ${attackId} - reached old data (chronological order)`);
+                return; // Stop processing this page
+            }
+            
+            // Extract enemy name
+            const enemyLink = cells[1].querySelector('a.link-battle');
+            const enemyName = enemyLink ? enemyLink.textContent.trim() : cells[1].textContent.trim();
+            
+            // Extract gold stolen (from enemy)
+            const goldSpan = cells[3].querySelector('span.gold');
+            const goldStolen = parseGoldFromSpan(goldSpan);
+            
+            // Extract timestamp
+            const timeText = cells[0].textContent.trim();
+            const timestamp = parseRelativeTime(timeText);
+            
+            attacks.push({
+                id: attackId,
+                enemy: enemyName,
+                goldStolen: goldStolen,
+                time: timeText,
+                timestamp: timestamp
+            });
+        });
+        
+        if (skippedCount > 0) {
+            console.log(`Skipped ${skippedCount} attack rows (invalid format)`);
+        }
+        
+        // Check if there's a next page and get total expected count
+        // Footer might be in tfoot, or in a td with colspan, or in the table itself
+        // Try multiple strategies to find the footer
+        
+        // Strategy 1: Look for td with "Your Attacks" text content (NOT "Attacks On You")
+        // CRITICAL: Must specifically look for "Your Attacks" to avoid matching Battle Defense footer
+        let footer = null;
+        const allTds = Array.from(document.querySelectorAll('td'));
+        footer = allTds.find(td => {
+            const text = td.textContent.trim();
+            const innerText = td.innerText.trim();
+            // Must contain "Your Attacks" (not "Attacks On You") AND have page info
+            const hasYourAttacks = (text.includes('Your Attacks') || innerText.includes('Your Attacks')) &&
+                                   !text.includes('Attacks On You') && !innerText.includes('Attacks On You');
+            const hasPageInfo = /page\s+\d+\s+of\s+\d+/.test(text) || /page\s+\d+\s+of\s+\d+/.test(innerText);
+            return hasYourAttacks && hasPageInfo;
+        });
+        
+        // Strategy 2: If not found, try within the table's tfoot
+        if (!footer) {
+            const tfoot = table.querySelector('tfoot');
+            if (tfoot) {
+                const tfootTds = tfoot.querySelectorAll('td');
+                for (const td of tfootTds) {
+                    const text = td.textContent.trim();
+                    const innerText = td.innerText.trim();
+                    if ((text.includes('Your Attacks') || innerText.includes('Your Attacks')) && 
+                        !text.includes('Attacks On You') && !innerText.includes('Attacks On You') &&
+                        (/page\s+\d+\s+of\s+\d+/.test(text) || /page\s+\d+\s+of\s+\d+/.test(innerText))) {
+                        footer = td;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Strategy 3: Try any td with colspan in the table (but verify it's "Your Attacks")
+        if (!footer) {
+            const tableTds = table.querySelectorAll('td[colspan]');
+            for (const td of tableTds) {
+                const text = td.textContent.trim();
+                const innerText = td.innerText.trim();
+                if ((text.includes('Your Attacks') || innerText.includes('Your Attacks')) &&
+                    !text.includes('Attacks On You') && !innerText.includes('Attacks On You') &&
+                    (/page\s+\d+\s+of\s+\d+/.test(text) || /page\s+\d+\s+of\s+\d+/.test(innerText))) {
+                    footer = td;
+                    break;
+                }
+            }
+        }
+        
+        // Strategy 4: Look after the table - sometimes footer is in a separate row after tbody
+        if (!footer) {
+            const tableParent = table.parentElement;
+            if (tableParent) {
+                // Look for sibling elements after the table
+                let nextSibling = table.nextElementSibling;
+                while (nextSibling && !footer) {
+                    const tds = nextSibling.querySelectorAll('td');
+                    for (const td of tds) {
+                        const text = td.textContent.trim();
+                        const innerText = td.innerText.trim();
+                        if ((text.includes('Your Attacks') || innerText.includes('Your Attacks')) &&
+                            !text.includes('Attacks On You') && !innerText.includes('Attacks On You') &&
+                            (/page\s+\d+\s+of\s+\d+/.test(text) || /page\s+\d+\s+of\s+\d+/.test(innerText))) {
+                            footer = td;
+                            break;
+                        }
+                    }
+                    nextSibling = nextSibling.nextElementSibling;
+                }
+            }
+        }
+        
+        // Also check for next page link as fallback
+        const nextPageLink = document.querySelector('a[href*="warlogs.php?ap="]');
+        const currentUrl = window.location.href;
+        const urlApMatch = currentUrl.match(/[?&]ap=(\d+)/);
+        const urlCurrentPage = urlApMatch ? parseInt(urlApMatch[1], 10) : 1;
+        
+        let hasMore = false;
+        let currentPage = urlCurrentPage; // Start with URL-based page number
+        let totalPages = 1;
+        let totalExpected = 0;
+        
+        if (footer) {
+            const footerText = footer.textContent.trim();
+            const footerInnerHTML = footer.innerHTML.trim();
+            console.log('📄 Attack footer found!');
+            console.log('📄 Footer text (raw):', JSON.stringify(footerText));
+            console.log('📄 Footer HTML:', footerInnerHTML);
+            console.log('📄 Footer element:', footer);
+            
+            // If text is empty but HTML exists, try innerText or wait a bit
+            if (!footerText && footerInnerHTML) {
+                console.log('⚠️ Footer text is empty but HTML exists, trying innerText...');
+                const innerText = footer.innerText.trim();
+                console.log('📄 Footer innerText:', JSON.stringify(innerText));
+                if (innerText) {
+                    // Use innerText instead
+                    footer = { textContent: innerText };
+                }
+            }
+            
+            const finalFooterText = footer.textContent ? footer.textContent.trim() : footerText;
+            
+            // Match: "431 Your Attacks | page 1 of 22"
+            // Try multiple patterns to be robust
+            const countMatch = finalFooterText.match(/(\d+)\s+Your\s+Attacks?/i);
+            if (countMatch) {
+                totalExpected = parseInt(countMatch[1], 10);
+                console.log(`📄 Parsed total expected: ${totalExpected}`);
+            } else {
+                console.warn('⚠️ Could not parse total expected from footer:', finalFooterText);
+            }
+            
+            // Try multiple regex patterns for page info
+            let pageMatch = finalFooterText.match(/page\s+(\d+)\s+of\s+(\d+)/i);
+            if (!pageMatch) {
+                // Try with pipe separator: "| page 1 of 22"
+                pageMatch = finalFooterText.match(/\|\s*page\s+(\d+)\s+of\s+(\d+)/i);
+            }
+            if (!pageMatch) {
+                // Try without "page" word: "1 of 22"
+                pageMatch = finalFooterText.match(/(\d+)\s+of\s+(\d+)/i);
+            }
+            if (!pageMatch) {
+                // Try slash format: "1/22"
+                pageMatch = finalFooterText.match(/(\d+)\s*\/\s*(\d+)/);
+            }
+            
+            if (pageMatch) {
+                currentPage = parseInt(pageMatch[1], 10);
+                totalPages = parseInt(pageMatch[2], 10);
+                hasMore = currentPage < totalPages && !foundKnown;
+                console.log(`✅ Attack pagination from footer: page ${currentPage} of ${totalPages}, hasMore: ${hasMore}, foundKnown: ${foundKnown}`);
+            } else {
+                console.error('❌ Could not parse attack page info from footer with any pattern!');
+                console.error('Footer text:', finalFooterText);
+                console.error('Footer HTML:', footerInnerHTML);
+                console.error('Tried patterns: /page\\s+(\\d+)\\s+of\\s+(\\d+)/i, /\\|\\s*page\\s+(\\d+)\\s+of\\s+(\\d+)/i, /(\\d+)\\s+of\\s+(\\d+)/i, /(\\d+)\\s*\\/\\s*(\\d+)/');
+            }
+        } else {
+            console.error('❌ Attack footer not found! Trying fallbacks...');
+            // Try to find ANY td that might be the footer
+            const allTds = Array.from(document.querySelectorAll('td'));
+            console.log(`Found ${allTds.length} td elements total`);
+            console.log('Looking for footer with "Your Attacks" (not "Attacks On You")...');
+            allTds.forEach((td, idx) => {
+                const text = td.textContent.trim();
+                const innerText = td.innerText.trim();
+                // Show both "Your Attacks" and "Attacks On You" to see what we're finding
+                if (text.includes('Your Attacks') || text.includes('Attacks On You') || 
+                    innerText.includes('Your Attacks') || innerText.includes('Attacks On You')) {
+                    const isYourAttacks = text.includes('Your Attacks') || innerText.includes('Your Attacks');
+                    const isAttacksOnYou = text.includes('Attacks On You') || innerText.includes('Attacks On You');
+                    console.log(`  td[${idx}]: text="${text}", innerText="${innerText}"`);
+                    console.log(`    -> "Your Attacks": ${isYourAttacks}, "Attacks On You": ${isAttacksOnYou}`);
+                }
+            });
+        }
+        
+        // Fallback: check for next page link (ONLY if footer parsing failed)
+        // Don't use this to set totalPages - we need the footer for that
+        if (!footer || totalPages === 1) {
+            if (nextPageLink) {
+                const linkHref = nextPageLink.getAttribute('href');
+                const linkText = nextPageLink.textContent.trim();
+                console.log('⚠️ Footer parsing failed, checking next page link:', linkHref, 'Text:', linkText);
+                
+                // Extract next page number from link text (e.g., "2 >>" or "2 &gt;&gt;" means next is page 2)
+                const nextPageMatch = linkText.match(/(\d+)\s*[>&]+\s*[>&]*/);
+                if (nextPageMatch) {
+                    const nextPageNum = parseInt(nextPageMatch[1], 10);
+                    console.log(`Next page link indicates page ${nextPageNum}`);
+                    // If next page number is greater than current, we have more pages
+                    if (nextPageNum > currentPage) {
+                        hasMore = !foundKnown;
+                        // DON'T set totalPages from link - we need footer for accurate count
+                        console.log(`Inferred from next link text: hasMore = ${hasMore} (but totalPages still unknown)`);
+                    }
+                }
+                
+                // Also check the href directly (more reliable)
+                const apMatch = linkHref.match(/ap=(\d+)/);
+                if (apMatch) {
+                    const nextPageFromHref = parseInt(apMatch[1], 10);
+                    console.log(`Next page from href: ${nextPageFromHref}`);
+                    if (nextPageFromHref > currentPage) {
+                        hasMore = !foundKnown;
+                        // DON'T set totalPages from link - we need footer for accurate count
+                        console.log(`Inferred from href: next page is ${nextPageFromHref}, hasMore = ${hasMore} (but totalPages still unknown)`);
+                    }
+                }
+            } else {
+                console.log('No next page link found');
+            }
+        }
+        
+        // Final check: if we're on page 1 and found attacks, assume there might be more
+        if (currentPage === 1 && attacks.length > 0 && !footer && !nextPageLink) {
+            console.warn('Could not determine pagination, but found attacks on page 1. Assuming more pages might exist.');
+            // Don't assume hasMore in this case - we need the footer or link to be sure
+        }
+        
+        console.log(`Final attack pagination: currentPage=${currentPage}, totalPages=${totalPages}, hasMore=${hasMore}, foundKnown=${foundKnown}`);
+        
+        console.log(`Attack scraping: Found ${attacks.length} new attacks, page ${currentPage}/${totalPages}, total expected: ${totalExpected}`);
+        
+        return { attacks, hasMore, foundKnown, currentPage, totalPages, totalExpected };
+    }
+    
+    /**
+     * Wait for page to be ready and elements to exist
+     */
+    function waitForPageReady(selector, maxWait = 5000) {
+        return new Promise((resolve) => {
+            const startTime = Date.now();
+            const checkInterval = setInterval(() => {
+                const element = document.querySelector(selector);
+                if (element || (Date.now() - startTime) > maxWait) {
+                    clearInterval(checkInterval);
+                    resolve(element !== null);
+                }
+            }, 100);
+        });
+    }
+    
+    /**
+     * Update Head to Head Stats by scraping war logs
+     */
+    async function updateHeadToHeadStats() {
+        // Navigate to war logs page
+        const baseUrl = window.location.origin.includes('www.') 
+            ? 'https://www.monsterswrath.com' 
+            : 'https://monsterswrath.com';
+        
+        // Check if we're in the middle of scraping
+        let scrapingState = GM_getValue('mwh_h2h_scraping', null);
+        
+        // If we're not on warlogs.php, navigate to the appropriate starting page
+        if (!window.location.href.includes('warlogs.php')) {
+            if (!scrapingState) {
+                // Starting fresh - go to defense page 1
+                window.location.href = `${baseUrl}/delta2/warlogs.php?dp=1`;
+                GM_setValue('mwh_h2h_update_pending', true);
+                return;
+            } else if (scrapingState.phase === 'defense') {
+                // Continue defense scraping
+                window.location.href = `${baseUrl}/delta2/warlogs.php?dp=${scrapingState.defensePage}`;
+                return;
+            } else if (scrapingState.phase === 'attack') {
+                // Continue attack scraping
+                window.location.href = `${baseUrl}/delta2/warlogs.php?ap=${scrapingState.attackPage}`;
+                return;
+            }
+        }
+        
+        // Wait for page to be ready - check for either table header
+        const pageReady = await waitForPageReady('th');
+        if (!pageReady) {
+            console.warn('Page not ready, retrying...');
+            setTimeout(() => updateHeadToHeadStats(), 1000);
+            return;
+        }
+        
+        // We're on the war logs page, start scraping
+        const existingData = getH2HData();
+        
+        // Reload state to ensure we have latest
+        scrapingState = GM_getValue('mwh_h2h_scraping', null);
+        
+        // Check if this is a fresh scrape (no known IDs)
+        const isFreshScrape = GM_getValue('mwh_h2h_fresh_scrape', false);
+        
+        // Debug: Log current state and URL
+        console.log('🔍 Current URL:', window.location.href);
+        if (scrapingState) {
+            console.log('🔍 Current scraping state:', {
+                phase: scrapingState.phase,
+                defensePage: scrapingState.defensePage,
+                attackPage: scrapingState.attackPage,
+                attackTotalPages: scrapingState.attackTotalPages,
+                isFreshScrape: scrapingState.isFreshScrape,
+                defenseCount: scrapingState.defenseCount,
+                attackCount: scrapingState.attackCount
+            });
+        }
+        
+        if (!scrapingState) {
+            // Start scraping
+            let knownDefenseIds = new Set();
+            let knownAttackIds = new Set();
+            let existingDefenses = [];
+            let existingAttacks = [];
+            
+            if (!isFreshScrape) {
+                // Normal update: use existing data to skip known entries
+                knownDefenseIds = new Set(existingData.battleDefenses.map(a => a.id));
+                knownAttackIds = new Set(existingData.battleAttacks.map(a => a.id));
+                existingDefenses = existingData.battleDefenses;
+                existingAttacks = existingData.battleAttacks;
+                showNotification('Starting to scrape new Battle Defense logs...', 2000);
+            } else {
+                // Fresh scrape: clear flag and start with empty data
+                GM_deleteValue('mwh_h2h_fresh_scrape');
+                showNotification('Starting fresh scrape of all Battle Defense logs...', 2000);
+            }
+            
+            GM_setValue('mwh_h2h_scraping', {
+                phase: 'defense',
+                defensePage: 1,
+                attackPage: 1,
+                defenseCount: 0,
+                attackCount: 0,
+                defenseTotalExpected: 0,
+                attackTotalExpected: 0,
+                attackTotalPages: 0, // Will be set when we scrape the first attack page
+                isFreshScrape: isFreshScrape,
+                knownDefenseIds: Array.from(knownDefenseIds),
+                knownAttackIds: Array.from(knownAttackIds),
+                existingDefenses: existingDefenses,
+                existingAttacks: existingAttacks
+            });
+            
+            // Navigate directly to defense page 1
+            window.location.href = `${baseUrl}/delta2/warlogs.php?dp=1`;
+            return;
+        }
+        
+            // Continue scraping based on current state
+        if (scrapingState.phase === 'defense') {
+            // Wait for defense table to be ready
+            const defenseReady = await waitForPageReady('th');
+            if (!defenseReady) {
+                setTimeout(() => updateHeadToHeadStats(), 1000);
+                return;
+            }
+            
+            // Get current page from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentDp = urlParams.get('dp') ? parseInt(urlParams.get('dp'), 10) : 1;
+            
+            // For fresh scrape, use empty set (collect everything)
+            // For normal update, use known IDs to stop when we find old data
+            const knownIds = scrapingState.isFreshScrape ? new Set() : new Set(scrapingState.knownDefenseIds);
+            const result = scrapeBattleDefensesFromPage(knownIds);
+            
+            // Store total expected from first page
+            if (result.totalExpected > 0 && scrapingState.defenseTotalExpected === 0) {
+                scrapingState.defenseTotalExpected = result.totalExpected;
+            }
+            
+            // Add defenses to state BEFORE checking continuation
+            if (result.attacks.length > 0) {
+                scrapingState.existingDefenses.unshift(...result.attacks);
+                scrapingState.defenseCount += result.attacks.length;
+            }
+            
+            // Determine current page and total pages
+            const currentPage = result.currentPage || currentDp;
+            const totalPages = result.totalPages || 1;
+            
+            console.log(`📊 Defense page ${currentPage} of ${totalPages}: Found ${result.attacks.length} defenses (total: ${scrapingState.defenseCount})`);
+            
+            // For normal update: stop when we find known data
+            if (!scrapingState.isFreshScrape && result.foundKnown) {
+                console.log('Found known defense data, moving to attack phase');
+                scrapingState.phase = 'attack';
+                scrapingState.attackPage = 1;
+                GM_setValue('mwh_h2h_scraping', scrapingState);
+                showNotification(`Scraping Battle Attacks logs... (${scrapingState.defenseCount} defenses collected)`, 2000);
+                setTimeout(() => {
+                    window.location.href = `${baseUrl}/delta2/warlogs.php?ap=1`;
+                }, 1500);
+                return;
+            }
+            
+            // Continue to next page or move to attack phase
+            if (currentPage < totalPages) {
+                // More defense pages
+                const nextPage = currentPage + 1;
+                scrapingState.defensePage = nextPage;
+                GM_setValue('mwh_h2h_scraping', scrapingState);
+                showNotification(`Scraping Defense page ${currentPage}... (${scrapingState.defenseCount} collected)`, 1500);
+                setTimeout(() => {
+                    window.location.href = `${baseUrl}/delta2/warlogs.php?dp=${nextPage}`;
+                }, 1500);
+                return;
+            } else {
+                // No more defense pages, move to attack phase
+                console.log('No more defense pages, moving to attack phase');
+                scrapingState.phase = 'attack';
+                scrapingState.attackPage = 1;
+                GM_setValue('mwh_h2h_scraping', scrapingState);
+                showNotification(`Scraping Battle Attacks logs... (${scrapingState.defenseCount} defenses collected)`, 2000);
+                setTimeout(() => {
+                    window.location.href = `${baseUrl}/delta2/warlogs.php?ap=1`;
+                }, 1500);
+                return;
+            }
+            
+        } else if (scrapingState.phase === 'attack') {
+            // Reload state to ensure we have latest values (including accumulated attacks from previous pages)
+            scrapingState = GM_getValue('mwh_h2h_scraping', scrapingState);
+            console.log(`📥 Reloaded state: ${scrapingState.existingAttacks.length} attacks already collected, attackCount=${scrapingState.attackCount}`);
+            
+            // Wait for attack table to be ready
+            const attackReady = await waitForPageReady('th');
+            if (!attackReady) {
+                setTimeout(() => updateHeadToHeadStats(), 1000);
+                return;
+            }
+            
+            // Get current page from URL
+            const attackUrlParams = new URLSearchParams(window.location.search);
+            const currentAp = attackUrlParams.get('ap') ? parseInt(attackUrlParams.get('ap'), 10) : 1;
+            
+            // For fresh scrape, use empty set (collect everything)
+            // For normal update, use known IDs to stop when we find old data
+            const knownIds = scrapingState.isFreshScrape ? new Set() : new Set(scrapingState.knownAttackIds);
+            const result = scrapeBattleAttacksFromPage(knownIds);
+            
+            // Add attacks to state FIRST (before any state reloads)
+            if (result.attacks.length > 0) {
+                scrapingState.existingAttacks.unshift(...result.attacks);
+                scrapingState.attackCount += result.attacks.length;
+                console.log(`➕ Added ${result.attacks.length} attacks. Total now: ${scrapingState.existingAttacks.length} (count: ${scrapingState.attackCount})`);
+            }
+            
+            // On page 1, read the footer to get total pages and store it
+            if (currentAp === 1) {
+                console.log(`🔍 Page 1: result.totalPages = ${result.totalPages}, result.totalExpected = ${result.totalExpected}`);
+                console.log(`🔍 Page 1: result.currentPage = ${result.currentPage}`);
+                
+                if (result.totalExpected > 0 && scrapingState.attackTotalExpected === 0) {
+                    scrapingState.attackTotalExpected = result.totalExpected;
+                    console.log(`💾 Stored attack total expected: ${result.totalExpected}`);
+                }
+                
+                if (result.totalPages > 1) {
+                    scrapingState.attackTotalPages = result.totalPages;
+                    console.log(`💾 Stored attack total pages: ${result.totalPages}`);
+                } else {
+                    console.error(`❌ CRITICAL: Failed to get total pages from page 1 footer!`);
+                    console.error(`   result.totalPages = ${result.totalPages}`);
+                    console.error(`   This means footer parsing failed. Check console for footer parsing logs above.`);
+                }
+            }
+            
+            // Use stored totalPages if available, otherwise use result
+            // CRITICAL: Use URL page number as source of truth for current page
+            const currentPage = currentAp; // Always use URL, not result.currentPage
+            const totalPages = scrapingState.attackTotalPages || result.totalPages || 1;
+            
+            console.log(`📊 Attack page ${currentPage} of ${totalPages}: Found ${result.attacks.length} attacks (total in state: ${scrapingState.existingAttacks.length}, count: ${scrapingState.attackCount})`);
+            console.log(`📊 State check: attackTotalPages=${scrapingState.attackTotalPages}, result.totalPages=${result.totalPages}, totalPages=${totalPages}`);
+            console.log(`📊 Continuation check: currentPage=${currentPage}, totalPages=${totalPages}, comparison: ${currentPage} < ${totalPages} = ${currentPage < totalPages}`);
+            
+            // CRITICAL: Save state IMMEDIATELY after adding attacks and before navigation
+            // This ensures all accumulated data is persisted
+            GM_setValue('mwh_h2h_scraping', scrapingState);
+            console.log(`💾 Saved state: ${scrapingState.existingAttacks.length} attacks, ${scrapingState.attackCount} count`);
+            
+            // For normal update: stop when we find known data
+            if (!scrapingState.isFreshScrape && result.foundKnown) {
+                console.log('⚠️ Found known attack data, completing scrape');
+                // Fall through to validation and save
+            } else if (currentPage === 1 && totalPages === 1) {
+                // CRITICAL: On page 1, if totalPages is still 1, footer parsing failed
+                // Don't continue - we can't determine if there are more pages
+                console.error(`❌ CRITICAL ERROR: On page 1, totalPages is still 1!`);
+                console.error(`   This means footer parsing completely failed.`);
+                console.error(`   Cannot continue scraping without knowing total pages.`);
+                console.error(`   Check console logs above for footer parsing details.`);
+                // Fall through to validation and save (with error)
+            } else if (currentPage < totalPages) {
+                // Continue to next attack page
+                const nextPage = currentPage + 1;
+                console.log(`✅ Continuing: page ${currentPage} < ${totalPages}, going to page ${nextPage}`);
+                
+                // Update page number and save state again (with all accumulated attacks)
+                scrapingState.attackPage = nextPage;
+                GM_setValue('mwh_h2h_scraping', scrapingState);
+                console.log(`💾 Saved state before navigation: ${scrapingState.existingAttacks.length} attacks, ${scrapingState.attackCount} count`);
+                
+                // Show notification for CURRENT page being scraped, not next
+                showNotification(`Scraping Attack page ${currentPage} of ${totalPages}... (${scrapingState.attackCount} attacks collected)`, 2000);
+                
+                setTimeout(() => {
+                    console.log(`🚀 Navigating to page ${nextPage}: ${baseUrl}/delta2/warlogs.php?ap=${nextPage}`);
+                    window.location.href = `${baseUrl}/delta2/warlogs.php?ap=${nextPage}`;
+                }, 2000);
+                return; // Continue scraping
+            } else {
+                // Reached last page
+                console.log(`✅ Reached last attack page (${currentPage} of ${totalPages}), completing scrape`);
+                // Fall through to validation and save
+            }
+            
+            // Done scraping - reload state one final time to ensure we have all accumulated data
+            scrapingState = GM_getValue('mwh_h2h_scraping', scrapingState);
+            console.log(`📥 Final state reload: ${scrapingState.existingAttacks.length} attacks, ${scrapingState.existingDefenses.length} defenses`);
+            
+            // Validate data
+            const finalDefenseCount = scrapingState.existingDefenses.length;
+            const finalAttackCount = scrapingState.existingAttacks.length;
+            
+            console.log(`=== VALIDATION ===`);
+            console.log(`Defense: Collected ${finalDefenseCount}, Expected ${scrapingState.defenseTotalExpected}`);
+            console.log(`Attack: Collected ${finalAttackCount}, Expected ${scrapingState.attackTotalExpected}`);
+            console.log(`Attack array length: ${scrapingState.existingAttacks.length}, attackCount: ${scrapingState.attackCount}`);
+            
+            let needsRescrape = false;
+            let validationMessage = '';
+            
+            // Validate defense count
+            if (scrapingState.defenseTotalExpected > 0) {
+                if (finalDefenseCount !== scrapingState.defenseTotalExpected) {
+                    needsRescrape = true;
+                    validationMessage += `Defense: Expected ${scrapingState.defenseTotalExpected}, got ${finalDefenseCount}. `;
+                } else {
+                    console.log(`✓ Defense count matches: ${finalDefenseCount}`);
+                }
+            }
+            
+            // Validate attack count
+            if (scrapingState.attackTotalExpected > 0) {
+                if (finalAttackCount !== scrapingState.attackTotalExpected) {
+                    needsRescrape = true;
+                    validationMessage += `Attack: Expected ${scrapingState.attackTotalExpected}, got ${finalAttackCount}. `;
+                } else {
+                    console.log(`✓ Attack count matches: ${finalAttackCount}`);
+                }
+            }
+            
+            if (needsRescrape) {
+                console.warn('❌ Data validation failed:', validationMessage);
+                // Show validation message with option to fresh scrape
+                const validationMsg = `Data Validation Failed!\n\n` +
+                    `${validationMessage}\n\n` +
+                    `This usually means some data was missed during scraping.\n\n` +
+                    `Would you like to do a fresh scrape? (This will clear all existing data and re-scrape everything)`;
+                
+                const shouldRescrape = confirm(validationMsg);
+                
+                if (shouldRescrape) {
+                    // Clear existing data and start fresh
+                    saveH2HData({ battleDefenses: [], battleAttacks: [] });
+                    GM_deleteValue('mwh_h2h_scraping');
+                    GM_deleteValue('mwh_h2h_update_pending');
+                    // Set fresh scrape flag
+                    GM_setValue('mwh_h2h_fresh_scrape', true);
+                    
+                    showNotification('Starting fresh scrape due to validation failure...', 2000);
+                    // Navigate to start page
+                    setTimeout(() => {
+                        window.location.href = warlogsUrl;
+                    }, 1000);
+                    return;
+                } else {
+                    // User chose not to rescrape, but show warning
+                    showNotification(`Validation failed! ${validationMessage} Consider using "Fresh Scrape" button.`, 8000);
+                }
+            } else {
+                console.log('✓ Validation passed - all counts match');
+            }
+            
+            // Save data
+            const finalData = {
+                battleDefenses: scrapingState.existingDefenses,
+                battleAttacks: scrapingState.existingAttacks
+            };
+            saveH2HData(finalData);
+            GM_deleteValue('mwh_h2h_scraping');
+            GM_deleteValue('mwh_h2h_update_pending');
+            
+            const validationText = needsRescrape ? ' (validation failed but saved anyway)' : '';
+            showNotification(`${scrapingState.defenseCount} battle defenses recorded, ${scrapingState.attackCount} battle attacks recorded${validationText}`, 5000);
+            
+            // Show the stats page
+            setTimeout(() => {
+                showHeadToHeadStats();
+            }, 2000);
+        }
+    }
+    
+    /**
+     * Show Head to Head Stats display page
+     */
+    function showHeadToHeadStats() {
+        // Navigate to a special URL that will trigger the display
+        const baseUrl = window.location.origin.includes('www.') 
+            ? 'https://www.monsterswrath.com' 
+            : 'https://monsterswrath.com';
+        window.location.href = `${baseUrl}/delta2/warlogs.php?mwh=h2h`;
+    }
+    
+    /**
+     * Create Head to Head Stats display page
+     */
+    function createHeadToHeadStatsPage() {
+        const existing = document.getElementById('mwh-h2h-display');
+        if (existing) existing.remove();
+        
+        const data = getH2HData();
+        
+        // Get player intelligence to identify real players vs farms
+        const playerIntel = getPlayerIntelligence();
+        // Create a set of real player usernames (case-insensitive)
+        const realPlayerNames = new Set();
+        Object.values(playerIntel).forEach(player => {
+            if (player.username) {
+                realPlayerNames.add(player.username.toLowerCase());
+            }
+        });
+        
+        // Helper function to check if a player is a farm
+        const isFarm = (playerName) => {
+            return !realPlayerNames.has(playerName.toLowerCase());
+        };
+        
+        const container = document.createElement('div');
+        container.id = 'mwh-h2h-display';
+        container.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            z-index: 99999;
+            overflow-y: auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            color: #fff;
+        `;
+        
+        // Header
+        const header = document.createElement('div');
+        header.style.cssText = 'margin-bottom: 30px; text-align: center;';
+        const title = document.createElement('h1');
+        title.textContent = 'Head to Head Stats';
+        title.style.cssText = 'margin: 0 0 10px 0; color: #4B9CD3;';
+        header.appendChild(title);
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = '✕ Close';
+        closeBtn.style.cssText = `
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        `;
+        closeBtn.addEventListener('click', () => {
+            container.remove();
+            // Remove URL parameter
+            const url = new URL(window.location.href);
+            url.searchParams.delete('mwh');
+            window.history.replaceState({}, '', url);
+        });
+        container.appendChild(closeBtn);
+        
+        container.appendChild(header);
+        
+        // Calculate Head to Head stats - separate farms from real players
+        const h2hStats = {};
+        const farmStats = { stolenFrom: 0, lostTo: 0 };
+        
+        // Process battle defenses (gold lost to enemies)
+        data.battleDefenses.forEach(attack => {
+            if (isFarm(attack.enemy)) {
+                farmStats.lostTo += attack.goldStolen;
+            } else {
+                if (!h2hStats[attack.enemy]) {
+                    h2hStats[attack.enemy] = { stolenFrom: 0, lostTo: 0 };
+                }
+                h2hStats[attack.enemy].lostTo += attack.goldStolen;
+            }
+        });
+        
+        // Process battle attacks (gold stolen from enemies)
+        data.battleAttacks.forEach(attack => {
+            if (isFarm(attack.enemy)) {
+                farmStats.stolenFrom += attack.goldStolen;
+            } else {
+                if (!h2hStats[attack.enemy]) {
+                    h2hStats[attack.enemy] = { stolenFrom: 0, lostTo: 0 };
+                }
+                h2hStats[attack.enemy].stolenFrom += attack.goldStolen;
+            }
+        });
+        
+        // Create Head to Head table with collapsible functionality
+        const h2hTableSection = document.createElement('div');
+        h2hTableSection.style.marginBottom = '40px';
+        
+        const h2hTitleContainer = document.createElement('div');
+        h2hTitleContainer.style.cssText = 'display: flex; align-items: center; margin-bottom: 15px; cursor: pointer;';
+        
+        const h2hToggle = document.createElement('span');
+        h2hToggle.textContent = '▼';
+        h2hToggle.style.cssText = 'margin-right: 10px; font-size: 12px; color: #4B9CD3; user-select: none;';
+        
+        const h2hTitle = document.createElement('h2');
+        h2hTitle.textContent = 'Head to Head Stats';
+        h2hTitle.style.cssText = 'margin: 0; color: #4B9CD3;';
+        
+        h2hTitleContainer.appendChild(h2hToggle);
+        h2hTitleContainer.appendChild(h2hTitle);
+        
+        const h2hTableContainer = document.createElement('div');
+        h2hTableContainer.style.cssText = 'display: block;'; // Default to visible
+        
+        let h2hExpanded = true;
+        h2hTitleContainer.addEventListener('click', () => {
+            h2hExpanded = !h2hExpanded;
+            h2hTableContainer.style.display = h2hExpanded ? 'block' : 'none';
+            h2hToggle.textContent = h2hExpanded ? '▼' : '▶';
+        });
+        
+        h2hTableSection.appendChild(h2hTitleContainer);
+        
+        const h2hTable = document.createElement('table');
+        h2hTable.style.cssText = 'width: 100%; border-collapse: collapse; background: #1a1a1a;';
+        
+        // Header
+        const h2hThead = document.createElement('thead');
+        const h2hHeaderRow = document.createElement('tr');
+        h2hHeaderRow.style.cssText = 'background: #333;';
+        
+        const headers = ['Player', 'Gold Stolen From', 'Gold Lost To', 'Differential'];
+        headers.forEach((headerText, index) => {
+            const th = document.createElement('th');
+            th.textContent = headerText;
+            th.style.cssText = 'padding: 12px; text-align: left; border-bottom: 2px solid #4B9CD3; cursor: pointer;';
+            if (index > 0) {
+                th.style.textAlign = 'right';
+                th.dataset.sort = ['player', 'stolenFrom', 'lostTo', 'differential'][index];
+                th.addEventListener('click', () => sortH2HTable(h2hTable, index));
+            }
+            h2hHeaderRow.appendChild(th);
+        });
+        h2hThead.appendChild(h2hHeaderRow);
+        h2hTable.appendChild(h2hThead);
+        
+        // Body
+        const h2hTbody = document.createElement('tbody');
+        const h2hPlayers = Object.keys(h2hStats).sort();
+        
+        // Add farm row first (if there are any farm stats)
+        const farmDifferential = farmStats.stolenFrom - farmStats.lostTo;
+        if (farmStats.stolenFrom > 0 || farmStats.lostTo > 0) {
+            const farmRow = document.createElement('tr');
+            farmRow.style.cssText = 'border-bottom: 2px solid #555; background: rgba(255, 215, 0, 0.1);';
+            
+            const farmPlayerCell = document.createElement('td');
+            farmPlayerCell.textContent = 'All Farms (Combined)';
+            farmPlayerCell.style.cssText = 'padding: 10px; font-weight: bold; color: #FFD700;';
+            farmRow.appendChild(farmPlayerCell);
+            
+            const farmStolenCell = document.createElement('td');
+            farmStolenCell.textContent = formatNumberWithCommas(farmStats.stolenFrom);
+            farmStolenCell.dataset.sortValue = farmStats.stolenFrom;
+            farmStolenCell.style.cssText = 'padding: 10px; text-align: right; color: #FFD700; font-weight: bold;';
+            farmRow.appendChild(farmStolenCell);
+            
+            const farmLostCell = document.createElement('td');
+            farmLostCell.textContent = formatNumberWithCommas(farmStats.lostTo);
+            farmLostCell.dataset.sortValue = farmStats.lostTo;
+            farmLostCell.style.cssText = 'padding: 10px; text-align: right; color: #FFD700; font-weight: bold;';
+            farmRow.appendChild(farmLostCell);
+            
+            const farmDiffCell = document.createElement('td');
+            farmDiffCell.textContent = formatNumberWithCommas(farmDifferential);
+            farmDiffCell.dataset.sortValue = farmDifferential;
+            farmDiffCell.style.cssText = `padding: 10px; text-align: right; color: ${farmDifferential >= 0 ? '#4CAF50' : '#f44336'}; font-weight: bold;`;
+            farmRow.appendChild(farmDiffCell);
+            
+            h2hTbody.appendChild(farmRow);
+        }
+        
+        // Add real player rows
+        h2hPlayers.forEach(player => {
+            const stats = h2hStats[player];
+            const differential = stats.stolenFrom - stats.lostTo;
+            
+            const row = document.createElement('tr');
+            row.style.cssText = 'border-bottom: 1px solid #333;';
+            
+            const playerCell = document.createElement('td');
+            playerCell.textContent = player;
+            playerCell.style.cssText = 'padding: 10px;';
+            row.appendChild(playerCell);
+            
+            const stolenCell = document.createElement('td');
+            stolenCell.textContent = formatNumberWithCommas(stats.stolenFrom);
+            stolenCell.dataset.sortValue = stats.stolenFrom; // Store numeric value for sorting
+            stolenCell.style.cssText = 'padding: 10px; text-align: right;';
+            row.appendChild(stolenCell);
+            
+            const lostCell = document.createElement('td');
+            lostCell.textContent = formatNumberWithCommas(stats.lostTo);
+            lostCell.dataset.sortValue = stats.lostTo; // Store numeric value for sorting
+            lostCell.style.cssText = 'padding: 10px; text-align: right;';
+            row.appendChild(lostCell);
+            
+            const diffCell = document.createElement('td');
+            diffCell.textContent = formatNumberWithCommas(differential);
+            diffCell.dataset.sortValue = differential; // Store numeric value for sorting
+            diffCell.style.cssText = `padding: 10px; text-align: right; color: ${differential >= 0 ? '#4CAF50' : '#f44336'}; font-weight: bold;`;
+            row.appendChild(diffCell);
+            
+            h2hTbody.appendChild(row);
+        });
+        
+        h2hTable.appendChild(h2hTbody);
+        h2hTableContainer.appendChild(h2hTable);
+        h2hTableSection.appendChild(h2hTableContainer);
+        container.appendChild(h2hTableSection);
+        
+        // Calculate own attack stats
+        const now = Date.now();
+        const oneDayAgo = now - (24 * 60 * 60 * 1000);
+        const threeDaysAgo = now - (3 * 24 * 60 * 60 * 1000);
+        
+        const last24h = data.battleAttacks.filter(a => a.timestamp >= oneDayAgo);
+        const last3Days = data.battleAttacks.filter(a => a.timestamp >= threeDaysAgo);
+        const allTime = data.battleAttacks;
+        
+        // Separate attacks by target type (players vs farms)
+        const separateByTarget = (attacks) => {
+            const vsPlayers = attacks.filter(a => !isFarm(a.enemy));
+            const vsFarms = attacks.filter(a => isFarm(a.enemy));
+            return { vsPlayers, vsFarms };
+        };
+        
+        const last24hSeparated = separateByTarget(last24h);
+        const last3DaysSeparated = separateByTarget(last3Days);
+        const allTimeSeparated = separateByTarget(allTime);
+        
+        const calculateStats = (attacks) => {
+            const totalGold = attacks.reduce((sum, a) => sum + a.goldStolen, 0);
+            const avgGold = attacks.length > 0 ? totalGold / attacks.length : 0;
+            return {
+                totalGold,
+                avgGold,
+                count: attacks.length
+            };
+        };
+        
+        // Calculate stats for all attacks
+        const stats24h = calculateStats(last24h);
+        const stats3Days = calculateStats(last3Days);
+        const statsAll = calculateStats(allTime);
+        
+        // Calculate stats for players vs farms
+        const stats24hPlayers = calculateStats(last24hSeparated.vsPlayers);
+        const stats24hFarms = calculateStats(last24hSeparated.vsFarms);
+        const stats3DaysPlayers = calculateStats(last3DaysSeparated.vsPlayers);
+        const stats3DaysFarms = calculateStats(last3DaysSeparated.vsFarms);
+        const statsAllPlayers = calculateStats(allTimeSeparated.vsPlayers);
+        const statsAllFarms = calculateStats(allTimeSeparated.vsFarms);
+        
+        // Create Own Attack Stats table with collapsible functionality
+        const ownStatsSection = document.createElement('div');
+        
+        const ownStatsTitleContainer = document.createElement('div');
+        ownStatsTitleContainer.style.cssText = 'display: flex; align-items: center; margin-bottom: 15px; cursor: pointer;';
+        
+        const ownStatsToggle = document.createElement('span');
+        ownStatsToggle.textContent = '▼';
+        ownStatsToggle.style.cssText = 'margin-right: 10px; font-size: 12px; color: #4B9CD3; user-select: none;';
+        
+        const ownStatsTitle = document.createElement('h2');
+        ownStatsTitle.textContent = 'Your Attack Stats';
+        ownStatsTitle.style.cssText = 'margin: 0; color: #4B9CD3;';
+        
+        ownStatsTitleContainer.appendChild(ownStatsToggle);
+        ownStatsTitleContainer.appendChild(ownStatsTitle);
+        
+        const ownStatsTableContainer = document.createElement('div');
+        ownStatsTableContainer.style.cssText = 'display: block;'; // Default to visible
+        
+        let ownStatsExpanded = true;
+        ownStatsTitleContainer.addEventListener('click', () => {
+            ownStatsExpanded = !ownStatsExpanded;
+            ownStatsTableContainer.style.display = ownStatsExpanded ? 'block' : 'none';
+            ownStatsToggle.textContent = ownStatsExpanded ? '▼' : '▶';
+        });
+        
+        ownStatsSection.appendChild(ownStatsTitleContainer);
+        
+        const ownStatsTable = document.createElement('table');
+        ownStatsTable.style.cssText = 'width: 100%; border-collapse: collapse; background: #1a1a1a;';
+        
+        // Header
+        const ownStatsThead = document.createElement('thead');
+        const ownStatsHeaderRow = document.createElement('tr');
+        ownStatsHeaderRow.style.cssText = 'background: #333;';
+        
+        const ownStatsHeaders = ['Metric', 'Last 24 Hours', 'Last 3 Days', 'All Age'];
+        ownStatsHeaders.forEach(headerText => {
+            const th = document.createElement('th');
+            th.textContent = headerText;
+            th.style.cssText = 'padding: 12px; text-align: left; border-bottom: 2px solid #4B9CD3;';
+            if (ownStatsHeaders.indexOf(headerText) > 0) {
+                th.style.textAlign = 'right';
+            }
+            ownStatsHeaderRow.appendChild(th);
+        });
+        ownStatsThead.appendChild(ownStatsHeaderRow);
+        ownStatsTable.appendChild(ownStatsThead);
+        
+        // Body
+        const ownStatsTbody = document.createElement('tbody');
+        
+        // All Attacks section
+        const allAttacksHeader = document.createElement('tr');
+        allAttacksHeader.style.cssText = 'background: #2a2a2a; font-weight: bold;';
+        const allAttacksHeaderCell = document.createElement('td');
+        allAttacksHeaderCell.textContent = 'All Attacks';
+        allAttacksHeaderCell.colSpan = 4;
+        allAttacksHeaderCell.style.cssText = 'padding: 10px; color: #4B9CD3;';
+        allAttacksHeader.appendChild(allAttacksHeaderCell);
+        ownStatsTbody.appendChild(allAttacksHeader);
+        
+        const metrics = [
+            { label: 'Total Gold Stolen', getValue: (s) => formatNumberWithCommas(s.totalGold) },
+            { label: 'Average Gold per Attack', getValue: (s) => formatNumberWithCommas(Math.round(s.avgGold)) },
+            { label: 'Number of Attacks', getValue: (s) => s.count.toLocaleString() }
+        ];
+        
+        metrics.forEach(metric => {
+            const row = document.createElement('tr');
+            row.style.cssText = 'border-bottom: 1px solid #333;';
+            
+            const labelCell = document.createElement('td');
+            labelCell.textContent = metric.label;
+            labelCell.style.cssText = 'padding: 10px; font-weight: bold;';
+            row.appendChild(labelCell);
+            
+            const cell24h = document.createElement('td');
+            cell24h.textContent = metric.getValue(stats24h);
+            cell24h.style.cssText = 'padding: 10px; text-align: right;';
+            row.appendChild(cell24h);
+            
+            const cell3Days = document.createElement('td');
+            cell3Days.textContent = metric.getValue(stats3Days);
+            cell3Days.style.cssText = 'padding: 10px; text-align: right;';
+            row.appendChild(cell3Days);
+            
+            const cellAll = document.createElement('td');
+            cellAll.textContent = metric.getValue(statsAll);
+            cellAll.style.cssText = 'padding: 10px; text-align: right;';
+            row.appendChild(cellAll);
+            
+            ownStatsTbody.appendChild(row);
+        });
+        
+        // Separator row
+        const separatorRow = document.createElement('tr');
+        separatorRow.style.cssText = 'height: 10px;';
+        const separatorCell = document.createElement('td');
+        separatorCell.colSpan = 4;
+        separatorCell.style.cssText = 'padding: 0; border: none;';
+        separatorRow.appendChild(separatorCell);
+        ownStatsTbody.appendChild(separatorRow);
+        
+        // vs Players section
+        const vsPlayersHeader = document.createElement('tr');
+        vsPlayersHeader.style.cssText = 'background: #2a2a2a; font-weight: bold;';
+        const vsPlayersHeaderCell = document.createElement('td');
+        vsPlayersHeaderCell.textContent = 'vs Players';
+        vsPlayersHeaderCell.colSpan = 4;
+        vsPlayersHeaderCell.style.cssText = 'padding: 10px; color: #4CAF50;';
+        vsPlayersHeader.appendChild(vsPlayersHeaderCell);
+        ownStatsTbody.appendChild(vsPlayersHeader);
+        
+        metrics.forEach(metric => {
+            const row = document.createElement('tr');
+            row.style.cssText = 'border-bottom: 1px solid #333;';
+            
+            const labelCell = document.createElement('td');
+            labelCell.textContent = metric.label;
+            labelCell.style.cssText = 'padding: 10px; font-weight: bold;';
+            row.appendChild(labelCell);
+            
+            const cell24h = document.createElement('td');
+            cell24h.textContent = metric.getValue(stats24hPlayers);
+            cell24h.style.cssText = 'padding: 10px; text-align: right;';
+            row.appendChild(cell24h);
+            
+            const cell3Days = document.createElement('td');
+            cell3Days.textContent = metric.getValue(stats3DaysPlayers);
+            cell3Days.style.cssText = 'padding: 10px; text-align: right;';
+            row.appendChild(cell3Days);
+            
+            const cellAll = document.createElement('td');
+            cellAll.textContent = metric.getValue(statsAllPlayers);
+            cellAll.style.cssText = 'padding: 10px; text-align: right;';
+            row.appendChild(cellAll);
+            
+            ownStatsTbody.appendChild(row);
+        });
+        
+        // Separator row
+        const separatorRow2 = document.createElement('tr');
+        separatorRow2.style.cssText = 'height: 10px;';
+        const separatorCell2 = document.createElement('td');
+        separatorCell2.colSpan = 4;
+        separatorCell2.style.cssText = 'padding: 0; border: none;';
+        separatorRow2.appendChild(separatorCell2);
+        ownStatsTbody.appendChild(separatorRow2);
+        
+        // vs Farms section
+        const vsFarmsHeader = document.createElement('tr');
+        vsFarmsHeader.style.cssText = 'background: #2a2a2a; font-weight: bold;';
+        const vsFarmsHeaderCell = document.createElement('td');
+        vsFarmsHeaderCell.textContent = 'vs Farms';
+        vsFarmsHeaderCell.colSpan = 4;
+        vsFarmsHeaderCell.style.cssText = 'padding: 10px; color: #FFD700;';
+        vsFarmsHeader.appendChild(vsFarmsHeaderCell);
+        ownStatsTbody.appendChild(vsFarmsHeader);
+        
+        metrics.forEach(metric => {
+            const row = document.createElement('tr');
+            row.style.cssText = 'border-bottom: 1px solid #333;';
+            
+            const labelCell = document.createElement('td');
+            labelCell.textContent = metric.label;
+            labelCell.style.cssText = 'padding: 10px; font-weight: bold;';
+            row.appendChild(labelCell);
+            
+            const cell24h = document.createElement('td');
+            cell24h.textContent = metric.getValue(stats24hFarms);
+            cell24h.style.cssText = 'padding: 10px; text-align: right; color: #FFD700;';
+            row.appendChild(cell24h);
+            
+            const cell3Days = document.createElement('td');
+            cell3Days.textContent = metric.getValue(stats3DaysFarms);
+            cell3Days.style.cssText = 'padding: 10px; text-align: right; color: #FFD700;';
+            row.appendChild(cell3Days);
+            
+            const cellAll = document.createElement('td');
+            cellAll.textContent = metric.getValue(statsAllFarms);
+            cellAll.style.cssText = 'padding: 10px; text-align: right; color: #FFD700;';
+            row.appendChild(cellAll);
+            
+            ownStatsTbody.appendChild(row);
+        });
+        
+        ownStatsTable.appendChild(ownStatsTbody);
+        ownStatsTableContainer.appendChild(ownStatsTable);
+        ownStatsSection.appendChild(ownStatsTableContainer);
+        container.appendChild(ownStatsSection);
+        
+        document.body.appendChild(container);
+    }
+    
+    /**
+     * Sort Head to Head table
+     */
+    function sortH2HTable(table, columnIndex) {
+        const tbody = table.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const header = table.querySelector('thead tr');
+        const sortKey = header.children[columnIndex].dataset.sort;
+        
+        // Determine sort direction
+        const currentSort = header.dataset.currentSort;
+        const ascending = currentSort === sortKey && header.dataset.sortDir === 'asc';
+        header.dataset.currentSort = sortKey;
+        header.dataset.sortDir = ascending ? 'desc' : 'asc';
+        
+        rows.sort((a, b) => {
+            let aVal, bVal;
+            
+            if (sortKey === 'player') {
+                aVal = a.children[0].textContent.trim();
+                bVal = b.children[0].textContent.trim();
+            } else {
+                // Use stored numeric value if available (from data-sort-value attribute)
+                // Otherwise parse from text content
+                const aCell = a.children[columnIndex];
+                const bCell = b.children[columnIndex];
+                aVal = aCell.dataset.sortValue ? parseFloat(aCell.dataset.sortValue) : parseNumber(aCell.textContent);
+                bVal = bCell.dataset.sortValue ? parseFloat(bCell.dataset.sortValue) : parseNumber(bCell.textContent);
+            }
+            
+            if (aVal < bVal) return ascending ? 1 : -1;
+            if (aVal > bVal) return ascending ? -1 : 1;
+            return 0;
+        });
+        
+        rows.forEach(row => tbody.appendChild(row));
     }
 
     // ============================================================================
@@ -2664,6 +4600,9 @@
      * Display snapshot overlays on Top Stats page
      */
     function displaySnapshotOverlays() {
+        const prefs = getSnapshotDisplayPreferences();
+        if (!prefs.showOnTopStats) return;
+        
         const snapshotData = GM_getValue(SNAPSHOT_DATA_KEY, {});
         if (Object.keys(snapshotData).length === 0) return;
         
@@ -2724,6 +4663,140 @@
             });
         });
     }
+    
+    /**
+     * Display snapshot data on battlefield page (inline with player names)
+     */
+    function displaySnapshotOnBattlefield() {
+        const prefs = getSnapshotDisplayPreferences();
+        if (!prefs.showOnBattlefield) return;
+        
+        const snapshotData = GM_getValue(SNAPSHOT_DATA_KEY, {});
+        if (Object.keys(snapshotData).length === 0) return;
+        
+        // Find all player rows on battlefield
+        const rows = document.querySelectorAll('tr.r1, tr.r2');
+        
+        rows.forEach(row => {
+            // Find username link
+            const usernameLink = row.querySelector('a.link-battle');
+            if (!usernameLink) return;
+            
+            const username = usernameLink.textContent.trim();
+            if (!snapshotData[username]) return;
+            
+            const data = snapshotData[username];
+            
+            // Find army size cell (td with data-sort attribute containing a number, typically the 6th column)
+            // Army size is typically a large number (millions+), while Rank is small (1-1000)
+            const allCells = row.querySelectorAll('td');
+            let armySizeCell = null;
+            
+            // Try the 6th column first (index 5) - this is where army size should be
+            if (allCells.length >= 6) {
+                const candidateCell = allCells[5];
+                const sortValue = candidateCell.getAttribute('data-sort');
+                const cellText = candidateCell.textContent.trim();
+                // Check if it has a numeric data-sort and contains a number (army size is typically large)
+                if (sortValue && /^\d+$/.test(sortValue.trim()) && cellText && /[\d,]+/.test(cellText)) {
+                    const sortNum = parseInt(sortValue, 10);
+                    // Army size is typically > 1000, while rank is usually < 1000
+                    if (sortNum > 1000) {
+                        armySizeCell = candidateCell;
+                    }
+                } else if (cellText && /[\d,]+/.test(cellText)) {
+                    // Fallback: if no data-sort but has number, check if it's a large number
+                    const cellNum = parseNumber(cellText);
+                    if (cellNum > 1000) {
+                        armySizeCell = candidateCell;
+                    }
+                }
+            }
+            
+            // If still not found, look for any cell with a large numeric data-sort
+            if (!armySizeCell) {
+                for (const cell of allCells) {
+                    const sortValue = cell.getAttribute('data-sort');
+                    if (sortValue && /^\d+$/.test(sortValue.trim())) {
+                        const sortNum = parseInt(sortValue, 10);
+                        // Army size is typically > 1000
+                        if (sortNum > 1000) {
+                            const cellText = cell.textContent.trim();
+                            if (cellText && /[\d,]+/.test(cellText)) {
+                                armySizeCell = cell;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Find gold span
+            const goldSpan = row.querySelector('span.gold');
+            
+            // Remove existing snapshot displays
+            const existingUnitProd = row.querySelector('.mwh-snapshot-unit-production');
+            if (existingUnitProd) existingUnitProd.remove();
+            const existingIncome = row.querySelector('.mwh-snapshot-income');
+            if (existingIncome) existingIncome.remove();
+            
+            // Add unit production near army size
+            if (data.unitProduction !== undefined && data.unitProduction !== 0 && armySizeCell) {
+                const unitProdSpan = document.createElement('span');
+                unitProdSpan.className = 'mwh-snapshot-unit-production';
+                unitProdSpan.style.cssText = `
+                    display: inline-block;
+                    margin-left: 8px;
+                    color: #2196F3;
+                    font-size: 11px;
+                    font-weight: bold;
+                `;
+                unitProdSpan.textContent = `+${formatNumber(data.unitProduction)}`;
+                unitProdSpan.title = 'Unit Production per turn';
+                armySizeCell.appendChild(unitProdSpan);
+            }
+            
+            // Add income near gold (with hourly display)
+            if (data.income !== undefined && data.income !== 0 && goldSpan) {
+                const incomeContainer = document.createElement('div');
+                incomeContainer.className = 'mwh-snapshot-income';
+                incomeContainer.style.cssText = `
+                    margin-top: 2px;
+                    font-size: 10px;
+                    line-height: 1.3;
+                `;
+                
+                // Per turn income
+                const incomeSpan = document.createElement('span');
+                incomeSpan.style.cssText = `
+                    display: block;
+                    color: #4CAF50;
+                    font-weight: bold;
+                `;
+                incomeSpan.textContent = `+${formatNumber(data.income)}/turn`;
+                incomeSpan.title = 'Income per turn';
+                incomeContainer.appendChild(incomeSpan);
+                
+                // Hourly income (60x per turn income)
+                const hourlyIncome = data.income * 60;
+                const hourlySpan = document.createElement('span');
+                hourlySpan.style.cssText = `
+                    display: block;
+                    color: #66BB6A;
+                    font-size: 9px;
+                `;
+                hourlySpan.textContent = `Hourly: ${formatNumber(hourlyIncome)}`;
+                hourlySpan.title = 'Estimated hourly income (60x per turn)';
+                incomeContainer.appendChild(hourlySpan);
+                
+                // Find the parent of gold span and append after it
+                const goldParent = goldSpan.parentElement;
+                if (goldParent) {
+                    goldParent.appendChild(incomeContainer);
+                }
+            }
+        });
+    }
 
     // ============================================================================
     // PLAYER INTELLIGENCE SYSTEM
@@ -2775,11 +4848,16 @@
             merged.militaryStats = merged.militaryStats || {};
             Object.keys(newData.militaryStats).forEach(key => {
                 const newValue = newData.militaryStats[key];
+                const oldValue = merged.militaryStats[key];
+                // Only update if new value is valid (not "???" or null/undefined)
+                // If new value is "???", explicitly preserve the old value
                 if (newValue !== '???' && newValue !== null && newValue !== undefined) {
                     merged.militaryStats[key] = newValue;
-                } else if (!merged.militaryStats[key]) {
-                    // Keep old value if exists, otherwise leave as is
+                } else if (oldValue !== undefined && oldValue !== null && oldValue !== '???') {
+                    // Explicitly preserve old value when new value is "???"
+                    merged.militaryStats[key] = oldValue;
                 }
+                // If both old and new are invalid, leave as is (undefined or "???")
             });
         }
         
@@ -2788,9 +4866,16 @@
             merged.generalStats = merged.generalStats || {};
             Object.keys(newData.generalStats).forEach(key => {
                 const newValue = newData.generalStats[key];
+                const oldValue = merged.generalStats[key];
+                // Only update if new value is valid (not "???" or null/undefined)
+                // If new value is "???", explicitly preserve the old value
                 if (newValue !== '???' && newValue !== null && newValue !== undefined) {
                     merged.generalStats[key] = newValue;
+                } else if (oldValue !== undefined && oldValue !== null && oldValue !== '???') {
+                    // Explicitly preserve old value when new value is "???"
+                    merged.generalStats[key] = oldValue;
                 }
+                // If both old and new are invalid, leave as is (undefined or "???")
             });
         }
         
@@ -2799,9 +4884,16 @@
             merged.armyStats = merged.armyStats || {};
             Object.keys(newData.armyStats).forEach(key => {
                 const newValue = newData.armyStats[key];
+                const oldValue = merged.armyStats[key];
+                // Only update if new value is valid (not "???" or null/undefined)
+                // If new value is "???", explicitly preserve the old value
                 if (newValue !== '???' && newValue !== null && newValue !== undefined) {
                     merged.armyStats[key] = newValue;
+                } else if (oldValue !== undefined && oldValue !== null && oldValue !== '???') {
+                    // Explicitly preserve old value when new value is "???"
+                    merged.armyStats[key] = oldValue;
                 }
+                // If both old and new are invalid, leave as is (undefined or "???")
             });
         }
         
@@ -3339,6 +5431,184 @@
         
         console.log('Parsed Command Center data:', data);
         return data;
+    }
+    
+    /**
+     * Parse and display key revenue stats overlay on Command Center
+     */
+    function displayCommandCenterStatsOverlay() {
+        // Check if feature is enabled
+        if (!isFeatureEnabled('commandCenterStats')) {
+            // Remove overlay if it exists and feature is disabled
+            const existingOverlay = document.getElementById('mwh-command-center-stats');
+            if (existingOverlay) {
+                existingOverlay.remove();
+            }
+            return;
+        }
+        
+        // Find Total Gold Revenue
+        let totalGoldRevenue = null;
+        const allRows = Array.from(document.querySelectorAll('tr'));
+        for (const row of allRows) {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 2) {
+                const firstCellText = cells[0].textContent.trim();
+                if (firstCellText.includes('Total Gold Revenue')) {
+                    const valueCell = cells[1];
+                    if (valueCell) {
+                        const valueText = valueCell.textContent.trim();
+                        totalGoldRevenue = parseNumber(valueText);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Find Total Unit Revenue
+        let totalUnitRevenue = null;
+        for (const row of allRows) {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 2) {
+                const firstCellText = cells[0].textContent.trim();
+                if (firstCellText.includes('Total Unit Revenue')) {
+                    const valueCell = cells[1];
+                    if (valueCell) {
+                        const valueText = valueCell.textContent.trim();
+                        totalUnitRevenue = parseNumber(valueText);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Find Mana Produced
+        let manaProduced = null;
+        for (const row of allRows) {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 2) {
+                const firstCellText = cells[0].textContent.trim();
+                // Check if it contains "Mana Produced" (might have tooltip div)
+                if (firstCellText.includes('Mana Produced')) {
+                    const valueCell = cells[1];
+                    if (valueCell) {
+                        const valueText = valueCell.textContent.trim();
+                        manaProduced = parseNumber(valueText);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Remove existing overlay if present
+        const existingOverlay = document.getElementById('mwh-command-center-stats');
+        if (existingOverlay) {
+            existingOverlay.remove();
+        }
+        
+        // Only create overlay if we have at least one value
+        if (totalGoldRevenue === null && totalUnitRevenue === null && manaProduced === null) {
+            return;
+        }
+        
+        // Create overlay container
+        const overlay = document.createElement('div');
+        overlay.id = 'mwh-command-center-stats';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 120px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            z-index: 10000;
+            min-width: 250px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        `;
+        
+        // Create title
+        const title = document.createElement('div');
+        title.textContent = '📊 Key Stats';
+        title.style.cssText = `
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        `;
+        overlay.appendChild(title);
+        
+        // Create stats container
+        const statsContainer = document.createElement('div');
+        statsContainer.style.cssText = `
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        `;
+        
+        // Add Total Gold Revenue
+        if (totalGoldRevenue !== null) {
+            const goldStat = document.createElement('div');
+            goldStat.style.cssText = `
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            `;
+            const goldLabel = document.createElement('span');
+            goldLabel.textContent = '💰 Total Gold Revenue:';
+            goldLabel.style.cssText = 'font-weight: 500;';
+            const goldValue = document.createElement('span');
+            goldValue.textContent = formatNumber(totalGoldRevenue);
+            goldValue.style.cssText = 'font-weight: bold; color: #FFD700;';
+            goldStat.appendChild(goldLabel);
+            goldStat.appendChild(goldValue);
+            statsContainer.appendChild(goldStat);
+        }
+        
+        // Add Total Unit Revenue
+        if (totalUnitRevenue !== null) {
+            const unitStat = document.createElement('div');
+            unitStat.style.cssText = `
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            `;
+            const unitLabel = document.createElement('span');
+            unitLabel.textContent = '⚔️ Total Unit Revenue:';
+            unitLabel.style.cssText = 'font-weight: 500;';
+            const unitValue = document.createElement('span');
+            unitValue.textContent = formatNumber(totalUnitRevenue);
+            unitValue.style.cssText = 'font-weight: bold; color: #4CAF50;';
+            unitStat.appendChild(unitLabel);
+            unitStat.appendChild(unitValue);
+            statsContainer.appendChild(unitStat);
+        }
+        
+        // Add Mana Produced
+        if (manaProduced !== null) {
+            const manaStat = document.createElement('div');
+            manaStat.style.cssText = `
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            `;
+            const manaLabel = document.createElement('span');
+            manaLabel.textContent = '🔮 Mana Produced:';
+            manaLabel.style.cssText = 'font-weight: 500;';
+            const manaValue = document.createElement('span');
+            manaValue.textContent = formatNumber(manaProduced);
+            manaValue.style.cssText = 'font-weight: bold; color: #FFD700;';
+            manaStat.appendChild(manaLabel);
+            manaStat.appendChild(manaValue);
+            statsContainer.appendChild(manaStat);
+        }
+        
+        overlay.appendChild(statsContainer);
+        document.body.appendChild(overlay);
     }
     
     /**
@@ -4054,7 +6324,10 @@
         
         // Calculate total mana needed for all unsought legends
         let totalManaNeeded = 0;
+        let totalRemainingMana = 0; // Total remaining mana needed after accounting for current mana
         let unsoughtCount = 0;
+        let manaApplied = 0; // Track how much of currentMana has been applied to previous legends
+        
         legendTbodies.forEach(tbody => {
             // Check if already sought
             const legendDiv = tbody.querySelector('div.legends-seeked');
@@ -4077,6 +6350,16 @@
             
             const manaCost = parseNumber(manaCostMatch[1]);
             totalManaNeeded += manaCost;
+            
+            // Calculate remaining mana for this legend after applying available mana sequentially
+            // Each legend gets priority for any remaining currentMana that hasn't been applied yet
+            const manaAvailableForThisLegend = Math.max(0, currentMana - manaApplied);
+            const remainingManaForThisLegend = Math.max(0, manaCost - manaAvailableForThisLegend);
+            totalRemainingMana += remainingManaForThisLegend;
+            
+            // Update how much mana has been applied (can't apply more than the legend costs)
+            manaApplied += Math.min(manaCost, manaAvailableForThisLegend);
+            
             unsoughtCount++;
         });
         
@@ -4089,9 +6372,11 @@
         // Calculate surplus/deficit
         const manaSurplus = totalManaAvailable - totalManaNeeded;
         
-        // Calculate time until all legends completed (if possible)
-        const manaNeededAfterCurrent = Math.max(0, totalManaNeeded - currentMana);
-        const minutesToComplete = manaNeededAfterCurrent / manaProduction;
+        // Calculate time until all legends completed (two scenarios)
+        // 1. Time if assuming 0 mana on hand (full cost)
+        const minutesToCompleteFromZero = totalManaNeeded / manaProduction;
+        // 2. Time if accounting for current mana on hand (remaining after applying current mana)
+        const minutesToCompleteWithCurrentMana = totalRemainingMana / manaProduction;
         
         // Create summary overlay
         const summaryOverlay = document.createElement('div');
@@ -4129,14 +6414,38 @@
         neededDiv.innerHTML = `<strong>Total Mana Needed:</strong> ${formatNumber(totalManaNeeded)}`;
         summaryOverlay.appendChild(neededDiv);
         
-        // Time until completion
+        // Current mana on hand
+        const currentManaDiv = document.createElement('div');
+        currentManaDiv.style.cssText = 'margin-bottom: 5px;';
+        currentManaDiv.innerHTML = `<strong>Mana On Hand:</strong> ${formatNumber(currentMana)}`;
+        summaryOverlay.appendChild(currentManaDiv);
+        
+        // Remaining mana after applying current mana
+        const remainingManaDiv = document.createElement('div');
+        remainingManaDiv.style.cssText = 'margin-bottom: 5px;';
+        remainingManaDiv.innerHTML = `<strong>Remaining Mana Needed:</strong> ${formatNumber(totalRemainingMana)}`;
+        summaryOverlay.appendChild(remainingManaDiv);
+        
+        // Time until completion (two scenarios)
         const timeDiv = document.createElement('div');
         timeDiv.style.cssText = 'margin-bottom: 5px;';
-        if (minutesToComplete <= totalMinutesRemaining) {
-            timeDiv.innerHTML = `<strong>Time Until All Legends Complete:</strong> ${formatTimeDuration(minutesToComplete)}`;
+        let timeHtml = '<strong>Time Until All Legends Complete:</strong><br>';
+        
+        // Time assuming 0 mana on hand
+        if (minutesToCompleteFromZero <= totalMinutesRemaining) {
+            timeHtml += `&nbsp;&nbsp;• From 0 mana: ${formatTimeDuration(minutesToCompleteFromZero)}<br>`;
         } else {
-            timeDiv.innerHTML = `<strong>Time Until All Legends Complete:</strong> <span style="color: #ff6b6b;">Not possible in remaining time</span>`;
+            timeHtml += `&nbsp;&nbsp;• From 0 mana: <span style="color: #ff6b6b;">Not possible in remaining time</span><br>`;
         }
+        
+        // Time accounting for current mana
+        if (minutesToCompleteWithCurrentMana <= totalMinutesRemaining) {
+            timeHtml += `&nbsp;&nbsp;• With current mana (${formatNumber(currentMana)}): <span style="color: #4CAF50; font-weight: bold;">${formatTimeDuration(minutesToCompleteWithCurrentMana)}</span>`;
+        } else {
+            timeHtml += `&nbsp;&nbsp;• With current mana (${formatNumber(currentMana)}): <span style="color: #ff6b6b;">Not possible in remaining time</span>`;
+        }
+        
+        timeDiv.innerHTML = timeHtml;
         summaryOverlay.appendChild(timeDiv);
         
         // Surplus/Deficit
@@ -4903,12 +7212,27 @@
     
     // Update player list when on battlefield page
     if (window.location.pathname.includes('battlefield2.php')) {
+        // Display snapshot data on battlefield (try multiple times in case DOM isn't ready)
+        const tryDisplaySnapshot = (attempts = 3) => {
+            displaySnapshotOnBattlefield();
+            if (attempts > 1) {
+                setTimeout(() => tryDisplaySnapshot(attempts - 1), 500);
+            }
+        };
+        
         setTimeout(() => {
             const count = updatePlayerList();
             if (count > 0) {
                 showNotification(`Updated player list: ${count} players`);
             }
+            // Display snapshot data on battlefield with retries
+            tryDisplaySnapshot();
         }, 1000);
+        
+        // Also try immediately in case page is already loaded
+        if (document.readyState === 'complete') {
+            tryDisplaySnapshot();
+        }
     }
     
     // Process spy results page data when on spylog.php (after completing captcha)
@@ -4920,15 +7244,70 @@
     
     // Store own stats when on Command Center
     if (window.location.pathname.includes('base.php')) {
+        // Display key stats overlay with retries (in case DOM isn't ready)
+        const tryDisplayStats = (attempts = 3) => {
+            displayCommandCenterStatsOverlay();
+            if (attempts > 1) {
+                setTimeout(() => tryDisplayStats(attempts - 1), 500);
+            }
+        };
+        
         setTimeout(() => {
             storeOwnStats();
+            // Display key stats overlay with retries
+            tryDisplayStats();
         }, 1000);
+        
+        // Also try to display overlay immediately if page is already loaded
+        if (document.readyState === 'complete') {
+            setTimeout(() => tryDisplayStats(), 500);
+        }
     }
     
     // Create intelligence display page (works on any page with mwh=intel parameter)
     if (window.location.search.includes('mwh=intel')) {
         setTimeout(() => {
             createIntelligenceDisplayPage();
+        }, 500);
+    }
+    
+    // Check if we need to update Head to Head stats
+    if (window.location.pathname.includes('warlogs.php')) {
+        const scrapingState = GM_getValue('mwh_h2h_scraping', null);
+        const updatePending = GM_getValue('mwh_h2h_update_pending', false);
+        const lastDebug = GM_getValue('mwh_h2h_last_debug', null);
+        
+        // Show last debug info if available
+        if (lastDebug) {
+            try {
+                const debug = JSON.parse(lastDebug);
+                console.log('=== LAST DEBUG INFO ===', debug);
+            } catch (e) {
+                console.log('Last debug info:', lastDebug);
+            }
+        }
+        
+        if (updatePending || scrapingState) {
+            console.log('H2H scraping state:', scrapingState ? 'Active' : 'None', 'Update pending:', updatePending);
+            // Wait for page to be fully loaded
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    setTimeout(() => {
+                        updateHeadToHeadStats();
+                    }, 2000); // Extra wait for dynamic content
+                });
+            } else {
+                setTimeout(() => {
+                    updateHeadToHeadStats();
+                }, 2000); // Wait for page to fully load
+            }
+        }
+    }
+    
+    // Create Head to Head stats display page (works on any page with mwh=h2h parameter)
+    if (window.location.search.includes('mwh=h2h')) {
+        setTimeout(() => {
+            createHeadToHeadStatsPage();
         }, 500);
     }
     

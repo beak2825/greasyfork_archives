@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AnimeStars Card Master (fork)
 // @namespace    AnimeStars.org
-// @version      1.35
+// @version      1.37.2
 // @description  1) Показывает спрос на карты.
 // @description  2) Показывает дубликаты карт.
 // @description  3) Отправляет карты в "Не нужное".
@@ -465,6 +465,9 @@ async function runMainScript() {
 	var dupEngineInstanceId = 0;           // Идентификатор текущей сессии двигателя
 	var dupQueueTimeoutId = null;          // ID таймера очереди
 	var lastProcessedPackIdForDemandCheck = null; // Для синхронизации со спросом
+	
+	// --- [Sub-Module] Провайдер данных профиля (Состояние) ---
+	let profileDataCache = { username: null, data: null, timestamp: 0 };
 
 
 	// ##################################################################################
@@ -793,12 +796,21 @@ async function runMainScript() {
 	
 	/**
 	 * Выполняет сетевой запрос к инвентарю пользователя для подсчета количества конкретных карт.
+	 * Реализована защита от кэширования браузера и приоритет физического подсчета элементов над текстом заголовка.
 	 * [searchUrl] - сформированный URL поиска с параметрами (имя, ID карты).
-	 * [targetCardId] - ID типа карты для проверки в DOM ответа (резервный метод).
+	 * [targetCardId] - ID типа карты для точной фильтрации при подсчете.
 	 */
 	async function ascm_fetchInventoryCount(searchUrl, targetCardId) {
 		try {
-			const res = await fetch(searchUrl, { credentials: 'include' });
+			const res = await fetch(searchUrl, { 
+				credentials: 'include',
+				cache: 'no-store',
+				headers: {
+					'Cache-Control': 'no-cache, no-store, must-revalidate',
+					'Pragma': 'no-cache',
+					'Expires': '0'
+				}
+			});
 			if (!res.ok) return null;
 			const html = await res.text();
 			const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -983,6 +995,97 @@ async function runMainScript() {
 		backdrop.addEventListener('click', closeTooltip);
 	}
 	unsafeWindow.showInfoTooltip = showInfoTooltip;
+	
+	/**
+	 * Создает временную прозрачную блокировку кликов на странице.
+	 * [durationMs] - длительность блокировки в миллисекундах.
+	 */
+	function ascm_tempNavigationLock(durationMs) {
+		const lock = document.createElement('div');
+		lock.id = 'acm-navigation-lock';
+		Object.assign(lock.style, {
+			position: 'fixed', top: '0', left: '0', width: '100vw', height: '100vh',
+			zIndex: '2147483646', background: 'transparent', cursor: 'wait'
+		});
+		document.documentElement.appendChild(lock);
+		setTimeout(() => lock.remove(), durationMs);
+	}
+
+	/**
+	 * Универсальный хелпер для обновления липкого прогресса в пуше и консоли.
+	 * [id] - уникальный ID пуша для обновления без мерцания.
+	 * [opts] - объект данных (title, step, totalSteps, status, lockTime).
+	 */
+	async function ascm_updateStickyProgress(id, opts) {
+		const stepPrefix = opts.totalSteps ? `[Этап ${opts.step}/${opts.totalSteps}] ` : "";
+		const lockText = opts.lockTime > 0 ? `\n<b style="font-size: 13px; color: #fff;">⏳ Блокировка ссылок: ${Math.ceil(opts.lockTime/1000)}с</b>` : "";
+		const fullMsgLog = `${stepPrefix}${opts.title}: ${opts.status}`;
+		
+		const displayMsg = `${stepPrefix}${opts.title}: ${opts.status}\n<b style="font-size: 13px;">⚠️ Не закрывайте страницу до завершения!</b>${lockText}`;
+
+		console.log(`%c[Card DB] ${fullMsgLog}`, "color: #bb86fc; font-weight: bold;");
+		showNotification(displayMsg, 'info', { sticky: true, id: id });
+	}
+
+	// --- [Sub-Module] Провайдер данных профиля (Состояние) ---
+
+	/**
+	 * Универсальный провайдер данных профиля пользователя.
+	 * Выполняет сетевой запрос, парсит квесты и при обнаружении невыполненного ежедневного задания
+	 * на просмотр аниме инициирует его автоматическое выполнение Лидером.
+	 * [targetUser] - никнейм пользователя для запроса
+	 * [force] - флаг принудительного игнорирования 30-секундного кэша
+	 */
+	async function ascm_fetchUserProfile(targetUser, force = false) {
+		const now = Date.now();
+		const CACHE_TTL_MS = 30000;
+
+		if (!force && profileDataCache.username === targetUser && (now - profileDataCache.timestamp < CACHE_TTL_MS)) {
+			return profileDataCache.data;
+		}
+
+		try {
+			const response = await fetch(`/user/${encodeURIComponent(targetUser)}/`, { cache: 'no-cache' });
+			if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+			const serverDateHeader = response.headers.get('Date');
+			if (serverDateHeader) {
+				const sMsk = new Date(new Date(serverDateHeader).getTime() + (3 * 3600 * 1000));
+				unsafeWindow.ascm_actual_server_date = sMsk.toISOString().split('T')[0];
+			}
+
+			const text = await response.text();
+			const doc = new DOMParser().parseFromString(text, 'text/html');
+			
+			const questElements = doc.querySelectorAll('.shop__get-coins li');
+			const parsedQuests = Array.from(questElements).map(li => ({
+				text: li.textContent.trim(),
+				isDone: li.classList.contains('reward-activated') || li.classList.contains('completed')
+			}));
+
+			const watchQuest = parsedQuests.find(q => /^Просмотр аниме\s*-\s*\d/.test(q.text));
+			const isDoneToday = watchQuest ? watchQuest.isDone : false;
+
+			const result = {
+				username: targetUser,
+				quests: parsedQuests,
+				dailyWatchDone: isDoneToday,
+				rawDoc: doc 
+			};
+
+			if (!isDoneToday && isLeaderWatch) {
+				await ascm_performDailyWatchQuest();
+				result.dailyWatchDone = true;
+			}
+
+			profileDataCache = { username: targetUser, data: result, timestamp: now };
+			return result;
+		} catch (error) {
+			console.error(`%c[ACM Provider] Ошибка загрузки профиля ${targetUser}:`, "color: #ff4d4d;", error);
+			return null;
+		}
+	}
+	unsafeWindow.ascm_fetchUserProfile = ascm_fetchUserProfile;
 
 
 	// ##################################################################################
@@ -2172,18 +2275,25 @@ async function runMainScript() {
 	
 	/**
 	 * Определяет, можно ли для данной карты мгновенно проставить "0" без запроса к серверу.
-	 * Основывается на CSS-классах сайта, специфичных для паков и предложений обмена.
+	 * Игнорирует контекст активных предложений обмена (trades/offers/) для принудительной проверки.
 	 * [cardEl] - DOM-элемент карты.
 	 */
 	function ascm_getInstantContextResult(cardEl) {
 		const isPacks = isCardPackPage();
-		const isOffer = window.location.pathname.startsWith('/trades/');
+		const isTradePage = window.location.pathname.startsWith('/trades/');
+		const isTradeOfferPage = /^\/trades\/offers\/\d+\/?$/i.test(window.location.pathname); // Проверка на активное предложение
 		const isRemelt = isRemeltPage();
 		const tradeBlocks = document.querySelectorAll('.trade__main-items');
 		const hasOwnedClass = cardEl.classList.contains('anime-cards__owned-by-user');
 
+		// Если это активное предложение обмена - НЕ ставим 0 автоматически
+		if (isTradeOfferPage) return null;
+
+		// Если это пак, и карта не наша - 0
 		if (isPacks && !hasOwnedClass) return 0;
-		if (isOffer && tradeBlocks.length > 0 && cardEl.closest('.trade__main-items') === tradeBlocks[0] && !hasOwnedClass) return 0;
+		
+		// Если это страница создания трейда/базы и карта в левом блоке ("Вы отдадите") и не наша - 0
+		if (isTradePage && tradeBlocks.length > 0 && cardEl.closest('.trade__main-items') === tradeBlocks[0] && !hasOwnedClass) return 0;
 
 		return null;
 	}
@@ -2393,6 +2503,7 @@ async function runMainScript() {
 
 	/**
 	 * Универсальный двигатель анализа дубликатов с поддержкой прерывания.
+	 * На страницах обмена принудительно обрабатывает блок "Вы хотите получить" первым.
 	 * При каждом вызове инкрементирует ID сессии, останавливая предыдущие итерации.
 	 * [isManual] - сохраняет флаг ручного режима для авто-продолжения на новых страницах.
 	 */
@@ -2413,7 +2524,24 @@ async function runMainScript() {
 		try {
 			await sleep(50);
 			if (instanceId !== dupEngineInstanceId) return;
-			const allCards = getCardsOnPage().filter(el => !el.closest('#cards-carousel') && !el.classList.contains('card-show__placeholder'));
+
+			let prioritizedCards = [];
+			const isTradeOfferPage = window.location.pathname.startsWith('/trades/offers/');
+			
+			if (isTradeOfferPage) {
+				const tradeBlocks = document.querySelectorAll('.trade__main-items');
+				if (tradeBlocks.length === 2) {
+					const wantedCards = Array.from(tradeBlocks[1].querySelectorAll('.trade__main-item'));
+					prioritizedCards.push(...wantedCards);
+					
+					const offeredCards = Array.from(tradeBlocks[0].querySelectorAll('.trade__main-item'));
+					prioritizedCards.push(...offeredCards);
+				}
+			}
+			
+			const allCards = prioritizedCards.length > 0 ? prioritizedCards : 
+				getCardsOnPage().filter(el => !el.closest('#cards-carousel') && !el.classList.contains('card-show__placeholder'));
+
 			const cardDataList = [];
 			const sessionResults = new Map();
 
@@ -2475,6 +2603,7 @@ async function runMainScript() {
 					const url = new URL(`${location.origin}/user/cards/`);
 					url.searchParams.set('name', user);
 					url.searchParams.set('card_id', targetId);
+					url.searchParams.set('_t', Date.now());
 					const count = await ascm_fetchInventoryCount(url.toString(), targetId);
 
 					if (instanceId !== dupEngineInstanceId) return;
@@ -2677,9 +2806,7 @@ async function runMainScript() {
 		if (timeSinceLast < CHECK_NEW_CARD_INTERVAL) {
 			const timeLeftMs = CHECK_NEW_CARD_INTERVAL - timeSinceLast;
 			const timeLeftSec = Math.ceil(timeLeftMs / 1000);
-			
 			sccLog(`[AutoWatch] Слишком рано. Глобальный откат: еще ${timeLeftSec} сек. (Обновление страницы не поможет)`, 'debug', true);
-
 			if (checkNewCardTimeoutId) clearTimeout(checkNewCardTimeoutId);
 			checkNewCardTimeoutId = setTimeout(mainCardCheckLogic, timeLeftMs + 1000);
 			return;
@@ -2707,7 +2834,7 @@ async function runMainScript() {
 			if (data.cards) {
 				state.failed_attempts = 0;
 				await GM_setValue('ascm_smart_progression_v1', state);
-				processCardReward(data, rawBody, 'auto');
+				await processCardReward(data, rawBody, 'auto');
 			} else {
 				if (data.reason === 'no') {
 					state.failed_attempts = (state.failed_attempts || 0) + 1;
@@ -2723,6 +2850,9 @@ async function runMainScript() {
 				}
 				handleCardError(data.reason, 'auto');
 			}
+
+			await updateCardCounter(true);
+
 		} catch (e) {
 			console.error('[AutoWatch] Ошибка цикла:', e);
 		}
@@ -2796,7 +2926,6 @@ async function runMainScript() {
 
             console.log(`%c[ACM] Карта: ${card.name} | Тип: ${source} | Камень: ${stoneRecord}`, "color: #00ffff; font-weight: bold; background: #000; padding: 2px;");
 
-            // Формируем объект лога для IndexedDB
             const receipt = {
                 receivedAt: Date.now(),
                 dateMsk: mskTime,
@@ -2808,6 +2937,8 @@ async function runMainScript() {
                 watchedAnimeId: animeIdValue,
                 watchedEpisode: watchedInfo.episode || '?',
                 watchedSeason: watchedInfo.season || '?',
+                translationId: watchedInfo.translation_id || '610',
+                translationTitle: watchedInfo.translation_title || 'AniLibria.TV',
                 source: source,
                 snowStone: stoneRecord
             };
@@ -3033,12 +3164,18 @@ async function runMainScript() {
 			showHighRankCardNotification(highestNotifyRank);
 		}
 
+		let networkRequestsCount = 0;
 		for (const card of cardsToProcess) {
 			const typeCardId = await getCardId(card, 'type');
-			if (typeCardId) {
-				await updateCardInfo(typeCardId, card, false);
-				await sleep(250); 
+			if (!typeCardId) continue;
+
+			const cachedData = await getCache('cardId: ' + typeCardId);
+			if (!cachedData) {
+				if (networkRequestsCount > 0) await sleep(2000);
+				networkRequestsCount++;
 			}
+
+			await updateCardInfo(typeCardId, card, false);
 		}
 	}
 
@@ -3105,6 +3242,83 @@ async function runMainScript() {
 			}
 
 			unsafeWindow.ascm_new_day_wait_until = 0;
+		}
+	}
+	
+	// --- [Sub-Module] 8.5. Ежедневные квесты (Daily Quests) ---
+
+	/**
+	 * Выполняет ежедневный квест на просмотр аниме, имитируя сохранение истории просмотра серии.
+	 * Использует данные последней полученной карты из базы, при отсутствии информации об озвучке
+	 * обращается к глобальному пулу аниме для восстановления идентификаторов трансляции.
+	 * [нет аргументов]
+	 */
+	async function ascm_performDailyWatchQuest() {
+		if (!isLeaderWatch) return;
+
+		try {
+			const db = await openDb();
+			const receipts = await new Promise((resolve) => {
+				const tx = db.transaction('card_receipts', 'readonly');
+				const request = tx.objectStore('card_receipts').getAll();
+				request.onsuccess = () => resolve(request.result);
+				request.onerror = () => resolve([]);
+			});
+
+			if (!receipts || receipts.length === 0) {
+				console.log("%c[ACM Quest] Таблица просмотров пуста. Квест будет выполнен после получения первой карты.", "color: #faa61a; font-weight: bold;");
+				return;
+			}
+
+			const lastReceipt = receipts.sort((a, b) => b.receivedAt - a.receivedAt)[0];
+			
+			let tId = parseInt(lastReceipt.translationId);
+			let tTitle = lastReceipt.translationTitle;
+
+			if (!tId || !tTitle) {
+				const poolMatch = GLOBAL_ANIME_POOL.find(p => p.anime_id == lastReceipt.watchedAnimeId);
+				if (poolMatch) {
+					tId = parseInt(poolMatch.t_id);
+					tTitle = poolMatch.t_title;
+				} else {
+					tId = 610;
+					tTitle = "AniLibria.TV";
+				}
+			}
+
+			const watchData = {
+				episode: parseInt(lastReceipt.watchedEpisode) || 1,
+				season: parseInt(lastReceipt.watchedSeason) || 1,
+				translation: {
+					id: tId,
+					title: tTitle
+				}
+			};
+
+			console.log(`%c[ACM Quest] Отправка квеста: ID ${lastReceipt.watchedAnimeId}, Ep ${watchData.episode}, Trans ${watchData.translation.title}`, "color: #bb86fc;");
+
+			const response = await fetch("/engine/ajax/controller.php?mod=anime_grabber&module=kodik_watched", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+					"X-Requested-With": "XMLHttpRequest"
+				},
+				body: new URLSearchParams({
+					'action': 'save_watched',
+					'news_id': lastReceipt.watchedAnimeId,
+					'kodik_data': JSON.stringify(watchData)
+				}).toString()
+			});
+
+			if (response.ok) {
+				const result = await response.json();
+				if (result.status) {
+					sccLog("Ежедневный квест на просмотр выполнен!", "success", true);
+					await sleep(1000);
+				}
+			}
+		} catch (error) {
+			console.error("[ACM Quest] Критическая ошибка квеста:", error);
 		}
 	}
 	
@@ -3880,12 +4094,16 @@ async function runMainScript() {
                 } catch(e) { return null; }
             };
 
+            const kodikRaw = getVal('kodik_data');
+            let kData = {};
+            if (kodikRaw) { try { kData = JSON.parse(kodikRaw); } catch(e) {} }
+
             return {
                 watched_news_id: getVal('news_id'),
-                episode: getVal('kodik_data[episode]'),
-                season: getVal('kodik_data[season]'),
-                translation_id: getVal('kodik_data[translation][id]'),
-                translation_title: getVal('kodik_data[translation][title]')
+                episode: kData.episode || getVal('kodik_data[episode]'),
+                season: kData.season || getVal('kodik_data[season]'),
+                translation_id: kData.translation?.id || getVal('kodik_data[translation][id]'),
+                translation_title: kData.translation?.title || getVal('kodik_data[translation][title]')
             };
         } catch (e) { return {}; }
     };
@@ -6770,146 +6988,143 @@ async function runMainScript() {
 		// Заменяем старую функцию, чтобы она использовала новую логику
 		unsafeWindow.fetchCardDatabase = fetchCardDatabaseFromRepo;
 
-		/**
-         * Обновляет локальную базу данных с динамическим расчетом этапов.
-         * Обеспечивает видимость каждого шага (мин. 1 сек) и дублирует статус в консоль.
-         * [force] - флаг принудительного обновления.
-         */
-        unsafeWindow.updateLocalDatabase = async function(force = false) {
-            await sleep(1000);
-            const UPDATE_FLAG_KEY = 'ascm_db_update_in_progress';
-            const LAST_DB_UPDATE_KEY = 'ascm_db_last_update_ts';
-            const STICKY_ID = 'acm-db-update-status';
-            const MAX_UPDATE_DURATION_MS = 60000;
-            const now = Date.now();
+	/**
+	 * Выполняет обновление локальной базы данных с принудительной отрисовкой каждого процента прогресса.
+	 * Использует пакетную запись в IndexedDB и систему искусственных микро-пауз для обновления UI.
+	 * [force] - флаг игнорирования TTL для немедленного запуска
+	 */
+	unsafeWindow.updateLocalDatabase = async function(force = false) {
+		await sleep(1000);
+		const STICKY_ID = 'acm-db-update-status';
+		const UPDATE_FLAG_KEY = 'ascm_db_update_in_progress';
+		const LAST_DB_UPDATE_KEY = 'ascm_db_last_update_ts';
+		const MAX_UPDATE_DURATION_MS = 60000;
+		const now = Date.now();
 
-            const updateInfo = await GM_getValue(UPDATE_FLAG_KEY, null);
-            if (updateInfo && (now - updateInfo.timestamp < MAX_UPDATE_DURATION_MS)) {
-                console.log(`%c[Card DB] Обновление уже выполняется в другой вкладке.`, "color: #faa61a;");
-                return;
-            }
-            
-            let needsUpdate = force;
-            if (!force) {
-                const cardCount = await getCardCountFromDB();
-                if (cardCount === 0) needsUpdate = true;
-                else {
-                    const lastUpdateTime = await GM_getValue(LAST_DB_UPDATE_KEY, 0);
-                    const userTtlHours = await GM_getValue(DB_UPDATE_TTL_KEY, 8);
-                    if ((now - lastUpdateTime) >= userTtlHours * 3600 * 1000) needsUpdate = true;
-                }
-            }
+		const updateInfo = await GM_getValue(UPDATE_FLAG_KEY, null);
+		if (updateInfo && (now - updateInfo.timestamp < MAX_UPDATE_DURATION_MS)) {
+			console.log(`%c[Card DB] Обновление уже запущено в другой вкладке.`, "color: #faa61a;");
+			return;
+		}
+		
+		let needsUpdate = force;
+		if (!force) {
+			const cardCount = await getCardCountFromDB();
+			if (cardCount === 0) needsUpdate = true;
+			else {
+				const lastUpdateTime = await GM_getValue(LAST_DB_UPDATE_KEY, 0);
+				const userTtlHours = await GM_getValue(DB_UPDATE_TTL_KEY, 8);
+				if ((now - lastUpdateTime) >= userTtlHours * 3600 * 1000) needsUpdate = true;
+			}
+		}
 
-            if (!needsUpdate) return;
+		if (!needsUpdate) return;
 
-            const isGithubCheckEnabled = await GM_getValue(GITHUB_CHECK_ENABLED_KEY, true);
-            const isGithubDemandEnabled = await GM_getValue('ascm_githubDemandCacheEnabled', true);
-            const isPageScanEnabled = await GM_getValue(PAGE_SCAN_ENABLED_KEY, true);
+		const isDemandEn = await GM_getValue('ascm_githubDemandCacheEnabled', true);
+		const isScanEn = await GM_getValue(PAGE_SCAN_ENABLED_KEY, true);
+		const totalSteps = 1 + (isDemandEn ? 1 : 0) + (isScanEn ? 1 : 0) + 1;
+		let currentStep = 1;
 
-            // 1. Предварительный расчет количества этапов
-            let steps = [];
-            if (isGithubCheckEnabled || force) {
-                steps.push("Загрузка данных с GitHub");
-                if (isGithubDemandEnabled) steps.push("Импорт данных о спросе");
-            }
-            if (isPageScanEnabled) steps.push("Скан новых карт на сайте");
-            steps.push("Завершение обновления");
+		ascm_tempNavigationLock(3000);
+		let lockTimer = 3000;
+		let lastStatus = "Инициализация...";
 
-            const totalSteps = steps.length;
-            let currentStepIdx = 0;
-            const dontRefreshWarning = "\n⚠️ Не обновляйте страницу до конца процесса!";
+		const syncUpdate = (status) => {
+			lastStatus = status;
+			ascm_updateStickyProgress(STICKY_ID, { title: "База карт", step: currentStep, totalSteps, status, lockTime: lockTimer });
+		};
 
-            // Вспомогательный логгер (Пуш + Консоль + Задержка)
-            const notifyStatus = async (text, isSticky = true, type = 'info') => {
-                const stepNum = isSticky ? ++currentStepIdx : currentStepIdx;
-                const prefix = isSticky ? `[Этап ${stepNum}/${totalSteps}] ` : "";
-                const fullMsg = prefix + text;
-                const displayMsg = isSticky ? fullMsg + dontRefreshWarning : text;
+		const countdown = setInterval(() => { 
+			lockTimer -= 1000; 
+			if (lockTimer >= 0) syncUpdate(lastStatus);
+			if (lockTimer <= 0) clearInterval(countdown); 
+		}, 1000);
 
-                console.log(`%c[Card DB] ${fullMsg}`, "color: #00ffff;");
-                showNotification(displayMsg, type, { sticky: isSticky, id: STICKY_ID });
-                
-                if (isSticky) await sleep(1000); // Минимум 1 сек на чтение этапа
-            };
+		await GM_setValue(UPDATE_FLAG_KEY, { tabId: tabIdWatch, timestamp: Date.now() });
 
-            await GM_setValue(UPDATE_FLAG_KEY, { tabId: tabIdWatch, timestamp: now });
+		try {
+			syncUpdate("Загрузка данных с GitHub...");
+			const fetchedDataObj = await unsafeWindow.fetchCardDatabase();
+			if (!fetchedDataObj || !fetchedDataObj.cards?.length) throw new Error("Файл не загружен");
+			
+			await populateDb(fetchedDataObj.cards);
+			currentStep++;
 
-            try {
-                let updateSuccessful = false;
+			if (isDemandEn) {
+				const cards = fetchedDataObj.cards;
+				const total = cards.length;
+				const db = await openDb();
+				const ttlMs = await GM_getValue(CACHE_TTL_STORAGE_KEY, DEFAULT_CACHE_TTL_HOURS) * 3600 * 1000;
+				
+				const BATCH_SIZE = 200; 
+				let nextTargetPct = 1; 
 
-                // ЭТАП: GitHub
-                if (isGithubCheckEnabled || force) {
-                    await notifyStatus('Загрузка данных с GitHub...');
-                    const fetchedDataObj = await unsafeWindow.fetchCardDatabase();
+				for (let i = 0; i < total; i += BATCH_SIZE) {
+					const chunk = cards.slice(i, i + BATCH_SIZE);
+					const tx = db.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
+					const store = tx.objectStore(DEMAND_CACHE_STORE_NAME);
 
-                    if (fetchedDataObj && fetchedDataObj.cards?.length > 0) {
-                        const fetchedCards = fetchedDataObj.cards;
-                        await populateDb(fetchedCards);
+					for (const c of chunk) {
+						if (c.users || c.need || c.trade) {
+							store.put({ 
+								data: { popularityCount: c.users, needCount: c.need, tradeCount: c.trade, updatedAt: c._demandUpdatedAt }, 
+								expires: (c._demandUpdatedAt || Date.now()) + ttlMs 
+							}, 'cardId: ' + c.id);
+						}
+					}
 
-                        // ЭТАП: Спрос
-                        if (isGithubDemandEnabled) {
-                            await notifyStatus('Импорт данных о спросе...');
-                            const ttlInHours = await GM_getValue(CACHE_TTL_STORAGE_KEY, DEFAULT_CACHE_TTL_HOURS);
-                            const ttlMs = ttlInHours * 3600 * 1000;
-                            const db = await openDb();
-                            const tx = db.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
-                            const store = tx.objectStore(DEMAND_CACHE_STORE_NAME);
+					await new Promise((resolve, reject) => {
+						tx.oncomplete = resolve;
+						tx.onerror = () => reject(tx.error);
+					});
 
-                            for (const card of fetchedCards) {
-                                if (card.users === 0 && card.need === 0 && card.trade === 0) continue;
-                                const expires = (card._demandUpdatedAt || Date.now()) + ttlMs;
-                                store.put({ 
-                                    data: { popularityCount: card.users, needCount: card.need, tradeCount: card.trade, updatedAt: card._demandUpdatedAt }, 
-                                    expires 
-                                }, 'cardId: ' + card.id);
-                            }
-                            await new Promise(r => tx.oncomplete = r);
-                        }
+					let currentPct = Math.floor(((i + chunk.length) / total) * 100);
+					
+					while (currentPct >= nextTargetPct && nextTargetPct <= 100) {
+						const currentCount = Math.min(Math.round((nextTargetPct / 100) * total), total);
+						syncUpdate(`Импорт спроса: ${nextTargetPct}% (${currentCount}/${total})`);
+						await sleep(20); 
+						nextTargetPct++;
+					}
 
-                        // Обновление ОЗУ
-                        if (!cardDatabaseMap) cardDatabaseMap = new Map(); else cardDatabaseMap.clear();
-                        if (!cardImageIndex) cardImageIndex = new Map(); else cardImageIndex.clear();
-                        fetchedCards.forEach(c => {
-                            cardDatabaseMap.set(c.id, c);
-                            const key = normalizeImagePath(c.image);
-                            if (key) cardImageIndex.set(key, c.id);
-                        });
-                        updateSuccessful = true;
-                    }
-                }
+					if (shouldStopProcessCards) break;
+				}
+				currentStep++;
+			}
 
-                // ЭТАП: Скан сайта
-                if (isPageScanEnabled) {
-                    await notifyStatus('Скан новых карт на сайте...');
-                    await unsafeWindow.runFallbackCardScrape(2);
-                    updateSuccessful = true;
-                }
+			if (isScanEn) {
+				syncUpdate("Скан новых карт на сайте...");
+				await unsafeWindow.runFallbackCardScrape(2);
+				currentStep++;
+			}
 
-                // ЭТАП: Финал
-                if (updateSuccessful) {
-                    await notifyStatus('Завершение обновления...');
-                    await GM_setValue(LAST_DB_UPDATE_KEY, Date.now());
-                    freshnessData = null;
-                    await prepareFreshnessData();
-                    await updateFreshnessOverlays(true);
-                    
-                    document.getElementById(STICKY_ID)?.remove();
-                    await notifyStatus('🎉 База карт успешно обновлена!', false, 'success');
-                    // Автоматическое скрытие успеха через 3 сек реализовано через стандартный timeout showNotification
-                    setTimeout(() => {
-                         const successMsg = document.getElementById(STICKY_ID);
-                         if (successMsg) successMsg.click(); // Закрываем
-                    }, 3000);
-                }
+			syncUpdate("Финализация...");
+			await GM_setValue(LAST_DB_UPDATE_KEY, Date.now());
+			
+			if (!cardDatabaseMap) cardDatabaseMap = new Map(); else cardDatabaseMap.clear();
+			if (!cardImageIndex) cardImageIndex = new Map(); else cardImageIndex.clear();
+			fetchedDataObj.cards.forEach(c => {
+				cardDatabaseMap.set(c.id, c);
+				const key = normalizeImagePath(c.image);
+				if (key) cardImageIndex.set(key, c.id);
+			});
 
-            } catch (e) {
-                console.error('[Card DB] Ошибка:', e);
-                document.getElementById(STICKY_ID)?.remove();
-                showNotification('❌ Ошибка обновления: ' + e.message, 'error', { timeout: 5000 });
-            } finally {
-                await GM_deleteValue(UPDATE_FLAG_KEY);
-            }
-        };
+			freshnessData = null;
+			await prepareFreshnessData();
+			await updateFreshnessOverlays(true);
+			
+			document.getElementById(STICKY_ID)?.remove();
+			showNotification("✨ База карт успешно обновлена!", "success", { timeout: 3000 });
+
+		} catch (e) {
+			console.error("[Card DB] Ошибка:", e);
+			document.getElementById(STICKY_ID)?.remove();
+			showNotification("❌ Ошибка обновления: " + e.message, "error", { timeout: 5000 });
+		} finally {
+			clearInterval(countdown);
+			await GM_deleteValue(UPDATE_FLAG_KEY);
+		}
+	};
 
         // ПРАВКА: Добавлена проверка на пустую базу с запросом подтверждения на обновление при первом запуске
 		unsafeWindow.initializeDatabase = async function() {
@@ -9089,7 +9304,10 @@ async function runMainScript() {
 					const text = await response.text(), doc = new DOMParser().parseFromString(text, 'text/html'), cardsOnPage = doc.querySelectorAll('.anime-cards__item-wrapper');
 					cardsOnPage.forEach(cardWrapper => {
 						const cardEl = cardWrapper.querySelector('.anime-cards__item');
-						if (cardEl && getBaseAnimeName(cardEl.dataset.animeName) === getBaseAnimeName(fullAnimeName)) { const rank = cardEl.dataset.rank.toLowerCase(); if (myRankCounts.hasOwnProperty(rank)) myRankCounts[rank]++; }
+						if (cardEl && cardEl.dataset.animeName.trim() === fullAnimeName.trim()) { 
+							const rank = cardEl.dataset.rank.toLowerCase(); 
+							if (myRankCounts.hasOwnProperty(rank)) myRankCounts[rank]++; 
+						}
 					});
 					const myTotalCollectedCount = Object.values(myRankCounts).reduce((sum, count) => sum + count, 0), collectedColor = myTotalCollectedCount > 0 ? '#faa61a' : '#96989d';
 					collectedInfoString = `<span style="color: ${collectedColor};">Собрано карт: <b>${myTotalCollectedCount}</b></span><br>`;
@@ -9962,85 +10180,59 @@ async function runMainScript() {
             }
         }
 
-        // ##################################################
-        // Загружает счетчик с полной страницы профиля.
-        // ##################################################
-		async function updateCardCounter(forceUpdate = false) {
-            const now = Date.now();
-            const cachedData = await GM_getValue(CARD_COUNT_CACHE_KEY, null);
+	/**
+	 * Выполняет обновление счетчиков лимита карт за просмотр аниме (36/36).
+	 * Получает данные через универсальный хелпер профиля и управляет состоянием паузы сбора.
+	 * [forceUpdate] - принудительный сетевой запрос игнорируя кэш хелпера
+	 */
+	async function updateCardCounter(forceUpdate = false) {
+		const now = Date.now();
+		const username = asbm_getUsername();
+		if (!username) return;
 
-            // Если не форсировано и кэш свежий (меньше 30 сек с последнего запроса), просто рисуем из кэша
-            if (!forceUpdate && cachedData && (now - cachedData.timestamp < CARD_COUNT_UPDATE_INTERVAL)) {
-                updateAllCardCountDisplays(cachedData.text, cachedData.className);
-                return;
-            }
+		const cachedData = await GM_getValue(CARD_COUNT_CACHE_KEY, null);
+		const lastFetch = await GM_getValue('ascm_last_profile_fetch', 0);
 
-            // Защита от одновременных запросов с разных вкладок (анти-спам 2 сек)
-            const lastGlobalRequest = await GM_getValue('ascm_last_profile_fetch', 0);
-            if (forceUpdate && (now - lastGlobalRequest < 2000)) {
-                console.log('[ACM] Запрос профиля пропущен (недавно обновлено другой вкладкой)');
-                return;
-            }
+		if (!forceUpdate && cachedData && (now - lastFetch < CARD_COUNT_UPDATE_INTERVAL)) {
+			updateAllCardCountDisplays(cachedData.text, cachedData.className);
+			return;
+		}
 
-            const username = asbm_getUsername();
-            if (!username) return;
+		try {
+			await GM_setValue('ascm_last_profile_fetch', now);
+			const profile = await ascm_fetchUserProfile(username, forceUpdate);
+			if (!profile || !profile.quests) return;
 
-            await GM_setValue('ascm_last_profile_fetch', now);
-            console.log(`[ACM] Обновляю лимит карт из профиля...`);
+			const cardQuest = profile.quests.find(q => q.text.includes('Получено карточек за просмотр аниме'));
+			if (cardQuest) {
+				const match = cardQuest.text.match(/(\d+)\s+из\s+(\d+)/);
+				if (match) {
+					const current = parseInt(match[1], 10);
+					const limit = parseInt(match[2], 10);
+					const newText = `${current} / ${limit}`;
+					const isAtLimit = current >= limit;
+					const newClassName = isAtLimit ? 'limit-reached' : 'in-progress';
 
-            try {
-                const response = await fetch(`/user/${encodeURIComponent(username)}/`, { cache: 'no-cache' });
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-				// ПРАВКА: Получаем точную дату от сервера сайта, чтобы не зависеть от времени на ПК
-                const serverDateHeader = response.headers.get('Date');
-                if (serverDateHeader) {
-                    const sDate = new Date(serverDateHeader);
-                    // Сдвиг на +3 часа для получения МСК времени
-                    const sMsk = new Date(sDate.getTime() + (3 * 60 * 60 * 1000));
-                    // Сохраняем дату (ГГГГ-ММ-ДД) в глобальную переменную
-                    unsafeWindow.ascm_actual_server_date = sMsk.toISOString().split('T')[0];
-                    console.log(`[ACM TimeSync] Серверное время МСК: ${unsafeWindow.ascm_actual_server_date}`);
-                }
-                const text = await response.text();
-                const doc = new DOMParser().parseFromString(text, 'text/html');
-                const questList = doc.querySelectorAll('.shop__get-coins li');
-
-                for (const li of questList) {
-                    if (li.textContent.includes('Получено карточек за просмотр аниме')) {
-                        const match = li.textContent.trim().match(/(\d+)\s+из\s+(\d+)/);
-                        if (match) {
-                        const current = parseInt(match[1], 10);
-                        const limit = parseInt(match[2], 10);
-                        const newText = `${current} / ${limit}`;
-                        const isAtLimit = current >= limit;
-                        const newClassName = isAtLimit ? 'limit-reached' : 'in-progress';
-
-                        // --- ПРАВКА: Сброс паузы, если лимит увеличился или еще не достигнут ---
-                        if (!isAtLimit) {
-                            const wasPaused = await GM_getValue(COLLECTION_PAUSED_KEY, false);
-                            if (wasPaused) {
-                                console.log(`%c[ACM] Обнаружено свободное место (${current}/${limit}). Снимаю паузу!`, "color: #43b581; font-weight: bold;");
-                                await GM_setValue(COLLECTION_PAUSED_KEY, false);
-                                await GM_deleteValue(PAUSE_DATE_KEY);
-                                // Пинка лидеру, чтобы он проснулся и проверил таймеры
-                                await GM_setValue(KICK_LEADER_TO_CHECK_KEY, Date.now());
-                            }
-                        }
-                        // ---------------------------------------------------------------------
-
-                        const payload = { text: newText, className: newClassName, timestamp: now };
-                        await GM_setValue(CARD_COUNT_CACHE_KEY, payload);
-                        await GM_setValue(CARD_COUNT_SYNC_KEY, payload);
-                        updateAllCardCountDisplays(newText, newClassName);
-                        break;
+					if (!isAtLimit) {
+						const wasPaused = await GM_getValue(COLLECTION_PAUSED_KEY, false);
+						if (wasPaused) {
+							await GM_setValue(COLLECTION_PAUSED_KEY, false);
+							await GM_deleteValue(PAUSE_DATE_KEY);
+							await GM_setValue(KICK_LEADER_TO_CHECK_KEY, Date.now());
 						}
-                    }
-                }
-            } catch (error) {
-                console.error('Ошибка обновления лимита:', error);
-            }
-        }
-        unsafeWindow.updateCardCounter = updateCardCounter;
+					}
+
+					const payload = { text: newText, className: newClassName, timestamp: now };
+					await GM_setValue(CARD_COUNT_CACHE_KEY, payload);
+					await GM_setValue(CARD_COUNT_SYNC_KEY, payload);
+					updateAllCardCountDisplays(newText, newClassName);
+				}
+			}
+		} catch (error) {
+			console.error('[ACM] Ошибка обновления счетчика карт:', error);
+		}
+	}
+	unsafeWindow.updateCardCounter = updateCardCounter;
 
         // ##################################################
         // # Инициализирует модуль кастомных закладок (добавление кнопок-ссылок под шапкой сайта).
@@ -11612,127 +11804,249 @@ async function runMainScript() {
 	// ##################################################
     // МОДУЛЬ: ИНТЕРФЕЙС УПРАВЛЕНИЯ ЗВЕЗДАМИ (v1.2 Persistence)
     // ##################################################
-    // Создает панель фильтров и сортировок для раздела "По звездам".
-    // Умеет сохранять состояние между страницами и удалять себя при выключении в настройках.
-    async function initStarsAdvancedInterface() {
-        const isUiEnabled = await GM_getValue(STARS_FILTERS_UI_ENABLED_KEY, true);
-        const urlParams = new URLSearchParams(window.location.search);
-        const existingUi = document.getElementById('ascm-stars-ui');
-        
-        // Сброс памяти, если мы ушли из звезд
-        if (!document.referrer.includes('sort=stars') && urlParams.get('sort') === 'stars' && !sessionStorage.getItem('ascm_stars_navigated')) {
-            sessionStorage.removeItem('ascm_stars_ui_state');
-        }
-        if (urlParams.get('sort') === 'stars') sessionStorage.setItem('ascm_stars_navigated', 'true');
+    /**
+	 * Инициализирует продвинутый интерфейс управления звездами.
+	 * Реализует систему приоритетов фильтрации: "Хватает на 5★" имеет высший приоритет над "Готовы к Апу".
+	 */
+	async function initStarsAdvancedInterface() {
+		const isUiEnabled = await GM_getValue(STARS_FILTERS_UI_ENABLED_KEY, true);
+		const urlParams = new URLSearchParams(window.location.search);
+		const existingUi = document.getElementById('ascm-stars-ui');
+		
+		if (!document.referrer.includes('sort=stars') && urlParams.get('sort') === 'stars' && !sessionStorage.getItem('ascm_stars_navigated')) {
+			sessionStorage.removeItem('ascm_stars_ui_state');
+		}
+		if (urlParams.get('sort') === 'stars') sessionStorage.setItem('ascm_stars_navigated', 'true');
 
-        // ЛОГИКА УДАЛЕНИЯ (если выключили в настройках)
-        if (!isUiEnabled || urlParams.get('sort') !== 'stars') {
-            if (existingUi) {
-                existingUi.remove();
-                document.querySelectorAll('.anime-cards__item-wrapper').forEach(wrp => wrp.style.display = '');
-            }
-            return;
-        }
+		if (!isUiEnabled || urlParams.get('sort') !== 'stars') {
+			if (existingUi) {
+				existingUi.remove();
+				document.querySelectorAll('.anime-cards__item-wrapper').forEach(wrp => wrp.style.display = '');
+			}
+			return;
+		}
 
-        if (existingUi) return;
+		if (existingUi) return;
 
-        const filterControls = document.querySelector('.card-filter-form__controls');
-        if (!filterControls) return;
+		const filterControls = document.querySelector('.card-filter-form__controls');
+		if (!filterControls) return;
 
-        const ui = document.createElement('div');
-        ui.id = 'ascm-stars-ui';
-        ui.className = 'ascm-stars-filter-bar';
-        
-        ui.innerHTML = `
-            <div style="display:flex; gap:10px; align-items:center;">
-                <button id="ascm-filter-ready" title="Только те, кто готов к апу прямо сейчас">Готовы к Апу</button>
-                <button id="ascm-filter-max" title="Только те, кому хватает карт до 5 звезд">Хватает на 5★</button>
-            </div>
-            <div style="width: 1px; height: 24px; background: #555; margin: 0 15px;"></div>
-            <div style="display:flex; gap:10px; align-items:center;">
-                <span style="font-size:11px; color:#888; text-transform:uppercase;">Сортировка:</span>
-                <select id="ascm-sort-missing">
-                    <option value="none">По близости к 5★ (нет)</option>
-                    <option value="asc">Сначала близкие к 5★</option>
-                    <option value="desc">Сначала далекие от 5★</option>
-                </select>
-                <select id="ascm-sort-rank">
-                    <option value="none">По рангу (нет)</option>
-                    <option value="desc">Ранг: S → E</option>
-                    <option value="asc">Ранг: E → S</option>
-                </select>
-            </div>
-            <div class="ascm-stars-info-note">⚠️ <b>Внимание:</b> Анализ только <i>текущей</i> страницы. Готовые карты могут быть на других страницах пагинации! (<span>Фильтры сохраняются при переходе</span>)</div>
-        `;
-        filterControls.parentNode.insertBefore(ui, filterControls);
+		const ui = document.createElement('div');
+		ui.id = 'ascm-stars-ui';
+		ui.className = 'ascm-stars-filter-bar';
+		
+		ui.innerHTML = `
+			<div style="display:flex; gap:10px; align-items:center;">
+				<button id="ascm-filter-ready" title="Показать карты, готовые к следующему уровню">Готовы к Апу</button>
+				<button id="ascm-filter-max" title="Показать только тех, кому хватает дублей до 5★ (Приоритет)">Хватает на 5★</button>
+			</div>
+			<div style="width: 1px; height: 24px; background: #555; margin: 0 15px;"></div>
+			<div style="display:flex; gap:10px; align-items:center;">
+				<span style="font-size:11px; color:#888; text-transform:uppercase;">Сортировка:</span>
+				<select id="ascm-sort-missing">
+					<option value="none">По близости к 5★ (нет)</option>
+					<option value="asc">Сначала близкие к 5★</option>
+					<option value="desc">Сначала далекие от 5★</option>
+				</select>
+				<select id="ascm-sort-rank">
+					<option value="none">По рангу (нет)</option>
+					<option value="desc">Ранг: S → E</option>
+					<option value="asc">Ранг: E → S</option>
+				</select>
+			</div>
+			<div id="ascm-stars-progress" style="font-size:11px; color:#43b581; margin-top:5px; display:none; font-weight:bold; width: 100%; text-align: center;"></div>
+			<div class="ascm-stars-info-note">ℹ️ <b>Глубокий анализ:</b> Скрипт просканирует инвентарь, пока не найдет предел "готовых" карт.</div>
+		`;
+		filterControls.parentNode.insertBefore(ui, filterControls);
 
-        const container = document.querySelector('.anime-cards--full-page');
-        const originalOrder = Array.from(container.querySelectorAll('.anime-cards__item-wrapper'));
-        const starReqs = { 's': [1,1,1,1,2], 'a': [4,8,12,16,20], 'b': [5,10,15,20,25], 'c': [10,15,20,25,30], 'd': [10,15,20,25,30], 'e': [10,15,20,25,30] };
-        const rankPower = { 's': 6, 'a': 5, 'b': 4, 'c': 3, 'd': 2, 'e': 1 };
+		const container = document.querySelector('.anime-cards--full-page');
+		let allWrappers = Array.from(container.querySelectorAll('.anime-cards__item-wrapper'));
+		const starReqs = { 's': [1,1,1,1,2], 'a': [4,8,12,16,20], 'b': [5,10,15,20,25], 'c': [10,15,20,25,30], 'd': [10,15,20,25,30], 'e': [10,15,20,25,30] };
+		const rankPower = { 's': 6, 'a': 5, 'b': 4, 'c': 3, 'd': 2, 'e': 1 };
 
-        const updateView = (saveToSession = true) => {
-            const state = {
-                ready: ui.querySelector('#ascm-filter-ready').classList.contains('active'),
-                max: ui.querySelector('#ascm-filter-max').classList.contains('active'),
-                missing: ui.querySelector('#ascm-sort-missing').value,
-                rank: ui.querySelector('#ascm-sort-rank').value
-            };
-            if (saveToSession) sessionStorage.setItem('ascm_stars_ui_state', JSON.stringify(state));
+		const fixLazyLoading = (nodes) => {
+			nodes.forEach(node => {
+				const img = node.querySelector('img[data-src]');
+				if (img) {
+					img.src = img.getAttribute('data-src');
+					img.classList.remove('lazy-hidden');
+					img.classList.add('lazy-loaded');
+					img.removeAttribute('loading');
+				}
+			});
+		};
 
-            let processing = [...originalOrder];
-            processing.forEach(wrp => {
-                const card = wrp.querySelector('.anime-cards__item');
-                const duplEl = card.querySelector('.dupl-count');
-                const rank = (card.dataset.rank || 'e').toLowerCase();
-                const stars = parseInt(card.dataset.stars) || 0;
-                const have = parseInt(duplEl.textContent.split('/')[0]) || 0;
-                const reqTable = starReqs[rank];
-                let costToMax = 0;
-                for(let i = stars; i < 5; i++) costToMax += reqTable[i];
-                
-                wrp._starsData = {
-                    ready: have >= (reqTable[stars] || 999),
-                    readyMax: have >= costToMax,
-                    missing: Math.max(0, costToMax - have),
-                    rankVal: rankPower[rank] || 0
-                };
-                let vis = true;
-                if (state.ready && !wrp._starsData.ready) vis = false;
-                if (state.max && !wrp._starsData.readyMax) vis = false;
-                wrp.style.display = vis ? '' : 'none';
-            });
+		const calculateStarsData = (wrp) => {
+			const card = wrp.querySelector('.anime-cards__item');
+			if (!card) return { ready: false, readyMax: false };
+			const stars = parseInt(card.dataset.stars) || 0;
+			const rank = (card.dataset.rank || 'e').toLowerCase();
+			const duplEl = card.querySelector('.dupl-count');
+			const have = duplEl ? (parseInt(duplEl.textContent.split('/')[0]) || 0) : 0;
+			const reqTable = starReqs[rank] || starReqs['e'];
+			
+			const readyNow = stars < 5 && have >= (reqTable[stars] || 999);
+			let costToMax = 0;
+			for(let i = stars; i < 5; i++) costToMax += reqTable[i];
+			const readyMax = stars < 5 && have >= costToMax;
 
-            if (state.missing !== 'none' || state.rank !== 'none') {
-                processing.sort((a, b) => {
-                    if (state.missing !== 'none') {
-                        const diff = a._starsData.missing - b._starsData.missing;
-                        if (diff !== 0) return state.missing === 'asc' ? diff : -diff;
-                    }
-                    if (state.rank !== 'none') {
-                        const diff = a._starsData.rankVal - b._starsData.rankVal;
-                        if (diff !== 0) return state.rank === 'asc' ? diff : -diff;
-                    }
-                    return 0;
-                });
-                processing.forEach(wrp => container.appendChild(wrp));
-            } else {
-                originalOrder.forEach(wrp => container.appendChild(wrp));
-            }
-        };
+			wrp._starsData = { ready: readyNow, readyMax, hasAnyStars: stars > 0, missing: Math.max(0, costToMax - have), rankVal: rankPower[rank] || 0 };
+			return wrp._starsData;
+		};
 
-        const saved = JSON.parse(sessionStorage.getItem('ascm_stars_ui_state') || 'null');
-        if (saved) {
-            if (saved.ready) ui.querySelector('#ascm-filter-ready').classList.add('active');
-            if (saved.max) ui.querySelector('#ascm-filter-max').classList.add('active');
-            ui.querySelector('#ascm-sort-missing').value = saved.missing;
-            ui.querySelector('#ascm-sort-rank').value = saved.rank;
-            updateView(false);
-        }
+		/**
+		 * ИЕРАРХИЧЕСКАЯ ВИДИМОСТЬ: Реализация приоритета "Хватает на 5★"
+		 */
+		const applyVisibility = () => {
+			const state = {
+				ready: ui.querySelector('#ascm-filter-ready').classList.contains('active'),
+				max: ui.querySelector('#ascm-filter-max').classList.contains('active')
+			};
 
-        ui.addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON') { e.target.classList.toggle('active'); updateView(); } });
-        ui.querySelectorAll('select').forEach(s => s.onchange = () => updateView());
-    }
+			allWrappers.forEach(wrp => {
+				const data = calculateStarsData(wrp);
+				let show = true;
+
+				// Приоритет 1: Если включен фильтр "На 5*", показываем ТОЛЬКО их
+				if (state.max) {
+					show = data.readyMax;
+				} 
+				// Приоритет 2: Если включен "Готовы к апу" (и НЕ включен "На 5*"), показываем их
+				else if (state.ready) {
+					show = data.ready;
+				}
+
+				// ПРАВКА: Если карта была только что апнута, оставляем её видимой в любом случае
+				if (wrp.dataset.justUpgraded === "true") show = true;
+
+				wrp.style.display = show ? '' : 'none';
+			});
+		};
+
+		const fetchMorePages = async () => {
+			if (ui.dataset.scanning === "true") return;
+			ui.dataset.scanning = "true";
+			const progressEl = document.getElementById('ascm-stars-progress');
+			progressEl.style.display = 'block';
+			
+			let currentPageNum = parseInt(urlParams.get('page') || '1');
+			let hasMore = true;
+			const maxDisplayCount = 49;
+
+			while (hasMore) {
+				const lastInList = allWrappers[allWrappers.length - 1];
+				const stats = calculateStarsData(lastInList);
+				
+				const currentFilterState = {
+					ready: ui.querySelector('#ascm-filter-ready').classList.contains('active'),
+					max: ui.querySelector('#ascm-filter-max').classList.contains('active')
+				};
+				
+				const filteredCount = allWrappers.filter(wrp => {
+					const data = wrp._starsData || calculateStarsData(wrp);
+					return (currentFilterState.max && data.readyMax) || (!currentFilterState.max && currentFilterState.ready && data.ready);
+				}).length;
+				
+				if ((!stats.hasAnyStars && !stats.ready) || filteredCount >= maxDisplayCount) {
+					console.log(`%c[Stars] Глубокое сканирование завершено (предел достигнут или найдено ${filteredCount} карт).`, "color: #faa61a;");
+					break;
+				}
+
+				currentPageNum++;
+				progressEl.textContent = `🔄 Глубокий анализ: страница ${currentPageNum}...`;
+				
+				try {
+					const response = await fetch(new URL(window.location.href).pathname + `?name=${urlParams.get('name')}&sort=stars&page=${currentPageNum}`);
+					const html = await response.text();
+					const doc = new DOMParser().parseFromString(html, 'text/html');
+					const newItems = Array.from(doc.querySelectorAll('.anime-cards__item-wrapper'));
+
+					if (newItems.length === 0) {
+						hasMore = false;
+					} else {
+						fixLazyLoading(newItems);
+						newItems.forEach(item => {
+							container.appendChild(item);
+							allWrappers.push(item);
+						});
+						applyVisibility();
+						await sleep(350);
+					}
+				} catch (e) { hasMore = false; }
+			}
+			progressEl.style.display = 'none';
+			ui.dataset.scanning = "false";
+			ui.dataset.deepScanned = "true";
+		};
+
+		const updateView = async () => {
+			const state = {
+				ready: ui.querySelector('#ascm-filter-ready').classList.contains('active'),
+				max: ui.querySelector('#ascm-filter-max').classList.contains('active'),
+				missing: ui.querySelector('#ascm-sort-missing').value,
+				rank: ui.querySelector('#ascm-sort-rank').value
+			};
+			
+			sessionStorage.setItem('ascm_stars_ui_state', JSON.stringify(state));
+
+			applyVisibility();
+
+			if ((state.ready || state.max) && ui.dataset.deepScanned !== "true") {
+				await fetchMorePages();
+			}
+			
+			let visibleWrappers = allWrappers.filter(wrp => wrp.style.display !== 'none');
+			const maxDisplayCount = 49;
+			if (visibleWrappers.length > maxDisplayCount) {
+				visibleWrappers = visibleWrappers.slice(0, maxDisplayCount);
+			}
+
+			if (state.missing !== 'none' || state.rank !== 'none') {
+				const sorted = [...visibleWrappers].sort((a, b) => {
+					const d1 = a._starsData, d2 = b._starsData;
+					if (state.missing !== 'none') {
+						const diff = d1.missing - d2.missing;
+						if (diff !== 0) return state.missing === 'asc' ? diff : -diff;
+					}
+					if (state.rank !== 'none') {
+						const diff = d1.rankVal - d2.rankVal;
+						if (diff !== 0) return state.rank === 'asc' ? diff : -diff;
+					}
+					return 0;
+				});
+				visibleWrappers = sorted;
+			}
+			
+			// ПРАВКА: Принудительная очистка и перерисовка контейнера с ограниченным/отсортированным списком
+			const fragment = document.createDocumentFragment();
+			visibleWrappers.forEach(wrp => fragment.appendChild(wrp));
+			
+			// Очистка контейнера перед вставкой
+			const titleH2 = container.querySelector('h2.ncard__main-title');
+			container.innerHTML = '';
+			if (titleH2) container.appendChild(titleH2);
+			container.appendChild(fragment);
+		};
+		const saved = JSON.parse(sessionStorage.getItem('ascm_stars_ui_state') || 'null');
+		if (saved) {
+			ui.querySelector('#ascm-filter-ready').classList.toggle('active', !!saved.ready);
+			ui.querySelector('#ascm-filter-max').classList.toggle('active', !!saved.max);
+			ui.querySelector('#ascm-sort-missing').value = saved.missing || 'none';
+			ui.querySelector('#ascm-sort-rank').value = saved.rank || 'none';
+			updateView(); 
+		}
+
+		ui.addEventListener('click', (e) => { 
+			const btn = e.target.closest('button');
+			if (btn) {
+				btn.classList.toggle('active');
+				// Если включили любой фильтр - разрешаем докачку страниц
+				if (btn.classList.contains('active')) ui.dataset.deepScanned = "false";
+				updateView();
+			}
+		});
+		ui.querySelectorAll('select').forEach(s => s.onchange = () => updateView());
+	}
     unsafeWindow.initStarsAdvancedInterface = initStarsAdvancedInterface;
 	
 	// ##################################################
@@ -14703,12 +15017,10 @@ async function runMainScript() {
 					button.setAttribute('data-mce-bogus', '1');
 				}
 				unsafeWindow.updateFullToggleButtonState(button);
-
-				if (typeof unsafeWindow.updateCardCounter === 'function') {
-					(async () => {
-						await unsafeWindow.updateCardCounter(false);
-					})();
-				}
+				(async () => {
+					const cached = await GM_getValue(CARD_COUNT_CACHE_KEY);
+					if (cached && cached.text) updateAllCardCountDisplays(cached.text, cached.className);
+				})();
 				button.style.transition = 'opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s';
 
 				button.addEventListener('click', async function() {
@@ -15219,114 +15531,189 @@ async function runMainScript() {
         }
     }
 
-	// Умная функция повышения уровня v3.1 (Фикс обработки ответа и авто-обновление DOM)
-    async function performQuickLevelUp(starsPageUrl, targetImgSrc, cardName, btnElement) {
-        const user_hash = unsafeWindow.dle_login_hash;
-        const username = asbm_getUsername();
-        
-        // Ищем карту на фоновой странице по имени
-        const modalContainer = document.getElementById('card-modal');
-        const nameInModal = modalContainer ? modalContainer.querySelector('.anime-cards__name')?.textContent.trim() : cardName;
-        const cardItem = Array.from(document.querySelectorAll('.anime-cards__item')).find(c => c.dataset.name === nameInModal);
+	/**
+	 * Продвинутое безопасное повышение звездного уровня персонажа.
+	 * [starsPageUrl] - URL страницы звезд (не используется в текущей логике инвентаря)
+	 * [targetImgSrc] - URL текущего изображения карты
+	 * [cardName] - Название карты для логов
+	 * [typeId] - Строгий общий ID типа карты (извлеченный из системной кнопки)
+	 * [btnElement] - DOM-элемент кнопки апа
+	 */
+	async function performQuickLevelUp(starsPageUrl, targetImgSrc, cardName, typeId, btnElement) {
+		const user_hash = unsafeWindow.dle_login_hash;
+		const username = asbm_getUsername();
+		
+		if (!user_hash || !username || !typeId) {
+			sccLog(`[LevelUp] Ошибка: сессия или ID карты (${typeId}) не найдены.`, 'error', true);
+			return;
+		}
 
-        if (!user_hash || !starsPageUrl || !targetImgSrc || !cardItem || !username) {
-            safeDLEPushCall('error', 'Ошибка: данные для обновления не собраны.');
-            return;
-        }
+		// Находим элемент в инвентаре для обновления. Ищем строго по Type ID.
+		const cardItem = document.querySelector(`.anime-cards__item[data-id="${typeId}"].ready-to-star-highlight, .anime-cards__item-wrapper[data-just-upgraded="true"] .anime-cards__item[data-id="${typeId}"]`);
 
-        const cardId = cardItem.dataset.id; 
-        const originalIcon = btnElement.innerHTML;
-        btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        btnElement.style.pointerEvents = 'none';
+		if (!cardItem) {
+			sccLog(`[LevelUp] Ошибка: карта-источник (ID:${typeId}) не найдена на странице.`, 'error', true);
+			return;
+		}
 
-        try {
-            // ШАГ 1: Получаем верный owner_id со страницы звезд
-            const pageRes = await fetch(starsPageUrl);
-            const html = await pageRes.text();
-            const doc = new DOMParser().parseFromString(html, 'text/html');
-            const targetCard = Array.from(doc.querySelectorAll('.card-stars-list__card')).find(el => {
-                const img = el.querySelector('img');
-                return img && img.getAttribute('src') === targetImgSrc;
-            });
+		const rank = (cardItem.dataset.rank || 'e').toLowerCase();
+		const currentStars = parseInt(cardItem.dataset.stars) || 0;
+		const animeId = (cardItem.dataset.animeLink || "").match(/\/(\d+)-/)?.[1];
 
-            const realOwnerId = targetCard ? targetCard.dataset.id : null;
-            if (!realOwnerId) throw new Error("ID не найден на странице звезд.");
+		const starReqs = { 's': [1, 1, 1, 1, 2], 'a': [4, 8, 12, 16, 20], 'b': [5, 10, 15, 20, 25], 'c': [10, 15, 20, 25, 30], 'd': [10, 15, 20, 25, 30], 'e': [10, 15, 20, 25, 30] };
+		const neededDups = starReqs[rank] ? starReqs[rank][currentStars] : 999;
 
-            // ШАГ 2: Запрос на повышение уровня
-            const response = await fetch("/engine/ajax/controller.php?mod=cards_ajax", {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-                body: new URLSearchParams({
-                    mod: 'cards_ajax', action: 'stars_levelup', owner_id: realOwnerId, with_risk: '0', user_hash: user_hash
-                }).toString()
-            });
+		const originalIcon = btnElement.innerHTML;
+		btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+		btnElement.style.pointerEvents = 'none';
 
-            const result = await response.json();
-            
-            // ИСПРАВЛЕННОЕ УСЛОВИЕ: проверяем наличие поля result.ok
-            if (result.ok) {
-                const successMsg = result.ok;
-                console.log(`%c[ACM LevelUp] Успех: ${successMsg}`, "color: #00ff00; font-weight: bold;");
-                safeDLEPushCall('success', successMsg);
-                
-                // ШАГ 3: Фоновое получение новых данных этой карты из инвентаря
-                const refreshUrl = `/user/cards/?name=${encodeURIComponent(username)}&card_id=${cardId}&sort=stars`;
-                const invRes = await fetch(refreshUrl);
-                const invHtml = await invRes.text();
-                const invDoc = new DOMParser().parseFromString(invHtml, 'text/html');
-                
-                // Ищем обновленную карточку в полученном коде
-                const updatedCardSource = invDoc.querySelector(`.anime-cards__item[data-id="${cardId}"]`);
-                
-                if (updatedCardSource) {
-                    const newImgSrc = updatedCardSource.dataset.image;
-                    const newDupsText = updatedCardSource.querySelector('.dupl-count')?.textContent || "";
-                    const newStars = updatedCardSource.dataset.stars;
-                    const newOwnerId = updatedCardSource.dataset.ownerId;
+		try {
+			let targetOwnerId = null;
+			let maxStarsFound = -1;
+			let isTargetManuallyLocked = false;
+			let unlockedIds = new Set(), manuallyLockedIds = new Set(), deckFixedIds = new Set(), inTradeIds = new Set();
+			let currentPage = 1, totalPages = 1, isDeckInitiallyLocked = false;
 
-                    // Обновляем визуальную часть на странице
-                    const mainImg = cardItem.querySelector('img');
-                    if (mainImg) {
-                        mainImg.src = newImgSrc;
-                        mainImg.dataset.src = newImgSrc;
-                    }
-                    
-                    cardItem.dataset.image = newImgSrc;
-                    cardItem.dataset.stars = newStars;
-                    cardItem.dataset.ownerId = newOwnerId;
-                    
-                    const duplCountEl = cardItem.querySelector('.dupl-count');
-                    if (duplCountEl) duplCountEl.textContent = newDupsText;
+			console.group(`%c[ACM LevelUp] ПРЯМОЙ АП ID:${typeId} (${cardName})`, "color: #00ff00; font-weight: bold;");
+			sccLog(`Анализ инвентаря для ID:${typeId}...`, 'info', true);
 
-                    console.log(`[ACM LevelUp] Карта "${cardName}" обновлена: ${newStars}/5★, дубли: ${newDupsText}`);
-                    
-                    // Пересчитываем рамки и фантомные звезды
-                    setTimeout(() => {
-                        if (typeof highlightReadyToStarCards === 'function') highlightReadyToStarCards();
-                    }, 300);
-                }
+			while (currentPage <= totalPages) {
+				const invUrl = `/user/cards/?name=${encodeURIComponent(username)}&card_id=${typeId}&page=${currentPage}&_t=${Date.now()}`;
+				const response = await fetch(invUrl);
+				const html = await response.text();
+				const doc = new DOMParser().parseFromString(html, 'text/html');
 
-                // Закрываем модалку сайта
-                if (typeof unsafeWindow.jQuery !== 'undefined') {
-                    unsafeWindow.jQuery('.ui-dialog-content').dialog('close');
-                }
+				if (currentPage === 1) {
+					const pagin = doc.querySelectorAll('.pagination__pages a, .pagination__pages span');
+					const nums = Array.from(pagin).map(el => parseInt(el.textContent.trim())).filter(n => !isNaN(n));
+					totalPages = nums.length > 0 ? Math.max(...nums) : 1;
+				}
 
-            } else {
-                // Если сервер прислал ошибку (например, {error: "..."})
-                const errorMsg = result.error || result.text || 'Неизвестная ошибка сервера';
-                console.warn(`[ACM LevelUp] Сервер вернул ошибку: ${errorMsg}`);
-                safeDLEPushCall('warning', errorMsg);
-                btnElement.innerHTML = originalIcon;
-                btnElement.style.pointerEvents = 'auto';
-            }
+				doc.querySelectorAll('.anime-cards__item').forEach(el => {
+					const oId = el.dataset.ownerId;
+					const stars = parseInt(el.dataset.stars) || 0;
+					const lockBtn = el.querySelector('.lock-card-btn i');
+					
+					if (stars > maxStarsFound) {
+						if (targetOwnerId) classifyCard(targetOwnerId, doc.querySelector(`.lock-card-btn[data-id="${targetOwnerId}"] i`));
+						targetOwnerId = oId; maxStarsFound = stars;
+						isTargetManuallyLocked = lockBtn?.classList.contains('fa-lock');
+						if (isTargetManuallyLocked) manuallyLockedIds.add(oId);
+						if (lockBtn?.classList.contains('fa-trophy-alt')) isDeckInitiallyLocked = true;
+					} else classifyCard(oId, lockBtn);
+				});
 
-        } catch (error) {
-            console.error('[ACM LevelUp Error]', error);
-            safeDLEPushCall('error', `Ошибка: ${error.message}`);
-            btnElement.innerHTML = originalIcon;
-            btnElement.style.pointerEvents = 'auto';
-        }
-    }
+				function classifyCard(id, iconEl) {
+					if (!iconEl || iconEl.classList.contains('fa-unlock')) unlockedIds.add(id);
+					else if (iconEl.classList.contains('fa-arrow-right-arrow-left')) inTradeIds.add(id);
+					else if (iconEl.classList.contains('fa-trophy-alt')) { deckFixedIds.add(id); isDeckInitiallyLocked = true; }
+					else if (iconEl.classList.contains('fa-lock')) manuallyLockedIds.add(id);
+				}
+				if (currentPage >= totalPages) break;
+				currentPage++;
+				await sleep(400);
+			}
+
+			console.log(`%cРезультаты анализа:`, "color: #faa61a; font-weight: bold;");
+			console.log(`  - Целевой ID: ${targetOwnerId || 'не найден'} (${maxStarsFound}★)`);
+			console.log(`  - Свободно: ${unlockedIds.size}\n  - В колоде: ${deckFixedIds.size}\n  - Заперто: ${manuallyLockedIds.size}\n  - В ТРЕЙДЕ: ${inTradeIds.size}`);
+
+			if (!targetOwnerId) throw new Error("Основная карта не найдена.");
+			if ((unlockedIds.size + manuallyLockedIds.size + deckFixedIds.size) < neededDups) throw new Error(`Недостаточно дублей.`);
+
+			if (isDeckInitiallyLocked && animeId) {
+				sccLog(`Снятие фиксации колоды...`, 'warning', true);
+				await fetch("/engine/ajax/controller.php?mod=cards_ajax", { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }, body: new URLSearchParams({ action: 'progress_fix', anime_id: animeId, user_hash: user_hash }).toString() });
+			}
+
+			let idsToUnlock = isTargetManuallyLocked ? [targetOwnerId] : [];
+			const unlockedArray = Array.from(unlockedIds);
+			const manuallyLockedArray = Array.from(manuallyLockedIds).filter(id => id !== targetOwnerId);
+
+			const currentClean = unlockedIds.size + deckFixedIds.size;
+			if (currentClean < neededDups) {
+				idsToUnlock.push(...manuallyLockedArray.slice(0, neededDups - currentClean));
+			}
+
+			if (idsToUnlock.length > 0) {
+				sccLog(`Разблокировка ресурсов (${idsToUnlock.length} шт.)...`, 'warning', true);
+				const unlockParams = new URLSearchParams();
+				idsToUnlock.forEach(id => unlockParams.append('ids[]', id));
+				unlockParams.append('user_hash', user_hash);
+				await fetch("/ajax/page_unlock_cards/", { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' }, body: unlockParams.toString() });
+				await sleep(800);
+			}
+
+			sccLog(`Запрос на повышение звезд (+1)...`, 'info', true);
+			const upRes = await fetch("/engine/ajax/controller.php?mod=cards_ajax", {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+				body: new URLSearchParams({ mod: 'cards_ajax', action: 'stars_levelup', owner_id: targetOwnerId, with_risk: '0', user_hash: user_hash }).toString()
+			});
+			const upResult = await upRes.json();
+			if (upResult.error) {
+				// РОЛЛБЭК: Возвращаем состояние карт и колоды к исходному
+				sccLog(`Лимит или ошибка. Восстановление состояния...`, 'warning', true);
+				
+				// 1. Возвращаем ручные замки только на те карты, которые мы открывали
+				if (idsToUnlock.length > 0) {
+					console.log("%c[Rollback] Возврат замков для ID:", "color: #faa61a;", idsToUnlock);
+					const lockParams = new URLSearchParams();
+					idsToUnlock.forEach(id => lockParams.append('ids[]', id));
+					lockParams.append('user_hash', user_hash);
+					await fetch("/ajax/page_lock_cards/", { 
+						method: 'POST', 
+						headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' }, 
+						body: lockParams.toString() 
+					});
+				}
+
+				// 2. Возвращаем фиксацию колоды (т.к. progress_fix работает как тумблер)
+				if (isDeckInitiallyLocked && animeId) {
+					console.log("%c[Rollback] Возврат фиксации колоды...", "color: #faa61a;");
+					await fetch("/engine/ajax/controller.php?mod=cards_ajax", { 
+						method: 'POST', 
+						headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }, 
+						body: new URLSearchParams({ action: 'progress_fix', anime_id: animeId, user_hash: user_hash }).toString() 
+					});
+				}
+
+				throw new Error(upResult.error);
+			}
+
+			sccLog(upResult.ok || "Успешное повышение звёздности!", 'success', true);
+
+			const invRes = await fetch(`/user/cards/?name=${encodeURIComponent(username)}&card_id=${typeId}&sort=stars&_t=${Date.now()}`);
+			const invDoc = new DOMParser().parseFromString(await invRes.text(), 'text/html');
+			const updated = invDoc.querySelector(`.anime-cards__item[data-id="${typeId}"]`);
+			if (updated) {
+				const newImg = updated.dataset.image;
+				const mainImg = cardItem.querySelector('img');
+				if (mainImg) { mainImg.src = newImg; mainImg.dataset.src = newImg; }
+				cardItem.dataset.image = newImg; cardItem.dataset.stars = updated.dataset.stars;
+				cardItem.dataset.ownerId = updated.dataset.ownerId;
+				const dupl = cardItem.querySelector('.dupl-count');
+				if (dupl) dupl.textContent = updated.querySelector('.dupl-count')?.textContent || "";
+				const wrapper = cardItem.closest('.anime-cards__item-wrapper');
+				if (wrapper) wrapper.dataset.justUpgraded = "true";
+			}
+
+			if (isDeckInitiallyLocked && animeId) {
+				sccLog(`Восстановление фиксации колоды...`, 'info', true);
+				await fetch("/engine/ajax/controller.php?mod=cards_ajax", { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }, body: new URLSearchParams({ action: 'progress_fix', anime_id: animeId, user_hash: user_hash }).toString() });
+			}
+
+			console.groupEnd();
+			if (typeof unsafeWindow.jQuery !== 'undefined') unsafeWindow.jQuery('.ui-dialog-content').dialog('close');
+			setTimeout(() => { if (typeof highlightReadyToStarCards === 'function') highlightReadyToStarCards(); }, 500);
+
+		} catch (error) {
+			sccLog(error.message, 'error', true);
+			console.groupEnd();
+			btnElement.innerHTML = originalIcon;
+			btnElement.style.pointerEvents = 'auto';
+		}
+	}
 
     // ##################################################
     // # Добавляет кнопку-замок в модальное окно. Статус проверяется по клику.
@@ -15477,21 +15864,23 @@ async function runMainScript() {
         else metaContainer.appendChild(lockButton);
 
         // --- НОВЫЙ БЛОК: Кнопка "Быстрый Ап" ---
-        const urlParams = new URLSearchParams(window.location.search);
-        // Условие 1: Мы в режиме сортировки по звездам
-        if (urlParams.get('sort') === 'stars') {
-            // Ищем на странице карточку с таким же именем, чтобы проверить, "готова" ли она
-            const cardOnPage = Array.from(document.querySelectorAll('.anime-cards__item')).find(c => 
-                c.dataset.name === modalContent.querySelector('div.anime-cards__name')?.textContent.trim()
-            );
+		const urlParams = new URLSearchParams(window.location.search);
+		if (urlParams.get('sort') === 'stars') {
+			// ПРАВКА: Извлекаем ТОЧНЫЙ Type ID из системной кнопки поиска дубликатов в модалке
+			const searchBtn = modalContent.querySelector('.dubl-search-card');
+			const mTypeId = searchBtn?.getAttribute('onclick')?.match(/card_id=(\d+)/)?.[1];
+			
+			// Находим карту-источник на странице строго по Type ID и классу готовности (или флагу апа)
+			const cardOnPage = mTypeId ? (
+				document.querySelector(`.anime-cards__item[data-id="${mTypeId}"].ready-to-star-highlight`) || 
+				document.querySelector(`.anime-cards__item-wrapper[data-just-upgraded="true"] .anime-cards__item[data-id="${mTypeId}"]`)
+			) : null;
 
-            // Условие 2: Нам хватает дублей (проверка по классу подсветки)
-            if (cardOnPage && cardOnPage.classList.contains('ready-to-star-highlight')) {
-                const cardName = cardOnPage.dataset.name;
-                const starsUrl = starButton ? starButton.href : null;
-                // Получаем относительный путь картинки (как в твоем HTML коде)
-                const imgTag = cardOnPage.querySelector('img');
-                const targetImgSrc = imgTag ? imgTag.getAttribute('src') : null;
+			if (cardOnPage) {
+				const cardName = cardOnPage.dataset.name || modalContent.querySelector('.anime-cards__name')?.textContent.trim();
+				const starsUrl = starButton ? starButton.href : null;
+				const imgEl = cardOnPage.querySelector('img');
+				const targetImgSrc = imgEl ? (imgEl.getAttribute('src') || imgEl.dataset.src) : null;
 
                 const levelUpBtn = document.createElement('button');
                 levelUpBtn.className = 'ncard__meta-item levelup-meta-item';
@@ -15504,8 +15893,8 @@ async function runMainScript() {
                 
                 levelUpBtn.onclick = (e) => {
                     e.preventDefault();
-                    if (starsUrl && targetImgSrc) {
-                        performQuickLevelUp(starsUrl, targetImgSrc, cardName, levelUpBtn);
+                    if (starsUrl && targetImgSrc && mTypeId) {
+                        performQuickLevelUp(starsUrl, targetImgSrc, cardName, mTypeId, levelUpBtn);
                     } else {
                         safeDLEPushCall('error', 'Не удалось определить параметры карты');
                     }
@@ -17928,124 +18317,74 @@ async function runMainScript() {
 		}
 	}
 
-    async function scanWishlist(username) {
-        if (isWishlistScanning) {
-            console.warn('[Wishlist Scanner] Попытка запустить сканирование, когда оно уже идет. Отменено.');
-            safeDLEPushCall('warning', 'Сканирование уже запущено.');
-            return;
-        }
-        isWishlistScanning = true;
-    
-		// ПРАВКА: Если мы начинаем новый скан, очищаем кеш старого твина для всех рангов сразу
-		['a','b','c','d','e'].forEach(r => GM_deleteValue(REMELT_TWIN_WISH_PREFIX + r));
-		if (typeof unsafeWindow.updateRemeltCacheTimers === 'function') {
-			unsafeWindow.updateRemeltCacheTimers();
-		}
-        console.log(`[Wishlist Scanner] Запуск сканирования для пользователя: ${username}`);
-		// ПРАВКА: Фиксируем время начала обновления немедленно, чтобы сбросить таймер
-		await GM_setValue(WISHLIST_LAST_UPDATE_TS_KEY, Date.now());
-        await GM_deleteValue(WISHLIST_SCAN_STOP_KEY);
-        const previousTarget = await GM_getValue(WISHLIST_TARGET_USER_KEY, null);
-        await GM_setValue(WISHLIST_PRE_SCAN_TARGET_KEY, previousTarget);
-        let cardIdSet = new Set();
-        let currentPage = 1;
-        let totalPages = 1;
-        const DELAY = 2000;
-        try {
-            while (true) {
-                if (await GM_getValue(WISHLIST_SCAN_STOP_KEY)) {
-                    console.log('[Wishlist Scanner] Получен сигнал на остановку.');
-                    safeDLEPushCall('warning', 'Сканирование остановлено пользователем.');
-                    break;
-                }
-                await GM_setValue(WISHLIST_SCAN_STATE_KEY, {
-                    username: username,
-                    currentPage: currentPage,
-                    totalPages: totalPages,
-                    foundCount: cardIdSet.size
-                });
-                const url = `/user/cards/need/?name=${encodeURIComponent(username)}&page=${currentPage}`;
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`Ошибка сети: ${response.status}`);
-                const htmlText = await response.text();
-                const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+    /**
+	 * Сканирует лист желаний пользователя с прогрессом и блокировкой.
+	 */
+	async function scanWishlist(username) {
+		if (isWishlistScanning) return;
+		isWishlistScanning = true;
+		const STICKY_ID = 'acm-wishlist-progress';
+		
+		ascm_tempNavigationLock(3000);
+		let lockTimer = 3000;
+		let lastStatus = "Подключение...";
 
-                // ПРОВЕРКА: Существует ли пользователь (анализ сообщения об ошибке сайта)
-                const errorMsg = doc.querySelector('.message-info__content');
-                if (errorMsg && errorMsg.textContent.includes('не существует')) {
-                    throw new Error('USER_NOT_FOUND'); // Специальный код ошибки
-                }
+		const syncUpdate = (status) => {
+			lastStatus = status;
+			ascm_updateStickyProgress(STICKY_ID, { title: `Лист: ${username}`, step: 1, totalSteps: 1, status, lockTime: lockTimer });
+		};
 
-                const cardsOnPage = doc.querySelectorAll('.anime-cards__item');
+		const countdown = setInterval(() => { 
+			lockTimer -= 1000; 
+			if (lockTimer >= 0) syncUpdate(lastStatus);
+			if (lockTimer <= 0) clearInterval(countdown); 
+		}, 1000);
 
-                // ПРОВЕРКА: Пустой список (только на 1 странице)
-                if (currentPage === 1 && cardsOnPage.length === 0) {
-                    const emptyIndicator = doc.querySelector('.not-found .info-text');
-                    if (emptyIndicator && emptyIndicator.textContent.includes('пустой')) {
-                        console.log('[Wishlist Scanner] Список пуст. Завершаю успешно с 0 карт.');
-                        break; // Выходим из цикла, сохранятся пустые данные
-                    }
-                    throw new Error('UNKNOWN_RESPONSE');
-                }
-                cardsOnPage.forEach(cardEl => { if (cardEl.dataset.id) cardIdSet.add(cardEl.dataset.id); });
-                if (currentPage === 1) {
-                    const pageLinks = doc.querySelectorAll('.pagination__pages a, .pagination__pages span');
-                    const pageNumbers = Array.from(pageLinks).map(el => parseInt(el.textContent.trim(), 10)).filter(num => !isNaN(num));
-                    totalPages = pageNumbers.length > 0 ? Math.max(...pageNumbers) : 1;
-                }
-                if (currentPage >= totalPages) break;
-                currentPage++;
-                await unsafeWindow.sleep(DELAY);
-            }
-            const wasStopped = await GM_getValue(WISHLIST_SCAN_STOP_KEY);
-            if (!wasStopped) {
-                const wishlistData = { cardIds: Array.from(cardIdSet), timestamp: Date.now() };
-                await unsafeWindow.dbSet(WISHLIST_DB_STORE_NAME, username, wishlistData);
-                await GM_setValue(WISHLIST_TARGET_USER_KEY, username);
-                activeWishlistSet = new Set(wishlistData.cardIds);
-                console.log(`[Wishlist Scanner] Данные для "${username}" (${cardIdSet.size} карт) сохранены.`);
-                safeDLEPushCall('success', `Список желаний для "${username}" успешно отсканирован.`);
-				
-				// ОБНОВЛЕНИЕ ПАНЕЛИ ПЕРЕПЛАВКИ ОНЛАЙН
-				if (typeof unsafeWindow.updateRemeltCacheTimers === 'function') {
-					unsafeWindow.updateRemeltCacheTimers();
+		let cardIdSet = new Set();
+		let currentPage = 1, totalPages = 1;
+
+		try {
+			syncUpdate("Подключение к серверу...");
+			while (true) {
+				if (await GM_getValue(WISHLIST_SCAN_STOP_KEY)) break;
+
+				const url = `/user/cards/need/?name=${encodeURIComponent(username)}&page=${currentPage}`;
+				const response = await fetch(url);
+				const html = await response.text();
+				const doc = new DOMParser().parseFromString(html, 'text/html');
+
+				if (currentPage === 1) {
+					const pagin = doc.querySelectorAll('.pagination__pages a, .pagination__pages span');
+					const nums = Array.from(pagin).map(el => parseInt(el.textContent.trim())).filter(n => !isNaN(n));
+					totalPages = nums.length > 0 ? Math.max(...nums) : 1;
 				}
-			
-                const button = document.getElementById('wishlistScannerBtn');
-                if (button) {
-                    button.style.background = 'linear-gradient(145deg, #28a745, #1e7e34)';
-                }
-            } else {
-                const rollbackTarget = await GM_getValue(WISHLIST_PRE_SCAN_TARGET_KEY, null);
-                if (rollbackTarget) {
-                    await GM_setValue(WISHLIST_TARGET_USER_KEY, rollbackTarget);
-                    const rollbackData = await unsafeWindow.dbGet(WISHLIST_DB_STORE_NAME, rollbackTarget);
-                    activeWishlistSet = new Set(rollbackData?.cardIds || []);
-                    console.log(`[Wishlist Scanner] Цель возвращена на: ${rollbackTarget}`);
-                } else {
-                    await GM_deleteValue(WISHLIST_TARGET_USER_KEY);
-                    activeWishlistSet = null;
-                }
-            }
-        } catch (error) {
-			// Если это наша запланированная ошибка, не спамим красным в консоль
-			if (error.message === 'USER_NOT_FOUND') {
-				safeDLEPushCall('error', 'Ошибка: Данного пользователя не существует.');
-			} else if (error.message === 'UNKNOWN_RESPONSE') {
-				safeDLEPushCall('error', 'Ошибка: Не удалось прочитать список карт.');
-			} else {
-				// Для реально неожиданных ошибок (сети и т.д.) оставляем лог
-				console.error('[Wishlist Scanner] Критическая ошибка:', error);
-				safeDLEPushCall('error', `Ошибка: ${error.message}`);
+
+				doc.querySelectorAll('.anime-cards__item').forEach(c => { if(c.dataset.id) cardIdSet.add(c.dataset.id); });
+				
+				const progress = Math.round((currentPage / totalPages) * 100);
+				syncUpdate(`Прогресс: ${progress}% (Стр. ${currentPage} из ${totalPages})`);
+
+				if (currentPage >= totalPages) break;
+				currentPage++;
+				await sleep(2000);
 			}
+
+			await unsafeWindow.dbSet(WISHLIST_DB_STORE_NAME, username, { cardIds: Array.from(cardIdSet), timestamp: Date.now() });
+			await GM_setValue(WISHLIST_TARGET_USER_KEY, username);
+			await GM_setValue(WISHLIST_LAST_UPDATE_TS_KEY, Date.now());
+
+			document.getElementById(STICKY_ID)?.remove();
+			showNotification(`✅ Лист желаний ${username} обновлен (${cardIdSet.size} шт.)`, "success", { timeout: 3000 });
+
+		} catch (e) {
+			document.getElementById(STICKY_ID)?.remove();
+			showNotification("❌ Ошибка сканера: " + e.message, "error", { timeout: 5000 });
 		} finally {
-            isWishlistScanning = false;
-            await GM_deleteValue(WISHLIST_SCAN_STATE_KEY);
-            await GM_deleteValue(WISHLIST_SCAN_STOP_KEY);
-            await GM_deleteValue(WISHLIST_PRE_SCAN_TARGET_KEY);
-            highlightTargetUserWishlist();
-        }
-    }
+			isWishlistScanning = false;
+			clearInterval(countdown);
+			await GM_deleteValue(WISHLIST_SCAN_STATE_KEY);
+		}
+	}
 
     // ##################################################
     // ##################################################
@@ -19322,42 +19661,42 @@ async function runMainScript() {
     }
 	
     /**
-     * Сканнер с обновлением информационного блока под кнопкой
-     */
-    async function checkRemeltQuest() {
-        const username = asbm_getUsername();
-        if (!username) return;
-        const btn = document.getElementById('ascm-remelt-quest-refresh');
-        const statusEl = document.getElementById('ascm-remelt-quest-status');
-        const timeEl = document.getElementById('ascm-remelt-quest-time');
-        
-        if (btn) btn.style.backgroundColor = '#5865f2'; 
+	 * Проверяет состояние квеста на ковки в кузнице.
+	 * Вызывает хелпер профиля с флагом принудительного обновления для получения актуальных данных.
+	 * Обновляет визуальное состояние кнопок и информационных полей панели переплавки.
+	 * [нет аргументов]
+	 */
+	async function checkRemeltQuest() {
+		const username = asbm_getUsername();
+		if (!username) return;
 
-        try {
-            const url = `${window.location.origin}/user/${encodeURIComponent(username)}/`;
-            const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
-            const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
-            const quests = doc.querySelectorAll('.shop__get-coins li');
-            let found = false;
+		const btn = document.getElementById('ascm-remelt-quest-refresh');
+		const statusEl = document.getElementById('ascm-remelt-quest-status');
+		const timeEl = document.getElementById('ascm-remelt-quest-time');
+		
+		if (btn) btn.style.backgroundColor = '#5865f2'; 
 
-            for (let li of quests) {
-                if (li.textContent.includes('Выполнить 10 ковок')) {
-                    const isDone = li.classList.contains('reward-activated');
-                    remeltQuestStatus = { done: isDone, timestamp: Date.now() };
-                    found = true; break;
-                }
-            }
+		try {
+			const profile = await ascm_fetchUserProfile(username, true);
+			if (!profile || !profile.quests) return;
 
-            if (btn) {
-                btn.className = 'ascm-remelt-btn-big quest-btn-special ' + (remeltQuestStatus.done ? 'done' : 'ready');
-                btn.style.backgroundColor = '';
-            }
-            if (statusEl) statusEl.textContent = remeltQuestStatus.done ? "ВЫПОЛНЕН" : "НЕ ВЫПОЛНЕН";
-            if (timeEl) timeEl.textContent = "только что";
+			const forgeQuest = profile.quests.find(q => q.text.includes('Выполнить 10 ковок'));
+			if (forgeQuest) {
+				remeltQuestStatus = { done: forgeQuest.isDone, timestamp: Date.now() };
 
-            sccLog(`Задание "10 ковок": ${remeltQuestStatus.done ? 'ВЫПОЛНЕНО' : 'НЕТ'}`, remeltQuestStatus.done ? 'success' : 'warning', true);
-        } catch (e) { console.error(e); }
-    }
+				if (btn) {
+					btn.className = 'ascm-remelt-btn-big quest-btn-special ' + (forgeQuest.isDone ? 'done' : 'ready');
+					btn.style.backgroundColor = '';
+				}
+				if (statusEl) statusEl.textContent = forgeQuest.isDone ? "ВЫПОЛНЕН" : "НЕ ВЫПОЛНЕН";
+				if (timeEl) timeEl.textContent = "только что";
+
+				sccLog(`Задание "10 ковок": ${forgeQuest.isDone ? 'ВЫПОЛНЕНО' : 'НЕТ'}`, forgeQuest.isDone ? 'success' : 'warning', true);
+			}
+		} catch (e) {
+			console.error('[ACM] Ошибка проверки квеста ковок:', e);
+		}
+	}
 	
 	/**
      * Глобальные функции синхронизации времени и счетчиков кеша
@@ -19680,6 +20019,7 @@ async function runMainScript() {
 		let currentPage = 1;
 		let totalPages = 0;
 		let tempMap = new Map();
+		let seenIds = new Set();
 		let totalFound = 0;
 
 		try {
@@ -19689,7 +20029,7 @@ async function runMainScript() {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' },
 					body: new URLSearchParams({ 
-						action: 'search_remelt', rank: rank, search: '', locked: '0', sort: 'date', page: currentPage, user_hash: unsafeWindow.dle_login_hash 
+						action: 'search_remelt', rank: rank, search: '', locked: '0', sort: 'name', page: currentPage, user_hash: unsafeWindow.dle_login_hash 
 					}).toString()
 				});
 				
@@ -19706,6 +20046,9 @@ async function runMainScript() {
 					const id = el.dataset.id;
 					const img = el.querySelector('img')?.getAttribute('src');
 					if (id && img) {
+						if (seenIds.has(id)) continue;
+						seenIds.add(id);
+
 						if (!tempMap.has(img)) {
 							const tId = cardImageIndex.get(normalizeImagePath(img));
 							const cached = tId ? await getCache('cardId: ' + tId) : null;
@@ -19789,7 +20132,7 @@ async function runMainScript() {
                     </div>
                 </div>
                 <div id="ascm-remelt-quest-refresh" class="ascm-remelt-btn-big quest-btn-special ready" title="Нажмите для обновления статуса задания">
-                    <span class="title">ДНЕВНОЙ КВЕСТ: ВЫПОЛНИТЬ 10 КОВОК</span>
+                    <span class="title"><i class="fas fa-play" style="color:#faa61a; margin-right:5px;"></i> ДНЕВНОЙ КВЕСТ: ВЫПОЛНИТЬ 10 КОВОК</span>
                     <div id="ascm-remelt-quest-status" class="title" style="font-size:15px !important; margin: 2px 0;">?</div>
                     <span id="ascm-remelt-quest-time" class="subtitle">--:--:-- назад</span>
                 </div>

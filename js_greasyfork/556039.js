@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto-attacker
 // @namespace    http://tampermonkey.net/
-// @version      1.13.0
+// @version      1.14.0
 // @description  Automatycznie atakuje osoby z listy (wymaga działającego UnMod_varriz na stronie)
 // @author       Varriz
 // @license      MIT
@@ -73,7 +73,7 @@
     function notify(msg, type = "info") {
         push(msg, type);
         // ograniczamy spam: tylko ważniejsze typy idą jako browser push
-        if (type === "error" || type === "warn" || type === "ok") {
+        if (type === "error" || type === "warn") {
             browserPush(msg);
         }
     }
@@ -295,8 +295,8 @@
     // ------------------ USTAWIENIA W /?a=settings ------------------
     (function injectSettingsUI() {
         var qs = location.search || '';
-        if (qs.indexOf('a=settings') === -1) return;
-
+        //if (qs.indexOf('a=settings') === -1) return;
+        if (qs != "?a=settings") return;
         // powiększamy min-height w #content-mid o +300px
         var contentMid = document.getElementById('content-mid');
         if (contentMid) {
@@ -435,7 +435,7 @@
         btn.id = 'AA_floatingButton';
         btn.style.position = 'fixed';
         btn.style.top = '10px';
-        btn.style.left = '10px';
+        btn.style.left = '110px';
         btn.style.zIndex = '9999';
         btn.style.padding = '4px 8px';
         btn.style.fontSize = '11px';
@@ -689,6 +689,9 @@
             }
 
             if (confirmedVisible && submitBtn && submitReady) {
+                if(unsafeWindow.arkanaSet) {
+                    unsafeWindow.arkanaSet();
+                }
                 submitBtn.click();
                 return;
             }

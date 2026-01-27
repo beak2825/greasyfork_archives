@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wnacg下载按钮恢复
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      2.1
 // @description  给浏览器无法单独放行广告拦截的，恢复下载按钮。
 // @author       Aloazny
 // @match        *://*.99xmh.*/*
@@ -75,8 +75,13 @@
     }
 
     function blockAds() {
-        if (isDownloadPage()) return;
-        ['#btimgid1', '#btmad1', 'script[src$="/js/jads.js"] + ins[id]', 'iframe[width="300"][height="250"]', 'iframe[src*="/smartpop/"]', 'iframe[src*="/herebyad"]', 'iframe[src*="/HereByAD"]', 'div[style*="z-index: 9999"][style*="justify-content: center;"]:not([class]):not([id])', 'a[href][target="_blank"] > img[src*="t4"][src*=".ru/data/t/"]'].forEach(s => document.querySelectorAll(s).forEach(e => e.remove()));
+        const isDL = isDownloadPage();
+        ['#btimgid1', '#btmad1', 'script[src$="/js/jads.js"] + ins[id]', 'iframe[width="300"][height="250"]', 'iframe[src*="/smartpop/"]', 'iframe[src*="/herebyad"]', 'iframe[src*="/HereByAD"]', 'iframe[style*="300"][style*="250"]', 'div[style*="z-index: 9999"][style*="justify-content: center;"]:not([class]):not([id])', 'a[href][target="_blank"] > img[src*="t4"][src*=".ru/data/t/"]'].forEach(s => {
+            document.querySelectorAll(s).forEach(e => {
+                if (isDL && e.closest('.as_bt_l')) return;
+                e.remove();
+            });
+        });
         const killPatterns = [
             /view[_-]?booster\.js/i,
             /\/bn\.js($|\?|#)/i,
@@ -125,7 +130,6 @@
     }
 
     function blockExternalLinks() {
-        if (isDownloadPage()) return;
         const currentHostname = window.location.hostname;
         const fuzzyDomain = currentHostname.replace(/\d+/g, '').replace(/\.+$/, '');
         document.addEventListener('click', function(e) {
@@ -136,7 +140,9 @@
             if (target && target.href) {
                 try {
                     const url = new URL(target.href, window.location.href);
-                    if (!url.hostname.includes('wnacg') && !url.hostname.includes(fuzzyDomain) && (target.target === '_blank' || e.ctrlKey || e.metaKey)) {
+                    const isDownload = url.pathname.includes('transmit');
+                    const isInternal = url.hostname.includes('wnacg') || url.hostname.includes(fuzzyDomain);
+                    if (!isDownload && !isInternal && (target.target === '_blank' || e.ctrlKey || e.metaKey)) {
                         e.preventDefault();
                         e.stopImmediatePropagation();
                         return false;
@@ -166,57 +172,61 @@
     }
 
     function handleNormalPage() {
-        document.querySelectorAll('.hlol_ad, .download_btn, div[id*="ad"], div[class*="ad"]').forEach(container => {
+        document.querySelectorAll('.hlol_ad, .download_btn, .btn-row-left, div[id*="ad"], div[class*="ad"]').forEach(container => {
             if (container.dataset.tmProcessed) return;
             const origLink = container.querySelector('a[href*="download-index-aid-"]');
             if (!origLink) return;
-            container.innerHTML = '';
-            container.style.cssText = 'padding:10px 0;text-align:center;';
-            const btn = document.createElement('div');
-            btn.textContent = '下载本子';
-            btn.style.cssText = 'display:inline-block;cursor:pointer;padding:11px 28px;background:#4CAF50;color:white;border-radius:6px;font-size:15px;font-weight:bold;';
-            btn.onmouseover = () => btn.style.background = '#45a049';
-            btn.onmouseout = () => btn.style.background = '#4CAF50';
-            btn.onclick = () => location.href = origLink.href;
-            container.appendChild(btn);
+            const downloadHref = origLink.href;
+            if (container.classList.contains('btn-row-left')) {
+                const adBtn = container.querySelector('a.ad-site');
+                if (adBtn) {
+                    const newBtn = document.createElement('a');
+                    newBtn.className = 'Btn-Fixed';
+                    newBtn.textContent = '下载本子';
+                    newBtn.style.cssText = 'cursor:pointer; background:#4CAF50 !important; color:white !important; margin-right:5px;';
+                    newBtn.onclick = (e) => {
+                        e.preventDefault();
+                        location.href = downloadHref;
+                    };
+                    adBtn.replaceWith(newBtn);
+                }
+            } else {
+                container.innerHTML = '';
+                container.style.cssText = 'padding:10px 0;text-align:center;';
+                const btn = document.createElement('div');
+                btn.textContent = '下载本子';
+                btn.style.cssText = 'display:inline-block;cursor:pointer;padding:11px 28px;background:#4CAF50;color:white;border-radius:6px;font-size:15px;font-weight:bold;';
+                btn.onmouseover = () => btn.style.background = '#45a049';
+                btn.onmouseout = () => btn.style.background = '#4CAF50';
+                btn.onclick = () => location.href = downloadHref;
+                container.appendChild(btn);
+            }
             container.dataset.tmProcessed = '1';
-            container.removeAttribute('class');
-            container.removeAttribute('id');
+            if (!container.classList.contains('btn-row-left')) {
+                container.removeAttribute('class');
+                container.removeAttribute('id');
+            }
         });
     }
 
     function handleDownloadPage() {
-        const e = document.querySelector(".adbox");
-        if (!e) return;
-        const t = document.querySelector(".download_filename"),
-            n = t ? t.textContent.trim() : "未知文件";
-        const r = [];
-        document.querySelectorAll("a.down_btn").forEach(e => {
-            const t = e.querySelector("span"),
-                a = t ? t.textContent.trim().replace(/\s+/g, " ") : "下载";
-            r.push({
-                url: e.href,
-                text: a.replace(/^\s+|\s+$/g, "").replace(/&nbsp;/g, ""),
-                isExternal: e.href.includes("wfile.uk")
-            })
-        });
-        if (0 === r.length) return;
-        const o = document.createElement("div");
-        o.className = "tm-download-page";
-        o.innerHTML = `<div class="c"><div class="card"><div class="h"><div class="t">下载</div><div class="f" title="${n}">${n}</div></div><div class="b">${r.map(e=>`<a href="${e.url}" class="btn${e.isExternal?" be":" bp"}"${e.isExternal?' target="_blank" rel="noopener noreferrer"':""}>${e.text||"开始下载"}</a>`).join("")}</div><div class="fo"><small>建议使用单线程下载工具</small></div></div></div>`;
-        const a = document.createElement("style");
-        a.textContent = `:root{--md-sys-color-background:244 246 252;--md-sys-color-surface:255 255 255;--md-sys-color-on-surface:28 27 31;--md-sys-color-outline:121 118 130;--md-sys-color-primary:33 150 243;--md-sys-color-on-primary:255 255 255;--md-elevation-level2:0 3px 10px rgba(0,0,0,0.16),0 2px 6px rgba(0,0,0,0.12);--md-elevation-level3:0 6px 20px rgba(0,0,0,0.22)}@media (prefers-color-scheme:dark){:root{--md-sys-color-background:18 18 24;--md-sys-color-surface:28 27 35;--md-sys-color-on-surface:235 230 235;--md-sys-color-outline:140 135 145;--md-sys-color-primary:138 180 248;--md-sys-color-on-primary:255 255 255;--md-elevation-level2:0 6px 18px rgba(0,0,0,0.45);--md-elevation-level3:0 10px 28px rgba(0,0,0,0.52)}}*,*::before,*::after{box-sizing:border-box}html,body{height:100%;margin:0;padding:0;background:rgb(var(--md-sys-color-background));color:rgb(var(--md-sys-color-on-surface));font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}.tm-download-page{min-height:100dvh;padding:16px;display:grid;place-items:center}.c{width:100%;max-width:520px}.card{background:rgba(var(--md-sys-color-surface),0.75);backdrop-filter:blur(32px) saturate(200%);-webkit-backdrop-filter:blur(32px) saturate(200%);border-radius:32px;padding:36px 20px 48px;box-shadow:var(--md-elevation-level2);border:1px solid rgba(var(--md-sys-color-outline),0.18)}.h{text-align:center;margin-bottom:36px}.t{font-size:2.25rem;font-weight:500;letter-spacing:-0.025em}.f{margin-top:14px;font-size:1.125rem;line-height:1.45;color:rgba(var(--md-sys-color-on-surface),0.78);word-break:break-word;max-height:5em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical}.b{display:flex;flex-direction:column;gap:18px;margin:28px 0 36px}.btn{display:flex;align-items:center;justify-content:center;padding:18px 32px;border-radius:28px;font-size:1.25rem;font-weight:600;text-decoration:none;transition:all 0.28s cubic-bezier(0.4,0,0.2,1);box-shadow:var(--md-elevation-level2);user-select:none}.bp{background:rgb(var(--md-sys-color-primary));color:rgb(var(--md-sys-color-on-primary))}.bp:hover{box-shadow:var(--md-elevation-level3);transform:translateY(-1px)}.bp:active{transform:scale(0.97)}.be{background:rgb(130,80,245);color:#ffffff !important;box-shadow:0 4px 14px rgba(130,80,245,0.42)}.be:hover{background:rgb(110,60,230);box-shadow:0 8px 24px rgba(130,80,245,0.55);transform:translateY(-1px)}.be:active{transform:scale(0.97)}.fo{text-align:center;font-size:0.875rem;color:rgba(var(--md-sys-color-on-surface),0.60)}@media (max-width:600px){.tm-download-page{align-items:flex-end;padding:0}.c{width:100%;max-width:none;padding:0 10px 8px}.card{border-radius:32px 32px 0 0;padding:40px 16px 64px;box-shadow:0 -8px 32px rgba(0,0,0,0.38)}.btn{padding:20px 36px;font-size:1.3125rem;border-radius:32px}}`;
-        document.body.innerHTML = "";
-        document.body.appendChild(a);
-        document.body.appendChild(o)
+        const downloadContainer = document.querySelector('.as_bt_l');
+        if (downloadContainer) {
+            downloadContainer.style.cssText = 'display: block !important; visibility: visible !important;';
+            const links = downloadContainer.querySelectorAll('a[href*="transmit"]');
+            links.forEach(link => {
+                link.style.cssText = 'display: inline-block !important; visibility: visible !important;';
+                link.onclick = (e) => e.stopPropagation();
+            });
+        }
     }
 
     function run() {
+        if (isDownloadPage()) handleDownloadPage();
+        else handleNormalPage();
         blockAds();
         blockAdFunctions();
         blockExternalLinks();
-        if (isDownloadPage()) handleDownloadPage();
-        else handleNormalPage();
     }
 
     function setupObserver() {

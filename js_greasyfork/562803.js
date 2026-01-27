@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Ironwood RPG - Pancake-Scripts
 // @namespace    http://tampermonkey.net/
-// @version      6.9.1
+// @version      6.11.0
 // @description  A collection of scripts to enhance Ironwood RPG - https://github.com/Boldy97/ironwood-scripts
 // @author       Pancake
 // @match        https://ironwoodrpg.com/*
@@ -9,13 +9,13 @@
 // @grant        none
 // @run-at       document-start
 // @require      https://code.jquery.com/jquery-3.6.4.min.js
-// @license      MIT
+// @license MIT
 // @downloadURL https://update.greasyfork.org/scripts/562803/Ironwood%20RPG%20-%20Pancake-Scripts.user.js
 // @updateURL https://update.greasyfork.org/scripts/562803/Ironwood%20RPG%20-%20Pancake-Scripts.meta.js
 // ==/UserScript==
 
 window.PANCAKE_ROOT = 'https://iwrpg.vectordungeon.com';
-window.PANCAKE_VERSION = '6.9.1';
+window.PANCAKE_VERSION = '6.11.0';
 Object.defineProperty(Array.prototype, '_groupBy', {
     enumerable: false,
     value: function (selector) {
@@ -10290,11 +10290,29 @@ window.moduleRegistry.add('manualMarketImport', (pages, configuration, component
     async function saveMarketHistory(listings) {
         if (!localDatabase) return;
 
+        // 1. Save Latest Scan IMMEDIATELY (Critical for UI responsiveness)
+        try {
+            await localDatabase.saveEntry('market-latest', {
+                type: 'latest',
+                timestamp: Date.now(),
+                listings: listings
+            });
+            // We don't toast here to avoid spamming, the outer function handles success message
+        } catch (e) {
+            console.error('Failed to save latest scan', e);
+        }
+
+        // 2. Process Historical Data in Background (Fire and Forget)
+        // We do NOT await this, allowing the UI to unblock immediately.
+        processHistoryBackground(listings);
+    }
+
+    async function processHistoryBackground(listings) {
         const historyStoreName = 'market-history';
         const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
         const entryMap = new Map(); // itemId -> { minPrice, volume }
 
-        // 1. Aggregation Pass
+        // Aggregation Pass
         for (const listing of listings) {
             // Only Sell listings
             if (listing.type !== '1') continue;
@@ -10313,7 +10331,7 @@ window.moduleRegistry.add('manualMarketImport', (pages, configuration, component
             }
         }
 
-        // 2. Save/Update DB
+        // Save/Update DB
         let snapshotsSaved = 0;
         let snapshotsUpdated = 0;
 
@@ -10335,7 +10353,10 @@ window.moduleRegistry.add('manualMarketImport', (pages, configuration, component
                     const oldCount = entry.count || 1;
 
                     finalPrice = ((oldMean * oldCount) + data.minPrice) / (oldCount + 1);
-                    finalVolume = (entry.volume || 0) + data.volume;
+                    finalVolume = (entry.volume || 0) + data.volume; // Cumulative volume? Or Max? 
+                    // Logic seems to be Max observed volume in a snapshot or cumulative?
+                    // Original code: finalVolume = Math.max(entry.volume || 0, data.volume);
+                    // Let's keep original logic:
                     finalVolume = Math.max(entry.volume || 0, data.volume);
 
                     count = oldCount + 1;
@@ -10356,19 +10377,7 @@ window.moduleRegistry.add('manualMarketImport', (pages, configuration, component
                 console.error('Error saving history for item', itemId, e);
             }
         }
-        console.log(`[MarketHistory] Saved ${snapshotsSaved} new, Updated ${snapshotsUpdated} snapshots.`);
-
-        // 3. Save Latest Scan
-        try {
-            await localDatabase.saveEntry('market-latest', {
-                type: 'latest',
-                timestamp: Date.now(),
-                listings: listings
-            });
-            toast.create('Market Scan saved for analysis.', 'success');
-        } catch (e) {
-            console.error('Failed to save latest scan', e);
-        }
+        console.log(`[MarketHistory] Background sync finished. Saved ${snapshotsSaved} new, Updated ${snapshotsUpdated} snapshots.`);
     }
 
     initialise();
@@ -10832,6 +10841,206 @@ window.moduleRegistry.add('marketAnalysis', (pages, components, localDatabase, i
     }
 
     initialise();
+}
+);
+// marketBumpButton
+window.moduleRegistry.add('marketBumpButton', (configuration, elementWatcher, util, colorMapper) => {
+
+    let enabled = false;
+
+    function initialise() {
+        configuration.registerCheckbox({
+            category: 'Market',
+            key: 'market-bump-button',
+            name: 'Bump Button',
+            default: true,
+            handler: handleConfigStateChange
+        });
+
+        // Observe the preview panel that appears when hitting a listing
+        elementWatcher.addRecursiveObserver(onPreviewOpened, 'app-component > div.scroll div.wrapper', 'market-page', 'market-listings-component', 'div.groups', 'div.sticky', 'div.preview');
+        elementWatcher.addRecursiveObserver(onPreviewOpened, 'app-component > div.scroll div.wrapper', 'market-page', 'market-order-component', 'div.groups', 'div.sticky', 'div.preview');
+    }
+
+    function handleConfigStateChange(state) {
+        enabled = state;
+    }
+
+    function onPreviewOpened(element) {
+        if (!enabled) return;
+        const $element = $(element);
+
+        // Find the "Edit" button to know where to insert our button
+        // and to confirm this is an editable listing (our own).
+        const editButton = $element.find('button.action:contains("Edit")');
+        if (!editButton.length) {
+            return;
+        }
+
+        if ($element.find('.market-bump-button').length) {
+            return;
+        }
+
+        // Determine if it's a Buy (Order) or Sell
+        // We can usually tell by context or text in the preview.
+        // But for bumping logic, we just need to know if we look for "Highest" or "Lowest".
+        // The modal will tell us.
+
+        const bumpButton = $('<button/>')
+            .addClass('market-bump-button')
+            .text('Bump')
+            .css({
+                'margin-left': '10px',
+                'background-color': colorMapper('componentRegular'),
+                'color': '#fff',
+                'border': '1px solid #444',
+                'padding': '5px 10px',
+                'cursor': 'pointer',
+                'border-radius': '4px'
+            })
+            .hover(
+                function () { $(this).css('background-color', colorMapper('componentHover')); },
+                function () { $(this).css('background-color', colorMapper('componentRegular')); }
+            )
+            .click((e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleBumpClick(editButton);
+            });
+
+        // Insert after the Edit button
+        editButton.after(bumpButton);
+    }
+
+    async function handleBumpClick(editButton) {
+        // 1. Open the Edit Modal
+        editButton.trigger('click');
+
+        // 2. Wait for Modal
+        const modalSelector = '.modal';
+        let modalElement;
+        try {
+            modalElement = await elementWatcher.exists(modalSelector, 10, 2000);
+        } catch (e) {
+            return;
+        }
+
+        const $modal = $(modalElement);
+
+        // 3. Determine Price Source
+        // If it's a Sell, we see "Market Lowest".
+        // If it's an Order, we see "Market Highest".
+
+        const marketLowestRow = $modal.find('.row:contains("Market Lowest")');
+        const marketHighestRow = $modal.find('.row:contains("Market Highest")');
+
+        let targetPrice = null;
+
+        if (marketLowestRow.length) {
+            // Extract number from text like "Market Lowest       105 <coin>"
+            // utilizing util.parseNumber which handles the coin icon/commas hopefully
+            targetPrice = util.parseNumber(marketLowestRow.text());
+        } else if (marketHighestRow.length) {
+            targetPrice = util.parseNumber(marketHighestRow.text());
+        } else {
+            return;
+        }
+
+        if (targetPrice === null || isNaN(targetPrice)) {
+            return;
+        }
+
+        // 4. Set Price
+        const priceInput = $modal.find('input[placeholder="Price"]');
+        if (!priceInput.length) {
+            return;
+        }
+
+        // Update the input
+        priceInput.val(targetPrice);
+        // Dispatch input event so Angular/Game detects change
+        priceInput[0].dispatchEvent(new Event('input', { bubbles: true }));
+        priceInput[0].dispatchEvent(new Event('change', { bubbles: true })); // Just in case
+
+        // 5. Submit
+        // Give a tiny delay for state update?
+        await new Promise(r => setTimeout(r, 100));
+
+        const submitButton = $modal.find('button.action:contains("Submit")');
+        if (submitButton.length) {
+            submitButton.trigger('click');
+        }
+    }
+
+    initialise();
+
+}
+);
+// marketEnterSubmit
+window.moduleRegistry.add('marketEnterSubmit', (configuration, elementWatcher) => {
+
+    let enabled = false;
+
+    function initialise() {
+        configuration.registerCheckbox({
+            category: 'Market',
+            key: 'market-enter-submit',
+            name: 'Submit with Enter',
+            default: true,
+            handler: handleConfigStateChange
+        });
+
+        // Listen for clicks that open market modals/forms
+        $(document).on('click', 'button.action:contains("Sell")', () => setupEnterSubmit('sell'));
+        $(document).on('click', 'button.action:contains("Order")', () => setupEnterSubmit('order'));
+        // Buy listings often open a modal or inline form
+        $(document).on('click', 'button.action:contains("Buy")', () => setupEnterSubmit('buy'));
+        // Edit existing listing
+        $(document).on('click', 'button.action:contains("Edit")', () => setupEnterSubmit('edit'));
+    }
+
+    function handleConfigStateChange(state) {
+        enabled = state;
+    }
+
+    async function setupEnterSubmit(type) {
+        if (!enabled) return;
+
+        // Wait for the modal or input container to appear.
+        // We look for the Quantity OR Price input which is common across these forms.
+        const inputSelector = '.modal input[placeholder="Quantity"], .preview input[placeholder="Quantity"], .modal input[placeholder="Price"]';
+
+        try {
+            const inputElement = await elementWatcher.exists(inputSelector, 10, 2000);
+            const container = $(inputElement).closest('.modal, .preview');
+            attachEnterListener(container);
+        } catch (e) {
+            // Element might not have appeared or was too slow
+        }
+    }
+
+    function attachEnterListener(container) {
+        const inputs = container.find('input[placeholder="Quantity"], input[placeholder="Price"]');
+        const submitButton = container.find('button.action:contains("Submit"), button.action:contains("Buy"), button.action:contains("Order"), button.action:contains("Sell")').last();
+
+        if (!submitButton.length) return;
+
+        // Clean up previous listeners to detect double-runs
+        inputs.off('keydown.enterSubmit');
+
+        inputs.on('keydown.enterSubmit', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Trigger angular logic or native click
+                submitButton.trigger('click');
+            }
+        });
+    }
+
+    initialise();
+
 }
 );
 // marketFilter
@@ -11593,6 +11802,238 @@ window.moduleRegistry.add('marketService', (configuration, toast, manualMarketIm
     loadCachedToken();
 
     return exports;
+
+}
+);
+// marketTrends
+window.moduleRegistry.add('marketTrends', (pages, components, localDatabase, itemCache, elementCreator, util, marketService, toast) => {
+
+    const PAGE_NAME = 'Market Trends';
+
+    const styles = `
+        .trend-positive { color: #5cb85c; }
+        .trend-negative { color: #d9534f; }
+        .trend-neutral { color: #f0ad4e; }
+        .trend-cell { font-weight: bold; }
+    `;
+
+    async function initialise() {
+        await pages.register({
+            category: 'Market',
+            name: PAGE_NAME,
+            image: 'https://cdn-icons-png.flaticon.com/512/2454/2454282.png', // Reusing profit icon for now
+            columns: '1',
+            render: renderPage
+        });
+
+        elementCreator.addStyles(styles);
+        pages.show(PAGE_NAME);
+    }
+
+    async function renderPage() {
+        // 1. Fetch Data
+        let history = [];
+        let latestscan = null;
+
+        try {
+            const [histArgs, latestArgs] = await Promise.all([
+                localDatabase.getAllEntries('market-history'),
+                localDatabase.getEntry('market-latest', 'latest')
+            ]);
+            history = histArgs;
+            latestscan = latestArgs;
+        } catch (e) {
+            console.error('Failed to load market data', e);
+        }
+
+        const rows = [];
+
+        // Header and Refresh
+        rows.push({
+            type: 'header',
+            title: 'Market Trends & Opportunities',
+            centered: true
+        });
+
+        // Instructions
+        rows.push({
+            type: 'item',
+            name: '📉 DIP (Buy)',
+            value: 'Item is selling for 20%+ below its 7-day average. Consider buying!'
+        });
+        rows.push({
+            type: 'item',
+            name: '📈 SPIKE (Rising)',
+            value: 'Price jumped 15%+ recently. May be selling opportunity or hype.'
+        });
+        rows.push({
+            type: 'item',
+            name: 'Columns',
+            value: 'Price (% Diff from Avg) | Avg: 7-Day Average Price'
+        });
+        rows.push({ type: 'break' });
+
+        if (marketService.hasToken()) {
+            rows.push({
+                type: 'buttons',
+                buttons: [{
+                    text: 'Refresh Market Data',
+                    color: 'success',
+                    action: async () => {
+                        try {
+                            await marketService.fetchMarketData();
+                            pages.requestRender(PAGE_NAME);
+                        } catch (e) { /* handled in service */ }
+                    }
+                }]
+            });
+        }
+
+        if (!history || history.length === 0) {
+            rows.push({ type: 'item', name: 'No historical data found.', value: 'Visit "Market Import" or use "Refresh" to build history.' });
+            renderComponent(rows);
+            return;
+        }
+
+        // 2. Process History
+        // Organize by ItemID
+        const itemHistory = {}; // itemId -> [entries]
+        for (const entry of history) {
+            if (!itemHistory[entry.itemId]) itemHistory[entry.itemId] = [];
+            itemHistory[entry.itemId].push(entry);
+        }
+
+        // 3. Analyze Items
+        // We iterate over everything we have history for.
+        // Or should we iterate over "Latest" scan to find current deals?
+        // Let's iterate over itemHistory keys, and check if we have a current price from 'latestscan'
+        // If 'latestscan' is old, maybe we shouldn't trust it? 
+        // For now, let's use the current market snapshot if available.
+
+        const currentPrices = {}; // itemId -> { price, volume }
+        if (latestscan && latestscan.listings) {
+            for (const list of latestscan.listings) {
+                if (list.type !== '1') continue; // Only Sell offers
+                const id = list.itemId;
+                const price = list.cost;
+                // We want the LOWEST price for the item to check for "Dip"
+                if (!currentPrices[id] || price < currentPrices[id].price) {
+                    currentPrices[id] = { price: price, volume: list.amount }; // This volume is just one listing though
+                }
+            }
+        }
+
+        const opportunities = [];
+
+        for (const itemId in itemHistory) {
+            const entries = itemHistory[itemId];
+            if (entries.length < 2) continue; // Need at least some history?
+
+            // Sort by date desc
+            entries.sort((a, b) => b.timestamp - a.timestamp);
+
+            const item = itemCache.byId[itemId];
+            if (!item) continue;
+
+            // Calculate 7-Day Average
+            // Filter entries within last 7 days
+            const now = Date.now();
+            const sevenDaysAgo = now - (7 * 24 * 60 * 60 * 1000);
+            const recentEntries = entries.filter(e => e.timestamp >= sevenDaysAgo);
+
+            if (recentEntries.length === 0) continue;
+
+            let totalSum = 0;
+            let count = 0;
+            for (const e of recentEntries) {
+                totalSum += e.price;
+                count++;
+            }
+            const avgPrice = totalSum / count;
+
+            // Check Current Price vs Avg
+            const current = currentPrices[itemId];
+            if (current) {
+                const diff = (current.price - avgPrice) / avgPrice; // e.g. -0.20 for 20% drop
+
+                // Criteria 1: Significant Dip (> 20% below avg)
+                if (diff < -0.20) {
+                    opportunities.push({
+                        type: 'DIP',
+                        name: item.name,
+                        price: current.price,
+                        avg: Math.round(avgPrice),
+                        metric: `${Math.round(diff * 100)}%`,
+                        score: Math.abs(diff) * 10 // Weight dips heavily
+                    });
+                }
+            }
+
+            // Criteria 2: Volume/Trend (Comparing last 2 known days if available)
+            if (entries.length >= 2) {
+                const today = entries[0];
+                const yesterday = entries[1];
+                // Simple trend: Price movement
+                const trendDiff = (today.price - yesterday.price) / yesterday.price;
+                if (trendDiff > 0.15) {
+                    // Price Spiking Up
+                    opportunities.push({
+                        type: 'SPIKE',
+                        name: item.name,
+                        price: today.price, // Last known hist price
+                        avg: yesterday.price, // prev price
+                        metric: `+${Math.round(trendDiff * 100)}%`,
+                        score: trendDiff * 5
+                    });
+                }
+            }
+        }
+
+        // Sort opportunities by score
+        opportunities.sort((a, b) => b.score - a.score);
+
+        // Render Top 20
+        if (opportunities.length === 0) {
+            rows.push({ type: 'item', name: 'No significant trends found right now.', centered: true });
+        } else {
+            rows.push({ type: 'header', title: 'Start Trading', centered: true });
+
+            for (const opp of opportunities.slice(0, 50)) {
+                let colorClass = 'trend-neutral';
+                let icon = '';
+
+                if (opp.type === 'DIP') {
+                    colorClass = 'trend-positive';
+                    icon = '📉 (Buy)';
+                } else if (opp.type === 'SPIKE') {
+                    colorClass = 'trend-negative'; // Warning or Sell signal?
+                    icon = '📈 (Rising)';
+                }
+
+                rows.push({
+                    type: 'item',
+                    name: `${opp.name}`,
+                    value: `${util.formatNumber(opp.price)} (${opp.metric})`,
+                    extra: `Avg: ${util.formatNumber(opp.avg)} | ${icon}`,
+                    class: colorClass
+                });
+            }
+        }
+
+        renderComponent(rows);
+    }
+
+    function renderComponent(rows) {
+        components.addComponent({
+            componentId: 'market-trends-page',
+            dependsOn: 'custom-page',
+            parent: '.column0',
+            selectedTabIndex: 0,
+            tabs: [{ title: 'Overview', rows: rows }]
+        });
+    }
+
+    initialise();
 
 }
 );
@@ -14061,7 +14502,7 @@ window.moduleRegistry.add('configurationStore', (Promise, localConfigurationStor
 }
 );
 // customItemPriceStore
-window.moduleRegistry.add('customItemPriceStore', (localDatabase, itemCache, Promise) => {
+window.moduleRegistry.add('customItemPriceStore', (localDatabase, itemCache, dropCache, Promise) => {
 
     const STORE_NAME = 'item-price';
     let prices = {};
@@ -14111,19 +14552,60 @@ window.moduleRegistry.add('customItemPriceStore', (localDatabase, itemCache, Pro
         return !!prices[key];
     }
 
+    /**
+     * Compute price for derivable items (e.g., Metal Parts, Sigil Pieces, Charcoal)
+     * by averaging the 3 cheapest market-priced sources that break down into this item.
+     * Only uses items with actual scanned market prices, not MIN_MARKET_PRICE fallbacks.
+     */
+    function getDerivablePrice(id) {
+        if (!dropCache.conversionMappings) return null;
+
+        const mappings = dropCache.conversionMappings[id];
+        if (!mappings || mappings.length === 0) return null;
+
+        // Collect all valid price-per-unit values
+        const pricesPerUnit = [];
+        for (const mapping of mappings) {
+            const sourceItem = itemCache.byId[mapping.from];
+            if (!sourceItem) continue;
+
+            // ONLY use items with actual scanned prices (stored in prices object)
+            // Skip items that would fall back to MIN_MARKET_PRICE
+            const storedPrice = prices[mapping.from];
+            if (!storedPrice || storedPrice <= 0) continue;
+
+            const pricePerUnit = storedPrice / mapping.amount;
+            pricesPerUnit.push(pricePerUnit);
+        }
+
+        if (pricesPerUnit.length === 0) return null;
+
+        // Sort ascending and take average of up to 3 cheapest
+        pricesPerUnit.sort((a, b) => a - b);
+        const top3 = pricesPerUnit.slice(0, 3);
+        const average = top3.reduce((sum, p) => sum + p, 0) / top3.length;
+
+        return average;
+    }
+
     function getDefault(id) {
         if (id === itemCache.specialIds.coins) {
             return 1;
         }
-        if (id === itemCache.specialIds.charcoal) {
-            return get(itemCache.byName['Pine Log'].id);
-        }
+        // Charcoal is now handled by getDerivablePrice (different logs give different yields)
         if (id === itemCache.specialIds.stardust) {
             return 2;
         }
         if (id === itemCache.specialIds.masteryContract) {
             return 2;
         }
+
+        // Check if this is a derivable item (can be created via CONVERSION)
+        const derivedPrice = getDerivablePrice(id);
+        if (derivedPrice !== null) {
+            return derivedPrice;
+        }
+
         const item = itemCache.byId[id];
         if (item.attributes['UNTRADEABLE']) {
             return item.attributes.SELL_PRICE;

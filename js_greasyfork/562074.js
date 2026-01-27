@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         pornhub-download-plugin
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-02
+// @version      2026-01-24
 // @description  Tiny pornhub downloader. Support m3u8 download or obtain video original link
 // @author       SHANGDISHIGE109
 // @source       https://github.com/SHANGDISHIGE109/pornhub-download-plugin
@@ -604,7 +604,7 @@
             btnBackgroundStyle = 'background: #000000;';
 
             // subscribeBtn
-            const subscribeBtn = document.querySelector('.userActions > .subscribeButton.videoSubscribeButton.js_videoSubscribeButton.js-show-subscribe-btn.updatedStyledBtn.loggedOut');
+            const subscribeBtn = document.querySelector('.userActions > .subscribeButton.videoSubscribeButton.js_videoSubscribeButton');
             
             let externalLinkButtonDiv = subscribeDiv.children[0];
             if (externalLinkButtonDiv.className == 'subscribeButton videoSubscribeButton' 
@@ -617,7 +617,7 @@
                 btnWindowScreenWidthStyle = `width: ${joinNowBtnWidth}px`;
                 btnWindowScreenRight = '150px';
                 btnFullScreenRight = '450px';
-            }else if (externalLinkButtonDiv.nodeName == 'A' && externalLinkButtonDiv.href.indexOf('www.fanhub.com') != -1) {
+            }else if (externalLinkButtonDiv.nodeName == 'A' && externalLinkButtonDiv.textContent.indexOf('More of Me') != -1) {
                 // Raw rendering of buttons: | More of Me | subscribe |
                 // console.log('external link button is more_of_me');
                 btnFullScreenRight = '375px';
@@ -1671,7 +1671,7 @@
         });
     }
     function main() {
-        window.addEventListener('load', ()=>{
+        window.addEventListener('DOMContentLoaded', ()=>{
             const VIDEO_ID = getVideoId();
             if (VIDEO_ID === undefined){
                 return;

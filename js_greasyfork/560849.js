@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LIMS 메인 대시보드 - LRS 수행팀
 // @namespace    http://tampermonkey.net/
-// @version      1.2.7
+// @version      1.2.8
 // @description  LRS 수행팀 전용 (PacBio / ONT) 실시간 작업 현황 + 지능형 YLD 모니터링
 // @author       김재형
 // @match        https://lims3.macrogen.com/main.do*
@@ -274,6 +274,9 @@
                 updateUI(sessionCounts);
             }
 
+            const lrsPlatforms = ['REVIO', 'PROMETHION', 'SEQUEL', 'GRIDION', 'PACBIO', 'ONT'];
+            const lrsKits = ['ISO-SEQ', 'NANOPORE', 'HIFI'];
+
             if (type === 'all' || type === 'prep-qc') {
                 const queries = [
                     { id: 'status-sqc-dna', p: { "dataSet": { "frmWait": [{ "name": "searchGeneTypeCd", "value": "D" }, { "name": "searchSmplStatCd", "value": "D" }, { "name": "tabIndex", "value": "0" }] } } },
@@ -283,7 +286,11 @@
                 ];
                 for (const q of queries) {
                     const data = await fetchLimsData("https://lims3.macrogen.com/ngs/sample/retrieveWaits.do", q.p);
-                    sessionCounts[q.id] = data.filter(i => ['Revio', 'PromethION'].includes(i.pltfomNm || i.prfmPltfomNm)).length;
+                    sessionCounts[q.id] = data.filter(i => {
+                        const plat = (i.pltfomNm || i.prfmPltfomNm || i.prfmPltfomCd || '').toUpperCase();
+                        const kit = (i.libKitNm || '').toUpperCase();
+                        return lrsPlatforms.some(p => plat.includes(p)) || lrsKits.some(k => kit.includes(k));
+                    }).length;
                     updateUI(sessionCounts);
                 }
             }
@@ -291,10 +298,13 @@
             if (type === 'all' || type === 'lib-run') {
                 const libData = await fetchLimsData("https://lims3.macrogen.com/ngs/library/retrieveWaits.do", { "dataSet": { "frmWait": [{ "name": "searchLibTypeCd", "value": "PBL" }, { "name": "menuCd", "value": "NGS120100" }] } });
                 const stats = { total: 0, mb: 0, msg: 0, hifi: 0, s16: 0, amp: 0, knx: 0, ont: 0, etc: 0 };
-                libData.filter(i => ['Revio', 'PromethION'].includes(i.pltfomNm)).forEach(item => {
+                libData.filter(i => {
+                    const plat = (i.pltfomNm || i.prfmPltfomNm || i.prfmPltfomCd || '').toUpperCase();
+                    return lrsPlatforms.some(p => plat.includes(p));
+                }).forEach(item => {
                     const kit = (item.libKitNm || '').toUpperCase();
                     stats.total++;
-                    if (item.pltfomNm === 'PromethION') stats.ont++;
+                    if (item.pltfomNm && (item.pltfomNm.toUpperCase().includes('PROMETHION') || item.pltfomNm.toUpperCase().includes('ONT'))) stats.ont++;
                     else if (kit.indexOf('KINNEX') !== -1) stats.knx++;
                     else if (kit.indexOf('MICROBIAL') !== -1) stats.mb++;
                     else if (kit.indexOf('METASHOTGUN') !== -1) stats.msg++;
@@ -307,7 +317,11 @@
                 updateUI(sessionCounts);
 
                 const runData = await fetchLimsData("https://lims3.macrogen.com/ngs/amplification/retrieveNgsAmplificationSequalTwoList.do", { "dataSet": { "amplificationForm": [{ "name": "amplificationType", "value": "S2" }, { "name": "searchMode", "value": "PAC" }, { "name": "menuCd", "value": "NGS150500" }] } });
-                const revioRuns = runData.filter(i => (i.pltfomNm || i.prfmPltfomNm) === 'Revio');
+                const lrsPlatformsRun = ['REVIO', 'SEQUEL', 'PACBIO'];
+                const revioRuns = runData.filter(i => {
+                    const plat = (i.pltfomNm || i.prfmPltfomNm || '').toUpperCase();
+                    return lrsPlatformsRun.some(p => plat.includes(p));
+                });
                 sessionCounts['status-run-wait'] = revioRuns.length;
                 updateUI(sessionCounts);
             }
@@ -365,15 +379,10 @@
                 const newYldCount = yldData.length;
                 const prevYldCount = GM_getValue(LAST_YLD_COUNT_KEY, null);
 
-                // 모니터링 중 수량 변경 감지 시 알림
                 if (GM_getValue(MONITOR_YLD_KEY, false) && prevYldCount !== null && prevYldCount !== newYldCount) {
                     const diff = newYldCount - prevYldCount;
                     const diffText = diff > 0 ? `+${diff}건 증가` : `${diff}건 감소`;
-                    GM_notification({
-                        title: "🔔 YLD 수량 변경 감지",
-                        text: `${prevYldCount}건 → ${newYldCount}건 (${diffText})\n확인 후 모니터링을 종료하세요.`,
-                        timeout: 10000
-                    });
+                    GM_notification({ title: "🔔 YLD 수량 변경 감지", text: `${prevYldCount}건 → ${newYldCount}건 (${diffText})\n확인 후 모니터링을 종료하세요.`, timeout: 10000 });
                 }
 
                 GM_setValue(LAST_YLD_COUNT_KEY, newYldCount);
@@ -386,8 +395,11 @@
             GM_setValue(CACHE_KEY, sessionCounts);
             GM_setValue(CACHE_TIME_KEY, Date.now());
             updateUITimestamp(Date.now());
-        } catch (e) { console.error('[LRS] Error:', e); }
-        finally { if (btn) { btn.innerText = labelMap[type] || 'ALL'; btn.style.opacity = '1'; } }
+        } catch (e) {
+            console.error('[LRS] Error:', e);
+        } finally {
+            if (btn) { btn.innerText = labelMap[type] || 'ALL'; btn.style.opacity = '1'; }
+        }
     }
 
     function updateUITimestamp(ts) {

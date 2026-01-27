@@ -3,7 +3,7 @@
 // @namespace    http://torn.com/
 // @version      1.2
 // @description  Expands the layout to the edges of the screen for more market space
-// @author       srsbsns / Gemini
+// @author       srsbsns
 // @match        *://www.torn.com/page.php?sid=ItemMarket*
 // @match        *://www.torn.com/imarket.php*
 // @grant        GM_addStyle

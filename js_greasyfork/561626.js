@@ -238,23 +238,27 @@ html:not(.htf-show-grid-details) .gallery-content.layout-grid > div:not(.show-lo
     text-overflow: ellipsis;
 }
 
-/* --- 新規追加: 個別詳細表示ボタンのスタイル --- */
 .detail-toggle-btn {
+    display: none !important;
+}
+
+/* --- 新規追加: 個別詳細表示ボタンのスタイル --- */
+.gallery-content.layout-grid .detail-toggle-btn {
+    display: flex !important;
     position: absolute;
     right: 0;
     bottom: 0;
     top: 0;
     width: 28px;
-    display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     /* 文字と被ったときのために背景色をつける (右端を白くする) */
-    // background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1) 30%);
-    background: #ffffffe6;
+    //background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1) 30%);
+    background: #ffffffcc;
     z-index: 10;
 }
-.detail-toggle-btn:hover {
+.gallery-content.layout-grid .detail-toggle-btn:hover {
     background: #fff; /* ホバー時は完全に白く */
 }
 
@@ -262,10 +266,10 @@ html:not(.htf-show-grid-details) .gallery-content.layout-grid > div:not(.show-lo
 .detail-toggle-btn svg {
     width: 20px;
     height: 20px;
-    fill: #41464e;
+    fill: #6b7280;
     transition: transform 0.3s ease;
 }
-.detail-toggle-btn:hover svg {
+.gallery-content.layout-grid .detail-toggle-btn:hover svg {
     fill: #111;
 }
 
@@ -705,6 +709,15 @@ input:checked + .slider:before { transform: translateX(18px); }
 @keyframes slideDown {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- 新規追加: 詳細表示時 (全体ON または 個別ON) はタイトルの折り返しを有効化 --- */
+/* 条件: グリッド表示 かつ (全体詳細ON または 個別詳細ON) */
+html.htf-show-grid-details .gallery-content.layout-grid h1,
+.gallery-content.layout-grid > div.show-local-detail h1 {
+    white-space: normal !important; /* 折り返し有効化 */
+    overflow: visible !important;   /* 文字が切れないようにする */
+    height: auto !important;        /* 高さを自動調整 */
 }
 
         `;

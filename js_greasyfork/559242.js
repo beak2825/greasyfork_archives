@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Ghost Trades
 // @namespace    https://github.com/Rosti-dev
-// @version      1.0
+// @version      1.1
 // @description  Trade helper: adds a sticky floating Trade Fill button, adds Paste + P&S buttons (moved to bottom), removes initial text, and supports safe Enter/Space hotkey (keyup only)
 // @author       Rosti
 // @license      MIT License
@@ -27,7 +27,7 @@
     const PASTE_SEND_BUTTON_ID = 'paste-send-button';
 
     // Hotkeys
-    const activationKeys = ['Enter', ' ', 'Spacebar'];
+    const activationKeys = [' ', 'Spacebar'];
 
     // Optional: keep a light safety timer (MutationObserver + events should be enough)
     const SAFETY_INTERVAL_MS = 800;
@@ -46,6 +46,12 @@
     let lastUrl = location.href;
 
     let ensureQueued = false;
+
+    // Amount cache for swap bug prevention (ms)
+    const AMOUNT_CACHE_TIMEOUT = 500;
+    let cachedTradeId = null;
+    let cachedAmount = 0;
+    let cacheExpiry = 0;
 
     /***************************************************************************
      * UTILS
@@ -213,8 +219,27 @@
             moneyInTrade = Number.isFinite(parsed) ? parsed : 0;
         }
 
-        const amountToAdd = moneyInTrade > 0 ? (moneyOnHand + moneyInTrade) : moneyOnHand;
-        window.location.href = `trade.php#step=view&sub_step=addmoney2&ID=${tradeID}&amount=${amountToAdd}`;
+        // Calculate target total (URL amount parameter is TOTAL, not delta)
+        const targetAmount = moneyOnHand + moneyInTrade;
+
+        // Swap bug prevention: check cached amount from recent trigger
+        const now = Date.now();
+        const isSameTrade = (cachedTradeId === tradeID);
+        const cacheActive = (now < cacheExpiry);
+
+        if (isSameTrade && cacheActive && targetAmount < cachedAmount) {
+            // Would decrease the amount - block it (prevents swap bug)
+            log(`Blocked: target ${targetAmount} < cached ${cachedAmount}`);
+            return;
+        }
+
+        // Update cache (even if we proceed, update with new amount)
+        cachedTradeId = tradeID;
+        cachedAmount = targetAmount;
+        cacheExpiry = now + AMOUNT_CACHE_TIMEOUT;
+
+        // Execute the fill
+        window.location.href = `trade.php#step=view&sub_step=addmoney2&ID=${tradeID}&amount=${targetAmount}`;
     }
 
     /***************************************************************************
@@ -378,7 +403,7 @@
 
         // Prevent space scroll ONLY when we would accept the hotkey
         window.addEventListener('keydown', (event) => {
-            if (event.key !== ' ' && event.key !== 'Spacebar') return;
+            if (event.key !== ' ' && event.key !== 'Spacebar') return; //#if (event.key !== ' ' && event.key !== 'Spacebar') return;
             if (!fillButtonRef) return;
             if (isFocusBlocked()) return;
             event.preventDefault();
@@ -412,6 +437,15 @@
         const now = location.href;
         if (now === lastUrl) return;
         lastUrl = now;
+
+        // Reset cache when navigating to a different trade
+        const newTradeId = now.match(/ID=(\d+)/)?.[1] || null;
+        if (newTradeId !== cachedTradeId) {
+            cachedTradeId = null;
+            cachedAmount = 0;
+            cacheExpiry = 0;
+        }
+
         scheduleEnsureAll();
     }
 

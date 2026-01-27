@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Market Listing Binder
 // @namespace    torn-mugging-bot
-// @version      1.9.4
+// @version      1.9.6
 // @description  Sends market listing data to mugging bot server when viewing items
 // @author       BaM
 // @license      All Rights Reserved
@@ -21,7 +21,7 @@
 
     const SERVER_URL = 'http://157.180.17.47:3000';
     const BINDING_ENDPOINT = SERVER_URL + '/api/listing-binding';
-    const SCRIPT_VERSION = '1.9.4';
+    const SCRIPT_VERSION = '1.9.6';
 
     const MONITORED_ITEMS = new Set([
         1118, 1119, 1120, 1121, 1122,
@@ -41,7 +41,8 @@
         680, 681, 682, 683, 684,
         1307, 1308, 1309, 1310, 1311,
         1355, 1356, 1357, 1358, 1359,
-        366, 532, 533, 554, 555
+        366, 532, 533, 554, 555,
+        370, 544, 588, 815, 818, 865, 1029
     ]);
 
     const NON_UID_ITEMS = new Set([
@@ -49,7 +50,8 @@
         453, 455, 456, 457, 458, 459,
         103, 283, 367, 428,
         106, 329, 330, 331, 421,
-        366, 532, 533, 554, 555
+        366, 532, 533, 554, 555,
+        370, 544, 588, 815, 818, 865, 1029
     ]);
 
     let isEnabled = GM_getValue('binderEnabled', true);
@@ -106,7 +108,7 @@
         saveState('binderEnabled', isEnabled);
         updateUI();
         if (!isSilentMode) {
-            showFlash(isEnabled ? '✅ Binder Enabled' : '⏸️ Binder Disabled', isEnabled ? '#28a745' : '#6c757d');
+            showFlash(isEnabled ? '🫡 Binder Enabled' : '⏸️ Binder Disabled', isEnabled ? '#28a745' : '#6c757d');
         }
     }
 
@@ -357,7 +359,7 @@
         if (isSilentMode) return;
 
         const lines = [];
-        if (result.updated > 0) lines.push('✅ Bound: ' + result.updated);
+        if (result.updated > 0) lines.push('🫡 Bound: ' + result.updated);
         if (result.alreadyBound > 0) lines.push('🔗 Already bound: ' + result.alreadyBound);
         if (result.anonymousTracked > 0) lines.push('👁️ New anonymous: ' + result.anonymousTracked);
         if (result.pending > 0) lines.push('⏳ Queued: ' + result.pending);
@@ -366,7 +368,7 @@
         if (result.errors > 0) lines.push('❌ Errors: ' + result.errors);
         if (batchErrors > 0) lines.push('⚠️ Failed batches: ' + batchErrors);
 
-        const message = lines.length > 0 ? lines.join('\n') : '✅ Request processed';
+        const message = lines.length > 0 ? lines.join('\n') : '🫡 Request processed';
         const isSuccess = (result.updated > 0 || result.alreadyBound > 0 || result.anonymousTracked > 0 || result.pending > 0) && result.errors === 0 && result.rejected === 0 && result.notMonitored === 0 && batchErrors === 0;
         const duration = isSuccess ? 500 : 3000;
         const allSkipped = (result.rejected + result.notMonitored) === result.processed && result.updated === 0 && result.alreadyBound === 0 && result.anonymousTracked === 0;
@@ -381,6 +383,7 @@
     }
 
     createGUI();
-    console.log('✅ Torn Market Listing Binder v' + SCRIPT_VERSION + ' loaded (' + (isEnabled ? 'ENABLED' : 'DISABLED') + (isSilentMode ? ' - SILENT' : '') + ') - Monitoring ' + MONITORED_ITEMS.size + ' items');
+    console.log('🫡 Torn Market Listing Binder v' + SCRIPT_VERSION + ' loaded (' + (isEnabled ? 'ENABLED' : 'DISABLED') + (isSilentMode ? ' - SILENT' : '') + ') - Monitoring ' + MONITORED_ITEMS.size + ' items');
 })();
+
 

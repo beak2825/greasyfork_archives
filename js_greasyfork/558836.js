@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         LinuxDo 用户关注标签
 // @namespace    https://linux.do/
-// @version      1.1.0
+// @version      1.2.0
 // @description  在帖子中显示用户关注标签（互关/关注/粉丝），支持实时更新
 // @author       ChiGamma
 // @license      Fair License
-// @match        https://linux.do/t/*
+// @match        https://linux.do/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
@@ -95,12 +95,15 @@
     // ==================== API ====================
     const fetchUserList = async (url) => {
         try {
+            const meta = document.querySelector('meta[name="csrf-token"]');
+            const headers = {
+                'X-CSRF-Token': meta ? meta.content : ''
+            };
+
             const response = await fetch(url, {
                 method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                headers: headers,
+                credentials: 'include'
             });
 
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -139,6 +142,7 @@
                 if (userList.length < limit) break;
                 offset += limit;
             } catch (e) {
+                if (offset === 0) throw e;
                 break;
             }
         }
@@ -147,14 +151,20 @@
     };
 
     const fetchRelationships = async (username) => {
-        const [following, followers] = await Promise.all([
-            fetchAllPages(`https://linux.do/u/${username}/follow/following.json`),
-            fetchAllPages(`https://linux.do/u/${username}/follow/followers.json`)
-        ]);
+        try {
+            const [following, followers] = await Promise.all([
+                fetchAllPages(`https://linux.do/u/${username}/follow/following.json`),
+                fetchAllPages(`https://linux.do/u/${username}/follow/followers.json`)
+            ]);
 
-        setCache(following, followers);
-        console.log(`[FollowerBadge] Cached ${following.size} following, ${followers.size} followers`);
-        return { following, followers };
+            setCache(following, followers);
+            console.log(`[FollowerBadge] Cached ${following.size} following, ${followers.size} followers`);
+            return { following, followers };
+        } catch (e) {
+            console.error(`[FollowerBadge] Fetch failed. Suspending fetches.`);
+            GM_setValue(CONFIG.CACHE_KEY_TIMESTAMP, Date.now());
+            return null;
+        }
     };
 
     // ==================== Badge ====================

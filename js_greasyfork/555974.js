@@ -3,7 +3,7 @@
 // @name:en            Article Image Queue Downloader
 // @name:zh-CN         图集队列批量下载器
 // @name:zh-TW         圖集隊列批量下載器
-// @version            2026.1.2
+// @version            2026.1.22
 // @description        爬圖神器之一，寫真、本子、漫畫，都到我碗裡來! 200+個規則，支援400+個網站，支援推送給Aria2進行下載。
 // @description:en     Support for over 400 sites! batch download of images from articles using a queue, Supports pushing to Aria2 for download.
 // @description:zh-CN  爬图神器之一，写真、本子、漫画，都到我碗里来! 200+个规则，支援400+个网站，支援推送给Aria2进行下载。
@@ -2185,14 +2185,13 @@
 		getLists: "A",
 		getSrcs: (url) => {
 			let [galleryId] = url.match(/\d+/);
-			let galleryUrl = `/photos-gallery-aid-${galleryId}.html`;
-			return ajax.text(galleryUrl).then(text => {
-				text = text.replaceAll("\\", "").replaceAll("fast_img_host+", "");
-				let s = text.indexOf("[{");
-				let e = text.indexOf(";", s);
-				text = text.slice(s, e);
-				let array = fn.run(text);
-				return array.map(e => e.url).filter(e => !e.includes("/themes/"));
+			let dataUrl = `/photos-item-aid-${galleryId}.html`;
+			return ajax.text(dataUrl).then(text => {
+				let array = strToArray(text, "page_url");
+				return array.map(url => fn.rs(url, [
+					[/^http:\/\//, "https://"],
+					[/^\/\//, "https://"]
+				]));
 			});
 		}
 	}, {
@@ -3375,18 +3374,25 @@
 			await get();
 			return chapterListData.map(({
 				chapterName,
-				codes
+				id
 			}) => ({
 				cover,
 				text: chapterName,
-				url: /mangaread/ + codes
+				mid: code,
+				cid: id,
+				url: /mangaread/ + code + "/" + id
 			}));
 		},
-		getSrcs: (url) => {
+		getSrcs: (url, item) => {
+			let {
+				mid,
+				cid
+			} = item.dataset;
 			let code = url.split("/").at(-1);
 			let params = new URLSearchParams({
-				code,
-				v: "v3.1818134"
+				code: mid,
+				cid,
+				v: "v3.1919111"
 			}).toString();
 			return ajax.json("/v2.0/apis/manga/reading?" + params, {
 				referrer: url,

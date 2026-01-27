@@ -2,7 +2,7 @@
 // @name         Milovana: Sidebar
 // @namespace    wompi72
 // @author       wompi72
-// @version      1.0.9
+// @version      1.0.10
 // @description  Milovana Sidebar
 // @match        *://milovana.com/*
 // @grant        none
@@ -48,10 +48,11 @@ function getPageData() {
             const titleElement = document.querySelector('#tease_title');
             if (!titleElement) return null;
 
-            const autorElement = titleElement.querySelector('.tease_author');
+            const titleClone = titleElement.cloneNode(true);
+            const autorElement = titleClone.querySelector('.tease_author');
             if (autorElement) autorElement.remove();
 
-            return titleElement.textContent.trim();
+            return titleClone.textContent.trim();
         }
     }
 
@@ -304,7 +305,7 @@ class Sidebar {
         if (!section) return;
 
         section.indicator.textContent = '▶ ';
-        section.content.style.display = 'none';
+        section.postContainer.style.display = 'none';
         settings.teaseSettings.SECTIONS_COLLAPSED[key] = true;
         settings.saveTeaseSettings();
     }
@@ -314,7 +315,7 @@ class Sidebar {
         if (!section) return;
 
         section.indicator.textContent = '▼ ';
-        section.content.style.display = 'flex';
+        section.postContainer.style.display = 'flex';
         settings.teaseSettings.SECTIONS_COLLAPSED[key] = false;
         settings.saveTeaseSettings();
     }
@@ -383,7 +384,7 @@ class Sidebar {
             node: sectionEl,
             header: header,
             indicator: indicator,
-            content: content
+            postContainer: content
         };
 
         let collapsed = settings.teaseSettings.SECTIONS_COLLAPSED[key] !== false;
@@ -410,7 +411,7 @@ class Sidebar {
     }
 
     getSectionContent(key) {
-        return this.sections[key]?.content;
+        return this.sections[key]?.postContainer;
     }
 
     addButton(label, callback, parent, classes = []) {

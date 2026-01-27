@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name        TORN War Helper
 // @namespace   finally.torn.warhelper
-// @version     20251222.082022+5bd3654
+// @version     20251225
 // @description Various helpers for warring
-// @author      finally [2060206], seintz [2460991], Shade [3129695], Kindly [1956699]
+// @author      finally [2060206], seintz [2460991], Shade [3129695], Kindly [1956699], Hwa [2466470]
 // @license     GNU GPLv3
 // @run-at      document-start
 // @match       https://www.torn.com/factions.php*
@@ -20,7 +20,7 @@
 // @downloadURL https://update.greasyfork.org/scripts/563238/TORN%20War%20Helper.user.js
 // @updateURL https://update.greasyfork.org/scripts/563238/TORN%20War%20Helper.meta.js
 // ==/UserScript==
-
+ 
 ! function() {
     const t = "undefined" != typeof unsafeWindow ? unsafeWindow : window;
     t.__WARHELPER_RUNNING || (t.__WARHELPER_RUNNING = !0, (() => {
@@ -39,7 +39,7 @@
             }
         };
         var e = window.unsafeWindow ?? window;
-
+ 
         function s(t) {
             try {
                 return JSON.parse(t)
@@ -47,20 +47,20 @@
                 return
             }
         }
-
+ 
         function n(t) {
             if (!document.head) return void document.addEventListener("DOMContentLoaded", () => n(t));
             if (GM_addStyle) return void GM_addStyle(t);
             const e = document.createElement("style");
             e.type = "text/css", e.innerText = t, document.head.appendChild(e)
         }
-
+ 
         function r() {
             const t = [128512, 128591],
                 e = Math.floor(Math.random() * (t[1] - t[0] + 1)) + t[0];
             return String.fromCodePoint(e)
         }
-
+ 
         function A(t, e) {
             if (!Array.isArray(e)) return A(t, e.split("."));
             let s = t;
@@ -70,12 +70,12 @@
             }
             return !0
         }
-
+ 
         function a(t) {
             let e = Math.round(Date.now() / 1e3) - t;
             return e < 0 ? "now" : e > 31536e3 ? `${Math.floor(e/31536e3)} years ago` : e > 2592e3 ? `${Math.floor(e/2592e3)} months ago` : e > 86400 ? `${Math.floor(e/86400)} days ago` : e > 3600 ? `${Math.floor(e/3600)} hours ago` : e > 60 ? `${Math.floor(e/60)} minutes ago` : `${Math.floor(e)} seconds ago`
         }
-
+ 
         function o(t) {
             const e = t - Math.floor(Date.now() / 1e3);
             if (e <= 0) return "Okay";
@@ -85,7 +85,7 @@
             let A = "";
             return s > 0 && (A += `${s.toString().padStart(2,"0")}:`), A += `${n.toString().padStart(2,"0")}:${r.toString().padStart(2,"0")}`, A
         }
-
+ 
         function i(t, e, s = ["K", "M", "B", "T", "Q"]) {
             for (let n = 0; n < s.length; n++) {
                 if ((t /= 1e3) >= 1e3 && n < s.length - 1) continue;
@@ -93,15 +93,15 @@
             }
             return "?"
         }
-
+ 
         function l(t) {
             return -1 !== window.location.href.indexOf(t)
         }
-
+ 
         function c() {
             return l("war.php")
         }
-
+ 
         function d({
             section: e,
             endpoint: n,
@@ -278,6 +278,55 @@
                     void 0 === this.onChangeHandlers[t] && (this.onChangeHandlers[t] = []), this.onChangeHandlers[t].push(e)
                 }
             },
+            w = class {
+                static {
+                    this.lastRequest = 0
+                }
+                static {
+                    this.scriptName = "finally_Script"
+                }
+                static {
+                    localStorage.setItem("tdup.battleStatsPredictor.IsBSPEnabledOnPage_Faction", "false"), this.key = p.get("bsp_key") || "", this.expires = p.get("bsp_expires") || null, p.onChange("bsp_key", (t, e) => {
+                        this.key = e, this.expires = null, p.set("bsp_expires", null)
+                    })
+                }
+                static {
+                    this.pendingRequests = new Map
+                }
+                static async getSpy(e) {
+                    const n = `bsp_user_${e}`,
+                        r = h.get(n);
+                    if (r) return r;
+                    if (!this.key) return Promise.resolve(void 0);
+                    if (this.expires && new Date(this.expires) < new Date) return Promise.resolve(void 0);
+                    const A = Math.max(600 - (Date.now() - this.lastRequest), 0);
+                    await async function(t) {
+                        return new Promise(e => setTimeout(e, t))
+                    }(A), this.lastRequest = Date.now();
+                    const a = this.pendingRequests.get(n);
+                    if (a) return a;
+                    const o = new Promise((r, A) => {
+                        t.request(`http://www.lol-manager.com/api/battlestats/${this.key}/${e}/${this.scriptName}`).then(async t => {
+                            const a = s(t);
+                            if (a?.SubscriptionEnd && (p.set("bsp_expires", `${a?.SubscriptionEnd}Z`), new Date(`${a.SubscriptionEnd}Z`) < new Date)) return void r(void 0);
+                            if (!a?.TBS) return void A(new Error("No TBS found"));
+                            const o = {
+                                type: 2,
+                                userId: e,
+                                score: a.Score,
+                                total: a.TBS,
+                                timestamp: new Date(`${a.PredictionDate}Z`).getTime() / 1e3
+                            };
+                            h.set(n, o, h.days(7)), r(o)
+                        }).catch(t => {
+                            A(t)
+                        }).finally(() => {
+                            this.pendingRequests.delete(n)
+                        })
+                    });
+                    return this.pendingRequests.set(n, o), o
+                }
+            },
             u = class t {
                 static {
                     this.handlers = []
@@ -383,29 +432,164 @@
                     this.hospTimestamp = 0
                 }
                 static {
+                    this.status = 0
+                }
+                static {
+                    this.lastAction = 0
+                }
+                static {
                     this.titleNode = null
                 }
                 static {
                     this.init()
                 }
-                static init() {
-                    (l("sid=attack") || l("sid=getInAttack")) && (this.enemyUserId = +(new URL(window?.location?.href || "http://.").searchParams.get("user2ID") || 0), this.loadHospTime(), u.onMessage(0, this.handleMessage, "sid=attackData"), g.onAdd("[class^='colored__'] [class^='title__']", t => this.titleNode = t), requestAnimationFrame(() => this.updateTimers()))
-                }
-                static handleMessage(t) {
-                    return t?.DB && t?.startErrorTitle && -1 !== t?.startErrorTitle.indexOf("hospital") ? (delete t?.startErrorTitle, delete t?.DB?.error, t.DB.startButtonTitle = "Start fight", t) : t
-                }
+static init() {
+    // Only run on the attack page
+    if (!(l("sid=attack") || l("sid=getInAttack"))) return;
+ 
+    // Get enemy user ID from URL
+    const urlParams = new URL(window?.location?.href || "http://.");
+    this.enemyUserId = +(urlParams.searchParams.get("user2ID") || 0);
+    // Initial load of hospital data
+    this.loadHospTime();
+ 
+    // Listen for attack-related server messages
+    u.onMessage(0, this.handleMessage, "sid=attackData");
+ 
+    // Find the title node in the DOM
+    g.onAdd("[class*='titleContainer']", (node) => {
+        this.titleNode = node;
+    });
+ 
+    let raw = Number(h?.get(`tornstats_user_${this.enemyUserId}`)?.total);
+    let isPredicted = false;
+ 
+    if (!Number.isFinite(raw)) {
+        raw = Number(h?.get(`bsp_user_${this.enemyUserId}`)?.total);
+        isPredicted = Number.isFinite(raw);
+ 
+        if (!isPredicted) {
+            const stored = localStorage.getItem(
+                `tdup.battleStatsPredictor.cache.prediction.${this.enemyUserId}`
+            );
+ 
+            const parsed = stored ? JSON.parse(stored) : null;
+            raw = Number(parsed?.TBS);
+            isPredicted = Number.isFinite(raw);
+        }
+    }
+ 
+    if (!Number.isFinite(raw)) {
+        this.total_stats = "";
+        return;
+    }
+ 
+    const suffix =
+          raw >= 1e12 ? "t" :
+    raw >= 1e9  ? "b" :
+    raw >= 1e6  ? "m" :
+    raw >= 1e3  ? "k" : "";
+ 
+    const divisor = { t:1e12, b:1e9, m:1e6, k:1e3 }[suffix] || 1;
+    const scaled = raw / divisor;
+ 
+    // digits before decimal (1–3)
+    const digits = scaled >= 100 ? 3 : scaled >= 10 ? 2 : 1;
+    const decimals = Math.max(0, 3 - digits);
+ 
+    const value = suffix
+    ? scaled.toFixed(decimals).replace(/\.0+$/, "")
+    : Math.round(raw).toString();
+ 
+    this.total_stats = `${value}${suffix}${isPredicted ? "*" : ""}`;
+ 
+    // Start the visual timer updates
+    requestAnimationFrame(() => this.updateTimers());
+ 
+    // only refreshes status if you are viewing the page & actively on it to avoid API overload
+    const reloadHospTime = () => {
+        if (document.visibilityState === "visible" && document.hasFocus()) {
+            this.loadHospTime();
+        }
+    };
+ 
+    // Periodically refresh hospital data from the server (every 30 seconds from API)
+    // **FOR TRC PEOPLE!!!** CHANGE NUMBER IN FRONT OF `* 1_000` TO HOWEVER MANY SECONDS YOU WANT!!!
+    setInterval(() => {
+        reloadHospTime();
+    }, 3 * 1_000);
+}
+static handleMessage(t) {
+    if (!t?.DB) return t;
+ 
+    const errorTitle = t.startErrorTitle?.toLowerCase?.() ?? "";
+ 
+    const isBlockingError =
+        errorTitle.includes("hospital") ||
+        errorTitle.includes("jail") ||
+        errorTitle.includes("travel");
+ 
+    // If NO blocking error → force fight button
+    if (!isBlockingError) {
+        // check if any hits have been made, force JOIN fight or start fight if no hits
+        const currentFightStatistics = t?.DB?.currentFightStatistics
+        if (currentFightStatistics && Object.keys(currentFightStatistics).length > 0) {
+            delete t.startErrorTitle;
+            delete t.DB.error;
+            t.DB.startButtonTitle = "Join fight";
+        } else {
+            delete t.startErrorTitle;
+            delete t.DB.error;
+            t.DB.startButtonTitle = "Start fight";
+        }
+    }
+ 
+    return t;
+}
                 static loadHospTime() {
                     0 != this.enemyUserId && d({
                         section: "user",
-                        id: this.enemyUserId
+                        id: this.enemyUserId,
+                        parameters: {
+                            timestamp: Date.now()
+                            }
                     }).then(t => {
-                        "Hospital" === t?.status?.state && (this.hospTimestamp = t?.status?.until)
+                            if (!this.titleNode) {
+                                const observer = new MutationObserver(() => {
+                                    const node = document.querySelector("div[class^='titleContainer'] h4");
+                                    if (node) {
+                                        this.titleNode = node;
+                                        observer.disconnect();
+                                    }
+                                });
+                                observer.observe(document.body, { childList: true, subtree: true });
+                            }
+                        "Hospital" === t?.profile?.status?.state && (this.hospTimestamp = t?.profile?.status?.until)
+                        this.status = t?.profile?.last_action?.status
+                        this.lastAction = t?.profile?.last_action?.relative
                     }).catch(t => {
                         console.error(t)
                     })
                 }
                 static updateTimers() {
-                    null === this.titleNode || "" != this.titleNode.innerHTML && !this.titleNode.innerHTML.startsWith("Hospital: ") || (this.titleNode.innerHTML = `Hospital: ${o(this.hospTimestamp)}`), requestAnimationFrame(() => this.updateTimers())
+                    let statusColor = "grey"; // default
+                    if (this.status) {
+                        const s = this.status.toLowerCase();
+                        if (s === "online") statusColor = "green";
+                        else if (s === "idle") statusColor = "yellow";
+                        else if (s === "offline") statusColor = "grey";
+                    }
+                    const statusHTML = `<span style="color: ${statusColor};">●</span>`;
+                    const lastActionHTML = `(${this.lastAction || "Unknown"})`;
+                    const hospText = `<span style="color: red;">Hospital: ${o(this.hospTimestamp)}</span> | ${this.total_stats} ${statusHTML} ${lastActionHTML} `;
+ 
+                    if (this.titleNode && this.hospTimestamp >= Math.floor(Date.now() / 1000)) {
+                        this.titleNode.innerHTML = hospText;
+                    }
+                    else if (this.titleNode) {
+                        this.titleNode.innerHTML = `Attacking | ${this.total_stats} ${statusHTML} ${lastActionHTML} `;
+                    }
+                    null === this.titleNode || "" != this.titleNode.innerHTML && !this.titleNode.innerHTML.startsWith("Hospital: ") || (this.titleNode.innerHTML = hospText), requestAnimationFrame(() => this.updateTimers())
                 }
             }, class t extends EventTarget {
                 static {
@@ -503,55 +687,6 @@
                         })
                     });
                     return this.pendingRequests.set(n, A), A
-                }
-            },
-            w = class {
-                static {
-                    this.lastRequest = 0
-                }
-                static {
-                    this.scriptName = "finally_Script"
-                }
-                static {
-                    localStorage.setItem("tdup.battleStatsPredictor.IsBSPEnabledOnPage_Faction", "false"), this.key = p.get("bsp_key") || "", this.expires = p.get("bsp_expires") || null, p.onChange("bsp_key", (t, e) => {
-                        this.key = e, this.expires = null, p.set("bsp_expires", null)
-                    })
-                }
-                static {
-                    this.pendingRequests = new Map
-                }
-                static async getSpy(e) {
-                    const n = `bsp_user_${e}`,
-                        r = h.get(n);
-                    if (r) return r;
-                    if (!this.key) return Promise.resolve(void 0);
-                    if (this.expires && new Date(this.expires) < new Date) return Promise.resolve(void 0);
-                    const A = Math.max(600 - (Date.now() - this.lastRequest), 0);
-                    await async function(t) {
-                        return new Promise(e => setTimeout(e, t))
-                    }(A), this.lastRequest = Date.now();
-                    const a = this.pendingRequests.get(n);
-                    if (a) return a;
-                    const o = new Promise((r, A) => {
-                        t.request(`http://www.lol-manager.com/api/battlestats/${this.key}/${e}/${this.scriptName}`).then(async t => {
-                            const a = s(t);
-                            if (a?.SubscriptionEnd && (p.set("bsp_expires", `${a?.SubscriptionEnd}Z`), new Date(`${a.SubscriptionEnd}Z`) < new Date)) return void r(void 0);
-                            if (!a?.TBS) return void A(new Error("No TBS found"));
-                            const o = {
-                                type: 2,
-                                userId: e,
-                                score: a.Score,
-                                total: a.TBS,
-                                timestamp: new Date(`${a.PredictionDate}Z`).getTime() / 1e3
-                            };
-                            h.set(n, o, h.days(7)), r(o)
-                        }).catch(t => {
-                            A(t)
-                        }).finally(() => {
-                            this.pendingRequests.delete(n)
-                        })
-                    });
-                    return this.pendingRequests.set(n, o), o
                 }
             },
             y = class {
@@ -655,7 +790,7 @@
                 userId: e,
                 timestamp: 0
             }, t), {});
-
+ 
             function n() {
                 return Object.values(s).every(t => 0 !== t.type)
             }
@@ -726,7 +861,7 @@
                 this.init()
             }
             static init() {
-                (l("factions.php") || c()) && (g.onAdd(".members-list:not(:has(.__warhelper))", t => this.handleNode(t)), m.on("UserStatusChanged", () => this.sort()), requestAnimationFrame(() => this.updateTimers()), h.onBust(() => this.reloadBattleStats()), n('\n.member div[class^="factionWrap_"],\n.member div[class^="honorWrap_"] img,\n.member div[class^="honorWrap_"] .honor-text-svg {\n  display: none !important;\n}\n.member div[class^="honorWrap_"] .honor-text {\n  position: relative;\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n  color: inherit;\n  stroke: inherit;\n}\n.member div[class^="honorWrap_"] a {\n  text-decoration: none;\n}\n\n.member {\n  overflow: hidden;\n}\n@media screen and (max-width: 784px) {\n  .member {\n    width: 100px !important;\n  }\n}\n\n.members-cont .level:not(.__warhelper) {\n  display: none !important;\n}\n\n.tt-stats-estimate {\n  display: none !important;\n}\n\n.level.__warhelper,\n.lvl.__warhelper {\n  display: block !important;\n  position: relative;\n}\n\n.level.__warhelper,\n.lvl.__warhelper {\n  width: 40px !important;\n  justify-content: right !important;\n}\n\n.faction-info-wrap .level.__warhelper,\n.faction-info-wrap .lvl.__warhelper {\n  width: 50px !important;\n  overflow: hidden;\n}\n\n.faction-info-wrap .__warhelper_total {\n  line-height: 36px;\n}\n\n.__warhelper_tooltip {\n  font-family: monospace;\n}\n\n.__warhelper_tooltip td {\n  color: var(--default-gray-6-color);\n}\n\n.__warhelper_tooltip td:nth-child(2) {\n  padding-left: 5px;\n  text-align: right;\n}\n\n.__warhelper_total.str {\n  color: #CC6666;\n}\n\n.__warhelper_total.def {\n  color: #6699CC;\n}\n\n.__warhelper_total.spd {\n  color: #99CC66;\n}\n\n.__warhelper_total.dex {\n  color: #9966CC;\n}\n\n.__warhelper_bstype {\n  position: absolute;\n  top: 0;\n  left: 0;\n  color: #ddd;\n  text-align: center;\n  font-family: monospace;\n  font-weight: bold;\n  line-height: 14px;\n  padding-top: 1px;\n  padding-left: 1px;\n  padding-right: 10px;\n  padding-bottom: 10px;\n  background-color: #999999;\n  clip-path: polygon(0 0, 100% 0, 100% 0%, 0% 100%);\n}\n\n.__warhelper_bstype.T {\n  background-color: #663399;\n}\n\n.__warhelper_bstype.B {\n  background-color: #336699;\n}\n\n.__warhelper_bstype.Y {\n  background-color: #669966;\n}\n\n.__warhelper_bstype.YE {\n  background-color: #9c9c00;\n}\n\n.__warhelper_bstype.F {\n  background-color: #a65e2e;\n}\n\n.__warhelper_compare {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: 3px;\n  background: linear-gradient(to right, var(--color) var(--fill), transparent var(--fill));\n}\n\ndiv[class^="sortIcon__"] {\n  display: none !important;\n}\n\n.__warhelper_sort {\n  overflow: visible !important;\n}\n\n.__warhelper_sort.asc div[class^="sortIcon__"],\n.__warhelper_sort.desc div[class^="sortIcon__"] {\n  display: block !important;\n  border: none !important;\n}\n\n.__warhelper_sort.asc div[class^="sortIcon__"]:after {\n  border-top: none !important;\n  border-bottom: 5px solid black !important;\n}\n.__warhelper_sort.desc div[class^="sortIcon__"]:after {\n  top: 0px !important;\n  border-top: 5px solid black !important;\n  border-bottom: none !important;\n}\n\n.__warhelper_favorite {\n  height: 19px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n}\n\n.__warhelper_favorite.active,\n.__warhelper_favorite:hover {\n  color: #daa520;\n}\n\n.__warhelper_bs_loading {\n  width: 100%;\n  height: 100%;\n background-size: contain;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n'))
+                (l("factions.php") || c()) && (g.onAdd(".members-list:not(:has(.__warhelper))", t => this.handleNode(t)), m.on("UserStatusChanged", () => this.sort()), requestAnimationFrame(() => this.updateTimers()), h.onBust(() => this.reloadBattleStats()), n('\n.member div[class^="factionWrap_"],\n.member div[class^="honorWrap_"] img,\n.member div[class^="honorWrap_"] .honor-text-svg {\n  display: none !important;\n}\n.member div[class^="honorWrap_"] .honor-text {\n  position: relative;\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n  color: inherit;\n  stroke: inherit;\n}\n.member div[class^="honorWrap_"] a {\n  text-decoration: none;\n}\n\n.member {\n  overflow: hidden;\n}\n@media screen and (max-width: 784px) {\n  .member {\n    width: 100px !important;\n  }\n}\n\n.members-cont .level:not(.__warhelper) {\n  display: none !important;\n}\n\n.tt-stats-estimate {\n  display: none !important;\n}\n\n.level.__warhelper,\n.lvl.__warhelper {\n  display: block !important;\n  position: relative;\n}\n\n.level.__warhelper,\n.lvl.__warhelper {\n  width: 40px !important;\n  justify-content: right !important;\n}\n\n.faction-info-wrap .level.__warhelper,\n.faction-info-wrap .lvl.__warhelper {\n  width: 50px !important;\n  overflow: hidden;\n}\n\n.faction-info-wrap .__warhelper_total {\n  line-height: 36px;\n}\n\n.__warhelper_tooltip {\n  font-family: monospace;\n}\n\n.__warhelper_tooltip td {\n  color: var(--default-gray-6-color);\n}\n\n.__warhelper_tooltip td:nth-child(2) {\n  padding-left: 5px;\n  text-align: right;\n}\n\n.__warhelper_total.str {\n  color: #CC6666;\n}\n\n.__warhelper_total.def {\n  color: #6699CC;\n}\n\n.__warhelper_total.spd {\n  color: #99CC66;\n}\n\n.__warhelper_total.dex {\n  color: #9966CC;\n}\n\n.__warhelper_bstype {\n  position: absolute;\n  top: 0;\n  left: 0;\n  color: #ddd;\n  text-align: center;\n  font-family: monospace;\n  font-weight: bold;\n  line-height: 14px;\n  padding-top: 1px;\n  padding-left: 1px;\n  padding-right: 10px;\n  padding-bottom: 10px;\n  background-color: #999999;\n  clip-path: polygon(0 0, 100% 0, 100% 0%, 0% 100%);\n}\n\n.__warhelper_bstype.T {\n  background-color: #663399;\n}\n\n.__warhelper_bstype.B {\n  background-color: #336699;\n}\n\n.__warhelper_bstype.Y {\n  background-color: #669966;\n}\n\n.__warhelper_bstype.YE {\n  background-color: #9c9c00;\n}\n\n.__warhelper_bstype.F {\n  background-color: #a65e2e;\n}\n\n.__warhelper_compare {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: 6px;\n  background: linear-gradient(to right, var(--color) var(--fill), transparent var(--fill));\n}\n\ndiv[class^="sortIcon__"] {\n  display: none !important;\n}\n\n.__warhelper_sort {\n  overflow: visible !important;\n}\n\n.__warhelper_sort.asc div[class^="sortIcon__"],\n.__warhelper_sort.desc div[class^="sortIcon__"] {\n  display: block !important;\n  border: none !important;\n}\n\n.__warhelper_sort.asc div[class^="sortIcon__"]:after {\n  border-top: none !important;\n  border-bottom: 5px solid black !important;\n}\n.__warhelper_sort.desc div[class^="sortIcon__"]:after {\n  top: 0px !important;\n  border-top: 5px solid black !important;\n  border-bottom: none !important;\n}\n\n.__warhelper_favorite {\n  height: 19px;\n  font-size: 18px;\n  line-height: 1;\n  cursor: pointer;\n}\n\n.__warhelper_favorite.active,\n.__warhelper_favorite:hover {\n  color: #daa520;\n}\n\n.__warhelper_bs_loading {\n  width: 100%;\n  height: 100%;\n background-size: contain;\n  background-repeat: no-repeat;\n  background-position: center;\n}\n'))
             }
             static {
                 this.sortFields = ["id", "member", "members", "bs", "points", "status"]

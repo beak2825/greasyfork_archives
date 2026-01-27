@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         ALIANAH/HALO
+// @name         HALO Armory Tracker Pro (Alien UI) - Torn Log ID Fix
 // @namespace    http://tampermonkey.net/
 // @version      HALO.6.1
 // @description  Faction armory tracker with Torn log ID deduplication
@@ -10,8 +10,8 @@
 // @grant        GM_setValue
 // @grant        GM_deleteValue
 // @connect      api.torn.com
-// @downloadURL https://update.greasyfork.org/scripts/560935/ALIANAHHALO.user.js
-// @updateURL https://update.greasyfork.org/scripts/560935/ALIANAHHALO.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29%20-%20Torn%20Log%20ID%20Fix.user.js
+// @updateURL https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29%20-%20Torn%20Log%20ID%20Fix.meta.js
 // ==/UserScript==
 
 (function(){
@@ -23,7 +23,7 @@ const DEBUG_MODE = false;
 /* ---------- CONFIG ---------- */
 const factionIds = ["48418"];
 const REFRESH_MS = 45000;
-const V2_INTERVAL_MS = 3 * 60 * 60 * 1000;
+const V2_INTERVAL_MS = 4 * 60 * 60 * 1000;
 const PRICE_CACHE_TTL = 30 * 60 * 1000;
 const PROCESSED_LOGS_PRUNE_DAYS = 7;
 const V2_MARKERS_PRUNE_DAYS = 3;
@@ -162,6 +162,13 @@ function debugLog(...args) {
 }
 
 /* ---------- HELPER FUNCTIONS ---------- */
+function debugLog(...args) {
+    if (DEBUG_MODE) {
+        console.log("HALO DEBUG:", ...args);
+    }
+}
+
+/* ---------- HELPER FUNCTIONS ---------- */
 function stripTags(str){ return str ? str.replace(/<[^>]*>/g,"").trim() : ""; }
 function normalize(name){
     if(!name) return "";
@@ -196,7 +203,7 @@ function formatTimeDate(ts){
 }
 
 function daysAgo(timestamp) {
-    return (Date.now() - timestamp) / (1000 * 60 * 60 * 24);
+    return (Date.now() - timestamp) / (1000 * 60 * 60 * 72);
 }
 
 function isFree(itemName){

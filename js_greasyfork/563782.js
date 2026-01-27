@@ -1,62 +1,65 @@
 // ==UserScript==
-// @name         Axis - Ultimate Patient Form Tool (v10.2)
+// @name         Axis - Ultimate Patient Form Tool (v10.3)
 // @namespace    http://tampermonkey.net/
-// @version      10.2
-// @description  Shift + Right Click for Settings
+// @version      10.3
+// @description  Updated for Alphanumeric UUID support
 // @author       Gemini
 // @match        https://axis.thejoint.com/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @license      C3GPS
-// @downloadURL https://update.greasyfork.org/scripts/563782/Axis%20-%20Ultimate%20Patient%20Form%20Tool%20%28v102%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563782/Axis%20-%20Ultimate%20Patient%20Form%20Tool%20%28v102%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563782/Axis%20-%20Ultimate%20Patient%20Form%20Tool%20%28v103%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563782/Axis%20-%20Ultimate%20Patient%20Form%20Tool%20%28v103%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
     const BUTTON_ID = "tm-google-form-button";
-    const TARGET_URL_START = "https://axis.thejoint.com/#Contacts/";
-
+    // Modified to be more flexible with the Contacts URL structure
+    const TARGET_URL_PART = "#Contacts/";
+    
     const SAMPLE_MAPPING = {
         "SAMPLE Patient Type": "entry.1793894942",
         "SAMPLE Marketing": "entry.1958122725",
         "SAMPLE Promotion Used": "entry.967111666"
     };
 
-    const safeParse = (key, fallback) => {
-        try {
+    const safeParse = (key, fallback) => { 
+        try { 
             let val = GM_getValue(key);
-            return val ? JSON.parse(val) : JSON.parse(fallback);
-        } catch (e) {
-            return JSON.parse(fallback);
-        }
+            return val ? JSON.parse(val) : JSON.parse(fallback); 
+        } catch (e) { 
+            return JSON.parse(fallback); 
+        } 
     };
 
+    // Updated to handle both numbers and UUID strings
     const getCrmGuid = () => window.location.href.split('/').pop() || "";
+
     function formatWellnessName(name) { if (!name || name.toLowerCase() === "user menu") return ""; return name.split(/[._]/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' '); }
     function formatToISODate(dateStr) { if (!dateStr) return ""; let match = dateStr.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/); if (match) return `${match[3]}-${match[1].padStart(2, '0')}-${match[2].padStart(2, '0')}`; return dateStr; }
-
-    function smartFormat(val, label) {
-        if (!val || val.toLowerCase() === "user menu") return "";
-        val = val.trim();
-        if (label === "Wellness Coordinator") return formatWellnessName(val);
-        let map = safeParse("valueMap", "{}");
-        if (map[val]) return map[val];
-        if (label.toLowerCase().includes('date') || val.includes('/')) return formatToISODate(val);
-        return val;
+    
+    function smartFormat(val, label) { 
+        if (!val || val.toLowerCase() === "user menu") return ""; 
+        val = val.trim(); 
+        if (label === "Wellness Coordinator") return formatWellnessName(val); 
+        let map = safeParse("valueMap", "{}"); 
+        if (map[val]) return map[val]; 
+        if (label.toLowerCase().includes('date') || val.includes('/')) return formatToISODate(val); 
+        return val; 
     }
 
-    function getValueFromSelector(label, selector) {
-        if (selector === "CRM_GUID") return getCrmGuid();
-        if (!selector) return "";
-        let el = document.querySelector(selector);
-        if (!el) return "";
+    function getValueFromSelector(label, selector) { 
+        if (selector === "CRM_GUID") return getCrmGuid(); 
+        if (!selector) return ""; 
+        let el = document.querySelector(selector); 
+        if (!el) return ""; 
         if (label === "Wellness Coordinator") {
             let attrVal = el.getAttribute('aria-label') || el.getAttribute('data-bs-original-title') || el.getAttribute('title');
             if (attrVal) return attrVal.trim();
         }
-        return (el.innerText || el.value || el.getAttribute('title') || "").trim();
+        return (el.innerText || el.value || el.getAttribute('title') || "").trim(); 
     }
 
     function updateLiveMonitor() {
@@ -89,7 +92,7 @@
         let displayMapping = currentMapping && currentMapping !== "{}" ? currentMapping : JSON.stringify(SAMPLE_MAPPING, null, 2);
 
         modal.innerHTML = `
-            <h2 style="margin-top:0; color:#333; border-bottom:2px solid #eee; padding-bottom:8px; font-size: 1.2em;">Workbench v10.2</h2>
+            <h2 style="margin-top:0; color:#333; border-bottom:2px solid #eee; padding-bottom:8px; font-size: 1.2em;">Workbench v10.3</h2>
             <div style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto 200px 140px; gap: 15px; margin-top: 10px;">
                 <div style="display:flex; flex-direction:column; gap:10px;">
                     <div>
@@ -97,8 +100,7 @@
                         <input type="text" id="formUrl" style="width:100%; padding:6px; border:1px solid #ccc; box-sizing:border-box;" value="${GM_getValue("formUrl","")}">
                     </div>
                     <div style="background:#f9f9f9; padding:15px; border:1px solid #ddd; border-radius:5px; font-size: 0.85em; color: #555;">
-                        <b>Pro Tip:</b><br>
-                        Hold <b>Shift + Right Click</b> on the button to open these settings later.
+                        <b>Pro Tip:</b><br> Hold <b>Shift + Right Click</b> on the button to open settings.
                     </div>
                 </div>
                 <div style="background:#f0f7ff; padding:10px; border-radius:8px; border:1px solid #b3d7ff;">
@@ -156,28 +158,26 @@
     }
 
     function injectButton() {
-        if (!window.location.href.includes(TARGET_URL_START) || document.getElementById(BUTTON_ID)) return;
-
+        // Updated check to work with alphanumeric UUIDs
+        if (!window.location.href.includes(TARGET_URL_PART) || document.getElementById(BUTTON_ID)) return;
+        
         let btn = document.createElement('button');
         btn.id = BUTTON_ID; btn.innerText = 'New Patient Google Form';
         Object.assign(btn.style, { position: 'fixed', top: '50px', left: '50%', transform: 'translateX(-50%)', zIndex: '9999', padding: '12px 24px', backgroundColor: '#d32f2f', color: '#fff', border: '2px solid #fff', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer' });
-
-        btn.onclick = openPrefilledForm;
-
-        // Settings Lock: Only opens with Shift + Right Click
+        
+        btn.onclick = openPrefilledForm; 
+        
         btn.oncontextmenu = (e) => {
             if (e.shiftKey) {
                 e.preventDefault();
                 openSettings();
             } else {
-                // Prevent normal right-click from doing anything on this specific button
                 e.preventDefault();
             }
         };
 
         document.body.appendChild(btn);
-
-        // Auto-open on first run
+        
         if (!GM_getValue("formUrl")) {
             openSettings();
         }

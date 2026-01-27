@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          Bazaar Scanner GOD MODE non TORN API
 // @namespace     https://weav3r.dev/
-// @version       6.3
+// @version       6.4
 // @description   Bazaar deals with NPC profit + background monitoring system
 // @author        Modified with Auto Monitor Integration
 // @match         https://www.torn.com/*
@@ -50,9 +50,9 @@
     };
 
    const MONITOR_CONFIG = {
-        maxItems: 10,
-        scanIntervalMin: 45000, // 45 seconds minimum
-        scanIntervalMax: 90000, // 90 seconds maximum
+        maxItems: 20,
+        scanIntervalMin: 5000, // 45 seconds minimum
+        scanIntervalMax: 10000, // 90 seconds maximum
         lockDuration: 30000,
         defaultMinProfit: 1000
     };
@@ -61,7 +61,7 @@
     function getRandomScanInterval() {
         // 15% chance of longer pause (1-2 minutes) to seem more human
         if (Math.random() < 0.15) {
-            return Math.floor(Math.random() * (120000 - 60000)) + 60000;
+            return Math.floor(Math.random() * (20000 - 10000)) + 10000;
         }
         // Normal range: 45-90 seconds
         const min = MONITOR_CONFIG.scanIntervalMin;
@@ -665,23 +665,28 @@
     // AUTO-MONITOR: Scanning Logic
     // ============================================================================
     async function scanMonitoredItem(itemId, itemName) {
-        try {
-            const settings = getMonitorSettings();
-            const [listings, teData] = await Promise.all([
-                fetchBazaarListings(itemId),
-                fetchTornExchangeData(itemId)
-            ]);
+    try {
+        const settings = getMonitorSettings();
+        const mode = settings.mode || 'both';
 
-            const npcData = npcPrices[itemId];
-            let npcPrice = 0;
+        // Only fetch market data if mode requires it
+        const needsMarketData = mode === 'market' || mode === 'both';
 
-            if (typeof npcData === 'object' && npcData !== null) {
-                npcPrice = npcData.npcPrice || 0;
-            } else if (typeof npcData === 'number') {
-                npcPrice = npcData;
-            }
+        const [listings, teData] = await Promise.all([
+            fetchBazaarListings(itemId),
+            needsMarketData ? fetchTornExchangeData(itemId) : Promise.resolve({ marketValue: null, bestBuyer: null })
+        ]);
 
-            const marketValue = teData.marketValue || 0;
+        const npcData = npcPrices[itemId];
+        let npcPrice = 0;
+
+        if (typeof npcData === 'object' && npcData !== null) {
+            npcPrice = npcData.npcPrice || 0;
+        } else if (typeof npcData === 'number') {
+            npcPrice = npcData;
+        }
+
+        const marketValue = teData ? (teData.marketValue || 0) : 0;
             let bestDeal = null;
 
             // Check each listing
@@ -754,10 +759,13 @@
         }
 
         // Get item to scan
-        const item = monitored[monitorState.currentIndex];
-        console.log(`[Monitor] Scanning ${item.name} (${monitorState.currentIndex + 1}/${monitored.length})`);
+const item = monitored[monitorState.currentIndex];
+console.log(`[Monitor] Scanning ${item.name} (${monitorState.currentIndex + 1}/${monitored.length})`);
 
-        const deal = await scanMonitoredItem(item.id, item.name);
+// Update status to show current item being scanned
+updateFavoritesMonitorStatus(item.name, monitorState.currentIndex + 1, monitored.length);
+
+const deal = await scanMonitoredItem(item.id, item.name);
 
         if (deal) {
             // Add or update deal
@@ -785,12 +793,13 @@
         }
 
         // Move to next item
-        monitorState.currentIndex = (monitorState.currentIndex + 1) % monitored.length;
-        monitorState.isScanning = false;
+monitorState.currentIndex = (monitorState.currentIndex + 1) % monitored.length;
+monitorState.isScanning = false;
 
-        // Update alert button
-        updateFavoritesMonitorAlert();
-        updateFavoritesMonitorStatus();
+// Update alert button
+updateFavoritesMonitorAlert();
+// Don't call updateFavoritesMonitorStatus() here - let it keep showing the last scanned item
+// updateFavoritesMonitorStatus();
     }
 
     // ============================================================================
@@ -824,35 +833,40 @@
         }
     }
 
-    function updateFavoritesMonitorStatus() {
-        const statusEl = document.getElementById('bz-monitor-status');
-        if (!statusEl) return;
+    function updateFavoritesMonitorStatus(currentItemName = null, currentIndex = null, totalItems = null) {
+    const statusEl = document.getElementById('bz-monitor-status');
+    if (!statusEl) return;
 
-        const monitored = getMonitoredItems();
-        const settings = getMonitorSettings();
+    const monitored = getMonitoredItems();
+    const settings = getMonitorSettings();
 
-        // Check if monitor is disabled
-        if (!settings.enabled) {
-            statusEl.textContent = 'Monitor: Disabled (Enable in settings)';
-            statusEl.className = 'bz-monitor-status';
-            statusEl.style.color = '#e74c3c';
-            return;
-        }
-
-        if (monitored.length === 0) {
-            statusEl.textContent = 'Monitor: Idle (No items)';
-            statusEl.className = 'bz-monitor-status';
-            statusEl.style.color = '';
-        } else if (monitorState.isActive) {
-            statusEl.textContent = `Monitor: Active (${monitored.length} items)`;
-            statusEl.className = 'bz-monitor-status active';
-            statusEl.style.color = '';
-        } else {
-            statusEl.textContent = `Monitor: Standby (Another tab active)`;
-            statusEl.className = 'bz-monitor-status standby';
-            statusEl.style.color = '';
-        }
+    // Check if monitor is disabled
+    if (!settings.enabled) {
+        statusEl.textContent = 'Monitor: Disabled (Enable in settings)';
+        statusEl.className = 'bz-monitor-status';
+        statusEl.style.color = '#e74c3c';
+        return;
     }
+
+    if (monitored.length === 0) {
+        statusEl.textContent = 'Monitor: Idle (No items)';
+        statusEl.className = 'bz-monitor-status';
+        statusEl.style.color = '';
+    } else if (currentItemName && currentIndex && totalItems) {
+        // Show currently scanning item with progress
+        statusEl.innerHTML = `<div style="color: #00FF00;">🔍 Scanning (${currentIndex}/${totalItems}):<br><strong>${currentItemName}</strong></div>`;
+        statusEl.className = 'bz-monitor-status active';
+        statusEl.style.color = '';
+    } else if (monitorState.isActive) {
+        statusEl.textContent = `Monitor: Active (${monitored.length} items)`;
+        statusEl.className = 'bz-monitor-status active';
+        statusEl.style.color = '';
+    } else {
+        statusEl.textContent = `Monitor: Standby (Another tab active)`;
+        statusEl.className = 'bz-monitor-status standby';
+        statusEl.style.color = '';
+    }
+}
 
     function showMonitorDeals() {
         const settings = getMonitorSettings();
@@ -1021,10 +1035,11 @@
         });
     }
 
-     async function fetchTornItemValue(itemId) {
+    async function fetchTornItemValue(itemId) {
     return new Promise((resolve) => {
         const apiKey = GM_getValue(S_KEY, '');
         if (!apiKey) {
+            console.warn('[Bazaar] No API key available for Torn API fallback');
             resolve(null);
             return;
         }
@@ -1033,24 +1048,30 @@
             method: 'GET',
             url: `https://api.torn.com/torn/${itemId}?selections=items&key=${apiKey}`,
             onload: (response) => {
-                // The tracker is now here: only counts when the request is actually made and loaded
+                // Track API usage
                 if (window.trackTornAPIRequest) {
-                    window.trackTornAPIRequest(`torn/${itemId}`, `Official API hit for item ${itemId}`);
+                    window.trackTornAPIRequest(`torn/${itemId}`, `Fallback for item ${itemId} - TornExchange unavailable`);
                 }
 
                 try {
                     const data = JSON.parse(response.responseText);
                     if (data && data.items && data.items[itemId]) {
                         const marketValue = data.items[itemId].market_value;
+                        console.log(`[Bazaar] ✓ Torn API returned market value for item ${itemId}: $${marketValue}`);
                         resolve(marketValue);
                     } else {
+                        console.warn(`[Bazaar] Torn API response missing market value for item ${itemId}`);
                         resolve(null);
                     }
                 } catch (e) {
+                    console.error(`[Bazaar] Error parsing Torn API response for item ${itemId}:`, e);
                     resolve(null);
                 }
             },
-            onerror: () => resolve(null)
+            onerror: () => {
+                console.error(`[Bazaar] Network error fetching from Torn API for item ${itemId}`);
+                resolve(null);
+            }
         });
     });
 }
@@ -1065,12 +1086,7 @@
             return;
         }
 
-        // Only fetch from Torn API if explicitly requested (via Refresh button)
-        let tornValue = null;
-        if (useTornAPI && forceRefresh) {
-            tornValue = await fetchTornItemValue(itemId);
-        }
-
+        // Try TornExchange first
         const [tePrice, bestBuyer] = await Promise.all([
             new Promise(res => {
                 GM_xmlhttpRequest({
@@ -1112,7 +1128,21 @@
             })
         ]);
 
-        const marketValue = tornValue || tePrice;
+        let marketValue = tePrice;
+
+        // If TornExchange failed or returned no value, fallback to Torn API
+        if (!marketValue || marketValue <= 0) {
+            console.log(`[Bazaar] TornExchange returned no market value for item ${itemId}, fetching from Torn API...`);
+            marketValue = await fetchTornItemValue(itemId);
+
+            if (!marketValue || marketValue <= 0) {
+                console.warn(`[Bazaar] Both TornExchange and Torn API failed for item ${itemId}`);
+                // Return null so UI can handle appropriately
+                resolve({ marketValue: null, bestBuyer: null });
+                return;
+            }
+        }
+
         const result = { marketValue, bestBuyer, timestamp: Date.now() };
         window._marketValueCache[itemId] = result;
         resolve({ marketValue, bestBuyer });
@@ -1861,7 +1891,7 @@ playerLinks.forEach(link => {
     const MONITOR_KEY = 'bz_monitored_items';
     const MONITOR_SETTINGS_KEY = 'bz_monitor_settings';
 
-    const MAX_MONITORED = 10;
+    const MAX_MONITORED = 20;
 
     const ITEM_CATEGORIES = {
         'Primary': [
@@ -3244,7 +3274,7 @@ playerLinks.forEach(link => {
 // ============================================================================
 })();
 // =====================================================
-// DEAL SCANNER MODULE (Bottom-Left Panel)
+// DEAL SCANNER MODULE (Bottom-Left Panel) - FIXED
 // =====================================================
 (function() {
     'use strict';
@@ -3266,7 +3296,7 @@ playerLinks.forEach(link => {
     const defaultScannerSettings = {
         enabled: false,
         minDiscountPercent: 20,
-        scanIntervalMinutes: 2,
+        scanIntervalSeconds: 60,
         itemsPerScan: 5,
         scanMode: 'roundrobin',
         categories: ['Uncategorized'],
@@ -3354,7 +3384,7 @@ playerLinks.forEach(link => {
         const lastScan = GM_getValue(SCANNER_LAST_SCAN_KEY, 0);
         const now = Date.now();
         const timeSinceLastScan = now - lastScan;
-        const scanIntervalMs = settings.scanIntervalMinutes * 60 * 1000;
+        const scanIntervalMs = settings.scanIntervalSeconds * 1000;
         return timeSinceLastScan >= scanIntervalMs;
     }
 
@@ -3370,7 +3400,7 @@ playerLinks.forEach(link => {
 
         const isThisTabActive = lock && lock.tabId === TAB_ID;
         const timeSinceLastScan = now - lastScan;
-        const scanIntervalMs = settings.scanIntervalMinutes * 60 * 1000;
+        const scanIntervalMs = settings.scanIntervalSeconds * 1000;
         const timeUntilNextScan = Math.max(0, scanIntervalMs - timeSinceLastScan);
 
         return {
@@ -3472,7 +3502,7 @@ playerLinks.forEach(link => {
         #bz-scanner-panel {
             position: fixed;
             left: 10px;
-            bottom: 5px;
+            bottom: 95px;
             width: 180px;
             background: #1a1a1a;
             border: 2px solid #696969;
@@ -3685,7 +3715,7 @@ playerLinks.forEach(link => {
         #bz-scanner-float-btn {
             position: fixed;
             left: 10px;
-            bottom: 5px;
+            bottom: 90px;
             background: #1a1a1a;
             border: 2px solid #00FF00;
             border-radius: 50%;
@@ -3718,6 +3748,45 @@ playerLinks.forEach(link => {
             justify-content: center;
             font-size: 11px;
             font-weight: bold;
+        }
+
+        #bz-scanner-float-btn.scanning {
+            animation: float-pulse 1.5s ease-in-out infinite;
+        }
+
+        #bz-scanner-float-btn.scanning::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 2px solid #00FF00;
+            border-radius: 50%;
+            animation: radar-spin 2s linear infinite;
+        }
+
+        @keyframes float-pulse {
+            0%, 100% {
+                box-shadow: 0 4px 12px rgba(0, 255, 0, 0.4);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(0, 255, 0, 0.8);
+            }
+        }
+
+        @keyframes radar-spin {
+            0% {
+                transform: rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: rotate(360deg);
+                opacity: 1;
+            }
         }
     `);
 
@@ -3813,11 +3882,13 @@ playerLinks.forEach(link => {
         }
     }
 
-    async function runScanner() {
+    // FIXED: Added forceRun parameter to override timer
+    async function runScanner(forceRun = false) {
         const settings = getScannerSettings();
         if (!settings.enabled) return;
 
-        if (!shouldScanNow()) {
+        // Only check timer if not forcing
+        if (!forceRun && !shouldScanNow()) {
             const tabInfo = getActiveTabInfo();
             const secondsRemaining = Math.ceil(tabInfo.timeUntilNextScan / 1000);
             console.log(`[DEAL SCANNER] Too soon - waiting ${secondsRemaining}s until next scan`);
@@ -3897,7 +3968,7 @@ playerLinks.forEach(link => {
         updateLastScanTime();
         releaseScannerLock();
 
-        const nextScanTime = new Date(Date.now() + settings.scanIntervalMinutes * 60 * 1000).toLocaleTimeString();
+        const nextScanTime = new Date(Date.now() + settings.scanIntervalSeconds * 1000).toLocaleTimeString();
         updateScannerStatus(`Last scan: ${new Date().toLocaleTimeString()} | Next: ${nextScanTime}`);
     }
 
@@ -3909,10 +3980,10 @@ playerLinks.forEach(link => {
 
         runScanner();
 
-        const intervalMs = settings.scanIntervalMinutes * 60 * 1000;
+        const intervalMs = settings.scanIntervalSeconds * 1000;
         scannerInterval = setInterval(runScanner, intervalMs);
 
-        console.log(`[DEAL SCANNER] Started - scanning every ${settings.scanIntervalMinutes} minutes`);
+        console.log(`[DEAL SCANNER] Started - scanning every ${settings.scanIntervalSeconds} seconds`);
     }
 
     function stopScanner() {
@@ -3926,13 +3997,17 @@ playerLinks.forEach(link => {
 
     function updateScannerStatus(message, currentItem = null) {
         const statusEl = document.querySelector('.bz-scanner-status');
+        const floatBtn = document.getElementById('bz-scanner-float-btn');
+
         if (statusEl) {
             if (currentItem) {
                 statusEl.innerHTML = `<div style="color: #00FF00;">🔍 Scanning: <strong>${currentItem}</strong></div>`;
                 statusEl.classList.add('scanning');
+                if (floatBtn) floatBtn.classList.add('scanning');
             } else {
                 statusEl.textContent = message;
                 statusEl.classList.remove('scanning');
+                if (floatBtn) floatBtn.classList.remove('scanning');
             }
         }
     }
@@ -4029,8 +4104,8 @@ playerLinks.forEach(link => {
                 </div>
                 <div class="bz-scanner-setting-row" style="margin-bottom: 4px;">
                     <label style="font-size: 10px;">Every:</label>
-                    <input type="number" id="bz-scan-interval" value="${settings.scanIntervalMinutes}" min="1" max="60" style="width: 40px; padding: 1px 3px; font-size: 10px;">
-                    <span style="margin-left: 2px; color: #aaa; font-size: 9px;">min</span>
+                    <input type="number" id="bz-scan-interval" value="${settings.scanIntervalSeconds}" min="10" max="3600" style="width: 40px; padding: 1px 3px; font-size: 10px;">
+                    <span style="margin-left: 2px; color: #aaa; font-size: 9px;">sec</span>
                 </div>
                 <div class="bz-scanner-setting-row" style="margin-bottom: 6px;">
                     <label style="font-size: 10px;">Items:</label>
@@ -4121,7 +4196,7 @@ playerLinks.forEach(link => {
             saveBtn.addEventListener('click', () => {
                 settings.scanMode = panel.querySelector('#bz-scan-mode').value;
                 settings.minDiscountPercent = parseInt(panel.querySelector('#bz-min-discount').value);
-                settings.scanIntervalMinutes = parseInt(panel.querySelector('#bz-scan-interval').value);
+                settings.scanIntervalSeconds = parseInt(panel.querySelector('#bz-scan-interval').value);
                 settings.itemsPerScan = parseInt(panel.querySelector('#bz-items-per-scan').value);
 
                 if (settings.scanMode === 'roundrobin') {
@@ -4129,9 +4204,7 @@ playerLinks.forEach(link => {
                 }
 
                 saveScannerSettings(settings);
-
-                const modeText = settings.scanMode === 'roundrobin' ? 'Round-Robin' : 'Random';
-                alert(`Settings saved!\n\nMode: ${modeText}\nDiscount: ${settings.minDiscountPercent}%+\nInterval: ${settings.itemsPerScan} items / ${settings.scanIntervalMinutes} min`);
+                console.log('[DEAL SCANNER] Settings saved and applied');
 
                 if (settings.enabled) {
                     stopScanner();
@@ -4140,10 +4213,12 @@ playerLinks.forEach(link => {
             });
         }
 
+        // FIXED: Pass true to force the scan
         const scanNowBtn = panel.querySelector('#bz-scan-now');
         if (scanNowBtn) {
             scanNowBtn.addEventListener('click', () => {
-                runScanner();
+                console.log('[DEAL SCANNER] Manual scan triggered - forcing scan now');
+                runScanner(true); // Pass true to override timer
             });
         }
 
@@ -4202,57 +4277,57 @@ playerLinks.forEach(link => {
         }
 
         function updateTabStatus() {
-    const tabStatusEl = panel.querySelector('#bz-tab-status');
-    if (!tabStatusEl) return;
+            const tabStatusEl = panel.querySelector('#bz-tab-status');
+            if (!tabStatusEl) return;
 
-    const tabInfo = getActiveTabInfo();
-    const settings = getScannerSettings();
+            const tabInfo = getActiveTabInfo();
+            const settings = getScannerSettings();
 
-    // Don't update if scanner is actively running
-    const statusEl = document.querySelector('.bz-scanner-status');
-    if (statusEl && statusEl.classList.contains('scanning')) {
-        // Scanner is actively scanning, don't overwrite the status
-        return;
-    }
+            // Don't update if scanner is actively running
+            const statusEl = document.querySelector('.bz-scanner-status');
+            if (statusEl && statusEl.classList.contains('scanning')) {
+                // Scanner is actively scanning, don't overwrite the status
+                return;
+            }
 
-    if (!settings.enabled) {
-        tabStatusEl.innerHTML = '⚫ Scanner disabled';
-        tabStatusEl.style.color = '#888';
-    } else if (tabInfo.isThisTabActive) {
-        tabStatusEl.innerHTML = '🟢 <strong>This tab is scanning</strong>';
-        tabStatusEl.style.color = '#00FF00';
-    } else if (tabInfo.hasActiveLock) {
-        const lock = GM_getValue(SCANNER_LOCK_KEY, null);
-        const lockAge = lock ? Math.floor((Date.now() - lock.timestamp) / 1000) : 0;
+            if (!settings.enabled) {
+                tabStatusEl.innerHTML = '⚫ Scanner disabled';
+                tabStatusEl.style.color = '#888';
+            } else if (tabInfo.isThisTabActive) {
+                tabStatusEl.innerHTML = '🟢 <strong>This tab is scanning</strong>';
+                tabStatusEl.style.color = '#00FF00';
+            } else if (tabInfo.hasActiveLock) {
+                const lock = GM_getValue(SCANNER_LOCK_KEY, null);
+                const lockAge = lock ? Math.floor((Date.now() - lock.timestamp) / 1000) : 0;
 
-        if (lockAge > 30) {
-            tabStatusEl.innerHTML = `⚠️ Stale lock (${lockAge}s old) <button id="bz-force-unlock" style="background: #A33C39; border: none; color: white; padding: 2px 6px; cursor: pointer; border-radius: 3px; font-size: 9px; margin-left: 4px;">Force Unlock</button>`;
-            tabStatusEl.style.color = '#FFA500';
+                if (lockAge > 30) {
+                    tabStatusEl.innerHTML = `⚠️ Stale lock (${lockAge}s old) <button id="bz-force-unlock" style="background: #A33C39; border: none; color: white; padding: 2px 6px; cursor: pointer; border-radius: 3px; font-size: 9px; margin-left: 4px;">Force Unlock</button>`;
+                    tabStatusEl.style.color = '#FFA500';
 
-            setTimeout(() => {
-                const unlockBtn = panel.querySelector('#bz-force-unlock');
-                if (unlockBtn) {
-                    unlockBtn.addEventListener('click', () => {
-                        forceUnlock();
-                        renderScannerPanel();
-                    });
+                    setTimeout(() => {
+                        const unlockBtn = panel.querySelector('#bz-force-unlock');
+                        if (unlockBtn) {
+                            unlockBtn.addEventListener('click', () => {
+                                forceUnlock();
+                                renderScannerPanel();
+                            });
+                        }
+                    }, 10);
+                } else {
+                    tabStatusEl.innerHTML = '🟡 Another tab is scanning';
+                    tabStatusEl.style.color = '#FFD700';
                 }
-            }, 10);
-        } else {
-            tabStatusEl.innerHTML = '🟡 Another tab is scanning';
-            tabStatusEl.style.color = '#FFD700';
+            } else {
+                const secondsUntilNext = Math.ceil(tabInfo.timeUntilNextScan / 1000);
+                if (secondsUntilNext > 0) {
+                    tabStatusEl.innerHTML = `⏱️ Next scan in ${secondsUntilNext}s`;
+                    tabStatusEl.style.color = '#87CEEB';
+                } else {
+                    tabStatusEl.innerHTML = '🔵 Ready to scan';
+                    tabStatusEl.style.color = '#00BFFF';
+                }
+            }
         }
-    } else {
-        const secondsUntilNext = Math.ceil(tabInfo.timeUntilNextScan / 1000);
-        if (secondsUntilNext > 0) {
-            tabStatusEl.innerHTML = `⏱️ Next scan in ${secondsUntilNext}s`;
-            tabStatusEl.style.color = '#87CEEB';
-        } else {
-            tabStatusEl.innerHTML = '🔵 Ready to scan';
-            tabStatusEl.style.color = '#00BFFF';
-        }
-    }
-}
 
         updateTabStatus();
         setInterval(updateTabStatus, 2000);
