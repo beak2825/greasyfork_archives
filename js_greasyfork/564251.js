@@ -1,26 +1,21 @@
 // ==UserScript==
 // @name         Gemini Model Switcher Buttons
-// @description  Replaces Gemini model selection dropdown with easily accessible buttons
 // @namespace    http://tampermonkey.net/
-// @version      1.8
+// @version      1.9
+// @description  Replaces Gemini model selection dropdown with easily accessible buttons
 // @author       treescandal & Gemini 3.0 Pro
 // @match        https://gemini.google.com/*
 // @license      MIT
 // @grant        none
 // @run-at       document-idle
-
 // @downloadURL https://update.greasyfork.org/scripts/564251/Gemini%20Model%20Switcher%20Buttons.user.js
 // @updateURL https://update.greasyfork.org/scripts/564251/Gemini%20Model%20Switcher%20Buttons.meta.js
 // ==/UserScript==
 
-
 (function() {
     'use strict';
 
-    // ============ CONFIGURATION  ============
-// Replace the labels if you want. 
-// The emojis are needed for the buttons to be clickable at all times.
-
+    // ============ CONFIGURATION ============
     const MODE_CONFIG = {
         modes: [
             { icon: '⚡', label: 'Flash', index: 0 },
@@ -31,6 +26,20 @@
         checkInterval: 1000,
         compactBreakpoint: 620
     };
+
+    let languageMap = null;
+    let lastActiveIndex = -1;
+
+    try {
+        const savedMap = localStorage.getItem('gqs_language_map');
+        if (savedMap) languageMap = JSON.parse(savedMap);
+
+        const savedIndex = localStorage.getItem('gqs_last_index');
+        if (savedIndex !== null) lastActiveIndex = parseInt(savedIndex, 10);
+    } catch (e) {
+        console.warn("Gemini Switcher: Could not load saved state", e);
+    }
+    // -----------------------------------------------------------
 
     // ============ STYLES ============
 
@@ -159,7 +168,7 @@
         document.head.appendChild(styleSheet);
     }
 
-// ============ MENU TRIGGER DETECTION ============
+    // ============ MENU TRIGGER DETECTION ============
 
     function findMenuTrigger() {
         let trigger = document.querySelector('[data-test-id*="mode-menu"]');
@@ -171,8 +180,8 @@
             const rect = btn.getBoundingClientRect();
             const isBottom = rect.bottom > window.innerHeight - 200;
             const hasRelevantContent = btn.querySelector('svg') ||
-                                      btn.className.includes('model') ||
-                                      btn.className.includes('mode');
+                                       btn.className.includes('model') ||
+                                       btn.className.includes('mode');
             return isBottom && hasRelevantContent;
         });
 
@@ -228,49 +237,107 @@
         return [];
     }
 
-    // ============ ACTIVE MODE DETECTION (INDEX-BASED) ============
+    // ============ POLLING HELPER ============
 
-    async function detectActiveMode() {
+    function waitForMenu(callback, maxWait = 500) {
+        const startTime = Date.now();
+
+        const check = () => {
+            const items = findMenuItems();
+
+            if (items.length >= 3) {
+                callback(items);
+            } else if (Date.now() - startTime < maxWait) {
+                requestAnimationFrame(check);
+            } else {
+                console.warn("Gemini Switcher: Menu timeout");
+                callback([]);
+            }
+        };
+
+        requestAnimationFrame(check);
+    }
+
+    function waitForTriggerUpdate(callback, maxWait = 300) {
+        const startTime = Date.now();
+
+        const check = () => {
+            const triggerResult = findMenuTrigger();
+            if (!triggerResult) {
+                callback();
+                return;
+            }
+
+            const text = triggerResult.element.innerText.toLowerCase().trim();
+
+            if (text && text.length >= 2 && languageMap) {
+                for (const keyword of Object.keys(languageMap)) {
+                    if (text.includes(keyword)) {
+                        callback();
+                        return;
+                    }
+                }
+            }
+
+            if (Date.now() - startTime < maxWait) {
+                requestAnimationFrame(check);
+            } else {
+                callback();
+            }
+        };
+
+        requestAnimationFrame(check);
+    }
+
+    // ============ LANGUAGE MAP  ============
+
+    function buildLanguageMapFromMenu(menuItems) {
+        // We allow rebuilding if null, or just to update
+        const tempMap = {};
+        menuItems.forEach((item, index) => {
+            const titleElement = item.querySelector('.gds-title-m, [class*="title"]');
+            if (titleElement) {
+                const text = titleElement.innerText.trim().toLowerCase();
+                if (text) {
+                    tempMap[text] = index;
+                }
+            }
+        });
+
+        if (Object.keys(tempMap).length > 0) {
+            languageMap = tempMap;
+            localStorage.setItem('gqs_language_map', JSON.stringify(languageMap));
+            console.log("Gemini Switcher: Language map built and saved", languageMap);
+        }
+    }
+
+    // ============ ACTIVE MODE DETECTION (NON-INVASIVE) ============
+
+    function detectActiveMode() {
         const triggerResult = findMenuTrigger();
-        if (!triggerResult) return -1;
+        if (!triggerResult) return lastActiveIndex;
 
         const trigger = triggerResult.element;
+        const text = trigger.innerText.toLowerCase().trim();
 
-        const scrollPos = window.scrollY;
+        if (!text || text.length < 2) {
+            return lastActiveIndex;
+        }
 
-        trigger.click();
+        // If map was loaded from LocalStorage, this will work immediately on refresh
+        if (!languageMap) {
+            return lastActiveIndex;
+        }
 
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const menuItems = findMenuItems();
-                let activeIndex = -1;
+        for (const [keyword, index] of Object.entries(languageMap)) {
+            if (text.includes(keyword)) {
+                // We don't save index to storage here to avoid excessive writes,
+                // we rely on the map for the active state usually.
+                return index;
+            }
+        }
 
-                menuItems.forEach((item, index) => {
-                    // Check multiple indicators of selection
-                    const isActive =
-                        item.getAttribute('aria-selected') === 'true' ||
-                        item.getAttribute('aria-checked') === 'true' ||
-                        item.classList.contains('mat-mdc-menu-item-highlighted') ||
-                        item.classList.contains('mdc-list-item--selected') ||
-                        item.classList.contains('active') ||
-                        item.classList.contains('selected') ||
-                        item.hasAttribute('data-selected') ||
-                        item.querySelector('[aria-checked="true"]') !== null ||
-                        item.querySelector('.selected') !== null ||
-                        item.querySelector('[data-selected="true"]') !== null;
-
-                    if (isActive) {
-                        activeIndex = index;
-                    }
-                });
-
-                document.body.click();
-
-                window.scrollTo(0, scrollPos);
-
-                resolve(activeIndex);
-            }, 100);
-        });
+        return lastActiveIndex;
     }
 
     // ============ RESPONSIVE LAYOUT ============
@@ -328,8 +395,13 @@
         }, 100);
     }
 
-    async function updateActiveState() {
-        const activeIndex = await detectActiveMode();
+    function updateActiveState(retryCount = 0) {
+        const activeIndex = detectActiveMode();
+
+        if (activeIndex === -1 && retryCount < 5 && languageMap) {
+            setTimeout(() => updateActiveState(retryCount + 1), 200);
+            return;
+        }
 
         document.querySelectorAll('.gqs-btn').forEach((btn, idx) => {
             if (idx === activeIndex) {
@@ -340,38 +412,47 @@
         });
     }
 
-    // ============ MODE SWITCHING (INDEX-BASED) ============
+
+    // ============ MODE SWITCHING ============
 
     function handleModeClick(e, modeIndex) {
         e.preventDefault();
 
-        // Immediately update UI for responsiveness
         document.querySelectorAll('.gqs-btn').forEach(b => b.classList.remove('active'));
         e.currentTarget.classList.add('active');
+
+        lastActiveIndex = modeIndex;
+        localStorage.setItem('gqs_last_index', modeIndex.toString());
 
         const triggerResult = findMenuTrigger();
         if (!triggerResult) {
             console.error("Gemini Switcher: Trigger not found");
-            alert("Could not find mode menu. Google may have updated the interface.");
             return;
         }
 
         triggerResult.element.click();
 
-        setTimeout(() => {
-            const menuItems = findMenuItems();
+        waitForMenu((menuItems) => {
+            if (menuItems.length === 0) {
+                console.error("Gemini Switcher: Menu not found");
+                return;
+            }
+
+            // Always try to build map if possible to keep it fresh
+            if (menuItems.length >= 3) {
+                buildLanguageMapFromMenu(menuItems);
+            }
 
             if (menuItems.length > modeIndex) {
                 menuItems[modeIndex].click();
 
-                setTimeout(() => updateActiveState(), 500);
+                waitForTriggerUpdate(() => {
+                    updateActiveState();
+                });
             } else {
-                console.error(`Gemini Switcher: Only found ${menuItems.length} menu items, cannot select index ${modeIndex}`);
-                document.body.click();
-                // Restore correct active state if switch failed
-                updateActiveState();
+                console.error(`Gemini Switcher: Only found ${menuItems.length} menu items`);
             }
-        }, 200);
+        });
     }
 
     // ============ INITIALIZATION & MONITORING ============
@@ -402,7 +483,7 @@
             }
         }
 
-        if (existingBar && Math.random() < 0.1) {
+        if (existingBar) {
             updateActiveState();
         }
     }, MODE_CONFIG.checkInterval);
@@ -414,6 +495,10 @@
         if (location.href !== lastUrl) {
             lastUrl = location.href;
             lastContainerCheck = null;
+            // We do NOT clear languageMap here anymore,
+            // so settings persist across navigation
+            // languageMap = null;
+            lastActiveIndex = -1;
             if (resizeObserver) {
                 resizeObserver.disconnect();
                 resizeObserver = null;

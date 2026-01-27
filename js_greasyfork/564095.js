@@ -1,22 +1,31 @@
 // ==UserScript==
-// @name         Claude Projects Manager (v2)
+// @name         Claude Projects Manager (v4)
 // @namespace    http://tampermonkey.net/
-// @version      2
+// @version      4
 // @description  Organize your Claude.ai Projects with view modes, favorites, colors, search, tooltips & backup!
 // @author       Solomon
 // @match        https://claude.ai/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @run-at       document-idle
-// @downloadURL https://update.greasyfork.org/scripts/564095/Claude%20Projects%20Manager%20%28v2%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/564095/Claude%20Projects%20Manager%20%28v2%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/564095/Claude%20Projects%20Manager%20%28v4%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/564095/Claude%20Projects%20Manager%20%28v4%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
     // ============================================
-    // 🎯 CLAUDE PROJECTS MANAGER v2
+    // 🎯 CLAUDE PROJECTS MANAGER v4
+    // ============================================
+    // Changelog v4:
+    // - 🔧 Fixed widget visibility issues
+    // - 🔧 Better URL detection for projects page
+    // - 🔧 Explicit display:block for panel show
+    // - 🔧 Improved initialization timing
+    // - 🔧 Added debug logging (can disable)
+    // - 🔧 Fixed storage key consistency
+    // - 🔧 Better viewport boundary checks
     // ============================================
     // Features:
     // - 🎨 4 View Modes (Cards, Compact, List, Mini)
@@ -27,12 +36,19 @@
     // - 💾 Auto-backup
     // - 🖱️ Draggable panel
     // - ⌨️ Keyboard shortcuts
-    // - 🔴 Project header color indicator (v3)
+    // - 🔴 Project header color indicator
     // ============================================
+
+    const DEBUG = true; // Set to false to disable console logging
+    const STORAGE_PREFIX = 'cpm_v4_';
+
+    function log(...args) {
+        if (DEBUG) console.log('📁 CPM v4:', ...args);
+    }
 
     let settings = {
         viewMode: 'compact',
-        panelMinimized: true,
+        panelMinimized: false, // Changed default to false so panel is visible initially
         panelX: null,
         panelY: 12,
         panelWidth: 140,
@@ -45,20 +61,31 @@
     let projectColors = {};
     let isInitialized = false;
     let lastUrl = '';
+    let panelCreated = false;
 
     // 💾 STORAGE
     function loadSettings() {
         try {
-            const saved = GM_getValue('cpm_v36_settings', null);
-            if (saved) settings = { ...settings, ...JSON.parse(saved) };
-            favorites = JSON.parse(GM_getValue('cpm_v36_favs', '[]'));
-            projectColors = JSON.parse(GM_getValue('cpm_v36_colors', '{}'));
-        } catch (e) {}
+            const saved = GM_getValue(STORAGE_PREFIX + 'settings', null);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                settings = { ...settings, ...parsed };
+                log('Settings loaded:', settings);
+            }
+            favorites = JSON.parse(GM_getValue(STORAGE_PREFIX + 'favs', '[]'));
+            projectColors = JSON.parse(GM_getValue(STORAGE_PREFIX + 'colors', '{}'));
+            log('Favorites:', favorites.length, 'Colors:', Object.keys(projectColors).length);
+        } catch (e) {
+            log('Error loading settings:', e);
+        }
     }
 
-    function saveSettings() { GM_setValue('cpm_v36_settings', JSON.stringify(settings)); }
-    function saveFavorites() { GM_setValue('cpm_v36_favs', JSON.stringify(favorites)); }
-    function saveColors() { GM_setValue('cpm_v36_colors', JSON.stringify(projectColors)); }
+    function saveSettings() {
+        GM_setValue(STORAGE_PREFIX + 'settings', JSON.stringify(settings));
+        log('Settings saved');
+    }
+    function saveFavorites() { GM_setValue(STORAGE_PREFIX + 'favs', JSON.stringify(favorites)); }
+    function saveColors() { GM_setValue(STORAGE_PREFIX + 'colors', JSON.stringify(projectColors)); }
 
     // ============================================
     // 📦 BACKUP SYSTEM
@@ -83,7 +110,7 @@
 
     function getAllData() {
         return {
-            version: 7,
+            version: 4,
             exportDate: new Date().toISOString(),
             settings: settings,
             favorites: favorites,
@@ -139,7 +166,7 @@
         else if (settings.autoBackup === 'monthly') currentKey = getMonthKey();
         else return;
         if (settings.lastAutoBackup === currentKey) return;
-        console.log('📁 CPM: Auto backup for ' + currentKey);
+        log('Auto backup for', currentKey);
         downloadBackupFile(`claude-projects-auto-backup-${getTodayDate()}.json`);
         settings.lastAutoBackup = currentKey;
         saveSettings();
@@ -211,138 +238,143 @@
                 75% { background-position: 0% 100%, 0% 0%, 100% 0%, 100% 100%; }
                 100% { background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%; }
             }
-            
+
             @keyframes cpm-glow-pulse {
                 0%, 100% { box-shadow: 0 0 5px #7c7cf5, 0 0 10px #7c7cf5, 0 0 20px rgba(124, 124, 245, 0.5); }
                 50% { box-shadow: 0 0 10px #a78bfa, 0 0 20px #a78bfa, 0 0 30px rgba(167, 139, 250, 0.6); }
             }
-            
+
             @keyframes cpm-tooltip-in {
                 0% { opacity: 0; transform: translateY(5px) scale(0.95); }
                 100% { opacity: 1; transform: translateY(0) scale(1); }
             }
 
             #cpm-panel {
-                position: fixed;
-                z-index: 999999;
+                position: fixed !important;
+                z-index: 999999 !important;
                 background: #f8f8fa !important;
-                border: 1px solid #ddd;
-                border-radius: 6px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-                color: #333;
-                user-select: none;
-                overflow: visible;
-                font-size: 9px;
+                border: 1px solid #ddd !important;
+                border-radius: 6px !important;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+                color: #333 !important;
+                user-select: none !important;
+                overflow: visible !important;
+                font-size: 9px !important;
+                display: block !important;
             }
 
-            #cpm-panel.minimized #cpm-body, #cpm-panel.minimized #cpm-resize { display: none; }
+            #cpm-panel.cpm-hidden {
+                display: none !important;
+            }
+
+            #cpm-panel.minimized #cpm-body, #cpm-panel.minimized #cpm-resize { display: none !important; }
             #cpm-panel.minimized { width: auto !important; height: auto !important; }
 
             #cpm-header {
-                background: linear-gradient(135deg, #7c7cf5, #a78bfa);
-                padding: 4px 8px;
-                border-radius: 5px 5px 0 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                cursor: pointer;
-                min-width: 24px;
-                min-height: 18px;
+                background: linear-gradient(135deg, #7c7cf5, #a78bfa) !important;
+                padding: 4px 8px !important;
+                border-radius: 5px 5px 0 0 !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                cursor: pointer !important;
+                min-width: 24px !important;
+                min-height: 18px !important;
             }
-            
-            #cpm-panel.minimized #cpm-header { border-radius: 5px; }
-            
+
+            #cpm-panel.minimized #cpm-header { border-radius: 5px !important; }
+
             #cpm-header:hover {
-                background: linear-gradient(135deg, #6b6be0, #9678e8);
+                background: linear-gradient(135deg, #6b6be0, #9678e8) !important;
             }
 
             #cpm-header .toggle-icon {
-                color: white;
-                font-size: 14px;
-                font-weight: bold;
-                line-height: 1;
+                color: white !important;
+                font-size: 14px !important;
+                font-weight: bold !important;
+                line-height: 1 !important;
             }
 
             #cpm-body {
-                padding: 5px;
-                display: flex;
-                flex-direction: column;
-                gap: 5px;
-                overflow-y: auto;
+                padding: 5px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 5px !important;
+                overflow-y: auto !important;
                 background: #f8f8fa !important;
-                height: calc(100% - 26px);
-                box-sizing: border-box;
+                height: calc(100% - 26px) !important;
+                box-sizing: border-box !important;
             }
 
-            .cpm-sec-title { font-size: 7px; text-transform: uppercase; letter-spacing: 0.3px; color: #888; margin-bottom: 2px; font-weight: 600; }
-            .cpm-view-row { display: flex; gap: 2px; }
+            .cpm-sec-title { font-size: 7px !important; text-transform: uppercase !important; letter-spacing: 0.3px !important; color: #888 !important; margin-bottom: 2px !important; font-weight: 600 !important; }
+            .cpm-view-row { display: flex !important; gap: 2px !important; }
 
             .cpm-vbtn {
-                flex: 1;
-                background: #eee;
-                border: 1px solid transparent;
-                padding: 3px 2px;
-                border-radius: 3px;
-                color: #666;
-                cursor: pointer;
-                text-align: center;
-                font-size: 9px;
-                line-height: 1;
+                flex: 1 !important;
+                background: #eee !important;
+                border: 1px solid transparent !important;
+                padding: 3px 2px !important;
+                border-radius: 3px !important;
+                color: #666 !important;
+                cursor: pointer !important;
+                text-align: center !important;
+                font-size: 9px !important;
+                line-height: 1 !important;
             }
-            .cpm-vbtn:hover { background: #e0e0e0; color: #333; }
-            .cpm-vbtn.active { background: #7c7cf5; border-color: #a78bfa; color: white; }
+            .cpm-vbtn:hover { background: #e0e0e0 !important; color: #333 !important; }
+            .cpm-vbtn.active { background: #7c7cf5 !important; border-color: #a78bfa !important; color: white !important; }
 
             #cpm-search {
-                width: 100%;
-                padding: 4px 5px;
-                background: white;
-                border: 1px solid #ddd;
-                border-radius: 3px;
-                color: #333;
-                font-size: 9px;
-                box-sizing: border-box;
+                width: 100% !important;
+                padding: 4px 5px !important;
+                background: white !important;
+                border: 1px solid #ddd !important;
+                border-radius: 3px !important;
+                color: #333 !important;
+                font-size: 9px !important;
+                box-sizing: border-box !important;
             }
-            #cpm-search:focus { outline: none; border-color: #7c7cf5; }
+            #cpm-search:focus { outline: none !important; border-color: #7c7cf5 !important; }
 
-            .cpm-stats { display: flex; justify-content: space-around; text-align: center; padding: 2px 0; }
-            .cpm-stat-num { font-size: 12px; font-weight: bold; color: #7c7cf5; }
-            .cpm-stat-lbl { font-size: 6px; color: #999; text-transform: uppercase; }
+            .cpm-stats { display: flex !important; justify-content: space-around !important; text-align: center !important; padding: 2px 0 !important; }
+            .cpm-stat-num { font-size: 12px !important; font-weight: bold !important; color: #7c7cf5 !important; }
+            .cpm-stat-lbl { font-size: 6px !important; color: #999 !important; text-transform: uppercase !important; }
 
             .cpm-backup-btn {
-                width: 100%;
-                padding: 4px;
-                background: #eee;
-                border: 1px solid #ddd;
-                border-radius: 3px;
-                color: #666;
-                cursor: pointer;
-                font-size: 8px;
-                text-align: center;
+                width: 100% !important;
+                padding: 4px !important;
+                background: #eee !important;
+                border: 1px solid #ddd !important;
+                border-radius: 3px !important;
+                color: #666 !important;
+                cursor: pointer !important;
+                font-size: 8px !important;
+                text-align: center !important;
             }
-            .cpm-backup-btn:hover { background: #e0e0e0; color: #333; }
+            .cpm-backup-btn:hover { background: #e0e0e0 !important; color: #333 !important; }
 
             #cpm-resize {
-                position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; cursor: nwse-resize;
+                position: absolute !important; bottom: 0 !important; right: 0 !important; width: 10px !important; height: 10px !important; cursor: nwse-resize !important;
             }
             #cpm-resize::before {
-                content: ''; position: absolute; bottom: 2px; right: 2px; width: 5px; height: 5px;
-                border-right: 1px solid #bbb; border-bottom: 1px solid #bbb;
+                content: '' !important; position: absolute !important; bottom: 2px !important; right: 2px !important; width: 5px !important; height: 5px !important;
+                border-right: 1px solid #bbb !important; border-bottom: 1px solid #bbb !important;
             }
 
             /* VIEW MODES - WIDER CARDS */
-            body.cpm-compact a[href^="/project/"] { 
-                display: block !important; 
-                padding: 10px 14px !important; 
-                margin-bottom: 4px !important; 
-                min-height: unset !important; 
-                height: auto !important; 
+            body.cpm-compact a[href^="/project/"] {
+                display: block !important;
+                padding: 10px 14px !important;
+                margin-bottom: 4px !important;
+                min-height: unset !important;
+                height: auto !important;
                 min-width: 180px !important;
             }
-            body.cpm-compact [class*="grid"]:has(a[href^="/project/"]) { 
-                display: grid !important; 
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important; 
-                gap: 8px !important; 
+            body.cpm-compact [class*="grid"]:has(a[href^="/project/"]) {
+                display: grid !important;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+                gap: 8px !important;
             }
 
             body.cpm-list a[href^="/project/"] { display: flex !important; align-items: center !important; padding: 6px 12px !important; margin-bottom: 2px !important; min-height: unset !important; height: auto !important; border-radius: 6px !important; }
@@ -358,13 +390,13 @@
 
             a[href^="/project/"] { position: relative !important; transition: background 0.2s ease, border 0.2s ease, transform 0.15s ease !important; }
             .cpm-hide { display: none !important; }
-            
+
             .cpm-match {
                 position: relative !important;
                 z-index: 1 !important;
                 animation: cpm-glow-pulse 1.5s ease-in-out infinite !important;
             }
-            
+
             .cpm-match::before {
                 content: '' !important;
                 position: absolute !important;
@@ -374,14 +406,14 @@
                 bottom: -3px !important;
                 border-radius: 10px !important;
                 z-index: -1 !important;
-                background: 
+                background:
                     linear-gradient(90deg, #7c7cf5 50%, transparent 50%) top / 200% 3px no-repeat,
                     linear-gradient(90deg, transparent 50%, #7c7cf5 50%) bottom / 200% 3px no-repeat,
                     linear-gradient(0deg, #7c7cf5 50%, transparent 50%) left / 3px 200% no-repeat,
                     linear-gradient(0deg, transparent 50%, #7c7cf5 50%) right / 3px 200% no-repeat !important;
                 animation: cpm-border-chase 2s linear infinite !important;
             }
-            
+
             .cpm-fav { order: -1 !important; box-shadow: inset 0 0 0 2px #ffd43b !important; }
             .cpm-fav.cpm-match { box-shadow: inset 0 0 0 2px #ffd43b !important; }
 
@@ -407,81 +439,81 @@
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
                 line-height: 1.2 !important;
             }
-            
+
             body.cpm-mini .cpm-num { display: none !important; }
 
             /* 🎯 TOOLTIP */
             #cpm-tooltip {
-                position: fixed;
-                z-index: 99999999;
-                background: #ffffff;
-                border: 1px solid #e0e0e0;
-                padding: 12px 24px;
-                border-radius: 12px;
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-                pointer-events: none;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-                opacity: 0;
-                visibility: hidden;
-                text-align: center;
-                min-width: 120px;
+                position: fixed !important;
+                z-index: 99999999 !important;
+                background: #ffffff !important;
+                border: 1px solid #e0e0e0 !important;
+                padding: 12px 24px !important;
+                border-radius: 12px !important;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+                pointer-events: none !important;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                text-align: center !important;
+                min-width: 120px !important;
             }
-            
+
             #cpm-tooltip.visible {
-                opacity: 1;
-                visibility: visible;
-                animation: cpm-tooltip-in 0.2s ease-out;
+                opacity: 1 !important;
+                visibility: visible !important;
+                animation: cpm-tooltip-in 0.2s ease-out !important;
             }
-            
+
             #cpm-tooltip .tooltip-name {
-                font-size: 14px;
-                font-weight: 600;
-                color: #333;
-                white-space: nowrap;
+                font-size: 14px !important;
+                font-weight: 600 !important;
+                color: #333 !important;
+                white-space: nowrap !important;
             }
-            
+
             #cpm-tooltip .tooltip-date {
-                font-size: 11px;
-                color: #888;
-                margin-top: 8px;
-                padding-top: 8px;
-                border-top: 1px solid #eee;
-                white-space: nowrap;
+                font-size: 11px !important;
+                color: #888 !important;
+                margin-top: 8px !important;
+                padding-top: 8px !important;
+                border-top: 1px solid #eee !important;
+                white-space: nowrap !important;
             }
-            
+
             #cpm-tooltip::after {
-                content: '';
-                position: absolute;
-                top: 100%;
-                left: 50%;
-                transform: translateX(-50%);
-                border: 8px solid transparent;
-                border-top-color: #ffffff;
-                filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+                content: '' !important;
+                position: absolute !important;
+                top: 100% !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                border: 8px solid transparent !important;
+                border-top-color: #ffffff !important;
+                filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1)) !important;
             }
-            
+
             /* Card hover effect */
             a[href^="/project/"]:hover {
                 transform: translateY(-2px) !important;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
             }
-            
+
             /* 🔴 Project title RED when inside project chat */
             body.cpm-inside-project h1 {
                 color: #e53935 !important;
             }
 
             #cpm-menu {
-                position: fixed; z-index: 9999999; background: #fff; border: 1px solid #ddd;
-                border-radius: 5px; padding: 3px 0; min-width: 100px; box-shadow: 0 3px 12px rgba(0,0,0,0.1);
-                display: none; font-size: 9px;
+                position: fixed !important; z-index: 9999999 !important; background: #fff !important; border: 1px solid #ddd !important;
+                border-radius: 5px !important; padding: 3px 0 !important; min-width: 100px !important; box-shadow: 0 3px 12px rgba(0,0,0,0.1) !important;
+                display: none !important; font-size: 9px !important;
             }
-            .cpm-menu-item { padding: 4px 7px; cursor: pointer; color: #333; display: flex; align-items: center; gap: 5px; }
-            .cpm-menu-item:hover { background: #f5f5f5; }
-            .cpm-menu-sep { height: 1px; background: #eee; margin: 2px 0; }
-            .cpm-menu-colors { display: flex; flex-wrap: wrap; gap: 3px; padding: 4px 7px; }
-            .cpm-menu-color { width: 16px; height: 16px; border-radius: 3px; cursor: pointer; border: 2px solid transparent; }
-            .cpm-menu-color:hover { transform: scale(1.1); border-color: #333; }
+            .cpm-menu-item { padding: 4px 7px !important; cursor: pointer !important; color: #333 !important; display: flex !important; align-items: center !important; gap: 5px !important; }
+            .cpm-menu-item:hover { background: #f5f5f5 !important; }
+            .cpm-menu-sep { height: 1px !important; background: #eee !important; margin: 2px 0 !important; }
+            .cpm-menu-colors { display: flex !important; flex-wrap: wrap !important; gap: 3px !important; padding: 4px 7px !important; }
+            .cpm-menu-color { width: 16px !important; height: 16px !important; border-radius: 3px !important; cursor: pointer !important; border: 2px solid transparent !important; }
+            .cpm-menu-color:hover { transform: scale(1.1) !important; border-color: #333 !important; }
             .cpm-menu-color[data-c="none"] { background: #98d8aa !important; }
             .cpm-menu-color[data-c="red"] { background: #ff6b6b !important; }
             .cpm-menu-color[data-c="orange"] { background: #ffa94d !important; }
@@ -490,19 +522,20 @@
             .cpm-menu-color[data-c="blue"] { background: #4dabf7 !important; }
             .cpm-menu-color[data-c="purple"] { background: #be4bdb !important; }
             .cpm-menu-color[data-c="pink"] { background: #f783ac !important; }
-            
+
             /* 🔴 PROJECT HEADER COLOR INDICATOR */
             .cpm-project-indicator {
-                display: inline-block;
-                width: 10px;
-                height: 10px;
-                border-radius: 50%;
-                margin-right: 8px;
-                vertical-align: middle;
-                box-shadow: 0 0 4px rgba(0,0,0,0.3);
+                display: inline-block !important;
+                width: 10px !important;
+                height: 10px !important;
+                border-radius: 50% !important;
+                margin-right: 8px !important;
+                vertical-align: middle !important;
+                box-shadow: 0 0 4px rgba(0,0,0,0.3) !important;
             }
         `;
         document.head.appendChild(style);
+        log('Styles injected');
     }
 
     // ============================================
@@ -510,12 +543,11 @@
     // ============================================
     let tooltipEl = null;
     let tooltipTimeout = null;
-    
+
     function createTooltip() {
-        // Remove old tooltip first
         const old = document.getElementById('cpm-tooltip');
         if (old) old.remove();
-        
+
         tooltipEl = document.createElement('div');
         tooltipEl.id = 'cpm-tooltip';
         tooltipEl.innerHTML = `
@@ -523,13 +555,14 @@
             <div class="tooltip-date"></div>
         `;
         document.body.appendChild(tooltipEl);
+        log('Tooltip created');
     }
-    
+
     function showTooltip(name, date, cardRect) {
         if (!tooltipEl || !name) return;
-        
+
         tooltipEl.querySelector('.tooltip-name').textContent = name;
-        
+
         const dateEl = tooltipEl.querySelector('.tooltip-date');
         if (date) {
             dateEl.textContent = date;
@@ -537,13 +570,13 @@
         } else {
             dateEl.style.display = 'none';
         }
-        
+
         tooltipEl.classList.add('visible');
-        
+
         const tooltipRect = tooltipEl.getBoundingClientRect();
         let left = cardRect.left + (cardRect.width / 2) - (tooltipRect.width / 2);
         let top = cardRect.top - tooltipRect.height - 12;
-        
+
         if (left < 10) left = 10;
         if (left + tooltipRect.width > window.innerWidth - 10) {
             left = window.innerWidth - tooltipRect.width - 10;
@@ -551,11 +584,11 @@
         if (top < 10) {
             top = cardRect.bottom + 12;
         }
-        
+
         tooltipEl.style.left = left + 'px';
         tooltipEl.style.top = top + 'px';
     }
-    
+
     function hideTooltip() {
         clearTimeout(tooltipTimeout);
         if (tooltipEl) {
@@ -565,16 +598,35 @@
 
     // 🖼️ PANEL
     function createPanel() {
+        log('Creating panel...');
         const old = document.getElementById('cpm-panel');
-        if (old) old.remove();
+        if (old) {
+            log('Removing old panel');
+            old.remove();
+        }
 
         const panel = document.createElement('div');
         panel.id = 'cpm-panel';
-        
-        const defaultX = window.innerWidth - 160;
-        panel.style.left = (settings.panelX !== null ? settings.panelX : defaultX) + 'px';
-        panel.style.top = settings.panelY + 'px';
-        
+
+        // Calculate safe position
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const panelWidth = settings.panelMinimized ? 40 : settings.panelWidth;
+
+        let posX = settings.panelX;
+        let posY = settings.panelY;
+
+        // If no saved position or position is invalid, use default
+        if (posX === null || posX < 0 || posX > viewportWidth - 30) {
+            posX = viewportWidth - panelWidth - 20;
+        }
+        if (posY === null || posY < 0 || posY > viewportHeight - 30) {
+            posY = 12;
+        }
+
+        panel.style.left = posX + 'px';
+        panel.style.top = posY + 'px';
+
         if (!settings.panelMinimized) {
             panel.style.width = settings.panelWidth + 'px';
             panel.style.height = settings.panelHeight + 'px';
@@ -589,15 +641,15 @@
                 <div>
                     <div class="cpm-sec-title">View</div>
                     <div class="cpm-view-row">
-                        <button class="cpm-vbtn" data-view="cards">🃏</button>
-                        <button class="cpm-vbtn" data-view="compact">📋</button>
-                        <button class="cpm-vbtn" data-view="list">📝</button>
-                        <button class="cpm-vbtn" data-view="mini">🔳</button>
+                        <button class="cpm-vbtn" data-view="cards" title="Cards view">🃏</button>
+                        <button class="cpm-vbtn" data-view="compact" title="Compact view">📋</button>
+                        <button class="cpm-vbtn" data-view="list" title="List view">📝</button>
+                        <button class="cpm-vbtn" data-view="mini" title="Mini view">🔳</button>
                     </div>
                 </div>
                 <div>
                     <div class="cpm-sec-title">Search</div>
-                    <input type="text" id="cpm-search" placeholder="Filter...">
+                    <input type="text" id="cpm-search" placeholder="Filter projects...">
                 </div>
                 <div>
                     <div class="cpm-sec-title">Stats</div>
@@ -615,8 +667,13 @@
         `;
 
         document.body.appendChild(panel);
+        panelCreated = true;
+        log('Panel created at', posX, posY, 'minimized:', settings.panelMinimized);
+
         setupPanelInteractions(panel);
         updateViewButtons();
+
+        return panel;
     }
 
     function updateToggleIcon(panel) {
@@ -631,94 +688,56 @@
         const btnBackup = panel.querySelector('#btn-backup');
         const search = panel.querySelector('#cpm-search');
         const resize = panel.querySelector('#cpm-resize');
-        
-        // HEADER: Click to toggle, drag to move - SMOOTH VERSION
+
+        // HEADER: Click to toggle, drag to move
         let mouseDownX = 0;
         let mouseDownY = 0;
         let isDragging = false;
         let hasMoved = false;
-        let targetX = 0;
-        let targetY = 0;
-        let currentX = 0;
-        let currentY = 0;
-        let animationFrame = null;
-        
-        // Smooth animation using lerp (linear interpolation)
-        function smoothMove() {
-            if (!isDragging && Math.abs(currentX - targetX) < 0.5 && Math.abs(currentY - targetY) < 0.5) {
-                currentX = targetX;
-                currentY = targetY;
-                panel.style.left = currentX + 'px';
-                panel.style.top = currentY + 'px';
-                animationFrame = null;
-                return;
-            }
-            
-            // Lerp factor - higher = snappier, lower = smoother (0.15-0.3 is nice)
-            const lerp = 0.25;
-            currentX += (targetX - currentX) * lerp;
-            currentY += (targetY - currentY) * lerp;
-            
-            panel.style.left = currentX + 'px';
-            panel.style.top = currentY + 'px';
-            
-            animationFrame = requestAnimationFrame(smoothMove);
-        }
-        
+
         header.addEventListener('mousedown', e => {
             mouseDownX = e.clientX;
             mouseDownY = e.clientY;
-            currentX = panel.offsetLeft;
-            currentY = panel.offsetTop;
-            targetX = currentX;
-            targetY = currentY;
             isDragging = true;
             hasMoved = false;
-            panel.style.transition = 'none';
             e.preventDefault();
         });
-        
+
         document.addEventListener('mousemove', e => {
             if (!isDragging) return;
-            
+
             const dx = e.clientX - mouseDownX;
             const dy = e.clientY - mouseDownY;
-            
-            if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+
+            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
                 hasMoved = true;
-                targetX = Math.max(0, Math.min(window.innerWidth - 30, panel.offsetLeft + (e.clientX - mouseDownX)));
-                targetY = Math.max(0, Math.min(window.innerHeight - 30, panel.offsetTop + (e.clientY - mouseDownY)));
+                const newX = panel.offsetLeft + dx;
+                const newY = panel.offsetTop + dy;
+                panel.style.left = Math.max(0, Math.min(window.innerWidth - 30, newX)) + 'px';
+                panel.style.top = Math.max(0, Math.min(window.innerHeight - 30, newY)) + 'px';
                 mouseDownX = e.clientX;
                 mouseDownY = e.clientY;
-                
-                if (!animationFrame) {
-                    animationFrame = requestAnimationFrame(smoothMove);
-                }
             }
         });
-        
+
         document.addEventListener('mouseup', e => {
             if (!isDragging) return;
             isDragging = false;
-            
+
             if (hasMoved) {
-                // Let animation finish smoothly
-                if (animationFrame) {
-                    cancelAnimationFrame(animationFrame);
-                    animationFrame = requestAnimationFrame(smoothMove);
-                }
-                settings.panelX = Math.round(targetX);
-                settings.panelY = Math.round(targetY);
+                settings.panelX = panel.offsetLeft;
+                settings.panelY = panel.offsetTop;
                 saveSettings();
+                log('Panel position saved:', settings.panelX, settings.panelY);
             } else {
                 toggleMinimize(panel);
             }
         });
-        
+
         // RESIZE SYSTEM
         let resizing = false;
         let resizeStartX, resizeStartY, resizeStartW, resizeStartH;
-        
+
         resize.addEventListener('mousedown', e => {
             e.preventDefault();
             e.stopPropagation();
@@ -730,13 +749,13 @@
             document.body.style.cursor = 'nwse-resize';
             document.body.style.userSelect = 'none';
         });
-        
+
         document.addEventListener('mousemove', e => {
             if (!resizing) return;
             panel.style.width = Math.max(100, Math.min(250, resizeStartW + e.clientX - resizeStartX)) + 'px';
             panel.style.height = Math.max(100, Math.min(350, resizeStartH + e.clientY - resizeStartY)) + 'px';
         });
-        
+
         document.addEventListener('mouseup', () => {
             if (resizing) {
                 resizing = false;
@@ -747,28 +766,30 @@
                 saveSettings();
             }
         });
-        
+
         // OTHER BUTTONS
         btnBackup.addEventListener('click', e => {
             e.stopPropagation();
             showBackupSettings();
         });
-        
+
         panel.querySelectorAll('.cpm-vbtn').forEach(btn => {
             btn.addEventListener('click', e => {
                 e.stopPropagation();
                 setViewMode(btn.dataset.view);
             });
         });
-        
+
         search.addEventListener('input', () => filterProjects(search.value));
         search.addEventListener('mousedown', e => e.stopPropagation());
-        
+
         // KEYBOARD SHORTCUTS
         document.addEventListener('keydown', e => {
             if (e.ctrlKey && e.key === 'f') {
-                e.preventDefault();
-                search.focus();
+                if (isProjectsPage()) {
+                    e.preventDefault();
+                    search.focus();
+                }
             }
             if (e.key === 'Escape' && document.activeElement === search) {
                 search.value = '';
@@ -776,10 +797,12 @@
                 search.blur();
             }
             if (!e.ctrlKey && !e.altKey && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) {
-                if (e.key === '1') setViewMode('cards');
-                if (e.key === '2') setViewMode('compact');
-                if (e.key === '3') setViewMode('list');
-                if (e.key === '4') setViewMode('mini');
+                if (isProjectsPage()) {
+                    if (e.key === '1') setViewMode('cards');
+                    if (e.key === '2') setViewMode('compact');
+                    if (e.key === '3') setViewMode('list');
+                    if (e.key === '4') setViewMode('mini');
+                }
             }
         });
     }
@@ -793,6 +816,7 @@
             panel.style.height = settings.panelHeight + 'px';
         }
         saveSettings();
+        log('Panel minimized:', settings.panelMinimized);
     }
 
     function setViewMode(mode) {
@@ -801,6 +825,7 @@
         settings.viewMode = mode;
         saveSettings();
         updateViewButtons();
+        log('View mode set to:', mode);
     }
 
     function updateViewButtons() {
@@ -840,7 +865,7 @@
     function createContextMenu() {
         const old = document.getElementById('cpm-menu');
         if (old) old.remove();
-        
+
         const menu = document.createElement('div');
         menu.id = 'cpm-menu';
         menu.innerHTML = `
@@ -862,6 +887,7 @@
                 menu.style.display = 'none';
             }
         });
+        log('Context menu created');
     }
 
     function showMenu(e, card, pid) {
@@ -893,28 +919,28 @@
             text = text.replace(/[☆★]\d*$/, '').trim();
             if (text) return text;
         }
-        
+
         const spans = card.querySelectorAll('span');
         for (const span of spans) {
             if (span.classList.contains('cpm-star') || span.classList.contains('cpm-num')) continue;
-            
+
             let text = span.textContent.trim();
-            
+
             if (text.match(/\d+\s+(day|days|hour|hours|minute|minutes|month|months|year|years)\s+ago/i)) continue;
             if (text.match(/^Updated/i)) continue;
-            
+
             text = text.replace(/Updated\s+\d+\s+\w+\s+ago/gi, '').trim();
             text = text.replace(/\d+\s+(day|days|hour|hours|minute|minutes|month|months|year|years)\s+ago/gi, '').trim();
             text = text.replace(/[☆★]\d*$/, '').trim();
-            
+
             if (text && text.length > 1) return text;
         }
-        
+
         let fullText = card.textContent;
         fullText = fullText.replace(/Updated\s+\d+\s+\w+\s+ago/gi, '');
         fullText = fullText.replace(/\d+\s+(day|days|hour|hours|minute|minutes|month|months|year|years)\s+ago/gi, '');
         fullText = fullText.replace(/[☆★]\d*/g, '');
-        
+
         const lines = fullText.split('\n').map(l => l.trim()).filter(l => l && l.length > 1);
         return lines[0] || 'Project';
     }
@@ -924,13 +950,13 @@
         if (timeEl) {
             return 'Updated ' + timeEl.textContent.trim();
         }
-        
+
         const allText = card.textContent;
         const agoMatch = allText.match(/(\d+\s+\w+\s+ago)/i);
         if (agoMatch) {
             return 'Updated ' + agoMatch[1];
         }
-        
+
         return '';
     }
 
@@ -946,21 +972,23 @@
 
     function enhanceCards() {
         const cards = getProjectCards();
+        log('Enhancing', cards.length, 'cards');
+
         cards.forEach((card, index) => {
             const pid = getProjectId(card);
             const isFav = favorites.includes(pid);
             const manualColor = projectColors[pid];
             card.classList.toggle('cpm-fav', isFav);
-            
-            let colorInfo = manualColor && manualColor !== 'none' 
-                ? MANUAL_COLORS.find(c => c.id === manualColor) 
+
+            let colorInfo = manualColor && manualColor !== 'none'
+                ? MANUAL_COLORS.find(c => c.id === manualColor)
                 : DEFAULT_COLOR;
-            
+
             if (colorInfo) {
                 card.style.borderLeft = `5px solid ${colorInfo.border}`;
                 card.style.background = colorInfo.bg;
             }
-            
+
             // Star button
             let star = card.querySelector('.cpm-star');
             if (!star) {
@@ -972,7 +1000,7 @@
             }
             star.textContent = isFav ? '★' : '☆';
             star.classList.toggle('on', isFav);
-            
+
             // Number badge
             let numBadge = card.querySelector('.cpm-num');
             if (!numBadge) {
@@ -981,7 +1009,7 @@
                 card.appendChild(numBadge);
             }
             numBadge.textContent = index + 1;
-            
+
             // Hover tooltip events
             if (!card.dataset.cpmHover) {
                 card.dataset.cpmHover = '1';
@@ -989,7 +1017,7 @@
                 const projectDate = getProjectDate(card);
                 card.dataset.cpmName = projectName;
                 card.dataset.cpmDate = projectDate;
-                
+
                 card.addEventListener('mouseenter', () => {
                     clearTimeout(tooltipTimeout);
                     tooltipTimeout = setTimeout(() => {
@@ -997,16 +1025,16 @@
                         showTooltip(card.dataset.cpmName, card.dataset.cpmDate, rect);
                     }, 300);
                 });
-                
+
                 card.addEventListener('mouseleave', () => {
                     hideTooltip();
                 });
-                
+
                 card.addEventListener('click', () => {
                     hideTooltip();
                 });
             }
-            
+
             // Context menu
             if (!card.dataset.cpmMenu) {
                 card.dataset.cpmMenu = '1';
@@ -1017,106 +1045,108 @@
     }
 
     // ============================================
-    // 🎯 CLEANUP & PAGE DETECTION
+    // 🎯 PAGE DETECTION - IMPROVED
     // ============================================
-    
+
     function isProjectsPage() {
-        return location.pathname === '/projects' || location.pathname.startsWith('/projects');
+        const path = location.pathname;
+        // Match /projects or /projects/ or URLs with project cards visible
+        const isPath = path === '/projects' || path === '/projects/';
+        const hasCards = document.querySelectorAll('a[href^="/project/"]').length > 0;
+
+        // Also check if we're on main page with projects visible
+        const isMainWithProjects = path === '/' && hasCards;
+
+        return isPath || isMainWithProjects;
     }
-    
+
     function isInsideProject() {
-        // Inside a specific project (e.g., /project/abc-123)
-        return location.pathname.startsWith('/project/') && !location.pathname.endsWith('/projects');
+        const path = location.pathname;
+        // Inside a specific project (e.g., /project/abc-123 or /project/abc-123/chat/xyz)
+        return path.match(/^\/project\/[^/]+/) !== null;
     }
-    
+
     function getProjectIdFromUrl() {
-        const match = location.pathname.match(/^\/project\/([^/?#]+)/);
+        const match = location.pathname.match(/^\/project\/([^/?#/]+)/);
         return match ? match[1] : null;
     }
-    
-    // 🔴 Apply color indicator to project header - WITH RETRY
-    let headerRetryCount = 0;
-    const MAX_HEADER_RETRIES = 20;
-    
+
+    // 🔴 Apply color indicator to project header
     function applyProjectHeaderColor() {
         const projectId = getProjectIdFromUrl();
-        if (!projectId) {
-            return;
-        }
-        
-        // Check if indicator already exists
-        if (document.querySelector('.cpm-project-indicator')) {
-            headerRetryCount = 0;
-            return;
-        }
-        
-        // ONLY look for links that actually point to /project/
-        // This is the breadcrumb link to the project
+        if (!projectId) return;
+
+        // Remove any existing indicators first
+        document.querySelectorAll('.cpm-project-indicator').forEach(el => el.remove());
+
+        // Find the project name element
         let targetElement = null;
-        
-        // Get all links that contain /project/ in href
-        const projectLinks = document.querySelectorAll('a[href*="/project/"]');
-        
-        for (const link of projectLinks) {
-            const rect = link.getBoundingClientRect();
-            // Must be in header area (top 80px) and visible
-            if (rect.top >= 0 && rect.top < 80 && rect.width > 0 && rect.height > 0) {
-                // This should be the breadcrumb project link
-                targetElement = link;
-                console.log('📁 CPM: Found project link in header:', link.textContent.trim(), 'at top:', rect.top);
+
+        // Method 1: Look for h1 elements
+        const h1Elements = document.querySelectorAll('h1');
+        for (const h1 of h1Elements) {
+            if (h1.textContent.trim().length > 0 && !h1.querySelector('.cpm-project-indicator')) {
+                targetElement = h1;
                 break;
             }
         }
-        
+
+        // Method 2: Look for project link in breadcrumb
         if (!targetElement) {
-            // Retry if not found yet
-            headerRetryCount++;
-            if (headerRetryCount < MAX_HEADER_RETRIES) {
-                console.log('📁 CPM: Project header link not found, retry', headerRetryCount, '/', MAX_HEADER_RETRIES);
-                setTimeout(applyProjectHeaderColor, 250);
-            } else {
-                console.log('📁 CPM: Could not find project header after', MAX_HEADER_RETRIES, 'attempts');
-                headerRetryCount = 0;
+            const projectLinks = document.querySelectorAll('a[href^="/project/"]');
+            for (const link of projectLinks) {
+                const rect = link.getBoundingClientRect();
+                if (rect.top < 100 && rect.top > 0) {
+                    targetElement = link;
+                    break;
+                }
             }
-            return;
         }
-        
-        headerRetryCount = 0;
-        
+
+        if (!targetElement) return;
+
         // Get the color for this project
         const manualColor = projectColors[projectId];
-        let colorInfo = manualColor && manualColor !== 'none' 
-            ? MANUAL_COLORS.find(c => c.id === manualColor) 
+        let colorInfo = manualColor && manualColor !== 'none'
+            ? MANUAL_COLORS.find(c => c.id === manualColor)
             : DEFAULT_COLOR;
-        
+
         // Create the color indicator dot
         const indicator = document.createElement('span');
         indicator.className = 'cpm-project-indicator';
         indicator.style.backgroundColor = colorInfo.border;
         indicator.title = 'Project color';
-        
-        // Insert at the beginning of the link
+
+        // Insert at the beginning of the element
         targetElement.insertBefore(indicator, targetElement.firstChild);
-        console.log('📁 CPM: ✅ Color indicator added!');
+        log('Applied header color indicator for project:', projectId);
     }
-    
+
     function cleanup() {
         hideTooltip();
         document.body.classList.remove('cpm-cards', 'cpm-compact', 'cpm-list', 'cpm-mini', 'cpm-inside-project');
-        
-        const panel = document.getElementById('cpm-panel');
-        if (panel) panel.style.display = 'none';
-    }
-    
-    function showUI() {
+
         const panel = document.getElementById('cpm-panel');
         if (panel) {
-            panel.style.display = '';
-        } else {
-            createPanel();
+            panel.classList.add('cpm-hidden');
         }
+        log('Cleanup done');
+    }
+
+    function showUI() {
+        log('showUI called');
+        let panel = document.getElementById('cpm-panel');
+
+        if (!panel) {
+            panel = createPanel();
+        } else {
+            panel.classList.remove('cpm-hidden');
+            log('Panel shown (removed cpm-hidden)');
+        }
+
         setViewMode(settings.viewMode);
         setTimeout(enhanceCards, 100);
+        setTimeout(enhanceCards, 500); // Double-check after content loads
     }
 
     // Hide tooltip on any click
@@ -1127,42 +1157,42 @@
     // ============================================
     // 🎯 SPA NAVIGATION DETECTION
     // ============================================
-    
+
     function checkPage() {
         const currentUrl = location.href;
-        
+
         if (currentUrl !== lastUrl) {
             lastUrl = currentUrl;
-            
+            log('URL changed to:', location.pathname);
+
             if (isProjectsPage()) {
-                console.log('📁 CPM: On projects page - showing UI');
+                log('On projects page - showing UI');
                 document.body.classList.remove('cpm-inside-project');
                 showUI();
             } else if (isInsideProject()) {
-                console.log('📁 CPM: Inside project - showing color indicator');
-                document.body.classList.add('cpm-inside-project');
+                log('Inside project - showing color indicator');
                 cleanup();
                 document.body.classList.add('cpm-inside-project');
-                // Apply project header color after a short delay for DOM to load
                 setTimeout(applyProjectHeaderColor, 300);
+                setTimeout(applyProjectHeaderColor, 1000); // Retry for slow loads
             } else {
-                console.log('📁 CPM: Other page - hiding UI');
+                log('Other page - hiding UI');
                 cleanup();
             }
         }
     }
-    
+
     // Watch for URL changes using multiple methods
-    
+
     // Method 1: popstate for back/forward
     window.addEventListener('popstate', () => {
         setTimeout(checkPage, 100);
     });
-    
+
     // Method 2: MutationObserver for SPA navigation
     const observer = new MutationObserver(() => {
         checkPage();
-        
+
         // Also enhance cards if on projects page
         if (isProjectsPage()) {
             const cards = getProjectCards();
@@ -1170,46 +1200,58 @@
                 enhanceCards();
             }
         }
-        
+
         // Apply header color inside project if not already present
         if (isInsideProject() && !document.querySelector('.cpm-project-indicator')) {
             applyProjectHeaderColor();
         }
     });
-    
+
     // Method 3: Periodic check as backup
-    setInterval(checkPage, 500);
+    setInterval(checkPage, 1000);
 
     // ============================================
     // 🚀 INIT
     // ============================================
-    
+
     function init() {
+        log('Initializing...');
         loadSettings();
         injectStyles();
         createTooltip();
         createContextMenu();
-        
+
         lastUrl = location.href;
-        
+
         if (isProjectsPage()) {
+            log('Starting on projects page');
             createPanel();
             setViewMode(settings.viewMode);
             checkAutoBackup();
             setTimeout(enhanceCards, 500);
+            setTimeout(enhanceCards, 1500); // Extra delay for slow loads
+        } else if (isInsideProject()) {
+            log('Starting inside project');
+            document.body.classList.add('cpm-inside-project');
+            setTimeout(applyProjectHeaderColor, 500);
+        } else {
+            log('Starting on other page:', location.pathname);
         }
-        
+
         // Start observing
         observer.observe(document.body, { childList: true, subtree: true });
-        
+
         isInitialized = true;
-        console.log('📁 CPM v2: Initialized');
+        log('Initialization complete');
     }
 
+    // Wait for DOM to be ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(init, 100);
+        });
     } else {
-        init();
+        setTimeout(init, 100);
     }
 
 })();

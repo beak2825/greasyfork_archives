@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FPL Faces
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      3.0
 // @description  Replaces player jerseys with faces
 // @author       Luigi
 // @match        https://fantasy.premierleague.com/*
@@ -15,82 +15,93 @@
     'use strict';
 
     GM_addStyle(`
-        /* BASE FACE STYLE */
-        .tm-fpl-face {
-            object-fit: contain;
-            display: block;
-            margin: 0 auto;
-            z-index: 10;
-            filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.2));
+
+        button.tm-card-pickteam {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+
+        button.tm-card-pickteam div[class*="_2j6lqn0"] {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-end !important;
+            align-items: center !important;
+
+            /* Remove internal gaps */
+            padding: 0 !important;
+            margin: 0 !important;
+
+            height: 100% !important;
+            width: 100% !important;
+            position: relative !important;
+        }
+
+
+        .tm-face-pickteam {
+            order: 1 !important;
+            flex: 1 1 auto !important;
+
+
+            width: auto !important;
+            height: auto !important;
+            max-height: 65% !important;
+            max-width: 85% !important;
+
+            margin: 0 auto !important;
+            margin-bottom: -1px !important;
+
+            object-fit: contain !important;
+            object-position: bottom center !important;
+            z-index: 1 !important;
             pointer-events: none;
         }
 
-        /* TRANSFERS PAGE */
+
+        button.tm-card-pickteam div[class*="_5supsj"] {
+            order: 2 !important;
+            flex: 0 0 auto !important;
+
+
+            width: 100% !important;
+            margin: 0 !important;
+            max-width: none !important;
+
+            z-index: 20 !important;
+            position: relative !important;
+
+
+            border-radius: 0 0 6px 6px !important;
+        }
+
+        button.tm-card-transfer {
+            position: relative !important;
+        }
+
         .tm-face-transfer {
-            width: 70px !important;  
-            height: 70px !important; 
-            margin-bottom: 30px;      /* Tiny gap above name */
+            position: absolute !important;
+            left: 0 !important;
+            right: 0 !important;
+            margin: 0 auto !important;
+            display: block !important;
+            top: 22px !important;
+            bottom: 58px !important;
+            width: 75% !important;
+            max-width: 70px !important;
+            object-fit: contain !important;
+            object-position: bottom center !important;
+            z-index: 0 !important;
+            pointer-events: none;
         }
 
-        /* PICK TEAM PAGE */
-        .tm-face-pickteam {
-            width: 69px !important;  
-            height: 90px !important; 
-            margin-bottom: 32px;      /* Pull closer to name */
+        button.tm-card-transfer div[class*="_2j6lqn0"] {
+            z-index: 20 !important;
+            position: relative !important;
         }
 
-        /* HIDE SHIRTS */
         button[data-pitch-element="true"] picture {
             display: none !important;
-        }
-
-        button[data-pitch-element="true"] div[class*="_2j6lqn0"] {
-            justify-content: flex-end; /* Align to bottom (name bar) */
-        }
-
-        @media (max-width: 700px) {
-            .tm-face-pickteam {
-                width: 12vw !important;
-                height: 11vw !important;
-                max-width: 100px !important;
-                margin-bottom: 4.5vw;
-            }
-
-            .tm-face-transfer {
-                width: 11vw !important;
-                height: 10.25vw !important;
-                margin-bottom: 5.5vw;
-            }
-        }
-
-        @media (max-width: 420px) {
-            .tm-face-pickteam {
-                width: 12vw !important;
-                height: 12vw !important;
-                max-width: 100px !important;
-                margin-bottom: 4.5vw;
-            }
-
-            .tm-face-transfer {
-                width: 11vw !important;
-                height: 11.5vw !important;
-                margin-bottom: 5.5vw;
-            }
-        }
-
-        @media (max-width: 366px) {
-            .tm-face-pickteam {
-                width: 12vw !important;
-                height: 13.5vw !important;
-                max-width: 100px !important;
-                margin-bottom: 4.5vw;
-            }
-
-            .tm-face-transfer {
-                width: 11vw !important;
-                height: 13.75vw !important;
-                margin-bottom: 4.5vw;
-            }
         }
     `);
 
@@ -132,7 +143,7 @@
         return null;
     }
 
-    
+
     function runScript() {
         if (!isDataLoaded) return;
 
@@ -143,40 +154,36 @@
             if (!shirtImg) return;
             const teamName = shirtImg.getAttribute('alt');
 
-            
             const pictureTag = card.querySelector('picture');
-            if (!pictureTag || !pictureTag.nextElementSibling) return;
+            if (!pictureTag) return;
+            const innerContainer = pictureTag.parentNode;
+
             const nameContainer = pictureTag.nextElementSibling;
+            if (!nameContainer) return;
             const nameSpan = nameContainer.querySelector('span');
             if (!nameSpan) return;
             const webName = nameSpan.textContent;
 
-            
-
-            // parent container of the picture
-            const parentDiv = pictureTag.parentNode;
-            const priceTag = parentDiv.querySelector('span:first-child');
-
-            
+            const parentDiv = innerContainer.parentNode;
+            const priceTag = parentDiv ? parentDiv.querySelector('span') : null;
             const isTransferPage = priceTag && priceTag.textContent.includes('£');
 
-            // image url
             const faceUrl = getPlayerPhoto(webName, teamName);
 
             if (faceUrl) {
                 const newImg = document.createElement('img');
                 newImg.src = faceUrl;
-                newImg.className = 'tm-fpl-face'; 
+                newImg.className = 'tm-fpl-face';
 
-                
                 if (isTransferPage) {
                     newImg.classList.add('tm-face-transfer');
+                    card.classList.add('tm-card-transfer');
                 } else {
                     newImg.classList.add('tm-face-pickteam');
+                    card.classList.add('tm-card-pickteam');
                 }
 
-                
-                pictureTag.parentNode.insertBefore(newImg, pictureTag);
+                innerContainer.insertBefore(newImg, pictureTag);
                 card.classList.add('tm-processed');
             }
         });

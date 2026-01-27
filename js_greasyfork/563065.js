@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         MangaMirai Chapter Downloader(DOM)
+// @name         MangaMirai Chapter Downloader
 // @namespace    http://tampermonkey.net/
 // @version      1.4
 // @description  Captures rendered manga pages from canvas elements on mangamirai.com and saves them to a named folder.
@@ -9,8 +9,8 @@
 // @license      MIT
 // @grant        GM_addStyle
 // @grant        GM_download
-// @downloadURL https://update.greasyfork.org/scripts/563065/MangaMirai%20Chapter%20Downloader%28DOM%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563065/MangaMirai%20Chapter%20Downloader%28DOM%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563065/MangaMirai%20Chapter%20Downloader.user.js
+// @updateURL https://update.greasyfork.org/scripts/563065/MangaMirai%20Chapter%20Downloader.meta.js
 // ==/UserScript==
 
 (function() {

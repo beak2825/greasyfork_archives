@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arson bang for buck
 // @namespace    Para_Thenics.torn.com
-// @version      1.00.013
+// @version      1.00.014
 // @description  Display profit per nerve and how to perform
 // @author       Para_Thenics, auboli77
 // @match        https://www.torn.com/page.php?sid=crimes*
@@ -303,7 +303,7 @@ async function getPricesFromAPI() {
 ],
 "Apart of the Problem": [
     [
-    "Payout:280K",
+    "Payout:265K",
     "Profit/Nerve: ",
     "Flamethrower: No",
     "Place: 6 Gasoline",
@@ -311,7 +311,7 @@ async function getPricesFromAPI() {
     "Dampen: "
 ],
       [
-    "Payout:280K",
+    "Payout:265K",
     "Profit/Nerve: ",
     "Flamethrower: Yes",
     "Place: 4 Gasoline",
@@ -541,7 +541,7 @@ async function getPricesFromAPI() {
     "Dampen: "
 ],
 "Bright Spark": [
-    "Payout: 290K",
+    "Payout: 275K",
     "Profit/Nerve: ",
     "Ignite: Lighter",
     "Place: 1 Hydrogen Tank",
@@ -3273,40 +3273,47 @@ loadItemValues();
 
 function calculateMaterialCost(lines) {
     let baseCost = 0;
-    let optionalCost = 0;
+    let optionalExtra = 0;
+
     const regex = /(\d+)\s+([A-Za-z]+(?:\s+[A-Za-z]+)*)/g;
+    const optionalRegex = /\?(\d+)\s+([A-Za-z]+(?:\s+[A-Za-z]+)*)\?/g;
 
     lines.forEach(line => {
-        // Regular items
-        if (/^(Place|Stoke|Dampen|Evidence)/.test(line)) {
-            let match;
-            while ((match = regex.exec(line)) !== null) {
-                const qty = parseInt(match[1], 10);
-                const item = match[2].trim();
-                const lookupKey = Object.keys(itemValues).find(k => k.toLowerCase() === item.toLowerCase());
-                if (lookupKey) {
-                    const cost = qty * parseValue(itemValues[lookupKey]);
-                    baseCost += cost;
-                    optionalCost += cost;
+
+        // Remove optional blocks for base calculations
+        const cleaned = line.replace(/\?[^?]+\?/g, "");
+
+        // Base items
+        if (/^(Place|Stoke|Dampen|Evidence)/i.test(line)) {
+            let m;
+            while ((m = regex.exec(cleaned)) !== null) {
+                const qty = parseInt(m[1], 10);
+                const item = m[2].trim();
+                const key = Object.keys(itemValues).find(k => k.toLowerCase() === item.toLowerCase());
+                if (key) {
+                    baseCost += qty * parseValue(itemValues[key]);
                 }
             }
         }
 
-        // Optional items (wrapped in ? ?)
-        const optionalRegex = /\?(\d+)\s+([A-Za-z]+(?:\s+[A-Za-z]+)*)\?/g;
-        let optMatch;
-        while ((optMatch = optionalRegex.exec(line)) !== null) {
-            const qty = parseInt(optMatch[1], 10);
-            const item = optMatch[2].trim();
-            const lookupKey = Object.keys(itemValues).find(k => k.toLowerCase() === item.toLowerCase());
-            if (lookupKey) {
-                optionalCost += qty * parseValue(itemValues[lookupKey]);
+        // Optional items
+        let o;
+        while ((o = optionalRegex.exec(line)) !== null) {
+            const qty = parseInt(o[1], 10);
+            const item = o[2].trim();
+            const key = Object.keys(itemValues).find(k => k.toLowerCase() === item.toLowerCase());
+            if (key) {
+                optionalExtra += qty * parseValue(itemValues[key]);
             }
         }
     });
 
-    return { baseCost, optionalCost };
+    return {
+        baseCost,
+        optionalCost: baseCost + optionalExtra   // <<< KEY FIX
+    };
 }
+``
 
 
 
@@ -3345,6 +3352,8 @@ function calculateMaterialCost(lines) {
 
 
 function calculateProfitPerNerve(lines) {
+
+    // read payout
     const payoutLine = lines.find(l => l.startsWith("Payout:"));
     if (!payoutLine) return null;
 
@@ -3359,25 +3368,36 @@ function calculateProfitPerNerve(lines) {
     let itemCount = 0;
     let optionalItemCount = 0;
 
+    const regex = /(\d+)\s+[A-Za-z]+/g;
+    const optionalRegex = /\?(\d+)\s+[A-Za-z]+/g;
+    const optionalAddRegex = /\?\+(\d+)\s+[A-Za-z]+/g;
+
     lines.forEach(line => {
-        // Regular items
-        if (/^(Place|Stoke|Dampen|Evidence)/.test(line)) {
-            const regex = /(\d+)\s+[A-Za-z]+/g;
-            let m;
-            while ((m = regex.exec(line)) !== null) itemCount += parseInt(m[1], 10);
+
+        // 1. Remove optional before counting base items
+        const cleaned = line.replace(/\?[^?]+\?/g, "");
+        let m;
+
+        if (/^(Place|Stoke|Dampen|Evidence)/i.test(line)) {
+            while ((m = regex.exec(cleaned)) !== null) {
+                itemCount += parseInt(m[1], 10);
+            }
         }
 
-        // Optional full items
-        const optionalRegex = /\?(\d+)\s+[A-Za-z]+/g;
-        let optMatch;
-        while ((optMatch = optionalRegex.exec(line)) !== null) optionalItemCount += parseInt(optMatch[1], 10);
+        // 2. Optional full items
+        let o;
+        while ((o = optionalRegex.exec(line)) !== null) {
+            optionalItemCount += parseInt(o[1], 10);
+        }
 
-        // Optional additions (+)
-        const optionalAddRegex = /\?\+(\d+)\s+[A-Za-z]+/g;
-        let optAddMatch;
-        while ((optAddMatch = optionalAddRegex.exec(line)) !== null) optionalItemCount += parseInt(optAddMatch[1], 10);
+        // 3. Optional additions "?+1 Gasoline?"
+        let o2;
+        while ((o2 = optionalAddRegex.exec(line)) !== null) {
+            optionalItemCount += parseInt(o2[1], 10);
+        }
     });
 
+    // correct nerve formula
     const baseNerve = 10 + (itemCount * 5);
     const optionalNerve = baseNerve + (optionalItemCount * 5);
 

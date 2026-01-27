@@ -5,7 +5,7 @@
 // @name:zh-CN   PonyTown小马皮肤导入
 // @name:zh-TW   PonyTown小馬角色導入
 // @namespace    https://pony.town/
-// @version      0.124.0-alpha
+// @version      0.125.2-alpha
 // @description        Use Edit character modal to import your character from the PTC file!!
 // @description:en     Use Edit character modal to import your character from the PTC file!!
 // @description:zh     使用角色编辑页面从PTC文件导入你的小马皮肤
@@ -23,11 +23,11 @@
 
 (function() {
     'use strict';
-    const CG = 2533654996;
-    const yG = 742503514;
+    const CG = 2263968421;
+    const yG = 1035231019;
 
-    const nl = 609298432;
-    const nx = 5;
+    const nl = 899990385;
+    const nx = 13;
 
     const KP = 4294967295; //2^32
     const A_o = 2786829884; //pony
@@ -35,8 +35,8 @@
 
     const Safe_Mode = true;
 
-    const version = "0.124.0-alpha";
-    const api_version = "KniIkVlo6N";
+    const version = "0.125.2-alpha";
+    const api_version = "_sfxQCG3yf";
     
     const zh = navigator.language.startsWith("zh");
 
@@ -2349,12 +2349,12 @@
                 const disableBtn = document.querySelector('button[aria-label="Can\'t duplicate this plush as it hasn\'t been saved yet"]');
                 exportBtn.disabled = (disableBtn || !countPonyItems()) ? true : false 
                 const plushid = getSelectedPonyItemId("character-plush-list");
-                const plushtext = plushid >= 0 ? 'Export' : 'Export all';
-                if (exportBtn.textContent.trim() !== plushtext) {
-                    const icon = exportBtn.querySelector('fa-icon');
-                    exportBtn.innerHTML = '';
-                    if (icon) exportBtn.appendChild(icon.cloneNode(true));
-                    exportBtn.appendChild(document.createTextNode(plushtext));
+                const plushstate = plushid >= 0;
+                const lastplushstate = exportBtn.getAttribute('plushid-state') === "true";
+                if (plushstate != lastplushstate) {
+                    const plushtext = plushstate ? 'Export' : 'Export all';
+                    exportBtn.textContent = plushtext;
+                    exportBtn.setAttribute('plushid-state', plushstate);
                 }
             }
         }
@@ -2636,12 +2636,17 @@
         }
 
         async function getScriptVersion() {
-            const response = await fetch(getScriptUrl());
-            const html = await response.text();
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const version = doc.querySelector('meta[name="script-version"]').getAttribute('content');
-            return version;
+            try{
+                const response = await fetch(getScriptUrl());
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const fetchversion = doc.querySelector('meta[name="script-version"]').getAttribute('content');
+                return fetchversion;
+            }
+            catch (err) {
+                return version;
+            }
         }
 
         function runAfterDOMLoaded(callback) {

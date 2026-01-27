@@ -1,39 +1,41 @@
 // ==UserScript==
-// @name         Student Helper Style
+// @name         Student Helper Style Schetule
 // @namespace    https://github.com/AbrikosV/StudentHelperStyle
-// @version      1.9.6
+// @version      1.9.7
 // @description  Это доплнение предназначено для улучшения UI интерфейса сайта с базовой настройкой, изменяет Страницу учеба
-// @author       AbrikosV 
+// @author       AbrikosV
 // @match        https://system.fgoupsk.ru/student/*
 // @grant        none
 // @run-at       document-end
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/556387/Student%20Helper%20Style.user.js
-// @updateURL https://update.greasyfork.org/scripts/556387/Student%20Helper%20Style.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/556387/Student%20Helper%20Style%20Schetule.user.js
+// @updateURL https://update.greasyfork.org/scripts/556387/Student%20Helper%20Style%20Schetule.meta.js
 // ==/UserScript==
 
 (function () {
-  'use strict';
+  "use strict";
 
   // === 🛑 Защита от дублей ===
-  const SCRIPT_ID = 'student-helper-stylett-v1.9.5';
+  const SCRIPT_ID = "student-helper-stylett-v1.9.5";
   if (document.getElementById(SCRIPT_ID)) return;
 
-  const marker = document.createElement('meta');
+  const marker = document.createElement("meta");
   marker.id = SCRIPT_ID;
   document.head.appendChild(marker);
 
   // === 🔐 ПЕРЕАДРЕСАЦИЯ ПОСЛЕ ВХОДА ===
   function setupLoginRedirect() {
-    if (location.pathname === '/student/' && !location.search.includes('mode=')) {
-      location.href = 'https://system.fgoupsk.ru/student/?mode=ucheba';
+    if (location.pathname === "/student/" && !location.search.includes("mode=")) {
+      location.href = "https://system.fgoupsk.ru/student/?mode=ucheba";
     }
   }
-
+  if (location.href.includes("/student/ATutor/")) {
+    return;
+  }
   setupLoginRedirect();
 
   // === 🎨 СТИЛИ ===
-  const style = document.createElement('style');
+  const style = document.createElement("style");
   style.textContent = `
 /* ===== 🌤 СВЕТЛАЯ ТЕМА (по умолчанию) ===== */
 body.shs-enhanced {
@@ -762,36 +764,34 @@ body.shs-enhanced[data-theme="dark"] {
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
-  const formatDate = d => {
-    const dd = String(d.getDate()).padStart(2, '0');
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const formatDate = (d) => {
+    const dd = String(d.getDate()).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
     return `${dd}.${mm}.${d.getFullYear()}`;
   };
 
-  const parseDate = str => {
-    const [d, m, y] = str.split('.').map(Number);
+  const parseDate = (str) => {
+    const [d, m, y] = str.split(".").map(Number);
     return new Date(y, m - 1, d);
   };
 
   function applyTheme() {
-    const saved = localStorage.getItem('shs-theme') || 'system';
-    const mq = matchMedia('(prefers-color-scheme: dark)');
+    const saved = localStorage.getItem("shs-theme") || "system";
+    const mq = matchMedia("(prefers-color-scheme: dark)");
     const systemPrefersDark = mq.matches;
 
-    const themeToApply = saved === 'system'
-      ? (systemPrefersDark ? 'dark' : 'light')
-      : saved;
+    const themeToApply = saved === "system" ? (systemPrefersDark ? "dark" : "light") : saved;
 
-    document.body.setAttribute('data-theme', themeToApply);
+    document.body.setAttribute("data-theme", themeToApply);
 
-    const select = document.getElementById('theme-select');
+    const select = document.getElementById("theme-select");
     if (select) select.value = saved;
 
     mq.onchange = (e) => {
-      const current = localStorage.getItem('shs-theme') || 'system';
-      if (current === 'system') {
-        const newTheme = e.matches ? 'dark' : 'light';
-        document.body.setAttribute('data-theme', newTheme);
+      const current = localStorage.getItem("shs-theme") || "system";
+      if (current === "system") {
+        const newTheme = e.matches ? "dark" : "light";
+        document.body.setAttribute("data-theme", newTheme);
       }
     };
 
@@ -807,20 +807,20 @@ body.shs-enhanced[data-theme="dark"] {
     init() {
       this.dateInput = $('input[name="d"]');
       this.searchBtn = $('.btn-primary[type="submit"]');
-      this.tables = $$('table.table.table-striped');
-      this.navbarRight = $('.navbar-nav.navbar-right');
-      this.h2s = $$('h2');
+      this.tables = $$("table.table.table-striped");
+      this.navbarRight = $(".navbar-nav.navbar-right");
+      this.h2s = $$("h2");
       return this.navbarRight !== null;
-    }
+    },
   };
 
   const modules = {
     uiCleanup() {
-      const h2Schedule = DOM.h2s.find(h => /расписан/i.test(h.textContent));
+      const h2Schedule = DOM.h2s.find((h) => /расписан/i.test(h.textContent));
       if (h2Schedule) {
         h2Schedule.remove();
         const nextHR = h2Schedule.nextElementSibling;
-        if (nextHR?.tagName === 'HR') nextHR.remove();
+        if (nextHR?.tagName === "HR") nextHR.remove();
       }
 
       const fullLink = $('a[href*="page=r"]');
@@ -830,9 +830,9 @@ body.shs-enhanced[data-theme="dark"] {
       if (groupLink) {
         try {
           const url = new URL(groupLink.href, location.origin);
-          url.searchParams.set('act2', 'prog');
+          url.searchParams.set("act2", "prog");
           groupLink.href = url.toString();
-          groupLink.title = 'Программа обучения группы';
+          groupLink.title = "Программа обучения группы";
         } catch (e) {
           console.warn('[SHS] Не удалось обновить ссылку "Группа":', e);
         }
@@ -842,16 +842,14 @@ body.shs-enhanced[data-theme="dark"] {
     dateNavigation() {
       if (!DOM.dateInput || !DOM.searchBtn) return;
 
-      const ctrl = document.createElement('div');
-      ctrl.className = 'date-controls';
+      const ctrl = document.createElement("div");
+      ctrl.className = "date-controls";
 
-      ['←', '🏠', '→'].forEach((txt, i) => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
+      ["←", "🏠", "→"].forEach((txt, i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
         btn.textContent = txt;
-        btn.title = i === 0 ? 'Предыдущий день' :
-                     i === 1 ? 'Сегодня' :
-                     'Следующий день';
+        btn.title = i === 0 ? "Предыдущий день" : i === 1 ? "Сегодня" : "Следующий день";
         btn.onclick = () => {
           const d = parseDate(DOM.dateInput.value);
           d.setDate(d.getDate() + (i === 0 ? -1 : i === 2 ? 1 : 0));
@@ -864,8 +862,8 @@ body.shs-enhanced[data-theme="dark"] {
 
       DOM.searchBtn.parentNode.insertBefore(ctrl, DOM.searchBtn.nextSibling);
 
-      DOM.dateInput.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || (e.ctrlKey && e.key === 'Enter')) {
+      DOM.dateInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || (e.ctrlKey && e.key === "Enter")) {
           e.preventDefault();
           DOM.searchBtn.click();
         }
@@ -878,70 +876,70 @@ body.shs-enhanced[data-theme="dark"] {
         if (DOM.tables.length < 2) return;
         const [, discTable] = DOM.tables;
         this.map.clear();
-        $$('tbody tr', discTable).forEach(tr => {
-          const a = $('td:nth-child(2) a[href]', tr);
+        $$("tbody tr", discTable).forEach((tr) => {
+          const a = $("td:nth-child(2) a[href]", tr);
           if (a) this.map.set(a.textContent.trim(), a.href);
         });
       },
       apply() {
         if (DOM.tables.length < 1) return;
         const [schedTable] = DOM.tables;
-        $$('tbody tr', schedTable).forEach(tr => {
-          const td = $('td:nth-child(2)', tr);
+        $$("tbody tr", schedTable).forEach((tr) => {
+          const td = $("td:nth-child(2)", tr);
           if (!td) return;
           const name = td.textContent.trim();
           const href = this.map.get(name);
           if (href) {
-            const link = document.createElement('a');
+            const link = document.createElement("a");
             link.href = href;
             link.textContent = name;
-            link.title = 'Перейти к программе дисциплины';
-            td.innerHTML = '';
+            link.title = "Перейти к программе дисциплины";
+            td.innerHTML = "";
             td.appendChild(link);
           }
         });
-      }
+      },
     },
 
     disciplinesToggler() {
-      const h2Disc = DOM.h2s.find(h => /дисциплин/i.test(h.textContent));
+      const h2Disc = DOM.h2s.find((h) => /дисциплин/i.test(h.textContent));
       const discTable = DOM.tables[1];
       if (!h2Disc || !discTable) return;
 
       modules.disciplineLinks.init();
       modules.disciplineLinks.apply();
 
-      const wrapper = document.createElement('div');
-      wrapper.className = 'disciplines-header';
+      const wrapper = document.createElement("div");
+      wrapper.className = "disciplines-header";
       wrapper.tabIndex = 0;
-      wrapper.setAttribute('role', 'button');
-      wrapper.setAttribute('aria-expanded', 'true');
-      wrapper.setAttribute('aria-controls', 'disciplines-table');
+      wrapper.setAttribute("role", "button");
+      wrapper.setAttribute("aria-expanded", "true");
+      wrapper.setAttribute("aria-controls", "disciplines-table");
       wrapper.innerHTML = '<span class="menu-toggle">☰</span> Дисциплины';
 
       h2Disc.replaceWith(wrapper);
-      discTable.id = 'disciplines-table';
+      discTable.id = "disciplines-table";
       if (DOM.tables[0]) {
-        DOM.tables[0].id = 'sched-table';
+        DOM.tables[0].id = "sched-table";
       }
 
-      let isHidden = localStorage.getItem('shs-disc-hidden') === 'true';
+      let isHidden = localStorage.getItem("shs-disc-hidden") === "true";
       if (isHidden) {
-        discTable.classList.add('hidden');
-        wrapper.querySelector('.menu-toggle').classList.add('rotated');
-        wrapper.setAttribute('aria-expanded', 'false');
+        discTable.classList.add("hidden");
+        wrapper.querySelector(".menu-toggle").classList.add("rotated");
+        wrapper.setAttribute("aria-expanded", "false");
       }
 
       const toggle = () => {
         isHidden = !isHidden;
-        discTable.classList.toggle('hidden', isHidden);
-        wrapper.querySelector('.menu-toggle').classList.toggle('rotated', isHidden);
-        wrapper.setAttribute('aria-expanded', String(!isHidden));
-        localStorage.setItem('shs-disc-hidden', String(isHidden));
+        discTable.classList.toggle("hidden", isHidden);
+        wrapper.querySelector(".menu-toggle").classList.toggle("rotated", isHidden);
+        wrapper.setAttribute("aria-expanded", String(!isHidden));
+        localStorage.setItem("shs-disc-hidden", String(isHidden));
       };
 
-      wrapper.onclick = wrapper.onkeydown = e => {
-        if (e.type === 'keydown' && !['Enter', ' '].includes(e.key)) return;
+      wrapper.onclick = wrapper.onkeydown = (e) => {
+        if (e.type === "keydown" && !["Enter", " "].includes(e.key)) return;
         e.preventDefault();
         toggle();
       };
@@ -952,8 +950,8 @@ body.shs-enhanced[data-theme="dark"] {
       init() {
         if (!DOM.navbarRight) return;
 
-        this.menu = document.createElement('div');
-        this.menu.className = 'settings-menu';
+        this.menu = document.createElement("div");
+        this.menu.className = "settings-menu";
         this.menu.innerHTML = `
           <div class="header">Настройки</div>
 
@@ -968,38 +966,38 @@ body.shs-enhanced[data-theme="dark"] {
         `;
         document.body.appendChild(this.menu);
 
-        const gearLi = document.createElement('li');
-        const gearLink = document.createElement('a');
-        gearLink.href = '#';
-        gearLink.textContent = '⚙️';
-        gearLink.setAttribute('aria-label', 'Настройки');
-        gearLink.setAttribute('role', 'button');
+        const gearLi = document.createElement("li");
+        const gearLink = document.createElement("a");
+        gearLink.href = "#";
+        gearLink.textContent = "⚙️";
+        gearLink.setAttribute("aria-label", "Настройки");
+        gearLink.setAttribute("role", "button");
         gearLi.appendChild(gearLink);
 
-        const exitLi = $('li:last-child', DOM.navbarRight);
+        const exitLi = $("li:last-child", DOM.navbarRight);
         if (exitLi) DOM.navbarRight.insertBefore(gearLi, exitLi);
         else DOM.navbarRight.appendChild(gearLi);
 
-        const themeSelect = $('#theme-select', this.menu);
-        const stored = localStorage.getItem('shs-theme') || 'system';
+        const themeSelect = $("#theme-select", this.menu);
+        const stored = localStorage.getItem("shs-theme") || "system";
         themeSelect.value = stored;
 
         themeSelect.onchange = () => {
           const value = themeSelect.value;
-          localStorage.setItem('shs-theme', value);
+          localStorage.setItem("shs-theme", value);
 
-          if (value === 'system') {
-            const mq = matchMedia('(prefers-color-scheme: dark)');
-            document.body.setAttribute('data-theme', mq.matches ? 'dark' : 'light');
+          if (value === "system") {
+            const mq = matchMedia("(prefers-color-scheme: dark)");
+            document.body.setAttribute("data-theme", mq.matches ? "dark" : "light");
           } else {
-            document.body.setAttribute('data-theme', value);
+            document.body.setAttribute("data-theme", value);
           }
         };
 
-        gearLink.onclick = e => {
+        gearLink.onclick = (e) => {
           e.preventDefault();
-          const wasVisible = this.menu.style.display === 'block';
-          this.menu.style.display = wasVisible ? 'none' : 'block';
+          const wasVisible = this.menu.style.display === "block";
+          this.menu.style.display = wasVisible ? "none" : "block";
 
           if (!wasVisible) {
             const rect = gearLink.getBoundingClientRect();
@@ -1013,25 +1011,25 @@ body.shs-enhanced[data-theme="dark"] {
 
             this.menu.style.left = `${left}px`;
             this.menu.style.top = `${rect.bottom + 4}px`;
-            this.menu.style.transform = 'none';
+            this.menu.style.transform = "none";
           }
         };
 
-        document.addEventListener('click', e => {
+        document.addEventListener("click", (e) => {
           if (!this.menu.contains(e.target) && e.target !== gearLink) {
-            this.menu.style.display = 'none';
+            this.menu.style.display = "none";
           }
         });
 
-        document.addEventListener('keydown', e => {
-          if (e.key === 'Escape') this.menu.style.display = 'none';
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") this.menu.style.display = "none";
         });
-      }
-    }
+      },
+    },
   };
 
   function main() {
-    document.body.classList.add('shs-enhanced');
+    document.body.classList.add("shs-enhanced");
     applyTheme();
 
     if (!DOM.init()) return;
@@ -1043,14 +1041,13 @@ body.shs-enhanced[data-theme="dark"] {
       modules.dateNavigation();
       modules.disciplinesToggler();
     } catch (err) {
-      console.error('[SHS] Ошибка:', err);
+      console.error("[SHS] Ошибка:", err);
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', main);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", main);
   } else {
     main();
   }
-
 })();

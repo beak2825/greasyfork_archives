@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Toolasha
 // @namespace    http://tampermonkey.net/
-// @version      0.5.30
+// @version      0.5.31
 // @description  Toolasha - Enhanced tools for Milky Way Idle.
 // @author       Celasha and Claude, thank you to bot7420, DrDucky, Frotty, Truth_Light, AlphB, qu, and sentientmilk, for providing the basis for a lot of this. Thank you to Miku, Orvel, Jigglymoose, Incinarator, Knerd, and others for their time and help. Thank you to Steez for testing and helping me figure out where I'm wrong! Thank you to Tib for his generous contribution of the Character Cards. Thank you to Sapnas for -deeply- testing and singlehandedly help me improve performance. Special thanks to Zaeter for the name.
 // @license      CC-BY-NC-SA-4.0
@@ -544,6 +544,14 @@
                     default: false,
                     dependencies: ['itemTooltip_profit'],
                     help: 'Shows material costs table with Ask/Bid prices, actions/hour, and profit breakdown',
+                },
+                itemTooltip_multiActionProfit: {
+                    id: 'itemTooltip_multiActionProfit',
+                    label: 'Show profit comparison for all item actions',
+                    type: 'checkbox',
+                    default: false,
+                    dependencies: ['itemTooltip_prices'],
+                    help: 'Displays best profit/hr highlighted, with other profitable actions (craft, coinify, decompose, transmute) summarized below',
                 },
                 itemTooltip_expectedValue: {
                     id: 'itemTooltip_expectedValue',
@@ -6517,6 +6525,458 @@
     const profitCalculator = new ProfitCalculator();
 
     /**
+     * Alchemy Profit Calculator Module
+     * Calculates profit for alchemy actions (Coinify, Decompose, Transmute) from game JSON data
+     *
+     * Success Rates (Base, Unmodified):
+     * - Coinify: 70% (0.7)
+     * - Decompose: 60% (0.6)
+     * - Transmute: Varies by item (from item.alchemyDetail.transmuteSuccessRate)
+     *
+     * Success Rate Modifiers:
+     * - Tea: Catalytic Tea provides /buff_types/alchemy_success (5% ratio boost, scales with Drink Concentration)
+     * - Formula: finalRate = baseRate × (1 + teaBonus)
+     */
+
+
+    // Base success rates for alchemy actions
+    const BASE_SUCCESS_RATES$1 = {
+        COINIFY: 0.7, // 70%
+        DECOMPOSE: 0.6, // 60%
+        // TRANSMUTE: varies by item (from alchemyDetail.transmuteSuccessRate)
+    };
+
+    // Base action time for all alchemy actions (20 seconds)
+    const BASE_ALCHEMY_TIME_SECONDS = 20;
+
+    class AlchemyProfitCalculator {
+        constructor() {
+            // Cache for item detail map
+            this._itemDetailMap = null;
+        }
+
+        /**
+         * Get item detail map (lazy-loaded and cached)
+         * @returns {Object} Item details map from init_client_data
+         */
+        getItemDetailMap() {
+            if (!this._itemDetailMap) {
+                const initData = dataManager.getInitClientData();
+                this._itemDetailMap = initData?.itemDetailMap || {};
+            }
+            return this._itemDetailMap;
+        }
+
+        /**
+         * Calculate alchemy success rate with tea modifiers
+         * @param {number} baseRate - Base success rate (0-1)
+         * @returns {number} Final success rate after modifiers
+         */
+        getAlchemySuccessRate(baseRate) {
+            try {
+                const gameData = dataManager.getInitClientData();
+                if (!gameData) {
+                    return baseRate;
+                }
+
+                const actionTypeHrid = '/action_types/alchemy';
+                const drinkSlots = dataManager.getActionDrinkSlots(actionTypeHrid);
+                const equipment = dataManager.getEquipment();
+
+                // Get drink concentration from equipment
+                const drinkConcentration = getDrinkConcentration(equipment, gameData.itemDetailMap);
+
+                // Calculate tea success rate bonus
+                let teaBonus = 0;
+
+                if (drinkSlots && drinkSlots.length > 0) {
+                    for (const drink of drinkSlots) {
+                        if (!drink || !drink.itemHrid) continue;
+
+                        const itemDetails = gameData.itemDetailMap[drink.itemHrid];
+                        if (!itemDetails || !itemDetails.consumableDetail || !itemDetails.consumableDetail.buffs) {
+                            continue;
+                        }
+
+                        // Check for alchemy_success buff
+                        for (const buff of itemDetails.consumableDetail.buffs) {
+                            if (buff.typeHrid === '/buff_types/alchemy_success') {
+                                // ratioBoost is a percentage multiplier (e.g., 0.05 = 5% of base)
+                                // It scales with drink concentration
+                                const ratioBoost = buff.ratioBoost * (1 + drinkConcentration);
+                                teaBonus += ratioBoost;
+                            }
+                        }
+                    }
+                }
+
+                // Calculate final success rate
+                // Formula: total = base × (1 + tea_ratio_boost)
+                const finalRate = baseRate * (1 + teaBonus);
+
+                return Math.min(1.0, finalRate); // Cap at 100%
+            } catch (error) {
+                console.error('[AlchemyProfitCalculator] Failed to calculate success rate:', error);
+                return baseRate;
+            }
+        }
+
+        /**
+         * Calculate alchemy action time with speed bonuses
+         * @returns {number} Action time in seconds
+         */
+        calculateAlchemyActionTime() {
+            try {
+                const gameData = dataManager.getInitClientData();
+                const equipment = dataManager.getEquipment();
+                const itemDetailMap = this.getItemDetailMap();
+
+                if (!gameData || !equipment) {
+                    return BASE_ALCHEMY_TIME_SECONDS;
+                }
+
+                const actionTypeHrid = '/action_types/alchemy';
+
+                // Get equipment speed bonus
+                const equipmentSpeedBonus = parseEquipmentSpeedBonuses(equipment, actionTypeHrid, itemDetailMap);
+
+                // Calculate action time with speed bonuses
+                // Formula: baseTime / (1 + speedBonus)
+                const actionTime = BASE_ALCHEMY_TIME_SECONDS / (1 + equipmentSpeedBonus);
+
+                return actionTime;
+            } catch (error) {
+                console.error('[AlchemyProfitCalculator] Failed to calculate action time:', error);
+                return BASE_ALCHEMY_TIME_SECONDS;
+            }
+        }
+
+        /**
+         * Calculate tea costs per hour for alchemy actions
+         * @returns {number} Tea cost per hour
+         */
+        calculateAlchemyTeaCosts() {
+            try {
+                const gameData = dataManager.getInitClientData();
+                const equipment = dataManager.getEquipment();
+
+                if (!gameData || !equipment) {
+                    return 0;
+                }
+
+                const actionTypeHrid = '/action_types/alchemy';
+                const drinkSlots = dataManager.getActionDrinkSlots(actionTypeHrid);
+
+                if (!drinkSlots || drinkSlots.length === 0) {
+                    return 0;
+                }
+
+                const drinkConcentration = getDrinkConcentration(equipment, gameData.itemDetailMap);
+                const drinksPerHour = calculateDrinksPerHour(drinkConcentration);
+
+                let totalTeaCost = 0;
+
+                for (const drink of drinkSlots) {
+                    if (!drink || !drink.itemHrid) continue;
+
+                    // Get tea price based on pricing mode
+                    const teaPrice = getItemPrice(drink.itemHrid, { context: 'profit', side: 'buy' });
+                    const resolvedPrice = teaPrice === null ? 0 : teaPrice;
+
+                    totalTeaCost += resolvedPrice;
+                }
+
+                return totalTeaCost * drinksPerHour;
+            } catch (error) {
+                console.error('[AlchemyProfitCalculator] Failed to calculate tea costs:', error);
+                return 0;
+            }
+        }
+
+        /**
+         * Calculate Coinify profit for an item
+         * @param {string} itemHrid - Item HRID
+         * @param {number} enhancementLevel - Enhancement level (default 0)
+         * @returns {Object|null} Profit data or null if not coinifiable
+         */
+        calculateCoinifyProfit(itemHrid, enhancementLevel = 0) {
+            try {
+                const itemDetails = dataManager.getItemDetails(itemHrid);
+                if (!itemDetails) {
+                    return null;
+                }
+
+                // Check if item is coinifiable
+                if (!itemDetails.alchemyDetail || itemDetails.alchemyDetail.isCoinifiable !== true) {
+                    return null;
+                }
+
+                // Get input cost (market price of the item)
+                const inputPrice = getItemPrice(itemHrid, { context: 'profit', side: 'buy', enhancementLevel });
+                if (inputPrice === null) {
+                    return null; // No market data
+                }
+
+                // Get output value (sell price from item data)
+                const outputValue = itemDetails.sellPrice || 0;
+
+                // Get success rate
+                const baseSuccessRate = BASE_SUCCESS_RATES$1.COINIFY;
+                const successRate = this.getAlchemySuccessRate(baseSuccessRate);
+
+                // Calculate action time and actions per hour
+                const actionTime = this.calculateAlchemyActionTime();
+                const actionsPerHour = calculateActionsPerHour(actionTime);
+
+                // Calculate tea costs
+                const teaCostPerHour = this.calculateAlchemyTeaCosts();
+
+                // Revenue per attempt (only on success)
+                const revenuePerAttempt = outputValue * successRate;
+
+                // Cost per attempt (input consumed on every attempt)
+                const costPerAttempt = inputPrice;
+
+                // Net profit per attempt
+                const profitPerAttempt = revenuePerAttempt - costPerAttempt;
+
+                // Hourly calculations
+                const profitPerHour = profitPerAttempt * actionsPerHour - teaCostPerHour;
+                const profitPerDay = calculateProfitPerDay(profitPerHour);
+
+                return {
+                    actionType: 'coinify',
+                    itemHrid,
+                    enhancementLevel,
+                    profitPerHour,
+                    profitPerDay,
+                    successRate,
+                    actionTime,
+                    actionsPerHour,
+                    inputCost: inputPrice,
+                    outputValue,
+                    teaCostPerHour,
+                };
+            } catch (error) {
+                console.error('[AlchemyProfitCalculator] Failed to calculate coinify profit:', error);
+                return null;
+            }
+        }
+
+        /**
+         * Calculate Decompose profit for an item
+         * @param {string} itemHrid - Item HRID
+         * @param {number} enhancementLevel - Enhancement level (default 0)
+         * @returns {Object|null} Profit data or null if not decomposable
+         */
+        calculateDecomposeProfit(itemHrid, enhancementLevel = 0) {
+            try {
+                const itemDetails = dataManager.getItemDetails(itemHrid);
+                if (!itemDetails) {
+                    return null;
+                }
+
+                // Check if item is decomposable
+                if (!itemDetails.alchemyDetail || !itemDetails.alchemyDetail.decomposeItems) {
+                    return null;
+                }
+
+                // Get input cost (market price of the item being decomposed)
+                const inputPrice = getItemPrice(itemHrid, { context: 'profit', side: 'buy', enhancementLevel });
+                if (inputPrice === null) {
+                    return null; // No market data
+                }
+
+                // Get success rate
+                const baseSuccessRate = BASE_SUCCESS_RATES$1.DECOMPOSE;
+                const successRate = this.getAlchemySuccessRate(baseSuccessRate);
+
+                // Calculate output value
+                let outputValue = 0;
+
+                // 1. Base decompose items (always received on success)
+                for (const output of itemDetails.alchemyDetail.decomposeItems) {
+                    const outputPrice = getItemPrice(output.itemHrid, { context: 'profit', side: 'sell' });
+                    if (outputPrice !== null) {
+                        const afterTax = calculatePriceAfterTax(outputPrice);
+                        outputValue += afterTax * output.count;
+                    }
+                }
+
+                // 2. Enhancing Essence (if item is enhanced)
+                if (enhancementLevel > 0) {
+                    const itemLevel = itemDetails.itemLevel || 1;
+                    const essenceAmount = Math.round(
+                        2 * (0.5 + 0.1 * Math.pow(1.05, itemLevel)) * Math.pow(2, enhancementLevel)
+                    );
+
+                    const essencePrice = getItemPrice('/items/enhancing_essence', { context: 'profit', side: 'sell' });
+                    if (essencePrice !== null) {
+                        const afterTax = calculatePriceAfterTax(essencePrice);
+                        outputValue += afterTax * essenceAmount;
+                    }
+                }
+
+                // Calculate action time and actions per hour
+                const actionTime = this.calculateAlchemyActionTime();
+                const actionsPerHour = calculateActionsPerHour(actionTime);
+
+                // Calculate tea costs
+                const teaCostPerHour = this.calculateAlchemyTeaCosts();
+
+                // Revenue per attempt (only on success)
+                const revenuePerAttempt = outputValue * successRate;
+
+                // Cost per attempt (input consumed on every attempt)
+                const costPerAttempt = inputPrice;
+
+                // Net profit per attempt
+                const profitPerAttempt = revenuePerAttempt - costPerAttempt;
+
+                // Hourly calculations
+                const profitPerHour = profitPerAttempt * actionsPerHour - teaCostPerHour;
+                const profitPerDay = calculateProfitPerDay(profitPerHour);
+
+                return {
+                    actionType: 'decompose',
+                    itemHrid,
+                    enhancementLevel,
+                    profitPerHour,
+                    profitPerDay,
+                    successRate,
+                    actionTime,
+                    actionsPerHour,
+                    inputCost: inputPrice,
+                    outputValue,
+                    teaCostPerHour,
+                };
+            } catch (error) {
+                console.error('[AlchemyProfitCalculator] Failed to calculate decompose profit:', error);
+                return null;
+            }
+        }
+
+        /**
+         * Calculate Transmute profit for an item
+         * @param {string} itemHrid - Item HRID
+         * @returns {Object|null} Profit data or null if not transmutable
+         */
+        calculateTransmuteProfit(itemHrid) {
+            try {
+                const itemDetails = dataManager.getItemDetails(itemHrid);
+                if (!itemDetails) {
+                    return null;
+                }
+
+                // Check if item is transmutable
+                if (!itemDetails.alchemyDetail || !itemDetails.alchemyDetail.transmuteDropTable) {
+                    return null;
+                }
+
+                // Get base success rate from item
+                const baseSuccessRate = itemDetails.alchemyDetail.transmuteSuccessRate || 0;
+                if (baseSuccessRate === 0) {
+                    return null; // Cannot transmute
+                }
+
+                // Get input cost (market price of the item being transmuted)
+                const inputPrice = getItemPrice(itemHrid, { context: 'profit', side: 'buy' });
+                if (inputPrice === null) {
+                    return null; // No market data
+                }
+
+                // Get success rate with modifiers
+                const successRate = this.getAlchemySuccessRate(baseSuccessRate);
+
+                // Calculate expected value of outputs
+                let expectedOutputValue = 0;
+
+                for (const drop of itemDetails.alchemyDetail.transmuteDropTable) {
+                    const outputPrice = getItemPrice(drop.itemHrid, { context: 'profit', side: 'sell' });
+                    if (outputPrice !== null) {
+                        const afterTax = calculatePriceAfterTax(outputPrice);
+                        // Expected value: price × dropRate × averageCount
+                        const averageCount = (drop.minCount + drop.maxCount) / 2;
+                        expectedOutputValue += afterTax * drop.dropRate * averageCount;
+                    }
+                }
+
+                // Calculate action time and actions per hour
+                const actionTime = this.calculateAlchemyActionTime();
+                const actionsPerHour = calculateActionsPerHour(actionTime);
+
+                // Calculate tea costs
+                const teaCostPerHour = this.calculateAlchemyTeaCosts();
+
+                // Revenue per attempt (expected value on success)
+                const revenuePerAttempt = expectedOutputValue * successRate;
+
+                // Cost per attempt (input consumed on every attempt)
+                const costPerAttempt = inputPrice;
+
+                // Net profit per attempt
+                const profitPerAttempt = revenuePerAttempt - costPerAttempt;
+
+                // Hourly calculations
+                const profitPerHour = profitPerAttempt * actionsPerHour - teaCostPerHour;
+                const profitPerDay = calculateProfitPerDay(profitPerHour);
+
+                return {
+                    actionType: 'transmute',
+                    itemHrid,
+                    enhancementLevel: 0, // Transmute doesn't care about enhancement
+                    profitPerHour,
+                    profitPerDay,
+                    successRate,
+                    actionTime,
+                    actionsPerHour,
+                    inputCost: inputPrice,
+                    outputValue: expectedOutputValue,
+                    teaCostPerHour,
+                };
+            } catch (error) {
+                console.error('[AlchemyProfitCalculator] Failed to calculate transmute profit:', error);
+                return null;
+            }
+        }
+
+        /**
+         * Calculate all applicable profits for an item
+         * @param {string} itemHrid - Item HRID
+         * @param {number} enhancementLevel - Enhancement level (default 0)
+         * @returns {Object} Object with all applicable profit calculations
+         */
+        calculateAllProfits(itemHrid, enhancementLevel = 0) {
+            const results = {};
+
+            // Try coinify
+            const coinifyProfit = this.calculateCoinifyProfit(itemHrid, enhancementLevel);
+            if (coinifyProfit) {
+                results.coinify = coinifyProfit;
+            }
+
+            // Try decompose
+            const decomposeProfit = this.calculateDecomposeProfit(itemHrid, enhancementLevel);
+            if (decomposeProfit) {
+                results.decompose = decomposeProfit;
+            }
+
+            // Try transmute (only for base items)
+            if (enhancementLevel === 0) {
+                const transmuteProfit = this.calculateTransmuteProfit(itemHrid);
+                if (transmuteProfit) {
+                    results.transmute = transmuteProfit;
+                }
+            }
+
+            return results;
+        }
+    }
+
+    // Create and export singleton instance
+    const alchemyProfitCalculator = new AlchemyProfitCalculator();
+
+    /**
      * Enhancement Calculator
      *
      * Uses Markov Chain matrix math to calculate exact expected values for enhancement attempts.
@@ -9213,10 +9673,13 @@
             }
 
             // Check if profit calculator is enabled
-            // Only run for base items (enhancementLevel = 0), not enhanced items
-            // Enhanced items show their cost in the enhancement path section instead
-            if (config.getSetting('itemTooltip_profit') && enhancementLevel === 0) {
-                // Calculate and inject profit information
+            if (config.getSetting('itemTooltip_multiActionProfit')) {
+                // Multi-action profit display (craft + alchemy actions)
+                await this.injectMultiActionProfitDisplay(tooltipElement, itemHrid, enhancementLevel, isCollectionTooltip);
+            } else if (config.getSetting('itemTooltip_profit') && enhancementLevel === 0) {
+                // Original single-action craft profit display
+                // Only run for base items (enhancementLevel = 0), not enhanced items
+                // Enhanced items show their cost in the enhancement path section instead
                 const profitData = await profitCalculator.calculateProfit(itemHrid);
                 if (profitData) {
                     this.injectProfitDisplay(tooltipElement, profitData, isCollectionTooltip);
@@ -9854,6 +10317,109 @@
 
             // Insert at the end of the tooltip
             tooltipText.appendChild(gatheringDiv);
+        }
+
+        /**
+         * Inject multi-action profit display into tooltip
+         * Shows all profitable actions (craft, coinify, decompose, transmute) with best highlighted
+         * @param {Element} tooltipElement - Tooltip element
+         * @param {string} itemHrid - Item HRID
+         * @param {number} enhancementLevel - Enhancement level
+         * @param {boolean} isCollectionTooltip - True if this is a collection tooltip
+         */
+        async injectMultiActionProfitDisplay(tooltipElement, itemHrid, enhancementLevel, isCollectionTooltip = false) {
+            // Find the tooltip text container
+            const tooltipText = isCollectionTooltip
+                ? tooltipElement.querySelector('.Collection_tooltipContent__2IcSJ')
+                : tooltipElement.querySelector('.ItemTooltipText_itemTooltipText__zFq3A');
+
+            if (!tooltipText) {
+                return;
+            }
+
+            // Check if we already injected (prevent duplicates)
+            if (tooltipText.querySelector('.market-profit-injected')) {
+                return;
+            }
+
+            // Collect all profit data
+            const allProfits = [];
+
+            // Try craft profit (only for base items)
+            if (enhancementLevel === 0) {
+                const craftProfit = await profitCalculator.calculateProfit(itemHrid);
+                if (craftProfit) {
+                    allProfits.push({
+                        actionType: 'craft',
+                        profitPerHour: craftProfit.profitPerHour,
+                        profitPerDay: craftProfit.profitPerDay,
+                        data: craftProfit,
+                    });
+                }
+            }
+
+            // Try alchemy profits (coinify, decompose, transmute)
+            const alchemyProfits = alchemyProfitCalculator.calculateAllProfits(itemHrid, enhancementLevel);
+
+            if (alchemyProfits.coinify) {
+                allProfits.push(alchemyProfits.coinify);
+            }
+            if (alchemyProfits.decompose) {
+                allProfits.push(alchemyProfits.decompose);
+            }
+            if (alchemyProfits.transmute) {
+                allProfits.push(alchemyProfits.transmute);
+            }
+
+            // If no profitable actions found, return
+            if (allProfits.length === 0) {
+                return;
+            }
+
+            // Sort by profitPerHour descending
+            allProfits.sort((a, b) => b.profitPerHour - a.profitPerHour);
+
+            // Create profit display container
+            const profitDiv = dom.createStyledDiv(
+                { color: config.COLOR_TOOLTIP_INFO, marginTop: '8px' },
+                '',
+                'market-profit-injected'
+            );
+
+            // Build display
+            let html = '<div style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 8px;">';
+
+            // Best profit section
+            const best = allProfits[0];
+            const actionLabel = best.actionType.charAt(0).toUpperCase() + best.actionType.slice(1);
+            const profitColor = best.profitPerHour >= 0 ? config.COLOR_TOOLTIP_PROFIT : config.COLOR_TOOLTIP_LOSS;
+
+            html += `<div style="font-weight: bold; margin-bottom: 4px;">BEST PROFIT: ${actionLabel}</div>`;
+            html += '<div style="font-size: 0.9em; margin-left: 8px;">';
+            html += `<div style="color: ${profitColor}; font-weight: bold;">${numberFormatter(best.profitPerHour)}/hr | ${formatKMB(best.profitPerDay)}/day</div>`;
+            html += '</div>';
+
+            // Other options (if more than one action)
+            if (allProfits.length > 1) {
+                html += '<div style="margin-top: 8px; font-size: 0.85em; color: ${config.COLOR_TEXT_SECONDARY};">';
+                html += '<div style="font-weight: 500; margin-bottom: 2px;">Other Options:</div>';
+                html += '<div style="margin-left: 8px;">';
+
+                for (let i = 1; i < allProfits.length; i++) {
+                    const profit = allProfits[i];
+                    const label = profit.actionType.charAt(0).toUpperCase() + profit.actionType.slice(1);
+                    const color = profit.profitPerHour >= 0 ? config.COLOR_TOOLTIP_INFO : config.COLOR_TOOLTIP_LOSS;
+                    html += `<div style="color: ${color};">• ${label}: ${numberFormatter(profit.profitPerHour)}/hr</div>`;
+                }
+
+                html += '</div>';
+                html += '</div>';
+            }
+
+            html += '</div>';
+
+            profitDiv.innerHTML = html;
+            tooltipText.appendChild(profitDiv);
         }
 
         /**
@@ -37518,13 +38084,7 @@
                 }
 
                 if (label) {
-                    // Mark as processed BEFORE inserting (matches working DRT script)
-                    e.msg.dataset.processed = '1';
-
-                    this.insertAnnotation(label, color, e.msg, false);
-
-                    // Add cumulative average if this is a successful run
-                    // Check that the NEXT key count (next) is not followed by fail/cancel
+                    // Check if this is a successful run before inserting annotation
                     const nextNext = events[i + 2];
                     const nextRunWasCanceled = nextNext && (nextNext.type === 'fail' || nextNext.type === 'cancel');
                     const isSuccessfulRun = diff && dungeonName && dungeonName !== 'Unknown' && !nextRunWasCanceled;
@@ -37543,6 +38103,19 @@
                         dungeonStats.runCount++;
                         dungeonStats.totalTime += diff;
 
+                        // Add run number to label for successful runs
+                        label = `Run #${dungeonStats.runCount}: ${label}`;
+                    }
+
+                    // Mark as processed BEFORE inserting (matches working DRT script)
+                    e.msg.dataset.processed = '1';
+
+                    this.insertAnnotation(label, color, e.msg, false);
+
+                    // Add cumulative average if this is a successful run
+                    if (isSuccessfulRun) {
+                        const dungeonStats = this.cumulativeStatsByDungeon[dungeonName];
+
                         // Calculate cumulative average (average of all runs up to this point)
                         const cumulativeAvg = Math.floor(dungeonStats.totalTime / dungeonStats.runCount);
 
@@ -37560,6 +38133,9 @@
          */
         async saveRunsFromEvents(events) {
             // Build runs from events (only key→key pairs)
+            let savedCount = 0;
+            const dungeonCounts = {};
+
             for (let i = 0; i < events.length; i++) {
                 const event = events[i];
                 if (event.type !== 'key') continue;
@@ -37586,7 +38162,12 @@
 
                 // Save team run (includes dungeon name from Phase 2)
                 await dungeonTrackerStorage.saveTeamRun(teamKey, run);
+
+                savedCount++;
+                dungeonCounts[dungeonName] = (dungeonCounts[dungeonName] || 0) + 1;
             }
+
+            console.log('[Dungeon Tracker Debug] Backfill saved', savedCount, 'runs:', dungeonCounts);
         }
 
         /**
@@ -37652,6 +38233,8 @@
             const nodes = [...document.querySelectorAll('[class^="ChatMessage_chatMessage"]')];
             const events = [];
 
+            console.log('[Dungeon Tracker Debug] Extracting chat events from', nodes.length, 'messages');
+
             for (const node of nodes) {
                 // Skip if already processed
                 if (node.dataset.processed === '1') continue;
@@ -37662,13 +38245,17 @@
                 // Battle started message
                 if (text.includes('Battle started:')) {
                     const timestamp = this.getTimestampFromMessage(node);
-                    if (!timestamp) continue;
+                    if (!timestamp) {
+                        console.warn('[Dungeon Tracker Debug] Battle started message has no timestamp:', text);
+                        continue;
+                    }
 
                     const dungeonName = text.split('Battle started:')[1]?.split(']')[0]?.trim();
                     if (dungeonName) {
                         // Cache the dungeon name (survives chat scrolling)
                         this.lastSeenDungeonName = dungeonName;
 
+                        console.log('[Dungeon Tracker Debug] Found battle_start:', dungeonName, 'at', timestamp);
                         events.push({
                             type: 'battle_start',
                             timestamp,
@@ -37710,6 +38297,7 @@
                     const timestamp = this.getTimestampFromMessage(node);
                     if (!timestamp) continue;
 
+                    console.log('[Dungeon Tracker Debug] Found battle_end at', timestamp);
                     events.push({
                         type: 'cancel',
                         timestamp,
@@ -37718,6 +38306,16 @@
                     node.dataset.processed = '1';
                 }
             }
+
+            const battleStartCount = events.filter((e) => e.type === 'battle_start').length;
+            const keyCount = events.filter((e) => e.type === 'key').length;
+            console.log(
+                '[Dungeon Tracker Debug] Extracted events:',
+                battleStartCount,
+                'battle_start,',
+                keyCount,
+                'key counts'
+            );
 
             return events;
         }
@@ -37736,21 +38334,40 @@
                 .reverse()
                 .find((ev) => ev.type === 'battle_start');
             if (battleStart?.dungeonName) {
+                console.log(
+                    '[Dungeon Tracker Debug] Priority 1: Found battle_start for index',
+                    currentIndex,
+                    '->',
+                    battleStart.dungeonName
+                );
                 return battleStart.dungeonName;
             }
 
             // 2nd priority: Currently active dungeon run
             const currentRun = dungeonTracker.getCurrentRun();
             if (currentRun?.dungeonName && currentRun.dungeonName !== 'Unknown') {
+                console.log(
+                    '[Dungeon Tracker Debug] Priority 2: Using current run for index',
+                    currentIndex,
+                    '->',
+                    currentRun.dungeonName
+                );
                 return currentRun.dungeonName;
             }
 
             // 3rd priority: Cached last seen dungeon name
             if (this.lastSeenDungeonName) {
+                console.log(
+                    '[Dungeon Tracker Debug] Priority 3: Using cached name for index',
+                    currentIndex,
+                    '->',
+                    this.lastSeenDungeonName
+                );
                 return this.lastSeenDungeonName;
             }
 
             // Final fallback
+            console.warn('[Dungeon Tracker Debug] ALL PRIORITIES FAILED for index', currentIndex, '-> Unknown');
             return 'Unknown';
         }
 
@@ -44749,7 +45366,7 @@
         const targetWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
 
         targetWindow.Toolasha = {
-            version: '0.5.30',
+            version: '0.5.31',
 
             // Feature toggle API (for users to manage settings via console)
             features: {

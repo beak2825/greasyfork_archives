@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Universal Image Downloader (Final Mobile Fix)
+// @name         Universal Image Downloader
 // @namespace    https://greasyfork.org/en/users/1553223-ozler365
-// @version      9.2.2
+// @version      9.2.6
 // @description  Professional UI, Smart Source Scan, Strict Reader Isolation, High Performance. Mobile & Desktop friendly.
 // @author       ozler365
 // @license      MIT
@@ -16,8 +16,8 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js
 // @run-at       document-start
 // @match        *://*/*
-// @downloadURL https://update.greasyfork.org/scripts/561884/Universal%20Image%20Downloader%20%28Final%20Mobile%20Fix%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561884/Universal%20Image%20Downloader%20%28Final%20Mobile%20Fix%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561884/Universal%20Image%20Downloader.user.js
+// @updateURL https://update.greasyfork.org/scripts/561884/Universal%20Image%20Downloader.meta.js
 // ==/UserScript==
 
 (function () {
@@ -54,33 +54,50 @@
     let networkSeen = new Set();
     let isUiOpen = false;
     let renderScheduled = false;
-    
+
     let scannedElements = new WeakSet();
     let isDirty = true;
+    let themeTimeout;
 
     const canvasMap = new Map();
     const interceptedQueue = [];
     const MIN_SIZE = 50;
     const MAX_RANGE = 3000;
+    let docBaseURI = document.baseURI;
 
-    const triggerScan = (mutations) => { 
-        isDirty = true; 
-        if (Array.isArray(mutations)) mutations.forEach(m => scannedElements.delete(m.target));
+    // Optimized Theme Update Scheduler
+    function scheduleThemeUpdate() {
+        if (themeTimeout) return;
+        themeTimeout = requestAnimationFrame(() => {
+            if (isUiOpen) updateThemeColors();
+            themeTimeout = null;
+        });
+    }
+
+    const triggerScan = (mutations) => {
+        isDirty = true;
+        if (mutations && Array.isArray(mutations)) {
+            for (const m of mutations) scannedElements.delete(m.target);
+        }
+        scheduleThemeUpdate();
     };
-    
+
     window.addEventListener('scroll', () => { isDirty = true; }, { passive: true });
     window.addEventListener('load', () => { isDirty = true; }, true);
-    new MutationObserver(triggerScan).observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ['src', 'style', 'class', 'data-src', 'data-original'] });
+    new MutationObserver(triggerScan).observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ['src', 'style', 'class', 'data-src', 'data-original', 'data-theme'] });
+    // Keep baseURI updated efficiently
+    new MutationObserver(() => { docBaseURI = document.baseURI; }).observe(document.head, {childList: true, subtree: true});
 
     function getAbsUrl(url) {
         if (!url || typeof url !== 'string' || url.startsWith('blob:') || url.startsWith('data:')) return url;
-        try { return new URL(url, document.baseURI).href; } catch { return url; }
+        if (url.startsWith('http')) return url; // Fast path
+        try { return new URL(url, docBaseURI).href; } catch { return url; }
     }
 
     function getCanonicalUrl(url) {
         if (!url || typeof url !== 'string' || url.startsWith('data:') || url.startsWith('blob:')) return url;
         try {
-            const u = new URL(url, document.baseURI);
+            const u = new URL(url, docBaseURI);
             if (/\.(jpg|jpeg|png|webp|gif|svg|bmp|tiff)($|\?)/i.test(u.pathname)) {
                 return u.origin + u.pathname;
             }
@@ -90,25 +107,67 @@
 
     function getFilename(url) {
         try {
-            const u = new URL(url, document.baseURI);
+            const u = new URL(url, docBaseURI);
             let name = u.pathname.split('/').pop() || u.hostname.replace(/\./g, '_');
             return decodeURIComponent(name.split('?')[0]).replace(/[\\/:*?"<>|]/g, '_');
         } catch { return 'image_' + Date.now(); }
     }
 
-    function detectTheme() {
+    // --- THEME ENGINE ---
+    function isDarkTheme() {
         const body = document.body;
-        if (!body) return 'light';
-        if (['dark', 'dark-mode', 'night-mode', 'theme-dark'].some(c => document.documentElement.classList.contains(c) || body.classList.contains(c))) return 'dark';
-        if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) return 'dark';
-        return 'light';
+        const html = document.documentElement;
+        if (!body) return false;
+
+        if (html.classList.contains('dark') || body.classList.contains('dark') || html.getAttribute('data-theme') === 'dark') return true;
+        if (html.classList.contains('light') || body.classList.contains('light') || html.getAttribute('data-theme') === 'light') return false;
+
+        const bg = window.getComputedStyle(body).backgroundColor;
+        if (bg && bg.includes('rgb')) {
+            const rgb = bg.match(/\d+/g);
+            if (rgb && rgb.length >= 3) {
+                const y = 0.299 * parseInt(rgb[0]) + 0.587 * parseInt(rgb[1]) + 0.114 * parseInt(rgb[2]);
+                return y < 128;
+            }
+        }
+        return window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+    }
+
+    function updateThemeColors() {
+        const overlay = document.querySelector('.tyc-overlay');
+        if (!overlay) return;
+
+        const dark = isDarkTheme();
+        const vars = overlay.style;
+
+        if (dark) {
+            vars.setProperty('--tyc-bg', '#1f2937');
+            vars.setProperty('--tyc-fg', '#f3f4f6');
+            vars.setProperty('--tyc-header', '#111827');
+            vars.setProperty('--tyc-border', '#374151');
+            vars.setProperty('--tyc-grid', '#0f1419');
+            vars.setProperty('--tyc-card', '#1f2937');
+            vars.setProperty('--tyc-input', '#374151');
+            vars.setProperty('--tyc-input-text', '#f3f4f6');
+            vars.setProperty('--tyc-btn-gray', '#374151');
+            vars.setProperty('--tyc-track', '#374151');
+        } else {
+            vars.setProperty('--tyc-bg', '#fcfcfc');
+            vars.setProperty('--tyc-fg', '#1f2937');
+            vars.setProperty('--tyc-header', '#fff');
+            vars.setProperty('--tyc-border', '#e0e0e0');
+            vars.setProperty('--tyc-grid', '#f9fafb');
+            vars.setProperty('--tyc-card', '#fff');
+            vars.setProperty('--tyc-input', '#fff');
+            vars.setProperty('--tyc-input-text', '#1f2937');
+            vars.setProperty('--tyc-btn-gray', '#f3f4f6');
+            vars.setProperty('--tyc-track', '#e5e7eb');
+        }
     }
 
     const originalDrawImage = CanvasRenderingContext2D.prototype.drawImage;
     CanvasRenderingContext2D.prototype.drawImage = function(image, ...args) {
-        if (this._isInternal || isNetworkMode) {
-            return originalDrawImage.apply(this, [image, ...args]);
-        }
+        if (this._isInternal || isNetworkMode) return originalDrawImage.apply(this, [image, ...args]);
         originalDrawImage.apply(this, [image, ...args]);
 
         try {
@@ -256,11 +315,10 @@
     async function scanPageOrdered() {
         const els = document.querySelectorAll('img, div, span, a, section, header, main, article, li, figure, canvas');
         const res = [], sm = [], loc = new Set();
-        const base = window.location.href;
         let batchTime = performance.now();
 
         for (let i = 0; i < els.length; i++) {
-            if (i % 200 === 0 && (performance.now() - batchTime > 12)) {
+            if (i % 100 === 0 && (performance.now() - batchTime > 10)) {
                 await new Promise(r => requestAnimationFrame(r));
                 batchTime = performance.now();
             }
@@ -273,7 +331,11 @@
                 [el.getAttribute('data-original'), el.getAttribute('data-src'), el.dataset.src, el.currentSrc, el.src]
                     .forEach(s => s && cands.push({ url: s, w: el.naturalWidth, h: el.naturalHeight }));
             } else if (el.offsetWidth > 0 || el.offsetHeight > 0) {
-                const bg = window.getComputedStyle(el).backgroundImage;
+                // Heuristic: Check inline first to avoid reflow
+                let bg = el.style.backgroundImage;
+                if (!bg || bg === 'none' || !bg.includes('url(')) {
+                     bg = window.getComputedStyle(el).backgroundImage;
+                }
                 if (bg?.includes('url(')) {
                     bg.match(/url\(['"]?([^'"]+)['"]?\)/g)?.forEach(m => cands.push({ url: m.replace(/url\(['"]?|['"]?\)/g, ''), w: 0, h: 0 }));
                 }
@@ -282,9 +344,9 @@
             let best = null;
             for (let c of cands) {
                 let s = c.url;
-                if (!s || s === base || s.startsWith('data:')) continue;
+                if (!s || s === docBaseURI || s.startsWith('data:')) continue;
                 if (!s.startsWith('http') && !s.startsWith('blob:')) {
-                    try { s = new URL(s, base).href; } catch { continue; }
+                    try { s = new URL(s, docBaseURI).href; } catch { continue; }
                 }
                 const sc = s.startsWith('http') ? 3 : 2;
                 if (!best || sc > best.sc) best = { src: s, w: c.w, h: c.h, sc };
@@ -294,11 +356,11 @@
                 const cUrl = getCanonicalUrl(best.src);
                 if (!seen.has(cUrl) && !loc.has(cUrl)) {
                     if (best.w > 0 && best.h > 0 && best.w < MIN_SIZE && best.h < MIN_SIZE) {
-                         scannedElements.add(el); 
+                         scannedElements.add(el);
                          loc.add(cUrl);
                          sm.push({ url: best.src, pos: getPos(el), w: best.w, h: best.h });
                     } else {
-                        scannedElements.add(el); 
+                        scannedElements.add(el);
                         loc.add(cUrl);
                         res.push({ url: best.src, pos: getPos(el), w: best.w, h: best.h });
                     }
@@ -337,7 +399,7 @@
             });
         } else if (!isNetworkMode && isUiOpen && isDirty) {
             const imgs = await scanPageOrdered();
-            isDirty = false; 
+            isDirty = false;
             imgs.forEach(i => {
                 const c = getCanonicalUrl(i.url);
                 if (!seen.has(c)) {
@@ -349,7 +411,7 @@
             });
         }
         if (isUiOpen && newData) scheduleRender();
-        setTimeout(backgroundLoop, 1000); 
+        setTimeout(backgroundLoop, 1000);
     }
 
     function scheduleRender() {
@@ -361,7 +423,7 @@
     function render() {
         const grid = document.getElementById("tyc-grid"), cnt = document.getElementById("tyc-cnt");
         if (!grid || !cnt) return;
-        
+
         const gV = (id) => parseInt(document.getElementById(id).value);
         const gC = (id) => document.getElementById(id).checked;
         const minW = gC("tyc-chk-min-w") ? (gV("tyc-min-w")||MIN_SIZE) : MIN_SIZE;
@@ -387,7 +449,7 @@
             d.className = "tyc-card" + (all ? " selected" : "");
             const i = document.createElement("img");
             i.loading = "lazy";
-            
+
             if (img.previewUrl) i.src = img.previewUrl;
             else {
                 i.src = img.url;
@@ -409,32 +471,32 @@
     }
 
     function createUI() {
-        const dark = detectTheme() === 'dark';
-        const c = dark ? { m: '#1f2937', h: '#111827', b: '#374151', g: '#0f1419', c: '#1f2937', i: '#374151', t: '#f3f4f6' } : { m: '#fcfcfc', h: '#fff', b: '#e0e0e0', g: '#f9fafb', c: '#fff', i: '#fff', t: '#1f2937' };
-        
         const css = `
             .tyc-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2147483640;display:flex;justify-content:center;align-items:center;font-family:sans-serif;pointer-events:none}
-            .tyc-modal{width:90vw;height:85vh;background:${c.m};color:${c.t};border-radius:12px;display:flex;flex-direction:column;overflow:hidden;resize:both;min-width:650px;box-shadow:0 10px 40px rgba(0,0,0,.4);border:1px solid #444;pointer-events:auto}
-            .tyc-header{padding:12px 20px;background:${c.h};border-bottom:1px solid ${c.b};display:flex;flex-direction:column;gap:10px;cursor:move;user-select:none}
+            .tyc-modal{width:90vw;height:85vh;background:var(--tyc-bg);color:var(--tyc-fg);border-radius:12px;display:flex;flex-direction:column;overflow:hidden;resize:both;min-width:650px;box-shadow:0 10px 40px rgba(0,0,0,.4);border:1px solid #444;pointer-events:auto;transition:background .2s,color .2s}
+            .tyc-header{padding:12px 20px;background:var(--tyc-header);border-bottom:1px solid var(--tyc-border);display:flex;flex-direction:column;gap:10px;cursor:move;user-select:none;transition:background .2s}
             .tyc-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;width:100%}
-            .tyc-input{padding:6px 10px;border:1px solid #ccc;border-radius:4px;width:120px;font-size:13px;background:${c.i};color:${c.t}}
+            .tyc-input{padding:6px 10px;border:1px solid #ccc;border-radius:4px;width:120px;font-size:13px;background:var(--tyc-input);color:var(--tyc-input-text)}
             .tyc-input-sm{width:50px;padding:4px;text-align:right}
+            .tyc-chk {appearance: checkbox !important;-webkit-appearance: checkbox !important;width: 14px !important;height: 14px !important;opacity: 1 !important;visibility: visible !important;display: inline-block !important;margin: 0 2px !important;cursor: pointer !important;position: static !important;box-shadow: none !important;background-color: initial !important;}
             .tyc-btn{padding:6px 12px;border-radius:6px;border:none;cursor:pointer;font-weight:600;font-size:12px;color:#fff;min-width:70px;transition:.2s}
             .tyc-btn-blue{background:#2563eb}.tyc-btn-green{background:#10b981}.tyc-btn-red{background:#ef4444}.tyc-btn-purple{background:#8b5cf6}
-            .tyc-btn-gray{background:${dark?'#374151':'#f3f4f6'};color:${c.t};border:1px solid ${c.b}}
-            .tyc-grid{flex:1;overflow-y:auto;padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));grid-auto-rows:220px;gap:12px;background:${c.g}}
-            .tyc-card{background:${c.c};border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,0.1);cursor:pointer;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;border:2px solid transparent}
+            .tyc-btn-gray{background:var(--tyc-btn-gray);color:var(--tyc-fg);border:1px solid var(--tyc-border)}
+            .tyc-grid{flex:1;overflow-y:auto;padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));grid-auto-rows:220px;gap:12px;background:var(--tyc-grid)}
+            .tyc-card{background:var(--tyc-card);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,0.1);cursor:pointer;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;border:2px solid transparent}
             .tyc-card:hover{transform:translateY(-2px);box-shadow:0 4px 6px rgba(0,0,0,0.1)}
             .tyc-card.selected{border-color:#2563eb}
             .tyc-card.selected::before{content:"✓";position:absolute;top:5px;right:5px;background:#2563eb;color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;z-index:2}
             .tyc-card img{width:100%;height:100%;object-fit:cover}
             .range-wrapper{position:relative;height:16px;width:100%;margin:6px 0;display:flex;align-items:center}
+            .range-track-bg{position:absolute;width:100%;height:4px;background:var(--tyc-track);border-radius:2px}
             .range-track-active{position:absolute;height:4px;background:#2563eb;pointer-events:none;opacity:0.3}
             .range-track-active.enabled{opacity:1}
             .range-wrapper input[type=range]{-webkit-appearance:none;position:absolute;width:100%;background:none;pointer-events:none;margin:0;outline:none}
-            .range-wrapper input[type=range]::-webkit-slider-thumb{pointer-events:auto;width:14px;height:14px;border-radius:50%;background:#9ca3af;cursor:pointer;border:2px solid #fff;box-shadow:0 1px 2px rgba(0,0,0,0.2)}
+            .range-wrapper input[type=range]::-webkit-slider-thumb{pointer-events:auto;-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#9ca3af;cursor:pointer;border:2px solid #fff;box-shadow:0 1px 2px rgba(0,0,0,0.2)}
+            .range-wrapper input[type=range]::-moz-range-thumb{pointer-events:auto;border:none;width:14px;height:14px;border-radius:50%;background:#9ca3af;cursor:pointer;border:2px solid #fff;box-shadow:0 1px 2px rgba(0,0,0,0.2)}
             .range-wrapper input[type=range]:not(:disabled)::-webkit-slider-thumb{background:#2563eb}
-            
+            .range-wrapper input[type=range]:not(:disabled)::-moz-range-thumb{background:#2563eb}
             @media screen and (max-width: 768px) {
                 .tyc-modal { width: 95vw !important; min-width: 0 !important; max-height: 90vh !important; top: auto !important; left: auto !important; margin: 0 auto !important; }
                 .tyc-grid { padding: 10px; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); grid-auto-rows: 140px; }
@@ -446,13 +508,14 @@
                 .tyc-filter-item { min-width: 100% !important; }
                 .tyc-btn-row { flex-wrap: nowrap !important; gap: 10px !important; }
                 .tyc-btn-action { flex: 1 !important; width: auto !important; }
-                /* Fix for Sliders on Mobile: Touch Actions & Z-Index Switching */
                 .range-wrapper input[type=range] { pointer-events: none; touch-action: none; }
                 .range-wrapper input[type=range]::-webkit-slider-thumb { pointer-events: auto; touch-action: none; width: 24px; height: 24px; z-index: 10; position: relative; }
                 .range-wrapper input[type=range]::-moz-range-thumb { pointer-events: auto; touch-action: none; width: 24px; height: 24px; z-index: 10; position: relative; }
             }
         `;
-        document.body.insertAdjacentHTML("beforeend", `<div class="tyc-overlay"><style>${css}</style><div class="tyc-modal" id="tyc-modal"><div class="tyc-header" id="tyc-drag"><div class="tyc-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;font-weight:600"><input type="checkbox" id="tyc-all" checked><span>${i18n.selectAll}</span></label><div style="height:20px;border-left:1px solid ${c.b};margin:0 5px"></div><input type="text" id="tyc-fold" class="tyc-input" placeholder="${i18n.subFolder}"><button class="tyc-btn tyc-btn-gray" id="tyc-ren">${i18n.rename}</button><div style="flex:1"></div><button class="tyc-btn ${isNetworkMode?'tyc-btn-purple':'tyc-btn-gray'}" id="tyc-mode">${isNetworkMode?i18n.modeNet:i18n.modeDef}</button><button class="tyc-btn tyc-btn-gray" id="tyc-sort">${i18n.sort}</button><button class="tyc-btn tyc-btn-red" id="tyc-clear">${i18n.clear}</button><button class="tyc-btn tyc-btn-gray" id="tyc-cls">✕</button></div><div class="tyc-filter-container" style="display:flex;gap:20px;width:100%;border-top:1px solid ${c.b};padding-top:10px;margin-top:5px;flex-wrap:wrap">${['w','h'].map(t=>`<div class="tyc-filter-item" style="flex:1;min-width:150px"><div class="tyc-row" style="justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;font-weight:700;color:#9ca3af">${t==='w'?i18n.width:i18n.height}</span><div style="display:flex;align-items:center;gap:4px;font-size:11px;color:#9ca3af"><input type="checkbox" id="tyc-chk-min-${t}" class="tyc-chk"><input type="number" id="tyc-min-${t}" class="tyc-input tyc-input-sm" value="${MIN_SIZE}" disabled><span>-</span><input type="number" id="tyc-max-${t}" class="tyc-input tyc-input-sm" value="${MAX_RANGE}" disabled><input type="checkbox" id="tyc-chk-max-${t}" class="tyc-chk"> px</div></div><div class="range-wrapper"><div style="position:absolute;width:100%;height:4px;background:${dark?'#374151':'#e5e7eb'};border-radius:2px"></div><div id="tyc-track-${t}" class="range-track-active"></div><input type="range" id="tyc-slide-min-${t}" min="${MIN_SIZE}" max="${MAX_RANGE}" value="${MIN_SIZE}" disabled><input type="range" id="tyc-slide-max-${t}" min="${MIN_SIZE}" max="${MAX_RANGE}" value="${MAX_RANGE}" disabled></div></div>`).join('')}</div><div class="tyc-row tyc-btn-row" style="margin-top:10px"><span class="tyc-badge" id="tyc-cnt" style="background:#1f2937;color:#fff;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700">0</span><div style="flex:1"></div><button class="tyc-btn tyc-btn-blue tyc-btn-action" id="tyc-dl" style="width:120px">${i18n.download}</button><button class="tyc-btn tyc-btn-green tyc-btn-action" id="tyc-zip" style="width:120px">${i18n.zip}</button></div></div><div class="tyc-grid" id="tyc-grid"></div></div></div>`);
+        document.body.insertAdjacentHTML("beforeend", `<div class="tyc-overlay"><style>${css}</style><div class="tyc-modal" id="tyc-modal"><div class="tyc-header" id="tyc-drag"><div class="tyc-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;font-weight:600"><input type="checkbox" id="tyc-all" class="tyc-chk" checked><span>${i18n.selectAll}</span></label><div style="height:20px;border-left:1px solid var(--tyc-border);margin:0 5px"></div><input type="text" id="tyc-fold" class="tyc-input" placeholder="${i18n.subFolder}"><button class="tyc-btn tyc-btn-gray" id="tyc-ren">${i18n.rename}</button><div style="flex:1"></div><button class="tyc-btn ${isNetworkMode?'tyc-btn-purple':'tyc-btn-gray'}" id="tyc-mode">${isNetworkMode?i18n.modeNet:i18n.modeDef}</button><button class="tyc-btn tyc-btn-gray" id="tyc-sort">${i18n.sort}</button><button class="tyc-btn tyc-btn-red" id="tyc-clear">${i18n.clear}</button><button class="tyc-btn tyc-btn-gray" id="tyc-cls">✕</button></div><div class="tyc-filter-container" style="display:flex;gap:20px;width:100%;border-top:1px solid var(--tyc-border);padding-top:10px;margin-top:5px;flex-wrap:wrap">${['w','h'].map(t=>`<div class="tyc-filter-item" style="flex:1;min-width:150px"><div class="tyc-row" style="justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;font-weight:700;color:#9ca3af">${t==='w'?i18n.width:i18n.height}</span><div style="display:flex;align-items:center;gap:4px;font-size:11px;color:#9ca3af"><input type="checkbox" id="tyc-chk-min-${t}" class="tyc-chk"><input type="number" id="tyc-min-${t}" class="tyc-input tyc-input-sm" value="${MIN_SIZE}" disabled><span>-</span><input type="number" id="tyc-max-${t}" class="tyc-input tyc-input-sm" value="${MAX_RANGE}" disabled><input type="checkbox" id="tyc-chk-max-${t}" class="tyc-chk"> px</div></div><div class="range-wrapper"><div class="range-track-bg"></div><div id="tyc-track-${t}" class="range-track-active"></div><input type="range" id="tyc-slide-min-${t}" min="${MIN_SIZE}" max="${MAX_RANGE}" value="${MIN_SIZE}" disabled><input type="range" id="tyc-slide-max-${t}" min="${MIN_SIZE}" max="${MAX_RANGE}" value="${MAX_RANGE}" disabled></div></div>`).join('')}</div><div class="tyc-row tyc-btn-row" style="margin-top:10px"><span class="tyc-badge" id="tyc-cnt" style="background:#1f2937;color:#fff;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700">0</span><div style="flex:1"></div><button class="tyc-btn tyc-btn-blue tyc-btn-action" id="tyc-dl" style="width:120px">${i18n.download}</button><button class="tyc-btn tyc-btn-green tyc-btn-action" id="tyc-zip" style="width:120px">${i18n.zip}</button></div></div><div class="tyc-grid" id="tyc-grid"></div></div></div>`);
+
+        updateThemeColors();
 
         const modal = document.getElementById("tyc-modal"), drag = document.getElementById("tyc-drag");
         let isDrag = false, oX = 0, oY = 0;
@@ -462,16 +525,15 @@
 
         const upT = (t, min, max) => { const mn=parseInt(min.min), mx=parseInt(min.max), v1=parseInt(min.value), v2=parseInt(max.value); t.style.left=((v1-mn)/(mx-mn))*100+'%'; t.style.width=(((v2-mn)/(mx-mn))*100)-parseFloat(t.style.left)+'%'; };
         const upS = () => { ['w','h'].forEach(t => { const c1=document.getElementById(`tyc-chk-min-${t}`), c2=document.getElementById(`tyc-chk-max-${t}`), i1=document.getElementById(`tyc-min-${t}`), i2=document.getElementById(`tyc-max-${t}`), s1=document.getElementById(`tyc-slide-min-${t}`), s2=document.getElementById(`tyc-slide-max-${t}`), tr=document.getElementById(`tyc-track-${t}`); i1.disabled=s1.disabled=!c1.checked; i2.disabled=s2.disabled=!c2.checked; tr.classList.toggle("enabled", c1.checked||c2.checked); scheduleRender(); }); };
-        
+
         ['w','h'].forEach(t => {
             const s1=document.getElementById(`tyc-slide-min-${t}`), s2=document.getElementById(`tyc-slide-max-${t}`), i1=document.getElementById(`tyc-min-${t}`), i2=document.getElementById(`tyc-max-${t}`), tr=document.getElementById(`tyc-track-${t}`);
-            const sync = (e) => { 
-                let v1=parseInt(s1.value), v2=parseInt(s2.value); 
-                if(v1>v2){ if(e.target===s1){ s1.value=v2; v1=v2; }else{ s2.value=v1; v2=v1; } } 
-                i1.value=v1; i2.value=v2; upT(tr, s1, s2); scheduleRender(); 
-                
-                // FIX: Slider Z-Index Toggle for Mobile
-                if(C.mob) { s1.style.zIndex = (e.target === s1) ? 10 : 5; s2.style.zIndex = (e.target === s2) ? 10 : 5; }
+            const sync = (e) => {
+                let v1=parseInt(s1.value), v2=parseInt(s2.value);
+                if(v1>v2){ if(e.target===s1){ s1.value=v2; v1=v2; }else{ s2.value=v1; v2=v1; } }
+                i1.value=v1; i2.value=v2; upT(tr, s1, s2); scheduleRender();
+                s1.style.zIndex = (e.target === s1) ? 10 : 5;
+                s2.style.zIndex = (e.target === s2) ? 10 : 5;
             };
             const syncI = () => { let v1=Math.max(MIN_SIZE, parseInt(i1.value)||MIN_SIZE), v2=Math.max(MIN_SIZE, parseInt(i2.value)||MAX_RANGE); if(v1<=MAX_RANGE) s1.value=v1; if(v2<=MAX_RANGE) s2.value=v2; upT(tr, s1, s2); scheduleRender(); };
             document.getElementById(`tyc-chk-min-${t}`).onchange = document.getElementById(`tyc-chk-max-${t}`).onchange = upS;
@@ -511,13 +573,11 @@
 
                     if(zip) z.file(n, b);
                     else if (!C.mob && typeof GM_download === 'function') {
-                        const u=URL.createObjectURL(b); 
-                        GM_download({url:u, name:pre+n, onload:()=>URL.revokeObjectURL(u)}); 
-                        await new Promise(r=>setTimeout(r,200)); 
+                        const u=URL.createObjectURL(b);
+                        GM_download({url:u, name:pre+n, onload:()=>URL.revokeObjectURL(u)});
+                        await new Promise(r=>setTimeout(r,200));
                     }
                     else {
-                        // FIX: Mobile Downloads now trigger "saveAs" with a strict 1.5s delay
-                        // ensuring every file is prompted
                         saveAs(b, n);
                         await new Promise(r => setTimeout(r, 1500));
                     }
@@ -531,7 +591,7 @@
     }
 
     function openUI() { if(document.querySelector(".tyc-overlay")) return; createUI(); isUiOpen=true; triggerScan(); }
-    
+
     backgroundLoop();
     window.addEventListener('keydown', (e) => { if(e.altKey && e.code === 'KeyW'){ e.preventDefault(); if(document.querySelector(".tyc-overlay")){ isUiOpen=false; document.querySelector(".tyc-overlay").remove(); } else openUI(); } }, true);
     if(typeof GM_registerMenuCommand==="function") GM_registerMenuCommand(i18n.menuOpen, openUI);

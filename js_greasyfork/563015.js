@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BTN - Fix User Profile Degraded Performance
 // @namespace    delgan-btn-series-recommendation-fix
-// @version      1.1.0
+// @version      2.0.0
 // @license      MIT
 // @description  Fix performances degradation on user profile pages
 // @match        https://broadcasthe.net/user.php?id=*
@@ -13,6 +13,9 @@
 
 (function () {
     'use strict';
+
+    console.info('Upstream fixed the bug this userscript targeted. You can safely uninstall it.');
+    return;
 
     function fetchSeriesData(query) {
         return fetch("/series_autocomplete.php?term=" + encodeURIComponent(query),
