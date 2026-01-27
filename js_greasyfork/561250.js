@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Geoguessr duel round analysis
 // @namespace    http://tampermonkey.net/
-// @version      0.3.1
+// @version      0.3.2
 // @description  Analyse duel round data on a map
 // @author       irrational
 // @match        https://www.geoguessr.com/*
@@ -38,6 +38,7 @@ const LINES_INPUT_ID = '__userscript_lines_input';
 const LINES_LABEL_ID = '__userscript_lines_label';
 const LINECOLOUR_SELECT_ID = '__userscript_linecolour_select';
 const KEEP_INPUT_ID = '__userscript_keep_input';
+const COUNTS_DIV_ID = '__userscript_counts_div';
 
 
 let map = null;
@@ -52,6 +53,9 @@ let roundsToDuels = [];
 let chart = null;
 let locIndex = null;
 let guessIndex = null;
+
+
+/* ========== Database helpers ========= */
 
 const openDB = async (userId) => {
     const request = indexedDB.open('userscript_duels');
@@ -69,10 +73,16 @@ const fetchResult = (request) => new Promise((resolve, reject) => {
     request.onerror = (event) => reject(event);
 });
 
+
+/* ========== API request helpers ========== */
+
 const fetchProfile = () => {
     return fetch('https://www.geoguessr.com/api/v3/profiles')
            .then(response => response.json());
 };
+
+
+/* ========== Interface helpers ========== */
 
 const makeStyledElement = (el, style) => {
     const element = document.createElement(el);
@@ -134,6 +144,15 @@ const makeMinimisableDiv = (titleText, contentDisplayStyle = null) => {
     return [div, content];
 };
 
+const lineColour = (value, min, max) => {
+    const gradient = chroma.scale('RdYlBu').mode('lab');
+    const clamped = Math.max(min, Math.min(max, value));
+    return gradient((clamped - min)/(max - min)).hex();
+};
+
+
+/* ========== Geometry helpers ========== */
+
 const radiusToExtent = (lon, lat, radius) => {
     const degPerMetre = 360/(2*Math.PI * 6371000);
     const dLat = radius * degPerMetre;
@@ -141,11 +160,42 @@ const radiusToExtent = (lon, lat, radius) => {
     return [lon - dLon, lat - dLat, lon + dLon, lat + dLat];
 };
 
-const lineColour = (value, min, max) => {
-    const gradient = chroma.scale('RdYlBu').mode('lab');
-    const clamped = Math.max(min, Math.min(max, value));
-    return gradient((clamped - min)/(max - min)).hex();
+const splitPolygonAtMeridian = (polygon, meridian) => {
+    const west = [];
+    const east = [];
+    const coords = polygon.getCoordinates()[0];
+    for (let i = 1; i < coords.length; ++i) {
+        if (coords[i - 1][0] <= meridian && coords[i][0] <= meridian) west.push(coords[i - 1]);
+        else if (coords[i - 1][0] > meridian && coords[i][0] > meridian) east.push(coords[i - 1]);
+        else {
+            if (coords[i - 1][0] <= meridian) west.push(coords[i - 1]);
+            else east.push(coords[i - 1]);
+
+            const lambda = (meridian - coords[i - 1][0])/(coords[i][0] - coords[i - 1][0]);
+            const latIntersect = coords[i - 1][1] + lambda * (coords[i][1] - coords[i - 1][1]);
+            west.push([meridian, latIntersect]);
+            east.push([meridian, latIntersect]);
+        }
+    }
+    if (west.length > 0) west.push(west[0]);
+    if (east.length > 0) east.push(east[0]);
+    return [new ol.geom.Polygon([west]), new ol.geom.Polygon([east])];
 };
+
+const shiftPolygonWest = (polygon, shift) => {
+    polygon.applyTransform((coords, _, stride) => {
+        for (let i = 0; i < coords.length; i += stride) coords[i] -= shift;
+    });
+};
+
+const lookupPolygon = (index, polygon, filter) => {
+    return index.range(...polygon.getExtent())
+                .filter((i) => polygon.intersectsCoordinate([allRounds[i][filter].lng,
+                                                             allRounds[i][filter].lat]));
+};
+
+
+/* ========== Interface logic ========== */
 
 const openMap = (userId) => {
     /* ===== Interface ===== */
@@ -271,6 +321,7 @@ const openMap = (userId) => {
     chartContainer.style.width = '50vh';
     const chartCanvas = document.createElement('canvas');
     const countsDiv = makeStyledElement('div', {color: 'white', textAlign: 'right'});
+    countsDiv.id = COUNTS_DIV_ID;
     chartContainer.append(chartCanvas);
     chartContainer.append(countsDiv);
 
@@ -295,10 +346,7 @@ const openMap = (userId) => {
 
     for (const control of [fromDateInput, toDateInput, gameModeSelect]) {
         control.addEventListener('change', () => {
-            fetchRounds(userId).then(() => {
-                makeHeatLayer();
-                updateCounts(countsDiv);
-            });
+            fetchRounds(userId).then(updateDataDisplays);
         });
     }
     selectSelect.addEventListener('change', () => {
@@ -311,8 +359,7 @@ const openMap = (userId) => {
         } else if (selectSelect.value == 'locs') {
             filterSelect.querySelector("option[value='country']").disabled = false;
         }
-        makeHeatLayer();
-        updateCounts(countsDiv);
+        updateDataDisplays();
     });
     filterSelect.addEventListener('change', () => {
         countrySelect.style.display = filterSelect.value == 'country' ? null : 'none';
@@ -327,18 +374,14 @@ const openMap = (userId) => {
             chart.data.datasets[0].data = new Array(11).fill(0);
             chart.update();
         }
-        makeHeatLayer();
-        updateCounts(countsDiv);
+        updateDataDisplays();
     });
 
-    countrySelect.addEventListener('change', () => {
-        makeHeatLayer();
-        updateCounts(countsDiv);
-    });
+    countrySelect.addEventListener('change', updateDataDisplays);
 
     showSelect.addEventListener('change', () => {
         linesLabel.innerHTML = `Inspect corresponding ${showSelect.value == 'guesses' ? 'locations' : 'guesses'}`;
-        makeHeatLayer();
+        updateHeatLayer();
     });
 
     linesCheckbox.addEventListener('change', () => {
@@ -389,8 +432,9 @@ const openMap = (userId) => {
         selectSource.clear();
     });
     selectDraw.on('drawend', (event) => {
-        makeHeatLayer(event.feature);
-        updateCounts(countsDiv);
+        updateHeatLayer(event.feature);
+        updateChart();
+        updateCounts();
     });
 
     map.on('pointermove', drawPairs);
@@ -437,10 +481,7 @@ const openMap = (userId) => {
     if (filterSelect.value == 'country') countrySelect.style.display = null;
     if (linesCheckbox.checked) lineColourSelect.style.display = null;
 
-    fetchRounds(userId).then(() => {
-        makeHeatLayer();
-        updateCounts(countsDiv);
-    });
+    fetchRounds(userId).then(updateDataDisplays);
 };
 
 const getControls = () => {
@@ -479,9 +520,6 @@ const fetchRounds = async (userId) => {
     guessIndex = new KDBush(allRounds.length);
     locIndex = new KDBush(allRounds.length);
     for (const round of allRounds) {
-        /* We ignore the wraparound at +- 180 degrees longitude. This is a bug, but because
-           we're unlikely to have to index anything in a reasonably wide band around it,
-           we'll let it slide for now. */
         guessIndex.add(round.ourGuess.lng, round.ourGuess.lat);
         locIndex.add(round.panorama.lng, round.panorama.lat);
     }
@@ -489,7 +527,7 @@ const fetchRounds = async (userId) => {
     locIndex.finish();
 };
 
-const makeHeatLayer = (selectFeature = null) => {
+const updateHeatLayer = (selectFeature = null) => {
     const controls = getControls();
     let features = null;
 
@@ -502,21 +540,25 @@ const makeHeatLayer = (selectFeature = null) => {
     activeRoundIndexes = [];
     if (controls.filter == 'polygon' && selectFeature) {
         const selectGeom = selectFeature.getGeometry();
-        if (controls.select == 'locs') {
-            activeRoundIndexes = locIndex
-                .range(...ol.proj.transformExtent(selectGeom.getExtent(), 'EPSG:3857', 'EPSG:4326'))
-                .filter((i) => selectGeom.intersectsCoordinate(ol.proj.fromLonLat([allRounds[i].panorama.lng,
-                                                                                   allRounds[i].panorama.lat])));
-            activeRounds = activeRoundIndexes.map((i) => allRounds[i]);
-        } else if (controls.select == 'guesses') {
-            activeRoundIndexes = guessIndex
-                .range(...ol.proj.transformExtent(selectGeom.getExtent(), 'EPSG:3857', 'EPSG:4326'))
-                .filter((i) => selectGeom.intersectsCoordinate(ol.proj.fromLonLat([allRounds[i].ourGuess.lng,
-                                                                                   allRounds[i].ourGuess.lat])));
-            activeRounds = activeRoundIndexes.map((i) => allRounds[i]);
+        const indexGeom = selectGeom.clone().transform('EPSG:3857', 'EPSG:4326');
+        const extent = indexGeom.getExtent();
+        // Shift coordinates so only splits at positive antimeridians are needed
+        shiftPolygonWest(indexGeom, 360 * Math.floor((extent[0] + 180) / 360));
+        // Split polygon at all relevant antimeridians
+        let splitPolygons = [indexGeom];
+        for (let antimeridian = 180; antimeridian < extent[2]; antimeridian += 360) {
+            splitPolygons.push(...splitPolygonAtMeridian(splitPolygons.pop(), antimeridian));
         }
+        // Normalise coordinates of polygons to the east of 180
+        splitPolygons.forEach(polygon =>
+            shiftPolygonWest(polygon, 360 * Math.floor((polygon.getExtent()[0] + 180) / 360)));
+        // Look up polygons in spatial index
+        activeRoundIndexes = splitPolygons.flatMap(polygon =>
+            lookupPolygon(controls.select == 'locs' ? locIndex : guessIndex, polygon,
+                          controls.select == 'locs' ? 'panorama' : 'ourGuess'));
+        activeRounds = activeRoundIndexes.map((i) => allRounds[i]);
     } else if (controls.filter == 'country') {
-        // country filtering is only active when we are selecting locations
+        // Country filtering is only active when we are selecting locations
         for (let i = 0; i < allRounds.length; ++i) {
             if (allRounds[i].panorama.countryCode == controls.country) {
                 activeRounds.push(allRounds[i]);
@@ -542,14 +584,29 @@ const makeHeatLayer = (selectFeature = null) => {
             }));
     }
 
+    if (features) heatSource.addFeatures(features);
+};
+
+const updateChart = () => {
     if (chart) {
         const scores = new Array(11).fill(0);
         activeRounds.forEach((round) => scores[10 - Math.floor(round.ourGuess.score / 500)] += 1);
         chart.data.datasets[0].data = scores;
         chart.update();
     }
+};
 
-    if (features) heatSource.addFeatures(features);
+const updateCounts = () => {
+    const element = document.getElementById(COUNTS_DIV_ID);
+    const uniqueDuels = new Set();
+    activeRoundIndexes.forEach((idx) => uniqueDuels.add(roundsToDuels[idx]));
+    element.innerHTML = `Selected ${activeRounds.length} rounds from ${uniqueDuels.size} duels.`;
+};
+
+const updateDataDisplays = () => {
+    updateHeatLayer();
+    updateChart();
+    updateCounts();
 };
 
 const drawPairs = (event) => {
@@ -596,11 +653,8 @@ const drawPairs = (event) => {
     }
 };
 
-const updateCounts = (element) => {
-    const uniqueDuels = new Set();
-    activeRoundIndexes.forEach((idx) => uniqueDuels.add(roundsToDuels[idx]));
-    element.innerHTML = `Selected ${activeRounds.length} rounds from ${uniqueDuels.size} duels.`;
-};
+
+/* ========== Interface integration ========== */
 
 const run = async (mutations) => {
     navigator.locks.request("userscript_analysis_menu_item", async (lock) => {

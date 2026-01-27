@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎美化
 // @namespace    http://tampermonkey.net/
-// @version      2026.1.22
+// @version      2026.1.25
 // @description  1.【重要更新】增加夜间模式按钮     2.知乎题目栏增加举报、匿名、问题日志、快捷键四个按钮     3.知乎按钮图标在鼠标悬停时变色(题目按钮、回答下方按钮、评论按钮等)     4.回答的发布时间移至顶部     5.图片原图显示     6.文字和卡片链接从知乎跳转链接改为直链     7.隐藏侧边栏     8.GIF图自动播放【默认不开启】     9.问题增加创建时间和最后编辑时间     10.鼠标悬停在回答时显示浅蓝色聚焦框    11.引用角标高亮    12.首页信息流增加不感兴趣按钮  13.【重要更新】增加设置界面    14.显示信息流标签【默认不开启】
 // @author       AN drew
 // @match        *://*.zhihu.com/*
@@ -993,7 +993,7 @@ function zhuanlan() {
     //发布时间置顶
     if (Config.currentValues.publishTop == 1 && $(".Post-Header").find(".ContentItem-time").length == 0) {
         let temp_time = $('.Post-content').find(".ContentItem-time").clone();
-        console.log(temp_time)
+
         $('.Post-content').find(".ContentItem-time").hide();
         temp_time.css({
             "padding": "0px 0px 0px 0px",
@@ -1013,21 +1013,20 @@ function zhuanlan() {
     $('.css-sdgtgb').width($('.css-10r8x72').width());
 }
 
-let pinbg=0;
+
 
 //想法
-function pin() {
-    if(pinbg==0)
+function pin(){
+
+    if($('#pin-style').length == 0)
     {
         GM_addStyle(`
         html[data-theme=light] body{background:white!important;}
         html[data-theme=dark] body{background:rgb(18,18,18)!important;}
         html[data-theme=dark] .PinToolbar-menuContainer .Menu{display:none!important;}
         html[data-theme=dark] .PinDetail{background: #191b1f; padding: 20px;}
-        `);
-        pinbg=1;
+        `).id='pin-style';
     }
-
 
     /*
     //想法喜欢按钮
@@ -1109,17 +1108,20 @@ function pin() {
     }
 }
 
-var upload_video_main_flag = 0; //上传视频页标志
 
 //视频页
-function zvideo() {
-
+function zvideo(){
     //隐藏推荐视频
     $(".ZVideo-sideColumn").hide();
 
-    if (upload_video_main_flag == 0 && window.location.href.indexOf('upload-video') > 0) {
-        GM_addStyle('html[data-theme=dark] main{background:rgb(18,18,18)}');
-        upload_video_main_flag = 1;
+    if (window.location.href.indexOf('upload-video') > 0)
+    {
+        if($('#zvideo-style').length == 0)
+        {
+            GM_addStyle(`
+            html[data-theme=dark] main{background:rgb(18,18,18)}
+            `).id='zvideo-style';
+        }
     }
 }
 
@@ -1195,124 +1197,151 @@ function club() {
 }
 */
 
-let widthFlag=0;
 
 //知乎圈子
-function ring() {
+const ring = (function() {
+    let widthFlag = 0;
+    let lastUrl = '';
 
-    if(window.location.href.includes('/ring-feeds'))
-    {
-        if (Config.currentValues.hideRingSideBar == 1) //隐藏侧边栏并拉宽内容
-        {
-            if(widthFlag==0)
-            {
-                let totalWidth=$(".Topstory-container").width();
-                $(".css-1qyytj7").hide();
-                $(".Topstory-mainColumn").width(totalWidth);
-                $(".Topstory-mainColumnCard").width(totalWidth);
-                $(".Topstory-content").width(totalWidth);
-                $(".css-1g878q7").width(totalWidth);
-                $(".css-ekkpum").width(totalWidth);
+    return function() {
 
-
-                let coverWidth=$(".css-19assbf").width();
-                let coverHeight=$(".css-19assbf").height();
-                $(".css-19assbf").width(totalWidth).height(coverHeight*totalWidth/coverWidth);
-
-                GM_addStyle(`.css-1im5po3{width:700px !important;}`);
-                widthFlag=1;
-            }
+        // URL 变化时重置标志
+        const currentUrl = window.location.href;
+        if (currentUrl !== lastUrl) {
+            widthFlag = 0;
+            lastUrl = currentUrl;
         }
-        else if (Config.currentValues.hideRingSideBar == 2) //隐藏侧边栏，仅水平居中内容，不拉宽
+
+        if(window.location.href.includes('/ring-feeds'))
         {
-            if(widthFlag==0)
+            if (Config.currentValues.hideRingSideBar == 1) //隐藏侧边栏并拉宽内容
             {
-                let totalWidth=$(".Topstory-container").width();
-                $(".css-1qyytj7").hide();
-
-                $(".Topstory-mainColumn").attr("style", "display:flex;justify-content:center;");
-                $(".Topstory-mainColumn").width(totalWidth);
-
-                GM_addStyle(`.css-1im5po3{width:700px !important;}`);
-
-                widthFlag=1;
-            }
-        }
-    }
-
-
-
-    if (Config.currentValues.hideRingSideBar == 1) //隐藏侧边栏并拉宽内容
-    {
-        if(widthFlag==0)
-        {
-            let totalWidth=$(".css-kboer3").width() + $(".css-ill7fe").width();
-            $(".css-ill7fe").hide();
-            $(".css-kboer3").width(totalWidth);
-            $(".css-1lo6frp").width(totalWidth);
-            $(".css-exh6me").width(totalWidth);
-
-            let coverWidth=$(".css-19assbf").width();
-            let coverHeight=$(".css-19assbf").height();
-            $(".css-19assbf").width(totalWidth).height(coverHeight*totalWidth/coverWidth);
-
-            GM_addStyle(`.css-1rnr3jg .RichContent-actions.is-fixed{width:${totalWidth}px !important;}`);
-            widthFlag=1;
-        }
-    }
-    else if (Config.currentValues.hideRingSideBar == 2) //隐藏侧边栏，仅水平居中内容，不拉宽
-    {
-
-        $(".css-ill7fe").hide();
-        $(".css-14pitda").parent().attr("style", "display:flex;justify-content:center;");
-        GM_addStyle(`.css-1rnr3jg .RichContent-actions.is-fixed{width:${$(".css-kboer3").width()}px !important;}`);
-    }
-
-    //圈子的发布时间
-    $(".ContentItem.PinItem").each(function() {
-        if (!($(this).find(".ContentItem-time:not(.css-18wtfyc)").hasClass("full")) && $(this).find(".ContentItem-time:not(.css-18wtfyc)").length > 0 && $(this).find(".ContentItem-time:not(.css-18wtfyc)").find("a span").text() != null) {
-            if ($(this).find(".ContentItem-time:not(.css-18wtfyc)").text().indexOf("发布于") == -1 && $(this).find(".ContentItem-time:not(.css-18wtfyc)").text().indexOf("编辑于") > -1) //只有"编辑于"时增加具体发布时间data-tooltip
-            {
-                let data_tooltip = $(this).find(".ContentItem-time:not(.css-18wtfyc)").find("a span").attr("data-tooltip");
-                var oldtext = $(this).find(".ContentItem-time:not(.css-18wtfyc)").find("a span").text();
-                $(this).find(".ContentItem-time:not(.css-18wtfyc)").find("a span").text(data_tooltip + "\xa0\xa0，\xa0\xa0" + oldtext);
-                $(this).find(".ContentItem-time:not(.css-18wtfyc)").addClass("full");
-            }
-            else if ($(this).find(".ContentItem-time:not(.css-18wtfyc)").text().indexOf("发布于") > -1 && $(this).find(".ContentItem-time:not(.css-18wtfyc)").text().indexOf("编辑于") == -1) //只有"发布于"时替换为具体发布时间data-tooltip
-            {
-                let data_tooltip = $(this).find(".ContentItem-time:not(.css-18wtfyc)").find("a span").attr("data-tooltip");
-                $(this).find(".ContentItem-time:not(.css-18wtfyc)").find("a span").text(data_tooltip);
-                $(this).find(".ContentItem-time:not(.css-18wtfyc)").addClass("full");
-            }
-
-            //发布时间置顶
-            if (Config.currentValues.publishTop == 1) {
-                if ($(this).find(".ContentItem-time:not(.css-18wtfyc)").parent().hasClass("css-18wtfyc") && !$(this).find('.ContentItem-time.css-18wtfyc').hasClass('full')) {
-                    let temp_out_time = $(this).find('.ContentItem-time.css-18wtfyc').clone();
-                    $(this).find('.ContentItem-time.css-18wtfyc').hide();
-                    $(this).find(".ContentItem-meta").append(temp_out_time);
-                    $(this).find('.ContentItem-time.css-18wtfyc').addClass('full');
-                }
-                else if (!$(this).find(".ContentItem-time:not(.css-18wtfyc)").parent().hasClass("ContentItem-meta")) {
-                    let temp_time = $(this).find(".ContentItem-time:not(.css-18wtfyc)").clone();
-                    if ($(this).find(".RichContent").length > 0) {
-                        $(this).find(".RichContent .ContentItem-time:not(.css-18wtfyc)").hide();
-                    }
-                    else //没有RichContent
+                if(widthFlag==0)
+                {
+                    if($(".Topstory-container").length > 0)
                     {
-                        $(this).find(".ContentItem-time:not(.css-18wtfyc):nth-of-type(2)").hide();
+                        let totalWidth=$(".Topstory-container").width();
+                        $(".css-1qyytj7").hide();
+                        $(".Topstory-mainColumn").width(totalWidth);
+                        $(".Topstory-mainColumnCard").width(totalWidth);
+                        $(".Topstory-content").width(totalWidth);
+                        $(".css-1g878q7").width(totalWidth);
+                        $(".css-ekkpum").width(totalWidth);
+
+
+                        let coverWidth=$(".css-19assbf").width();
+                        let coverHeight=$(".css-19assbf").height();
+                        $(".css-19assbf").width(totalWidth).height(coverHeight*totalWidth/coverWidth);
+
+                        GM_addStyle(`.css-1im5po3{width:700px !important;}`);
+                        widthFlag=1;
                     }
-                    $(this).find(".ContentItem-meta").append(temp_time);
+                }
+            }
+            else if (Config.currentValues.hideRingSideBar == 2) //隐藏侧边栏，仅水平居中内容，不拉宽
+            {
+                if(widthFlag==0)
+                {
+                    if($(".Topstory-container").length > 0)
+                    {
+                        let totalWidth=$(".Topstory-container").width();
+                        $(".css-1qyytj7").hide();
+
+                        $(".Topstory-mainColumn").attr("style", "display:flex;justify-content:center;");
+                        $(".Topstory-mainColumn").width(totalWidth);
+
+                        GM_addStyle(`.css-1im5po3{width:700px !important;}`);
+
+                        widthFlag=1;
+                    }
                 }
             }
         }
-
-        if($(this).find('.Button.ContentItem-more').length>0)
+        else
         {
-            $(this).find('.Button.ContentItem-more').click();
+            if (Config.currentValues.hideRingSideBar == 1) //隐藏侧边栏并拉宽内容
+            {
+                if(widthFlag==0)
+                {
+                    if($(".css-14pitda").length > 0)
+                    {
+                        let totalWidth=$(".css-kboer3").width() + $(".css-ill7fe").width();
+                        $(".css-ill7fe").hide();
+                        $(".css-kboer3").width(totalWidth);
+                        $(".css-1lo6frp").width(totalWidth);
+                        $(".css-exh6me").width(totalWidth);
+
+                        let coverWidth=$(".css-19assbf").width();
+                        let coverHeight=$(".css-19assbf").height();
+                        $(".css-19assbf").width(totalWidth).height(coverHeight*totalWidth/coverWidth);
+
+                        GM_addStyle(`.css-1rnr3jg .RichContent-actions.is-fixed{width:${totalWidth}px !important;}`);
+                        widthFlag=1;
+                    }
+                }
+            }
+            else if (Config.currentValues.hideRingSideBar == 2) //隐藏侧边栏，仅水平居中内容，不拉宽
+            {
+                if(widthFlag==0)
+                {
+                    if($(".css-14pitda").length > 0)
+                    {
+                        $(".css-ill7fe").hide();
+                        $(".css-14pitda").parent().attr("style", "display:flex;justify-content:center;");
+                        GM_addStyle(`.css-1rnr3jg .RichContent-actions.is-fixed{width:${$(".css-kboer3").width()}px !important;}`);
+                        widthFlag=1;
+                    }
+                }
+            }
+
+            //圈子的发布时间
+            $(".ContentItem.PinItem").each(function() {
+                if (!($(this).find(".ContentItem-time:not(.css-18wtfyc)").hasClass("full")) && $(this).find(".ContentItem-time:not(.css-18wtfyc)").length > 0 && $(this).find(".ContentItem-time:not(.css-18wtfyc)").find("a span").text() != null) {
+                    if ($(this).find(".ContentItem-time:not(.css-18wtfyc)").text().indexOf("发布于") == -1 && $(this).find(".ContentItem-time:not(.css-18wtfyc)").text().indexOf("编辑于") > -1) //只有"编辑于"时增加具体发布时间data-tooltip
+                    {
+                        let data_tooltip = $(this).find(".ContentItem-time:not(.css-18wtfyc)").find("a span").attr("data-tooltip");
+                        var oldtext = $(this).find(".ContentItem-time:not(.css-18wtfyc)").find("a span").text();
+                        $(this).find(".ContentItem-time:not(.css-18wtfyc)").find("a span").text(data_tooltip + "\xa0\xa0，\xa0\xa0" + oldtext);
+                        $(this).find(".ContentItem-time:not(.css-18wtfyc)").addClass("full");
+                    }
+                    else if ($(this).find(".ContentItem-time:not(.css-18wtfyc)").text().indexOf("发布于") > -1 && $(this).find(".ContentItem-time:not(.css-18wtfyc)").text().indexOf("编辑于") == -1) //只有"发布于"时替换为具体发布时间data-tooltip
+                    {
+                        let data_tooltip = $(this).find(".ContentItem-time:not(.css-18wtfyc)").find("a span").attr("data-tooltip");
+                        $(this).find(".ContentItem-time:not(.css-18wtfyc)").find("a span").text(data_tooltip);
+                        $(this).find(".ContentItem-time:not(.css-18wtfyc)").addClass("full");
+                    }
+
+                    //发布时间置顶
+                    if (Config.currentValues.publishTop == 1) {
+                        if ($(this).find(".ContentItem-time:not(.css-18wtfyc)").parent().hasClass("css-18wtfyc") && !$(this).find('.ContentItem-time.css-18wtfyc').hasClass('full')) {
+                            let temp_out_time = $(this).find('.ContentItem-time.css-18wtfyc').clone();
+                            $(this).find('.ContentItem-time.css-18wtfyc').hide();
+                            $(this).find(".ContentItem-meta").append(temp_out_time);
+                            $(this).find('.ContentItem-time.css-18wtfyc').addClass('full');
+                        }
+                        else if (!$(this).find(".ContentItem-time:not(.css-18wtfyc)").parent().hasClass("ContentItem-meta")) {
+                            let temp_time = $(this).find(".ContentItem-time:not(.css-18wtfyc)").clone();
+                            if ($(this).find(".RichContent").length > 0) {
+                                $(this).find(".RichContent .ContentItem-time:not(.css-18wtfyc)").hide();
+                            }
+                            else //没有RichContent
+                            {
+                                $(this).find(".ContentItem-time:not(.css-18wtfyc):nth-of-type(2)").hide();
+                            }
+                            $(this).find(".ContentItem-meta").append(temp_time);
+                        }
+                    }
+                }
+
+                if($(this).find('.Button.ContentItem-more').length>0)
+                {
+                    $(this).find('.Button.ContentItem-more').click();
+                }
+            });
         }
-    });
-}
+    };
+})();
+
 
 //获取url中?后面的参数
 function getQueryVariable(variable) {
@@ -2591,7 +2620,7 @@ function index() {
     }, 500);
 
     if (Config.currentValues.hideIndexSidebar == 1) {
-        if( !$('#ring-feeds-style').length )
+        if($('#ring-feeds-style').length == 0)
         {
             GM_addStyle(`
         /*ring-feeds 圈子-内容拉宽*/
@@ -13440,7 +13469,7 @@ function creator() {
 
 //无障碍
 function wza() {
-    if($('#wza-style').length==0)
+    if($('#wza-style').length == 0)
     {
         GM_addStyle(`html[data-theme=dark] .content{background:#121212;}
         html[data-theme=dark] .artic{border: 1px solid #444}
@@ -15546,7 +15575,7 @@ html[data-theme=dark] #settingLayer #settings-close{
     }
     document.addEventListener('copy', addLink);
 
-/*
+    /*
     //每个页面对应的功能函数
     if (window.location.href.indexOf("/topic/") > -1) //话题页
         setInterval(topic, 300);
@@ -15640,6 +15669,7 @@ html[data-theme=dark] #settingLayer #settings-close{
          */
         onUrlChange() {
             const path = window.location.href;
+
             // 如果 URL 没变（仅仅是 hash 变化等），则不处理
             if (path === this.currentPath) return;
             this.currentPath = path;
@@ -15669,9 +15699,9 @@ html[data-theme=dark] #settingLayer #settings-close{
             let lastTriggerTime = 0; // 用于节流
 
             const execute = () => {
-                // 简单的节流：防止 MutationObserver 在 100ms 内疯狂触发
+                // 简单的节流：防止 MutationObserver 在 500ms 内疯狂触发
                 const now = Date.now();
-                if (now - lastTriggerTime < 100) return;
+                if (now - lastTriggerTime < 500) return;
                 lastTriggerTime = now;
 
                 callback();
@@ -15798,7 +15828,7 @@ html[data-theme=dark] #settingLayer #settings-close{
 
             // 14. 圈子(Ring)
             else if (url.includes("/ring/") || url.includes("/ring-feeds")) {
-                this.observeSelector('.Topstory', () => ring(), true);
+                this.observeSelector('.css-14pitda, .Topstory-container', () => ring(), true);
             }
 
             // 15. 讲座（Lives）

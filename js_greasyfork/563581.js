@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         三叉戟-发版管理-表格增强
 // @namespace    http://tampermonkey.net/
-// @version      1.6.0
-// @description  发版管理页面，相关功能的增强实现 (增加完整调试日志+扩大查询范围)
+// @version      1.6.5
+// @description  发版管理页面，相关功能的增强实现 (v1.6.5: 修复全部模式+统一按钮样式)
 // @author       shrek_maxi
 // @match        https://poseidon.cisdigital.cn/app/devops*
 // @match        https://poseidon.cisdigital.cn/devops*
@@ -21,7 +21,7 @@
     "use strict";
 
     // 脚本版本信息
-    const SCRIPT_VERSION = "1.6.0";
+    const SCRIPT_VERSION = "1.6.5";
     const SCRIPT_NAME = "三叉戟-发版管理-表格增强";
     
     // 可能的 releases API 路径 (/api 在前)
@@ -52,10 +52,24 @@
 
     // 注入CSS样式确保发版日志按钮文字完整显示
     GM_addStyle(`
+        /* v1.6.5: 统一发版日志按钮样式 */
         .release-log-btn {
+            color: #409EFF !important;
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            font-size: 12px !important;
+            font-weight: normal !important;
+            cursor: pointer !important;
             white-space: nowrap !important;
             overflow: visible !important;
             text-overflow: unset !important;
+            line-height: inherit !important;
+            vertical-align: middle !important;
+        }
+        .release-log-btn:hover {
+            color: #66b1ff !important;
+            text-decoration: none !important;
         }
         /* 让操作列允许内容溢出 */
         .el-table td:last-child,
@@ -74,6 +88,9 @@
 
     function initial() {
         console.log(`[${SCRIPT_NAME}] 脚本初始化... (v${SCRIPT_VERSION})`);
+        
+        // v1.6.4: 拦截 XHR 和 fetch 请求，监听 releases API 响应
+        interceptNetworkRequests();
         // vue单页面框架，需要根据URL的变化执行相应的操作
         let lastUrl = location.href;
         new MutationObserver(() => {
@@ -85,32 +102,240 @@
             }
         }).observe(document, { subtree: true, childList: true });
 
-        // 监听tab切换（归档/未归档）
+        // 监听tab切换和下拉框选择（归档/未归档）- v1.6.4 改进
         document.addEventListener('click', function (e) {
             // 支持多种 tab 选择器
             const tabItem = e.target.closest('.el-tabs__item') || 
                            e.target.closest('[role="tab"]') ||
                            e.target.closest('.tab-item');
+            
+            // 支持下拉框选项（el-select-dropdown__item）
+            const dropdownItem = e.target.closest('.el-select-dropdown__item');
+            
             const isReleasePage = releaseUrlPatterns.some(pattern => location.href.includes(pattern));
             
-            if (tabItem && isReleasePage) {
-                // 延迟执行以等待tab内容加载
-                setTimeout(() => {
-                    detectArchivedTab();
-                    reloadTableEnhancements();
-                }, 500);
+            if ((tabItem || dropdownItem) && isReleasePage) {
+                const clickedText = (tabItem || dropdownItem)?.textContent?.trim() || '';
+                console.log(`[${SCRIPT_NAME}] 检测到点击: "${clickedText}" (tab=${!!tabItem}, dropdown=${!!dropdownItem})`);
+                
+                // 如果点击的是归档相关选项
+                if (clickedText.includes('已归档') || clickedText.includes('未归档') || clickedText.includes('全部')) {
+                    console.log(`[${SCRIPT_NAME}] 归档状态切换: "${clickedText}"`);
+                    // 直接根据点击内容设置状态
+                    const prevArchived = currentArchived;
+                    currentArchived = clickedText === '已归档' ? 1 : 0;
+                    console.log(`[${SCRIPT_NAME}] 归档状态从 ${prevArchived} 变更为 ${currentArchived}`);
+                    
+                    // v1.6.5: 检查是否所有行都有按钮的函数
+                    function checkAllRowsHaveButtons() {
+                        const rows = document.querySelectorAll('.el-table__body-wrapper .el-table__body tbody tr.el-table__row') ||
+                                    document.querySelectorAll('.el-table tbody tr.el-table__row');
+                        if (rows.length === 0) return false;
+                        
+                        let rowsWithoutBtn = 0;
+                        rows.forEach(row => {
+                            if (!row.querySelector('.release-log-btn')) {
+                                rowsWithoutBtn++;
+                            }
+                        });
+                        console.log(`[${SCRIPT_NAME}] 检查按钮: ${rows.length}行, ${rowsWithoutBtn}行缺少按钮`);
+                        return rowsWithoutBtn === 0;
+                    }
+                    
+                    // 对于下拉框，需要等待下拉框关闭和 API 请求完成
+                    // 使用多次重试策略
+                    if (dropdownItem) {
+                        console.log(`[${SCRIPT_NAME}] 下拉框选择，等待 API 响应...`);
+                        // 第一次延迟：等待下拉框关闭
+                        setTimeout(() => {
+                            detectArchivedStatus();
+                            reloadTableEnhancements();
+                        }, 800);
+                        
+                        // 第二次延迟：确保表格已更新，检查所有行是否都有按钮
+                        setTimeout(() => {
+                            if (!checkAllRowsHaveButtons()) {
+                                console.log(`[${SCRIPT_NAME}] 第二次检查：有行缺少按钮，重新添加`);
+                                addReleaseNoteButton();
+                            }
+                        }, 2500);
+                        
+                        // 第三次延迟：最终保障
+                        setTimeout(() => {
+                            if (!checkAllRowsHaveButtons()) {
+                                console.log(`[${SCRIPT_NAME}] 第三次检查：有行缺少按钮，最终重新添加`);
+                                addReleaseNoteButton();
+                            }
+                        }, 4000);
+                    } else {
+                        // Tab 切换，使用较短延迟
+                        setTimeout(() => {
+                            detectArchivedStatus();
+                            reloadTableEnhancements();
+                        }, 500);
+                    }
+                } else {
+                    // 其他点击（非归档切换），正常处理
+                    const delay = dropdownItem ? 1000 : 500;
+                    setTimeout(() => {
+                        detectArchivedStatus();
+                        reloadTableEnhancements();
+                    }, delay);
+                }
             }
         });
     }
 
-    function detectArchivedTab() {
-        // 检测当前是否在已归档tab
+    // v1.6.5: 拦截网络请求以监听 releases API 响应
+    function interceptNetworkRequests() {
+        // v1.6.5: 检查是否所有行都有按钮
+        function checkAndAddMissingButtons() {
+            const rows = document.querySelectorAll('.el-table__body-wrapper .el-table__body tbody tr.el-table__row') ||
+                        document.querySelectorAll('.el-table tbody tr.el-table__row');
+            if (rows.length === 0) {
+                console.log(`[${SCRIPT_NAME}] 未找到表格行，跳过按钮检查`);
+                return;
+            }
+            
+            let rowsWithoutBtn = 0;
+            rows.forEach(row => {
+                if (!row.querySelector('.release-log-btn')) {
+                    rowsWithoutBtn++;
+                }
+            });
+            
+            console.log(`[${SCRIPT_NAME}] API 响应后检查: ${rows.length}行, ${rowsWithoutBtn}行缺少按钮`);
+            
+            if (rowsWithoutBtn > 0) {
+                addReleaseNoteButton();
+            }
+        }
+        
+        // 保存原始的 fetch 函数
+        const originalFetch = window.fetch;
+        
+        window.fetch = function(...args) {
+            const url = args[0];
+            
+            // 检查是否是 releases API 请求
+            if (typeof url === 'string' && url.includes('/api/devops/releases')) {
+                console.log(`[${SCRIPT_NAME}] 检测到 releases API 请求: ${url}`);
+                
+                // 解析 archived 参数
+                const urlObj = new URL(url, window.location.origin);
+                const archivedParam = urlObj.searchParams.get('archived');
+                if (archivedParam !== null) {
+                    console.log(`[${SCRIPT_NAME}] API 请求 archived 参数: ${archivedParam}`);
+                }
+                
+                return originalFetch.apply(this, args).then(response => {
+                    // 克隆响应以便读取
+                    const clonedResponse = response.clone();
+                    
+                    clonedResponse.json().then(data => {
+                        console.log(`[${SCRIPT_NAME}] releases API 响应完成，数据条数: ${data.data?.length || 0}`);
+                        
+                        // 延迟后刷新按钮（等待 Vue 渲染）
+                        setTimeout(() => {
+                            console.log(`[${SCRIPT_NAME}] API 响应后自动刷新按钮`);
+                            checkAndAddMissingButtons();
+                        }, 500);
+                        
+                        // v1.6.5: 额外延迟检查，确保所有行都有按钮
+                        setTimeout(() => {
+                            checkAndAddMissingButtons();
+                        }, 1500);
+                    }).catch(() => {});
+                    
+                    return response;
+                });
+            }
+            
+            return originalFetch.apply(this, args);
+        };
+        
+        // 保存原始的 XMLHttpRequest
+        const originalXHROpen = XMLHttpRequest.prototype.open;
+        const originalXHRSend = XMLHttpRequest.prototype.send;
+        
+        XMLHttpRequest.prototype.open = function(method, url, ...rest) {
+            this._url = url;
+            return originalXHROpen.apply(this, [method, url, ...rest]);
+        };
+        
+        XMLHttpRequest.prototype.send = function(...args) {
+            if (this._url && this._url.includes('/api/devops/releases')) {
+                console.log(`[${SCRIPT_NAME}] 检测到 XHR releases API 请求: ${this._url}`);
+                
+                this.addEventListener('load', function() {
+                    console.log(`[${SCRIPT_NAME}] XHR releases API 响应完成`);
+                    
+                    // 延迟后刷新按钮
+                    setTimeout(() => {
+                        console.log(`[${SCRIPT_NAME}] XHR 响应后自动刷新按钮`);
+                        checkAndAddMissingButtons();
+                    }, 500);
+                    
+                    // v1.6.5: 额外延迟检查
+                    setTimeout(() => {
+                        checkAndAddMissingButtons();
+                    }, 1500);
+                });
+            }
+            
+            return originalXHRSend.apply(this, args);
+        };
+        
+        console.log(`[${SCRIPT_NAME}] 网络请求拦截已设置`);
+    }
+
+    function detectArchivedStatus() {
+        // 检测当前是否在已归档状态
+        console.log(`[${SCRIPT_NAME}] 开始检测归档状态...`);
+        
+        // 方法1: 检查 tab
         const activeTab = document.querySelector('.el-tabs__item.is-active');
         if (activeTab) {
             const tabText = activeTab.textContent.trim();
-            currentArchived = tabText.includes('已归档') ? 1 : 0;
-            console.log(`[${SCRIPT_NAME}] 当前Tab: ${tabText}, archived=${currentArchived}`);
+            if (tabText.includes('已归档') || tabText.includes('未归档')) {
+                currentArchived = tabText.includes('已归档') ? 1 : 0;
+                console.log(`[${SCRIPT_NAME}] 从Tab检测: ${tabText}, archived=${currentArchived}`);
+                return;
+            }
         }
+        
+        // 方法2: 检查所有下拉框，找到包含归档选项的那个
+        const allSelects = document.querySelectorAll('.el-select');
+        console.log(`[${SCRIPT_NAME}] 找到 ${allSelects.length} 个下拉框`);
+        
+        for (const select of allSelects) {
+            const input = select.querySelector('.el-input__inner, input');
+            if (input) {
+                const value = input.value || input.textContent || '';
+                console.log(`[${SCRIPT_NAME}] 下拉框值: "${value}"`);
+                
+                if (value === '已归档') {
+                    currentArchived = 1;
+                    console.log(`[${SCRIPT_NAME}] 从下拉框检测: ${value}, archived=1`);
+                    return;
+                } else if (value === '未归档' || value === '全部') {
+                    currentArchived = 0;
+                    console.log(`[${SCRIPT_NAME}] 从下拉框检测: ${value}, archived=0`);
+                    return;
+                }
+            }
+        }
+        
+        // 方法3: 检查 URL 参数 (一些实现可能通过 URL 参数传递归档状态)
+        const urlParams = new URLSearchParams(window.location.search);
+        const archivedParam = urlParams.get('archived');
+        if (archivedParam !== null) {
+            currentArchived = archivedParam === '1' || archivedParam === 'true' ? 1 : 0;
+            console.log(`[${SCRIPT_NAME}] 从URL参数检测: archived=${currentArchived}`);
+            return;
+        }
+        
+        console.log(`[${SCRIPT_NAME}] 未能检测到归档状态，使用默认值: archived=${currentArchived}`);
     }
 
     function createObserver() {
@@ -127,7 +352,7 @@
 
     function initializePageEnhancements() {
         try {
-            detectArchivedTab();
+            detectArchivedStatus();
 
             // 尝试多种方式获取项目和产品显示名称
             let projectDisplayName = getProjectDisplayName();
@@ -278,9 +503,72 @@
     }
 
     function reloadTableEnhancements() {
-        // 重新加载表格增强
-        console.log(`[${SCRIPT_NAME}] 重新加载表格增强...`);
-        enableTableObserver();
+        // 重新加载表格增强 - v1.6.4 使用轮询方式代替 MutationObserver
+        console.log(`[${SCRIPT_NAME}] 重新加载表格增强... (v1.6.4)`);
+        console.log(`[${SCRIPT_NAME}] 当前归档状态: ${currentArchived === 1 ? '已归档' : '未归档'}`);
+        
+        // 先移除所有已存在的发版日志按钮
+        document.querySelectorAll('.release-log-btn').forEach(btn => btn.remove());
+        
+        // 使用轮询方式等待表格渲染完成
+        let attempts = 0;
+        const maxAttempts = 20; // 最多尝试 20 次
+        const pollInterval = 300; // 每 300ms 检查一次
+        
+        function pollForTable() {
+            attempts++;
+            console.log(`[${SCRIPT_NAME}] 轮询表格 (${attempts}/${maxAttempts})...`);
+            
+            // 查找表格行
+            const rows = document.querySelectorAll('.el-table__body-wrapper .el-table__body tbody tr.el-table__row') ||
+                        document.querySelectorAll('.el-table tbody tr.el-table__row') ||
+                        document.querySelectorAll('table tbody tr');
+            
+            // 检查是否有有效的表格行（排除空行）
+            const validRows = Array.from(rows).filter(row => {
+                const tds = row.querySelectorAll('td');
+                return tds.length > 0;
+            });
+            
+            console.log(`[${SCRIPT_NAME}] 找到 ${validRows.length} 个有效行`);
+            
+            if (validRows.length > 0) {
+                // 找到表格行，执行按钮添加
+                console.log(`[${SCRIPT_NAME}] 表格已渲染，开始添加按钮`);
+                
+                // 稍微延迟以确保 DOM 完全渲染
+                setTimeout(() => {
+                    addReleaseNoteButton();
+                    fetchReleaseList(currentArchived)
+                        .then((data) => {
+                            cacheReleaseData(data);
+                            updateTableWithRealIds(data);
+                        })
+                        .catch((error) => {
+                            console.error(`[${SCRIPT_NAME}] Error fetching release list: ${error}`);
+                        });
+                }, 200);
+            } else if (attempts < maxAttempts) {
+                // 继续轮询
+                setTimeout(pollForTable, pollInterval);
+            } else {
+                // 超过最大尝试次数，强制执行
+                console.warn(`[${SCRIPT_NAME}] 超过最大尝试次数 (${maxAttempts})，强制添加按钮`);
+                debugPageStructure();
+                addReleaseNoteButton();
+                fetchReleaseList(currentArchived)
+                    .then((data) => {
+                        cacheReleaseData(data);
+                        updateTableWithRealIds(data);
+                    })
+                    .catch((error) => {
+                        console.error(`[${SCRIPT_NAME}] Error fetching release list: ${error}`);
+                    });
+            }
+        }
+        
+        // 开始轮询
+        pollForTable();
     }
 
     function onUrlChange() {
@@ -745,174 +1033,186 @@
     }
 
     function addReleaseNoteButton() {
-        console.log("[三叉戟] 添加发版日志按钮 (v1.4.0)");
+        console.log("[三叉戟] 添加发版日志按钮 (v1.6.4 - 已归档修复版)");
+        console.log(`[三叉戟] 当前状态: ${currentArchived === 1 ? '已归档' : '未归档'}`);
 
         try {
-            // 尝试多种选择器以适配不同版本的 Poseidon
-            // v1.7.0+ 可能使用不同的 DOM 结构
-            const actionGroupSelectors = [
-                ".table-action-group",           // 原始选择器
-                ".el-table__fixed-right .cell",  // 固定右侧列
-                "[class*='action']",             // 包含 action 的类
-                ".operation-column",             // 操作列
-                "td:last-child .cell",           // 最后一列的单元格
-            ];
+            // v1.6.4: 使用多种选择器策略，确保能找到表格行
+            let rows = null;
             
-            // 尝试多种行选择器
-            const rowSelectors = [
-                ".el-table__fixed-body-wrapper .el-table__body tbody tr",
-                ".el-table__fixed-right-wrapper .el-table__body tbody tr",
-                ".el-table__body-wrapper .el-table__body tbody tr",
-                ".el-table tbody tr",
-                "table tbody tr.el-table__row",
-            ];
+            // 策略1: 优先查找主表格体的行（适用于大部分情况）
+            rows = document.querySelectorAll('.el-table__body-wrapper .el-table__body tbody tr.el-table__row');
+            console.log(`[三叉戟] 策略1 (body-wrapper): 找到 ${rows.length} 行`);
             
-            let fixedRows = [];
-            let mainRows = [];
-            let usedRowSelector = "";
-            
-            // 找到有效的行选择器
-            for (const selector of rowSelectors) {
-                const rows = document.querySelectorAll(selector);
-                if (rows.length > 0) {
-                    if (selector.includes('fixed')) {
-                        fixedRows = rows;
-                        console.log(`[三叉戟] 固定行选择器: ${selector}, 找到 ${rows.length} 行`);
-                    } else if (mainRows.length === 0) {
-                        mainRows = rows;
-                        usedRowSelector = selector;
-                        console.log(`[三叉戟] 主表行选择器: ${selector}, 找到 ${rows.length} 行`);
-                    }
-                }
+            // 策略2: 如果策略1失败，尝试不带 fixed 的表格
+            if (rows.length === 0) {
+                rows = document.querySelectorAll('.el-table:not(.el-table--scrollable-x) tbody tr.el-table__row');
+                console.log(`[三叉戟] 策略2 (non-scrollable): 找到 ${rows.length} 行`);
             }
             
-            // 如果没有固定列，使用主表行
-            if (fixedRows.length === 0 && mainRows.length > 0) {
-                fixedRows = mainRows;
-                console.log("[三叉戟] 使用主表行作为目标行");
+            // 策略3: 查找任何 el-table 的行
+            if (rows.length === 0) {
+                rows = document.querySelectorAll('.el-table tbody tr.el-table__row');
+                console.log(`[三叉戟] 策略3 (el-table): 找到 ${rows.length} 行`);
             }
-
-            console.log(`[三叉戟] 最终: ${fixedRows.length} 个固定行, ${mainRows.length} 个主表行`);
             
-            if (fixedRows.length === 0) {
-                console.warn("[三叉戟] 未找到表格行，可能页面结构已变化");
+            // 策略4: 最通用的选择器
+            if (rows.length === 0) {
+                rows = document.querySelectorAll('table tbody tr');
+                console.log(`[三叉戟] 策略4 (generic): 找到 ${rows.length} 行`);
+            }
+            
+            if (rows.length === 0) {
+                console.warn("[三叉戟] 未找到表格行");
                 debugPageStructure();
                 return;
             }
 
+            // v1.6.4: 增强调试，输出更多详情
+            console.log(`[三叉戟] === 表格行调试信息 ===`);
+            Array.from(rows).slice(0, 3).forEach((row, i) => {
+                const tds = row.querySelectorAll('td');
+                console.log(`[三叉戟] 第${i}行: ${tds.length}个td`);
+                
+                // 输出每个 td 的内容
+                tds.forEach((td, j) => {
+                    const cell = td.querySelector('.cell');
+                    const content = (cell || td).textContent.trim().substring(0, 50);
+                    const hasBtn = td.querySelector('button, .el-button') ? '[有按钮]' : '';
+                    const hasArchive = content.includes('已归档') ? '[已归档文本]' : '';
+                    console.log(`  td[${j}]: "${content}" ${hasBtn}${hasArchive}`);
+                });
+            });
+            console.log(`[三叉戟] === 调试信息结束 ===`);
+
             let buttonsAdded = 0;
-            fixedRows.forEach((row, index) => {
-                // 尝试多种选择器找到操作区域
-                let actionGroup = null;
-                for (const selector of actionGroupSelectors) {
-                    actionGroup = row.querySelector(selector);
-                    if (actionGroup) {
-                        // 验证这是操作列而不是数据列
-                        const isActionColumn = actionGroup.closest('td:last-child') || 
-                                              actionGroup.classList.contains('table-action-group') ||
-                                              actionGroup.querySelector('button');
-                        if (isActionColumn) {
-                            break;
+            let buttonsSkipped = 0;
+            
+            rows.forEach((row, index) => {
+                // 检查是否已经添加过按钮
+                if (row.querySelector('.release-log-btn')) {
+                    buttonsSkipped++;
+                    return;
+                }
+
+                // 获取所有 td
+                const tds = row.querySelectorAll('td');
+                if (tds.length === 0) {
+                    if (index < 3) console.log(`[三叉戟] 第${index}行没有td，跳过`);
+                    return;
+                }
+
+                // 找到操作列 - 从最后一个 td 开始往前找
+                // 操作列通常是最后一列，包含按钮或"已归档"文字
+                let actionTd = null;
+                let actionCell = null;
+                let foundMethod = '';
+                
+                // v1.6.4: 改进操作列查找逻辑
+                // 从后往前遍历，找到合适的操作列
+                for (let i = tds.length - 1; i >= Math.max(0, tds.length - 4); i--) {
+                    const td = tds[i];
+                    const cell = td.querySelector('.cell');
+                    const content = (cell || td).textContent.trim();
+                    
+                    // 检查是否是操作列的特征
+                    const hasActionGroup = td.querySelector('.table-action-group');
+                    const hasButtons = td.querySelector('button, .el-button, [class*="button"]');
+                    const hasSpace = td.querySelector('.el-space');
+                    const isArchiveText = content === '已归档';
+                    const isArchiveTip = td.querySelector('.archive-tip') || td.querySelector('[class*="archive"]');
+                    const hasActionKeywords = content.includes('编辑') || content.includes('删除') || 
+                                              content.includes('发版') || content.includes('任务管理') ||
+                                              content.includes('归档');
+                    
+                    if (hasActionGroup || hasButtons || hasSpace || isArchiveText || isArchiveTip || hasActionKeywords) {
+                        actionTd = td;
+                        actionCell = cell || td;
+                        foundMethod = hasActionGroup ? 'actionGroup' : 
+                                     hasButtons ? 'buttons' : 
+                                     hasSpace ? 'space' :
+                                     isArchiveText ? 'archiveText' : 
+                                     isArchiveTip ? 'archiveTip' : 'keywords';
+                        if (index < 3) {
+                            console.log(`[三叉戟] 第${index}行找到操作列 td[${i}] via ${foundMethod}: "${content.substring(0, 30)}"`);
                         }
-                        actionGroup = null;
+                        break;
                     }
                 }
+
+                // 如果没找到，使用最后一个 td
+                if (!actionTd) {
+                    actionTd = tds[tds.length - 1];
+                    actionCell = actionTd.querySelector('.cell') || actionTd;
+                    foundMethod = 'lastTd';
+                    if (index < 3) {
+                        const content = actionCell.textContent.trim().substring(0, 30);
+                        console.log(`[三叉戟] 第${index}行使用最后一个td作为操作列: "${content}"`);
+                    }
+                }
+
+                // v1.6.5: 创建按钮 - 使用统一样式（由 CSS 控制）
+                const btn = document.createElement("button");
+                btn.setAttribute("type", "button");
+                btn.setAttribute("data-row-index", index.toString());
+                btn.setAttribute("title", "发版日志");
+                btn.textContent = "发版日志";
+                btn.className = "el-button el-button--text release-log-btn";
+                // 不再设置 inline style，完全由 CSS 控制
+
+                // 查找操作区域并添加按钮
+                let actionGroup = actionCell.querySelector('.table-action-group') || 
+                                 actionCell.querySelector('.el-space') ||
+                                 actionCell;
                 
-                if (actionGroup) {
-                    // 检查是否已经添加过按钮
-                    if (row.querySelector('.release-log-btn')) {
-                        return;
-                    }
-
-                    // 调试：输出 actionGroup 的 HTML 结构（仅第一行）
-                    if (index === 0) {
-                        console.log("[三叉戟] actionGroup HTML:", actionGroup.innerHTML);
-                        console.log("[三叉戟] actionGroup 子元素数量:", actionGroup.children.length);
-                        Array.from(actionGroup.children).forEach((child, i) => {
-                            console.log(`[三叉戟] 子元素${i}: tagName=${child.tagName}, className=${child.className}, text=${child.textContent.trim().substring(0, 20)}`);
-                        });
-                    }
-
-                    // 查找所有现有按钮和它们的包装元素
-                    const existingBtns = actionGroup.querySelectorAll('button, .el-button');
-                    const lastBtn = existingBtns.length > 0 ? existingBtns[existingBtns.length - 1] : null;
+                // v1.6.5: 对于"已归档"文本或包含"已归档"的行，需要特殊处理
+                const cellContent = actionCell.textContent.trim();
+                const isArchivedCell = cellContent === '已归档' || cellContent.includes('已归档');
+                const hasNoActionContainer = !actionCell.querySelector('.table-action-group') && !actionCell.querySelector('.el-space');
+                
+                if (isArchivedCell && hasNoActionContainer) {
+                    // 创建一个包装容器
+                    const wrapper = document.createElement('span');
+                    wrapper.className = 'release-action-wrapper';
+                    wrapper.style.cssText = 'display: inline-flex; align-items: center; gap: 12px;';
                     
-                    // 找到按钮的直接父包装元素（如果有的话）
-                    let lastBtnWrapper = null;
-                    if (lastBtn && lastBtn.parentNode !== actionGroup) {
-                        lastBtnWrapper = lastBtn.parentNode;
-                        if (index === 0) {
-                            console.log("[三叉戟] 按钮有包装元素:", lastBtnWrapper.tagName, lastBtnWrapper.className);
-                        }
+                    // 保留原有的"已归档"文本
+                    const archiveSpan = document.createElement('span');
+                    archiveSpan.className = 'archive-tip';
+                    archiveSpan.textContent = '已归档';
+                    archiveSpan.style.cssText = 'color: #909399;';
+                    
+                    // 清空并重建内容
+                    actionCell.innerHTML = '';
+                    wrapper.appendChild(archiveSpan);
+                    wrapper.appendChild(btn);
+                    actionCell.appendChild(wrapper);
+                    
+                    if (index < 3) {
+                        console.log(`[三叉戟] 第${index}行 (已归档) 创建包装容器并添加按钮`);
                     }
-                    
-                    // 创建按钮
-                    const btn = document.createElement("button");
-                    btn.setAttribute("type", "button");
-                    btn.setAttribute("data-row-index", index.toString());
-                    btn.setAttribute("title", "发版日志"); // 鼠标悬停显示完整文本
-                    btn.textContent = "发版日志";
-                    btn.className = "el-button el-button--text release-log-btn";
-                    btn.style.cssText = "color: var(--cs-color_primary, #409EFF); cursor: pointer; pointer-events: auto; background: transparent; border: none; padding: 0; font-size: 14px; white-space: nowrap;";
-                    
-                    if (lastBtn) {
-                        // 复制现有按钮的类名
-                        const cleanClass = lastBtn.className
-                            .replace(/is-disabled/g, '')
-                            .replace(/disabled/g, '')
-                            .replace(/release-log-btn/g, '')
-                            .trim();
-                        btn.className = cleanClass + ' release-log-btn';
-                    }
-                    
-                    // 如果按钮有包装元素，克隆包装元素的结构
-                    if (lastBtnWrapper) {
-                        const wrapper = lastBtnWrapper.cloneNode(false); // 只克隆元素本身，不克隆子节点
-                        wrapper.innerHTML = ''; // 清空
-                        wrapper.style.cssText += "; overflow: visible; flex-shrink: 0;";
-                        wrapper.appendChild(btn);
-                        
-                        // 在最后一个按钮的包装元素之后插入
-                        if (lastBtnWrapper.nextSibling) {
-                            lastBtnWrapper.parentNode.insertBefore(wrapper, lastBtnWrapper.nextSibling);
-                        } else {
-                            lastBtnWrapper.parentNode.appendChild(wrapper);
-                        }
-                        
-                        // 强制让父容器和表格单元格允许溢出
-                        const elSpace = wrapper.closest('.el-space');
-                        if (elSpace) {
-                            elSpace.style.overflow = 'visible';
-                            elSpace.style.flexWrap = 'nowrap';
-                        }
-                        const cell = wrapper.closest('.cell');
-                        if (cell) {
-                            cell.style.overflow = 'visible';
-                        }
-                        const td = wrapper.closest('td');
-                        if (td) {
-                            td.style.overflow = 'visible';
-                        }
-                    } else {
-                        // 没有包装元素，直接追加到 actionGroup
-                        actionGroup.appendChild(btn);
-                    }
-                    btn.removeAttribute("disabled");
-                    
                     buttonsAdded++;
+                    return;
+                }
 
-                    // 同步行高
-                    if (mainRows[index] && mainRows[index] !== row) {
-                        syncRowHeight(mainRows[index], row);
-                    }
-                } else if (index === 0) {
-                    // 首行找不到操作区域，输出调试信息
-                    console.warn("[三叉戟] 第一行未找到操作区域，输出行结构:");
-                    console.log(row.innerHTML.substring(0, 500));
+                // 添加按钮到操作区域
+                actionGroup.appendChild(btn);
+                
+                // 确保容器支持 flex 布局
+                if (actionGroup.children.length > 1 || actionGroup.tagName === 'DIV') {
+                    actionGroup.style.display = 'flex';
+                    actionGroup.style.alignItems = 'center';
+                    actionGroup.style.flexWrap = 'nowrap';
+                    actionGroup.style.gap = '12px';
+                }
+                
+                buttonsAdded++;
+                if (index < 3) {
+                    console.log(`[三叉戟] 第${index}行成功添加按钮 (方式: ${foundMethod})`);
                 }
             });
             
-            console.log(`[三叉戟] 成功添加 ${buttonsAdded} 个发版日志按钮`);
+            console.log(`[三叉戟] 完成: 添加 ${buttonsAdded} 个按钮, 跳过 ${buttonsSkipped} 个已存在按钮`);
 
             // 使用事件委托 - 在 document 上监听点击事件
             if (!window._releaseLogClickHandlerAdded) {
@@ -965,27 +1265,54 @@
     
     // 调试函数：输出页面结构
     function debugPageStructure() {
-        console.log("=== [三叉戟] 页面结构调试 ===");
+        console.log("=== [三叉戟] 页面结构调试 (v1.6.4) ===");
         
+        // 检查 el-select 下拉框
+        const selects = document.querySelectorAll('.el-select');
+        console.log(`找到 ${selects.length} 个下拉框`);
+        selects.forEach((select, i) => {
+            const input = select.querySelector('.el-input__inner, input');
+            const value = input ? (input.value || input.textContent || '').trim() : '';
+            console.log(`  下拉框 ${i}: "${value}"`);
+        });
+        
+        // 检查表格
         const tables = document.querySelectorAll('table, .el-table');
         console.log(`找到 ${tables.length} 个表格元素`);
         
         tables.forEach((table, i) => {
-            console.log(`表格 ${i}:`, table.className);
-            const rows = table.querySelectorAll('tr');
-            console.log(`  - 行数: ${rows.length}`);
-            if (rows[0]) {
-                const cells = rows[0].querySelectorAll('td, th');
-                console.log(`  - 列数: ${cells.length}`);
+            console.log(`表格 ${i}: className="${table.className}"`);
+            const bodyRows = table.querySelectorAll('tbody tr.el-table__row, tbody tr');
+            console.log(`  - tbody 行数: ${bodyRows.length}`);
+            
+            if (bodyRows.length > 0) {
+                const firstRow = bodyRows[0];
+                const cells = firstRow.querySelectorAll('td');
+                console.log(`  - 第一行列数: ${cells.length}`);
+                
                 if (cells.length > 0) {
                     const lastCell = cells[cells.length - 1];
+                    const cellContent = lastCell.querySelector('.cell') || lastCell;
                     console.log(`  - 最后一列类名: ${lastCell.className}`);
-                    console.log(`  - 最后一列内容: ${lastCell.innerHTML.substring(0, 200)}`);
+                    console.log(`  - 最后一列内容: "${cellContent.textContent.trim().substring(0, 100)}"`);
+                    console.log(`  - 最后一列 HTML: ${lastCell.innerHTML.substring(0, 300)}`);
+                    
+                    // 检查是否有按钮
+                    const btns = lastCell.querySelectorAll('button, .el-button, [class*="button"]');
+                    console.log(`  - 最后一列按钮数: ${btns.length}`);
                 }
             }
         });
         
-        // 查找所有包含"操作"或"action"的元素
+        // 检查 release-log-btn
+        const releaseLogBtns = document.querySelectorAll('.release-log-btn');
+        console.log(`当前页面 release-log-btn 数量: ${releaseLogBtns.length}`);
+        
+        // 检查"已归档"文本
+        const archiveTexts = document.querySelectorAll('.archive-tip, [class*="archive"]');
+        console.log(`找到 ${archiveTexts.length} 个归档相关元素`);
+        
+        // 检查所有包含"操作"或"action"的元素
         const actionElements = document.querySelectorAll('[class*="action"], [class*="操作"]');
         console.log(`找到 ${actionElements.length} 个操作相关元素`);
         
@@ -1892,8 +2219,8 @@
         if (appsWithConfigs.length === 0) {
             return {
                 name: '后端应用公共配置关联',
-                status: 'passed',
-                message: `✓ ${backendApps.length}个后端应用（无法获取配置关联详情，请在页面确认）`
+                status: 'warning',
+                message: `${backendApps.length}个后端应用（无法获取配置关联详情，请在页面确认）`
             };
         }
 

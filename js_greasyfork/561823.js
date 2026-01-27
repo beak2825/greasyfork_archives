@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nyaa Visual Enhanced (Glass Edition Pro)
 // @namespace    http://tampermonkey.net/
-// @version      4.7
+// @version      4.8
 // @description  Universal Nyaa previews with unified search, AniList fallback, metadata tooltips, synopsis panel, and improved title parsing.
 // @author       dr.bobo0
 // @match        https://nyaa.si/*
@@ -22,8 +22,8 @@
     // =============== 1. CONFIGURATION ===============
     const DEFAULT_CONFIG = {
         enabled: true,
-        mode: 'inline',
-        size: 80,
+        mode: 'hybrid',
+        size: 85,
         square: false,
         zoom: true,
         transparent: true,
@@ -460,6 +460,12 @@
                 margin: 6px 0;
             }
             #nv-context-menu .nv-menu-icon { width: 18px; text-align: center; }
+            #nv-context-menu .nv-menu-shortcut {
+                margin-left: auto;
+                font-size: 11px;
+                color: #888;
+                opacity: 0.7;
+            }
 
             #nv-search-modal {
                 position: fixed;
@@ -1031,16 +1037,46 @@ function extractAnimeTitle(rawText) {
         }
     }
 
-    // =============== 8. SYNOPSIS TOGGLE ===============
-    function setupSynopsisToggle() {
+    // =============== 8. SYNOPSIS TOGGLE & KEYBOARD SHORTCUTS ===============
+    function setupKeyboardShortcuts() {
         document.addEventListener('keydown', (e) => {
-            if (!CONFIG.showSynopsisPanel) return;
-            const settingsOpen = document.getElementById('nv-settings') !== null;
-            if (settingsOpen) return;
+            // Check if user is typing in an input field
+            if (document.activeElement.tagName === 'INPUT' ||
+                document.activeElement.tagName === 'TEXTAREA') {
+                return;
+            }
 
-            if (e.key === 'Shift' && !e.repeat &&
-                document.activeElement.tagName !== 'INPUT' &&
-                document.activeElement.tagName !== 'TEXTAREA') {
+            const settingsOpen = document.getElementById('nv-settings') !== null;
+            const searchModalOpen = searchModal && searchModal.style.display === 'flex';
+
+            // Alt+S: Open Settings
+            if (e.altKey && e.key.toLowerCase() === 's') {
+                e.preventDefault();
+                if (settingsOpen) {
+                    // Close settings if already open
+                    const panel = document.getElementById('nv-settings');
+                    if (panel) panel.remove();
+                } else {
+                    createSettingsUI();
+                }
+                return;
+            }
+
+            // Escape: Close modals
+            if (e.key === 'Escape') {
+                if (searchModalOpen) {
+                    hideSearchModal();
+                    return;
+                }
+                if (settingsOpen) {
+                    const panel = document.getElementById('nv-settings');
+                    if (panel) panel.remove();
+                    return;
+                }
+            }
+
+            // Shift: Toggle synopsis panel (only when hovering)
+            if (e.key === 'Shift' && !e.repeat && CONFIG.showSynopsisPanel && !settingsOpen && !searchModalOpen) {
                 isSynopsisVisible = !isSynopsisVisible;
                 CONFIG.synopsisVisible = isSynopsisVisible;
                 saveConfig();
@@ -1059,7 +1095,7 @@ function extractAnimeTitle(rawText) {
         createTooltip();
         createContextMenu();
         createSearchModal();
-        setupSynopsisToggle();
+        setupKeyboardShortcuts();
         applyBodyClasses();
         cleanCache();
 
@@ -1112,7 +1148,7 @@ function extractAnimeTitle(rawText) {
         document.addEventListener('click', () => hideContextMenu());
         document.addEventListener('contextmenu', handleContextMenu);
 
-        GM_registerMenuCommand("⚙️ Settings", createSettingsUI);
+        GM_registerMenuCommand("⚙️ Settings (Alt+S)", createSettingsUI);
     }
 
     function injectSkeleton(link) {
@@ -1386,6 +1422,12 @@ function extractAnimeTitle(rawText) {
                 <span class="nv-menu-icon">❌</span>
                 <span>Remove Image</span>
             </div>
+            <div class="nv-menu-divider"></div>
+            <div class="nv-menu-item" data-action="settings">
+                <span class="nv-menu-icon">⚙️</span>
+                <span>Settings</span>
+                <span class="nv-menu-shortcut">Alt+S</span>
+            </div>
         `;
         document.body.appendChild(contextMenu);
         contextMenu.addEventListener('click', handleMenuAction);
@@ -1426,20 +1468,30 @@ function extractAnimeTitle(rawText) {
 
         const action = item.dataset.action;
         const link = currentContextTarget;
-        if (!link) return;
 
-        const title = link.dataset.cleanTitle;
         hideContextMenu();
 
         switch (action) {
             case 'search':
-                showSearchModal(title);
+                if (link) {
+                    const title = link.dataset.cleanTitle;
+                    showSearchModal(title);
+                }
                 break;
             case 'refetch':
-                refetchFromAPI(title);
+                if (link) {
+                    const title = link.dataset.cleanTitle;
+                    refetchFromAPI(title);
+                }
                 break;
             case 'remove':
-                removeImage(title);
+                if (link) {
+                    const title = link.dataset.cleanTitle;
+                    removeImage(title);
+                }
+                break;
+            case 'settings':
+                createSettingsUI();
                 break;
         }
     }
@@ -1703,7 +1755,7 @@ function extractAnimeTitle(rawText) {
         panel.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(128,128,128,0.3); padding-bottom:12px; margin-bottom:15px;">
                 <h2 style="margin:0; font-size:18px;">🖼️ Visual Enhanced Pro</h2>
-                <span style="font-size:10px; opacity:0.6;">v4.7/span>
+                <span style="font-size:10px; opacity:0.6;">v4.8</span>
             </div>
 
             <div class="nv-row"><label for="nv-enable">Enable Script</label><input type="checkbox" id="nv-enable"></div>
@@ -1755,7 +1807,7 @@ function extractAnimeTitle(rawText) {
 
             <div style="margin-top:15px; padding-top:12px; border-top:1px solid rgba(128,128,128,0.2); font-size:11px; opacity:0.6; text-align:center;">
                 💡 Right-click images for alternatives<br>
-                🎯 Orange border = uncertain match
+                ⌨️ Alt+S = Settings | Esc = Close
             </div>
         `;
         document.body.appendChild(panel);

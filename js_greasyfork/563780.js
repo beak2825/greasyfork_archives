@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fortnite.gg Locker Importer
 // @namespace    https://fortnite.gg/
-// @version      2.5
+// @version      2.6
 // @description  Import your Fortnite locker to Fortnite.gg
 // @author       ItsReepze
 // @match        https://fortnite.gg/*
@@ -45,6 +45,7 @@
     if (!location.pathname.toLowerCase().includes('/locker')) return;
 
     var SAC = 'Reepze';
+    var VERSION = '2.6';
     var switchToken = 'OThmN2U0MmMyZTNhNGY4NmE3NGViNDNmYmI0MWVkMzk6MGEyNDQ5YTItMDAxYS00NTFlLWFmZWMtM2U4MTI5MDFjNGQ3';
     var epicBase = 'https://account-public-service-prod.ol.epicgames.com';
     var fnBase = 'https://fortnite-public-service-prod11.ol.epicgames.com';
@@ -163,30 +164,30 @@
     GM_addStyle(`
         #fngg-panel{position:fixed;top:60px;right:0;width:350px;background:rgba(15,15,18,.65);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.12);border-right:0;border-radius:16px 0 0 16px;font-family:fn,sans-serif;z-index:999999;box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.05) inset;transition:transform .3s ease}
         #fngg-panel.min{transform:translateX(100%)}
-        #fngg-tab{position:fixed;top:110px;right:0;width:26px;height:48px;background:rgba(15,15,18,.65);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.12);border-right:0;border-radius:6px 0 0 6px;cursor:pointer;z-index:999998;display:flex;align-items:center;justify-content:center;color:#888;font-size:13px;transition:right .3s ease,background .2s,color .2s}
+        #fngg-tab{position:fixed;top:100px;right:0;width:22px;height:40px;background:rgba(15,15,18,.65);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.12);border-right:0;border-radius:6px 0 0 6px;cursor:pointer;z-index:999998;display:flex;align-items:center;justify-content:center;color:#888;font-size:11px;transition:right .3s ease,background .2s,color .2s}
         #fngg-tab:hover{background:rgba(40,40,45,.8);color:#fff}
         #fngg-tab.open{right:350px}
-        #fngg-info{position:fixed;bottom:15px;right:0;width:350px;max-height:calc(100vh - 290px);background:rgba(15,15,18,.65);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.12);border-right:0;border-radius:16px 0 0 16px;font-family:fn,sans-serif;z-index:999998;box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.05) inset;transform:translateX(100%);opacity:0;transition:all .3s ease;pointer-events:none;overflow-y:auto}
+        #fngg-info{position:fixed;top:260px;bottom:15px;right:0;width:350px;background:rgba(15,15,18,.65);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.12);border-right:0;border-radius:16px 0 0 16px;font-family:fn,sans-serif;z-index:999998;box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.05) inset;transform:translateX(100%);opacity:0;transition:all .3s ease;pointer-events:none;overflow-y:auto}
         #fngg-info.show{transform:translateX(0);opacity:1;pointer-events:auto}
-        .fngg-hdr{background:linear-gradient(135deg,rgba(45,45,50,.5) 0%,rgba(35,35,40,.5) 100%);padding:15px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08);border-radius:16px 0 0 0}
+        .fngg-hdr{background:linear-gradient(135deg,rgba(45,45,50,.5) 0%,rgba(35,35,40,.5) 100%);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08);border-radius:16px 0 0 0}
         .fngg-brand{display:flex;align-items:center;gap:10px}
-        .fngg-brand img{width:35px;height:35px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
-        .fngg-brand span{font-size:16px;font-weight:700;color:#fff;letter-spacing:.5px;text-transform:uppercase}
+        .fngg-brand img{width:30px;height:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+        .fngg-brand span{font-size:14px;font-weight:700;color:#fff;letter-spacing:.5px;text-transform:uppercase}
         .fngg-btns{display:flex;gap:4px}
-        .fngg-hbtn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#888;width:30px;height:30px;border-radius:8px;cursor:pointer;transition:all .2s;font-size:13px}
+        .fngg-hbtn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#888;width:26px;height:26px;border-radius:6px;cursor:pointer;transition:all .2s;font-size:12px}
         .fngg-hbtn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.15);color:#fff}
-        .body{padding:18px}
-        .ucard{display:flex;align-items:center;gap:14px;padding:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;margin-bottom:14px}
-        .ucard img{width:48px;height:48px;border-radius:10px;object-fit:cover;box-shadow:0 0 12px rgba(240,219,79,.2),0 2px 8px rgba(0,0,0,.3)}
-        .ucard-placeholder{width:48px;height:48px;border-radius:10px;background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:20px}
+        .body{padding:12px}
+        .ucard{display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;margin-bottom:10px}
+        .ucard img{width:42px;height:42px;border-radius:10px;object-fit:cover;box-shadow:0 0 12px rgba(240,219,79,.2),0 2px 8px rgba(0,0,0,.3)}
+        .ucard-placeholder{width:42px;height:42px;border-radius:10px;background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:18px}
         .ucard .info{flex:1;min-width:0}
-        .ucard .name{font-size:15px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2;text-transform:uppercase;letter-spacing:.3px}
-        .ucard .status{font-size:12px;color:#4ade80;display:flex;align-items:center;gap:5px;margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+        .ucard .name{font-size:14px;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2;text-transform:uppercase;letter-spacing:.3px}
+        .ucard .status{font-size:11px;color:#4ade80;display:flex;align-items:center;gap:5px;margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
         .ucard .status::before{content:'';width:6px;height:6px;background:#4ade80;border-radius:50%;box-shadow:0 0 6px #4ade80;animation:pulse 2s ease-in-out infinite}
         @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.9)}}
-        .lout{background:0;border:1px solid rgba(255,255,255,.1);color:#888;font-size:11px;padding:7px 14px;border-radius:6px;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+        .lout{background:0;border:1px solid rgba(255,255,255,.1);color:#888;font-size:10px;padding:5px 10px;border-radius:6px;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
         .lout:hover{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.4);color:#ef4444}
-        .btn{width:100%;padding:15px 18px;border:0;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.5px}
+        .btn{width:100%;padding:12px 14px;border:0;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.5px}
         .btn:disabled{opacity:.5;cursor:not-allowed}
         .btn-y{background:linear-gradient(135deg,#f0db4f 0%,#e6c93a 100%);color:#000;box-shadow:0 2px 12px rgba(240,219,79,.25)}
         .btn-y:hover:not(:disabled){background:linear-gradient(135deg,#f5e066 0%,#f0db4f 100%);box-shadow:0 4px 16px rgba(240,219,79,.35);transform:translateY(-1px)}
@@ -202,19 +203,19 @@
         .spin{width:28px;height:28px;border:3px solid rgba(255,255,255,.1);border-top-color:#f0db4f;border-radius:50%;animation:spin .8s linear infinite;margin:16px auto}
         @keyframes spin{to{transform:rotate(360deg)}}
         .mhint{font-size:12px;color:#666}
-        .isec{text-align:left;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.08)}
+        .isec{text-align:left;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.08)}
         .isec:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0}
-        .isec h3{font-size:13px;font-weight:700;color:#f0db4f;margin-bottom:7px;text-transform:uppercase;letter-spacing:.3px}
-        .isec p{font-size:13px;color:#ccc;line-height:1.6}
+        .isec h3{font-size:13px;font-weight:700;color:#f0db4f;margin-bottom:5px;text-transform:uppercase;letter-spacing:.3px}
+        .isec p{font-size:13px;color:#ccc;line-height:1.5}
         .isec a{color:#f0db4f;text-decoration:none}
         .isec a:hover{text-decoration:underline}
-        .isec.footer{margin-top:8px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);border-bottom:0}
+        .isec.footer{margin-top:4px;padding-top:10px;border-top:1px solid rgba(255,255,255,.1);border-bottom:0}
         .isec.footer .credit{color:#f0db4f;font-size:12px;font-weight:600}
         .isec.footer .credit a{color:#f0db4f}
-        .isec.footer .links{font-size:11px;margin-top:7px}
+        .isec.footer .links{font-size:11px;margin-top:5px}
         .isec.footer .links a{color:#999}
-        .isec.footer .disclaimer{color:#666;font-size:11px;margin-top:7px}
-        .isec.footer .version{color:#555;font-size:11px;margin-top:5px}
+        .isec.footer .disclaimer{color:#666;font-size:11px;margin-top:5px}
+        .isec.footer .version{color:#555;font-size:11px;margin-top:4px}
         .login-card{display:flex;align-items:center;gap:12px;padding:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;margin-bottom:12px}
         .login-icon{font-size:28px}
         .login-text{flex:1}
@@ -290,7 +291,7 @@
 
         var ip = document.createElement('div');
         ip.id = 'fngg-info';
-        ip.innerHTML = '<div class="fngg-hdr"><div class="fngg-brand"><img src="'+LOGO+'"><span>Info</span></div><div class="fngg-btns"><button class="fngg-hbtn" id="cibtn">✕</button></div></div><div class="body"><div class="isec"><h3>🎯 What does this do?</h3><p>Imports your entire Fortnite locker to fortnite.gg with one click. All cosmetics (skins, pickaxes, emotes, etc.) get sorted automatically by type and rarity.</p></div><div class="isec"><h3>🔐 Is this safe?</h3><p>100% safe! Uses Epic\'s official Device Code authentication. Your password never touches this script, you login directly on Epic\'s website.</p></div><div class="isec"><h3>⚡ How it works</h3><p>1. Click "Connect Epic Account"<br>2. Login on Epic\'s website<br>3. Click "Import Locker"<br>4. Done! Your locker is updated.</p></div><div class="isec"><h3>🔑 Token Info</h3><p>The access token expires after ~2 hours. After that, simply reconnect. We never store your password.</p></div><div class="isec"><h3>❤️ Support me</h3><p>If you like this tool, use Creator Code <strong style="color:#f0db4f">'+SAC+'</strong> in the Fortnite Item Shop!</p></div><div class="isec footer"><p class="credit">Made with ❤️ by <a href="https://github.com/ItsReepze" target="_blank">Reepze</a></p><p class="links"><a href="https://github.com/ItsReepze/fngg-locker-importer" target="_blank">GitHub</a> · <a href="https://greasyfork.org/en/scripts/563780" target="_blank">Greasyfork</a></p><p class="disclaimer">Not affiliated with Epic Games or fortnite.gg</p><p class="version">v2.5</p></div></div>';
+        ip.innerHTML = '<div class="fngg-hdr"><div class="fngg-brand"><img src="'+LOGO+'"><span>Info</span></div><div class="fngg-btns"><button class="fngg-hbtn" id="cibtn">✕</button></div></div><div class="body"><div class="isec"><h3>🎯 What does this do?</h3><p>Imports your entire Fortnite locker to fortnite.gg with one click. All cosmetics (skins, pickaxes, emotes, etc.) get sorted automatically by type and rarity.</p></div><div class="isec"><h3>🔐 Is this safe?</h3><p>100% safe! Uses Epic\'s official Device Code authentication. Your password never touches this script, you login directly on Epic\'s website.</p></div><div class="isec"><h3>⚡ How it works</h3><p>1. Click "Connect Epic Account"<br>2. Login on Epic\'s website<br>3. Click "Import Locker"<br>4. Done! Your locker is updated.</p></div><div class="isec"><h3>🔑 Token Info</h3><p>The access token expires after ~2 hours. After that, simply reconnect. We never store your password.</p></div><div class="isec"><h3>❤️ Support me</h3><p>If you like this tool, use Creator Code <strong style="color:#f0db4f">'+SAC+'</strong> in the Fortnite Item Shop!</p></div><div class="isec footer"><p class="credit">Made with ❤️ by <a href="https://github.com/ItsReepze" target="_blank">Reepze</a></p><p class="links"><a href="https://github.com/ItsReepze/fngg-locker-importer" target="_blank">GitHub</a> · <a href="https://greasyfork.org/en/scripts/563780" target="_blank">Greasyfork</a></p><p class="disclaimer">Not affiliated with Epic Games or fortnite.gg</p><p class="version">v'+VERSION+'</p></div></div>';
         document.body.appendChild(ip);
 
         var sm = document.createElement('div');
@@ -309,6 +310,23 @@
         tab.className = 'open';
         document.body.appendChild(tab);
 
+        function updateInfoPosition() {
+            var panel = document.getElementById('fngg-panel');
+            var info = document.getElementById('fngg-info');
+            if (panel && info) {
+                var panelRect = panel.getBoundingClientRect();
+                var panelBottom = panelRect.bottom + 10;
+                info.style.top = panelBottom + 'px';
+            }
+        }
+
+        var observer = new MutationObserver(function() {
+            if (document.getElementById('fngg-info').classList.contains('show')) {
+                setTimeout(updateInfoPosition, 10);
+            }
+        });
+        observer.observe(p, { childList: true, subtree: true });
+
         if (getSettings().panelMin) {
             p.classList.add('min');
             tab.classList.remove('open');
@@ -318,7 +336,14 @@
         var infoActive = !getSettings().infoClosed;
         if (infoActive && !getSettings().panelMin) {
             document.getElementById('fngg-info').classList.add('show');
+            setTimeout(updateInfoPosition, 50);
         }
+
+        window.addEventListener('resize', function() {
+            if (document.getElementById('fngg-info').classList.contains('show')) {
+                updateInfoPosition();
+            }
+        });
 
         function togglePanel() {
             var isMin = p.classList.toggle('min');
@@ -329,6 +354,7 @@
             var info = document.getElementById('fngg-info');
             if (infoActive) {
                 info.classList.toggle('show', !isMin);
+                if (!isMin) setTimeout(updateInfoPosition, 50);
             }
         }
 
@@ -339,6 +365,7 @@
             infoActive = willShow;
             saveSetting('infoClosed', !willShow);
             info.classList.toggle('show', willShow);
+            if (willShow) setTimeout(updateInfoPosition, 50);
         };
         document.getElementById('cibtn').onclick = function() { 
             infoActive = false;

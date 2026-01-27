@@ -1,0 +1,34 @@
+// ==UserScript==
+// @name         复制网站标题，描述，图标
+// @description  复制网站标题，描述，图标，快捷键CTRL+Z打开。
+// @namespace    https://jixiejidiguan.top
+// @version      1.4
+// @author       麗姫を描く
+// @icon         https://jixiejidiguan.top/favicon.ico
+// @license      AGPL-3.0-only
+// @match        http://*/*
+// @match        https://*/*
+// @grant        GM_addStyle
+// @grant        GM_registerMenuCommand
+// @run-at       document-start
+// @downloadURL https://update.greasyfork.org/scripts/564250/%E5%A4%8D%E5%88%B6%E7%BD%91%E7%AB%99%E6%A0%87%E9%A2%98%EF%BC%8C%E6%8F%8F%E8%BF%B0%EF%BC%8C%E5%9B%BE%E6%A0%87.user.js
+// @updateURL https://update.greasyfork.org/scripts/564250/%E5%A4%8D%E5%88%B6%E7%BD%91%E7%AB%99%E6%A0%87%E9%A2%98%EF%BC%8C%E6%8F%8F%E8%BF%B0%EF%BC%8C%E5%9B%BE%E6%A0%87.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    let kai = true;
+
+    GM_addStyle(`#pageMetaInfoPanel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;max-width:90vw;background:#fff;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.15);padding:16px;z-index:999999;color:#333;font-size:12px}#pageMetaInfoPanel .panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #eee}#pageMetaInfoPanel .panel-title{font-size:18px;font-weight:600;color:#2c3e50;margin:0}#pageMetaInfoPanel .close-btn{background:#f5f5f5;color:#2c3e50;border:none;border-radius:4px;width:28px;height:28px;cursor:pointer;font-size:24px;display:flex;align-items:center;justify-content:center;transition:background 0.2s}#pageMetaInfoPanel .close-btn:hover{background:#e5e5e5}#pageMetaInfoPanel .meta-item{margin:12px 0}#pageMetaInfoPanel .meta-label{font-weight:700;color:#666;display:inline-block}#pageMetaInfoPanel .meta-value{color:#2c3e50;word-break:break-all;line-height:1.5}#pageMetaInfoPanel .copy-btn{background:#409eff;color:#fff;border:none;border-radius:4px;padding:4px 6px;font-size:12px;cursor:pointer;margin-left:8px;transition:background 0.2s}#pageMetaInfoPanel .copy-btn:hover{background:#337ecc}#pageMetaInfoOverlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:999998}.meta-empty{color:#999;font-style:italic}.favicon-preview{width:24px;height:24px;margin-right:8px;vertical-align:middle;border-radius:2px}.json-data-item{margin-top:20px;padding-top:16px;border-top:2px dashed #eee}.json-data-label{font-weight:500;color:#666;display:block;margin-bottom:8px}.json-data-content{background:#e1e1e1;padding:12px;border-radius:4px;font-family:monospace;font-size:12px;white-space:pre-wrap;word-break:break-all;color:#000}.copy-json-btn{background:#67c23a;color:#fff;border:none;border-radius:4px;padding:6px 12px;font-size:12px;cursor:pointer;margin-top:8px;transition:background 0.2s}.copy-json-btn:hover{background:#52c41a}`);
+
+    function getPageMetaInfo(){const title=document.title;const descriptions=[];const metaArr=document.head.querySelectorAll("meta");if(metaArr.length>0){metaArr.forEach((res)=>{if(res.name?.toLocaleLowerCase()==="description"&&res.content){descriptions.push(res.content)}else if(res.getAttribute("property")==='description'&&res.content){descriptions.push(res.content)}else if(res.getAttribute("itemprop")==='description'&&res.content){descriptions.push(res.content)}})}const description=descriptions.length>0?[...new Set(descriptions)].join(' | '):'';const href=location.href;function getFaviconUrl(){const faviconLink=document.querySelector('link[rel*="icon"], link[rel*="shortcut icon"]');if(faviconLink&&faviconLink.href){return faviconLink.href}return''}const favicon=getFaviconUrl();const sitedata={"name":title||"","desc":description||"","icon":favicon||"","url":href||"","id":0};return{title,description,href,favicon,sitedata}}
+
+    function copyToClipboard(text,btn){navigator.clipboard.writeText(text).then(()=>{const originalText=btn.textContent;btn.textContent='已复制!';btn.style.background='#67c23a';setTimeout(()=>{btn.textContent=originalText;btn.style.background=btn.classList.contains('copy-json-btn')?'#67c23a':'#409eff'},1500)}).catch(err=>{alert('复制失败：'+err)})}
+
+    function showMetaInfoPanel(){const existingPanel=document.getElementById('pageMetaInfoPanel');const existingOverlay=document.getElementById('pageMetaInfoOverlay');if(existingPanel)existingPanel.remove();if(existingOverlay)existingOverlay.remove();if(!kai){kai=true;return}const{title,description,href,favicon,sitedata}=getPageMetaInfo();const overlay=document.createElement('div');overlay.id='pageMetaInfoOverlay';document.body.appendChild(overlay);const panel=document.createElement('div');panel.id='pageMetaInfoPanel';const formattedJson=JSON.stringify(sitedata,null,2);panel.innerHTML=`<div class="panel-header"><h3 class="panel-title">页面元信息</h3><button class="close-btn">×</button></div><div class="meta-item"><span class="meta-label">标题：</span><span class="meta-value ${title === '无标题' ? 'meta-empty' : ''}">${title}</span><button class="copy-btn"data-type="title">复制</button></div><div class="meta-item"><span class="meta-label">描述：</span><span class="meta-value ${description === '无描述信息' ? 'meta-empty' : ''}">${description}</span><button class="copy-btn"data-type="description">复制</button></div><div class="meta-item"><span class="meta-label">链接：</span><span class="meta-value ${href === '无链接' ? 'meta-empty' : ''}">${href}</span><button class="copy-btn"data-type="href">复制</button></div><div class="meta-item"><span class="meta-label">图标：</span><span class="meta-value ${favicon === '无图标地址' ? 'meta-empty' : ''}">${favicon!=='无图标地址'?`<img src="${favicon}"class="favicon-preview"alt="图标预览">`:''}${favicon}</span><button class="copy-btn"data-type="favicon">复制</button></div><!--新增：展示sitedata JSON数据--><div class="json-data-item"><span class="json-data-label">整合数据(JSON)：</span><div class="json-data-content">${formattedJson}</div><button class="copy-json-btn"data-type="json">复制JSON</button></div>`;document.body.appendChild(panel);panel.querySelector('.close-btn').addEventListener('click',()=>{panel.remove();overlay.remove();kai=true});overlay.addEventListener('click',()=>{panel.remove();overlay.remove();kai=true});panel.querySelectorAll('.copy-btn, .copy-json-btn').forEach(btn=>{btn.addEventListener('click',()=>{const type=btn.getAttribute('data-type');let text='';if(type==='title')text=title;else if(type==='description')text=description;else if(type==='href')text=href;else if(type==='favicon')text=favicon;else if(type==='json')text=formattedJson;copyToClipboard(text,btn)})});kai=false}
+
+    GM_registerMenuCommand("打开页面",showMetaInfoPanel);
+    document.addEventListener('keydown',(e)=>{if(e.ctrlKey&&e.key.toLowerCase()==='z'){showMetaInfoPanel()}});
+
+})();

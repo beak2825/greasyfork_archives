@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LMArena Manager
 // @namespace    http://tampermonkey.net/
-// @version      4.5.0
+// @version      4.5.1
 // @description  智能管理 LMArena 模型显示 - 多模式组织排序、Image类型分类
 // @author       LMArena Manager Team
 // @match        https://lmarena.ai/*
@@ -19,7 +19,7 @@
     'use strict';
 
     const STORAGE_KEY = 'lmarena_manager_v5';
-    const VERSION = '4.5.0';
+    const VERSION = '4.5.1';
 
     // ==================== 1. 选择器与配置 ====================
     const SELECTORS = {
@@ -90,7 +90,7 @@
         { patterns: [/^step/i], company: 'StepFun', icon: '👣' },
         { patterns: [/^llama/i], company: 'Meta', icon: '🔷' },
         { patterns: [/^nvidia/i, /^nemotron/i], company: 'Nvidia', icon: '💚' },
-        { patterns: [/^olmo/i], company: 'Allen AI', icon: '🔬' },
+        { patterns: [/^olmo/i, /^molmo/i], company: 'Allen AI', icon: '🔬' },
         { patterns: [/^mercury/i], company: 'Inception AI', icon: '☿️' },
         { patterns: [/^ppl/i, /^perplexity/i, /^sonar/i], company: 'Perplexity', icon: '❓' },
         { patterns: [/^diffbot/i], company: 'Diffbot', icon: '🤖' },
@@ -124,7 +124,7 @@
     ];
 
     const OSS_PATTERNS = [
-        /^llama/i, /^qwen/i, /^glm/i, /^olmo/i, /^gemma/i, /^mistral/i, /^mixtral/i, /^falcon/i,
+        /^llama/i, /^qwen/i, /^glm/i, /^olmo/i, /^molmo/i, /^gemma/i, /^mistral/i, /^mixtral/i, /^falcon/i,
         /^yi-/i, /^deepseek/i, /^baichuan/i, /^internlm/i, /^phi-/i, /^mimo/i, /gpt-oss/i
     ];
 
@@ -385,42 +385,43 @@
         initHistoryHook() {
             const originalPush = history.pushState;
             const originalReplace = history.replaceState;
-            const onUrlChange = () => {
-                setTimeout(() => {
-                    this.scan();
-                    this.applyFilters();
-                }, 150);
-            };
-            history.pushState = function() {
-                originalPush.apply(this, arguments);
-                onUrlChange();
-            };
-            history.replaceState = function() {
-                originalReplace.apply(this, arguments);
-                onUrlChange();
-            };
+            const onUrlChange = () => { setTimeout(() => { this.scan(); this.applyFilters(); }, 150); };
+            history.pushState = function() { originalPush.apply(this, arguments); onUrlChange(); };
+            history.replaceState = function() { originalReplace.apply(this, arguments); onUrlChange(); };
             window.addEventListener('popstate', onUrlChange);
         }
 
-        // 获取当前所有模型选项元素（兼容下拉和抽屉两种模式）
-        getModelOptions() {
-            // 优先检测下拉模式
-            let options = document.querySelectorAll(SELECTORS.modelOptionDropdown);
-            if (options.length > 0) return { options, mode: 'dropdown' };
-            // 抽屉模式 - 直接查找所有 w-full 按钮（不依赖容器）
-            const buttons = document.querySelectorAll('button.w-full');
-            if (buttons.length > 0) {
-                return { options: buttons, mode: 'drawer' };
-            }
-            return { options: [], mode: null };
+        // 获取所有容器及其选项（支持多容器，如 Side by Side）
+        getAllContainers() {
+            const result = [];
+
+            // 下拉模式 - 检查 cmdk-group-items 容器
+            const dropdownContainers = document.querySelectorAll('[cmdk-group-items]');
+            dropdownContainers.forEach(container => {
+                const options = container.querySelectorAll('[cmdk-item][role="option"]');
+                if (options.length > 0) {
+                    result.push({ container, options: [...options], mode: 'dropdown' });
+                }
+            });
+            if (result.length > 0) return result;
+
+            // 抽屉模式 - 每个 relative px-4 容器分别处理
+            const drawerContainers = document.querySelectorAll('div.relative.px-4');
+            drawerContainers.forEach(container => {
+                const options = container.querySelectorAll('button.w-full');
+                if (options.length > 0) {
+                    result.push({ container, options: [...options], mode: 'drawer' });
+                }
+            });
+
+            return result;
         }
 
-        extractInfo(el, mode = 'dropdown') {
+        extractInfo(el, layoutMode = 'dropdown') {
             const nameEl = el.querySelector(SELECTORS.modelName);
             const name = nameEl?.textContent?.trim();
             if (!name || name.length < 2) return null;
 
-            // 获取组织信息
             let iconCompany = null;
             const imgEl = el.querySelector('img[alt]');
             if (imgEl) {
@@ -428,7 +429,6 @@
                 iconCompany = alt.replace(/\s*icon\s*/i, '').trim() || null;
             }
 
-            // 检测标记 - 两种模式都使用相同的 SVG 类名
             const imageFlags = {
                 vision: !!el.querySelector('svg.lucide-glasses, [class*="lucide-glasses"]'),
                 riu: !!el.querySelector('svg.lucide-image-up, [class*="lucide-image-up"]'),
@@ -439,49 +439,48 @@
         }
 
         scan() {
-            const { options, mode: layoutMode } = this.getModelOptions();
-            if (options.length === 0) return;
+            const containers = this.getAllContainers();
+            if (containers.length === 0) return;
 
             const currentMode = ModeDetector.detect();
-            const found = new Map();
             const newModels = [];
 
-            options.forEach(el => {
-                const info = this.extractInfo(el, layoutMode);
-                if (!info) return;
-                found.set(info.name, el);
-                if (this.scanSession.active) {
-                    this.scanSession.scannedModels.add(info.name);
-                    this.scanSession.scannedModes.add(currentMode);
-                }
-                let model = this.dm.getModel(info.name);
-                if (!model) {
-                    const data = this.dm.analyze(info.name, info.iconCompany, currentMode, info.imageFlags);
-                    this.dm.setModel(info.name, data);
-                    newModels.push(info.name);
-                } else {
-                    this.dm.addModeToModel(info.name, currentMode);
-                    // 更新 Vision 标记
-                    if (info.imageFlags.vision && !model.hasVision) {
-                        this.dm.updateModel(info.name, { hasVision: true });
+            containers.forEach(({ options, mode: layoutMode }) => {
+                options.forEach(el => {
+                    const info = this.extractInfo(el, layoutMode);
+                    if (!info) return;
+
+                    if (this.scanSession.active) {
+                        this.scanSession.scannedModels.add(info.name);
+                        this.scanSession.scannedModes.add(currentMode);
                     }
-                    // 更新 imageType
-                    if (currentMode === 'image' && !model.imageType) {
-                        const hasVision = info.imageFlags.vision;
-                        const hasRIU = info.imageFlags.riu;
-                        let imageType = 't2i';
-                        if (hasVision && hasRIU) imageType = 'i2i';
-                        else if (hasVision && !hasRIU) imageType = 'universal';
-                        this.dm.updateModel(info.name, { imageType });
+
+                    let model = this.dm.getModel(info.name);
+                    if (!model) {
+                        const data = this.dm.analyze(info.name, info.iconCompany, currentMode, info.imageFlags);
+                        this.dm.setModel(info.name, data);
+                        newModels.push(info.name);
+                    } else {
+                        this.dm.addModeToModel(info.name, currentMode);
+                        if (info.imageFlags.vision && !model.hasVision) {
+                            this.dm.updateModel(info.name, { hasVision: true });
+                        }
+                        if (currentMode === 'image' && !model.imageType) {
+                            const hasVision = info.imageFlags.vision;
+                            const hasRIU = info.imageFlags.riu;
+                            let imageType = 't2i';
+                            if (hasVision && hasRIU) imageType = 'i2i';
+                            else if (hasVision && !hasRIU) imageType = 'universal';
+                            this.dm.updateModel(info.name, { imageType });
+                        }
                     }
-                }
+                });
             });
 
             if (newModels.length > 0 && this.dm.data.settings.showNewAlert) {
                 const msg = newModels.length <= 3 ? `发现新模型: ${newModels.slice(0, 3).join(', ')}` : `发现 ${newModels.length} 个新模型`;
                 this.toast(msg);
             }
-            return found;
         }
 
         startScanSession() {
@@ -499,86 +498,79 @@
             return result;
         }
 
-        isScanActive() {
-            return this.scanSession.active;
-        }
+        isScanActive() { return this.scanSession.active; }
 
         applyFilters() {
-            const { options, mode: layoutMode } = this.getModelOptions();
-            if (options.length === 0) return;
+            const containers = this.getAllContainers();
+            if (containers.length === 0) return;
 
             const currentMode = ModeDetector.detect();
             const orgOrder = this.dm.getOrgOrder(currentMode);
             const customOrder = this.dm.getModelOrder(currentMode);
             const hasCustomOrder = customOrder && customOrder.length > 0;
 
-            const items = [];
+            // 对每个容器分别处理排序
+            containers.forEach(({ options, mode: layoutMode }) => {
+                const items = [];
 
-            options.forEach(el => {
-                const info = this.extractInfo(el, layoutMode);
-                if (!info) return;
-                const model = this.dm.getModel(info.name);
-                if (!model) return;
+                options.forEach(el => {
+                    const info = this.extractInfo(el, layoutMode);
+                    if (!info) return;
+                    const model = this.dm.getModel(info.name);
+                    if (!model) return;
 
-                const visible = this.dm.isVisible(info.name);
-                el.style.display = visible ? '' : 'none';
+                    const visible = this.dm.isVisible(info.name);
+                    el.style.display = visible ? '' : 'none';
 
-                if (visible) {
-                    let order = 0;
-                    if (model.starred) {
-                        order = -99999 + (info.name.charCodeAt(0) || 0) * 0.001;
-                    } else if (hasCustomOrder) {
-                        const customIndex = customOrder.indexOf(info.name);
-                        if (customIndex !== -1) {
-                            order = customIndex;
+                    if (visible) {
+                        let order = 0;
+                        if (model.starred) {
+                            order = -99999 + (info.name.charCodeAt(0) || 0) * 0.001;
+                        } else if (hasCustomOrder) {
+                            const customIndex = customOrder.indexOf(info.name);
+                            if (customIndex !== -1) {
+                                order = customIndex;
+                            } else {
+                                order = 50000 + (info.name.charCodeAt(0) || 0) * 0.01;
+                            }
                         } else {
-                            order = 50000 + (info.name.charCodeAt(0) || 0) * 0.01;
+                            let baseOrder = 10000;
+                            if (currentMode === 'image' && model.imageType) {
+                                baseOrder += (IMAGE_TYPE_ORDER[model.imageType] ?? 3) * 10000;
+                            }
+                            const orgIndex = orgOrder.indexOf(model.company);
+                            const orgScore = (orgIndex !== -1 ? orgIndex : 900) * 100;
+                            order = baseOrder + orgScore + (info.name.charCodeAt(0) || 0) * 0.01;
                         }
-                    } else {
-                        let baseOrder = 10000;
-                        if (currentMode === 'image' && model.imageType) {
-                            baseOrder += (IMAGE_TYPE_ORDER[model.imageType] ?? 3) * 10000;
-                        }
-                        const orgIndex = orgOrder.indexOf(model.company);
-                        const orgScore = (orgIndex !== -1 ? orgIndex : 900) * 100;
-                        order = baseOrder + orgScore + (info.name.charCodeAt(0) || 0) * 0.01;
+                        items.push({ el, order });
                     }
-                    items.push({ el, order });
+                });
+
+                // 在当前容器内排序（不跨容器移动）
+                if (items.length > 0) {
+                    items.sort((a, b) => a.order - b.order);
+                    const parent = items[0].el.parentElement;
+                    if (parent) {
+                        items.forEach(item => parent.appendChild(item.el));
+                    }
                 }
             });
-
-            // DOM 排序
-            if (items.length > 0) {
-                items.sort((a, b) => a.order - b.order);
-                const parent = items[0].el.parentElement;
-                if (parent) {
-                    items.forEach(item => parent.appendChild(item.el));
-                }
-            }
         }
 
         toast(msg, type = 'info') {
             document.querySelectorAll('.lmm-toast').forEach(t => t.remove());
-            const t = document.createElement('div');
-            t.className = `lmm-toast lmm-toast-${type}`;
+            const t = document.createElement('div'); t.className = `lmm-toast lmm-toast-${type}`;
             t.innerHTML = `<span>${type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️'}</span><span>${msg}</span><button class="lmm-toast-x">×</button>`;
-            document.body.appendChild(t);
-            t.querySelector('.lmm-toast-x').onclick = () => t.remove();
-            setTimeout(() => t.remove(), 4000);
+            document.body.appendChild(t); t.querySelector('.lmm-toast-x').onclick = () => t.remove(); setTimeout(() => t.remove(), 4000);
         }
 
         startObserving() {
             let timer = null;
             const observer = new MutationObserver(() => {
-                // 检测下拉或抽屉模式的容器
-                const dropdown = document.querySelector(SELECTORS.dropdownList);
-                const drawer = document.querySelector(SELECTORS.arenaButtons);
-                if (dropdown || drawer) {
+                const containers = this.getAllContainers();
+                if (containers.length > 0) {
                     clearTimeout(timer);
-                    timer = setTimeout(() => {
-                        this.scan();
-                        this.applyFilters();
-                    }, 50);
+                    timer = setTimeout(() => { this.scan(); this.applyFilters(); }, 50);
                 }
             });
             observer.observe(document.body, { childList: true, subtree: true });
@@ -1591,7 +1583,7 @@
                     const dragHandle = this.isModelSortMode ? '<span class="lmm-drag-handle">⠿</span>' : '';
                     const modes = Array.isArray(m.modes) ? m.modes : ['text'];
                     const imgTypeTag = (sidebarMode === 'image' && m.imageType && IMAGE_TYPE_LABELS[m.imageType])
-                        ? `<span class="lmm-tag imgtype">${IMAGE_TYPE_LABELS[m.imageType].icon}</span>` : '';
+                    ? `<span class="lmm-tag imgtype">${IMAGE_TYPE_LABELS[m.imageType].icon}</span>` : '';
                     const visionTag = m.hasVision ? '<span class="lmm-tag vision">👓</span>' : '';
 
                     return `

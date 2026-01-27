@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hasoth's My Today Prayer
 // @namespace    torn.rings.float
-// @version      3.26.0
+// @version      3.30.0
 // @description  My Today Prayer for Torn - Restored UI & Original Drag + Efficient Log Check
 // @author       Hasoth [4042954]
 // @match        https://www.torn.com/*
@@ -174,8 +174,15 @@ observer.observe(document, obs_ops);
 async function insertFloat() {
     if(document.getElementById('ringsFloat')) return;
     const isCompact = useCompactMode;
+
+    // --- FIX START: Determine initial visibility to prevent flash ---
+    // If "Show Only Until Done" is ON, start HIDDEN (none).
+    // If OFF, start VISIBLE (flex) so you see "Checking...".
+    const initialDisplay = ShowOnlyUntilDone ? 'none' : 'flex';
+    // --- FIX END ---
+
     const ringBtn = `
-        <a id="ringsFloat" class="rings-float ${isCompact ? 'rings-compact' : ''}" title="Click to refresh">
+        <a id="ringsFloat" class="rings-float ${isCompact ? 'rings-compact' : ''}" title="Click to refresh" style="display: ${initialDisplay};">
             <span class="rings-icon">${prayer_svg}</span>
             <div class="rings-info">
                 <span class="rings-text">TODAY PRAYER</span>
@@ -429,7 +436,7 @@ function insertStyle() {
             cursor: pointer; text-decoration: none; color: #333;
             background: #f2f2f2;
             border: 1px solid #999; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            display: flex; user-select: none; touch-action: none;
+            user-select: none; touch-action: none;
         }
         #ringsFloat:active { transform: scale(0.98); }
 

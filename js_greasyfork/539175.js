@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Holotower Soundposts
 // @namespace    http://tampermonkey.net/
-// @version      1.6
+// @version      1.6.1
 // @author       grem
 // @license      MIT
 // @description  Play sound for soundposts (video and image) on Holotower.
@@ -46,7 +46,8 @@
   // Whitelist of allowed domains for sound file URLs
   const ALLOWED_SOUND_DOMAINS = [
     'files.catbox.moe',
-    'litterbox.catbox.moe'
+    'litter.catbox.moe',
+    'x0.at'
     // Add more domains here as needed
   ];
 

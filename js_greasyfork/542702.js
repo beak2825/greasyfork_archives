@@ -2,7 +2,7 @@
 // @name         MZone Advanced: Table, Stats & Play-off / MZone Gelişmiş: Tablo, İstatistik & Play-off
 // @name:tr      MZone Gelişmiş: Tablo, İstatistik & Play-off
 // @namespace    http://tampermonkey.net/
-// @version      2.93
+// @version      2.94
 // @description  A powerful suite combining the Advanced League Table (live scores, FD), Player Stat Averages, and the new Play-off/Play-out Predictor. Now with Excel export, Shortlist Filtering and Transfer Tracker with charts.
 // @description:tr Gelişmiş Lig Tablosu (canlı skorlar, FZ), Oyuncu İstatistik Ortalamaları ve yeni Play-Off/Play-Out Tahmincisi betiklerini tek bir güçlü araçta birleştirir. Şimdi Excel'e aktarma, Takip Listesi Filtreleme ve Grafikli Transfer Takipçisi özelliğiyle.
 // @author       alex66
@@ -186,9 +186,15 @@
             fixtureElo: { nameKey: "fixturePageEloName" },
             matchFinder: { nameKey: "matchFinderName" },
             messengerTools: { nameKey: "messengerToolsTitle" },
-            ghostRobot: { nameKey: "ghostRobotTitle" }, // <--- YENİ EKLENEN SATIR
+            ghostRobot: { nameKey: "ghostRobotTitle" },
             friendlyMatchAuto: { nameKey: "friendlyMatchAutoTitle" },
-            linkEnhancements: { nameKey: "linkEnhancementsTitle" }
+            linkEnhancements: { nameKey: "linkEnhancementsTitle" },
+            transferScoutFilter: { nameKey: "transferScoutFilterTitle" },
+
+            // ▼▼▼ BUNU EKLE ▼▼▼
+            skillColoring: { nameKey: "rankingTweaksTitle" },
+            // ▼▼▼ YENİ MODÜL AYARI ▼▼▼
+            maxedBallColoring: { nameKey: "maxedBallTitle" }
         };
 
         // Ayarları tarayıcı hafızasından yükleyen fonksiyon
@@ -564,12 +570,12 @@
                     <button id="mz-update-close-button">${i18n.get('updateModalCloseBtn')}</button>
                 </div>
             </div>`;
-            document.body.appendChild(modalOverlay);
-            modalOverlay.querySelector(CONFIG.SELECTORS.UPDATE_MODAL_CLOSE).addEventListener('click', async () => {
-                modalOverlay.style.display = 'none';
-                await GM_setValue(LAST_SEEN_VERSION_KEY, SCRIPT_INFO.version);
-            });
-        }
+                document.body.appendChild(modalOverlay);
+                modalOverlay.querySelector(CONFIG.SELECTORS.UPDATE_MODAL_CLOSE).addEventListener('click', async () => {
+                    modalOverlay.style.display = 'none';
+                    await GM_setValue(LAST_SEEN_VERSION_KEY, SCRIPT_INFO.version);
+                });
+            }
 
             function createSettingsModal() {
                 if (document.querySelector(CONFIG.SELECTORS.SETTINGS_MODAL)) return;
@@ -596,15 +602,15 @@
                     <button id="mz-settings-save">${i18n.get('saveBtn')}</button>
                 </div>
             </div>`;
-            document.body.appendChild(modalOverlay);
-            modalOverlay.querySelector(CONFIG.SELECTORS.SETTINGS_MODAL_CLOSE).addEventListener('click', closeSettingsModal);
-            modalOverlay.querySelector(CONFIG.SELECTORS.SETTINGS_MODAL_SAVE).addEventListener('click', saveSettingsAndClose);
-            modalOverlay.addEventListener('click', (e) => {
-                if (e.target === modalOverlay) {
-                    closeSettingsModal();
-                }
-            });
-        }
+                document.body.appendChild(modalOverlay);
+                modalOverlay.querySelector(CONFIG.SELECTORS.SETTINGS_MODAL_CLOSE).addEventListener('click', closeSettingsModal);
+                modalOverlay.querySelector(CONFIG.SELECTORS.SETTINGS_MODAL_SAVE).addEventListener('click', saveSettingsAndClose);
+                modalOverlay.addEventListener('click', (e) => {
+                    if (e.target === modalOverlay) {
+                        closeSettingsModal();
+                    }
+                });
+            }
 
             function openSettingsModal() {
                 const modal = document.querySelector(CONFIG.SELECTORS.SETTINGS_MODAL);
@@ -1324,23 +1330,23 @@
             </span>
             <span class="buttonClassRight"> </span>`;
 
-                if (filter.type === 'all') {
-                    // ESKİ HALİ: buttonLink.style.filter = 'brightness(85%)';
-                    // YENİ HALİ: Sayfa ilk açıldığında "Genel" butonu aktif ve büyük görünür.
-                    buttonLink.style.transform = 'scale(1.05)';
-                    buttonLink.style.zIndex = '1'; // Diğer butonların üzerine çıkması için
-                }
+                    if (filter.type === 'all') {
+                        // ESKİ HALİ: buttonLink.style.filter = 'brightness(85%)';
+                        // YENİ HALİ: Sayfa ilk açıldığında "Genel" butonu aktif ve büyük görünür.
+                        buttonLink.style.transform = 'scale(1.05)';
+                        buttonLink.style.zIndex = '1'; // Diğer butonların üzerine çıkması için
+                    }
 
-                buttonLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    handleFilterClick(filter.type);
+                    buttonLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        handleFilterClick(filter.type);
+                    });
+
+                    filterContainer.appendChild(buttonLink);
                 });
 
-                filterContainer.appendChild(buttonLink);
-            });
-
-            titleHeader.appendChild(filterContainer);
-        }
+                titleHeader.appendChild(filterContainer);
+            }
 
             /**
  * Filtre butonuna tıklandığında tetiklenir. (Güncellenmiş Versiyon)
@@ -2164,58 +2170,58 @@
 
         </div>
     </div>`;
-            $('body').append(popupHTML);
+                $('body').append(popupHTML);
 
-            // Olay dinleyicileri (event listeners)
-            $('.popup-close').on('click', () => $('#scrape-options-popup').remove());
+                // Olay dinleyicileri (event listeners)
+                $('.popup-close').on('click', () => $('#scrape-options-popup').remove());
 
-            $('#select-all-types').on('click', (e) => {
-                e.preventDefault();
-                $('.match-type-checkbox').prop('checked', true).trigger('change');
-            });
-
-            $('#deselect-all-types').on('click', (e) => {
-                e.preventDefault();
-                $('.match-type-checkbox').prop('checked', false).trigger('change');
-            });
-
-            $('.match-type-checkbox').on('change', () => {
-                const count = $('.match-type-checkbox:checked').length;
-                $('#start-scrape-button').text(i18n.scanSelectedCategories(count)).prop('disabled', count === 0);
-            });
-
-            $('#start-scrape-button').on('click', function() {
-                const selectedTypes = [];
-                $('.match-type-checkbox:checked').each(function() {
-                    selectedTypes.push({
-                        value: $(this).val(),
-                        text: $(this).data('text')
-                    });
+                $('#select-all-types').on('click', (e) => {
+                    e.preventDefault();
+                    $('.match-type-checkbox').prop('checked', true).trigger('change');
                 });
-                if (selectedTypes.length > 0) {
-                    $('#scrape-options-popup').remove();
-                    startAutomatedScrape(selectedTypes);
-                }
-                $(this).prop('disabled', true);
-            });
 
-            // --- YENİ EKLENEN OLAY DİNLEYİCİLERİ ---
-            $('#backup-json-btn').on('click', function() {
-                handleJsonBackup($(this));
-            });
+                $('#deselect-all-types').on('click', (e) => {
+                    e.preventDefault();
+                    $('.match-type-checkbox').prop('checked', false).trigger('change');
+                });
 
-            $('#restore-json-btn').on('click', function() {
-                // Geri yükleme işlemi gizli bir dosya girişini tetikler.
-                // Bu girişin var olduğundan emin olalım.
-                if ($('#restore-file-input').length === 0) {
-                    $('<input type="file" id="restore-file-input" style="display: none;" accept=".json">')
-                        .appendTo('body')
-                        .on('change', processRestoreFile);
-                }
-                handleJsonRestore();
-            });
-            // --- YENİ DİNLEYİCİLER SONU ---
-        }
+                $('.match-type-checkbox').on('change', () => {
+                    const count = $('.match-type-checkbox:checked').length;
+                    $('#start-scrape-button').text(i18n.scanSelectedCategories(count)).prop('disabled', count === 0);
+                });
+
+                $('#start-scrape-button').on('click', function() {
+                    const selectedTypes = [];
+                    $('.match-type-checkbox:checked').each(function() {
+                        selectedTypes.push({
+                            value: $(this).val(),
+                            text: $(this).data('text')
+                        });
+                    });
+                    if (selectedTypes.length > 0) {
+                        $('#scrape-options-popup').remove();
+                        startAutomatedScrape(selectedTypes);
+                    }
+                    $(this).prop('disabled', true);
+                });
+
+                // --- YENİ EKLENEN OLAY DİNLEYİCİLERİ ---
+                $('#backup-json-btn').on('click', function() {
+                    handleJsonBackup($(this));
+                });
+
+                $('#restore-json-btn').on('click', function() {
+                    // Geri yükleme işlemi gizli bir dosya girişini tetikler.
+                    // Bu girişin var olduğundan emin olalım.
+                    if ($('#restore-file-input').length === 0) {
+                        $('<input type="file" id="restore-file-input" style="display: none;" accept=".json">')
+                            .appendTo('body')
+                            .on('change', processRestoreFile);
+                    }
+                    handleJsonRestore();
+                });
+                // --- YENİ DİNLEYİCİLER SONU ---
+            }
 
             async function startAutomatedScrape(selectedTypes) {
                 const loader = $('#mz-stat-loader');
@@ -2556,20 +2562,20 @@
                         </div>
                     `;
 
-                    statsTd.find('img[src*="goal.gif"], img[src*="card_yellow.gif"], img[src*="card_red.gif"], br').remove();
-                    statsTd.contents().filter(function() { return this.nodeType === 3; }).remove();
-                    statsTd.prepend(dynamicStatsHTML);
-                }
-            };
+                        statsTd.find('img[src*="goal.gif"], img[src*="card_yellow.gif"], img[src*="card_red.gif"], br').remove();
+                        statsTd.contents().filter(function() { return this.nodeType === 3; }).remove();
+                        statsTd.prepend(dynamicStatsHTML);
+                    }
+                };
 
-            if ($('.playerContainer').length > 0) {
-                $('.playerContainer').each(function() {
-                    injectContent($(this));
-                });
-            } else if (window.location.href.includes('p=player&pid=')) {
-                injectContent($('div.player-title').closest('.mainContent'));
+                if ($('.playerContainer').length > 0) {
+                    $('.playerContainer').each(function() {
+                        injectContent($(this));
+                    });
+                } else if (window.location.href.includes('p=player&pid=')) {
+                    injectContent($('div.player-title').closest('.mainContent'));
+                }
             }
-        }
 
             // DEĞİŞİKLİK BAŞLANGICI: `matchTypeValue` ile filtreleme yapacak şekilde güncelle
             function getCategorySummaryStats(pid, filterTypeValue, rawData) {
@@ -2630,66 +2636,66 @@
                         <table id="popup-stats-table" style="margin-top:15px;"><thead><tr><th>${i18n.statistics}</th><th>Value</th></tr></thead><tbody></tbody></table>
                     </div>
                 </div>`;
-            $('body').append(popupHTML);
+                $('body').append(popupHTML);
 
-            const updatePopupForPlayer = (currentPid) => {
-                const playerData = rawData[currentPid];
-                const availableCategories = new Map();
-                if (playerData && playerData.matches) {
-                    playerData.matches.forEach(m => { if(m.matchTypeValue) availableCategories.set(m.matchTypeValue, m.matchType) });
-                }
-                const sortedCategories = Array.from(availableCategories.entries()).sort((a,b) => a[1].localeCompare(b[1]));
+                const updatePopupForPlayer = (currentPid) => {
+                    const playerData = rawData[currentPid];
+                    const availableCategories = new Map();
+                    if (playerData && playerData.matches) {
+                        playerData.matches.forEach(m => { if(m.matchTypeValue) availableCategories.set(m.matchTypeValue, m.matchType) });
+                    }
+                    const sortedCategories = Array.from(availableCategories.entries()).sort((a,b) => a[1].localeCompare(b[1]));
 
-                if (sortedCategories.length > 0) {
-                    sortedCategories.unshift(['all', i18n.all]);
+                    if (sortedCategories.length > 0) {
+                        sortedCategories.unshift(['all', i18n.all]);
 
-                    const categoryDropdown = $('#category-dropdown-list').empty();
-                    sortedCategories.forEach(([value, text]) => {
-                        categoryDropdown.append(`<li data-value="${value}" style="padding: 8px 12px; cursor: pointer;">${getShortCategoryName(text)}</li>`);
-                    });
-                    $('#popup-category-selector').show();
+                        const categoryDropdown = $('#category-dropdown-list').empty();
+                        sortedCategories.forEach(([value, text]) => {
+                            categoryDropdown.append(`<li data-value="${value}" style="padding: 8px 12px; cursor: pointer;">${getShortCategoryName(text)}</li>`);
+                        });
+                        $('#popup-category-selector').show();
 
-                    const defaultCategoryValue = 'all';
-                    $('#popup-category-selector').attr('data-selected-category', defaultCategoryValue);
-                    $('#current-category-name').text(getShortCategoryName(i18n.all));
-                    updateCategoryStatsDisplay(currentPid, defaultCategoryValue, rawData);
-                    updateStatsPopupTable(currentPid, defaultCategoryValue);
-                } else {
-                    $('#popup-category-selector').hide();
-                    updateStatsPopupTable(currentPid, 'all');
-                }
-            };
+                        const defaultCategoryValue = 'all';
+                        $('#popup-category-selector').attr('data-selected-category', defaultCategoryValue);
+                        $('#current-category-name').text(getShortCategoryName(i18n.all));
+                        updateCategoryStatsDisplay(currentPid, defaultCategoryValue, rawData);
+                        updateStatsPopupTable(currentPid, defaultCategoryValue);
+                    } else {
+                        $('#popup-category-selector').hide();
+                        updateStatsPopupTable(currentPid, 'all');
+                    }
+                };
 
-            const updateCategoryStatsDisplay = (currentPid, categoryValue, rawData) => {
-                const stats = getCategorySummaryStats(currentPid, categoryValue, rawData);
-                $('#current-category-stats').html(`
+                const updateCategoryStatsDisplay = (currentPid, categoryValue, rawData) => {
+                    const stats = getCategorySummaryStats(currentPid, categoryValue, rawData);
+                    $('#current-category-stats').html(`
                     <span title="${i18n.statMappings['G']}"><img src="/nocache-936/img/soccer/goal.gif" style="width:10px; vertical-align: middle;"> ${stats.G}</span>
                     <span title="${i18n.statMappings['A']}"><span class="assist-icon" style="vertical-align: middle;">👟</span> ${stats.A}</span>
                     <span title="${i18n.statMappings['YC']}"><img src="/nocache-936/img/card_yellow.gif" style="width:8px; vertical-align: middle;"> ${stats.YC}</span>
                     <span title="${i18n.statMappings['RC']}"><img src="/nocache-936/img/card_red.gif" style="width:8px; vertical-align: middle;"> ${stats.RC}</span>
                 `);
-            };
+                };
 
-            $('#player-switcher').on('change', function() { updatePopupForPlayer($(this).val()); });
-            $('#popup-category-selector').on('click', (e) => { e.stopPropagation(); $('#category-dropdown-list').slideToggle(200); });
-            $('#category-dropdown-list').on('mouseenter', 'li', function(){ $(this).css('background-color', '#f0f0f0'); });
-            $('#category-dropdown-list').on('mouseleave', 'li', function(){ $(this).css('background-color', 'white'); });
-            $('#category-dropdown-list').on('click', 'li', function(e) {
-                e.stopPropagation();
-                const selectedCategoryValue = $(this).data('value');
-                const selectedCategoryText = $(this).text();
-                $('#popup-category-selector').attr('data-selected-category', selectedCategoryValue);
-                $('#current-category-name').text(getShortCategoryName(selectedCategoryText));
-                const currentPid = $('#player-switcher').val();
-                updateCategoryStatsDisplay(currentPid, selectedCategoryValue, rawData);
-                updateStatsPopupTable(currentPid, selectedCategoryValue);
-                $('#category-dropdown-list').hide();
-            });
-            $(document).on('click.statsPopup', function(e) { if (!$('#popup-category-selector').is(e.target) && $('#popup-category-selector').has(e.target).length === 0) { $('#category-dropdown-list').slideUp(200); } });
-            $('#player-stats-popup .popup-close').on('click', () => { $('#player-stats-popup').remove(); $(document).off('click.statsPopup'); });
+                $('#player-switcher').on('change', function() { updatePopupForPlayer($(this).val()); });
+                $('#popup-category-selector').on('click', (e) => { e.stopPropagation(); $('#category-dropdown-list').slideToggle(200); });
+                $('#category-dropdown-list').on('mouseenter', 'li', function(){ $(this).css('background-color', '#f0f0f0'); });
+                $('#category-dropdown-list').on('mouseleave', 'li', function(){ $(this).css('background-color', 'white'); });
+                $('#category-dropdown-list').on('click', 'li', function(e) {
+                    e.stopPropagation();
+                    const selectedCategoryValue = $(this).data('value');
+                    const selectedCategoryText = $(this).text();
+                    $('#popup-category-selector').attr('data-selected-category', selectedCategoryValue);
+                    $('#current-category-name').text(getShortCategoryName(selectedCategoryText));
+                    const currentPid = $('#player-switcher').val();
+                    updateCategoryStatsDisplay(currentPid, selectedCategoryValue, rawData);
+                    updateStatsPopupTable(currentPid, selectedCategoryValue);
+                    $('#category-dropdown-list').hide();
+                });
+                $(document).on('click.statsPopup', function(e) { if (!$('#popup-category-selector').is(e.target) && $('#popup-category-selector').has(e.target).length === 0) { $('#category-dropdown-list').slideUp(200); } });
+                $('#player-stats-popup .popup-close').on('click', () => { $('#player-stats-popup').remove(); $(document).off('click.statsPopup'); });
 
-            updatePopupForPlayer(pid);
-        }
+                updatePopupForPlayer(pid);
+            }
 
             async function updateStatsPopupTable(pid, filterTypeValue) {
                 $('#player-stats-popup').data('pid', pid);
@@ -2754,9 +2760,9 @@
                     <div id="age-slider-range" class="ui-slider ui-widget-content ui-corner-all"></div>
                     <input type="text" id="ageb_slider_input" class="age-slider-input">
                 </div>`;
-            } else {
-                // MOBİL: Basit input'lu ve "Uygula" butonlu filtre
-                ageFilterHTML = `
+                } else {
+                    // MOBİL: Basit input'lu ve "Uygula" butonlu filtre
+                    ageFilterHTML = `
                 <div id="age-filter-container-mobile" style="display:flex; align-items:center; gap: 5px; flex-wrap: wrap;">
                      <label for="min-age-input" style="font-weight:bold; margin-bottom:0;">Yaş:</label>
                      <input type="text" inputmode="numeric" pattern="[0-9]*" id="min-age-input" class="age-slider-input" placeholder="Min" value="16" maxlength="2" style="width: 55px;">
@@ -2764,9 +2770,9 @@
                      <input type="text" inputmode="numeric" pattern="[0-9]*" id="max-age-input" class="age-slider-input" placeholder="Max" value="38" maxlength="2" style="width: 55px;">
                      <button id="apply-age-filter-btn" class="mz-script-button" style="padding: 4px 8px; font-size: 12px; background-color: #007bff; margin-left: 5px;">Uygula</button>
                 </div>`;
-            }
+                }
 
-            const popupHTML = `
+                const popupHTML = `
             <div id="player-comparison-popup">
                 <div class="popup-header"><h3>${i18n.playerComparison}</h3><span class="popup-close">×</span></div>
                 <div class="popup-content-scrollable">
@@ -2781,56 +2787,56 @@
                     </div>
                 </div>
             </div>`;
-            $('body').append(popupHTML);
+                $('body').append(popupHTML);
 
-            if ($.fn.slider) {
-                // --- MASAÜSTÜ ÖZEL KODU ---
-                const minAgeInput = $("#agea_slider_input");
-                const maxAgeInput = $("#ageb_slider_input");
-                const ageSlider = $("#age-slider-range");
-                let debounceTimer;
+                if ($.fn.slider) {
+                    // --- MASAÜSTÜ ÖZEL KODU ---
+                    const minAgeInput = $("#agea_slider_input");
+                    const maxAgeInput = $("#ageb_slider_input");
+                    const ageSlider = $("#age-slider-range");
+                    let debounceTimer;
 
-                ageSlider.slider({
-                    range: true, min: 16, max: 38, values: [16, 38],
-                    slide: (event, ui) => { minAgeInput.val(ui.values[0]); maxAgeInput.val(ui.values[1]); },
-                    change: (event, ui) => { if (event.originalEvent) { updateComparisonTable(); } }
-                });
-                minAgeInput.val(ageSlider.slider("values", 0));
-                maxAgeInput.val(ageSlider.slider("values", 1));
+                    ageSlider.slider({
+                        range: true, min: 16, max: 38, values: [16, 38],
+                        slide: (event, ui) => { minAgeInput.val(ui.values[0]); maxAgeInput.val(ui.values[1]); },
+                        change: (event, ui) => { if (event.originalEvent) { updateComparisonTable(); } }
+                    });
+                    minAgeInput.val(ageSlider.slider("values", 0));
+                    maxAgeInput.val(ageSlider.slider("values", 1));
 
-                minAgeInput.add(maxAgeInput).on("input", function() {
-                    clearTimeout(debounceTimer);
-                    debounceTimer = setTimeout(() => {
-                        let min = parseInt(minAgeInput.val(), 10), max = parseInt(maxAgeInput.val(), 10);
-                        const currentValues = ageSlider.slider("values");
-                        const sliderMin = isNaN(min) ? currentValues[0] : Math.max(16, min);
-                        const sliderMax = isNaN(max) ? currentValues[1] : Math.min(38, max);
-                        if (sliderMin <= sliderMax) ageSlider.slider("values", [sliderMin, sliderMax]);
+                    minAgeInput.add(maxAgeInput).on("input", function() {
+                        clearTimeout(debounceTimer);
+                        debounceTimer = setTimeout(() => {
+                            let min = parseInt(minAgeInput.val(), 10), max = parseInt(maxAgeInput.val(), 10);
+                            const currentValues = ageSlider.slider("values");
+                            const sliderMin = isNaN(min) ? currentValues[0] : Math.max(16, min);
+                            const sliderMax = isNaN(max) ? currentValues[1] : Math.min(38, max);
+                            if (sliderMin <= sliderMax) ageSlider.slider("values", [sliderMin, sliderMax]);
+                            updateComparisonTable();
+                        }, 400);
+                    }).on("blur", function() {
+                        let min = parseInt(minAgeInput.val(), 10) || 16, max = parseInt(maxAgeInput.val(), 10) || 38;
+                        if (min > max) [min, max] = [max, min];
+                        min = Math.max(16, min); max = Math.min(38, max);
+                        minAgeInput.val(min); maxAgeInput.val(max);
+                    });
+                } else {
+                    // --- MOBİL ÖZEL KODU ---
+                    $('#apply-age-filter-btn').on('click', function() {
                         updateComparisonTable();
-                    }, 400);
-                }).on("blur", function() {
-                    let min = parseInt(minAgeInput.val(), 10) || 16, max = parseInt(maxAgeInput.val(), 10) || 38;
-                    if (min > max) [min, max] = [max, min];
-                    min = Math.max(16, min); max = Math.min(38, max);
-                    minAgeInput.val(min); maxAgeInput.val(max);
+                    });
+                }
+
+                updateComparisonTable();
+
+                $(document).off('click', '#comparison-table td:first-child').on('click', '#comparison-table td:first-child', function() {
+                    const pid = $(this).closest('tr').data('pid');
+                    if (pid && userTeamId) GM_openInTab(`https://www.managerzone.com/?p=players&pid=${pid}&tid=${userTeamId}`, false);
                 });
-            } else {
-                // --- MOBİL ÖZEL KODU ---
-                $('#apply-age-filter-btn').on('click', function() {
-                    updateComparisonTable();
-                });
+                $('#player-comparison-popup .popup-close').on('click', () => $('#player-comparison-popup').remove());
+                $('#player-comparison-popup .popup-filters select').on('change', updateComparisonTable);
+                $('#export-to-excel-btn').on('click', handleExcelExport);
             }
-
-            updateComparisonTable();
-
-            $(document).off('click', '#comparison-table td:first-child').on('click', '#comparison-table td:first-child', function() {
-                const pid = $(this).closest('tr').data('pid');
-                if (pid && userTeamId) GM_openInTab(`https://www.managerzone.com/?p=players&pid=${pid}&tid=${userTeamId}`, false);
-            });
-            $('#player-comparison-popup .popup-close').on('click', () => $('#player-comparison-popup').remove());
-            $('#player-comparison-popup .popup-filters select').on('change', updateComparisonTable);
-            $('#export-to-excel-btn').on('click', handleExcelExport);
-        }
 
             async function handleExcelExport() {
                 const button = $('#export-to-excel-btn');
@@ -3077,12 +3083,12 @@
                                                             <i class="fa-duotone fa-heart-pulse extend-career-icon" style="font-size: 14px;"></i>
                                                         </span>
                                                     </span>`;
+                            }
+                            retirementIconsHTML += `</span>`;
                         }
-                        retirementIconsHTML += `</span>`;
-                    }
 
-                    // Oyuncu ismini içeren hücreyi oluştururken, hazırladığımız ikon HTML'ini başına ekliyoruz.
-                    let row = `<tr data-pid="${player.pid}">
+                        // Oyuncu ismini içeren hücreyi oluştururken, hazırladığımız ikon HTML'ini başına ekliyoruz.
+                        let row = `<tr data-pid="${player.pid}">
                <td style="color: #00529B; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
                    <span style="text-decoration: underline;">${player.name}</span>
                    ${retirementIconsHTML}
@@ -3090,163 +3096,163 @@
                <td data-sort="${currentAge}">${displayAge}</td>
                <td data-sort="${data.matches}">${data.matches}</td>`;
 
-                    displayColumns.forEach(col => {
-                        if (sumAvgColumns.includes(col)) {
-                            const sum = data[`${col}_sum`] || 0,
-                                  avg = data[`${col}_avg`] || '0.00';
-                            row += `<td data-sort-sum="${sum}" data-sort-avg="${avg}">${sum} / ${avg}</td>`;
-                        } else {
-                            const statValue = data[col] || '0.00',
-                                  suffix = col.includes('%') ? ' %' : '';
-                            row += `<td data-sort="${parseFloat(statValue)}">${statValue}${suffix}</td>`;
-                        }
-                    });
-                    row += '</tr>';
-                    tableBody.append(row);
-                }
-            }
-            makeTableSortable($('#comparison-table'));
-            applyCellColoring($('#comparison-table'));
-            initialSortByGreenness($('#comparison-table'));
-        }
-
-        function makeTableSortable(table) {
-            table.find('th[data-sort-type]').off('click').on('click', function() {
-                const th = $(this),
-                      index = th.index(),
-                      headerText = th.text().trim(),
-                      isSpecialSort = sumAvgColumns.includes(headerText);
-                table.find('th').not(th).removeClass('sort-asc sort-desc sort-sum-asc sort-sum-desc sort-avg-asc sort-avg-desc').removeAttr('data-sort-state');
-                let sortKey, direction, sortAttribute;
-                if (isSpecialSort) {
-                    const states = ['sum-desc', 'sum-asc', 'avg-desc', 'avg-asc'],
-                          currentState = th.attr('data-sort-state') || '',
-                          nextIndex = (states.indexOf(currentState) + 1) % states.length,
-                          newState = states[nextIndex];
-                    th.attr('data-sort-state', newState).removeClass('sort-asc sort-desc sort-sum-asc sort-sum-desc sort-avg-asc sort-avg-desc').addClass(`sort-${newState}`);
-                    [sortKey, direction] = newState.split('-');
-                    sortAttribute = `data-sort-${sortKey}`;
-                } else {
-                    direction = th.hasClass('sort-asc') ? 'desc' : 'asc';
-                    th.removeClass('sort-asc sort-desc').addClass(`sort-${direction}`);
-                    sortAttribute = 'data-sort';
-                    th.removeAttr('data-sort-state');
-                }
-                const rows = table.find('tbody tr').get();
-                rows.sort((a, b) => {
-                    let valA, valB;
-                    const tdA = $(a).find('td').eq(index),
-                          tdB = $(b).find('td').eq(index);
-                    if (isSpecialSort) {
-                        valA = parseFloat(tdA.attr(sortAttribute)) || 0;
-                        valB = parseFloat(tdB.attr(sortAttribute)) || 0;
-                    } else {
-                        valA = tdA.attr(sortAttribute) || 0;
-                        valB = tdB.attr(sortAttribute) || 0;
-                        if (isNaN(parseFloat(valA)) || isNaN(parseFloat(valB))) return direction === 'asc' ? valA.localeCompare(valB, lang === 'tr' ? 'tr-TR' : undefined) : valB.localeCompare(valA, lang === 'tr' ? 'tr-TR' : undefined);
-                        valA = parseFloat(valA);
-                        valB = parseFloat(valB);
+                        displayColumns.forEach(col => {
+                            if (sumAvgColumns.includes(col)) {
+                                const sum = data[`${col}_sum`] || 0,
+                                      avg = data[`${col}_avg`] || '0.00';
+                                row += `<td data-sort-sum="${sum}" data-sort-avg="${avg}">${sum} / ${avg}</td>`;
+                            } else {
+                                const statValue = data[col] || '0.00',
+                                      suffix = col.includes('%') ? ' %' : '';
+                                row += `<td data-sort="${parseFloat(statValue)}">${statValue}${suffix}</td>`;
+                            }
+                        });
+                        row += '</tr>';
+                        tableBody.append(row);
                     }
-                    return direction === 'asc' ? valA - valB : valB - valA;
+                }
+                makeTableSortable($('#comparison-table'));
+                applyCellColoring($('#comparison-table'));
+                initialSortByGreenness($('#comparison-table'));
+            }
+
+            function makeTableSortable(table) {
+                table.find('th[data-sort-type]').off('click').on('click', function() {
+                    const th = $(this),
+                          index = th.index(),
+                          headerText = th.text().trim(),
+                          isSpecialSort = sumAvgColumns.includes(headerText);
+                    table.find('th').not(th).removeClass('sort-asc sort-desc sort-sum-asc sort-sum-desc sort-avg-asc sort-avg-desc').removeAttr('data-sort-state');
+                    let sortKey, direction, sortAttribute;
+                    if (isSpecialSort) {
+                        const states = ['sum-desc', 'sum-asc', 'avg-desc', 'avg-asc'],
+                              currentState = th.attr('data-sort-state') || '',
+                              nextIndex = (states.indexOf(currentState) + 1) % states.length,
+                              newState = states[nextIndex];
+                        th.attr('data-sort-state', newState).removeClass('sort-asc sort-desc sort-sum-asc sort-sum-desc sort-avg-asc sort-avg-desc').addClass(`sort-${newState}`);
+                        [sortKey, direction] = newState.split('-');
+                        sortAttribute = `data-sort-${sortKey}`;
+                    } else {
+                        direction = th.hasClass('sort-asc') ? 'desc' : 'asc';
+                        th.removeClass('sort-asc sort-desc').addClass(`sort-${direction}`);
+                        sortAttribute = 'data-sort';
+                        th.removeAttr('data-sort-state');
+                    }
+                    const rows = table.find('tbody tr').get();
+                    rows.sort((a, b) => {
+                        let valA, valB;
+                        const tdA = $(a).find('td').eq(index),
+                              tdB = $(b).find('td').eq(index);
+                        if (isSpecialSort) {
+                            valA = parseFloat(tdA.attr(sortAttribute)) || 0;
+                            valB = parseFloat(tdB.attr(sortAttribute)) || 0;
+                        } else {
+                            valA = tdA.attr(sortAttribute) || 0;
+                            valB = tdB.attr(sortAttribute) || 0;
+                            if (isNaN(parseFloat(valA)) || isNaN(parseFloat(valB))) return direction === 'asc' ? valA.localeCompare(valB, lang === 'tr' ? 'tr-TR' : undefined) : valB.localeCompare(valA, lang === 'tr' ? 'tr-TR' : undefined);
+                            valA = parseFloat(valA);
+                            valB = parseFloat(valB);
+                        }
+                        return direction === 'asc' ? valA - valB : valB - valA;
+                    });
+                    $.each(rows, (idx, row) => table.children('tbody').append(row));
                 });
-                $.each(rows, (idx, row) => table.children('tbody').append(row));
-            });
-        }
+            }
 
-        function applyCellColoring(table) {
-            const headers = table.find('thead th').map(function() {
-                return $(this).text();
-            }).get();
-            const goodStats = ['MP', 'G', 'A', 'S', 'G%', 'SOT', 'SOT%', 'P%', 'PL', 'In', 'T', 'T%', 'Pos%', 'Dist', 'DistP', 'SpR', 'SV', 'SpP'];
-            const badStats = ['YC', 'RC'];
-            headers.forEach((header, index) => {
-                if (goodStats.includes(header) || badStats.includes(header)) {
-                    let values = [];
-                    table.find(`tbody tr td:nth-child(${index + 1})`).each(function() {
-                        let sortVal = sumAvgColumns.includes(header) ? $(this).attr('data-sort-avg') : $(this).attr('data-sort');
-                        values.push(parseFloat(sortVal) || 0);
-                    });
-                    const min = Math.min(...values),
-                          max = Math.max(...values);
-                    if (min === max) return;
-                    table.find(`tbody tr td:nth-child(${index + 1})`).each(function() {
-                        let sortVal = sumAvgColumns.includes(header) ? $(this).attr('data-sort-avg') : $(this).attr('data-sort');
-                        const value = parseFloat(sortVal) || 0,
-                              normalized = max === min ? 0.5 : (value - min) / (max - min);
-                        let hue = badStats.includes(header) ? 120 - (normalized * 120) : normalized * 120;
-                        // DEĞİŞEN SATIR BURASI: .attr('data-hue', hue) eklendi
-                        $(this).css('background-color', `hsla(${hue}, 70%, 75%, 0.6)`).addClass('colored-cell').attr('data-hue', hue);
-                    });
-                }
-            });
-        }
+            function applyCellColoring(table) {
+                const headers = table.find('thead th').map(function() {
+                    return $(this).text();
+                }).get();
+                const goodStats = ['MP', 'G', 'A', 'S', 'G%', 'SOT', 'SOT%', 'P%', 'PL', 'In', 'T', 'T%', 'Pos%', 'Dist', 'DistP', 'SpR', 'SV', 'SpP'];
+                const badStats = ['YC', 'RC'];
+                headers.forEach((header, index) => {
+                    if (goodStats.includes(header) || badStats.includes(header)) {
+                        let values = [];
+                        table.find(`tbody tr td:nth-child(${index + 1})`).each(function() {
+                            let sortVal = sumAvgColumns.includes(header) ? $(this).attr('data-sort-avg') : $(this).attr('data-sort');
+                            values.push(parseFloat(sortVal) || 0);
+                        });
+                        const min = Math.min(...values),
+                              max = Math.max(...values);
+                        if (min === max) return;
+                        table.find(`tbody tr td:nth-child(${index + 1})`).each(function() {
+                            let sortVal = sumAvgColumns.includes(header) ? $(this).attr('data-sort-avg') : $(this).attr('data-sort');
+                            const value = parseFloat(sortVal) || 0,
+                                  normalized = max === min ? 0.5 : (value - min) / (max - min);
+                            let hue = badStats.includes(header) ? 120 - (normalized * 120) : normalized * 120;
+                            // DEĞİŞEN SATIR BURASI: .attr('data-hue', hue) eklendi
+                            $(this).css('background-color', `hsla(${hue}, 70%, 75%, 0.6)`).addClass('colored-cell').attr('data-hue', hue);
+                        });
+                    }
+                });
+            }
 
-        function setupTooltipListeners() {
-            const tooltip = $('#custom-tooltip');
-            let currentTarget = null;
-            $(document).on('click', '[data-tooltip]', function(e) {
-                e.stopPropagation();
-                const target = $(this);
-                const tooltipText = target.attr('data-tooltip');
-                if (currentTarget && currentTarget[0] === target[0]) {
-                    tooltip.hide();
-                    currentTarget = null;
-                    return;
-                }
-                currentTarget = target;
-                if (tooltipText) {
-                    tooltip.html(tooltipText).show();
-                    const targetOffset = target.offset(),
-                          targetHeight = target.outerHeight(),
-                          targetWidth = target.outerWidth(),
-                          tooltipHeight = tooltip.outerHeight(),
-                          tooltipWidth = tooltip.outerWidth();
-                    let top = targetOffset.top - tooltipHeight - 10;
-                    let left = targetOffset.left + (targetWidth / 2) - (tooltipWidth / 2);
-                    if (top < 0) top = targetOffset.top + targetHeight + 10;
-                    if (left < 0) left = 5;
-                    if (left + tooltipWidth > $(window).width()) left = $(window).width() - tooltipWidth - 5;
-                    tooltip.css({
-                        top: top,
-                        left: left
-                    });
-                }
-            });
-            $(document).on('click', function(e) {
-                if (currentTarget && !$(e.target).is(currentTarget)) {
-                    tooltip.hide();
-                    currentTarget = null;
-                }
-            });
-            $(document).on('mouseenter', '[data-tooltip]', function() {
-                if ('ontouchstart' in window) return; // Don't show on hover for touch devices
-                const target = $(this);
-                const tooltipText = target.attr('data-tooltip');
-                if (tooltipText) {
-                    tooltip.html(tooltipText).show();
-                    const targetOffset = target.offset(),
-                          targetHeight = target.outerHeight(),
-                          targetWidth = target.outerWidth(),
-                          tooltipHeight = tooltip.outerHeight(),
-                          tooltipWidth = tooltip.outerWidth();
-                    let top = targetOffset.top - tooltipHeight - 10;
-                    let left = targetOffset.left + (targetWidth / 2) - (tooltipWidth / 2);
-                    if (top < 0) top = targetOffset.top + targetHeight + 10;
-                    if (left < 0) left = 5;
-                    if (left + tooltipWidth > $(window).width()) left = $(window).width() - tooltipWidth - 5;
-                    tooltip.css({
-                        top: top,
-                        left: left
-                    });
-                }
-            }).on('mouseleave', '[data-tooltip]', function() {
-                if ('ontouchstart' in window) return; // Don't hide on leave for touch devices if it was opened by click
-                if (!currentTarget) { // Only hide if it wasn't "click-locked"
-                    tooltip.hide();
-                }
-            });
+            function setupTooltipListeners() {
+                const tooltip = $('#custom-tooltip');
+                let currentTarget = null;
+                $(document).on('click', '[data-tooltip]', function(e) {
+                    e.stopPropagation();
+                    const target = $(this);
+                    const tooltipText = target.attr('data-tooltip');
+                    if (currentTarget && currentTarget[0] === target[0]) {
+                        tooltip.hide();
+                        currentTarget = null;
+                        return;
+                    }
+                    currentTarget = target;
+                    if (tooltipText) {
+                        tooltip.html(tooltipText).show();
+                        const targetOffset = target.offset(),
+                              targetHeight = target.outerHeight(),
+                              targetWidth = target.outerWidth(),
+                              tooltipHeight = tooltip.outerHeight(),
+                              tooltipWidth = tooltip.outerWidth();
+                        let top = targetOffset.top - tooltipHeight - 10;
+                        let left = targetOffset.left + (targetWidth / 2) - (tooltipWidth / 2);
+                        if (top < 0) top = targetOffset.top + targetHeight + 10;
+                        if (left < 0) left = 5;
+                        if (left + tooltipWidth > $(window).width()) left = $(window).width() - tooltipWidth - 5;
+                        tooltip.css({
+                            top: top,
+                            left: left
+                        });
+                    }
+                });
+                $(document).on('click', function(e) {
+                    if (currentTarget && !$(e.target).is(currentTarget)) {
+                        tooltip.hide();
+                        currentTarget = null;
+                    }
+                });
+                $(document).on('mouseenter', '[data-tooltip]', function() {
+                    if ('ontouchstart' in window) return; // Don't show on hover for touch devices
+                    const target = $(this);
+                    const tooltipText = target.attr('data-tooltip');
+                    if (tooltipText) {
+                        tooltip.html(tooltipText).show();
+                        const targetOffset = target.offset(),
+                              targetHeight = target.outerHeight(),
+                              targetWidth = target.outerWidth(),
+                              tooltipHeight = tooltip.outerHeight(),
+                              tooltipWidth = tooltip.outerWidth();
+                        let top = targetOffset.top - tooltipHeight - 10;
+                        let left = targetOffset.left + (targetWidth / 2) - (tooltipWidth / 2);
+                        if (top < 0) top = targetOffset.top + targetHeight + 10;
+                        if (left < 0) left = 5;
+                        if (left + tooltipWidth > $(window).width()) left = $(window).width() - tooltipWidth - 5;
+                        tooltip.css({
+                            top: top,
+                            left: left
+                        });
+                    }
+                }).on('mouseleave', '[data-tooltip]', function() {
+                    if ('ontouchstart' in window) return; // Don't hide on leave for touch devices if it was opened by click
+                    if (!currentTarget) { // Only hide if it wasn't "click-locked"
+                        tooltip.hide();
+                    }
+                });
+            }
         }
-    }
 
 
         /****************************************************************************************
@@ -3742,89 +3748,89 @@
                     ruleSet.forEach(g => {
                         partialHtml += `<h3 class="subheader clearfix">${g.name}</h3><div class="mainContent" style="padding: 5px; margin-bottom: 20px;"><table class="nice_table" style="width:100%;">
 <thead><tr><th style="width:13%;">Lig</th><th style="width:5%; text-align: center;">Sıra</th><th style="width:18%;">Potansiyel Takım</th><th title="Oynanan Maç" style="width:4%; text-align: center;">O</th><th title="Galibiyet" style="width:4%; text-align: center;">G</th><th title="Beraberlik" style="width:4%; text-align: center;">B</th><th title="Mağlubiyet" style="width:4%; text-align: center;">M</th><th title="Attığı Gol" style="width:4%; text-align: center;">A</th><th title="Yediği Gol" style="width:4%; text-align: center;">Y</th><th title="Averaj" style="width:4%; text-align: center;">Av</th><th title="Puan" style="width:5%; text-align: center;">P</th><th style="width:15%; text-align: center;">En Değerli 11</th></tr></thead><tbody>`;
-                    g.teams.forEach(t => {
-                        const d = data.find(ad => ad && ad.league && t.league && ad.league.toLowerCase() === t.league.toLowerCase() && ad.rank === t.rank);
-                        let teamCell = `...`;
-                        let playedMatchesCell = '<td style="text-align:center;">-</td>';
-                        let statsCells = '<td colspan="7" style="text-align:center;">- Veri Yok -</td>'; // Colspan düzeltildi
-                        let top11Cell = '<td>...</td>';
-                        let rankCell = `<td style="text-align: center;">${t.rank}</td>`;
-                        if (d) {
-                            teamCell = d.url && d.url !== '#' ? `<a href="${d.url}" target="_blank" title="${d.name}">${d.name}</a>` : d.name;
-                            if (d.p !== undefined) {
-                                const g = parseInt(d.g, 10) || 0;
-                                const b = parseInt(d.b, 10) || 0;
-                                const m = parseInt(d.m, 10) || 0;
-                                const o = g + b + m;
-                                // DEĞİŞİKLİK: 'O' sütunundaki <b> etiketi kaldırıldı.
-                                playedMatchesCell = `<td style="text-align: center;">${o}</td>`;
+                        g.teams.forEach(t => {
+                            const d = data.find(ad => ad && ad.league && t.league && ad.league.toLowerCase() === t.league.toLowerCase() && ad.rank === t.rank);
+                            let teamCell = `...`;
+                            let playedMatchesCell = '<td style="text-align:center;">-</td>';
+                            let statsCells = '<td colspan="7" style="text-align:center;">- Veri Yok -</td>'; // Colspan düzeltildi
+                            let top11Cell = '<td>...</td>';
+                            let rankCell = `<td style="text-align: center;">${t.rank}</td>`;
+                            if (d) {
+                                teamCell = d.url && d.url !== '#' ? `<a href="${d.url}" target="_blank" title="${d.name}">${d.name}</a>` : d.name;
+                                if (d.p !== undefined) {
+                                    const g = parseInt(d.g, 10) || 0;
+                                    const b = parseInt(d.b, 10) || 0;
+                                    const m = parseInt(d.m, 10) || 0;
+                                    const o = g + b + m;
+                                    // DEĞİŞİKLİK: 'O' sütunundaki <b> etiketi kaldırıldı.
+                                    playedMatchesCell = `<td style="text-align: center;">${o}</td>`;
 
-                                // DEĞİŞİKLİK: 'P' sütunundaki <b> etiketi kaldırıldı.
-                                statsCells = `<td style="text-align: center;">${d.g || '-'}</td><td style="text-align: center;">${d.b || '-'}</td><td style="text-align: center;">${d.m || '-'}</td><td style="text-align: center;">${d.a || '-'}</td><td style="text-align: center;">${d.y || '-'}</td><td style="text-align: center;">${d.av || '-'}</td><td style="text-align: center;">${d.p}</td>`;
+                                    // DEĞİŞİKLİK: 'P' sütunundaki <b> etiketi kaldırıldı.
+                                    statsCells = `<td style="text-align: center;">${d.g || '-'}</td><td style="text-align: center;">${d.b || '-'}</td><td style="text-align: center;">${d.m || '-'}</td><td style="text-align: center;">${d.a || '-'}</td><td style="text-align: center;">${d.y || '-'}</td><td style="text-align: center;">${d.av || '-'}</td><td style="text-align: center;">${d.p}</td>`;
+                                }
+                                top11Cell = `<td style="text-align: center;">${d.top11Value || 'Hesaplanıyor...'}</td>`;
+                            } else {
+                                teamCell = `<span style="color:red;">(Veri alınamadı)</span>`;
                             }
-                            top11Cell = `<td style="text-align: center;">${d.top11Value || 'Hesaplanıyor...'}</td>`;
-                        } else {
-                            teamCell = `<span style="color:red;">(Veri alınamadı)</span>`;
-                        }
-                        partialHtml += `<tr><td>${t.league}</td>${rankCell}<td>${teamCell}</td>${playedMatchesCell}${statsCells}${top11Cell}</tr>`;
+                            partialHtml += `<tr><td>${t.league}</td>${rankCell}<td>${teamCell}</td>${playedMatchesCell}${statsCells}${top11Cell}</tr>`;
+                        });
+                        partialHtml += `</tbody></table></div>`;
                     });
-                    partialHtml += `</tbody></table></div>`;
-                });
-                return partialHtml;
-            };
+                    return partialHtml;
+                };
 
-            if (playoffRules.length > 0) {
-                h += generateHtmlForRules(playoffRules);
+                if (playoffRules.length > 0) {
+                    h += generateHtmlForRules(playoffRules);
+                }
+                if (playoutRules.length > 0) {
+                    h += generateHtmlForRules(playoutRules);
+                }
+
+                h += `<hr><div style="font-size:0.9em; padding:10px; background-color: #f0f0f0; border: 1px solid #ddd; border-radius: 4px;"><h4>Bilgi</h4><p>Yukarıdaki puan tablosunun kesin olmadığını, takım pozisyonlarının çekişmeli olması durumunda play-off/out gruplarının değişebileceğini unutmayın. Olası eşitlik durumlarında sıralamaların hesaplanması için aşağıdaki öncelik sırasına göre bir dizi kural uygulanır:</p><ul><li><strong>Puanı en yüksek olan takım:</strong> En temel sıralama ölçütüdür.</li><li><strong>Averaj:</strong> Puan eşitliğinde averajı daha iyi olan takım üstte yer alır.</li><li><strong>Sezon içi galibiyet sayısı:</strong> Puan ve averaj eşitliğinde daha fazla galibiyeti olan takım önceliklidir.</li><li><strong>Gol sayısı:</strong> Yukarıdaki tüm kriterler eşitse, daha fazla gol atan takım üstte yer alır.</li><li><strong>Kura çekimi:</strong> Tüm istatistiklerin tamamen aynı olması gibi çok nadir bir durumda sıralama kura ile belirlenir.</li></ul></div>`;
+                return h;
             }
-            if (playoutRules.length > 0) {
-                h += generateHtmlForRules(playoutRules);
+
+            function showProgressIndicator(message) {
+                removeProgressIndicator();
+                const i = document.createElement('div');
+                i.id = 'mz-predictor-progress';
+                i.style = "position: fixed; top: 0; left: 0; width: 100%; background: #00529B; color: white; padding: 10px; z-index: 9999; text-align: center; font-size: 1.1em; border-bottom: 2px solid #003666; box-shadow: 0 2px 5px rgba(0,0,0,0.5);";
+                i.innerHTML = `<span><i class="fa fa-spinner fa-pulse"></i> ${message}</span> <button id="cancelJobBtn" style="margin-left: 20px; background: #c00; color: white; border: 1px solid white; border-radius: 4px; cursor: pointer; padding: 2px 8px;">Durdur</button>`;
+                document.body.appendChild(i);
+                document.getElementById('cancelJobBtn').onclick = () => {
+                    isJobRunning = false;
+                };
             }
 
-            h += `<hr><div style="font-size:0.9em; padding:10px; background-color: #f0f0f0; border: 1px solid #ddd; border-radius: 4px;"><h4>Bilgi</h4><p>Yukarıdaki puan tablosunun kesin olmadığını, takım pozisyonlarının çekişmeli olması durumunda play-off/out gruplarının değişebileceğini unutmayın. Olası eşitlik durumlarında sıralamaların hesaplanması için aşağıdaki öncelik sırasına göre bir dizi kural uygulanır:</p><ul><li><strong>Puanı en yüksek olan takım:</strong> En temel sıralama ölçütüdür.</li><li><strong>Averaj:</strong> Puan eşitliğinde averajı daha iyi olan takım üstte yer alır.</li><li><strong>Sezon içi galibiyet sayısı:</strong> Puan ve averaj eşitliğinde daha fazla galibiyeti olan takım önceliklidir.</li><li><strong>Gol sayısı:</strong> Yukarıdaki tüm kriterler eşitse, daha fazla gol atan takım üstte yer alır.</li><li><strong>Kura çekimi:</strong> Tüm istatistiklerin tamamen aynı olması gibi çok nadir bir durumda sıralama kura ile belirlenir.</li></ul></div>`;
-            return h;
-        }
-
-        function showProgressIndicator(message) {
-            removeProgressIndicator();
-            const i = document.createElement('div');
-            i.id = 'mz-predictor-progress';
-            i.style = "position: fixed; top: 0; left: 0; width: 100%; background: #00529B; color: white; padding: 10px; z-index: 9999; text-align: center; font-size: 1.1em; border-bottom: 2px solid #003666; box-shadow: 0 2px 5px rgba(0,0,0,0.5);";
-            i.innerHTML = `<span><i class="fa fa-spinner fa-pulse"></i> ${message}</span> <button id="cancelJobBtn" style="margin-left: 20px; background: #c00; color: white; border: 1px solid white; border-radius: 4px; cursor: pointer; padding: 2px 8px;">Durdur</button>`;
-            document.body.appendChild(i);
-            document.getElementById('cancelJobBtn').onclick = () => {
-                isJobRunning = false;
-            };
-        }
-
-        function updateProgressIndicator(message) {
-            const i = document.getElementById('mz-predictor-progress');
-            if (i) i.querySelector('span').innerHTML = `<i class="fa fa-spinner fa-pulse"></i> ${message}`;
-        }
-
-        function removeProgressIndicator() {
-            const i = document.getElementById('mz-predictor-progress');
-            if (i) i.remove();
-        }
-
-        function initButton() {
-            const container = document.querySelector('div[style*="float: right; line-height: 36px;"]');
-            if (container && !document.getElementById('runPredictorBtn')) {
-                const btn = document.createElement('a');
-                btn.href = '#';
-                btn.className = 'mzbtn buttondiv button_account';
-                btn.id = 'runPredictorBtn';
-                btn.style.marginLeft = '10px';
-                btn.innerHTML = `<span class="buttonClassMiddle"><span style="white-space: nowrap;"><i class="fa fa-sitemap" aria-hidden="true"></i> Play-Off/Out Tahmin Et</span></span><span class="buttonClassRight"> </span>`;
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    startJob();
-                });
-                container.appendChild(btn);
+            function updateProgressIndicator(message) {
+                const i = document.getElementById('mz-predictor-progress');
+                if (i) i.querySelector('span').innerHTML = `<i class="fa fa-spinner fa-pulse"></i> ${message}`;
             }
-        }
 
-        waitForElement('div[style*="float: right; line-height: 36px;"]', initButton);
-    }
+            function removeProgressIndicator() {
+                const i = document.getElementById('mz-predictor-progress');
+                if (i) i.remove();
+            }
+
+            function initButton() {
+                const container = document.querySelector('div[style*="float: right; line-height: 36px;"]');
+                if (container && !document.getElementById('runPredictorBtn')) {
+                    const btn = document.createElement('a');
+                    btn.href = '#';
+                    btn.className = 'mzbtn buttondiv button_account';
+                    btn.id = 'runPredictorBtn';
+                    btn.style.marginLeft = '10px';
+                    btn.innerHTML = `<span class="buttonClassMiddle"><span style="white-space: nowrap;"><i class="fa fa-sitemap" aria-hidden="true"></i> Play-Off/Out Tahmin Et</span></span><span class="buttonClassRight"> </span>`;
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        startJob();
+                    });
+                    container.appendChild(btn);
+                }
+            }
+
+            waitForElement('div[style*="float: right; line-height: 36px;"]', initButton);
+        }
 
 
         /****************************************************************************************
@@ -3999,50 +4005,50 @@
             </html>
         `;
 
-        iframeDoc.open();
-        iframeDoc.write(iframeHtml);
-        iframeDoc.close();
+                    iframeDoc.open();
+                    iframeDoc.write(iframeHtml);
+                    iframeDoc.close();
 
-        await new Promise(r => setTimeout(r, 1500));
+                    await new Promise(r => setTimeout(r, 1500));
 
-        const targetElementInIframe = iframeDoc.querySelector('.playerContainer');
-        if (!targetElementInIframe) {
-            throw new Error("Oyuncu konteyneri iframe içine kopyalanamadı.");
-        }
+                    const targetElementInIframe = iframeDoc.querySelector('.playerContainer');
+                    if (!targetElementInIframe) {
+                        throw new Error("Oyuncu konteyneri iframe içine kopyalanamadı.");
+                    }
 
-        const transferDisclaimer = targetElementInIframe.querySelector('.bid-history-lite-wrapper p');
-        if (transferDisclaimer) {
-            transferDisclaimer.remove();
-        }
+                    const transferDisclaimer = targetElementInIframe.querySelector('.bid-history-lite-wrapper p');
+                    if (transferDisclaimer) {
+                        transferDisclaimer.remove();
+                    }
 
-        // ▼▼▼ EN ÖNEMLİ DEĞİŞİKLİK BURADA ▼▼▼
-        // Arka plan rengini, istediğimiz açık gri renk (#e6e6e6) olarak açıkça belirtiyoruz.
-        const canvas = await html2canvas(targetElementInIframe, {
-            useCORS: true,
-            allowTaint: true,
-            scale: 1.5,
-            backgroundColor: '#e6e6e6' // <-- DÜZELTME BURADA
-        });
-        // ▲▲▲ DEĞİŞİKLİK SONA ERDİ ▲▲▲
+                    // ▼▼▼ EN ÖNEMLİ DEĞİŞİKLİK BURADA ▼▼▼
+                    // Arka plan rengini, istediğimiz açık gri renk (#e6e6e6) olarak açıkça belirtiyoruz.
+                    const canvas = await html2canvas(targetElementInIframe, {
+                        useCORS: true,
+                        allowTaint: true,
+                        scale: 1.5,
+                        backgroundColor: '#e6e6e6' // <-- DÜZELTME BURADA
+                    });
+                    // ▲▲▲ DEĞİŞİKLİK SONA ERDİ ▲▲▲
 
-        const link = document.createElement('a');
-        link.download = `MZ_Player_${playerName.replace(/\s/g, '_')}_${pid}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
+                    const link = document.createElement('a');
+                    link.download = `MZ_Player_${playerName.replace(/\s/g, '_')}_${pid}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
 
-    } catch (error) {
-        console.error(getText('downloadError'), error);
-        alert(getText('downloadError'));
-    } finally {
-        if (iframe) {
-            iframe.remove();
-        }
-        button.html(originalIcon).prop('disabled', false).attr('title', getText('downloadImageTitle'));
-    }
-    }
+                } catch (error) {
+                    console.error(getText('downloadError'), error);
+                    alert(getText('downloadError'));
+                } finally {
+                    if (iframe) {
+                        iframe.remove();
+                    }
+                    button.html(originalIcon).prop('disabled', false).attr('title', getText('downloadImageTitle'));
+                }
+            }
 
-    function addFilterUI() {
-        GM_addStyle(`
+            function addFilterUI() {
+                GM_addStyle(`
             /* ... stiller aynı kalabilir ... */
             .sl-action-btn { padding: 5px 12px !important; cursor: pointer; color: white !important; border: 1px solid rgba(0,0,0,0.2) !important; border-radius: 4px !important; font-weight: bold !important; font-size: 13px !important; text-decoration: none !important; display: inline-block !important; line-height: normal !important; height: auto !important; }
             #shortlist-filter-btn { background-color: #4CAF50; } #shortlist-filter-btn:hover { background-color: #45a049; }
@@ -4068,191 +4074,191 @@
             }
         `);
 
-        const modalHTML = `
+                const modalHTML = `
             <div id="shortlist-filter-modal" class="sl-modal-overlay"> <div class="sl-modal-content"> <div class="sl-modal-header"> <h3>Oyuncu Filtrele</h3> <span class="sl-modal-close">×</span> </div> <div class="sl-modal-body"> <div class="sl-filter-group"> <h4>Yaş Aralığı</h4> <div class="sl-age-inputs"> <input type="number" id="min-age" placeholder="Min" min="15" max="40"> <span>-</span> <input type="number" id="max-age" placeholder="Max" min="15" max="40"> </div> </div> <div class="sl-filter-group"> <h4>Diğer</h4> <label> <input type="checkbox" id="retiring-only"> Emekli Olacaklar </label> <label> <input type="checkbox" id="on-transfer-only"> Transferde Olanlar (Aktif) </label> <label> <input type="checkbox" id="expired-transfer-only"> Transferi Bitmişler </label> </div> <div class="sl-filter-group" style="grid-column: 1 / -1;"> <h4>Milliyet</h4> <label><input type="radio" name="nationality" value="all" checked> Tümü</label> <label><input type="radio" name="nationality" value="national"> Yerli</label> <label><input type="radio" name="nationality" value="foreign"> Yabancı</label> </div> </div> <div class="sl-modal-footer"> <button id="shortlist-filter-apply">Filtrele</button> <button id="shortlist-filter-reset">Sıfırla</button> </div> </div> </div>
         `;
-        $('body').append(modalHTML);
+                $('body').append(modalHTML);
 
-        const playersListContainer = $('#players_container');
-        if (playersListContainer.length > 0 && $('#script-controls-wrapper').length === 0) {
-            const scriptWrapper = $(`<div id="script-controls-wrapper"><div id="shortlist-filter-controls"><button id="shortlist-filter-btn" class="sl-action-btn">Filtrele</button><span id="shortlist-filter-count"></span></div></div>`);
-            playersListContainer.before(scriptWrapper);
-        }
-
-        $('#shortlist-filter-btn').on('click', () => $('#shortlist-filter-modal').css('display', 'flex'));
-        $('#shortlist-filter-modal .sl-modal-close').on('click', () => $('#shortlist-filter-modal').hide());
-        $('#shortlist-filter-apply').on('click', applyFilters);
-        $('#shortlist-filter-reset').on('click', resetFilters);
-        $('#shortlist-filter-modal input[type="number"]').on('keydown keyup keypress', event => event.stopPropagation());
-    }
-
-    function applyFilters() {
-        const minAge = parseInt($('#min-age').val(), 10) || 0;
-        const maxAge = parseInt($('#max-age').val(), 10) || 100;
-        const retiringOnly = $('#retiring-only').is(':checked');
-        const onTransferOnly = $('#on-transfer-only').is(':checked');
-        const expiredTransferOnly = $('#expired-transfer-only').is(':checked');
-        const nationalityFilter = $('input[name="nationality"]:checked').val();
-
-        const currentGameTime = getGameTime();
-        if (!currentGameTime && (onTransferOnly || expiredTransferOnly)) {
-            alert("Hata: Transfer filtresini kullanmak için oyun saati sayfadan alınamadı. Filtreleme yapılamıyor.");
-            return;
-        }
-
-        let visibleCount = 0;
-        $('.playerContainer').each(function() {
-            const player = $(this);
-            let show = true;
-
-            // Önceki filtreler (yaş, emeklilik vb.)
-            if (show) {
-                let age = -1;
-                player.find('.dg_playerview_info table td').each(function() {
-                    if (/yaş:|age:/i.test($(this).text())) {
-                        const ageMatch = $(this).text().match(/\d+/);
-                        if (ageMatch) { age = parseInt(ageMatch[0], 10); return false; }
-                    }
-                });
-                if (age !== -1 && (age < minAge || age > maxAge)) {
-                    show = false;
+                const playersListContainer = $('#players_container');
+                if (playersListContainer.length > 0 && $('#script-controls-wrapper').length === 0) {
+                    const scriptWrapper = $(`<div id="script-controls-wrapper"><div id="shortlist-filter-controls"><button id="shortlist-filter-btn" class="sl-action-btn">Filtrele</button><span id="shortlist-filter-count"></span></div></div>`);
+                    playersListContainer.before(scriptWrapper);
                 }
-            }
-            if (show && retiringOnly) {
-                if (player.find('.dg_playerview_retire').length === 0) {
-                    show = false;
-                }
+
+                $('#shortlist-filter-btn').on('click', () => $('#shortlist-filter-modal').css('display', 'flex'));
+                $('#shortlist-filter-modal .sl-modal-close').on('click', () => $('#shortlist-filter-modal').hide());
+                $('#shortlist-filter-apply').on('click', applyFilters);
+                $('#shortlist-filter-reset').on('click', resetFilters);
+                $('#shortlist-filter-modal input[type="number"]').on('keydown keyup keypress', event => event.stopPropagation());
             }
 
-            // *** YENİ ve DÜZELTİLMİŞ TRANSFER FİLTRELEME MANTIĞI (v2 - VEYA Mantığı) ***
-            if (show && (onTransferOnly || expiredTransferOnly)) {
-                let isPlayerOnTransfer = false;
-                let isTransferActive = false;
+            function applyFilters() {
+                const minAge = parseInt($('#min-age').val(), 10) || 0;
+                const maxAge = parseInt($('#max-age').val(), 10) || 100;
+                const retiringOnly = $('#retiring-only').is(':checked');
+                const onTransferOnly = $('#on-transfer-only').is(':checked');
+                const expiredTransferOnly = $('#expired-transfer-only').is(':checked');
+                const nationalityFilter = $('input[name="nationality"]:checked').val();
 
-                // "Bitiş tarihi:" etiketini içeren <span> elementini bul
-                const deadlineLabel = player.find('span').filter(function() {
-                    return $(this).text().trim() === 'Bitiş tarihi:';
-                });
+                const currentGameTime = getGameTime();
+                if (!currentGameTime && (onTransferOnly || expiredTransferOnly)) {
+                    alert("Hata: Transfer filtresini kullanmak için oyun saati sayfadan alınamadı. Filtreleme yapılamıyor.");
+                    return;
+                }
 
-                if (deadlineLabel.length > 0) {
-                    // Etiketin bir sonraki kardeşi olan <span> içindeki metni al.
-                    const rawDeadlineText = deadlineLabel.next('span').text();
-                    // Regex ile sadece tarih ve saat kısmını güvenli bir şekilde al.
-                    const match = rawDeadlineText.match(/(\d{2}-\d{2}-\d{4}\s\d{2}:\d{2}(?::\d{2})?)/);
+                let visibleCount = 0;
+                $('.playerContainer').each(function() {
+                    const player = $(this);
+                    let show = true;
 
-                    if (match && match[1]) {
-                        const deadlineTime = parseMzDateTime(match[1]);
-                        if (deadlineTime) {
-                            isPlayerOnTransfer = true;
-                            // Oyun saati ile karşılaştır.
-                            isTransferActive = deadlineTime > currentGameTime;
+                    // Önceki filtreler (yaş, emeklilik vb.)
+                    if (show) {
+                        let age = -1;
+                        player.find('.dg_playerview_info table td').each(function() {
+                            if (/yaş:|age:/i.test($(this).text())) {
+                                const ageMatch = $(this).text().match(/\d+/);
+                                if (ageMatch) { age = parseInt(ageMatch[0], 10); return false; }
+                            }
+                        });
+                        if (age !== -1 && (age < minAge || age > maxAge)) {
+                            show = false;
                         }
                     }
-                }
+                    if (show && retiringOnly) {
+                        if (player.find('.dg_playerview_retire').length === 0) {
+                            show = false;
+                        }
+                    }
 
-                // --- HATA DÜZELTMESİ BAŞLANGICI ---
-                // Oyuncunun seçili kriterlerden herhangi birine uyup uymadığını kontrol etmek için bir değişken.
-                let matchesTransferCriteria = false;
+                    // *** YENİ ve DÜZELTİLMİŞ TRANSFER FİLTRELEME MANTIĞI (v2 - VEYA Mantığı) ***
+                    if (show && (onTransferOnly || expiredTransferOnly)) {
+                        let isPlayerOnTransfer = false;
+                        let isTransferActive = false;
 
-                // 1. "Aktif" filtresi seçiliyse ve oyuncu aktif transferdeyse, kriteri karşılar.
-                if (onTransferOnly && isPlayerOnTransfer && isTransferActive) {
-                    matchesTransferCriteria = true;
-                }
+                        // "Bitiş tarihi:" etiketini içeren <span> elementini bul
+                        const deadlineLabel = player.find('span').filter(function() {
+                            return $(this).text().trim() === 'Bitiş tarihi:';
+                        });
 
-                // 2. "Bitmiş" filtresi seçiliyse ve oyuncunun transferi bitmişse, kriteri karşılar.
-                // Bu bir VEYA (OR) durumu olduğu için, önceki koşul doğru olsa bile bunu kontrol ederiz.
-                if (expiredTransferOnly && isPlayerOnTransfer && !isTransferActive) {
-                    matchesTransferCriteria = true;
-                }
+                        if (deadlineLabel.length > 0) {
+                            // Etiketin bir sonraki kardeşi olan <span> içindeki metni al.
+                            const rawDeadlineText = deadlineLabel.next('span').text();
+                            // Regex ile sadece tarih ve saat kısmını güvenli bir şekilde al.
+                            const match = rawDeadlineText.match(/(\d{2}-\d{2}-\d{4}\s\d{2}:\d{2}(?::\d{2})?)/);
 
-                // Eğer her iki filtre de seçiliyse, bu blok zaten yukarıdaki iki if bloğu sayesinde
-                // doğru çalışacaktır. Oyuncu ya aktif ya da bitmiş transferdeyse matchesTransferCriteria = true olur.
-                // Eğer sadece bir filtre seçiliyse ve oyuncu o kritere uymuyorsa matchesTransferCriteria = false kalır.
+                            if (match && match[1]) {
+                                const deadlineTime = parseMzDateTime(match[1]);
+                                if (deadlineTime) {
+                                    isPlayerOnTransfer = true;
+                                    // Oyun saati ile karşılaştır.
+                                    isTransferActive = deadlineTime > currentGameTime;
+                                }
+                            }
+                        }
 
-                // Eğer oyuncu, seçilen transfer kriterlerinden HİÇBİRİNİ karşılamıyorsa gizle.
-                if (!matchesTransferCriteria) {
-                    show = false;
-                }
-                // --- HATA DÜZELTMESİ SONU ---
+                        // --- HATA DÜZELTMESİ BAŞLANGICI ---
+                        // Oyuncunun seçili kriterlerden herhangi birine uyup uymadığını kontrol etmek için bir değişken.
+                        let matchesTransferCriteria = false;
+
+                        // 1. "Aktif" filtresi seçiliyse ve oyuncu aktif transferdeyse, kriteri karşılar.
+                        if (onTransferOnly && isPlayerOnTransfer && isTransferActive) {
+                            matchesTransferCriteria = true;
+                        }
+
+                        // 2. "Bitmiş" filtresi seçiliyse ve oyuncunun transferi bitmişse, kriteri karşılar.
+                        // Bu bir VEYA (OR) durumu olduğu için, önceki koşul doğru olsa bile bunu kontrol ederiz.
+                        if (expiredTransferOnly && isPlayerOnTransfer && !isTransferActive) {
+                            matchesTransferCriteria = true;
+                        }
+
+                        // Eğer her iki filtre de seçiliyse, bu blok zaten yukarıdaki iki if bloğu sayesinde
+                        // doğru çalışacaktır. Oyuncu ya aktif ya da bitmiş transferdeyse matchesTransferCriteria = true olur.
+                        // Eğer sadece bir filtre seçiliyse ve oyuncu o kritere uymuyorsa matchesTransferCriteria = false kalır.
+
+                        // Eğer oyuncu, seçilen transfer kriterlerinden HİÇBİRİNİ karşılamıyorsa gizle.
+                        if (!matchesTransferCriteria) {
+                            show = false;
+                        }
+                        // --- HATA DÜZELTMESİ SONU ---
+                    }
+
+                    // Milliyet filtresi
+                    if (show && userCountryCode && nationalityFilter !== 'all') {
+                        const playerFlagImg = player.find('img[src*="img/flags/s_"]');
+                        let playerCountryCode = null;
+                        if (playerFlagImg.length > 0) {
+                            const src = playerFlagImg.attr('src');
+                            const match = src.match(/s_([a-z]{2})\.gif/);
+                            if (match && match[1]) {
+                                playerCountryCode = match[1];
+                            }
+                        }
+                        if (playerCountryCode) {
+                            if (nationalityFilter === 'national' && playerCountryCode !== userCountryCode) {
+                                show = false;
+                            }
+                            if (nationalityFilter === 'foreign' && playerCountryCode === userCountryCode) {
+                                show = false;
+                            }
+                        }
+                    }
+
+                    player.toggle(show);
+                    if (show) {
+                        visibleCount++;
+                    }
+                });
+
+                const isFiltered = minAge > 0 || maxAge < 100 || retiringOnly || onTransferOnly || expiredTransferOnly || nationalityFilter !== 'all';
+                $('#shortlist-filter-count').text(isFiltered ? `${visibleCount} oyuncu filtrelendi.` : '');
+                $('#shortlist-filter-modal').hide();
             }
 
-            // Milliyet filtresi
-            if (show && userCountryCode && nationalityFilter !== 'all') {
-                const playerFlagImg = player.find('img[src*="img/flags/s_"]');
-                let playerCountryCode = null;
-                if (playerFlagImg.length > 0) {
-                    const src = playerFlagImg.attr('src');
-                    const match = src.match(/s_([a-z]{2})\.gif/);
-                    if (match && match[1]) {
-                        playerCountryCode = match[1];
-                    }
-                }
-                if (playerCountryCode) {
-                    if (nationalityFilter === 'national' && playerCountryCode !== userCountryCode) {
-                        show = false;
-                    }
-                    if (nationalityFilter === 'foreign' && playerCountryCode === userCountryCode) {
-                        show = false;
-                    }
-                }
+            function resetFilters() {
+                $('#min-age').val('');
+                $('#max-age').val('');
+                $('#retiring-only').prop('checked', false);
+                $('#on-transfer-only').prop('checked', false);
+                $('#expired-transfer-only').prop('checked', false);
+                $('input[name="nationality"][value="all"]').prop('checked', true);
+                $('.playerContainer').show();
+                $('#shortlist-filter-count').text('');
+                $('#shortlist-filter-modal').hide();
             }
 
-            player.toggle(show);
-            if (show) {
-                visibleCount++;
-            }
-        });
+            function init() {
+                if ($('#players_container').length) {
+                    fetchAndSetUserCountryCode();
+                    addFilterUI();
 
-        const isFiltered = minAge > 0 || maxAge < 100 || retiringOnly || onTransferOnly || expiredTransferOnly || nationalityFilter !== 'all';
-        $('#shortlist-filter-count').text(isFiltered ? `${visibleCount} oyuncu filtrelendi.` : '');
-        $('#shortlist-filter-modal').hide();
-    }
+                    // GÜNCELLENDİ: İndirme butonunu her oyuncu için ekliyoruz
+                    $('.playerContainer').each(function() {
+                        const pid = $(this).find('span.player_id_span').text().trim();
+                        const playerName = $(this).find('span.player_name').text().trim();
 
-    function resetFilters() {
-        $('#min-age').val('');
-        $('#max-age').val('');
-        $('#retiring-only').prop('checked', false);
-        $('#on-transfer-only').prop('checked', false);
-        $('#expired-transfer-only').prop('checked', false);
-        $('input[name="nationality"][value="all"]').prop('checked', true);
-        $('.playerContainer').show();
-        $('#shortlist-filter-count').text('');
-        $('#shortlist-filter-modal').hide();
-    }
-
-    function init() {
-        if ($('#players_container').length) {
-            fetchAndSetUserCountryCode();
-            addFilterUI();
-
-            // GÜNCELLENDİ: İndirme butonunu her oyuncu için ekliyoruz
-            $('.playerContainer').each(function() {
-                const pid = $(this).find('span.player_id_span').text().trim();
-                const playerName = $(this).find('span.player_name').text().trim();
-
-                // Eğer buton zaten varsa tekrar ekleme
-                if (pid && $(this).find('.player-download-btn').length === 0) {
-                    // ▼▼▼ DEĞİŞTİRİLECEK SATIR BURASI ▼▼▼
-                    const downloadBtn = $(`<button class="player-download-btn" title="${getText('downloadImageTitle')}"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; pointer-events: none;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>`);
-                    // ▲▲▲ DEĞİŞTİRİLECEK SATIR BURASI ▲▲▲
-                    downloadBtn.data('pid', pid).data('player-name', playerName);
+                        // Eğer buton zaten varsa tekrar ekleme
+                        if (pid && $(this).find('.player-download-btn').length === 0) {
+                            // ▼▼▼ DEĞİŞTİRİLECEK SATIR BURASI ▼▼▼
+                            const downloadBtn = $(`<button class="player-download-btn" title="${getText('downloadImageTitle')}"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; pointer-events: none;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>`);
+                            // ▲▲▲ DEĞİŞTİRİLECEK SATIR BURASI ▲▲▲
+                            downloadBtn.data('pid', pid).data('player-name', playerName);
 
 
-                    // Butonu mevcut Transfer Takipçisi butonunun yanına ekle
-                    const actionContainer = $(this).find('h2.subheader .floatRight');
-                    if (actionContainer.length > 0) {
-                        actionContainer.append(downloadBtn);
-                    }
+                            // Butonu mevcut Transfer Takipçisi butonunun yanına ekle
+                            const actionContainer = $(this).find('h2.subheader .floatRight');
+                            if (actionContainer.length > 0) {
+                                actionContainer.append(downloadBtn);
+                            }
+                        }
+                    });
+
+                    // YENİ EKLENDİ: Butonlara tıklama olayını atıyoruz.
+                    // Sayfa dinamik olarak değişebileceği için 'document' üzerinden olay atamak daha güvenlidir.
+                    $(document).off('click', '.player-download-btn').on('click', '.player-download-btn', handlePlayerImageDownload);
                 }
-            });
-
-            // YENİ EKLENDİ: Butonlara tıklama olayını atıyoruz.
-            // Sayfa dinamik olarak değişebileceği için 'document' üzerinden olay atamak daha güvenlidir.
-            $(document).off('click', '.player-download-btn').on('click', '.player-download-btn', handlePlayerImageDownload);
+            }
+            init();
         }
-    }
-    init();
-}
 
         /****************************************************************************************
      *                                                                                      *
@@ -4376,24 +4382,24 @@
             .tt-modal-footer { margin-top: 15px; text-align: right; }
         `);
 
-        async function showTransferHistoryModal(pid, playerName) {
-            $('#transfer-tracker-modal').remove();
+            async function showTransferHistoryModal(pid, playerName) {
+                $('#transfer-tracker-modal').remove();
 
-            const allHistory = JSON.parse(await GM_getValue(TRANSFER_HISTORY_KEY, '{}'));
-            const playerHistory = allHistory[pid] || [];
+                const allHistory = JSON.parse(await GM_getValue(TRANSFER_HISTORY_KEY, '{}'));
+                const playerHistory = allHistory[pid] || [];
 
-            let tableRows = '';
-            const chartData = [];
-            let soldEntry = null;
+                let tableRows = '';
+                const chartData = [];
+                let soldEntry = null;
 
-            if (playerHistory.length > 0) {
-                playerHistory.forEach(entry => {
-                    const statusClass = `status-${entry.status.toLowerCase()}`;
-                    const statusText = getText(`status${entry.status.charAt(0).toUpperCase() + entry.status.slice(1)}`) || entry.status;
-                    const priceNum = parseInt((entry.askingPrice || '0').replace(/\D/g, ''), 10);
-                    const bidNum = parseInt((entry.finalBid || '0').replace(/\D/g, ''), 10);
+                if (playerHistory.length > 0) {
+                    playerHistory.forEach(entry => {
+                        const statusClass = `status-${entry.status.toLowerCase()}`;
+                        const statusText = getText(`status${entry.status.charAt(0).toUpperCase() + entry.status.slice(1)}`) || entry.status;
+                        const priceNum = parseInt((entry.askingPrice || '0').replace(/\D/g, ''), 10);
+                        const bidNum = parseInt((entry.finalBid || '0').replace(/\D/g, ''), 10);
 
-                    tableRows = `
+                        tableRows = `
                         <tr>
                             <td>${new Date(entry.timestamp).toLocaleString()}</td>
                             <td class="${statusClass}">${statusText}</td>
@@ -4403,34 +4409,34 @@
                             <td>${entry.buyer || '-'}</td>
                         </tr>` + tableRows;
 
-                    if (priceNum > 0) {
-                        chartData.push({
-                            x: entry.timestamp,
-                            y: priceNum,
-                            name: `İstenen: ${entry.askingPrice}`
+                        if (priceNum > 0) {
+                            chartData.push({
+                                x: entry.timestamp,
+                                y: priceNum,
+                                name: `İstenen: ${entry.askingPrice}`
                         });
-                    }
-                    if (bidNum > 0) {
-                        chartData.push({
-                            x: entry.timestamp,
-                            y: bidNum,
-                            name: `Teklif: ${entry.finalBid}`
+                        }
+                        if (bidNum > 0) {
+                            chartData.push({
+                                x: entry.timestamp,
+                                y: bidNum,
+                                name: `Teklif: ${entry.finalBid}`
                         });
-                    }
-                    if (entry.status === 'sold') {
-                        soldEntry = {
-                            x: entry.timestamp,
-                            y: bidNum,
-                            name: `Satıldı: ${entry.finalBid}`
+                        }
+                        if (entry.status === 'sold') {
+                            soldEntry = {
+                                x: entry.timestamp,
+                                y: bidNum,
+                                name: `Satıldı: ${entry.finalBid}`
                         };
                     }
-                });
-            } else {
-                tableRows = `<tr><td colspan="6" style="text-align:center;">${getText('noHistory')}</td></tr>`;
-            }
-            chartData.sort((a, b) => a.x - b.x);
+                    });
+                } else {
+                    tableRows = `<tr><td colspan="6" style="text-align:center;">${getText('noHistory')}</td></tr>`;
+                }
+                chartData.sort((a, b) => a.x - b.x);
 
-            const modalHTML = `
+                const modalHTML = `
                 <div id="transfer-tracker-modal" class="tt-modal-overlay">
                     <div class="tt-modal-content">
                         <div class="tt-modal-header">
@@ -4466,98 +4472,98 @@
                         </div>
                     </div>
                 </div>`;
-            $('body').append(modalHTML);
+                $('body').append(modalHTML);
 
-            $('.tt-tab').on('click', function() {
-                const tabId = $(this).data('tab');
-                $('.tt-tab').removeClass('active');
-                $(this).addClass('active');
-                $('.tt-tab-content').removeClass('active');
-                $('#tt-content-' + tabId).addClass('active');
-            });
-
-            if (playerHistory.length > 0) {
-                unsafeWindow.Highcharts.chart('tt-chart-container', {
-                    chart: { type: 'line' },
-                    title: { text: `${playerName} - Fiyat Değişimi` },
-                    xAxis: {
-                        type: 'datetime',
-                        title: { text: 'Tarih' }
-                    },
-                    yAxis: {
-                        title: { text: 'Fiyat (EUR)' },
-                        labels: {
-                            formatter: function() { return this.value.toLocaleString('de-DE') + ' EUR'; }
-                        },
-                        min: 0
-                    },
-                    tooltip: {
-                        formatter: function() {
-                            return `<b>${this.point.name}</b><br/>${new Date(this.x).toLocaleString()}`;
-                        }
-                    },
-                    series: [{
-                        name: 'Fiyat Geçmişi',
-                        data: chartData,
-                        step: 'left',
-                        marker: {
-                            enabled: true,
-                            radius: 4
-                        }
-                    },
-                             ...(soldEntry ? [{
-                                 type: 'scatter',
-                                 name: 'Satış Noktası',
-                                 data: [soldEntry],
-                                 marker: {
-                                     symbol: 'diamond',
-                                     fillColor: '#28a745',
-                                     radius: 7,
-                                     lineWidth: 2,
-                                     lineColor: '#FFF'
-                                 }
-                             }] : [])]
+                $('.tt-tab').on('click', function() {
+                    const tabId = $(this).data('tab');
+                    $('.tt-tab').removeClass('active');
+                    $(this).addClass('active');
+                    $('.tt-tab-content').removeClass('active');
+                    $('#tt-content-' + tabId).addClass('active');
                 });
-            } else {
-                $('#tt-chart-container').html(`<div style="text-align:center; padding-top: 50px;">${getText('noHistory')}</div>`);
+
+                if (playerHistory.length > 0) {
+                    unsafeWindow.Highcharts.chart('tt-chart-container', {
+                        chart: { type: 'line' },
+                        title: { text: `${playerName} - Fiyat Değişimi` },
+                        xAxis: {
+                            type: 'datetime',
+                            title: { text: 'Tarih' }
+                        },
+                        yAxis: {
+                            title: { text: 'Fiyat (EUR)' },
+                            labels: {
+                                formatter: function() { return this.value.toLocaleString('de-DE') + ' EUR'; }
+                            },
+                            min: 0
+                        },
+                        tooltip: {
+                            formatter: function() {
+                                return `<b>${this.point.name}</b><br/>${new Date(this.x).toLocaleString()}`;
+                            }
+                        },
+                        series: [{
+                            name: 'Fiyat Geçmişi',
+                            data: chartData,
+                            step: 'left',
+                            marker: {
+                                enabled: true,
+                                radius: 4
+                            }
+                        },
+                                 ...(soldEntry ? [{
+                                     type: 'scatter',
+                                     name: 'Satış Noktası',
+                                     data: [soldEntry],
+                                     marker: {
+                                         symbol: 'diamond',
+                                         fillColor: '#28a745',
+                                         radius: 7,
+                                         lineWidth: 2,
+                                         lineColor: '#FFF'
+                                     }
+                                 }] : [])]
+                    });
+                } else {
+                    $('#tt-chart-container').html(`<div style="text-align:center; padding-top: 50px;">${getText('noHistory')}</div>`);
+                }
+
+
+                const modal = $('#transfer-tracker-modal');
+                modal.css('display', 'flex');
+                modal.find('.tt-modal-close').on('click', () => modal.remove());
+                modal.on('click', (e) => { if (e.target === modal[0]) modal.remove(); });
+                $('#tt-clear-history').on('click', async () => {
+                    if(confirm(getText('confirmClear'))) {
+                        const currentHistory = JSON.parse(await GM_getValue(TRANSFER_HISTORY_KEY, '{}'));
+                        delete currentHistory[pid];
+                        await GM_setValue(TRANSFER_HISTORY_KEY, JSON.stringify(currentHistory));
+                        modal.remove();
+                    }
+                });
             }
 
+            function init() {
+                $('.playerContainer').each(function() {
+                    const pid = $(this).find('span.player_id_span').text().trim();
+                    const playerName = $(this).find('span.player_name').text().trim();
+                    if (pid) {
+                        const trackBtn = $(`<button class="transfer-track-btn" title="${getText('trackPlayer')}">T</button>`);
+                        trackBtn.data('pid', pid).data('player-name', playerName);
+                        $(this).find('h2.subheader .floatRight').append(trackBtn);
+                    }
+                });
 
-            const modal = $('#transfer-tracker-modal');
-            modal.css('display', 'flex');
-            modal.find('.tt-modal-close').on('click', () => modal.remove());
-            modal.on('click', (e) => { if (e.target === modal[0]) modal.remove(); });
-            $('#tt-clear-history').on('click', async () => {
-                if(confirm(getText('confirmClear'))) {
-                    const currentHistory = JSON.parse(await GM_getValue(TRANSFER_HISTORY_KEY, '{}'));
-                    delete currentHistory[pid];
-                    await GM_setValue(TRANSFER_HISTORY_KEY, JSON.stringify(currentHistory));
-                    modal.remove();
-                }
-            });
+                $(document).on('click', '.transfer-track-btn', function() {
+                    const pid = $(this).data('pid');
+                    const playerName = $(this).data('player-name');
+                    showTransferHistoryModal(pid, playerName);
+                });
+
+            }
+
+            init();
         }
-
-        function init() {
-            $('.playerContainer').each(function() {
-                const pid = $(this).find('span.player_id_span').text().trim();
-                const playerName = $(this).find('span.player_name').text().trim();
-                if (pid) {
-                    const trackBtn = $(`<button class="transfer-track-btn" title="${getText('trackPlayer')}">T</button>`);
-                    trackBtn.data('pid', pid).data('player-name', playerName);
-                    $(this).find('h2.subheader .floatRight').append(trackBtn);
-                }
-            });
-
-            $(document).on('click', '.transfer-track-btn', function() {
-                const pid = $(this).data('pid');
-                const playerName = $(this).data('player-name');
-                showTransferHistoryModal(pid, playerName);
-            });
-
-        }
-
-        init();
-    }
 
 
         /****************************************************************************************
@@ -4686,461 +4692,461 @@
             }
             #mz-toast-notification.visible { opacity: 1; transform: translateY(0); }
         `);
-    }
+            }
 
-    function showToastNotification(message, duration = 3500) {
-        $('#mz-toast-notification').remove();
-        const toast = $(`<div id="mz-toast-notification"></div>`).text(message);
-        $('body').append(toast);
-        setTimeout(() => { toast.addClass('visible'); }, 10);
-        setTimeout(() => { toast.removeClass('visible'); setTimeout(() => { toast.remove(); }, 500); }, duration);
-    }
+            function showToastNotification(message, duration = 3500) {
+                $('#mz-toast-notification').remove();
+                const toast = $(`<div id="mz-toast-notification"></div>`).text(message);
+                $('body').append(toast);
+                setTimeout(() => { toast.addClass('visible'); }, 10);
+                setTimeout(() => { toast.removeClass('visible'); setTimeout(() => { toast.remove(); }, 500); }, duration);
+            }
 
-    // --- Ana Fonksiyonlar ---
-    function addSummaryButton() {
-        const targetContainer = $('.statsTabs .ui-tabs-nav').first();
-        if (targetContainer.length > 0 && $('#stats-summary-wrapper').length === 0) {
+            // --- Ana Fonksiyonlar ---
+            function addSummaryButton() {
+                const targetContainer = $('.statsTabs .ui-tabs-nav').first();
+                if (targetContainer.length > 0 && $('#stats-summary-wrapper').length === 0) {
 
-            // Vurgulanan Değişiklikler BAŞLANGIÇ: YENİ BUTONLAR (Mat Yeşil Renk Düzeltmesi)
-            const MAT_YESIL_CLASS = "mz-mat-green-btn"; // Yeni tanımladığımız sınıf
+                    // Vurgulanan Değişiklikler BAŞLANGIÇ: YENİ BUTONLAR (Mat Yeşil Renk Düzeltmesi)
+                    const MAT_YESIL_CLASS = "mz-mat-green-btn"; // Yeni tanımladığımız sınıf
 
-            // 1. YENİ BUTON: "Tüm Son Sezonları Güncelle" (Mat Yeşil)
-            const updateAllLastSeasonsBtn = $(`<a href="#" id="stats-update-tab-btn" class="mzbtn buttondiv button_account ${MAT_YESIL_CLASS}">
+                    // 1. YENİ BUTON: "Tüm Son Sezonları Güncelle" (Mat Yeşil)
+                    const updateAllLastSeasonsBtn = $(`<a href="#" id="stats-update-tab-btn" class="mzbtn buttondiv button_account ${MAT_YESIL_CLASS}">
                                             <span class="buttonClassMiddle"><span>${getText('updateCurrentTab')}</span></span>
                                             <span class="buttonClassRight"> </span>
                                           </a>`);
 
-            // 2. MEVCUT BUTON (Bu Sekmeyi Özetle): Mat Yeşil
-            const summarizeCurrentBtn = $(`<a href="#" id="stats-summary-btn" class="mzbtn buttondiv button_account ${MAT_YESIL_CLASS}">
+                    // 2. MEVCUT BUTON (Bu Sekmeyi Özetle): Mat Yeşil
+                    const summarizeCurrentBtn = $(`<a href="#" id="stats-summary-btn" class="mzbtn buttondiv button_account ${MAT_YESIL_CLASS}">
                                     <span class="buttonClassMiddle"><span>${getText('summarizeSeasons')}</span></span>
                                     <span class="buttonClassRight"> </span>
                                   </a>`);
 
-            // 3. MEVCUT BUTON (TÜM SEKMELERİ ÖZETLE): Mat Yeşil
-            const summaryAllBtn = $(`<a href="#" id="stats-summary-all-btn" class="mzbtn buttondiv button_account ${MAT_YESIL_CLASS}">
+                    // 3. MEVCUT BUTON (TÜM SEKMELERİ ÖZETLE): Mat Yeşil
+                    const summaryAllBtn = $(`<a href="#" id="stats-summary-all-btn" class="mzbtn buttondiv button_account ${MAT_YESIL_CLASS}">
                                     <span class="buttonClassMiddle"><span>${getText('summarizeAll')}</span></span>
                                     <span class="buttonClassRight"> </span>
                                   </a>`);
 
-            // 4. MEVCUT BUTON (Sıfırla): Kırmızı Renk (Stili CSS'ten geliyor)
-            const clearCacheBtn = $(`<a href="#" id="stats-clear-cache-btn" class="mzbtn buttondiv button_account" title="Tüm verileri sil ve baştan tara">
+                    // 4. MEVCUT BUTON (Sıfırla): Kırmızı Renk (Stili CSS'ten geliyor)
+                    const clearCacheBtn = $(`<a href="#" id="stats-clear-cache-btn" class="mzbtn buttondiv button_account" title="Tüm verileri sil ve baştan tara">
                                     <span class="buttonClassMiddle"><span>${getText('clearCache')}</span></span>
                                     <span class="buttonClassRight"> </span>
                                   </a>`);
 
-            // Event Atamaları
-            summarizeCurrentBtn.on('click', handleSummaryClick);
-            summaryAllBtn.on('click', handleSummaryAllClick);
-            // 👇 SIFIRLA BUTONUNUN EVENT'İ BURADA. KODUNUZDA ZATEN VARDI VE BU KISIM DÜZELTME GEREKİYORSA O BURADADIR
-            clearCacheBtn.on('click', handleClearCacheClick);
-            // 👆 DÜZELTME SONU
+                    // Event Atamaları
+                    summarizeCurrentBtn.on('click', handleSummaryClick);
+                    summaryAllBtn.on('click', handleSummaryAllClick);
+                    // 👇 SIFIRLA BUTONUNUN EVENT'İ BURADA. KODUNUZDA ZATEN VARDI VE BU KISIM DÜZELTME GEREKİYORSA O BURADADIR
+                    clearCacheBtn.on('click', handleClearCacheClick);
+                    // 👆 DÜZELTME SONU
 
-            updateAllLastSeasonsBtn.on('click', handleUpdateAllLastSeasonsClick);
+                    updateAllLastSeasonsBtn.on('click', handleUpdateAllLastSeasonsClick);
 
-            // DÜĞME SIRALAMASI: Görseldeki sırayı koruyacak şekilde ekliyoruz:
-            const buttonWrapper = $('<div id="stats-summary-wrapper"></div>')
-            .append(updateAllLastSeasonsBtn)
-            .append(summarizeCurrentBtn)
-            .append(summaryAllBtn)
-            .append(clearCacheBtn);
+                    // DÜĞME SIRALAMASI: Görseldeki sırayı koruyacak şekilde ekliyoruz:
+                    const buttonWrapper = $('<div id="stats-summary-wrapper"></div>')
+                    .append(updateAllLastSeasonsBtn)
+                    .append(summarizeCurrentBtn)
+                    .append(summaryAllBtn)
+                    .append(clearCacheBtn);
 
-            targetContainer.after(buttonWrapper);
-        }
-    }
-
-    async function handleClearCacheClick(e) {
-        e.preventDefault();
-        console.log("[MZone Advanced] 'Sıfırla' butonu tıklandı. Önbellek temizleme başlıyor...");
-
-        // 1. ADIM: Güvenilir Team ID Bulma
-        let teamId = new URLSearchParams(window.location.search).get('tid');
-
-        // Eğer URL'de yoksa, AJAX sekmelerinden birinden almaya çalış
-        if (!teamId) {
-            const allMainTabs = $('.statsTabs > ul.ui-tabs-nav > li > a');
-            try {
-                const firstAjaxTab = allMainTabs.filter(':not([href^="#"])').first();
-                if (firstAjaxTab.length > 0) {
-                    teamId = new URLSearchParams(firstAjaxTab.attr('href').split('?')[1]).get('tid');
-                }
-            } catch (error) {
-                console.error("[MZone Advanced] Team ID alınırken hata:", error);
-            }
-        }
-
-        if (!teamId) {
-            alert(getText('errorTeamId') + " (Sıfırlama işlemi için Team ID bulunamadı.)");
-            console.error("[MZone Advanced] HATA: Sıfırlama için Team ID bulunamadı.");
-            return;
-        }
-
-        // 2. ADIM: Kullanıcı Onayı
-        if (!confirm("Bu takımın (ID: " + teamId + ") kayıtlı tüm Sezon Özet verileri kalıcı olarak silinecek ve tekrar tarama yapmanız gerekecek. Emin misiniz?")) {
-            console.log("[MZone Advanced] Sıfırlama işlemi kullanıcı tarafından iptal edildi.");
-            return;
-        }
-
-        // 3. ADIM: ÖnBelleği Silme
-        const CACHE_KEY = 'mz_stats_summary_cache_v2';
-
-        try {
-            const allCaches = JSON.parse(await GM_getValue(CACHE_KEY, '{}'));
-
-            if (allCaches[teamId]) {
-                delete allCaches[teamId];
-                await GM_setValue(CACHE_KEY, JSON.stringify(allCaches));
-                showToastNotification(getText('cacheCleared'));
-                console.log(`[MZone Advanced] BAŞARILI: Takım ID ${teamId} için önbellek temizlendi.`);
-            } else {
-                showToastNotification("Önbellekte bu takıma ait veri bulunamadı.");
-                console.warn(`[MZone Advanced] UYARI: Takım ID ${teamId} için önbellekte veri bulunamadı.`);
-            }
-        } catch (error) {
-            alert("Önbellek silinirken kritik bir hata oluştu. Konsolu kontrol edin.");
-            console.error("[MZone Advanced] KRİTİK HATA: Önbellek silinirken hata:", error);
-        }
-    }
-
-    async function handleSummaryAllClick(e) {
-        e.preventDefault();
-        const button = $('#stats-summary-all-btn');
-        const originalText = button.find('.buttonClassMiddle span').text();
-        button.find('.buttonClassMiddle span').text(getText('processing')).css('pointer-events', 'none');
-        NProgress.start();
-
-        const allMainTabs = $('.statsTabs > ul.ui-tabs-nav > li > a');
-        let teamId = new URLSearchParams(window.location.search).get('tid');
-        if (!teamId) {
-            try {
-                const firstAjaxTab = allMainTabs.filter(':not([href^="#"])').first();
-                if (firstAjaxTab.length > 0) {
-                    teamId = new URLSearchParams(firstAjaxTab.attr('href').split('?')[1]).get('tid');
-                }
-            } catch (error) { console.error(error); }
-        }
-        if (!teamId) {
-            alert(getText('errorTeamId'));
-            NProgress.done();
-            button.find('.buttonClassMiddle span').text(originalText).css('pointer-events', 'auto');
-            return;
-        }
-
-        const CACHE_KEY = 'mz_stats_summary_cache_v2';
-        const allCaches = JSON.parse(await GM_getValue(CACHE_KEY, '{}'));
-        if (!allCaches[teamId]) allCaches[teamId] = {};
-        const teamCache = allCaches[teamId];
-
-        for (let i = 0; i < allMainTabs.length; i++) {
-            const tabLink = $(allMainTabs[i]);
-            const categoryKey = tabLink.text().trim();
-            const tabUrl = tabLink.attr('href');
-
-            NProgress.set((i + 0.1) / allMainTabs.length);
-            button.find('.buttonClassMiddle span').text(getText('processingTab', categoryKey, i + 1, allMainTabs.length));
-
-            let tabHtml;
-            if (tabUrl.startsWith('#')) {
-                tabHtml = $(tabUrl).html();
-            } else {
-                try {
-                    const response = await GM.xmlHttpRequest({ method: "GET", url: tabUrl });
-                    tabHtml = response.responseText;
-                } catch (error) {
-                    console.error(`Sekme '${categoryKey}' yüklenemedi:`, error);
-                    continue;
+                    targetContainer.after(buttonWrapper);
                 }
             }
 
-            const seasonTabs = $(`<div>${tabHtml}</div>`).find('.leagueStats > ul > li > a, .topScorers > ul > li > a, .topBadBoys > ul > li > a').first().closest('ul').find('a');
-            if (seasonTabs.length === 0) continue;
+            async function handleClearCacheClick(e) {
+                e.preventDefault();
+                console.log("[MZone Advanced] 'Sıfırla' butonu tıklandı. Önbellek temizleme başlıyor...");
 
-            if (!teamCache[categoryKey]) teamCache[categoryKey] = [];
-            const cachedSeasons = new Map(teamCache[categoryKey].map(d => [d.season, d]));
-            let hasChanges = false;
+                // 1. ADIM: Güvenilir Team ID Bulma
+                let teamId = new URLSearchParams(window.location.search).get('tid');
 
-            for (let j = 0; j < seasonTabs.length; j++) {
-                const seasonTab = $(seasonTabs[j]);
-                const season = seasonTab.text().trim();
-                const existingData = cachedSeasons.get(season);
-
-                // DÜZELTME: Eğer veri daha önce tarandıysa (scanned: true), boş olsa bile tekrar çekme.
-                // Sadece hiç taranmamışsa (undefined) çek.
-                if (!existingData || !existingData.scanned) {
+                // Eğer URL'de yoksa, AJAX sekmelerinden birinden almaya çalış
+                if (!teamId) {
+                    const allMainTabs = $('.statsTabs > ul.ui-tabs-nav > li > a');
                     try {
-                        const seasonUrl = new URL(seasonTab.attr('href'), window.location.origin).href;
-                        const response = await GM.xmlHttpRequest({ method: "GET", url: seasonUrl });
-                        const parsedData = { season, ...parseLeagueDataFromHtml(response.responseText) };
-                        cachedSeasons.set(season, parsedData);
-                        hasChanges = true;
+                        const firstAjaxTab = allMainTabs.filter(':not([href^="#"])').first();
+                        if (firstAjaxTab.length > 0) {
+                            teamId = new URLSearchParams(firstAjaxTab.attr('href').split('?')[1]).get('tid');
+                        }
                     } catch (error) {
-                        console.error(`Sezon ${season} ('${categoryKey}') verisi alınamadı:`, error);
+                        console.error("[MZone Advanced] Team ID alınırken hata:", error);
                     }
                 }
-            }
-            if (hasChanges) {
-                teamCache[categoryKey] = Array.from(cachedSeasons.values());
-            }
-        }
-        await GM_setValue(CACHE_KEY, JSON.stringify(allCaches));
-        NProgress.done();
-        button.find('.buttonClassMiddle span').text(originalText).css('pointer-events', 'auto');
-        showToastNotification(getText('summaryComplete'));
-    }
 
-    // Vurgulanan Değişiklikler BAŞLANGIÇ: Yeni, Tüm Sekmelerin Son Sezonunu Güncelleyen Fonksiyon
-    async function handleUpdateAllLastSeasonsClick(e) {
-        e.preventDefault();
-        const button = $('#stats-update-tab-btn');
-        const originalText = button.find('.buttonClassMiddle span').text();
-        const resetButton = () => button.find('.buttonClassMiddle span').text(originalText).css('pointer-events', 'auto').fadeTo('fast', 1);
-        button.find('.buttonClassMiddle span').text(getText('processing')).css('pointer-events', 'none').fadeTo('fast', 0.7);
-        NProgress.start();
-
-        const allMainTabs = $('.statsTabs > ul.ui-tabs-nav > li > a');
-
-        // GÜVENİLİR TEAM ID BULMA BAŞLANGICI
-        let teamId = new URLSearchParams(window.location.search).get('tid');
-        if (!teamId) {
-            try {
-                const firstAjaxTab = allMainTabs.filter(':not([href^="#"])').first();
-                if (firstAjaxTab.length > 0) {
-                    teamId = new URLSearchParams(firstAjaxTab.attr('href').split('?')[1]).get('tid');
+                if (!teamId) {
+                    alert(getText('errorTeamId') + " (Sıfırlama işlemi için Team ID bulunamadı.)");
+                    console.error("[MZone Advanced] HATA: Sıfırlama için Team ID bulunamadı.");
+                    return;
                 }
-            } catch (error) { console.error(error); }
-        }
-        if (!teamId) {
-            alert(getText('errorTeamId'));
-            NProgress.done();
-            resetButton();
-            return;
-        }
-        // GÜVENİLİR TEAM ID BULMA SONU
 
-        const CACHE_KEY = 'mz_stats_summary_cache_v2';
-        const allCaches = JSON.parse(await GM_getValue(CACHE_KEY, '{}'));
-        if (!allCaches[teamId]) allCaches[teamId] = {};
-        const teamCache = allCaches[teamId];
-
-        let totalTabsToProcess = allMainTabs.length;
-        let tabsProcessed = 0;
-        let hasChanges = false;
-
-
-        for (let i = 0; i < allMainTabs.length; i++) {
-            const tabLink = $(allMainTabs[i]);
-            const categoryKey = tabLink.text().trim();
-            const tabUrl = tabLink.attr('href');
-
-            NProgress.set((i + 0.1) / totalTabsToProcess);
-            button.find('.buttonClassMiddle span').text(getText('processingTab', categoryKey, i + 1, totalTabsToProcess));
-            tabsProcessed++;
-
-            let tabHtml;
-            if (tabUrl.startsWith('#')) {
-                // Aktif sekme için DOM'dan al
-                const activePanel = $('.statsTabs > .ui-tabs-panel:visible');
-                if (activePanel.length > 0) {
-                    tabHtml = activePanel.html();
-                } else {
-                    continue; // Boş sekme
+                // 2. ADIM: Kullanıcı Onayı
+                if (!confirm("Bu takımın (ID: " + teamId + ") kayıtlı tüm Sezon Özet verileri kalıcı olarak silinecek ve tekrar tarama yapmanız gerekecek. Emin misiniz?")) {
+                    console.log("[MZone Advanced] Sıfırlama işlemi kullanıcı tarafından iptal edildi.");
+                    return;
                 }
-            } else {
-                // Diğer sekmeler için AJAX ile çek
+
+                // 3. ADIM: ÖnBelleği Silme
+                const CACHE_KEY = 'mz_stats_summary_cache_v2';
+
                 try {
-                    const response = await GM.xmlHttpRequest({ method: "GET", url: tabUrl });
-                    tabHtml = response.responseText;
+                    const allCaches = JSON.parse(await GM_getValue(CACHE_KEY, '{}'));
+
+                    if (allCaches[teamId]) {
+                        delete allCaches[teamId];
+                        await GM_setValue(CACHE_KEY, JSON.stringify(allCaches));
+                        showToastNotification(getText('cacheCleared'));
+                        console.log(`[MZone Advanced] BAŞARILI: Takım ID ${teamId} için önbellek temizlendi.`);
+                    } else {
+                        showToastNotification("Önbellekte bu takıma ait veri bulunamadı.");
+                        console.warn(`[MZone Advanced] UYARI: Takım ID ${teamId} için önbellekte veri bulunamadı.`);
+                    }
                 } catch (error) {
-                    console.error(`Sekme '${categoryKey}' yüklenemedi:`, error);
-                    continue;
+                    alert("Önbellek silinirken kritik bir hata oluştu. Konsolu kontrol edin.");
+                    console.error("[MZone Advanced] KRİTİK HATA: Önbellek silinirken hata:", error);
                 }
             }
 
-            // 1. Sekmedeki EN SON SEZON bilgisini bul.
-            const seasonTabs = $(`<div>${tabHtml}</div>`).find('.leagueStats > ul > li > a, .topScorers > ul > li > a, .topBadBoys > ul > li > a').first().closest('ul').find('a');
+            async function handleSummaryAllClick(e) {
+                e.preventDefault();
+                const button = $('#stats-summary-all-btn');
+                const originalText = button.find('.buttonClassMiddle span').text();
+                button.find('.buttonClassMiddle span').text(getText('processing')).css('pointer-events', 'none');
+                NProgress.start();
 
-            if (seasonTabs.length > 0) {
-                const lastSeasonElement = $(seasonTabs[0]); // En üstteki (en son) sezon
+                const allMainTabs = $('.statsTabs > ul.ui-tabs-nav > li > a');
+                let teamId = new URLSearchParams(window.location.search).get('tid');
+                if (!teamId) {
+                    try {
+                        const firstAjaxTab = allMainTabs.filter(':not([href^="#"])').first();
+                        if (firstAjaxTab.length > 0) {
+                            teamId = new URLSearchParams(firstAjaxTab.attr('href').split('?')[1]).get('tid');
+                        }
+                    } catch (error) { console.error(error); }
+                }
+                if (!teamId) {
+                    alert(getText('errorTeamId'));
+                    NProgress.done();
+                    button.find('.buttonClassMiddle span').text(originalText).css('pointer-events', 'auto');
+                    return;
+                }
+
+                const CACHE_KEY = 'mz_stats_summary_cache_v2';
+                const allCaches = JSON.parse(await GM_getValue(CACHE_KEY, '{}'));
+                if (!allCaches[teamId]) allCaches[teamId] = {};
+                const teamCache = allCaches[teamId];
+
+                for (let i = 0; i < allMainTabs.length; i++) {
+                    const tabLink = $(allMainTabs[i]);
+                    const categoryKey = tabLink.text().trim();
+                    const tabUrl = tabLink.attr('href');
+
+                    NProgress.set((i + 0.1) / allMainTabs.length);
+                    button.find('.buttonClassMiddle span').text(getText('processingTab', categoryKey, i + 1, allMainTabs.length));
+
+                    let tabHtml;
+                    if (tabUrl.startsWith('#')) {
+                        tabHtml = $(tabUrl).html();
+                    } else {
+                        try {
+                            const response = await GM.xmlHttpRequest({ method: "GET", url: tabUrl });
+                            tabHtml = response.responseText;
+                        } catch (error) {
+                            console.error(`Sekme '${categoryKey}' yüklenemedi:`, error);
+                            continue;
+                        }
+                    }
+
+                    const seasonTabs = $(`<div>${tabHtml}</div>`).find('.leagueStats > ul > li > a, .topScorers > ul > li > a, .topBadBoys > ul > li > a').first().closest('ul').find('a');
+                    if (seasonTabs.length === 0) continue;
+
+                    if (!teamCache[categoryKey]) teamCache[categoryKey] = [];
+                    const cachedSeasons = new Map(teamCache[categoryKey].map(d => [d.season, d]));
+                    let hasChanges = false;
+
+                    for (let j = 0; j < seasonTabs.length; j++) {
+                        const seasonTab = $(seasonTabs[j]);
+                        const season = seasonTab.text().trim();
+                        const existingData = cachedSeasons.get(season);
+
+                        // DÜZELTME: Eğer veri daha önce tarandıysa (scanned: true), boş olsa bile tekrar çekme.
+                        // Sadece hiç taranmamışsa (undefined) çek.
+                        if (!existingData || !existingData.scanned) {
+                            try {
+                                const seasonUrl = new URL(seasonTab.attr('href'), window.location.origin).href;
+                                const response = await GM.xmlHttpRequest({ method: "GET", url: seasonUrl });
+                                const parsedData = { season, ...parseLeagueDataFromHtml(response.responseText) };
+                                cachedSeasons.set(season, parsedData);
+                                hasChanges = true;
+                            } catch (error) {
+                                console.error(`Sezon ${season} ('${categoryKey}') verisi alınamadı:`, error);
+                            }
+                        }
+                    }
+                    if (hasChanges) {
+                        teamCache[categoryKey] = Array.from(cachedSeasons.values());
+                    }
+                }
+                await GM_setValue(CACHE_KEY, JSON.stringify(allCaches));
+                NProgress.done();
+                button.find('.buttonClassMiddle span').text(originalText).css('pointer-events', 'auto');
+                showToastNotification(getText('summaryComplete'));
+            }
+
+            // Vurgulanan Değişiklikler BAŞLANGIÇ: Yeni, Tüm Sekmelerin Son Sezonunu Güncelleyen Fonksiyon
+            async function handleUpdateAllLastSeasonsClick(e) {
+                e.preventDefault();
+                const button = $('#stats-update-tab-btn');
+                const originalText = button.find('.buttonClassMiddle span').text();
+                const resetButton = () => button.find('.buttonClassMiddle span').text(originalText).css('pointer-events', 'auto').fadeTo('fast', 1);
+                button.find('.buttonClassMiddle span').text(getText('processing')).css('pointer-events', 'none').fadeTo('fast', 0.7);
+                NProgress.start();
+
+                const allMainTabs = $('.statsTabs > ul.ui-tabs-nav > li > a');
+
+                // GÜVENİLİR TEAM ID BULMA BAŞLANGICI
+                let teamId = new URLSearchParams(window.location.search).get('tid');
+                if (!teamId) {
+                    try {
+                        const firstAjaxTab = allMainTabs.filter(':not([href^="#"])').first();
+                        if (firstAjaxTab.length > 0) {
+                            teamId = new URLSearchParams(firstAjaxTab.attr('href').split('?')[1]).get('tid');
+                        }
+                    } catch (error) { console.error(error); }
+                }
+                if (!teamId) {
+                    alert(getText('errorTeamId'));
+                    NProgress.done();
+                    resetButton();
+                    return;
+                }
+                // GÜVENİLİR TEAM ID BULMA SONU
+
+                const CACHE_KEY = 'mz_stats_summary_cache_v2';
+                const allCaches = JSON.parse(await GM_getValue(CACHE_KEY, '{}'));
+                if (!allCaches[teamId]) allCaches[teamId] = {};
+                const teamCache = allCaches[teamId];
+
+                let totalTabsToProcess = allMainTabs.length;
+                let tabsProcessed = 0;
+                let hasChanges = false;
+
+
+                for (let i = 0; i < allMainTabs.length; i++) {
+                    const tabLink = $(allMainTabs[i]);
+                    const categoryKey = tabLink.text().trim();
+                    const tabUrl = tabLink.attr('href');
+
+                    NProgress.set((i + 0.1) / totalTabsToProcess);
+                    button.find('.buttonClassMiddle span').text(getText('processingTab', categoryKey, i + 1, totalTabsToProcess));
+                    tabsProcessed++;
+
+                    let tabHtml;
+                    if (tabUrl.startsWith('#')) {
+                        // Aktif sekme için DOM'dan al
+                        const activePanel = $('.statsTabs > .ui-tabs-panel:visible');
+                        if (activePanel.length > 0) {
+                            tabHtml = activePanel.html();
+                        } else {
+                            continue; // Boş sekme
+                        }
+                    } else {
+                        // Diğer sekmeler için AJAX ile çek
+                        try {
+                            const response = await GM.xmlHttpRequest({ method: "GET", url: tabUrl });
+                            tabHtml = response.responseText;
+                        } catch (error) {
+                            console.error(`Sekme '${categoryKey}' yüklenemedi:`, error);
+                            continue;
+                        }
+                    }
+
+                    // 1. Sekmedeki EN SON SEZON bilgisini bul.
+                    const seasonTabs = $(`<div>${tabHtml}</div>`).find('.leagueStats > ul > li > a, .topScorers > ul > li > a, .topBadBoys > ul > li > a').first().closest('ul').find('a');
+
+                    if (seasonTabs.length > 0) {
+                        const lastSeasonElement = $(seasonTabs[0]); // En üstteki (en son) sezon
+                        const lastSeason = lastSeasonElement.text().trim();
+
+                        // 2. Sadece bu sezonun önbelleğini temizle (Eğer varsa)
+                        if (teamCache[categoryKey]) {
+                            const categoryCache = teamCache[categoryKey];
+                            // Sadece son sezonun verisini önbellekten kaldırarak yeniden taramaya zorla
+                            const newCache = categoryCache.filter(d => d.season !== lastSeason);
+                            teamCache[categoryKey] = newCache;
+                            hasChanges = true;
+
+                            // 3. O sezonu hemen çek ve önbelleğe ekle (handleSummaryClick'in içindeki tek sezon mantığı)
+                            try {
+                                const seasonUrl = new URL(lastSeasonElement.attr('href'), window.location.origin).href;
+                                const response = await GM.xmlHttpRequest({ method: "GET", url: seasonUrl });
+                                const parsedData = { season: lastSeason, ...parseLeagueDataFromHtml(response.responseText) };
+                                teamCache[categoryKey].push(parsedData);
+                                teamCache[categoryKey].sort((a, b) => parseFloat(b.season) - parseFloat(a.season)); // Sıralamayı koru
+                            } catch (error) {
+                                console.error(`Sezon ${lastSeason} ('${categoryKey}') verisi alınamadı:`, error);
+                            }
+                        }
+                    }
+                }
+
+                if (hasChanges) {
+                    await GM_setValue(CACHE_KEY, JSON.stringify(allCaches));
+                }
+
+                NProgress.done();
+                resetButton();
+                showToastNotification(getText('lastSeasonUpdateComplete'));
+            }
+
+            async function handleSummaryClick(e) {
+                e.preventDefault();
+                const button = $('#stats-summary-btn');
+                const originalText = button.find('.buttonClassMiddle span').text();
+                const resetButton = () => button.find('.buttonClassMiddle span').text(originalText).css('pointer-events', 'auto').fadeTo('fast', 1);
+                button.find('.buttonClassMiddle span').text(getText('processing')).css('pointer-events', 'none').fadeTo('fast', 0.7);
+                NProgress.start();
+
+                const activePanel = $('.statsTabs > .ui-tabs-panel:visible');
+                const activeCategoryKey = $('.statsTabs > .ui-tabs-nav > li.ui-tabs-active > a').text().trim();
+
+                if (activePanel.length === 0 || !activeCategoryKey) {
+                    alert(getText('errorActiveTab')); NProgress.done(); resetButton(); return;
+                }
+
+                const seasonTabs = activePanel.find('.leagueStats > ul > li > a, .topScorers > ul > li > a, .topBadBoys > ul > li > a').first().closest('ul').find('a');
+                if (seasonTabs.length === 0) {
+                    alert(getText('errorNoSeasons')); NProgress.done(); resetButton(); return;
+                }
+
+                let teamId = new URLSearchParams(window.location.search).get('tid');
+                if (!teamId) {
+                    try { teamId = new URLSearchParams(seasonTabs.first().attr('href').split('?')[1]).get('tid'); } catch (error) {}
+                }
+                if (!teamId) {
+                    alert(getText('errorTeamId')); NProgress.done(); resetButton(); return;
+                }
+
+                const CACHE_KEY = 'mz_stats_summary_cache_v2';
+                const allCaches = JSON.parse(await GM_getValue(CACHE_KEY, '{}'));
+                const teamCache = allCaches[teamId] || {};
+                const categoryCache = teamCache[activeCategoryKey] || [];
+                const cachedSeasons = new Map(categoryCache.map(d => [d.season, d]));
+                let hasChanges = false;
+
+                for (let i = 0; i < seasonTabs.length; i++) {
+                    const tab = $(seasonTabs[i]);
+                    const season = tab.text().trim();
+                    const existingData = cachedSeasons.get(season);
+
+                    NProgress.set((i + 1) / seasonTabs.length);
+                    button.find('.buttonClassMiddle span').text(getText('fetchingSeason', season, i + 1, seasonTabs.length));
+
+                    // DÜZELTME: Sürekli taramayı önlemek için 'scanned' kontrolü eklendi.
+                    // Veri boş olsa bile 'scanned: true' ise tekrar çekmez.
+                    if (!existingData || !existingData.scanned) {
+                        try {
+                            const response = await GM.xmlHttpRequest({ method: "GET", url: tab.attr('href') });
+                            const parsedData = { season, ...parseLeagueDataFromHtml(response.responseText) };
+                            cachedSeasons.set(season, parsedData);
+                            hasChanges = true;
+                        } catch (error) {
+                            console.error(`Sezon ${season} verisi alınamadı:`, error);
+                        }
+                    }
+                }
+
+                if (hasChanges) {
+                    if (!allCaches[teamId]) allCaches[teamId] = {};
+                    allCaches[teamId][activeCategoryKey] = Array.from(cachedSeasons.values());
+                    await GM_setValue(CACHE_KEY, JSON.stringify(allCaches));
+                }
+
+                button.find('.buttonClassMiddle span').text(getText('generatingReport'));
+                createAndShowModal(Array.from(cachedSeasons.values()), activeCategoryKey);
+                NProgress.done();
+                resetButton();
+            }
+
+            // Vurgulanan Değişiklikler BAŞLANGIÇ: Yeni Güncelleme Fonksiyonu
+            async function handleUpdateCurrentTabClick(e) {
+                e.preventDefault();
+                const button = $('#stats-update-tab-btn');
+                const originalText = button.find('.buttonClassMiddle span').text();
+                const resetButton = () => button.find('.buttonClassMiddle span').text(originalText).css('pointer-events', 'auto').fadeTo('fast', 1);
+
+                const activePanel = $('.statsTabs > .ui-tabs-panel:visible');
+                const activeCategoryKey = $('.statsTabs > .ui-tabs-nav > li.ui-tabs-active > a').text().trim();
+                const teamId = new URLSearchParams(window.location.search).get('tid');
+
+                if (activePanel.length === 0 || !activeCategoryKey) { alert(getText('errorActiveTab')); return; }
+                if (!teamId) { alert(getText('errorTeamId')); return; }
+
+                // 1. Sekmedeki EN SON SEZON bilgisini bul.
+                const seasonTabs = activePanel.find('.leagueStats > ul > li > a, .topScorers > ul > li > a, .topBadBoys > ul > li > a').first().closest('ul').find('a');
+                if (seasonTabs.length === 0) { alert(getText('errorNoSeasons')); return; }
+
+                // En son (en üstteki) sezonu al
+                const lastSeasonElement = $(seasonTabs[0]);
                 const lastSeason = lastSeasonElement.text().trim();
 
-                // 2. Sadece bu sezonun önbelleğini temizle (Eğer varsa)
-                if (teamCache[categoryKey]) {
-                    const categoryCache = teamCache[categoryKey];
-                    // Sadece son sezonun verisini önbellekten kaldırarak yeniden taramaya zorla
-                    const newCache = categoryCache.filter(d => d.season !== lastSeason);
-                    teamCache[categoryKey] = newCache;
-                    hasChanges = true;
+                // 2. Sadece bu sezonun önbelleğini temizle
+                const CACHE_KEY = 'mz_stats_summary_cache_v2';
+                const allCaches = JSON.parse(await GM_getValue(CACHE_KEY, '{}'));
 
-                    // 3. O sezonu hemen çek ve önbelleğe ekle (handleSummaryClick'in içindeki tek sezon mantığı)
-                    try {
-                        const seasonUrl = new URL(lastSeasonElement.attr('href'), window.location.origin).href;
-                        const response = await GM.xmlHttpRequest({ method: "GET", url: seasonUrl });
-                        const parsedData = { season: lastSeason, ...parseLeagueDataFromHtml(response.responseText) };
-                        teamCache[categoryKey].push(parsedData);
-                        teamCache[categoryKey].sort((a, b) => parseFloat(b.season) - parseFloat(a.season)); // Sıralamayı koru
-                    } catch (error) {
-                        console.error(`Sezon ${lastSeason} ('${categoryKey}') verisi alınamadı:`, error);
-                    }
+                if (allCaches[teamId] && allCaches[teamId][activeCategoryKey]) {
+                    const categoryCache = allCaches[teamId][activeCategoryKey];
+                    // Sadece son sezonun verisini önbellekten kaldır
+                    allCaches[teamId][activeCategoryKey] = categoryCache.filter(d => d.season !== lastSeason);
+                    await GM_setValue(CACHE_KEY, JSON.stringify(allCaches));
                 }
+
+                showToastNotification(getText('tabCacheCleared', activeCategoryKey));
+
+                // 3. Güncelleme (handleSummaryClick fonksiyonunu taklit et)
+                button.find('.buttonClassMiddle span').text(getText('processing')).css('pointer-events', 'none').fadeTo('fast', 0.7);
+
+                // handleSummaryClick'i çağırarak tarama işlemini başlat
+                await handleSummaryClick(e);
+
+                // İşlem bittikten sonra düğmeyi sıfırla
+                resetButton();
             }
-        }
 
-        if (hasChanges) {
-            await GM_setValue(CACHE_KEY, JSON.stringify(allCaches));
-        }
+            function parseLeagueDataFromHtml(html) {
+                const data = { scanned: true }; // Varsayılan olarak tarandı işareti ekle
+                const tempDiv = $(`<div>${html}</div>`);
+                const rowIndexToDataKeyMap = {
+                    0: 'league', 1: 'points', 2: 'rank', 3: 'goalsFor',
+                    4: 'goalsAgainst', 5: 'avgGoalsFor', 6: 'avgGoalsAgainst'
+                };
+                const rows = tempDiv.find('.hitlist tbody tr');
 
-        NProgress.done();
-        resetButton();
-        showToastNotification(getText('lastSeasonUpdateComplete'));
-    }
-
-    async function handleSummaryClick(e) {
-        e.preventDefault();
-        const button = $('#stats-summary-btn');
-        const originalText = button.find('.buttonClassMiddle span').text();
-        const resetButton = () => button.find('.buttonClassMiddle span').text(originalText).css('pointer-events', 'auto').fadeTo('fast', 1);
-        button.find('.buttonClassMiddle span').text(getText('processing')).css('pointer-events', 'none').fadeTo('fast', 0.7);
-        NProgress.start();
-
-        const activePanel = $('.statsTabs > .ui-tabs-panel:visible');
-        const activeCategoryKey = $('.statsTabs > .ui-tabs-nav > li.ui-tabs-active > a').text().trim();
-
-        if (activePanel.length === 0 || !activeCategoryKey) {
-            alert(getText('errorActiveTab')); NProgress.done(); resetButton(); return;
-        }
-
-        const seasonTabs = activePanel.find('.leagueStats > ul > li > a, .topScorers > ul > li > a, .topBadBoys > ul > li > a').first().closest('ul').find('a');
-        if (seasonTabs.length === 0) {
-            alert(getText('errorNoSeasons')); NProgress.done(); resetButton(); return;
-        }
-
-        let teamId = new URLSearchParams(window.location.search).get('tid');
-        if (!teamId) {
-            try { teamId = new URLSearchParams(seasonTabs.first().attr('href').split('?')[1]).get('tid'); } catch (error) {}
-        }
-        if (!teamId) {
-            alert(getText('errorTeamId')); NProgress.done(); resetButton(); return;
-        }
-
-        const CACHE_KEY = 'mz_stats_summary_cache_v2';
-        const allCaches = JSON.parse(await GM_getValue(CACHE_KEY, '{}'));
-        const teamCache = allCaches[teamId] || {};
-        const categoryCache = teamCache[activeCategoryKey] || [];
-        const cachedSeasons = new Map(categoryCache.map(d => [d.season, d]));
-        let hasChanges = false;
-
-        for (let i = 0; i < seasonTabs.length; i++) {
-            const tab = $(seasonTabs[i]);
-            const season = tab.text().trim();
-            const existingData = cachedSeasons.get(season);
-
-            NProgress.set((i + 1) / seasonTabs.length);
-            button.find('.buttonClassMiddle span').text(getText('fetchingSeason', season, i + 1, seasonTabs.length));
-
-            // DÜZELTME: Sürekli taramayı önlemek için 'scanned' kontrolü eklendi.
-            // Veri boş olsa bile 'scanned: true' ise tekrar çekmez.
-            if (!existingData || !existingData.scanned) {
-                try {
-                    const response = await GM.xmlHttpRequest({ method: "GET", url: tab.attr('href') });
-                    const parsedData = { season, ...parseLeagueDataFromHtml(response.responseText) };
-                    cachedSeasons.set(season, parsedData);
-                    hasChanges = true;
-                } catch (error) {
-                    console.error(`Sezon ${season} verisi alınamadı:`, error);
+                if (rows.length > 0) {
+                    rows.each(function(index) {
+                        const key = rowIndexToDataKeyMap[index];
+                        if (key) {
+                            const value = $(this).find('td').eq(1).text().trim();
+                            data[key] = value;
+                        }
+                    });
+                } else {
+                    // Eğer tablo satırı yoksa (takım oynamamışsa), boş değerler ata
+                    data.league = '-';
+                    data.points = '0';
+                    data.rank = '-';
                 }
+                return data;
             }
-        }
 
-        if (hasChanges) {
-            if (!allCaches[teamId]) allCaches[teamId] = {};
-            allCaches[teamId][activeCategoryKey] = Array.from(cachedSeasons.values());
-            await GM_setValue(CACHE_KEY, JSON.stringify(allCaches));
-        }
+            function createAndShowModal(data, categoryTitle) {
+                $('#stats-summary-modal').remove();
+                // Sadece lig verisi olanları göster, boşları grafikten/tablodan hariç tutabiliriz veya "-" gösterebiliriz
+                data.sort((a, b) => parseFloat(b.season) - parseFloat(a.season));
 
-        button.find('.buttonClassMiddle span').text(getText('generatingReport'));
-        createAndShowModal(Array.from(cachedSeasons.values()), activeCategoryKey);
-        NProgress.done();
-        resetButton();
-    }
+                let tableRows = data.map(d => `<tr><td>${d.season}</td><td>${d.league || '-'}</td><td>${d.rank || '-'}</td><td>${d.points || '-'}</td><td>${d.goalsFor || '-'}</td><td>${d.goalsAgainst || '-'}</td><td>${d.avgGoalsFor || '-'}</td><td>${d.avgGoalsAgainst || '-'}</td></tr>`).join('');
 
-    // Vurgulanan Değişiklikler BAŞLANGIÇ: Yeni Güncelleme Fonksiyonu
-    async function handleUpdateCurrentTabClick(e) {
-        e.preventDefault();
-        const button = $('#stats-update-tab-btn');
-        const originalText = button.find('.buttonClassMiddle span').text();
-        const resetButton = () => button.find('.buttonClassMiddle span').text(originalText).css('pointer-events', 'auto').fadeTo('fast', 1);
-
-        const activePanel = $('.statsTabs > .ui-tabs-panel:visible');
-        const activeCategoryKey = $('.statsTabs > .ui-tabs-nav > li.ui-tabs-active > a').text().trim();
-        const teamId = new URLSearchParams(window.location.search).get('tid');
-
-        if (activePanel.length === 0 || !activeCategoryKey) { alert(getText('errorActiveTab')); return; }
-        if (!teamId) { alert(getText('errorTeamId')); return; }
-
-        // 1. Sekmedeki EN SON SEZON bilgisini bul.
-        const seasonTabs = activePanel.find('.leagueStats > ul > li > a, .topScorers > ul > li > a, .topBadBoys > ul > li > a').first().closest('ul').find('a');
-        if (seasonTabs.length === 0) { alert(getText('errorNoSeasons')); return; }
-
-        // En son (en üstteki) sezonu al
-        const lastSeasonElement = $(seasonTabs[0]);
-        const lastSeason = lastSeasonElement.text().trim();
-
-        // 2. Sadece bu sezonun önbelleğini temizle
-        const CACHE_KEY = 'mz_stats_summary_cache_v2';
-        const allCaches = JSON.parse(await GM_getValue(CACHE_KEY, '{}'));
-
-        if (allCaches[teamId] && allCaches[teamId][activeCategoryKey]) {
-            const categoryCache = allCaches[teamId][activeCategoryKey];
-            // Sadece son sezonun verisini önbellekten kaldır
-            allCaches[teamId][activeCategoryKey] = categoryCache.filter(d => d.season !== lastSeason);
-            await GM_setValue(CACHE_KEY, JSON.stringify(allCaches));
-        }
-
-        showToastNotification(getText('tabCacheCleared', activeCategoryKey));
-
-        // 3. Güncelleme (handleSummaryClick fonksiyonunu taklit et)
-        button.find('.buttonClassMiddle span').text(getText('processing')).css('pointer-events', 'none').fadeTo('fast', 0.7);
-
-        // handleSummaryClick'i çağırarak tarama işlemini başlat
-        await handleSummaryClick(e);
-
-        // İşlem bittikten sonra düğmeyi sıfırla
-        resetButton();
-    }
-
-    function parseLeagueDataFromHtml(html) {
-        const data = { scanned: true }; // Varsayılan olarak tarandı işareti ekle
-        const tempDiv = $(`<div>${html}</div>`);
-        const rowIndexToDataKeyMap = {
-            0: 'league', 1: 'points', 2: 'rank', 3: 'goalsFor',
-            4: 'goalsAgainst', 5: 'avgGoalsFor', 6: 'avgGoalsAgainst'
-        };
-        const rows = tempDiv.find('.hitlist tbody tr');
-
-        if (rows.length > 0) {
-            rows.each(function(index) {
-                const key = rowIndexToDataKeyMap[index];
-                if (key) {
-                    const value = $(this).find('td').eq(1).text().trim();
-                    data[key] = value;
-                }
-            });
-        } else {
-            // Eğer tablo satırı yoksa (takım oynamamışsa), boş değerler ata
-            data.league = '-';
-            data.points = '0';
-            data.rank = '-';
-        }
-        return data;
-    }
-
-    function createAndShowModal(data, categoryTitle) {
-        $('#stats-summary-modal').remove();
-        // Sadece lig verisi olanları göster, boşları grafikten/tablodan hariç tutabiliriz veya "-" gösterebiliriz
-        data.sort((a, b) => parseFloat(b.season) - parseFloat(a.season));
-
-        let tableRows = data.map(d => `<tr><td>${d.season}</td><td>${d.league || '-'}</td><td>${d.rank || '-'}</td><td>${d.points || '-'}</td><td>${d.goalsFor || '-'}</td><td>${d.goalsAgainst || '-'}</td><td>${d.avgGoalsFor || '-'}</td><td>${d.avgGoalsAgainst || '-'}</td></tr>`).join('');
-
-        const modalHTML = `
+                const modalHTML = `
             <div id="stats-summary-modal" class="stats-modal-overlay">
                 <div class="stats-modal-content">
                     <div class="stats-modal-header"><h3>${categoryTitle} - ${getText('summaryTitle')}</h3><span class="stats-modal-close">×</span></div>
@@ -5164,81 +5170,81 @@
                     </div>
                 </div>
             </div>`;
-        $('body').append(modalHTML);
-        renderHistoryChart(data, 'level');
-        const modal = $('#stats-summary-modal');
-        modal.css('display', 'flex');
-        modal.find('.stats-modal-close').on('click', () => modal.remove());
-        modal.on('click', '.chartable-header', function() {
-            const metric = $(this).data('metric');
-            modal.find('.chartable-header').removeClass('active-metric');
-            $(this).addClass('active-metric');
-            renderHistoryChart(data, metric);
-        });
-    }
+                $('body').append(modalHTML);
+                renderHistoryChart(data, 'level');
+                const modal = $('#stats-summary-modal');
+                modal.css('display', 'flex');
+                modal.find('.stats-modal-close').on('click', () => modal.remove());
+                modal.on('click', '.chartable-header', function() {
+                    const metric = $(this).data('metric');
+                    modal.find('.chartable-header').removeClass('active-metric');
+                    $(this).addClass('active-metric');
+                    renderHistoryChart(data, metric);
+                });
+            }
 
-    function parseLeagueLevel(leagueName) {
-        if (!leagueName || typeof leagueName !== 'string' || leagueName.toLowerCase().includes('hata!') || leagueName === '-') return null;
-        const match = leagueName.toLowerCase().match(/div(\d+)\.(\d+)/);
-        if (match) return parseInt(match[1], 10) + 1;
-        if (/dünya ligi|world league/i.test(leagueName)) return 1;
-        return 1;
-    }
+            function parseLeagueLevel(leagueName) {
+                if (!leagueName || typeof leagueName !== 'string' || leagueName.toLowerCase().includes('hata!') || leagueName === '-') return null;
+                const match = leagueName.toLowerCase().match(/div(\d+)\.(\d+)/);
+                if (match) return parseInt(match[1], 10) + 1;
+                if (/dünya ligi|world league/i.test(leagueName)) return 1;
+                return 1;
+            }
 
-    function renderHistoryChart(data, metric) {
-        const metricConfig = {
-            level: { key: 'league', yAxisTitle: getText('yAxisTitleLeague'), reversed: true, parser: parseLeagueLevel, name: getText('league') },
-            rank: { key: 'rank', yAxisTitle: getText('rank'), reversed: true, parser: s => parseFloat(s), name: getText('rank') },
-            points: { key: 'points', yAxisTitle: getText('points'), reversed: false, parser: s => parseFloat(s), name: getText('points') },
-            goalsFor: { key: 'goalsFor', yAxisTitle: getText('goalsFor'), reversed: false, parser: s => parseFloat(s), name: getText('goalsFor') },
-            goalsAgainst: { key: 'goalsAgainst', yAxisTitle: getText('goalsAgainst'), reversed: false, parser: s => parseFloat(s), name: getText('goalsAgainst') },
-            avgGoalsFor: { key: 'avgGoalsFor', yAxisTitle: getText('avgGoalsFor'), reversed: false, parser: s => parseFloat(s), name: getText('avgGoalsFor') },
-            avgGoalsAgainst: { key: 'avgGoalsAgainst', yAxisTitle: getText('avgGoalsAgainst'), reversed: false, parser: s => parseFloat(s), name: getText('avgGoalsAgainst') }
-        };
+            function renderHistoryChart(data, metric) {
+                const metricConfig = {
+                    level: { key: 'league', yAxisTitle: getText('yAxisTitleLeague'), reversed: true, parser: parseLeagueLevel, name: getText('league') },
+                    rank: { key: 'rank', yAxisTitle: getText('rank'), reversed: true, parser: s => parseFloat(s), name: getText('rank') },
+                    points: { key: 'points', yAxisTitle: getText('points'), reversed: false, parser: s => parseFloat(s), name: getText('points') },
+                    goalsFor: { key: 'goalsFor', yAxisTitle: getText('goalsFor'), reversed: false, parser: s => parseFloat(s), name: getText('goalsFor') },
+                    goalsAgainst: { key: 'goalsAgainst', yAxisTitle: getText('goalsAgainst'), reversed: false, parser: s => parseFloat(s), name: getText('goalsAgainst') },
+                    avgGoalsFor: { key: 'avgGoalsFor', yAxisTitle: getText('avgGoalsFor'), reversed: false, parser: s => parseFloat(s), name: getText('avgGoalsFor') },
+                    avgGoalsAgainst: { key: 'avgGoalsAgainst', yAxisTitle: getText('avgGoalsAgainst'), reversed: false, parser: s => parseFloat(s), name: getText('avgGoalsAgainst') }
+                };
 
-        const config = metricConfig[metric];
-        if (!config) return;
+                const config = metricConfig[metric];
+                if (!config) return;
 
-        const chartData = data
-        .map(d => ({
-            season: parseFloat(d.season),
-            y: config.parser(d[config.key]),
-            originalValue: d[config.key]
-        }))
-        .filter(d => d.y !== null && !isNaN(d.y))
-        .sort((a, b) => a.season - b.season);
+                const chartData = data
+                .map(d => ({
+                    season: parseFloat(d.season),
+                    y: config.parser(d[config.key]),
+                    originalValue: d[config.key]
+                }))
+                .filter(d => d.y !== null && !isNaN(d.y))
+                .sort((a, b) => a.season - b.season);
 
-        if (chartData.length === 0) {
-            $('#stats-history-chart-container').html(`<div style="text-align:center; padding-top:50px;">Grafik için veri bulunamadı.</div>`);
-            return;
+                if (chartData.length === 0) {
+                    $('#stats-history-chart-container').html(`<div style="text-align:center; padding-top:50px;">Grafik için veri bulunamadı.</div>`);
+                    return;
+                }
+
+                const total = chartData.reduce((sum, point) => sum + point.y, 0);
+                const average = chartData.length > 0 ? total / chartData.length : 0;
+
+                unsafeWindow.Highcharts.chart('stats-history-chart-container', {
+                    chart: { type: 'line' },
+                    title: { text: getText('chartTitle', config.name) },
+                    xAxis: { title: { text: getText('season') }, categories: chartData.map(d => d.season.toString()) },
+                    yAxis: {
+                        title: { text: config.yAxisTitle },
+                        reversed: config.reversed,
+                        plotLines: [{ value: average, color: '#d9534f', dashStyle: 'shortdash', width: 2, 'zIndex': 5, label: { useHTML: true, formatter: function() { return `<div style="background-color: rgba(217, 83, 79, 0.9); color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; box-shadow: 0 1px 3px rgba(0,0,0,0.4); text-shadow: none;">${getText('average')}: ${average.toFixed(2)}</div>`; }, align: 'right', x: -5, y: -7 } }]
+                    },
+                    tooltip: { formatter: function() { const pointData = chartData.find(d => d.season.toString() === this.x); return `<b>${getText('season')} ${this.x}</b><br/>${config.name}: <b>${pointData.originalValue}</b>`; } },
+                    legend: { enabled: false },
+                    series: [{ name: config.name, data: chartData.map(d => d.y), marker: { enabled: true, radius: 4 }, dataLabels: { enabled: true, formatter: function() { const pointData = chartData.find(d => d.season.toString() === this.x); return pointData ? pointData.originalValue : ''; }, style: { fontSize: '10px', fontWeight: 'bold', color: 'gray', textOutline: '1px white' } } }]
+                });
+            }
+
+            function init() {
+                if ($('.statsTabs').length) {
+                    injectStyles();
+                    addSummaryButton();
+                }
+            }
+            $(document).ready(init);
         }
-
-        const total = chartData.reduce((sum, point) => sum + point.y, 0);
-        const average = chartData.length > 0 ? total / chartData.length : 0;
-
-        unsafeWindow.Highcharts.chart('stats-history-chart-container', {
-            chart: { type: 'line' },
-            title: { text: getText('chartTitle', config.name) },
-            xAxis: { title: { text: getText('season') }, categories: chartData.map(d => d.season.toString()) },
-            yAxis: {
-                title: { text: config.yAxisTitle },
-                reversed: config.reversed,
-                plotLines: [{ value: average, color: '#d9534f', dashStyle: 'shortdash', width: 2, 'zIndex': 5, label: { useHTML: true, formatter: function() { return `<div style="background-color: rgba(217, 83, 79, 0.9); color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; box-shadow: 0 1px 3px rgba(0,0,0,0.4); text-shadow: none;">${getText('average')}: ${average.toFixed(2)}</div>`; }, align: 'right', x: -5, y: -7 } }]
-            },
-            tooltip: { formatter: function() { const pointData = chartData.find(d => d.season.toString() === this.x); return `<b>${getText('season')} ${this.x}</b><br/>${config.name}: <b>${pointData.originalValue}</b>`; } },
-            legend: { enabled: false },
-            series: [{ name: config.name, data: chartData.map(d => d.y), marker: { enabled: true, radius: 4 }, dataLabels: { enabled: true, formatter: function() { const pointData = chartData.find(d => d.season.toString() === this.x); return pointData ? pointData.originalValue : ''; }, style: { fontSize: '10px', fontWeight: 'bold', color: 'gray', textOutline: '1px white' } } }]
-        });
-    }
-
-    function init() {
-        if ($('.statsTabs').length) {
-            injectStyles();
-            addSummaryButton();
-        }
-    }
-    $(document).ready(init);
-}
 
         /****************************************************************************************
      *                                                                                      *
@@ -5301,210 +5307,210 @@
                     <span class="buttonClassRight">&nbsp;</span>
                 </a>`);
 
-                btn.on('click', function(e) {
-                    e.preventDefault();
-                    startGhostProcess();
-                });
+                    btn.on('click', function(e) {
+                        e.preventDefault();
+                        startGhostProcess();
+                    });
 
-                container.append(btn);
-                console.log(getText('logReady'));
-            }
-        }, 1000);
-
-        function startPopupKiller() {
-            if (popupKillerInterval) clearInterval(popupKillerInterval);
-            popupKillerInterval = setInterval(() => {
-                const powerboxBtn = $('#powerbox_confirm_ok_button');
-                if (powerboxBtn.length > 0 && powerboxBtn.is(':visible')) {
-                    powerboxBtn[0].click();
+                    container.append(btn);
+                    console.log(getText('logReady'));
                 }
-                const dialogs = $('.ui-dialog:visible');
-                dialogs.each(function() {
-                    const text = $(this).text();
-                    // Evrensel kontrol: Türkçe, İngilizce veya genel "Tamam/OK"
-                    if (text.includes("başarı ile eklendi") || text.includes("successfully added") || text.includes("Tamam") || text.includes("OK")) {
-                        const okBtn = $(this).find('.ui-dialog-buttonpane button');
-                        if (okBtn.length > 0) okBtn.click();
+            }, 1000);
+
+            function startPopupKiller() {
+                if (popupKillerInterval) clearInterval(popupKillerInterval);
+                popupKillerInterval = setInterval(() => {
+                    const powerboxBtn = $('#powerbox_confirm_ok_button');
+                    if (powerboxBtn.length > 0 && powerboxBtn.is(':visible')) {
+                        powerboxBtn[0].click();
                     }
-                });
-            }, 200);
-        }
+                    const dialogs = $('.ui-dialog:visible');
+                    dialogs.each(function() {
+                        const text = $(this).text();
+                        // Evrensel kontrol: Türkçe, İngilizce veya genel "Tamam/OK"
+                        if (text.includes("başarı ile eklendi") || text.includes("successfully added") || text.includes("Tamam") || text.includes("OK")) {
+                            const okBtn = $(this).find('.ui-dialog-buttonpane button');
+                            if (okBtn.length > 0) okBtn.click();
+                        }
+                    });
+                }, 200);
+            }
 
-        function stopPopupKiller() {
-            if (popupKillerInterval) clearInterval(popupKillerInterval);
-        }
+            function stopPopupKiller() {
+                if (popupKillerInterval) clearInterval(popupKillerInterval);
+            }
 
-        async function startGhostProcess() {
-            try {
-                console.clear();
-                console.log(getText('logStart'));
+            async function startGhostProcess() {
+                try {
+                    console.clear();
+                    console.log(getText('logStart'));
 
-                const editor = unsafeWindow.teamTactic.editor;
-                const textArea = $('#importExportData');
+                    const editor = unsafeWindow.teamTactic.editor;
+                    const textArea = $('#importExportData');
 
-                $('#importExportTacticsWindow').css({ 'opacity': '0.01', 'pointer-events': 'none' });
+                    $('#importExportTacticsWindow').css({ 'opacity': '0.01', 'pointer-events': 'none' });
 
-                if (!$('#importExportTacticsWindow').is(':visible')) {
-                    unsafeWindow.toggleImportExportWindow();
-                }
+                    if (!$('#importExportTacticsWindow').is(':visible')) {
+                        unsafeWindow.toggleImportExportWindow();
+                    }
 
-                textArea.val('');
-                editor.exportTactic();
-                await wait(300);
+                    textArea.val('');
+                    editor.exportTactic();
+                    await wait(300);
 
-                const sourceXML = textArea.val();
-                if (!sourceXML) {
-                    alert(getText('errorNoXML'));
+                    const sourceXML = textArea.val();
+                    if (!sourceXML) {
+                        alert(getText('errorNoXML'));
+                        restoreUI();
+                        return;
+                    }
+
+                    sourceDataMap = parseXMLToMap(sourceXML);
+                    if (Object.keys(sourceDataMap).length === 0) {
+                        alert(getText('errorNoPlayer'));
+                        restoreUI();
+                        return;
+                    }
+
+                    const mzData = unsafeWindow.teamTactic.tacticsData;
+                    let allTactics = [];
+                    if (mzData.TeamTactics && mzData.TeamTactics.Tactic) {
+                        allTactics = mzData.TeamTactics.Tactic;
+                    } else if (mzData.tactics && mzData.tactics.TeamTactics) {
+                        allTactics = mzData.tactics.TeamTactics.Tactic;
+                    }
+                    if (!Array.isArray(allTactics)) allTactics = [allTactics];
+
+                    const currentTabId = $('#current_tab').val();
+                    const currentTabName = $(`#tacticTab_${currentTabId} span`).text();
+
+                    tacticsQueue = allTactics
+                        .filter(t => t['@attributes'].name !== currentTabId && t.TacticPlayer)
+                        .map(t => t['@attributes'].name);
+
+                    if (tacticsQueue.length === 0) {
+                        alert(getText('errorNoTarget'));
+                        restoreUI();
+                        return;
+                    }
+
+                    if(!confirm(getText('confirmMsg', currentTabName, tacticsQueue.length))) {
+                        restoreUI();
+                        return;
+                    }
+
+                    startPopupKiller();
+                    processNextTactic();
+
+                } catch (err) {
+                    console.error(err);
+                    alert("Error: " + err.message);
+                    stopPopupKiller();
                     restoreUI();
-                    return;
                 }
+            }
 
-                sourceDataMap = parseXMLToMap(sourceXML);
-                if (Object.keys(sourceDataMap).length === 0) {
-                    alert(getText('errorNoPlayer'));
-                    restoreUI();
-                    return;
-                }
-
-                const mzData = unsafeWindow.teamTactic.tacticsData;
-                let allTactics = [];
-                if (mzData.TeamTactics && mzData.TeamTactics.Tactic) {
-                    allTactics = mzData.TeamTactics.Tactic;
-                } else if (mzData.tactics && mzData.tactics.TeamTactics) {
-                    allTactics = mzData.tactics.TeamTactics.Tactic;
-                }
-                if (!Array.isArray(allTactics)) allTactics = [allTactics];
-
-                const currentTabId = $('#current_tab').val();
-                const currentTabName = $(`#tacticTab_${currentTabId} span`).text();
-
-                tacticsQueue = allTactics
-                    .filter(t => t['@attributes'].name !== currentTabId && t.TacticPlayer)
-                    .map(t => t['@attributes'].name);
-
+            async function processNextTactic() {
                 if (tacticsQueue.length === 0) {
-                    alert(getText('errorNoTarget'));
-                    restoreUI();
+                    finishProcess();
                     return;
                 }
+                const tabId = tacticsQueue.shift();
+                try {
+                    const textArea = $('#importExportData');
+                    const editor = unsafeWindow.teamTactic.editor;
 
-                if(!confirm(getText('confirmMsg', currentTabName, tacticsQueue.length))) {
-                    restoreUI();
-                    return;
+                    unsafeWindow.changeTacticTab(tabId);
+                    await wait(700);
+
+                    textArea.val('');
+                    editor.exportTactic();
+                    await wait(200);
+
+                    let targetXML = textArea.val();
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(targetXML, "text/xml");
+
+                    const positions = [];
+                    const posNodes = xmlDoc.getElementsByTagName("Pos");
+                    const subNodes = xmlDoc.getElementsByTagName("Sub");
+                    for(let i=0; i<posNodes.length; i++) positions.push(posNodes[i]);
+                    for(let i=0; i<subNodes.length; i++) positions.push(subNodes[i]);
+
+                    let hasChanges = false;
+                    for (let i = 0; i < positions.length; i++) {
+                        const node = positions[i];
+                        const pid = node.getAttribute("pid");
+                        if (sourceDataMap[pid]) {
+                            const sourceInfo = sourceDataMap[pid];
+                            if (sourceInfo.pt && node.getAttribute("pt") !== sourceInfo.pt) {
+                                node.setAttribute("pt", sourceInfo.pt);
+                                hasChanges = true;
+                            }
+                            if (sourceInfo.fk && node.getAttribute("fk") !== sourceInfo.fk) {
+                                node.setAttribute("fk", sourceInfo.fk);
+                                hasChanges = true;
+                            }
+                        }
+                    }
+
+                    if (hasChanges) {
+                        const serializer = new XMLSerializer();
+                        const modifiedXML = serializer.serializeToString(xmlDoc);
+                        textArea.val(modifiedXML);
+                        editor.importTactic();
+                        await wait(600);
+                    }
+                    processNextTactic();
+                } catch (err) {
+                    console.error(`Tactic ${tabId} error:`, err);
+                    processNextTactic();
                 }
+            }
 
-                startPopupKiller();
-                processNextTactic();
-
-            } catch (err) {
-                console.error(err);
-                alert("Error: " + err.message);
+            function finishProcess() {
                 stopPopupKiller();
                 restoreUI();
+                unsafeWindow.toggleImportExportWindow();
+                $('#save_all').val('1');
+                alert(getText('successMsg'));
+                const saveBtn = $('#saveallb');
+                $('html, body').animate({ scrollTop: saveBtn.offset().top }, 500);
+                saveBtn.css({'border': '5px solid red', 'transform': 'scale(1.2)', 'transition': '0.5s'});
             }
-        }
 
-        async function processNextTactic() {
-            if (tacticsQueue.length === 0) {
-                finishProcess();
-                return;
+            function restoreUI() {
+                $('#importExportTacticsWindow').css({'opacity': '1', 'pointer-events': 'auto'});
             }
-            const tabId = tacticsQueue.shift();
-            try {
-                const textArea = $('#importExportData');
-                const editor = unsafeWindow.teamTactic.editor;
 
-                unsafeWindow.changeTacticTab(tabId);
-                await wait(700);
-
-                textArea.val('');
-                editor.exportTactic();
-                await wait(200);
-
-                let targetXML = textArea.val();
+            function parseXMLToMap(xmlString) {
                 const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(targetXML, "text/xml");
-
+                const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+                const map = {};
                 const positions = [];
                 const posNodes = xmlDoc.getElementsByTagName("Pos");
                 const subNodes = xmlDoc.getElementsByTagName("Sub");
                 for(let i=0; i<posNodes.length; i++) positions.push(posNodes[i]);
                 for(let i=0; i<subNodes.length; i++) positions.push(subNodes[i]);
 
-                let hasChanges = false;
                 for (let i = 0; i < positions.length; i++) {
                     const node = positions[i];
                     const pid = node.getAttribute("pid");
-                    if (sourceDataMap[pid]) {
-                        const sourceInfo = sourceDataMap[pid];
-                        if (sourceInfo.pt && node.getAttribute("pt") !== sourceInfo.pt) {
-                            node.setAttribute("pt", sourceInfo.pt);
-                            hasChanges = true;
-                        }
-                        if (sourceInfo.fk && node.getAttribute("fk") !== sourceInfo.fk) {
-                            node.setAttribute("fk", sourceInfo.fk);
-                            hasChanges = true;
-                        }
+                    const pt = node.getAttribute("pt");
+                    const fk = node.getAttribute("fk");
+                    if (pid) {
+                        map[pid] = {};
+                        if (pt) map[pid].pt = pt;
+                        if (fk) map[pid].fk = fk;
                     }
                 }
+                return map;
+            }
 
-                if (hasChanges) {
-                    const serializer = new XMLSerializer();
-                    const modifiedXML = serializer.serializeToString(xmlDoc);
-                    textArea.val(modifiedXML);
-                    editor.importTactic();
-                    await wait(600);
-                }
-                processNextTactic();
-            } catch (err) {
-                console.error(`Tactic ${tabId} error:`, err);
-                processNextTactic();
+            function wait(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
             }
         }
-
-        function finishProcess() {
-            stopPopupKiller();
-            restoreUI();
-            unsafeWindow.toggleImportExportWindow();
-            $('#save_all').val('1');
-            alert(getText('successMsg'));
-            const saveBtn = $('#saveallb');
-            $('html, body').animate({ scrollTop: saveBtn.offset().top }, 500);
-            saveBtn.css({'border': '5px solid red', 'transform': 'scale(1.2)', 'transition': '0.5s'});
-        }
-
-        function restoreUI() {
-            $('#importExportTacticsWindow').css({'opacity': '1', 'pointer-events': 'auto'});
-        }
-
-        function parseXMLToMap(xmlString) {
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(xmlString, "text/xml");
-            const map = {};
-            const positions = [];
-            const posNodes = xmlDoc.getElementsByTagName("Pos");
-            const subNodes = xmlDoc.getElementsByTagName("Sub");
-            for(let i=0; i<posNodes.length; i++) positions.push(posNodes[i]);
-            for(let i=0; i<subNodes.length; i++) positions.push(subNodes[i]);
-
-            for (let i = 0; i < positions.length; i++) {
-                const node = positions[i];
-                const pid = node.getAttribute("pid");
-                const pt = node.getAttribute("pt");
-                const fk = node.getAttribute("fk");
-                if (pid) {
-                    map[pid] = {};
-                    if (pt) map[pid].pt = pt;
-                    if (fk) map[pid].fk = fk;
-                }
-            }
-            return map;
-        }
-
-        function wait(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-    }
 
         /****************************************************************************************
  *                                                                                      *
@@ -5536,10 +5542,12 @@
                     sendMessageToAuthor: "Betik yazarına mesaj gönder",
                     dragToMove: "Taşımak için basılı tutup sürükleyin.",
                     retireWarning: "Emeklilik Göstergesi",
-
+                    maxedBallTitle: "Tıkalı Yetenek (Kırmızı Top)",
                     // --- EKLENTİLER ---
                     fixturePageEloName: "Fikstür Sayfası ELO",
                     matchFinderName: "Gelişmiş Maç Bulucu",
+                    transferScoutFilterTitle: "Transfer Gözlemci Filtresi",
+                    transferScoutFilterDesc: "Transfer listesini Yüksek/Düşük Potansiyel yıldızlarına göre filtreleyin.",
                     messengerToolsTitle: "Messenger Toplu Silme",
                     ghostRobotTitle: "Taktik: Otomatik Kopyalama",
                     ghostRobotDesc: "Duran toplardaki penaltı ve frikik atan oyuncuları bir taktikten diğerlerine otomatik kopyalayın.",
@@ -5575,10 +5583,12 @@
                     sendMessageToAuthor: "Send a message to the author",
                     dragToMove: "Press and drag to move.",
                     retireWarning: "Retirement Indicator",
-
+                    maxedBallTitle: "Maxed Skill (Red Ball)",
                     // --- MISSING KEYS ---
                     fixturePageEloName: "Fixture Page ELO",
                     matchFinderName: "Advanced Match Finder",
+                    transferScoutFilterTitle: "Transfer Scout Filter",
+                    transferScoutFilterDesc: "Filter transfer list by High/Low Potential stars.",
                     messengerToolsTitle: "Messenger Bulk Delete",
                     ghostRobotTitle: "Tactics: Automatic Copy",
                     ghostRobotDesc: "Automatically copy players who take penalties and free kicks from one tactic to another.",
@@ -5746,226 +5756,823 @@
         .mz-fs-footer { text-align: center; border-top: 1px solid #dee2e6; padding-top: 15px; margin-top: 15px; }
     `);
 
-    // --- Fonksiyonlar ---
-    function createFeatureSettingsModal() {
-        if ($('#mz-feature-settings-modal').length > 0) return;
-        let checkboxesHTML = '';
+            // --- Fonksiyonlar ---
+            function createFeatureSettingsModal() {
+                if ($('#mz-feature-settings-modal').length > 0) return;
+                let checkboxesHTML = '';
 
-        for (const key in MODULES) {
-            let rawName = getText(MODULES[key].nameKey);
-            if (!rawName) {
-                console.warn(`[MZone] Çeviri bulunamadı: ${MODULES[key].nameKey}`);
-                rawName = `[${MODULES[key].nameKey}]`;
+                for (const key in MODULES) {
+                    let rawName = getText(MODULES[key].nameKey);
+                    if (!rawName) {
+                        console.warn(`[MZone] Çeviri bulunamadı: ${MODULES[key].nameKey}`);
+                        rawName = `[${MODULES[key].nameKey}]`;
+                    }
+                    const moduleName = rawName.replace(/<[^>]*>?/gm, '');
+                    checkboxesHTML += `<label class="mz-fs-label"><input type="checkbox" id="setting-${key}" data-key="${key}"><span>${moduleName}</span></label>`;
+                }
+
+                const modalHTML = `<div id="mz-feature-settings-modal"><div class="mz-fs-content"><div class="mz-fs-header"><h3>${getText('featureSettingsTitle')}</h3><span class="mz-fs-close">×</span></div><div class="mz-fs-controls"><a href="#" id="mz-fs-select-all">${getText('selectAll')}</a><a href="#" id="mz-fs-deselect-all">${getText('deselectAll')}</a></div><div class="mz-fs-body">${checkboxesHTML}</div><div class="mz-fs-footer"><button id="mz-save-feature-settings" class="mz-script-button" style="background-color: #28a745;">${getText('saveSettings')}</button><p style="font-size: 11px; color: #6c757d; margin-top: 10px;">${getText('reloadToApply')}</p></div></div></div>`;
+                $('body').append(modalHTML);
+                $('#mz-feature-settings-modal .mz-fs-close').on('click', () => $('#mz-feature-settings-modal').hide());
+                $('#mz-save-feature-settings').on('click', saveAndCloseFeatureSettings);
+                $('#mz-fs-select-all').on('click', (e) => { e.preventDefault(); $('#mz-feature-settings-modal .mz-fs-body input[type="checkbox"]').prop('checked', true); });
+                $('#mz-fs-deselect-all').on('click', (e) => { e.preventDefault(); $('#mz-feature-settings-modal .mz-fs-body input[type="checkbox"]').prop('checked', false); });
             }
-            const moduleName = rawName.replace(/<[^>]*>?/gm, '');
-            checkboxesHTML += `<label class="mz-fs-label"><input type="checkbox" id="setting-${key}" data-key="${key}"><span>${moduleName}</span></label>`;
-        }
 
-        const modalHTML = `<div id="mz-feature-settings-modal"><div class="mz-fs-content"><div class="mz-fs-header"><h3>${getText('featureSettingsTitle')}</h3><span class="mz-fs-close">×</span></div><div class="mz-fs-controls"><a href="#" id="mz-fs-select-all">${getText('selectAll')}</a><a href="#" id="mz-fs-deselect-all">${getText('deselectAll')}</a></div><div class="mz-fs-body">${checkboxesHTML}</div><div class="mz-fs-footer"><button id="mz-save-feature-settings" class="mz-script-button" style="background-color: #28a745;">${getText('saveSettings')}</button><p style="font-size: 11px; color: #6c757d; margin-top: 10px;">${getText('reloadToApply')}</p></div></div></div>`;
-        $('body').append(modalHTML);
-        $('#mz-feature-settings-modal .mz-fs-close').on('click', () => $('#mz-feature-settings-modal').hide());
-        $('#mz-save-feature-settings').on('click', saveAndCloseFeatureSettings);
-        $('#mz-fs-select-all').on('click', (e) => { e.preventDefault(); $('#mz-feature-settings-modal .mz-fs-body input[type="checkbox"]').prop('checked', true); });
-        $('#mz-fs-deselect-all').on('click', (e) => { e.preventDefault(); $('#mz-feature-settings-modal .mz-fs-body input[type="checkbox"]').prop('checked', false); });
-    }
-
-    async function openFeatureSettingsModal() {
-        const modal = $('#mz-feature-settings-modal');
-        for (const key in MODULES) {
-            modal.find(`#setting-${key}`).prop('checked', scriptSettings[key]);
-        }
-        modal.css('display', 'flex');
-    }
-
-    async function saveAndCloseFeatureSettings() {
-        for (const key in MODULES) {
-            scriptSettings[key] = $(`#setting-${key}`).is(':checked');
-        }
-        await GM_setValue(MODULE_SETTINGS_KEY, JSON.stringify(scriptSettings));
-        $('#mz-feature-settings-modal').hide();
-        alert('Ayarlar kaydedildi. Değişikliklerin geçerli olması için sayfayı yenilemeniz gerekebilir.');
-    }
-
-    async function createMenu() {
-        if ($('#mz-global-info-btn').length > 0) return;
-
-        // 1. Önce Butonu Oluştur - MOBİL TOGGLE DAHİL
-        const infoButton = $(`<div id="mz-global-info-btn" title="${getText('menuTitle')}\n${getText('dragToMove')}">i<div id="mz-mobile-toggle-btn">-</div></div>`);
-        const infoPanel = $('<div id="mz-global-info-panel"></div>');
-
-        // 2. Panel İçeriğini Hazırla
-        const baseTitle = getText('menuTitle');
-        const scriptAuthor = GM_info.script.author;
-        const hardcodedTeamName = "☆TC☆ NiCoTiN ☆TC☆";
-        const scriptNameToDisplay = (lang === 'tr') ? "MZone Gelişmiş: Tablo, İstatistik & Play-off" : "MZone Advanced: Table, Stats & Play-off";
-        const authorLineHtml = `<a href="#" id="author-message-link" class="author-link" title="${getText('sendMessageToAuthor')}">by ${scriptAuthor} (${hardcodedTeamName})</a>`;
-        const fullHeaderHtml = `${baseTitle}<br><small style="font-weight: normal; font-size: 0.75em; opacity: 0.85; line-height: 1.4;">${scriptNameToDisplay}<br>${authorLineHtml}</small>`;
-        const settingsButtonHtml = `<span id="mz-open-feature-settings" title="${getText('settings')}" style="position: absolute; top: 10px; right: 12px; font-size: 20px; cursor: pointer; transition: transform 0.2s;">⚙️</span>`;
-        let listItems = featurePages.map(page => {
-            const urlParams = new URLSearchParams(page.url.split('?')[1]);
-            let moduleKey = '';
-            if (page.url.includes('p=league')) moduleKey = 'leagueTable';
-            else if (page.url.includes('p=statistics')) moduleKey = 'statisticsSummary';
-            else if (page.url.includes('p=shortlist')) moduleKey = 'shortlistFilter';
-            else if (page.url.includes('p=players')) moduleKey = 'playerStats';
-            else if (page.url.includes('p=challenges')) moduleKey = 'friendlyMatchAuto';
-            else if (page.url.includes('p=tactics')) moduleKey = 'ghostRobot';
-
-            if (moduleKey && scriptSettings[moduleKey] === false) {
-                return '';
+            async function openFeatureSettingsModal() {
+                const modal = $('#mz-feature-settings-modal');
+                for (const key in MODULES) {
+                    modal.find(`#setting-${key}`).prop('checked', scriptSettings[key]);
+                }
+                modal.css('display', 'flex');
             }
-            return `<li><a href="${page.url}"><strong>${getText(page.titleKey)}</strong><p>${getText(page.descKey)}</p></a></li>`;
-        }).join('');
 
-        infoPanel.html(`<div class="mz-gip-header">${fullHeaderHtml}${settingsButtonHtml}</div><ul class="mz-gip-list">${listItems}</ul>`);
+            async function saveAndCloseFeatureSettings() {
+                for (const key in MODULES) {
+                    scriptSettings[key] = $(`#setting-${key}`).is(':checked');
+                }
+                await GM_setValue(MODULE_SETTINGS_KEY, JSON.stringify(scriptSettings));
+                $('#mz-feature-settings-modal').hide();
+                alert('Ayarlar kaydedildi. Değişikliklerin geçerli olması için sayfayı yenilemeniz gerekebilir.');
+            }
 
-        // 3. Konumlandırma
+            async function createMenu() {
+                if ($('#mz-global-info-btn').length > 0) return;
+
+                // 1. Önce Butonu Oluştur - MOBİL TOGGLE DAHİL
+                const infoButton = $(`<div id="mz-global-info-btn" title="${getText('menuTitle')}\n${getText('dragToMove')}">i<div id="mz-mobile-toggle-btn">-</div></div>`);
+                const infoPanel = $('<div id="mz-global-info-panel"></div>');
+
+                // 2. Panel İçeriğini Hazırla
+                const baseTitle = getText('menuTitle');
+                const scriptAuthor = GM_info.script.author;
+                const hardcodedTeamName = "☆TC☆ NiCoTiN ☆TC☆";
+                const scriptNameToDisplay = (lang === 'tr') ? "MZone Gelişmiş: Tablo, İstatistik & Play-off" : "MZone Advanced: Table, Stats & Play-off";
+                const authorLineHtml = `<a href="#" id="author-message-link" class="author-link" title="${getText('sendMessageToAuthor')}">by ${scriptAuthor} (${hardcodedTeamName})</a>`;
+                const fullHeaderHtml = `${baseTitle}<br><small style="font-weight: normal; font-size: 0.75em; opacity: 0.85; line-height: 1.4;">${scriptNameToDisplay}<br>${authorLineHtml}</small>`;
+                const settingsButtonHtml = `<span id="mz-open-feature-settings" title="${getText('settings')}" style="position: absolute; top: 10px; right: 12px; font-size: 20px; cursor: pointer; transition: transform 0.2s;">⚙️</span>`;
+                let listItems = featurePages.map(page => {
+                    const urlParams = new URLSearchParams(page.url.split('?')[1]);
+                    let moduleKey = '';
+                    if (page.url.includes('p=league')) moduleKey = 'leagueTable';
+                    else if (page.url.includes('p=statistics')) moduleKey = 'statisticsSummary';
+                    else if (page.url.includes('p=shortlist')) moduleKey = 'shortlistFilter';
+                    else if (page.url.includes('p=players')) moduleKey = 'playerStats';
+                    else if (page.url.includes('p=challenges')) moduleKey = 'friendlyMatchAuto';
+                    else if (page.url.includes('p=tactics')) moduleKey = 'ghostRobot';
+
+                    if (moduleKey && scriptSettings[moduleKey] === false) {
+                        return '';
+                    }
+                    return `<li><a href="${page.url}"><strong>${getText(page.titleKey)}</strong><p>${getText(page.descKey)}</p></a></li>`;
+                }).join('');
+
+                infoPanel.html(`<div class="mz-gip-header">${fullHeaderHtml}${settingsButtonHtml}</div><ul class="mz-gip-list">${listItems}</ul>`);
+
+                // 3. Konumlandırma
+                try {
+                    const savedPosition = JSON.parse(await GM_getValue(POSITION_KEY, 'null'));
+                    if (savedPosition && savedPosition.top !== undefined && savedPosition.left !== undefined) {
+                        let topVal = parseInt(savedPosition.top);
+                        let leftVal = parseInt(savedPosition.left);
+                        const winHeight = $(window).height();
+                        const winWidth = $(window).width();
+
+                        if (!isNaN(topVal) && !isNaN(leftVal) && topVal >= 0 && topVal < winHeight && leftVal >= 0 && leftVal < winWidth) {
+                            infoButton.css({ top: savedPosition.top, left: savedPosition.left, bottom: 'auto', right: 'auto' });
+                        }
+                    }
+                } catch (e) {
+                    console.error("Konum yüklenirken hata oluştu:", e);
+                }
+
+                $('body').append(infoButton).append(infoPanel);
+
+                // MOBİL TOGGLE İÇİN EVENT
+                infoButton.find('#mz-mobile-toggle-btn').on('click', function(e) {
+                    e.stopPropagation(); // Butonun sürüklenmesini veya menü açmasını engelle
+                    $('#mz-global-info-btn').addClass('mz-minimized');
+                    $('#mz-global-info-panel').removeClass('visible'); // Menü açıksa kapat
+                });
+
+                // Küçültülmüş butona tıklayınca geri açma
+                infoButton.on('click', function(e) {
+                    if ($(this).hasClass('mz-minimized')) {
+                        e.stopPropagation(); // Menünün hemen açılmasını engelle, önce boyutu düzelt
+                        $(this).removeClass('mz-minimized');
+                    }
+                });
+            }
+
+            function makeButtonInteractive() {
+                const button = $('#mz-global-info-btn'); let isDragging = false; let hasMoved = false; let startX, startY, offsetX, offsetY;
+                button.on('mousedown touchstart', function(e) {
+                    // Eğer küçültülmüşse sürüklemeyi engelle
+                    if(button.hasClass('mz-minimized')) return;
+
+                    const evt = e.type === 'touchstart' ? e.originalEvent.touches[0] : e;
+                    if (e.type === 'mousedown' && e.which !== 1) return;
+                    // e.preventDefault(); // Touch scrollu engellememesi için mobilde dikkatli kullanılmalı
+                    if(e.type === 'mousedown') e.preventDefault();
+
+                    startX = evt.clientX; startY = evt.clientY;
+                    const buttonPos = button.offset();
+                    offsetX = evt.clientX - buttonPos.left;
+                    offsetY = evt.clientY - buttonPos.top;
+
+                    if(e.type === 'touchstart') {
+                        $(document).on('touchmove.interactive', onMouseMove);
+                        $(document).on('touchend.interactive', onMouseUp);
+                    } else {
+                        $(document).on('mousemove.interactive', onMouseMove);
+                        $(document).on('mouseup.interactive', onMouseUp);
+                    }
+                });
+
+                function onMouseMove(e) {
+                    const evt = e.type === 'touchmove' ? e.originalEvent.touches[0] : e;
+                    if (!isDragging) {
+                        const moveThreshold = 5;
+                        if (Math.abs(evt.clientX - startX) > moveThreshold || Math.abs(evt.clientY - startY) > moveThreshold) {
+                            isDragging = true; hasMoved = true; button.addClass('is-dragging');
+                        }
+                    }
+                    if (isDragging) {
+                        if(e.type === 'touchmove') e.preventDefault(); // Sürüklerken sayfa kaymasını engelle
+                        updatePosition(evt);
+                    }
+                }
+
+                function updatePosition(e) {
+                    let newLeft = e.clientX - offsetX; let newTop = e.clientY - offsetY;
+                    const buttonWidth = button.outerWidth(); const buttonHeight = button.outerHeight();
+                    const windowWidth = $(window).width(); const windowHeight = $(window).height();
+                    newLeft = Math.max(0, Math.min(newLeft, windowWidth - buttonWidth));
+                    newTop = Math.max(0, Math.min(newTop, windowHeight - buttonHeight));
+                    button.css({ top: newTop, left: newLeft, bottom: 'auto', right: 'auto' });
+                }
+
+                async function onMouseUp(e) {
+                    $(document).off('mousemove.interactive mouseup.interactive touchmove.interactive touchend.interactive');
+                    if (isDragging) {
+                        const finalPosition = { top: button.css('top'), left: button.css('left') };
+                        await GM_setValue(POSITION_KEY, JSON.stringify(finalPosition));
+                    }
+                    if (!hasMoved && !button.hasClass('mz-minimized')) {
+                        // Eğer buton minimize değilse ve sürüklenmediyse menüyü aç/kapat
+                        // Tıklanan yer toggle butonu değilse (zaten yukarıda stopPropagation var ama garanti olsun)
+                        if(!$(e.target).is('#mz-mobile-toggle-btn')) {
+                            positionPanelRelativeToButton();
+                            $('#mz-global-info-panel').toggleClass('visible');
+                        }
+                    }
+                    isDragging = false; hasMoved = false; button.removeClass('is-dragging');
+                }
+            }
+
+            function positionPanelRelativeToButton() {
+                const button = $('#mz-global-info-btn'); const panel = $('#mz-global-info-panel'); const margin = 10;
+                panel.css({ visibility: 'hidden', display: 'block' }); const panelWidth = panel.outerWidth(); const panelHeight = panel.outerHeight(); panel.css({ visibility: '', display: '' });
+                const buttonOffset = button.offset(); const buttonWidth = button.outerWidth(); const buttonHeight = button.outerHeight(); const windowWidth = $(window).width(); const windowHeight = $(window).height();
+                const buttonCenterX = buttonOffset.left + buttonWidth / 2; const buttonCenterY = buttonOffset.top + buttonHeight / 2;
+                let targetTop, targetLeft;
+
+                // Dikey Konumlandırma
+                if (buttonCenterY > windowHeight / 2) {
+                    targetTop = buttonOffset.top - panelHeight - margin;
+                } else {
+                    targetTop = buttonOffset.top + buttonHeight + margin;
+                }
+
+                // Yatay Konumlandırma
+                if (buttonCenterX > windowWidth / 2) {
+                    targetLeft = buttonOffset.left + buttonWidth - panelWidth;
+                } else {
+                    targetLeft = buttonOffset.left;
+                }
+
+                // Ekran sınırlarını aşmasını engelle
+                targetLeft = Math.max(margin, Math.min(targetLeft, windowWidth - panelWidth - margin));
+                targetTop = Math.max(margin, Math.min(targetTop, windowHeight - panelHeight - margin));
+
+                panel.css({ top: `${targetTop}px`, left: `${targetLeft}px`, bottom: 'auto', right: 'auto' });
+            }
+
+            // --- Başlatıcı ---
+            $(document).ready(function() {
+                createFeatureSettingsModal();
+                createMenu().then(() => {
+                    makeButtonInteractive();
+                    $(document).on('click', '#mz-open-feature-settings', openFeatureSettingsModal);
+                });
+                $(document).on('click', '#author-message-link', function(e) { e.preventDefault(); const tempMessengerLink = $(`<a href="/?p=messenger&uid=3111770" class="messenger-link"></a>`); tempMessengerLink.css('display', 'none').appendTo('body'); tempMessengerLink[0].click(); tempMessengerLink.remove(); });
+                $(document).on('click', function(e) {
+                    const panel = $('#mz-global-info-panel');
+                    const button = $('#mz-global-info-btn');
+                    // Panel açıkken, panele veya butona tıklanmadıysa paneli kapat
+                    if (!panel.is(e.target) && panel.has(e.target).length === 0 && !button.is(e.target) && button.has(e.target).length === 0) {
+                        panel.removeClass('visible');
+                    }
+                });
+            });
+        }
+
+        /****************************************************************************************
+ *                                                                                      *
+ *  BÖLÜM 17: OYUNCU BECERİ RENKLENDİRME (Van Style Coloring) - NİHAİ SÜRÜM (v8)         *
+ *                                                                                      *
+ ****************************************************************************************/
+function initializeSkillColoringScript() {
+    'use strict';
+    const $ = unsafeWindow.jQuery;
+    console.log('[MZ Skill Coloring] Modül Başlatıldı (Nihai Sürüm v8 - Panel Durumu Kayıtlı).');
+
+    // ▼▼▼ YENİ EKLENEN KOD BAŞLANGICI ▼▼▼
+    const PANEL_STATE_KEY = 'mz_scout_filter_panel_state';
+
+    // Panel durumunu kaydetmek için helper fonksiyon
+    function savePanelState(isOpen) {
+        localStorage.setItem(PANEL_STATE_KEY, isOpen ? 'open' : 'closed');
+    }
+
+    // Panel durumunu okumak için helper fonksiyon
+    function getSavedPanelState() {
+        return localStorage.getItem(PANEL_STATE_KEY) === 'open';
+    }
+    // ▲▲▲ YENİ EKLENEN KOD SONU ▲▲▲
+
+
+    // --- SABİTLER ---
+    const PERSISTENT_CACHE_KEY = 'mz_scout_report_cache_v7';
+    let persistentCache = {};
+    let currentRosterPids = new Set();
+    let isSyncing = false;
+
+    // --- DİL DESTEĞİ (i18n) ---
+    const i18n_scout = {
+        tr: {
+            filterTitle: "Oyuncu Filtresi",
+            filterHP: "YP (Yüksek Potansiyel):",
+            filterLP: "DP (Düşük Potansiyel):",
+            filterTS: "AH (Ant. Hızı):",
+            applyBtn: "Filtrele",
+            filterCount: (visible, total) => `${visible} / ${total} Oyuncu Görüntüleniyor`,
+            loadingStatus: (newCount) => newCount > 0 ? `Önbellek güncelleniyor: ${newCount} yeni oyuncu taranıyor...` : `Önbellek hazır.`,
+            unscouted: "Gözlemlenmemiş",
+            selectAll: "Tümünü Seç",
+            deselectAll: "Tümünü Kaldır",
+            btnRefreshCache: "Yenile (Tam Tarama)",
+            alertRefreshConfirm: "Tüm oyuncu verilerinin önbelleği silinecek ve tüm oyuncular yeniden taranacaktır. Bu işlem biraz zaman alabilir. Emin misiniz?",
+        },
+        en: {
+            filterTitle: "Player Filter (Fast)",
+            filterHP: "HP (High Potential):",
+            filterLP: "LP (Low Potential):",
+            filterTS: "TS (Train Speed):",
+            applyBtn: "Filter",
+            filterCount: (visible, total) => `${visible} / ${total} Players Displayed`,
+            loadingStatus: (newCount) => newCount > 0 ? `Cache updating: Scanning ${newCount} new players...` : `Cache ready.`,
+            unscouted: "Unscouted",
+            selectAll: "Select All",
+            deselectAll: "Deselect All",
+            btnRefreshCache: "Refresh Cache (Full Scan)",
+            alertRefreshConfirm: "The cache for all player data will be deleted and all players will be rescanned. This may take some time. Are you sure?",
+        }
+    };
+    const lang = ($('meta[name="language"]').attr('content') || 'en') === 'tr' ? 'tr' : 'en';
+    const getText = (key, ...args) => { const t = i18n_scout[lang][key] || i18n_scout['en'][key]; return typeof t === 'function' ? t(...args) : t; };
+
+    // --- CSS STİLLERİ ---
+    GM_addStyle(`
+        .gm_scout_h { font-weight: bold; }
+        .gm_s1 { color: red !important; }
+        .gm_s2 { color: darkgoldenrod !important; }
+        .gm_s3 { color: blue !important; }
+        .gm_s4 { color: fuchsia !important; }
+        .skill_name_colored { transition: color 0.3s; }
+        /* FİLTRE STİLLERİ */
+        #mz-scout-filter-panel-wrapper { margin-top: 10px; margin-bottom: -1px; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #mz-scout-filter-toggle-btn { background: #007bff; color: white; padding: 5px 10px; font-weight: bold; font-size: 14px; cursor: pointer; border-radius: 4px 4px 0 0; text-align: center; user-select: none; transition: background 0.2s; }
+        #mz-scout-filter-toggle-btn:hover { background: #0056b3; }
+        #mz-scout-filter-panel { padding: 10px; background: #f8f9fa; border-top: 1px solid #ddd; border-radius: 0 0 5px 5px; display: flex; flex-direction: column; gap: 10px; }
+        .mz-filter-group { display: flex; align-items: center; gap: 8px; border: 1px solid #ccc; padding: 5px 10px; border-radius: 4px; }
+        .mz-filter-group label { font-size: 13px; cursor: pointer; user-select: none; }
+        .mz-filter-group input[type="checkbox"] { margin-right: 2px; accent-color: #00529B; }
+        #mz-filter-count { font-weight: bold; color: #00529B; font-size: 13px; }
+        #mz-scout-filter-panel { margin-top: 10px; padding: 10px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center; justify-content: space-between; }
+        #mz-filter-actions { display: flex; gap: 10px; margin-top: 10px; }
+        .mz-action-link { font-size: 12px; color: #007bff; text-decoration: none; cursor: pointer; font-weight: bold; }
+        .mz-action-link:hover { text-decoration: underline; }
+        #mz-apply-filter-btn { display: none !important; }
+        .mz-refresh-btn {
+            padding: 4px 10px; background: #FF9800; color: white; border: none; border-radius: 4px;
+            cursor: pointer; font-weight: bold; font-size: 11px; transition: background 0.2s;
+        }
+        .mz-refresh-btn:hover { background: #E68900; }
+    `);
+
+    // --- YARDIMCI FONKSİYONLAR ---
+    function debounce(func, wait) { let timeout; return function(...args) { const context = this; clearTimeout(timeout); timeout = setTimeout(() => func.apply(context, args), wait); }; }
+    async function saveCache() { await GM_setValue(PERSISTENT_CACHE_KEY, JSON.stringify(persistentCache)); }
+    function getPid(container) { return container.find('.player_id_span').text().trim() || null; }
+
+    /**
+     * DOM'daki mevcut kadro ile önbelleği senkronize eder.
+     */
+    async function syncRosterAndCache() {
+        if (isSyncing) return [];
+        isSyncing = true;
+
+        currentRosterPids.clear();
+        $('.playerContainer').each(function() {
+            const pid = getPid($(this));
+            if (pid) currentRosterPids.add(pid);
+        });
+
         try {
-            const savedPosition = JSON.parse(await GM_getValue(POSITION_KEY, 'null'));
-            if (savedPosition && savedPosition.top !== undefined && savedPosition.left !== undefined) {
-                let topVal = parseInt(savedPosition.top);
-                let leftVal = parseInt(savedPosition.left);
-                const winHeight = $(window).height();
-                const winWidth = $(window).width();
-
-                if (!isNaN(topVal) && !isNaN(leftVal) && topVal >= 0 && topVal < winHeight && leftVal >= 0 && leftVal < winWidth) {
-                    infoButton.css({ top: savedPosition.top, left: savedPosition.left, bottom: 'auto', right: 'auto' });
-                }
-            }
-        } catch (e) {
-            console.error("Konum yüklenirken hata oluştu:", e);
+            persistentCache = JSON.parse(await GM_getValue(PERSISTENT_CACHE_KEY, '{}'));
+        } catch(e) {
+            persistentCache = {};
         }
 
-        $('body').append(infoButton).append(infoPanel);
+        const stalePids = [];
+        const newPids = [];
 
-        // MOBİL TOGGLE İÇİN EVENT
-        infoButton.find('#mz-mobile-toggle-btn').on('click', function(e) {
-            e.stopPropagation(); // Butonun sürüklenmesini veya menü açmasını engelle
-            $('#mz-global-info-btn').addClass('mz-minimized');
-            $('#mz-global-info-panel').removeClass('visible'); // Menü açıksa kapat
+        for (const pid in persistentCache) {
+            if (!currentRosterPids.has(pid)) {
+                stalePids.push(pid);
+                delete persistentCache[pid];
+            }
+        }
+        if(stalePids.length > 0) console.log(`[MZ Skill Coloring] ${stalePids.length} giden oyuncu önbellekten silindi.`);
+
+        currentRosterPids.forEach(pid => {
+            if (!persistentCache.hasOwnProperty(pid)) {
+                newPids.push(pid);
+            }
         });
 
-        // Küçültülmüş butona tıklayınca geri açma
-        infoButton.on('click', function(e) {
-            if ($(this).hasClass('mz-minimized')) {
-                e.stopPropagation(); // Menünün hemen açılmasını engelle, önce boyutu düzelt
-                $(this).removeClass('mz-minimized');
+        await saveCache();
+        isSyncing = false;
+        return newPids;
+    }
+
+    /**
+     * Oyuncu kartlarına renkleri ve potansiyel bilgisini uygular.
+     */
+    function applyColors(container, report) {
+        let skillElements = container.find(".player-skills span.responsive-hide.responsive-container, td > span.clippable, td > span.skill_name span:first-child");
+        if (skillElements.length === 0) {
+            skillElements = container.find('td').filter(function(index) { return index >= 5 && index <= 15; }).find('span:first');
+        }
+
+        container.find('.gm_scout_h, .gm_s1, .gm_s2, .gm_s3, .gm_s4').each(function() {
+             $(this).removeClass('gm_scout_h gm_s1 gm_s2 gm_s3 gm_s4 skill_name_colored');
+        });
+
+        skillElements.each(function() {
+            const el = $(this);
+            const skillName = el.text().trim();
+            const parent = el.parent();
+
+            // Yüksek Potansiyel Kontrolü
+            if (report.hp.skills.includes(skillName)) {
+                parent.addClass(`gm_scout_h gm_s${report.hp.stars}`);
+                el.addClass(`gm_scout_h gm_s${report.hp.stars} skill_name_colored`);
             }
+            // Düşük Potansiyel Kontrolü
+            else if (report.lp.skills.includes(skillName)) {
+                parent.addClass(`gm_s${report.lp.stars}`);
+                el.addClass(`gm_s${report.lp.stars} skill_name_colored`);
+            }
+        });
+
+        container.attr({
+            'data-hp-stars': report.hp.stars,
+            'data-lp-stars': report.lp.stars,
+            'data-ts-stars': report.ts.stars,
+            'data-unscouted': report.unscouted
+        }).show();
+    }
+
+    /**
+     * AJAX isteği ile tek bir oyuncu raporunu çeker.
+     */
+    function fetchSingleReport(pid) {
+        return new Promise((resolve, reject) => {
+            const url = `/ajax.php?p=players&sub=scout_report&pid=${pid}&sport=soccer`;
+            GM_xmlhttpRequest({
+                method: "GET", url: url,
+                onload: function(response) {
+                    try {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(response.responseText, "text/html");
+                        const divs = doc.querySelectorAll("dd div.flex-grow-1");
+                        const starSpans = doc.querySelectorAll("dd span.stars");
+                        const countStars = (span) => span ? span.querySelectorAll(".lit").length : 0;
+                        const extractSkills = (el) => Array.from(el.querySelectorAll(".blurred span")).map(s => s.textContent.trim()).filter(t => t !== "Trzxyvopaxis");
+
+                        let hpSkills = [], lpSkills = [];
+                        let hpStars = 0, lpStars = 0, tsStars = 0;
+                        let unscouted = starSpans.length === 0;
+
+                        if (divs.length >= 2) {
+                            hpStars = countStars(starSpans[0]);
+                            hpSkills = extractSkills(divs[0]);
+                            lpStars = countStars(starSpans[1]);
+                            lpSkills = extractSkills(divs[1]);
+                            if(starSpans.length > 2) { tsStars = countStars(starSpans[2]); }
+                        }
+
+                        resolve({
+                            pid: pid,
+                            hp: { stars: hpStars, skills: hpSkills },
+                            lp: { stars: lpStars, skills: lpSkills },
+                            ts: { stars: tsStars },
+                            unscouted: unscouted
+                        });
+                    } catch (e) { reject(e); }
+                },
+                onerror: reject
+            });
         });
     }
 
-    function makeButtonInteractive() {
-        const button = $('#mz-global-info-btn'); let isDragging = false; let hasMoved = false; let startX, startY, offsetX, offsetY;
-        button.on('mousedown touchstart', function(e) {
-            // Eğer küçültülmüşse sürüklemeyi engelle
-            if(button.hasClass('mz-minimized')) return;
+    /**
+     * Yeni oyuncuların raporlarını çeker ve önbelleği günceller.
+     */
+    async function fetchNewReports(newPids) {
+        const statusEl = $('#mz-filter-count');
+        if (newPids.length === 0) {
+            statusEl.text(getText('loadingStatus', 0));
+            return;
+        }
 
-            const evt = e.type === 'touchstart' ? e.originalEvent.touches[0] : e;
-            if (e.type === 'mousedown' && e.which !== 1) return;
-            // e.preventDefault(); // Touch scrollu engellememesi için mobilde dikkatli kullanılmalı
-            if(e.type === 'mousedown') e.preventDefault();
+        for (let i = 0; i < newPids.length; i++) {
+            const pid = newPids[i];
+            statusEl.text(getText('loadingStatus', newPids.length - i));
+            try {
+                const report = await fetchSingleReport(pid);
+                persistentCache[pid] = report;
+                await saveCache();
+                const container = $(`.playerContainer:has(.player_id_span:contains('${pid}'))`);
+                if (container.length) applyColors(container, report);
+                await new Promise(r => setTimeout(r, 100));
+            } catch (e) {
+                console.error(`[MZ Skill Coloring] Yeni oyuncu ${pid} için rapor çekilemedi.`, e);
+            }
+        }
+        statusEl.text(getText('loadingStatus', 0));
+    }
 
-            startX = evt.clientX; startY = evt.clientY;
-            const buttonPos = button.offset();
-            offsetX = evt.clientX - buttonPos.left;
-            offsetY = evt.clientY - buttonPos.top;
 
-            if(e.type === 'touchstart') {
-                $(document).on('touchmove.interactive', onMouseMove);
-                $(document).on('touchend.interactive', onMouseUp);
+    /**
+     * Filtre arayüzünü DOM'a ekler. (YP/AH 2★ eklendi, Panel Durumu Kaydı)
+     */
+    function addScoutFilterUI() {
+        const target = $('.playerContainer h2.subheader').first().closest('.playerContainer');
+        if (target.length === 0 || $('#mz-scout-filter-panel-wrapper').length > 0) return;
+
+        const filterHTML = `
+            <div id="mz-scout-filter-panel" style="padding: 10px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 0 0 5px 5px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center; justify-content: space-between;">
+
+                    <!-- YP FİLTRESİ (4★, 3★, 2★) -->
+                    <div class="mz-filter-group" data-filter-type="hp">
+                        <span style="font-weight: bold; color: #00529B;">${getText('filterHP')}</span>
+                        <label><input type="checkbox" class="mz-scout-filter" data-filter-type="hp" data-star="4" checked> 4★</label>
+                        <label><input type="checkbox" class="mz-scout-filter" data-filter-type="hp" data-star="3" checked> 3★</label>
+                        <label><input type="checkbox" class="mz-scout-filter" data-filter-type="hp" data-star="2" checked> 2★</label>
+                    </div>
+
+                    <!-- DP FİLTRESİ -->
+                    <div class="mz-filter-group" data-filter-type="lp">
+                        <span style="font-weight: bold; color: #00529B;">${getText('filterLP')}</span>
+                        <label><input type="checkbox" class="mz-scout-filter" data-filter-type="lp" data-star="2" checked> 2★</label>
+                        <label><input type="checkbox" class="mz-scout-filter" data-filter-type="lp" data-star="1" checked> 1★</label>
+                    </div>
+
+                    <!-- AH FİLTRESİ (1★, 2★, 3★, 4★) -->
+                    <div class="mz-filter-group" data-filter-type="ts">
+                        <span style="font-weight: bold; color: #00529B;">${getText('filterTS')}</span>
+                        <label><input type="checkbox" class="mz-scout-filter" data-filter-type="ts" data-star="4" checked> 4★</label>
+                        <label><input type="checkbox" class="mz-scout-filter" data-filter-type="ts" data-star="3" checked> 3★</label>
+                        <label><input type="checkbox" class="mz-scout-filter" data-filter-type="ts" data-star="2" checked> 2★</label>
+                        <label><input type="checkbox" class="mz-scout-filter" data-filter-type="ts" data-star="1" checked> 1★</label>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #dee2e6; padding-top: 10px;">
+                    <span id="mz-filter-count" style="font-weight: bold;">${getText('loadingStatus', 0)}</span>
+                    <div id="mz-filter-actions">
+                        <button id="mz-refresh-cache-btn" class="mz-refresh-btn">${getText('btnRefreshCache')}</button>
+                        <a href="#" id="mz-select-all-filters" class="mz-action-link">${getText('selectAll')}</a>
+                        <a href="#" id="mz-deselect-all-filters" class="mz-action-link">${getText('deselectAll')}</a>
+                    </div>
+                </div>
+
+            </div>
+        `;
+
+        const wrapperHTML = `
+            <div id="mz-scout-filter-panel-wrapper" style="margin-top: 10px; margin-bottom: -1px; border: 1px solid #ddd; border-bottom: none; border-radius: 5px 5px 0 0;">
+                <div id="mz-scout-filter-toggle-btn" style="background: #007bff; color: white; padding: 5px 10px; font-weight: bold; font-size: 14px; cursor: pointer; border-radius: 4px 4px 0 0; text-align: center; user-select: none;">
+                    🔍 ${getText('filterTitle')}
+                </div>
+                ${filterHTML}
+            </div>
+        `;
+
+        target.before(wrapperHTML);
+        $('#mz-scout-filter-panel').hide();
+
+        // Olay Atamaları
+        $('#mz-scout-filter-toggle-btn').on('click', (e) => {
+            e.preventDefault();
+            const panel = $('#mz-scout-filter-panel');
+            panel.slideToggle(200, function() {
+                // Kapatma/Açma işlemi bittikten sonra durumu kaydet
+                savePanelState(panel.is(':visible'));
+            });
+            $('#mz-scout-filter-toggle-btn').css('background', panel.is(':visible') ? '#dc3545' : '#007bff');
+        });
+
+        const debouncedFilter = debounce(applyScoutFilters, 150);
+
+        // Checkbox değişimi anında filtrelemeyi tetikle
+        $('.mz-scout-filter').on('change', debouncedFilter);
+
+        // ÖNBELLEK YENİLEME BUTONU OLAYI
+        $('#mz-refresh-cache-btn').on('click', async (e) => {
+            e.preventDefault();
+            if (confirm(getText('alertRefreshConfirm'))) {
+                await GM_deleteValue(PERSISTENT_CACHE_KEY);
+                // Panel durumunu kaydet (açık olarak) ve sayfayı yenile
+                savePanelState(true);
+                alert("Önbellek temizlendi. Yeniden tarama başlatılıyor...");
+                location.reload();
+            }
+        });
+
+        // EKLE/KALDIR DÜĞMELERİNİN FONKSİYONLARI
+        $('#mz-select-all-filters').on('click', (e) => {
+            e.preventDefault();
+            $('.mz-scout-filter').prop('checked', true).trigger('change');
+        });
+
+        $('#mz-deselect-all-filters').on('click', (e) => {
+            e.preventDefault();
+            $('.mz-scout-filter').prop('checked', false).trigger('change');
+        });
+
+        // Sayfa yüklendiğinde paneli açma mantığı
+        const isPanelInitiallyOpen = getSavedPanelState();
+        if (isPanelInitiallyOpen) {
+            $('#mz-scout-filter-panel').show();
+            $('#mz-scout-filter-toggle-btn').css('background', '#dc3545');
+        } else {
+            // İlk yüklemede durumu kaydet (varsayılan: kapalı)
+            savePanelState(false);
+        }
+    }
+
+    /**
+     * Filtreleme mantığını uygular (AND Mantığı)
+     */
+    function applyScoutFilters() {
+        const filters = {
+            hp: $('.mz-scout-filter[data-filter-type="hp"]:checked').map(function() { return parseInt($(this).data('star')); }).get(),
+            lp: $('.mz-scout-filter[data-filter-type="lp"]:checked').map(function() { return parseInt($(this).data('star')); }).get(),
+            ts: $('.mz-scout-filter[data-filter-type="ts"]:checked').map(function() { return parseInt($(this).data('star')); }).get()
+        };
+
+        let visibleCount = 0;
+        let totalCount = 0;
+
+        $('.playerContainer').each(function() {
+            const container = $(this);
+            const pid = getPid(container);
+            const report = persistentCache[pid];
+            totalCount++;
+
+            // Eğer oyuncu henüz taranmamışsa (yeni eklenmiş) görünür kalsın
+            if (!report) {
+                container.show();
+                visibleCount++;
+                return;
+            }
+
+            // Gözlemlenmemiş oyuncuysa gizle
+            if (report.unscouted) {
+                container.hide();
+                return;
+            }
+
+            // --- FİLTRE MANTIĞI (AND) ---
+
+            // 1. HP filtresi (Seçili değer yoksa başarılı)
+            const passesHP = filters.hp.length === 0 || filters.hp.includes(report.hp.stars);
+
+            // 2. LP filtresi
+            const passesLP = filters.lp.length === 0 || filters.lp.includes(report.lp.stars);
+
+            // 3. TS filtresi
+            const passesTS = filters.ts.length === 0 || filters.ts.includes(report.ts.stars);
+
+            // Tüm filtre gruplarını sağlıyorsa göster.
+            if (passesHP && passesLP && passesTS) {
+                container.show();
+                visibleCount++;
             } else {
-                $(document).on('mousemove.interactive', onMouseMove);
-                $(document).on('mouseup.interactive', onMouseUp);
+                container.hide();
             }
         });
 
-        function onMouseMove(e) {
-            const evt = e.type === 'touchmove' ? e.originalEvent.touches[0] : e;
-            if (!isDragging) {
-                const moveThreshold = 5;
-                if (Math.abs(evt.clientX - startX) > moveThreshold || Math.abs(evt.clientY - startY) > moveThreshold) {
-                    isDragging = true; hasMoved = true; button.addClass('is-dragging');
-                }
-            }
-            if (isDragging) {
-                if(e.type === 'touchmove') e.preventDefault(); // Sürüklerken sayfa kaymasını engelle
-                updatePosition(evt);
-            }
-        }
+        $('#mz-filter-count').text(getText('filterCount', visibleCount, totalCount));
+    }
 
-        function updatePosition(e) {
-            let newLeft = e.clientX - offsetX; let newTop = e.clientY - offsetY;
-            const buttonWidth = button.outerWidth(); const buttonHeight = button.outerHeight();
-            const windowWidth = $(window).width(); const windowHeight = $(window).height();
-            newLeft = Math.max(0, Math.min(newLeft, windowWidth - buttonWidth));
-            newTop = Math.max(0, Math.min(newTop, windowHeight - buttonHeight));
-            button.css({ top: newTop, left: newLeft, bottom: 'auto', right: 'auto' });
-        }
 
-        async function onMouseUp(e) {
-            $(document).off('mousemove.interactive mouseup.interactive touchmove.interactive touchend.interactive');
-            if (isDragging) {
-                const finalPosition = { top: button.css('top'), left: button.css('left') };
-                await GM_setValue(POSITION_KEY, JSON.stringify(finalPosition));
+    /**
+     * Oyuncu kartlarını renklendirir (Senkronizasyonun ilk adımı)
+     */
+    function processPlayersInitial() {
+        $('.playerContainer').each(function() {
+            const container = $(this);
+            const pid = getPid(container);
+
+            if (pid && persistentCache[pid]) {
+                applyColors(container, persistentCache[pid]);
+            } else {
+                container.show(); // Veri yoksa göster
             }
-            if (!hasMoved && !button.hasClass('mz-minimized')) {
-                // Eğer buton minimize değilse ve sürüklenmediyse menüyü aç/kapat
-                // Tıklanan yer toggle butonu değilse (zaten yukarıda stopPropagation var ama garanti olsun)
-                if(!$(e.target).is('#mz-mobile-toggle-btn')) {
-                    positionPanelRelativeToButton();
-                    $('#mz-global-info-panel').toggleClass('visible');
-                }
-            }
-            isDragging = false; hasMoved = false; button.removeClass('is-dragging');
+        });
+
+        // Renklendirme bitti, filtreleme panelini oluştur ve filtreyi uygula
+        addScoutFilterUI();
+        applyScoutFilters();
+    }
+
+
+    // --- ANA BAŞLATICI ---
+    async function init() {
+        const newPids = await syncRosterAndCache();
+        processPlayersInitial();
+
+        if (newPids.length > 0) {
+            fetchNewReports(newPids).then(() => {
+                applyScoutFilters();
+                console.log("[MZ Skill Coloring] Yeni oyuncu taraması tamamlandı ve filtre güncellendi.");
+            });
         }
     }
 
-    function positionPanelRelativeToButton() {
-        const button = $('#mz-global-info-btn'); const panel = $('#mz-global-info-panel'); const margin = 10;
-        panel.css({ visibility: 'hidden', display: 'block' }); const panelWidth = panel.outerWidth(); const panelHeight = panel.outerHeight(); panel.css({ visibility: '', display: '' });
-        const buttonOffset = button.offset(); const buttonWidth = button.outerWidth(); const buttonHeight = button.outerHeight(); const windowWidth = $(window).width(); const windowHeight = $(window).height();
-        const buttonCenterX = buttonOffset.left + buttonWidth / 2; const buttonCenterY = buttonOffset.top + buttonHeight / 2;
-        let targetTop, targetLeft;
+    // Başlatıcı
+    if (window.location.href.includes('p=players')) {
+        setTimeout(init, 500);
 
-        // Dikey Konumlandırma
-        if (buttonCenterY > windowHeight / 2) {
-            targetTop = buttonOffset.top - panelHeight - margin;
-        } else {
-            targetTop = buttonOffset.top + buttonHeight + margin;
-        }
-
-        // Yatay Konumlandırma
-        if (buttonCenterX > windowWidth / 2) {
-            targetLeft = buttonOffset.left + buttonWidth - panelWidth;
-        } else {
-            targetLeft = buttonOffset.left;
-        }
-
-        // Ekran sınırlarını aşmasını engelle
-        targetLeft = Math.max(margin, Math.min(targetLeft, windowWidth - panelWidth - margin));
-        targetTop = Math.max(margin, Math.min(targetTop, windowHeight - panelHeight - margin));
-
-        panel.css({ top: `${targetTop}px`, left: `${targetLeft}px`, bottom: 'auto', right: 'auto' });
-    }
-
-    // --- Başlatıcı ---
-    $(document).ready(function() {
-        createFeatureSettingsModal();
-        createMenu().then(() => {
-            makeButtonInteractive();
-            $(document).on('click', '#mz-open-feature-settings', openFeatureSettingsModal);
-        });
-        $(document).on('click', '#author-message-link', function(e) { e.preventDefault(); const tempMessengerLink = $(`<a href="/?p=messenger&uid=3111770" class="messenger-link"></a>`); tempMessengerLink.css('display', 'none').appendTo('body'); tempMessengerLink[0].click(); tempMessengerLink.remove(); });
-        $(document).on('click', function(e) {
-            const panel = $('#mz-global-info-panel');
-            const button = $('#mz-global-info-btn');
-            // Panel açıkken, panele veya butona tıklanmadıysa paneli kapat
-            if (!panel.is(e.target) && panel.has(e.target).length === 0 && !button.is(e.target) && button.has(e.target).length === 0) {
-                panel.removeClass('visible');
+        const observer = new MutationObserver(debounce(() => {
+            const target = document.querySelector('#squad_container');
+            if (target && target.childElementCount > 0) {
+                init();
             }
-        });
-    });
+        }, 250));
+
+        const targetNode = document.body;
+        observer.observe(targetNode, { childList: true, subtree: true });
+    }
 }
+
+      /****************************************************************************************
+         *                                                                                      *
+         *  BÖLÜM 18: YETENEK RENKLENDİRİCİ - FINAL V5 (ORİJİNAL RENK MANTIĞI + İKON)           *
+         *                                                                                      *
+         ****************************************************************************************/
+        function initializeMaxedBallColoringScript() {
+            'use strict';
+            const $ = unsafeWindow.jQuery;
+            console.log('[MZ Ball Colorizer] Modül Başlatıldı (Strict Color + Icon).');
+
+            // 1. RESİMLER (BASE64)
+            const IMG_RED = "data:image/gif;base64,R0lGODlhDAAKAJEDAP////8AAMyZmf///yH5BAEAAAMALAAAAAAMAAoAAAIk3BQZYp0CAAptxvjMgojTEVwKpl0dCQrQJX3T+jpLNDXGlDUFADs=";
+            const IMG_BLUE = "data:image/gif;base64,R0lGODlhDAAKAJEDAP///8zM/wAA/////yH5BAEAAAMALAAAAAAMAAoAAAIk3CIpYZ0BABJtxvjMgojTIVwKpl0dCQbQJX3T+jpLNDXGlDUFADs=";
+
+            // 2. HTML OLUŞTURUCU
+            function generateBallHtml(count, imgSource, extraIconsHtml) {
+                if (!count || count < 0) count = 0;
+
+                let html = '<div class="mz-custom-skill-container" style="display:inline-flex; align-items:center; vertical-align:middle; white-space:nowrap; height: 12px;">';
+
+                // Topları ekle
+                for (let i = 0; i < count; i++) {
+                    html += `<img src="${imgSource}" style="vertical-align:middle; margin-right:1px;">`;
+                }
+
+                // Yeşil antrenman ikonu varsa ekle
+                if (extraIconsHtml) {
+                    html += `<span class="mz-training-icon-wrapper" style="margin-left:6px; display:inline-flex; align-items:center;">${extraIconsHtml}</span>`;
+                }
+
+                html += '</div>';
+                return html;
+            }
+
+            // 3. ANA RENKLENDİRME FONKSİYONU
+            function colorizeBalls() {
+                $('img.skill').each(function() {
+                    const img = $(this);
+                    const src = img.attr('src') || '';
+                    const altText = img.attr('alt') || '';
+                    const parentRow = img.closest('tr'); // Değişkeni burada bir kez tanımlıyoruz
+
+                    // --- YENİ EKLEME: Tecrübe ve Form satırlarını boyama (Pas geç) ---
+                    const skillLabel = parentRow.find('td:first').text().toLowerCase();
+                    if (skillLabel.includes('tecrübe') ||
+                        skillLabel.includes('experience') ||
+                        skillLabel.includes('form')) {
+                        return;
+                    }
+                    // ---------------------------------------------------------------
+
+                    // A) Eğer bu resim yeşil antrenman ikonuysa (blevel), işleme ama GİZLEME.
+                    if (src.includes('blevel')) {
+                        if (img.parent().find('.mz-custom-skill-container').length > 0) {
+                            img.hide();
+                        }
+                        return;
+                    }
+
+                    // B) Zaten işlenmiş mi?
+                    if (img.next().hasClass('mz-custom-skill-container')) return;
+
+                    // C) Değeri Bulma (Alt Etiketi Yöntemi - En Güvenlisi)
+                    let skillValue = 0;
+                    if (altText) {
+                        const parts = altText.split(':');
+                        if (parts.length > 1) {
+                            skillValue = parseInt(parts[1].trim(), 10);
+                        }
+                    }
+
+                    if (!skillValue || isNaN(skillValue)) {
+                        const text = parentRow.text();
+                        const matches = text.match(/\((\d+)\)/);
+                        if (matches && matches[1]) {
+                            skillValue = parseInt(matches[1], 10);
+                        }
+                    }
+
+                    if (!skillValue || isNaN(skillValue)) return;
+
+                    // D) Renk Kararı (ORİJİNAL MANTIK)
+                    // Not: parentRow yukarıda tanımlandığı için burada tekrar 'const' kullanmıyoruz.
+                    let isMaxed = parentRow.find('.maxed').length > 0;
+
+                    if (!isMaxed) {
+                        isMaxed = parentRow.find('font, span').filter(function() {
+                            const color = $(this).css('color');
+                            const attrColor = $(this).attr('color');
+                            return (color === 'rgb(255, 0, 0)' || color === 'red' || attrColor === 'red');
+                        }).length > 0;
+                    }
+
+                    const targetImg = isMaxed ? IMG_RED : IMG_BLUE;
+
+                    // E) Yeşil İkonu Yakalama ve Kopyalama
+                    let extraIconsHtml = '';
+                    const parentDiv = img.parent();
+
+                    parentDiv.find('img').each(function() {
+                        const sSrc = $(this).attr('src') || '';
+                        if (sSrc.includes('blevel')) {
+                            let cleanHtml = this.outerHTML.replace(/style="[^"]*display:\s*none[^"]*"/g, '').replace('display: none', '');
+                            extraIconsHtml += cleanHtml;
+                            $(this).hide();
+                        }
+                    });
+
+                    // F) Değişimi Uygula
+                    img.hide();
+                    const newHtml = generateBallHtml(skillValue, targetImg, extraIconsHtml);
+                    img.after(newHtml);
+                });
+            }
+
+            // Sayfa yüklenince çalıştır
+            setTimeout(colorizeBalls, 500);
+
+            // AJAX takibi
+            const observer = new MutationObserver(function(mutations) {
+                let shouldRun = false;
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length > 0 && !$(mutation.target).hasClass('mz-custom-skill-container')) {
+                        shouldRun = true;
+                    }
+                });
+                if (shouldRun) setTimeout(colorizeBalls, 200);
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
+        }
 
 
         /****************************************************************************************
@@ -6065,6 +6672,20 @@
                 if ((p_param === 'league') || (p_param === 'match' && sub_param === 'result')) {
                     runModule("Link Enhancements", initializeLinkEnhancements);
                 }
+            }
+
+            if (scriptSettings.transferScoutFilter && p_param === 'transfer') {
+                runModule("Transfer Scout Filter", initializeTransferScoutFilterScript);
+            }
+
+            // ▼▼▼ YENİ EKLENECEK KISIM BURASI ▼▼▼
+            // Transfer, Oyuncular veya Kısa Liste sayfalarında çalışsın
+            if (p_param === 'transfer' || p_param === 'players' || p_param === 'shortlist') {
+                runModule("Skill Coloring (Van Style)", initializeSkillColoringScript);
+            }
+            // ▲▲▲ YENİ EKLENECEK KISIM BURASI ▲▲▲
+            if (scriptSettings.maxedBallColoring && (p_param === 'transfer' || p_param === 'players' || p_param === 'shortlist')) {
+                runModule("Maxed Skill Ball Colorizer", initializeMaxedBallColoringScript);
             }
         }
 
@@ -6484,344 +7105,344 @@
                     <tbody>${generateTableRowsHTML(matches)}</tbody>
                 </table>
             </div>`;
-        document.body.appendChild(modal);
+            document.body.appendChild(modal);
 
-        modal.querySelector('.lmf-modal-close').onclick = () => { modal.style.display = 'none'; };
-        modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
-        document.querySelectorAll('.lmf-type-checkbox, input[name="resultFilter"], #lmf-time-filter').forEach(el => el.addEventListener('change', handleFilterChange));
-        document.getElementById('lmf-select-all').addEventListener('click', () => toggleAllCheckboxes(true));
-        document.getElementById('lmf-deselect-all').addEventListener('click', () => toggleAllCheckboxes(false));
-        document.getElementById('lmf-review-button').addEventListener('click', runVisualReview);
-        const tableBody = modal.querySelector('#lmf-results-table tbody');
-        tableBody.addEventListener('mouseover', handleScoreHover);
-        tableBody.addEventListener('mouseout', handleScoreMouseOut);
-        handleFilterChange();
-    }
-
-function handleFilterChange() {
-    const selectedResult = document.querySelector('input[name="resultFilter"]:checked').value;
-    const checkedBoxes = document.querySelectorAll('.lmf-type-checkbox:checked');
-    const selectedTypes = Array.from(checkedBoxes).map(cb => cb.value);
-    const selectedTimeRange = document.getElementById('lmf-time-filter').value;
-    let filteredMatches = allFoundMatches;
-    if (selectedResult !== 'All') { filteredMatches = filteredMatches.filter(match => match.result === selectedResult); }
-    filteredMatches = filteredMatches.filter(match => selectedTypes.includes(match.type));
-    if (selectedTimeRange !== 'all') {
-        const now = new Date();
-        const daysToSubtract = selectedTimeRange === '1week' ? 7 : 14;
-        const cutoffDate = new Date();
-        cutoffDate.setDate(now.getDate() - daysToSubtract);
-        cutoffDate.setHours(0, 0, 0, 0);
-        filteredMatches = filteredMatches.filter(match => match.matchDateObject >= cutoffDate);
-    }
-    currentFilteredMatches = filteredMatches;
-    document.querySelector('#lmf-results-table tbody').innerHTML = generateTableRowsHTML(filteredMatches);
-    const titleEl = document.getElementById('lmf-modal-dynamic-title');
-    if (titleEl) { titleEl.innerHTML = getText('modalTitle', currentSearchInput, filteredMatches.length); }
-}
-
-function createTacticTooltip() {
-    if (document.getElementById('lmf-tactic-tooltip')) return;
-    const tooltip = document.createElement('div');
-    tooltip.id = 'lmf-tactic-tooltip';
-    document.body.appendChild(tooltip);
-}
-
-function getModifiedTacticImage(imageUrl, colorToReplace, callback) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-    img.crossOrigin = 'Anonymous';
-    img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
-        const targetRgb = colorToReplace === 'Sarı' ? [255, 255, 0] : [0, 0, 0];
-        const replacementRgb = [0, 191, 255];
-        for (let i = 0; i < data.length; i += 4) {
-            const redDiff = Math.abs(data[i] - targetRgb[0]);
-            const greenDiff = Math.abs(data[i + 1] - targetRgb[1]);
-            const blueDiff = Math.abs(data[i + 2] - targetRgb[2]);
-            const tolerance = 30;
-            if (redDiff < tolerance && greenDiff < tolerance && blueDiff < tolerance) {
-                data[i] = replacementRgb[0]; data[i + 1] = replacementRgb[1]; data[i + 2] = replacementRgb[2];
-            }
+            modal.querySelector('.lmf-modal-close').onclick = () => { modal.style.display = 'none'; };
+            modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+            document.querySelectorAll('.lmf-type-checkbox, input[name="resultFilter"], #lmf-time-filter').forEach(el => el.addEventListener('change', handleFilterChange));
+            document.getElementById('lmf-select-all').addEventListener('click', () => toggleAllCheckboxes(true));
+            document.getElementById('lmf-deselect-all').addEventListener('click', () => toggleAllCheckboxes(false));
+            document.getElementById('lmf-review-button').addEventListener('click', runVisualReview);
+            const tableBody = modal.querySelector('#lmf-results-table tbody');
+            tableBody.addEventListener('mouseover', handleScoreHover);
+            tableBody.addEventListener('mouseout', handleScoreMouseOut);
+            handleFilterChange();
         }
-        ctx.putImageData(imageData, 0, 0);
-        callback(canvas.toDataURL());
-    };
-    img.onerror = () => { callback(null); };
-    img.src = imageUrl;
-}
 
-function handleScoreHover(e) {
-    const scoreCell = e.target.closest('.lmf-score-cell');
-    if (!scoreCell) return;
-    const isHome = scoreCell.dataset.ishome === 'true';
-    const ourColorName = isHome ? 'Sarı' : 'Siyah';
-    const matchIdLink = scoreCell.querySelector('a').href;
-    const matchIdMatch = matchIdLink.match(/match_id=(\d+)|mid=(\d+)/);
-    if (!matchIdMatch) return;
-    const matchId = matchIdMatch[1] || matchIdMatch[2];
-    const tacticImageUrl = `https://www.managerzone.com/dynimg/pitch.php?match_id=${matchId}`;
-    const cacheKey = `${matchId}-${ourColorName}`;
-    const tooltip = document.getElementById('lmf-tactic-tooltip');
-    const updateTooltipPosition = (event) => {
-        tooltip.style.visibility = 'hidden'; tooltip.style.display = 'block';
-        const tooltipRect = tooltip.getBoundingClientRect();
-        let top = event.pageY + 15; let left = event.pageX + 15;
-        if (top + tooltipRect.height > window.innerHeight + window.scrollY) { top = event.pageY - tooltipRect.height - 15; }
-        if (left + tooltipRect.width > window.innerWidth + window.scrollX) { left = event.pageX - tooltipRect.width - 15; }
-        tooltip.style.top = `${top}px`; tooltip.style.left = `${left}px`;
-        tooltip.style.visibility = 'visible';
-    };
-    const displayImage = (imageUrl) => {
-        const rotationStyle = !isHome ? 'style="transform: rotate(180deg);"' : '';
-        tooltip.innerHTML = `<img src="${imageUrl}" ${rotationStyle} alt="Processed Tactic Board">`;
-        updateTooltipPosition(e);
-    };
-    if (tacticImageCache[cacheKey]) { displayImage(tacticImageCache[cacheKey]); }
-    else {
-        tooltip.innerHTML = `<div class="tooltip-loading">${getText('tooltipProcessing')}</div>`;
-        updateTooltipPosition(e);
-        getModifiedTacticImage(tacticImageUrl, ourColorName, (modifiedDataUrl) => {
-            if (modifiedDataUrl) {
-                tacticImageCache[cacheKey] = modifiedDataUrl;
-                if (scoreCell.matches(':hover')) displayImage(modifiedDataUrl);
-            } else {
-                tooltip.innerHTML = `<div class="tooltip-loading">${getText('tooltipImageError')}</div>`;
-                updateTooltipPosition(e);
+        function handleFilterChange() {
+            const selectedResult = document.querySelector('input[name="resultFilter"]:checked').value;
+            const checkedBoxes = document.querySelectorAll('.lmf-type-checkbox:checked');
+            const selectedTypes = Array.from(checkedBoxes).map(cb => cb.value);
+            const selectedTimeRange = document.getElementById('lmf-time-filter').value;
+            let filteredMatches = allFoundMatches;
+            if (selectedResult !== 'All') { filteredMatches = filteredMatches.filter(match => match.result === selectedResult); }
+            filteredMatches = filteredMatches.filter(match => selectedTypes.includes(match.type));
+            if (selectedTimeRange !== 'all') {
+                const now = new Date();
+                const daysToSubtract = selectedTimeRange === '1week' ? 7 : 14;
+                const cutoffDate = new Date();
+                cutoffDate.setDate(now.getDate() - daysToSubtract);
+                cutoffDate.setHours(0, 0, 0, 0);
+                filteredMatches = filteredMatches.filter(match => match.matchDateObject >= cutoffDate);
             }
-        });
-    }
-}
+            currentFilteredMatches = filteredMatches;
+            document.querySelector('#lmf-results-table tbody').innerHTML = generateTableRowsHTML(filteredMatches);
+            const titleEl = document.getElementById('lmf-modal-dynamic-title');
+            if (titleEl) { titleEl.innerHTML = getText('modalTitle', currentSearchInput, filteredMatches.length); }
+        }
 
-function handleScoreMouseOut() { const tooltip = document.getElementById('lmf-tactic-tooltip'); if (tooltip) tooltip.style.display = 'none'; }
+        function createTacticTooltip() {
+            if (document.getElementById('lmf-tactic-tooltip')) return;
+            const tooltip = document.createElement('div');
+            tooltip.id = 'lmf-tactic-tooltip';
+            document.body.appendChild(tooltip);
+        }
 
-async function runVisualReview() {
-    const reviewBtn = document.getElementById('lmf-review-button');
-    const statusEl = document.getElementById('lmf-review-progress-status');
-    if (!currentFilteredMatches || currentFilteredMatches.length === 0) { alert(getText('alertFilterFirst')); return; }
-    reviewBtn.disabled = true; reviewBtn.textContent = getText('reviewButtonPreparing');
-    statusEl.textContent = getText('reviewProgress', 0, currentFilteredMatches.length);
-    const matchPromises = currentFilteredMatches.map((match, index) => {
-        return new Promise(async (resolve) => {
-            const matchIdMatch = match.link.match(/match_id=(\d+)|mid=(\d+)/);
-            if (!matchIdMatch) return resolve(null);
+        function getModifiedTacticImage(imageUrl, colorToReplace, callback) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            img.crossOrigin = 'Anonymous';
+            img.onload = () => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                const targetRgb = colorToReplace === 'Sarı' ? [255, 255, 0] : [0, 0, 0];
+                const replacementRgb = [0, 191, 255];
+                for (let i = 0; i < data.length; i += 4) {
+                    const redDiff = Math.abs(data[i] - targetRgb[0]);
+                    const greenDiff = Math.abs(data[i + 1] - targetRgb[1]);
+                    const blueDiff = Math.abs(data[i + 2] - targetRgb[2]);
+                    const tolerance = 30;
+                    if (redDiff < tolerance && greenDiff < tolerance && blueDiff < tolerance) {
+                        data[i] = replacementRgb[0]; data[i + 1] = replacementRgb[1]; data[i + 2] = replacementRgb[2];
+                    }
+                }
+                ctx.putImageData(imageData, 0, 0);
+                callback(canvas.toDataURL());
+            };
+            img.onerror = () => { callback(null); };
+            img.src = imageUrl;
+        }
+
+        function handleScoreHover(e) {
+            const scoreCell = e.target.closest('.lmf-score-cell');
+            if (!scoreCell) return;
+            const isHome = scoreCell.dataset.ishome === 'true';
+            const ourColorName = isHome ? 'Sarı' : 'Siyah';
+            const matchIdLink = scoreCell.querySelector('a').href;
+            const matchIdMatch = matchIdLink.match(/match_id=(\d+)|mid=(\d+)/);
+            if (!matchIdMatch) return;
             const matchId = matchIdMatch[1] || matchIdMatch[2];
             const tacticImageUrl = `https://www.managerzone.com/dynimg/pitch.php?match_id=${matchId}`;
-            const ourColor = match.isHome ? 'Sarı' : 'Siyah';
-            const cacheKey = `${matchId}-${ourColor}`;
-            const processImage = (imageUrl) => {
-                getModifiedTacticImage(imageUrl, ourColor, (modifiedDataUrl) => {
+            const cacheKey = `${matchId}-${ourColorName}`;
+            const tooltip = document.getElementById('lmf-tactic-tooltip');
+            const updateTooltipPosition = (event) => {
+                tooltip.style.visibility = 'hidden'; tooltip.style.display = 'block';
+                const tooltipRect = tooltip.getBoundingClientRect();
+                let top = event.pageY + 15; let left = event.pageX + 15;
+                if (top + tooltipRect.height > window.innerHeight + window.scrollY) { top = event.pageY - tooltipRect.height - 15; }
+                if (left + tooltipRect.width > window.innerWidth + window.scrollX) { left = event.pageX - tooltipRect.width - 15; }
+                tooltip.style.top = `${top}px`; tooltip.style.left = `${left}px`;
+                tooltip.style.visibility = 'visible';
+            };
+            const displayImage = (imageUrl) => {
+                const rotationStyle = !isHome ? 'style="transform: rotate(180deg);"' : '';
+                tooltip.innerHTML = `<img src="${imageUrl}" ${rotationStyle} alt="Processed Tactic Board">`;
+                updateTooltipPosition(e);
+            };
+            if (tacticImageCache[cacheKey]) { displayImage(tacticImageCache[cacheKey]); }
+            else {
+                tooltip.innerHTML = `<div class="tooltip-loading">${getText('tooltipProcessing')}</div>`;
+                updateTooltipPosition(e);
+                getModifiedTacticImage(tacticImageUrl, ourColorName, (modifiedDataUrl) => {
                     if (modifiedDataUrl) {
                         tacticImageCache[cacheKey] = modifiedDataUrl;
-                        statusEl.textContent = getText('reviewProgress', index + 1, currentFilteredMatches.length);
-                        resolve({ ...match, imageDataUrl: modifiedDataUrl });
-                    } else { resolve(null); }
+                        if (scoreCell.matches(':hover')) displayImage(modifiedDataUrl);
+                    } else {
+                        tooltip.innerHTML = `<div class="tooltip-loading">${getText('tooltipImageError')}</div>`;
+                        updateTooltipPosition(e);
+                    }
                 });
-            };
-            if (tacticImageCache[cacheKey]) {
-                statusEl.textContent = getText('reviewProgress', index + 1, currentFilteredMatches.length);
-                resolve({ ...match, imageDataUrl: tacticImageCache[cacheKey] });
-            } else { processImage(tacticImageUrl); }
-        });
-    });
-    const reviewedMatches = (await Promise.all(matchPromises)).filter(Boolean);
-    statusEl.textContent = ''; reviewBtn.disabled = false; reviewBtn.textContent = getText('viewTacticsButton');
-    displayVisualReviewModal(reviewedMatches);
-}
+            }
+        }
 
-function displayVisualReviewModal(matches) {
-    let modal = document.getElementById('lmf-visual-review-modal');
-    if (modal) modal.remove();
-    const resultsHTML = matches.map(match => {
-        const rotationStyle = !match.isHome ? 'style="transform: rotate(180deg);"' : '';
-        const scoreClass = `score-${match.result.toLowerCase()}`;
-        return `<div class="visual-tactic-item"><img src="${match.imageDataUrl}" ${rotationStyle} alt="Tactic Board"><div class="visual-tactic-info"><p class="opponent">vs ${match.opponent}</p><p class="score ${scoreClass}">${match.score}</p><p class="tournament-type" style="font-size: 12px; color: #99A3A4; margin-top: 4px;">${match.type}</p></div></div>`; // <-- YENİ EKLENEN SATIR BURADA
-    }).join('');
-    modal = document.createElement('div');
-    modal.id = 'lmf-visual-review-modal';
-    modal.innerHTML = `
+        function handleScoreMouseOut() { const tooltip = document.getElementById('lmf-tactic-tooltip'); if (tooltip) tooltip.style.display = 'none'; }
+
+        async function runVisualReview() {
+            const reviewBtn = document.getElementById('lmf-review-button');
+            const statusEl = document.getElementById('lmf-review-progress-status');
+            if (!currentFilteredMatches || currentFilteredMatches.length === 0) { alert(getText('alertFilterFirst')); return; }
+            reviewBtn.disabled = true; reviewBtn.textContent = getText('reviewButtonPreparing');
+            statusEl.textContent = getText('reviewProgress', 0, currentFilteredMatches.length);
+            const matchPromises = currentFilteredMatches.map((match, index) => {
+                return new Promise(async (resolve) => {
+                    const matchIdMatch = match.link.match(/match_id=(\d+)|mid=(\d+)/);
+                    if (!matchIdMatch) return resolve(null);
+                    const matchId = matchIdMatch[1] || matchIdMatch[2];
+                    const tacticImageUrl = `https://www.managerzone.com/dynimg/pitch.php?match_id=${matchId}`;
+                    const ourColor = match.isHome ? 'Sarı' : 'Siyah';
+                    const cacheKey = `${matchId}-${ourColor}`;
+                    const processImage = (imageUrl) => {
+                        getModifiedTacticImage(imageUrl, ourColor, (modifiedDataUrl) => {
+                            if (modifiedDataUrl) {
+                                tacticImageCache[cacheKey] = modifiedDataUrl;
+                                statusEl.textContent = getText('reviewProgress', index + 1, currentFilteredMatches.length);
+                                resolve({ ...match, imageDataUrl: modifiedDataUrl });
+                            } else { resolve(null); }
+                        });
+                    };
+                    if (tacticImageCache[cacheKey]) {
+                        statusEl.textContent = getText('reviewProgress', index + 1, currentFilteredMatches.length);
+                        resolve({ ...match, imageDataUrl: tacticImageCache[cacheKey] });
+                    } else { processImage(tacticImageUrl); }
+                });
+            });
+            const reviewedMatches = (await Promise.all(matchPromises)).filter(Boolean);
+            statusEl.textContent = ''; reviewBtn.disabled = false; reviewBtn.textContent = getText('viewTacticsButton');
+            displayVisualReviewModal(reviewedMatches);
+        }
+
+        function displayVisualReviewModal(matches) {
+            let modal = document.getElementById('lmf-visual-review-modal');
+            if (modal) modal.remove();
+            const resultsHTML = matches.map(match => {
+                const rotationStyle = !match.isHome ? 'style="transform: rotate(180deg);"' : '';
+                const scoreClass = `score-${match.result.toLowerCase()}`;
+                return `<div class="visual-tactic-item"><img src="${match.imageDataUrl}" ${rotationStyle} alt="Tactic Board"><div class="visual-tactic-info"><p class="opponent">vs ${match.opponent}</p><p class="score ${scoreClass}">${match.score}</p><p class="tournament-type" style="font-size: 12px; color: #99A3A4; margin-top: 4px;">${match.type}</p></div></div>`; // <-- YENİ EKLENEN SATIR BURADA
+            }).join('');
+            modal = document.createElement('div');
+            modal.id = 'lmf-visual-review-modal';
+            modal.innerHTML = `
             <div class="lmf-modal-content">
                 <span class="lmf-modal-close">×</span>
                 <div class="lmf-modal-title">${getText('visualReviewTitle', matches.length)}</div>
                 <div id="lmf-visual-review-results">${resultsHTML}</div>
             </div>`;
-        document.body.appendChild(modal);
-        modal.style.display = 'block';
-        modal.querySelector('.lmf-modal-close').onclick = () => { modal.style.display = 'none'; };
-        modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
-    }
+            document.body.appendChild(modal);
+            modal.style.display = 'block';
+            modal.querySelector('.lmf-modal-close').onclick = () => { modal.style.display = 'none'; };
+            modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+        }
 
-function generateTableRowsHTML(matches) {
-    if (!matches || matches.length === 0) return `<tr><td colspan="4" style="text-align:center; padding: 20px;">${getText('noMatchesFound')}</td></tr>`;
-    return matches.map(m => {
-        const scoreClass = `lmf-score-cell-${m.result.toLowerCase()}`;
-        return `<tr><td>${m.date}</td><td>${m.type}</td><td>${m.opponent}</td><td class="lmf-score-cell ${scoreClass}" data-ishome="${m.isHome}"><a href="${m.link}" target="_blank">${m.score}</a></td></tr>`;
-    }).join('');
-}
+        function generateTableRowsHTML(matches) {
+            if (!matches || matches.length === 0) return `<tr><td colspan="4" style="text-align:center; padding: 20px;">${getText('noMatchesFound')}</td></tr>`;
+            return matches.map(m => {
+                const scoreClass = `lmf-score-cell-${m.result.toLowerCase()}`;
+                return `<tr><td>${m.date}</td><td>${m.type}</td><td>${m.opponent}</td><td class="lmf-score-cell ${scoreClass}" data-ishome="${m.isHome}"><a href="${m.link}" target="_blank">${m.score}</a></td></tr>`;
+            }).join('');
+        }
 
-function createInitialUI() {
-    const container = document.createElement('div');
-    container.id = 'lmf-container';
-    container.innerHTML = `
+        function createInitialUI() {
+            const container = document.createElement('div');
+            container.id = 'lmf-container';
+            container.innerHTML = `
             <label for="lmf-team-input">${getText('teamUserInputLabel')}</label>
             <input type="text" id="lmf-team-input" placeholder="${getText('teamUserInputPlaceholder')}">
             <button id="lmf-find-button">${getText('findMatchesButton')}</button>
             <span id="lmf-status"></span>
             <div id="lmf-search-results" style="display:none;"></div>`;
-        const targetArea = document.querySelector('#results-fixtures-header');
-        if (targetArea) {
-            targetArea.insertAdjacentElement('afterend', container);
-            document.getElementById('lmf-find-button').addEventListener('click', startSearch);
-        }
-    }
-
-function startSearch() {
-    const searchInput = document.getElementById('lmf-team-input').value.trim();
-    if (!searchInput) return;
-    const button = document.getElementById('lmf-find-button');
-    const statusEl = document.getElementById('lmf-status');
-    const resultsContainer = document.getElementById('lmf-search-results');
-    const quickSearchInput = document.getElementById('quickSearchField');
-    const searchResponseContainer = document.getElementById('quickSearchResponseContainer');
-    if (!quickSearchInput || !searchResponseContainer) { statusEl.textContent = getText('errorSearchComponents'); return; }
-    button.disabled = true; statusEl.textContent = getText('statusSearching');
-    resultsContainer.innerHTML = ''; resultsContainer.style.display = 'none';
-    const observer = new MutationObserver((mutations, obs) => {
-        obs.disconnect();
-        const links = Array.from(searchResponseContainer.querySelectorAll('a'));
-        if (links.length === 0) { statusEl.textContent = getText('statusNotFound'); button.disabled = false; return; }
-        const exactMatches = links.filter(link => link.textContent.trim().toLowerCase() === searchInput.toLowerCase());
-        if (exactMatches.length > 0) {
-            let targetLink = exactMatches.find(link => link.href.includes('&tid=')) || exactMatches[0];
-            statusEl.textContent = getText('statusExactMatch', targetLink.textContent.trim());
-            processSelection(targetLink.href, targetLink.textContent.trim());
-            return;
-        }
-        if (links.length === 1) {
-            let targetLink = links[0];
-            statusEl.textContent = getText('statusSingleMatch', targetLink.textContent.trim());
-            processSelection(targetLink.href, targetLink.textContent.trim());
-            return;
-        }
-        statusEl.textContent = getText('statusMultipleMatches');
-        links.forEach(link => {
-            const href = link.href;
-            const name = link.textContent.trim();
-            let type = href.includes('&tid=') ? getText('resultTypeTeam') : (href.includes('&uid=') ? getText('resultTypeUser') : getText('resultTypeUnknown'));
-            const resultDiv = document.createElement('div');
-            resultDiv.innerHTML = `<span>${name}</span> <span class="result-type">${type}</span>`;
-            resultDiv.addEventListener('click', () => {
-                resultsContainer.style.display = 'none';
-                statusEl.textContent = getText('statusSelected', name);
-                button.disabled = true; processSelection(href, name);
-            });
-            resultsContainer.appendChild(resultDiv);
-        });
-        resultsContainer.style.display = 'block'; button.disabled = false;
-    });
-    observer.observe(searchResponseContainer, { childList: true, subtree: true });
-    quickSearchInput.value = searchInput;
-    quickSearchInput.dispatchEvent(new Event('focus', { bubbles: true }));
-    quickSearchInput.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
-}
-
-async function processSelection(url, teamNameFromLink) {
-    const button = document.getElementById('lmf-find-button');
-    const statusEl = document.getElementById('lmf-status');
-    let teamId = null;
-    let finalTeamName = teamNameFromLink || document.getElementById('lmf-team-input').value.trim();
-    try {
-        if (url.includes('&tid=')) { const match = url.match(/tid=(\d+)/); if (match) teamId = match[1]; }
-        else if (url.includes('&uid=')) {
-            statusEl.textContent = getText('statusScanningProfile');
-            const userMatch = url.match(/uid=(\d+)/);
-            if (userMatch) {
-                const userId = userMatch[1];
-                const profileUrl = `https://www.managerzone.com/?p=profile&uid=${userId}`;
-                const profileResponse = await fetch(profileUrl);
-                const profileHtml = await profileResponse.text();
-                const profileDoc = new DOMParser().parseFromString(profileHtml, 'text/html');
-                const profileTeamLink = profileDoc.querySelector('a[href*="p=team&tid="]');
-                if (profileTeamLink) { const teamMatch = profileTeamLink.href.match(/tid=(\d+)/); if (teamMatch) teamId = teamMatch[1]; }
+            const targetArea = document.querySelector('#results-fixtures-header');
+            if (targetArea) {
+                targetArea.insertAdjacentElement('afterend', container);
+                document.getElementById('lmf-find-button').addEventListener('click', startSearch);
             }
         }
-        if (!teamId) { throw new Error(getText('errorInvalidTid')); }
-        await fetchAndScrapeMatches(teamId, finalTeamName);
-    } catch (error) { statusEl.textContent = getText('statusErrorPrefix') + error.message; button.disabled = false; }
-}
 
-async function fetchAndScrapeMatches(teamId, teamName) {
-    const statusEl = document.getElementById('lmf-status');
-    if (statusEl) statusEl.textContent = getText('statusFetchingMatches', teamId);
-    try {
-        const matchesUrl = `https://www.managerzone.com/?p=match&sub=played&tid=${teamId}&limit=max`;
-        const matchesResponse = await fetch(matchesUrl);
-        if (!matchesResponse.ok) throw new Error(getText('errorFetchingList', matchesResponse.status));
-        const matchesHtml = await matchesResponse.text();
-        const matchesDoc = new DOMParser().parseFromString(matchesHtml, 'text/html');
-        scrapeAndDisplayAllMatches(teamName, matchesDoc);
-    } catch (error) {
-        if (statusEl) { statusEl.textContent = getText('statusErrorPrefix') + error.message; document.getElementById('lmf-find-button').disabled = false; }
-        else { console.error('MZ Advanced Match Finder Error:', error); alert(getText('alertFetchError', error.message)); }
-    }
-}
-
-function updateMainButtonToToggleModal(teamName) {
-    const button = document.getElementById('lmf-find-button');
-    const statusEl = document.getElementById('lmf-status');
-    const modal = document.getElementById('lmf-results-modal');
-    if (!button || !statusEl || !modal) return;
-    button.textContent = getText('showResultsButton');
-    statusEl.textContent = getText('statusComplete', allFoundMatches.length);
-    button.disabled = false;
-    button.removeEventListener('click', startSearch);
-    button.addEventListener('click', () => { modal.style.display = 'block'; });
-}
-
-function toggleAllCheckboxes(shouldBeChecked) { document.querySelectorAll('.lmf-type-checkbox').forEach(cb => cb.checked = shouldBeChecked); handleFilterChange(); }
-
-function initializeFixturesPage() {
-    const analysisIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="cursor: pointer;" title="${getText('analyzeOpponentTitle')}"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><line x1="12" y1="3" x2="12" y2="22"></line><line x1="12" y1="12" x2="18" y2="9"></line><line x1="6" y1="9" x2="12" y2="12"></line></svg>`;
-    const matchRows = document.querySelectorAll('#fixtures-results-list > dd:not(.group)');
-    matchRows.forEach(row => {
-        const opponentLink = row.querySelector('a.clippable:not(:has(strong))');
-        if (opponentLink) {
-            const opponentName = opponentLink.querySelector('.full-name').textContent.trim();
-            const opponentUrl = opponentLink.href;
-            const tidMatch = opponentUrl.match(/tid=(\d+)/);
-            if (tidMatch) {
-                const opponentTid = tidMatch[1];
-                const iconWrapper = document.createElement('span');
-                iconWrapper.innerHTML = analysisIconSVG;
-                iconWrapper.style.marginLeft = '8px'; iconWrapper.style.display = 'inline-flex'; iconWrapper.style.alignItems = 'center'; iconWrapper.style.verticalAlign = 'middle';
-                iconWrapper.addEventListener('click', (e) => {
-                    e.preventDefault(); e.stopPropagation();
-                    const svgIcon = iconWrapper.firstElementChild;
-                    svgIcon.style.color = '#e74c3c'; svgIcon.style.transform = 'scale(1.2)'; svgIcon.setAttribute('title', getText('analyzingOpponentTitle'));
-                    fetchAndScrapeMatches(opponentTid, opponentName).finally(() => {
-                        svgIcon.style.color = 'currentColor'; svgIcon.style.transform = 'scale(1)'; svgIcon.setAttribute('title', getText('analyzeOpponentTitle'));
+        function startSearch() {
+            const searchInput = document.getElementById('lmf-team-input').value.trim();
+            if (!searchInput) return;
+            const button = document.getElementById('lmf-find-button');
+            const statusEl = document.getElementById('lmf-status');
+            const resultsContainer = document.getElementById('lmf-search-results');
+            const quickSearchInput = document.getElementById('quickSearchField');
+            const searchResponseContainer = document.getElementById('quickSearchResponseContainer');
+            if (!quickSearchInput || !searchResponseContainer) { statusEl.textContent = getText('errorSearchComponents'); return; }
+            button.disabled = true; statusEl.textContent = getText('statusSearching');
+            resultsContainer.innerHTML = ''; resultsContainer.style.display = 'none';
+            const observer = new MutationObserver((mutations, obs) => {
+                obs.disconnect();
+                const links = Array.from(searchResponseContainer.querySelectorAll('a'));
+                if (links.length === 0) { statusEl.textContent = getText('statusNotFound'); button.disabled = false; return; }
+                const exactMatches = links.filter(link => link.textContent.trim().toLowerCase() === searchInput.toLowerCase());
+                if (exactMatches.length > 0) {
+                    let targetLink = exactMatches.find(link => link.href.includes('&tid=')) || exactMatches[0];
+                    statusEl.textContent = getText('statusExactMatch', targetLink.textContent.trim());
+                    processSelection(targetLink.href, targetLink.textContent.trim());
+                    return;
+                }
+                if (links.length === 1) {
+                    let targetLink = links[0];
+                    statusEl.textContent = getText('statusSingleMatch', targetLink.textContent.trim());
+                    processSelection(targetLink.href, targetLink.textContent.trim());
+                    return;
+                }
+                statusEl.textContent = getText('statusMultipleMatches');
+                links.forEach(link => {
+                    const href = link.href;
+                    const name = link.textContent.trim();
+                    let type = href.includes('&tid=') ? getText('resultTypeTeam') : (href.includes('&uid=') ? getText('resultTypeUser') : getText('resultTypeUnknown'));
+                    const resultDiv = document.createElement('div');
+                    resultDiv.innerHTML = `<span>${name}</span> <span class="result-type">${type}</span>`;
+                    resultDiv.addEventListener('click', () => {
+                        resultsContainer.style.display = 'none';
+                        statusEl.textContent = getText('statusSelected', name);
+                        button.disabled = true; processSelection(href, name);
                     });
+                    resultsContainer.appendChild(resultDiv);
                 });
-                opponentLink.insertAdjacentElement('afterend', iconWrapper);
+                resultsContainer.style.display = 'block'; button.disabled = false;
+            });
+            observer.observe(searchResponseContainer, { childList: true, subtree: true });
+            quickSearchInput.value = searchInput;
+            quickSearchInput.dispatchEvent(new Event('focus', { bubbles: true }));
+            quickSearchInput.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
+        }
+
+        async function processSelection(url, teamNameFromLink) {
+            const button = document.getElementById('lmf-find-button');
+            const statusEl = document.getElementById('lmf-status');
+            let teamId = null;
+            let finalTeamName = teamNameFromLink || document.getElementById('lmf-team-input').value.trim();
+            try {
+                if (url.includes('&tid=')) { const match = url.match(/tid=(\d+)/); if (match) teamId = match[1]; }
+                else if (url.includes('&uid=')) {
+                    statusEl.textContent = getText('statusScanningProfile');
+                    const userMatch = url.match(/uid=(\d+)/);
+                    if (userMatch) {
+                        const userId = userMatch[1];
+                        const profileUrl = `https://www.managerzone.com/?p=profile&uid=${userId}`;
+                        const profileResponse = await fetch(profileUrl);
+                        const profileHtml = await profileResponse.text();
+                        const profileDoc = new DOMParser().parseFromString(profileHtml, 'text/html');
+                        const profileTeamLink = profileDoc.querySelector('a[href*="p=team&tid="]');
+                        if (profileTeamLink) { const teamMatch = profileTeamLink.href.match(/tid=(\d+)/); if (teamMatch) teamId = teamMatch[1]; }
+                    }
+                }
+                if (!teamId) { throw new Error(getText('errorInvalidTid')); }
+                await fetchAndScrapeMatches(teamId, finalTeamName);
+            } catch (error) { statusEl.textContent = getText('statusErrorPrefix') + error.message; button.disabled = false; }
+        }
+
+        async function fetchAndScrapeMatches(teamId, teamName) {
+            const statusEl = document.getElementById('lmf-status');
+            if (statusEl) statusEl.textContent = getText('statusFetchingMatches', teamId);
+            try {
+                const matchesUrl = `https://www.managerzone.com/?p=match&sub=played&tid=${teamId}&limit=max`;
+                const matchesResponse = await fetch(matchesUrl);
+                if (!matchesResponse.ok) throw new Error(getText('errorFetchingList', matchesResponse.status));
+                const matchesHtml = await matchesResponse.text();
+                const matchesDoc = new DOMParser().parseFromString(matchesHtml, 'text/html');
+                scrapeAndDisplayAllMatches(teamName, matchesDoc);
+            } catch (error) {
+                if (statusEl) { statusEl.textContent = getText('statusErrorPrefix') + error.message; document.getElementById('lmf-find-button').disabled = false; }
+                else { console.error('MZ Advanced Match Finder Error:', error); alert(getText('alertFetchError', error.message)); }
             }
         }
-    });
-}
 
-function main() {
-    addStyles();
-    createTacticTooltip();
-    if (window.location.href.includes('sub=scheduled')) { initializeFixturesPage(); }
-    else if (window.location.href.includes('sub=played')) { createInitialUI(); }
-}
+        function updateMainButtonToToggleModal(teamName) {
+            const button = document.getElementById('lmf-find-button');
+            const statusEl = document.getElementById('lmf-status');
+            const modal = document.getElementById('lmf-results-modal');
+            if (!button || !statusEl || !modal) return;
+            button.textContent = getText('showResultsButton');
+            statusEl.textContent = getText('statusComplete', allFoundMatches.length);
+            button.disabled = false;
+            button.removeEventListener('click', startSearch);
+            button.addEventListener('click', () => { modal.style.display = 'block'; });
+        }
 
-main();
-}
+        function toggleAllCheckboxes(shouldBeChecked) { document.querySelectorAll('.lmf-type-checkbox').forEach(cb => cb.checked = shouldBeChecked); handleFilterChange(); }
+
+        function initializeFixturesPage() {
+            const analysisIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="cursor: pointer;" title="${getText('analyzeOpponentTitle')}"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><line x1="12" y1="3" x2="12" y2="22"></line><line x1="12" y1="12" x2="18" y2="9"></line><line x1="6" y1="9" x2="12" y2="12"></line></svg>`;
+            const matchRows = document.querySelectorAll('#fixtures-results-list > dd:not(.group)');
+            matchRows.forEach(row => {
+                const opponentLink = row.querySelector('a.clippable:not(:has(strong))');
+                if (opponentLink) {
+                    const opponentName = opponentLink.querySelector('.full-name').textContent.trim();
+                    const opponentUrl = opponentLink.href;
+                    const tidMatch = opponentUrl.match(/tid=(\d+)/);
+                    if (tidMatch) {
+                        const opponentTid = tidMatch[1];
+                        const iconWrapper = document.createElement('span');
+                        iconWrapper.innerHTML = analysisIconSVG;
+                        iconWrapper.style.marginLeft = '8px'; iconWrapper.style.display = 'inline-flex'; iconWrapper.style.alignItems = 'center'; iconWrapper.style.verticalAlign = 'middle';
+                        iconWrapper.addEventListener('click', (e) => {
+                            e.preventDefault(); e.stopPropagation();
+                            const svgIcon = iconWrapper.firstElementChild;
+                            svgIcon.style.color = '#e74c3c'; svgIcon.style.transform = 'scale(1.2)'; svgIcon.setAttribute('title', getText('analyzingOpponentTitle'));
+                            fetchAndScrapeMatches(opponentTid, opponentName).finally(() => {
+                                svgIcon.style.color = 'currentColor'; svgIcon.style.transform = 'scale(1)'; svgIcon.setAttribute('title', getText('analyzeOpponentTitle'));
+                            });
+                        });
+                        opponentLink.insertAdjacentElement('afterend', iconWrapper);
+                    }
+                }
+            });
+        }
+
+        function main() {
+            addStyles();
+            createTacticTooltip();
+            if (window.location.href.includes('sub=scheduled')) { initializeFixturesPage(); }
+            else if (window.location.href.includes('sub=played')) { createInitialUI(); }
+        }
+
+        main();
+    }
 
 /****************************************************************************************
  *                                                                                      *
@@ -6883,121 +7504,121 @@ function initializeRetirementIndicatorScript() {
             }
         `);
 
-        const retirementDataJSON = await GM_getValue(RETIREMENT_DATA_KEY, '{}');
-        const retirementData = JSON.parse(retirementDataJSON);
+            const retirementDataJSON = await GM_getValue(RETIREMENT_DATA_KEY, '{}');
+            const retirementData = JSON.parse(retirementDataJSON);
 
-        if (Object.keys(retirementData).length === 0) {
-            return; // Gösterilecek veri yoksa çık.
+            if (Object.keys(retirementData).length === 0) {
+                return; // Gösterilecek veri yoksa çık.
+            }
+
+            // Hem masaüstü hem mobil tabloyu hedef alıyoruz.
+            const tableRows = document.querySelectorAll('#playerAltViewTable tbody tr, .alt-view-table-mobile tbody tr');
+
+            tableRows.forEach(row => {
+                const checkbox = row.querySelector('input.snapshot__check-player');
+                let pid = checkbox ? checkbox.dataset.playerId : null;
+
+                if (!pid) {
+                    const playerLinkEl = row.querySelector('a[href*="&pid="]');
+                    if (playerLinkEl) {
+                        const urlParams = new URLSearchParams(new URL(playerLinkEl.href).search);
+                        pid = urlParams.get('pid');
+                    }
+                }
+
+                if (pid && retirementData[pid]) {
+                    const nameCell = row.cells[1] || row.cells[0]; // Masaüstü için 1, mobil için 0. hücre
+                    const playerLink = nameCell ? nameCell.querySelector('a') : null;
+
+                    // Eğer oyuncu linki varsa ve daha önce ikon eklenmemişse devam et.
+                    if (playerLink && !nameCell.querySelector('.retirement-indicator-container')) {
+                        const iconContainer = document.createElement('span');
+                        iconContainer.className = 'retirement-indicator-container';
+                        iconContainer.style.display = 'inline-flex';
+                        iconContainer.style.alignItems = 'center';
+                        iconContainer.style.gap = '4px';
+                        iconContainer.style.marginRight = '6px';
+                        iconContainer.style.verticalAlign = 'middle';
+
+                        const warningIcon = document.createElement('i');
+                        warningIcon.className = 'fa fa-exclamation-triangle';
+                        warningIcon.style.fontSize = '14px';
+                        warningIcon.style.color = '#e60000';
+                        warningIcon.style.cursor = 'help';
+                        warningIcon.style.lineHeight = '1';
+                        warningIcon.title = getText('retireWarning');
+                        iconContainer.appendChild(warningIcon);
+
+                        if (retirementData[pid].extendable) {
+                            const heartContainer = document.createElement('span');
+                            heartContainer.className = 'player_icon_placeholder view_extend_career';
+                            heartContainer.title = getText('canExtendRetirement');
+                            heartContainer.style.cursor = 'help';
+                            heartContainer.style.margin = '0';
+                            heartContainer.style.padding = '0';
+                            heartContainer.style.display = 'inline-flex';
+                            heartContainer.style.alignItems = 'center';
+
+                            const heartIcon = document.createElement('i');
+                            heartIcon.className = 'fa-duotone fa-heart-pulse extend-career-icon';
+                            heartIcon.style.fontSize = '14px';
+
+                            const iconWrapper = document.createElement('span');
+                            iconWrapper.className = 'player_icon_wrapper';
+                            iconWrapper.style.display = 'inline-flex';
+                            iconWrapper.style.alignItems = 'center';
+                            iconWrapper.appendChild(heartIcon);
+
+                            heartContainer.appendChild(iconWrapper);
+                            iconContainer.appendChild(heartContainer);
+                        }
+
+                        playerLink.before(iconContainer);
+                    }
+                }
+            });
+            console.log(`[Emeklilik Göstergesi] İkonlar başarıyla uygulandı.`);
         }
 
-        // Hem masaüstü hem mobil tabloyu hedef alıyoruz.
-        const tableRows = document.querySelectorAll('#playerAltViewTable tbody tr, .alt-view-table-mobile tbody tr');
-
-        tableRows.forEach(row => {
-            const checkbox = row.querySelector('input.snapshot__check-player');
-            let pid = checkbox ? checkbox.dataset.playerId : null;
-
-            if (!pid) {
-                const playerLinkEl = row.querySelector('a[href*="&pid="]');
-                if (playerLinkEl) {
-                    const urlParams = new URLSearchParams(new URL(playerLinkEl.href).search);
-                    pid = urlParams.get('pid');
-                }
-            }
-
-            if (pid && retirementData[pid]) {
-                const nameCell = row.cells[1] || row.cells[0]; // Masaüstü için 1, mobil için 0. hücre
-                const playerLink = nameCell ? nameCell.querySelector('a') : null;
-
-                // Eğer oyuncu linki varsa ve daha önce ikon eklenmemişse devam et.
-                if (playerLink && !nameCell.querySelector('.retirement-indicator-container')) {
-                    const iconContainer = document.createElement('span');
-                    iconContainer.className = 'retirement-indicator-container';
-                    iconContainer.style.display = 'inline-flex';
-                    iconContainer.style.alignItems = 'center';
-                    iconContainer.style.gap = '4px';
-                    iconContainer.style.marginRight = '6px';
-                    iconContainer.style.verticalAlign = 'middle';
-
-                    const warningIcon = document.createElement('i');
-                    warningIcon.className = 'fa fa-exclamation-triangle';
-                    warningIcon.style.fontSize = '14px';
-                    warningIcon.style.color = '#e60000';
-                    warningIcon.style.cursor = 'help';
-                    warningIcon.style.lineHeight = '1';
-                    warningIcon.title = getText('retireWarning');
-                    iconContainer.appendChild(warningIcon);
-
-                    if (retirementData[pid].extendable) {
-                        const heartContainer = document.createElement('span');
-                        heartContainer.className = 'player_icon_placeholder view_extend_career';
-                        heartContainer.title = getText('canExtendRetirement');
-                        heartContainer.style.cursor = 'help';
-                        heartContainer.style.margin = '0';
-                        heartContainer.style.padding = '0';
-                        heartContainer.style.display = 'inline-flex';
-                        heartContainer.style.alignItems = 'center';
-
-                        const heartIcon = document.createElement('i');
-                        heartIcon.className = 'fa-duotone fa-heart-pulse extend-career-icon';
-                        heartIcon.style.fontSize = '14px';
-
-                        const iconWrapper = document.createElement('span');
-                        iconWrapper.className = 'player_icon_wrapper';
-                        iconWrapper.style.display = 'inline-flex';
-                        iconWrapper.style.alignItems = 'center';
-                        iconWrapper.appendChild(heartIcon);
-
-                        heartContainer.appendChild(iconWrapper);
-                        iconContainer.appendChild(heartContainer);
-                    }
-
-                    playerLink.before(iconContainer);
-                }
-            }
-        });
-        console.log(`[Emeklilik Göstergesi] İkonlar başarıyla uygulandı.`);
-    }
-
-    /**
+        /**
      * ▼▼▼ YENİ FONKSİYON: AJAX DEĞİŞİKLİKLERİNİ İZLEYİCİ ▼▼▼
      * Bu fonksiyon, tablo içeriği değiştiğinde displayRetirementIcons'ı tekrar tetikler.
      */
-    function setupAjaxObserver() {
-        // Filtreleme sonucunda içeriği değişen ana kapsayıcıyı hedef alıyoruz.
-        const targetNode = document.getElementById('squad_summary');
+        function setupAjaxObserver() {
+            // Filtreleme sonucunda içeriği değişen ana kapsayıcıyı hedef alıyoruz.
+            const targetNode = document.getElementById('squad_summary');
 
-        if (!targetNode) {
-            console.warn("[Emeklilik Göstergesi] Gözlemlenecek hedef ('squad_summary') bulunamadı.");
-            return;
+            if (!targetNode) {
+                console.warn("[Emeklilik Göstergesi] Gözlemlenecek hedef ('squad_summary') bulunamadı.");
+                return;
+            }
+
+            const observer = new MutationObserver(mutations => {
+                // Herhangi bir değişiklik algılandığında, fonksiyonumuzu tekrar çalıştırıyoruz.
+                // Küçük bir gecikme, DOM'un tamamen oturmasını garantiler.
+                setTimeout(displayRetirementIcons, 100);
+            });
+
+            // Gözlemciyi, hedef elementin altındaki eleman değişikliklerini izleyecek şekilde ayarlıyoruz.
+            observer.observe(targetNode, { childList: true, subtree: true });
+            console.log("[Emeklilik Göstergesi] AJAX gözlemcisi aktif.");
         }
 
-        const observer = new MutationObserver(mutations => {
-            // Herhangi bir değişiklik algılandığında, fonksiyonumuzu tekrar çalıştırıyoruz.
-            // Küçük bir gecikme, DOM'un tamamen oturmasını garantiler.
-            setTimeout(displayRetirementIcons, 100);
-        });
+        // --- Modül Yönlendiricisi ---
+        const params = new URLSearchParams(window.location.search);
+        const sub = params.get('sub');
 
-        // Gözlemciyi, hedef elementin altındaki eleman değişikliklerini izleyecek şekilde ayarlıyoruz.
-        observer.observe(targetNode, { childList: true, subtree: true });
-        console.log("[Emeklilik Göstergesi] AJAX gözlemcisi aktif.");
+        if (sub === 'alt') {
+            // Sayfa ilk yüklendiğinde ve AJAX ile güncellendiğinde çalışacak yapıyı kuruyoruz.
+            setTimeout(() => {
+                displayRetirementIcons(); // 1. Sayfa ilk açıldığında ikonları ekle.
+                setupAjaxObserver();      // 2. Gelecekteki tüm filtreleme işlemleri için gözlemciyi başlat.
+            }, 500); // Sayfanın tam olarak oturması için yarım saniye beklemek her zaman daha sağlıklıdır.
+        } else if (!params.has('pid')) {
+            // Diğer oyuncular sayfalarında (profil görünümleri) tarama yapmaya devam ediyoruz.
+            scanAndStoreRetirementData();
+        }
     }
-
-    // --- Modül Yönlendiricisi ---
-    const params = new URLSearchParams(window.location.search);
-    const sub = params.get('sub');
-
-    if (sub === 'alt') {
-        // Sayfa ilk yüklendiğinde ve AJAX ile güncellendiğinde çalışacak yapıyı kuruyoruz.
-        setTimeout(() => {
-            displayRetirementIcons(); // 1. Sayfa ilk açıldığında ikonları ekle.
-            setupAjaxObserver();      // 2. Gelecekteki tüm filtreleme işlemleri için gözlemciyi başlat.
-        }, 500); // Sayfanın tam olarak oturması için yarım saniye beklemek her zaman daha sağlıklıdır.
-    } else if (!params.has('pid')) {
-        // Diğer oyuncular sayfalarında (profil görünümleri) tarama yapmaya devam ediyoruz.
-        scanAndStoreRetirementData();
-    }
-}
 
 /****************************************************************************************
      *                                                                                      *
@@ -7064,9 +7685,9 @@ function initializeRankingPageTweaks() {
                             <i class="fa fa-star fa-stack-1x"></i>
                         </span>`;
 
-                    newCell.appendChild(scoutLink);
-                }
+                newCell.appendChild(scoutLink);
             }
+        }
             // Yeni hücreyi, mesaj ikonundan sonraki sütuna ekle
             row.cells[2].insertAdjacentElement('afterend', newCell);
         });
@@ -7120,117 +7741,117 @@ function initializeMessengerEnhancements() {
         .messenger-convo-checkbox { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; cursor: pointer; z-index: 10; }
     `);
 
-    let uiInitialized = false;
+        let uiInitialized = false;
 
-    // --- Arayüz ve Olay Yöneticileri ---
-    function addBulkControls(jNode) {
-        if (uiInitialized) return;
-        const controlsContainer = $('<div id="messenger-bulk-controls"></div>');
-        const selectAllLink = $(`<a>${getText('selectAll')}</a>`).on('click', (e) => { e.preventDefault(); toggleCheckboxes(true); });
-        const deselectAllLink = $(`<a>${getText('deselectAll')}</a>`).on('click', (e) => { e.preventDefault(); toggleCheckboxes(false); });
-        const deleteButton = $(`<a class="delete-btn">${getText('deleteSelected')}</a>`).on('click', (e) => { e.preventDefault(); handleDeleteSelected(); });
-        controlsContainer.append(selectAllLink, deselectAllLink, deleteButton).insertBefore(jNode);
-        uiInitialized = true;
-    }
-
-    function addConversationCheckbox(jNode) {
-        if (jNode.find('.messenger-convo-checkbox').length === 0) {
-            const checkbox = $('<input type="checkbox" class="messenger-convo-checkbox">');
-            checkbox.on('click', (event) => event.stopPropagation());
-            jNode.prepend(checkbox);
-        }
-    }
-
-    function toggleCheckboxes(checkedState) {
-        $('.messenger-convo-checkbox').prop('checked', checkedState);
-    }
-
-    async function handleDeleteSelected() {
-        const selected = $('.messenger-convo-checkbox:checked');
-        if (selected.length === 0) { alert(getText('noSelection')); return; }
-        // Bu seferki onay, betiğin kendi onayıdır. Diğerleri çıkmayacak.
-        if (!confirm(getText('confirmDelete', selected.length))) { return; }
-
-        const conversationsToDelete = [];
-        selected.each(function() {
-            conversationsToDelete.push($(this).closest('.notification'));
-        });
-
-        const deleteButton = $('#msg-delete-selected');
-        const originalText = deleteButton.text();
-        deleteButton.css('pointer-events', 'none');
-
-        for (let i = 0; i < conversationsToDelete.length; i++) {
-            const convoElement = conversationsToDelete[i];
-            deleteButton.text(getText('deleting', i + 1, conversationsToDelete.length));
-            try {
-                // Kullanıcı tıklamalarını taklit eden yeni fonksiyonu çağır
-                await deleteSingleConversationBySimulation(convoElement);
-                // Başarılı olursa ekrandan kaldır
-                convoElement.fadeOut(300, function() { $(this).remove(); });
-            } catch (error) {
-                console.error(`Bir sohbet silinirken hata oluştu:`, error);
-                convoElement.css('background-color', 'rgba(255, 0, 0, 0.3)');
-            }
-            await new Promise(resolve => setTimeout(resolve, 500)); // Adımlar arasına biraz bekleme ekle
+        // --- Arayüz ve Olay Yöneticileri ---
+        function addBulkControls(jNode) {
+            if (uiInitialized) return;
+            const controlsContainer = $('<div id="messenger-bulk-controls"></div>');
+            const selectAllLink = $(`<a>${getText('selectAll')}</a>`).on('click', (e) => { e.preventDefault(); toggleCheckboxes(true); });
+            const deselectAllLink = $(`<a>${getText('deselectAll')}</a>`).on('click', (e) => { e.preventDefault(); toggleCheckboxes(false); });
+            const deleteButton = $(`<a class="delete-btn">${getText('deleteSelected')}</a>`).on('click', (e) => { e.preventDefault(); handleDeleteSelected(); });
+            controlsContainer.append(selectAllLink, deselectAllLink, deleteButton).insertBefore(jNode);
+            uiInitialized = true;
         }
 
-        deleteButton.text(originalText).css('pointer-events', 'auto');
-        alert(getText('deletionComplete'));
-    }
-
-    // ▼▼▼ TAMAMEN YENİ, KULLANICI EYLEMLERİNİ TAKLİT EDEN SİLME FONKSİYONU ▼▼▼
-    function deleteSingleConversationBySimulation(convoElement) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                // Adım 1: Silinecek sohbet satırına tıkla
-                convoElement.trigger('click');
-                await new Promise(r => setTimeout(r, 750)); // Pencerenin yüklenmesini bekle
-
-                // Adım 2: Sağda açılan aktif sohbet penceresindeki ayarlar (çark) ikonuna tıkla
-                const activeDialog = $('.messenger-dialog.active');
-                if (!activeDialog.length) throw new Error("Aktif sohbet penceresi bulunamadı.");
-                activeDialog.find('.dialog-menu').trigger('click');
-                await new Promise(r => setTimeout(r, 250)); // Menünün açılmasını bekle
-
-                // Adım 3: Açılan menüdeki #messenger-link-remove ID'li "Sohbeti sil" linkine tıkla
-                const deleteLink = $('#messenger-link-remove');
-                if (!deleteLink.length) throw new Error("'Sohbeti Sil' linki (#messenger-link-remove) bulunamadı.");
-                deleteLink.trigger('click');
-
-                // Adım 4: Onay penceresinin ("powerbox") ve "Evet" butonunun çıkmasını bekle
-                const yesButton = await new Promise((res, rej) => {
-                    const startTime = Date.now();
-                    const interval = setInterval(() => {
-                        const button = $('#powerbox_confirm_ok_button');
-                        if (button.length > 0) {
-                            clearInterval(interval);
-                            res(button);
-                        }
-                        if (Date.now() - startTime > 5000) {
-                            clearInterval(interval);
-                            rej("Onay penceresi ('Evet' butonu) zaman aşımına uğradı.");
-                        }
-                    }, 100);
-                });
-
-                // Adım 5: "Evet" butonuna tıkla ve işlemi bitir
-                yesButton.trigger('click');
-                await new Promise(r => setTimeout(r, 300)); // Pencerenin kapanması için bekle
-
-                resolve();
-
-            } catch (error) {
-                reject(error);
+        function addConversationCheckbox(jNode) {
+            if (jNode.find('.messenger-convo-checkbox').length === 0) {
+                const checkbox = $('<input type="checkbox" class="messenger-convo-checkbox">');
+                checkbox.on('click', (event) => event.stopPropagation());
+                jNode.prepend(checkbox);
             }
-        });
-    }
-    // ▲▲▲ YENİ SİLME FONKSİYONU SONU ▲▲▲
+        }
 
-    // --- waitForKeyElements'i Başlat ---
-    waitForKeyElements("#messenger-settings", addBulkControls, true);
-    waitForKeyElements("#messenger-list > div[id^='notification_message_']", addConversationCheckbox);
-}
+        function toggleCheckboxes(checkedState) {
+            $('.messenger-convo-checkbox').prop('checked', checkedState);
+        }
+
+        async function handleDeleteSelected() {
+            const selected = $('.messenger-convo-checkbox:checked');
+            if (selected.length === 0) { alert(getText('noSelection')); return; }
+            // Bu seferki onay, betiğin kendi onayıdır. Diğerleri çıkmayacak.
+            if (!confirm(getText('confirmDelete', selected.length))) { return; }
+
+            const conversationsToDelete = [];
+            selected.each(function() {
+                conversationsToDelete.push($(this).closest('.notification'));
+            });
+
+            const deleteButton = $('#msg-delete-selected');
+            const originalText = deleteButton.text();
+            deleteButton.css('pointer-events', 'none');
+
+            for (let i = 0; i < conversationsToDelete.length; i++) {
+                const convoElement = conversationsToDelete[i];
+                deleteButton.text(getText('deleting', i + 1, conversationsToDelete.length));
+                try {
+                    // Kullanıcı tıklamalarını taklit eden yeni fonksiyonu çağır
+                    await deleteSingleConversationBySimulation(convoElement);
+                    // Başarılı olursa ekrandan kaldır
+                    convoElement.fadeOut(300, function() { $(this).remove(); });
+                } catch (error) {
+                    console.error(`Bir sohbet silinirken hata oluştu:`, error);
+                    convoElement.css('background-color', 'rgba(255, 0, 0, 0.3)');
+                }
+                await new Promise(resolve => setTimeout(resolve, 500)); // Adımlar arasına biraz bekleme ekle
+            }
+
+            deleteButton.text(originalText).css('pointer-events', 'auto');
+            alert(getText('deletionComplete'));
+        }
+
+        // ▼▼▼ TAMAMEN YENİ, KULLANICI EYLEMLERİNİ TAKLİT EDEN SİLME FONKSİYONU ▼▼▼
+        function deleteSingleConversationBySimulation(convoElement) {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    // Adım 1: Silinecek sohbet satırına tıkla
+                    convoElement.trigger('click');
+                    await new Promise(r => setTimeout(r, 750)); // Pencerenin yüklenmesini bekle
+
+                    // Adım 2: Sağda açılan aktif sohbet penceresindeki ayarlar (çark) ikonuna tıkla
+                    const activeDialog = $('.messenger-dialog.active');
+                    if (!activeDialog.length) throw new Error("Aktif sohbet penceresi bulunamadı.");
+                    activeDialog.find('.dialog-menu').trigger('click');
+                    await new Promise(r => setTimeout(r, 250)); // Menünün açılmasını bekle
+
+                    // Adım 3: Açılan menüdeki #messenger-link-remove ID'li "Sohbeti sil" linkine tıkla
+                    const deleteLink = $('#messenger-link-remove');
+                    if (!deleteLink.length) throw new Error("'Sohbeti Sil' linki (#messenger-link-remove) bulunamadı.");
+                    deleteLink.trigger('click');
+
+                    // Adım 4: Onay penceresinin ("powerbox") ve "Evet" butonunun çıkmasını bekle
+                    const yesButton = await new Promise((res, rej) => {
+                        const startTime = Date.now();
+                        const interval = setInterval(() => {
+                            const button = $('#powerbox_confirm_ok_button');
+                            if (button.length > 0) {
+                                clearInterval(interval);
+                                res(button);
+                            }
+                            if (Date.now() - startTime > 5000) {
+                                clearInterval(interval);
+                                rej("Onay penceresi ('Evet' butonu) zaman aşımına uğradı.");
+                            }
+                        }, 100);
+                    });
+
+                    // Adım 5: "Evet" butonuna tıkla ve işlemi bitir
+                    yesButton.trigger('click');
+                    await new Promise(r => setTimeout(r, 300)); // Pencerenin kapanması için bekle
+
+                    resolve();
+
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+        // ▲▲▲ YENİ SİLME FONKSİYONU SONU ▲▲▲
+
+        // --- waitForKeyElements'i Başlat ---
+        waitForKeyElements("#messenger-settings", addBulkControls, true);
+        waitForKeyElements("#messenger-list > div[id^='notification_message_']", addConversationCheckbox);
+    }
 
 
 function waitForKeyElements (
@@ -7390,7 +8011,7 @@ function initializeFriendlyMatchAutomationScript() {
             emptyList: "Liste boş. İsim ekleyin veya arkadaşları çekin."
         },
         en: {
-             dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
             modalHelper: "Only the 5 match days are listed:",
             btnSelectAll: "Select All",
             btnSave: "Save",
@@ -7567,96 +8188,96 @@ function initializeFriendlyMatchAutomationScript() {
         .sifirla-btn { background: #FF9800; color: white; border: none !important; }
         .kapat-btn { background: #f44336; color: white; border: none !important; }
         `;
-        document.head.appendChild(style);
-    }
-
-    // =================================================================================
-    // 4. VERİ YÖNETİMİ
-    // =================================================================================
-    function getStoredUsers() {
-        let raw = [];
-        try { raw = JSON.parse(getPersistentData(KEY_USER_LIST, '[]')); } catch (e) { raw = []; }
-        if (raw.length === 0) return [];
-        let hasChanges = false;
-        const normalized = raw.map(u => {
-            if (typeof u === 'string') { hasChanges = true; return { name: u, days: [...VALID_DAYS] }; }
-            else if (typeof u === 'object' && u !== null) {
-                if (!Array.isArray(u.days)) { u.days = [...VALID_DAYS]; hasChanges = true; }
-                return u;
-            }
-            return null;
-        }).filter(u => u !== null);
-        if (hasChanges) setPersistentData(KEY_USER_LIST, JSON.stringify(normalized));
-        return normalized;
-    }
-
-    function saveStoredUsers(usersObjArray, forceSort = false) {
-        const userMap = new Map();
-        usersObjArray.forEach(user => { if (!userMap.has(user.name)) userMap.set(user.name, user); });
-        const uniqueList = Array.from(userMap.values());
-        if (forceSort) uniqueList.sort((a, b) => a.name.localeCompare(b.name));
-        setPersistentData(KEY_USER_LIST, JSON.stringify(uniqueList));
-        renderList();
-    }
-
-    function getSelectedUsers() { return JSON.parse(getPersistentData(KEY_SELECTED_USERS, '[]')); }
-
-    function saveSelectionState() {
-        const checkboxes = document.querySelectorAll('.mz-user-checkbox');
-        const selected = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
-        setPersistentData(KEY_SELECTED_USERS, JSON.stringify(selected));
-    }
-
-    function getTacticsList() { return JSON.parse(getPersistentData(KEY_TACTIC_NAMES) || '[]').length > 0 ? JSON.parse(getPersistentData(KEY_TACTIC_NAMES)) : DEFAULT_TACTICS; }
-
-    function fetchAndSaveTactics() {
-        fetch(location.origin + '/?p=tactics').then(res => res.text()).then(html => {
-            const doc = new DOMParser().parseFromString(html, 'text/html');
-            const newTactics = [];
-            const letters = "abcdefghijklmnopqrst".split("");
-            letters.forEach(c => {
-                const tabId = `tacticTab_${c}`; const spanId = `tactic${c.toUpperCase()}Tab`;
-                const liElement = doc.getElementById(tabId); const spanElement = doc.getElementById(spanId);
-                if (liElement && spanElement && !liElement.classList.contains('ui-state-disabled')) {
-                    newTactics.push({ val: c, txt: spanElement.innerText.trim() });
-                }
-            });
-            if(newTactics.length > 0) setPersistentData(KEY_TACTIC_NAMES, JSON.stringify(newTactics));
-        });
-    }
-
-    // =================================================================================
-    // 5. ARAYÜZ (PANEL) FONKSİYONLARI
-    // =================================================================================
-    let dragSourceEl = null; let autoScrollInterval = null; const SCROLL_SPEED = 5; const SCROLL_AREA_SIZE = 20;
-    function startAutoScroll(direction) { if (autoScrollInterval) return; const listContainer = document.getElementById('mz-list-container'); autoScrollInterval = setInterval(() => { if (direction === 'up') listContainer.scrollTop -= SCROLL_SPEED; else if (direction === 'down') listContainer.scrollTop += SCROLL_SPEED; }, 20); }
-    function stopAutoScroll() { if (autoScrollInterval) { clearInterval(autoScrollInterval); autoScrollInterval = null; } }
-    function handleDragStart(e) { dragSourceEl = this; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/html', this.innerHTML); this.classList.add('dragging'); }
-    function handleDragEnd(e) { this.classList.remove('dragging'); stopAutoScroll(); saveSelectionState(); }
-    function handleDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; const listContainer = document.getElementById('mz-list-container'); const rect = listContainer.getBoundingClientRect(); const mouseY = e.clientY; if (mouseY < rect.top + SCROLL_AREA_SIZE) startAutoScroll('up'); else if (mouseY > rect.bottom - SCROLL_AREA_SIZE) startAutoScroll('down'); else stopAutoScroll(); return false; }
-    function handleDrop(e) { e.stopPropagation(); stopAutoScroll(); if (dragSourceEl !== this) { const listContainer = document.getElementById('mz-list-container'); const targetRow = this; const sourceRow = dragSourceEl; const children = Array.from(listContainer.children); const sourceIndex = children.indexOf(sourceRow); const targetIndex = children.indexOf(targetRow); if (sourceIndex < targetIndex) listContainer.insertBefore(sourceRow, targetRow.nextSibling); else listContainer.insertBefore(sourceRow, targetRow); } return false; }
-
-    function renderList() {
-        const c = document.getElementById('mz-list-container');
-        if (!c) return;
-        c.innerHTML = '';
-        const allUsers = getStoredUsers();
-        if (allUsers.length === 0) {
-            c.innerHTML = `<div style="padding:10px; color:#999; text-align:center; font-style:italic; font-size:11px;">${getText('emptyList')}</div>`;
-            return;
+            document.head.appendChild(style);
         }
-        const selectedUsers = getSelectedUsers();
-        allUsers.forEach((uObj, index) => {
-            const uName = uObj.name;
-            const validDayCount = uObj.days.filter(d => VALID_DAYS.includes(d)).length;
-            const dayBadgeColor = validDayCount === 0 ? '#ff4444' : (validDayCount < 5 ? '#ffbb33' : '#00C851');
-            const d = document.createElement('div');
-            d.className = 'mz-user-row';
-            d.draggable = true;
-            d.style.display = 'flex'; d.style.alignItems = 'center'; d.style.justifyContent = 'space-between'; d.style.padding = '4px';
-            d.addEventListener('dragstart', handleDragStart); d.addEventListener('dragover', handleDragOver); d.addEventListener('drop', handleDrop); d.addEventListener('dragend', handleDragEnd);
-            const isChecked = selectedUsers.includes(uName) ? 'checked' : '';
-            d.innerHTML = `
+
+        // =================================================================================
+        // 4. VERİ YÖNETİMİ
+        // =================================================================================
+        function getStoredUsers() {
+            let raw = [];
+            try { raw = JSON.parse(getPersistentData(KEY_USER_LIST, '[]')); } catch (e) { raw = []; }
+            if (raw.length === 0) return [];
+            let hasChanges = false;
+            const normalized = raw.map(u => {
+                if (typeof u === 'string') { hasChanges = true; return { name: u, days: [...VALID_DAYS] }; }
+                else if (typeof u === 'object' && u !== null) {
+                    if (!Array.isArray(u.days)) { u.days = [...VALID_DAYS]; hasChanges = true; }
+                    return u;
+                }
+                return null;
+            }).filter(u => u !== null);
+            if (hasChanges) setPersistentData(KEY_USER_LIST, JSON.stringify(normalized));
+            return normalized;
+        }
+
+        function saveStoredUsers(usersObjArray, forceSort = false) {
+            const userMap = new Map();
+            usersObjArray.forEach(user => { if (!userMap.has(user.name)) userMap.set(user.name, user); });
+            const uniqueList = Array.from(userMap.values());
+            if (forceSort) uniqueList.sort((a, b) => a.name.localeCompare(b.name));
+            setPersistentData(KEY_USER_LIST, JSON.stringify(uniqueList));
+            renderList();
+        }
+
+        function getSelectedUsers() { return JSON.parse(getPersistentData(KEY_SELECTED_USERS, '[]')); }
+
+        function saveSelectionState() {
+            const checkboxes = document.querySelectorAll('.mz-user-checkbox');
+            const selected = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+            setPersistentData(KEY_SELECTED_USERS, JSON.stringify(selected));
+        }
+
+        function getTacticsList() { return JSON.parse(getPersistentData(KEY_TACTIC_NAMES) || '[]').length > 0 ? JSON.parse(getPersistentData(KEY_TACTIC_NAMES)) : DEFAULT_TACTICS; }
+
+        function fetchAndSaveTactics() {
+            fetch(location.origin + '/?p=tactics').then(res => res.text()).then(html => {
+                const doc = new DOMParser().parseFromString(html, 'text/html');
+                const newTactics = [];
+                const letters = "abcdefghijklmnopqrst".split("");
+                letters.forEach(c => {
+                    const tabId = `tacticTab_${c}`; const spanId = `tactic${c.toUpperCase()}Tab`;
+                    const liElement = doc.getElementById(tabId); const spanElement = doc.getElementById(spanId);
+                    if (liElement && spanElement && !liElement.classList.contains('ui-state-disabled')) {
+                        newTactics.push({ val: c, txt: spanElement.innerText.trim() });
+                    }
+                });
+                if(newTactics.length > 0) setPersistentData(KEY_TACTIC_NAMES, JSON.stringify(newTactics));
+            });
+        }
+
+        // =================================================================================
+        // 5. ARAYÜZ (PANEL) FONKSİYONLARI
+        // =================================================================================
+        let dragSourceEl = null; let autoScrollInterval = null; const SCROLL_SPEED = 5; const SCROLL_AREA_SIZE = 20;
+        function startAutoScroll(direction) { if (autoScrollInterval) return; const listContainer = document.getElementById('mz-list-container'); autoScrollInterval = setInterval(() => { if (direction === 'up') listContainer.scrollTop -= SCROLL_SPEED; else if (direction === 'down') listContainer.scrollTop += SCROLL_SPEED; }, 20); }
+        function stopAutoScroll() { if (autoScrollInterval) { clearInterval(autoScrollInterval); autoScrollInterval = null; } }
+        function handleDragStart(e) { dragSourceEl = this; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/html', this.innerHTML); this.classList.add('dragging'); }
+        function handleDragEnd(e) { this.classList.remove('dragging'); stopAutoScroll(); saveSelectionState(); }
+        function handleDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; const listContainer = document.getElementById('mz-list-container'); const rect = listContainer.getBoundingClientRect(); const mouseY = e.clientY; if (mouseY < rect.top + SCROLL_AREA_SIZE) startAutoScroll('up'); else if (mouseY > rect.bottom - SCROLL_AREA_SIZE) startAutoScroll('down'); else stopAutoScroll(); return false; }
+        function handleDrop(e) { e.stopPropagation(); stopAutoScroll(); if (dragSourceEl !== this) { const listContainer = document.getElementById('mz-list-container'); const targetRow = this; const sourceRow = dragSourceEl; const children = Array.from(listContainer.children); const sourceIndex = children.indexOf(sourceRow); const targetIndex = children.indexOf(targetRow); if (sourceIndex < targetIndex) listContainer.insertBefore(sourceRow, targetRow.nextSibling); else listContainer.insertBefore(sourceRow, targetRow); } return false; }
+
+        function renderList() {
+            const c = document.getElementById('mz-list-container');
+            if (!c) return;
+            c.innerHTML = '';
+            const allUsers = getStoredUsers();
+            if (allUsers.length === 0) {
+                c.innerHTML = `<div style="padding:10px; color:#999; text-align:center; font-style:italic; font-size:11px;">${getText('emptyList')}</div>`;
+                return;
+            }
+            const selectedUsers = getSelectedUsers();
+            allUsers.forEach((uObj, index) => {
+                const uName = uObj.name;
+                const validDayCount = uObj.days.filter(d => VALID_DAYS.includes(d)).length;
+                const dayBadgeColor = validDayCount === 0 ? '#ff4444' : (validDayCount < 5 ? '#ffbb33' : '#00C851');
+                const d = document.createElement('div');
+                d.className = 'mz-user-row';
+                d.draggable = true;
+                d.style.display = 'flex'; d.style.alignItems = 'center'; d.style.justifyContent = 'space-between'; d.style.padding = '4px';
+                d.addEventListener('dragstart', handleDragStart); d.addEventListener('dragover', handleDragOver); d.addEventListener('drop', handleDrop); d.addEventListener('dragend', handleDragEnd);
+                const isChecked = selectedUsers.includes(uName) ? 'checked' : '';
+                d.innerHTML = `
                 <div style="display:flex; align-items:center; gap:5px; overflow:hidden;">
                     <input type="checkbox" class="mz-user-checkbox" value="${uName}" ${isChecked}>
                     <span onclick="this.previousElementSibling.click()" style="cursor:pointer; font-weight:bold;">${uName}</span>
@@ -7665,27 +8286,27 @@ function initializeFriendlyMatchAutomationScript() {
                     📅 ${validDayCount}/5
                 </button>
             `;
-            c.appendChild(d);
-            d.querySelector('.mz-user-checkbox').addEventListener('change', saveSelectionState);
-            d.querySelector('.mz-day-config-btn').addEventListener('click', (e) => { e.stopPropagation(); openUserDaySettings(index); });
-        });
-    }
+                c.appendChild(d);
+                d.querySelector('.mz-user-checkbox').addEventListener('change', saveSelectionState);
+                d.querySelector('.mz-day-config-btn').addEventListener('click', (e) => { e.stopPropagation(); openUserDaySettings(index); });
+            });
+        }
 
-    function openUserDaySettings(userIndex) {
-        const allUsers = getStoredUsers();
-        const userObj = allUsers[userIndex];
-        const dayNamesList = getText('dayNames');
-        const modalId = 'mz-user-day-modal';
-        document.getElementById(modalId)?.remove();
-        const modal = document.createElement('div');
-        modal.id = modalId;
-        modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:100000; display:flex; justify-content:center; align-items:center;';
-        let checksHtml = '';
-        VALID_DAYS.forEach(i => {
-            const isChecked = userObj.days.includes(i) ? 'checked' : '';
-            checksHtml += `<label style="display:block; padding:8px 5px; cursor:pointer; border-bottom:1px solid #eee;"><input type="checkbox" class="mz-uday-check" value="${i}" ${isChecked}> ${dayNamesList[i]}</label>`;
-        });
-        modal.innerHTML = `
+        function openUserDaySettings(userIndex) {
+            const allUsers = getStoredUsers();
+            const userObj = allUsers[userIndex];
+            const dayNamesList = getText('dayNames');
+            const modalId = 'mz-user-day-modal';
+            document.getElementById(modalId)?.remove();
+            const modal = document.createElement('div');
+            modal.id = modalId;
+            modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:100000; display:flex; justify-content:center; align-items:center;';
+            let checksHtml = '';
+            VALID_DAYS.forEach(i => {
+                const isChecked = userObj.days.includes(i) ? 'checked' : '';
+                checksHtml += `<label style="display:block; padding:8px 5px; cursor:pointer; border-bottom:1px solid #eee;"><input type="checkbox" class="mz-uday-check" value="${i}" ${isChecked}> ${dayNamesList[i]}</label>`;
+            });
+            modal.innerHTML = `
             <div style="background:#fff; padding:20px; border-radius:8px; width:260px; color:#333; font-family:Arial; box-shadow:0 0 20px rgba(0,0,0,0.5);">
                 <h4 style="margin-top:0; border-bottom:2px solid #007bff; padding-bottom:5px; color:#007bff;">${userObj.name}</h4>
                 <div style="font-size:11px; color:#666; margin-bottom:10px;">${getText('modalHelper')}</div>
@@ -7698,26 +8319,26 @@ function initializeFriendlyMatchAutomationScript() {
                     </div>
                 </div>
             </div>`;
-        document.body.appendChild(modal);
-        modal.querySelector('#mz-uday-close').onclick = () => modal.remove();
-        modal.querySelector('#mz-uday-select-all').onclick = () => {
-            const allChecks = modal.querySelectorAll('.mz-uday-check');
-            const areAllChecked = Array.from(allChecks).every(cb => cb.checked);
-            allChecks.forEach(cb => cb.checked = !areAllChecked);
-        };
-        modal.querySelector('#mz-uday-save').onclick = () => {
-            const newDays = [];
-            modal.querySelectorAll('.mz-uday-check:checked').forEach(cb => newDays.push(parseInt(cb.value)));
-            const freshList = getStoredUsers();
-            if (freshList[userIndex]) { freshList[userIndex].days = newDays; saveStoredUsers(freshList, false); }
-            modal.remove();
-        };
-    }
+            document.body.appendChild(modal);
+            modal.querySelector('#mz-uday-close').onclick = () => modal.remove();
+            modal.querySelector('#mz-uday-select-all').onclick = () => {
+                const allChecks = modal.querySelectorAll('.mz-uday-check');
+                const areAllChecked = Array.from(allChecks).every(cb => cb.checked);
+                allChecks.forEach(cb => cb.checked = !areAllChecked);
+            };
+            modal.querySelector('#mz-uday-save').onclick = () => {
+                const newDays = [];
+                modal.querySelectorAll('.mz-uday-check:checked').forEach(cb => newDays.push(parseInt(cb.value)));
+                const freshList = getStoredUsers();
+                if (freshList[userIndex]) { freshList[userIndex].days = newDays; saveStoredUsers(freshList, false); }
+                modal.remove();
+            };
+        }
 
-    function initMainPanel() {
-        const mainPanel = document.createElement('div');
-        mainPanel.id = 'mz-main-panel';
-        mainPanel.innerHTML = `
+        function initMainPanel() {
+            const mainPanel = document.createElement('div');
+            mainPanel.id = 'mz-main-panel';
+            mainPanel.innerHTML = `
             <div id="mz-panel-header"><span>${getText('panelTitle')}</span><span id="mz-arrow">▼</span></div>
             <div id="mz-panel-body">
                 <div style="margin-bottom:8px;">
@@ -7747,137 +8368,137 @@ function initializeFriendlyMatchAutomationScript() {
                 </div>
             </div>
         `;
-        bindEvents(mainPanel);
-        const targetID = 'back-to-overview';
-        const checkExist = setInterval(() => {
-            const target = document.getElementById(targetID);
-            if (target && target.parentNode && !document.getElementById('mz-main-panel')) {
-                clearInterval(checkExist); target.parentNode.insertBefore(mainPanel, target);
-                setTimeout(() => {
-                    fetchAndSaveTactics();
-                    renderList();
-                    const autoStatus = getQueueData();
-                    const toggle = mainPanel.querySelector('#mz-auto-mode-toggle');
-                    if(toggle) toggle.checked = autoStatus.enabled;
-                }, 500);
-            }
-        }, 250);
-    }
-
-    function bindEvents(panel) {
-        const header = panel.querySelector('#mz-panel-header');
-        const body = panel.querySelector('#mz-panel-body');
-        const arrow = panel.querySelector('#mz-arrow');
-
-        if(header) {
-            header.onclick = function() {
-                if (body.style.display === 'none' || body.style.display === '') {
-                    body.style.display = 'block';
-                    arrow.innerText = '▲';
-                    renderList();
-                } else {
-                    body.style.display = 'none';
-                    arrow.innerText = '▼';
+            bindEvents(mainPanel);
+            const targetID = 'back-to-overview';
+            const checkExist = setInterval(() => {
+                const target = document.getElementById(targetID);
+                if (target && target.parentNode && !document.getElementById('mz-main-panel')) {
+                    clearInterval(checkExist); target.parentNode.insertBefore(mainPanel, target);
+                    setTimeout(() => {
+                        fetchAndSaveTactics();
+                        renderList();
+                        const autoStatus = getQueueData();
+                        const toggle = mainPanel.querySelector('#mz-auto-mode-toggle');
+                        if(toggle) toggle.checked = autoStatus.enabled;
+                    }, 500);
                 }
-            };
+            }, 250);
         }
 
-        panel.querySelector('#mz-auto-mode-toggle').addEventListener('change', (e) => {
-            const status = getQueueData();
-            status.enabled = e.target.checked;
-            if(!e.target.checked) status.queue = [];
-            setQueueData(status);
-            logToWidget(e.target.checked ? "> OTO MOD AÇILDI" : "> OTO MOD KAPATILDI", e.target.checked ? 'success' : 'warn');
-        });
+        function bindEvents(panel) {
+            const header = panel.querySelector('#mz-panel-header');
+            const body = panel.querySelector('#mz-panel-body');
+            const arrow = panel.querySelector('#mz-arrow');
 
-        panel.querySelector('#mz-settings-toggle').addEventListener('click', () => {
-            ayarlarPaneliniOlustur();
-            document.getElementById('mz-ayar-paneli').style.display = 'block';
-        });
-
-        panel.querySelector('#mz-add-btn').addEventListener('click', () => {
-            const area = panel.querySelector('#mz-input-area');
-            const rawTxt = area.value.trim();
-            if(!rawTxt) return;
-            const namesToAdd = rawTxt.split('\n').map(s => s.trim()).filter(s => s.length > 0);
-            const currentStoredList = getStoredUsers();
-            namesToAdd.forEach(name => {
-                const exists = currentStoredList.some(user => user.name === name);
-                if (!exists) {
-                    currentStoredList.push({ name: name, days: [...VALID_DAYS] });
-                }
-            });
-            saveStoredUsers(currentStoredList, true);
-            area.value = '';
-        });
-
-        panel.querySelector('#mz-add-friends-btn').addEventListener('click', () => {
-            const buddyList = document.getElementById('buddy_list');
-            if (!buddyList) { alert(getText('noBuddyList')); return; }
-            const links = buddyList.querySelectorAll('a.clippable');
-            const namesToAdd = Array.from(links).map(l => l.innerText.trim());
-            const currentStoredList = getStoredUsers();
-            let addedCount = 0;
-            namesToAdd.forEach(name => {
-                const exists = currentStoredList.some(user => user.name === name);
-                if (!exists) {
-                    currentStoredList.push({ name: name, days: [...VALID_DAYS] });
-                    addedCount++;
-                }
-            });
-            saveStoredUsers(currentStoredList, true);
-            alert(`${addedCount} yeni kişi eklendi.`);
-        });
-
-        panel.querySelector('#mz-select-all').addEventListener('click', (e) => {
-            e.preventDefault(); const cbs = document.querySelectorAll('.mz-user-checkbox');
-            const all = Array.from(cbs).every(cb => cb.checked);
-            cbs.forEach(cb => cb.checked = !all); saveSelectionState();
-        });
-
-        panel.querySelector('#mz-delete-selected').addEventListener('click', (e) => {
-            e.preventDefault();
-            const cbs = document.querySelectorAll('.mz-user-checkbox');
-            const toDeleteNames = Array.from(cbs).filter(cb => cb.checked).map(cb => cb.value);
-            if(toDeleteNames.length > 0 && confirm(getText('confirmDelete', toDeleteNames.length))) {
-                const currentList = getStoredUsers();
-                const newList = currentList.filter(u => !toDeleteNames.includes(u.name));
-                saveStoredUsers(newList, false);
-                const currentSelected = getSelectedUsers();
-                const newSelected = currentSelected.filter(u => !toDeleteNames.includes(u));
-                setPersistentData(KEY_SELECTED_USERS, JSON.stringify(newSelected));
+            if(header) {
+                header.onclick = function() {
+                    if (body.style.display === 'none' || body.style.display === '') {
+                        body.style.display = 'block';
+                        arrow.innerText = '▲';
+                        renderList();
+                    } else {
+                        body.style.display = 'none';
+                        arrow.innerText = '▼';
+                    }
+                };
             }
-        });
 
-        panel.querySelector('#mz-start-btn').addEventListener('click', () => {
-            const cbs = document.querySelectorAll('.mz-user-checkbox:checked');
-            const selectedNames = Array.from(cbs).map(cb => cb.value);
-            if (selectedNames.length === 0) { alert(getText('noSelection')); return; }
-            const allUsers = getStoredUsers();
-            const queueObjs = allUsers.filter(u => selectedNames.includes(u.name));
+            panel.querySelector('#mz-auto-mode-toggle').addEventListener('change', (e) => {
+                const status = getQueueData();
+                status.enabled = e.target.checked;
+                if(!e.target.checked) status.queue = [];
+                setQueueData(status);
+                logToWidget(e.target.checked ? "> OTO MOD AÇILDI" : "> OTO MOD KAPATILDI", e.target.checked ? 'success' : 'warn');
+            });
 
-            const status = getQueueData();
-            status.enabled = true;
-            status.queue = queueObjs;
-            status.lastRun = 0; // Manuel başlatıldığı için 0 yapıyoruz
-            setQueueData(status);
+            panel.querySelector('#mz-settings-toggle').addEventListener('click', () => {
+                ayarlarPaneliniOlustur();
+                document.getElementById('mz-ayar-paneli').style.display = 'block';
+            });
 
-            document.getElementById('mz-auto-mode-toggle').checked = true;
-            location.reload();
-        });
+            panel.querySelector('#mz-add-btn').addEventListener('click', () => {
+                const area = panel.querySelector('#mz-input-area');
+                const rawTxt = area.value.trim();
+                if(!rawTxt) return;
+                const namesToAdd = rawTxt.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+                const currentStoredList = getStoredUsers();
+                namesToAdd.forEach(name => {
+                    const exists = currentStoredList.some(user => user.name === name);
+                    if (!exists) {
+                        currentStoredList.push({ name: name, days: [...VALID_DAYS] });
+                    }
+                });
+                saveStoredUsers(currentStoredList, true);
+                area.value = '';
+            });
 
-        panel.querySelector('#mz-stop-btn').addEventListener('click', () => {
-            const status = getQueueData();
-            status.enabled = false; status.queue = [];
-            setQueueData(status);
-            location.reload();
-        });
-    }
+            panel.querySelector('#mz-add-friends-btn').addEventListener('click', () => {
+                const buddyList = document.getElementById('buddy_list');
+                if (!buddyList) { alert(getText('noBuddyList')); return; }
+                const links = buddyList.querySelectorAll('a.clippable');
+                const namesToAdd = Array.from(links).map(l => l.innerText.trim());
+                const currentStoredList = getStoredUsers();
+                let addedCount = 0;
+                namesToAdd.forEach(name => {
+                    const exists = currentStoredList.some(user => user.name === name);
+                    if (!exists) {
+                        currentStoredList.push({ name: name, days: [...VALID_DAYS] });
+                        addedCount++;
+                    }
+                });
+                saveStoredUsers(currentStoredList, true);
+                alert(`${addedCount} yeni kişi eklendi.`);
+            });
 
-    function ayarlarPaneliniOlustur() {
-        if (document.getElementById('mz-ayar-paneli')) { document.getElementById('mz-ayar-paneli').style.display = 'block'; return; }
-        const panel = document.createElement('div'); panel.id = 'mz-ayar-paneli';
-        let html = `<h3 style="border-bottom: 2px solid #ccc; padding-bottom:10px;">${getText('settingsTitle')}</h3>
+            panel.querySelector('#mz-select-all').addEventListener('click', (e) => {
+                e.preventDefault(); const cbs = document.querySelectorAll('.mz-user-checkbox');
+                const all = Array.from(cbs).every(cb => cb.checked);
+                cbs.forEach(cb => cb.checked = !all); saveSelectionState();
+            });
+
+            panel.querySelector('#mz-delete-selected').addEventListener('click', (e) => {
+                e.preventDefault();
+                const cbs = document.querySelectorAll('.mz-user-checkbox');
+                const toDeleteNames = Array.from(cbs).filter(cb => cb.checked).map(cb => cb.value);
+                if(toDeleteNames.length > 0 && confirm(getText('confirmDelete', toDeleteNames.length))) {
+                    const currentList = getStoredUsers();
+                    const newList = currentList.filter(u => !toDeleteNames.includes(u.name));
+                    saveStoredUsers(newList, false);
+                    const currentSelected = getSelectedUsers();
+                    const newSelected = currentSelected.filter(u => !toDeleteNames.includes(u));
+                    setPersistentData(KEY_SELECTED_USERS, JSON.stringify(newSelected));
+                }
+            });
+
+            panel.querySelector('#mz-start-btn').addEventListener('click', () => {
+                const cbs = document.querySelectorAll('.mz-user-checkbox:checked');
+                const selectedNames = Array.from(cbs).map(cb => cb.value);
+                if (selectedNames.length === 0) { alert(getText('noSelection')); return; }
+                const allUsers = getStoredUsers();
+                const queueObjs = allUsers.filter(u => selectedNames.includes(u.name));
+
+                const status = getQueueData();
+                status.enabled = true;
+                status.queue = queueObjs;
+                status.lastRun = 0; // Manuel başlatıldığı için 0 yapıyoruz
+                setQueueData(status);
+
+                document.getElementById('mz-auto-mode-toggle').checked = true;
+                location.reload();
+            });
+
+            panel.querySelector('#mz-stop-btn').addEventListener('click', () => {
+                const status = getQueueData();
+                status.enabled = false; status.queue = [];
+                setQueueData(status);
+                location.reload();
+            });
+        }
+
+        function ayarlarPaneliniOlustur() {
+            if (document.getElementById('mz-ayar-paneli')) { document.getElementById('mz-ayar-paneli').style.display = 'block'; return; }
+            const panel = document.createElement('div'); panel.id = 'mz-ayar-paneli';
+            let html = `<h3 style="border-bottom: 2px solid #ccc; padding-bottom:10px;">${getText('settingsTitle')}</h3>
                     <div class="ayar-tablosu">
                         <div class="ayar-baslik">
                             <span class="sutun sutun-teklif">${getText('colOfferDay')}</span>
@@ -7886,551 +8507,555 @@ function initializeFriendlyMatchAutomationScript() {
                             <span class="sutun sutun-taktik">${getText('colTacticHome')}</span>
                             <span class="sutun sutun-taktik">${getText('colTacticAway')}</span>
                         </div>`;
-        const currentTactics = getTacticsList();
-        const options = currentTactics.map(t => `<option value="${t.val}">${t.txt} (${t.val.toUpperCase()})</option>`).join('');
-        const customGroups = [
-            { matchDay: GUNLER[2], offerIndices: [1] },
-            { matchDay: GUNLER[4], offerIndices: [2, 3] },
-            { matchDay: GUNLER[5], offerIndices: [4] },
-            { matchDay: GUNLER[6], offerIndices: [5] },
-            { matchDay: GUNLER[1], offerIndices: [6, 0] }
-        ];
-        const getOfferDayNames = (indices) => indices.map(i => GUNLER[i]).join(', ');
-        customGroups.forEach(group => {
-            const offerDays = getOfferDayNames(group.offerIndices);
-            html += `<div class="ayar-satiri" data-indices="${group.offerIndices.join(',')}">
+            const currentTactics = getTacticsList();
+            const options = currentTactics.map(t => `<option value="${t.val}">${t.txt} (${t.val.toUpperCase()})</option>`).join('');
+            const customGroups = [
+                { matchDay: GUNLER[2], offerIndices: [1] },
+                { matchDay: GUNLER[4], offerIndices: [2, 3] },
+                { matchDay: GUNLER[5], offerIndices: [4] },
+                { matchDay: GUNLER[6], offerIndices: [5] },
+                { matchDay: GUNLER[1], offerIndices: [6, 0] }
+            ];
+            const getOfferDayNames = (indices) => indices.map(i => GUNLER[i]).join(', ');
+            customGroups.forEach(group => {
+                const offerDays = getOfferDayNames(group.offerIndices);
+                html += `<div class="ayar-satiri" data-indices="${group.offerIndices.join(',')}">
                         <span class="sutun sutun-teklif" style="font-size:12px;">${offerDays}</span>
                         <span class="sutun sutun-mac" style="font-size:12px;">${group.matchDay}</span>
                         <span class="sutun sutun-aktif"><input type="checkbox" class="gun-aktif-check"></span>
                         <span class="sutun sutun-taktik"><select class="taktik-secim-home" style="display:none; width:95%; font-size:11px;">${options}</select></span>
                         <span class="sutun sutun-taktik"><select class="taktik-secim-away" style="display:none; width:95%; font-size:11px;">${options}</select></span>
                      </div>`;
-        });
-        html += `</div>
+            });
+            html += `</div>
                  <div class="buton-grup">
                     <button class="kaydet-btn" style="background: #4CAF50; color: white;">${getText('saveButton')}</button>
                     <button class="sifirla-btn" style="background: #FF5722; color: white;">${getText('resetButton')}</button>
                     <button class="kapat-btn" style="background: #607D8B; color: white;">${getText('closeButton')}</button>
                  </div>
                  <div style="font-size:10px; color:#666; margin-top:10px; text-align:center;">${getText('settingsNote')}</div>`;
-        panel.innerHTML = html; document.body.appendChild(panel);
-        panel.querySelector('.kapat-btn').addEventListener('click', () => panel.style.display = 'none');
-        panel.querySelector('.kaydet-btn').addEventListener('click', () => {
-            try {
-                const settings = {};
-                panel.querySelectorAll('.ayar-satiri').forEach(row => {
-                    const active = row.querySelector('.gun-aktif-check').checked;
-                    const tacticHomeVal = row.querySelector('.taktik-secim-home').value;
-                    const tacticAwayVal = row.querySelector('.taktik-secim-away').value;
-                    row.dataset.indices.split(',').forEach(dayIndex => { settings[dayIndex] = { aktif: active, taktikHome: tacticHomeVal, taktikAway: tacticAwayVal }; });
-                });
-                setPersistentData(KEY_SETTINGS, JSON.stringify(settings));
-                alert(getText('alertSaved'));
-                panel.style.display = 'none';
-            } catch (e) { alert(getText('alertSaveError') + e.message); }
-        });
-        panel.querySelector('.sifirla-btn').addEventListener('click', () => {
-            if(confirm(getText('alertResetConfirm'))) {
-                removePersistentData(KEY_SETTINGS);
-                removePersistentData(KEY_TACTIC_NAMES);
-                location.reload();
-            }
-        });
-        panel.querySelectorAll('.gun-aktif-check').forEach(cb => {
-            cb.addEventListener('change', e => {
-                const row = e.target.closest('.ayar-satiri');
-                row.querySelector('.taktik-secim-home').style.display = e.target.checked ? 'inline-block' : 'none';
-                row.querySelector('.taktik-secim-away').style.display = e.target.checked ? 'inline-block' : 'none';
+            panel.innerHTML = html; document.body.appendChild(panel);
+            panel.querySelector('.kapat-btn').addEventListener('click', () => panel.style.display = 'none');
+            panel.querySelector('.kaydet-btn').addEventListener('click', () => {
+                try {
+                    const settings = {};
+                    panel.querySelectorAll('.ayar-satiri').forEach(row => {
+                        const active = row.querySelector('.gun-aktif-check').checked;
+                        const tacticHomeVal = row.querySelector('.taktik-secim-home').value;
+                        const tacticAwayVal = row.querySelector('.taktik-secim-away').value;
+                        row.dataset.indices.split(',').forEach(dayIndex => { settings[dayIndex] = { aktif: active, taktikHome: tacticHomeVal, taktikAway: tacticAwayVal }; });
+                    });
+                    setPersistentData(KEY_SETTINGS, JSON.stringify(settings));
+                    alert(getText('alertSaved'));
+                    panel.style.display = 'none';
+                } catch (e) { alert(getText('alertSaveError') + e.message); }
             });
-        });
-        loadSettingsToPanel();
-    }
+            panel.querySelector('.sifirla-btn').addEventListener('click', () => {
+                if(confirm(getText('alertResetConfirm'))) {
+                    removePersistentData(KEY_SETTINGS);
+                    removePersistentData(KEY_TACTIC_NAMES);
+                    location.reload();
+                }
+            });
+            panel.querySelectorAll('.gun-aktif-check').forEach(cb => {
+                cb.addEventListener('change', e => {
+                    const row = e.target.closest('.ayar-satiri');
+                    row.querySelector('.taktik-secim-home').style.display = e.target.checked ? 'inline-block' : 'none';
+                    row.querySelector('.taktik-secim-away').style.display = e.target.checked ? 'inline-block' : 'none';
+                });
+            });
+            loadSettingsToPanel();
+        }
 
-    function loadSettingsToPanel() {
-        const settings = JSON.parse(getPersistentData(KEY_SETTINGS, '{}'));
-        document.querySelectorAll('#mz-ayar-paneli .ayar-satiri').forEach(row => {
-            const idx = row.dataset.indices.split(',')[0];
-            const conf = settings[idx];
-            const cb = row.querySelector('.gun-aktif-check');
-            const selHome = row.querySelector('.taktik-secim-home');
-            const selAway = row.querySelector('.taktik-secim-away');
-            if(conf) {
-                cb.checked = conf.aktif;
-                selHome.value = conf.taktikHome || 'a';
-                selAway.value = conf.taktikAway || 'a';
-                selHome.style.display = conf.aktif ? 'inline-block' : 'none';
-                selAway.style.display = conf.aktif ? 'inline-block' : 'none';
+        function loadSettingsToPanel() {
+            const settings = JSON.parse(getPersistentData(KEY_SETTINGS, '{}'));
+            document.querySelectorAll('#mz-ayar-paneli .ayar-satiri').forEach(row => {
+                const idx = row.dataset.indices.split(',')[0];
+                const conf = settings[idx];
+                const cb = row.querySelector('.gun-aktif-check');
+                const selHome = row.querySelector('.taktik-secim-home');
+                const selAway = row.querySelector('.taktik-secim-away');
+                if(conf) {
+                    cb.checked = conf.aktif;
+                    selHome.value = conf.taktikHome || 'a';
+                    selAway.value = conf.taktikAway || 'a';
+                    selHome.style.display = conf.aktif ? 'inline-block' : 'none';
+                    selAway.style.display = conf.aktif ? 'inline-block' : 'none';
+                } else {
+                    cb.checked = false; selHome.style.display = 'none'; selAway.style.display = 'none';
+                }
+            });
+        }
+
+        // =================================================================================
+        // 6. YÖNETİCİ (BACKGROUND MANAGER) FONKSİYONLARI (GÜNCELLENDİ: 6 SAAT KONTROLÜ)
+        // =================================================================================
+        function initBackgroundManager() {
+            const autoStatus = getQueueData();
+            const now = Date.now();
+            const lastRun = parseInt(autoStatus.lastRun) || 0; // Timestamp olarak al
+            const selectedUsers = JSON.parse(getPersistentData(KEY_SELECTED_USERS, '[]'));
+
+            // --- ZAMAN KONTROLÜ (6 SAAT) ---
+            // Eğer 6 saat geçtiyse (21600000 ms) ve listede kullanıcı varsa çalıştır
+            if (selectedUsers.length > 0 && (now - lastRun > INTERVAL_MS)) {
+                // Otomatik mod kapalı olsa bile zaman geldiyse zorla aç
+                if (!autoStatus.enabled) {
+                    autoStatus.enabled = true;
+                    setQueueData(autoStatus);
+                    console.log("[MZ Otomasyon] 6 saat doldu. Otomatik başlatıldı.");
+                }
+            }
+
+            if (!autoStatus.enabled) return;
+
+            // Eğer süre dolmadıysa ve kuyruk boşsa dur
+            if ((now - lastRun < INTERVAL_MS) && autoStatus.queue.length === 0) return;
+
+            // Kuyruk boşsa ve zamanı geldiyse kuyruğu doldur
+            if (!autoStatus.queue || autoStatus.queue.length === 0) {
+                const allUserObjects = getStoredUsers();
+                const queueObjects = allUserObjects.filter(u => selectedUsers.includes(u.name));
+
+                if (queueObjects.length > 0) {
+                    autoStatus.queue = queueObjects;
+                    // lastRun'ı hemen güncelleme, işlem bitince güncelleyeceğiz
+                    setQueueData(autoStatus);
+                    logToWidget(getText('logSystemStart', queueObjects.length), 'success');
+                } else { return; }
+            }
+
+            if (autoStatus.queue.length > 0) {
+                logToWidget(getText('logRobotCall'), 'warn');
+                createWorkerIframe();
+            }
+
+            window.addEventListener('message', function(e) {
+                if (e.data.type === 'MZ_WORKER_LOG') {
+                    logToWidget(e.data.msg, e.data.logType);
+                }
+                if (e.data.type === 'MZ_WORKER_READY') {
+                    const currentStatus = getQueueData();
+                    if (currentStatus.queue && currentStatus.queue.length > 0) {
+                        const nextUser = currentStatus.queue[0];
+                        const allSettings = JSON.parse(getPersistentData(KEY_SETTINGS, '{}'));
+                        const allTactics = getTacticsList();
+
+                        const iframe = document.getElementById('mz_worker_frame');
+                        if(iframe) {
+                            iframe.contentWindow.postMessage({
+                                type: 'MZ_START_JOB',
+                                user: nextUser,
+                                settings: allSettings,
+                                tactics: allTactics
+                            }, '*');
+                        }
+                    }
+                }
+                if (e.data.type === 'MZ_WORKER_USER_DONE') {
+                    const currentStatus = getQueueData();
+                    const finishedUserObj = currentStatus.queue.shift();
+                    const finishedUserName = finishedUserObj ? finishedUserObj.name : "Unknown";
+                    setQueueData(currentStatus);
+                    logToWidget(getText('logProcessDone', finishedUserName, currentStatus.queue.length), 'success');
+                    const frame = document.getElementById('mz_worker_frame');
+                    if (currentStatus.queue.length > 0) {
+                        if(frame) frame.src = frame.src;
+                    } else {
+                        // --- İŞLEM TAMAMLANDI: ZAMANI KAYDET ---
+                        currentStatus.lastRun = Date.now(); // Şimdiki zamanı kaydet
+                        setQueueData(currentStatus);
+
+                        logToWidget(getText('logAllComplete'), 'success');
+                        if(frame) frame.remove();
+                        setTimeout(() => {
+                            document.getElementById('mz-universal-widget')?.remove();
+                            localStorage.setItem('mz_redirect_to_sent_offers', 'true');
+                            location.reload();
+                        }, 2000);
+                    }
+                }
+            });
+        }
+
+        function createWorkerIframe() {
+            if (document.getElementById('mz_worker_frame')) return;
+            const iframe = document.createElement('iframe');
+            iframe.id = 'mz_worker_frame';
+            iframe.name = 'mz_auto_worker_frame';
+            iframe.src = 'https://www.managerzone.com/?p=challenges&mz_mode=worker';
+            iframe.style.width = '1366px'; iframe.style.height = '768px'; iframe.style.position = 'fixed';
+            iframe.style.bottom = '0'; iframe.style.right = '0'; iframe.style.opacity = '0.01';
+            iframe.style.pointerEvents = 'none'; iframe.style.zIndex = '99999'; iframe.style.left = '-10000px';
+            document.body.appendChild(iframe);
+        }
+
+        // =================================================================================
+        // 7. İŞÇİ (WORKER) FONKSİYONLARI
+        // =================================================================================
+        function waitForSearchBox(attempts = 0) {
+            const searchInput = document.getElementById('search-string');
+            if (searchInput) {
+                if(window.parent) window.parent.postMessage({type: 'MZ_WORKER_READY'}, '*');
+                window.addEventListener('message', (e) => {
+                    if (e.data.type === 'MZ_START_JOB') {
+                        processUserLoop(e.data.user, e.data.settings, e.data.tactics);
+                    }
+                });
             } else {
-                cb.checked = false; selHome.style.display = 'none'; selAway.style.display = 'none';
-            }
-        });
-    }
-
-    // =================================================================================
-    // 6. YÖNETİCİ (BACKGROUND MANAGER) FONKSİYONLARI (GÜNCELLENDİ: 6 SAAT KONTROLÜ)
-    // =================================================================================
-    function initBackgroundManager() {
-        const autoStatus = getQueueData();
-        const now = Date.now();
-        const lastRun = parseInt(autoStatus.lastRun) || 0; // Timestamp olarak al
-        const selectedUsers = JSON.parse(getPersistentData(KEY_SELECTED_USERS, '[]'));
-
-        // --- ZAMAN KONTROLÜ (6 SAAT) ---
-        // Eğer 6 saat geçtiyse (21600000 ms) ve listede kullanıcı varsa çalıştır
-        if (selectedUsers.length > 0 && (now - lastRun > INTERVAL_MS)) {
-            // Otomatik mod kapalı olsa bile zaman geldiyse zorla aç
-            if (!autoStatus.enabled) {
-                autoStatus.enabled = true;
-                setQueueData(autoStatus);
-                console.log("[MZ Otomasyon] 6 saat doldu. Otomatik başlatıldı.");
+                if (attempts < 40) setTimeout(() => waitForSearchBox(attempts + 1), 500);
+                else {
+                    if(window.parent) window.parent.postMessage({type: 'MZ_WORKER_LOG', msg: getText('logErrorTimeout'), logType: 'error'}, '*');
+                    if(window.parent) window.parent.postMessage({type: 'MZ_WORKER_USER_DONE'}, '*');
+                }
             }
         }
 
-        if (!autoStatus.enabled) return;
-
-        // Eğer süre dolmadıysa ve kuyruk boşsa dur
-        if ((now - lastRun < INTERVAL_MS) && autoStatus.queue.length === 0) return;
-
-        // Kuyruk boşsa ve zamanı geldiyse kuyruğu doldur
-        if (!autoStatus.queue || autoStatus.queue.length === 0) {
-            const allUserObjects = getStoredUsers();
-            const queueObjects = allUserObjects.filter(u => selectedUsers.includes(u.name));
-
-            if (queueObjects.length > 0) {
-                autoStatus.queue = queueObjects;
-                // lastRun'ı hemen güncelleme, işlem bitince güncelleyeceğiz
-                setQueueData(autoStatus);
-                logToWidget(getText('logSystemStart', queueObjects.length), 'success');
-            } else { return; }
-        }
-
-        if (autoStatus.queue.length > 0) {
-            logToWidget(getText('logRobotCall'), 'warn');
-            createWorkerIframe();
-        }
-
-        window.addEventListener('message', function(e) {
-            if (e.data.type === 'MZ_WORKER_LOG') {
-                logToWidget(e.data.msg, e.data.logType);
+        async function processUserLoop(userObj, globalSettings, globalTactics) {
+            if (typeof userObj === 'string') {
+                userObj = { name: userObj, days: [0,1,2,3,4,5,6] };
             }
-            if (e.data.type === 'MZ_WORKER_READY') {
-                const currentStatus = getQueueData();
-                if (currentStatus.queue && currentStatus.queue.length > 0) {
-                    const nextUser = currentStatus.queue[0];
-                    const allSettings = JSON.parse(getPersistentData(KEY_SETTINGS, '{}'));
-                    const allTactics = getTacticsList();
 
-                    const iframe = document.getElementById('mz_worker_frame');
-                    if(iframe) {
-                        iframe.contentWindow.postMessage({
-                            type: 'MZ_START_JOB',
-                            user: nextUser,
-                            settings: allSettings,
-                            tactics: allTactics
-                        }, '*');
+            const user = userObj.name;
+            const allowedDays = userObj.days;
+
+            const searchInput = document.getElementById('search-string');
+            const searchBtn = document.getElementById('fss-submit');
+            if (!searchInput) { window.parent.postMessage({type: 'MZ_WORKER_USER_DONE'}, '*'); return; }
+
+            const currentFound = document.querySelector('#search-response-found a');
+            const isAlreadySearched = currentFound && document.getElementById('search-string').value === user;
+
+            if (!isAlreadySearched) {
+                window.parent.postMessage({type: 'MZ_WORKER_LOG', msg: getText('logSearch', user), logType: 'info'}, '*');
+                searchInput.value = user; searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+                if(searchBtn.onclick) searchBtn.click();
+                else searchBtn.dispatchEvent(new MouseEvent('click', { view: window, bubbles: true, cancelable: true }));
+                await wait(2500);
+            }
+
+            const teamLink = document.querySelector('#search-response-found a');
+            if (!teamLink) {
+                window.parent.postMessage({type: 'MZ_WORKER_LOG', msg: getText('logNotFound', user), logType: 'warn'}, '*');
+                window.parent.postMessage({type: 'MZ_WORKER_USER_DONE'}, '*');
+                return;
+            }
+            const targetTeamName = teamLink.innerText.trim();
+
+            const buttons = document.querySelectorAll('.fss-challenge-button');
+            let targetBtn = null;
+            let dayText = "";
+            let settingKeyToUse = null;
+            let detectedMatchDayCode = "";
+            const gunIsimleri = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"];
+
+            const getSettingKeyFromMatchDay = (matchDayIndex) => {
+                if (matchDayIndex === 2) return '1';
+                if (matchDayIndex === 4) return '2';
+                if (matchDayIndex === 5) return '4';
+                if (matchDayIndex === 6) return '5';
+                if (matchDayIndex === 1) return '6';
+                return null;
+            };
+
+            const isChallengeAlreadySent = (targetTeamName, dayText) => {
+                const outTable = document.querySelector('#matches_out tbody');
+                if (!outTable) return false;
+                const rows = outTable.querySelectorAll('tr');
+                for (let row of rows) {
+                    const dayCell = row.querySelector('td:nth-child(2) span');
+                    const rowDay = dayCell ? dayCell.innerText.trim() : "";
+                    if (!rowDay.includes(dayText)) continue;
+                    const teamLink = row.querySelector('td:nth-child(1) a');
+                    const rowTeamName = teamLink ? teamLink.innerText.trim() : "";
+                    if (rowTeamName === targetTeamName) return true;
+                }
+                return false;
+            };
+
+            const savedSettings = globalSettings || {};
+
+            for (let btn of buttons) {
+                if (btn.offsetParent !== null && (btn.innerText.includes("Maç Teklifleri") || btn.innerText.includes("Challenge"))) {
+                    const dayContainer = btn.closest('.fss-d');
+                    if (dayContainer) {
+                        const header = dayContainer.querySelector('.fss-header');
+                        const dayNum = header.innerText.replace(/\D/g, '');
+                        const currentDayText = `Gün ${dayNum}`;
+
+                        if (isChallengeAlreadySent(targetTeamName, currentDayText)) continue;
+
+                        const dateStrong = dayContainer.querySelector('.date-range strong');
+                        if (dateStrong) {
+                            const rawText = dateStrong.innerText;
+                            const dateMatch = rawText.match(/(\d{1,2})[\/.-](\d{1,2})/);
+
+                            if (dateMatch) {
+                                const dayVal = parseInt(dateMatch[1], 10);
+                                const monthVal = parseInt(dateMatch[2], 10) - 1;
+                                const now = new Date();
+                                let yearVal = now.getFullYear();
+                                if (now.getMonth() === 11 && monthVal === 0) yearVal++;
+                                const matchDateObj = new Date(yearVal, monthVal, dayVal);
+                                const dayIndex = matchDateObj.getDay();
+
+                                if (!allowedDays.includes(dayIndex)) {
+                                    continue;
+                                }
+
+                                const dayName = gunIsimleri[dayIndex];
+                                const foundKey = getSettingKeyFromMatchDay(dayIndex);
+                                if (foundKey && savedSettings[foundKey] && savedSettings[foundKey].aktif) {
+                                    settingKeyToUse = foundKey;
+                                    targetBtn = btn;
+                                    dayText = currentDayText;
+                                    detectedMatchDayCode = dayName;
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
             }
-            if (e.data.type === 'MZ_WORKER_USER_DONE') {
-                const currentStatus = getQueueData();
-                const finishedUserObj = currentStatus.queue.shift();
-                const finishedUserName = finishedUserObj ? finishedUserObj.name : "Unknown";
-                setQueueData(currentStatus);
-                logToWidget(getText('logProcessDone', finishedUserName, currentStatus.queue.length), 'success');
-                const frame = document.getElementById('mz_worker_frame');
-                if (currentStatus.queue.length > 0) {
-                    if(frame) frame.src = frame.src;
-                } else {
-                    // --- İŞLEM TAMAMLANDI: ZAMANI KAYDET ---
-                    currentStatus.lastRun = Date.now(); // Şimdiki zamanı kaydet
-                    setQueueData(currentStatus);
 
-                    logToWidget(getText('logAllComplete'), 'success');
-                    if(frame) frame.remove();
-                    setTimeout(() => {
-                        document.getElementById('mz-universal-widget')?.remove();
-                        localStorage.setItem('mz_redirect_to_sent_offers', 'true');
-                        location.reload();
-                    }, 2000);
-                }
+            if (!targetBtn || !settingKeyToUse) {
+                window.parent.postMessage({type: 'MZ_WORKER_LOG', msg: getText('logNoDay', user), logType: 'info'}, '*');
+                window.parent.postMessage({type: 'MZ_WORKER_USER_DONE'}, '*');
+                return;
             }
-        });
+
+            const configToUse = savedSettings[settingKeyToUse];
+            targetBtn.click();
+            await wait(2000);
+
+            const applyTactic = (selector, tacticVal) => {
+                if (!tacticVal) return;
+                const storedTactics = globalTactics || [];
+                const tacticConfig = storedTactics.find(t => t.val === tacticVal);
+                const targetName = tacticConfig ? tacticConfig.txt.trim() : null;
+                const selectEl = $(selector);
+                if (selectEl.length > 0) {
+                    let foundIndex = -1;
+                    let foundValue = null;
+                    selectEl.find('option').each(function(index) {
+                        if (targetName && $(this).text().trim().toLowerCase() === targetName.toLowerCase()) {
+                            foundIndex = index; foundValue = $(this).val(); return false;
+                        }
+                    });
+                    if (foundIndex === -1) {
+                        const letterIndex = tacticVal.toLowerCase().charCodeAt(0) - 97;
+                        if (letterIndex < selectEl[0].options.length) {
+                            foundIndex = letterIndex; foundValue = selectEl[0].options[letterIndex].value;
+                        }
+                    }
+                    if (foundIndex !== -1 && foundValue) {
+                        selectEl[0].selectedIndex = foundIndex;
+                        selectEl[0].value = foundValue;
+                        selectEl.val(foundValue);
+                        selectEl[0].dispatchEvent(new Event('change', { bubbles: true }));
+                        selectEl.trigger('change');
+                    }
+                }
+            };
+
+            if (configToUse.taktikHome) applyTactic('select[name="tactic_home"]', configToUse.taktikHome);
+            if (configToUse.taktikAway) applyTactic('select[name="tactic_away"]', configToUse.taktikAway);
+
+            await wait(1000);
+
+            let sendBtn = null;
+            document.querySelectorAll('.send-challenge-btn').forEach(b => { if (b.offsetParent !== null) sendBtn = b; });
+            if (sendBtn) {
+                sendBtn.click();
+                window.parent.postMessage({type: 'MZ_WORKER_LOG', msg: getText('logOfferSent', user, dayText + " (" + detectedMatchDayCode + ")"), logType: 'sent'}, '*');
+                await wait(2500);
+                location.reload();
+            } else {
+                const closeBtn = document.querySelector('.fss-reset');
+                if(closeBtn) closeBtn.click();
+                window.parent.postMessage({type: 'MZ_WORKER_USER_DONE'}, '*');
+            }
+        }
+
+        // =================================================================================
+        // 8. ÇALIŞTIRMA MANTIĞI
+        // =================================================================================
+        if (isWorkerMode) {
+            if (document.readyState === "complete" || document.readyState === "interactive") {
+                waitForSearchBox();
+            } else {
+                window.addEventListener('load', () => waitForSearchBox());
+            }
+        } else if (window.top === window.self) {
+            // Normal sayfadaysak:
+            // 1. Panel arayüzünü sadece challenges sayfasındaysak yükle
+            if (isChallengePage) initMainPanel();
+
+            // 2. Arka plan yöneticisini HER SAYFADA yükle (Artık 6 saat kontrolünü burada yapıyor)
+            if (document.readyState === "complete" || document.readyState === "interactive") {
+                initBackgroundManager();
+            } else {
+                window.addEventListener('load', initBackgroundManager);
+            }
+        }
+
+        if (localStorage.getItem('mz_redirect_to_sent_offers') === 'true') {
+            localStorage.removeItem('mz_redirect_to_sent_offers');
+            $(document).ready(function() {
+                setTimeout(() => {
+                    const targetTab = $('a[href="#matches_out_wrapper"]');
+                    if (targetTab.length > 0) {
+                        targetTab.click();
+                        $('html, body').animate({ scrollTop: targetTab.offset().top - 150 }, 500);
+                    }
+                }, 800);
+            });
+        }
     }
 
-    function createWorkerIframe() {
-        if (document.getElementById('mz_worker_frame')) return;
-        const iframe = document.createElement('iframe');
-        iframe.id = 'mz_worker_frame';
-        iframe.name = 'mz_auto_worker_frame';
-        iframe.src = 'https://www.managerzone.com/?p=challenges&mz_mode=worker';
-        iframe.style.width = '1366px'; iframe.style.height = '768px'; iframe.style.position = 'fixed';
-        iframe.style.bottom = '0'; iframe.style.right = '0'; iframe.style.opacity = '0.01';
-        iframe.style.pointerEvents = 'none'; iframe.style.zIndex = '99999'; iframe.style.left = '-10000px';
-        document.body.appendChild(iframe);
-    }
+/****************************************************************************************
+ *                                                                                      *
+ *  BÖLÜM 15: LINK ENHANCEMENTS (Link İyileştirmeleri) - v5.0 (Başlık Eşleştirme)       *
+ *                                                                                      *
+ ****************************************************************************************/
+function initializeLinkEnhancements() {
+    'use strict';
+    const currentUrl = window.location.href;
+    const $ = unsafeWindow.jQuery;
 
-    // =================================================================================
-    // 7. İŞÇİ (WORKER) FONKSİYONLARI
-    // =================================================================================
-    function waitForSearchBox(attempts = 0) {
-        const searchInput = document.getElementById('search-string');
-        if (searchInput) {
-            if(window.parent) window.parent.postMessage({type: 'MZ_WORKER_READY'}, '*');
-            window.addEventListener('message', (e) => {
-                if (e.data.type === 'MZ_START_JOB') {
-                    processUserLoop(e.data.user, e.data.settings, e.data.tactics);
+    // --- Alt Modül: Lig Tablosu Link Düzeltici (Değişiklik Yok) ---
+    if (currentUrl.includes('?p=league')) {
+        const fixLeagueLinks = () => {
+            const rows = document.querySelectorAll('.nice_table tbody tr');
+            if (rows.length === 0) return;
+
+            rows.forEach(row => {
+                const weirdLink = row.querySelector('a[href*="?p=league"][href*="tid="]');
+                if (weirdLink) {
+                    try {
+                        const hrefParts = weirdLink.getAttribute('href').split('?')[1];
+                        const urlParams = new URLSearchParams(hrefParts);
+                        const tid = urlParams.get('tid');
+
+                        if (tid) {
+                            weirdLink.href = `/?p=team&tid=${tid}`;
+                        }
+                    } catch (e) {
+                        // Sessizce geç
+                    }
                 }
             });
-        } else {
-            if (attempts < 40) setTimeout(() => waitForSearchBox(attempts + 1), 500);
-            else {
-                if(window.parent) window.parent.postMessage({type: 'MZ_WORKER_LOG', msg: getText('logErrorTimeout'), logType: 'error'}, '*');
-                if(window.parent) window.parent.postMessage({type: 'MZ_WORKER_USER_DONE'}, '*');
-            }
+        };
+
+        fixLeagueLinks();
+
+        const observer = new MutationObserver((mutations) => {
+            const hasAddedNodes = mutations.some(m => m.addedNodes.length > 0);
+            if (hasAddedNodes) fixLeagueLinks();
+        });
+
+        const contentDiv = document.getElementById('contentDiv');
+        if (contentDiv) {
+            observer.observe(contentDiv, { childList: true, subtree: true });
         }
     }
 
-    async function processUserLoop(userObj, globalSettings, globalTactics) {
-        if (typeof userObj === 'string') {
-            userObj = { name: userObj, days: [0,1,2,3,4,5,6] };
-        }
+    // --- Alt Modül: Maç Sayfası Lig Linki Ekleme (YENİ MANTIK) ---
+    else if (currentUrl.includes('?p=match&sub=result&mid=')) {
 
-        const user = userObj.name;
-        const allowedDays = userObj.days;
+        // Profilden belirli bir kategoriye (etikete) ait ligi bulan fonksiyon
+        const findSpecificLeagueFromProfile = (htmlContent, matchCategoryText) => {
+            const doc = new DOMParser().parseFromString(htmlContent, 'text/html');
+            const infoBlock = doc.querySelector('#infoAboutTeam');
+            if (!infoBlock) return null;
 
-        const searchInput = document.getElementById('search-string');
-        const searchBtn = document.getElementById('fss-submit');
-        if (!searchInput) { window.parent.postMessage({type: 'MZ_WORKER_USER_DONE'}, '*'); return; }
+            const rows = infoBlock.querySelectorAll('dd');
 
-        const currentFound = document.querySelector('#search-response-found a');
-        const isAlreadySearched = currentFound && document.getElementById('search-string').value === user;
+            // "U18 Ligi" gibi başlıkları temizleyip eşleştirmek için yardımcı
+            const cleanText = (txt) => txt.replace(':', '').trim().toLowerCase();
+            const targetCategory = cleanText(matchCategoryText);
 
-        if (!isAlreadySearched) {
-            window.parent.postMessage({type: 'MZ_WORKER_LOG', msg: getText('logSearch', user), logType: 'info'}, '*');
-            searchInput.value = user; searchInput.dispatchEvent(new Event('input', { bubbles: true }));
-            if(searchBtn.onclick) searchBtn.click();
-            else searchBtn.dispatchEvent(new MouseEvent('click', { view: window, bubbles: true, cancelable: true }));
-            await wait(2500);
-        }
+            for (let row of rows) {
+                const labelSpan = row.querySelector('.teamExpText');
+                if (!labelSpan) continue;
 
-        const teamLink = document.querySelector('#search-response-found a');
-        if (!teamLink) {
-            window.parent.postMessage({type: 'MZ_WORKER_LOG', msg: getText('logNotFound', user), logType: 'warn'}, '*');
-            window.parent.postMessage({type: 'MZ_WORKER_USER_DONE'}, '*');
-            return;
-        }
-        const targetTeamName = teamLink.innerText.trim();
+                const labelText = cleanText(labelSpan.textContent);
 
-        const buttons = document.querySelectorAll('.fss-challenge-button');
-        let targetBtn = null;
-        let dayText = "";
-        let settingKeyToUse = null;
-        let detectedMatchDayCode = "";
-        const gunIsimleri = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"];
-
-        const getSettingKeyFromMatchDay = (matchDayIndex) => {
-            if (matchDayIndex === 2) return '1';
-            if (matchDayIndex === 4) return '2';
-            if (matchDayIndex === 5) return '4';
-            if (matchDayIndex === 6) return '5';
-            if (matchDayIndex === 1) return '6';
+                // EŞLEŞTİRME MANTIĞI:
+                // Maç başlığındaki yazı (örn: "U18 Ligi") ile profil satırındaki yazı eşleşiyor mu?
+                if (labelText === targetCategory) {
+                    const link = row.querySelector('a');
+                    if (link) {
+                        return {
+                            name: link.textContent.trim(), // Örn: "Turkey - div2.3"
+                            url: link.href // Örn: /?p=league&type=u18&sid=...
+                        };
+                    }
+                }
+            }
             return null;
         };
 
-        const isChallengeAlreadySent = (targetTeamName, dayText) => {
-            const outTable = document.querySelector('#matches_out tbody');
-            if (!outTable) return false;
-            const rows = outTable.querySelectorAll('tr');
-            for (let row of rows) {
-                const dayCell = row.querySelector('td:nth-child(2) span');
-                const rowDay = dayCell ? dayCell.innerText.trim() : "";
-                if (!rowDay.includes(dayText)) continue;
-                const teamLink = row.querySelector('td:nth-child(1) a');
-                const rowTeamName = teamLink ? teamLink.innerText.trim() : "";
-                if (rowTeamName === targetTeamName) return true;
-            }
-            return false;
-        };
+        const enrichMatchHeader = async () => {
+            const wrapper = document.querySelector('#match-info-wrapper');
+            if (!wrapper) return;
 
-        const savedSettings = globalSettings || {};
+            // 1. ADIM: Maçın Kategorisini H1'den Al (Örn: "U18 Ligi", "Lig", "Resmi Kupa")
+            const headerH1 = wrapper.querySelector('h1');
+            if (!headerH1) return;
 
-        for (let btn of buttons) {
-            if (btn.offsetParent !== null && (btn.innerText.includes("Maç Teklifleri") || btn.innerText.includes("Challenge"))) {
-                const dayContainer = btn.closest('.fss-d');
-                if (dayContainer) {
-                    const header = dayContainer.querySelector('.fss-header');
-                    const dayNum = header.innerText.replace(/\D/g, '');
-                    const currentDayText = `Gün ${dayNum}`;
+            const matchCategoryText = headerH1.textContent.trim();
+            if (!matchCategoryText) return;
 
-                    if (isChallengeAlreadySent(targetTeamName, currentDayText)) continue;
+            const subHeader = wrapper.querySelector('h2');
 
-                    const dateStrong = dayContainer.querySelector('.date-range strong');
-                    if (dateStrong) {
-                        const rawText = dateStrong.innerText;
-                        const dateMatch = rawText.match(/(\d{1,2})[\/.-](\d{1,2})/);
+            // Eğer H2 içinde zaten "divX.X" gibi çalışan bir link varsa dokunmayalım (Opsiyonel, duruma göre kaldırılabilir)
+            // Ancak MZ bazen yanlış link veriyor (örnekteki u23_world hatası gibi), o yüzden her durumda düzeltmeyi deneyebiliriz.
+            // if (subHeader && subHeader.querySelector('a')) return;
 
-                        if (dateMatch) {
-                            const dayVal = parseInt(dateMatch[1], 10);
-                            const monthVal = parseInt(dateMatch[2], 10) - 1;
-                            const now = new Date();
-                            let yearVal = now.getFullYear();
-                            if (now.getMonth() === 11 && monthVal === 0) yearVal++;
-                            const matchDateObj = new Date(yearVal, monthVal, dayVal);
-                            const dayIndex = matchDateObj.getDay();
+            // Takım Linkini Bul (Sadece ev sahibi yeterli olur ama garanti olsun diye ilk bulduğumuzu alalım)
+            const teamLink = wrapper.querySelector('a[href*="/?p=team&tid="]');
+            if (!teamLink) return;
 
-                            if (!allowedDays.includes(dayIndex)) {
-                                continue;
-                            }
+            try {
+                // Takımın profil sayfasını çek
+                const response = await fetch(teamLink.href);
+                const html = await response.text();
 
-                            const dayName = gunIsimleri[dayIndex];
-                            const foundKey = getSettingKeyFromMatchDay(dayIndex);
-                            if (foundKey && savedSettings[foundKey] && savedSettings[foundKey].aktif) {
-                                settingKeyToUse = foundKey;
-                                targetBtn = btn;
-                                dayText = currentDayText;
-                                detectedMatchDayCode = dayName;
-                                break;
-                            }
-                        }
+                // H1'deki kategoriye (matchCategoryText) karşılık gelen ligi profilden bul
+                const foundLeague = findSpecificLeagueFromProfile(html, matchCategoryText);
+
+                if (foundLeague) {
+                    // URL'den tid parametresini temizle (temiz lig linki olsun)
+                    let cleanUrl = foundLeague.url;
+                    /* Eğer URL tam path değilse başına domain ekle (Browser otomatik halleder ama garanti olsun) */
+
+                    // H2 etiketi varsa içini değiştir, yoksa oluştur.
+                    if (subHeader) {
+                        subHeader.innerHTML = `<a href="${cleanUrl}">${foundLeague.name}</a>`;
+                    } else {
+                        const newH2 = document.createElement('h2');
+                        newH2.style.margin = "0 0 10px 10px";
+                        newH2.style.padding = "0";
+                        newH2.style.fontSize = "12px";
+                        newH2.innerHTML = `<a href="${cleanUrl}">${foundLeague.name}</a>`;
+                        headerH1.after(newH2);
                     }
+                    console.log(`[LinkEnhancer] Lig linki düzeltildi: ${matchCategoryText} -> ${foundLeague.name}`);
+                } else {
+                    console.log(`[LinkEnhancer] Bu kategori (${matchCategoryText}) için profilde karşılık bulunamadı.`);
                 }
-            }
-        }
 
-        if (!targetBtn || !settingKeyToUse) {
-            window.parent.postMessage({type: 'MZ_WORKER_LOG', msg: getText('logNoDay', user), logType: 'info'}, '*');
-            window.parent.postMessage({type: 'MZ_WORKER_USER_DONE'}, '*');
-            return;
-        }
-
-        const configToUse = savedSettings[settingKeyToUse];
-        targetBtn.click();
-        await wait(2000);
-
-        const applyTactic = (selector, tacticVal) => {
-            if (!tacticVal) return;
-            const storedTactics = globalTactics || [];
-            const tacticConfig = storedTactics.find(t => t.val === tacticVal);
-            const targetName = tacticConfig ? tacticConfig.txt.trim() : null;
-            const selectEl = $(selector);
-            if (selectEl.length > 0) {
-                let foundIndex = -1;
-                let foundValue = null;
-                selectEl.find('option').each(function(index) {
-                    if (targetName && $(this).text().trim().toLowerCase() === targetName.toLowerCase()) {
-                        foundIndex = index; foundValue = $(this).val(); return false;
-                    }
-                });
-                if (foundIndex === -1) {
-                    const letterIndex = tacticVal.toLowerCase().charCodeAt(0) - 97;
-                    if (letterIndex < selectEl[0].options.length) {
-                        foundIndex = letterIndex; foundValue = selectEl[0].options[letterIndex].value;
-                    }
-                }
-                if (foundIndex !== -1 && foundValue) {
-                    selectEl[0].selectedIndex = foundIndex;
-                    selectEl[0].value = foundValue;
-                    selectEl.val(foundValue);
-                    selectEl[0].dispatchEvent(new Event('change', { bubbles: true }));
-                    selectEl.trigger('change');
-                }
+            } catch (err) {
+                console.error("[LinkEnhancer] Veri çekme hatası:", err);
             }
         };
 
-        if (configToUse.taktikHome) applyTactic('select[name="tactic_home"]', configToUse.taktikHome);
-        if (configToUse.taktikAway) applyTactic('select[name="tactic_away"]', configToUse.taktikAway);
-
-        await wait(1000);
-
-        let sendBtn = null;
-        document.querySelectorAll('.send-challenge-btn').forEach(b => { if (b.offsetParent !== null) sendBtn = b; });
-        if (sendBtn) {
-            sendBtn.click();
-            window.parent.postMessage({type: 'MZ_WORKER_LOG', msg: getText('logOfferSent', user, dayText + " (" + detectedMatchDayCode + ")"), logType: 'sent'}, '*');
-            await wait(2500);
-            location.reload();
-        } else {
-            const closeBtn = document.querySelector('.fss-reset');
-            if(closeBtn) closeBtn.click();
-            window.parent.postMessage({type: 'MZ_WORKER_USER_DONE'}, '*');
-        }
-    }
-
-    // =================================================================================
-    // 8. ÇALIŞTIRMA MANTIĞI
-    // =================================================================================
-    if (isWorkerMode) {
-        if (document.readyState === "complete" || document.readyState === "interactive") {
-            waitForSearchBox();
-        } else {
-            window.addEventListener('load', () => waitForSearchBox());
-        }
-    } else if (window.top === window.self) {
-        // Normal sayfadaysak:
-        // 1. Panel arayüzünü sadece challenges sayfasındaysak yükle
-        if (isChallengePage) initMainPanel();
-
-        // 2. Arka plan yöneticisini HER SAYFADA yükle (Artık 6 saat kontrolünü burada yapıyor)
-        if (document.readyState === "complete" || document.readyState === "interactive") {
-            initBackgroundManager();
-        } else {
-            window.addEventListener('load', initBackgroundManager);
-        }
-    }
-
-    if (localStorage.getItem('mz_redirect_to_sent_offers') === 'true') {
-        localStorage.removeItem('mz_redirect_to_sent_offers');
-        $(document).ready(function() {
-            setTimeout(() => {
-                const targetTab = $('a[href="#matches_out_wrapper"]');
-                if (targetTab.length > 0) {
-                    targetTab.click();
-                    $('html, body').animate({ scrollTop: targetTab.offset().top - 150 }, 500);
-                }
-            }, 800);
-        });
+        enrichMatchHeader();
     }
 }
 
-    /****************************************************************************************
-         *                                                                                      *
-         *  BÖLÜM 15: LINK ENHANCEMENTS (Link İyileştirmeleri) - v4.0 (Tüm Ligler Aktif)        *
-         *                                                                                      *
-         ****************************************************************************************/
-        function initializeLinkEnhancements() {
-            'use strict';
-            const currentUrl = window.location.href;
-            const $ = unsafeWindow.jQuery;
-
-            // --- Alt Modül: Lig Tablosu Link Düzeltici ---
-            if (currentUrl.includes('?p=league')) {
-                const fixLeagueLinks = () => {
-                    const rows = document.querySelectorAll('.nice_table tbody tr');
-                    if (rows.length === 0) return;
-
-                    rows.forEach(row => {
-                        const weirdLink = row.querySelector('a[href*="?p=league"][href*="tid="]');
-                        if (weirdLink) {
-                            try {
-                                const hrefParts = weirdLink.getAttribute('href').split('?')[1];
-                                const urlParams = new URLSearchParams(hrefParts);
-                                const tid = urlParams.get('tid');
-
-                                if (tid) {
-                                    weirdLink.href = `/?p=team&tid=${tid}`;
-                                }
-                            } catch (e) {
-                                // Sessizce geç
-                            }
-                        }
-                    });
-                };
-
-                fixLeagueLinks();
-
-                const observer = new MutationObserver((mutations) => {
-                    const hasAddedNodes = mutations.some(m => m.addedNodes.length > 0);
-                    if (hasAddedNodes) fixLeagueLinks();
-                });
-
-                const contentDiv = document.getElementById('contentDiv');
-                if (contentDiv) {
-                    observer.observe(contentDiv, { childList: true, subtree: true });
-                }
-            }
-
-            // --- Alt Modül: Maç Sayfası Lig Linki Ekleme ---
-            else if (currentUrl.includes('?p=match&sub=result&mid=')) {
-
-                const scrapeAllLeagues = (htmlContent) => {
-                    const doc = new DOMParser().parseFromString(htmlContent, 'text/html');
-                    const infoBlock = doc.querySelector('#infoAboutTeam');
-                    if (!infoBlock) return [];
-
-                    const links = infoBlock.querySelectorAll('a[href*="p=league"]');
-
-                    return Array.from(links).map(link => {
-                        const href = link.getAttribute('href');
-                        const sidMatch = href.match(/[?&]sid=(\d+)/);
-
-                        return sidMatch ? {
-                            name: link.textContent.trim(),
-                            url: href,
-                            sid: sidMatch[1]
-                        } : null;
-                    }).filter(item => item !== null);
-                };
-
-                const findCommonLeague = (listA, listB) => {
-                    return listA.find(leagueA => listB.some(leagueB => leagueA.sid === leagueB.sid));
-                };
-
-                const enrichMatchHeader = async () => {
-                    const wrapper = document.querySelector('#match-info-wrapper');
-                    if (!wrapper) return;
-
-                    const headerH1 = wrapper.querySelector('h1');
-                    if (!headerH1) return;
-
-                    // --- DÜZELTME BURADA ---
-                    // Eskiden burada yaş kontrolü vardı, şimdi kaldırdık.
-                    // Artık sadece H2'nin (alt başlık) boş olup olmadığını kontrol ediyoruz.
-                    // -----------------------
-
-                    const subHeader = wrapper.querySelector('h2');
-
-                    // Eğer H2 var ve içinde zaten bir link varsa (MZ bazen koyar) dokunma.
-                    if (subHeader && subHeader.querySelector('a')) return;
-
-                    const teamLinks = wrapper.querySelectorAll('a[href*="/?p=team&tid="]');
-                    const uniqueLinks = [];
-                    const seenTids = new Set();
-
-                    teamLinks.forEach(link => {
-                        const tid = new URLSearchParams(link.search).get('tid');
-                        if (tid && !seenTids.has(tid)) {
-                            seenTids.add(tid);
-                            uniqueLinks.push(link.href);
-                        }
-                    });
-
-                    if (uniqueLinks.length !== 2) return;
-
-                    try {
-                        const [html1, html2] = await Promise.all([
-                            fetch(uniqueLinks[0]).then(r => r.text()),
-                            fetch(uniqueLinks[1]).then(r => r.text())
-                        ]);
-
-                        const leagues1 = scrapeAllLeagues(html1);
-                        const leagues2 = scrapeAllLeagues(html2);
-
-                        // İki takımın ortak olduğu ligi bul
-                        const commonLeague = findCommonLeague(leagues1, leagues2);
-
-                        if (commonLeague) {
-                            const cleanUrl = commonLeague.url.replace(/&tid=\d+/, '');
-
-                            // H2 etiketi varsa içini doldur, yoksa oluştur.
-                            if (subHeader) {
-                                // Stil vermeden saf link ekliyoruz (MZ stiliyle aynı görünür)
-                                subHeader.innerHTML = `<a href="${cleanUrl}">${commonLeague.name}</a>`;
-                            } else {
-                                const newH2 = document.createElement('h2');
-                                newH2.innerHTML = `<a href="${cleanUrl}">${commonLeague.name}</a>`;
-                                headerH1.after(newH2);
-                            }
-                        }
-                    } catch (err) {
-                        console.error("[LinkEnhancer] Veri çekme hatası:", err);
-                    }
-                };
-
-                enrichMatchHeader();
-            }
-        }
-
-   /****************************************************************************************
+/****************************************************************************************
  *                                                                                      *
  *  BÖLÜM EK: SATIŞ VERGİSİ HESAPLAYICI (EVRENSEL DİL DESTEĞİ v7)                       *
  *                                                                                      *
@@ -8640,26 +9265,26 @@ function initializeSellTaxCalculator() {
                     <span>${getText('taxDrop15')}:</span> <span>${effectiveSaleDays > 70 ? getText('passed') : formatDate(date15)}</span>
                 </div>
             `;
-        } else {
-            // --- ALTYAPI OYUNCUSU (Dilden Bağımsız Yaş Tespiti) ---
-            const age = getPlayerAge();
-            let taxRate = "15%";
-            let taxColor = "green";
-            let nextInfo = "";
+            } else {
+                // --- ALTYAPI OYUNCUSU (Dilden Bağımsız Yaş Tespiti) ---
+                const age = getPlayerAge();
+                let taxRate = "15%";
+                let taxColor = "green";
+                let nextInfo = "";
 
-            if (age !== null) {
-                if (age <= 19) {
-                    taxRate = "25%"; taxColor = "#d32f2f";
-                    nextInfo = `<div style="margin-top:4px; color:#555;">${getText('taxDrop20')}: <strong>${getText('nextSeason')}</strong></div>`;
-                } else if (age === 20) {
-                    taxRate = "20%"; taxColor = "#f57c00";
-                    nextInfo = `<div style="margin-top:4px; color:#555;">${getText('taxDrop15_age')}: <strong>${getText('nextSeason')}</strong></div>`;
-                } else {
-                    taxRate = "15%"; taxColor = "green";
-                    nextInfo = `<div style="margin-top:4px; color:green; font-style:italic;">${getText('minTaxReached')}</div>`;
-                }
+                if (age !== null) {
+                    if (age <= 19) {
+                        taxRate = "25%"; taxColor = "#d32f2f";
+                        nextInfo = `<div style="margin-top:4px; color:#555;">${getText('taxDrop20')}: <strong>${getText('nextSeason')}</strong></div>`;
+                    } else if (age === 20) {
+                        taxRate = "20%"; taxColor = "#f57c00";
+                        nextInfo = `<div style="margin-top:4px; color:#555;">${getText('taxDrop15_age')}: <strong>${getText('nextSeason')}</strong></div>`;
+                    } else {
+                        taxRate = "15%"; taxColor = "green";
+                        nextInfo = `<div style="margin-top:4px; color:green; font-style:italic;">${getText('minTaxReached')}</div>`;
+                    }
 
-                content += `
+                    content += `
                     <div style="color:#1565c0; margin-bottom:2px;">${getText('originalPlayer')}</div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <span>${getText('age')}: <strong>${age}</strong></span>
@@ -8668,23 +9293,776 @@ function initializeSellTaxCalculator() {
                     <hr style="margin:4px 0; border:0; border-top:1px dashed #ccc;">
                     ${nextInfo}
                 `;
+                } else {
+                    // Yaş bulunamazsa
+                    content += `<div style="color:#1565c0;">${getText('originalPlayer')}</div><div style="font-style:italic; font-size:10px;">${getText('originalNote')}</div>`;
+                }
+            }
+
+            panel.html(content);
+
+            const container = helpBtn.closest('td');
+            if(container.length > 0) {
+                container.append(panel);
             } else {
-                // Yaş bulunamazsa
-                content += `<div style="color:#1565c0;">${getText('originalPlayer')}</div><div style="font-style:italic; font-size:10px;">${getText('originalNote')}</div>`;
+                helpBtn.parent().parent().append(panel);
             }
         }
 
-        panel.html(content);
+        setInterval(watchForPopup, 1000);
+    }
 
-        const container = helpBtn.closest('td');
-        if(container.length > 0) {
-            container.append(panel);
+/****************************************************************************************
+ *                                                                                      *
+ *  BÖLÜM 16: TRANSFER GÖZLEMCİ FİLTRESİ (V43 - FİLTRE KAYMASI DÜZELTİLDİ)              *
+ *                                                                                      *
+ ****************************************************************************************/
+function initializeTransferScoutFilterScript() {
+    'use strict';
+    const $ = unsafeWindow.jQuery;
+    console.log('[MZ Scout Filter] Modül Başlatıldı (V43 - Fixed Indexing).');
+
+    const STORAGE_KEY_PRESETS = 'mz_tsf_presets_v1';
+
+    const i18n = {
+        tr: {
+            btnTitle: "Gözlemci Robotu",
+            modalTitle: "Hızlı Transfer Tarayıcı",
+            startMsg: "Transfer listesini tarar, oyuncuların YP (¹) ve DP (²) özelliklerini analiz eder.",
+            minStarLabel: "En Az Kaç Yıldız (YP) Kaydedilsin:",
+            starInfo: "Sadece 2, 3 veya 4 yazabilirsiniz.",
+            btnStart: "TARAMAYI BAŞLAT",
+            btnClose: "Kapat",
+            btnStop: "DURDUR",
+            scanningMsg: "Hızlı Tarama ve Analiz Yapılıyor... ",
+            waitMsg: "Yükleniyor...",
+            pageInfo: "İşlenen Sayfa: ",
+            foundInfo: "Bulunan Oyuncu: ",
+            finishMsg: "Tarama Tamamlandı!",
+            panelTitle: "FİLTRELEME PANELİ",
+            lblHP: "Yüksek Potansiyel (YP)",
+            lblLP: "Düşük Potansiyel (DP)",
+            lblSpeed: "Hız (AH)",
+            lblUnscouted: "Gözlemlenmemiş",
+            countVisible: "Filtrelenen Sonuç: ",
+            prevPage: "« Geri",
+            nextPage: "İleri »",
+            pageOf: "Sayfa",
+            stoppedMsg: "Durduruldu.",
+            viewModeCard: "Kart Görünümü",
+            viewModeTable: "Tablo Görünümü",
+            toggleFilters: "Detaylı Potansiyel Filtresi ▼",
+            filterYP: "YP",
+            filterNotYP: "YP Yok",
+            filterNotDP: "DP Yok",
+            // Preset (Ayar) Kısmı
+            presetLabel: "Kayıtlı Ayarlar:",
+            btnSavePreset: "Kaydet",
+            btnLoadPreset: "Yükle",
+            btnDeletePreset: "Sil",
+            phPresetName: "Ayar İsmi...",
+            alertPresetSaved: "Ayarlar başarıyla kaydedildi!",
+            alertPresetLoaded: "Ayarlar yüklendi!",
+            alertPresetDeleted: "Ayar silindi.",
+            alertEnterName: "Lütfen bir ayar ismi giriniz.",
+            // Özellik İsimleri
+            skSpeed: "Hız", skStamina: "Dayanıklılık", skPlayInt: "Oyun Zekası",
+            skPassing: "Paslaşma", skShooting: "Şut Çekme", skHeading: "Kafa Vuruşu",
+            skKeeping: "Kalecilik", skControl: "Top Kontrolü", skTackling: "Top Çalma",
+            skAerial: "Orta Yapma", skSetPlays: "Duran Top"
+        },
+        en: {
+            btnTitle: "Scout Robot",
+            modalTitle: "Fast Transfer Scanner",
+            startMsg: "Scans list and reads HP (¹) and LP (²) markers.",
+            minStarLabel: "Min High Potential (HP) to Save:",
+            starInfo: "Only 2, 3, or 4 allowed.",
+            btnStart: "START SCAN",
+            btnClose: "Close",
+            btnStop: "STOP",
+            scanningMsg: "Fast Scanning & Analyzing... ",
+            waitMsg: "Loading...",
+            pageInfo: "Processed Page: ",
+            foundInfo: "Found Players: ",
+            finishMsg: "Scan Completed!",
+            panelTitle: "FILTER DASHBOARD",
+            lblHP: "High Potential",
+            lblLP: "Low Potential",
+            lblSpeed: "Speed",
+            lblUnscouted: "Unscouted",
+            countVisible: "Showing: ",
+            prevPage: "« Prev",
+            nextPage: "Next »",
+            pageOf: "Page",
+            stoppedMsg: "Stopped.",
+            viewModeCard: "Card View",
+            viewModeTable: "Table View",
+            toggleFilters: "Detailed Potential Filter ▼",
+            filterYP: "HP",
+            filterNotYP: "Not HP",
+            filterNotDP: "Not LP",
+            // Preset Section
+            presetLabel: "Saved Presets:",
+            btnSavePreset: "Save",
+            btnLoadPreset: "Load",
+            btnDeletePreset: "Delete",
+            phPresetName: "Preset Name...",
+            alertPresetSaved: "Settings saved successfully!",
+            alertPresetLoaded: "Settings loaded!",
+            alertPresetDeleted: "Preset deleted.",
+            alertEnterName: "Please enter a preset name.",
+            // Skills
+            skSpeed: "Speed", skStamina: "Stamina", skPlayInt: "Play Int",
+            skPassing: "Passing", skShooting: "Shooting", skHeading: "Heading",
+            skKeeping: "Keeping", skControl: "Ball Ctrl", skTackling: "Tackling",
+            skAerial: "Aerial", skSetPlays: "Set Plays"
+        }
+    };
+
+    const lang = ($('meta[name="language"]').attr('content') || 'en') === 'tr' ? 'tr' : 'en';
+    const getText = (key, ...args) => { const t = i18n[lang][key] || i18n['en'][key]; return typeof t === 'function' ? t(...args) : t; };
+
+    const skillMap = [
+        { key: 'speed', tr: 'Hız', en: 'Speed', labelKey: 'skSpeed' },
+        { key: 'stamina', tr: 'Dayanıklılık', en: 'Stamina', labelKey: 'skStamina' },
+        { key: 'play_intelligence', tr: 'Oyun zekası', en: 'Play intelligence', labelKey: 'skPlayInt' },
+        { key: 'passing', tr: 'Paslaşma', en: 'Passing', labelKey: 'skPassing' },
+        { key: 'shooting', tr: 'Şut çekme', en: 'Shooting', labelKey: 'skShooting' },
+        { key: 'heading', tr: 'Kafa vuruşu', en: 'Heading', labelKey: 'skHeading' },
+        { key: 'keeping', tr: 'Kalecilik', en: 'Keeping', labelKey: 'skKeeping' },
+        { key: 'ball_control', tr: 'Top kontrolü', en: 'Ball control', labelKey: 'skControl' },
+        { key: 'tackling', tr: 'Top çalma', en: 'Tackling', labelKey: 'skTackling' },
+        { key: 'aerial_passing', tr: 'Orta yapma', en: 'Aerial passing', labelKey: 'skAerial' },
+        { key: 'set_plays', tr: 'Duran top', en: 'Set plays', labelKey: 'skSetPlays' }
+    ];
+
+    let isScanning = false;
+    let stopRequested = false;
+    let collectedPlayerData = [];
+    let filteredPlayerData = [];
+    let scanPageCount = 0;
+    let lastFirstPlayerId = "";
+    let minStarToCollect = 0;
+
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    // --- DEBOUNCE ---
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            const context = this;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), wait);
+        };
+    }
+
+    // CSS
+    GM_addStyle(`
+        #mz-scout-filter-btn { float: right; margin-right: 5px; cursor: pointer; background: #6f42c1; color: white; border: 1px solid #59359a; font-weight:bold; }
+        .tsf-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10050; display: none; justify-content: center; align-items: center; }
+        .tsf-modal { background: #fff; padding: 20px; border-radius: 8px; width: 420px; text-align: center; box-shadow: 0 0 25px rgba(0,0,0,0.5); font-family: sans-serif; }
+        .tsf-btn-start { padding: 12px; font-size: 15px; font-weight: bold; color: white; background: #28a745; border: none; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 15px; transition: 0.2s; }
+        .tsf-btn-start:hover { background: #218838; transform: scale(1.02); }
+        .tsf-input-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; background: #f8f9fa; padding: 10px; border-radius: 4px; border: 1px solid #dee2e6; }
+        .tsf-input-limit { padding: 5px; width: 60px; text-align: center; font-weight: bold; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; color: #d63031; }
+        .tsf-info-text { font-size: 11px; color: #d63031; text-align: right; margin-bottom: 15px; font-style: italic; }
+
+        #tsf-scan-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 20000; display: none; flex-direction: column; justify-content: center; align-items: center; color: white; }
+        #tsf-scan-status { font-size: 24px; font-weight: bold; margin-bottom: 10px; color: #4CAF50; }
+        #tsf-scan-count { font-size: 18px; color: #ddd; margin-bottom: 20px; line-height: 1.5; text-align: center; }
+        .tsf-btn-stop { padding: 8px 30px; background: #dc3545; color: white; border: 2px solid #fff; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 14px; transition: transform 0.2s; }
+        .tsf-btn-stop:hover { transform: scale(1.1); }
+        .tsf-loader { border: 5px solid #333; border-top: 5px solid #00d2ff; border-radius: 50%; width: 60px; height: 60px; animation: spin 0.8s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        #tsf-dashboard {
+            background: #1e272e; color: white; padding: 15px; margin-bottom: 15px;
+            border-radius: 8px; position: relative; z-index: 100;
+            border-bottom: 4px solid #0fbcf9; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* PRESET BAR STYLE */
+        .tsf-preset-row {
+            display: flex; align-items: center; gap: 8px; padding-bottom: 10px;
+            margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-wrap: wrap; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px;
+        }
+        .tsf-preset-label { font-weight: bold; color: #ff9ff3; font-size: 13px; }
+        #tsf-preset-select { padding: 5px; border-radius: 4px; border: none; font-size: 12px; background: #333; color: white; }
+        #tsf-preset-name { padding: 5px; border-radius: 4px; border: none; font-size: 12px; width: 120px; }
+        .tsf-btn-p { padding: 5px 10px; border-radius: 4px; border: none; font-size: 11px; cursor: pointer; color: white; font-weight: bold; }
+        .tsf-btn-save { background: #00b894; }
+        .tsf-btn-load { background: #0984e3; }
+        .tsf-btn-del { background: #d63031; }
+
+        .tsf-filter-row { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; align-items: center; margin-bottom: 15px; }
+        .tsf-filter-group { background: rgba(255,255,255,0.08); padding: 5px 10px; border-radius: 5px; display: flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .tsf-filter-title { font-weight: bold; font-size: 12px; color: #ffd32a; margin-right: 5px; }
+        .tsf-lbl { font-size: 12px; cursor: pointer; user-select: none; display: flex; align-items: center; }
+        .tsf-lbl input { margin-right: 4px; }
+
+        .tsf-skill-matrix {
+            display: none; flex-wrap: wrap; gap: 10px; justify-content: center;
+            background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;
+            border: 1px solid #333; margin-bottom: 15px;
+        }
+        .tsf-skill-matrix.show-matrix { display: flex !important; }
+
+        .tsf-skill-box { display: flex; flex-direction: column; align-items: center; background: #2f3640; border: 1px solid #555; padding: 8px; border-radius: 5px; width: 100px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.2s; }
+        .tsf-skill-box:hover { transform: translateY(-2px); border-color: #777; }
+        .tsf-skill-name { font-size: 11px; font-weight: bold; color: #fff; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center; border-bottom: 1px solid #444; padding-bottom: 3px; }
+        .tsf-chk-row { display: flex; align-items: center; justify-content: space-between; gap: 5px; font-size: 10px; color: #ddd; width: 100%; margin-bottom: 2px; cursor: pointer; }
+        .tsf-chk-row input { margin: 0; cursor: pointer; }
+
+        #tsf-counter { font-size: 14px; font-weight: bold; color: #0fbcf9; margin-left: auto; display: flex; align-items: center; gap: 10px; justify-content: space-between; width: 100%; border-top: 1px solid #444; padding-top: 10px; }
+        .tsf-toggle-filters-btn { background: #16a085; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; transition: background 0.2s; }
+        .tsf-toggle-filters-btn:hover { background: #1abc9c; }
+
+        .tsf-pagination-controls button { background: #3c40c6; color: white; border: none; padding: 5px 12px; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        .tsf-pagination-controls button:disabled { background: #57606f; cursor: not-allowed; }
+
+        .tsf-p-wrap {
+            content-visibility: auto;
+            contain-intrinsic-size: 150px;
+            margin-bottom: 10px;
+        }
+        #mz-tsf-results-container { contain: content; }
+    `);
+
+    function createUI() {
+        if ($('#mz-scout-filter-btn').length > 0) return;
+        const targetArea = $('.buttons-wrapper #tds');
+        if (targetArea.length) {
+            const btn = $(`<a href="#" id="mz-scout-filter-btn" class="mzbtn buttondiv button_account">
+                <span class="buttonClassMiddle"><span><i class="fa fa-rocket"></i> ${getText('btnTitle')}</span></span>
+                <span class="buttonClassRight">&nbsp;</span>
+            </a>`);
+            btn.on('click', (e) => { e.preventDefault(); openModal(); });
+            targetArea.before(btn);
+        }
+
+        const modalHTML = `
+        <div id="tsf-modal-overlay" class="tsf-modal-overlay">
+            <div class="tsf-modal">
+                <h3 style="color:#333; margin:0 0 15px 0;">${getText('modalTitle')}</h3>
+                <p style="font-size:12px; color:#666; margin-bottom:20px;">${getText('startMsg')}</p>
+
+                <div class="tsf-input-row">
+                    <label style="font-size:13px; color:#333; font-weight:bold;">${getText('minStarLabel')}</label>
+                    <input type="text" id="tsf-min-hp" class="tsf-input-limit" value="" placeholder="2,3,4">
+                </div>
+                <div class="tsf-info-text">${getText('starInfo')}</div>
+
+                <button id="tsf-start-scan" class="tsf-btn-start">${getText('btnStart')}</button>
+                <div style="margin-top:10px; cursor:pointer; color:#999; font-size:11px; text-decoration:underline;" onclick="$('#tsf-modal-overlay').hide()">${getText('btnClose')}</div>
+            </div>
+        </div>
+
+        <div id="tsf-scan-overlay">
+            <div class="tsf-loader"></div>
+            <div id="tsf-scan-status">${getText('scanningMsg')}</div>
+            <div id="tsf-scan-count"></div>
+            <button id="tsf-stop-scan" class="tsf-btn-stop">${getText('btnStop')}</button>
+        </div>`;
+
+        $('body').append(modalHTML);
+        $('#tsf-start-scan').on('click', startScanningProcess);
+        $('#tsf-stop-scan').on('click', () => { stopRequested = true; $('#tsf-scan-status').text(getText('stoppedMsg')); });
+
+        $('#tsf-min-hp').on('input', function() {
+            let val = $(this).val();
+            val = val.replace(/[^234]/g, '');
+            if (val.length > 1) val = val.slice(-1);
+            $(this).val(val);
+        });
+    }
+
+    function openModal() { $('#tsf-modal-overlay').css('display', 'flex'); }
+
+    function isStarActive(element) {
+        if (element.style.color === 'rgb(0, 0, 0)') return false;
+        if (element.classList.contains('fa-star-o')) return false;
+        const style = window.getComputedStyle(element);
+        const color = style.color;
+        const opacity = style.opacity;
+        if (opacity && parseFloat(opacity) < 0.5) return false;
+        if (color && color.includes('rgb')) {
+            const rgb = color.match(/\d+/g);
+            if (rgb && rgb.length >= 3) {
+                const r = parseInt(rgb[0]), g = parseInt(rgb[1]), b = parseInt(rgb[2]);
+                const saturation = Math.max(r, g, b) - Math.min(r, g, b);
+                if (saturation < 20) return false;
+                return true;
+            }
+        }
+        return true;
+    }
+
+    function countActiveStarsInContainer(wrapper, selector) {
+        let count = 0;
+        wrapper.find(selector).each(function() { if (isStarActive(this)) count++; });
+        return count;
+    }
+
+    // --- DÜZELTİLMİŞ ANALİZ FONKSİYONU (V43) ---
+    function analyzeSkillPotentials(container, playerName) {
+        const skillAnalysis = { hp: [], lp: [] };
+
+        // ManagerZone Standart Beceri Sıralaması (Bu sıra asla değişmez)
+        const skillOrder = [
+            'speed', 'stamina', 'play_intelligence', 'passing', 'shooting',
+            'heading', 'keeping', 'ball_control', 'tackling', 'aerial_passing', 'set_plays'
+        ];
+
+        // DÜZELTME: Sadece "skill_name" içeren satırları seçiyoruz.
+        // Bu, başlıkları veya boş satırları atlar ve indeksin kaymasını önler.
+        const skillRows = container.find('.skill_name').closest('tr');
+
+        skillRows.each(function(index) {
+            // Eğer beklenenden fazla satır varsa (nadiren olur), hata vermesin diye durdur.
+            if (index >= skillOrder.length) return;
+
+            const currentSkillKey = skillOrder[index];
+            const supElement = $(this).find('.sup');
+
+            if (supElement.length > 0) {
+                const supVal = supElement.text().trim();
+
+                if (currentSkillKey) {
+                    if (supVal === '1') { // Yüksek Potansiyel
+                        skillAnalysis.hp.push(currentSkillKey);
+                    } else if (supVal === '2') { // Düşük Potansiyel
+                        skillAnalysis.lp.push(currentSkillKey);
+                    }
+                }
+            }
+        });
+
+        return skillAnalysis;
+    }
+
+    function extractBasicInfo(container) {
+        const name = container.find('a.player_link').text().trim();
+        const link = container.find('a.player_link').attr('href');
+        let age = 0;
+        const ageMatch = container.text().match(/(?:Age|Yaş):\s*(\d+)/i);
+        if (ageMatch) age = parseInt(ageMatch[1]);
+        return { name, link, age };
+    }
+
+    // --- TARAMA ---
+    function startScanningProcess() {
+        console.clear();
+        console.log("--- TRANSFER TARAMASI BAŞLADI (V43) ---");
+        isScanning = true;
+        stopRequested = false;
+        collectedPlayerData = [];
+        scanPageCount = 0;
+        lastFirstPlayerId = "";
+
+        let rawMinStar = $('#tsf-min-hp').val();
+        minStarToCollect = (rawMinStar === '') ? 0 : parseInt(rawMinStar);
+
+        $('#tsf-modal-overlay').hide();
+        $('#tsf-scan-overlay').css('display', 'flex');
+        $('#tsf-scan-count').html(`${getText('pageInfo')} 0`);
+
+        processPage();
+    }
+
+    function processPage() {
+        if (!isScanning) return;
+        if (stopRequested) { finishScanning(); return; }
+
+        const playersOnPage = $('.playerContainer');
+        if (playersOnPage.length === 0) { finishScanning(); return; }
+
+        const currentFirstId = playersOnPage.first().find('.player_id_span').text().trim();
+        if (currentFirstId === lastFirstPlayerId && scanPageCount > 0) { finishScanning(); return; }
+        lastFirstPlayerId = currentFirstId;
+        scanPageCount++;
+
+        playersOnPage.each(function() {
+            const container = $(this);
+            const basics = extractBasicInfo(container);
+            const reportRow = container.find('.scout_report_row');
+            let counts = { hp: 0, lp: 0, speed: 0, unscouted: false };
+
+            if (reportRow.length === 0) {
+                counts.unscouted = true;
+            } else {
+                counts.hp = countActiveStarsInContainer(reportRow.find('.high-stars'), 'i.fa-star');
+                counts.lp = countActiveStarsInContainer(reportRow.find('.low-stars'), 'i.fa-star');
+                counts.speed = countActiveStarsInContainer(reportRow.find('.scout_report_stars').eq(2), 'i.fa-star');
+            }
+
+            if (counts.unscouted || counts.hp < minStarToCollect) return;
+
+            const potentials = analyzeSkillPotentials(container, basics.name);
+
+            // --- HIZLI RENKLENDİRME (DÜZELTİLMİŞ) ---
+            // Buradaki mantık da yukarıdaki analyzeSkillPotentials ile aynı olmalı.
+            const colorSkillOrder = [
+                'speed', 'stamina', 'play_intelligence', 'passing', 'shooting',
+                'heading', 'keeping', 'ball_control', 'tackling', 'aerial_passing', 'set_plays'
+            ];
+
+            // Yine güvenli satır seçiciyi kullanıyoruz
+            const skillRows = container.find('.skill_name').closest('tr');
+
+            skillRows.each(function(index) {
+                if (index >= colorSkillOrder.length) return;
+                const currentKey = colorSkillOrder[index];
+                const row = $(this);
+
+                // Renklendirilecek hedefi bul (Yazı veya Span)
+                let target = row.find('td:first span.skill_name span:first');
+                if(target.length === 0) target = row.find('td:first'); // Yedek seçim
+
+                if (potentials.hp.includes(currentKey)) {
+                    // Yüksek Potansiyel Rengi
+                    target.addClass(`gm_scout_h gm_s${counts.hp} skill_name_colored`);
+                    target.closest('td').addClass(`gm_scout_h gm_s${counts.hp}`);
+                } else if (potentials.lp.includes(currentKey)) {
+                    // Düşük Potansiyel Rengi
+                    target.addClass(`gm_s${counts.lp} skill_name_colored`);
+                    target.closest('td').addClass(`gm_s${counts.lp}`);
+                }
+            });
+            // ----------------------------------------
+
+            let html = container[0].outerHTML;
+
+            collectedPlayerData.push({
+                html: html,
+                hp: counts.hp,
+                lp: counts.lp,
+                speed: counts.speed,
+                unscouted: counts.unscouted,
+                potentials: potentials,
+                basics: basics
+            });
+        });
+
+        $('#tsf-scan-count').html(`${getText('pageInfo')} ${scanPageCount} <br> ${getText('foundInfo')} ${collectedPlayerData.length}`);
+
+        const nextButton = findNextButton();
+        if (nextButton && nextButton.length > 0) {
+            nextButton[0].click();
+            let checks = 0;
+            const checkInt = setInterval(() => {
+                if (stopRequested) {
+                    clearInterval(checkInt);
+                    finishScanning();
+                    return;
+                }
+                if (!isScanning) {
+                    clearInterval(checkInt);
+                    return;
+                }
+
+                const newFirst = $('.playerContainer').first().find('.player_id_span').text().trim();
+                if (newFirst && newFirst !== lastFirstPlayerId) {
+                    clearInterval(checkInt);
+                    processPage();
+                }
+                if (++checks > 40) { clearInterval(checkInt); finishScanning(); }
+            }, 100);
         } else {
-            helpBtn.parent().parent().append(panel);
+            finishScanning();
         }
     }
 
-    setInterval(watchForPopup, 1000);
+    function findNextButton() {
+        const container = $('.transferSearchPages.top:visible');
+        if (container.length === 0) return null;
+        let activeEl = container.find('.nav_select, strong').first();
+        if (activeEl.length === 0) {
+            container.contents().each(function() {
+                if (this.nodeName !== 'A') {
+                    const txt = $(this).text().trim();
+                    if (txt.length > 0 && !isNaN(parseInt(txt))) {
+                        activeEl = $(this);
+                        return false;
+                    }
+                }
+            });
+        }
+        if (activeEl.length === 0) return null;
+        let targetBtn = null;
+        const activeNode = activeEl[0];
+        const allLinks = container.find('a');
+        allLinks.each(function() {
+            const linkNode = this;
+            if (activeNode.compareDocumentPosition(linkNode) & 4) {
+                targetBtn = $(linkNode);
+                return false;
+            }
+        });
+        return targetBtn;
+    }
+
+    function finishScanning() {
+        isScanning = false;
+        $('#tsf-scan-status').text(getText('finishMsg'));
+        $('#tsf-stop-scan').hide();
+        setTimeout(() => {
+            $('#tsf-scan-overlay').hide();
+            collectedPlayerData.sort((a, b) => {
+                if (b.hp !== a.hp) return b.hp - a.hp;
+                if (b.lp !== a.lp) return b.lp - a.lp;
+                return b.speed - a.speed;
+            });
+            filteredPlayerData = [...collectedPlayerData];
+            renderDashboardAndList();
+        }, 800);
+    }
+
+    // --- SONUÇ GÖSTERİMİ & PRESET YÖNETİMİ ---
+    function getPresets() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY_PRESETS);
+            return raw ? JSON.parse(raw) : {};
+        } catch(e) { return {}; }
+    }
+
+    function savePreset(name) {
+        if(!name) { alert(getText('alertEnterName')); return; }
+        const config = {
+            hp: $('.tsf-live-filter[data-type="hp"]:checked').map(function(){return parseInt(this.value)}).get(),
+            lp: $('.tsf-live-filter[data-type="lp"]:checked').map(function(){return parseInt(this.value)}).get(),
+            speed: $('.tsf-live-filter[data-type="speed"]:checked').map(function(){return parseInt(this.value)}).get(),
+            matrix: {}
+        };
+
+        $('.tsf-mx-yp:checked').each(function() {
+            const k = $(this).data('key');
+            if(!config.matrix[k]) config.matrix[k] = [];
+            config.matrix[k].push('yp');
+        });
+        $('.tsf-mx-notyp:checked').each(function() {
+            const k = $(this).data('key');
+            if(!config.matrix[k]) config.matrix[k] = [];
+            config.matrix[k].push('notyp');
+        });
+        $('.tsf-mx-notdp:checked').each(function() {
+            const k = $(this).data('key');
+            if(!config.matrix[k]) config.matrix[k] = [];
+            config.matrix[k].push('notdp');
+        });
+
+        const presets = getPresets();
+        presets[name] = config;
+        localStorage.setItem(STORAGE_KEY_PRESETS, JSON.stringify(presets));
+        updatePresetDropdown(name);
+        alert(getText('alertPresetSaved'));
+    }
+
+    function loadPreset(name) {
+        const presets = getPresets();
+        const config = presets[name];
+        if(!config) return;
+
+        $('.tsf-live-filter, .tsf-mx-yp, .tsf-mx-notyp, .tsf-mx-notdp').prop('checked', false);
+
+        if(config.hp) config.hp.forEach(v => $(`.tsf-live-filter[data-type="hp"][value="${v}"]`).prop('checked', true));
+        if(config.lp) config.lp.forEach(v => $(`.tsf-live-filter[data-type="lp"][value="${v}"]`).prop('checked', true));
+        if(config.speed) config.speed.forEach(v => $(`.tsf-live-filter[data-type="speed"][value="${v}"]`).prop('checked', true));
+
+        if(config.matrix) {
+            for (const [key, types] of Object.entries(config.matrix)) {
+                if(types.includes('yp')) $(`.tsf-mx-yp[data-key="${key}"]`).prop('checked', true);
+                if(types.includes('notyp')) $(`.tsf-mx-notyp[data-key="${key}"]`).prop('checked', true);
+                if(types.includes('notdp')) $(`.tsf-mx-notdp[data-key="${key}"]`).prop('checked', true);
+            }
+        }
+
+        applyLiveFilters();
+        alert(getText('alertPresetLoaded'));
+    }
+
+    function deletePreset(name) {
+        if(!name) return;
+        const presets = getPresets();
+        delete presets[name];
+        localStorage.setItem(STORAGE_KEY_PRESETS, JSON.stringify(presets));
+        updatePresetDropdown();
+        alert(getText('alertPresetDeleted'));
+    }
+
+    function updatePresetDropdown(selectName = null) {
+        const presets = getPresets();
+        const sel = $('#tsf-preset-select');
+        sel.empty();
+        sel.append(`<option value="">-- Seçiniz --</option>`);
+        for (const name of Object.keys(presets)) {
+            sel.append(`<option value="${name}">${name}</option>`);
+        }
+        if(selectName) sel.val(selectName);
+    }
+
+    function renderDashboardAndList() {
+        $('#players_container').remove();
+        $('.transferSearchPages').remove();
+        const newContainer = $('<div id="mz-tsf-results-container" class="players_transfer_container" style="min-height: 500px;"></div>');
+
+        let skillMatrixHTML = '';
+        skillMap.forEach(s => {
+            const skillName = getText(s.labelKey);
+            skillMatrixHTML += `
+                <div class="tsf-skill-box">
+                    <span class="tsf-skill-name" title="${skillName}">${skillName}</span>
+                    <label class="tsf-chk-row" style="color:#2ecc71;">${getText('filterYP')} <input type="checkbox" class="tsf-mx-yp" data-key="${s.key}"></label>
+                    <label class="tsf-chk-row" style="color:#f39c12;">${getText('filterNotYP')} <input type="checkbox" class="tsf-mx-notyp" data-key="${s.key}"></label>
+                    <label class="tsf-chk-row" style="color:#e74c3c;">${getText('filterNotDP')} <input type="checkbox" class="tsf-mx-notdp" data-key="${s.key}"></label>
+                </div>
+            `;
+        });
+
+        const dashboardHTML = `
+        <div id="tsf-dashboard">
+            <div class="tsf-preset-row">
+                <span class="tsf-preset-label">${getText('presetLabel')}</span>
+                <select id="tsf-preset-select"></select>
+                <button id="tsf-btn-load" class="tsf-btn-p tsf-btn-load">${getText('btnLoadPreset')}</button>
+                <div style="flex-grow:1;"></div>
+                <input type="text" id="tsf-preset-name" placeholder="${getText('phPresetName')}">
+                <button id="tsf-btn-save" class="tsf-btn-p tsf-btn-save">${getText('btnSavePreset')}</button>
+                <button id="tsf-btn-del" class="tsf-btn-p tsf-btn-del">${getText('btnDeletePreset')}</button>
+            </div>
+
+            <div class="tsf-filter-row">
+                <div class="tsf-filter-group">
+                    <span class="tsf-filter-title">${getText('lblHP')}</span>
+                    <label class="tsf-lbl"><input type="checkbox" class="tsf-live-filter" data-type="hp" value="4" checked>4★</label>
+                    <label class="tsf-lbl"><input type="checkbox" class="tsf-live-filter" data-type="hp" value="3" checked>3★</label>
+                </div>
+                <div class="tsf-filter-group">
+                    <span class="tsf-filter-title">${getText('lblLP')}</span>
+                    <label class="tsf-lbl"><input type="checkbox" class="tsf-live-filter" data-type="lp" value="2" checked>2★</label>
+                    <label class="tsf-lbl"><input type="checkbox" class="tsf-live-filter" data-type="lp" value="1" checked>1★</label>
+                </div>
+                <div class="tsf-filter-group">
+                    <span class="tsf-filter-title">${getText('lblSpeed')}</span>
+                    <label class="tsf-lbl"><input type="checkbox" class="tsf-live-filter" data-type="speed" value="4" checked>4★</label>
+                    <label class="tsf-lbl"><input type="checkbox" class="tsf-live-filter" data-type="speed" value="3" checked>3★</label>
+                    <label class="tsf-lbl"><input type="checkbox" class="tsf-live-filter" data-type="speed" value="2" checked>2★</label>
+                    <label class="tsf-lbl"><input type="checkbox" class="tsf-live-filter" data-type="speed" value="1" checked>1★</label>
+                </div>
+                <button class="tsf-toggle-filters-btn">${getText('toggleFilters')}</button>
+            </div>
+
+            <div class="tsf-skill-matrix">
+                ${skillMatrixHTML}
+            </div>
+
+            <div id="tsf-counter">
+                <span id="tsf-status-text">${getText('countVisible')} ${filteredPlayerData.length} / ${collectedPlayerData.length}</span>
+                <div class="tsf-pagination-controls">
+                    <button id="tsf-prev-btn" disabled>${getText('prevPage')}</button>
+                    <span id="tsf-page-info" class="tsf-page-info">${getText('pageOf')} 1</span>
+                    <button id="tsf-next-btn">${getText('nextPage')}</button>
+                </div>
+            </div>
+        </div>
+        <div id="tsf-player-list"></div>`;
+
+        newContainer.append(dashboardHTML);
+        $('.transfer_window').last().after(newContainer);
+        $(window).scrollTop(0);
+        currentPage = 1;
+        renderCurrentPage();
+        updatePresetDropdown();
+
+        const debouncedFilter = debounce(applyLiveFilters, 300);
+        $(document).on('change', '.tsf-live-filter, .tsf-mx-yp, .tsf-mx-notdp, .tsf-mx-notyp', debouncedFilter);
+
+        $('#tsf-btn-save').on('click', () => savePreset($('#tsf-preset-name').val().trim()));
+        $('#tsf-btn-load').on('click', () => loadPreset($('#tsf-preset-select').val()));
+        $('#tsf-btn-del').on('click', () => deletePreset($('#tsf-preset-select').val()));
+        $('#tsf-preset-select').on('change', function() { $('#tsf-preset-name').val(this.value); });
+
+        $('#tsf-prev-btn').on('click', () => { if(currentPage > 1) { currentPage--; renderCurrentPage(true); } });
+        $('#tsf-next-btn').on('click', () => {
+            const maxPage = Math.ceil(filteredPlayerData.length / itemsPerPage);
+            if(currentPage < maxPage) { currentPage++; renderCurrentPage(true); }
+        });
+
+        $('.tsf-toggle-filters-btn').on('click', () => {
+            $('.tsf-skill-matrix').toggleClass('show-matrix');
+        });
+    }
+
+    function renderCurrentPage(scrollToTop = false) {
+        const listDiv = $('#tsf-player-list');
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = Math.min(startIndex + itemsPerPage, filteredPlayerData.length);
+        const pageData = filteredPlayerData.slice(startIndex, endIndex);
+
+        let htmlBuffer = '';
+        pageData.forEach(p => {
+            htmlBuffer += `<div class="tsf-p-wrap">${p.html}</div>`;
+        });
+
+        listDiv.html(htmlBuffer);
+
+        const maxPage = Math.ceil(filteredPlayerData.length / itemsPerPage) || 1;
+        $('#tsf-prev-btn').prop('disabled', currentPage === 1);
+        $('#tsf-next-btn').prop('disabled', currentPage === maxPage);
+        $('#tsf-page-info').text(`${getText('pageOf')} ${currentPage} / ${maxPage}`);
+
+        if (scrollToTop) {
+            $(window).scrollTop(0);
+        }
+    }
+
+    function applyLiveFilters() {
+        const hpVals = $('.tsf-live-filter[data-type="hp"]:checked').map(function(){return parseInt(this.value)}).get();
+        const lpVals = $('.tsf-live-filter[data-type="lp"]:checked').map(function(){return parseInt(this.value)}).get();
+        const speedVals = $('.tsf-live-filter[data-type="speed"]:checked').map(function(){return parseInt(this.value)}).get();
+
+        const mustBeHP = [];
+        const mustNotBeHP = [];
+        const mustNotBeDP = [];
+
+        $('.tsf-mx-yp:checked').each(function() { mustBeHP.push($(this).data('key')); });
+        $('.tsf-mx-notyp:checked').each(function() { mustNotBeHP.push($(this).data('key')); });
+        $('.tsf-mx-notdp:checked').each(function() { mustNotBeDP.push($(this).data('key')); });
+
+        filteredPlayerData = collectedPlayerData.filter(p => {
+            if (p.unscouted) return false;
+
+            const hpMatch = hpVals.length === 0 || hpVals.includes(p.hp);
+            const lpMatch = lpVals.length === 0 || lpVals.includes(p.lp);
+            const speedMatch = speedVals.length === 0 || speedVals.includes(p.speed);
+
+            if (!(hpMatch && lpMatch && speedMatch)) return false;
+
+            for (let skillKey of mustBeHP) {
+                if (!p.potentials.hp.includes(skillKey)) return false;
+            }
+
+            for (let skillKey of mustNotBeHP) {
+                if (p.potentials.hp.includes(skillKey)) return false;
+            }
+
+            for (let skillKey of mustNotBeDP) {
+                if (p.potentials.lp.includes(skillKey)) return false;
+            }
+
+            return true;
+        });
+
+        currentPage = 1;
+        $('#tsf-status-text').text(`${getText('countVisible')} ${filteredPlayerData.length} / ${collectedPlayerData.length}`);
+        renderCurrentPage(false);
+    }
+
+    setTimeout(createUI, 1000);
+    const observer = new MutationObserver(() => createUI());
+    const target = document.querySelector('.buttons-wrapper');
+    if(target) observer.observe(target, { childList: true, subtree: true });
 }
 
 })();

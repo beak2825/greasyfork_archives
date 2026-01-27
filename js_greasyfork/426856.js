@@ -709,7 +709,7 @@ var hhh_lightoff_main = {
                             lightOnWhenPause: { text: '暂停时自动开灯', status: OFF, fn: 'lightOnWhenPause' },
                             lightOnWhenLike: { text: '关灯状态时滚动屏幕控制开关灯', status: OFF, tip: '默认下滚超过0.3屏开灯，方便关灯时点赞、评论等', fn: 'lightOnWhenLike',
                                                args:{ screen_top: 0.3, opt: { tip: ['占屏比（0.0~1.0）'] } } },
-                            autoQualityVideo: { text: '自动选择视频画质', status: ON, tip: '',
+                            autoQualityVideo: { text: '自动选择视频画质', status: OFF, tip: '',
                                                 args2:{ type: ['select'],
                                                 select: { items: ["自动最高", "真彩 HDR", "超清 4K", "高清 1080P60", "高清 1080P+", "高清 1080P", "高清 720P", "清晰 480P", "流畅 360P", "自动"],
                                                           data_value: [Number.MAX_SAFE_INTEGER, 125, 120, 116, 112, 80, 64, 32, 16, 0],
@@ -4799,7 +4799,7 @@ var hhh_lightoff_main = {
             $('.tag-panel .tag-link:first, .tag-panel .tag-link:eq(1)').each(function(){
                 tags.push($(this).text())
             })
-            $('.pubdate-ip.item').after(`<span id=hhh_tags style="margin-right:5px">( ${tags.join(' | ')} )</span>`)
+            $('.video-info-meta .pubdate-ip.item').after(`<span id=hhh_tags style="margin-right:5px">( ${tags.join(' | ')} )</span>`)
         }
 
         //读取cookie
@@ -5194,7 +5194,7 @@ var hhh_lightoff_main = {
             function add_play_count_to_video_title(play_count){
                 if(play_count === undefined) return
                 remove_play_count_to_video_title()
-                let $insert = $('#hhh_tags').length > 0 ? $('#hhh_tags') : $('.pubdate-ip.item')
+                let $insert = $('#hhh_tags').length > 0 ? $('#hhh_tags') : $('.video-info-meta .pubdate-ip.item')
                 $insert.after(`<span id=hhh_normal_video_play_count style="margin-right:10px">( 观看次数:${play_count} )</span>`)
             }
 
@@ -5247,6 +5247,7 @@ var hhh_lightoff_main = {
         // })
         
         //加载视频时执行，处理不刷新页面也重新加载视频的情况
+        let a = 0
         function run_video_loaded(){
             // log('------加载视频时执行，处理不刷新页面也重新加载视频的情况------')
             
@@ -5290,7 +5291,8 @@ var hhh_lightoff_main = {
             expand_list(config.getCheckboxSettingStatus('expandList'), config.getCheckboxSettingArgs('expandList', 'columns'))
             
             //列表类视频head加入总时长等信息、进度可视化、排序
-            set_video_list()
+            if(a<=0)set_video_list()
+            a++
             
             //新窗口打开自动连播列表视频
             run_rec_list_newtab(config.getCheckboxSettingStatus('openVideoInNewTab'))
@@ -5305,7 +5307,7 @@ var hhh_lightoff_main = {
             video_speed_set(config.getCheckboxSettingStatus('videoSpeedDefault'), config.getCheckboxSettingArgs('videoSpeedDefault', 'speed'))
 
             //抬头显示tags（视频属于哪个区）
-            add_tags_to_video_title()
+            add_tags_to_video_title(config.getCheckboxSettingStatus('addTagsToVideoTitle'))
             
             //常规视频播放计数
             normal_video_play_count(config.getCheckboxSettingStatus('normalVideoPlayCount'), config.getCheckboxSettingArgs('normalVideoPlayCount', 'second'))
@@ -8292,6 +8294,7 @@ let s = {'color': "var(--Ga1_t)"}
                             // if(silde.hasAttribute('data-hhh-video-count')) return
                             // silde.dataset.hhhVideoCount = ''
                             $('.video-pod__slide .slide-inner .slide-item').each((i, item)=>{
+                                // console.log(i,item)
                                 let $item = $(item)
                                 $item.css({display: 'flex', 'flex-direction': 'column', 'justify-content': 'center', 'height': '42px', 'line-height': 'normal'})
                                 let n = $('.video-pod')[0]?.__vue__.podSectionList[i].list.length
@@ -9122,12 +9125,14 @@ let s = {'color': "var(--Ga1_t)"}
 
                             // 1. 记录原始样式
                             const originalStyle = pod.style.cssText
-                            pod.style.display = 'block'
+                            if (video_type === '合集' ) pod.style.display = 'block'
+
+                            console.log($pod.find('.title')[0].getBoundingClientRect().width)
 
                             max_w.max_w_title    = $pod.find('.title')[0].getBoundingClientRect().width
-                            max_w.max_w_view     = $pod.find('.view')[0].getBoundingClientRect().width
+                            max_w.max_w_view     = $pod.find('.view')?.[0]?.getBoundingClientRect().width
                             max_w.max_w_dm       = $pod.find('.dm')[0].getBoundingClientRect().width
-                            max_w.max_w_pubdate  = $pod.find('.pubdate')[0].getBoundingClientRect().width
+                            max_w.max_w_pubdate  = $pod.find('.pubdate')?.[0]?.getBoundingClientRect().width
                             max_w.max_w_duration = $pod.find('.stat-item')[0].getBoundingClientRect().width
 
                             // const $video_pod_item = $('.video-pod__item:first')
@@ -9146,9 +9151,12 @@ let s = {'color': "var(--Ga1_t)"}
                             const w_reset    = 32
                             const w_title    = max_w.max_w_title + item_padding + stats_margin_left/2 - w_reset
                             const w_view     = Math.max(max_w.max_w_view, 1) + stats_margin_left/2 + episode_gap/2
+                            // const w_view     = 0
                             const w_dm       = Math.max(max_w.max_w_dm, 1) + episode_gap/2 + (is_addDateKey ? episode_gap/2 : stats_gap/2)
                             const w_pubdate  = is_addDateKey ? Math.max(max_w.max_w_pubdate, 1) + episode_gap/2 + stats_gap/2 : 0
                             const w_duration = Math.max(max_w.max_w_duration, 1) + stats_gap/2 + item_padding
+
+                            console.log('max_w',max_w, w_title)
 
                             let widths
                             if (video_type === '合集') {
@@ -9446,12 +9454,13 @@ let s = {'color': "var(--Ga1_t)"}
                             , o = t - 112 - n
                             , a = o < r ? o : r;
                             a < 668 && (a = 668),
-                            1694 < a && (a = 1694);
+                            1694 < a && (a = 668);
                             var d, l = a + n;
                             window.isWide && (l -= 125,
                             a -= 100),
                             d = window.hasBlackSide && !window.isWide ? Math.round((a - 14 + (e ? n : 0)) * (9 / 16) + (1680 < innerWidth ? 56 : 46)) + 96 : Math.round((a + (e ? n : 0)) * (9 / 16)) + (1680 < innerWidth ? 56 : 46);
                             var c = l - n;
+                            console.log('l',l,'a',a,'n',n,'l - (e ? -30 : n) + "px"', l - (e ? -30 : n))
                             var s = constructStyleString(".video-container-v1", {
                                 width: "auto",
                                 padding: "0 10px"
@@ -9510,7 +9519,7 @@ let s = {'color': "var(--Ga1_t)"}
                         
                         function limit_width(right_container_width){
                             const t = Math.max(document.body && document.body.clientWidth || window.innerWidth, 1100)
-                            const limit_right_container_width = Math.max(411, Math.min(right_container_width, t - 112 - 668))
+                            let limit_right_container_width = Math.max(411, Math.min(right_container_width, t - 112 - 668))
                             // console.log('t',t, 'old_right_container_width', $('.right-container').width(), 'right_container_width', right_container_width, 'limit_right_container_width', limit_right_container_width)
                             return limit_right_container_width
                         }
@@ -9529,11 +9538,14 @@ let s = {'color': "var(--Ga1_t)"}
                             ctx.font = get_title_max_width.font
 
                             let max_txt_width = 0
+                            let arr = []
                             $items.each((i, v) => {
                                 const width = ctx.measureText($(v).text().trim()).width
+                                arr.push(width)
                                 if (width > max_txt_width) max_txt_width = width
                             })
 
+                            // max_txt_width = arr.sort()[parseInt(arr.length*0.95)]
                             const gif_width = $('.video-pod__list .playing-gif:first').outerWidth(true)
                             // console.log('max_txt_width', max_txt_width)
                             // console.log('old_title_width', $('.video-pod__list .title:first').outerWidth(true),'maxWidth', parseInt(max_txt_width + gif_width) + 1)
@@ -9547,7 +9559,7 @@ let s = {'color': "var(--Ga1_t)"}
 
                             let title = $('.video-pod__list .title:first').outerWidth(true)
                             let right = $('.right-container').width()
-                            log('title', title, 'right', right, 'right-title', right-title)
+                            // log('title', title, 'right', right, 'right-title', right-title)
                             
                             let new_right_container_width = WIDTH_WIDE
                             let title_max_width = 0
@@ -9591,6 +9603,7 @@ let s = {'color': "var(--Ga1_t)"}
                             
                             console.time('hhh_expand_title')
                             handle_event(next)
+                            window.setSize()
                             timeEnd('hhh_expand_title')
                         })
 
@@ -10107,7 +10120,7 @@ let s = {'color': "var(--Ga1_t)"}
                         // log(e.type)
                         if(e.type === 'loadeddata'){
                             waitForTrue(()=> window?.__INITIAL_STATE__?.videoData?.bvid === window?.__INITIAL_STATE__?.bvid, ()=>{
-                                lazyload([run_once, run_video_loaded])  //run_video_loaded
+                                lazyload([run_once, run_video_loaded])
                             })
                         }
                     })

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Torn ACI Member Badge (Indonesia)
 // @namespace    https://greasyfork.org/users/aci-indonesia
-// @version      1.5.0
-// @description  Shows ACI MEMBER badge with Indonesian flag icon for verified users.
+// @version      1.5.7
+// @description  Shows ACI MEMBER badge with Indonesian flag emoji for verified users.
 // @author       Altec64
 // @license      All Rights Reserved
 // @match        https://www.torn.com/profiles.php*
@@ -641,64 +641,86 @@
   "3556218"
     ]);
 
-// 🇮🇩 Indonesian flag icon
-    const FLAG_ICON_URL = 'https://flagcdn.com/w20/id.png';
+const containerId = "aciMemberContainer";
 
-    function injectAciBadge() {
-        const nameHeader = document.querySelector('h4#skip-to-content');
-        if (!nameHeader) return;
+    function getUserId() {
+        try {
+            const url = new URL(window.location.href);
+            const keys = ["XID", "ID", "xid", "id", "userID", "userid"];
+            for (const k of keys) {
+                const v = url.searchParams.get(k);
+                if (v && /^\d{3,}$/.test(v)) return v;
+            }
+        } catch (e) {}
 
-        // More flexible regex: match any 6+ digit number
-        const match = nameHeader.textContent.match(/(\d{6,})/);
-        if (!match) return;
+        const header = document.querySelector("h4#skip-to-content");
+        if (header) {
+            const m = header.textContent.match(/(\d{6,})/);
+            if (m) return m[1];
+        }
 
-        const userId = match[1];
-        if (!ACI_MEMBERS.has(userId)) return;
+        const anyLink = document.querySelector(
+            'a[href*="profiles.php"][href*="XID="],a[href*="profiles.php"][href*="ID="]'
+        );
+        if (anyLink && anyLink.href) {
+            const m = anyLink.href.match(/[?&](?:XID|ID)=(\d+)/i);
+            if (m) return m[1];
+        }
 
-        // Prevent duplicate injection
-        if (document.getElementById('aci-member-container')) return;
-
-        const container = document.createElement('span');
-        container.id = 'aci-member-container';
-        container.style.marginLeft = '10px';
-        container.style.display = 'inline-flex';
-        container.style.alignItems = 'center';
-        container.style.gap = '6px';
-
-        // 🔴 ACI MEMBER badge
-        const badge = document.createElement('span');
-        badge.textContent = 'ACI MEMBER';
-        badge.style.padding = '4px 8px';
-        badge.style.backgroundColor = '#c62828';
-        badge.style.color = '#ffffff';
-        badge.style.fontSize = '12px';
-        badge.style.fontWeight = 'bold';
-        badge.style.borderRadius = '4px';
-        badge.title = 'ACI Discord Verified Member';
-
-        // 🇮🇩 Flag icon
-        const flag = document.createElement('img');
-        flag.src = FLAG_ICON_URL;
-        flag.alt = 'Indonesia';
-        flag.title = 'Indonesia';
-        flag.style.width = '16px';
-        flag.style.height = '16px';
-        flag.style.objectFit = 'cover';
-
-        container.appendChild(badge);
-        container.appendChild(flag);
-        nameHeader.appendChild(container);
-
-        console.log("ACI badge injected for ID:", userId);
+        return null;
     }
 
-    // Run once immediately
-    injectAciBadge();
+    function getNameHeader() {
+        return document.querySelector("h4#skip-to-content") || document.querySelector("h4");
+    }
 
-    // Observe DOM changes
-    const observer = new MutationObserver(injectAciBadge);
-    observer.observe(document.body, { childList: true, subtree: true });
+    function injectBadgeOnce() {
+        if (document.getElementById(containerId)) return;
 
-    // Fallback: retry every second
-    setInterval(injectAciBadge, 1000);
+        const userId = getUserId();
+        if (!userId) return;
+
+        if (!ACI_MEMBERS.has(String(userId))) return;
+
+        const nameHeader = getNameHeader();
+        if (!nameHeader) return;
+
+        const container = document.createElement("span");
+        container.id = containerId;
+        container.style.marginLeft = "10px";
+
+        const badge = document.createElement("span");
+        badge.textContent = "ACI MEMBER";
+        badge.title = "ACI Discord Verified Member";
+        badge.style.padding = "4px 8px";
+        badge.style.backgroundColor = "#c62828";
+        badge.style.color = "#ffffff";
+        badge.style.fontSize = "12px";
+        badge.style.fontWeight = "700";
+        badge.style.borderRadius = "4px";
+
+        container.appendChild(badge);
+        nameHeader.appendChild(container);
+    }
+
+    function boot() {
+        // Initial tries
+        injectBadgeOnce();
+
+        // Observer (fast DOM changes)
+        const obs = new MutationObserver(injectBadgeOnce);
+        obs.observe(document.documentElement || document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        // Desktop Torn final render killer → periodic re-inject
+        setInterval(injectBadgeOnce, 2000);
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot, { once: true });
+    } else {
+        boot();
+    }
 })();

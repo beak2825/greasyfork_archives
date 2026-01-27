@@ -1,14 +1,13 @@
 // ==UserScript==
-// @name         Perplexity.ai Limits Overlay (Dark Mode, Draggable)
+// @name         Perplexity.ai Limits Overlay
 // @namespace    http://tampermonkey.net/
-// @version      3.1
-// @description  Overlays various limit values on Perplexity.ai main and search pages, updates on submit
-// @match        https://www.perplexity.ai/
-// @match        https://www.perplexity.ai/search*
-// @grant        GM_setValue
-// @grant        GM_getValue
-// @downloadURL https://update.greasyfork.org/scripts/507664/Perplexityai%20Limits%20Overlay%20%28Dark%20Mode%2C%20Draggable%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/507664/Perplexityai%20Limits%20Overlay%20%28Dark%20Mode%2C%20Draggable%29.meta.js
+// @version      3.2
+// @description  Overlays remaining message limits and updates automatically when a prompt is sent
+// @match        https://www.perplexity.ai/*
+// @run-at       document-start
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/507664/Perplexityai%20Limits%20Overlay.user.js
+// @updateURL https://update.greasyfork.org/scripts/507664/Perplexityai%20Limits%20Overlay.meta.js
 // ==/UserScript==
 
 (function() {
@@ -124,7 +123,7 @@
 
         limitsBox.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px;">
-                <span style="opacity: 0.8;">Remaining Queries :</span>
+                <span style="opacity: 0.8;">Remaining Queries:</span>
                 <span style="font-weight: 700; color: #fff; font-size: 15px;">${value ?? '—'}</span>
             </div>
         `;

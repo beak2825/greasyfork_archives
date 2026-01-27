@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name            ASMR Online  aria2下载
-// @name:zh-CN      ASMR Online 一键下载aria2下载
-// @name:en         ASMR Online Work Downloader aria2
+// @name            ASMR Online 一键下载 2.2
+// @name:zh-CN      ASMR Online 一键下载 2.2
+// @name:en         ASMR Online Work Downloader 2.2
 // @namespace       ASMR-ONE
-// @version         1.0
-// @description     在https://greasyfork.org/zh-CN/scripts/453600-asmr-online-%E4%B8%80%E9%94%AE%E4%B8%8B%E8%BD%BD基础上 仿照One站原生下载.支持 RJ/VJ/BJ 代码，自定义标签筛选下载。内置 Aria2 连接测试工具。
-// @description:zh-CN 在https://greasyfork.org/zh-CN/scripts/453600-asmr-online-%E4%B8%80%E9%94%AE%E4%B8%8B%E8%BD%BD基础上 仿照One站原生下载. 支持 RJ/VJ/BJ 代码，自定义标签筛选下载。内置 Aria2 连接测试工具。
+// @version         2.2
+// @description     一键下载asmr.one上的整个作品(或者选择文件下载)，包括全部的文件和目录结构。支持 RJ/VJ/BJ 代码，自定义标签筛选下载。内置 Aria2 连接测试工具。
+// @description:zh-CN 一键下载asmr.one上的整个作品(或者选择文件下载)，包括全部的文件和目录结构。支持 RJ/VJ/BJ 代码，自定义标签筛选下载。内置 Aria2 连接测试工具。
 // @description:en     Download all(selected) folders and files for current work on asmr.one in one click, preserving folder structures. Supports RJ/VJ/BJ codes and quick audio selection.
 // @author         惊奇 (Modified by Assistant)
 // @license         MIT
@@ -32,9 +32,12 @@
 // @grant           GM_xmlhttpRequest
 // @grant           GM_setValue
 // @grant           GM_getValue
-// @downloadURL https://update.greasyfork.org/scripts/563902/ASMR%20Online%20%20aria2%E4%B8%8B%E8%BD%BD.user.js
-// @updateURL https://update.greasyfork.org/scripts/563902/ASMR%20Online%20%20aria2%E4%B8%8B%E8%BD%BD.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563902/ASMR%20Online%20%E4%B8%80%E9%94%AE%E4%B8%8B%E8%BD%BD%2022.user.js
+// @updateURL https://update.greasyfork.org/scripts/563902/ASMR%20Online%20%E4%B8%80%E9%94%AE%E4%B8%8B%E8%BD%BD%2022.meta.js
 // ==/UserScript==
+
+/* eslint-disable no-multi-spaces */
+/* eslint-disable no-return-assign */
 
 /* eslint-disable no-multi-spaces */
 /* eslint-disable no-return-assign */
@@ -42,10 +45,9 @@
 (function __MAIN__() {
     'use strict';
 
-    // 全局日志函数
     window.logToModal = function(msg, type='info') { console.log(msg); };
     let hasErrorOccurred = false;
-    const OVERLAY_ID = 'asmr-overlay-unique-v4';
+    const OVERLAY_ID = 'asmr-overlay-unique-v4'; 
 
     const CONST = {
         HTML: {
@@ -226,9 +228,9 @@
                         hasErrorOccurred = true;
                         throw new Error(msg);
                     }
-
+                    
                     const finalOptions = Object.assign({}, options, { dir: this.dir });
-
+                    
                     if (options.subDir) {
                         const sep = navigator.userAgent.includes('Windows') ? '\\' : '/';
                         let cleanDir = this.dir.replace(/[\\/]+$/, '');
@@ -236,7 +238,7 @@
                         finalOptions.dir = cleanDir + sep + cleanSub;
                         delete finalOptions.subDir;
                     }
-
+                    
                     window.logToModal(`[Aria2] Sending Task: ${options.out}`, 'info');
                     return this.send('addUri', [[uri], finalOptions]);
                 }
@@ -258,7 +260,7 @@
                 GM_setValue('port', port);
                 GM_setValue('secret', secret);
                 GM_setValue('dir', dir);
-
+                
                 client.reloadConfig();
                 alert('设置已保存！');
             }
@@ -285,12 +287,14 @@
             const utils = require('utils');
             const { client } = require('aria2_internal');
 
-            async function download(url, path) {
-                const useAria2 = GM_getValue('use-aria2', false);
-
+            // 【核心修改】接受第三个参数 forceAria2，强制指定模式
+            async function download(url, path, forceAria2) {
+                // 优先使用传入的 forceAria2 参数，如果没有则读取存储
+                const useAria2 = (forceAria2 !== undefined) ? forceAria2 : GM_getValue('use-aria2', false);
+                
                 if (useAria2) {
                     // === Aria2 Mode ===
-                    client.reloadConfig();
+                    client.reloadConfig(); 
                     const sep = utils.getOSSep();
                     const parts = path.split(sep);
                     const filename = parts.pop();
@@ -302,8 +306,8 @@
                     }
 
                     try {
-                        return await client.addUri(url, {
-                            out: filename,
+                        return await client.addUri(url, { 
+                            out: filename, 
                             subDir: subDir,
                             header: [`referer: https://asmr-200.com/`, `user-agent: ${navigator.userAgent}`]
                         });
@@ -316,15 +320,15 @@
                     // === Browser Mode ===
                     const fullpath = utils.joinPath(CONST.Text.DownloadFolder, path);
                     window.logToModal(`[Browser DL] ${fullpath}`, 'info');
-
+                    
                     return new Promise((resolve, reject) => {
-                         GM_download({
-                             url,
-                             name: fullpath,
+                         GM_download({ 
+                             url, 
+                             name: fullpath, 
                              onload: () => {
                                  window.logToModal(`[Success] ${path}`, 'success');
                                  resolve();
-                             },
+                             }, 
                              onerror: (err) => {
                                  const errType = err.error || 'Unknown';
                                  window.logToModal(`[Browser Error] ${errType}: ${path}`, 'error');
@@ -392,12 +396,11 @@
                 $AEL(downloadBtn, 'click', showCustomSelector);
 
                 async function showCustomSelector() {
-                    // 【核心修改】分别获取 API用的ID 和 文件夹用的ID
                     const ids = getIds();
-
+                    
                     let rawList = [];
                     try {
-                        rawList = await api.tracks(ids.apiId); // 用纯数字ID请求API
+                        rawList = await api.tracks(ids.apiId); 
                     } catch (e) {
                         alert(`获取作品信息失败！\n\n尝试API ID: ${ids.apiId}\n错误信息: ${e.message}\n\n可能原因：URL结构变更或ID提取错误。`);
                         return;
@@ -405,35 +408,35 @@
 
                     const treeData = buildTree(rawList);
                     const allExtensions = getAllExtensions(rawList);
-                    hasErrorOccurred = false;
-
+                    hasErrorOccurred = false; 
+                    
                     const overlay = document.createElement('div');
                     overlay.id = OVERLAY_ID;
                     overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9998;display:flex;justify-content:center;align-items:center;';
-
+                    
                     const modal = document.createElement('div');
                     modal.style.cssText = 'background:white;width:600px;max-width:95%;height:85vh;min-height:500px;border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.2);display:flex;flex-direction:column;font-family:sans-serif;overflow:hidden;animation:popIn 0.2s ease-out;';
-
+                    
                     const style = document.createElement('style');
                     style.innerHTML = `
                         @keyframes popIn { from{transform:scale(0.95);opacity:0;} to{transform:scale(1);opacity:1;} }
                         .asmr-dl-header { padding: 15px 20px; border-bottom: 1px solid #eee; font-size: 18px; font-weight: 500; color: #333; background: #fff; }
                         .asmr-dl-filters { padding: 10px 20px; display: flex; gap: 8px; flex-wrap: wrap; background: #fafafa; border-bottom: 1px solid #eee; }
-                        .asmr-dl-tag {
-                            padding: 4px 12px; border-radius: 4px; font-size: 12px; cursor: pointer;
+                        .asmr-dl-tag { 
+                            padding: 4px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; 
                             background: #e0e0e0; color: #333; border: 1px solid #ccc;
                             transition: all 0.2s; user-select: none;
                         }
                         .asmr-dl-tag:hover { opacity: 0.8; }
-                        .asmr-dl-tag.active {
+                        .asmr-dl-tag.active { 
                             background: #1976D2; color: white; border-color: #1976D2;
                             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
                         }
                         .asmr-dl-stats { padding: 8px 20px; font-size: 13px; color: #666; border-bottom: 1px solid #eee; background: #fff; }
                         .asmr-dl-body { flex: 1; overflow-y: auto; padding: 10px; background: #fff; color: #333; }
                         .asmr-dl-log { height: 100px; background: #222; color: #ccc; font-family: monospace; font-size: 11px; padding: 5px; overflow-y: auto; border-top: 1px solid #444; }
-                        .asmr-dl-footer {
-                            padding: 10px 20px; border-top: 1px solid #eee; display: flex;
+                        .asmr-dl-footer { 
+                            padding: 10px 20px; border-top: 1px solid #eee; display: flex; 
                             justify-content: space-between; align-items: center;
                             gap: 10px; background: white;
                         }
@@ -481,17 +484,17 @@
 
                     const body = document.createElement('div');
                     body.className = 'asmr-dl-body';
-
+                    
                     treeData.children.forEach(node => renderNode(node, body));
                     function renderNode(node, container) {
                         const div = document.createElement('div');
                         const itemRow = document.createElement('div');
                         itemRow.className = 'tree-item';
-
+                        
                         const cb = document.createElement('input');
                         cb.type = 'checkbox';
                         cb.className = node.type === 'folder' ? 'folder-checkbox' : 'file-checkbox';
-                        cb.checked = false;
+                        cb.checked = false; 
                         cb.className += ' tree-checkbox';
                         cb.itemData = node;
 
@@ -535,7 +538,7 @@
 
                     function updateParentState(currentCb) {
                         const currentIndent = currentCb.closest('.tree-indent');
-                        if (!currentIndent) return;
+                        if (!currentIndent) return; 
                         const parentWrapper = currentIndent.parentElement;
                         const parentCb = parentWrapper.querySelector('.tree-item > input[type="checkbox"]');
                         if (parentCb) {
@@ -563,7 +566,7 @@
 
                     const footer = document.createElement('div');
                     footer.className = 'asmr-dl-footer';
-
+                    
                     const leftDiv = document.createElement('div');
                     leftDiv.className = 'aria2-group';
                     const ariaLabel = document.createElement('label');
@@ -582,9 +585,9 @@
                     btnTest.innerText = '测试连接';
                     btnTest.onclick = () => aria2.testConnection();
                     leftDiv.append(ariaLabel, btnConfig, btnTest);
-
+                    
                     const rightDiv = document.createElement('div');
-
+                    
                     const closeModal = () => {
                         const el = document.getElementById(OVERLAY_ID);
                         if (el) el.remove();
@@ -595,11 +598,11 @@
                     btnCancel.className = 'asmr-dl-btn asmr-dl-btn-cancel';
                     btnCancel.innerText = '取消';
                     btnCancel.onclick = closeModal;
-
+                    
                     const btnOk = document.createElement('button');
                     btnOk.className = 'asmr-dl-btn asmr-dl-btn-ok';
                     btnOk.innerText = '开始下载';
-
+                    
                     btnOk.onclick = () => {
                         if (btnOk.dataset.action === 'close') {
                             closeModal();
@@ -611,19 +614,24 @@
                             tasks.push({ item: cb.itemData, path: cb.itemPath });
                         });
                         if (tasks.length === 0) return alert('未选择任何文件');
-
+                        
                         logDiv.innerHTML = '';
                         hasErrorOccurred = false;
                         window.logToModal(`Initialized ${tasks.length} tasks.`);
-
+                        
+                        // 【核心修复】强制同步 UI 状态到下载逻辑
+                        const useAria2 = ariaInput.checked;
+                        window.logToModal(`Download Mode: ${useAria2 ? 'Aria2 RPC' : 'Browser Native'}`);
+                        
                         btnOk.disabled = true;
                         btnOk.innerText = '处理中...';
 
                         const manager = new utils.ProgressManager(tasks.length, on_progress);
-                        tasks.forEach(task => dealItem(task.item, task.path, manager));
+                        // 传递 useAria2 参数
+                        tasks.forEach(task => dealItem(task.item, task.path, manager, useAria2));
                     };
                     rightDiv.append(btnCancel, btnOk);
-
+                    
                     footer.append(leftDiv, rightDiv);
                     modal.appendChild(footer);
                     overlay.appendChild(modal);
@@ -670,27 +678,27 @@
                     return text;
                 }
 
-                async function dealItem(item, path = [], manager) {
+                async function dealItem(item, path = [], manager, useAria2) {
                      const sep = utils.getOSSep();
                      const url = item.mediaDownloadUrl;
-
+                     
                      if (!url) {
                          window.logToModal(`Error: Item ${item.title} has no URL`, 'error');
                          await manager.progress(); // skip
                          return;
                      }
 
-                     // 【核心修改】这里使用从URL末尾获取到的原始ID（如 VJ01002423）来命名文件夹
                      const WorkID = getIds().displayId;
-
+                     
                      const dlpath = [
                          replaceText(CONST.Text.WorkFolder, { '{RJ}': WorkID, '{WorkName}': item.workTitle || CONST.Text.NoTitle }),
                          ...path,
                          item.title,
                      ].map(name => escapePath(name)).join(sep);
-
+                     
                      try {
-                        await manager.progress(downloader.download(url, dlpath));
+                        // 【核心修复】传入强制的 useAria2 参数
+                        await manager.progress(downloader.download(url, dlpath, useAria2));
                      } catch (e) {
                          window.logToModal(`[Failed] ${e.message}`, 'error');
                          hasErrorOccurred = true;
@@ -700,13 +708,13 @@
 
                 function on_progress(finished, total) {
                     downloadBtn_inner.innerText = replaceText(CONST.Text.DownloadButton_Working, { '{Done}': finished, '{All}': total });
-
+                    
                     if (finished === total) {
                         downloadBtn_inner.innerText = CONST.Text.DownloadButton_Done;
                         const modalBtn = document.querySelector('.asmr-dl-btn-ok');
                         modalBtn.disabled = false;
                         modalBtn.dataset.action = 'close';
-
+                        
                         if (hasErrorOccurred) {
                             window.logToModal('=== Completed with Errors ===', 'error');
                             modalBtn.innerText = '关闭 (有错误)';
@@ -727,35 +735,29 @@
                     path.endsWith('.') && (path += '_');
                     return path;
                 }
-
-                // 【核心修复】分离 ID 获取逻辑
+                
                 function getIds() {
-                    const path = location.pathname; // 例如 /work/100000046/DLSITE/VJ01002423
-                    const parts = path.split('/').filter(p => p); // 去除空项
-
+                    const path = location.pathname; 
+                    const parts = path.split('/').filter(p => p); 
+                    
                     let apiId = '';
                     let displayId = '';
 
-                    // 寻找 work 后的数字作为 API ID
                     const workIndex = parts.indexOf('work');
                     if (workIndex !== -1 && parts[workIndex + 1]) {
                         apiId = parts[workIndex + 1];
-                        // 如果 URL 是 /work/RJ123，apiId 需要去除 RJ
                         apiId = apiId.replace(/^[a-zA-Z]+/, "");
                     }
 
-                    // 文件夹命名 ID 通常是 URL 的最后一段
                     if (parts.length > 0) {
                         displayId = parts[parts.length - 1];
                     }
-
-                    // 保底：如果路径很简单 /work/123456
+                    
                     if (!apiId) apiId = displayId.replace(/^[a-zA-Z]+/, "");
-
+                    
                     return { apiId, displayId };
                 }
-
-                // 兼容旧调用 (只获取数字)
+                
                 function getid() {
                     return getIds().apiId;
                 }

@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         OnlyFans User-Lists Link Collector
 // @namespace    https://onlyfans.com/
-// @version      1.1.9
-// @description  Auto-scrolls and collects OnlyFans profile links. Features smart auto-stop, dynamic filename auto-download, and navigation auto-clear.
-// @author       Gemini 3 Pro (previously ChatGPT 5.2 Thinking)
+// @version      1.2.0
+// @description  Auto-scrolls and collects OnlyFans profile links. Features smart auto-stop, dynamic filename auto-download, and navigation auto-clear with SPA support.
+// @author       Claude 4.5 Sonner, Gemini 3 Pro, ChatGPT-5.2 Thinking
 // @icon         https://static2.onlyfans.com/static/prod/f/202512181451-75a62e2193/icons/favicon-32x32.png
-// @match        https://onlyfans.com/my/collections/user-lists*
+// @match        https://onlyfans.com/*
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
 // @license      MIT
@@ -17,7 +17,7 @@
     'use strict';
     var TAB_W = 18;
     var TAB_H = 44;
-    var TAB_TEXT_PAD = TAB_W + 9; // 18 + 9
+    var TAB_TEXT_PAD = TAB_W + 9;
     var PANEL_W = 340;
     var USERS_GRID_SELECTORS = [
         'div.b-grid-users',
@@ -43,8 +43,9 @@
     var noProgressTicks = 0;
     var bottomNoLoaderTicks = 0;
 
-    // NEW: Track current path to detect navigation
     var lastPath = window.location.pathname;
+    var uiCreated = false;
+    var tab, panel, arrowPath, headerWrap, output, counter, status;
 
     function nowMs() { return Date.now(); }
     function pinBriefly(ms) {
@@ -213,7 +214,6 @@
         if (scrollTimer) clearInterval(scrollTimer);
         scrollTimer = null;
         status.textContent = reason || 'Stopped';
-
         if (autoDownload) {
             downloadTxt();
         }
@@ -233,12 +233,10 @@
             status.textContent = scrolling ? 'Scrolling...' : 'Idle';
         }, 900);
     }
-
     function getCleanTitle() {
         var t = document.title || 'user-list';
         return t.replace(/\s*[—–-]\s*OnlyFans$/i, '').trim();
     }
-
     function getFormattedDate() {
         var d = new Date();
         var year = d.getFullYear();
@@ -246,7 +244,6 @@
         var day = String(d.getDate()).padStart(2, '0');
         return year + '-' + month + '-' + day;
     }
-
     function downloadTxt() {
         var blob = new Blob([output.value || ''], { type: 'text/plain' });
         var a = document.createElement('a');
@@ -259,7 +256,6 @@
             status.textContent = scrolling ? 'Scrolling...' : 'Idle';
         }, 900);
     }
-
     function setPanelTopToTab() {
         var tabRect = tab.getBoundingClientRect();
         var headerHeight = headerWrap.getBoundingClientRect().height;
@@ -290,175 +286,232 @@
             setArrow(false);
         }, 140);
     }
-    GM_addStyle(`
-        #of-hover-tab {
-            position: fixed;
-            left: 0;
-            top: 50%;
-            width: ${TAB_W}px;
-            height: ${TAB_H}px;
-            margin-top: -${Math.floor(TAB_H / 2)}px;
-            z-index: 100000;
-            cursor: pointer;
-            opacity: 0.7;
-            background-color: #bdc5c8;
-            border: 1px solid #abb0b3;
-            border-left: none;
-            border-radius: 0 5px 5px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+
+    function isOnUserListsPage() {
+        return window.location.pathname.indexOf('/my/collections/user-lists') === 0;
+    }
+
+    function showUI() {
+        if (tab && panel) {
+            tab.style.display = 'flex';
+            panel.style.display = 'block';
         }
-        #of-hover-tab:hover { opacity: 1; }
-        #of-hover-tab svg { display: block; }
-        #of-link-panel {
-            position: fixed;
-            left: 0;
-            top: 50%;
-            width: ${PANEL_W}px;
-            z-index: 99999;
-            transform: translateX(-100%);
-            transition: transform 140ms linear, opacity 140ms linear;
-            opacity: 0.92;
-            background: rgba(0,0,0,0.75);
-            color: #fff;
-            padding: 10px 10px 10px ${TAB_TEXT_PAD}px;
-            border-radius: 0 8px 8px 0;
-            font-size: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+    }
+
+    function hideUI() {
+        if (tab && panel) {
+            tab.style.display = 'none';
+            panel.style.display = 'none';
+            if (isShown) {
+                isShown = false;
+                panel.classList.remove('tm-panel-show');
+                setArrow(false);
+            }
         }
-        #of-link-panel.tm-panel-show { transform: translateX(0); opacity: 1; }
-        #of-header { margin-bottom: ${TITLE_MARGIN_BOTTOM}px; }
-        #of-title { font-weight: 700; margin: 0 0 4px 0; }
-        #of-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            margin: 0;
-        }
-        #of-status { opacity: 0.9; font-size: 11px; }
-        #of-actions { margin-bottom: ${ACTIONS_MARGIN_BOTTOM}px; }
-        #of-actions-row1 {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 6px;
-        }
-        #of-actions-row2 {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        #of-link-panel button {
-            padding: 4px 10px;
-            font-size: 12px;
-            cursor: pointer;
-            background: rgba(255,255,255,0.08);
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.25);
-            border-radius: 999px;
-            line-height: 1.2;
-            user-select: none;
-        }
-        #of-link-panel button:hover { background: rgba(255,255,255,0.18); }
-        #of-link-panel button:active { background: rgba(255,255,255,0.28); }
-        #of-start { border: 1px solid #4CAF50 !important; box-shadow: 0 0 3px #4CAF50; }
-        #of-stop  { border: 1px solid #F44336 !important; box-shadow: 0 0 3px #F44336; }
-        #of-clear { border: 1px solid #FFEB3B !important; box-shadow: 0 0 3px #FFEB3B; color: #fff; }
-        #of-link-panel textarea {
-            width: 100%;
-            height: 180px;
-            margin-top: 6px;
-            font-size: 11px;
-            resize: vertical;
-        }
-    `);
-    // Tab
-    var tab = document.createElement('div');
-    tab.id = 'of-hover-tab';
-    tab.innerHTML =
-        '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">' +
-        '<path id="of-arrow-path" d="M4 2 L8 6 L4 10 Z" fill="#2b2f33"></path>' +
-        '</svg>';
-    document.body.appendChild(tab);
-    var arrowPath = document.getElementById('of-arrow-path');
-    // Panel
-    var panel = document.createElement('div');
-    panel.id = 'of-link-panel';
-    panel.innerHTML =
-        '<div id="of-header">' +
-            '<div id="of-title">OnlyFans Link Collector</div>' +
-            '<div id="of-row">' +
-                '<div id="of-counter">0 links</div>' +
-                '<div id="of-status">Idle</div>' +
+    }
+
+    function createUI() {
+        if (uiCreated) return;
+
+        GM_addStyle(`
+            #of-hover-tab {
+                position: fixed;
+                left: 0;
+                top: 50%;
+                width: ${TAB_W}px;
+                height: ${TAB_H}px;
+                margin-top: -${Math.floor(TAB_H / 2)}px;
+                z-index: 100000;
+                cursor: pointer;
+                opacity: 0.7;
+                background-color: #bdc5c8;
+                border: 1px solid #abb0b3;
+                border-left: none;
+                border-radius: 0 5px 5px 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            #of-hover-tab:hover { opacity: 1; }
+            #of-hover-tab svg { display: block; }
+            #of-link-panel {
+                position: fixed;
+                left: 0;
+                top: 50%;
+                width: ${PANEL_W}px;
+                z-index: 99999;
+                transform: translateX(-100%);
+                transition: transform 140ms linear, opacity 140ms linear;
+                opacity: 0.92;
+                background: rgba(0,0,0,0.75);
+                color: #fff;
+                padding: 10px 10px 10px ${TAB_TEXT_PAD}px;
+                border-radius: 0 8px 8px 0;
+                font-size: 12px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+            }
+            #of-link-panel.tm-panel-show { transform: translateX(0); opacity: 1; }
+            #of-header { margin-bottom: ${TITLE_MARGIN_BOTTOM}px; }
+            #of-title { font-weight: 700; margin: 0 0 4px 0; }
+            #of-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+                margin: 0;
+            }
+            #of-status { opacity: 0.9; font-size: 11px; }
+            #of-actions { margin-bottom: ${ACTIONS_MARGIN_BOTTOM}px; }
+            #of-actions-row1 {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+                margin-bottom: 6px;
+            }
+            #of-actions-row2 {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            #of-link-panel button {
+                padding: 4px 10px;
+                font-size: 12px;
+                cursor: pointer;
+                background: rgba(255,255,255,0.08);
+                color: #fff;
+                border: 1px solid rgba(255,255,255,0.25);
+                border-radius: 999px;
+                line-height: 1.2;
+                user-select: none;
+            }
+            #of-link-panel button:hover { background: rgba(255,255,255,0.18); }
+            #of-link-panel button:active { background: rgba(255,255,255,0.28); }
+            #of-start { border: 1px solid #4CAF50 !important; box-shadow: 0 0 3px #4CAF50; }
+            #of-stop  { border: 1px solid #F44336 !important; box-shadow: 0 0 3px #F44336; }
+            #of-clear { border: 1px solid #FFEB3B !important; box-shadow: 0 0 3px #FFEB3B; color: #fff; }
+            #of-link-panel textarea {
+                width: 100%;
+                height: 180px;
+                margin-top: 6px;
+                font-size: 11px;
+                resize: vertical;
+            }
+        `);
+
+        tab = document.createElement('div');
+        tab.id = 'of-hover-tab';
+        tab.innerHTML =
+            '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">' +
+            '<path id="of-arrow-path" d="M4 2 L8 6 L4 10 Z" fill="#2b2f33"></path>' +
+            '</svg>';
+        document.body.appendChild(tab);
+        arrowPath = document.getElementById('of-arrow-path');
+
+        panel = document.createElement('div');
+        panel.id = 'of-link-panel';
+        panel.innerHTML =
+            '<div id="of-header">' +
+                '<div id="of-title">OnlyFans Link Collector</div>' +
+                '<div id="of-row">' +
+                    '<div id="of-counter">0 links</div>' +
+                    '<div id="of-status">Idle</div>' +
+                '</div>' +
             '</div>' +
-        '</div>' +
-        '<div id="of-actions">' +
-            '<div id="of-actions-row1">' +
-                '<button id="of-start" type="button">Start scroll</button>' +
-                '<button id="of-stop" type="button">Stop</button>' +
-                '<button id="of-copy" type="button">Copy</button>' +
-                '<button id="of-clear" type="button">Clear</button>' +
+            '<div id="of-actions">' +
+                '<div id="of-actions-row1">' +
+                    '<button id="of-start" type="button">Start scroll</button>' +
+                    '<button id="of-stop" type="button">Stop</button>' +
+                    '<button id="of-copy" type="button">Copy</button>' +
+                    '<button id="of-clear" type="button">Clear</button>' +
+                '</div>' +
+                '<div id="of-actions-row2">' +
+                    '<button id="of-txt" type="button">Download .txt</button>' +
+                '</div>' +
             '</div>' +
-            '<div id="of-actions-row2">' +
-                '<button id="of-txt" type="button">Download .txt</button>' +
-            '</div>' +
-        '</div>' +
-        '<textarea id="of-output" readonly></textarea>';
-    document.body.appendChild(panel);
-    var headerWrap = document.getElementById('of-header');
-    var output = document.getElementById('of-output');
-    var counter = document.getElementById('of-counter');
-    var status = document.getElementById('of-status');
-    document.getElementById('of-start').addEventListener('click', function (e) {
-        e.preventDefault();
-        pinBriefly(2500);
-        startScroll();
-    });
-    document.getElementById('of-stop').addEventListener('click', function (e) {
-        e.preventDefault();
-        pinBriefly(2500);
-        stopScroll('Stopped');
-    });
-    document.getElementById('of-copy').addEventListener('click', function (e) {
-        e.preventDefault();
-        pinBriefly(2500);
-        copyAll();
-    });
-    document.getElementById('of-txt').addEventListener('click', function (e) {
-        e.preventDefault();
-        pinBriefly(2500);
-        downloadTxt();
-    });
-    document.getElementById('of-clear').addEventListener('click', function (e) {
-        e.preventDefault();
-        pinBriefly(2500);
-        clearAll();
-    });
-    window.addEventListener('resize', function () {
-        if (isShown) setPanelTopToTab();
-    }, { passive: true });
-    tab.addEventListener('mouseenter', function () { showPanel(false); });
-    tab.addEventListener('mouseleave', scheduleHide);
-    panel.addEventListener('mouseenter', function () { showPanel(true); });
-    panel.addEventListener('mouseleave', scheduleHide);
-    setArrow(false);
-    // Boot: grid may appear later
-    var tries = 0;
-    var bootTimer = setInterval(function () {
-        tries += 1;
-        collectLinks();
-        if (getGrid() || tries >= 30) clearInterval(bootTimer);
+            '<textarea id="of-output" readonly></textarea>';
+        document.body.appendChild(panel);
+
+        headerWrap = document.getElementById('of-header');
+        output = document.getElementById('of-output');
+        counter = document.getElementById('of-counter');
+        status = document.getElementById('of-status');
+
+        document.getElementById('of-start').addEventListener('click', function (e) {
+            e.preventDefault();
+            pinBriefly(2500);
+            startScroll();
+        });
+        document.getElementById('of-stop').addEventListener('click', function (e) {
+            e.preventDefault();
+            pinBriefly(2500);
+            stopScroll('Stopped');
+        });
+        document.getElementById('of-copy').addEventListener('click', function (e) {
+            e.preventDefault();
+            pinBriefly(2500);
+            copyAll();
+        });
+        document.getElementById('of-txt').addEventListener('click', function (e) {
+            e.preventDefault();
+            pinBriefly(2500);
+            downloadTxt();
+        });
+        document.getElementById('of-clear').addEventListener('click', function (e) {
+            e.preventDefault();
+            pinBriefly(2500);
+            clearAll();
+        });
+
+        window.addEventListener('resize', function () {
+            if (isShown) setPanelTopToTab();
+        }, { passive: true });
+
+        tab.addEventListener('mouseenter', function () { showPanel(false); });
+        tab.addEventListener('mouseleave', scheduleHide);
+        panel.addEventListener('mouseenter', function () { showPanel(true); });
+        panel.addEventListener('mouseleave', scheduleHide);
+
+        setArrow(false);
+        uiCreated = true;
+
+        if (!isOnUserListsPage()) {
+            hideUI();
+        }
+    }
+
+    function initializeOnPage() {
+        var tries = 0;
+        var bootTimer = setInterval(function () {
+            tries += 1;
+            collectLinks();
+            if (getGrid() || tries >= 30) clearInterval(bootTimer);
+        }, 500);
+    }
+
+    setInterval(function() {
+        var currentPath = window.location.pathname;
+        if (currentPath !== lastPath) {
+            var wasOnUserLists = lastPath.indexOf('/my/collections/user-lists') === 0;
+            var isNowOnUserLists = currentPath.indexOf('/my/collections/user-lists') === 0;
+
+            if (wasOnUserLists && !isNowOnUserLists) {
+                clearAll();
+                status.textContent = 'Left user-lists';
+                if (scrolling) stopScroll('Navigated', false);
+                hideUI();
+            }
+
+            if (!wasOnUserLists && isNowOnUserLists) {
+                showUI();
+                initializeOnPage();
+            }
+
+            lastPath = currentPath;
+        }
     }, 500);
 
-    // NEW: Check navigation periodically to auto-clear
-    setInterval(function() {
-        if (window.location.pathname !== lastPath) {
-            lastPath = window.location.pathname;
-            clearAll();
-            status.textContent = 'List changed (cleared)';
-            if (scrolling) stopScroll('Navigated', false);
-        }
-    }, 1000);
+    createUI();
+    if (isOnUserListsPage()) {
+        initializeOnPage();
+    }
 })();

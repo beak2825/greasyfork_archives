@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Twitter/X Media Downloader
+// @name         Twitter/X Media Downloader (Button Fixed)
 // @name:zh-CN   Twitter/X 推特媒体下载
 // @namespace    http://tampermonkey.net/
-// @version      4.1
+// @version      4.3
 // @description  Adds a download button next to the share icon. Downloads images and videos with auto-renaming (Account-ID-TweetID).
 // @description:zh-CN 在推文分享按钮旁边添加一个独立的下载按钮。支持图片和视频下载，自动按“账号-ID-推文ID”重命名。
 // @author       Gemini
@@ -12,19 +12,20 @@
 // @grant        GM_addStyle
 // @license      MIT
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/559131/TwitterX%20Media%20Downloader.user.js
-// @updateURL https://update.greasyfork.org/scripts/559131/TwitterX%20Media%20Downloader.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/559131/TwitterX%20Media%20Downloader%20%28Button%20Fixed%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/559131/TwitterX%20Media%20Downloader%20%28Button%20Fixed%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
     // ================= 配置区域 =================
+    // 注意：GraphQL ID 可能会随推特更新而变化，如果下载失败需更新此 ID
     const GRAPHQL_ID = 'zAz9764BcLZOJ0JU2wrd1A';
     const API_BASE = `https://x.com/i/api/graphql/${GRAPHQL_ID}/TweetResultByRestId`;
     const MAX_FILENAME_LENGTH = 200;
 
-    console.log('🚀 Twitter Media Downloader v4.0 (Button Mode) Loaded');
+    console.log('🚀 Twitter Media Downloader v4.2 (Button Fix) Loaded');
 
     // ================= 样式注入 =================
     GM_addStyle(`
@@ -43,10 +44,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 19%;
+            width: 19%; /* 动态调整宽度以适应操作栏 */
             min-width: 34px;
             height: 34.75px;
             box-sizing: border-box;
+            margin-left: -8px; /* 微调位置 */
         }
         .wb-download-btn {
             display: flex;
@@ -64,8 +66,8 @@
             color: rgb(29, 155, 240);
         }
         .wb-download-btn svg {
-            width: 20px;
-            height: 20px;
+            width: 19px; /*稍微调小图标以匹配新版UI*/
+            height: 19px;
             fill: currentColor;
         }
     `);
@@ -161,14 +163,12 @@
             }
             if (item.type === 'video' || item.type === 'animated_gif') {
                 const variants = item.video_info?.variants || [];
+                // 优先下载 bitrate 最高的 mp4
                 const mp4s = variants.filter(v => v.content_type === 'video/mp4');
                 if (mp4s.length === 0) return [];
-                if (item.type === 'animated_gif') {
-                    return mp4s[0].url ? [mp4s[0].url] : [];
-                } else {
-                    mp4s.sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0));
-                    return mp4s[0].url ? [mp4s[0].url] : [];
-                }
+                
+                mp4s.sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0));
+                return mp4s[0].url ? [mp4s[0].url] : [];
             }
             return [];
         });
@@ -176,6 +176,7 @@
 
     const parseTweetData = (data, inputTweetId) => {
         let rootTweet = data?.data?.tweetResult?.result;
+        // 兼容详情页的 conversation 结构
         if (!rootTweet) {
             const instructions = data?.data?.threaded_conversation_with_injections_v2?.instructions || [];
             const tweetEntry = instructions[0]?.entries?.find(e => e.entryId === `tweet-${inputTweetId}`);
@@ -186,7 +187,7 @@
         const outerCore = rootTweet.core || rootTweet.tweet?.core;
         const outerLegacy = rootTweet.legacy || rootTweet.tweet?.legacy;
 
-        // 1. 外层 (原创/引用)
+        // 1. 优先检查外层 (原创/引用)
         if (outerLegacy && outerCore) {
             const outerMedia = extractMedia(outerLegacy);
             if (outerMedia.length > 0) {
@@ -197,13 +198,13 @@
                         nick: outerCore.user_results?.result?.legacy?.name || 'unknown',
                         id: outerCore.user_results?.result?.legacy?.screen_name || 'unknown',
                         tweetId: outerLegacy.id_str || inputTweetId,
-                        createdAt: outerLegacy.created_at // 新增：提取时间
+                        createdAt: outerLegacy.created_at
                     }
                 };
             }
         }
 
-        // 2. 内层 (转发)
+        // 2. 检查内层 (转发) - 如果外层没媒体，可能是纯文字转发带媒体的推文
         let innerTweet = null;
         if (rootTweet.legacy && rootTweet.legacy.retweeted_status_result) {
             innerTweet = rootTweet.legacy.retweeted_status_result.result;
@@ -228,7 +229,7 @@
                             nick: innerCore.user_results?.result?.legacy?.name || 'unknown',
                             id: innerCore.user_results?.result?.legacy?.screen_name || 'unknown',
                             tweetId: innerLegacy.id_str || inputTweetId,
-                            createdAt: innerLegacy.created_at // 新增：提取时间
+                            createdAt: innerLegacy.created_at
                         }
                     };
                 }
@@ -249,7 +250,7 @@
         const apiResult = await fetchTweetData(domTweetId);
 
         if (!apiResult || apiResult.mediaUrls.length === 0) {
-            showToast('⚠️ 未找到媒体文件');
+            showToast('⚠️ 此推文无媒体或解析失败');
             return;
         }
 
@@ -259,24 +260,16 @@
         let count = 0;
         for (const url of mediaUrls) {
             count++;
-
-            // 1. 判断类型和后缀
             const isVideo = url.includes('.mp4');
             const ext = isVideo ? 'mp4' : 'jpg';
             const typeStr = isVideo ? 'video' : 'photo';
-
-            // 2. 多图处理
             const indexStr = mediaUrls.length > 1 ? `_${count}` : '';
+            
+            const safeNick = sanitize(origin.nick);
+            const safeId = sanitize(origin.id);
+            const dateStr = formatTwitterDate(origin.createdAt);
 
-            // 3. 数据清洗 (已修复空格报错)
-            const safeNick = sanitize(origin.nick); // 显示名称
-            const safeId = sanitize(origin.id); // @ID
-            const dateStr = formatTwitterDate(origin.createdAt); // 格式化时间
-
-            // 4. 组合文件名
             let filename = `twitter_${safeNick}(@${safeId})_${dateStr}_${origin.tweetId}_${typeStr}${indexStr}.${ext}`;
-
-            // 长度保护
             if (filename.length > MAX_FILENAME_LENGTH) {
                 filename = `twitter_@${safeId}_${dateStr}_${origin.tweetId}_${indexStr}.${ext}`;
             }
@@ -302,31 +295,22 @@
         });
     }
 
-    // ================= UI 注入逻辑 (Media Check Added) =================
-    function hasMedia(article) {
-        // 检查推文内容中是否包含图片、视频或GIF的DOM元素
-        const mediaSelector = 'div[data-testid="tweetPhoto"], div[data-testid="videoPlayer"]';
-        return article.querySelector(mediaSelector) !== null;
-    }
-
+    // ================= UI 注入逻辑 (已移除不稳定的 hasMedia 检查) =================
     function addDownloadButton(group) {
         if (group.classList.contains('wb-download-added')) return;
 
+        // 确保这是一个推文的操作栏
         const tweetArticle = group.closest('article[data-testid="tweet"]');
         if (!tweetArticle) return;
 
-        // **新逻辑：检查媒体**
-        if (!hasMedia(tweetArticle)) {
-            // 如果没有媒体，仍然标记为已检查，避免重复处理，但不添加按钮
-            group.classList.add('wb-download-added');
-            return;
-        }
+        // 修正：移除前端媒体检测。因为推文加载时 DOM 结构变化太快，
+        // 前端检测容易因为图片/视频还没渲染出来而误判，导致按钮不显示。
+        // 现在对所有推文显示按钮，点击后再由 API 判断是否有媒体。
 
-        // 创建下载按钮容器 (对应样式中的 .wb-download-btn-container)
+        // 创建下载按钮容器
         const container = document.createElement('div');
         container.className = 'wb-download-btn-container';
 
-        // 创建实际的按钮元素
         const btn = document.createElement('div');
         btn.className = 'wb-download-btn';
         btn.setAttribute('role', 'button');
@@ -342,7 +326,6 @@
             </svg>
         `;
 
-        // 绑定点击事件
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -354,21 +337,17 @@
             }
         });
 
-        container.appendChild(btn); // 将按钮放入容器
-        group.appendChild(container); // 将容器插入到操作栏
+        container.appendChild(btn);
+        group.appendChild(container);
         group.classList.add('wb-download-added');
     }
 
     function observeTweets() {
         const observer = new MutationObserver((mutations) => {
-            // 查找所有操作栏 (role="group") 且还没有添加按钮或已检查的
+            // 查找所有操作栏 (role="group")
             const actionGroups = document.querySelectorAll('div[role="group"]:not(.wb-download-added)');
             actionGroups.forEach(group => {
-                // 确保它是在一条推文里的
-                if (group.closest('article[data-testid="tweet"]')) {
-                    // 立即处理，会在 addDownloadButton 中检查是否有媒体
-                    addDownloadButton(group);
-                }
+                addDownloadButton(group);
             });
         });
 

@@ -1,30 +1,38 @@
 // ==UserScript==
-// @name         OpenGuessr - OMNISCIENT CLASSIC (v1.1)
+// @name         OpenGuessr - OMNISCIENT CLASSIC
+// @version      1.2
 // @namespace    https://github.com/kosmosa/openguessr-omni
-// @version      1.1
-// @description  Restored v1.1 + Settings Memory + F2 Toggle Fixed
-// @author       kosmosa / Gemini AI
-// @license      MIT
+// @description  Full Map Recovery + Auto-Unlock + Settings Memory
+// @author       kosmosa
+// @license MIT
 // @match        *://*.openguessr.com/*
 // @grant        GM_xmlhttpRequest
 // @run-at       document-idle
-// @downloadURL https://update.greasyfork.org/scripts/564138/OpenGuessr%20-%20OMNISCIENT%20CLASSIC%20%28v11%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/564138/OpenGuessr%20-%20OMNISCIENT%20CLASSIC%20%28v11%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/564138/OpenGuessr%20-%20OMNISCIENT%20CLASSIC.user.js
+// @updateURL https://update.greasyfork.org/scripts/564138/OpenGuessr%20-%20OMNISCIENT%20CLASSIC.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    const libs = ['https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'];
-    const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = libs[0]; document.head.appendChild(link);
-    const script = document.createElement('script'); script.src = libs[1]; document.head.appendChild(script);
+    // ბიბლიოთეკების იძულებითი ჩატვირთვა
+    function loadLib(url, type) {
+        return new Promise((resolve) => {
+            const el = document.createElement(type === 'js' ? 'script' : 'link');
+            if (type === 'js') { el.src = url; el.onload = resolve; }
+            else { el.rel = 'stylesheet'; el.href = url; resolve(); }
+            document.head.appendChild(el);
+        });
+    }
 
-    // მეხსიერებიდან წაკითხვა ან დეფოლტ მნიშვნელობები
     let cfg = JSON.parse(localStorage.getItem('omni_cfg')) || {
         lang: 'ka', theme: 'dark', hard: false, zoom: true, head: true, mIdx: 0
     };
+    function save() { localStorage.setItem('omni_cfg', JSON.stringify(cfg)); }
 
-    let lastLoc = "", map, marker, currentLayer, isVisible = true, savedCity = "", savedCountry = "";
+    let currentLang = cfg.lang, isHardMode = cfg.hard, currentTheme = cfg.theme, lastLoc = "";
+    let savedCity = "", savedCountry = "", showInHeader = cfg.head, autoZoom = cfg.zoom, isVisible = true;
+    let map = null, marker = null, currentLayer = null, mapIndex = cfg.mIdx;
 
     const layers = [
         'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -41,16 +49,14 @@
     };
 
     const translations = {
-        ka: { header: "Omniscient v1.1", lock: "დაშიფრულია", mode: "რეჟიმი: ", easy: "მარტივი", hard: "რთული", map: "რუკა 🔄", cityPop: "🏙️ ქალაქი: ", countryPop: "👥 ქვეყანა: ", lang: "🗣️ ენა: ", call: "📞 კოდი: ", dist: "ბაზიდან: ", km: " კმ", zoom: "ზუმი: ", head: "სათაური: ", on: "ჩართ", off: "გამორთ" },
-        en: { header: "Omniscient v1.1", lock: "ENCRYPTED", mode: "MODE: ", easy: "EASY", hard: "HARD", map: "MAP 🔄", cityPop: "🏙️ City: ", countryPop: "👥 Country: ", lang: "🗣️ Lang: ", call: "📞 Code: ", dist: "From Base: ", km: " km", zoom: "ZOOM: ", head: "HEAD: ", on: "ON", off: "OFF" },
-        ru: { header: "Omniscient v1.1", lock: "ЗАШИФРОВАНО", mode: "РЕЖИМ: ", easy: "ЛЕГКИЙ", hard: "СЛОЖНЫЙ", map: "КАРТА 🔄", cityPop: "🏙️ Город: ", countryPop: "👥 Страна: ", lang: "🗣️ Язык: ", call: "📞 Код: ", dist: "От базы: ", km: " км", zoom: "ЗУМ: ", head: "ШАПКА: ", on: "ВКЛ", off: "ВЫКЛ" }
+        ka: { header: "Omniscient v1.2", lock: "დაშიფრულია", mode: "რეჟიმი: ", easy: "მარტივი", hard: "რთული", map: "რუკა 🔄", cityPop: "🏙️ ქალაქი: ", countryPop: "👥 ქვეყანა: ", lang: "🗣️ ენა: ", call: "📞 კოდი: ", dist: "ბაზიდან: ", km: " კმ", zoom: "ზუმი: ", head: "სათაური: ", on: "ჩართ", off: "გამორთ" },
+        en: { header: "Omniscient v1.2", lock: "ENCRYPTED", mode: "MODE: ", easy: "EASY", hard: "HARD", map: "MAP 🔄", cityPop: "🏙️ City: ", countryPop: "👥 Country: ", lang: "🗣️ Lang: ", call: "📞 Code: ", dist: "From Base: ", km: " km", zoom: "ZOOM: ", head: "HEAD: ", on: "ON", off: "OFF" },
+        ru: { header: "Omniscient v1.2", lock: "ЗАШИФРОВАНО", mode: "РЕЖИМ: ", easy: "ЛЕГКИЙ", hard: "СЛОЖНЫЙ", map: "КАРТА 🔄", cityPop: "🏙️ Город: ", countryPop: "👥 Страна: ", lang: "🗣️ Язык: ", call: "📞 Код: ", dist: "От базы: ", km: " км", zoom: "ЗУМ: ", head: "ШАПКА: ", on: "ВКЛ", off: "ВЫКЛ" }
     };
-
-    function saveCfg() { localStorage.setItem('omni_cfg', JSON.stringify(cfg)); }
 
     const panel = document.createElement('div');
     panel.id = "main-panel";
-    panel.style = "position: fixed; top: 10px; left: 10px; width: 440px; z-index: 200000; border-radius: 10px; border: 1px solid; font-family: 'Consolas', monospace; box-shadow: 0 10px 30px rgba(0,0,0,0.8); display: flex; flex-direction: column;";
+    panel.style = "position: fixed; top: 10px; left: 10px; width: 440px; z-index: 2147483647; border-radius: 10px; border: 1px solid; font-family: 'Consolas', monospace; box-shadow: 0 10px 30px rgba(0,0,0,0.8); display: flex; flex-direction: column; overflow: hidden;";
     panel.innerHTML = `
         <div id="og-header" style="padding: 10px; cursor: move; color: #000 !important; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-radius: 8px 8px 0 0;">
             <div style="display: flex; gap: 8px; align-items: center; pointer-events: none;">
@@ -72,7 +78,7 @@
             <div id="lock-overlay" style="position: absolute; top: 40px; left: 0; width: 100%; height: calc(100% - 40px); background: rgba(10,10,10,0.98); z-index: 200001; display: none; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
                 <div style="font-size: 40px;">🔒</div><div id="ui-lock-text" style="margin-top: 10px;"></div>
             </div>
-            <div id="mini-map" style="width: 100%; height: 240px; background: #000; border-bottom: 1px solid; filter: brightness(0.8);"></div>
+            <div id="mini-map" style="width: 100%; height: 240px; background: #111; border-bottom: 1px solid; position: relative;"></div>
             <div style="padding: 15px; display: flex; flex-direction: column; gap: 10px;">
                 <div style="display: flex; gap: 8px;"><button id="btn-mode-toggle" style="flex: 2; background: rgba(0,0,0,0.3); border: 1px solid; padding: 6px; cursor: pointer; font-size: 10px; color: inherit;"></button><button id="btn-map-cycle" style="flex: 1; background: rgba(0,0,0,0.3); border: 1px solid; padding: 6px; cursor: pointer; font-size: 10px; color: inherit;"></button></div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
@@ -87,19 +93,18 @@
     document.body.appendChild(panel);
 
     function updateUI() {
-        const t = translations[cfg.lang], theme = themes[cfg.theme];
+        const t = translations[currentLang], theme = themes[currentTheme];
         panel.style.borderColor = theme.main; panel.style.color = theme.text; panel.style.backgroundColor = theme.bg;
         document.getElementById('og-header').style.backgroundColor = theme.main;
         document.getElementById('ui-header').innerText = t.header;
-        document.getElementById('ui-header-info').innerText = (cfg.head && savedCity) ? `| ${savedCity}, ${savedCountry}` : "";
+        document.getElementById('ui-header-info').innerText = (showInHeader && savedCity) ? `| ${savedCity}, ${savedCountry}` : "";
         document.getElementById('ui-lock-text').innerText = t.lock;
         document.getElementById('btn-map-cycle').innerText = t.map;
-        document.getElementById('btn-mode-toggle').innerText = t.mode + (cfg.hard ? t.hard : t.easy);
-        document.getElementById('btn-zoom-toggle').innerText = t.zoom + (cfg.zoom ? t.on : t.off);
-        document.getElementById('btn-head-toggle').innerText = t.head + (cfg.head ? t.on : t.off);
-        document.getElementById('sel-lang').value = cfg.lang;
-        document.getElementById('sel-theme').value = cfg.theme;
-
+        document.getElementById('btn-mode-toggle').innerText = t.mode + (isHardMode ? t.hard : t.easy);
+        document.getElementById('btn-zoom-toggle').innerText = t.zoom + (autoZoom ? t.on : t.off);
+        document.getElementById('btn-head-toggle').innerText = t.head + (showInHeader ? t.on : t.off);
+        document.getElementById('sel-lang').value = currentLang;
+        document.getElementById('sel-theme').value = currentTheme;
         const gd = (id) => document.getElementById(id).getAttribute('data-val') || '-';
         document.getElementById('city-pop-box').innerText = t.cityPop + gd('city-pop-box');
         document.getElementById('pop-box').innerText = t.countryPop + gd('pop-box');
@@ -107,17 +112,30 @@
         document.getElementById('call-box').innerText = t.call + gd('call-box');
         document.getElementById('dist-display').innerText = t.dist + gd('dist-display') + (gd('dist-display') !== '-' ? t.km : '');
         document.getElementById('dist-display').style.backgroundColor = theme.main;
+    }
 
-        if (cfg.hard) document.getElementById('lock-overlay').style.display = 'flex';
-        else document.getElementById('lock-overlay').style.display = 'none';
+    async function initMapSystem() {
+        await loadLib('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', 'css');
+        await loadLib('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', 'js');
+        if (!map) {
+            map = L.map('mini-map', { zoomControl: false, attributionControl: false }).setView([0,0], 2);
+            currentLayer = L.tileLayer(layers[mapIndex]).addTo(map);
+            marker = L.marker([0, 0]).addTo(map);
+            setTimeout(() => map.invalidateSize(), 500);
+        }
     }
 
     function process(lat, lon) {
-        if (cfg.hard && isVisible) document.getElementById('lock-overlay').style.display = 'flex';
-        if (cfg.zoom && map) map.setView([lat, lon], 7); marker.setLatLng([lat, lon]);
+        if (isHardMode && isVisible) document.getElementById('lock-overlay').style.display = 'flex';
+        if (!map) initMapSystem();
+        if (map) {
+            if (autoZoom) map.setView([lat, lon], 7);
+            marker.setLatLng([lat, lon]);
+            map.invalidateSize();
+        }
         GM_xmlhttpRequest({
             method: "GET",
-            url: `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=${cfg.lang}`,
+            url: `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=${currentLang}`,
             onload: (res) => {
                 const d = JSON.parse(res.responseText), a = d.address, code = (a.country_code||"").toUpperCase();
                 savedCity = a.city || a.town || a.village || "N/A"; savedCountry = a.country || "N/A";
@@ -135,39 +153,38 @@
         updateUI();
     }
 
-    script.onload = () => {
-        map = L.map('mini-map', { zoomControl: false });
-        currentLayer = L.tileLayer(layers[cfg.mIdx]).addTo(map);
-        marker = L.marker([0, 0]).addTo(map);
-        updateUI();
-    };
-
-    window.addEventListener('keydown', (e) => {
-        if (e.key === "F2") {
-            isVisible = !isVisible;
-            panel.style.setProperty('display', isVisible ? 'flex' : 'none', 'important');
-        }
-    });
-
-    document.getElementById('btn-map-cycle').onclick = () => { cfg.mIdx = (cfg.mIdx + 1) % layers.length; map.removeLayer(currentLayer); currentLayer = L.tileLayer(layers[cfg.mIdx]).addTo(map); saveCfg(); };
-    document.getElementById('btn-zoom-toggle').onclick = () => { cfg.zoom = !cfg.zoom; saveCfg(); updateUI(); };
-    document.getElementById('btn-head-toggle').onclick = () => { cfg.head = !cfg.head; saveCfg(); updateUI(); };
-    document.getElementById('btn-collapse').onclick = () => { const c = document.getElementById('panel-content'); c.style.display = c.style.display === "none" ? "block" : "none"; updateUI(); };
-    document.getElementById('btn-settings').onclick = () => { const s = document.getElementById('settings-popup'); s.style.display = s.style.display === "none" ? "flex" : "none"; };
-    document.getElementById('sel-lang').onchange = (e) => { cfg.lang = e.target.value; saveCfg(); updateUI(); };
-    document.getElementById('sel-theme').onchange = (e) => { cfg.theme = e.target.value; saveCfg(); updateUI(); };
-    document.getElementById('btn-mode-toggle').onclick = () => { cfg.hard = !cfg.hard; saveCfg(); updateUI(); };
-
     setInterval(() => {
         const iframe = document.querySelector('#PanoramaIframe') || document.querySelector('iframe[src*="location"]');
         if (iframe && iframe.src) {
             const loc = new URL(iframe.src).searchParams.get('location');
             if (loc && loc !== lastLoc) { lastLoc = loc; const [lat, lon] = loc.split(',').map(Number); process(lat, lon); }
         }
-    }, 2000);
+        const btns = document.querySelectorAll('button');
+        btns.forEach(b => {
+            const t = b.innerText.toLowerCase();
+            if (t.includes('locked') || t.includes('continue') || t.includes('next') || t.includes('round')) {
+                const overlay = document.getElementById('lock-overlay');
+                if (overlay && overlay.style.display !== 'none') overlay.style.display = 'none';
+            }
+        });
+    }, 1000);
 
+    // გადათრევა და სეთინგები
     let isDragging = false, ox, oy;
     document.getElementById('og-header').onmousedown = (e) => { if(e.target.tagName !== 'BUTTON'){isDragging = true; ox = e.clientX - panel.offsetLeft; oy = e.clientY - panel.offsetTop;} };
     document.onmousemove = (e) => { if (isDragging) { panel.style.left = (e.clientX - ox) + 'px'; panel.style.top = (e.clientY - oy) + 'px'; } };
     document.onmouseup = () => isDragging = false;
+    document.getElementById('btn-map-cycle').onclick = () => { if(map){mapIndex = (mapIndex + 1) % layers.length; cfg.mIdx = mapIndex; save(); map.removeLayer(currentLayer); currentLayer = L.tileLayer(layers[mapIndex]).addTo(map);} };
+    document.getElementById('btn-zoom-toggle').onclick = () => { autoZoom = !autoZoom; cfg.zoom = autoZoom; save(); updateUI(); };
+    document.getElementById('btn-head-toggle').onclick = () => { showInHeader = !showInHeader; cfg.head = showInHeader; save(); updateUI(); };
+    document.getElementById('btn-collapse').onclick = () => { const c = document.getElementById('panel-content'); c.style.display = c.style.display === "none" ? "block" : "none"; if(map) setTimeout(()=>map.invalidateSize(), 100); };
+    document.getElementById('btn-settings').onclick = () => { const s = document.getElementById('settings-popup'); s.style.display = s.style.display === "none" ? "flex" : "none"; };
+    document.getElementById('sel-lang').onchange = (e) => { currentLang = e.target.value; cfg.lang = currentLang; save(); updateUI(); };
+    document.getElementById('sel-theme').onchange = (e) => { currentTheme = e.target.value; cfg.theme = currentTheme; save(); updateUI(); };
+    document.getElementById('btn-mode-toggle').onclick = () => { isHardMode = !isHardMode; cfg.hard = isHardMode; save(); updateUI(); document.getElementById('lock-overlay').style.display = isHardMode ? 'flex' : 'none'; };
+
+    window.addEventListener('keydown', (e) => { if (e.key === "F2") { isVisible = !isVisible; panel.style.setProperty('display', isVisible ? 'flex' : 'none', 'important'); } });
+
+    updateUI();
+    initMapSystem();
 })();

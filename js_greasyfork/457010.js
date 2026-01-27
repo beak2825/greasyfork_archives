@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Annoying Ad blocker
 // @description Prevents annoying ads from displaying
-// @version     2017.08.57
+// @version     2017.08.59
 // @match     *://*.amazon.com/*
 // @match     *://*.bing.com/*
 // @match     *://*.alltrails.com/*
@@ -75,6 +75,7 @@ function bing()
 
 function ebay()
 {
+    $(".srp-river-answer").remove();
     $(".x-evo-btf-river").remove();
     $(".x-rx-slot").remove();
     //$(".d-vi-evo-region").remove();

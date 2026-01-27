@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Inoreader Auto-Load Full Article
 // @namespace    elddc
-// @version      1.1
+// @version      2.0
 // @description  Automatically load full content when opening an article in Inoreader
 // @author       Elddc
 // @match        https://www.inoreader.com/*
@@ -11,25 +11,44 @@
 // ==/UserScript==
 
 //----- configure (change as desired) -----
-const excludedSources = ['The Associated Press']; //subscriptions to exclude from auto-load
-const waitTime = 200; //time in ms to wait for page load (1 sec: 1000ms)
-//-----------------------------------------
+const excludedSources = ["Associated Press"]; // subscriptions to exclude from auto-load
+const buttonSelector = ".icon-article_topbar_mobilize_empty"; // modify this if the button class name changes
+const sourceSelector = ".article_sub_title a";
+//------------------------------------
 
-loadFullArticle();
-window.onpopstate = loadFullArticle;
+function loadFullArticle(button) {
+    let source = ""; // fallback if there is an error finding the article source
+    try {
+        source = document.querySelector(".article_sub_title a").innerText.trim();
+    } catch (err) {
+        console.log("The source selector has changed! Open an issue here to let me know: https://github.com/elddc/inoreader-autoload-full-content/issues");
+    }
 
-function loadFullArticle() {
-    if (window.location.pathname.includes('article/')) {
-        setTimeout(() => {
-            try {
-                const source = document.querySelector('.article_subtitle_author_wrapper');
-                const button = document.querySelector('.icon-article_topbar_mobilize_empty');
-                if (!excludedSources.includes(source.innerHTML.trim())) {
-                    button.click();
-                }
-            } catch (err) {
-                console.log('page has not loaded');
-            }
-        }, waitTime);
+    console.log(source);
+    if (!excludedSources.includes(source)) {
+        button.click();
     }
 }
+
+function handleNav() {
+    if (!window.location.pathname.includes("article/")) {
+        return;
+    }
+
+    const button = document.querySelector(buttonSelector);
+    if (button) {
+        loadFullArticle(button);
+    }
+
+    const observer = new MutationObserver(() => {
+        const button = document.querySelector(buttonSelector);
+        if (button) {
+            observer.disconnect();
+            loadFullArticle(button);
+        }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+}
+
+handleNav();
+window.onpopstate = handleNav;

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Rem4rk's Locked Items Manager
 // @namespace    https://www.torn.com/
-// @version      2.0.5
-// @description  This userscript allows you to lock items in your inventory to prevent accidentally trading, selling, donating, or trashing them. Perfect for protecting high-value items, collections, or anything you want to keep safe!- Now with Unique ID's, fallback protection, and a settings panel!
+// @version      2.1.5
+// @description  Allows you to lock items in your inventory to prevent accidentally trading, selling, donating, or trashing them. Refined for Faction Armory and City Shops with enhanced SPA support.
 // @author       rem4rk [2375926] - https://www.torn.com/profiles.php?XID=2375926
 // @match        https://www.torn.com/item.php*
 // @match        https://www.torn.com/bazaar.php*
@@ -22,9 +22,14 @@
 
     const STORAGE_KEY = 'torn_locked_items';
     const SETTINGS_KEY = 'torn_locked_settings';
+    const DEBUG = false; // Disable debug logging for production
 
     const getSettings = () => JSON.parse(localStorage.getItem(SETTINGS_KEY)) || { padlockTransparent: true, showActionToasts: true, showInfoToasts: true, showUnlockButton: true };
     const getLockedItems = () => JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+
+    function log(...args) {
+        if (DEBUG) console.log('[LOCKED ITEMS]', ...args);
+    }
 
     // ========== STYLES ========== //
     const mainStyle = document.createElement('style');
@@ -54,44 +59,17 @@
         }
 
         #torn-unlock-all-btn {
-            position: fixed;
-            left: 20px;
-            top: 50%;
-
-            background: #000;
-            color: #fff;
-            padding: 12px 16px;
-            border-radius: 4px;
-
-            border: 1px solid #f00;
-
-            z-index: 99999;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 11px;
-
-            opacity: 0.6;
+            position: fixed; left: 20px; top: 50%;
+            background: #000; color: #fff; padding: 12px 16px; border-radius: 4px;
+            border: 1px solid #f00; z-index: 99999; cursor: pointer;
+            font-weight: bold; font-size: 11px; opacity: 0.6;
             transition: transform 0.4s ease, opacity 0.3s ease;
        }
 
-       .selectAll___PTOHO {
-            position: relative !important;
-            visibility: hidden !important;
-       }
+       .selectAll___PTOHO { position: relative !important; visibility: hidden !important; }
+       .selectAll___PTOHO::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0); z-index: 9999; }
 
-       .selectAll___PTOHO::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0);
-            z-index: 9999;
-       }
-
-       #torn-unlock-all-btn:hover {
-            transform: scale(1.2);
-            opacity: 1;
-       }
-
+       #torn-unlock-all-btn:hover { transform: scale(1.2); opacity: 1; }
 
         #torn-toast-container { position: fixed; top: 20px; right: 20px; z-index: 999999; display: flex; flex-direction: column; gap: 10px; }
         .torn-toast {
@@ -102,28 +80,31 @@
 
         body:not(.item-php) .torn-padlock, body:not(.item-php) .lock-icon { display: none !important; }
 
-
+        .torn-bazaar-force-hide {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            position: absolute !important;
+            pointer-events: none !important;
+            overflow: hidden !important;
+        }
     `;
     document.head.appendChild(mainStyle);
 
-    // COMMENT: Fixed showToast to strictly respect info/action settings toggle.
+    // ========== TOAST NOTIFICATIONS ========== //
     function showToast(msg, type = 'info') {
         const s = getSettings();
+        if ((type === 'reminder' || type === 'info') && !s.showInfoToasts) return;
+        if ((type === 'action' || type === 'error') && !s.showActionToasts) return;
 
-        // COMMENT: If it's a reminder/info toast and setting is OFF, kill it.
-        if (type === 'reminder' && !s.showInfoToasts) return;
-        if (type === 'info' && !s.showInfoToasts) return;
-
-        // COMMENT: If it's a lock/unlock action toast and setting is OFF, kill it.
-        if (type === 'action' && !s.showActionToasts) return;
-        if (type === 'error' && !s.showActionToasts) return;
-
-        let container = document.getElementById('torn-toast-container');
-        if (!container) {
-            container = document.createElement('div');
-            container.id = 'torn-toast-container';
-            document.body.appendChild(container);
-        }
+        let container = document.getElementById('torn-toast-container') || (function() {
+            const c = document.createElement('div');
+            c.id = 'torn-toast-container';
+            document.body.appendChild(c);
+            return c;
+        })();
 
         const toast = document.createElement('div');
         toast.className = 'torn-toast';
@@ -138,35 +119,255 @@
         }, 3500);
     }
 
+    // ========== UNIVERSAL ID GETTER ========== //
     const getUniversalID = (el) => {
-        const armory = el.getAttribute('data-armoryid') || el.querySelector('input[name="armoryID"]')?.value;
+        // Priority 1: Check for armory IDs (weapons/armor with unique IDs)
+        const armory = el.getAttribute('data-armoryid') || el.getAttribute('data-armory');
         if (armory) return armory;
 
-        const itemId = el.getAttribute('data-id') || el.getAttribute('data-item') || el.querySelector('input[name="ID"]')?.value;
-        if (itemId) return itemId;
+        // Priority 2: Check child elements for armory ID
+        const armoryChild = el.querySelector('[data-armory], [data-armoryid]');
+        if (armoryChild) {
+            const childArmory = armoryChild.getAttribute('data-armory') || armoryChild.getAttribute('data-armoryid');
+            if (childArmory) return childArmory;
+        }
 
+        // Priority 3: Check for armoryID input
+        const armoryInput = el.querySelector('input[name="armoryID"]');
+        if (armoryInput?.value) return armoryInput.value;
+
+        // Priority 4: For items WITHOUT armory IDs, use base item ID from image
         const img = el.querySelector('img[src*="/items/"]');
         if (img) {
-            const match = img.getAttribute('src').match(/\/items\/(\d+)\//);
-            if (match) return match[1];
+            const src = img.getAttribute('src');
+            const match = src.match(/\/items\/(\d+)\//);
+            if (match) {
+                const baseItemId = match[1];
+                const dataItem = el.getAttribute('data-item') || el.getAttribute('data-id');
+                if (dataItem && dataItem === baseItemId) {
+                    return baseItemId;
+                }
+                if (!dataItem) {
+                    return baseItemId;
+                }
+            }
         }
+
+        // Priority 5: Fall back to data attributes
+        const itemId = el.getAttribute('data-id') || el.getAttribute('data-item');
+        if (itemId) return itemId;
+
+        // Priority 6: Check input for ID
+        const idInput = el.querySelector('input[name="ID"]');
+        if (idInput?.value) return idInput.value;
+
         return null;
     };
 
+    // ========== CHECK IF ON BAZAAR ADD PAGE ========== //
+    function isOnBazaarAddPage() {
+        const url = window.location.href;
+        if (!url.includes('bazaar.php')) return false;
+
+        const hash = window.location.hash;
+        return hash === '#/add';
+    }
+
+    // ========== BAZAAR HANDLER ========== //
+    let bazaarObserver = null;
+    let bazaarProcessInterval = null;
+
+    function stopBazaarObserver() {
+        if (bazaarObserver) {
+            bazaarObserver.disconnect();
+            bazaarObserver = null;
+        }
+        if (bazaarProcessInterval) {
+            clearInterval(bazaarProcessInterval);
+            bazaarProcessInterval = null;
+        }
+    }
+
+    function handleBazaarPage() {
+        if (!isOnBazaarAddPage()) {
+            log('Not on bazaar add page, stopping observer');
+            stopBazaarObserver();
+            document.querySelectorAll('.torn-bazaar-force-hide').forEach(el => {
+                el.classList.remove('torn-bazaar-force-hide');
+            });
+            return;
+        }
+
+        log('On bazaar add page, starting item hiding');
+
+        function getItemIdFromElement(itemElement) {
+            // CRITICAL: Use the EXACT SAME LOGIC as inventory!
+
+            // Priority 1: Armory IDs for weapons/armor
+            const armory = itemElement.getAttribute('data-armoryid') || itemElement.getAttribute('data-armory');
+            if (armory) {
+                log('Found armory ID on element:', armory);
+                return armory;
+            }
+
+            // Priority 2: Child armory IDs
+            const armoryChild = itemElement.querySelector('[data-armory], [data-armoryid]');
+            if (armoryChild) {
+                const childArmory = armoryChild.getAttribute('data-armory') || armoryChild.getAttribute('data-armoryid');
+                if (childArmory) {
+                    log('Found child armory ID:', childArmory);
+                    return childArmory;
+                }
+            }
+
+            // Priority 3: Armory input
+            const armoryInput = itemElement.querySelector('input[name="armoryID"]');
+            if (armoryInput?.value) {
+                log('Found armory input:', armoryInput.value);
+                return armoryInput.value;
+            }
+
+            // Priority 4: BASE ITEM ID from image (for consumables/tools)
+            const img = itemElement.querySelector('img[data-size="medium"], img[src*="/items/"]');
+            if (img) {
+                const src = img.getAttribute('src') || img.getAttribute('srcset');
+                if (src) {
+                    const match = src.match(/\/items\/(\d+)\//);
+                    if (match) {
+                        const baseItemId = match[1];
+                        log('Extracted base item ID from image:', baseItemId);
+                        return baseItemId;
+                    }
+                }
+            }
+
+            // Priority 5: Data attributes (fallback)
+            const dataId = itemElement.getAttribute('data-id') || itemElement.getAttribute('data-item');
+            if (dataId) {
+                log('Found data attribute ID:', dataId);
+                return dataId;
+            }
+
+            log('❌ Could not extract any ID from element');
+            return null;
+        }
+
+        function isItemEquipped(itemElement) {
+            // Check if item is equipped by looking for "Equipped" text
+            const usedDiv = itemElement.querySelector('.used');
+            if (usedDiv && usedDiv.textContent.trim() === 'Equipped') {
+                return true;
+            }
+
+            // Also check for disabled and bg-red classes (equipped items)
+            if (itemElement.classList.contains('disabled') && itemElement.classList.contains('bg-red')) {
+                return true;
+            }
+
+            return false;
+        }
+
+        function processBazaarItems() {
+            const items = document.querySelectorAll('li[data-group="child"]');
+            const locked = getLockedItems();
+            let hiddenCount = 0;
+            let equippedCount = 0;
+
+            log(`\n=== PROCESSING BAZAAR ITEMS ===`);
+            log(`Total items found: ${items.length}`);
+            log(`Locked items in storage:`, Object.keys(locked));
+
+            items.forEach((itemElement, index) => {
+                const itemId = getItemIdFromElement(itemElement);
+                const isEquipped = isItemEquipped(itemElement);
+
+                const nameEl = itemElement.querySelector('.name-wrap .t-overflow, [class*="name"]');
+                const itemName = nameEl ? nameEl.textContent.trim() : 'Unknown';
+
+                if (!itemId) {
+                    log(`❌ Item #${index} (${itemName}): NO ID EXTRACTED`);
+                    return;
+                }
+
+                // Hide if LOCKED or EQUIPPED
+                if (locked[itemId] || isEquipped) {
+                    itemElement.classList.add('torn-bazaar-force-hide');
+                    itemElement.setAttribute('data-locked-item', itemId);
+                    hiddenCount++;
+
+                    if (isEquipped) {
+                        equippedCount++;
+                        log(`⚡ Item #${index} (${itemName}): ID=${itemId} - HIDING (EQUIPPED)`);
+                    } else {
+                        log(`🔒 Item #${index} (${itemName}): ID=${itemId} - HIDING (LOCKED)`);
+                    }
+                } else {
+                    itemElement.classList.remove('torn-bazaar-force-hide');
+                    itemElement.removeAttribute('data-locked-item');
+                    log(`✅ Item #${index} (${itemName}): ID=${itemId} - VISIBLE`);
+                }
+            });
+
+            log(`\n=== SUMMARY ===`);
+            log(`Hidden: ${hiddenCount} / ${items.length} (${equippedCount} equipped, ${hiddenCount - equippedCount} locked)`);
+        }
+
+        processBazaarItems();
+        stopBazaarObserver();
+
+        bazaarObserver = new MutationObserver(() => {
+            processBazaarItems();
+        });
+
+        bazaarObserver.observe(document.body, { childList: true, subtree: true });
+        bazaarProcessInterval = setInterval(processBazaarItems, 500);
+    }
+
+    // ========== DYNAMIC CSS HIDING ========== //
     function updateHidingCSS() {
         const locked = getLockedItems();
         const ids = Object.keys(locked);
-        if (ids.length === 0 || window.location.href.includes('item.php') || window.location.href.endsWith('page.php?sid=ItemMarket') || window.location.href.includes('page.php?sid=ItemMarket#/market')) {
-            hidingStyle.textContent = ""; return;
+        const url = window.location.href;
+
+        if (url.includes('item.php') ||
+            url.includes('sid=ItemMarket#/market') ||
+            url.includes('bazaar.php') ||
+            ids.length === 0) {
+            hidingStyle.textContent = "";
+            return;
+        }
+
+        const isFaction = url.includes('factions.php');
+        const isShop = url.includes('shops.php') || url.includes('bigalgunshop.php');
+        const safeSubTabs = ['sub=weapons', 'sub=armour', 'sub=temporary', 'sub=medical', 'sub=consumables', 'sub=drugs', 'sub=boosters', 'sub=utilities', 'sub=loot', 'sub=points'];
+        const isSafeTab = safeSubTabs.some(sub => url.includes(sub));
+
+        if (isFaction) {
+            const isArmoury = url.includes('tab=armoury');
+            if (!isArmoury || (isArmoury && isSafeTab)) {
+                hidingStyle.textContent = "";
+                return;
+            }
         }
 
         let css = "";
         ids.forEach(id => {
-            css += `li[data-id="${id}"], li[data-item="${id}"], li[data-armoryid="${id}"],
-                    li:has(input[value="${id}"]), li:has(img[src*="/items/${id}/"]),
-                    div.itemRowWrapper___cFs4O:has([aria-controls*="-${id}"]),
-                    .virtualListing___jl0JE:has([aria-controls*="-${id}"]),
-                    li:has([data-reactid*=".$${id}"]) { display: none !important; }\n`;
+            const baseSelectors = [
+                `li[data-id="${id}"]`, `li[data-item="${id}"]`, `li[data-armoryid="${id}"]`,
+                `li:has(input[value="${id}"])`, `li:has(img[src*="/items/${id}/"])`,
+                `div[class*="itemRow"]:has([aria-controls*="-${id}"])`,
+                `div[class*="itemRow"]:has(img[src*="/items/${id}/"])`,
+                `.virtualListing___jl0JE:has([aria-controls*="-${id}"])`,
+                `li:has([data-reactid*=".$${id}"])`
+            ];
+
+            if (isShop) {
+                baseSelectors.forEach(sel => {
+                    css += `.sell-items-list ${sel}, .sell-items-wrap ${sel} { display: none !important; }\n`;
+                });
+            } else {
+                css += baseSelectors.join(', ') + " { display: none !important; }\n";
+            }
         });
         hidingStyle.textContent = css;
     }
@@ -174,6 +375,7 @@
     const hidingStyle = document.createElement('style');
     document.head.appendChild(hidingStyle);
 
+    // ========== MAIN LOGIC ========== //
     function runLogic() {
         const isInv = window.location.href.includes('item.php');
         const locked = getLockedItems();
@@ -197,10 +399,21 @@
                         e.stopPropagation();
                         const current = getLockedItems();
                         const name = el.querySelector('.name')?.textContent || "Item";
-                        if (current[key]) { delete current[key]; showToast(`${name} Unlocked`, 'action'); }
-                        else { current[key] = true; showToast(`${name} Locked`, 'error'); }
+                        if (current[key]) {
+                            delete current[key];
+                            showToast(`${name} Unlocked`, 'action');
+                            log(`Unlocked item: ${key} (${name})`);
+                        } else {
+                            current[key] = true;
+                            showToast(`${name} Locked`, 'error');
+                            log(`Locked item: ${key} (${name})`);
+                        }
                         localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
-                        updateHidingCSS(); runLogic();
+                        updateHidingCSS();
+                        runLogic();
+                        if (isOnBazaarAddPage()) {
+                            setTimeout(handleBazaarPage, 100);
+                        }
                     };
                     const target = el.querySelector('.name-wrap');
                     if (target) target.insertBefore(lock, target.firstChild);
@@ -216,21 +429,26 @@
         document.body.classList.toggle('torn-hide-unlock-btn', !settings.showUnlockButton);
 
         removeSelectAll();
-
         const uBtn = document.getElementById('torn-unlock-all-btn');
         if (uBtn) uBtn.textContent = `Unlock All (${Object.keys(locked).length})`;
     }
 
-    // COMMENT: Reminder toast logic. Respects info-toast toggle.
-    if (!window.location.href.includes('item.php')) {
-        const count = Object.keys(getLockedItems()).length;
-        if (count > 0) setTimeout(() => showToast(`Reminder: ${count} locked items are hidden. Unlock them in inventory.`, 'reminder'), 1000);
+    // ========== REMOVE SELECT ALL BUTTONS ========== //
+    function removeSelectAll() {
+        document.querySelectorAll(
+            '#itemRow-incognitoCheckbox-select-all, #_r_80_, .sell-act .select, .sell-act button.wai-btn'
+        ).forEach(el => el.remove());
     }
 
+    // ========== SETTINGS PANEL ========== //
     if (!document.getElementById('torn-lock-gear')) {
         const gear = document.createElement('div');
-        gear.id = 'torn-lock-gear'; gear.innerHTML = '⚙';
-        gear.onclick = () => { const m = document.getElementById('torn-lock-modal'); m.style.display = (m.style.display === 'block') ? 'none' : 'block'; };
+        gear.id = 'torn-lock-gear';
+        gear.innerHTML = '⚙';
+        gear.onclick = () => {
+            const m = document.getElementById('torn-lock-modal');
+            m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+        };
         document.body.appendChild(gear);
 
         const modal = document.createElement('div');
@@ -257,43 +475,72 @@
         });
     }
 
+    // ========== UNLOCK ALL BUTTON ========== //
     if (window.location.href.includes('item.php') && !document.getElementById('torn-unlock-all-btn')) {
         const btn = document.createElement('button');
         btn.id = 'torn-unlock-all-btn';
-        btn.onclick = () => { if (confirm('Unlock all items?')) { localStorage.setItem(STORAGE_KEY, '{}'); showToast('All items unlocked', 'action'); updateHidingCSS(); runLogic(); } };
+        btn.onclick = () => {
+            if (confirm('Unlock all items?')) {
+                localStorage.setItem(STORAGE_KEY, '{}');
+                showToast('All items unlocked', 'action');
+                log('All items unlocked');
+                updateHidingCSS();
+                runLogic();
+                if (isOnBazaarAddPage()) {
+                    setTimeout(handleBazaarPage, 100);
+                }
+            }
+        };
         document.body.appendChild(btn);
     }
 
+    // ========== SPA PAGE CHANGE HANDLER ========== //
+    function handlePageChange() {
+        log('Page change detected:', window.location.href);
+        [10, 100, 500, 1000].forEach(delay => {
+            setTimeout(() => {
+                runLogic();
+                updateHidingCSS();
+                handleBazaarPage();
+            }, delay);
+        });
+    }
+
+    // ========== MUTATION OBSERVER ========== //
     let t = null;
     const obs = new MutationObserver(() => {
         if (t) clearTimeout(t);
-        t = setTimeout(() => requestAnimationFrame(() => { runLogic(); updateHidingCSS(); }), 300);
+        t = setTimeout(() => requestAnimationFrame(() => {
+            runLogic();
+            updateHidingCSS();
+        }), 300);
     });
     obs.observe(document.body, { childList: true, subtree: true });
-    updateHidingCSS(); runLogic();
 
-    function removeSelectAll() {
-        document.querySelectorAll(
-        '#itemRow-incognitoCheckbox-select-all, #_r_80_'
-    ).forEach(el => el.remove());
+    // ========== EVENT LISTENERS FOR SPA NAVIGATION ========== //
+    window.addEventListener('hashchange', handlePageChange);
+    window.addEventListener('popstate', handlePageChange);
+    if (window.onurlchange === null) {
+        window.addEventListener('urlchange', handlePageChange);
+    }
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('li[role="tab"]')) {
+            handlePageChange();
+        }
+    });
+
+    // ========== LOCKED ITEMS REMINDER ========== //
+    if (!window.location.href.includes('item.php')) {
+        const count = Object.keys(getLockedItems()).length;
+        if (count > 0) {
+            setTimeout(() => showToast(`Reminder: ${count} locked items are hidden. Unlock them in inventory.`, 'reminder'), 1000);
+        }
     }
 
-    // ================= SPA URL change support =================
-function handlePageChange() {
-    // Re-run the main logic
-    runLogic();
+    // ========== INITIAL RUN ========== //
     updateHidingCSS();
-}
+    runLogic();
+    handleBazaarPage();
 
-// Run immediately on page load
-handlePageChange();
-
-// SPA support: re-run logic on URL changes (hash-based or sid-based)
-if (window.onurlchange === null) {
-    window.addEventListener('urlchange', handlePageChange);
-} else {
-    // fallback if onurlchange is not supported
-    window.addEventListener('hashchange', handlePageChange);
-}
-
+    log('Script initialized');
 })();

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Npm Userscript
-// @version      0.3.4
+// @version      0.3.5
 // @description  Various improvements and fixes for npmjs.com
 // @license      MIT
 // @author       Bjorn Lu
@@ -303,11 +303,6 @@
     const repositoryLink = getNpmContext().context.packument.repository;
     return /github\.com\/([^\/]+\/[^\/]+)/.exec(repositoryLink)?.[1];
   }
-  function getNpmTarballUrl() {
-    const packument = getNpmContext().context.packument;
-    const versionData = packument.versions.find((v2) => v2.version = packument.version);
-    return versionData.dist.tarball;
-  }
   function prettyBytes(bytes) {
     if (bytes < 1e3) return `${bytes} B`;
     const units = ["kB", "MB", "GB", "TB"];
@@ -465,11 +460,11 @@
   }
   function fetchStatus(input, init) {
     return new Promise((resolve, reject) => {
-      const req = GM.xmlHttpRequest({
+      GM.xmlHttpRequest({
         ...getSharedOptions(input, init, reject),
+        method: "HEAD",
         onreadystatechange: (response) => {
           if (response.readyState === 2) {
-            req.abort();
             resolve(response.status);
           }
         }
@@ -5558,12 +5553,11 @@ is powered by https://osv.dev.
     columnToInsertAfter.insertAdjacentElement("afterend", tarballSizeColumn);
   }
   async function getTarballSize() {
-    const tarballUrl = getNpmTarballUrl();
-    if (!tarballUrl) return void 0;
-    const result = await fetchHeaders(tarballUrl);
-    const contentLength = /content-length:\s*(\d+)/.exec(result)?.[1];
-    if (!contentLength) return void 0;
-    return prettyBytes(parseInt(contentLength, 10));
+    const packageName = getPackageName();
+    const packageVersion = getPackageVersion();
+    if (!packageName || !packageVersion) return;
+    const size2 = await fetchText(`${"https://npm-userscript.bjornlu.workers.dev"}/packed-size/${packageName}@${packageVersion}`);
+    return prettyBytes(parseInt(size2, 10));
   }
   async function getColumnToInsertAfter() {
     const column = getColumnByName("Unpacked Size");

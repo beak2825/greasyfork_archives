@@ -5,7 +5,7 @@
 // @description:ja Twitter, Bluesky, Tokimekiの画像、GIF、動画のALTテキスト（代替テキスト）を表示・コピーします。
 // @namespace      https://bsky.app/profile/neon-ai.art
 // @homepage       https://neon-aiart.github.io/
-// @version        3.0
+// @version        3.1
 // @author         ねおん
 // @match          https://twitter.com/*
 // @match          https://x.com/*
@@ -38,7 +38,9 @@
 (function() {
     'use strict';
 
-    const SCRIPT_VERSION = '3.0';
+    const SCRIPT_VERSION = '3.1';
+
+    const MINIMUM_CHARACTER_LENGTH = 12; // 最低文字数
 
     // 除外ALTテキスト
     const localizedImageStrings = [
@@ -217,9 +219,13 @@
             cursor: auto;
             pointer-events: auto;
         }
+
         /* ボタンホバー時、その親にあるリンクの反応を消す */
         .alt-button:hover {
-            box-shadow: 0 0 0 1000px rgba(0,0,0,0); /* 当たり判定を広げる裏技 */
+            box-shadow:
+                0 2px 5px rgba(0,0,0,0.3),  /* 元の影をそのまま記述 */
+                0 0 0 1000px rgba(0,0,0,0); /* その後に判定用の透明な影を足す */
+            background-color: rgba(29, 155, 240, 1.0); /* ついでに色を少し濃くしてホバー感出すのもアリ */
         }
     `);
 
@@ -230,8 +236,9 @@
         if (!text) {
             return false;
         }
+        const length = Math.min(Math.max(MINIMUM_CHARACTER_LENGTH, 1), 99);
         const trimmed = text.trim();
-        return trimmed.length > 12 && !localizedImageStrings.includes(trimmed);
+        return trimmed.length > length && !localizedImageStrings.includes(trimmed);
     }
 
     /**
@@ -391,7 +398,7 @@
         }
 
         try {
-            const apiUrl = `https://public.api.bsky.app/xrpc/app.bsky.feed.getPostThread?uri=${encodeURIComponent(uri)}&depth=0`;
+            const apiUrl = `https://public.api.bsky.app/xrpc/app.bsky.feed.getPostThread?uri=${encodeURIComponent(uri)}&depth=1`;
             const res = await fetch(apiUrl);
             if (!res.ok) {
                 return '';
@@ -399,14 +406,26 @@
 
             const data = await res.json();
             const post = data.thread?.post;
-            // console.log('[Debug] post.embed full structure:', JSON.stringify(post.embed, null, 2));
+            console.log('[Debug] post.embed full structure:', JSON.stringify(post.embed, null, 2));
 
             // 動画のALTを優先的に、なければ埋め込みのALTを取得
-            const altText = post.embed?.external?.title ||
-                post.embed?.media?.external?.title ||
-                post.embed?.media?.alt ||
-                post.embed?.video?.alt ||
-                post.embed?.alt || '';
+            let altText = post.embed?.external?.title ||
+                          post.embed?.media?.external?.title ||
+                          post.embed?.media?.alt ||
+                          post.embed?.video?.alt ||
+                          post.embed?.alt || '';
+
+            if (!altText && post.embed?.record) {
+                const q = post.embed.record.embeds?.[0];
+                if (q) {
+                    altText = q.external?.title ||
+                              q.media?.external?.title ||
+                              q.media?.alt ||
+                              q.video?.alt ||
+                              q.alt || '';
+                }
+            }
+
             return altText;
         } catch (e) {
             console.error('[ALT-Script] Tokimeki API Fetch Error:', e);

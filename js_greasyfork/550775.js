@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Tokimeki MediaView Fix Plus
 // @icon           data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌈</text></svg>
-// @version        3.6
+// @version        3.8
 // @description    Enables navigating to individual post pages by clicking on the body or quote source in TOKIMEKI's "Media" style. Also adds keyboard shortcuts for reactions.
 // @description:ja TOKIMEKIの「メディア」スタイルで投稿の本文や引用元をクリックした際に、その投稿の個別ページに移動できるようにします。また、キーボードショートカットでリアクション操作ができるようになります。
 // @author         ねおん
@@ -38,7 +38,7 @@
 (function() {
     'use strict';
 
-    const VERSION = '3.6';
+    const VERSION = '3.8';
     const STORE_KEY = 'tokimeki_media_fix_shortcuts';
 
     // ========= 設定 =========
@@ -48,7 +48,7 @@
         like: 'Numpad3',
         quote: 'Numpad4',
         bookmark: 'Numpad5',
-        moderation: 'Numpad6'
+        moderation: 'Numpad6',
     });
 
     // ========= クリックでポストを開く処理 (v1.4ベース) =========
@@ -83,16 +83,19 @@
         // --- Step 5: 全てのチェックを通過した場合、atURIを取得してページを遷移させる ---
         const atUri = postContent.dataset.aturi;
 
-        if (atUri && atUri.startsWith('at://') && atUri.includes('/app.bsky.feed.post/')) {
+        // atUriが存在し、かつBlueskyのポスト形式であることを確認
+        if (atUri?.includes('/app.bsky.feed.post/')) {
             const parts = atUri.replace('at://', '').split('/');
+
             const did = parts[0];
             const rkey = parts[2];
-            const postUrl = `/profile/${did}/post/${rkey}`;
 
-            // TOKIMEKI本体のイベントをキャンセルし、ページ移動を実行
-            e.preventDefault();
-            e.stopPropagation();
-            window.location.href = postUrl;
+            if (did && rkey) {
+                const postUrl = `/profile/${did}/post/${rkey}`;
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = postUrl;
+            }
         }
     }, true); // イベントキャプチャリングを使い、TOKIMEKIの処理より先にこのリスナーを実行
 
@@ -107,11 +110,19 @@
 
         // 保存時と同じルールで「今押されたキー文字列」を作成
         const modifiers = [];
-        if (e.ctrlKey) modifiers.push('Ctrl');
-        if (e.shiftKey) modifiers.push('Shift');
-        if (e.altKey) modifiers.push('Alt');
+        if (e.ctrlKey) {
+            modifiers.push('Ctrl');
+        }
+        if (e.shiftKey) {
+            modifiers.push('Shift');
+        }
+        if (e.altKey) {
+            modifiers.push('Alt');
+        }
 
-        if (['Control', 'Shift', 'Alt', 'Meta'].includes(e.key)) return;
+        if (['Control', 'Shift', 'Alt', 'Meta',].includes(e.key)) {
+            return;
+        }
 
         // キー名の正規化（矢印キー以外は左右の区別を消す）
         let keyName = e.code;
@@ -119,10 +130,14 @@
             keyName = keyName.replace('Left', '').replace('Right', '');
         }
         keyName = keyName.replace('Key', '').replace('Digit', '');
-        if (keyName === 'Escape') keyName = 'Esc';
-        if (keyName === 'Backspace') keyName = 'BS';
+        if (keyName === 'Escape') {
+            keyName = 'Esc';
+        }
+        if (keyName === 'Backspace') {
+            keyName = 'BS';
+        }
 
-        const finalKeys = [...new Set([...modifiers, keyName])];
+        const finalKeys = [...new Set([...modifiers, keyName,]),];
         const currentPressedKey = finalKeys.join('+');
 
         // 押されたキーに一致するアクションを探す
@@ -133,7 +148,9 @@
         if (!action && currentPressedKey.startsWith('Ctrl+')) {
             const baseKey = currentPressedKey.replace('Ctrl+', '');
             action = Object.keys(shortcuts).find(key => shortcuts[key] === baseKey);
-            if (action) isParentOperation = true;
+            if (action) {
+                isParentOperation = true;
+            }
         }
 
         // 複数画像操作（Shift + ArrowLeft/Right）
@@ -179,14 +196,16 @@
 
                     scrollTarget.scrollBy({
                         top: scrollAmount * direction,
-                        behavior: 'smooth'
+                        behavior: 'smooth',
                     });
                     return;
                 }
             }
         }
 
-        if (!action) return;
+        if (!action) {
+            return;
+        }
 
         // イベントのデフォルト動作をキャンセル
         e.preventDefault();
@@ -194,13 +213,17 @@
 
         // ダイアログ内の対応するボタンを探してクリック！
         const contentArea = dialog.querySelector('.media-content__content');
-        if (!contentArea) return;
+        if (!contentArea) {
+            return;
+        }
 
         // モデレーション操作
         if (action === 'moderation') {
             // 投稿全体（.media-content）を取得
             const postContainer = contentArea.closest('.media-content');
-            if (!postContainer) return;
+            if (!postContainer) {
+                return;
+            }
 
             // 警告コンテナ（「表示する」ボタンの親）と非表示化コンテナ（「隠す」ボタンの親）
             const warnContainer = postContainer.querySelector('.media-content__image .timeline-warn');
@@ -234,7 +257,9 @@
 
         // リアクション操作
         const reactionAreas = contentArea.querySelectorAll('.timeline-reaction');
-        if (reactionAreas.length === 0) return;
+        if (reactionAreas.length === 0) {
+            return;
+        }
 
         // --- ターゲットにするAreaを決定 ---
         const reactionArea = (isParentOperation && reactionAreas.length > 1)
@@ -243,22 +268,22 @@
 
         let button;
         switch (action) {
-            case 'reply':
-                button = reactionArea.querySelector('.timeline-reaction__item--reply');
-                break;
-            case 'repost':
-                button = reactionArea.querySelector('.timeline-reaction__item--repost');
-                break;
-            case 'like':
-                button = reactionArea.querySelector('.timeline-reaction__item--like');
-                break;
-            case 'quote':
-                button = reactionArea.querySelector('.timeline-reaction__item--quote');
-                break;
-            case 'bookmark':
-                // ブックマークはボタンが入れ子になってるので注意です！
-                button = reactionArea.querySelector('.timeline-reaction__item--bookmark');
-                break;
+        case 'reply':
+            button = reactionArea.querySelector('.timeline-reaction__item--reply');
+            break;
+        case 'repost':
+            button = reactionArea.querySelector('.timeline-reaction__item--repost');
+            break;
+        case 'like':
+            button = reactionArea.querySelector('.timeline-reaction__item--like');
+            break;
+        case 'quote':
+            button = reactionArea.querySelector('.timeline-reaction__item--quote');
+            break;
+        case 'bookmark':
+            // ブックマークはボタンが入れ子になってるので注意です！
+            button = reactionArea.querySelector('.timeline-reaction__item--bookmark');
+            break;
         }
 
         if (button) {
@@ -273,7 +298,9 @@
 
     // ========= 設定UI =========
     function ensureStyle() {
-        if (document.getElementById('tmf-style')) return;
+        if (document.getElementById('tmf-style')) {
+            return;
+        }
         const style = document.createElement('style');
         style.id = 'tmf-style';
         style.textContent = `
@@ -339,7 +366,9 @@
 
     function openSettings() {
         ensureStyle();
-        if (document.querySelector('.tmf-overlay')) return;
+        if (document.querySelector('.tmf-overlay')) {
+            return;
+        }
 
         // メディアビューのダイアログが開いているか確認
         const activeDialog = document.querySelector('dialog.media-content-wrap[open]');
@@ -348,7 +377,11 @@
 
         const overlay = document.createElement('div');
         overlay.className = 'tmf-overlay';
-        overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+        overlay.addEventListener('click', e => {
+            if (e.target === overlay) {
+                overlay.remove();
+            }
+        });
 
         const panel = document.createElement('div');
         panel.className = 'tmf-panel';
@@ -389,7 +422,7 @@
         targetParent.appendChild(overlay);
 
         const inputs = Object.fromEntries(
-            Array.from(panel.querySelectorAll('.tmf-input')).map(input => [input.id.replace('tmf-', ''), input])
+            Array.from(panel.querySelectorAll('.tmf-input')).map(input => [input.id.replace('tmf-', ''), input,])
         );
 
         // 現在の設定値を表示
@@ -405,13 +438,19 @@
 
             // 1. 修飾キー（Ctrl, Shift, Alt）の状態を配列に集める
             const modifiers = [];
-            if (e.ctrlKey) modifiers.push('Ctrl');
-            if (e.shiftKey) modifiers.push('Shift');
-            if (e.altKey) modifiers.push('Alt');
+            if (e.ctrlKey) {
+                modifiers.push('Ctrl');
+            }
+            if (e.shiftKey) {
+                modifiers.push('Shift');
+            }
+            if (e.altKey) {
+                modifiers.push('Alt');
+            }
 
             // 2. 現在押されたメインのキーを特定する
             // 修飾キーそのものが押されたときは、まだ確定させない
-            if (['Control', 'Shift', 'Alt', 'Meta'].includes(e.key)) {
+            if (['Control', 'Shift', 'Alt', 'Meta',].includes(e.key)) {
                 // 修飾キー単体での表示更新（任意ですが、入力中っぽく見せるなら）
                 inputs[action].value = modifiers.join('+');
                 return;
@@ -425,8 +464,12 @@
             keyName = keyName.replace('Right', '');  // ShiftRight -> Shift
 
             // 特殊なキーの微調整（お好みで）
-            if (keyName === 'Escape') keyName = 'Esc';
-            if (keyName === 'Backspace') keyName = 'BS';
+            if (keyName === 'Escape') {
+                keyName = 'Esc';
+            }
+            if (keyName === 'Backspace') {
+                keyName = 'BS';
+            }
 
             // 4. 修飾キーとメインキーを合体させる
             // すでに modifiers に含まれているキー（Altなど）がメインキーとして来た場合は重複させない
@@ -438,7 +481,7 @@
 
             // 5. 重複チェック
             const otherInputs = Object.entries(inputs).filter(([act,]) => act !== action);
-            if (otherInputs.some(([, inp]) => inp.value === fullKeyString && !inp.classList.contains('recording'))) {
+            if (otherInputs.some(([, inp,]) => inp.value === fullKeyString && !inp.classList.contains('recording'))) {
                 inputs[action].classList.add('error');
                 showToast('既に使われています (Already in use)', true);
                 return;
@@ -457,7 +500,9 @@
                 activeInput = null;
                 return;
             }
-            if (activeInput) activeInput.classList.remove('recording', 'error');
+            if (activeInput) {
+                activeInput.classList.remove('recording', 'error');
+            }
 
             activeInput = input;
             // input.value = 'キーを押してください... (Press a key...)';
@@ -479,7 +524,7 @@
             // 予約済み（設定不可）キーのリスト
             const reservedKeys = [
                 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
-                'Shift+ArrowLeft', 'Shift+ArrowRight'
+                'Shift+ArrowLeft', 'Shift+ArrowRight',
             ];
 
             for (const action in inputs) {
@@ -537,83 +582,124 @@
 
     // 画像やGIF、動画を網羅的に探す関数
     function findMedia(obj) {
-        if (!obj) return null;
-
-        // 画像
-        if (obj.images && Array.isArray(obj.images)) {
-            return { type: 'images', data: obj.images };
+        if (!obj) {
+            return null;
         }
 
-        // 動画
-        if (obj.$type === 'app.bsky.embed.video#view' || obj.video) {
-            const videoData = obj.video || obj;
+        // --- 1. RecordWithMedia の media をチェック ---
+        // これが「自分の投稿に添付した画像/動画」になる
+        if (obj.$type === 'app.bsky.embed.recordWithMedia#view' || obj.media) {
+            const mediaFound = findMedia(obj.media || obj); // mediaの中身を再帰
+            if (mediaFound) {
+                return mediaFound;
+            }
+        }
+
+        // --- 2. 画像の判定 (URL文字列優先) ---
+        if (obj.images && Array.isArray(obj.images) && obj.images[0]) {
+            const thumbUrl = typeof obj.images[0].thumb === 'string' ? obj.images[0].thumb : null;
+            if (thumbUrl) {
+                return {
+                    type: 'images',
+                    data: obj.images.map(img => ({ ...img, thumb: typeof img.thumb === 'string' ? img.thumb : null, })),
+                };
+            }
+        }
+
+        // --- 3. 動画の判定 ---
+        const videoThumb = obj.thumbnail || obj.thumb || (obj.video && (obj.video.thumbnail || obj.video.thumb));
+        if ((obj.$type?.includes('video') || obj.playlist) && typeof videoThumb === 'string') {
             return {
                 type: 'video',
-                data: [{ thumb: videoData.thumbnail, video: videoData.playlist }]
+                data: [{ thumb: videoThumb, video: obj.playlist || obj.video?.playlist, },],
             };
         }
 
-        // GIFステッカーと外部リンク
-        const external = obj.external || (obj.media && obj.media.external);
-        if (external) {
-            // Tenor (GIF)
-            if (external.uri?.includes('tenor.com')) {
-                return {
-                    type: 'gif',
-                    data: [{ thumb: external.thumb, video: external.uri.replace('.gif', '.mp4') }]
-                };
+        // --- 4. 外部リンク / Tenor ---
+        const ext = obj.external || (obj.media && obj.media.external);
+        if (ext && ext.uri) {
+            const thumbUrl = typeof ext.thumb === 'string' ? ext.thumb : null;
+            if (ext.uri.includes('tenor.com')) {
+                return { type: 'gif', data: [{ thumb: thumbUrl, video: ext.uri.replace('.gif', '.mp4'), },], };
             }
-            return { type: 'external', data: [external] }; // 一般的なリンクカード
+            // リンクカードはサムネがある場合のみ採用（灰色の板防止）
+            if (thumbUrl) {
+                return { type: 'external', data: [{ ...ext, thumb: thumbUrl, },], };
+            }
         }
 
-        // 再帰探索
-        if (obj.media) return findMedia(obj.media);
+        // --- 5. 自分の投稿にメディアがなければ、引用先 (record) を探す ---
         if (obj.record) {
-            if (obj.record.embed) return findMedia(obj.record.embed);
-            if (obj.record.value && obj.record.value.embed) return findMedia(obj.record.value.embed);
+            // record.embeds[0] (整形済みデータ) を優先
+            if (obj.record.embeds && obj.record.embeds[0]) {
+                const found = findMedia(obj.record.embeds[0]);
+                if (found) {
+                    return found;
+                }
+            }
+            // record 直下や record.record (ネストされたrecord) を探索
+            return findMedia(obj.record.record || obj.record);
         }
+
         return null;
     }
 
     async function fetchAndInjectImage(item) {
-        if (item.querySelector('.neon-fixed') || item.dataset.imageFixed) return;
+        if (item.querySelector('.neon-fixed') || item.dataset.imageFixed) {
+            return;
+        }
 
         // Tokimekiが自前でメディアを表示しているならスキップ
-        if (item.querySelector('.timeline-images') || item.querySelector('.gif-video-wrap')) return;
+        if (item.querySelector('.timeline-images') || item.querySelector('.gif-video-wrap')) {
+            return;
+        }
 
-        item.dataset.imageFixed = "true";
+        item.dataset.imageFixed = 'true';
         item.classList.add('neon-fixed');
 
         const contentArea = item.querySelector('.notification-column__content');
-        if (!contentArea) return;
+        if (!contentArea) {
+            return;
+        }
 
         const postLink = contentArea.querySelector('a[href*="/post/"]');
-        if (!postLink) return;
+        if (!postLink) {
+            return;
+        }
 
         const match = postLink.getAttribute('href').match(/\/profile\/([^/]+)\/post\/([^/]+)/);
-        if (!match) return;
+        if (!match) {
+            return;
+        }
 
-        const [_, handle, postId] = match;
+        const [_, handle, postId,] = match;
 
         try {
-            const apiUrl = `https://public.api.bsky.app/xrpc/app.bsky.feed.getPostThread?uri=at://${handle}/app.bsky.feed.post/${postId}&depth=0`;
+            const apiUrl = `https://public.api.bsky.app/xrpc/app.bsky.feed.getPostThread?uri=at://${handle}/app.bsky.feed.post/${postId}&depth=1`;
             const res = await fetch(apiUrl);
-            if (!res.ok) return;
+            if (!res.ok) {
+                return;
+            }
 
             const data = await res.json();
             const post = data.thread?.post;
-            if (!post || !post.embed) return;
+            if (!post || !post.embed) {
+                return;
+            }
             // console.log('[Debug] post.embed full structure:', JSON.stringify(post.embed, null, 2));
 
             // ALTテキスト
             const altText = post.embed?.external?.title ||
                             post.embed?.media?.external?.title ||
+                            post.embed?.media?.alt ||
                             post.embed?.video?.alt ||
-                            post.embed?.alt || "";
+                            post.embed?.alt || '';
 
             // 探索開始
             const result = findMedia(post.embed);
-            if (!result || !result.data || result.data.length === 0) return;
+            if (!result || !result.data || !result.data[0] || !result.data[0].thumb) {
+                return;
+            }
 
             const wrapper = document.createElement('div');
             wrapper.className = 'notifications-item-images svelte-68xwnf';
@@ -642,7 +728,7 @@
 
                     const imgEl = document.createElement('img');
                     imgEl.src = img.thumb;
-                    imgEl.alt = img.alt || "";
+                    imgEl.alt = img.alt || '';
                     imgEl.className = 'svelte-1mo90jh';
                     imgEl.style.cssText = 'width: 100%; height: auto; max-height: 300px; object-fit: contain; border-radius: 8px;';
 
@@ -694,10 +780,10 @@
                 // 本家風：マウスが乗ったらアンダーライン
                 titleLink.onmouseover = () => {
                     titleLink.style.textDecoration = 'underline';
-                }
+                };
                 titleLink.onmouseout = () => {
                     titleLink.style.textDecoration = 'none';
-                }
+                };
 
                 titleWrapper.appendChild(titleLink);
                 textDiv.appendChild(titleWrapper);
@@ -716,7 +802,7 @@
                 wrapper.className = 'notifications-item-images svelte-68xwnf timeline-external--normal svelte-1mlxd9t timeline-external--tenor';
 
                 const mediaData = result.data[0] || {};
-                const rawUrl = mediaData.url || mediaData.video || "";
+                const rawUrl = mediaData.url || mediaData.video || '';
 
                 // 動画(m3u8)かどうかの判定
                 const isVideo = rawUrl.includes('playlist.m3u8');
@@ -739,10 +825,10 @@
                                     </div>
                                 ` : ''}
                                 <video class="gif-video svelte-or3n9u"
-                                       playsinline
-                                       ${isVideo ? 'controls' : 'loop autoplay muted'}
-                                       src="${videoUrl}"
-                                       style="width: 100%; border-radius: 8px; display: block; cursor: pointer;"></video>
+                                    playsinline
+                                    ${isVideo ? 'controls' : 'loop autoplay muted'}
+                                    src="${videoUrl}"
+                                    style="width: 100%; border-radius: 8px; display: block; cursor: pointer;"></video>
                                 ${!isVideo ? '<button class="gif-toggle svelte-or3n9u"></button>' : ''}
                             </div>
                         </div>
@@ -775,7 +861,9 @@
                         }
                     };
                     videoEl.onclick = togglePlay;
-                    if (toggleBtn) toggleBtn.onclick = togglePlay;
+                    if (toggleBtn) {
+                        toggleBtn.onclick = togglePlay;
+                    }
                 }
             }
 
@@ -788,7 +876,7 @@
             }
 
         } catch (e) {
-            console.error("Notif Media Fix Error:", e);
+            console.error('Notif Media Fix Error:', e);
         }
     }
 
@@ -796,11 +884,13 @@
     const observer = new MutationObserver((mutations) => {
         for (const mutation of mutations) {
             mutation.addedNodes.forEach(node => {
-                if (node.nodeType !== 1) return;
+                if (node.nodeType !== 1) {
+                    return;
+                }
 
                 // リポスト通知のarticleのみを抽出
                 const targetItems = node.matches('article.notifications-item')
-                    ? [node]
+                    ? [node,]
                     : node.querySelectorAll('article.notifications-item');
 
                 targetItems.forEach(item => fetchAndInjectImage(item));
@@ -809,7 +899,7 @@
     });
 
     // 実行開始（既存の処理の最後に追加）
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, { childList: true, subtree: true, });
 
     GM_registerMenuCommand('キー設定 (Shortcut Settings)', openSettings);
 

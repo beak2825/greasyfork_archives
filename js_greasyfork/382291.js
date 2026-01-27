@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name AutoSpamCop
 // @namespace   Violentmonkey Scripts
-// @version	2.3
+// @version	2.5
 // @description	GreaseMonkey script for validating SpamCop reports
 // @licence MIT License (MIT)
 // @namespace Violentmonkey Scripts
-// @match *://www.spamcop.net/*
-// @match *://spamcop.net/*
+// @match https://www.spamcop.net/*
 // @run-at document-end
 // @icon https://www.spamcop.net/images/05logo.png
 // @grant none

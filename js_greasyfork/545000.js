@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         魔兽官网多语言切换
 // @namespace    https://greasyfork.org/zh-CN/users/1502715
-// @version      2.8
+// @version      2.9
 // @description  用于快速切换魔兽世界官网和战网商城的其他语言版本，支持一键提取新闻封面
 // @author       电视卫士
 // @license      MIT
@@ -46,6 +46,15 @@
         if (parts.length <= 1) return null;
 
         let relative = parts.slice(1).join('/');
+
+        if (relative.startsWith('article/')) {
+            relative = relative.replace(/^article\//, 'news/');
+            try {
+                relative = decodeURIComponent(relative);
+            } catch (e) {
+                console.log('解码URL路径失败，保持原样');
+            }
+        }
 
         if (relative.startsWith('game/status/')) {
             return 'STATUS_GLOBAL';

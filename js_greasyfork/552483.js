@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name X Userscript
-// @description X/Twitter Userscript
+// @name X/Twitter Clear
+// @description X/Twitter Clear userscript.
 // @author qzda
-// @version 0.0.2
+// @version 0.0.4
 // @match https://x.com/*
 // @namespace https://github.com/qzda/x-userscript/
 // @supportURL https://github.com/qzda/x-userscript/issues/new
 // @icon https://raw.githubusercontent.com/qzda/x-userscript/main/image/logo.svg
 // @copyright MIT
-// @run-at document-end
+// @run-at document-start
 // @connect raw.githubusercontent.com
 // @connect github.com
 // @grant GM_registerMenuCommand
@@ -17,8 +17,8 @@
 // @grant GM_setValue
 // @grant GM_addStyle
 // @grant GM_addElement
-// @downloadURL https://update.greasyfork.org/scripts/552483/X%20Userscript.user.js
-// @updateURL https://update.greasyfork.org/scripts/552483/X%20Userscript.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/552483/XTwitter%20Clear.user.js
+// @updateURL https://update.greasyfork.org/scripts/552483/XTwitter%20Clear.meta.js
 // ==/UserScript==
 
 // node_modules/@qzda/prolog/dist/index.js
@@ -79,7 +79,7 @@ var dist_default = Obj;
 
 // package.json
 var name = "x-userscript";
-var version = "0.0.2";
+var version = "0.0.4";
 
 // utils/dev.ts
 var isDev = false;
@@ -94,73 +94,86 @@ function devLog(...arg) {
   }
 }
 
-// user-script/nav.ts
-var navItems = [
-  { key: "Grok", selector: "nav a[href='/i/grok']", defaultValue: true },
-  { key: "Messages", selector: "nav a[href='/messages']", defaultValue: true },
-  {
-    key: "Communities",
-    selector: "nav a[href$='/communities']",
-    defaultValue: true
-  },
-  { key: "List", selector: "nav a[href$='/lists']" },
-  {
-    key: "Bookmarks",
-    selector: "nav a[href='/i/bookmarks']"
-  },
-  { key: "Premium", selector: "nav a[href^='/i/premium']", defaultValue: true },
-  {
-    key: "Organization",
-    selector: "nav a[href^='/i/verified-orgs-signup']",
-    defaultValue: true
-  }
-];
-function applyVisibility() {
-  devLog("applyVisibility");
-  navItems.forEach((nav) => {
-    const hidden = GM_getValue(nav.key, nav.defaultValue || false);
-    const navEle = document.querySelector(nav.selector);
-    if (navEle) {
-      navEle.style.display = hidden ? "none" : "inherit";
-    }
-  });
-}
-
-// user-script/menu.ts
+// user-script/index.ts
+log();
+var sidebar_testid = "sidebarColumn";
 var menuIds = [];
 function initMenu() {
-  while (menuIds.length) {
-    const id = menuIds.pop();
-    if (id) {
-      GM_unregisterMenuCommand(id);
-    }
-  }
-  navItems.forEach((nav) => {
-    const hidden = GM_getValue(nav.key, nav.defaultValue || false);
-    const id = GM_registerMenuCommand(`${hidden ? "✅" : "❌"} Hidden ${nav.key}`, () => {
-      GM_setValue(nav.key, !hidden);
+  devLog("initMenu");
+  function updateMenu(name2, label) {
+    const hidden = GM_getValue(name2, false);
+    const id = GM_registerMenuCommand(`${hidden ? "❌" : "✅"} ${label}`, () => {
+      GM_setValue(name2, !hidden);
       initMenu();
       applyVisibility();
     }, { autoClose: false });
     menuIds.push(id);
-  });
-  devLog("initMenu");
-}
-
-// user-script/index.ts
-log();
-initMenu();
-var navInterval = setInterval(() => {
-  if (document.querySelector("nav")) {
-    clearInterval(navInterval);
-    applyVisibility();
   }
-}, 200);
-window.addEventListener("click", () => {
-  const navInterval2 = setInterval(() => {
+  menuIds.forEach((id) => {
+    GM_unregisterMenuCommand(id);
+  });
+  menuIds = [];
+  const navs = document.querySelectorAll('nav[role="navigation"] > a');
+  navs.forEach((nav) => {
+    const testid = nav.getAttribute("data-testid");
+    const label = nav.getAttribute("aria-label");
+    if (label) {
+      updateMenu(testid || label, label);
+    }
+  });
+  const sidebar = document.querySelector(`div[data-testid="${sidebar_testid}"]`);
+  if (sidebar) {
+    updateMenu(sidebar_testid, "Sidebar");
+  }
+}
+function applyVisibility() {
+  devLog("applyVisibility");
+  const cssRules = [];
+  const navs = document.querySelectorAll('nav[role="navigation"] > a');
+  navs.forEach((nav) => {
+    const testid = nav.getAttribute("data-testid");
+    const label = nav.getAttribute("aria-label");
+    if (label) {
+      const hidden = GM_getValue(testid || label, false);
+      if (hidden) {
+        const selector = testid ? `nav[role="navigation"] > a[data-testid="${testid}"]` : `nav[role="navigation"] > a[aria-label="${label}"]`;
+        cssRules.push(`${selector} { display: none !important; }`);
+      }
+    }
+  });
+  const sidebarHidden = GM_getValue(sidebar_testid, false);
+  if (sidebarHidden) {
+    cssRules.push(`div[data-testid="${sidebar_testid}"] { display: none !important; }`);
+  }
+  let styleElement = document.querySelector(`style#${name}`);
+  if (!styleElement) {
+    styleElement = document.createElement("style");
+    styleElement.id = name;
+    document.head.appendChild(styleElement);
+  }
+  styleElement.textContent = cssRules.join(`
+`);
+}
+function main() {
+  const mainInterval = setInterval(() => {
     if (document.querySelector("nav")) {
-      clearInterval(navInterval2);
+      clearInterval(mainInterval);
+      initMenu();
       applyVisibility();
     }
   }, 200);
+}
+var _pushState = history.pushState;
+var _replaceState = history.replaceState;
+history.pushState = function(...args) {
+  _pushState.apply(this, args);
+  main();
+};
+history.replaceState = function(...args) {
+  _replaceState.apply(this, args);
+  main();
+};
+window.addEventListener("popstate", () => {
+  main();
 });
+main();

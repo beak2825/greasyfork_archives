@@ -1,20 +1,78 @@
 // ==UserScript==
 // @name         YouTube - Extra UI tweaks (Old icons + Extra experimental features to be disabled)
-// @version      2026.01.24
+// @version      2026.01.27
 // @description  This is the script that tweaks extra UI stuff (that also includes old icons from the post-rounded UI changes along with other experimental features to be reverted in backend)
 // @author       Joey_JTS
+// @license MIT
 // @match        *://www.youtube.com/*
 // @match        *://m.youtube.com/*
 // @exclude      *://studio.youtube.com/*
-// @grant        GM_addStyle
-// @grant        GM_setValue
-// @grant        GM_getValue
-// @run-at       document-start
-// @license      MIT
 // @namespace    https://greasyfork.org/en/users/761382
+// @icon         https://www.youtube.com/favicon.ico
+// @run-at       document-idle
+// @grant        none
+// @allFrames    true
+// @inject-into  page
 // @downloadURL https://update.greasyfork.org/scripts/552336/YouTube%20-%20Extra%20UI%20tweaks%20%28Old%20icons%20%2B%20Extra%20experimental%20features%20to%20be%20disabled%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/552336/YouTube%20-%20Extra%20UI%20tweaks%20%28Old%20icons%20%2B%20Extra%20experimental%20features%20to%20be%20disabled%29.meta.js
 // ==/UserScript==
+
+// Enable strict mode to catch common coding mistakes
+"use strict";
+
+// Define the flags to assign to the EXPERIMENT_FLAGS object
+const flagsToAssign = {
+  // Disables both 'web_modern_tabs' and 'web_modern_typography' (Note: both these experimental flags have been patched since 2025)
+  web_modern_tabs: false,
+  web_modern_typography: false,
+  // More config flags to be reverted (Note: This was in part of 2024 UI changes)
+  web_player_enable_featured_product_banner_exclusives_on_desktop: false,
+  fill_view_models_on_web_vod: true,
+  live_chat_over_engagement_panels: false,
+  live_chat_scaled_height: false,
+  live_chat_smaller_min_height: false,
+  main_app_controller_extraction_batch_18: false,
+  main_app_controller_extraction_batch_19: false,
+  no_iframe_for_web_stickiness: false,
+  optimal_reading_width_comments_ep: false,
+  remove_masthead_channel_banner_on_refresh: false,
+  web_watch_log_theater_mode: false,
+  web_watch_theater_chat: false,
+  web_watch_theater_fixed_chat: false
+};
+
+const updateFlags = () => {
+  // Check if the EXPERIMENT_FLAGS object exists in the window.yt.config_ property chain
+  const expFlags = window?.yt?.config_?.EXPERIMENT_FLAGS;
+
+  // If EXPERIMENT_FLAGS is not found, exit the function
+  if (!expFlags) return;
+
+  // Assign the defined flags to the EXPERIMENT_FLAGS object
+  Object.assign(expFlags, flagsToAssign);
+};
+
+// Create a MutationObserver that calls the updateFlags function when changes occur in the document's subtree
+const mutationObserver = new MutationObserver(updateFlags);
+mutationObserver.observe(document, { subtree: true, childList: true });
+
+// Remove the tab prefix that displays the number of notifications
+// Save the original descriptor of document.title
+const originalTitleDescriptor = Object.getOwnPropertyDescriptor(Document.prototype, 'title');
+
+// Create a custom getter and setter
+Object.defineProperty(document, 'title', {
+  get: function() {
+    return originalTitleDescriptor.get.call(this);
+  },
+  set: function(newValue) {
+    // Remove the (#) with regex.
+    const interceptedValue = newValue.replace(/^\(\d+\)\s?/, "");
+
+    // Call the original setter
+    originalTitleDescriptor.set.call(this, interceptedValue);
+  }
+});
 
 (function() {
 let css = `
@@ -617,6 +675,145 @@ d: path("m18 9.28-6.35 6.35-6.37-6.35.72-.71 5.64 5.65 5.65-5.65z")
 d: path("M21 11v1H5.64l6.72 6.72-.71.71-7.93-7.93 7.92-7.92.71.71L5.64 11H21z")
 }
 
+/* Force mid-2023 channel layout */
+#avatar.ytd-c4-tabbed-header-renderer,
+.yt-spec-avatar-shape__button--button-giant {
+width: 128px !important;
+height: 128px !important;
+margin: 0 24px 0 0 !important;
+flex: none !important;
+overflow: hidden !important
+}
+
+.yt-spec-avatar-shape__button--button-giant,
+.yt-spec-avatar-shape--avatar-size-giant,
+.yt-spec-avatar-shape__button--button-extra-extra-large,
+.yt-spec-avatar-shape--avatar-size-extra-extra-large {
+width: 128px !important;
+height: 128px !important;
+margin-right: 0px !important
+}
+
+#avatar-editor.ytd-c4-tabbed-header-renderer {
+--ytd-channel-avatar-editor-size: 80px !important
+}
+
+#channel-header-container.ytd-c4-tabbed-header-renderer {
+padding-top: 0 !important;
+align-items: center !important
+}
+
+#inner-header-container.ytd-c4-tabbed-header-renderer {
+margin-top: 0 !important;
+align-items: center !important
+}
+
+.yt-content-metadata-view-model-wiz--inline .yt-content-metadata-view-model-wiz__metadata-row {
+margin-top: 0 !important
+}
+
+.meta-item.ytd-c4-tabbed-header-renderer {
+display: block !important
+}
+
+span.delimiter.style-scope.ytd-c4-tabbed-header-renderer,
+[page-subtype="channels"] ytd-tabbed-page-header .yt-content-metadata-view-model-wiz__delimiter,
+[page-subtype="channels"] ytd-tabbed-page-header .yt-content-metadata-view-model__delimiter,
+#channel-header-links.style-scope.ytd-c4-tabbed-header-renderer,
+.page-header-view-model-wiz__page-header-attribution,
+.yt-page-header-view-model__page-header-attribution {
+display: none !important
+}
+
+ytd-c4-tabbed-header-renderer[use-page-header-style] #channel-name.ytd-c4-tabbed-header-renderer,
+[page-subtype="channels"] .page-header-view-model-wiz__page-header-title--page-header-title-large,
+[page-subtype="channels"] .yt-page-header-view-model__page-header-title--page-header-title-large {
+font-size: 2.4em !important;
+font-weight: 400 !important;
+line-height: var(--yt-channel-title-line-height, 3rem) !important;
+margin: 0 !important
+}
+
+#meta.style-scope.ytd-c4-tabbed-header-renderer {
+width: auto !important
+}
+
+ytd-c4-tabbed-header-renderer[use-page-header-style] #inner-header-container.ytd-c4-tabbed-header-renderer {
+flex-direction: row !important
+}
+
+.page-header-banner.style-scope.ytd-c4-tabbed-header-renderer {
+margin-left: 0px !important;
+margin-right: 8px !important;
+border-radius: 0px !important
+}
+
+[has-inset-banner] #page-header-banner.ytd-tabbed-page-header {
+padding-left: 0 !important;
+padding-right: 0 !important
+}
+
+ytd-c4-tabbed-header-renderer[use-page-header-style] .page-header-banner.ytd-c4-tabbed-header-renderer,
+.yt-image-banner-view-model-wiz--inset,
+.ytImageBannerViewModelInset {
+border-radius: 0px !important
+}
+
+[page-subtype="channels"] .yt-content-metadata-view-model-wiz__metadata-text,
+[page-subtype="channels"] .yt-content-metadata-view-model--medium-text .yt-content-metadata-view-model__metadata-text {
+margin-right: 8px !important
+}
+
+[page-subtype="channels"] .yt-content-metadata-view-model-wiz__metadata-text,
+[page-subtype="channels"] .truncated-text-wiz,
+[page-subtype="channels"] .truncated-text-wiz__absolute-button,
+[page-subtype="channels"] .yt-content-metadata-view-model__metadata-text,
+[page-subtype="channels"] .yt-truncated-text {
+font-size: 1.4rem !important
+}
+
+ytd-browse[page-subtype="channels"] .yt-flexible-actions-view-model-wiz--inline {
+flex-direction: row-reverse
+}
+
+ytd-browse[page-subtype="channels"] .page-header-view-model-wiz__page-header-flexible-actions,
+ytd-browse[page-subtype="channels"] .ytFlexibleActionsViewModelInline {
+margin-top: -56px;
+flex-direction: row-reverse
+}
+
+ytd-browse[page-subtype="channels"] .yt-flexible-actions-view-model-wiz__action-row {
+margin-top: 60px
+}
+
+ytd-browse[page-subtype="channels"] .yt-flexible-actions-view-model-wiz__action,
+.ytFlexibleActionsViewModelAction {
+padding-right: 8px;
+padding-left: 0px
+}
+
+ytd-browse[page-subtype="channels"] span.yt-core-attributed-string--link-inherit-color {
+font-weight: 400 !important
+}
+
+.yt-tab-shape-wiz,
+.yt-tab-shape {
+padding: 0 32px !important;
+margin-right: 0 !important
+}
+
+.yt-tab-shape-wiz__tab,
+.yt-tab-shape__tab {
+font-size: 14px !important;
+font-weight: 500 !important;
+letter-spacing: var(--ytd-tab-system-letter-spacing) !important;
+text-transform: uppercase !important
+}
+
+.yt-tab-group-shape-wiz__slider {
+display: none !important
+}
+
 /* Revert pre-2023 'Subscribed' notifcation button */
 yt-button-shape.style-scope.ytd-subscribe-button-renderer {
 display: flex !important
@@ -736,6 +933,56 @@ font-family: "YouTube Sans","Roboto",sans-serif !important;
 font-weight: 600 !important;
 font-size: 2rem !important;
 line-height: 2.8rem !important
+}
+
+span.style-scope.ytd-rich-shelf-renderer,
+#chip-container.yt-chip-cloud-chip-renderer,
+.ytChipShapeChip,
+.count-text.ytd-comments-header-renderer {
+font-weight: 400 !important
+}
+
+#title.ytd-shelf-renderer,
+#title.ytd-reel-shelf-renderer,
+#title.ytd-rich-shelf-renderer,
+.page-header-view-model-wiz__page-header-title--page-header-title-large,
+.page-header-view-model__page-header-title--page-header-title-large,
+#title.ytd-item-section-header-renderer {
+font-weight: 500 !important
+}
+
+#title.ytd-shelf-renderer,
+#title.ytd-reel-shelf-renderer,
+#title.ytd-rich-shelf-renderer,
+span.style-scope.ytd-shelf-renderer,
+.count-text.ytd-comments-header-renderer,
+.page-header-view-model-wiz__page-header-title--page-header-title-large,
+.page-header-view-model__page-header-title--page-header-title-large {
+font-size: 1.6rem !important
+}
+
+.count-text.ytd-comments-header-renderer {
+line-height: 2.2rem !important
+}
+
+[page-subtype="history"] #page-header.ytd-tabbed-page-header {
+padding-top: 0 !important;
+padding-bottom: 0 !important
+}
+
+.page-header-view-model-wiz__page-header-title--page-header-title-large,
+.page-header-view-model__page-header-title--page-header-title-large {
+margin-top: 24px !important;
+margin-bottom: 8px !important;
+color: var(--yt-spec-text-primary) !important;
+font-size: 1.6em !important;
+line-height: 1.4em !important
+}
+
+#title.ytd-item-section-header-renderer {
+color: var(--yt-spec-text-primary) !important;
+font-size: 1.6em !important;
+line-height: 1.4em !important
 }
 
 .ytp-play-progress,

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Abdullah Abbas WME Explorer
 // @namespace    https://greasyfork.org/users/AbdullahAbbas
-// @version      2026.01.23.18
+// @version      2026.01.27.01
 // @description  WME Script: Cities, Places, Editors, Locks, Speed, and Update History (Bootstrap Integration)
 // @author       Abdullah Abbas
 // @copyright    2026, Abdullah Abbas
@@ -19,7 +19,7 @@
     'use strict';
 
     let sdk = null;
-    const STORAGE_KEY = 'aa_explorer_settings_2026_v18';
+    const STORAGE_KEY = 'aa_explorer_settings_2026_v27_01';
     let lockLayer = null;
     let speedLayer = null;
     let dateLayer = null;
@@ -218,7 +218,7 @@
     startScript();
 
     function init() {
-        console.log("Abdullah Abbas WME Explorer v2026.01.23.18 Initialized.");
+        console.log("Abdullah Abbas WME Explorer v2026.01.27.01 Initialized.");
         const settings = loadSettings();
         appState.language = settings.language || 'en';
         appState.orientation = settings.orientation || 'landscape';
@@ -234,13 +234,9 @@
     }
 
     async function initSidebar() {
-        // Register the tab similar to Toolkit
         const { tabLabel, tabPane } = await sdk.Sidebar.registerScriptTab();
-
-        // --- تم تعديل الاسم هنا حسب الطلب ---
         tabLabel.innerText = 'Abdullah Abbas WME Explorer';
         tabLabel.title = t('title');
-
         renderSidebarContent(tabPane);
     }
 
@@ -254,7 +250,7 @@
         const header = document.createElement('div');
         header.style.cssText = 'text-align: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;';
         header.innerHTML = `<div style="font-weight: bold; color: #5989de; font-size: 14px;">${t('title')}</div>
-                            <div style="font-size: 10px; color: #888;">v2026.01.23.18</div>`;
+                            <div style="font-size: 10px; color: #888;">v2026.01.27.01</div>`;
         container.appendChild(header);
 
         // Launch Button
@@ -399,16 +395,12 @@
                 flex-direction: column;
                 border: 1px solid #ccc;
             ">
-                <div style="background:#222; color:#888; font-size:9px; text-align:center; padding:3px; font-family:sans-serif; letter-spacing:0.5px; border-radius: 8px 8px 0 0; flex-shrink: 0;">
-                    © 2026 Abdullah Abbas - All Rights Reserved
-                </div>
-
                 <div id="aa-header" style="cursor: move; background: #333; color: white; padding: 8px 12px; display: flex; align-items: center; flex-shrink: 0;">
-                    <div id="aa-header-title" style="flex-grow: 1; text-align: center; font-weight: bold; font-size: 13px;">${t('title')}</div>
-                    <div style="display: flex; gap: 8px; align-items: center; margin-right: 0;">
+                    <div style="display: flex; gap: 8px; align-items: center; margin-right: 10px;">
+                        <button id="aa-btn-close" style="background:none; border:none; color:#ffdddd; cursor:pointer; font-weight:bold; font-size: 14px;">X</button>
                         <button id="aa-btn-rotate" title="Rotate" style="background:none; border:none; color:#fff; cursor:pointer; font-size:16px;">⟳</button>
-                        <button id="aa-btn-close" style="background:none; border:none; color:#ffdddd; cursor:pointer; font-weight:bold;">X</button>
                     </div>
+                    <div id="aa-header-title" style="flex-grow: 1; text-align: center; font-weight: bold; font-size: 13px;">${t('title')}</div>
                 </div>
 
                 <div style="display: flex; background: #eee; border-bottom: 1px solid #ccc; overflow-x: auto; flex-shrink: 0;">
@@ -459,7 +451,7 @@
                     </table>
                     <div id="aa-empty-msg" style="text-align: center; padding: 20px; color: #999;">${t('msg_click_scan')}</div>
                 </div>
-                <div id="aa-status" style="padding: 5px; text-align: center; font-size: 11px; color: #777; background: #eee; border-top: 1px solid #ddd; flex-shrink: 0;">${t('msg_ready')} - v2026.01.23.18</div>
+                <div id="aa-status" style="padding: 5px; text-align: center; font-size: 11px; color: #777; background: #eee; border-top: 1px solid #ddd; flex-shrink: 0;">${t('msg_ready')} - v2026.01.27.01</div>
             </div>`;
 
         $('body').append(html);
@@ -748,6 +740,64 @@
     function clearData() { $('#aa-tbody').empty(); $('#aa-empty-msg').text(t('msg_ready')); $('#aa-status').text(t('msg_ready')); $('#aa-search-input').val(''); appState.objectsMap = {}; try { W.selectionManager.unselectAll(); } catch(e) {} if (lockLayer) lockLayer.removeAllFeatures(); if (speedLayer) speedLayer.removeAllFeatures(); if (dateLayer) dateLayer.removeAllFeatures(); }
     function loadSettings() { const defaultSettings = { top: '80px', left: '80px', width: '550px', height: '350px', orientation: 'landscape', language: 'en' }; try { const saved = localStorage.getItem(STORAGE_KEY); return saved ? JSON.parse(saved) : defaultSettings; } catch (e) { return defaultSettings; } }
     function saveSettings() { const panel = $('#aa-panel'); if (panel.length === 0) return; const settings = { top: panel.css('top'), left: panel.css('left'), width: panel.css('width'), height: panel.css('height'), orientation: appState.orientation, language: appState.language }; localStorage.setItem(STORAGE_KEY, JSON.stringify(settings)); }
-    function makeDraggable(elmnt) { let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0; const header = document.getElementById("aa-header"); if (header) header.onmousedown = dragMouseDown; function dragMouseDown(e) { e = e || window.event; if (e.target.tagName === 'BUTTON' || e.target.tagName === 'SELECT' || e.target.id === 'aa-search-input') return; e.preventDefault(); pos3 = e.clientX; pos4 = e.clientY; document.onmouseup = closeDragElement; document.onmousemove = elementDrag; } function elementDrag(e) { e = e || window.event; e.preventDefault(); pos1 = pos3 - e.clientX; pos2 = pos4 - e.clientY; pos3 = e.clientX; pos4 = e.clientY; elmnt.style.top = (elmnt.offsetTop - pos2) + "px"; elmnt.style.left = (elmnt.offsetLeft - pos1) + "px"; } function closeDragElement() { document.onmouseup = null; document.onmousemove = null; saveSettings(); } }
+    function makeDraggable(elmnt) {
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        const header = document.getElementById("aa-header");
+        if (header) header.onmousedown = dragMouseDown;
+
+        function dragMouseDown(e) {
+            e = e || window.event;
+            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'SELECT' || e.target.id === 'aa-search-input') return;
+            e.preventDefault();
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+
+            // Calculate new position
+            let newTop = elmnt.offsetTop - pos2;
+            let newLeft = elmnt.offsetLeft - pos1;
+
+            // Boundary checks
+
+            // Top: Strict (Cannot go above the browser window)
+            if (newTop < 0) newTop = 0;
+
+            // Left: Strict (Cannot go left of the browser window)
+            if (newLeft < 0) newLeft = 0;
+
+            // Right: Strict (Cannot go right of the browser window)
+            if (newLeft + elmnt.offsetWidth > window.innerWidth) {
+                newLeft = window.innerWidth - elmnt.offsetWidth;
+            }
+
+            // Bottom: Allow dragging down until only the header is visible
+            // Assuming header height is around 40px
+            const headerHeight = 40;
+            const maxTop = window.innerHeight - headerHeight;
+
+            if (newTop > maxTop) {
+                newTop = maxTop;
+            }
+
+            elmnt.style.top = newTop + "px";
+            elmnt.style.left = newLeft + "px";
+        }
+
+        function closeDragElement() {
+            document.onmouseup = null;
+            document.onmousemove = null;
+            saveSettings();
+        }
+    }
 
 })();

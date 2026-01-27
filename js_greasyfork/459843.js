@@ -3,7 +3,7 @@
 // @name:en            Happymh Reading Helper
 // @name:zh-CN         嗨皮漫画阅读助手
 // @name:zh-TW         嗨皮漫畫閱讀助手
-// @version            2.7.23
+// @version            2.7.24
 // @description        無限滾動模式(自動翻頁、瀑布流)，背景預讀圖片，自動重新載入出錯的圖片，左右方向鍵切換章節，目錄頁自動展開全部章節，新分頁打開漫畫鏈接。
 // @description:en     infinite scroll reading mode,Arrow keys to switch chapters,Background preload image,Auto reload image with error.
 // @description:zh-CN  无限滚动模式(自动翻页、瀑布流)，背景预读图片，自动重新加载出错的图片，左右方向键切换章节，目录页自动展开全部章节，新标籤页打开漫画链接。
@@ -212,6 +212,7 @@
     const openInNewTab = () => gae(".home-banner a:not([target=_blank]),.manga-rank a:not([target=_blank]),.manga-cover a:not([target=_blank])").forEach(a => a.setAttribute("target", "_blank"));
     const delay = time => new Promise(resolve => setTimeout(resolve, time));
     const isString = str => Object.prototype.toString.call(str) === "[object String]";
+	const isNumber = num => Object.prototype.toString.call(num) === "[object Number]";
     const isObject = obj => Object.prototype.toString.call(obj) === "[object Object]";
     const isArray = arr => Object.prototype.toString.call(arr) === "[object Array]";
     const isEle = e => /^\[object\sHTML[a-zA-Z]*Element\]$/.test(Object.prototype.toString.call(e));
@@ -526,6 +527,7 @@ div:has(>#page-area) {
     max-height: max-content !important;
     overflow: auto !important;
 }
+header~div[class*=imgContainer],
 div[class$='root']:has(>div[class$='adTip']),
 [data-ad-id],
 [id^='supr-ad-container'],
@@ -645,7 +647,7 @@ body {
 }
         `);
 
-        const img = await waitEle("article div[id^=imageLoader] img[id^=scan]");
+        const img = await waitEle("article>div[class*='imgContainer']>img[id^=scan]");
         const {
             src
         } = img;
@@ -1275,7 +1277,7 @@ footer {
                 let cid = currentData.next_cid;
 
                 if (isObtainedAllChapters) {
-                    if (isString(chapters_next_cid) && cid !== chapters_next_cid) {
+                    if (isNumber(chapters_next_cid) && cid != chapters_next_cid) {
                         //有少數閱讀資料和章節資料的next_cid不相同，以章節資料為準。
                         cid = chapters_next_cid;
                     }
@@ -1313,7 +1315,7 @@ footer {
                         let nid = currentData.next_cid;
 
                         if (isObtainedAllChapters) {
-                            if (isString(chapters_next_cid) && nid !== chapters_next_cid) {
+                            if (isNumber(chapters_next_cid) && nid !== chapters_next_cid) {
                                 nid = chapters_next_cid;
                             }
                         }
@@ -1349,7 +1351,7 @@ footer {
                         let pid = currentData.pre_cid;
 
                         if (isObtainedAllChapters) {
-                            if (isString(chapters_pre_cid) && pid !== chapters_pre_cid) {
+                            if (isNumber(chapters_pre_cid) && pid !== chapters_pre_cid) {
                                 pid = chapters_pre_cid;
                             }
                         }
@@ -1427,7 +1429,7 @@ footer {
                 let nid = currentData.next_cid;
 
                 if (isObtainedAllChapters) {
-                    if (isString(chapters_next_cid) && nid !== chapters_next_cid) {
+                    if (isNumber(chapters_next_cid) && nid !== chapters_next_cid) {
                         nid = chapters_next_cid;
                     }
                 }
@@ -1442,7 +1444,7 @@ footer {
                 let pid = currentData.pre_cid;
 
                 if (isObtainedAllChapters) {
-                    if (isString(chapters_pre_cid) && pid !== chapters_pre_cid) {
+                    if (isNumber(chapters_pre_cid) && pid !== chapters_pre_cid) {
                         pid = chapters_pre_cid;
                     }
                 }

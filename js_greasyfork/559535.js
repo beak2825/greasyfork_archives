@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         I'm not a robot neal.fun cheats
 // @namespace    http://tampermonkey.net/
-// @version      13.7
+// @version      14.5
 // @description  Adds features to help with certain levels.
 // @author       Suomynona589
 // @match        https://neal.fun/not-a-robot/*
@@ -1100,6 +1100,76 @@ async function runTrafficTreeCheat() {
   log("traffic-tree: total clicked =", clicks);
 }
 
+//----Beats Cheat----
+
+async function runBeatsCheat() {
+    await runPart(1, 3);
+    await runPart(2, 4);
+    await runPart(3, 5);
+}
+
+async function runPart(partId, amount) {
+    let count = 0;
+    let lastPlaying = null;
+
+    while (count < amount) {
+        const fail = document.querySelector(".dance-square.launchpad-pad.user-selected.failed");
+        if (fail) {
+            location.reload();
+            return;
+        }
+
+        const playing = document.querySelector(".dance-square.launchpad-pad.playing");
+
+        if (playing && playing !== lastPlaying) {
+            lastPlaying = playing;
+            count++;
+
+            const parent = playing.closest(".grid-item.grid-item");
+            if (parent) {
+                let label = parent.querySelector(".beats-label");
+
+                if (!label) {
+                    label = document.createElement("div");
+                    label.className = "beats-label";
+                    label.textContent = String(count);
+                    label.style.position = "absolute";
+                    label.style.top = "2px";
+                    label.style.right = "4px";
+                    label.style.color = "white";
+                    label.style.fontSize = "18px";
+                    label.style.fontWeight = "bold";
+                    label.style.pointerEvents = "none";
+                    parent.appendChild(label);
+
+                    parent.addEventListener("click", () => {
+                        label.remove();
+                    });
+                } else {
+                    const old = label.textContent;
+                    label.textContent = old + ", " + count;
+                }
+            }
+        }
+
+        if (!playing) {
+            lastPlaying = null;
+        }
+
+        await new Promise(r => setTimeout(r, 10));
+    }
+
+    while (document.querySelector(".beats-label")) {
+        const fail = document.querySelector(".dance-square.launchpad-pad.user-selected.failed");
+        if (fail) {
+            location.reload();
+            return;
+        }
+
+        await new Promise(r => setTimeout(r, 20));
+    }
+}
+
 //----Brands Cheat----
 
 async function runBrandsCheat() {
@@ -1502,6 +1572,7 @@ async function runDDRCheat() {
     if (level === 26) runNetworkCheat();
     if (level === 28) runSoulCheat();
     if (level === 30) runTrafficTreeCheat();
+    if (level === 31) runBeatsCheat();
     if (level === 32) runBrandsCheat();
     if (level === 33) runMathCheat();
     if (level === 34) runCupCheat();

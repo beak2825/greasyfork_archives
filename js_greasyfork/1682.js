@@ -2,10 +2,10 @@
 // @name        Google Hit Hider by Domain (Search Filter / Block Sites)
 // @author      Jefferson "jscher2000" Scher
 // @namespace   JeffersonScher
-// @version     2.3.6
+// @version     2.3.7
 // @copyright   Copyright 2026 Jefferson Scher
 // @license     BSD-3-Clause
-// @description Block unwanted sites from your Google, DuckDuckGo, Startpage.com, Bing and Yahoo search results. v2.3.6 2026-01-22
+// @description Block unwanted sites from your Google, DuckDuckGo, Startpage.com, Bing and Yahoo search results. v2.3.7 2026-01-27
 // @include     http*://www.google.*/*
 // @exclude http*://www.google.com/recaptcha/*
 // @include     http*://www.google.co*.*/*
@@ -17,6 +17,7 @@
 // @exclude https://www.startpage.com/*/*/ads*
 // @exclude https://us-browse.startpage.com/av/proxy?*
 // @include     http*://duckduckgo.com/*
+// @include     http*://noai.duckduckgo.com/*
 // @include     http*://start.duckduckgo.com/*
 // @include     http*://safe.duckduckgo.com/*
 // @include     http*://3g2upl4pq6kufc4m.onion/*
@@ -39,13 +40,13 @@
 // @grant       GM.deleteValue
 // @grant       GM_getResourceURL
 // @grant       GM.getResourceUrl
-// @resource    mycon https://www.jeffersonscher.com/gm/src/gfrk-GHHbD-ver236.png
+// @resource    mycon https://www.jeffersonscher.com/gm/src/gfrk-GHHbD-ver237.png
 // @downloadURL https://update.greasyfork.org/scripts/1682/Google%20Hit%20Hider%20by%20Domain%20%28Search%20Filter%20%20Block%20Sites%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/1682/Google%20Hit%20Hider%20by%20Domain%20%28Search%20Filter%20%20Block%20Sites%29.meta.js
 // ==/UserScript==
 var script_about = "https://greasyfork.org/scripts/1682-google-hit-hider-by-domain-search-filter-block-sites";
 /*
-Copyright (c) 2025 Jefferson Scher.
+Copyright (c) 2026 Jefferson Scher.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met and subject to the following restriction:
 
@@ -1565,7 +1566,7 @@ function addManageForm(){
         "for regular blocked hits\"><input type=\"checkbox\" name=\"chkshownotc\" id=\"chkshownotc\"> Show hidden hit notices</label><br>" +
         "<label title=\"Switch between block dialog and one-click blocking\"><input type=\"checkbox\" name=\"chk1click\" " +
         "id=\"chk1click\"> Enable 1-click blocking</label></p>" +
-        "<p style=\"border-top:1px solid #000; padding:0.25em;margin:0.25em\">v2.3.5 &copy; 2025 Jefferson Scher. Learn more on " +
+        "<p style=\"border-top:1px solid #000; padding:0.25em;margin:0.25em\">v2.3.7 &copy; 2026 Jefferson Scher. Learn more on " +
         "<a href=\"" + script_about + "\">this script's page</a>.</p></div></div>" +
         "<div id=\"ghhmt2\" style=\"display:none\"><p>Click to remove from regular block list:</p>" +
         "<div class=\"ghhtab\"><ul id=\"ghhsitelist\"></ul></div></div>\n" +

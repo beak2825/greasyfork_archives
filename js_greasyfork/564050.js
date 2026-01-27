@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         [Flight Rising] Sophie Auto Reduce
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      2.01
 // @description  Automatically reduces items from your list.
 // @author       Triggernometry base code + flight-crime modifications
-// @match        https://www1.flightrising.com/trading/sophie/reduce
+// @match        https://www1.flightrising.com/trading/sophie/reduce*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @icon         https://www.google.com/s2/favicons?domain=flightrising.com
@@ -16,9 +16,29 @@
 // wait until page load, then run main
 $(document).ready(main);
 
-var reduceItems = {
+/* Attention Script User!
+
+Please add the items you'd like to reduce between the brackets below in their respective categories.
+This script is CASE SENSITIVE!
+Please surround the item name with ''s
+Please add a comma between each item name
+You may leave a category blank or only add one item
+
+Example:
+let reduceItems = {
     // For Simple Thread
-    "food": ['Coral Grouse'],
+    "food": ['Black Capped Chickadee', 'Fire Ant'],
+    "materials": ['Broken Pottery Piece', 'Shale'],
+    "other": ['Scroll Case', 'Battered Scroll Case'],
+    // For Fine Thread
+    "apparel": ['Porcelain Marionette Legs', 'Fanciful Casting'],
+    "familiars": ['Undergrowth Shovelsnout', 'Mossy Beetleboar']
+};
+*/
+
+let reduceItems = {
+    // For Simple Thread
+    "food": [],
     "materials": [],
     "other": [],
     // For Fine Thread
@@ -26,19 +46,28 @@ var reduceItems = {
     "familiars": []
 };
 
-
 // these are used across all/most functions
-var toggleState = GM_getValue('toggleState', false);
-var toggleDisplay = ["OFF (click to toggle)",
-    "ON (click to toggle)"];
+let toggleState = GM_getValue('toggleState', false);
+let toggleDisplay = ["Entire Script: OFF",
+    "Entire Script: ON"];
+
+// toggle auto reduce food logic
+let foodToggleState = GM_getValue('foodToggleState', false);
+let foodToggleDisplay = ["Auto Reduce Food: OFF",
+    "Auto Reduce Food: ON"];
 
 function buildGUI() {
     console.log("toggleDisplay:", toggleDisplay);
+    console.log("foodToggleDisplay:", foodToggleDisplay);
     // set up GUI box
-    $('body').prepend("<div id=\"familiariliarbox\">" +
-        "    <div style=\"text-align: center; color: #e8cc9f; font: bold 7.8pt/30px tahoma; background: #731d08; margin: -10px -10px 10px;\">Auto Spooling</div>" +
+    $('body').prepend("<div style=\"text-align: center; max-width: 170px;\" id=\"familiariliarbox\">" +
+        "    <h3 style=\"color: #e8cc9f; font: bold 9pt tahoma; background: #731d08; margin: -10px -10px 10px; padding: 5px;\">Sophie Auto Reduce</h3>" +
+        " <p style=\"font: 9pt tahoma; margin: 10px 0px 10px 0px;\">Click Buttons to Toggle On/Off</p>" +
         // set toggle display to whatever it was before new page was loaded (or off, if page has never beeen loaded this session)
         "    <button id=\"onOffDisplay\">" + toggleDisplay[toggleState ? 1 : 0] + "</button>" +
+        " <br> " +
+        "    <button id=\"onOffFoodDisplay\">" + foodToggleDisplay[foodToggleState ? 1 : 0] + "</button>" +
+        "<p style=\"font: 8pt tahoma; margin: 10px 0px 10px 0px;\"><i>The auto reduce food option will select & reduce any food items that are not favorites, starting with the lowest treasure value.<i></p> " +
         "</div>" +
         "<style>" +
         "    #familiariliarbox label {" +
@@ -69,7 +98,7 @@ function buildGUI() {
         "        font: bold 11px arial;" +
         "        transition: 0.1s;" +
         "    }" +
-        "    #onOffDisplay {" +
+        "    #onOffDisplay, #onOffFoodDisplay {" +
         "        border: 0;" +
         "        background-color: #dcd6c8;" +
         "        padding: 5px 10px;" +
@@ -104,6 +133,59 @@ function buildGUI() {
             $('#onOffDisplay').html(toggleDisplay[0]);
         }
     });
+
+    // set the auto reduce food toggle click behavior
+    $('#onOffFoodDisplay').click(function () {
+        foodToggleState = !foodToggleState;
+        GM_setValue('foodToggleState', foodToggleState);
+
+        if (foodToggleState) {
+            $('#onOffFoodDisplay').html(foodToggleDisplay[1]);
+        }
+        else {
+            $('#onOffFoodDisplay').html(foodToggleDisplay[0]);
+        }
+    });
+}
+
+async function getFood() {
+    // switch to food category tab, if not already selected
+    console.log("Swapping to food tab...");
+    let chooseCategory = document.querySelector('.item-picker-common-tabs .common-tab[data-category="food"]').click();
+    await sleep(2000);
+
+    // select not favorited items
+    let select = document.querySelector(".item-picker-filter-field > select[name='favorited']");
+    console.log("Select Menu:", select);
+    let selectOption = "0";
+    select.value = selectOption;
+    select.focus();
+    await sleep(1000);
+
+    // sort ascending by treasure value
+    select = document.querySelector(".item-picker-filter-field > select[name='sort']");
+    console.log("Select Menu:", select);
+    selectOption = 'value_asc';
+    select.value = selectOption;
+    select.focus();
+    await sleep(1000);
+
+    // simulate keyup event to fire search
+    let input = document.querySelector(".item-picker-filter-field > input");
+    input.focus();
+    let keyUp = new KeyboardEvent('keyup');
+    input.addEventListener("build", (e) => { });
+    input.dispatchEvent(keyUp);
+    await sleep(2000);
+
+    // return item to brew
+    let item = document.querySelector(`.item-picker-items:first-child > .item-picker-item`);
+
+    if (item) {
+        return item;
+    } else {
+        return null;
+    }
 }
 
 async function getMatchingReduceables() {
@@ -112,29 +194,30 @@ async function getMatchingReduceables() {
         console.log("key:", key);
         // switch to category tab
         let chooseCategory = document.querySelector(`.item-picker-common-tabs .common-tab[data-category="${key}"]`).click();
-        await sleep(2000);
+        await sleep(1000);
 
         // search for item
         let input = document.querySelector(".item-picker-filter-field > input");
         let searchTerm = input.value = valueList;
-        console.log("Item to search for:", searchTerm);
-        input.focus();
-        
-        // simulate keyup event to fire search
-        let keyUp = new KeyboardEvent('keyup');
-        input.addEventListener("build", (e) => {
-            /* … */
-        });
-        input.dispatchEvent(keyUp);
-        await sleep(2000);
+
+        if (searchTerm.length > 0) {
+            console.log("Item to search for:", searchTerm);
+            input.focus();
+
+            // simulate keyup event to fire search
+            let keyUp = new KeyboardEvent('keyup');
+            input.addEventListener("build", (e) => { });
+            input.dispatchEvent(keyUp);
+            await sleep(1000);
+        }
+
 
         // return item to brew
         let item = document.querySelector(`.item-picker-item-icon[data-name="${searchTerm}"]`);
-        return item;
-
+        if (item) { return item; }
     }
 
-    //if reached end of loop without returning, no item found
+    // if reached end of loop without returning, no item found
     return null;
 }
 
@@ -160,29 +243,38 @@ async function reduce() {
     console.log("Click return object:", clickReduceButton);
 
     // wait for item load
-    // if Transmute button is clicked multiple times, page breaks
+    // if reduce button is clicked multiple times, page breaks
     while (!document.querySelector('#ui-id-1')) {
         await sleep(2000);
         clickReduceButton.click();
         await sleep(2000);
     }
 
-    var reduceSelection;
-
-    if (autoMeltFood) {
-        reduceSelection = await getFood(2);
-    }
+    let reduceSelection;
 
     if (!reduceSelection) {
         reduceSelection = await getMatchingReduceables();
     }
 
+    if (foodToggleState) {
+        reduceSelection = await getFood();
+    }
+
     // if not null, item found
     if (reduceSelection) {
-        console.log("Selected food:", reduceSelection);
-
         reduceSelection.click();
+        await sleep(1000);
+
+        // check for virtual stack
+        let virtualStack = document.querySelector("#item-picker-back-message");
+        if (virtualStack) {
+            await sleep(1000);
+            console.log("Item is in a virtual stack.")
+            reduceSelection = document.querySelector(".item-picker-item");
+            reduceSelection.click();
+        };
         await sleep(2000);
+        // Final Confirmation -- Comment out for testing
         let reduceConfirm = document.querySelector('.beigebutton.thingbutton[value="Okay"]').click();
     }
     // trinketswise, reached end of items without findin a match. Exit.
@@ -193,7 +285,7 @@ async function reduce() {
 }
 
 function sleep(ms) {
-    console.log(`Sleebs ${ms} ms!`);
+    console.log(`Sleep ${ms}ms`);
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -203,12 +295,12 @@ function main() {
     // only if on
     if (toggleState == true) {
         let idle = document.querySelector('#crafter-reduce-item');
-        let brewing = document.querySelector('.crafter-status-action');
+        let reducing = document.querySelector('.crafter-status-action');
         let done = document.querySelector('#crafter-status-claim');
 
         if (done) {
             collectItem();
-        } else if (brewing) {
+        } else if (reducing) {
             reducingWait();
         } else if (idle) {
             reduce();

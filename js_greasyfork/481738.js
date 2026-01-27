@@ -2,22 +2,22 @@
 // @name            Bilibili-Live-Spamer
 // @name:zh         Bilibili-Live-Spamer
 // @namespace       https://github.com/ADJazzzz
-// @version         1.4.3
+// @version         1.5.0
 // @author          ADJazz
 // @description     B站直播文字、表情独轮车
 // @description:zh  B站直播文字、表情独轮车
 // @license         MIT
-// @copyright       2023, ADJazz (https://github.com/ADJazzzz)
+// @copyright       2026, ADJazz (https://github.com/ADJazzzz)
 // @icon            data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNiAzNiI+CgogPGc+CiAgPGcgdHJhbnNmb3JtPSJyb3RhdGUoMTAuMzM4NSAxNy4zNTk3IDEyLjI5MzEpIiBzdHJva2U9Im51bGwiIGlkPSJsYXllcjEiICA+CiAgIDxwYXRoIHN0cm9rZT0ibnVsbCIgc3Ryb2tlLXdpZHRoPSIwLjAzMzA3IiBpZD0ic3ZnXzMwIiBwLWlkPSIyMzA5IiBmaWxsPSIjMjBiMGUzIiBkPSJtMTEuNzkzOTMsNC4wMjgxN2ExLjM1OTgzLDEuMzIxMjYgMCAwIDEgMS4xNTU4NiwwYTIuODI4NDcsMi43NDgyMyAwIDAgMSAwLjcwNzExLDAuNTAyMDhsMi43MTk2OCwyLjMxMjIybDEuOTQ0NTcsMGwyLjcxOTY3LC0yLjMxMjIyYTIuODU1NjUsMi43NzQ2NSAwIDAgMSAwLjcwNzExLC0wLjUwMjA4YTEuMzU5ODMsMS4zMjEyNiAwIDAgMSAxLjgwODYsMS4wOTY2NmExLjM1OTgzLDEuMzIxMjYgMCAwIDEgLTAuMjk5MTYsMC44ODUyNWE3LjYwMTUsNy4zODU4NyAwIDAgMSAtMC41OTgzMywwLjUyODVhMy45Mjk5MywzLjgxODQ1IDAgMCAxIC0wLjM4MDc1LDAuMzAzODlsMS42OTk3OSwwYTIuODgyODYsMi44MDEwOCAwIDAgMSAxLjk5ODk3LDAuODcyMDNhMi44OTY0NSwyLjgxNDI5IDAgMCAxIDAuOTExMDksMS45NDIyNWwwLDcuNTk3MjdhNS41MDczNiw1LjM1MTEzIDAgMCAxIC0wLjA2OCwxLjE0OTVhMy4wMTg4NSwyLjkzMzIxIDAgMCAxIC0xLjM1OTgzLDEuODQ5NzdhMi45MjM2NiwyLjg0MDcyIDAgMCAxIC0xLjU2MzgyLDAuNDIyODFsLTEyLjQ4MzMzLDBhNS43NjU3Miw1LjYwMjE3IDAgMCAxIC0xLjIyMzg1LC0wLjA2NjA4YTMuMDA1MjQsMi45MTk5OSAwIDAgMSAtMS44NzY1NywtMS4zMjEyNmEyLjkxMDA1LDIuODI3NSAwIDAgMSAtMC40NjIzNiwtMS41MTk0NmwwLC03LjUxNzk4YTYuMDkyMDgsNS45MTkyNiAwIDAgMSAwLC0xLjA5NjY2YTIuOTkxNjQsMi45MDY3OCAwIDAgMSAyLjcxOTY5LC0yLjM1MTg0bDEuNzgxNCwwYy0wLjI4NTU4LC0wLjE5ODE5IC0wLjUzMDM0LC0wLjQzNjAyIC0wLjc4ODcxLC0wLjY0NzQzYTEuMzU5ODMsMS4zMjEyNiAwIDAgMSAtMC40MzUxNSwtMS4wODM0M2ExLjM1OTgzLDEuMzIxMjYgMCAwIDEgMC42NjYzMywtMS4wNDM4bS0wLjMxMjc5LDUuMTI2NTFhMS4zNTk4MywxLjMyMTI2IDAgMCAwIC0xLjA3NDI4LDAuOTUxMzFhMS44MzU3OCwxLjc4MzcgMCAwIDAgMCwwLjUwMjA4bDAsNi4yNDk1OGExLjM1OTgzLDEuMzIxMjYgMCAwIDAgMC45MzgyOSwxLjMyMTI3YTEuNzk0OTgsMS43NDQwNyAwIDAgMCAwLjU4NDczLDAuMDkyNDhsMTEuMDU1NSwwYTEuMzU5ODMsMS4zMjEyNiAwIDAgMCAxLjI5MTgzLC0wLjc3OTU0YTEuOTAzNzgsMS44NDk3NyAwIDAgMCAwLjEzNTk5LC0wLjg3MjAzbDAsLTUuODEzNTZhMi4yODQ1MywyLjIxOTczIDAgMCAwIDAsLTAuNjM0MjFhMS4zNTk4MywxLjMyMTI2IDAgMCAwIC0wLjg4Mzg5LC0wLjg5ODQ3YTIuMTg5MzQsMi4xMjcyNCAwIDAgMCAtMC44NDMwOSwtMC4xMTg5MWwtMTAuNTY1OTUsMGE0LjU0MTg2LDQuNDEzMDIgMCAwIDAgLTAuNjM5MTIsMHptMCwwIi8+CiAgIDxwYXRoIHN0cm9rZT0ibnVsbCIgc3Ryb2tlLXdpZHRoPSIwLjUyNDE2IiBmaWxsPSIjMjBiMGUzIiAgZD0ibTEyLjgyMDE1LDEyLjEyMjUxYzAuMTg1NDYsMC4xODc0OSAwLjM4MDQ4LDAuMzcwNzMgMC41NTU5OCwwLjU2Njk1YzAuMzA0OTMsMC4zNDA5MyAwLjU3MTAzLDAuNTk0NDkgMC44NTA5NywwLjg5ODEyYy0wLjA2NTY2LC0wLjU1NDUxIDAuNjY2NCwtMC41OTQ5MSAwLjAzNzg5LC0wLjg3MjMzYy0wLjIwODMxLDAuMjA3MTMgLTAuNDgwOTgsMC40Mzg3NyAtMC42OTUyMSwwLjYwNzEzYy0wLjE5OTk3LDAuMTU3MTUgLTAuNDQwNTMsMC4zMzI4NiAtMC42MzA4NCwwLjQ3Mjc0Yy0wLjk3NDQzLDAuNzE2MjIgMC4xMTU0MiwyLjAxMjA3IDEuMDg4NzUsMS4yOTQ0NGwwLDBjMCwwIDEuMDIxMzIsLTAuNzYyMTQgMS40MzQwOSwtMS4xNDI1OWMwLjIyNDYsLTAuMjA3MDMgMC4zNDczMywtMC40NzQ0NCAwLjM2NzQxLC0wLjc5MDE2YzAuMDIwNjUsLTAuMzI0NzEgLTAuMjczMDEsLTAuNjE2MDIgLTAuNDA1NDMsLTAuNzQzNzdjLTAuNDcwMjgsLTAuNDUzNjYgLTAuODkwMjYsLTAuOTc3MDUgLTEuMzAzMTgsLTEuMzk1OTVjLTAuODA0NiwtMC44OTM0IC0yLjEwNTAzLDAuMjEyMTMgLTEuMzAwNDMsMS4xMDU1MmwwLjAwMDAxLC0wLjAwMDExeiIgaWQ9InN2Z18zMSIvPgogICA8cGF0aCBzdHJva2U9Im51bGwiIHN0cm9rZS13aWR0aD0iMC41MjQxNiIgZmlsbD0iIzIwYjBlMyIgIGQ9Im0yMi4wMjE4OSwxMi4xMjI1MWMtMC4xODU0NywwLjE4NzQ5IC0wLjM4MDQ4LDAuMzcwNzMgLTAuNTU1OTksMC41NjY5NWMtMC4zMDQ5MywwLjM0MDkzIC0wLjU3MTAzLDAuNTk0NDkgLTAuODUwOTcsMC44OTgxMmMwLjA2NTY2LC0wLjU1NDUxIC0wLjY2NjQsLTAuNTk0OTEgLTAuMDM3OTEsLTAuODcyMzNjMC4yMDgzMSwwLjIwNzEzIDAuNDgwOTgsMC40Mzg3NyAwLjY5NTIxLDAuNjA3MTNjMC4xOTk5NywwLjE1NzE1IDAuNDQwNTMsMC4zMzI4NiAwLjYzMDg1LDAuNDcyNzRjMC45NzQ0MiwwLjcxNjIyIC0wLjExNTQzLDIuMDEyMDcgLTEuMDg4NzUsMS4yOTQ0NGwwLDBjMCwwIC0xLjAyMTMyLC0wLjc2MjE0IC0xLjQzNDA4LC0xLjE0MjU5Yy0wLjIyNDYxLC0wLjIwNzAzIC0wLjM0NzM0LC0wLjQ3NDQ0IC0wLjM2NzQyLC0wLjc5MDE2Yy0wLjAyMDY0LC0wLjMyNDcxIDAuMjczMDEsLTAuNjE2MDIgMC40MDU0NCwtMC43NDM3N2MwLjQ3MDI4LC0wLjQ1MzY2IDAuODkwMjYsLTAuOTc3MDUgMS4zMDMxOCwtMS4zOTU5NWMwLjgwNDYsLTAuODkzNCAyLjEwNTAzLDAuMjEyMTMgMS4zMDA0MywxLjEwNTUybDAuMDAwMDIsLTAuMDAwMTF6IiBpZD0ic3ZnXzMyIi8+CiAgPC9nPgogIDxwYXRoIGlkPSJzdmdfMSIgZD0ibTI2LjYyMyw5Ljg1OWwwLjQ0LC01LjQzYzAuMDIyLC0wLjI3NCAwLjI2NSwtMC40OCAwLjUzOSwtMC40NThsMC4wMywwLjAwMmMwLjI3NCwwLjAyMiAwLjQ4LDAuMjY1IDAuNDU4LDAuNTM5bC0wLjQ0LDUuNDNjLTAuMDIyLDAuMjc0IC0wLjI2NSwwLjQ4IC0wLjUzOSwwLjQ1OGwtMC4wMywtMC4wMDJjLTAuMjc1LC0wLjAyMyAtMC40ODEsLTAuMjY1IC0wLjQ1OCwtMC41Mzl6IiBmaWxsPSIjNjY3NTdGIi8+CiAgPHBhdGggaWQ9InN2Z18yIiBkPSJtMTQuNDU3LDIwLjU0OGwwLDIuMDZzLTIuMDYsMCAtMi4wNiwyLjA2bDAsMy4wOWMwLDEuMDMgMS4wMywyLjA2IDIuMDYsMi4wNmwxMC4zMDIsMGMxLjAzLDAgMi4wNiwtMS4wMyAyLjA2LC0yLjA2bDAsLTUuMTUxYzAsLTEuMDMgLTEuMDMsLTIuMDYgLTIuMDYsLTIuMDZsLTEwLjMwMiwwLjAwMXoiIGZpbGw9IiMyOTJGMzMiLz4KICA8cGF0aCBpZD0ic3ZnXzMiIGQ9Im0yMS42MjIsMjIuMTU0bC0xMC4xNDUsLTEuNzg5Yy0xLjAxNCwtMC4xNzkgLTEuMDE0LC0wLjE3OSAtMC44MzYsLTEuMTkzYzAuMDk4LC0wLjU1OCAwLjYzNSwtMC45MzQgMS4xOTMsLTAuODM2bDEwLjE0NSwxLjc4OWMwLjU1OCwwLjA5OCAwLjkzNCwwLjYzNSAwLjgzNiwxLjE5M2MtMC4xNzgsMS4wMTUgLTAuMTc4LDEuMDE1IC0xLjE5MywwLjgzNnoiIGZpbGw9IiMyOTJGMzMiLz4KICA8cGF0aCBpZD0ic3ZnXzQiIGQ9Im0yMy45NzQsMTguNTExYy0wLjE5OSwwLjk0OSAtMC41NzQsMS44ODIgLTIuMTU3LDEuNTgzYy0xLjU4MywtMC4yOTggLTEuODM2LDEuMjYyIC0wLjg0OSwxLjUzOGMwLjk4NywwLjI3NSAzLjM1LDAuNjY2IDQuMDM5LC0wLjQ1OWMwLjY4OCwtMS4xMjQgMC44MDMsLTIuMjAzIDAuNzM0LC0yLjY4NWMtMC4wNjksLTAuNDgxIC0xLjYyLC0wLjY3OSAtMS43NjcsMC4wMjN6IiBmaWxsPSIjMjkyRjMzIi8+CiAgPHBhdGggaWQ9InN2Z181IiBkPSJtMjIuMTM3LDIyLjUwNGwtMTEuMTg5LC0xLjk3M2MtMC4yNzEsLTAuMDQ4IC0wLjQ1MywtMC4zMDggLTAuNDA2LC0wLjU3OWwwLjAwNSwtMC4wM2MwLjA0OCwtMC4yNzEgMC4zMDgsLTAuNDUzIDAuNTc5LC0wLjQwNmwxMS4xODksMS45NzNjMC4yNzEsMC4wNDggMC40NTMsMC4zMDggMC40MDYsMC41NzlsLTAuMDA1LDAuMDNjLTAuMDQ3LDAuMjcxIC0wLjMwOCwwLjQ1MyAtMC41NzksMC40MDZ6IiBmaWxsPSIjREQyRTQ0Ii8+CiAgPHBhdGggaWQ9InN2Z182IiBkPSJtMjcuNzc4LDguODQ4bC0xLjc4OSwxMC4xNDVjLTAuMTc5LDEuMDE0IC0wLjE3OSwxLjAxNCAtMS4xOTMsMC44MzZjLTAuNTU4LC0wLjA5OCAtMC45MzQsLTAuNjM1IC0wLjgzNiwtMS4xOTNsMS43ODksLTEwLjE0NmMwLjA5OCwtMC41NTggMC42MzUsLTAuOTM0IDEuMTkzLC0wLjgzNmMxLjAxNSwwLjE3OSAxLjAxNSwwLjE3OSAwLjgzNiwxLjE5NHptMS4wMjIsLTcuNzE2bC0wLjczNCw0LjE0NmMtMC4wOSwwLjUwOCAtMC4xNzMsMS4wMzggLTEuMTg4LDAuODU5Yy0wLjU1OCwtMC4wOTkgLTAuOTA4LC0wLjczNyAtMC43ODYsLTEuNDQxbDAuNjU4LC0zLjcxOGMwLjE2OCwtMC41OTcgMC42NDUsLTEuMDM0IDEuMjAzLC0wLjkzNmMxLjAxNCwwLjE4IDAuOTM3LDAuNTgyIDAuODQ3LDEuMDl6IiBmaWxsPSIjMjkyRjMzIi8+CiAgPHBhdGggaWQ9InN2Z183IiBkPSJtMjguMjcsOC40MDJsLTEuOTczLDExLjE4OWMtMC4wNDgsMC4yNzEgLTAuMzA4LDAuNDUzIC0wLjU3OSwwLjQwNmwtMC4wMywtMC4wMDVjLTAuMjcxLC0wLjA0OCAtMC40NTMsLTAuMzA4IC0wLjQwNiwtMC41NzlsMS45NzMsLTExLjE4OWMwLjA0OCwtMC4yNzEgMC4zMDgsLTAuNDUzIDAuNTc5LC0wLjQwNmwwLjAzLDAuMDA1YzAuMjcxLDAuMDQ4IDAuNDUzLDAuMzA4IDAuNDA2LDAuNTc5em0xLjI4LC03LjY4bC0wLjk0Myw1LjM2NmMtMC4wNDgsMC4yNzEgLTAuMzA4LDAuNDU0IC0wLjU3OSwwLjQwNmwtMC4wMywtMC4wMDVjLTAuMjcxLC0wLjA0OCAtMC40NTMsLTAuMzA4IC0wLjQwNiwtMC41NzlsMC45NDMsLTUuMzY2YzAuMDQ4LC0wLjI3MSAwLjMwOCwtMC40NTMgMC41NzksLTAuNDA2bDAuMDMsMC4wMDVjMC4yNzEsMC4wNDggMC40NTMsMC4zMDggMC40MDYsMC41Nzl6IiBmaWxsPSIjREQyRTQ0Ii8+CiAgPHBhdGggaWQ9InN2Z184IiBkPSJtMjQuMjM3LDE3LjkxMmwtNy42OTEsLTEuMzU2Yy0wLjc2OSwtMC4xMzYgLTAuNzY5LC0wLjEzNiAtMC42MzUsLTAuODk1YzAuMDc0LC0wLjQxOCAwLjQ4LC0wLjY5OCAwLjkwMywtMC42MjRsNy42OTEsMS4zNTZjMC40MjMsMC4wNzUgMC43MDksMC40NzcgMC42MzUsMC44OTVjLTAuMTM0LDAuNzU5IC0wLjEzNCwwLjc1OSAtMC45MDMsMC42MjR6IiBmaWxsPSIjMjkyRjMzIi8+CiAgPHBhdGggaWQ9InN2Z185IiBkPSJtMjEuNzk0LDIxLjM5N2MxLjAyMywwLjE4IDMuMDQzLDAuNTM3IDMuNTgsLTIuNTA3YzAuNTM3LC0zLjA0MyAxLjU1MSwtMi44NjUgMS4wMTQsMC4xNzlzLTIuMzA0LDMuNzc4IC00Ljc3MywzLjM0MmMtMi4wMjksLTAuMzU3IC0xLjg1LC0xLjM3MiAwLjE3OSwtMS4wMTR6bS0xMC42NDEsLTEuODc2YzIuMDMsMC4zNSAyLjM0NSwxLjQ2NSAwLjMxNywxLjEwMmMtMC44OTksLTAuMTYxIC0xLjAxNCwwLjIxOCAtMS4yODksMC45ODdjLTAuMjU5LDAuNzIzIC0wLjYzLDEuODEgLTEuMTc4LDMuMzI4Yy0wLjQwMywxLjExNSAtMS4zMTcsMC42MjEgLTAuOTc5LC0wLjM1MmMwLjU2OCwtMS42MzYgMS4wOTMsLTMuMDU4IDEuNDM0LC0zLjk2MmMwLjM0OCwtMC45MjQgMC42MzIsLTEuMjg2IDEuNjk1LC0xLjEwM3oiIGZpbGw9IiNERDJFNDQiLz4KICA8cGF0aCBpZD0ic3ZnXzEwIiBkPSJtOC45MjksMjMuNjU0bC0wLjAyOSwtMC4wMTFjLTAuMjU4LC0wLjA5NCAtMC41NDcsMC4wNCAtMC42NDEsMC4yOTlsLTIuMTI0LDUuODM2Yy0wLjA5NCwwLjI1OCAwLjA0LDAuNTQ3IDAuMjk5LDAuNjQxbDAuMDI4LDAuMDFjMC4yNTgsMC4wOTQgMC41NDcsLTAuMDQgMC42NDEsLTAuMjk5bDIuMTI0LC01LjgzNmMwLjA5NCwtMC4yNTggLTAuMDQsLTAuNTQ2IC0wLjI5OCwtMC42NHoiIGZpbGw9IiNERDJFNDQiLz4KICA8cGF0aCBpZD0ic3ZnXzExIiBkPSJtNi40NjIsMzAuNDNsLTMuOSwtMS40MmMtMC4yNTgsLTAuMDk0IC0wLjM5MywtMC4zODIgLTAuMjk5LC0wLjY0MWwwLjAxLC0wLjAyOGMwLjA5NCwtMC4yNTggMC4zODIsLTAuMzkzIDAuNjQxLC0wLjI5OWwzLjksMS40MmMwLjI1OCwwLjA5NCAwLjM5MywwLjM4MiAwLjI5OSwwLjY0MWwtMC4wMSwwLjAyOGMtMC4wOTQsMC4yNTggLTAuMzgyLDAuMzkzIC0wLjY0MSwwLjI5OXoiIGZpbGw9IiM2Njc1N0YiLz4KICA8cGF0aCBpZD0ic3ZnXzEyIiBkPSJtMTIuMjI1LDMwLjcxOGwzLjA2LC0zLjA2YzAuMTk0LC0wLjE5NCAwLjE5NCwtMC41MTMgMCwtMC43MDdsLTAuMDIxLC0wLjAyMWMtMC4xOTQsLTAuMTk0IC0wLjUxMywtMC4xOTQgLTAuNzA3LDBsLTMuMDYsMy4wNmMtMC4xOTQsMC4xOTQgLTAuMTk0LDAuNTEzIDAsMC43MDdsMC4wMjEsMC4wMjFjMC4xOTQsMC4xOTQgMC41MTIsMC4xOTQgMC43MDcsMHptMTguNzQ0LDMuMjIybC0wLjA2LDBjLTAuNTUsMCAtMSwtMC40NSAtMSwtMWwwLC0zLjE1MWMwLC0wLjU1IDAuNDUsLTEgMSwtMWwwLjA2LDBjMC41NSwwIDEsMC40NSAxLDFsMCwzLjE1MWMwLDAuNTUgLTAuNDUsMSAtMSwxeiIgZmlsbD0iI0REMkU0NCIvPgogIDxwYXRoIGlkPSJzdmdfMTMiIGQ9Im0xMS45MTEsMzMuOTRsLTAuMDYsMGMtMC41NSwwIC0xLC0wLjQ1IC0xLC0xbDAsLTMuMTUxYzAsLTAuNTUgMC40NSwtMSAxLC0xbDAuMDYsMGMwLjU1LDAgMSwwLjQ1IDEsMWwwLDMuMTUxYzAsMC41NSAtMC40NSwxIC0xLDF6bTEzLjMyOSwtNi4xODZsMi4wOSwwYzAuMjc1LDAgMC41LC0wLjIyNSAwLjUsLTAuNWwwLC0wLjAzYzAsLTAuMjc1IC0wLjIyNSwtMC41IC0wLjUsLTAuNWwtMi4wOSwwYy0wLjI3NSwwIC0wLjUsMC4yMjUgLTAuNSwwLjVsMCwwLjAzYzAsMC4yNzUgMC4yMjUsMC41IDAuNSwwLjV6IiBmaWxsPSIjREQyRTQ0Ii8+CiAgPHBhdGggaWQ9InN2Z18xNCIgZD0ibTMwLjA0NywzMC42NTdsLTMuMDYsLTMuMDZjLTAuMTk0LC0wLjE5NCAtMC4xOTQsLTAuNTEzIDAsLTAuNzA3bDAuMDIxLC0wLjAyMWMwLjE5NCwtMC4xOTQgMC41MTMsLTAuMTk0IDAuNzA3LDBsMy4wNiwzLjA2YzAuMTk0LDAuMTk0IDAuMTk0LDAuNTEzIDAsMC43MDdsLTAuMDIxLDAuMDIxYy0wLjE5NSwwLjE5NSAtMC41MTMsMC4xOTUgLTAuNzA3LDB6IiBmaWxsPSIjREQyRTQ0Ii8+CiAgPHBhdGggaWQ9InN2Z18xNSIgZD0ibTkuOTk4LDE1LjUyOGMwLjc2NSwwLjMyOCAyLjExMSwwLjk2NCAyLjQxLDEuMDc5YzAsMCAwLjEzOCwtMC45MTggMC41MDUsLTAuOTE4YzAsMCAwLjEzOCwtMC40ODIgMC4yMjksLTAuNjg4YzAuMDkyLC0wLjIwNyAwLjM2NywtMC4xMzggMC4zOSwwLjI1MmMwLjAyMywwLjM5IC0wLjA5MiwwLjUyOCAtMC4wOTIsMC41MjhzMC4zNDQsMC40MzYgMC4xMzgsMS4wMzNjMCwwIDAuNDU5LDAuMDY5IDAuMzY3LDAuNjQzYy0wLjA5MiwwLjU3NCAwLjA2OSwxLjAxIC0wLjM0NCwxLjEyNGMtMC40MTMsMC4xMTUgLTEuOTc0LDAuNTUxIC0xLjk5NywtMC4wNjljLTAuMDIzLC0wLjYyIC0wLjQxMywtMS4xMDIgLTEuMTcsLTEuNTYxYy0wLjc1NywtMC40NTkgLTEuMzA4LC0wLjk2NCAtMS4yMTYsLTEuMjE2YzAuMDkxLC0wLjI1MyAwLjEzNywtMC40ODIgMC43OCwtMC4yMDd6IiBmaWxsPSIjMjkyRjMzIi8+CiAgPHBhdGggaWQ9InN2Z18xNiIgZD0ibTI1LjI4OCwyNC42NjhsLTExLjM2MSwwYy0wLjI3NSwwIC0wLjUsLTAuMjI1IC0wLjUsLTAuNWwwLC0wLjAzYzAsLTAuMjc1IDAuMjI1LC0wLjUgMC41LC0wLjVsMTEuMzYyLDBjMC4yNzUsMCAwLjUsMC4yMjUgMC41LDAuNWwwLDAuMDNjLTAuMDAxLDAuMjc1IC0wLjIyNiwwLjUgLTAuNTAxLDAuNXoiIGZpbGw9IiNERDJFNDQiLz4KICA8Y2lyY2xlIGlkPSJzdmdfMTciIHI9IjQuNjM2IiBjeT0iMzEuMzY0IiBjeD0iMjAuMTIyIiBmaWxsPSIjNjY3NTdGIi8+CiAgPGNpcmNsZSBpZD0ic3ZnXzE4IiByPSIyLjU3NSIgY3k9IjMzLjQyNSIgY3g9IjExLjg4MSIgZmlsbD0iIzY2NzU3RiIvPgogIDxjaXJjbGUgaWQ9InN2Z18xOSIgcj0iMi4wNiIgY3k9IjMzLjk0IiBjeD0iMzAuOTM5IiBmaWxsPSIjNjY3NTdGIi8+CiAgPGNpcmNsZSBpZD0ic3ZnXzIwIiByPSIyLjU3NSIgY3k9IjMxLjM2NCIgY3g9IjIwLjEyMiIgZmlsbD0iI0NDRDZERCIvPgogIDxjaXJjbGUgaWQ9InN2Z18yMSIgcj0iMS41NDUiIGN5PSIzMy40MjUiIGN4PSIxMS44ODEiIGZpbGw9IiNDQ0Q2REQiLz4KICA8Y2lyY2xlIGlkPSJzdmdfMjIiIHI9IjEuMDMiIGN5PSIzMy45NCIgY3g9IjMwLjkzOSIgZmlsbD0iIzI5MkYzMyIvPgogIDxnIGlkPSJzdmdfMjMiIGZpbGw9IiMyOTJGMzMiPgogICA8Y2lyY2xlIGlkPSJzdmdfMjQiIHI9IjAuNTE1IiBjeT0iMzAuNDcyIiBjeD0iMjAuNjM4Ii8+CiAgIDxjaXJjbGUgaWQ9InN2Z18yNSIgcj0iMC41MTUiIGN5PSIzMi4yNTYiIGN4PSIxOS42MDciLz4KICAgPGNpcmNsZSBpZD0ic3ZnXzI2IiByPSIwLjUxNSIgY3k9IjMwLjg0OSIgY3g9IjE5LjIzIi8+CiAgIDxjaXJjbGUgaWQ9InN2Z18yNyIgcj0iMC41MTUiIGN5PSIzMS44NzkiIGN4PSIyMS4wMTUiLz4KICA8L2c+CiAgPGNpcmNsZSBpZD0ic3ZnXzI4IiByPSIwLjc3MyIgY3k9IjMzLjQyNSIgY3g9IjExLjg4MSIgZmlsbD0iIzI5MkYzMyIvPgogIDxjaXJjbGUgaWQ9InN2Z18yOSIgcj0iMC41MTUiIGN5PSIzMy45NCIgY3g9IjMwLjkzOSIgZmlsbD0iIzY2NzU3RiIvPgogPC9nPgo8L3N2Zz4=
 // @homepageURL     https://github.com/ADJazzzz/BLSPAM
 // @supportURL      https://github.com/ADJazzzz/BLSPAM/issues
 // @match           *://live.bilibili.com/*
-// @require         https://cdn.jsdelivr.net/npm/vue@3.5.21/dist/vue.global.prod.js
+// @require         https://cdn.jsdelivr.net/npm/vue@3.5.27/dist/vue.global.prod.js
 // @require         data:application/javascript,window.Vue%3DVue%3Bwindow.VueDemi%3DVue
-// @require         https://cdn.jsdelivr.net/npm/pinia@3.0.3/dist/pinia.iife.prod.js
-// @require         https://cdn.jsdelivr.net/npm/naive-ui@2.42.0/dist/index.prod.js
-// @require         https://cdn.jsdelivr.net/npm/axios@1.11.0/dist/axios.min.js
-// @require         https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js
+// @require         https://cdn.jsdelivr.net/npm/pinia@3.0.4/dist/pinia.iife.prod.js
+// @require         https://cdn.jsdelivr.net/npm/naive-ui@2.43.2/dist/index.prod.js
+// @require         https://cdn.jsdelivr.net/npm/axios@1.13.3/dist/axios.min.js
+// @require         https://cdn.jsdelivr.net/npm/lodash@4.17.23/lodash.min.js
 // @connect         api.bilibili.com
 // @connect         api.live.bilibili.com
 // @connect         live.bilibili.com
@@ -36,6 +36,12 @@
 (function (vue, pinia$1, naive, _, axios) {
   'use strict';
 
+  var _GM_addStyle = (() => typeof GM_addStyle != "undefined" ? GM_addStyle : void 0)();
+  var _GM_getValue = (() => typeof GM_getValue != "undefined" ? GM_getValue : void 0)();
+  var _GM_info = (() => typeof GM_info != "undefined" ? GM_info : void 0)();
+  var _GM_setValue = (() => typeof GM_setValue != "undefined" ? GM_setValue : void 0)();
+  var _GM_xmlhttpRequest = (() => typeof GM_xmlhttpRequest != "undefined" ? GM_xmlhttpRequest : void 0)();
+  var _unsafeWindow = (() => typeof unsafeWindow != "undefined" ? unsafeWindow : void 0)();
   const dq = document.querySelector.bind(document);
   document.querySelectorAll.bind(document);
   const dce = document.createElement.bind(document);
@@ -51,50 +57,44 @@
       const timerPolling = setInterval(() => {
         const ele = element.querySelector(selectors);
         if (ele) {
-          clearTimeout(timerPolling);
+          clearInterval(timerPolling);
+          clearTimeout(timerTimeout);
           resolve(ele);
         }
       }, interval);
       const timerTimeout = setTimeout(() => {
-        clearTimeout(timerPolling);
-        clearTimeout(timerTimeout);
-        reject();
+        clearInterval(timerPolling);
+        reject(new Error(`在${timeout}ms内未发现对应元素 "${selectors}"`));
       }, timeout);
     });
   };
-  var _GM_addStyle = (() => typeof GM_addStyle != "undefined" ? GM_addStyle : void 0)();
-  var _GM_getValue = (() => typeof GM_getValue != "undefined" ? GM_getValue : void 0)();
-  var _GM_info = (() => typeof GM_info != "undefined" ? GM_info : void 0)();
-  var _GM_setValue = (() => typeof GM_setValue != "undefined" ? GM_setValue : void 0)();
-  var _GM_xmlhttpRequest = (() => typeof GM_xmlhttpRequest != "undefined" ? GM_xmlhttpRequest : void 0)();
-  var _unsafeWindow = (() => typeof unsafeWindow != "undefined" ? unsafeWindow : void 0)();
   const defaultValues = {
     ui: {
       activeMenuIndex: "TextView",
       isShowPanel: false,
-      isCollapsed: false,
+      isCollapsed: true,
       theme: "light"
     },
     modules: {
       TextSpam: {
         enable: false,
-        msg: "车了可能会被禁，但不车就等于一直被禁",
-        timeinterval: 3,
+        msg: "车",
+        timeinterval: 5,
         textinterval: 20,
         timelimit: 0
       },
       EmotionSpam: {
         enable: false,
-        timeinterval: 3,
+        timeinterval: 5,
         emotionViewSelectedID: 1,
         msg: [],
         timelimit: 0
       },
-      TextGroupSpam: {
+      Favorites: {
         enable: false,
-        timeinterval: 3,
-        textGroupTabsValue: 1,
-        textGroupTabPanels: [
+        timeinterval: 5,
+        favoritesTabsValue: 1,
+        favoritesTabPanels: [
           {
             key: 1,
             name: 1,
@@ -111,7 +111,8 @@
           enable: true
         },
         danmakuModules: {
-          enable: false
+          enable: false,
+          mode: "menu"
         },
         danmakuDetail: {
           enable: true
@@ -184,28 +185,31 @@
   }
   class Logger {
     NAME = "BLSPAM";
-    prefix_title_str;
-    title;
+    module;
     get prefix() {
+      const now = new Date();
+      const time = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
       return [
-        `%c${this.NAME}%c[${this.prefix_title_str}]%c:`,
+        `%c${this.NAME}%c[${time}][${this.module}]%c:`,
         "font-weight: bold; color: white; background-color: #23ade5; padding: 1px 4px; border-radius: 4px;",
         "font-weight: bold; color: #0093D3;",
-        "font-weight: bold;"
+        ""
       ];
     }
     log(...data) {
       console.log(...this.prefix, ...data);
     }
-    error(...data) {
-      console.error(...this.prefix, ...data);
+    info(...data) {
+      console.info(...this.prefix, ...data);
     }
     warn(...data) {
       console.warn(...this.prefix, ...data);
     }
-    constructor(title) {
-      this.title = title;
-      this.prefix_title_str = title.split("_").join("][");
+    error(...data) {
+      console.error(...this.prefix, ...data);
+    }
+    constructor(module) {
+      this.module = module.split("_").join("][");
     }
   }
   class BaseModule {
@@ -235,7 +239,7 @@
         if (Object.keys(cookieValues).length === cookieNames.length) {
           resolve(cookieValues);
         } else {
-          reject(new Error(`没找到cookies`));
+          reject(this.logger.error("没有找到所需的 Cookie 值，请确保已登录。"));
         }
       });
     }
@@ -245,29 +249,28 @@
   }
   axios.defaults.withCredentials = true;
   const BILIAPI = {
-    sendMsg: (msg, roomid, bubble = 0, color = 16777215, mode = 1, room_type = 0, jumpfrom = 0, reply_mid = 0, reply_attr = 0, reply_dmid = "", statistics = { appId: 100, platform: 5 }, fontsize = 25, reply_type = 0, reply_uname = "", data_extend = { trackid: "-99998" }) => {
+    sendMsg: async (msg, roomid, bubble = 0, color = 16777215, mode = 1, room_type = 0, jumpfrom = 0, reply_mid = 0, reply_attr = 0, replay_dmid = "", statistics = { appId: 100, platform: 5 }, reply_type = 0, reply_uname = "", data_extend = { trackid: "-99998" }, fontsize = 25) => {
       const biliStore = useBiliStore();
       const bili_jct = biliStore.cookies.bili_jct;
-      const timestamp = () => Date.parse(( new Date()).toString()) / 1e3;
-      return axios.post(
+      const res = await axios.post(
         "https://api.live.bilibili.com/msg/send",
         {
-          msg,
-          roomid,
           bubble,
+          msg,
           color,
           mode,
           room_type,
           jumpfrom,
           reply_mid,
           reply_attr,
-          reply_dmid,
-          fontsize,
-          statistics: JSON.stringify(statistics),
+          replay_dmid,
+          statistics,
           reply_type,
           reply_uname,
-          data_extend: JSON.stringify(data_extend),
-          rnd: timestamp(),
+          data_extend,
+          fontsize,
+          rnd: Math.floor(Date.now() / 1e3),
+          roomid,
           csrf: bili_jct,
           csrf_token: bili_jct
         },
@@ -277,23 +280,24 @@
           }
         }
       );
+      return res.data;
     },
-    sendEmotion: (msg, roomid, bubble = 0, color = 16777215, mode = 1, dm_type = 1, fontsize = 25, data_extend = { trackid: "-99998" }) => {
+    sendEmotion: async (msg, roomid, bubble = 0, color = 16777215, mode = 1, dm_type = 1, emoticonOptions = {}, data_extend = { trackid: "-99998" }, fontsize = 25) => {
       const biliStore = useBiliStore();
       const bili_jct = biliStore.cookies.bili_jct;
-      const timestamp = () => Date.parse(( new Date()).toString()) / 1e3;
-      return axios.post(
+      const res = await axios.post(
         "https://api.live.bilibili.com/msg/send",
         {
-          msg,
-          roomid,
           bubble,
+          msg,
           color,
           mode,
           dm_type,
+          emoticon_options: emoticonOptions,
+          data_extend,
           fontsize,
-          data_extend: JSON.stringify(data_extend),
-          rnd: timestamp(),
+          rnd: Math.floor(Date.now() / 1e3),
+          roomid,
           csrf: bili_jct,
           csrf_token: bili_jct
         },
@@ -303,20 +307,23 @@
           }
         }
       );
+      return res.data;
     },
-    async getEmoticons(platform = "pc", room_id) {
+    getEmoticons: async (platform, room_id) => {
       const res = await axios.get(
         `https://api.live.bilibili.com/xlive/web-ucenter/v2/emoticon/GetEmoticons?platform=${platform}&room_id=${room_id}`
       );
       return res.data;
     },
-    async nav() {
-      const res = await axios.get("https://api.bilibili.com/x/web-interface/nav");
-      return res.data;
-    },
-    async getInfoByUser(room_id) {
+    getInfoByUser: async (room_id) => {
       const res = await axios.get(
         `https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByUser?room_id=${room_id}`
+      );
+      return res.data;
+    },
+    nav: async () => {
+      const res = await axios.get(
+        "https://api.bilibili.com/x/web-interface/nav"
       );
       return res.data;
     }
@@ -429,107 +436,111 @@
     return naive.createDiscreteApi(apis, options);
   }
   class TextSpamer extends BaseModule {
-    config = this.moduleStore.moduleConfig.TextSpam;
+    textConfig = this.moduleStore.moduleConfig.TextSpam;
+    favoritesConfig = this.moduleStore.moduleConfig.Favorites;
     intervalId = null;
-    msgSlices = [];
+    timeLimitId = null;
+    get roomId() {
+      return useBiliStore().BilibiliLive?.ROOMID;
+    }
     formatMsg(msg) {
       return msg.replace(/\n/g, "");
     }
-    formatTime(time) {
-      return time * 1e3;
+    sliceMsg(msg, maxLength) {
+      if (msg.length <= maxLength) return [msg];
+      return msg.match(new RegExp(`.{1,${maxLength}}`, "g")) || [];
+    }
+    formatFavorites() {
+      return _.flatMap(this.favoritesConfig.favoritesTabPanels, (item) => {
+        if (!item.msg) return [];
+        const processedMsg = this.formatMsg(item.msg);
+        return this.sliceMsg(processedMsg, this.textConfig.textinterval);
+      });
+    }
+    formatTime(seconds) {
+      return seconds * 1e3;
     }
     cleanUP() {
       if (this.intervalId) {
         clearInterval(this.intervalId);
         this.intervalId = null;
       }
-      this.msgSlices = [];
-    }
-    async cycleSendDanmu(msg, roomid, timeinterval, textinterval, timelimit) {
-      const sendMsg = async (message) => {
-        try {
-          const response = await BILIAPI.sendMsg(message, roomid);
-          const { notification } = useDiscreteAPI(
-            ["notification"],
-            !this.moduleStore.moduleConfig.setting.danmakuDetail.enable
-          );
-          if (response.data.code === 0) {
-            this.logger.log(`弹幕 ${message} 发送成功`, response);
-          } else {
-            this.logger.error(`弹幕 ${message} 发送失败`, response);
-            notification.error({
-              closable: false,
-              content: `弹幕"${message}"发送失败: ${response.data.message}`,
-              duration: 3e3
-            });
-          }
-        } catch (error) {
-          this.logger.error(`弹幕 ${message} 发送失败`, error);
-        }
-      };
-      if (msg.length < textinterval) {
-        const sendNext = async () => {
-          if (this.config.enable) {
-            await sendMsg(msg);
-          } else {
-            this.cleanUP();
-          }
-        };
-        await sendNext();
-        this.intervalId = setInterval(sendNext, timeinterval);
-      } else {
-        for (let i = 0; i < msg.length; i += textinterval) {
-          this.msgSlices.push(msg.slice(i, i + textinterval));
-        }
-        let currentIndex = 0;
-        const sendNextSlice = async () => {
-          if (this.config.enable) {
-            if (currentIndex < this.msgSlices.length) {
-              await sendMsg(this.msgSlices[currentIndex]);
-              currentIndex++;
-            }
-            if (currentIndex >= this.msgSlices.length) {
-              currentIndex = 0;
-            }
-          } else {
-            this.cleanUP();
-          }
-        };
-        await sendNextSlice();
-        this.intervalId = setInterval(sendNextSlice, timeinterval);
+      if (this.timeLimitId) {
+        clearTimeout(this.timeLimitId);
+        this.timeLimitId = null;
       }
-      if (timelimit !== 0) {
-        setTimeout(() => {
-          this.config.enable = false;
+    }
+    async sendMsg(message, roomid) {
+      try {
+        const response = await BILIAPI.sendMsg(message, roomid);
+        const { notification } = useDiscreteAPI(
+          ["notification"],
+          !this.moduleStore.moduleConfig.setting.danmakuDetail.enable
+        );
+        if (response.code === 0) {
+          this.logger.log(`弹幕 ${message} 发送成功`, response);
+          return true;
+        }
+        this.logger.error(`弹幕 ${message} 发送失败`, response);
+        notification.error({
+          closable: false,
+          content: `弹幕"${message}"发送失败: ${response.message}`,
+          duration: 3e3
+        });
+        return false;
+      } catch (error) {
+        this.logger.error(`弹幕 ${message} 发送失败`, error);
+        return false;
+      }
+    }
+    createCycleSender(msgs, roomid, timeinterval, config) {
+      let currentIndex = 0;
+      const sendNext = async () => {
+        if (!config.enable) {
           this.cleanUP();
-          this.logger.log("文字独轮车已停止");
+          return;
+        }
+        await this.sendMsg(msgs[currentIndex], roomid);
+        currentIndex = (currentIndex + 1) % msgs.length;
+      };
+      sendNext();
+      this.intervalId = setInterval(sendNext, timeinterval);
+    }
+    async startTextSpam() {
+      this.cleanUP();
+      if (!this.roomId) return;
+      const formattedMsg = this.formatMsg(this.textConfig.msg);
+      const msgs = this.sliceMsg(formattedMsg, this.textConfig.textinterval);
+      const timeinterval = this.formatTime(this.textConfig.timeinterval);
+      const timelimit = this.formatTime(this.textConfig.timelimit);
+      this.createCycleSender(msgs, this.roomId, timeinterval, this.textConfig);
+      if (timelimit > 0) {
+        this.timeLimitId = setTimeout(() => {
+          this.stop("text");
         }, timelimit);
       }
     }
-    stop() {
-      this.config.enable = false;
+    async startFavoritesSpam() {
       this.cleanUP();
-      this.logger.log("文字独轮车已停止");
+      if (!this.roomId) return;
+      const msgs = this.formatFavorites();
+      if (msgs.length === 0) return;
+      const timeinterval = this.formatTime(this.favoritesConfig.timeinterval);
+      this.createCycleSender(msgs, this.roomId, timeinterval, this.favoritesConfig);
+    }
+    stop(area) {
+      const config = area === "text" ? this.textConfig : this.favoritesConfig;
+      const log = area === "text" ? "文字独轮车已停止" : "收藏夹独轮车已停止";
+      config.enable = false;
+      this.cleanUP();
+      this.logger.log(log);
     }
     async run() {
       this.moduleStore.emitter.off("TextSpam");
+      this.moduleStore.emitter.off("Favorites");
       this.cleanUP();
-      this.moduleStore.emitter.on("TextSpam", async () => {
-        const formattedMsg = this.formatMsg(this.config.msg);
-        const roomid = useBiliStore().BilibiliLive?.ROOMID;
-        const timeinterval = this.formatTime(this.config.timeinterval);
-        const textinterval = this.config.textinterval;
-        const formattedTime = this.formatTime(this.config.timelimit);
-        if (roomid) {
-          await this.cycleSendDanmu(
-            formattedMsg,
-            roomid,
-            timeinterval,
-            textinterval,
-            formattedTime
-          );
-        }
-      });
+      this.moduleStore.emitter.on("TextSpam", () => this.startTextSpam());
+      this.moduleStore.emitter.on("Favorites", () => this.startFavoritesSpam());
     }
   }
   class EmotionSpamer extends BaseModule {
@@ -553,13 +564,13 @@
             ["notification"],
             !this.moduleStore.moduleConfig.setting.danmakuDetail.enable
           );
-          if (response.data.code === 0) {
+          if (response.code === 0) {
             this.logger.log(`表情 ${emotion} 发送成功`, response);
           } else {
             this.logger.error(`表情 ${emotion} 发送失败`, response);
             notification.error({
               closable: false,
-              content: `表情"${emotion}"发送失败: ${response.data.message}`,
+              content: `表情"${emotion}"发送失败: ${response.message}`,
               duration: 3e3
             });
           }
@@ -609,89 +620,6 @@
       });
     }
   }
-  class TextGroupSpamer extends BaseModule {
-    config = this.moduleStore.moduleConfig.TextGroupSpam;
-    intervalId = null;
-    formatMsg() {
-      const slicedMsg = _.flatMap(this.config.textGroupTabPanels, (items) => {
-        if (items.msg) {
-          const processedMsg = items.msg.replace(/\n/g, "");
-          if (processedMsg.length > 20) {
-            return processedMsg.match(/.{1,20}/g) || [];
-          } else {
-            return [processedMsg];
-          }
-        }
-        return [];
-      });
-      return slicedMsg;
-    }
-    formatTime(time) {
-      return time * 1e3;
-    }
-    cleanUP() {
-      if (this.intervalId) {
-        clearInterval(this.intervalId);
-        this.intervalId = null;
-      }
-    }
-    async cycleSendDanmuGroup(msg, roomid, timeinterval) {
-      let currentIndex = 0;
-      const sendMsg = async (msg2) => {
-        try {
-          const response = await BILIAPI.sendMsg(msg2, roomid);
-          const { notification } = useDiscreteAPI(
-            ["notification"],
-            !this.moduleStore.moduleConfig.setting.danmakuDetail.enable
-          );
-          if (response.data.code === 0) {
-            this.logger.log(`弹幕 ${msg2} 发送成功`, response);
-          } else {
-            this.logger.error(`弹幕 ${msg2} 发送失败`, response);
-            notification.error({
-              closable: false,
-              content: `弹幕"${msg2}"发送失败: ${response.data.message}`,
-              duration: 3e3
-            });
-          }
-        } catch (error) {
-          this.logger.error(`弹幕 ${msg2} 发送失败`, error);
-        }
-      };
-      const sendNextMsg = async () => {
-        if (this.config.enable) {
-          if (currentIndex < msg.length) {
-            await sendMsg(msg[currentIndex]);
-            currentIndex++;
-          }
-          if (currentIndex >= msg.length) {
-            currentIndex = 0;
-          }
-        } else {
-          this.cleanUP();
-        }
-      };
-      await sendNextMsg();
-      this.intervalId = setInterval(sendNextMsg, timeinterval);
-    }
-    stop() {
-      this.config.enable = false;
-      this.cleanUP();
-      this.logger.log("文字池独轮车已停止");
-    }
-    async run() {
-      this.moduleStore.emitter.off("TextGroupSpam");
-      this.cleanUP();
-      this.moduleStore.emitter.on("TextGroupSpam", async () => {
-        const msg = this.formatMsg();
-        const roomid = useBiliStore().BilibiliLive?.ROOMID;
-        const formattedTimeInterval = this.formatTime(this.config.timeinterval);
-        if (roomid) {
-          await this.cycleSendDanmuGroup(msg, roomid, formattedTimeInterval);
-        }
-      });
-    }
-  }
   class SaveSpamerStatus extends BaseModule {
     config = this.moduleStore.moduleConfig.setting.saveSpamerStatus;
     async run() {
@@ -715,7 +643,7 @@
       } else {
         this.moduleStore.moduleConfig.TextSpam.enable = false;
         this.moduleStore.moduleConfig.EmotionSpam.enable = false;
-        this.moduleStore.moduleConfig.TextGroupSpam.enable = false;
+        this.moduleStore.moduleConfig.Favorites.enable = false;
       }
     }
   }
@@ -724,15 +652,14 @@
     async getLatestVersionRes() {
       return new Promise((resolve, reject) => {
         _GM_xmlhttpRequest({
-          url: "https://api.github.com/repos/ADJazzzz/BLSPAM/releases/latest",
-          nocache: true,
           method: "GET",
-          responseType: "json",
-          onload: (res) => {
-            resolve(res);
-          },
-          onerror: (res) => {
-            reject(res);
+          url: "https://api.github.com/repos/ADJazzzz/BLSPAM/releases/latest",
+          onload: (response) => {
+            if (response.status === 200) {
+              resolve({ response: JSON.parse(response.responseText) });
+            } else {
+              reject(this.logger.error("获取最新版本信息失败", response));
+            }
           }
         });
       });
@@ -819,6 +746,32 @@
       }
     }
   }
+  const _hoisted_1$8 = {
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 24 24"
+  };
+  function render$6(_ctx, _cache) {
+    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$8, [..._cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
+        d: "M10 7H8v4H4v2h4v4h2v-4h4v-2h-4zm10 11h-2V7.38L15 8.4V6.7L19.7 5h.3z"
+      }, null, -1)
+    ])]);
+  }
+  const PlusIcon = { render: render$6 };
+  const _hoisted_1$7 = {
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 24 24"
+  };
+  function render$5(_ctx, _cache) {
+    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$7, [..._cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "currentColor",
+        d: "M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2m0 16H8V7h11z"
+      }, null, -1)
+    ])]);
+  }
+  const CopyIcon = { render: render$5 };
   class danmakuModules extends BaseModule {
     config = this.moduleStore.moduleConfig.setting.danmakuModules;
     async dmOB() {
@@ -831,18 +784,76 @@
 (node.classList.length === 2 ||
 node.classList.contains("chat-colorful-bubble") && node.classList.contains("has-bubble") && node.classList.length === 4 ||
 node.classList.contains("has-bubble") && node.classList.length === 3)) {
-                node.addEventListener("click", (event) => this.handleNodeClick(event));
+                if (this.config.mode === "menu") {
+                  const msg = node.dataset.danmaku || "";
+                  node.addEventListener("click", () => this.renderMenu(msg));
+                } else {
+                  this.renderDirectly(node);
+                }
               }
             });
           });
         }).observe(dmArea, { childList: true, subtree: false });
       }
     }
-    handleNodeClick(event) {
-      const clickedElement = event.target;
-      if (clickedElement instanceof HTMLElement && clickedElement.classList.contains("danmaku-item-right")) {
-        this.renderMenu(clickedElement.innerText);
-      }
+    renderDirectly(node) {
+      const msg = node.dataset.danmaku || "";
+      const msgEle = node.querySelector(".danmaku-item-right");
+      if (!msgEle) return;
+      const btnContainer = document.createElement("div");
+      btnContainer.style.cssText = "display: inline-block; vertical-align: middle;";
+      msgEle.after(btnContainer);
+      vue.render(
+        vue.h(
+          naive.NConfigProvider,
+          {
+            theme: useUIStore().uiConfig.theme === "dark" ? naive.darkTheme : naive.lightTheme,
+            themeOverrides: {
+              Button: {
+                textColorHover: "#409eff",
+                textColorFocus: "#409eff",
+                textColorTextHover: "#409eff",
+                textColorTextFocus: "#409eff"
+              }
+            },
+            style: { marginLeft: "2px", paddingTop: "4px" }
+          },
+          {
+            default: () => vue.h(vue.Fragment, [
+              vue.h(
+                naive.NButton,
+                {
+                  text: true,
+                  focusable: false,
+                  bordered: false,
+                  style: {
+                    marginLeft: "2px"
+                  },
+                  onClick: (e) => {
+                    e.stopPropagation();
+                    this.dmCopy(msg);
+                  }
+                },
+                { default: () => vue.h(naive.NIcon, { component: CopyIcon, size: 16 }) }
+              ),
+              vue.h(
+                naive.NButton,
+                {
+                  text: true,
+                  focusable: false,
+                  bordered: false,
+                  onClick: (e) => {
+                    e.stopPropagation();
+                    this.dmRepeat(msg);
+                  }
+                },
+                { default: () => vue.h(naive.NIcon, { component: PlusIcon, size: 16 }) }
+              )
+            ])
+          }
+        ),
+        btnContainer
+      );
     }
     renderMenu(msg) {
       const dmMenu = dq(".danmaku-menu.p-fixed.ts-dot-4.a-move-in-top.p-relative.z-danmaku-menu");
@@ -893,14 +904,14 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
         try {
           const response = await BILIAPI.sendMsg(msg, roomid);
           const { message, notification } = useDiscreteAPI(["message", "notification"]);
-          if (response.data.code === 0) {
+          if (response.code === 0) {
             this.logger.log(`弹幕 ${msg} 发送成功`, response);
             message.success(`弹幕 ${msg} 发送成功`, { duration: 2500 });
           } else {
             this.logger.error(`弹幕 ${msg} 发送失败`, response);
             notification.error({
               closable: false,
-              content: `弹幕"${msg}"发送失败: ${response.data.message}`,
+              content: `弹幕"${msg}"发送失败: ${response.message}`,
               duration: 3e3
             });
           }
@@ -930,7 +941,6 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
     Setting_AutoCheckUpdate: checkUpdate,
     Setting_SaveSpamerStatus: SaveSpamerStatus,
     Spamer_EmotionSpamer: EmotionSpamer,
-    Spamer_TextGroupSpamer: TextGroupSpamer,
     Spamer_TextSpamer: TextSpamer
   }, Symbol.toStringTag, { value: "Module" }));
   const useModuleStore = pinia$1.defineStore("modules", () => {
@@ -961,7 +971,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
           await loadDefaultModules();
           break;
         } catch (error) {
-          logger.error(`重试次数: ${retryCount + 1}`, error);
+          logger.warn(`重试次数: ${retryCount + 1}`, error);
           errorCount++;
           retryCount++;
           if (retryCount <= maxRetries) {
@@ -989,53 +999,46 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
     );
     return { moduleConfig, loadModules, emitter };
   });
-  const _export_sfc = (sfc, props) => {
-    const target = sfc.__vccOpts || sfc;
-    for (const [key, val] of props) {
-      target[key] = val;
-    }
-    return target;
-  };
-  const _sfc_main$c = {};
-  const _hoisted_1$5 = {
+  const _hoisted_1$6 = {
     xmlns: "http://www.w3.org/2000/svg",
-    "xmlns:xlink": "http://www.w3.org/1999/xlink",
-    width: "20px",
-    height: "20px",
-    viewBox: "0 0 20 20",
-    version: "1.1"
+    width: "24",
+    height: "24",
+    fill: "none",
+    viewBox: "0 0 32 32"
   };
-  function _sfc_render$5(_ctx, _cache) {
-    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$5, [..._cache[0] || (_cache[0] = [
-      vue.createStaticVNode('<g id="surface1"><path style="stroke:none;fill-rule:nonzero;fill:rgb(83.921569%, 54.509804%, 32.156863%);fill-opacity:1;" d="M 10 2.1875 C 14.308594 2.1875 17.8125 5.691406 17.8125 10 C 17.8125 14.308594 14.308594 17.8125 10 17.8125 C 5.691406 17.8125 2.1875 14.308594 2.1875 10 C 2.1875 5.691406 5.691406 2.1875 10 2.1875 M 10 0.625 C 4.820312 0.625 0.625 4.820312 0.625 10 C 0.625 15.179688 4.820312 19.375 10 19.375 C 15.179688 19.375 19.375 15.179688 19.375 10 C 19.375 4.820312 15.179688 0.625 10 0.625 Z M 10 0.625 "></path><path style="stroke:none;fill-rule:nonzero;fill:rgb(47.058824%, 30.196078%, 18.823529%);fill-opacity:1;" d="M 10 2.191406 C 14.304688 2.191406 17.808594 5.695312 17.808594 10 C 17.808594 14.304688 14.304688 17.808594 10 17.808594 C 5.695312 17.808594 2.191406 14.304688 2.191406 10 C 2.191406 5.695312 5.695312 2.191406 10 2.191406 M 10 1.726562 C 5.429688 1.726562 1.726562 5.429688 1.726562 10 C 1.726562 14.570312 5.429688 18.273438 10 18.273438 C 14.570312 18.273438 18.273438 14.570312 18.273438 10 C 18.273438 5.429688 14.570312 1.726562 10 1.726562 Z M 10 1.726562 "></path><path style="stroke:none;fill-rule:nonzero;fill:rgb(65.098039%, 37.254902%, 24.313725%);fill-opacity:1;" d="M 17.371094 12.109375 L 11.535156 10.210938 L 17.527344 8.265625 C 17.769531 8.179688 17.898438 7.917969 17.820312 7.675781 C 17.742188 7.433594 17.484375 7.300781 17.238281 7.371094 L 11.246094 9.320312 L 14.992188 4.160156 C 15.144531 3.953125 15.101562 3.65625 14.890625 3.507812 C 14.679688 3.355469 14.386719 3.398438 14.234375 3.609375 L 10.488281 8.769531 L 10.488281 2.320312 C 10.488281 2.058594 10.277344 1.851562 10.019531 1.851562 C 9.757812 1.851562 9.550781 2.058594 9.550781 2.320312 L 9.550781 8.769531 L 5.789062 3.589844 C 5.714844 3.488281 5.605469 3.421875 5.480469 3.402344 C 5.359375 3.382812 5.234375 3.414062 5.132812 3.488281 C 5.03125 3.558594 4.964844 3.671875 4.945312 3.792969 C 4.925781 3.917969 4.957031 4.042969 5.03125 4.140625 L 8.792969 9.320312 L 2.761719 7.359375 C 2.515625 7.289062 2.257812 7.421875 2.179688 7.664062 C 2.101562 7.90625 2.230469 8.167969 2.472656 8.253906 L 8.5 10.210938 L 2.617188 12.125 C 2.371094 12.203125 2.234375 12.46875 2.3125 12.714844 C 2.351562 12.832031 2.4375 12.929688 2.546875 12.988281 C 2.65625 13.042969 2.785156 13.054688 2.90625 13.015625 L 8.789062 11.101562 L 5.210938 16.027344 C 5.0625 16.234375 5.105469 16.53125 5.316406 16.679688 C 5.398438 16.742188 5.496094 16.769531 5.589844 16.769531 C 5.734375 16.769531 5.878906 16.703125 5.96875 16.578125 L 9.546875 11.648438 L 9.546875 17.648438 C 9.546875 17.90625 9.757812 18.117188 10.015625 18.117188 C 10.277344 18.117188 10.484375 17.90625 10.484375 17.648438 L 10.484375 11.648438 L 14.074219 16.585938 C 14.164062 16.710938 14.308594 16.78125 14.453125 16.78125 C 14.628906 16.78125 14.789062 16.679688 14.871094 16.523438 C 14.949219 16.367188 14.933594 16.179688 14.832031 16.035156 L 11.242188 11.097656 L 17.078125 12.996094 C 17.128906 13.011719 17.175781 13.019531 17.226562 13.019531 C 17.421875 13.019531 17.605469 12.890625 17.671875 12.695312 C 17.75 12.453125 17.617188 12.1875 17.371094 12.109375 Z M 10 11.511719 C 9.296875 11.511719 8.726562 10.941406 8.726562 10.238281 C 8.726562 9.53125 9.296875 8.960938 10 8.960938 C 10.703125 8.960938 11.273438 9.535156 11.273438 10.238281 C 11.273438 10.941406 10.703125 11.511719 10 11.511719 Z M 10 11.511719 "></path><path style="stroke:none;fill-rule:nonzero;fill:rgb(83.921569%, 54.509804%, 32.156863%);fill-opacity:1;" d="M 10 8.597656 C 9.09375 8.597656 8.363281 9.332031 8.363281 10.234375 C 8.363281 11.140625 9.09375 11.875 10 11.875 C 10.90625 11.875 11.636719 11.140625 11.636719 10.238281 C 11.636719 9.332031 10.90625 8.597656 10 8.597656 Z M 10 10.703125 C 9.742188 10.703125 9.535156 10.492188 9.535156 10.238281 C 9.535156 9.980469 9.742188 9.773438 10 9.773438 C 10.257812 9.773438 10.464844 9.980469 10.464844 10.238281 C 10.464844 10.492188 10.257812 10.703125 10 10.703125 Z M 10 10.703125 "></path><path style="stroke:none;fill-rule:nonzero;fill:rgb(47.058824%, 30.196078%, 18.823529%);fill-opacity:1;" d="M 10 9.773438 C 10.257812 9.773438 10.464844 9.980469 10.464844 10.234375 C 10.464844 10.492188 10.257812 10.699219 10 10.699219 C 9.742188 10.699219 9.535156 10.492188 9.535156 10.234375 C 9.535156 9.980469 9.742188 9.773438 10 9.773438 M 10 9.460938 C 9.570312 9.460938 9.222656 9.808594 9.222656 10.234375 C 9.222656 10.664062 9.570312 11.011719 10 11.011719 C 10.429688 11.011719 10.777344 10.664062 10.777344 10.234375 C 10.777344 9.808594 10.429688 9.460938 10 9.460938 Z M 10 9.460938 "></path></g>', 1)
+  function render$4(_ctx, _cache) {
+    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$6, [..._cache[0] || (_cache[0] = [
+      vue.createStaticVNode('<path fill="#F3AD61" d="m4.891 11.302 9.541 3.474L8.61 6.46a.606.606 0 0 1 .99-.696l5.825 8.319V3.927c0-.334.272-.606.605-.606.334 0 .606.272.606.606v10.412l6.693-7.976a.605.605 0 1 1 .927.779l-6.527 7.778 9.806-2.63a.604.604 0 1 1 .31 1.17l-9.81 2.627 9.548 3.476a.605.605 0 1 1-.417 1.138l-9.538-3.474 5.823 8.318a.606.606 0 1 1-.994.692l-5.82-8.315v10.152a.605.605 0 1 1-1.212 0V17.668L8.732 25.64a.6.6 0 0 1-.85.073.605.605 0 0 1-.074-.852l6.526-7.777-9.811 2.625a.605.605 0 1 1-.31-1.167l9.808-2.627-9.543-3.476a.605.605 0 1 1 .413-1.138"></path><path fill="#A56953" d="M16.002 2C8.27 2 2 8.27 2 16.002c0 7.731 6.27 14.001 14.002 14.001 7.731 0 13.998-6.27 13.998-14.001C30 8.27 23.733 2 16.002 2m0 24.753c-6.222 0-10.769-4.533-10.769-10.755C5.233 9.777 9.78 5.22 16.002 5.22s10.765 4.557 10.765 10.778c-.003 6.226-4.543 10.755-10.765 10.755"></path><path fill="#6D4534" d="M16.002 5.737a10.24 10.24 0 0 1 9.456 6.267c.535 1.266.804 2.61.804 3.994s-.272 2.731-.804 3.994a10.2 10.2 0 0 1-2.2 3.264 10.23 10.23 0 0 1-7.256 3.003 10.228 10.228 0 0 1-7.257-3.003 10.23 10.23 0 0 1-3.004-7.258 10.228 10.228 0 0 1 3.004-7.257 10.23 10.23 0 0 1 7.257-3.004m0-1.003C9.78 4.734 4.734 9.78 4.734 16.001c0 6.222 5.046 11.268 11.268 11.268 6.221 0 11.267-5.046 11.267-11.268-.003-6.221-5.046-11.267-11.267-11.267"></path><path fill="#A56953" d="M16.002 19.377a3.375 3.375 0 1 0 0-6.75 3.375 3.375 0 0 0 0 6.75"></path><path fill="#F3C07B" d="M16.002 17.576a1.574 1.574 0 1 0 0-3.148 1.574 1.574 0 0 0 0 3.148"></path>', 5)
     ])]);
   }
-  const MainIcon = _export_sfc(_sfc_main$c, [["render", _sfc_render$5]]);
-  const _sfc_main$b = {};
+  const AppIcon = { render: render$4 };
+  const _hoisted_1$5 = {
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 36 36"
+  };
+  function render$3(_ctx, _cache) {
+    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$5, [..._cache[0] || (_cache[0] = [
+      vue.createElementVNode("path", {
+        fill: "#E1E8ED",
+        d: "m32.415 9.586-9-9a2.001 2.001 0 0 0-2.829 2.829l-3.859 3.859 9 9 3.859-3.859a2 2 0 0 0 2.829-2.829"
+      }, null, -1),
+      vue.createElementVNode("path", {
+        fill: "#CCD6DD",
+        d: "M22 0H7a4 4 0 0 0-4 4v28a4 4 0 0 0 4 4h22a4 4 0 0 0 4-4V11h-9c-1 0-2-1-2-2z"
+      }, null, -1),
+      vue.createElementVNode("path", {
+        fill: "#99AAB5",
+        d: "M22 0h-2v9a4 4 0 0 0 4 4h9v-2h-9c-1 0-2-1-2-2zm-5 8a1 1 0 0 1-1 1H8a1 1 0 0 1 0-2h8a1 1 0 0 1 1 1m0 4a1 1 0 0 1-1 1H8a1 1 0 0 1 0-2h8a1 1 0 0 1 1 1m12 4a1 1 0 0 1-1 1H8a1 1 0 0 1 0-2h20a1 1 0 0 1 1 1m0 4a1 1 0 0 1-1 1H8a1 1 0 1 1 0-2h20a1 1 0 0 1 1 1m0 4a1 1 0 0 1-1 1H8a1 1 0 1 1 0-2h20a1 1 0 0 1 1 1m0 4a1 1 0 0 1-1 1H8a1 1 0 1 1 0-2h20a1 1 0 0 1 1 1"
+      }, null, -1)
+    ])]);
+  }
+  const TextIcon = { render: render$3 };
   const _hoisted_1$4 = {
     xmlns: "http://www.w3.org/2000/svg",
     viewBox: "0 0 36 36"
   };
-  function _sfc_render$4(_ctx, _cache) {
+  function render$2(_ctx, _cache) {
     return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$4, [..._cache[0] || (_cache[0] = [
-      vue.createElementVNode("path", {
-        fill: "#3B88C3",
-        d: "M36 32a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4h28a4 4 0 0 1 4 4v28z"
-      }, null, -1),
-      vue.createElementVNode("path", {
-        fill: "#FFF",
-        d: "M12.821 22.328c0 .703 0 1.785-1.311 1.785-.798 0-1.121-.436-1.311-1.158-.703.836-1.558 1.273-2.603 1.273-2.565 0-4.521-2.186-4.521-5.263 0-3.001 2.014-5.3 4.521-5.3 1.007 0 1.995.399 2.603 1.254.076-.665.646-1.14 1.311-1.14 1.311 0 1.311 1.083 1.311 1.786v6.763zm-4.844-.607c1.425 0 2.109-1.444 2.109-2.755s-.665-2.792-2.109-2.792c-1.501 0-2.166 1.482-2.166 2.792.001 1.31.684 2.755 2.166 2.755zm6.403-10.829c0-.912.57-1.52 1.368-1.52.798 0 1.368.608 1.368 1.52v3.723a3.96 3.96 0 0 1 2.603-.95c2.944 0 4.407 2.754 4.407 5.415 0 2.584-1.747 5.148-4.503 5.148-.93 0-1.994-.418-2.507-1.254-.171.722-.608 1.139-1.368 1.139-.798 0-1.368-.607-1.368-1.52V10.892zm4.883 10.829c1.425 0 2.128-1.482 2.128-2.755 0-1.292-.703-2.792-2.128-2.792-1.463 0-2.146 1.368-2.146 2.697-.001 1.33.645 2.85 2.146 2.85zm12.824-5.016c-.684 0-1.292-.532-2.165-.532-1.559 0-2.299 1.387-2.299 2.792 0 1.349.817 2.755 2.299 2.755.684 0 1.709-.57 2.032-.57.647 0 1.178.551 1.178 1.197 0 1.405-2.355 1.881-3.344 1.881-2.944 0-4.901-2.413-4.901-5.263 0-2.773 2.015-5.3 4.901-5.3 1.083 0 3.344.399 3.344 1.729 0 .57-.399 1.311-1.045 1.311z"
-      }, null, -1)
-    ])]);
-  }
-  const TextIcon = _export_sfc(_sfc_main$b, [["render", _sfc_render$4]]);
-  const _sfc_main$a = {};
-  const _hoisted_1$3 = {
-    xmlns: "http://www.w3.org/2000/svg",
-    viewBox: "0 0 36 36"
-  };
-  function _sfc_render$3(_ctx, _cache) {
-    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$3, [..._cache[0] || (_cache[0] = [
       vue.createElementVNode("circle", {
         cx: "18",
         cy: "18",
@@ -1043,57 +1046,46 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
         fill: "#FFCC4D"
       }, null, -1),
       vue.createElementVNode("path", {
-        fill: "#664500",
-        d: "M16 16.958c-.419 0-.809-.265-.949-.684-.203-.599-1.018-2.316-2.051-2.316-1.062 0-1.888 1.827-2.051 2.316a1 1 0 1 1-1.897-.633c.125-.377 1.304-3.684 3.949-3.684s3.823 3.307 3.949 3.684a1 1 0 0 1-.95 1.317zm10 0a.999.999 0 0 1-.948-.684c-.203-.599-1.019-2.316-2.052-2.316-1.062 0-1.889 1.827-2.052 2.316a1 1 0 0 1-1.897-.633c.125-.377 1.304-3.684 3.948-3.684s3.823 3.307 3.948 3.684A1 1 0 0 1 26 16.958zm1.335 3.733a.501.501 0 0 0-.635-.029c-.039.029-3.922 2.9-8.7 2.9-4.766 0-8.662-2.871-8.7-2.9a.5.5 0 0 0-.729.657c.129.215 3.217 5.243 9.429 5.243s9.301-5.028 9.429-5.243a.499.499 0 0 0-.094-.628z"
+        fill: "#65471B",
+        d: "M6.001 11a1 1 0 0 1-.004-2c.156-.002 3.569-.086 6.205-3.6a1 1 0 0 1 1.6 1.2C10.539 10.95 6.185 11 6.001 11m24.986 2.393a1 1 0 0 1-1.945.468c-.038-.151-.911-3.452-4.941-5.201a1 1 0 0 1 .796-1.834c4.989 2.165 6.047 6.388 6.09 6.567"
       }, null, -1),
+      vue.createElementVNode("path", {
+        fill: "#664500",
+        d: "M23.186 29.526c-.993 0-1.952-.455-2.788-1.339-2.816-2.985-3.569-2.333-4.817-1.251-.781.679-1.754 1.523-3.205 1.523-2.351 0-3.969-2.302-4.036-2.4a1 1 0 0 1 1.644-1.14c.301.429 1.317 1.54 2.393 1.54.704 0 1.256-.479 1.895-1.033 1.816-1.578 3.764-2.655 7.583 1.388.823.873 1.452.774 1.908.592 1.659-.665 3.205-3.698 3.197-5.15a1 1 0 0 1 .994-1.005h.006a1 1 0 0 1 1 .995c.012 2.103-1.854 5.976-4.454 7.017a3.6 3.6 0 0 1-1.32.263"
+      }, null, -1),
+      vue.createElementVNode("path", {
+        fill: "#65471B",
+        d: "M14.815 15.375c-.584 2.114-1.642 3.083-3.152 2.666-1.509-.417-2.343-1.909-1.76-4.023.583-2.112 2.175-3.363 3.684-2.946 1.511.417 1.812 2.19 1.228 4.303m11.416-.755c.473 2.141-.675 4.838-2.204 5.176s-3.28-1.719-3.753-3.86.419-3.971 1.948-4.309 3.536.853 4.009 2.993"
+      }, null, -1)
+    ])]);
+  }
+  const EmotionIcon = { render: render$2 };
+  const _hoisted_1$3 = {
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 36 36"
+  };
+  function render$1(_ctx, _cache) {
+    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$3, [..._cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
         fill: "#FFAC33",
-        d: "M21.229 3.947c0 .24.03.472.082.696.425 2.643 3.364 5.431 5.47 6.197 1.665-.605 3.846-2.476 4.898-4.539A18.027 18.027 0 0 0 23.75.939a3.059 3.059 0 0 0-2.521 3.008zm-7.486 25.131c.057-.242.09-.494.09-.754a3.319 3.319 0 0 0-3.319-3.319 3.312 3.312 0 0 0-2.697 1.389 3.314 3.314 0 0 0-2.697-1.389 3.304 3.304 0 0 0-2.88 1.698 18.071 18.071 0 0 0 8.068 7.574c1.637-1.351 3.131-3.307 3.435-5.199zm20.558-3.436a2.29 2.29 0 0 0-4.062-.685 2.299 2.299 0 0 0-4.105 1.859c.307 1.905 2.348 3.896 3.909 4.561a18.045 18.045 0 0 0 4.258-5.735z"
-      }, null, -1),
-      vue.createElementVNode("path", {
-        fill: "#DD2E44",
-        d: "M33.625 3.269A3.063 3.063 0 0 0 30.562.206a3.057 3.057 0 0 0-2.489 1.282 3.063 3.063 0 0 0-5.47 2.477c.426 2.643 3.364 5.431 5.47 6.197 2.106-.766 5.044-3.554 5.469-6.196.053-.225.083-.457.083-.697zM12.208 28.408a3.319 3.319 0 0 0-3.319-3.319 3.312 3.312 0 0 0-2.697 1.389 3.311 3.311 0 0 0-2.697-1.389 3.319 3.319 0 0 0-3.23 4.073c.461 2.863 3.644 5.884 5.926 6.714 2.282-.829 5.465-3.85 5.926-6.713.058-.244.091-.496.091-.755zm23.74-2.281a2.299 2.299 0 0 0-4.167-1.337 2.299 2.299 0 0 0-4.105 1.859c.319 1.983 2.524 4.076 4.105 4.65 1.58-.574 3.786-2.667 4.104-4.65.04-.168.063-.342.063-.522z"
+        d: "M27.287 34.627c-.404 0-.806-.124-1.152-.371L18 28.422l-8.135 5.834a1.97 1.97 0 0 1-2.312-.008 1.97 1.97 0 0 1-.721-2.194l3.034-9.792-8.062-5.681a1.98 1.98 0 0 1-.708-2.203 1.98 1.98 0 0 1 1.866-1.363L12.947 13l3.179-9.549a1.976 1.976 0 0 1 3.749 0L23 13l10.036.015a1.975 1.975 0 0 1 1.159 3.566l-8.062 5.681 3.034 9.792a1.97 1.97 0 0 1-.72 2.194 1.96 1.96 0 0 1-1.16.379"
       }, null, -1)
     ])]);
   }
-  const EmotionIcon = _export_sfc(_sfc_main$a, [["render", _sfc_render$3]]);
-  const _sfc_main$9 = {};
+  const FavoritesIcon = { render: render$1 };
   const _hoisted_1$2 = {
     xmlns: "http://www.w3.org/2000/svg",
-    "xml:space": "preserve",
-    viewBox: "0 0 128 128"
+    viewBox: "0 0 36 36"
   };
-  function _sfc_render$2(_ctx, _cache) {
+  function render(_ctx, _cache) {
     return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$2, [..._cache[0] || (_cache[0] = [
-      vue.createStaticVNode('<path d="M88.24 9.65v-2.3c0-1.85 1.5-3.35 3.35-3.35h22.62c1.85 0 3.35 1.5 3.35 3.35v8.26c1.2 0 2.17.97 2.17 2.17V92.1H8.26V18.81c0-1.77 1.43-3.2 3.2-3.2h70.81c3.3 0 5.97-2.67 5.97-5.96" style="fill:#f3ab47;"></path><path d="M8.26 34.42v-4.43c0-1.62 1.31-2.94 2.94-2.94h105.6c1.62 0 2.94 1.31 2.94 2.94v4.43z" style="fill:#de7340;"></path><path d="M78.66 24.78v-2.3c0-1.85-1.5-3.35-3.35-3.35H52.69a3.35 3.35 0 0 0-3.35 3.35v2.3c0 3.29-2.67 5.96-5.96 5.96H11.46c-1.77 0-3.2 1.43-3.2 3.2v75.94h111.47V33.94c0-1.77-1.43-3.2-3.2-3.2H84.62c-3.29 0-5.96-2.67-5.96-5.96" style="fill:#ffca28;"></path><path d="M8.26 49.66v-4.54c0-1.62 1.31-2.94 2.94-2.94h105.6c1.62 0 2.94 1.31 2.94 2.94v4.43z" style="fill:#f3ab47;"></path><path d="M39.76 39.9v-2.3c0-1.85-1.5-3.35-3.35-3.35H13.79a3.35 3.35 0 0 0-3.35 3.35v8.26c-1.2 0-2.17.97-2.17 2.17v73.13c0 1.56 1.27 2.83 2.83 2.83h105.81c1.56 0 2.83-1.27 2.83-2.83v-72.1c0-1.77-1.43-3.2-3.2-3.2H45.72c-3.29 0-5.96-2.67-5.96-5.96" style="fill:#ffe36c;"></path><path d="M39.76 39.9v-2.3c0-1.85-1.5-3.35-3.35-3.35H13.79a3.35 3.35 0 0 0-3.35 3.35v8.26h35.29c-3.3 0-5.97-2.67-5.97-5.96" style="fill:#f44336;"></path><path d="M78.66 24.78v-2.3c0-1.85-1.5-3.35-3.35-3.35H52.69a3.35 3.35 0 0 0-3.35 3.35v2.3c0 3.29-2.67 5.96-5.96 5.96h41.25c-3.3 0-5.97-2.67-5.97-5.96" style="fill:#0288d1;"></path><path d="M117.56 15.07V7.35c0-1.85-1.5-3.35-3.35-3.35H91.59a3.35 3.35 0 0 0-3.35 3.35v2.3c0 2.41-1.44 4.49-3.5 5.42z" style="fill:#7cb342;"></path>', 8)
-    ])]);
-  }
-  const TextGroupIcon = _export_sfc(_sfc_main$9, [["render", _sfc_render$2]]);
-  const _sfc_main$8 = {};
-  const _hoisted_1$1 = {
-    width: "32",
-    height: "32",
-    viewBox: "0 0 32 32",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg"
-  };
-  function _sfc_render$1(_ctx, _cache) {
-    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$1, [..._cache[0] || (_cache[0] = [
       vue.createElementVNode("path", {
-        d: "M12.8472 3.83391C12.9336 2.79732 13.8001 2 14.8403 2H17.1597C18.1999 2 19.0664 2.79732 19.1528 3.83391L19.3882 6.6587C19.422 7.06373 19.8992 7.2614 20.2095 6.99887L22.3734 5.16789C23.1674 4.49599 24.3439 4.54493 25.0795 5.28045L26.7196 6.92056C27.4551 7.65608 27.504 8.8326 26.8321 9.62666L25.0012 11.7905C24.7386 12.1008 24.9363 12.578 25.3413 12.6118L28.1661 12.8472C29.2027 12.9336 30 13.8001 30 14.8403V17.1597C30 18.1999 29.2027 19.0664 28.1661 19.1528L25.3413 19.3882C24.9363 19.422 24.7386 19.8992 25.0012 20.2095L26.8321 22.3733C27.504 23.1674 27.4551 24.3439 26.7196 25.0794L25.0795 26.7196C24.3439 27.4551 23.1674 27.504 22.3734 26.8321L20.2095 25.0011C19.8992 24.7386 19.422 24.9363 19.3882 25.3413L19.1528 28.1661C19.0664 29.2027 18.1999 30 17.1597 30H14.8403C13.8001 30 12.9336 29.2027 12.8472 28.1661L12.6118 25.3413C12.578 24.9363 12.1008 24.7386 11.7905 25.0012L9.62666 26.8321C8.8326 27.504 7.65608 27.4551 6.92056 26.7196L5.28045 25.0795C4.54493 24.3439 4.496 23.1674 5.16789 22.3734L6.99888 20.2095C7.26141 19.8992 7.06373 19.422 6.65871 19.3882L3.83391 19.1528C2.79732 19.0664 2 18.1999 2 17.1597V14.8403C2 13.8001 2.79732 12.9336 3.83391 12.8472L6.65871 12.6118C7.06373 12.578 7.2614 12.1008 6.99888 11.7905L5.16789 9.62664C4.496 8.83258 4.54493 7.65606 5.28045 6.92054L6.92056 5.28043C7.65608 4.54491 8.8326 4.49597 9.62666 5.16787L11.7905 6.99884C12.1008 7.26137 12.578 7.06369 12.6118 6.65867L12.8472 3.83391ZM21 16C21 13.2386 18.7614 11 16 11C13.2386 11 11 13.2386 11 16C11 18.7614 13.2386 21 16 21C18.7614 21 21 18.7614 21 16Z",
-        fill: "#B4ACBC"
-      }, null, -1),
-      vue.createElementVNode("path", {
-        d: "M24 16C24 20.4183 20.4183 24 16 24C11.5817 24 8 20.4183 8 16C8 11.5817 11.5817 8 16 8C20.4183 8 24 11.5817 24 16ZM20.5 16C20.5 13.5147 18.4853 11.5 16 11.5C13.5147 11.5 11.5 13.5147 11.5 16C11.5 18.4853 13.5147 20.5 16 20.5C18.4853 20.5 20.5 18.4853 20.5 16Z",
-        fill: "#998EA4"
-      }, null, -1),
-      vue.createElementVNode("path", {
-        d: "M10.5 16C10.5 12.9624 12.9624 10.5 16 10.5C19.0376 10.5 21.5 12.9624 21.5 16C21.5 19.0376 19.0376 21.5 16 21.5C12.9624 21.5 10.5 19.0376 10.5 16ZM21 16C21 13.2386 18.7614 11 16 11C13.2386 11 11 13.2386 11 16C11 18.7614 13.2386 21 16 21C18.7614 21 21 18.7614 21 16Z",
-        fill: "#CDC4D6"
+        fill: "#66757F",
+        d: "M34 15h-3.362a12.9 12.9 0 0 0-1.582-3.814l2.379-2.379a2 2 0 0 0 0-2.829l-1.414-1.414a2 2 0 0 0-2.828 0l-2.379 2.379A13 13 0 0 0 21 5.362V2a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v3.362a12.9 12.9 0 0 0-3.814 1.582L8.808 4.565a2 2 0 0 0-2.828 0L4.565 5.979a2 2 0 0 0-.001 2.829l2.379 2.379A12.9 12.9 0 0 0 5.362 15H2a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h3.362a12.9 12.9 0 0 0 1.582 3.813l-2.379 2.379c-.78.78-.78 2.048.001 2.829l1.414 1.414c.78.78 2.047.78 2.828 0l2.379-2.379a12.9 12.9 0 0 0 3.814 1.582V34a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-3.362a12.9 12.9 0 0 0 3.813-1.582l2.379 2.379a2 2 0 0 0 2.828 0l1.414-1.414a2 2 0 0 0 0-2.829l-2.379-2.379a12.9 12.9 0 0 0 1.582-3.814H34a2 2 0 0 0 2-2v-2A2 2 0 0 0 34 15M18 26a8 8 0 1 1 0-16 8 8 0 0 1 0 16"
       }, null, -1)
     ])]);
   }
-  const SettingIcon = _export_sfc(_sfc_main$8, [["render", _sfc_render$1]]);
+  const SettingIcon = { render };
   const _sfc_main$7 = vue.defineComponent({
     __name: "PanelMenu",
     setup(__props) {
@@ -1108,14 +1100,14 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
           icon: renderIcon(TextIcon)
         },
         {
-          label: "文字池",
-          key: "TextGroupView",
-          icon: renderIcon(TextGroupIcon)
-        },
-        {
           label: "表情",
           key: "EmotionView",
           icon: renderIcon(EmotionIcon)
+        },
+        {
+          label: "收藏夹",
+          key: "FavoritesView",
+          icon: renderIcon(FavoritesIcon)
         },
         {
           label: "全局设置",
@@ -1137,6 +1129,8 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
       };
     }
   });
+  const _hoisted_1$1 = { style: { "display": "grid", "grid-template-columns": "repeat(auto-fill, minmax(32px, 1fr))", "gap": "8px", "padding": "8px" } };
+  const _hoisted_2$1 = ["disabled"];
   const _sfc_main$6 = vue.defineComponent({
     __name: "TextView",
     setup(__props) {
@@ -1159,7 +1153,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
         }
       };
       const handleStopSpamer = () => {
-        tStop.stop();
+        tStop.stop("text");
       };
       const rules = {
         timeinterval: {
@@ -1225,7 +1219,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
                               "show-button": false,
                               value: vue.unref(moduleStore).moduleConfig.TextSpam.timeinterval,
                               "onUpdate:value": _cache[0] || (_cache[0] = ($event) => vue.unref(moduleStore).moduleConfig.TextSpam.timeinterval = $event),
-                              placeholder: "默认3，单位为秒",
+                              placeholder: "默认5，单位为秒",
                               min: "1",
                               precision: 0
                             }, {
@@ -1236,7 +1230,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
                             }, 8, ["value"])
                           ]),
                           default: vue.withCtx(() => [
-                            _cache[7] || (_cache[7] = vue.createElementVNode("span", null, "弹幕发送时间间隔，默认为3秒，也是b站最快的发弹幕频率，当然这里可以设置小于该值", -1))
+                            _cache[7] || (_cache[7] = vue.createElementVNode("span", null, "弹幕发送时间间隔，默认为5秒，也是b站最快的发弹幕频率，当然这里可以设置小于该值", -1))
                           ]),
                           _: 1
                         })
@@ -1324,7 +1318,49 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
                   value: vue.unref(moduleStore).moduleConfig.TextSpam.msg,
                   "onUpdate:value": _cache[3] || (_cache[3] = ($event) => vue.unref(moduleStore).moduleConfig.TextSpam.msg = $event),
                   placeholder: "车了可能会被禁，但不车就等于一直被禁"
-                }, null, 8, ["value"])
+                }, null, 8, ["value"]),
+                vue.createVNode(vue.unref(naive.NPopover), {
+                  trigger: "click",
+                  placement: "left",
+                  style: { "width": "500px" }
+                }, {
+                  trigger: vue.withCtx(() => [
+                    vue.createVNode(vue.unref(naive.NButton), {
+                      text: "",
+                      style: { "padding-left": "4px" }
+                    }, {
+                      default: vue.withCtx(() => [
+                        vue.createVNode(vue.unref(naive.NIcon), { size: 24 }, {
+                          default: vue.withCtx(() => [
+                            vue.createVNode(vue.unref(EmotionIcon))
+                          ]),
+                          _: 1
+                        })
+                      ]),
+                      _: 1
+                    })
+                  ]),
+                  default: vue.withCtx(() => [
+                    vue.createElementVNode("div", _hoisted_1$1, [
+                      (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(vue.unref(biliStore).emotionData.find((data) => data.pkg_id === 100)?.emoticons, (data) => {
+                        return vue.openBlock(), vue.createElementBlock("div", {
+                          key: data.emoticon_id,
+                          disabled: data.perm === 0
+                        }, [
+                          vue.createVNode(vue.unref(naive.NAvatar), {
+                            color: vue.unref(uiStore).uiConfig.theme === "dark" ? "#48484E" : "white",
+                            size: 24,
+                            src: data.url,
+                            "object-fit": "contain",
+                            style: { "cursor": "pointer" },
+                            onClick: ($event) => vue.unref(moduleStore).moduleConfig.TextSpam.msg += data.emoji
+                          }, null, 8, ["color", "src", "onClick"])
+                        ], 8, _hoisted_2$1);
+                      }), 128))
+                    ])
+                  ]),
+                  _: 1
+                })
               ]),
               _: 1
             }),
@@ -1545,7 +1581,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
                                 "show-button": false,
                                 value: vue.unref(moduleStore).moduleConfig.EmotionSpam.timeinterval,
                                 "onUpdate:value": _cache[1] || (_cache[1] = ($event) => vue.unref(moduleStore).moduleConfig.EmotionSpam.timeinterval = $event),
-                                placeholder: "默认3，单位为秒",
+                                placeholder: "默认5，单位为秒",
                                 min: "1",
                                 precision: 0
                               }, {
@@ -1556,7 +1592,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
                               }, 8, ["value"])
                             ]),
                             default: vue.withCtx(() => [
-                              _cache[7] || (_cache[7] = vue.createElementVNode("span", null, "弹幕发送时间间隔，默认为3秒，也是b站最快的发弹幕频率，当然这里可以设置小于该值", -1))
+                              _cache[7] || (_cache[7] = vue.createElementVNode("span", null, "弹幕发送时间间隔，默认为5秒，也是b站最快的发弹幕频率，当然这里可以设置小于该值", -1))
                             ]),
                             _: 1
                           })
@@ -1674,54 +1710,52 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
     }
   });
   const _sfc_main$4 = vue.defineComponent({
-    __name: "TextGroupView",
+    __name: "FavoritesView",
     setup(__props) {
       const moduleStore = useModuleStore();
       const uiStore = useUIStore();
       const message = naive.useMessage();
       const dialog = naive.useDialog();
-      const tgStop = new TextGroupSpamer("StopTextGroupSpamer");
+      const favStop = new TextSpamer("StopFavoritesSpamer");
       const rules = {
         timeinterval: {
           required: true,
           message: "最小为1",
           trigger: ["input", "blur"],
           validator: () => {
-            return moduleStore.moduleConfig.TextGroupSpam.timeinterval !== null;
+            return moduleStore.moduleConfig.Favorites.timeinterval !== null;
           }
         }
       };
       const handleTabsValueUpdate = (value) => {
-        moduleStore.moduleConfig.TextGroupSpam.textGroupTabsValue = value;
+        moduleStore.moduleConfig.Favorites.favoritesTabsValue = value;
       };
       const closeDisable = vue.computed(() => {
-        return moduleStore.moduleConfig.TextGroupSpam.textGroupTabPanels.length > 1;
+        return moduleStore.moduleConfig.Favorites.favoritesTabPanels.length > 1;
       });
       const handleTabsAdd = () => {
-        if (moduleStore.moduleConfig.TextGroupSpam.enable) {
+        if (moduleStore.moduleConfig.Favorites.enable) {
           message.error("停车后才能添加");
         } else {
           const newKey = Math.max(
-            ...moduleStore.moduleConfig.TextGroupSpam.textGroupTabPanels.map(
-              (panels) => panels.key
-            )
+            ...moduleStore.moduleConfig.Favorites.favoritesTabPanels.map((panels) => panels.key)
           ) + 1;
           const newName = Math.max(
-            ...moduleStore.moduleConfig.TextGroupSpam.textGroupTabPanels.map(
+            ...moduleStore.moduleConfig.Favorites.favoritesTabPanels.map(
               (panels) => panels.name
             )
           ) + 1;
-          moduleStore.moduleConfig.TextGroupSpam.textGroupTabPanels.push({
+          moduleStore.moduleConfig.Favorites.favoritesTabPanels.push({
             key: newKey,
             name: newName,
             tab: "",
             msg: ""
           });
-          moduleStore.moduleConfig.TextGroupSpam.textGroupTabsValue = newName;
+          moduleStore.moduleConfig.Favorites.favoritesTabsValue = newName;
         }
       };
       const handleTabsClose = (name) => {
-        if (moduleStore.moduleConfig.TextGroupSpam.enable) {
+        if (moduleStore.moduleConfig.Favorites.enable) {
           message.error("停车后才能删除");
         } else {
           dialog.warning({
@@ -1730,15 +1764,15 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
             positiveText: "确定",
             negativeText: "再想想",
             onPositiveClick: () => {
-              _.remove(moduleStore.moduleConfig.TextGroupSpam.textGroupTabPanels, { name });
-              moduleStore.moduleConfig.TextGroupSpam.textGroupTabsValue = name - 1;
+              _.remove(moduleStore.moduleConfig.Favorites.favoritesTabPanels, { name });
+              moduleStore.moduleConfig.Favorites.favoritesTabsValue = name - 1;
             }
           });
         }
       };
       const handleStartSpamer = () => {
         const panelsWithEmptyMsg = _.filter(
-          moduleStore.moduleConfig.TextGroupSpam.textGroupTabPanels,
+          moduleStore.moduleConfig.Favorites.favoritesTabPanels,
           (panels) => _.isEmpty(panels.msg)
         );
         if (!_.isEmpty(panelsWithEmptyMsg)) {
@@ -1746,23 +1780,23 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
             message.error(`${panels.tab}还没填内容呢`);
           });
         } else {
-          if (moduleStore.moduleConfig.TextGroupSpam.timeinterval === null) {
+          if (moduleStore.moduleConfig.Favorites.timeinterval === null) {
             message.error("没参数你车什么?");
           } else {
             uiStore.uiConfig.isShowPanel = false;
-            moduleStore.moduleConfig.TextGroupSpam.enable = true;
-            moduleStore.emitter.emit("TextGroupSpam", {
-              module: "TextGroupSpam"
+            moduleStore.moduleConfig.Favorites.enable = true;
+            moduleStore.emitter.emit("Favorites", {
+              module: "Favorites"
             });
           }
         }
       };
       const handleStopSpamer = () => {
-        tgStop.stop();
+        favStop.stop("favorites");
       };
       const handleSendToText = () => {
-        const currentTabValue = moduleStore.moduleConfig.TextGroupSpam.textGroupTabsValue;
-        const currentPanel = moduleStore.moduleConfig.TextGroupSpam.textGroupTabPanels.find(
+        const currentTabValue = moduleStore.moduleConfig.Favorites.favoritesTabsValue;
+        const currentPanel = moduleStore.moduleConfig.Favorites.favoritesTabPanels.find(
           (panel) => panel.name === currentTabValue
         );
         if (currentPanel) {
@@ -1779,11 +1813,11 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
       return (_ctx, _cache) => {
         return vue.openBlock(), vue.createBlock(vue.unref(naive.NForm), {
           rules,
-          disabled: vue.unref(moduleStore).moduleConfig.TextGroupSpam.enable
+          disabled: vue.unref(moduleStore).moduleConfig.Favorites.enable
         }, {
           default: vue.withCtx(() => [
             vue.createVNode(vue.unref(naive.NPageHeader), {
-              subtitle: "文字池独轮车：循环发送所有弹幕组内容。当然，也可以当成一个收藏夹😀",
+              subtitle: "收藏夹：这是一个收藏夹，当然你也可以车收藏夹😊",
               style: { "margin-bottom": "10px" }
             }),
             vue.createVNode(vue.unref(naive.NFormItem), { "show-label": false }, {
@@ -1804,9 +1838,9 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
                             vue.createVNode(vue.unref(naive.NInputNumber), {
                               clearable: "",
                               "show-button": false,
-                              value: vue.unref(moduleStore).moduleConfig.TextGroupSpam.timeinterval,
-                              "onUpdate:value": _cache[0] || (_cache[0] = ($event) => vue.unref(moduleStore).moduleConfig.TextGroupSpam.timeinterval = $event),
-                              placeholder: "默认3，单位为秒",
+                              value: vue.unref(moduleStore).moduleConfig.Favorites.timeinterval,
+                              "onUpdate:value": _cache[0] || (_cache[0] = ($event) => vue.unref(moduleStore).moduleConfig.Favorites.timeinterval = $event),
+                              placeholder: "默认5，单位为秒",
                               min: "1",
                               precision: 0
                             }, {
@@ -1817,7 +1851,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
                             }, 8, ["value"])
                           ]),
                           default: vue.withCtx(() => [
-                            _cache[5] || (_cache[5] = vue.createElementVNode("span", null, "弹幕发送时间间隔，默认为3秒，也是b站最快的发弹幕频率，当然这里可以设置小于该值", -1))
+                            _cache[5] || (_cache[5] = vue.createElementVNode("span", null, "弹幕发送时间间隔，默认为5秒，也是b站最快的发弹幕频率，当然这里可以设置小于该值", -1))
                           ]),
                           _: 1
                         })
@@ -1837,9 +1871,9 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
               default: vue.withCtx(() => [
                 vue.createVNode(vue.unref(naive.NTabs), {
                   type: "card",
-                  value: vue.unref(moduleStore).moduleConfig.TextGroupSpam.textGroupTabsValue,
+                  value: vue.unref(moduleStore).moduleConfig.Favorites.favoritesTabsValue,
                   "onUpdate:value": [
-                    _cache[1] || (_cache[1] = ($event) => vue.unref(moduleStore).moduleConfig.TextGroupSpam.textGroupTabsValue = $event),
+                    _cache[1] || (_cache[1] = ($event) => vue.unref(moduleStore).moduleConfig.Favorites.favoritesTabsValue = $event),
                     handleTabsValueUpdate
                   ],
                   addable: "",
@@ -1848,7 +1882,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
                   onClose: handleTabsClose
                 }, {
                   default: vue.withCtx(() => [
-                    (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(vue.unref(moduleStore).moduleConfig.TextGroupSpam.textGroupTabPanels, (panels) => {
+                    (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(vue.unref(moduleStore).moduleConfig.Favorites.favoritesTabPanels, (panels) => {
                       return vue.openBlock(), vue.createBlock(vue.unref(naive.NTabPane), {
                         key: panels.key,
                         name: panels.name,
@@ -1883,7 +1917,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
                                 clearable: "",
                                 "show-count": "",
                                 type: "textarea",
-                                placeholder: "默认每次弹幕发送字数为20，超出20将自动分割到下一条弹幕"
+                                placeholder: "默认每次弹幕发送字数为你文字独轮车设置的间隔，超出相应值将自动分割到下一条弹幕"
                               }, null, 8, ["value", "onUpdate:value"])
                             ]),
                             _: 2
@@ -1898,7 +1932,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
               ]),
               _: 1
             }),
-            !vue.unref(moduleStore).moduleConfig.TextGroupSpam.enable ? (vue.openBlock(), vue.createBlock(vue.unref(naive.NFlex), {
+            !vue.unref(moduleStore).moduleConfig.Favorites.enable ? (vue.openBlock(), vue.createBlock(vue.unref(naive.NFlex), {
               key: 0,
               justify: "end",
               style: { "margin-top": "10px" }
@@ -1936,7 +1970,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
               ]),
               _: 1
             })) : vue.createCommentVNode("", true),
-            vue.unref(moduleStore).moduleConfig.TextGroupSpam.enable ? (vue.openBlock(), vue.createBlock(vue.unref(naive.NFlex), {
+            vue.unref(moduleStore).moduleConfig.Favorites.enable ? (vue.openBlock(), vue.createBlock(vue.unref(naive.NFlex), {
               key: 1,
               justify: "end",
               style: { "margin-top": "10px" }
@@ -1975,7 +2009,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
       saveSpamerStatus: {
         title: "保持独轮车开关状态",
         content: () => vue.h("p", [
-          vue.h("span", "启用后，独轮车开关状态将会被保持，下次启动时会自动恢复。"),
+          vue.h("span", "启用后，独轮车开关状态将会被保持，下次进入任意直播间时会自动恢复。"),
           vue.h("br"),
           vue.h("span", "该功能默认关闭。")
         ])
@@ -1983,6 +2017,8 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
       danmakuModules: {
         title: "弹幕+1和弹幕复制",
         content: () => vue.h("p", [
+          vue.h("span", "菜单模式："),
+          vue.h("br"),
           vue.h(
             "span",
             "启用后，会在弹幕菜单中提供弹幕+1和弹幕复制功能。（点击弹幕列表即可触发弹幕菜单，该功能只支持文字弹幕）"
@@ -1992,6 +2028,13 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
             "span",
             { style: { color: "#FF0000", fontWeight: "bold" } },
             "温馨提示：B站的弹幕菜单有问题，如果在太低的地方触发，它有可能会无法完全显示所有选项。"
+          ),
+          vue.h("br"),
+          vue.h("span", "直接渲染模式："),
+          vue.h("br"),
+          vue.h(
+            "span",
+            "启用后，会在弹幕列表中直接渲染弹幕+1和弹幕复制按钮。（该功能只支持文字弹幕）"
           ),
           vue.h("br"),
           vue.h("span", "该功能默认关闭。")
@@ -2022,7 +2065,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
     }
   };
   const _sfc_main$3 = vue.defineComponent({
-    __name: "InfoDialog",
+    __name: "helpInfoDialog",
     props: {
       id: {}
     },
@@ -2064,6 +2107,13 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
     setup(__props) {
       const moduleStore = useModuleStore();
       const manualCheckUpdate = new checkUpdate("ManualCheckUpdate");
+      const handleDanmakuModeChange = () => {
+        if (moduleStore.moduleConfig.setting.danmakuModules.mode === "menu") {
+          moduleStore.moduleConfig.setting.danmakuModules.mode = "direct";
+        } else {
+          moduleStore.moduleConfig.setting.danmakuModules.mode = "menu";
+        }
+      };
       return (_ctx, _cache) => {
         return vue.openBlock(), vue.createElementBlock(vue.Fragment, null, [
           vue.createVNode(vue.unref(naive.NPageHeader), {
@@ -2090,7 +2140,20 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
                     "onUpdate:value": _cache[1] || (_cache[1] = ($event) => vue.unref(moduleStore).moduleConfig.setting.danmakuModules.enable = $event)
                   }, null, 8, ["value"]),
                   _cache[6] || (_cache[6] = vue.createTextVNode("弹幕+1和弹幕复制", -1)),
-                  vue.createVNode(_sfc_main$3, { id: "SettingView.danmakuModules" })
+                  vue.createVNode(_sfc_main$3, { id: "SettingView.danmakuModules" }),
+                  _cache[7] || (_cache[7] = vue.createTextVNode(" 目前模式为", -1)),
+                  vue.createVNode(vue.unref(naive.NButton), {
+                    focusable: false,
+                    quaternary: "",
+                    size: "tiny",
+                    type: "info",
+                    onClick: handleDanmakuModeChange
+                  }, {
+                    default: vue.withCtx(() => [
+                      vue.createTextVNode(vue.toDisplayString(vue.unref(moduleStore).moduleConfig.setting.danmakuModules.mode === "menu" ? "菜单模式" : "直接渲染模式"), 1)
+                    ]),
+                    _: 1
+                  })
                 ]),
                 _: 1
               }),
@@ -2100,7 +2163,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
                     value: vue.unref(moduleStore).moduleConfig.setting.danmakuDetail.enable,
                     "onUpdate:value": _cache[2] || (_cache[2] = ($event) => vue.unref(moduleStore).moduleConfig.setting.danmakuDetail.enable = $event)
                   }, null, 8, ["value"]),
-                  _cache[7] || (_cache[7] = vue.createTextVNode("显示弹幕详情", -1)),
+                  _cache[8] || (_cache[8] = vue.createTextVNode("显示弹幕详情", -1)),
                   vue.createVNode(_sfc_main$3, { id: "SettingView.danmakuDetail" })
                 ]),
                 _: 1
@@ -2111,7 +2174,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
                     value: vue.unref(moduleStore).moduleConfig.setting.autoCheckUpdate.enable,
                     "onUpdate:value": _cache[3] || (_cache[3] = ($event) => vue.unref(moduleStore).moduleConfig.setting.autoCheckUpdate.enable = $event)
                   }, null, 8, ["value"]),
-                  _cache[9] || (_cache[9] = vue.createTextVNode("自动检测更新", -1)),
+                  _cache[10] || (_cache[10] = vue.createTextVNode("自动检测更新", -1)),
                   vue.createVNode(_sfc_main$3, { id: "SettingView.autoCheckUpdate" }),
                   vue.createVNode(vue.unref(naive.NButton), {
                     strong: "",
@@ -2120,7 +2183,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
                     type: "primary",
                     onClick: _cache[4] || (_cache[4] = ($event) => vue.unref(manualCheckUpdate).CheckUpdate("manual"))
                   }, {
-                    default: vue.withCtx(() => [..._cache[8] || (_cache[8] = [
+                    default: vue.withCtx(() => [..._cache[9] || (_cache[9] = [
                       vue.createTextVNode("检测更新", -1)
                     ])]),
                     _: 1
@@ -2138,7 +2201,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
   const _sfc_main$1 = vue.defineComponent({
     components: {
       TextView: _sfc_main$6,
-      TextGroupView: _sfc_main$4,
+      FavoritesView: _sfc_main$4,
       EmotionView: _sfc_main$5,
       SettingView: _sfc_main$2
     },
@@ -2149,6 +2212,13 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
       };
     }
   });
+  const _export_sfc = (sfc, props) => {
+    const target = sfc.__vccOpts || sfc;
+    for (const [key, val] of props) {
+      target[key] = val;
+    }
+    return target;
+  };
   function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(_ctx.uiStore.uiConfig.activeMenuIndex));
   }
@@ -2160,15 +2230,14 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
       const uiStore = useUIStore();
       const moduleStore = useModuleStore();
       uiStore.uiConfig.isShowPanel = false;
-      const renderPanel = (elementName, ctrStyle) => {
-        pollingQuery(document, elementName, 300, 300).then((controlPanelContent) => {
+      const renderAppBtn = (ctrEleName, appStyle) => {
+        pollingQuery(document, ctrEleName, 300, 1200).then((eleContent) => {
           const buttonNode = vue.h(
             naive.NButton,
             {
-              class: "blspam_btn",
+              class: "blspam_app_btn",
               text: true,
-              tag: "div",
-              style: ctrStyle,
+              style: appStyle,
               focusable: false,
               bordered: false,
               onClick: () => {
@@ -2186,15 +2255,16 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
                 {
                   dot: true,
                   processing: true,
-                  type: moduleStore.moduleConfig.TextSpam.enable || moduleStore.moduleConfig.EmotionSpam.enable || moduleStore.moduleConfig.TextGroupSpam.enable ? "success" : useBiliStore().loginInfo?.isLogin && useBiliStore().cookies ? "info" : "error"
+                  offset: [-1, 2],
+                  type: moduleStore.moduleConfig.TextSpam.enable || moduleStore.moduleConfig.EmotionSpam.enable || moduleStore.moduleConfig.Favorites.enable ? "success" : useBiliStore().loginInfo?.isLogin && useBiliStore().cookies ? "info" : "error"
                 },
                 {
-                  default: () => vue.h(naive.NIcon, { component: MainIcon, size: 24 }, { default: () => null })
+                  default: () => vue.h(naive.NIcon, { component: AppIcon, size: 24 })
                 }
               )
             }
           );
-          vue.render(buttonNode, controlPanelContent);
+          vue.render(buttonNode, eleContent);
         });
       };
       const handleUpdateTheme = () => {
@@ -2207,23 +2277,12 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
       new MutationObserver((_mutationsList, observer) => {
         const controlPanel = dq("#control-panel-ctnr-box");
         if (controlPanel) {
-          setTimeout(() => {
-            const oldTheme = dq(".icon-left-part");
-            const newTheme = dq(".chat-input-ctnr-new.p-relative");
-            if (oldTheme || newTheme) {
-              if (oldTheme) {
-                renderPanel(".icon-left-part", { marginLeft: "4px", display: "inline-block" });
-              }
-              if (newTheme) {
-                renderPanel(".chat-input-ctnr-new.p-relative", {
-                  marginRight: "4px",
-                  alignSelf: "center"
-                });
-              }
-            }
-          }, 500);
+          renderAppBtn(".icon-left-part", {
+            marginLeft: "4px",
+            display: "inline-block"
+          });
           observer.disconnect();
-          logger.log("初始化完成");
+          logger.info("初始化完成");
         }
       }).observe(document.body, { childList: true, subtree: true });
       _GM_addStyle("body { font-size: 12px }");
@@ -2294,7 +2353,7 @@ node.classList.contains("has-bubble") && node.classList.length === 3)) {
     moduleStore.loadModules();
     const div = dce("div");
     div.id = "BLSPAM";
-    document.body.append(div);
+    document.body.appendChild(div);
     app.mount(div);
   };
 

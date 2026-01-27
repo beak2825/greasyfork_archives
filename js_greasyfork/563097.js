@@ -2,8 +2,8 @@
 // @name         悬浮精准时间显示（秒杀助手）
 // @name:en      Precision Floating Clock (Synchronized)
 // @namespace    http://tampermonkey.net/
-// @version      1.3.3
-// @description  在网页右上角显示带有毫秒的精准北京时间，支持自动与京东、淘宝服务器同步。点击设置颜色：选白则白底黑字，选黑则黑底白字。
+// @version      1.3.4
+// @description  在网页右上角显示带有毫秒的精准北京时间，支持自动与京东、淘宝服务器同步。
 // @author       l_greasy
 // @match        *://*/*
 // @run-at       document-start
@@ -18,11 +18,15 @@
 // @updateURL https://update.greasyfork.org/scripts/563097/%E6%82%AC%E6%B5%AE%E7%B2%BE%E5%87%86%E6%97%B6%E9%97%B4%E6%98%BE%E7%A4%BA%EF%BC%88%E7%A7%92%E6%9D%80%E5%8A%A9%E6%89%8B%EF%BC%89.meta.js
 // ==/UserScript==
 
+
 (function() {
     'use strict';
 
+    // 防止在 iframe 中重复生成
+    if (window.self !== window.top) return;
+
     let config = GM_getValue('clockConfig_v5_7', {
-        bgColor: 'rgba(255,255,255,', // 基础背景色前缀
+        bgColor: 'rgba(255,255,255,', 
         textColor: 'auto',
         bgOpacity: 0.45,
         pos: { top: '30px', left: (window.innerWidth - 250) + 'px' }
@@ -31,22 +35,17 @@
     let timeOffset = 0;
     let clockDiv, settingsPanel;
 
-    // --- 样式定义 ---
     function updateStyles() {
         const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-        // 核心逻辑：颜色联动
         let displayTextColor, baseBgColor;
 
         if (config.textColor === 'auto') {
             displayTextColor = isDarkMode ? '#ffffff' : '#000000';
             baseBgColor = isDarkMode ? 'rgba(0,0,0,' : 'rgba(255,255,255,';
         } else if (config.textColor === '#ffffff') {
-            // 用户点击了黑色 -> 黑底白字
             displayTextColor = '#ffffff';
             baseBgColor = 'rgba(0,0,0,';
         } else {
-            // 用户点击了白色 -> 白底黑字
             displayTextColor = '#000000';
             baseBgColor = 'rgba(255,255,255,';
         }
@@ -92,15 +91,22 @@
                 backdrop-filter: blur(30px) !important;
                 border-radius: 24px !important;
                 padding: 20px !important;
-                z-index: 2147483647 !important;
+                z-index: 2147483648 !important;
                 width: 180px !important;
                 display: none;
                 box-shadow: 0 20px 50px rgba(0,0,0,0.15) !important;
                 font-family: -apple-system, sans-serif;
             }
-            .s-item { margin-bottom: 18px; }
-            .s-item label { display: flex; justify-content: space-around; align-items: center; }
-            #cfg-ok-v5 { width: 100%; background: #007AFF; color: #fff; border: none; padding: 10px; border-radius: 14px; cursor: pointer; font-weight: 600; }
+            .s-item { margin-bottom: 20px; }
+            /* 【修改点】菜单按钮对称排列逻辑 */
+            .s-item label { 
+                display: grid !important; 
+                grid-template-columns: repeat(3, 1fr) !important; 
+                justify-items: center !important; 
+                align-items: center !important;
+                gap: 10px !important;
+            }
+            #cfg-ok-v5 { width: 100%; background: #007AFF; color: #fff; border: none; padding: 10px; border-radius: 14px; cursor: pointer; font-weight: 600; margin-top: 5px; }
             .color-dot { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.2s; position: relative; }
             .dot-active { border-color: #007AFF !important; transform: scale(1.15); box-shadow: 0 0 8px rgba(0,122,255,0.4); }
         `;
@@ -157,27 +163,20 @@
                 timeOffset = offset;
                 console.log(`[Clock] 校准成功 (${res.source}), 偏移: ${timeOffset}ms`);
             }
-        }).catch(() => {
-            console.warn("[Clock] 接口请求失败");
-        });
+        }).catch(() => {});
     }
 
-    // --- 刷新逻辑 ---
     function updateClock() {
         if (!clockDiv) return;
-        const localNow = Date.now();
-        const adjustedNow = new Date(localNow + timeOffset);
-
-        const h = String(isNaN(adjustedNow.getTime()) ? new Date().getHours() : adjustedNow.getHours()).padStart(2, '0');
-        const m = String(isNaN(adjustedNow.getTime()) ? new Date().getMinutes() : adjustedNow.getMinutes()).padStart(2, '0');
-        const s = String(isNaN(adjustedNow.getTime()) ? new Date().getSeconds() : adjustedNow.getSeconds()).padStart(2, '0');
-        const ms = String(Math.floor((isNaN(adjustedNow.getTime()) ? new Date().getMilliseconds() : adjustedNow.getMilliseconds()) / 10)).padStart(2, '0');
-
+        const adjustedNow = new Date(Date.now() + timeOffset);
+        const h = String(adjustedNow.getHours()).padStart(2, '0');
+        const m = String(adjustedNow.getMinutes()).padStart(2, '0');
+        const s = String(adjustedNow.getSeconds()).padStart(2, '0');
+        const ms = String(Math.floor(adjustedNow.getMilliseconds() / 10)).padStart(2, '0');
         clockDiv.innerHTML = `${h}:${m}:${s}<span class="tm-ms-v5-7">${ms}</span>`;
         requestAnimationFrame(updateClock);
     }
 
-    // --- 初始化 ---
     function init() {
         if (document.getElementById('tm-precise-clock-v5-7')) return;
 
@@ -211,7 +210,6 @@
             if (!isDragging) return;
             isDragging = false;
             if (!hasMoved) {
-                syncTime();
                 showSettings(e.clientX, e.clientY);
             } else {
                 GM_setValue('clockConfig_v5_7', config);
@@ -244,7 +242,7 @@
             dot.onclick = () => {
                 settingsPanel.querySelectorAll('.color-dot').forEach(d => d.classList.remove('dot-active'));
                 dot.classList.add('dot-active');
-                config.textColor = dot.dataset.col; // 这里的逻辑已在 updateStyles 中联动背景
+                config.textColor = dot.dataset.col;
                 updateStyles();
             };
         });

@@ -1,38 +1,76 @@
 // ==UserScript==
-// @name         蝦皮按讚清單
+// @name         Shopee Quick Likes (蝦皮按讚清單)
 // @namespace    http://tampermonkey.net/
-// @version      1.2
-// @description  左下角增加一個SVG愛心圖示，點擊後展開顯示按讚過的商品清單
+// @version      1.3
+// @description  在蝦皮台灣 (shopee.tw) 左下角增加一個SVG愛心圖示，點擊後展開顯示按讚過的商品清單
 // @author       You
 // @match        https://shopee.tw/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=shopee.tw
 // @grant        GM_addStyle
 // @grant        GM_openInTab
 // @grant        unsafeWindow
+// @grant        GM_setValue
+// @grant        GM_getValue
 // @run-at       document-idle
-// @downloadURL https://update.greasyfork.org/scripts/557543/%E8%9D%A6%E7%9A%AE%E6%8C%89%E8%AE%9A%E6%B8%85%E5%96%AE.user.js
-// @updateURL https://update.greasyfork.org/scripts/557543/%E8%9D%A6%E7%9A%AE%E6%8C%89%E8%AE%9A%E6%B8%85%E5%96%AE.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/557543/Shopee%20Quick%20Likes%20%28%E8%9D%A6%E7%9A%AE%E6%8C%89%E8%AE%9A%E6%B8%85%E5%96%AE%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/557543/Shopee%20Quick%20Likes%20%28%E8%9D%A6%E7%9A%AE%E6%8C%89%E8%AE%9A%E6%B8%85%E5%96%AE%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // 本地資料管理 (LocalStorage)
+    // 本地資料管理 (改用 GM_Storage 以防止網站登出時清除資料)
     const LocalData = {
         KEY_CATS: 'shopee_likes_custom_cats',
         KEY_ITEMS: 'shopee_likes_custom_items',
         
         getCats: () => {
-            try { return JSON.parse(localStorage.getItem(LocalData.KEY_CATS) || '[{"id":"all","name":"全部"}]'); } 
-            catch (e) { return [{"id":"all","name":"全部"}]; }
+            try {
+                // 1. 優先讀取 GM Storage (永久儲存)
+                let data = GM_getValue(LocalData.KEY_CATS);
+                if (data) return JSON.parse(data);
+
+                // 2. 如果沒有，嘗試從舊的 LocalStorage 遷移資料
+                const oldData = localStorage.getItem(LocalData.KEY_CATS);
+                if (oldData) {
+                    console.log('[Shopee Likes] Migrating categories to GM storage...');
+                    GM_setValue(LocalData.KEY_CATS, oldData);
+                    return JSON.parse(oldData);
+                }
+            } catch (e) {
+                console.error('[Shopee Likes] Categories parse error:', e);
+            }
+            return [{"id":"all","name":"全部"}];
         },
-        saveCats: (cats) => localStorage.setItem(LocalData.KEY_CATS, JSON.stringify(cats)),
+
+        saveCats: (cats) => {
+            // 存入 GM Storage
+            GM_setValue(LocalData.KEY_CATS, JSON.stringify(cats));
+        },
         
         getItems: () => {
-            try { return JSON.parse(localStorage.getItem(LocalData.KEY_ITEMS) || '{}'); } 
-            catch (e) { return {}; }
+            try {
+                // 1. 優先讀取 GM Storage
+                let data = GM_getValue(LocalData.KEY_ITEMS);
+                if (data) return JSON.parse(data);
+
+                // 2. 嘗試遷移舊資料
+                const oldData = localStorage.getItem(LocalData.KEY_ITEMS);
+                if (oldData) {
+                    console.log('[Shopee Likes] Migrating items to GM storage...');
+                    GM_setValue(LocalData.KEY_ITEMS, oldData);
+                    return JSON.parse(oldData);
+                }
+            } catch (e) {
+                console.error('[Shopee Likes] Items parse error:', e);
+            }
+            return {};
         },
-        saveItems: (items) => localStorage.setItem(LocalData.KEY_ITEMS, JSON.stringify(items)),
+
+        saveItems: (items) => {
+            // 存入 GM Storage
+            GM_setValue(LocalData.KEY_ITEMS, JSON.stringify(items));
+        },
 
         addCategory: (name) => {
             const cats = LocalData.getCats();
@@ -96,7 +134,7 @@
         currentCatId: 'all',
         isLoading: false,
         renderId: 0,
-        isSyncing: false // 用於防止重複同步
+        isSyncing: false
     };
 
     // 配置
@@ -159,14 +197,14 @@
     }
 
     // -----------------------------------------------------------
-    // 背景同步功能 (新)
+    // 背景同步功能
     // -----------------------------------------------------------
     async function syncLocalDataWithServer() {
         if (STATE.isSyncing) return;
         
         const localItems = LocalData.getItems();
         const localKeys = Object.keys(localItems);
-        if (localKeys.length === 0) return; // 本地沒資料就不需比對
+        if (localKeys.length === 0) return; 
 
         STATE.isSyncing = true;
         const syncStatusEl = document.getElementById('sync-status');
@@ -174,13 +212,11 @@
 
         try {
             const validKeys = new Set();
-            const limit = 50; // 使用較大 limit 加快速度
+            const limit = 50; 
             let offset = 0;
             let hasMore = true;
             let completeSuccess = true;
-            
-            // 安全限制：最多讀取 50 頁 (2500 筆)，避免無限迴圈
-            let maxPages = 50;
+            let maxPages = 50; // 安全限制
 
             const nativeFetch = (typeof unsafeWindow !== 'undefined' && unsafeWindow.fetch) ? unsafeWindow.fetch : window.fetch;
 
@@ -209,8 +245,6 @@
                 maxPages--;
             }
 
-            // 只有在成功讀取完所有資料時，才執行刪除
-            // 如果網路中斷或 API 錯誤，不執行刪除以防誤刪
             if (completeSuccess && !hasMore) {
                 let changed = false;
                 localKeys.forEach(key => {
@@ -223,7 +257,6 @@
 
                 if (changed) {
                     LocalData.saveItems(localItems);
-                    // 如果當前正在看自訂分類，刷新畫面
                     if (STATE.currentCatId !== 'all') {
                         renderLocalLikes(STATE.currentCatId);
                     }
@@ -238,7 +271,6 @@
             if (syncStatusEl) syncStatusEl.textContent = '! 同步錯誤';
         } finally {
             STATE.isSyncing = false;
-            // 3秒後清除狀態文字
             setTimeout(() => {
                 if (syncStatusEl && syncStatusEl.textContent.includes('同步')) syncStatusEl.textContent = '';
             }, 3000);
@@ -664,7 +696,6 @@
             panel.classList.add('visible');
             coinBtn.classList.add('visible');
             loadData();
-            // 觸發背景同步
             syncLocalDataWithServer();
         }
     }
@@ -762,10 +793,11 @@
     }
 
     async function fetchLikesFromApi(page, reqRenderId) {
-        STATE.isLoading = true;
-        
         const pageIndicator = document.getElementById('page-indicator');
         pageIndicator.textContent = `第 ${page} 頁`;
+
+        // 嚴格檢查
+        if (STATE.currentCatId !== 'all') return;
 
         if (page === 1 || STATE.totalCount === null) await fetchTotalCount();
 
@@ -786,8 +818,6 @@
             const json = await res.json();
             const items = json.data && json.data.items;
             
-            STATE.isLoading = false;
-
             if (!items || items.length === 0) {
                 document.getElementById('likes-list').innerHTML = '<div style="padding:20px;text-align:center;">沒有商品</div>';
             } else {
@@ -812,7 +842,6 @@
 
         } catch (err) {
             if (reqRenderId === STATE.renderId && STATE.currentCatId === 'all') {
-                STATE.isLoading = false;
                 console.error(err);
                 document.getElementById('likes-list').innerHTML = '<div style="padding:20px;text-align:center;color:red;">載入失敗，請重整</div>';
             }

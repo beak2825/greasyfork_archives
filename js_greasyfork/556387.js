@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Student Helper Style
 // @namespace    https://github.com/AbrikosV/StudentHelperStyle
-// @version      1.9.5
-// @description  Улучшенный интерфейс расписания для студентов колледжа (с полной поддержкой тёмной темы)
+// @version      1.9.6
+// @description  Это доплнение предназначено для улучшения UI интерфейса сайта с базовой настройкой, изменяет Страницу учеба
 // @author       AbrikosV 
 // @match        https://system.fgoupsk.ru/student/*
 // @grant        none

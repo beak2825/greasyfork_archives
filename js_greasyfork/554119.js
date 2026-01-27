@@ -2,7 +2,7 @@
 // @name         Gemini宽屏 (动态适配版)
 // @name:zh-CN   Gemini宽屏 (动态适配版)
 // @namespace    https://greasyfork.org/zh-CN/users/lcx04
-// @version      2.1
+// @version      2.2
 // @description  Dynamically adapts for the 'ChatGPT Conversation Timeline' plugin. Widens input-container and input-area-container. Clears disclaimer text.
 // @description:zh-CN 动态适配ChatGPT Conversation Timeline插件，并同时加宽input-container及其内部区域。清空底部免责声明文字（保留边距）。
 // @author       lcx04
@@ -88,6 +88,11 @@
                 .overlay-container {
                     max-width: 2000px !important; /* 保持最大宽度一致 */
                 }
+
+                /* --- 去除对话气泡宽度限制 (v2.2) --- */
+                .user-query-bubble-with-background {
+                    max-width: none !important;
+                }
             `;
         } else {
             // 没找到，应用 0 边距的全宽样式
@@ -116,6 +121,11 @@
                 .input-area-container,
                 .overlay-container {
                     max-width: 2000px !important; /* 保持最大宽度一致 */
+                }
+
+                /* --- 去除对话气泡宽度限制 (v2.2) --- */
+                .user-query-bubble-with-background {
+                    max-width: none !important;
                 }
             `;
         }
@@ -191,5 +201,5 @@
 
     startObserver();
 
-    console.log('Wider Gemini (Dynamic Adapter) script v2.0 loaded.');
+    console.log('Wider Gemini (Dynamic Adapter) script v2.2 loaded.');
 })();

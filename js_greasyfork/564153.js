@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name         SC
+// @name         Subject Cheeser
 // @namespace    LA
 // @license      MIT
-// @version      2.0.1
+// @version      2.0.4
 // @description  cheese
 // @author       Azie
 // @match        https://app.subject.com/lti/enrollments/*
 // @match        https://app.time4learning.com/App/Admin/ParentAdminV3/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=subject.com
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/564153/SC.user.js
-// @updateURL https://update.greasyfork.org/scripts/564153/SC.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/564153/Subject%20Cheeser.user.js
+// @updateURL https://update.greasyfork.org/scripts/564153/Subject%20Cheeser.meta.js
 // ==/UserScript==
 
 (function () {
@@ -144,31 +144,37 @@
 
         if (!form) return { success: false };
 
-        const questions = Array.from(form.firstElementChild.children);
+        const questions = form.firstElementChild.children;
 
-        questions.forEach((question) => {
+        for (const i = 0; i < questions.length; i++) {
+            const question = questions[i];
             const questionId = question.id;
-            const choices = question.querySelector(".css-0");
-
-            const aChoices = choices.lastElementChild.lastElementChild;
-            const answers = aChoices.querySelectorAll(":scope > div");
-
-            let qChoices = choices.firstElementChild;
-            if (qChoices.getAttribute("role") === "radiogroup") {
-                qChoices = qChoices.firstElementChild;
-            }
 
             data[questionId] = [];
 
-            answers.forEach((answer) => {
-                const aIndex = Array.from(aChoices.children).indexOf(answer);
-                const input = qChoices.children[aIndex].querySelector("input");
+            try {
+                const choices = question.querySelector(".css-0");
 
-                if (!input) return;
+                const aChoices = choices.lastElementChild.lastElementChild;
+                const answers = aChoices.querySelectorAll(":scope > div");
 
-                data[questionId].push(input.value);
-            });
-        });
+                let qChoices = choices.firstElementChild;
+                if (qChoices.getAttribute("role") === "radiogroup") {
+                    qChoices = qChoices.firstElementChild;
+                }
+
+                for (const answer of answers) {
+                    const aIndex = Array.from(aChoices.children).indexOf(answer);
+                    const input = qChoices.children[aIndex].querySelector("input");
+
+                    if (!input) continue;
+
+                    data[questionId].push(input.value);
+                }
+            } catch (e) {
+                console.warn(`Failed to process question ${i + 1}:`, e);
+            }
+        }
 
         return api.post(API_URL + lessonId, data);
     };
@@ -187,14 +193,16 @@
                 if (!form) throw new Error("Form not found");
 
                 for (const [questionId, answers] of Object.entries(data)) {
-                    const question = form.querySelector(`#${questionId}`);
+                    try {
+                        const question = form.querySelector(`#${questionId}`);
 
-                    if (!question) continue;
-
-                    answers.forEach((answerId) => {
-                        const answer = question.querySelector(`input[value="${answerId}"]`);
-                        if (answer && !answer.checked) answer.click();
-                    });
+                        for (const answerId of answers) {
+                            const answer = question.querySelector(`input[value="${answerId}"]`);
+                            if (!answer.checked) answer.click();
+                        }
+                    } catch (e) {
+                        console.warn(`Failed to import '${questionId}':`, e);
+                    }
                 }
             })
             .finally(() => {
@@ -233,6 +241,8 @@
                 exportBtn.classList.remove("loading");
                 exportBtn.classList.add("error");
                 exportBtn.innerText = "✕ Failed";
+
+                throw new Error(e);
             }
 
             setTimeout(reset, 2000);
@@ -260,17 +270,17 @@
 
             try {
                 await importAK();
+
+                importBtn.classList.remove("loading");
+                importBtn.classList.add("success");
+                importBtn.innerText = "✓ Imported";
             } catch (e) {
                 importBtn.classList.remove("loading");
                 importBtn.classList.add("error");
                 importBtn.innerText = "✕ Failed";
-                setTimeout(reset, 2000);
-                return;
-            }
 
-            importBtn.classList.remove("loading");
-            importBtn.classList.add("success");
-            importBtn.innerText = "✓ Imported";
+                throw new Error(e);
+            }
 
             setTimeout(reset, 2000);
         });
@@ -290,9 +300,9 @@
 
         topbar.insertBefore(search, topbar.children[1]);
 
-        Array.from(topbar.children).forEach((child) => {
+        for (const child of topbar.children) {
             child.style.maxWidth = "33.3%";
-        });
+        }
 
         search.addEventListener("focus", () => {
             search.value = "";

@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         关注列表导出
+// @name         临时关注列表导出带检测
 // @namespace    https://github.com/yourname
-// @version      1.3
+// @version      1.3.1
 // @description  [安全增强+历史保护]并发优化+智能暂停+防误触+无痕模式
 // @author       YourName
 // @match        https://weibo.com/*
@@ -17,13 +17,24 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.7/dayjs.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.7/plugin/relativeTime.min.js
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/540942/%E5%85%B3%E6%B3%A8%E5%88%97%E8%A1%A8%E5%AF%BC%E5%87%BA.user.js
-// @updateURL https://update.greasyfork.org/scripts/540942/%E5%85%B3%E6%B3%A8%E5%88%97%E8%A1%A8%E5%AF%BC%E5%87%BA.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/540942/%E4%B8%B4%E6%97%B6%E5%85%B3%E6%B3%A8%E5%88%97%E8%A1%A8%E5%AF%BC%E5%87%BA%E5%B8%A6%E6%A3%80%E6%B5%8B.user.js
+// @updateURL https://update.greasyfork.org/scripts/540942/%E4%B8%B4%E6%97%B6%E5%85%B3%E6%B3%A8%E5%88%97%E8%A1%A8%E5%AF%BC%E5%87%BA%E5%B8%A6%E6%A3%80%E6%B5%8B.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
     dayjs.extend(dayjs_plugin_relativeTime);
+
+    const showRemoved = GM_getValue('showRemoved', true);
+    GM_registerMenuCommand(
+        `显示减少关注: ${showRemoved ? '✓' : '✗'}`,
+        function() {
+            const newValue = !GM_getValue('showRemoved', true);
+            GM_setValue('showRemoved', newValue);
+            alert(`已${newValue ? '开启' : '关闭'}减少关注显示`);
+            location.reload();
+        }
+    );
 
     const CONFIG = {
         API_PATH: location.host.includes('weibo.com')
@@ -144,9 +155,30 @@
             text-align: center;
             line-height: 1.2;
         `,
+        STEALTH_CHECKBOX_STYLE: `
+            position: fixed;
+            bottom: 205px;
+            right: 30px;
+            z-index: 9999;
+            background: rgba(255,255,255,0.9);
+            border-radius: 6px;
+            padding: 6px 8px;
+            font-size: 12px;
+            color: #666;
+            border: 1px solid #ddd;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            width: auto;
+            min-width: auto;
+            max-width: 120px;
+            height: 22px;
+            line-height: 12px;
+        `,
         DATE_FORMAT: 'YYYY.M.D',
-        MIN_DELAY: 1500,
-        MAX_DELAY: 5000,
+        MIN_DELAY: 2500,
+        MAX_DELAY: 7000,
         MAX_CONCURRENT: 3,
         MAX_RETRY: 7,
         PAGE_SIZE: 20,
@@ -155,7 +187,8 @@
             CSV: 'CSV'
         },
         CACHE_EXPIRY: 30 * 60 * 1000,
-        HISTORY_EXPIRY: 180 * 24 * 60 * 60 * 1000
+        HISTORY_EXPIRY: 180 * 24 * 60 * 60 * 1000,
+        AVATAR_BASE64_CACHE_EXPIRY: 7 * 24 * 60 * 60 * 1000
     };
 
     class WeiboFollowExporter {
@@ -171,42 +204,29 @@
             this.isManualMode = false;
             this.manualTextarea = null;
             this.switchButton = null;
+            this.stealthCheckbox = null;
             this.cache = {
                 userInfo: new Map(),
                 weiboData: new Map(),
-                lastUpdate: new Map()
+                lastUpdate: new Map(),
+                avatarBase64: new Map()
             };
             this.exportFormat = CONFIG.EXPORT_FORMATS.HTML;
             this.formatSelector = null;
             this.lastErrorTime = 0;
             this.errorCount = 0;
             this.pauseMultiplier = 1;
+            
             this.showRemoved = GM_getValue('showRemoved', true);
-            this.stealthMode = false;
-            this.stealthCheckbox = null;
+            this.stealthMode = GM_getValue('stealthMode', false);
 
             this.cleanupHistoryData();
             setInterval(() => {
                 this.cleanupHistoryData();
             }, 24 * 60 * 60 * 1000);
 
-            this.registerMenuCommands();
             this.init();
             this.bindPageUnload();
-        }
-
-        registerMenuCommands() {
-            const showRemovedText = this.showRemoved ? '隐藏减少关注' : '显示减少关注';
-            GM_registerMenuCommand(showRemovedText, () => {
-                this.showRemoved = !this.showRemoved;
-                GM_setValue('showRemoved', this.showRemoved);
-                const newText = this.showRemoved ? '隐藏减少关注' : '显示减少关注';
-                GM_notification({
-                    title: '设置已更新',
-                    text: `减少关注显示: ${this.showRemoved ? '开启' : '关闭'}`,
-                    timeout: 2000
-                });
-            });
         }
 
         cleanupHistoryData() {
@@ -229,13 +249,11 @@
 
         async init() {
             if (document.querySelector('#weiboExportBtn')) return;
+            this.createStealthCheckbox();
             this.createSwitchButton();
             this.createManualTextarea();
             this.createExportButton();
             this.createProgressText();
-            if (location.pathname.includes('/follow')) {
-                this.createStealthModeCheckbox();
-            }
             this.addPageListener();
         }
 
@@ -298,7 +316,7 @@
 
             this.exportButton = document.createElement('button');
             this.exportButton.id = 'weiboExportBtn';
-            this.exportButton.textContent = '导出关注列表';
+            this.exportButton.textContent = this.isManualMode ? '导出手动输入列表' : '导出关注列表';
             this.exportButton.style = CONFIG.BUTTON_STYLE;
             this.exportButton.onclick = () => this.startExport();
 
@@ -317,6 +335,46 @@
             container.appendChild(formatContainer);
             container.appendChild(this.exportButton);
             document.body.appendChild(container);
+        }
+
+        createStealthCheckbox() {
+            if (!location.pathname.includes('/follow')) return;
+            
+            this.stealthCheckbox = document.createElement('div');
+            this.stealthCheckbox.id = 'stealthModeCheckbox';
+            this.stealthCheckbox.style = CONFIG.STEALTH_CHECKBOX_STYLE;
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = 'stealthModeInput';
+            checkbox.style.margin = '0';
+            checkbox.style.padding = '0';
+            checkbox.style.width = '14px';
+            checkbox.style.height = '14px';
+            checkbox.style.cursor = 'pointer';
+            
+            const label = document.createElement('label');
+            label.htmlFor = 'stealthModeInput';
+            label.textContent = '无痕模式';
+            label.style.cursor = 'pointer';
+            label.style.fontSize = '12px';
+            label.style.color = '#666';
+            label.style.margin = '0';
+            label.style.padding = '0';
+            label.style.lineHeight = '14px';
+            label.style.userSelect = 'none';
+            
+            this.stealthCheckbox.appendChild(checkbox);
+            this.stealthCheckbox.appendChild(label);
+            
+            checkbox.checked = this.stealthMode;
+            
+            checkbox.addEventListener('change', (e) => {
+                this.stealthMode = e.target.checked;
+                GM_setValue('stealthMode', this.stealthMode);
+            });
+            
+            document.body.appendChild(this.stealthCheckbox);
         }
 
         createSwitchButton() {
@@ -342,53 +400,6 @@
             this.manualTextarea.placeholder = '每行输入一个微博用户链接，可附带【备注】信息\n例如：\nhttps://weibo.com/u/1234567【备注信息】';
             this.manualTextarea.style = CONFIG.TEXTAREA_STYLE;
             document.body.appendChild(this.manualTextarea);
-        }
-
-        createStealthModeCheckbox() {
-            const container = document.createElement('div');
-            container.style.cssText = `
-                position: fixed;
-                bottom: 210px;
-                right: 30px;
-                z-index: 9999;
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                background: rgba(255, 255, 255, 0.9);
-                padding: 6px 10px;
-                border-radius: 6px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                font-size: 12px;
-                color: #333;
-            `;
-
-            this.stealthCheckbox = document.createElement('input');
-            this.stealthCheckbox.type = 'checkbox';
-            this.stealthCheckbox.id = 'weiboStealthMode';
-            this.stealthCheckbox.style.cssText = `
-                width: 14px;
-                height: 14px;
-                cursor: pointer;
-                margin: 0;
-            `;
-            this.stealthCheckbox.checked = this.stealthMode;
-            this.stealthCheckbox.onchange = () => {
-                this.stealthMode = this.stealthCheckbox.checked;
-            };
-
-            const label = document.createElement('label');
-            label.htmlFor = 'weiboStealthMode';
-            label.textContent = '无痕模式';
-            label.style.cssText = `
-                cursor: pointer;
-                white-space: nowrap;
-                font-size: 12px;
-                color: #666;
-            `;
-
-            container.appendChild(this.stealthCheckbox);
-            container.appendChild(label);
-            document.body.appendChild(container);
         }
 
         toggleMode() {
@@ -478,6 +489,7 @@
                 this.isExporting = true;
                 if (this.manualTextarea) this.manualTextarea.style.display = 'none';
                 if (this.switchButton) this.switchButton.style.display = 'none';
+                if (this.stealthCheckbox) this.stealthCheckbox.style.display = 'none';
                 this.updateButtonText('正在获取数据...');
                 this.showProgressText();
 
@@ -499,6 +511,9 @@
                             const followersChange = await this.getFollowersChange(id, currentFollowers);
                             const backupPostTime = userInfo.status?.created_at;
                             const lastPost = this.parseLastPost(weiboData) || backupPostTime;
+                            
+                            const avatarUrl = userInfo.avatar_hd || userInfo.avatar_large || userInfo.profile_image_url;
+                            const avatarBase64 = await this.getAvatarBase64Manual(avatarUrl, id);
 
                             data.push({
                                 order: i + 1,
@@ -507,7 +522,7 @@
                                 url: `https://weibo.com/u/${id}`,
                                 followers_count: this.formatFollowers(currentFollowers),
                                 followers_raw: currentFollowers,
-                                avatar: userInfo.avatar_hd || userInfo.avatar_large || userInfo.profile_image_url,
+                                avatar: avatarBase64,
                                 remark: remark,
                                 last_post: lastPost,
                                 change: followersChange.text,
@@ -539,13 +554,205 @@
                 this.hideProgressText();
                 if (this.manualTextarea) this.manualTextarea.style.display = this.isManualMode ? 'block' : 'none';
                 if (this.switchButton) this.switchButton.style.display = 'block';
+                if (this.stealthCheckbox && location.pathname.includes('/follow')) {
+                    this.stealthCheckbox.style.display = 'flex';
+                }
                 this.controller = new AbortController();
             }
         }
 
+        async getAvatarBase64Manual(avatarUrl, userId) {
+            if (!avatarUrl) return this.getBlankAvatar();
+            
+            const cacheKey = `avatar_${userId}`;
+            const cachedAvatar = this.getCachedData(cacheKey, 'avatarBase64');
+            if (cachedAvatar) {
+                return cachedAvatar;
+            }
+
+            try {
+                const base64 = await this.imageUrlToBase64(avatarUrl);
+                if (base64) {
+                    this.setCacheData(cacheKey, 'avatarBase64', base64);
+                    return base64;
+                }
+            } catch (error) {
+                console.error(`手动模式获取头像失败: ${error}`);
+            }
+            
+            return this.getBlankAvatar();
+        }
+
+        async getAvatarBase64FromDOM(userId) {
+            if (this.stealthMode) {
+                return this.getBlankAvatar();
+            }
+
+            const cacheKey = `avatar_${userId}`;
+            const cachedAvatar = this.getCachedData(cacheKey, 'avatarBase64');
+            if (cachedAvatar) {
+                return cachedAvatar;
+            }
+
+            try {
+                const avatarElement = this.findAvatarElementInDOM(userId);
+                if (avatarElement) {
+                    const base64 = await this.imageElementToBase64(avatarElement);
+                    if (base64) {
+                        this.setCacheData(cacheKey, 'avatarBase64', base64);
+                        return base64;
+                    }
+                }
+                
+                // 如果在DOM中找不到，使用API返回的头像URL（非无痕模式才这样做）
+                if (!this.stealthMode) {
+                    console.log(`从DOM中找不到用户 ${userId} 的头像，尝试使用API头像URL`);
+                    // 这里我们无法直接获取头像URL，因为在自动导出模式下，我们没有userInfo
+                    // 所以返回空白头像
+                    return this.getBlankAvatar();
+                }
+            } catch (error) {
+                console.error(`从DOM获取头像失败: ${error}`);
+            }
+            
+            return this.getBlankAvatar();
+        }
+
+        async getAvatarFromAPI(user) {
+            // 从API返回的用户数据中获取头像URL并转换为Base64
+            if (this.stealthMode) {
+                return this.getBlankAvatar();
+            }
+
+            const cacheKey = `avatar_${user.idstr}`;
+            const cachedAvatar = this.getCachedData(cacheKey, 'avatarBase64');
+            if (cachedAvatar) {
+                return cachedAvatar;
+            }
+
+            try {
+                const avatarUrl = user.avatar_hd || user.avatar_large || user.profile_image_url;
+                if (avatarUrl) {
+                    const base64 = await this.imageUrlToBase64(avatarUrl);
+                    if (base64) {
+                        this.setCacheData(cacheKey, 'avatarBase64', base64);
+                        return base64;
+                    }
+                }
+            } catch (error) {
+                console.error(`从API获取头像失败: ${error}`);
+            }
+            
+            return this.getBlankAvatar();
+        }
+
+        findAvatarElementInDOM(userId) {
+            // 关注列表页面的头像选择器
+            const selectors = [
+                `a[href*="/u/${userId}"] img`,
+                `a[href*="/profile/${userId}"] img`,
+                `a[href*="${userId}"] img`,
+                `div[data-uid="${userId}"] img`,
+                `div[data-userid="${userId}"] img`,
+                `img[src*="${userId}"]`,
+                `.follow_item[data-uid="${userId}"] img`,
+                `.follow_item a[href*="/u/${userId}"] img`
+            ];
+            
+            for (const selector of selectors) {
+                try {
+                    const element = document.querySelector(selector);
+                    if (element && element.src && !element.src.includes('data:')) {
+                        return element;
+                    }
+                } catch (e) {
+                    console.log(`选择器 ${selector} 查找失败:`, e);
+                }
+            }
+            
+            // 更通用的查找方法：在所有img标签中查找
+            const allImages = document.querySelectorAll('img');
+            for (const img of allImages) {
+                if (img.src && img.src.includes(userId) && !img.src.includes('data:')) {
+                    return img;
+                }
+            }
+            
+            return null;
+        }
+
+        async imageElementToBase64(imgElement) {
+            return new Promise((resolve, reject) => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // 压缩到100×100像素，但保持原比例
+                canvas.width = 100;
+                canvas.height = 100;
+                
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => {
+                    try {
+                        // 计算居中绘制
+                        const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+                        const x = (canvas.width - img.width * scale) / 2;
+                        const y = (canvas.height - img.height * scale) / 2;
+                        
+                        ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+                        const base64 = canvas.toDataURL('image/jpeg', 0.7);
+                        resolve(base64);
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                img.onerror = reject;
+                img.src = imgElement.src;
+                
+                setTimeout(() => reject(new Error('图片加载超时')), 5000);
+            });
+        }
+
+        async imageUrlToBase64(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = 100;
+                        canvas.height = 100;
+                        
+                        // 计算居中绘制
+                        const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+                        const x = (canvas.width - img.width * scale) / 2;
+                        const y = (canvas.height - img.height * scale) / 2;
+                        
+                        ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+                        const base64 = canvas.toDataURL('image/jpeg', 0.7);
+                        resolve(base64);
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                img.onerror = reject;
+                img.src = url;
+                
+                setTimeout(() => reject(new Error('图片加载超时')), 5000);
+            });
+        }
+
+        getBlankAvatar() {
+            return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==';
+        }
+
         isCacheValid(key, type) {
             const lastUpdate = this.cache.lastUpdate.get(`${type}_${key}`);
-            return lastUpdate && (Date.now() - lastUpdate) < CONFIG.CACHE_EXPIRY;
+            const expiry = type === 'avatarBase64' 
+                ? CONFIG.AVATAR_BASE64_CACHE_EXPIRY 
+                : CONFIG.CACHE_EXPIRY;
+            return lastUpdate && (Date.now() - lastUpdate) < expiry;
         }
 
         getCachedData(key, type) {
@@ -561,6 +768,10 @@
         }
 
         async fetchUserInfoWithRetry(id, retryCount = 0) {
+            if (this.stealthMode) {
+                return null;
+            }
+
             const cachedData = this.getCachedData(id, 'userInfo');
             if (cachedData) {
                 return cachedData;
@@ -583,6 +794,10 @@
         }
 
         async fetchWeiboDataWithRetry(id, retryCount = 0) {
+            if (this.stealthMode) {
+                return null;
+            }
+
             const cachedData = this.getCachedData(id, 'weiboData');
             if (cachedData) {
                 return cachedData;
@@ -617,11 +832,10 @@
                 this.pauseMultiplier = Math.min(this.pauseMultiplier * 2, 8);
             }
 
-            const baseDelay = 2000 * (retryCount + 1);
-            const extraDelay = Math.random() * 1000;
+            const baseDelay = 3000 * (retryCount + 1);
+            const extraDelay = Math.random() * 1500;
             const finalDelay = baseDelay * this.pauseMultiplier + extraDelay;
 
-            console.log(`智能暂停: ${Math.round(finalDelay)}ms (倍率: ${this.pauseMultiplier}x)`);
             await new Promise(resolve => setTimeout(resolve, finalDelay));
         }
 
@@ -642,7 +856,7 @@
                 });
                 return {
                     value: 0,
-                    text: '无',
+                    text: '-',
                     color: '#999999'
                 };
             }
@@ -666,13 +880,14 @@
                 this.isExporting = true;
                 if (this.manualTextarea) this.manualTextarea.style.display = 'none';
                 if (this.switchButton) this.switchButton.style.display = 'none';
+                if (this.stealthCheckbox) this.stealthCheckbox.style.display = 'none';
 
                 this.failedPages = [];
                 this.updateButtonText('正在获取总数...');
                 this.totalFollows = await this.getTotalFollows();
 
                 const totalPages = Math.ceil(this.totalFollows / CONFIG.PAGE_SIZE);
-                const avgTimePerRequest = this.stealthMode ? 2 : 4;
+                const avgTimePerRequest = 6;
                 const concurrentRequests = CONFIG.MAX_CONCURRENT;
                 const estimatedTime = Math.ceil((totalPages * avgTimePerRequest) / concurrentRequests);
 
@@ -708,6 +923,9 @@
                 this.hideProgressText();
                 if (this.manualTextarea) this.manualTextarea.style.display = this.isManualMode ? 'block' : 'none';
                 if (this.switchButton) this.switchButton.style.display = 'block';
+                if (this.stealthCheckbox && location.pathname.includes('/follow')) {
+                    this.stealthCheckbox.style.display = 'flex';
+                }
                 this.controller = new AbortController();
             }
         }
@@ -780,7 +998,7 @@
                     }
                 }
 
-                await new Promise(resolve => setTimeout(resolve, 200));
+                await new Promise(resolve => setTimeout(resolve, 300));
             }
 
             result.sort((a, b) => a.order - b.order);
@@ -789,7 +1007,7 @@
 
         async fetchWithRetry(page, retryCount = 0) {
             try {
-                const backoffDelay = Math.pow(2, retryCount) * 1000;
+                const backoffDelay = Math.pow(2, retryCount) * 1500;
                 await new Promise(r => setTimeout(r, backoffDelay));
 
                 return await this.fetchAPI(page);
@@ -805,7 +1023,9 @@
         }
 
         async getLastPost(uid) {
-            if (this.stealthMode) return null;
+            if (this.stealthMode) {
+                return null;
+            }
 
             try {
                 const data = await this.fetchWeiboData(uid);
@@ -821,7 +1041,9 @@
         }
 
         async getLastPostFromProfile(uid) {
-            if (this.stealthMode) return null;
+            if (this.stealthMode) {
+                return null;
+            }
 
             try {
                 const data = await this.fetchUserProfile(uid);
@@ -867,6 +1089,9 @@
                 ].find(t => t && dayjs(t).isValid());
             }
 
+            // 修改这里：先尝试从API数据中获取头像URL，然后转换为Base64
+            const avatarBase64 = await this.getAvatarFromAPI(user);
+
             return {
                 order: (page - 1) * CONFIG.PAGE_SIZE + index + 1,
                 name: user.screen_name,
@@ -877,17 +1102,9 @@
                 followers_raw: currentFollowers,
                 change: followersChange.text,
                 change_raw: followersChange.value,
-                avatar: this.randomizeAvatar(user.avatar_hd),
+                avatar: avatarBase64,
                 last_post: lastPost || null
             };
-        }
-
-        randomizeAvatar(url) {
-            if (!url) return '';
-            const timestamp = Date.now();
-            return url.includes('?')
-                ? `${url}&_rnd=${timestamp}`
-                : `${url}?_rnd=${timestamp}`;
         }
 
         randomArrayElement(array) {
@@ -945,8 +1162,6 @@
         }
 
         async fetchUserProfile(uid) {
-            if (this.stealthMode) return { data: { user: { screen_name: '未知用户' } } };
-
             return new Promise((resolve, reject) => {
                 GM_xmlhttpRequest({
                     method: 'GET',
@@ -970,8 +1185,6 @@
         }
 
         async fetchWeiboData(uid) {
-            if (this.stealthMode) return { data: { list: [] } };
-
             return new Promise((resolve, reject) => {
                 GM_xmlhttpRequest({
                     method: 'GET',
@@ -1072,7 +1285,7 @@
 
         async exportHTML(data, filename) {
             const generateRemovedSection = () => {
-                if (!this.showRemoved || !this.removedUsers || this.removedUsers.length === 0) return '';
+                if (!this.removedUsers || this.removedUsers.length === 0 || !this.showRemoved) return '';
 
                 return `
         <div class="removed-section">
@@ -1234,6 +1447,11 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        .avatar:hover {
+            opacity: 0.8;
         }
         .change.positive { color: #2ecc71; }
         .change.negative { color: #e74c3c; }
@@ -1349,7 +1567,7 @@
             <tbody>
                 ${data.map((item, index) => `
                     <tr>
-                        <td><img class="avatar" src="${item.avatar}" alt=""></td>
+                        <td><img class="avatar" src="${item.avatar}" alt="${this.escapeHtml(item.name)}的头像" title="右键在新标签页中打开可查看100×100大图"></td>
                         <td>${index + 1}</td>
                         <td>${this.escapeHtml(item.name)}</td>
                         <td class="remark" data-has-remark="${item.remark ? '1' : '0'}">${item.remark ? this.escapeHtml(item.remark) : '-'}</td>
@@ -1358,7 +1576,7 @@
                             <div class="user-id">ID: ${this.escapeHtml(item.id)}</div>
                         </td>
                         <td class="last-post" data-timestamp="${item.last_post ? new Date(item.last_post).getTime() : 0}">
-                            ${this.formatTime(item.last_post)}
+                            ${this.stealthMode ? '-' : this.formatTime(item.last_post)}
                         </td>
                         <td class="followers" data-followers="${item.followers_raw}">${item.followers_raw.toString().replace(/\B(?=(\d{4})+(?!\d))/g, ',')}</td>
                         <td class="change ${item.change === '无' ? 'none' : item.change_raw > 0 ? 'positive' : item.change_raw < 0 ? 'negative' : 'neutral'}"
@@ -1611,6 +1829,9 @@
             }
             if (exporter.switchButton) {
                 exporter.switchButton.textContent = '手动输入模式';
+            }
+            if (exporter.stealthCheckbox) {
+                exporter.stealthCheckbox.style.display = 'none';
             }
         }
     }

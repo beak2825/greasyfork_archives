@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Block YouTube Comments
 // @namespace    http://tampermonkey.net/
-// @version      2025-08-26
-// @description  Block the entire comment section
+// @version      2026-01-27
+// @description  Block the comment section under videos
 // @author       skygate2012
 // @match        https://www.youtube.com/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
+// @icon         https://www.youtube.com/favicon.ico
 // @run-at       document-start
 // @license      WTFPL
 // @downloadURL https://update.greasyfork.org/scripts/547459/Block%20YouTube%20Comments.user.js
@@ -13,11 +13,16 @@
 // ==/UserScript==
 
 (function() {
-    const ogIntersectionObserver = unsafeWindow.IntersectionObserver;
-    unsafeWindow.IntersectionObserver = function(cb, options) {
-        return new ogIntersectionObserver((entries, obs) => {
-            const filtered = entries.filter(e => !document.getElementById('comments')?.contains(e.target));
-            if (filtered.length) cb(filtered, obs);
-        }, options);
+    const NativeIO = unsafeWindow.IntersectionObserver;
+    if (!NativeIO) return;
+
+    const nativeObserve = NativeIO.prototype.observe;
+
+    NativeIO.prototype.observe = function (target) {
+        // Skip comments
+        const comments = document.getElementById('comments');
+        if (comments && comments.contains(target)) return;
+
+        return nativeObserve.call(this, target);
     };
 })();

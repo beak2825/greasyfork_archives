@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         IMDb SeriesGraph Rating Colors
 // @namespace    http://tampermonkey.net/
-// @version      2.5
-// @description  Applies SeriesGraph rating color codes to IMDb episode heatmaps, histograms, and creates a Season Average section. Adds "Save Image" functionality with auto-transpose for long seasons. Works for all languages.
+// @version      2.6
+// @description  Applies SeriesGraph rating color codes to IMDb episode heatmaps, histograms, creates a Season Average section, and adds "Save Image" functionality. Works for all languages.
 // @author       Windy
 // @match        https://www.imdb.com/title/*/ratings*
 // @match        https://www.imdb.com/*/title/*/ratings*
@@ -321,8 +321,7 @@
         return { seasons, maxEps };
     }
 
-// --- SCREENSHOT FUNCTIONALITY ---
-    async function downloadGraph() {
+async function downloadGraph() {
         const btn = document.getElementById('sg-download-btn');
         const updateBtn = (text) => { if(btn) btn.innerText = text; };
 
@@ -450,11 +449,10 @@
                     score.style.boxShadow = 'none';
                     score.style.border = 'none';
 
-                    const bg = score.style.backgroundColor;
-                    if(bg && (bg.includes('231') || bg.includes('99') || bg.includes('24') || bg.includes('29'))) {
-                        score.style.color = '#fff';
-                    } else {
-                        score.style.color = '#2a2a2a';
+                    const val = parseFloat(score.innerText);
+                    if (!isNaN(val)) {
+                        const style = getStyleForRating(val);
+                        score.style.color = style.text;
                     }
                 });
                 mainContent.appendChild(avgClone);
@@ -576,8 +574,14 @@
                     // Style Episode Cells
                     eClone.querySelectorAll('*').forEach(el => {
                         if (el.classList.contains('sg-rating-text')) {
-                            const bg = el.parentNode.style.backgroundColor;
-                            el.style.color = (bg && (bg.includes('231') || bg.includes('99') || bg.includes('24') || bg.includes('29'))) ? '#ffffff' : '#2a2a2a';
+
+                            const val = parseFloat(el.innerText.replace(',', '.'));
+                            if (!isNaN(val)) {
+                                const style = getStyleForRating(val);
+                                el.style.color = style.text;
+                            } else {
+                                el.style.color = '#2a2a2a'; // fallback
+                            }
                         } else if (el.tagName === 'TH') {
                             el.style.color = '#bbbbbb';
                             el.style.fontSize = '12px';

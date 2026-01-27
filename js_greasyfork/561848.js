@@ -1,27 +1,30 @@
 // ==UserScript==
 // @name         哔哩哔哩过滤视频
 // @namespace    https://github.com/girl-dream/
-// @version      1.0.0
+// @version      1.0.1
 // @description  根据关键词过滤视频
 // @author       girl-dream
-// @match        https://www.bilibili.com/
-// @match        https://www.bilibili.com/video/*
 // @icon         https://www.bilibili.com/favicon.ico
-// @license      The Unlicense
+// @match        https://www.bilibili.com/
+// @match        https://www.bilibili.com/?*
+// @match        https://www.bilibili.com/video/*
+// @match        https://search.bilibili.com/*
+// @license      The Unlicensea
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_registerMenuCommand
+// @grant        unsafeWindow
 // @run-at       document-end
 // @downloadURL https://update.greasyfork.org/scripts/561848/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E8%BF%87%E6%BB%A4%E8%A7%86%E9%A2%91.user.js
 // @updateURL https://update.greasyfork.org/scripts/561848/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E8%BF%87%E6%BB%A4%E8%A7%86%E9%A2%91.meta.js
 // ==/UserScript==
 
-(async () => {
+(() => {
     'use strict'
 
+    const url = window.location.href.split('?')[0]
     let keyWords = GM_getValue('filter_keywords', [
-        'Rust',
-        '00'
+        '终末地'
     ])
 
     GM_registerMenuCommand('设置过滤关键词', () => {
@@ -46,30 +49,32 @@
             padding: 20px;
             border-radius: 8px;
             width: 400px;
-            max-width: 90%;
             max-height: 80vh;
             overflow-y: auto;
             color:var(--text1);
         `
         content.innerHTML = `
-            <div style="font-size: 1.5rem;">过滤关键词设置</div>
+            <div style="font-size: 1.5rem;margin-bottom: 10px;">过滤关键词设置</div>
             <p style="color: var(--brt-placeholder-color, var(--text3, #9499a0)); font-size: 14px; margin-bottom: 15px;">
-                每行一个关键词/正则表达式,视频包含任意关键词即被过滤
+                每行一个关键词/正则表达式,评论包含任意关键词即被过滤
             </p>
             <textarea id="keywords-input"
-                     style="width: 90%;
-                     background: var(--bg2);
-                            height: 200px;
-                            padding: 10px;
-                            border: 1px solid var(--Ga1);
-                            border-radius: 4px;
-                            resize: vertical;
-                            margin-bottom: 15px;"></textarea>
+                    style="width: 100%;
+                    background: var(--bg2);
+                    box-sizing: border-box;
+                    height: 200px;
+                    padding: 10px;
+                    border: 1px solid var(--Ga1);
+                    border-radius: 4px;
+                    resize: vertical;
+                    margin-bottom: 15px;
+                    font-size: 1rem;
+                    color: var(--text1);"></textarea>
             <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                <button id="cancel-btn" style="padding: 8px 16px; border: none; background: var(--bpx-dmsend-disable-button-bg,#e7e7e7); border-radius: 4px; cursor: pointer;">
+                <button id="cancel-btn" style="padding: 8px 16px; border: none; background: var(--bpx-dmsend-disable-button-bg,var(--graph_bg_thin));color: var(--text1);border-radius: 4px; cursor: pointer;">
                     取消
                 </button>
-                <button id="save-btn" style="padding: 8px 16px; border: none; background: var(--brand_blue); color: white; border-radius: 4px; cursor: pointer;">
+                <button id="save-btn" style="padding: 8px 16px; border: none; background: var(--brand_blue); color: var(--text1); border-radius: 4px; cursor: pointer;">
                     保存
                 </button>
             </div>
@@ -93,6 +98,7 @@
             GM_setValue('filter_keywords', newKeywords)
             keyWords = newKeywords
             div.remove()
+            location.reload()
         }
         div.appendChild(content)
         document.body.appendChild(div)
@@ -111,52 +117,69 @@
         }
     }
 
-    if (window.location.href == 'https://www.bilibili.com/') {
-        document.querySelectorAll('.feed-card').forEach(e => {
-            let title = e.querySelector('.bili-video-card__info a')
-            dom(e, title?.textContent)
+    if (url == 'https://www.bilibili.com/') {
+        document.querySelectorAll('.feed-card').forEach(card => {
+            const title = card.querySelector('.bili-video-card__info a')?.textContent
+            title && dom(card, title)
         })
     }
 
-    if (window.location.href.startsWith('https://www.bilibili.com/video/')) {
-        // 视频页 todo临时方案
-        setTimeout(() => {
-            document.querySelectorAll('.video-page-card-small').forEach(e => {
-                let title = e.querySelector('p')
-                dom(e, title?.textContent)
-            }
-            )
+    if (url.startsWith('https://www.bilibili.com/video/')) {
+        if (document.querySelector('.rec-list').children.length == 0) return
+        const fn = () => {
+            document.querySelectorAll('.card-box').forEach(e => {
+                const title = e.querySelector('p')?.textContent
+                title && dom(e, title)
+            })
+        }
 
-            document.querySelector('.rec-footer').onclick = () => {
-                document.querySelectorAll('.video-page-card-small').forEach(e => {
-                    let title = e.querySelector('p')
-                    dom(e, title?.textContent)
+        fn()
+
+        document.querySelector('.rec-footer').onclick = () => {
+            fn()
+        }
+    }
+
+    if (url.startsWith('https://search.bilibili.com')) {
+        document.querySelectorAll('.bili-video-card__info--tit').forEach(e => {
+            const container = e.closest('.video-list-item, .col_3')
+            container && dom(container, e.textContent.trim())
+        })
+    }
+
+    const filterReplies = (e) => {
+        return e.filter(e => {
+            const title = e.title || ''
+
+            // 检查是否包含关键词
+            return !keyWords.some(keyword => {
+                if (keyword.startsWith('/') && keyword.lastIndexOf('/') > 0 && eval(keyword) instanceof RegExp) {
+                    return eval(keyword).test(title)
+                } else {
+                    return title.includes(keyword)
                 }
-                )
-            }
+            })
 
-        }, 3000)
+        })
     }
 
     const originalFetch = window.fetch
-    window.fetch = async (...args) => {
-        let bool
-        // 首页
-        if (args[0].includes('web-interface/wbi/index/top/feed/rcmd')) {
-            bool = true
-        }
-
+    unsafeWindow.fetch = async (...args) => {
         const response = await originalFetch.apply(this, args)
-
-        if (bool) {
-            let data = await response.json()
-            let list = data['data']['item']
-            list.forEach(e => {
-                if (filter(e['title'])) {
-                    list.splice(list.indexOf(e), 1)
-                }
-            })
-            return new Response(JSON.stringify(data), response)
+        const clonedResponse = response.clone()
+        if (args[0].includes('top/feed/rcmd')) {
+            let data = await clonedResponse.json()
+            if (data.data?.item && Array.isArray(data.data?.item)) {
+                data.data.item = filterReplies(data.data.item)
+                return new Response(JSON.stringify(data), response)
+            }
+        }
+        if (args[0].includes('search/type')) {
+            let data = await clonedResponse.json()
+            if (data.data?.result && Array.isArray(data.data?.result)) {
+                data.data.result = filterReplies(data.data.result)
+                return new Response(JSON.stringify(data), response)
+            }
         }
         return response
     }

@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         New-API 令牌 USD 充值/撤回（按美元输入）
 // @namespace    https://github.com/QuantumNous/new-api
-// @version      0.1.0
+// @version      0.1.1
 // @description  在 New-API 控制台令牌页为每个令牌增加“追加额度/撤回”按钮：按美元输入，自动换算 quota，并调用 /api/token 更新 remain_quota。
 // @match        https://xinbaoapi.dpdns.org/*
+// @match        https://lightai.de5.net/*
 // @run-at       document-end
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/561482/New-API%20%E4%BB%A4%E7%89%8C%20USD%20%E5%85%85%E5%80%BC%E6%92%A4%E5%9B%9E%EF%BC%88%E6%8C%89%E7%BE%8E%E5%85%83%E8%BE%93%E5%85%A5%EF%BC%89.user.js

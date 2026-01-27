@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Ultimate Pinterest, Lexica & Twitter Image Assistant: One-Click HD Originals & Free AI 2x Sharpen
+// @name         Ultimate Image Assistant: Pinterest, Lexica, Twitter HD Originals, AI 2x Enhance & Save as JPG
 // @namespace    http://tampermonkey.net/
-// @version      8.6
-// @description  The Most Stable Version: One-Click Originals, AI 2x Sharpen, and Source Finder. Supports Pinterest, Lexica, and Twitter.
+// @version      8.8
+// @description  The Most Stable Version: One-Click Originals, AI 2x Sharpen, Source Finder, and Save as JPG.
 // @author       Pi Xiao
 // @match        https://*.pinterest.com/*
 // @match        https://lexica.art/*
@@ -11,9 +11,9 @@
 // @grant        GM_openInTab
 // @grant        GM_setClipboard
 // @license      MIT
-// @keywords Pinterest, Twitter, Lexica, HD, Download, Originals, AI Enhance, Color Palette
-// @downloadURL https://update.greasyfork.org/scripts/560387/Ultimate%20Pinterest%2C%20Lexica%20%20Twitter%20Image%20Assistant%3A%20One-Click%20HD%20Originals%20%20Free%20AI%202x%20Sharpen.user.js
-// @updateURL https://update.greasyfork.org/scripts/560387/Ultimate%20Pinterest%2C%20Lexica%20%20Twitter%20Image%20Assistant%3A%20One-Click%20HD%20Originals%20%20Free%20AI%202x%20Sharpen.meta.js
+// @keywords Pinterest, Twitter, Lexica, HD, Download, Originals, AI Enhance, Color Palette, JPG Converter
+// @downloadURL https://update.greasyfork.org/scripts/560387/Ultimate%20Image%20Assistant%3A%20Pinterest%2C%20Lexica%2C%20Twitter%20HD%20Originals%2C%20AI%202x%20Enhance%20%20Save%20as%20JPG.user.js
+// @updateURL https://update.greasyfork.org/scripts/560387/Ultimate%20Image%20Assistant%3A%20Pinterest%2C%20Lexica%2C%20Twitter%20HD%20Originals%2C%20AI%202x%20Enhance%20%20Save%20as%20JPG.meta.js
 // ==/UserScript==
 
 (function() {
@@ -25,11 +25,8 @@
     function getOriginalUrl(src) {
         if(!src) return "";
         const host = location.host;
-        // Pinterest
         if (host.includes('pinterest.com')) return src.replace(/\/(236x|474x|564x|736x|1200x)\//, '/originals/').replace(/\.webp$/, '.jpg');
-        // Lexica
         if (host.includes('lexica.art')) return src.replace('full_webp', 'full_jpg');
-        // Twitter / X
         if (host.includes('twitter.com') || host.includes('x.com')) {
             if (src.includes('pbs.twimg.com')) {
                 const base = src.split('?')[0];
@@ -39,7 +36,7 @@
         return src;
     }
 
-    // --- 2. 颜色与算法逻辑 (保持 V7.2 满血版) ---
+    // --- 2. 颜色与算法逻辑 ---
     function getColorDist(h1, h2) {
         const r1=parseInt(h1.slice(1,3),16), g1=parseInt(h1.slice(3,5),16), b1=parseInt(h1.slice(5,7),16);
         const r2=parseInt(h2.slice(1,3),16), g2=parseInt(h2.slice(3,5),16), b2=parseInt(h2.slice(5,7),16);
@@ -78,7 +75,40 @@
         if (overlay) { overlay.remove(); document.body.style.overflow = 'auto'; }
     }
 
-    // --- 3. 智能预览窗 (比例锁+色盘) ---
+    // --- 3. 新功能：后台静默 WebP 转 JPG 下载器 ---
+    function downloadAsJPG(imgUrl) {
+        const originalUrl = getOriginalUrl(imgUrl);
+        const img = new Image();
+        img.crossOrigin = "Anonymous"; // 必须跨域，否则无法导出
+        img.src = originalUrl;
+
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+
+            // 转成高质量 JPG
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                // 自动重命名，秒杀原生下载
+                a.download = `Designer_HD_${Date.now()}.jpg`; 
+                a.click();
+                URL.revokeObjectURL(url);
+            }, 'image/jpeg', 1.0);
+        };
+
+        img.onerror = () => {
+            alert("This image is protected. Opening in a new tab instead.");
+            window.open(originalUrl, '_blank');
+        };
+    }
+
+
+    // --- 4. 智能预览窗 ---
     async function processAndShow(imgUrl) {
         const originalUrl = getOriginalUrl(imgUrl);
         document.body.style.overflow = 'hidden';
@@ -141,7 +171,7 @@
         img.onerror = () => { window.open(originalUrl, '_blank'); destroyOverlay(); };
     }
 
-    // --- 4. 极简注入逻辑 ---
+    // --- 5. 四合一注入逻辑 ---
     function inject() {
         const images = document.querySelectorAll('img:not(.px-done)');
         images.forEach(img => {
@@ -161,18 +191,34 @@
                 if (window.getComputedStyle(container).position === 'static') container.style.position = 'relative';
                 const bar = document.createElement('div');
                 bar.className = 'px-helper-bar';
-                bar.style = "position:absolute; top:10px; left:10px; z-index:10000; display:flex; gap:4px; opacity:0; transition:0.3s; pointer-events:auto;";
+                // 稍微增加一点间距以容纳4个按钮
+                bar.style = "position:absolute; top:10px; left:10px; z-index:10000; display:flex; gap:3px; opacity:0; transition:0.3s; pointer-events:auto;";
                 
                 const lockedSrc = src; 
-                const btnS = 'color:white; border:none; border-radius:4px; cursor:pointer; padding:4px 8px; font-weight:bold; font-size:9px; box-shadow:0 2px 5px rgba(0,0,0,0.3); white-space:nowrap;';
+                // 字体微调到 8.5px，防止4个按钮超出图片宽度
+                const btnS = 'color:white; border:none; border-radius:4px; cursor:pointer; padding:4px 6px; font-weight:bold; font-size:8.5px; box-shadow:0 2px 5px rgba(0,0,0,0.3); white-space:nowrap;';
+                
                 const b1 = document.createElement('button'); b1.innerHTML = '🪄 2x HD'; b1.style = btnS + 'background:#00BFFF;';
                 b1.onclick = (e) => { e.preventDefault(); e.stopPropagation(); processAndShow(lockedSrc); };
-                const b2 = document.createElement('button'); b2.innerHTML = '🖼️ Originals'; b2.style = btnS + 'background:#E60023;';
+                
+                const b2 = document.createElement('button'); b2.innerHTML = '🖼️ View'; b2.style = btnS + 'background:#E60023;';
                 b2.onclick = (e) => { e.preventDefault(); e.stopPropagation(); window.open(getOriginalUrl(lockedSrc), '_blank'); };
-                const b3 = document.createElement('button'); b3.innerHTML = '🔍 Source'; b3.style = btnS + 'background:#34a853;';
-                b3.onclick = (e) => { e.preventDefault(); e.stopPropagation(); window.open(`https://lens.google.com/uploadbyurl?url=${encodeURIComponent(getOriginalUrl(lockedSrc))}`, '_blank'); };
 
-                bar.append(b1, b2, b3);
+                // 新增：JPG 下载器
+                const b3 = document.createElement('button'); b3.innerHTML = '💾 JPG'; b3.style = btnS + 'background:#6a11cb;'; // 魅惑紫
+                b3.onclick = (e) => { 
+                    e.preventDefault(); e.stopPropagation(); 
+                    // 按钮点击后稍微变个色给反馈
+                    b3.innerHTML = '⏳ Saving...';
+                    b3.style.background = '#888';
+                    downloadAsJPG(lockedSrc); 
+                    setTimeout(() => { b3.innerHTML = '💾 JPG'; b3.style.background = '#6a11cb'; }, 2000);
+                };
+
+                const b4 = document.createElement('button'); b4.innerHTML = '🔍 Src'; b4.style = btnS + 'background:#34a853;';
+                b4.onclick = (e) => { e.preventDefault(); e.stopPropagation(); window.open(`https://lens.google.com/uploadbyurl?url=${encodeURIComponent(getOriginalUrl(lockedSrc))}`, '_blank'); };
+
+                bar.append(b1, b2, b3, b4);
                 container.appendChild(bar);
                 container.addEventListener('mouseenter', () => bar.style.opacity = "1");
                 container.addEventListener('mouseleave', () => bar.style.opacity = "0");

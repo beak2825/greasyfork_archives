@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Facebook remove suggested sponsored ads blocks
-// @version 1.20.13
+// @version 1.20.15
 // @description Remove suggested/sponsored blocks from Facebook
 // @author Sly_North
 // @match https://www.facebook.com/*
@@ -14,6 +14,7 @@
 // @exclude https://www.facebook.com/*/about
 // @exclude https://www.facebook.com/*/photos
 // @exclude https://www.facebook.com/*/friends
+// @exclude https://www.facebook.com/*/about/
 // @namespace https://greasyfork.org/en/users/759669-sly-north
 // @license MIT
 // @grant none
@@ -84,7 +85,7 @@ function removeElement(type, e, parent) {
     console.log('- Fb ads - could not find parent for ', type, ' tag= ', parent.tagName, ' H=', height, ' ', e.innerText.substring(0, maxMessageLog).replaceAll('\n',''));
     return;
   }
-  console.log('- Fb ads ', type, ' tag=', parent.tagName, ' H=', height, ' ',
+  console.log('- Fb ads removed: ', type, ' tag=', parent.tagName, ' H=', height, ' ',
               parent.innerText.replaceAll("\n"," ").replaceAll(/Facebook  *Facebook  */g, ""), ' from ', e.innerText.substring(0, maxMessageLog).replaceAll('\n',''));
   e.style.display = "none";
   parent.style.display = "none";
@@ -110,7 +111,7 @@ function RemoveAllSponsored()
   }
 
   // Remove the "suggestion" posts
-  if (document.URL.match(/facebook.com\/*(\?.*)*/)) {
+  if (document.URL.match(/facebook.com\/*(\?.*)*/) && !document.URL.match(/\/posts\//)) {
     for (tag of ['a', 'use']) {
       const maybeAds = Array.from(document.getElementsByTagName(tag)).filter(e => {
         const br = e.getBoundingClientRect();
@@ -123,6 +124,7 @@ function RemoveAllSponsored()
         const parent = getWholePost(e);
         if (!parent) { console.log(' - Fb ads sponsored element: parent element not found!'); continue; }
         if (parent.innerText.match(/Create new account/) || parent.innerText.match(/shared a memory/)) continue;
+        const br = e.getBoundingClientRect();
         removeElement('sponsored post', e, parent);
       }
     }
@@ -188,4 +190,4 @@ function RemoveAllSponsored()
   }
 }
 
-setTimeout(RemoveAllSponsored, 1000);
+setTimeout(RemoveAllSponsored, 2000);

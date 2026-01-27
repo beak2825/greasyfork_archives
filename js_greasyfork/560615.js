@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          FF14物价查询补充-Universalis+Wiki
 // @namespace     FF14-Universalis-CN-L10n
-// @version       1.3.0
+// @version       1.3.1
 // @description   Universalis 新版本物品搜索补全；FF14 灰机Wiki 物品页增加物价链接。
 // @author        桀桀大王@红茶川
 // @match         https://ff14.huijiwiki.com/wiki/*
@@ -226,17 +226,23 @@
             this.injectStyles();
             this.injectInterceptor(); // 注入 Fetch 拦截器
             this.bindBridge();        // 绑定跨域通信桥
-            this.observeDOM();        // 监听 DOM 变化
-            
-            // 路由监听：处理 SPA (Single Page Application) 的页面跳转
-            window.addEventListener('popstate', () => this.handleNavigation());
-            
-            // 劫持 pushState 以捕获前端路由跳转
-            const pushState = history.pushState;
-            history.pushState = (...args) => {
-                pushState.apply(history, args);
-                this.handleNavigation();
+            const startDOM = () => {
+                this.observeDOM();        // 监听 DOM 变化
+                // 路由监听：处理 SPA (Single Page Application) 的页面跳转
+                window.addEventListener('popstate', () => this.handleNavigation());
+               // 劫持 pushState 以捕获前端路由跳转
+                const pushState = history.pushState;
+                history.pushState = (...args) => {
+                    pushState.apply(history, args);
+                    this.handleNavigation();
+                };
             };
+
+            if (document.body) {
+                startDOM();
+            } else {
+                window.addEventListener('DOMContentLoaded', startDOM);
+            }
         }
 
         /**

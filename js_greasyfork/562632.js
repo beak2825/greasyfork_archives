@@ -1,10 +1,12 @@
 // ==UserScript==
 // @name         三叉戟-发版管理-表格增强
 // @namespace    http://tampermonkey.net/
-// @version      1.3.8
-// @description  发版管理页面，相关功能的增强实现
+// @version      1.8.6
+// @description  发版管理页面，相关功能的增强实现 (v1.8.6: 导出完成后延迟下载)
 // @author       shrek_maxi
 // @match        https://poseidon.cisdigital.cn/app/devops*
+// @match        https://poseidon.cisdigital.cn/devops*
+// @match        *://*/app/devops*
 // @icon         https://poseidon.cisdigital.cn/favicon.ico
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
@@ -19,16 +21,29 @@
     "use strict";
 
     // 脚本版本信息
-    const SCRIPT_VERSION = "1.3.8";
+    const SCRIPT_VERSION = "1.8.6";
     const SCRIPT_NAME = "三叉戟-发版管理-表格增强";
+    
+    // 可能的 releases API 路径 (/api 在前)
+    const RELEASES_API_PATHS = [
+        "/api/devops/releases/",    // 主路径
+        "/api/releases/",           // 备选路径
+    ];
 
-    const releaseUrlPrefix =
-        "https://poseidon.cisdigital.cn/app/devops/releases?";
+    // 支持多种 URL 格式 (v1.7.0+ 兼容)
+    const releaseUrlPatterns = [
+        "poseidon.cisdigital.cn/app/devops/releases",
+        "/app/devops/releases",
+        "/devops/releases",
+    ];
     let isFirstLoad = true;
     let projectName;
     let productName;
+    let projectId;    // v1.7.0: 存储数字 ID
+    let productId;    // v1.7.0: 存储数字 ID
     let productDisplayName;
     let currentArchived = 0; // 0: 未归档, 1: 已归档
+    let isShowingAll = false; // v1.6.8: 是否选择了"全部"
     let observer = null;
     let releaseDataCache = {}; // 缓存版本数据 {name: id}
 
@@ -38,10 +53,47 @@
     console.log(`%c[${SCRIPT_NAME}]`, 'color: #67C23A;', 
                 `当前生效版本: v${SCRIPT_VERSION}`);
 
+    // 注入CSS样式确保发版日志按钮文字完整显示
+    GM_addStyle(`
+        /* v1.6.5: 统一发版日志按钮样式 */
+        .release-log-btn {
+            color: #409EFF !important;
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            font-size: 12px !important;
+            font-weight: normal !important;
+            cursor: pointer !important;
+            white-space: nowrap !important;
+            overflow: visible !important;
+            text-overflow: unset !important;
+            line-height: inherit !important;
+            vertical-align: middle !important;
+        }
+        .release-log-btn:hover {
+            color: #66b1ff !important;
+            text-decoration: none !important;
+        }
+        /* 让操作列允许内容溢出 */
+        .el-table td:last-child,
+        .el-table td:last-child .cell,
+        .el-table td:last-child .el-space,
+        .el-table td:last-child .el-space__item {
+            overflow: visible !important;
+        }
+        /* 让包含发版日志按钮的容器不换行 */
+        .el-space--horizontal:has(.release-log-btn) {
+            flex-wrap: nowrap !important;
+        }
+    `);
+
     initial();
 
     function initial() {
         console.log(`[${SCRIPT_NAME}] 脚本初始化... (v${SCRIPT_VERSION})`);
+        
+        // v1.6.4: 拦截 XHR 和 fetch 请求，监听 releases API 响应
+        interceptNetworkRequests();
         // vue单页面框架，需要根据URL的变化执行相应的操作
         let lastUrl = location.href;
         new MutationObserver(() => {
@@ -53,27 +105,249 @@
             }
         }).observe(document, { subtree: true, childList: true });
 
-        // 监听tab切换（归档/未归档）
+        // 监听tab切换和下拉框选择（归档/未归档）- v1.6.4 改进
         document.addEventListener('click', function (e) {
-            const tabItem = e.target.closest('.el-tabs__item');
-            if (tabItem && location.href.startsWith(releaseUrlPrefix)) {
-                // 延迟执行以等待tab内容加载
-                setTimeout(() => {
-                    detectArchivedTab();
-                    reloadTableEnhancements();
-                }, 500);
+            // 支持多种 tab 选择器
+            const tabItem = e.target.closest('.el-tabs__item') || 
+                           e.target.closest('[role="tab"]') ||
+                           e.target.closest('.tab-item');
+            
+            // 支持下拉框选项（el-select-dropdown__item）
+            const dropdownItem = e.target.closest('.el-select-dropdown__item');
+            
+            const isReleasePage = releaseUrlPatterns.some(pattern => location.href.includes(pattern));
+            
+            if ((tabItem || dropdownItem) && isReleasePage) {
+                const clickedText = (tabItem || dropdownItem)?.textContent?.trim() || '';
+                console.log(`[${SCRIPT_NAME}] 检测到点击: "${clickedText}" (tab=${!!tabItem}, dropdown=${!!dropdownItem})`);
+                
+                // 如果点击的是归档相关选项
+                if (clickedText.includes('已归档') || clickedText.includes('未归档') || clickedText.includes('全部')) {
+                    console.log(`[${SCRIPT_NAME}] 归档状态切换: "${clickedText}"`);
+                    // 直接根据点击内容设置状态
+                    const prevArchived = currentArchived;
+                    currentArchived = clickedText === '已归档' ? 1 : 0;
+                    // v1.6.8: 记录是否选择了"全部"
+                    isShowingAll = clickedText.includes('全部');
+                    console.log(`[${SCRIPT_NAME}] 归档状态从 ${prevArchived} 变更为 ${currentArchived}, 全部模式: ${isShowingAll}`);
+                    
+                    // v1.6.5: 检查是否所有行都有按钮的函数
+                    function checkAllRowsHaveButtons() {
+                        const rows = document.querySelectorAll('.el-table__body-wrapper .el-table__body tbody tr.el-table__row') ||
+                                    document.querySelectorAll('.el-table tbody tr.el-table__row');
+                        if (rows.length === 0) return false;
+                        
+                        let rowsWithoutBtn = 0;
+                        rows.forEach(row => {
+                            if (!row.querySelector('.release-log-btn')) {
+                                rowsWithoutBtn++;
+                            }
+                        });
+                        console.log(`[${SCRIPT_NAME}] 检查按钮: ${rows.length}行, ${rowsWithoutBtn}行缺少按钮`);
+                        return rowsWithoutBtn === 0;
+                    }
+                    
+                    // 对于下拉框，需要等待下拉框关闭和 API 请求完成
+                    // 使用多次重试策略
+                    if (dropdownItem) {
+                        console.log(`[${SCRIPT_NAME}] 下拉框选择，等待 API 响应...`);
+                        // 第一次延迟：等待下拉框关闭
+                        setTimeout(() => {
+                            detectArchivedStatus();
+                            reloadTableEnhancements();
+                        }, 800);
+                        
+                        // 第二次延迟：确保表格已更新，检查所有行是否都有按钮
+                        setTimeout(() => {
+                            if (!checkAllRowsHaveButtons()) {
+                                console.log(`[${SCRIPT_NAME}] 第二次检查：有行缺少按钮，重新添加`);
+                                addReleaseNoteButton();
+                            }
+                        }, 2500);
+                        
+                        // 第三次延迟：最终保障
+                        setTimeout(() => {
+                            if (!checkAllRowsHaveButtons()) {
+                                console.log(`[${SCRIPT_NAME}] 第三次检查：有行缺少按钮，最终重新添加`);
+                                addReleaseNoteButton();
+                            }
+                        }, 4000);
+                    } else {
+                        // Tab 切换，使用较短延迟
+                        setTimeout(() => {
+                            detectArchivedStatus();
+                            reloadTableEnhancements();
+                        }, 500);
+                    }
+                } else {
+                    // 其他点击（非归档切换），正常处理
+                    const delay = dropdownItem ? 1000 : 500;
+                    setTimeout(() => {
+                        detectArchivedStatus();
+                        reloadTableEnhancements();
+                    }, delay);
+                }
             }
         });
     }
 
-    function detectArchivedTab() {
-        // 检测当前是否在已归档tab
+    // v1.6.5: 拦截网络请求以监听 releases API 响应
+    function interceptNetworkRequests() {
+        // v1.6.5: 检查是否所有行都有按钮
+        function checkAndAddMissingButtons() {
+            const rows = document.querySelectorAll('.el-table__body-wrapper .el-table__body tbody tr.el-table__row') ||
+                        document.querySelectorAll('.el-table tbody tr.el-table__row');
+            if (rows.length === 0) {
+                console.log(`[${SCRIPT_NAME}] 未找到表格行，跳过按钮检查`);
+                return;
+            }
+            
+            let rowsWithoutBtn = 0;
+            rows.forEach(row => {
+                if (!row.querySelector('.release-log-btn')) {
+                    rowsWithoutBtn++;
+                }
+            });
+            
+            console.log(`[${SCRIPT_NAME}] API 响应后检查: ${rows.length}行, ${rowsWithoutBtn}行缺少按钮`);
+            
+            if (rowsWithoutBtn > 0) {
+                addReleaseNoteButton();
+            }
+        }
+        
+        // 保存原始的 fetch 函数
+        const originalFetch = window.fetch;
+        
+        window.fetch = function(...args) {
+            const url = args[0];
+            
+            // 检查是否是 releases API 请求
+            if (typeof url === 'string' && url.includes('/api/devops/releases')) {
+                console.log(`[${SCRIPT_NAME}] 检测到 releases API 请求: ${url}`);
+                
+                // 解析 archived 参数
+                const urlObj = new URL(url, window.location.origin);
+                const archivedParam = urlObj.searchParams.get('archived');
+                if (archivedParam !== null) {
+                    console.log(`[${SCRIPT_NAME}] API 请求 archived 参数: ${archivedParam}`);
+                }
+                
+                return originalFetch.apply(this, args).then(response => {
+                    // 克隆响应以便读取
+                    const clonedResponse = response.clone();
+                    
+                    clonedResponse.json().then(data => {
+                        console.log(`[${SCRIPT_NAME}] releases API 响应完成，数据条数: ${data.data?.length || 0}`);
+                        
+                        // 延迟后刷新按钮（等待 Vue 渲染）
+                        setTimeout(() => {
+                            console.log(`[${SCRIPT_NAME}] API 响应后自动刷新按钮`);
+                            checkAndAddMissingButtons();
+                        }, 500);
+                        
+                        // v1.6.5: 额外延迟检查，确保所有行都有按钮
+                        setTimeout(() => {
+                            checkAndAddMissingButtons();
+                        }, 1500);
+                    }).catch(() => {});
+                    
+                    return response;
+                });
+            }
+            
+            return originalFetch.apply(this, args);
+        };
+        
+        // 保存原始的 XMLHttpRequest
+        const originalXHROpen = XMLHttpRequest.prototype.open;
+        const originalXHRSend = XMLHttpRequest.prototype.send;
+        
+        XMLHttpRequest.prototype.open = function(method, url, ...rest) {
+            this._url = url;
+            return originalXHROpen.apply(this, [method, url, ...rest]);
+        };
+        
+        XMLHttpRequest.prototype.send = function(...args) {
+            if (this._url && this._url.includes('/api/devops/releases')) {
+                console.log(`[${SCRIPT_NAME}] 检测到 XHR releases API 请求: ${this._url}`);
+                
+                this.addEventListener('load', function() {
+                    console.log(`[${SCRIPT_NAME}] XHR releases API 响应完成`);
+                    
+                    // 延迟后刷新按钮
+                    setTimeout(() => {
+                        console.log(`[${SCRIPT_NAME}] XHR 响应后自动刷新按钮`);
+                        checkAndAddMissingButtons();
+                    }, 500);
+                    
+                    // v1.6.5: 额外延迟检查
+                    setTimeout(() => {
+                        checkAndAddMissingButtons();
+                    }, 1500);
+                });
+            }
+            
+            return originalXHRSend.apply(this, args);
+        };
+        
+        console.log(`[${SCRIPT_NAME}] 网络请求拦截已设置`);
+    }
+
+    function detectArchivedStatus() {
+        // 检测当前是否在已归档状态
+        console.log(`[${SCRIPT_NAME}] 开始检测归档状态...`);
+        
+        // 方法1: 检查 tab
         const activeTab = document.querySelector('.el-tabs__item.is-active');
         if (activeTab) {
             const tabText = activeTab.textContent.trim();
-            currentArchived = tabText.includes('已归档') ? 1 : 0;
-            console.log(`[${SCRIPT_NAME}] 当前Tab: ${tabText}, archived=${currentArchived}`);
+            if (tabText.includes('已归档') || tabText.includes('未归档')) {
+                currentArchived = tabText.includes('已归档') ? 1 : 0;
+                console.log(`[${SCRIPT_NAME}] 从Tab检测: ${tabText}, archived=${currentArchived}`);
+                return;
+            }
         }
+        
+        // 方法2: 检查所有下拉框，找到包含归档选项的那个
+        const allSelects = document.querySelectorAll('.el-select');
+        console.log(`[${SCRIPT_NAME}] 找到 ${allSelects.length} 个下拉框`);
+        
+        for (const select of allSelects) {
+            const input = select.querySelector('.el-input__inner, input');
+            if (input) {
+                const value = input.value || input.textContent || '';
+                console.log(`[${SCRIPT_NAME}] 下拉框值: "${value}"`);
+                
+                if (value === '已归档') {
+                    currentArchived = 1;
+                    isShowingAll = false;
+                    console.log(`[${SCRIPT_NAME}] 从下拉框检测: ${value}, archived=1, 全部模式=false`);
+                    return;
+                } else if (value === '未归档') {
+                    currentArchived = 0;
+                    isShowingAll = false;
+                    console.log(`[${SCRIPT_NAME}] 从下拉框检测: ${value}, archived=0, 全部模式=false`);
+                    return;
+                } else if (value === '全部') {
+                    currentArchived = 0;
+                    isShowingAll = true;
+                    console.log(`[${SCRIPT_NAME}] 从下拉框检测: ${value}, archived=0, 全部模式=true`);
+                    return;
+                }
+            }
+        }
+        
+        // 方法3: 检查 URL 参数 (一些实现可能通过 URL 参数传递归档状态)
+        const urlParams = new URLSearchParams(window.location.search);
+        const archivedParam = urlParams.get('archived');
+        if (archivedParam !== null) {
+            currentArchived = archivedParam === '1' || archivedParam === 'true' ? 1 : 0;
+            console.log(`[${SCRIPT_NAME}] 从URL参数检测: archived=${currentArchived}`);
+            return;
+        }
+        
+        console.log(`[${SCRIPT_NAME}] 未能检测到归档状态，使用默认值: archived=${currentArchived}`);
     }
 
     function createObserver() {
@@ -90,81 +364,272 @@
 
     function initializePageEnhancements() {
         try {
-            detectArchivedTab();
+            detectArchivedStatus();
 
-            let projectDisplayName = document.querySelectorAll(
-                "#base-app > div > div.header-container > div.header > div.left > div.base-selector.base-selector > span.selector-item-wrap.selector-project > div > div.el-select-dropdown.el-popper.base-selector-dropdown > div > div.el-select-dropdown__wrap.el-scrollbar__wrap > ul > ul.el-select-group__wrap.recent-group > li:nth-child(2) > ul > li.el-select-dropdown__item.selected"
-            )[0]?.textContent;
-            let defaultProductDisplayName = document.querySelectorAll(
-                "#base-app > div > div.header-container > div.header > div.left > div.base-selector.base-selector > span.selector-item-wrap.selector-product > div > div.el-select-dropdown.el-popper.base-selector-dropdown > div > div.el-select-dropdown__wrap.el-scrollbar__wrap > ul > ul.el-select-group__wrap.recent-group > li:nth-child(2) > ul > li.el-select-dropdown__item.selected"
-            )[0]?.textContent;
-            let selectProductDisplayName = document.querySelectorAll(
-                "body > div.el-select-dropdown.el-popper.base-selector-dropdown > div > div.el-select-dropdown__wrap.el-scrollbar__wrap > ul > ul:nth-child(2) > li:nth-child(2) > ul > li.el-select-dropdown__item.selected"
-            )[0]?.textContent;
-            productDisplayName = defaultProductDisplayName ? defaultProductDisplayName : selectProductDisplayName;
+            // 尝试多种方式获取项目和产品显示名称
+            let projectDisplayName = getProjectDisplayName();
+            let productDisplayNameValue = getProductDisplayName();
+            
+            productDisplayName = productDisplayNameValue;
+            
+            // 如果 DOM 方式失败，尝试从 URL 获取 (v1.7.0 使用数字 ID)
+            if (!productDisplayName || !projectDisplayName) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const urlProject = urlParams.get('project');
+                const urlProduct = urlParams.get('product');
+                
+                if (urlProject && urlProduct) {
+                    console.log(`[${SCRIPT_NAME}] 从 URL 获取项目产品 ID: ${urlProject}/${urlProduct}`);
+                    // v1.7.0 使用数字 ID，需要通过 API 转换为名称
+                    continueInitialization(urlProject, urlProduct);
+                    return;
+                }
+            }
+            
             if (!productDisplayName) {
-                console.error(
-                    `[${SCRIPT_NAME}] 获取项目和产品信息失败，projectDisplayName=${projectDisplayName}, productDisplayName=${productDisplayName}`
+                console.warn(
+                    `[${SCRIPT_NAME}] 无法获取产品信息，尝试延迟重试...`
                 );
+                // 延迟重试一次
+                setTimeout(() => {
+                    productDisplayName = getProductDisplayName();
+                    if (productDisplayName) {
+                        continueInitialization(projectDisplayName, productDisplayName);
+                    } else {
+                        console.error(`[${SCRIPT_NAME}] 获取产品信息最终失败`);
+                    }
+                }, 1000);
                 return;
             }
-            fetchProjectList()
-                .then((projectList) => {
-                    if (projectList && projectList.length > 0) {
-                        projectList.forEach((project) => {
-                            if (project.display_name === projectDisplayName) {
-                                projectName = project.name;
-                                project.products.forEach((product) => {
-                                    if (
-                                        product.display_name === productDisplayName
-                                    ) {
-                                        productName = product.name;
-                                    }
-                                });
-                            }
-                        });
-                    }
-                    if (projectName && productName) {
-                        console.log(`[${SCRIPT_NAME}] project=${projectName}, product=${productName}`);
-                        addVersionBadge();
-                        addIdColumn();
-                        removeColumn('新建时间');
-                        removeColumn('ID');
-                        removeEditButtons();
-                        addReleaseNoteButton();
-                        // 根据当前tab获取对应的数据
-                        fetchReleaseList(currentArchived)
-                            .then((data) => {
-                                cacheReleaseData(data); // 缓存数据
-                                updateTableWithRealIds(data);
-                            })
-                            .catch((error) => {
-                                console.error(`[${SCRIPT_NAME}] Error fetching data: ${error}`);
-                            });
-                    } else {
-                        console.error(
-                            `[${SCRIPT_NAME}] 获取项目和产品信息失败，project=${projectName}, product=${productName}`
-                        );
-                    }
-                })
-                .catch((error) => {
-                    console.error(`[${SCRIPT_NAME}] Error fetching data: ${error}`);
-                });
+            
+            continueInitialization(projectDisplayName, productDisplayName);
+            
         } catch (error) {
             console.error(`[${SCRIPT_NAME}] initializePageEnhancements错误: ${error}`);
+            console.error(error.stack);
         }
+    }
+    
+    // 获取项目显示名称
+    function getProjectDisplayName() {
+        const selectors = [
+            "#base-app .selector-project .el-select-dropdown__item.selected",
+            ".selector-project .selected",
+            "[class*='selector-project'] .selected",
+            ".project-select .el-input__inner",
+            ".header-selector .project .selected-text",
+        ];
+        
+        for (const selector of selectors) {
+            const el = document.querySelector(selector);
+            if (el?.textContent?.trim()) {
+                return el.textContent.trim();
+            }
+        }
+        return null;
+    }
+    
+    // 获取产品显示名称
+    function getProductDisplayName() {
+        const selectors = [
+            "#base-app .selector-product .el-select-dropdown__item.selected",
+            ".selector-product .selected",
+            "[class*='selector-product'] .selected",
+            ".product-select .el-input__inner",
+            ".header-selector .product .selected-text",
+            "body > div.el-select-dropdown .el-select-dropdown__item.selected",
+        ];
+        
+        for (const selector of selectors) {
+            const el = document.querySelector(selector);
+            if (el?.textContent?.trim()) {
+                return el.textContent.trim();
+            }
+        }
+        return null;
+    }
+    
+    // 继续初始化流程
+    function continueInitialization(projDisplayName, prodDisplayName) {
+        fetchProjectList()
+            .then((projectList) => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const urlProjectId = urlParams.get('project');
+                const urlProductId = urlParams.get('product');
+                
+                if (projectList && projectList.length > 0) {
+                    projectList.forEach((project) => {
+                        // 支持通过 ID、名称或显示名称匹配
+                        const projectIdMatch = String(project.id) === urlProjectId;
+                        const projectNameMatch = project.display_name === projDisplayName || project.name === projDisplayName;
+                        
+                        if (projectIdMatch || projectNameMatch) {
+                            projectName = project.name; // 使用 API 名称
+                            projectId = project.id;     // v1.7.0: 存储数字 ID
+                            console.log(`[${SCRIPT_NAME}] 匹配到项目: id=${project.id}, name=${project.name}`);
+                            
+                            project.products.forEach((product) => {
+                                const productIdMatch = String(product.id) === urlProductId;
+                                const productNameMatch = product.display_name === prodDisplayName || product.name === prodDisplayName;
+                                
+                                if (productIdMatch || productNameMatch) {
+                                    productName = product.name; // 使用 API 名称
+                                    productId = product.id;     // v1.7.0: 存储数字 ID
+                                    console.log(`[${SCRIPT_NAME}] 匹配到产品: id=${product.id}, name=${product.name}`);
+                                }
+                            });
+                        }
+                    });
+                }
+                
+                if (projectName && productName) {
+                    proceedWithProjectProduct();
+                } else {
+                    console.error(
+                        `[${SCRIPT_NAME}] 无法从项目列表中找到匹配项，urlProjectId=${urlProjectId}, urlProductId=${urlProductId}`
+                    );
+                    console.log(`[${SCRIPT_NAME}] 可用项目列表:`, projectList?.map(p => ({id: p.id, name: p.name})));
+                }
+            })
+            .catch((error) => {
+                console.error(`[${SCRIPT_NAME}] Error fetching project list: ${error}`);
+            });
+    }
+    
+    // 使用项目和产品信息进行页面增强
+    function proceedWithProjectProduct() {
+        console.log(`[${SCRIPT_NAME}] project=${projectName}, product=${productName}`);
+        addVersionBadge();
+        addIdColumn();
+        removeColumn('新建时间');
+        removeColumn('ID');
+        removeEditButtons();
+        addReleaseNoteButton();
+        // 根据当前tab获取对应的数据
+        fetchReleaseList(currentArchived)
+            .then((data) => {
+                cacheReleaseData(data); // 缓存数据
+                updateTableWithRealIds(data);
+            })
+            .catch((error) => {
+                console.error(`[${SCRIPT_NAME}] Error fetching release list: ${error}`);
+            });
     }
 
     function reloadTableEnhancements() {
-        // 重新加载表格增强
-        console.log(`[${SCRIPT_NAME}] 重新加载表格增强...`);
-        enableTableObserver();
+        // 重新加载表格增强 - v1.6.7
+        console.log(`[${SCRIPT_NAME}] 重新加载表格增强... (v1.6.7)`);
+        
+        // v1.6.7: 检查是否在版本管理页面
+        const isReleasePage = releaseUrlPatterns.some(pattern => location.href.includes(pattern));
+        if (!isReleasePage) {
+            console.log(`[${SCRIPT_NAME}] 当前不是版本管理页面，跳过`);
+            return;
+        }
+        
+        console.log(`[${SCRIPT_NAME}] 当前归档状态: ${currentArchived === 1 ? '已归档' : '未归档'}`);
+        
+        // 先移除所有已存在的发版日志按钮
+        document.querySelectorAll('.release-log-btn').forEach(btn => btn.remove());
+        
+        // 使用轮询方式等待表格渲染完成
+        let attempts = 0;
+        const maxAttempts = 20; // 最多尝试 20 次
+        const pollInterval = 300; // 每 300ms 检查一次
+        
+        function pollForTable() {
+            attempts++;
+            console.log(`[${SCRIPT_NAME}] 轮询表格 (${attempts}/${maxAttempts})...`);
+            
+            // 查找表格行
+            const rows = document.querySelectorAll('.el-table__body-wrapper .el-table__body tbody tr.el-table__row') ||
+                        document.querySelectorAll('.el-table tbody tr.el-table__row') ||
+                        document.querySelectorAll('table tbody tr');
+            
+            // 检查是否有有效的表格行（排除空行）
+            const validRows = Array.from(rows).filter(row => {
+                const tds = row.querySelectorAll('td');
+                return tds.length > 0;
+            });
+            
+            console.log(`[${SCRIPT_NAME}] 找到 ${validRows.length} 个有效行`);
+            
+            if (validRows.length > 0) {
+                // 找到表格行，执行按钮添加
+                console.log(`[${SCRIPT_NAME}] 表格已渲染，开始添加按钮`);
+                
+                // 稍微延迟以确保 DOM 完全渲染
+                setTimeout(() => {
+                    addReleaseNoteButton();
+                    // v1.6.8: 如果是"全部"模式，获取两种数据
+                    if (isShowingAll) {
+                        console.log(`[${SCRIPT_NAME}] 全部模式，获取两种数据...`);
+                        Promise.all([
+                            fetchReleaseList(0).catch(() => []),
+                            fetchReleaseList(1).catch(() => [])
+                        ]).then(([unarchived, archived]) => {
+                            const allData = [...(unarchived || []), ...(archived || [])];
+                            cacheReleaseData(allData);
+                            updateTableWithRealIds(allData);
+                        }).catch((error) => {
+                            console.error(`[${SCRIPT_NAME}] Error fetching release lists: ${error}`);
+                        });
+                    } else {
+                        fetchReleaseList(currentArchived)
+                            .then((data) => {
+                                cacheReleaseData(data);
+                                updateTableWithRealIds(data);
+                            })
+                            .catch((error) => {
+                                console.error(`[${SCRIPT_NAME}] Error fetching release list: ${error}`);
+                            });
+                    }
+                }, 200);
+            } else if (attempts < maxAttempts) {
+                // 继续轮询
+                setTimeout(pollForTable, pollInterval);
+            } else {
+                // 超过最大尝试次数，强制执行
+                console.warn(`[${SCRIPT_NAME}] 超过最大尝试次数 (${maxAttempts})，强制添加按钮`);
+                debugPageStructure();
+                addReleaseNoteButton();
+                // v1.6.8: 如果是"全部"模式，获取两种数据
+                if (isShowingAll) {
+                    Promise.all([
+                        fetchReleaseList(0).catch(() => []),
+                        fetchReleaseList(1).catch(() => [])
+                    ]).then(([unarchived, archived]) => {
+                        const allData = [...(unarchived || []), ...(archived || [])];
+                        cacheReleaseData(allData);
+                        updateTableWithRealIds(allData);
+                    }).catch((error) => {
+                        console.error(`[${SCRIPT_NAME}] Error fetching release lists: ${error}`);
+                    });
+                } else {
+                    fetchReleaseList(currentArchived)
+                        .then((data) => {
+                            cacheReleaseData(data);
+                            updateTableWithRealIds(data);
+                        })
+                        .catch((error) => {
+                            console.error(`[${SCRIPT_NAME}] Error fetching release list: ${error}`);
+                        });
+                }
+            }
+        }
+        
+        // 开始轮询
+        pollForTable();
     }
 
     function onUrlChange() {
         const currUrl = location.href;
         console.log(`[${SCRIPT_NAME}] URL changed!`, currUrl);
-        if (currUrl.startsWith(releaseUrlPrefix)) {
+        
+        // 检查是否匹配任何版本管理页面 URL
+        const isReleasePage = releaseUrlPatterns.some(pattern => currUrl.includes(pattern));
+        if (isReleasePage) {
+            console.log(`[${SCRIPT_NAME}] 检测到版本管理页面`);
             enableTableObserver();
         }
     }
@@ -182,28 +647,81 @@
     }
 
     function isPageLoaded() {
-        const headerRow = document.querySelector(
-            ".el-table__header-wrapper .el-table__header thead tr"
-        );
-        const bodyRows = document.querySelectorAll(
-            ".el-table__body-wrapper .el-table__body tbody tr"
-        );
-        const project = document.querySelectorAll(
-            "#base-app > div > div.header-container > div.header > div.left > div.base-selector.base-selector > span.selector-item-wrap.selector-project > div > div.el-select-dropdown.el-popper.base-selector-dropdown > div > div.el-select-dropdown__wrap.el-scrollbar__wrap > ul > ul.el-select-group__wrap.recent-group > li:nth-child(2) > ul > li.el-select-dropdown__item.selected"
-        )[0];
-        const defaultProduct = document.querySelectorAll(
-            "#base-app > div > div.header-container > div.header > div.left > div.base-selector.base-selector > span.selector-item-wrap.selector-product > div > div.el-select-dropdown.el-popper.base-selector-dropdown > div > div.el-select-dropdown__wrap.el-scrollbar__wrap > ul > ul.el-select-group__wrap.recent-group > li:nth-child(2) > ul > li.el-select-dropdown__item.selected"
-        )[0];
-        const product = document.querySelectorAll(
-            "body > div.el-select-dropdown.el-popper.base-selector-dropdown > div > div.el-select-dropdown__wrap.el-scrollbar__wrap > ul > ul:nth-child(2) > li:nth-child(2) > ul > li.el-select-dropdown__item.selected"
-        )[0];
-        return (
-            headerRow &&
-            bodyRows &&
-            bodyRows.length > 0 &&
-            project &&
-            (defaultProduct || product)
-        );
+        // 多种表格头部选择器
+        const headerSelectors = [
+            ".el-table__header-wrapper .el-table__header thead tr",
+            ".el-table thead tr",
+            "table thead tr",
+        ];
+        
+        // 多种表格行选择器
+        const bodyRowSelectors = [
+            ".el-table__body-wrapper .el-table__body tbody tr",
+            ".el-table tbody tr.el-table__row",
+            "table tbody tr",
+        ];
+        
+        // 多种项目选择器 (v1.7.0 可能有变化)
+        const projectSelectors = [
+            "#base-app .selector-project .el-select-dropdown__item.selected",
+            ".selector-project .selected",
+            "[class*='selector-project'] .selected",
+            ".header .project-selector .selected",
+            ".el-select-dropdown__item.selected", // 通用选择器
+        ];
+        
+        // 多种产品选择器
+        const productSelectors = [
+            "#base-app .selector-product .el-select-dropdown__item.selected",
+            ".selector-product .selected",
+            "[class*='selector-product'] .selected",
+            ".header .product-selector .selected",
+        ];
+        
+        // 检查表格头部
+        let headerRow = null;
+        for (const selector of headerSelectors) {
+            headerRow = document.querySelector(selector);
+            if (headerRow) break;
+        }
+        
+        // 检查表格行
+        let bodyRows = [];
+        for (const selector of bodyRowSelectors) {
+            bodyRows = document.querySelectorAll(selector);
+            if (bodyRows.length > 0) break;
+        }
+        
+        // 检查项目选择
+        let project = null;
+        for (const selector of projectSelectors) {
+            project = document.querySelector(selector);
+            if (project) break;
+        }
+        
+        // 检查产品选择
+        let product = null;
+        for (const selector of productSelectors) {
+            product = document.querySelector(selector);
+            if (product) break;
+        }
+        
+        const isLoaded = headerRow && bodyRows && bodyRows.length > 0 && (project || product);
+        
+        if (!isLoaded && bodyRows.length > 0) {
+            // 如果有表格数据但没有选择器，可能是新版本 UI
+            // 尝试从 URL 获取项目和产品信息
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlProject = urlParams.get('project');
+            const urlProduct = urlParams.get('product');
+            
+            if (urlProject || urlProduct) {
+                console.log(`[${SCRIPT_NAME}] 从 URL 获取: project=${urlProject}, product=${urlProduct}`);
+                return true;
+            }
+        }
+        
+        return isLoaded;
     }
 
     function addReleaseNoteDom(releaseDetail, taskList, checkResults) {
@@ -224,6 +742,120 @@
             }
         }
         return "";
+    }
+    
+    // 获取 Poseidon Token (支持多种存储位置)
+    function getPoseidonToken() {
+        // 优先尝试从 localStorage 获取 (v1.7.0+ 使用 platform_base_token)
+        const localStorageKeys = [
+            'platform_base_token',      // v1.7.0+ 新格式
+            'poseidon_user_token',
+            'poseidon_token',
+            'token',
+            'access_token'
+        ];
+        
+        for (const key of localStorageKeys) {
+            try {
+                const token = localStorage.getItem(key);
+                if (token) {
+                    console.log(`[三叉戟] 从 localStorage "${key}" 获取到 Token`);
+                    return token;
+                }
+            } catch (e) {
+                // localStorage 可能不可用
+            }
+        }
+        
+        // 尝试多种 Cookie 名称
+        const cookieNames = [
+            'poseidon_user_token',
+            'poseidon_token',
+            'token',
+            'access_token',
+            'jwt_token'
+        ];
+        
+        for (const name of cookieNames) {
+            const token = getCookie(name);
+            if (token) {
+                console.log(`[三叉戟] 从 Cookie "${name}" 获取到 Token`);
+                return token;
+            }
+        }
+        
+        // 尝试从 sessionStorage 获取
+        const sessionStorageKeys = [
+            'platform_base_token',
+            'poseidon_user_token',
+            'poseidon_token',
+            'token',
+            'access_token'
+        ];
+        
+        for (const key of sessionStorageKeys) {
+            try {
+                const token = sessionStorage.getItem(key);
+                if (token) {
+                    console.log(`[三叉戟] 从 sessionStorage "${key}" 获取到 Token`);
+                    return token;
+                }
+            } catch (e) {
+                // sessionStorage 可能不可用
+            }
+        }
+        
+        console.warn('[三叉戟] 未能找到 Token，尝试列出所有存储位置...');
+        debugTokenLocations();
+        
+        return "";
+    }
+    
+    // 获取带 Bearer 前缀的 Authorization 头
+    function getAuthorizationHeader() {
+        const token = getPoseidonToken();
+        if (!token) {
+            console.error('[三叉戟] 无法获取 Token');
+            return '';
+        }
+        
+        // 如果 token 已经包含 Bearer 前缀，直接返回
+        if (token.startsWith('Bearer ')) {
+            return token;
+        }
+        
+        // 否则添加 Bearer 前缀
+        return `Bearer ${token}`;
+    }
+    
+    // 调试：列出所有可能的 Token 存储位置
+    function debugTokenLocations() {
+        console.log('=== [三叉戟] Token 存储位置调试 ===');
+        
+        // 列出所有 Cookie
+        console.log('Cookies:');
+        document.cookie.split(';').forEach(cookie => {
+            const [name, value] = cookie.trim().split('=');
+            if (name.toLowerCase().includes('token') || name.toLowerCase().includes('auth') || name.toLowerCase().includes('jwt')) {
+                console.log(`  ${name}: ${value ? value.substring(0, 30) + '...' : '(empty)'}`);
+            }
+        });
+        
+        // 列出 localStorage 中的 token 相关项
+        console.log('localStorage:');
+        try {
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.toLowerCase().includes('token') || key.toLowerCase().includes('auth') || key.toLowerCase().includes('jwt')) {
+                    const value = localStorage.getItem(key);
+                    console.log(`  ${key}: ${value ? value.substring(0, 30) + '...' : '(empty)'}`);
+                }
+            }
+        } catch (e) {
+            console.log('  (无法访问)');
+        }
+        
+        console.log('=== 调试结束 ===');
     }
 
     // 缓存版本数据
@@ -452,49 +1084,193 @@
     }
 
     function addReleaseNoteButton() {
-        console.log("[三叉戟] 添加发版日志按钮");
+        console.log("[三叉戟] 添加发版日志按钮 (v1.6.7)");
+        console.log(`[三叉戟] 当前状态: ${currentArchived === 1 ? '已归档' : '未归档'}`);
+        
+        // v1.6.7: 检查是否在版本管理页面
+        const isReleasePage = releaseUrlPatterns.some(pattern => location.href.includes(pattern));
+        if (!isReleasePage) {
+            console.log(`[三叉戟] 当前不是版本管理页面 (${location.href})，跳过添加按钮`);
+            return;
+        }
 
         try {
-            // 同时处理主表格和固定表格
-            const fixedRows = document.querySelectorAll(
-                ".el-table__fixed-body-wrapper .el-table__body tbody tr"
-            );
-            const mainRows = document.querySelectorAll(
-                ".el-table__body-wrapper .el-table__body tbody tr"
-            );
+            // v1.6.4: 使用多种选择器策略，确保能找到表格行
+            let rows = null;
+            
+            // 策略1: 优先查找主表格体的行（适用于大部分情况）
+            rows = document.querySelectorAll('.el-table__body-wrapper .el-table__body tbody tr.el-table__row');
+            console.log(`[三叉戟] 策略1 (body-wrapper): 找到 ${rows.length} 行`);
+            
+            // 策略2: 如果策略1失败，尝试不带 fixed 的表格
+            if (rows.length === 0) {
+                rows = document.querySelectorAll('.el-table:not(.el-table--scrollable-x) tbody tr.el-table__row');
+                console.log(`[三叉戟] 策略2 (non-scrollable): 找到 ${rows.length} 行`);
+            }
+            
+            // 策略3: 查找任何 el-table 的行
+            if (rows.length === 0) {
+                rows = document.querySelectorAll('.el-table tbody tr.el-table__row');
+                console.log(`[三叉戟] 策略3 (el-table): 找到 ${rows.length} 行`);
+            }
+            
+            // 策略4: 最通用的选择器
+            if (rows.length === 0) {
+                rows = document.querySelectorAll('table tbody tr');
+                console.log(`[三叉戟] 策略4 (generic): 找到 ${rows.length} 行`);
+            }
+            
+            if (rows.length === 0) {
+                console.warn("[三叉戟] 未找到表格行");
+                debugPageStructure();
+                return;
+            }
 
-            console.log(`[三叉戟] 找到 ${fixedRows.length} 个固定行, ${mainRows.length} 个主表行`);
+            // v1.6.4: 增强调试，输出更多详情
+            console.log(`[三叉戟] === 表格行调试信息 ===`);
+            Array.from(rows).slice(0, 3).forEach((row, i) => {
+                const tds = row.querySelectorAll('td');
+                console.log(`[三叉戟] 第${i}行: ${tds.length}个td`);
+                
+                // 输出每个 td 的内容
+                tds.forEach((td, j) => {
+                    const cell = td.querySelector('.cell');
+                    const content = (cell || td).textContent.trim().substring(0, 50);
+                    const hasBtn = td.querySelector('button, .el-button') ? '[有按钮]' : '';
+                    const hasArchive = content.includes('已归档') ? '[已归档文本]' : '';
+                    console.log(`  td[${j}]: "${content}" ${hasBtn}${hasArchive}`);
+                });
+            });
+            console.log(`[三叉戟] === 调试信息结束 ===`);
 
-            fixedRows.forEach((row, index) => {
-                const actionGroup = row.querySelector(
-                    "td:last-child .table-action-group"
-                );
-                if (actionGroup) {
-                    // 检查是否已经添加过按钮
-                    if (actionGroup.querySelector('.release-log-btn')) {
-                        return;
-                    }
+            let buttonsAdded = 0;
+            let buttonsSkipped = 0;
+            
+            rows.forEach((row, index) => {
+                // 检查是否已经添加过按钮
+                if (row.querySelector('.release-log-btn')) {
+                    buttonsSkipped++;
+                    return;
+                }
 
-                    const actionItem = document.createElement("div");
-                    actionItem.className = "table-action-item";
-                    const btn = document.createElement("button");
-                    btn.setAttribute("type", "button");
-                    btn.setAttribute("data-row-index", index.toString());
-                    btn.style.cssText =
-                        "margin-top:-10px; vertical-align:middle; color:var(--cs-color_primary); cursor: pointer;";
-                    btn.className =
-                        "el-button table-action-button table-action-item el-button--text release-log-btn";
-                    btn.innerHTML = "<span>发版日志</span>";
+                // 获取所有 td
+                const tds = row.querySelectorAll('td');
+                if (tds.length === 0) {
+                    if (index < 3) console.log(`[三叉戟] 第${index}行没有td，跳过`);
+                    return;
+                }
 
-                    actionItem.appendChild(btn);
-                    actionGroup.appendChild(actionItem);
-
-                    // 同步行高
-                    if (mainRows[index]) {
-                        syncRowHeight(mainRows[index], row);
+                // 找到操作列 - 从最后一个 td 开始往前找
+                // 操作列通常是最后一列，包含按钮或"已归档"文字
+                let actionTd = null;
+                let actionCell = null;
+                let foundMethod = '';
+                
+                // v1.6.4: 改进操作列查找逻辑
+                // 从后往前遍历，找到合适的操作列
+                for (let i = tds.length - 1; i >= Math.max(0, tds.length - 4); i--) {
+                    const td = tds[i];
+                    const cell = td.querySelector('.cell');
+                    const content = (cell || td).textContent.trim();
+                    
+                    // 检查是否是操作列的特征
+                    const hasActionGroup = td.querySelector('.table-action-group');
+                    const hasButtons = td.querySelector('button, .el-button, [class*="button"]');
+                    const hasSpace = td.querySelector('.el-space');
+                    const isArchiveText = content === '已归档';
+                    const isArchiveTip = td.querySelector('.archive-tip') || td.querySelector('[class*="archive"]');
+                    const hasActionKeywords = content.includes('编辑') || content.includes('删除') || 
+                                              content.includes('发版') || content.includes('任务管理') ||
+                                              content.includes('归档');
+                    
+                    if (hasActionGroup || hasButtons || hasSpace || isArchiveText || isArchiveTip || hasActionKeywords) {
+                        actionTd = td;
+                        actionCell = cell || td;
+                        foundMethod = hasActionGroup ? 'actionGroup' : 
+                                     hasButtons ? 'buttons' : 
+                                     hasSpace ? 'space' :
+                                     isArchiveText ? 'archiveText' : 
+                                     isArchiveTip ? 'archiveTip' : 'keywords';
+                        if (index < 3) {
+                            console.log(`[三叉戟] 第${index}行找到操作列 td[${i}] via ${foundMethod}: "${content.substring(0, 30)}"`);
+                        }
+                        break;
                     }
                 }
+
+                // 如果没找到，使用最后一个 td
+                if (!actionTd) {
+                    actionTd = tds[tds.length - 1];
+                    actionCell = actionTd.querySelector('.cell') || actionTd;
+                    foundMethod = 'lastTd';
+                    if (index < 3) {
+                        const content = actionCell.textContent.trim().substring(0, 30);
+                        console.log(`[三叉戟] 第${index}行使用最后一个td作为操作列: "${content}"`);
+                    }
+                }
+
+                // v1.6.5: 创建按钮 - 使用统一样式（由 CSS 控制）
+                const btn = document.createElement("button");
+                btn.setAttribute("type", "button");
+                btn.setAttribute("data-row-index", index.toString());
+                btn.setAttribute("title", "发版日志");
+                btn.textContent = "发版日志";
+                btn.className = "el-button el-button--text release-log-btn";
+                // 不再设置 inline style，完全由 CSS 控制
+
+                // 查找操作区域并添加按钮
+                let actionGroup = actionCell.querySelector('.table-action-group') || 
+                                 actionCell.querySelector('.el-space') ||
+                                 actionCell;
+                
+                // v1.6.5: 对于"已归档"文本或包含"已归档"的行，需要特殊处理
+                const cellContent = actionCell.textContent.trim();
+                const isArchivedCell = cellContent === '已归档' || cellContent.includes('已归档');
+                const hasNoActionContainer = !actionCell.querySelector('.table-action-group') && !actionCell.querySelector('.el-space');
+                
+                if (isArchivedCell && hasNoActionContainer) {
+                    // 创建一个包装容器
+                    const wrapper = document.createElement('span');
+                    wrapper.className = 'release-action-wrapper';
+                    wrapper.style.cssText = 'display: inline-flex; align-items: center; gap: 12px;';
+                    
+                    // 保留原有的"已归档"文本
+                    const archiveSpan = document.createElement('span');
+                    archiveSpan.className = 'archive-tip';
+                    archiveSpan.textContent = '已归档';
+                    archiveSpan.style.cssText = 'color: #909399;';
+                    
+                    // 清空并重建内容
+                    actionCell.innerHTML = '';
+                    wrapper.appendChild(archiveSpan);
+                    wrapper.appendChild(btn);
+                    actionCell.appendChild(wrapper);
+                    
+                    if (index < 3) {
+                        console.log(`[三叉戟] 第${index}行 (已归档) 创建包装容器并添加按钮`);
+                    }
+                    buttonsAdded++;
+                    return;
+                }
+
+                // 添加按钮到操作区域
+                actionGroup.appendChild(btn);
+                
+                // 确保容器支持 flex 布局
+                if (actionGroup.children.length > 1 || actionGroup.tagName === 'DIV') {
+                    actionGroup.style.display = 'flex';
+                    actionGroup.style.alignItems = 'center';
+                    actionGroup.style.flexWrap = 'nowrap';
+                    actionGroup.style.gap = '12px';
+                }
+                
+                buttonsAdded++;
+                if (index < 3) {
+                    console.log(`[三叉戟] 第${index}行成功添加按钮 (方式: ${foundMethod})`);
+                }
             });
+            
+            console.log(`[三叉戟] 完成: 添加 ${buttonsAdded} 个按钮, 跳过 ${buttonsSkipped} 个已存在按钮`);
 
             // 使用事件委托 - 在 document 上监听点击事件
             if (!window._releaseLogClickHandlerAdded) {
@@ -506,31 +1282,33 @@
                         e.stopPropagation();
                         console.log("[三叉戟] 发版日志按钮被点击 (事件委托)");
                         
-                        // 获取按钮所在的行（在固定表格中）
-                        const fixedRow = btn.closest('tr');
-                        if (!fixedRow) {
+                        // 获取按钮所在的行
+                        const clickedRow = btn.closest('tr');
+                        if (!clickedRow) {
                             console.error("[三叉戟] 无法找到按钮所在的行");
                             return;
                         }
                         
                         // 获取行索引
-                        const rowIndex = Array.from(fixedRow.parentElement.children).indexOf(fixedRow);
+                        const rowIndex = Array.from(clickedRow.parentElement.children).indexOf(clickedRow);
                         console.log("[三叉戟] 点击的行索引:", rowIndex);
                         
-                        // 从主表格获取对应行（主表格包含所有数据列）
-                        const mainTableRows = document.querySelectorAll(
-                            ".el-table__body-wrapper .el-table__body tbody tr"
-                        );
-                        const mainRow = mainTableRows[rowIndex];
-                        
-                        if (mainRow) {
-                            console.log("[三叉戟] 找到主表格对应行");
-                            handleReleaseLogClick(mainRow);
-                        } else {
-                            console.error("[三叉戟] 无法在主表格中找到对应行, 索引:", rowIndex);
-                            // 降级使用固定表格行
-                            handleReleaseLogClick(fixedRow);
+                        // 尝试从主表格获取对应行
+                        let targetRow = clickedRow;
+                        for (const selector of [
+                            ".el-table__body-wrapper .el-table__body tbody tr",
+                            ".el-table tbody tr.el-table__row",
+                            "table tbody tr"
+                        ]) {
+                            const tableRows = document.querySelectorAll(selector);
+                            if (tableRows[rowIndex] && tableRows[rowIndex] !== clickedRow) {
+                                targetRow = tableRows[rowIndex];
+                                console.log("[三叉戟] 找到主表格对应行");
+                                break;
+                            }
                         }
+                        
+                        handleReleaseLogClick(targetRow);
                     }
                 }, true); // 使用捕获阶段
                 console.log("[三叉戟] 事件委托已注册");
@@ -539,12 +1317,69 @@
             console.log("[三叉戟] 发版日志按钮添加完成");
         } catch (error) {
             console.error("[三叉戟] addReleaseNoteButton错误:", error);
+            console.error(error.stack);
         }
+    }
+    
+    // 调试函数：输出页面结构
+    function debugPageStructure() {
+        console.log("=== [三叉戟] 页面结构调试 (v1.6.4) ===");
+        
+        // 检查 el-select 下拉框
+        const selects = document.querySelectorAll('.el-select');
+        console.log(`找到 ${selects.length} 个下拉框`);
+        selects.forEach((select, i) => {
+            const input = select.querySelector('.el-input__inner, input');
+            const value = input ? (input.value || input.textContent || '').trim() : '';
+            console.log(`  下拉框 ${i}: "${value}"`);
+        });
+        
+        // 检查表格
+        const tables = document.querySelectorAll('table, .el-table');
+        console.log(`找到 ${tables.length} 个表格元素`);
+        
+        tables.forEach((table, i) => {
+            console.log(`表格 ${i}: className="${table.className}"`);
+            const bodyRows = table.querySelectorAll('tbody tr.el-table__row, tbody tr');
+            console.log(`  - tbody 行数: ${bodyRows.length}`);
+            
+            if (bodyRows.length > 0) {
+                const firstRow = bodyRows[0];
+                const cells = firstRow.querySelectorAll('td');
+                console.log(`  - 第一行列数: ${cells.length}`);
+                
+                if (cells.length > 0) {
+                    const lastCell = cells[cells.length - 1];
+                    const cellContent = lastCell.querySelector('.cell') || lastCell;
+                    console.log(`  - 最后一列类名: ${lastCell.className}`);
+                    console.log(`  - 最后一列内容: "${cellContent.textContent.trim().substring(0, 100)}"`);
+                    console.log(`  - 最后一列 HTML: ${lastCell.innerHTML.substring(0, 300)}`);
+                    
+                    // 检查是否有按钮
+                    const btns = lastCell.querySelectorAll('button, .el-button, [class*="button"]');
+                    console.log(`  - 最后一列按钮数: ${btns.length}`);
+                }
+            }
+        });
+        
+        // 检查 release-log-btn
+        const releaseLogBtns = document.querySelectorAll('.release-log-btn');
+        console.log(`当前页面 release-log-btn 数量: ${releaseLogBtns.length}`);
+        
+        // 检查"已归档"文本
+        const archiveTexts = document.querySelectorAll('.archive-tip, [class*="archive"]');
+        console.log(`找到 ${archiveTexts.length} 个归档相关元素`);
+        
+        // 检查所有包含"操作"或"action"的元素
+        const actionElements = document.querySelectorAll('[class*="action"], [class*="操作"]');
+        console.log(`找到 ${actionElements.length} 个操作相关元素`);
+        
+        console.log("=== 调试结束 ===");
     }
 
     // 处理发版日志按钮点击
     function handleReleaseLogClick(row) {
-        console.log("[三叉戟] handleReleaseLogClick 被调用");
+        console.log("[三叉戟] handleReleaseLogClick 被调用 (v1.6.9)");
         
         // 打印所有单元格内容用于调试
         const allCells = row.querySelectorAll("td");
@@ -554,74 +1389,152 @@
             console.log(`[三叉戟] 单元格${idx}:`, cellContent ? cellContent.innerText.trim().substring(0, 50) : '(无.cell)');
         });
         
-        // 尝试从第一列获取ID
-        const releaseIdCell = row.querySelector("td:first-child .cell");
-        let releaseId = releaseIdCell ? releaseIdCell.innerText.trim() : null;
-        console.log("[三叉戟] 从ID列获取的releaseId:", releaseId);
-
-        // 如果ID列为空，尝试从版本名称获取
-        if (!releaseId) {
-            console.log("[三叉戟] ID列为空，尝试从版本名称获取...");
-            console.log("[三叉戟] 当前缓存:", JSON.stringify(releaseDataCache));
+        // v1.6.9: 支持两种表格模式
+        // 新模式: ID列在第一列，版本名称在第二列 (7列: ID, 版本, 当前环境, 描述, 状态, 新建时间, 操作)
+        // 旧模式: 没有ID列，版本名称在第一列 (6列: 版本, 当前环境, 描述, 状态, 新建时间, 操作)
+        
+        const firstCell = row.querySelector("td:first-child .cell");
+        const firstCellText = firstCell ? firstCell.innerText.trim() : null;
+        const secondCell = row.querySelector("td:nth-child(2) .cell");
+        const secondCellText = secondCell ? secondCell.innerText.trim() : null;
+        
+        console.log("[三叉戟] 第一列内容:", firstCellText);
+        console.log("[三叉戟] 第二列内容:", secondCellText);
+        
+        // 判断是新模式还是旧模式
+        // 新模式: 第一列是纯数字ID（如 "1502"）
+        // 旧模式: 第一列是版本名称（包含点号，如 "3.0.2-datapulse"）
+        const isNewPattern = firstCellText && /^\d+$/.test(firstCellText);
+        console.log("[三叉戟] 检测到模式:", isNewPattern ? "新模式(有ID列)" : "旧模式(无ID列)");
+        
+        let releaseId = null;
+        let versionName = null;
+        
+        if (isNewPattern) {
+            // 新模式: 第一列是ID，直接使用
+            releaseId = parseInt(firstCellText, 10);
+            versionName = secondCellText;
+            console.log("[三叉戟] 新模式 - 直接使用ID:", releaseId, "版本名:", versionName);
             
-            // 尝试多个可能的位置查找版本名称
-            let versionName = null;
+            if (releaseId && releaseId > 0) {
+                proceedWithReleaseId(releaseId);
+                return;
+            }
+        }
+        
+        // 旧模式: 第一列是版本名称，需要从缓存查找ID
+        if (!versionName) {
+            versionName = firstCellText;
+        }
+        
+        // 如果还是没有版本名称，尝试多个位置查找
+        if (!versionName || !versionName.match(/\d+\.\d+/)) {
+            console.log("[三叉戟] 尝试其他列查找版本名称...");
             for (let i = 1; i <= 3; i++) {
-                const versionCell = row.querySelector(`td:nth-child(${i}) .cell`);
-                const text = versionCell ? versionCell.innerText.trim() : null;
+                const cell = row.querySelector(`td:nth-child(${i}) .cell`);
+                const text = cell ? cell.innerText.trim() : null;
                 console.log(`[三叉戟] 第${i}列内容:`, text);
-                // 版本名称通常包含数字和点号，如 "1.0.0" 或 "v1.2.3"
-                if (text && (text.match(/\d+\.\d+/) || releaseDataCache[text])) {
+                if (text && text.match(/\d+\.\d+/)) {
                     versionName = text;
-                    console.log(`[三叉戟] 在第${i}列找到可能的版本名称:`, versionName);
+                    console.log(`[三叉戟] 在第${i}列找到版本名称:`, versionName);
                     break;
                 }
             }
-            
-            if (versionName) {
-                // 从缓存的数据中查找ID
-                releaseId = findReleaseIdByName(versionName);
-                console.log("[三叉戟] 通过版本名称查找到的releaseId:", releaseId);
-            }
+        }
+        
+        console.log("[三叉戟] 最终版本名称:", versionName);
+        console.log("[三叉戟] 当前缓存条目数:", Object.keys(releaseDataCache).length);
+
+        if (!versionName) {
+            alert("无法获取版本信息，请检查表格数据");
+            return;
         }
 
-        // 如果还是没有，尝试直接调用API获取
-        if (!releaseId) {
-            console.log("[三叉戟] 尝试从API重新获取数据...");
+        // 从缓存中查找 release ID
+        releaseId = findReleaseIdByName(versionName);
+        console.log("[三叉戟] 从缓存查找到的releaseId:", releaseId);
+
+        if (releaseId) {
+            // 缓存中有，直接使用
+            proceedWithReleaseId(releaseId);
+        } else {
+            // 缓存中没有，需要先获取数据
+            console.log("[三叉戟] 缓存中没有该版本，从API获取数据...");
             
-            // 先获取数据再让用户重试
-            fetchReleaseList(currentArchived).then((data) => {
-                cacheReleaseData(data);
-                updateTableWithRealIds(data);
+            // 获取所有类型的数据（未归档+已归档）
+            Promise.all([
+                fetchReleaseList(0).catch(() => []),  // 未归档
+                fetchReleaseList(1).catch(() => [])   // 已归档
+            ]).then(([unarchived, archived]) => {
+                const allData = [...(unarchived || []), ...(archived || [])];
+                console.log("[三叉戟] 获取到的数据总数:", allData.length);
                 
-                // 再次尝试获取
-                const retryIdCell = row.querySelector("td:first-child .cell");
-                const retryId = retryIdCell ? retryIdCell.innerText.trim() : null;
+                // 合并缓存（不要覆盖）
+                allData.forEach(item => {
+                    if (item.name && item.id) {
+                        releaseDataCache[item.name] = item.id;
+                    }
+                });
+                console.log("[三叉戟] 更新后缓存条目数:", Object.keys(releaseDataCache).length);
                 
-                if (retryId) {
-                    console.log("[三叉戟] 重新获取后找到ID:", retryId);
-                    proceedWithReleaseId(retryId);
+                // 再次查找
+                releaseId = findReleaseIdByName(versionName);
+                console.log("[三叉戟] 再次查找到的releaseId:", releaseId);
+                
+                if (releaseId) {
+                    proceedWithReleaseId(releaseId);
                 } else {
-                    alert("无法获取版本ID，请检查控制台日志并报告问题");
+                    console.error("[三叉戟] 无法找到版本的ID，版本名称:", versionName);
+                    console.log("[三叉戟] 可用的版本名称:", Object.keys(releaseDataCache).slice(0, 10));
+                    alert(`无法找到版本 "${versionName}" 的ID，请刷新页面重试`);
                 }
             }).catch(err => {
                 console.error("[三叉戟] 获取数据失败:", err);
                 alert("获取数据失败: " + err.message);
             });
-            return;
         }
-        
-        proceedWithReleaseId(releaseId);
     }
     
     // 继续处理发版日志
     function proceedWithReleaseId(releaseId) {
-        console.log("[三叉戟] proceedWithReleaseId:", releaseId);
+        console.log("[三叉戟] proceedWithReleaseId:", releaseId, "类型:", typeof releaseId);
+        
+        // v1.6.8: releaseId 应该是从缓存中获取的数字ID
+        if (!releaseId) {
+            alert("无法获取版本ID，请检查表格数据");
+            return;
+        }
+        
+        // 确保是数字
+        const numericId = typeof releaseId === 'number' ? releaseId : parseInt(releaseId, 10);
+        if (isNaN(numericId) || numericId <= 0) {
+            console.error(`[三叉戟] 无效的 releaseId: "${releaseId}" (类型: ${typeof releaseId})`);
+            alert(`无效的版本ID: "${releaseId}"，请刷新页面重试`);
+            return;
+        }
+        
+        console.log(`[三叉戟] 使用 releaseId: ${numericId}`);
 
-                        fetchReleaseDetailData(releaseId)
+        fetchReleaseDetailData(numericId)
             .then((releaseDetail) => {
                 console.log("[三叉戟] 获取到releaseDetail:", releaseDetail);
-                const env = (releaseDetail && releaseDetail.env) ? releaseDetail.env : "dev";
+                
+                // v1.7.0 兼容: env 可能是字符串或对象
+                let env = "dev";
+                if (releaseDetail && releaseDetail.env) {
+                    if (typeof releaseDetail.env === 'string') {
+                        env = releaseDetail.env;
+                    } else if (typeof releaseDetail.env === 'object') {
+                        // 尝试多种可能的属性名
+                        env = releaseDetail.env.name || 
+                              releaseDetail.env.value || 
+                              releaseDetail.env.key ||
+                              releaseDetail.env.id ||
+                              "dev";
+                        console.log("[三叉戟] env 是对象，提取值:", env, "原对象:", releaseDetail.env);
+                    }
+                }
+                console.log("[三叉戟] 使用 env:", env);
 
                                 fetchTaskList(releaseId, env)
                                     .then((taskList) => {
@@ -843,10 +1756,16 @@
     }
 
     function checkEnvironment(releaseDetail) {
-        const env = releaseDetail.env;
+        // v1.7.0 兼容: env 可能是字符串或对象
+        let env = releaseDetail.env;
+        if (typeof env === 'object' && env !== null) {
+            env = env.name || env.value || env.key || env.id || '';
+        }
+        env = env || '';
+        
         // 合法环境: DEV, QA, PRE, PROD (不区分大小写)
         const validEnvs = ['dev', 'qa', 'pre', 'prod'];
-        const envLower = (env || '').toLowerCase();
+        const envLower = env.toLowerCase();
 
         if (validEnvs.includes(envLower)) {
             return {
@@ -1011,10 +1930,16 @@
         };
     }
 
+    // builds API 状态追踪 (用于 Branch-Tag 检查)
+    let buildsApiStatus = 'unknown';  // 'working', 'failed', 'unknown'
+
     // 异步检查branch信息
     async function checkBranchTagMatchAsync(serviceTasks) {
         const issues = [];
         const passed = [];
+        const apiUnavailable = [];
+        
+        console.log(`[三叉戟] 开始 Branch-Tag 检查，共 ${serviceTasks.length} 个服务任务`);
         
         for (const task of serviceTasks) {
             const appId = task.task.app.id;
@@ -1024,67 +1949,211 @@
             const expectedBranch = `tags/v${version}`;
             
             try {
-                // 获取该应用的构建记录
-                const builds = await fetchAppBuilds(appId);
+                // 获取该应用的构建记录 (传入 appName 用于日志)
+                const builds = await fetchAppBuilds(appId, appName);
                 
-                // 查找与当前tag匹配的构建记录
-                const matchingBuild = builds.find(b => b.tag === version || b.tag === tag);
+                // 如果 builds 为空数组且 API 状态为 failed，说明是 API 问题
+                if (builds.length === 0 && buildsApiStatus === 'failed') {
+                    apiUnavailable.push(appName);
+                    continue;
+                }
+                
+                // 查找与当前版本号匹配的构建记录
+                // 只要版本号匹配就OK，不管分支类型 (release/tags/hotfix 都行)
+                // 注意: 版本和分支信息在 config 对象中
+                
+                console.log(`[三叉戟] ${appName} 查找版本 ${version}, 共 ${builds.length} 条构建记录`);
+                
+                // 列出所有构建记录的版本信息用于调试
+                const allVersions = builds.map((b, idx) => {
+                    const cfg = b.config || {};
+                    return `[${idx}] ${cfg.branch || 'N/A'}:${cfg.tag || 'N/A'}`;
+                });
+                console.log(`[三叉戟] ${appName} 所有构建版本:`, allVersions);
+                
+                // 查找版本号匹配的构建
+                const matchingBuild = builds.find((b, idx) => {
+                    // 获取 config 对象中的 tag/branch
+                    const config = b.config || {};
+                    const buildTag = (config.tag || '').trim();
+                    const buildBranch = (config.branch || '').trim();
+                    
+                    // 从 tag 提取版本号: "2.12.0", "2.11.1-release"
+                    const tagVersion = buildTag.replace(/-release$/, '').split('(')[0].trim();
+                    
+                    // 从 branch 提取版本号: "release/v2.11.1", "tags/v2.11.1", "hotfix/v2.17.1"
+                    const branchMatch = buildBranch.match(/(?:release|tags|hotfix|feature|test)\/v?(\d+\.\d+\.\d+)/i);
+                    const branchVersion = branchMatch ? branchMatch[1] : null;
+                    
+                    console.log(`[三叉戟] ${appName}[${idx}] 检查: branch="${buildBranch}" (提取=${branchVersion}), tag="${buildTag}" (提取=${tagVersion}), 目标=${version}`);
+                    
+                    // 只要 tag 或 branch 中的版本号匹配即可
+                    if (tagVersion === version || branchVersion === version) {
+                        console.log(`[三叉戟] ✓ ${appName} 在记录[${idx}]找到匹配: branch=${buildBranch}, tag=${buildTag}`);
+                        return true;
+                    }
+                    
+                    return false;
+                });
                 
                 if (matchingBuild) {
-                    const actualBranch = matchingBuild.branch || '';
-                    if (actualBranch === expectedBranch) {
-                        passed.push(appName);
-                    } else {
-                        issues.push(`${appName}: branch="${actualBranch}" 应为"${expectedBranch}"`);
-                    }
+                    passed.push(appName);
+                } else if (builds.length > 0) {
+                    // 没找到匹配，列出所有记录的版本信息
+                    const versions = builds.map(b => {
+                        const cfg = b.config || {};
+                        return `${cfg.branch || 'N/A'}:${cfg.tag || 'N/A'}`;
+                    }).join(', ');
+                    issues.push(`${appName}: 未找到v${version} (现有${builds.length}条: ${versions})`);
+                    console.warn(`[三叉戟] ✗ ${appName}: 未找到版本 ${version}，所有记录:`, versions);
                 } else {
-                    issues.push(`${appName}: 未找到tag=${version}的构建记录`);
+                    apiUnavailable.push(appName);
                 }
             } catch (error) {
-                console.error(`[三叉戟] 获取${appName}构建记录失败:`, error);
-                issues.push(`${appName}: 获取构建记录失败`);
+                console.error(`[三叉戟] 获取${appName}构建记录异常:`, error);
+                apiUnavailable.push(appName);
             }
+        }
+
+        // 根据不同情况返回结果
+        if (apiUnavailable.length === serviceTasks.length) {
+            // 所有应用都无法获取构建记录 - API 不可用
+        return {
+            name: 'Branch-Tag匹配',
+                status: 'warning',
+                message: `⚠️ builds API 不可用 (Poseidon v1.7.0 可能已移除此功能)`
+            };
+        }
+        
+        let message = '';
+        if (issues.length === 0 && apiUnavailable.length === 0) {
+            message = `✓ ${passed.length}个服务均有对应版本的构建记录`;
+        } else {
+            const parts = [];
+            if (issues.length > 0) {
+                parts.push(issues.slice(0, 2).join('; ') + (issues.length > 2 ? `...等${issues.length}个` : ''));
+            }
+            if (apiUnavailable.length > 0) {
+                parts.push(`${apiUnavailable.length}个应用无构建记录`);
+            }
+            message = parts.join(' | ');
         }
 
         return {
             name: 'Branch-Tag匹配',
-            status: issues.length === 0 ? 'passed' : 'failed',
-            message: issues.length === 0 
-                ? `${passed.length}个服务branch格式正确(tags/v{version})`
-                : issues.slice(0, 3).join('; ') + (issues.length > 3 ? `...等${issues.length}个` : '')
+            status: issues.length === 0 ? (apiUnavailable.length > 0 ? 'warning' : 'passed') : 'failed',
+            message: message
         };
     }
 
+    // 可能的 apps/builds API 路径 (/api 在前)
+    const APPS_API_PATHS = [
+        "/api/devops/apps/",    // 主路径
+        "/api/apps/",           // 备选路径
+    ];
+    let workingAppsPath = null;
+
     // 获取应用的构建记录
-    function fetchAppBuilds(appId) {
+    function fetchAppBuilds(appId, appName) {
+        return new Promise(async (resolve, reject) => {
+            // 如果已知 builds API 不可用，直接返回空数组
+            if (buildsApiStatus === 'failed') {
+                resolve([]);
+                return;
+            }
+            
+            // 如果已有工作路径，直接使用（非静默）
+            if (workingAppsPath) {
+                try {
+                    const result = await tryFetchBuilds(appId, workingAppsPath, appName, false);
+                    resolve(result);
+                    return;
+                } catch (e) {
+                    // 缓存路径失效，重新探测
+                    workingAppsPath = null;
+                }
+            }
+            
+            // 探测所有可能的路径（静默模式）
+            for (const basePath of APPS_API_PATHS) {
+                try {
+                    const result = await tryFetchBuilds(appId, basePath, appName, true);
+                    workingAppsPath = basePath;
+                    buildsApiStatus = 'working';
+                    console.log(`%c[三叉戟] builds API: ${basePath}`, 'color: #67C23A');
+                    resolve(result);
+                    return;
+                } catch (e) {
+                    // 静默继续尝试下一个路径
+                }
+            }
+            
+            // 所有路径都失败 - 只输出一次简短警告
+            buildsApiStatus = 'failed';
+            console.warn(`[三叉戟] builds API 不可用，Branch-Tag 检查已跳过`);
+            resolve([]);
+        });
+    }
+
+    function tryFetchBuilds(appId, basePath, appName, silent = false) {
         return new Promise((resolve, reject) => {
+            const apiUrl = `${getApiBaseUrl()}${basePath}${appId}/builds/?page=1&page_size=100`;
+            
             GM_xmlhttpRequest({
                 method: "GET",
-                url: `https://poseidon.cisdigital.cn/devops/api/apps/${appId}/builds/?page=1&page_size=20`,
+                url: apiUrl,
                 headers: {
                     accept: "application/json, text/plain, */*",
                     "accept-language": "zh-CN,zh;q=0.9",
-                    authorization: `Bearer ${getCookie("poseidon_user_token")}`,
+                    authorization: getAuthorizationHeader(),
                     "x-poseidon-product": `${productName}`,
                     "x-poseidon-project": `${projectName}`,
                 },
                 onload: function (response) {
                     try {
+                        // 检查是否返回 HTML
+                        const text = response.responseText.trim().toLowerCase();
+                        if (text.startsWith('<!doctype') || text.startsWith('<html')) {
+                            reject(new Error(`返回 HTML`));
+                            return;
+                        }
+                        
                         const result = JSON.parse(response.responseText);
+                        
+                        // 检查错误响应
+                        if (result.code && result.code !== 0) {
+                            reject(new Error(`API错误: ${result.message || result.msg}`));
+                            return;
+                        }
+                        
                         if (result.code === 0 && Array.isArray(result.data)) {
+                            if (!silent) {
+                                console.log(`[三叉戟] ${appName || appId} 构建记录: ${result.data.length} 条`);
+                                if (result.data.length > 0) {
+                                    console.log(`[三叉戟] ${appName || appId} API返回的第一条数据:`, result.data[0]);
+                                }
+                            }
                             resolve(result.data);
+                        } else if (Array.isArray(result.results)) {
+                            if (!silent) {
+                                console.log(`[三叉戟] ${appName || appId} 构建记录: ${result.results.length} 条`);
+                                if (result.results.length > 0) {
+                                    console.log(`[三叉戟] ${appName || appId} API返回的第一条数据:`, result.results[0]);
+                                }
+                            }
+                            resolve(result.results);
                         } else {
                             reject(new Error("API返回结构异常"));
                         }
                     } catch (e) {
                         reject(new Error(`解析响应失败: ${e.message}`));
-                }
+                    }
                 },
                 onerror: function (error) {
-                    reject(new Error(`API调用失败: ${error}`));
+                    reject(new Error(`网络错误`));
                 },
             });
-            });
+        });
     }
 
     // 检查2.3: 是否包含非应用类任务 (如SQL任务)
@@ -1219,7 +2288,8 @@
                 const appName = t.task.app.name;
                 return appName !== 'app-datakits-ai' && 
                        appName !== 'app-datakits-xxl-job' && 
-                       appName !== 'app-datagovernance-management';
+                       appName !== 'app-datagovernance-management' &&
+                       appName !== 'app-datakits-dbz';  // v1.6.9: 跳过 dbz 配置检查
             });
 
         if (backendApps.length === 0) {
@@ -1270,8 +2340,8 @@
         if (appsWithConfigs.length === 0) {
             return {
                 name: '后端应用公共配置关联',
-                status: 'passed',
-                message: `✓ ${backendApps.length}个后端应用（无法获取配置关联详情，请在页面确认）`
+                status: 'warning',
+                message: `${backendApps.length}个后端应用（无法获取配置关联详情，请在页面确认）`
             };
         }
 
@@ -1388,28 +2458,52 @@
         }
     }
 
+    // 获取当前主机地址
+    function getApiBaseUrl() {
+        return window.location.origin;
+    }
+
     function fetchProjectList() {
         return new Promise((resolve, reject) => {
+            const apiUrl = `${getApiBaseUrl()}/api/projects/`;
+            console.log(`[三叉戟] 请求项目列表: ${apiUrl}`);
+            
+            const authHeader = getAuthorizationHeader();
+            if (!authHeader) {
+                reject(new Error("[三叉戟] 无法获取认证 Token"));
+                return;
+            }
+            
             GM_xmlhttpRequest({
                 method: "GET",
-                url: `https://poseidon.cisdigital.cn/api/projects/`,
+                url: apiUrl,
                 headers: {
                     accept: "application/json, text/plain, */*",
                     "accept-language": "zh-CN,zh;q=0.9",
-                    authorization: `Bearer ${getCookie("poseidon_user_token")}`,
-                    referer:
-                        "https://poseidon.cisdigital.cn/app/devops/releases?project=ciip-private&product=datakits",
+                    authorization: authHeader,
                 },
                 onload: function (response) {
                     try {
-                    const result = JSON.parse(response.responseText);
-                    if (result.code === 0 && Array.isArray(result.data)) {
-                            console.log(`[三叉戟] 获取项目数据成功`);
-                        resolve(result.data);
-                    } else {
+                        // v1.6.6: 检查是否返回 HTML（使用小写比较）
+                        const responseTextLower = response.responseText.trim().toLowerCase();
+                        if (responseTextLower.startsWith('<!doctype') || 
+                            responseTextLower.startsWith('<html')) {
+                            console.error(`[三叉戟] 项目列表 API 返回 HTML，可能是认证问题或路径错误`);
+                            console.log(`[三叉戟] 响应状态: ${response.status}`);
+                            reject(new Error("[三叉戟] API 返回 HTML 而非 JSON"));
+                            return;
+                        }
+                        
+                        const result = JSON.parse(response.responseText);
+                        if (result.code === 0 && Array.isArray(result.data)) {
+                            console.log(`[三叉戟] 获取项目数据成功，共 ${result.data.length} 个项目`);
+                            resolve(result.data);
+                        } else {
+                            console.error(`[三叉戟] API 返回结构异常:`, result);
                             reject(new Error("[三叉戟] API返回结构异常"));
                         }
                     } catch (e) {
+                        console.error(`[三叉戟] 解析响应失败:`, response.responseText.substring(0, 200));
                         reject(new Error(`[三叉戟] 解析响应失败: ${e.message}`));
                     }
                 },
@@ -1420,60 +2514,169 @@
         });
     }
 
-    function fetchReleaseList(archived = 0) {
+    // 尝试单个 API 路径获取 releases
+    // silent: 静默模式，探测时不输出警告
+    function tryFetchReleasesFromPath(basePath, archived, silent = false) {
         return new Promise((resolve, reject) => {
+            const apiUrl = `${getApiBaseUrl()}${basePath}?page=1&page_size=100&archived=${archived}&search=`;
+            if (!silent) console.log(`[三叉戟] 尝试 API 路径: ${apiUrl}`);
+            
             GM_xmlhttpRequest({
                 method: "GET",
-                url: `https://poseidon.cisdigital.cn/devops/api/releases/?page=1&page_size=100&archived=${archived}&search=`,
+                url: apiUrl,
                 headers: {
                     accept: "application/json, text/plain, */*",
                     "accept-language": "zh-CN,zh;q=0.9",
-                    authorization: `Bearer ${getCookie("poseidon_user_token")}`,
-                    referer:
-                        "https://poseidon.cisdigital.cn/app/devops/releases?project=ciip-private&product=datakits",
+                    authorization: getAuthorizationHeader(),
                     "x-poseidon-product": `${productName}`,
                     "x-poseidon-project": `${projectName}`,
                 },
                 onload: function (response) {
                     try {
-                    const result = JSON.parse(response.responseText);
-                    if (result.code === 0 && Array.isArray(result.data)) {
-                            console.log(`[三叉戟] 获取版本管理数据(archived=${archived})成功`);
-                        resolve(result.data);
-                    } else {
-                            reject(new Error("[三叉戟] API返回结构异常"));
+                        // 检查是否返回 HTML (404页面) - 大小写不敏感
+                        const text = response.responseText.trim().toLowerCase();
+                        if (text.startsWith('<!doctype') || text.startsWith('<html')) {
+                            // 探测模式下静默失败
+                            reject(new Error(`返回 HTML`));
+                            return;
+                        }
+                        
+                        const result = JSON.parse(response.responseText);
+                        
+                        // 检查是否返回错误
+                        if (result.code && result.code !== 0) {
+                            reject(new Error(`路径 ${basePath} 返回错误: ${result.message || result.msg}`));
+                            return;
+                        }
+                        
+                        // 成功获取数据
+                        if (Array.isArray(result.data)) {
+                            console.log(`%c[三叉戟] ✓ ${basePath} 成功，共 ${result.data.length} 条`, 'color: #67C23A');
+                            resolve({ path: basePath, data: result.data });
+                        } else if (result.results && Array.isArray(result.results)) {
+                            // 有些 API 使用 results 而不是 data
+                            console.log(`%c[三叉戟] ✓ ${basePath} 成功 (results)，共 ${result.results.length} 条`, 'color: #67C23A');
+                            resolve({ path: basePath, data: result.results });
+                        } else {
+                            reject(new Error(`路径 ${basePath} 返回结构异常`));
                         }
                     } catch (e) {
-                        reject(new Error(`[三叉戟] 解析响应失败: ${e.message}`));
+                        // 探测模式下静默处理解析失败
+                        reject(new Error(`路径 ${basePath} 解析失败: ${e.message}`));
                     }
                 },
                 onerror: function (error) {
-                    reject(new Error(`API call failed: ${error}`));
+                    reject(new Error(`路径 ${basePath} 请求失败`));
                 },
             });
         });
     }
+    
+    // 缓存已发现的工作路径
+    let workingReleasesPath = null;
+    
+    function fetchReleaseList(archived = 0) {
+        return new Promise(async (resolve, reject) => {
+            console.log(`[三叉戟] 请求版本列表: project=${projectName}, product=${productName}`);
+            
+            // 如果已有工作路径，优先使用
+            if (workingReleasesPath) {
+                try {
+                    const result = await tryFetchReleasesFromPath(workingReleasesPath, archived, false);
+                    resolve(result.data);
+                    return;
+                } catch (e) {
+                    console.log(`[三叉戟] 缓存路径失效，重新探测...`);
+                    workingReleasesPath = null;
+                }
+            }
+            
+            // 尝试所有可能的路径（静默模式，不输出警告）
+            for (const path of RELEASES_API_PATHS) {
+                try {
+                    const result = await tryFetchReleasesFromPath(path, archived, true);
+                    workingReleasesPath = result.path;  // 缓存工作路径
+                    console.log(`%c[三叉戟] releases API: ${result.path}`, 'color: #67C23A');
+                    resolve(result.data);
+                    return;
+                } catch (e) {
+                    // 静默继续尝试下一个路径
+                }
+            }
+            
+            // 所有路径都失败
+            console.error(`[三叉戟] 所有 releases API 路径都失败，尝试过: ${RELEASES_API_PATHS.join(', ')}`);
+            reject(new Error("[三叉戟] 无法找到可用的 releases API"));
+        });
+    }
+
+    // 获取当前生效的 releases API 基路径
+    function getReleasesBasePath() {
+        return workingReleasesPath || "/api/devops/releases/";
+    }
 
     function fetchReleaseDetailData(releaseId) {
         return new Promise((resolve, reject) => {
-            console.log(`[三叉戟] 请求版本详情: releaseId=${releaseId}, project=${projectName}, product=${productName}`);
+            const basePath = getReleasesBasePath().replace(/\/$/, '');  // 移除尾部斜杠
+            const apiUrl = `${getApiBaseUrl()}${basePath}/${releaseId}/`;
+            console.log(`[三叉戟] 请求版本详情: ${apiUrl}`);
+            
             GM_xmlhttpRequest({
                 method: "GET",
-                url: `https://poseidon.cisdigital.cn/devops/api/releases/${releaseId}/`,
+                url: apiUrl,
                 headers: {
                     accept: "application/json, text/plain, */*",
                     "accept-language": "zh-CN,zh;q=0.9",
-                    authorization: `Bearer ${getCookie("poseidon_user_token")}`,
-                    referer:
-                        "https://poseidon.cisdigital.cn/app/devops/releases?project=ciip-private&product=datakits",
+                    authorization: getAuthorizationHeader(),
+                    referer: window.location.href,
                     "x-poseidon-product": `${productName}`,
                     "x-poseidon-project": `${projectName}`,
                 },
                 onload: function (response) {
                     try {
                         console.log(`[三叉戟] API响应状态: ${response.status}`);
-                        console.log(`[三叉戟] API响应内容: ${response.responseText.substring(0, 500)}`);
-                        const result = JSON.parse(response.responseText);
+                        console.log(`[三叉戟] API响应前100字符: ${response.responseText.substring(0, 100)}`);
+                        
+                        // v1.6.7: 更健壮的 HTML 检测
+                        const responseText = response.responseText || '';
+                        const responseTextLower = responseText.trim().toLowerCase();
+                        
+                        // 检查是否是 HTML 响应（多种检测方式）
+                        const isHtmlResponse = 
+                            responseTextLower.startsWith('<!doctype') || 
+                            responseTextLower.startsWith('<html') ||
+                            responseTextLower.startsWith('<head') ||
+                            responseTextLower.startsWith('<body') ||
+                            responseTextLower.includes('<!doctype html>') ||
+                            responseTextLower.includes('<title>not found</title>') ||
+                            responseTextLower.includes('<h1>not found</h1>') ||
+                            (responseTextLower.includes('<html') && responseTextLower.includes('</html>'));
+                        
+                        // 检查 HTTP 状态码
+                        const isErrorStatus = response.status >= 400;
+                        
+                        if (isHtmlResponse || isErrorStatus) {
+                            console.error(`[三叉戟] 版本详情 API 返回错误 (状态码: ${response.status}, isHTML: ${isHtmlResponse})`);
+                            console.error(`[三叉戟] 响应内容: ${responseText.substring(0, 300)}`);
+                            
+                            // 根据状态码给出具体错误信息
+                            if (response.status === 401 || response.status === 403) {
+                                reject(new Error("认证失败，请刷新页面重新登录"));
+                            } else if (response.status === 404 || responseTextLower.includes('not found')) {
+                                reject(new Error(`版本ID ${releaseId} 不存在 (404)`));
+                            } else if (response.status >= 500) {
+                                reject(new Error(`服务器错误 (${response.status})`));
+                            } else if (isHtmlResponse) {
+                                reject(new Error(`API 返回 HTML 而非 JSON (状态码: ${response.status})`));
+                            } else {
+                                reject(new Error(`API 请求失败 (状态码: ${response.status})`));
+                            }
+                            return;
+                        }
+                        
+                        // 尝试解析 JSON
+                        console.log(`[三叉戟] 尝试解析 JSON...`);
+                        const result = JSON.parse(responseText);
                         // 兼容多种返回结构
                         if (result.code === 0 && result.data) {
                             console.log(`[三叉戟] 获取版本详情数据成功 (code=0)`);
@@ -1491,8 +2694,23 @@
                             reject(new Error(`[三叉戟] API返回结构异常: code=${result.code}, msg=${result.msg || result.message || '未知'}`));
                         }
                     } catch (e) {
-                        console.error(`[三叉戟] 解析响应失败:`, e, response.responseText);
-                        reject(new Error(`[三叉戟] 解析响应失败: ${e.message}`));
+                        // v1.6.7: 改进错误处理
+                        const responsePreview = response.responseText ? response.responseText.substring(0, 200) : '(空响应)';
+                        console.error(`[三叉戟] 解析响应失败:`, e);
+                        console.error(`[三叉戟] 响应内容预览:`, responsePreview);
+                        
+                        // 检查是否是 HTML 响应（在 catch 中再次检查）
+                        if (responsePreview.toLowerCase().includes('<!doctype') || 
+                            responsePreview.toLowerCase().includes('<html') ||
+                            responsePreview.toLowerCase().includes('not found')) {
+                            if (responsePreview.toLowerCase().includes('not found')) {
+                                reject(new Error(`版本ID ${releaseId} 不存在`));
+                            } else {
+                                reject(new Error(`API 返回 HTML 而非 JSON`));
+                            }
+                        } else {
+                            reject(new Error(`解析响应失败: ${e.message}`));
+                        }
                     }
                 },
                 onerror: function (error) {
@@ -1505,32 +2723,61 @@
 
     function fetchTaskList(releaseId, env) {
         return new Promise((resolve, reject) => {
+            const basePath = getReleasesBasePath().replace(/\/$/, '');
+            const apiUrl = `${getApiBaseUrl()}${basePath}/${releaseId}/tasks/?env=${env}`;
+            console.log(`[三叉戟] 请求任务列表: ${apiUrl}`);
+            
             GM_xmlhttpRequest({
                 method: "GET",
-                url: `https://poseidon.cisdigital.cn/devops/api/releases/${releaseId}/tasks/?env=${env}`,
+                url: apiUrl,
                 headers: {
                     accept: "application/json, text/plain, */*",
                     "accept-language": "zh-CN,zh;q=0.9",
-                    authorization: `Bearer ${getCookie("poseidon_user_token")}`,
-                    referer:
-                        "https://poseidon.cisdigital.cn/app/devops/releases?project=ciip-private&product=datakits",
+                    authorization: getAuthorizationHeader(),
+                    referer: window.location.href,
                     "x-poseidon-product": `${productName}`,
                     "x-poseidon-project": `${projectName}`,
                 },
                 onload: function (response) {
                     try {
-                    const result = JSON.parse(response.responseText);
-                    if (result.code === 0 && Array.isArray(result.data)) {
+                        // v1.6.6: 修复 HTML 检测 - 使用小写比较
+                        const responseTextLower = response.responseText.trim().toLowerCase();
+                        if (responseTextLower.startsWith('<!doctype') || 
+                            responseTextLower.startsWith('<html') ||
+                            responseTextLower.startsWith('<head') ||
+                            responseTextLower.startsWith('<body')) {
+                            console.error(`[三叉戟] 任务列表 API 返回 HTML (状态码: ${response.status})`);
+                            
+                            if (response.status === 401 || response.status === 403) {
+                                reject(new Error("认证失败，请刷新页面重新登录"));
+                            } else {
+                                reject(new Error(`任务列表 API 返回 HTML (状态码: ${response.status})`));
+                            }
+                            return;
+                        }
+                        
+                        const result = JSON.parse(response.responseText);
+                        if (result.code === 0 && Array.isArray(result.data)) {
                             console.log(`[三叉戟] 获取版本任务数据成功`);
-                        resolve(result.data);
-                    } else {
+                            resolve(result.data);
+                        } else if (Array.isArray(result.results)) {
+                            console.log(`[三叉戟] 获取版本任务数据成功 (results)`);
+                            resolve(result.results);
+                        } else if (Array.isArray(result.data)) {
+                            // 有些API的data不是数组但也是有效的
+                            console.log(`[三叉戟] 获取版本任务数据成功 (data)`);
+                            resolve(result.data);
+                        } else {
+                            console.warn(`[三叉戟] API返回结构:`, result);
                             reject(new Error("[三叉戟] API返回结构异常"));
                         }
                     } catch (e) {
+                        console.error(`[三叉戟] 解析任务列表响应失败:`, e, response.responseText.substring(0, 200));
                         reject(new Error(`[三叉戟] 解析响应失败: ${e.message}`));
                     }
                 },
                 onerror: function (error) {
+                    console.error(`[三叉戟] 任务列表API请求失败:`, error);
                     reject(new Error(`API call failed: ${error}`));
                 },
             });
@@ -2158,53 +3405,158 @@
         const appName = row.dataset.app;
         const tag = row.dataset.tag;
         const digest = row.dataset.digest;
-        const token = getCookie("poseidon_user_token");
 
+        // v1.8.3: 使用正确的 API 格式 (通过 Chrome DevTools 验证)
         const exportData = {
-            spec: JSON.stringify({
-                images: [{
-                    app: appName,
-                    images: [{ tag, digest }]
-                }]
-            }),
+            info: {
+                spec: JSON.stringify({
+                    images: [{
+                        app: appName,
+                        images: [{ tag, digest }]
+                    }]
+                })
+            },
             description: "导出镜像",
             meta_type: 2
         };
 
+        const baseUrl = getApiBaseUrl();
         GM_xmlhttpRequest({
             method: "POST",
-            url: "https://poseidon.cisdigital.cn/devops/api/migration/exports/",
+            url: `${baseUrl}/api/devops/migration/exports/`,  // v1.8.3: 正确的 API 路径
             headers: {
                 "accept": "application/json, text/plain, */*",
                 "accept-language": "zh-CN,zh;q=0.9",
-                "authorization": `Bearer ${token}`,
+                "authorization": getAuthorizationHeader(),
                 "content-type": "application/json",
-                "origin": "https://poseidon.cisdigital.cn",
-                "referer": "https://poseidon.cisdigital.cn/app/devops/import-export",
-                "x-poseidon-product": `${productName}`,
-                "x-poseidon-project": `${projectName}`,
+                "origin": baseUrl,
+                "referer": `${baseUrl}/app/devops/import-export`,
+                "x-poseidon-product": `${productId}`,   // v1.8.3: 使用数字 ID
+                "x-poseidon-project": `${projectId}`,   // v1.8.3: 使用数字 ID
             },
             data: JSON.stringify(exportData),
             onload: function (response) {
                 try {
-                const result = JSON.parse(response.responseText);
-                if (result.code === 0 && result.data) {
-                    console.log(
-                        `[三叉戟] 成功触发导出单个镜像: ${appName}-${tag}-${digest}`
-                    );
-                    const url = `https://poseidon.cisdigital.cn/app/devops/import-export?project=${projectName}&product=${productName}`;
-                    window.open(url, '_blank');
-                } else {
-                    window.alert(`[三叉戟] 触发导出单个镜像失败: ${JSON.stringify(result)}`)
+                    const result = JSON.parse(response.responseText);
+                    if (result.code === 0 && result.data) {
+                        const exportId = result.data.id;
+                        console.log(`[三叉戟] 成功触发导出单个镜像: ${appName}-${tag}-${digest}, exportId: ${exportId}`);
+                        // v1.8.5: 轮询列表 API 等待下载完成
+                        pollExportListForDownload(exportId, `${appName}-${tag}.zip`);
+                    } else {
+                        window.alert(`[三叉戟] 触发导出单个镜像失败: ${JSON.stringify(result)}`);
                     }
                 } catch (e) {
                     window.alert(`[三叉戟] 解析响应失败: ${e.message}`);
                 }
             },
             onerror: function (error) {
-                window.alert(`[三叉戟] 触发导出单个镜像API call failed: ${error}`)
+                window.alert(`[三叉戟] 触发导出单个镜像API call failed: ${error}`);
             },
         });
+    }
+
+    // v1.8.5: 通过列表 API 轮询导出状态，等待下载完成
+    function pollExportListForDownload(exportId, filename, maxAttempts = 30, interval = 2000) {
+        const baseUrl = getApiBaseUrl();
+        let attempts = 0;
+
+        console.log(`[三叉戟] 开始轮询导出状态 (通过列表API), exportId: ${exportId}`);
+
+        function checkStatus() {
+            attempts++;
+            console.log(`[三叉戟] 轮询第 ${attempts} 次...`);
+
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: `${baseUrl}/api/devops/migration/exports/?page=1&page_size=20`,
+                headers: {
+                    "accept": "application/json, text/plain, */*",
+                    "authorization": getAuthorizationHeader(),
+                    "x-poseidon-product": `${productId}`,
+                    "x-poseidon-project": `${projectId}`,
+                },
+                onload: function (response) {
+                    try {
+                        const result = JSON.parse(response.responseText);
+                        if (result.code === 0 && result.data) {
+                            // 在列表中查找对应的导出记录
+                            const exportRecord = result.data.find(item => item.id === exportId);
+                            
+                            if (exportRecord) {
+                                const status = exportRecord.status;
+                                console.log(`[三叉戟] 导出状态: ${status} (1=处理中, 2=已完成, 3=失败)`);
+
+                                if (status === 2) {
+                                    // 已完成，等待 3 秒后下载（给文件上传时间）
+                                    if (exportRecord.download_url) {
+                                        const downloadUrl = exportRecord.download_url.startsWith('//')
+                                            ? 'https:' + exportRecord.download_url
+                                            : exportRecord.download_url;
+                                        console.log(`[三叉戟] 导出完成，等待 3 秒后下载...`);
+                                        setTimeout(() => {
+                                            console.log(`[三叉戟] 开始下载: ${downloadUrl}`);
+                                            // 使用 window.open 下载
+                                            window.open(downloadUrl, '_blank');
+                                        }, 3000);
+                                    } else {
+                                        window.alert('[三叉戟] 导出完成但没有下载链接');
+                                    }
+                                } else if (status === 3) {
+                                    window.alert('[三叉戟] 导出失败，请检查导出记录');
+                                } else if (status === 1) {
+                                    // 处理中，继续轮询
+                                    if (attempts < maxAttempts) {
+                                        setTimeout(checkStatus, interval);
+                                    } else {
+                                        console.log('[三叉戟] 轮询超时');
+                                        window.alert('[三叉戟] 导出处理时间较长，请到导出记录页手动下载');
+                                        const url = `${baseUrl}/app/devops/import-export?project=${projectId}&product=${productId}`;
+                                        window.open(url, '_blank');
+                                    }
+                                }
+                            } else {
+                                console.log(`[三叉戟] 未在列表中找到导出记录 ${exportId}`);
+                                if (attempts < maxAttempts) {
+                                    setTimeout(checkStatus, interval);
+                                }
+                            }
+                        } else {
+                            console.error('[三叉戟] 获取导出列表失败:', result);
+                            if (attempts < maxAttempts) {
+                                setTimeout(checkStatus, interval);
+                            }
+                        }
+                    } catch (e) {
+                        console.error('[三叉戟] 解析导出列表失败:', e);
+                        if (attempts < maxAttempts) {
+                            setTimeout(checkStatus, interval);
+                        }
+                    }
+                },
+                onerror: function (error) {
+                    console.error('[三叉戟] 轮询请求失败:', error);
+                    if (attempts < maxAttempts) {
+                        setTimeout(checkStatus, interval);
+                    }
+                }
+            });
+        }
+
+        checkStatus();
+    }
+
+    // v1.8.5: 触发文件下载
+    function triggerDownload(url, filename) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename || '';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            document.body.removeChild(a);
+        }, 100);
     }
 
     function batchExportImages(onlySelected = false) {
@@ -2233,42 +3585,48 @@
             return;
             }
 
+        // v1.8.3: 使用正确的 API 格式 (通过 Chrome DevTools 验证)
         const exportData = {
-            spec: JSON.stringify({
-                images: images.map(img => ({
-                    app: img.app,
-                    images: [{ tag: img.tag, digest: img.digest }]
-                }))
-            }),
+            info: {
+                spec: JSON.stringify({
+                    images: images.map(img => ({
+                        app: img.app,
+                        images: [{ tag: img.tag, digest: img.digest }]
+                    }))
+                })
+            },
             description: onlySelected ? `选中导出${images.length}个镜像` : "批量导出镜像",
             meta_type: 2
         };
 
         console.log(`[三叉戟] 导出的镜像信息为：${JSON.stringify(exportData)}`);
 
+        const baseUrl = getApiBaseUrl();
         GM_xmlhttpRequest({
             method: "POST",
-            url: "https://poseidon.cisdigital.cn/devops/api/migration/exports/",
+            url: `${baseUrl}/api/devops/migration/exports/`,  // v1.8.3: 正确的 API 路径
             headers: {
                 "accept": "application/json, text/plain, */*",
                 "accept-language": "zh-CN,zh;q=0.9",
-                "authorization": `Bearer ${getCookie("poseidon_user_token")}`,
+                "authorization": getAuthorizationHeader(),
                 "content-type": "application/json",
-                "origin": "https://poseidon.cisdigital.cn",
-                "referer": "https://poseidon.cisdigital.cn/app/devops/import-export",
-                "x-poseidon-product": `${productName}`,
-                "x-poseidon-project": `${projectName}`,
+                "origin": baseUrl,
+                "referer": `${baseUrl}/app/devops/import-export`,
+                "x-poseidon-product": `${productId}`,   // v1.8.3: 使用数字 ID
+                "x-poseidon-project": `${projectId}`,   // v1.8.3: 使用数字 ID
             },
             data: JSON.stringify(exportData),
             onload: function (response) {
                 try {
-                const result = JSON.parse(response.responseText);
-                if (result.code === 0 && result.data) {
-                        console.log(`[三叉戟] 成功触发${onlySelected ? '选中' : '批量'}导出${images.length}个镜像`);
-                    const url = `https://poseidon.cisdigital.cn/app/devops/import-export?project=${projectName}&product=${productName}`;
-                    window.open(url, '_blank');
-                } else {
-                        window.alert(`[三叉戟] 触发导出镜像失败: ${JSON.stringify(result)}`)
+                    const result = JSON.parse(response.responseText);
+                    if (result.code === 0 && result.data) {
+                        const exportId = result.data.id;
+                        const filename = onlySelected ? `selected-${images.length}-images.zip` : `batch-${images.length}-images.zip`;
+                        console.log(`[三叉戟] 成功触发${onlySelected ? '选中' : '批量'}导出${images.length}个镜像, exportId: ${exportId}`);
+                        // v1.8.5: 轮询列表 API 等待下载完成
+                        pollExportListForDownload(exportId, filename);
+                    } else {
+                        window.alert(`[三叉戟] 触发导出镜像失败: ${JSON.stringify(result)}`);
                     }
                 } catch (e) {
                     window.alert(`[三叉戟] 解析响应失败: ${e.message}`);

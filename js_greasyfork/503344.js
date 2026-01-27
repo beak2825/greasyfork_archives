@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         YouTube - Force rounded corners + tweaks included
-// @version      2026.01.22.1
+// @version      2026.01.27
 // @description  This script forces the rounded version of the layout (which includes some fewer tweaks applied along with CSS tweaks/fixes and disables most of experimental flags).
 // @author       Joey_JTS (original author: xX_LegendCraftd_Xx)
 // @license MIT
@@ -451,7 +451,8 @@ margin-bottom: 0 !important
 }
 
 ytd-watch-metadata.ytd-watch-flexy {
-padding-bottom: 36px !important
+padding-bottom: 136px !important;
+margin-bottom: 56px !important
 }
 
 ytd-watch-flexy[default-layout][reduced-top-margin] #primary.ytd-watch-flexy, ytd-watch-flexy[default-layout][reduced-top-margin] #secondary.ytd-watch-flexy {

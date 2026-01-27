@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name          Stick YouTube Progress Bar
-// @version       1.0.13
+// @version       1.0.14
 // @match         https://www.youtube.com/**
 // @author        peng-devs
 // @namespace     https://greasyfork.org/users/57176
@@ -70,10 +70,11 @@
 
     let video = document.querySelector("video.video-stream");
     internal = setInterval(() => {
-      if (!video.getAttribute('src')) {
-        // youtube 有時候會抽風把頁面重新 re-render
+      if (!video?.getAttribute('src')) {
+        // youtube 有時候會抽風把頁面重新 re-render 生成新的 video
         console.debug(`[${NAME}] detect page re-render, reset video`);
-        video = document.querySelector("video.video-stream");
+        const videos = document.querySelectorAll("video.video-stream");
+        video = [...videos].find(v => v.getAttribute('src'));
       }
 
       const progress = video.currentTime / video.duration;

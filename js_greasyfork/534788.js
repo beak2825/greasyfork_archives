@@ -2,7 +2,7 @@
 // @name         BilinovelAntiBlock
 // @name:zh      Bilinovel 反广告屏蔽
 // @namespace    https://github.com/SuniRein/scripts
-// @version      1.2.0
+// @version      1.3.0
 // @description  抑制 Bilinovel 检测到广告屏蔽插件后隐藏内容
 // @author       SuniRein
 // @match        https://www.bilinovel.com/*
@@ -24,6 +24,9 @@
     const checkElementInterval = 100;
     const maxWaitTime = 15000;
     let timeWaited = 0;
+
+    // 保护 console 不被覆盖
+    Object.freeze(console);
 
     // 根据不同网页定位目标元素
     function analyzePage() {
@@ -57,7 +60,7 @@
     }
 
     function showElement(element) {
-        element.style.setProperty('display', 'block', 'important');
+        element.removeAttribute('style');
     }
 
     function hideElement(element) {
@@ -124,6 +127,26 @@
                     attributes: true,
                     attributeFilter: ['style'],
                 });
+            }
+
+            // 检测 linovelib 广告弹窗
+            if (window.location.hostname === 'www.linovelib.com') {
+                const bodyObserver = new MutationObserver((mutationsList) => {
+                    for (const mutation of mutationsList) {
+                        if (mutation.type === 'childList') {
+                            mutation.addedNodes.forEach((node) => {
+                                if (node.nodeType === Node.ELEMENT_NODE) {
+                                    const bnt = node.querySelector('#close-btn');
+                                    if (bnt) {
+                                        console.log('Bilinovel: 发现广告弹窗，尝试关闭');
+                                        bnt.click();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+                bodyObserver.observe(document.body, { childList: true, subtree: true });
             }
         } else if (timeWaited >= maxWaitTime) {
             console.warn('Bilinovel: 获取目标元素超时 (' + maxWaitTime + 'ms)，停止检查。');

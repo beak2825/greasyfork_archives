@@ -7,7 +7,7 @@
 // @exclude         *://*.waze.com/user/editor*
 // @grant 			none
 // @require         https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.8.0/proj4.js
-// @version 		1.4.0
+// @version 		1.4.1
 // @supportURL   https://github.com/RobinBreman/WME-MapLinks/issues
 // @homepageURL  https://github.com/RobinBreman/WME-MapLinks
 // @run-at       document-end      // After DOM loads (default)
@@ -18,7 +18,7 @@
 (function () {
     'use strict';
 
-const version = '1.4.0';
+const version = '1.4.1';
 let W;
 const mapLinksRegistry = [
     {
@@ -212,9 +212,15 @@ function gotoWegstatus3() {
     window.open(url, '_blank');
 }
 function gotoGeorge() {
+    //https://wegkenmerken.ndw.nu/kaart?kaartlagen=BRT&zichtbaar-gebied=6.42225,52.1184,6.46705,52.13297
+    //https://wegkenmerken.ndw.nu/kaart?kaartlagen=DRIVING_DIRECTION_OVERLAY,ROAD_SECTION_ID_LABEL,HECTOMETRE_SIGN,HOUSE_NUMBER,ADMINISTRATIVE_DIVISION,NDW,SPEED_LIMIT,TRAFFIC_SIGN&zichtbaar-gebied=6.31125,52.10806,6.50667,52.17158
     const coords = getMapCoordinates();
-    const url = `https://wegkenmerken.staging.ndw.nu/kaart?kaartlagen=ADMINISTRATIVE_DIVISION,SPEED_LIMIT,BRT,TRAFFIC_SIGN`;
-    //UNDONE pl werkt niet &zichtbaar-gebied=${coords.x},${coords.y},${coords.x},${coords.y}`;
+    const zoom = getMapZoomlevel();
+    let latMin = coords.y - 0.015 * (5 / zoom);
+    let latMax = coords.y + 0.015 * (5 / zoom);
+    let lonMin = coords.x - 0.015 * (5 / zoom);
+    let lonMax = coords.x + 0.015 * (5 / zoom);
+    const url = `https://wegkenmerken.ndw.nu/kaart?kaartlagen=DRIVING_DIRECTION_OVERLAY,ROAD_SECTION_ID_LABEL,HECTOMETRE_SIGN,HOUSE_NUMBER,ADMINISTRATIVE_DIVISION,NDW,SPEED_LIMIT,TRAFFIC_SIGN&zichtbaar-gebied=${lonMin},${latMin},${lonMax},${latMax}`;
     window.open(url, '_blank');
 }
 function gotoNDW() {
@@ -235,4 +241,6 @@ function gotoMatrixNL() {
     window.open(url, '_blank');
 }
 window.SDK_INITIALIZED.then(WMEML_InitScript);
+//# sourceMappingURL=wme-maplinks.js.map
 })();
+//# sourceMappingURL=wme-maplinks.js.map

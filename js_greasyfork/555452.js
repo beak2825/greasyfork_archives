@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Unified Lab Assistant & Receiver plus
-// @version      18.9
+// @version      18.9.1
 // @description  v18.8: Enhanced Rapid Receiver with STOP button, Reset Status, and performance optimizations for 'ER' status.
 // @match        https://his.kaauh.org/lab/*
 // @author       Hamad AlShegifi 
@@ -1867,22 +1867,35 @@ function updateActionableHeader(counts) {
 
 
     // --- Feature: Dropdown Pagination ---
+
     (function() {
-        const setDropdownValue = () => {
-            const dropdown = document.getElementById("dropdownPaginationPageSize");
-            if (dropdown && dropdown.value !== "100") {
-                dropdown.value = "100";
-                dropdown.dispatchEvent(new Event('change', {
-                    bubbles: true
-                }));
+    const setDropdownValue = () => {
+        const dropdown = document.getElementById("dropdownPaginationPageSize");
+        if (dropdown) {
+            // Add a custom "500" or "All" option
+            const customOption = Array.from(dropdown.options).find(opt => opt.value === "500");
+            if (!customOption) {
+                const newOption = document.createElement('option');
+                newOption.value = "500"; // Or a very large number
+                newOption.text = "500";
+                dropdown.appendChild(newOption);
             }
-        };
-        new MutationObserver(setDropdownValue).observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-        window.addEventListener('load', setDropdownValue);
-    })();
+
+            // Set to 500
+            if (dropdown.value !== "500") {
+                dropdown.value = "500";
+                dropdown.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        }
+    };
+
+    new MutationObserver(setDropdownValue).observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    window.addEventListener('load', setDropdownValue);
+})();
 
 
     // --- Feature: Conditional Auto & Manual VERIFY2 ---

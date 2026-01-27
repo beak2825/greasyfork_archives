@@ -3,7 +3,7 @@
 // @name:en            MWI Market Addon
 // @name:zh-CN         MWI 市场插件
 // @namespace          https://milkyway.market/
-// @version            1.4.3
+// @version            1.5.1
 // @author             mathewcst
 // @description:en     Sync character data between MWI game and MilkyWay Market
 // @description:zh-CN  同步 MWI 游戏和 MilkyWay Market 之间的角色数据
@@ -35,7 +35,7 @@
   var _GM_getValue = (() => typeof GM_getValue != "undefined" ? GM_getValue : void 0)();
   var _GM_setValue = (() => typeof GM_setValue != "undefined" ? GM_setValue : void 0)();
   var _GM_xmlhttpRequest = (() => typeof GM_xmlhttpRequest != "undefined" ? GM_xmlhttpRequest : void 0)();
-  const version = "1.4.3";
+  const version = "1.5.1";
   const VERSION = version;
   const STORAGE_KEY$1 = "@mwm/character-data";
   const SYNC_THROTTLE_MS = 3e4;
@@ -262,6 +262,9 @@ processNode(node) {
 		</div>
 	`;
     banner.querySelector(".mwm-update-dismiss")?.addEventListener("click", () => {
+      banner.remove();
+    });
+    banner.querySelector(".mwm-update-link")?.addEventListener("click", () => {
       banner.remove();
     });
     document.body.appendChild(banner);

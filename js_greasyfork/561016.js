@@ -1,12 +1,25 @@
 // ==UserScript==
 // @name         哔哩哔哩过滤评论区
 // @description  根据关键词过滤评论区
-// @version      2.0.0
+// @version      2.0.1
 // @author       girl-dream
 // @license      The Unlicense
 // @namespace    https://github.com/girl-dream/
-// @match        https://www.bilibili.com/video/*
 // @icon         https://www.bilibili.com/favicon.ico
+// @match        https://www.bilibili.com/video/*
+// @match        https://www.bilibili.com/list/*
+// @match        https://www.bilibili.com/bangumi/play/*
+// @match        https://t.bilibili.com/*
+// @match        https://www.bilibili.com/opus/*
+// @match        https://space.bilibili.com/*
+// @match        https://www.bilibili.com/v/topic/detail/*
+// @match        https://www.bilibili.com/cheese/play/*
+// @match        https://www.bilibili.com/festival/*
+// @match        https://www.bilibili.com/blackboard/*
+// @match        https://www.bilibili.com/blackroom/ban/*
+// @match        https://www.bilibili.com/read/*
+// @match        https://manga.bilibili.com/*
+// @match        https://www.bilibili.com/v/topic/detail*
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_registerMenuCommand
@@ -101,7 +114,40 @@
         document.body.appendChild(div)
     })
 
+
+    const filterReplies = (replies) => {
+        return replies.filter(reply => {
+            const msg = reply.content?.message || ''
+
+            // 检查是否包含关键词
+            const hasKeyword = keyWords.some(keyword => {
+                if (keyword.startsWith('/') && keyword.lastIndexOf('/') > 0 && eval(keyword) instanceof RegExp) {
+                    return eval(keyword).test(msg)
+                } else {
+                    return msg.includes(keyword)
+                }
+            })
+
+            // 如果包含关键词,过滤掉
+            if (hasKeyword) {
+                return false
+            }
+
+            // 如果当前回复有子回复,递归过滤
+            if (reply.replies && Array.isArray(reply.replies)) {
+                reply.replies = filterReplies(reply.replies)
+                // 如果子回复数组为空,设置为 null
+                if (reply.replies.length == 0) {
+                    reply.replies = null
+                }
+            }
+
+            return true
+        })
+    }
+
     const originalFetch = window.fetch
+
     unsafeWindow.fetch = async (...args) => {
         const response = await originalFetch.apply(this, args)
 
@@ -111,20 +157,11 @@
 
             let data = await clonedResponse.json()
 
-            if (data.data?.replies) {
-                data.data.replies = data.data.replies.filter(e => {
-                    const msg = e.content?.message || ''
-                    return !keyWords.some(keyword => {
-                        if (keyword.startsWith('/') && keyword.lastIndexOf('/') > 0 && eval(item) instanceof RegExp) {
-                            return eval(item).test(msg)
-                        } else {
-                            return msg.includes(keyword)
-                        }
-                    })
-                })
+            if (data.data?.replies && Array.isArray(data.data?.replies)) {
+                data.data.replies = filterReplies(data.data.replies)
                 return new Response(JSON.stringify(data), response)
             }
         }
         return response
     }
-})();
+})()

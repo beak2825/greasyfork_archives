@@ -7,7 +7,7 @@
 // @include             https://www.waze.com/editor*
 // @include             https://beta.waze.com/*
 // @exclude             https://www.waze.com/user/editor*
-// @version             2026.01.25.02
+// @version             2026.01.27.08
 // @grant               GM_xmlhttpRequest
 // @grant               unsafeWindow
 // @connect             waze.com
@@ -27,7 +27,7 @@
  * [English]
  * A comprehensive suite for Waze Map Editor including:
  * 1. City/Place Inspector
- * 2. Map Validator
+ * 2. Map Validator (Rotatable + Wide View + Compact Settings + Card Results)
  * 3. Advanced Selection
  * 4. City Boundary Validator (Waze + OSM)
  *
@@ -53,7 +53,7 @@
     }
 
     const SCRIPT_NAME = "Abdullah Abbas WME Tools";
-    const SCRIPT_VERSION = "2026.01.25.02";
+    const SCRIPT_VERSION = "2026.01.27.08";
     const DEFAULT_W = "340px";
     const DEFAULT_H = "480px";
 
@@ -88,10 +88,10 @@
             adv_opt_lock: 'Lock Level', adv_opt_type: 'Road Type',
             adv_btn_sel: 'Select', adv_btn_desel: 'Deselect',
             adv_msg_found: 'Selected', adv_msg_none: 'No matches found',
-            adv_type_st: 'Street (St)', adv_type_ps: 'Primary Street (PS)', adv_type_mh: 'Minor Highway (mH)',
-            adv_type_maj: 'Major Highway (MH)', adv_type_fw: 'Freeway (Fw)', adv_type_rmp: 'Ramp (Rmp)',
-            adv_type_plr: 'Parking Lot (PLR)', adv_type_pw: 'Private Way (Pw)', adv_type_pr: 'Private (PR)',
-            adv_type_or: 'Off-Road (OR)',
+            adv_type_st: 'Street', adv_type_ps: 'Primary Street', adv_type_mh: 'Minor Highway',
+            adv_type_maj: 'Major Highway', adv_type_fw: 'Freeway', adv_type_rmp: 'Ramp',
+            adv_type_plr: 'Parking Lot', adv_type_pw: 'Private Way', adv_type_pr: 'Private Road',
+            adv_type_or: 'Off-Road',
             city_no_name: 'No City',
             // Cities Checkbox
             cc_refresh: 'Refresh List', cc_draw: 'Draw Selected', cc_clear: 'Clear All',
@@ -118,18 +118,18 @@
             qa_lbl_short: 'قطاع قصير', qa_lbl_angle: 'زوايا حادة', qa_lbl_cross: 'بلا عقدة',
             qa_lbl_lock: 'أقفال', qa_lbl_ghost: 'مدن فارغة', qa_lbl_speed: 'سرعة',
             qa_lbl_discon: 'غير متصل', qa_lbl_jagged: 'تشوهات', qa_opt_exclude_rab: 'تجاهل الدوارات',
-            qa_lbl_discon_mode: 'نوع عدم الاتصال:', qa_opt_discon_1w: 'جهة واحدة', qa_opt_discon_2w: 'جهتين',
+            qa_lbl_discon_mode: 'انقطاع:', qa_opt_discon_1w: 'جهة واحدة', qa_opt_discon_2w: 'جهتين',
             qa_lbl_limit_dist: 'حد المسافة', qa_lbl_limit_angle: 'حد الزاوية',
             qa_unit_m: 'متر', qa_unit_i: 'ميل', qa_msg_no_segments: '⚠️ المنطقة واسعة! يرجى التقريب.',
             adv_lbl_crit: 'معيار التحديد:', adv_lbl_val: 'القيمة:',
-            adv_opt_nocity: 'بدون مدينة (Ghost)', adv_opt_nospeed: 'بدون سرعة (Driveable)',
+            adv_opt_nocity: 'بدون مدينة', adv_opt_nospeed: 'بدون سرعة',
             adv_opt_lock: 'مستوى القفل', adv_opt_type: 'نوع الطريق',
             adv_btn_sel: 'تحديد العناصر', adv_btn_desel: 'إلغاء التحديد',
             adv_msg_found: 'تم تحديد', adv_msg_none: 'لم يتم العثور على عناصر مطابقة',
-            adv_type_st: 'شارع (St)', adv_type_ps: 'شارع رئيسي (PS)', adv_type_mh: 'سريع ثانوي (mH)',
-            adv_type_maj: 'سريع رئيسي (MH)', adv_type_fw: 'طريق حرة (Fw)', adv_type_rmp: 'منحدر (Rmp)',
-            adv_type_plr: 'موقف (PLR)', adv_type_pw: 'طريق ضيق (Pw)', adv_type_pr: 'طريق خاص (PR)',
-            adv_type_or: 'طريق ترابي (OR)',
+            adv_type_st: 'شارع', adv_type_ps: 'شارع رئيسي', adv_type_mh: 'سريع ثانوي',
+            adv_type_maj: 'سريع رئيسي', adv_type_fw: 'طريق حرة', adv_type_rmp: 'منحدر',
+            adv_type_plr: 'موقف', adv_type_pw: 'طريق ضيق', adv_type_pr: 'طريق خاص',
+            adv_type_or: 'طريق ترابي',
             city_no_name: 'بدون مدينة',
             // Cities Checkbox
             cc_refresh: 'تحديث القائمة', cc_draw: 'تلوين المحدد', cc_clear: 'مسح شامل',
@@ -164,16 +164,16 @@
             adv_opt_lock: 'ئاستی قوفڵ', adv_opt_type: 'جۆری ڕێگا',
             adv_btn_sel: 'دیاریکردن', adv_btn_desel: 'لادانی دیاریکردن',
             adv_msg_found: 'دیاریکرا', adv_msg_none: 'هیچ نەدۆزرایەوە',
-            adv_type_st: 'شەقام (St)', adv_type_ps: 'شەقامی سەرەکی (PS)', adv_type_mh: 'خێرایی لاوەکی (mH)',
-            adv_type_maj: 'خێرایی سەرەکی (MH)', adv_type_fw: 'ڕێگای خێرا (Fw)', adv_type_rmp: 'ڕامپ (Rmp)',
-            adv_type_plr: 'پارکینگ (PLR)', adv_type_pw: 'کۆڵان (Pw)', adv_type_pr: 'تایبەت (PR)',
-            adv_type_or: 'ڕێگای خۆڵ (OR)',
+            adv_type_st: 'شەقام', adv_type_ps: 'شەقامی سەرەکی', adv_type_mh: 'خێرایی لاوەکی',
+            adv_type_maj: 'خێرایی سەرەکی', adv_type_fw: 'ڕێگای خێرا', adv_type_rmp: 'ڕامپ',
+            adv_type_plr: 'پارکینگ', adv_type_pw: 'کۆڵان', adv_type_pr: 'تایبەت',
+            adv_type_or: 'ڕێگای خۆڵ',
             city_no_name: 'بێ شار',
             // Cities Checkbox
             cc_refresh: 'نوێکردنەوە', cc_draw: 'کێشان', cc_clear: 'پاککردنەوە',
             cc_waze_src: 'Waze', cc_osm_src: 'OSM', cc_search_ph: 'گەڕان بۆ ناوی شار...',
-            cc_search_btn: 'گەڕان', cc_status_ready: 'ئامادەیە', cc_status_scan: 'گەڕان...',
-            cc_msg_empty: 'نوێکردنەوە بکە یان بگەڕێ...', cc_check_all: 'هەمووی'
+            cc_search_btn: 'Lêgerîn', cc_status_ready: 'Amade ye', cc_status_scan: 'Lêgerîn...',
+            cc_msg_empty: 'Nûkirin bike an bigere...', cc_check_all: 'Hemî'
         },
         'kmr': {
             name: 'Kurdî (Kurmancî)',
@@ -202,10 +202,10 @@
             adv_opt_lock: 'Asta Qufilê', adv_opt_type: 'Cureyê Rê',
             adv_btn_sel: 'Hilbijartin', adv_btn_desel: 'Rakirin',
             adv_msg_found: 'Hat hilbijartin', adv_msg_none: 'Ti encam nehat dîtin',
-            adv_type_st: 'Kolan (St)', adv_type_ps: 'Kolana Sereke (PS)', adv_type_mh: 'Lezgeha Biçûk (mH)',
-            adv_type_maj: 'Lezgeha Mezin (MH)', adv_type_fw: 'Rêya Bilez (Fw)', adv_type_rmp: 'Ramp (Rmp)',
-            adv_type_plr: 'Parking (PLR)', adv_type_pw: 'Rêya Taybet (Pw)', adv_type_pr: 'Taybet (PR)',
-            adv_type_or: 'Rêya Axê (OR)',
+            adv_type_st: 'Kolan', adv_type_ps: 'Kolana Sereke', adv_type_mh: 'Lezgeha Biçûk',
+            adv_type_maj: 'Lezgeha Mezin', adv_type_fw: 'Rêya Bilez', adv_type_rmp: 'Ramp',
+            adv_type_plr: 'Parking', adv_type_pw: 'Rêya Taybet', adv_type_pr: 'Taybet',
+            adv_type_or: 'Rêya Axê',
             city_no_name: 'Bê Bajar',
             // Cities Checkbox
             cc_refresh: 'Nûkirin', cc_draw: 'Xêzkirin', cc_clear: 'Paqijkirin',
@@ -471,8 +471,29 @@
                 document.onmousemove = (e) => {
                     if (!isDragging) return;
                     e.preventDefault();
-                    win.style.left = (initialLeft + e.clientX - startX) + 'px';
-                    win.style.top = (initialTop + e.clientY - startY) + 'px';
+
+                    // Calculate new positions
+                    let newLeft = initialLeft + e.clientX - startX;
+                    let newTop = initialTop + e.clientY - startY;
+
+                    // --- BOUNDARY CONSTRAINTS ---
+                    // 1. Restrict Top (Prevents header from going off-screen)
+                    if (newTop < 0) newTop = 0;
+
+                    // 2. Restrict Left (Prevents window from going off-screen left)
+                    if (newLeft < 0) newLeft = 0;
+
+                    // 3. Restrict Right (Prevents window from going completely off-screen right)
+                    // Ensure at least 50px of the window is visible on the right, or constrain strictly to viewport
+                    const maxLeft = window.innerWidth - win.offsetWidth;
+                    if (newLeft > maxLeft) newLeft = maxLeft;
+
+                    // 4. Restrict Bottom (Optional, keeps header visible)
+                    const maxTop = window.innerHeight - header.offsetHeight;
+                    if (newTop > maxTop) newTop = maxTop;
+
+                    win.style.left = newLeft + 'px';
+                    win.style.top = newTop + 'px';
                 };
                 document.onmouseup = () => { isDragging = false; document.onmousemove = null; document.onmouseup = null; UIBuilder.saveState(id, win); };
             };
@@ -1004,12 +1025,13 @@
     };
 
     // ===========================================================================
-    //  EXISTING MODULES
+    //  MODULE: MAP VALIDATOR (UPDATED 2026 - COMPACT UI + CARD RESULTS)
     // ===========================================================================
     const ValidatorCleanUI = {
         qaLayer: null,
         visualLayer: null,
         isInitialized: false,
+        foundIssues: {},
         settings: {
             checkShort: false,
             checkAngle: false,
@@ -1026,10 +1048,12 @@
             disconMode: '2w',
             winTop: '100px',
             winLeft: '100px',
-            winWidth: DEFAULT_W,
-            winHeight: DEFAULT_H
+            winWidth: '750px',
+            winHeight: '500px',
+            isPortrait: false
         },
-        SETTINGS_STORE: 'AA_WME_VALIDATOR_V18',
+        SETTINGS_STORE: 'AA_WME_VALIDATOR_V23',
+
         init: () => {
             if (ValidatorCleanUI.isInitialized) {
                 ValidatorCleanUI.toggle();
@@ -1040,6 +1064,7 @@
             ValidatorCleanUI.isInitialized = true;
             ValidatorCleanUI.toggle();
         },
+
         toggle: () => {
             const win = document.getElementById('aa-qa-pro-window');
             if (win) {
@@ -1047,20 +1072,38 @@
                 if (win.style.display === 'block') ValidatorCleanUI.saveSettings();
             }
         },
+
         loadSettings: () => {
             const s = localStorage.getItem(ValidatorCleanUI.SETTINGS_STORE);
-            if (s) ValidatorCleanUI.settings = { ...ValidatorCleanUI.settings,
-                ...JSON.parse(s)
-            };
+            if (s) ValidatorCleanUI.settings = { ...ValidatorCleanUI.settings, ...JSON.parse(s) };
             if (!ValidatorCleanUI.settings.limitShort) ValidatorCleanUI.settings.limitShort = 6;
             if (!ValidatorCleanUI.settings.limitAngle) ValidatorCleanUI.settings.limitAngle = 30;
-            if (!ValidatorCleanUI.settings.winWidth) ValidatorCleanUI.settings.winWidth = DEFAULT_W;
-            if (!ValidatorCleanUI.settings.winHeight) ValidatorCleanUI.settings.winHeight = DEFAULT_H;
-            if (!ValidatorCleanUI.settings.disconMode || ValidatorCleanUI.settings.disconMode === 'all') ValidatorCleanUI.settings.disconMode = '2w';
+            if (!ValidatorCleanUI.settings.winWidth) ValidatorCleanUI.settings.winWidth = '750px';
+            if (!ValidatorCleanUI.settings.winHeight) ValidatorCleanUI.settings.winHeight = '500px';
+            if (typeof ValidatorCleanUI.settings.isPortrait === 'undefined') ValidatorCleanUI.settings.isPortrait = false;
         },
+
         saveSettings: () => {
             localStorage.setItem(ValidatorCleanUI.SETTINGS_STORE, JSON.stringify(ValidatorCleanUI.settings));
         },
+
+        toggleOrientation: () => {
+            const win = document.getElementById('aa-qa-pro-window');
+            if(!win) return;
+            ValidatorCleanUI.settings.isPortrait = !ValidatorCleanUI.settings.isPortrait;
+
+            if(ValidatorCleanUI.settings.isPortrait) {
+                win.style.width = '320px';
+                win.style.height = '550px';
+            } else {
+                win.style.width = '750px';
+                win.style.height = '500px';
+            }
+            ValidatorCleanUI.settings.winWidth = win.style.width;
+            ValidatorCleanUI.settings.winHeight = win.style.height;
+            ValidatorCleanUI.saveSettings();
+        },
+
         openGMaps: () => {
             if (!W || !W.map) return;
             const center = W.map.getCenter();
@@ -1068,34 +1111,48 @@
             const url = `https://www.google.com/maps?q=${lonlat.lat},${lonlat.lon}`;
             window.open(url, '_blank');
         },
+
         scanMap: () => {
             if (typeof W === 'undefined' || !W.map || !W.model) return;
             const statusEl = document.getElementById('aa_qa_status');
+            const resultPanel = document.getElementById('aa_qa_results_panel');
+
             statusEl.innerText = _t('qa_msg_scanning');
             statusEl.style.color = '#2196F3';
+            resultPanel.innerHTML = '';
+            ValidatorCleanUI.foundIssues = {};
+
             if (!ValidatorCleanUI.qaLayer) {
-                ValidatorCleanUI.qaLayer = new OpenLayers.Layer.Vector("AA_QA_Results", {
-                    displayInLayerSwitcher: true
-                });
+                ValidatorCleanUI.qaLayer = new OpenLayers.Layer.Vector("AA_QA_Results", { displayInLayerSwitcher: true });
                 W.map.addLayer(ValidatorCleanUI.qaLayer);
             }
             ValidatorCleanUI.qaLayer.removeAllFeatures();
             ValidatorCleanUI.qaLayer.setVisibility(true);
             ValidatorCleanUI.qaLayer.setZIndex(1001);
             W.selectionManager.unselectAll();
+
             const extent = W.map.getExtent();
             const segments = W.model.segments.getObjectArray().filter(s => s.geometry && extent.intersectsBounds(s.geometry.getBounds()));
             const nodes = W.model.nodes.getObjectArray().filter(n => n.geometry && extent.intersectsBounds(n.geometry.getBounds()));
+
             if (segments.length === 0) {
                 statusEl.innerText = _t('qa_msg_no_segments');
                 statusEl.style.color = '#F44336';
                 return;
             }
+
             const features = [];
-            const modelsToSelect = [];
             const isMetric = ValidatorCleanUI.settings.unitSystem === 'metric';
             const isRAB = (s) => s.isInRoundabout();
             const s = ValidatorCleanUI.settings;
+
+            const addIssue = (typeKey, model, geom, msg, color) => {
+                if (!ValidatorCleanUI.foundIssues[typeKey]) ValidatorCleanUI.foundIssues[typeKey] = [];
+                ValidatorCleanUI.foundIssues[typeKey].push({ model: model, geom: geom, msg: msg, color: color });
+                features.push(ValidatorCleanUI.createFeature(geom, color, msg, typeKey === 'checkAngle' || typeKey === 'checkSpeed'));
+            };
+
+            // Checks (Same logic)
             if (s.checkShort) {
                 let limit = parseFloat(s.limitShort) || 6;
                 if (!isMetric) limit = limit * 0.3048;
@@ -1103,19 +1160,13 @@
                     if (!seg.geometry) return;
                     if (s.excludeRAB && isRAB(seg)) return;
                     const len = seg.geometry.getGeodesicLength(W.map.getProjectionObject());
-                    if (len < limit) {
-                        const txt = isMetric ? Math.round(len) + 'm' : Math.round(len * 3.28) + 'ft';
-                        features.push(ValidatorCleanUI.createFeature(seg.geometry, '#E91E63', txt));
-                        modelsToSelect.push(seg);
-                    }
+                    if (len < limit) addIssue('checkShort', seg, seg.geometry, isMetric ? Math.round(len) + 'm' : Math.round(len * 3.28) + 'ft', '#E91E63');
                 });
             }
             if (s.checkDiscon) {
                 const ignoredTypes = [5, 10, 16, 18];
                 segments.forEach(seg => {
-                    if (!seg.geometry) return;
-                    if (s.excludeRAB && isRAB(seg)) return;
-                    if (ignoredTypes.includes(seg.attributes.roadType)) return;
+                    if (!seg.geometry || (s.excludeRAB && isRAB(seg)) || ignoredTypes.includes(seg.attributes.roadType)) return;
                     const nodeA = W.model.nodes.objects[seg.attributes.fromNodeID];
                     const nodeB = W.model.nodes.objects[seg.attributes.toNodeID];
                     if (!nodeA || !nodeB || !nodeA.geometry || !nodeB.geometry) return;
@@ -1123,69 +1174,44 @@
                     const conB = nodeB.attributes.segIDs.length;
                     const visibleA = extent.intersectsBounds(nodeA.geometry.getBounds());
                     const visibleB = extent.intersectsBounds(nodeB.geometry.getBounds());
-                    let isDisc = false;
-                    if (s.disconMode === '2w') {
-                        if (conA === 1 && conB === 1 && visibleA && visibleB) isDisc = true;
-                    } else if (s.disconMode === '1w') {
-                        const deadA = (conA === 1 && visibleA);
-                        const deadB = (conB === 1 && visibleB);
-                        if ((deadA && conB > 1) || (deadB && conA > 1)) isDisc = true;
+                    let isDisc = false; let type = "";
+                    if (s.disconMode === '2w') { if (conA === 1 && conB === 1 && visibleA && visibleB) { isDisc = true; type = "A+B"; } }
+                    else if (s.disconMode === '1w') {
+                        const deadA = (conA === 1 && visibleA); const deadB = (conB === 1 && visibleB);
+                        if ((deadA && conB > 1) || (deadB && conA > 1)) { isDisc = true; type = deadA ? "A" : "B"; }
                     }
-                    if (isDisc) {
-                        features.push(ValidatorCleanUI.createFeature(seg.geometry, '#FF5722', 'Disc'));
-                        modelsToSelect.push(seg);
-                    }
+                    if (isDisc) addIssue('checkDiscon', seg, seg.geometry, type, '#FF5722');
                 });
             }
             if (s.checkJagged) {
                 segments.forEach(seg => {
-                    if (!seg.geometry) return;
-                    if (s.excludeRAB && isRAB(seg)) return;
+                    if (!seg.geometry || (s.excludeRAB && isRAB(seg))) return;
                     const verts = seg.geometry.getVertices();
                     const len = seg.geometry.getGeodesicLength(W.map.getProjectionObject());
-                    if (verts.length > 3 && (len / verts.length) < 3) {
-                        features.push(ValidatorCleanUI.createFeature(seg.geometry, '#795548', 'Jagged'));
-                        modelsToSelect.push(seg);
-                    }
+                    if (verts.length > 3 && (len / verts.length) < 3) addIssue('checkJagged', seg, seg.geometry, 'Jagged', '#795548');
                 });
             }
             if (s.checkCross) {
-                const items = segments.map(seg => ({
-                    s: seg,
-                    b: seg.geometry.getBounds()
-                }));
+                const items = segments.map(seg => ({ s: seg, b: seg.geometry.getBounds() }));
                 const ignoredTypes = [5, 10, 16, 18];
                 for (let i = 0; i < items.length; i++) {
                     let item1 = items[i];
                     for (let j = i + 1; j < items.length; j++) {
                         let item2 = items[j];
                         if (!item1.b.intersectsBounds(item2.b)) continue;
-                        let s1 = item1.s;
-                        let s2 = item2.s;
+                        let s1 = item1.s; let s2 = item2.s;
                         if (ignoredTypes.includes(s1.attributes.roadType) || ignoredTypes.includes(s2.attributes.roadType)) continue;
                         if (s1.attributes.level === s2.attributes.level && s1.attributes.fromNodeID !== s2.attributes.fromNodeID && s1.attributes.fromNodeID !== s2.attributes.toNodeID && s1.attributes.toNodeID !== s2.attributes.fromNodeID && s1.attributes.toNodeID !== s2.attributes.toNodeID) {
-                            if (s1.geometry.intersects(s2.geometry)) {
-                                features.push(ValidatorCleanUI.createFeature(s1.geometry, '#D50000', 'X'));
-                                if (!modelsToSelect.includes(s1)) modelsToSelect.push(s1);
-                                if (!modelsToSelect.includes(s2)) modelsToSelect.push(s2);
-                            }
+                            if (s1.geometry.intersects(s2.geometry)) addIssue('checkCross', s1, s1.geometry, 'Cross', '#D50000');
                         }
                     }
                 }
             }
             if (s.checkLock) segments.forEach(seg => {
                 if (!seg.geometry) return;
-                const rt = seg.attributes.roadType;
-                const lock = (seg.attributes.lockRank || 0) + 1;
-                let req = 1;
-                if (rt === 3) req = 4;
-                else if (rt === 6) req = 3;
-                else if (rt === 7) req = 2;
-                else if (rt === 4 && lock < 2) req = 2;
-                if (lock < req) {
-                    features.push(ValidatorCleanUI.createFeature(seg.geometry, '#F44336', `L${lock}`));
-                    modelsToSelect.push(seg);
-                }
+                const rt = seg.attributes.roadType; const lock = (seg.attributes.lockRank || 0) + 1; let req = 1;
+                if (rt === 3) req = 4; else if (rt === 6) req = 3; else if (rt === 7) req = 2; else if (rt === 4 && lock < 2) req = 2;
+                if (lock < req) addIssue('checkLock', seg, seg.geometry, `L${lock}<L${req}`, '#F44336');
             });
             if (s.checkGhost) segments.forEach(seg => {
                 if (!seg.geometry) return;
@@ -1194,20 +1220,13 @@
                     const st = W.model.streets.objects[sid];
                     if (st && st.attributes.name && st.attributes.name.trim() !== "") {
                         let ce = !st.attributes.cityID;
-                        if (!ce) {
-                            const c = W.model.cities.objects[st.attributes.cityID];
-                            if (!c || !c.attributes.name || c.attributes.name.trim() === "") ce = true;
-                        }
-                        if (ce) {
-                            features.push(ValidatorCleanUI.createFeature(seg.geometry, '#FF9800', 'NoCity'));
-                            modelsToSelect.push(seg);
-                        }
+                        if (!ce) { const c = W.model.cities.objects[st.attributes.cityID]; if (!c || !c.attributes.name || c.attributes.name.trim() === "") ce = true; }
+                        if (ce) addIssue('checkGhost', seg, seg.geometry, 'No City', '#FF9800');
                     }
                 }
             });
             if (s.checkSpeed) segments.forEach(seg => {
-                if (!seg.geometry) return;
-                if (s.excludeRAB && isRAB(seg)) return;
+                if (!seg.geometry || (s.excludeRAB && isRAB(seg))) return;
                 const sp = seg.attributes.fwdMaxSpeed;
                 if (!sp) return;
                 const tn = W.model.nodes.objects[seg.attributes.toNodeID];
@@ -1216,132 +1235,218 @@
                     const os = W.model.segments.objects[oid];
                     if (os) {
                         let osp = (os.attributes.fromNodeID === tn.attributes.id) ? os.attributes.fwdMaxSpeed : os.attributes.revMaxSpeed;
-                        if (osp > 0 && Math.abs(sp - osp) >= 30) {
-                            features.push(ValidatorCleanUI.createFeature(tn.geometry, '#2196F3', 'Jump', true));
-                            modelsToSelect.push(tn);
-                        }
+                        if (osp > 0 && Math.abs(sp - osp) >= 30) addIssue('checkSpeed', tn, tn.geometry, `${sp}/${osp}`, '#2196F3');
                     }
                 }
             });
             if (s.checkAngle) nodes.forEach(n => {
-                if (!n.geometry) return;
-                if (n.attributes.segIDs.length < 2) return;
+                if (!n.geometry || n.attributes.segIDs.length < 2) return;
                 const sg = n.attributes.segIDs.map(id => W.model.segments.objects[id]);
                 if (s.excludeRAB && sg.some(seg => seg && isRAB(seg))) return;
-                for (let i = 0; i < sg.length; i++)
-                    for (let j = i + 1; j < sg.length; j++) {
-                        if (!sg[i] || !sg[j] || !sg[i].geometry || !sg[j].geometry) continue;
-                        const angle = ValidatorCleanUI.calculateAngleAtNode(n, sg[i], sg[j]);
-                        if (angle < (parseFloat(s.limitAngle) || 30)) {
-                            features.push(ValidatorCleanUI.createFeature(n.geometry, '#9C27B0', Math.round(angle) + '°', true));
-                            if (!modelsToSelect.includes(n)) modelsToSelect.push(n);
-                        }
-                    }
+                for (let i = 0; i < sg.length; i++) for (let j = i + 1; j < sg.length; j++) {
+                    if (!sg[i] || !sg[j] || !sg[i].geometry || !sg[j].geometry) continue;
+                    const angle = ValidatorCleanUI.calculateAngleAtNode(n, sg[i], sg[j]);
+                    if (angle < (parseFloat(s.limitAngle) || 30)) addIssue('checkAngle', n, n.geometry, Math.round(angle) + '°', '#9C27B0');
+                }
             });
+
             ValidatorCleanUI.qaLayer.addFeatures(features);
-            if (modelsToSelect.length > 0) {
-                statusEl.innerText = `${_t('qa_msg_found')}: ${modelsToSelect.length}`;
+            const totalIssues = Object.values(ValidatorCleanUI.foundIssues).reduce((a, b) => a + b.length, 0);
+
+            if (totalIssues > 0) {
+                statusEl.innerText = `${_t('qa_msg_found')}: ${totalIssues}`;
                 statusEl.style.color = '#D50000';
-                W.selectionManager.setSelectedModels(modelsToSelect);
-                let b = null;
-                modelsToSelect.forEach(o => {
-                    if (o.geometry) {
-                        if (!b) b = o.geometry.getBounds().clone();
-                        else b.extend(o.geometry.getBounds());
-                    }
-                });
-                if (b) W.map.setCenter(b.getCenterLonLat());
+                ValidatorCleanUI.renderResults();
             } else {
                 statusEl.innerText = _t('qa_msg_clean');
                 statusEl.style.color = '#4CAF50';
             }
         },
+
+        renderResults: () => {
+            const panel = document.getElementById('aa_qa_results_panel');
+            panel.innerHTML = '';
+            const titles = {
+                checkShort: 'qa_lbl_short', checkAngle: 'qa_lbl_angle', checkCross: 'qa_lbl_cross',
+                checkLock: 'qa_lbl_lock', checkGhost: 'qa_lbl_ghost', checkSpeed: 'qa_lbl_speed',
+                checkDiscon: 'qa_lbl_discon', checkJagged: 'qa_lbl_jagged'
+            };
+            Object.keys(ValidatorCleanUI.foundIssues).forEach(key => {
+                const issues = ValidatorCleanUI.foundIssues[key];
+                if (issues.length === 0) return;
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'aa-qa-group';
+                const header = document.createElement('div');
+                header.className = 'aa-qa-group-header';
+                header.innerHTML = `<span class="aa-qa-group-title">${_t(titles[key])} (${issues.length})</span> <span class="aa-qa-toggle">▼</span>`;
+                const list = document.createElement('div');
+                list.className = 'aa-qa-group-list';
+
+                // Get the problem title (e.g., "Short Segment")
+                const problemTitle = _t(titles[key]);
+
+                issues.forEach((item) => {
+                    const row = document.createElement('div');
+                    row.className = 'aa-qa-item-row';
+                    row.style.flexDirection = 'column'; // Make it two rows
+                    row.style.alignItems = 'stretch';
+                    row.style.cursor = 'pointer'; // Make it look clickable
+
+                    let itemName = item.model.type === 'segment' ? `Seg: ${item.model.attributes.id}` : `Node: ${item.model.attributes.id}`;
+
+                    // New Layout: Row 1 = Problem Type, Row 2 = Details
+                    row.innerHTML = `
+                        <div style="font-weight:bold; color:${item.color}; font-size:11px; margin-bottom:2px;">${problemTitle}</div>
+                        <div style="display:flex; justify-content:space-between; font-size:10px; color:#555;">
+                            <span>${itemName}</span>
+                            <span style="background:#eee; padding:0 3px; border-radius:3px; font-weight:bold;">${item.msg}</span>
+                        </div>
+                    `;
+
+                    // Click selects and centers
+                    row.onclick = () => {
+                         W.selectionManager.setSelectedModels([item.model]);
+                         if(item.geom) W.map.setCenter(item.geom.getBounds().getCenterLonLat());
+                    };
+
+                    list.appendChild(row);
+                });
+                header.onclick = () => {
+                    const isHidden = list.style.display === 'none';
+                    list.style.display = isHidden ? 'block' : 'none';
+                    header.querySelector('.aa-qa-toggle').innerText = isHidden ? '▼' : '▶';
+                };
+                groupDiv.appendChild(header); groupDiv.appendChild(list); panel.appendChild(groupDiv);
+            });
+        },
+
         createFeature: (geometry, color, label, isPoint = false) => {
             if (!geometry) return null;
             return new OpenLayers.Feature.Vector(geometry.clone(), {}, {
-                strokeColor: color,
-                strokeWidth: isPoint ? 0 : 6,
-                strokeOpacity: 0.6,
-                pointRadius: isPoint ? 7 : 0,
-                fillColor: color,
-                fillOpacity: 0.8,
-                label: label,
-                labelOutlineColor: "white",
-                labelOutlineWidth: 2,
-                fontSize: "10px",
-                fontColor: color,
-                labelYOffset: 16,
-                fontWeight: "bold"
+                strokeColor: color, strokeWidth: isPoint ? 0 : 6, strokeOpacity: 0.6,
+                pointRadius: isPoint ? 7 : 0, fillColor: color, fillOpacity: 0.8,
+                label: label, labelOutlineColor: "white", labelOutlineWidth: 2,
+                fontSize: "10px", fontColor: color, labelYOffset: 16, fontWeight: "bold"
             });
         },
+
         calculateAngleAtNode: (node, s1, s2) => {
             const pNode = node.geometry;
-            const getP = (s) => {
-                const v = s.geometry.getVertices();
-                return (s.attributes.fromNodeID === node.attributes.id) ? v[1] : v[v.length - 2];
-            };
-            const p1 = getP(s1);
-            const p2 = getP(s2);
+            const getP = (s) => (s.attributes.fromNodeID === node.attributes.id) ? s.geometry.getVertices()[1] : s.geometry.getVertices()[s.geometry.getVertices().length - 2];
+            const p1 = getP(s1); const p2 = getP(s2);
             const a = Math.sqrt(Math.pow(p1.x - pNode.x, 2) + Math.pow(p1.y - pNode.y, 2));
             const b = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
             const c = Math.sqrt(Math.pow(p2.x - pNode.x, 2) + Math.pow(p2.y - pNode.y, 2));
             const cosC = (a * a + c * c - b * b) / (2 * a * c);
             return Math.acos(Math.max(-1, Math.min(1, cosC))) * 180 / Math.PI;
         },
+
         createWindow: () => {
             if (document.getElementById('aa-qa-pro-window')) return;
             const s = ValidatorCleanUI.settings;
             const win = document.createElement('div');
             win.id = 'aa-qa-pro-window';
             win.className = `aa-window ${_dir()}`;
-            win.style.cssText = ` position: fixed; top: ${s.winTop}; left: ${s.winLeft}; width: ${s.winWidth}; height: ${s.winHeight}; background: #fff; border-radius: 8px; z-index: 9999; box-shadow: 0 5px 15px rgba(0,0,0,0.3); display: none; font-family: 'Cairo', sans-serif, Arial; overflow: hidden; resize: none; direction: ${_dir()}; `;
-            const resizeHandle = document.createElement('div');
-            resizeHandle.id = 'aa-qa-resize-handle';
-            win.appendChild(resizeHandle);
-            const head = document.createElement('div');
-            head.className = 'aa-header aa-bg-orange';
-            head.innerHTML = `<span>${_t('qa_title')}</span><span id="aa-qa-close" class="aa-close">✖</span>`;
+            const css = `
+                .aa-qa-group { border: 1px solid #ddd; margin-bottom: 5px; border-radius: 4px; background: #fff; }
+                .aa-qa-group-header { padding: 5px 8px; background: #f0f0f0; cursor: pointer; display: flex; justify-content: space-between; font-weight: bold; font-size: 11px; }
+                .aa-qa-group-header:hover { background: #e0e0e0; }
+                .aa-qa-group-list { display: block; max-height: 200px; overflow-y: auto; padding: 2px; }
+                .aa-qa-item-row { display: flex; padding: 5px; border-bottom: 1px solid #eee; transition: background 0.2s; }
+                .aa-qa-item-row:hover { background: #f0f8ff; }
+
+                /* COMPACT SETTINGS CSS */
+                .aa-qa-compact-settings { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 4px 6px; background: #f4f4f4; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 10px; margin-top: 5px; color: #333; }
+                .aa-qa-compact-row { display: flex; align-items: center; gap: 4px; }
+                .aa-qa-pill-sm { display: flex; background: #e0e0e0; border-radius: 3px; overflow: hidden; cursor: pointer; }
+                .aa-qa-pill-opt-sm { padding: 1px 6px; font-size: 9px; font-weight: bold; color: #666; transition: 0.2s; white-space: nowrap; }
+                .aa-qa-pill-opt-sm.active { background: #2196F3; color: white; }
+                .aa-qa-input-sm { width: 30px; padding: 1px; font-size: 10px; text-align: center; border: 1px solid #ccc; border-radius: 3px; height: 16px; }
+            `;
+            const style = document.createElement('style'); style.innerHTML = css; win.appendChild(style);
+
+            win.style.cssText = `position: fixed; top: ${s.winTop}; left: ${s.winLeft}; width: ${s.winWidth}; height: ${s.winHeight}; background: #fff; border-radius: 8px; z-index: 9999; box-shadow: 0 5px 15px rgba(0,0,0,0.3); display: none; font-family: 'Cairo', sans-serif, Arial; overflow: hidden; resize: none; direction: ${_dir()};`;
+
+            const resizeHandle = document.createElement('div'); resizeHandle.id = 'aa-qa-resize-handle'; win.appendChild(resizeHandle);
+
+            const head = document.createElement('div'); head.className = 'aa-header aa-bg-orange';
+            head.innerHTML = `
+                <div style="display:flex; align-items:center; gap:5px;">
+                    <span>${_t('qa_title')}</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:5px;">
+                    <button id="aa_qa_rotate_btn" style="background:transparent; border:1px solid rgba(255,255,255,0.5); color:white; cursor:pointer; font-weight:bold; border-radius:3px; padding:0 5px;" title="${_t('insp_btn_rotate')}">⟲</button>
+                    <span id="aa-qa-close" class="aa-close">✖</span>
+                </div>`;
             win.appendChild(head);
-            const body = document.createElement('div');
-            body.className = 'aa-content';
-            const createChk = (key, label) => `<label class="aa-qa-chk-card"><input type="checkbox" id="aa_qa_${key}" ${s[key]?'checked':''} data-key="${key}"><span>${label}</span></label>`;
-            let html = `<div class="aa-qa-grid"> ${createChk('checkShort',_t('qa_lbl_short'))} ${createChk('checkAngle',_t('qa_lbl_angle'))} ${createChk('checkCross',_t('qa_lbl_cross'))} ${createChk('checkLock',_t('qa_lbl_lock'))} ${createChk('checkGhost',_t('qa_lbl_ghost'))} ${createChk('checkSpeed',_t('qa_lbl_speed'))} ${createChk('checkDiscon',_t('qa_lbl_discon'))} ${createChk('checkJagged',_t('qa_lbl_jagged'))} <button id="aa_qa_gmaps_grid" class="aa-qa-grid-btn">${_t('qa_btn_gmaps')}</button> </div>`;
-            html += `<div class="aa-qa-settings-box"> <div class="aa-qa-setting-row"><span>${_t('qa_opt_exclude_rab')}</span><input type="checkbox" id="aa_qa_excludeRAB" ${s.excludeRAB?'checked':''}></div> <div class="aa-qa-setting-row"><span>${_t('qa_lbl_discon_mode')}</span><div class="aa-qa-pill"><div id="aa_qa_disc_1w" class="aa-qa-pill-opt ${s.disconMode==='1w'?'active':''}">${_t('qa_opt_discon_1w')}</div><div id="aa_qa_disc_2w" class="aa-qa-pill-opt ${s.disconMode==='2w'?'active':''}">${_t('qa_opt_discon_2w')}</div></div></div> <div class="aa-qa-setting-row"><span>${_t('qa_unit_m')} / ${_t('qa_unit_i')}</span><div class="aa-qa-pill"><div id="aa_qa_unit_m" class="aa-qa-pill-opt ${s.unitSystem==='metric'?'active':''}">${_t('qa_unit_m')}</div><div id="aa_qa_unit_i" class="aa-qa-pill-opt ${s.unitSystem==='imperial'?'active':''}">${_t('qa_unit_i')}</div></div></div> <div class="aa-qa-setting-row"><span>${_t('qa_lbl_limit_dist')}</span><div><input type="number" id="aa_qa_limitShort" class="aa-qa-input" value="${s.limitShort}"> <span id="aa_qa_lbl_short_unit" style="color:#888;">${s.unitSystem==='metric'?'m':'ft'}</span></div></div> <div class="aa-qa-setting-row"><span>${_t('qa_lbl_limit_angle')}</span><div><input type="number" id="aa_qa_limitAngle" class="aa-qa-input" value="${s.limitAngle}"> <span>°</span></div></div> </div>`;
-            html += `<div class="aa-qa-action-row"> <button id="aa_qa_scan" class="aa-qa-btn aa-btn-scan">${_t('qa_btn_scan')}</button> <button id="aa_qa_clear" class="aa-qa-btn aa-btn-clear">${_t('qa_btn_clear')}</button> </div>`;
-            html += `<div id="aa_qa_status" style="text-align:center; margin-top:8px; font-weight:bold; font-size:11px; color:#777;">${_t('qa_msg_ready')}</div>`;
-            body.innerHTML = html;
-            win.appendChild(body);
-            document.body.appendChild(win);
-            document.getElementById('aa-qa-close').onclick = () => {
-                win.style.display = 'none';
-                ValidatorCleanUI.saveSettings();
-            };
+
+            const body = document.createElement('div'); body.className = 'aa-content';
+            body.style.display = 'flex'; body.style.flexDirection = 'column';
+
+            const createChk = (key, label) => `<label class="aa-qa-chk-card" style="padding:2px 4px; font-size:10px;"><input type="checkbox" id="aa_qa_${key}" ${s[key]?'checked':''} data-key="${key}" style="width:12px; height:12px;"><span>${label}</span></label>`;
+
+            let html = `
+                <div style="flex-shrink: 0;">
+                    <div class="aa-qa-grid" style="grid-template-columns: repeat(4, 1fr); gap:4px;">
+                        ${createChk('checkShort',_t('qa_lbl_short'))} ${createChk('checkAngle',_t('qa_lbl_angle'))}
+                        ${createChk('checkCross',_t('qa_lbl_cross'))} ${createChk('checkLock',_t('qa_lbl_lock'))}
+                        ${createChk('checkGhost',_t('qa_lbl_ghost'))} ${createChk('checkSpeed',_t('qa_lbl_speed'))}
+                        ${createChk('checkDiscon',_t('qa_lbl_discon'))} ${createChk('checkJagged',_t('qa_lbl_jagged'))}
+                    </div>
+
+                    <div class="aa-qa-compact-settings">
+                         <div class="aa-qa-compact-row" title="${_t('qa_opt_exclude_rab')}">
+                            <input type="checkbox" id="aa_qa_excludeRAB" ${s.excludeRAB?'checked':''} style="width:12px; height:12px; cursor:pointer;">
+                            <span>${_t('qa_opt_exclude_rab')}</span>
+                         </div>
+                         <div style="width:1px; height:12px; background:#ccc; margin:0 2px;"></div>
+                         <div class="aa-qa-compact-row">
+                            <div class="aa-qa-pill-sm"><div id="aa_qa_disc_1w" class="aa-qa-pill-opt-sm ${s.disconMode==='1w'?'active':''}">${_t('qa_opt_discon_1w')}</div><div id="aa_qa_disc_2w" class="aa-qa-pill-opt-sm ${s.disconMode==='2w'?'active':''}">${_t('qa_opt_discon_2w')}</div></div>
+                         </div>
+                         <div style="width:1px; height:12px; background:#ccc; margin:0 2px;"></div>
+                         <div class="aa-qa-compact-row">
+                             <div class="aa-qa-pill-sm"><div id="aa_qa_unit_m" class="aa-qa-pill-opt-sm ${s.unitSystem==='metric'?'active':''}">${_t('qa_unit_m')}</div><div id="aa_qa_unit_i" class="aa-qa-pill-opt-sm ${s.unitSystem==='imperial'?'active':''}">${_t('qa_unit_i')}</div></div>
+                         </div>
+                         <div style="width:1px; height:12px; background:#ccc; margin:0 2px;"></div>
+                         <div class="aa-qa-compact-row">
+                            <span>${_t('qa_lbl_limit_dist')}</span> <input type="number" id="aa_qa_limitShort" class="aa-qa-input-sm" value="${s.limitShort}">
+                         </div>
+                         <div class="aa-qa-compact-row">
+                            <span>${_t('qa_lbl_limit_angle')}</span> <input type="number" id="aa_qa_limitAngle" class="aa-qa-input-sm" value="${s.limitAngle}">
+                         </div>
+                    </div>
+
+                    <div class="aa-qa-action-row" style="margin-top:6px;">
+                        <button id="aa_qa_scan" class="aa-qa-btn aa-btn-scan" style="padding:5px;">${_t('qa_btn_scan')}</button>
+                        <button id="aa_qa_clear" class="aa-qa-btn aa-btn-clear" style="padding:5px;">${_t('qa_btn_clear')}</button>
+                        <button id="aa_qa_gmaps_grid" class="aa-qa-grid-btn" style="flex:1; height:auto; font-size:10px;">${_t('qa_btn_gmaps')}</button>
+                    </div>
+                    <div id="aa_qa_status" style="text-align:center; margin-top:4px; font-weight:bold; font-size:10px; color:#777;">${_t('qa_msg_ready')}</div>
+                </div>
+                <div id="aa_qa_results_panel" style="flex-grow: 1; overflow-y: auto; margin-top: 5px; border-top: 1px solid #ccc; padding-top: 5px;"></div>
+            `;
+
+            body.innerHTML = html; win.appendChild(body); document.body.appendChild(win);
+
+            document.getElementById('aa-qa-close').onclick = () => { win.style.display = 'none'; ValidatorCleanUI.saveSettings(); };
+            document.getElementById('aa_qa_rotate_btn').onclick = (e) => { e.stopPropagation(); ValidatorCleanUI.toggleOrientation(); };
             document.getElementById('aa_qa_scan').onclick = ValidatorCleanUI.scanMap;
             document.getElementById('aa_qa_gmaps_grid').onclick = ValidatorCleanUI.openGMaps;
             document.getElementById('aa_qa_clear').onclick = () => {
                 W.selectionManager.unselectAll();
                 if (ValidatorCleanUI.qaLayer) ValidatorCleanUI.qaLayer.removeAllFeatures();
-                if (ValidatorCleanUI.visualLayer) ValidatorCleanUI.visualLayer.removeAllFeatures();
                 document.getElementById('aa_qa_status').innerText = _t('qa_msg_ready');
+                document.getElementById('aa_qa_results_panel').innerHTML = '';
+                ValidatorCleanUI.foundIssues = {};
             };
+
             win.querySelectorAll('input[type="checkbox"][data-key]').forEach(c => {
-                c.onchange = function() {
-                    ValidatorCleanUI.settings[this.getAttribute('data-key')] = this.checked;
-                    ValidatorCleanUI.saveSettings();
-                };
+                c.onchange = function() { ValidatorCleanUI.settings[this.getAttribute('data-key')] = this.checked; ValidatorCleanUI.saveSettings(); };
             });
-            document.getElementById('aa_qa_limitShort').onchange = (e) => {
-                ValidatorCleanUI.settings.limitShort = e.target.value;
-                ValidatorCleanUI.saveSettings();
-            };
-            document.getElementById('aa_qa_limitAngle').onchange = (e) => {
-                ValidatorCleanUI.settings.limitAngle = e.target.value;
-                ValidatorCleanUI.saveSettings();
-            };
-            document.getElementById('aa_qa_excludeRAB').onchange = (e) => {
-                ValidatorCleanUI.settings.excludeRAB = e.target.checked;
-                ValidatorCleanUI.saveSettings();
-            };
+            document.getElementById('aa_qa_limitShort').onchange = (e) => { ValidatorCleanUI.settings.limitShort = e.target.value; ValidatorCleanUI.saveSettings(); };
+            document.getElementById('aa_qa_limitAngle').onchange = (e) => { ValidatorCleanUI.settings.limitAngle = e.target.value; ValidatorCleanUI.saveSettings(); };
+            document.getElementById('aa_qa_excludeRAB').onchange = (e) => { ValidatorCleanUI.settings.excludeRAB = e.target.checked; ValidatorCleanUI.saveSettings(); };
+
             const setupPill = (ids, settingKey, values) => {
                 ids.forEach((id, idx) => {
                     document.getElementById(id).onclick = () => {
@@ -1349,69 +1454,60 @@
                         ValidatorCleanUI.saveSettings();
                         ids.forEach((oid, oidx) => {
                             const el = document.getElementById(oid);
-                            if (idx === oidx) el.classList.add('active');
-                            else el.classList.remove('active');
+                            if (idx === oidx) el.classList.add('active'); else el.classList.remove('active');
                         });
-                        if (settingKey === 'unitSystem') document.getElementById('aa_qa_lbl_short_unit').innerText = values[idx] === 'metric' ? 'm' : 'ft';
                     };
                 });
             };
             setupPill(['aa_qa_unit_m', 'aa_qa_unit_i'], 'unitSystem', ['metric', 'imperial']);
             setupPill(['aa_qa_disc_1w', 'aa_qa_disc_2w'], 'disconMode', ['1w', '2w']);
-            let isDrag = false,
-                startX, startY, initialLeft, initialTop;
+
+            let isDrag = false, startX, startY, initialLeft, initialTop;
             head.onmousedown = (e) => {
-                if (e.target.className.includes('aa-close')) return;
-                isDrag = true;
-                startX = e.clientX;
-                startY = e.clientY;
-                initialLeft = win.offsetLeft;
-                initialTop = win.offsetTop;
+                if (e.target.id === 'aa-qa-close' || e.target.id === 'aa_qa_rotate_btn') return;
+                isDrag = true; startX = e.clientX; startY = e.clientY; initialLeft = win.offsetLeft; initialTop = win.offsetTop;
                 document.onmousemove = (e) => {
                     if (!isDrag) return;
                     e.preventDefault();
-                    win.style.left = (initialLeft + e.clientX - startX) + 'px';
-                    win.style.top = (initialTop + e.clientY - startY) + 'px';
+                    // Calculate
+                    let newLeft = initialLeft + e.clientX - startX;
+                    let newTop = initialTop + e.clientY - startY;
+
+                    // --- BOUNDARY CONSTRAINTS ---
+                    // 1. Restrict Top
+                    if (newTop < 0) newTop = 0;
+
+                    // 2. Restrict Left
+                    if (newLeft < 0) newLeft = 0;
+
+                    // 3. Restrict Right
+                    const maxLeft = window.innerWidth - win.offsetWidth;
+                    if (newLeft > maxLeft) newLeft = maxLeft;
+
+                    // 4. Restrict Bottom
+                    const maxTop = window.innerHeight - head.offsetHeight;
+                    if (newTop > maxTop) newTop = maxTop;
+
+                    win.style.left = newLeft + 'px';
+                    win.style.top = newTop + 'px';
                 };
                 document.onmouseup = () => {
-                    isDrag = false;
-                    document.onmousemove = null;
-                    document.onmouseup = null;
-                    ValidatorCleanUI.settings.winTop = win.style.top;
-                    ValidatorCleanUI.settings.winLeft = win.style.left;
-                    ValidatorCleanUI.saveSettings();
+                    isDrag = false; document.onmousemove = null; document.onmouseup = null;
+                    ValidatorCleanUI.settings.winTop = win.style.top; ValidatorCleanUI.settings.winLeft = win.style.left; ValidatorCleanUI.saveSettings();
                 };
             };
+
             const handle = document.getElementById('aa-qa-resize-handle');
-            let isResizing = false,
-                rStartX, rStartY, rStartW, rStartH;
-            handle.onmousedown = (e) => {
-                isResizing = true;
-                rStartX = e.clientX;
-                rStartY = e.clientY;
-                rStartW = win.offsetWidth;
-                rStartH = win.offsetHeight;
-                e.stopPropagation();
-                e.preventDefault();
-            };
+            let isResizing = false, rStartX, rStartY, rStartW, rStartH;
+            handle.onmousedown = (e) => { isResizing = true; rStartX = e.clientX; rStartY = e.clientY; rStartW = win.offsetWidth; rStartH = win.offsetHeight; e.stopPropagation(); e.preventDefault(); };
             document.addEventListener('mousemove', (e) => {
                 if (!isResizing) return;
-                const newW = rStartW + (rStartX - e.clientX);
-                const newH = rStartH + (e.clientY - rStartY);
-                if (newW > 280) {
-                    win.style.width = newW + 'px';
-                    win.style.left = (e.clientX) + 'px';
-                }
-                if (newH > 300) win.style.height = newH + 'px';
+                const newW = rStartW + (rStartX - e.clientX); const newH = rStartH + (e.clientY - rStartY);
+                if (newW > 280) { win.style.width = newW + 'px'; win.style.left = (e.clientX) + 'px'; }
+                if (newH > 400) win.style.height = newH + 'px';
             });
             document.addEventListener('mouseup', () => {
-                if (isResizing) {
-                    isResizing = false;
-                    ValidatorCleanUI.settings.winWidth = win.style.width;
-                    ValidatorCleanUI.settings.winHeight = win.style.height;
-                    ValidatorCleanUI.settings.winLeft = win.style.left;
-                    ValidatorCleanUI.saveSettings();
-                }
+                if (isResizing) { isResizing = false; ValidatorCleanUI.settings.winWidth = win.style.width; ValidatorCleanUI.settings.winHeight = win.style.height; ValidatorCleanUI.settings.winLeft = win.style.left; ValidatorCleanUI.saveSettings(); }
             });
         }
     };
@@ -1646,7 +1742,7 @@
         `;
 
         const newtab = document.createElement('li');
-        newtab.innerHTML = '<a href="#aa-suite-tab-content" data-toggle="tab" title="Abdullah Abbas WME Tools">Abdullah Abbas Tools</a>';
+        newtab.innerHTML = '<a href="#aa-suite-tab-content" data-toggle="tab" title="Abdullah Abbas WME Tools">Abdullah Abbas WME Tools</a>';
         navTabs.appendChild(newtab);
         tabContent.appendChild(addon);
 

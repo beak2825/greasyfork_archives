@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Trakt.tv | Megascript
 // @description  My 13 trakt.tv userscripts merged into one for convenience. Namely: Actor Pronunciation Helper, All-in-One Lists View, Average Season And Episode Ratings, Bug Fixes and Optimizations, Charts - Ratings Distribution, Charts - Seasons, Custom Links (Watch-Now + External), Custom Profile Image, Enhanced List Preview Posters, Enhanced Title Metadata, Nested Header Navigation Menus, Partial VIP Unlock, Scheduled E-Mail Data Exports. See README for details.
-// @version      2026-01-26_05-34
+// @version      2026-01-27_17-27
 // @namespace    https://github.com/Fenn3c401
 // @author       Fenn3c401
 // @license      GPL-3.0-or-later
@@ -341,7 +341,7 @@ const gmStorage = { '2dz6ub1t': true, '2hc6zfyy': true, '71cd9s61': true, 'brzmp
 GM_setValue('megascript', gmStorage);
 
 
-gmStorage['2dz6ub1t'] && (async () => {
+gmStorage['2dz6ub1t'] && (async (moduleName) => {
 'use strict';
 
 let $, toastr;
@@ -522,10 +522,10 @@ body:is(.dashboard, .settings, .authorized_applications, .applications) #results
   `);
   }
 }
-})();
+})('Trakt.tv | Custom Profile Image');
 
 
-gmStorage['2hc6zfyy'] && (async () => {
+gmStorage['2hc6zfyy'] && (async (moduleName) => {
 /* global Cron */
 
 'use strict';
@@ -597,10 +597,10 @@ cron && window.addEventListener('turbo:load', async () => {
     });
   }
 });
-})();
+})('Trakt.tv | Scheduled E-Mail Data Exports');
 
 
-gmStorage['71cd9s61'] && (async () => {
+gmStorage['71cd9s61'] && (async (moduleName) => {
 'use strict';
 
 let $, toastr;
@@ -756,10 +756,10 @@ function addStyles() {
 @keyframes lineWave-3 { from { transform: scaleY(0.24); } to { transform: scaleY(0.80); } }
   `);
 }
-})();
+})('Trakt.tv | Actor Pronunciation Helper');
 
 
-gmStorage['brzmp0a9'] && (async () => {
+gmStorage['brzmp0a9'] && (async (moduleName) => {
 /* BUG REPORTS
 - items in "most watched shows and movies" section on profile page lack data-source-counts and data-source-slugs attrs for watch-now modal
 - progress > dropped > toggle grid-view button => triggers GET /settings/grid_view/progress_dropped/1 or /0 and results in 400 resp but works for watched and collected
@@ -1522,10 +1522,10 @@ GM_addStyle(`
 //     $container.prepend($peopleGridItems);
 //   });
 // }
-})();
+})('Trakt.tv | Bug Fixes and Optimizations');
 
 
-gmStorage['cs1u5z40'] && (async () => {
+gmStorage['cs1u5z40'] && (async (moduleName) => {
 /* global Chart */
 
 'use strict';
@@ -1900,10 +1900,10 @@ function addStyles() {
 }
   `);
 }
-})();
+})('Trakt.tv | Charts - Seasons');
 
 
-gmStorage['fyk2l3vj'] && (async () => {
+gmStorage['fyk2l3vj'] && (async (moduleName) => {
 'use strict';
 
 let $, toastr, traktApiModule;
@@ -2316,10 +2316,10 @@ function addStyles() {
 }
   `);
 }
-})();
+})('Trakt.tv | Enhanced Title Metadata');
 
 
-gmStorage['kji85iek'] && (async () => {
+gmStorage['kji85iek'] && (async (moduleName) => {
 'use strict';
 
 let $;
@@ -2383,10 +2383,10 @@ function addStyles() {
 }
   `);
 }
-})();
+})('Trakt.tv | Enhanced List Preview Posters');
 
 
-gmStorage['p2o98x5r'] && (async () => {
+gmStorage['p2o98x5r'] && (async (moduleName) => {
 'use strict';
 
 addStyles();
@@ -2515,10 +2515,10 @@ body:has(#btn-list-edit-lists.active) :is(#all-in-one-lists-view-btn, #all-in-on
 }
   `);
 }
-})();
+})('Trakt.tv | All-in-One Lists View');
 
 
-gmStorage['pmdf6nr9'] && (async () => {
+gmStorage['pmdf6nr9'] && (async (moduleName) => {
 /* global Chart */
 
 'use strict';
@@ -2776,10 +2776,10 @@ function addStyles() {
 }
   `);
 }
-})();
+})('Trakt.tv | Charts - Ratings Distribution');
 
 
-gmStorage['txw82860'] && (async () => {
+gmStorage['txw82860'] && (async (moduleName) => {
 'use strict';
 
 const userslug = document.cookie.match(/(?:^|; )trakt_userslug=([^;]*)/)?.[1];
@@ -3549,10 +3549,10 @@ body.dark-knight #top-nav#top-nav .btn-profile a:has(> span.toggle-dark-mode):no
 }
   `);
 }
-})();
+})('Trakt.tv | Nested Header Navigation Menus');
 
 
-gmStorage['wkt34fcz'] && (async () => {
+gmStorage['wkt34fcz'] && (async (moduleName) => {
 /* global levenshteinDistance */
 
 'use strict';
@@ -4378,10 +4378,10 @@ function addStyles() {
 ${customWatchNowLinks.concat(customExternalLinks).map((l) => l.addStyles).filter(Boolean).join('\n')}
   `); // font data-uris are so long that everything below them doesn't get shown in style tag
 }
-})();
+})('Trakt.tv | Custom Links (Watch-Now + External)');
 
 
-gmStorage['x70tru7b'] && (async () => {
+gmStorage['x70tru7b'] && (async (moduleName) => {
 'use strict';
 
 let $, compressedCache, Cookies, toastr;
@@ -4672,10 +4672,10 @@ function addStyles() {
     `);
   }
 }
-})();
+})('Trakt.tv | Partial VIP Unlock');
 
 
-gmStorage['yl9xlca7'] && (async () => {
+gmStorage['yl9xlca7'] && (async (moduleName) => {
 'use strict';
 
 let $;
@@ -4787,4 +4787,4 @@ function addStyles() {
 }
   `);
 }
-})();
+})('Trakt.tv | Average Season And Episode Ratings');

@@ -2,7 +2,7 @@
 // @name         M-Team 免费种子提取
 // @name:en      M-Team FREE Torrents Extractor
 // @namespace    https://github.com/cyrahs
-// @version      2.6
+// @version      2.8
 // @description  获取页面上所有标记为FREE的torrent id并通过API获取下载链接
 // @description:en  Finds all FREE-marked torrents on the page and fetches download links via the API.
 // @author       cyrah
@@ -25,31 +25,112 @@
     const CONFIG_KEYS = {
         apiEndpoint: 'mteam_api_endpoint',
         apiKey: 'mteam_api_key',
-        openUrl: 'mteam_open_url'
+        openUrl: 'mteam_open_url',
+        openUrlOnPartialSuccess: 'mteam_open_url_on_partial_success'
     };
+
+    // 简单 i18n：根据浏览器语言在中文/英文间切换
+    const I18N = {
+        zh: {
+            buttonGet: '获取FREE种子',
+            buttonProcessing: '处理中...',
+            buttonNotFound: '未找到',
+            buttonNeedApi: '请配置API',
+            buttonFailed: '处理失败',
+            doneSuffix: '成功 已复制到剪贴板',
+            alertConfigRequired: '请先配置 API Endpoint 和 API Key',
+            alertApiEndpointRequired: 'API Endpoint不能为空',
+            alertApiKeyRequired: 'API Key不能为空',
+            alertSaved: '设置已保存',
+            settingsTitle: 'M-Team FREE 种子设置',
+            settingsCloseTitle: '关闭',
+            settingsButtonTitle: '打开设置',
+            settingsButtonAria: '设置',
+            apiEndpointLabel: 'API Endpoint:',
+            apiEndpointHint: '例如: https://api.m-team.cc/api/torrent/genDlToken',
+            apiKeyLabel: 'API Key (x-api-key):',
+            apiKeyPlaceholder: '请输入API Key',
+            openUrlLabel: '复制后自动打开网址 (可选):',
+            openUrlPlaceholder: '例如: http://localhost:8080 或 qbittorrent://',
+            openUrlHint: '留空则不自动打开新标签页',
+            openUrlAlwaysLabel: '无论是否全部获取成功都自动打开网址',
+            openUrlAlwaysHint: '未勾选时，仅当全部成功才自动打开网址',
+            cancelButton: '取消',
+            saveButton: '保存'
+        },
+        en: {
+            buttonGet: 'Get FREE Torrents',
+            buttonProcessing: 'Processing...',
+            buttonNotFound: 'Not Found',
+            buttonNeedApi: 'Configure API',
+            buttonFailed: 'Failed',
+            doneSuffix: 'success, copied to clipboard',
+            alertConfigRequired: 'Please configure API Endpoint and API Key first',
+            alertApiEndpointRequired: 'API Endpoint is required',
+            alertApiKeyRequired: 'API Key is required',
+            alertSaved: 'Settings saved',
+            settingsTitle: 'M-Team FREE Torrent Settings',
+            settingsCloseTitle: 'Close',
+            settingsButtonTitle: 'Open settings',
+            settingsButtonAria: 'Settings',
+            apiEndpointLabel: 'API Endpoint:',
+            apiEndpointHint: 'Example: https://api.m-team.cc/api/torrent/genDlToken',
+            apiKeyLabel: 'API Key (x-api-key):',
+            apiKeyPlaceholder: 'Enter API Key',
+            openUrlLabel: 'Open URL after copy (optional):',
+            openUrlPlaceholder: 'e.g. http://localhost:8080 or qbittorrent://',
+            openUrlHint: 'Leave empty to disable auto-open',
+            openUrlAlwaysLabel: 'Open URL even if some links fail',
+            openUrlAlwaysHint: 'When unchecked, URL opens only if all succeed',
+            cancelButton: 'Cancel',
+            saveButton: 'Save'
+        }
+    };
+
+    function getLang() {
+        const lang = (navigator.language || '').toLowerCase();
+        return lang.startsWith('zh') ? 'zh' : 'en';
+    }
+
+    const LANG = getLang();
+
+    function t(key) {
+        const dict = I18N[LANG] || I18N.en;
+        return dict[key] || I18N.zh[key] || key;
+    }
+
+    function formatDoneMessage(success, total) {
+        return `${success}/${total} ${t('doneSuffix')}`;
+    }
 
     function getConfig() {
         const defaultConfig = {
             apiEndpoint: 'https://api.m-team.cc/api/torrent/genDlToken',
             apiKey: '',
-            openUrl: ''
+            openUrl: '',
+            openUrlOnPartialSuccess: false
         };
         try {
             const storedEndpoint = GM_getValue(CONFIG_KEYS.apiEndpoint, undefined);
             const storedApiKey = GM_getValue(CONFIG_KEYS.apiKey, undefined);
             const storedOpenUrl = GM_getValue(CONFIG_KEYS.openUrl, undefined);
+            const storedOpenUrlOnPartialSuccess = GM_getValue(CONFIG_KEYS.openUrlOnPartialSuccess, undefined);
 
             const hasGMValues =
                 storedEndpoint !== undefined ||
                 storedApiKey !== undefined ||
-                storedOpenUrl !== undefined;
+                storedOpenUrl !== undefined ||
+                storedOpenUrlOnPartialSuccess !== undefined;
 
             if (hasGMValues) {
                 return {
                     ...defaultConfig,
                     apiEndpoint: storedEndpoint !== undefined ? storedEndpoint : defaultConfig.apiEndpoint,
                     apiKey: storedApiKey !== undefined ? storedApiKey : defaultConfig.apiKey,
-                    openUrl: storedOpenUrl !== undefined ? storedOpenUrl : defaultConfig.openUrl
+                    openUrl: storedOpenUrl !== undefined ? storedOpenUrl : defaultConfig.openUrl,
+                    openUrlOnPartialSuccess: storedOpenUrlOnPartialSuccess !== undefined
+                        ? Boolean(storedOpenUrlOnPartialSuccess)
+                        : defaultConfig.openUrlOnPartialSuccess
                 };
             }
 
@@ -64,6 +145,7 @@
             GM_setValue(CONFIG_KEYS.apiEndpoint, config.apiEndpoint);
             GM_setValue(CONFIG_KEYS.apiKey, config.apiKey);
             GM_setValue(CONFIG_KEYS.openUrl, config.openUrl);
+            GM_setValue(CONFIG_KEYS.openUrlOnPartialSuccess, Boolean(config.openUrlOnPartialSuccess));
         } catch (e) {
             console.error('保存配置失败:', e);
         }
@@ -266,6 +348,25 @@
         }
     }
 
+    // 获取下载链接（失败重试）
+    async function getDownloadLinkWithRetry(torrentId, maxRetries = 1) {
+        let lastError;
+        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+            try {
+                if (attempt > 0) {
+                    console.warn(`  重试第 ${attempt} 次...`);
+                }
+                return await getDownloadLink(torrentId);
+            } catch (error) {
+                lastError = error;
+                if (attempt < maxRetries) {
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+            }
+        }
+        throw lastError;
+    }
+
     // 复制到剪贴板
     async function copyToClipboard(text) {
         try {
@@ -295,7 +396,7 @@
         const button = document.getElementById('mteam-free-btn');
         if (button) {
             button.disabled = true;
-            button.textContent = '处理中...';
+            button.textContent = t('buttonProcessing');
         }
 
         try {
@@ -307,10 +408,10 @@
             if (freeTorrents.length === 0) {
                 if (button) {
                     button.disabled = false;
-                    button.textContent = '未找到';
+                    button.textContent = t('buttonNotFound');
                     setTimeout(() => {
                         if (button) {
-                            button.textContent = '获取FREE种子';
+                            button.textContent = t('buttonGet');
                         }
                     }, 2000);
                 }
@@ -321,23 +422,24 @@
             console.log(`找到 ${freeTorrents.length} 个FREE标记的torrent`);
 
             const config = getConfig();
-            if (!config.apiEndpoint) {
+            if (!config.apiEndpoint || !config.apiKey) {
                 if (button) {
                     button.disabled = false;
-                    button.textContent = '请配置API';
+                    button.textContent = t('buttonNeedApi');
                     setTimeout(() => {
                         if (button) {
-                            button.textContent = '获取FREE种子';
+                            button.textContent = t('buttonGet');
                         }
                     }, 2000);
                 }
+                alert(t('alertConfigRequired'));
                 showSettingsPanel();
                 return;
             }
 
             // 更新按钮显示开始处理
             if (button) {
-                button.textContent = '处理中... 0/' + freeTorrents.length;
+                button.textContent = `${t('buttonProcessing')} 0/${freeTorrents.length}`;
             }
 
             console.log('开始获取下载链接...');
@@ -353,7 +455,7 @@
                 console.log(`[${index}/${total}] 处理种子 ID: ${torrent.id}...`);
 
                 try {
-                    const downloadLink = await getDownloadLink(torrent.id);
+                    const downloadLink = await getDownloadLinkWithRetry(torrent.id, 1);
                     const result = {
                         id: torrent.id,
                         title: torrent.title,
@@ -373,7 +475,7 @@
                     completedCount++;
                     // 更新按钮显示进度
                     if (button) {
-                        button.textContent = `处理中... ${completedCount}/${total}`;
+                        button.textContent = `${t('buttonProcessing')} ${completedCount}/${total}`;
                     }
                 }
             };
@@ -416,8 +518,10 @@
             console.log('\n完整结果:');
             console.log(resultTextWithInfo);
 
-            // 复制完成后按需打开指定网址
-            if (copied) {
+            // 复制完成后按需打开指定网址（默认全部成功才打开，可在设置中改为总是打开）
+            const allSuccess = successResults.length === results.length;
+            const openUrlAlways = Boolean(config.openUrlOnPartialSuccess);
+            if (copied && (allSuccess || openUrlAlways)) {
                 const openUrl = (config.openUrl || '').trim();
                 if (openUrl) {
                     try {
@@ -426,6 +530,8 @@
                         console.warn('自动打开网址失败:', e);
                     }
                 }
+            } else if (copied && !allSuccess) {
+                console.warn('存在获取失败的种子，已跳过自动打开网址');
             }
 
             // 保存到全局变量
@@ -437,11 +543,11 @@
             // 在按钮上显示成功信息
             if (button) {
                 button.disabled = false;
-                button.textContent = `${successResults.length}/${results.length} 成功 已复制到剪贴板`;
+                button.textContent = formatDoneMessage(successResults.length, results.length);
                 // 3秒后恢复按钮文本
                 setTimeout(() => {
                     if (button) {
-                        button.textContent = '获取FREE种子';
+                        button.textContent = t('buttonGet');
                     }
                 }, 3000);
             }
@@ -450,11 +556,11 @@
             console.error('处理失败:', error);
             if (button) {
                 button.disabled = false;
-                button.textContent = '处理失败';
+                button.textContent = t('buttonFailed');
                 // 3秒后恢复按钮文本
                 setTimeout(() => {
                     if (button) {
-                        button.textContent = '获取FREE种子';
+                        button.textContent = t('buttonGet');
                     }
                 }, 3000);
             }
@@ -484,31 +590,38 @@
 
         panel.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="margin: 0; color: #1890ff;">M-Team FREE 种子设置</h3>
-                <button id="mteam-settings-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
+                <h3 style="margin: 0; color: #1890ff;">${t('settingsTitle')}</h3>
+                <button id="mteam-settings-close" title="${t('settingsCloseTitle')}" aria-label="${t('settingsCloseTitle')}" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
             </div>
             <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: bold;">API Endpoint:</label>
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">${t('apiEndpointLabel')}</label>
                 <input type="text" id="mteam-api-endpoint" value="${config.apiEndpoint}" 
                     style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
-                <small style="color: #666;">例如: https://api.m-team.cc/api/torrent/genDlToken</small>
+                <small style="color: #666;">${t('apiEndpointHint')}</small>
             </div>
             <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: bold;">API Key (x-api-key):</label>
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">${t('apiKeyLabel')}</label>
                 <input type="text" id="mteam-api-key" value="${config.apiKey}" 
                     style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;"
-                    placeholder="请输入API Key">
+                    placeholder="${t('apiKeyPlaceholder')}">
             </div>
             <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: bold;">复制后自动打开网址 (可选):</label>
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">${t('openUrlLabel')}</label>
                 <input type="text" id="mteam-open-url" value="${config.openUrl || ''}" 
                     style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;"
-                    placeholder="例如: http://localhost:8080 或 qbittorrent://">
-                <small style="color: #666;">留空则不自动打开新标签页</small>
+                    placeholder="${t('openUrlPlaceholder')}">
+                <small style="color: #666;">${t('openUrlHint')}</small>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: flex; align-items: center; gap: 8px; font-weight: bold; cursor: pointer;">
+                    <input type="checkbox" id="mteam-open-url-on-partial-success" ${config.openUrlOnPartialSuccess ? 'checked' : ''}>
+                    ${t('openUrlAlwaysLabel')}
+                </label>
+                <small style="color: #666;">${t('openUrlAlwaysHint')}</small>
             </div>
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                <button id="mteam-settings-cancel" style="padding: 8px 16px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; background: #f5f5f5;">取消</button>
-                <button id="mteam-settings-save" style="padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; background: #1890ff; color: white;">保存</button>
+                <button id="mteam-settings-cancel" style="padding: 8px 16px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; background: #f5f5f5;">${t('cancelButton')}</button>
+                <button id="mteam-settings-save" style="padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; background: #1890ff; color: white;">${t('saveButton')}</button>
             </div>
         `;
 
@@ -523,14 +636,19 @@
             const apiEndpoint = document.getElementById('mteam-api-endpoint').value.trim();
             const apiKey = document.getElementById('mteam-api-key').value.trim();
             const openUrl = document.getElementById('mteam-open-url').value.trim();
+            const openUrlOnPartialSuccess = document.getElementById('mteam-open-url-on-partial-success').checked;
 
             if (!apiEndpoint) {
-                alert('API Endpoint不能为空');
+                alert(t('alertApiEndpointRequired'));
+                return;
+            }
+            if (!apiKey) {
+                alert(t('alertApiKeyRequired'));
                 return;
             }
 
-            saveConfig({ apiEndpoint, apiKey, openUrl });
-            alert('设置已保存');
+            saveConfig({ apiEndpoint, apiKey, openUrl, openUrlOnPartialSuccess });
+            alert(t('alertSaved'));
             panel.remove();
         };
 
@@ -572,7 +690,7 @@
 
         const mainButton = document.createElement('button');
         mainButton.id = 'mteam-free-btn';
-        mainButton.textContent = '获取FREE种子';
+        mainButton.textContent = t('buttonGet');
         mainButton.style.cssText = `
             height: 44px;
             padding: 0 14px 0 20px;
@@ -616,8 +734,8 @@
                     s1.61-3.6,3.6-3.6s3.6,1.61,3.6,3.6S13.99,15.6,12,15.6z"/>
             </svg>
         `;
-        settingsButton.title = '打开设置';
-        settingsButton.setAttribute('aria-label', '设置');
+        settingsButton.title = t('settingsButtonTitle');
+        settingsButton.setAttribute('aria-label', t('settingsButtonAria'));
         settingsButton.style.cssText = `
             height: 44px;
             padding: 0 10px;

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         b站评论区保存为html (bili-comments-to-html)
 // @namespace    http://tampermonkey.net/
-// @version      0.6.8
+// @version      0.6.9
 // @description  删除b站视频及动态中的多余元素，展开评论区二级回复，调整页面样式，为通过SingleFile等工具导出网页备份评论区做准备。必须搭配油猴脚本“Bilibili - 在未登录的情况下照常加载评论”使用。
 // @license      GPL-3.0
 // @author       MonkeyBro
@@ -417,8 +417,10 @@
                 { tag: 'Link', href: '//s1.hdslb.com/bfs/seed/jinkela/short/bili-theme/map.css' },
                 { tag: 'Link', href: '//s1.hdslb.com/bfs/seed/jinkela/short/bili-theme/light_u.css' },
                 { tag: 'Link', href: '//s1.hdslb.com/bfs/seed/jinkela/short/bili-theme/light.css' },
-                { tag: 'Link', href: '//s1.hdslb.com/bfs/static/stone-free/opus-detail/css/opus-detail' },
-                { tag: 'Link', href: '//s1.hdslb.com/bfs/static/stone-free/opus-detail/css/opus-detail' },
+                // { tag: 'Link', href: '//s1.hdslb.com/bfs/static/stone-free/opus-detail/css/opus-detail' },
+                // { tag: 'Link', href: '//s1.hdslb.com/bfs/static/stone-free/opus-detail/css/opus-detail' },
+                { tag: 'Link', href: '//s1.hdslb.com/bfs/static/2233-monorepo/opus-detail/css/opus-detail.1.32ed816815fb5678f0e5be8ddd2c54b9444bf7ee.css' },
+                { tag: 'Link', href: '//s1.hdslb.com/bfs/static/2233-monorepo/opus-detail/css/opus-detail.0.32ed816815fb5678f0e5be8ddd2c54b9444bf7ee.css' },
                 { tag: 'STYLE', type: 'text/css' },
                 { tag: 'STYLE', id: 'bmgstyle-b-img__inner' },
             ];
@@ -469,7 +471,7 @@
         else if (isT) {
             keepBodyElements = [
                 ...commonBodyElements,
-                { tag: 'Link', href: '//s1.hdslb.com/bfs/static/stone-free/dyn-detail/css/dyn-detail' },
+                { tag: 'Link', href: '//s1.hdslb.com/bfs/static/2233-monorepo/dyn-detail/static/css/index.36f3a9c5.css' },
                 { tag: 'DIV', id: 'app' },
             ];
         }

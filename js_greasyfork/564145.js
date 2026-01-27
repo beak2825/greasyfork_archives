@@ -2,7 +2,7 @@
 // @name         Internet Roadtrip Fractional Odometer
 // @namespace    https://github.com/MinecraftFan69420
 // @match        https://neal.fun/internet-roadtrip/*
-// @version      0.31
+// @version      0.37
 // @description  Adds hundredths of mi/km to the odometer display of Internet Roadtrip
 // @run-at       document-idle
 // @grant        GM.addStyle
@@ -21,12 +21,11 @@
 
     // ---------------- CSS ----------------
     GM.addStyle(`
-      img.coffee[src="/internet-roadtrip/coffee.png"] {
-        position: relative !important;
-        left: -12px !important;
+      /* Expand container safely */
+      img.coffee {
+        left: 32px !important;
       }
 
-      /* Expand container safely */
       .odometer-container {
           position: relative;
           /* Add room on the right for Mi + fractional */

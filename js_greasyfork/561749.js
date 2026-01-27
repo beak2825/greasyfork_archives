@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name              新版百度贴吧增强 - 自动签到/夜间模式
+// @name              新版百度贴吧增强 - 夜间模式/精简/屏蔽/签到
 // @namespace         https://greasyfork.org/zh-CN/users/1069880-l-l
-// @version           2.1
+// @version           2.2
 // @description       新版网页版百度贴吧增强脚本，旧版不可用。
 // @author            Li
 // @license           MIT
@@ -15,8 +15,8 @@
 // @connect           c.tieba.baidu.com
 // @require           https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js
 // @icon              https://tb3.bdstatic.com/tb/pc/pc-main-core/static/img/home_icon_min.f440eb33.png
-// @downloadURL https://update.greasyfork.org/scripts/561749/%E6%96%B0%E7%89%88%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E5%A2%9E%E5%BC%BA%20-%20%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0%E5%A4%9C%E9%97%B4%E6%A8%A1%E5%BC%8F.user.js
-// @updateURL https://update.greasyfork.org/scripts/561749/%E6%96%B0%E7%89%88%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E5%A2%9E%E5%BC%BA%20-%20%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0%E5%A4%9C%E9%97%B4%E6%A8%A1%E5%BC%8F.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561749/%E6%96%B0%E7%89%88%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E5%A2%9E%E5%BC%BA%20-%20%E5%A4%9C%E9%97%B4%E6%A8%A1%E5%BC%8F%E7%B2%BE%E7%AE%80%E5%B1%8F%E8%94%BD%E7%AD%BE%E5%88%B0.user.js
+// @updateURL https://update.greasyfork.org/scripts/561749/%E6%96%B0%E7%89%88%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E5%A2%9E%E5%BC%BA%20-%20%E5%A4%9C%E9%97%B4%E6%A8%A1%E5%BC%8F%E7%B2%BE%E7%AE%80%E5%B1%8F%E8%94%BD%E7%AD%BE%E5%88%B0.meta.js
 // ==/UserScript==
 
 (function () {
@@ -317,7 +317,7 @@
     const hideHomeCardsConfig = {
         hideMyForums: { selector: '.list-container-wrapper.card-border', titleText: '我常逛的吧', dataKey: 'myForumsChecked' },
         hidePlayedGames: { selector: '.list-container-wrapper.card-border', titleText: '我玩过的游戏', dataKey: 'playedGamesChecked' },
-        hideRightNav: { selector: '.right-nav-bar[data-v-a2fc3112]', titleText: null, dataKey: 'rightNavChecked' }
+        hideRightNav: { selector: '.right-nav-bar', titleText: null, dataKey: 'rightNavChecked' }
     };
 
     function processHomeCards() {

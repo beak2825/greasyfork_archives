@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Universal Image Downloader (Optimized)
+// @name         Universal Image Downloader (Final Mobile Fix)
 // @namespace    https://greasyfork.org/en/users/1553223-ozler365
-// @version      9.1.5
-// @description  Professional UI, Smart Source Scan, Strict Reader Isolation, High Performance. Fixes preview for scrambled images & prevents duplicates.
+// @version      9.2.2
+// @description  Professional UI, Smart Source Scan, Strict Reader Isolation, High Performance. Mobile & Desktop friendly.
 // @author       ozler365
 // @license      MIT
 // @connect      *
@@ -16,8 +16,8 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js
 // @run-at       document-start
 // @match        *://*/*
-// @downloadURL https://update.greasyfork.org/scripts/561884/Universal%20Image%20Downloader%20%28Optimized%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561884/Universal%20Image%20Downloader%20%28Optimized%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561884/Universal%20Image%20Downloader%20%28Final%20Mobile%20Fix%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561884/Universal%20Image%20Downloader%20%28Final%20Mobile%20Fix%29.meta.js
 // ==/UserScript==
 
 (function () {
@@ -54,8 +54,7 @@
     let networkSeen = new Set();
     let isUiOpen = false;
     let renderScheduled = false;
-
-    // Optimization: WeakSet for scanning and Dirty flag for event-driven scanning
+    
     let scannedElements = new WeakSet();
     let isDirty = true;
 
@@ -64,13 +63,11 @@
     const MIN_SIZE = 50;
     const MAX_RANGE = 3000;
 
-    // Optimization: Event listeners to trigger scans only when needed
-    const triggerScan = (mutations) => {
-        isDirty = true;
-        // If specific elements changed, unmark them so they get re-scanned
+    const triggerScan = (mutations) => { 
+        isDirty = true; 
         if (Array.isArray(mutations)) mutations.forEach(m => scannedElements.delete(m.target));
     };
-
+    
     window.addEventListener('scroll', () => { isDirty = true; }, { passive: true });
     window.addEventListener('load', () => { isDirty = true; }, true);
     new MutationObserver(triggerScan).observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ['src', 'style', 'class', 'data-src', 'data-original'] });
@@ -107,7 +104,6 @@
         return 'light';
     }
 
-    // Optimized Canvas Interceptor
     const originalDrawImage = CanvasRenderingContext2D.prototype.drawImage;
     CanvasRenderingContext2D.prototype.drawImage = function(image, ...args) {
         if (this._isInternal || isNetworkMode) {
@@ -257,16 +253,13 @@
         if (isUiOpen) scheduleRender();
     }
 
-    // Optimization: Chunked scanning with main thread yielding
     async function scanPageOrdered() {
         const els = document.querySelectorAll('img, div, span, a, section, header, main, article, li, figure, canvas');
         const res = [], sm = [], loc = new Set();
         const base = window.location.href;
-
         let batchTime = performance.now();
 
         for (let i = 0; i < els.length; i++) {
-            // Yield to main thread every 200 items or 12ms to prevent lag
             if (i % 200 === 0 && (performance.now() - batchTime > 12)) {
                 await new Promise(r => requestAnimationFrame(r));
                 batchTime = performance.now();
@@ -301,12 +294,11 @@
                 const cUrl = getCanonicalUrl(best.src);
                 if (!seen.has(cUrl) && !loc.has(cUrl)) {
                     if (best.w > 0 && best.h > 0 && best.w < MIN_SIZE && best.h < MIN_SIZE) {
-                        // Mark small image as processed so we don't re-check it
-                         scannedElements.add(el);
+                         scannedElements.add(el); 
                          loc.add(cUrl);
                          sm.push({ url: best.src, pos: getPos(el), w: best.w, h: best.h });
                     } else {
-                        scannedElements.add(el);
+                        scannedElements.add(el); 
                         loc.add(cUrl);
                         res.push({ url: best.src, pos: getPos(el), w: best.w, h: best.h });
                     }
@@ -319,7 +311,6 @@
 
     async function backgroundLoop() {
         let newData = false;
-
         if (!isNetworkMode) {
              while(interceptedQueue.length) {
                 const u = interceptedQueue.shift();
@@ -332,7 +323,6 @@
                 }
              }
         }
-
         if (isNetworkMode && capturedNetworkQueue.length) {
             const batch = capturedNetworkQueue.splice(0, 20);
             const res = await Promise.all(batch.map(async u => {
@@ -347,8 +337,7 @@
             });
         } else if (!isNetworkMode && isUiOpen && isDirty) {
             const imgs = await scanPageOrdered();
-            isDirty = false;
-
+            isDirty = false; 
             imgs.forEach(i => {
                 const c = getCanonicalUrl(i.url);
                 if (!seen.has(c)) {
@@ -359,9 +348,8 @@
                 }
             });
         }
-
         if (isUiOpen && newData) scheduleRender();
-        setTimeout(backgroundLoop, 1000);
+        setTimeout(backgroundLoop, 1000); 
     }
 
     function scheduleRender() {
@@ -373,7 +361,7 @@
     function render() {
         const grid = document.getElementById("tyc-grid"), cnt = document.getElementById("tyc-cnt");
         if (!grid || !cnt) return;
-
+        
         const gV = (id) => parseInt(document.getElementById(id).value);
         const gC = (id) => document.getElementById(id).checked;
         const minW = gC("tyc-chk-min-w") ? (gV("tyc-min-w")||MIN_SIZE) : MIN_SIZE;
@@ -399,7 +387,7 @@
             d.className = "tyc-card" + (all ? " selected" : "");
             const i = document.createElement("img");
             i.loading = "lazy";
-
+            
             if (img.previewUrl) i.src = img.previewUrl;
             else {
                 i.src = img.url;
@@ -423,6 +411,7 @@
     function createUI() {
         const dark = detectTheme() === 'dark';
         const c = dark ? { m: '#1f2937', h: '#111827', b: '#374151', g: '#0f1419', c: '#1f2937', i: '#374151', t: '#f3f4f6' } : { m: '#fcfcfc', h: '#fff', b: '#e0e0e0', g: '#f9fafb', c: '#fff', i: '#fff', t: '#1f2937' };
+        
         const css = `
             .tyc-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2147483640;display:flex;justify-content:center;align-items:center;font-family:sans-serif;pointer-events:none}
             .tyc-modal{width:90vw;height:85vh;background:${c.m};color:${c.t};border-radius:12px;display:flex;flex-direction:column;overflow:hidden;resize:both;min-width:650px;box-shadow:0 10px 40px rgba(0,0,0,.4);border:1px solid #444;pointer-events:auto}
@@ -443,10 +432,27 @@
             .range-track-active{position:absolute;height:4px;background:#2563eb;pointer-events:none;opacity:0.3}
             .range-track-active.enabled{opacity:1}
             .range-wrapper input[type=range]{-webkit-appearance:none;position:absolute;width:100%;background:none;pointer-events:none;margin:0;outline:none}
-            .range-wrapper input[type=range]::-webkit-slider-thumb{pointer-events:auto;-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#9ca3af;cursor:pointer;border:2px solid #fff;box-shadow:0 1px 2px rgba(0,0,0,0.2)}
+            .range-wrapper input[type=range]::-webkit-slider-thumb{pointer-events:auto;width:14px;height:14px;border-radius:50%;background:#9ca3af;cursor:pointer;border:2px solid #fff;box-shadow:0 1px 2px rgba(0,0,0,0.2)}
             .range-wrapper input[type=range]:not(:disabled)::-webkit-slider-thumb{background:#2563eb}
+            
+            @media screen and (max-width: 768px) {
+                .tyc-modal { width: 95vw !important; min-width: 0 !important; max-height: 90vh !important; top: auto !important; left: auto !important; margin: 0 auto !important; }
+                .tyc-grid { padding: 10px; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); grid-auto-rows: 140px; }
+                .tyc-header { padding: 8px 10px; gap: 8px; overflow-y: auto; max-height: 45vh; }
+                .tyc-btn { padding: 8px 10px; min-width: 40px; }
+                .tyc-input { width: 80px; }
+                .tyc-row { gap: 6px; }
+                .tyc-filter-container { flex-direction: column !important; gap: 10px !important; }
+                .tyc-filter-item { min-width: 100% !important; }
+                .tyc-btn-row { flex-wrap: nowrap !important; gap: 10px !important; }
+                .tyc-btn-action { flex: 1 !important; width: auto !important; }
+                /* Fix for Sliders on Mobile: Touch Actions & Z-Index Switching */
+                .range-wrapper input[type=range] { pointer-events: none; touch-action: none; }
+                .range-wrapper input[type=range]::-webkit-slider-thumb { pointer-events: auto; touch-action: none; width: 24px; height: 24px; z-index: 10; position: relative; }
+                .range-wrapper input[type=range]::-moz-range-thumb { pointer-events: auto; touch-action: none; width: 24px; height: 24px; z-index: 10; position: relative; }
+            }
         `;
-        document.body.insertAdjacentHTML("beforeend", `<div class="tyc-overlay"><style>${css}</style><div class="tyc-modal" id="tyc-modal"><div class="tyc-header" id="tyc-drag"><div class="tyc-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;font-weight:600"><input type="checkbox" id="tyc-all" checked><span>${i18n.selectAll}</span></label><div style="height:20px;border-left:1px solid ${c.b};margin:0 5px"></div><input type="text" id="tyc-fold" class="tyc-input" placeholder="${i18n.subFolder}"><button class="tyc-btn tyc-btn-gray" id="tyc-ren">${i18n.rename}</button><div style="flex:1"></div><button class="tyc-btn ${isNetworkMode?'tyc-btn-purple':'tyc-btn-gray'}" id="tyc-mode">${isNetworkMode?i18n.modeNet:i18n.modeDef}</button><button class="tyc-btn tyc-btn-gray" id="tyc-sort">${i18n.sort}</button><button class="tyc-btn tyc-btn-red" id="tyc-clear">${i18n.clear}</button><button class="tyc-btn tyc-btn-gray" id="tyc-cls">✕</button></div><div style="display:flex;gap:20px;width:100%;border-top:1px solid ${c.b};padding-top:10px;margin-top:5px">${['w','h'].map(t=>`<div style="flex:1"><div class="tyc-row" style="justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;font-weight:700;color:#9ca3af">${t==='w'?i18n.width:i18n.height}</span><div style="display:flex;align-items:center;gap:4px;font-size:11px;color:#9ca3af"><input type="checkbox" id="tyc-chk-min-${t}" class="tyc-chk"><input type="number" id="tyc-min-${t}" class="tyc-input tyc-input-sm" value="${MIN_SIZE}" disabled><span>-</span><input type="number" id="tyc-max-${t}" class="tyc-input tyc-input-sm" value="${MAX_RANGE}" disabled><input type="checkbox" id="tyc-chk-max-${t}" class="tyc-chk"> px</div></div><div class="range-wrapper"><div style="position:absolute;width:100%;height:4px;background:${dark?'#374151':'#e5e7eb'};border-radius:2px"></div><div id="tyc-track-${t}" class="range-track-active"></div><input type="range" id="tyc-slide-min-${t}" min="${MIN_SIZE}" max="${MAX_RANGE}" value="${MIN_SIZE}" disabled><input type="range" id="tyc-slide-max-${t}" min="${MIN_SIZE}" max="${MAX_RANGE}" value="${MAX_RANGE}" disabled></div></div>`).join('')}</div><div class="tyc-row" style="margin-top:10px"><span class="tyc-badge" id="tyc-cnt" style="background:#1f2937;color:#fff;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700">0</span><div style="flex:1"></div><button class="tyc-btn tyc-btn-blue" id="tyc-dl" style="width:120px">${i18n.download}</button><button class="tyc-btn tyc-btn-green" id="tyc-zip" style="width:120px">${i18n.zip}</button></div></div><div class="tyc-grid" id="tyc-grid"></div></div></div>`);
+        document.body.insertAdjacentHTML("beforeend", `<div class="tyc-overlay"><style>${css}</style><div class="tyc-modal" id="tyc-modal"><div class="tyc-header" id="tyc-drag"><div class="tyc-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;font-weight:600"><input type="checkbox" id="tyc-all" checked><span>${i18n.selectAll}</span></label><div style="height:20px;border-left:1px solid ${c.b};margin:0 5px"></div><input type="text" id="tyc-fold" class="tyc-input" placeholder="${i18n.subFolder}"><button class="tyc-btn tyc-btn-gray" id="tyc-ren">${i18n.rename}</button><div style="flex:1"></div><button class="tyc-btn ${isNetworkMode?'tyc-btn-purple':'tyc-btn-gray'}" id="tyc-mode">${isNetworkMode?i18n.modeNet:i18n.modeDef}</button><button class="tyc-btn tyc-btn-gray" id="tyc-sort">${i18n.sort}</button><button class="tyc-btn tyc-btn-red" id="tyc-clear">${i18n.clear}</button><button class="tyc-btn tyc-btn-gray" id="tyc-cls">✕</button></div><div class="tyc-filter-container" style="display:flex;gap:20px;width:100%;border-top:1px solid ${c.b};padding-top:10px;margin-top:5px;flex-wrap:wrap">${['w','h'].map(t=>`<div class="tyc-filter-item" style="flex:1;min-width:150px"><div class="tyc-row" style="justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;font-weight:700;color:#9ca3af">${t==='w'?i18n.width:i18n.height}</span><div style="display:flex;align-items:center;gap:4px;font-size:11px;color:#9ca3af"><input type="checkbox" id="tyc-chk-min-${t}" class="tyc-chk"><input type="number" id="tyc-min-${t}" class="tyc-input tyc-input-sm" value="${MIN_SIZE}" disabled><span>-</span><input type="number" id="tyc-max-${t}" class="tyc-input tyc-input-sm" value="${MAX_RANGE}" disabled><input type="checkbox" id="tyc-chk-max-${t}" class="tyc-chk"> px</div></div><div class="range-wrapper"><div style="position:absolute;width:100%;height:4px;background:${dark?'#374151':'#e5e7eb'};border-radius:2px"></div><div id="tyc-track-${t}" class="range-track-active"></div><input type="range" id="tyc-slide-min-${t}" min="${MIN_SIZE}" max="${MAX_RANGE}" value="${MIN_SIZE}" disabled><input type="range" id="tyc-slide-max-${t}" min="${MIN_SIZE}" max="${MAX_RANGE}" value="${MAX_RANGE}" disabled></div></div>`).join('')}</div><div class="tyc-row tyc-btn-row" style="margin-top:10px"><span class="tyc-badge" id="tyc-cnt" style="background:#1f2937;color:#fff;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700">0</span><div style="flex:1"></div><button class="tyc-btn tyc-btn-blue tyc-btn-action" id="tyc-dl" style="width:120px">${i18n.download}</button><button class="tyc-btn tyc-btn-green tyc-btn-action" id="tyc-zip" style="width:120px">${i18n.zip}</button></div></div><div class="tyc-grid" id="tyc-grid"></div></div></div>`);
 
         const modal = document.getElementById("tyc-modal"), drag = document.getElementById("tyc-drag");
         let isDrag = false, oX = 0, oY = 0;
@@ -456,10 +462,17 @@
 
         const upT = (t, min, max) => { const mn=parseInt(min.min), mx=parseInt(min.max), v1=parseInt(min.value), v2=parseInt(max.value); t.style.left=((v1-mn)/(mx-mn))*100+'%'; t.style.width=(((v2-mn)/(mx-mn))*100)-parseFloat(t.style.left)+'%'; };
         const upS = () => { ['w','h'].forEach(t => { const c1=document.getElementById(`tyc-chk-min-${t}`), c2=document.getElementById(`tyc-chk-max-${t}`), i1=document.getElementById(`tyc-min-${t}`), i2=document.getElementById(`tyc-max-${t}`), s1=document.getElementById(`tyc-slide-min-${t}`), s2=document.getElementById(`tyc-slide-max-${t}`), tr=document.getElementById(`tyc-track-${t}`); i1.disabled=s1.disabled=!c1.checked; i2.disabled=s2.disabled=!c2.checked; tr.classList.toggle("enabled", c1.checked||c2.checked); scheduleRender(); }); };
-
+        
         ['w','h'].forEach(t => {
             const s1=document.getElementById(`tyc-slide-min-${t}`), s2=document.getElementById(`tyc-slide-max-${t}`), i1=document.getElementById(`tyc-min-${t}`), i2=document.getElementById(`tyc-max-${t}`), tr=document.getElementById(`tyc-track-${t}`);
-            const sync = (e) => { let v1=parseInt(s1.value), v2=parseInt(s2.value); if(v1>v2){ if(e.target===s1){ s1.value=v2; v1=v2; }else{ s2.value=v1; v2=v1; } } i1.value=v1; i2.value=v2; upT(tr, s1, s2); scheduleRender(); };
+            const sync = (e) => { 
+                let v1=parseInt(s1.value), v2=parseInt(s2.value); 
+                if(v1>v2){ if(e.target===s1){ s1.value=v2; v1=v2; }else{ s2.value=v1; v2=v1; } } 
+                i1.value=v1; i2.value=v2; upT(tr, s1, s2); scheduleRender(); 
+                
+                // FIX: Slider Z-Index Toggle for Mobile
+                if(C.mob) { s1.style.zIndex = (e.target === s1) ? 10 : 5; s2.style.zIndex = (e.target === s2) ? 10 : 5; }
+            };
             const syncI = () => { let v1=Math.max(MIN_SIZE, parseInt(i1.value)||MIN_SIZE), v2=Math.max(MIN_SIZE, parseInt(i2.value)||MAX_RANGE); if(v1<=MAX_RANGE) s1.value=v1; if(v2<=MAX_RANGE) s2.value=v2; upT(tr, s1, s2); scheduleRender(); };
             document.getElementById(`tyc-chk-min-${t}`).onchange = document.getElementById(`tyc-chk-max-${t}`).onchange = upS;
             s1.oninput = s2.oninput = sync; i1.oninput = i2.oninput = syncI; upT(tr, s1, s2);
@@ -497,8 +510,17 @@
                     let base=n, c=1; while(used.has(n)) { const d=base.lastIndexOf('.'); n=(d>-1?base.slice(0,d):base)+`_${c++}`+(d>-1?base.slice(d):''); } used.add(n);
 
                     if(zip) z.file(n, b);
-                    else if(!C.mob && GM_download) { const u=URL.createObjectURL(b); GM_download({url:u, name:pre+n, onload:()=>URL.revokeObjectURL(u)}); await new Promise(r=>setTimeout(r,200)); }
-                    else saveAs(b, n);
+                    else if (!C.mob && typeof GM_download === 'function') {
+                        const u=URL.createObjectURL(b); 
+                        GM_download({url:u, name:pre+n, onload:()=>URL.revokeObjectURL(u)}); 
+                        await new Promise(r=>setTimeout(r,200)); 
+                    }
+                    else {
+                        // FIX: Mobile Downloads now trigger "saveAs" with a strict 1.5s delay
+                        // ensuring every file is prompted
+                        saveAs(b, n);
+                        await new Promise(r => setTimeout(r, 1500));
+                    }
                 } catch(e){}
             }
             if(zip) { btn.innerText="Generating..."; z.generateAsync({type:"blob"}, m => btn.innerText=`${Math.round(m.percent)}%`).then(c => { btn.innerText="100%"; saveAs(c, document.title.replace(/[\\/:*?"<>|]/g,"_")+".zip"); setTimeout(()=>{btn.innerText=i18n.zip;btn.disabled=false},500); }); }
@@ -509,8 +531,8 @@
     }
 
     function openUI() { if(document.querySelector(".tyc-overlay")) return; createUI(); isUiOpen=true; triggerScan(); }
-
+    
     backgroundLoop();
-    window.addEventListener('keydown', (e) => { if(e.altKey && e.code==='KeyW'){ e.preventDefault(); if(document.querySelector(".tyc-overlay")){ isUiOpen=false; document.querySelector(".tyc-overlay").remove(); } else openUI(); } }, true);
+    window.addEventListener('keydown', (e) => { if(e.altKey && e.code === 'KeyW'){ e.preventDefault(); if(document.querySelector(".tyc-overlay")){ isUiOpen=false; document.querySelector(".tyc-overlay").remove(); } else openUI(); } }, true);
     if(typeof GM_registerMenuCommand==="function") GM_registerMenuCommand(i18n.menuOpen, openUI);
 })();

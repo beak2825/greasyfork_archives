@@ -2,7 +2,7 @@
 // @name         Block Youtube Shorts
 // @name:ko      유튜브 쇼츠 차단
 // @namespace    https://github.com/onetwohour/Block-YouTube-Shorts
-// @version      1.1
+// @version      1.2
 // @description         Protect from brain breaker
 // @description:ko      유튜브 Shorts를 차단하여 집중력을 지켜줍니다
 // @description:en      Block YouTube Shorts to stay focused
@@ -40,12 +40,12 @@
     scrollLock: true,
     sidebar: true
   };
-  
+
   let LANGS;
   try {
     LANGS = JSON.parse(GM_getResourceText('lang'));
   } catch (e) {
-    LANGS = { en: { title: 'Shorts', home:'', subs:'', feeds:'', recommend:'', channel:'', search:'', redirect:'', scrollLock:'', sidebar:'' } };
+    LANGS = { en: { title: 'Shorts', home: '', subs: '', feeds: '', recommend: '', channel: '', search: '', redirect: '', scrollLock: '', sidebar: '' } };
   }
 
   function detectLang() {
@@ -102,6 +102,8 @@
         'ytd-shorts',
         'ytd-shorts-shelf-renderer',
         'ytm-shorts-lockup-view-model-v2',
+        'ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-shorts])',
+		    'ytd-rich-shelf-renderer[is-shorts]',
         !PATTERN.subs.test(location.href) ? 'ytd-rich-section-renderer.style-scope.ytd-rich-grid-renderer:has(ytd-rich-shelf-renderer[is-shorts])' : null,
         '[is-shorts]',
         '#contents > grid-shelf-view-model:has(ytm-shorts-lockup-view-model-v2)',
@@ -147,9 +149,7 @@
 
     const block = e => e.stopPropagation() || e.preventDefault();
     ['wheel', 'touchmove', 'keydown'].forEach(evt =>
-      window.addEventListener(evt, block, {
-        passive: false
-      })
+      window.addEventListener(evt, block, { passive: false })
     );
     window.__prnBlock = block;
   }
@@ -159,9 +159,7 @@
     const block = window.__prnBlock;
     if (block) {
       ['wheel', 'touchmove', 'keydown'].forEach(evt =>
-        window.removeEventListener(evt, block, {
-          passive: false
-        })
+        window.removeEventListener(evt, block, { passive: false })
       );
       delete window.__prnBlock;
     }
@@ -239,9 +237,7 @@
     svg.setAttribute('height', '20');
     svg.setAttribute('viewBox', '0 0 24 24');
     svg.setAttribute('fill', 'currentColor');
-    Object.assign(svg.style, {
-      display: 'block'
-    });
+    Object.assign(svg.style, { display: 'block' });
 
     const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     p.setAttribute('d', 'M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2Zm1 15h-2v-2h2Zm0-4h-2V7h2Z');
@@ -261,9 +257,6 @@
 
     btn.appendChild(iconWrap);
     btn.appendChild(txt);
-
-    wrap.appendChild(btn);
-    end.prepend(wrap);
 
     const dd = document.createElement('div');
     dd.id = 'prn-dropdown';
@@ -292,15 +285,14 @@
 
     for (const key in INIT_CONFIG) {
       const lbl = document.createElement('label');
-      Object.assign(lbl.style, {
-        display: 'block',
-        margin: '4px 0'
-      });
+      Object.assign(lbl.style, { display: 'block', margin: '4px 0' });
+
       const inp = document.createElement('input');
       inp.type = 'checkbox';
       inp.checked = config[key];
       inp.dataset.k = key;
       inp.style.marginRight = '6px';
+
       inp.addEventListener('change', e => {
         const k = e.target.dataset.k;
         const val = e.target.checked;
@@ -308,8 +300,8 @@
         GM_setValue(PREFIX + k, val);
         updateStyleSheet();
         handlePage();
-        if (k === "redirect") handlePage();
       });
+
       lbl.appendChild(inp);
       lbl.appendChild(document.createTextNode(UI_LABEL[key] || key));
       dd.appendChild(lbl);
@@ -318,42 +310,36 @@
     btn.addEventListener('click', e => {
       e.stopPropagation();
 
+      dd.style.display = (dd.style.display === 'block') ? 'none' : 'block';
+
       if (dd.style.display === 'block') {
-        dd.style.display = 'none';
-        return;
+        dd.style.visibility = 'hidden';
+        dd.style.left = 'auto';
+        dd.style.right = '0';
+
+        requestAnimationFrame(() => {
+          const rect = btn.getBoundingClientRect();
+          const ddRect = dd.getBoundingClientRect();
+          const padding = 16;
+
+          if (rect.left + ddRect.width > window.innerWidth - padding) {
+            dd.style.left = 'auto';
+            dd.style.right = '0';
+          } else if (rect.left < ddRect.width - padding) {
+            dd.style.right = 'auto';
+            dd.style.left = '0';
+          } else {
+            dd.style.left = 'auto';
+            dd.style.right = '0';
+          }
+
+          dd.style.visibility = 'visible';
+        });
       }
-
-      dd.style.display = 'block';
-      dd.style.visibility = 'hidden';
-      dd.style.left = 'auto';
-      dd.style.right = '0';
-
-      requestAnimationFrame(() => {
-        const rect = btn.getBoundingClientRect();
-        const ddRect = dd.getBoundingClientRect();
-        const dropdownWidth = ddRect.width;
-        const padding = 16;
-
-        if (rect.left + dropdownWidth > window.innerWidth - padding) {
-          dd.style.left = 'auto';
-          dd.style.right = '0';
-        } else if (rect.left < dropdownWidth - padding) {
-          dd.style.right = 'auto';
-          dd.style.left = '0';
-        } else {
-          dd.style.left = 'auto';
-          dd.style.right = '0';
-        }
-
-        dd.style.visibility = 'visible';
-        dd.style.display = 'block';
-      });
     });
 
-    document.addEventListener('click', (e) => {
-      if (!dd.contains(e.target) && !btn.contains(e.target)) {
-        dd.style.display = 'none';
-      }
+    document.addEventListener('click', e => {
+      if (!dd.contains(e.target) && !btn.contains(e.target)) dd.style.display = 'none';
     });
 
     wrap.appendChild(btn);
@@ -372,10 +358,7 @@
     endObserver = new MutationObserver(() => {
       insertSettingsPanel();
     });
-    endObserver.observe(end, {
-      childList: true,
-      subtree: false
-    });
+    endObserver.observe(end, { childList: true, subtree: false });
   }
 
   const iv = setInterval(() => {
@@ -396,17 +379,11 @@
 
   function waitBodyAndObserve() {
     if (document.body) {
-      shortsObserver.observe(document.body, {
-        childList: true,
-        subtree: true
-      });
+      shortsObserver.observe(document.body, { childList: true, subtree: true });
     } else {
       const iv = setInterval(() => {
         if (document.body) {
-          shortsObserver.observe(document.body, {
-            childList: true,
-            subtree: true
-          });
+          shortsObserver.observe(document.body, { childList: true, subtree: true });
           clearInterval(iv);
         }
       }, 1000);
@@ -416,5 +393,4 @@
   waitBodyAndObserve();
 
   window.addEventListener('yt-navigate-finish', () => setTimeout(observeEnd, 1000));
-  window.addEventListener('#header-bar > header', () => setTimeout(observeEnd, 1000));
 })();

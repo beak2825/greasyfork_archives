@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Toolasha
 // @namespace    http://tampermonkey.net/
-// @version      0.5.23
+// @version      0.5.30
 // @description  Toolasha - Enhanced tools for Milky Way Idle.
 // @author       Celasha and Claude, thank you to bot7420, DrDucky, Frotty, Truth_Light, AlphB, qu, and sentientmilk, for providing the basis for a lot of this. Thank you to Miku, Orvel, Jigglymoose, Incinarator, Knerd, and others for their time and help. Thank you to Steez for testing and helping me figure out where I'm wrong! Thank you to Tib for his generous contribution of the Character Cards. Thank you to Sapnas for -deeply- testing and singlehandedly help me improve performance. Special thanks to Zaeter for the name.
 // @license      CC-BY-NC-SA-4.0
@@ -3656,7 +3656,7 @@
             this.API_URL = 'https://www.milkywayidle.com/game_data/marketplace.json';
 
             // Cache settings
-            this.CACHE_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
+            this.CACHE_DURATION = 15 * 60 * 1000; // 15 minutes in milliseconds
             this.CACHE_KEY_DATA = 'MWITools_marketAPI_json';
             this.CACHE_KEY_TIMESTAMP = 'MWITools_marketAPI_timestamp';
 
@@ -3807,9 +3807,21 @@
                 return null;
             }
 
+            const normalizeMarketPriceValue = (value) => {
+                if (typeof value !== 'number') {
+                    return null;
+                }
+
+                if (value < 0) {
+                    return null;
+                }
+
+                return value;
+            };
+
             return {
-                ask: price.a || 0, // Sell price
-                bid: price.b || 0, // Buy price
+                ask: normalizeMarketPriceValue(price.a), // Sell price
+                bid: normalizeMarketPriceValue(price.b), // Buy price
             };
         }
 
@@ -5068,16 +5080,36 @@
             return priceData.ask || 0;
         }
 
+        const resolvePrice = (value) => {
+            if (typeof value !== 'number') {
+                return null;
+            }
+
+            if (value < 0) {
+                return null;
+            }
+
+            return value;
+        };
+
         // Return price based on mode
         switch (pricingMode) {
             case 'ask':
-                return priceData.ask || 0;
+                return resolvePrice(priceData.ask);
             case 'bid':
-                return priceData.bid || 0;
+                return resolvePrice(priceData.bid);
             case 'average':
-                return ((priceData.ask || 0) + (priceData.bid || 0)) / 2;
+                if (typeof priceData.ask !== 'number' || typeof priceData.bid !== 'number') {
+                    return null;
+                }
+
+                if (priceData.ask < 0 || priceData.bid < 0) {
+                    return null;
+                }
+
+                return (priceData.ask + priceData.bid) / 2;
             default:
-                return priceData.ask || 0;
+                return resolvePrice(priceData.ask);
         }
     }
 
@@ -5147,6 +5179,331 @@
                 return 'ask';
             }
         }
+    }
+
+    /**
+     * Profit Calculation Constants
+     * Shared constants used across profit calculators
+     */
+
+    /**
+     * Marketplace tax rate (2%)
+     */
+    const MARKET_TAX = 0.02;
+
+    /**
+     * Base drink consumption rate per hour (before Drink Concentration)
+     */
+    const DRINKS_PER_HOUR_BASE = 12;
+
+    /**
+     * Seconds per hour (for rate conversions)
+     */
+    const SECONDS_PER_HOUR = 3600;
+
+    /**
+     * Hours per day (for daily profit calculations)
+     */
+    const HOURS_PER_DAY = 24;
+
+    /**
+     * Gathering skill action types
+     * Skills that gather raw materials from the world
+     */
+    const GATHERING_TYPES$2 = ['/action_types/foraging', '/action_types/woodcutting', '/action_types/milking'];
+
+    /**
+     * Production skill action types
+     * Skills that craft items from materials
+     */
+    const PRODUCTION_TYPES$4 = [
+        '/action_types/brewing',
+        '/action_types/cooking',
+        '/action_types/cheesesmithing',
+        '/action_types/crafting',
+        '/action_types/tailoring',
+    ];
+
+    /**
+     * Profit Calculation Helpers
+     * Pure functions for profit/rate calculations used across features
+     *
+     * These functions consolidate duplicated calculations from:
+     * - profit-calculator.js
+     * - gathering-profit.js
+     * - task-profit-calculator.js
+     * - action-time-display.js
+     * - tooltip-prices.js
+     */
+
+
+    // ============ Rate Conversions ============
+
+    /**
+     * Calculate actions per hour from action time
+     * @param {number} actionTimeSeconds - Time per action in seconds
+     * @returns {number} Actions per hour (0 if invalid input)
+     *
+     * @example
+     * calculateActionsPerHour(6) // Returns 600 (3600 / 6)
+     * calculateActionsPerHour(0) // Returns 0 (invalid)
+     */
+    function calculateActionsPerHour(actionTimeSeconds) {
+        if (!actionTimeSeconds || actionTimeSeconds <= 0) {
+            return 0;
+        }
+        return SECONDS_PER_HOUR / actionTimeSeconds;
+    }
+
+    /**
+     * Calculate hours needed for a number of actions
+     * @param {number} actionCount - Number of queued actions
+     * @param {number} actionsPerHour - Actions per hour rate
+     * @returns {number} Hours needed (0 if invalid input)
+     *
+     * @example
+     * calculateHoursForActions(600, 600) // Returns 1
+     * calculateHoursForActions(1200, 600) // Returns 2
+     */
+    function calculateHoursForActions(actionCount, actionsPerHour) {
+        if (!actionsPerHour || actionsPerHour <= 0) {
+            return 0;
+        }
+        return actionCount / actionsPerHour;
+    }
+
+    /**
+     * Calculate seconds needed for a number of actions
+     * @param {number} actionCount - Number of queued actions
+     * @param {number} actionsPerHour - Actions per hour rate
+     * @returns {number} Seconds needed (0 if invalid input)
+     *
+     * @example
+     * calculateSecondsForActions(100, 600) // Returns 600 (100/600 * 3600)
+     */
+    function calculateSecondsForActions(actionCount, actionsPerHour) {
+        return calculateHoursForActions(actionCount, actionsPerHour) * SECONDS_PER_HOUR;
+    }
+
+    // ============ Efficiency Calculations ============
+
+    /**
+     * Calculate efficiency multiplier from efficiency percentage
+     * Efficiency gives bonus action completions per time-consuming action
+     *
+     * @param {number} efficiencyPercent - Efficiency as percentage (e.g., 150 for 150%)
+     * @returns {number} Multiplier (e.g., 2.5 for 150% efficiency)
+     *
+     * @example
+     * calculateEfficiencyMultiplier(0)   // Returns 1.0 (no bonus)
+     * calculateEfficiencyMultiplier(50)  // Returns 1.5
+     * calculateEfficiencyMultiplier(150) // Returns 2.5
+     */
+    function calculateEfficiencyMultiplier(efficiencyPercent) {
+        return 1 + (efficiencyPercent || 0) / 100;
+    }
+
+    // ============ Profit Calculations ============
+
+    /**
+     * Calculate profit per action from hourly profit data
+     *
+     * IMPORTANT: This assumes profitPerHour already includes efficiency.
+     * The formula works because:
+     * - profitPerHour = actionsPerHour × efficiencyMultiplier × profitPerItem
+     * - profitPerHour / actionsPerHour = efficiencyMultiplier × profitPerItem
+     * - This gives profit per ATTEMPT (what the queue shows)
+     *
+     * @param {number} profitPerHour - Profit per hour (includes efficiency)
+     * @param {number} actionsPerHour - Base actions per hour (without efficiency)
+     * @returns {number} Profit per action (0 if invalid input)
+     *
+     * @example
+     * // With 150% efficiency (2.5x), 600 actions/hr, 50 profit/item:
+     * // profitPerHour = 600 × 2.5 × 50 = 75,000
+     * calculateProfitPerAction(75000, 600) // Returns 125 (profit per action)
+     */
+    function calculateProfitPerAction(profitPerHour, actionsPerHour) {
+        if (!actionsPerHour || actionsPerHour <= 0) {
+            return 0;
+        }
+        return profitPerHour / actionsPerHour;
+    }
+
+    /**
+     * Calculate profit per day from hourly profit
+     * @param {number} profitPerHour - Profit per hour
+     * @returns {number} Profit per day
+     *
+     * @example
+     * calculateProfitPerDay(10000) // Returns 240,000
+     */
+    function calculateProfitPerDay(profitPerHour) {
+        return profitPerHour * HOURS_PER_DAY;
+    }
+
+    // ============ Cost Calculations ============
+
+    /**
+     * Calculate drink consumption rate with Drink Concentration
+     * @param {number} drinkConcentration - Drink Concentration stat as decimal (e.g., 0.15 for 15%)
+     * @returns {number} Drinks consumed per hour
+     *
+     * @example
+     * calculateDrinksPerHour(0)    // Returns 12 (base rate)
+     * calculateDrinksPerHour(0.15) // Returns 13.8 (12 × 1.15)
+     */
+    function calculateDrinksPerHour(drinkConcentration = 0) {
+        return DRINKS_PER_HOUR_BASE * (1 + drinkConcentration);
+    }
+
+    /**
+     * Calculate price after marketplace tax
+     * @param {number} price - Price before tax
+     * @param {number} [taxRate=MARKET_TAX] - Tax rate (e.g., 0.02 for 2%)
+     * @returns {number} Price after tax deduction
+     *
+     * @example
+     * calculatePriceAfterTax(100) // Returns 98
+     */
+    function calculatePriceAfterTax(price, taxRate = MARKET_TAX) {
+        return price * (1 - taxRate);
+    }
+
+    /**
+     * Calculate action-based totals for production actions
+     * Uses per-action base inputs (efficiency only affects time)
+     *
+     * @param {Object} params - Calculation parameters
+     * @param {number} params.actionsCount - Number of queued actions
+     * @param {number} params.actionsPerHour - Base actions per hour
+     * @param {number} params.outputAmount - Items produced per action
+     * @param {number} params.outputPrice - Output price per item (pre-tax)
+     * @param {number} params.gourmetBonus - Gourmet bonus as decimal (e.g., 0.1 for 10%)
+     * @param {Array} [params.bonusDrops] - Bonus drop entries with revenuePerAction
+     * @param {Array} [params.materialCosts] - Material cost entries per action
+     * @param {number} params.totalTeaCostPerHour - Tea cost per hour
+     * @param {number} [params.efficiencyMultiplier=1] - Efficiency multiplier for time scaling
+     * @returns {Object} Totals and time values
+     */
+    function calculateProductionActionTotalsFromBase({
+        actionsCount,
+        actionsPerHour,
+        outputAmount,
+        outputPrice,
+        gourmetBonus,
+        bonusDrops = [],
+        materialCosts = [],
+        totalTeaCostPerHour,
+        efficiencyMultiplier = 1,
+    }) {
+        const effectiveActionsPerHour = actionsPerHour * efficiencyMultiplier;
+        if (!effectiveActionsPerHour || effectiveActionsPerHour <= 0) {
+            return {
+                totalBaseItems: 0,
+                totalGourmetItems: 0,
+                totalBaseRevenue: 0,
+                totalGourmetRevenue: 0,
+                totalBonusRevenue: 0,
+                totalRevenue: 0,
+                totalMarketTax: 0,
+                totalMaterialCost: 0,
+                totalTeaCost: 0,
+                totalCosts: 0,
+                totalProfit: 0,
+                hoursNeeded: 0,
+            };
+        }
+        const totalBaseItems = outputAmount * actionsCount;
+        const totalGourmetItems = outputAmount * gourmetBonus * actionsCount;
+        const totalBaseRevenue = totalBaseItems * outputPrice;
+        const totalGourmetRevenue = totalGourmetItems * outputPrice;
+        const totalBonusRevenue = bonusDrops.reduce((sum, drop) => sum + (drop.revenuePerAction || 0) * actionsCount, 0);
+        const totalRevenue = totalBaseRevenue + totalGourmetRevenue + totalBonusRevenue;
+        const totalMarketTax = totalRevenue * MARKET_TAX;
+        const totalMaterialCost = materialCosts.reduce((sum, material) => sum + material.totalCost * actionsCount, 0);
+        const hoursNeeded = calculateHoursForActions(actionsCount, effectiveActionsPerHour);
+        const totalTeaCost = totalTeaCostPerHour * hoursNeeded;
+        const totalCosts = totalMaterialCost + totalTeaCost + totalMarketTax;
+        const totalProfit = totalRevenue - totalCosts;
+
+        return {
+            totalBaseItems,
+            totalGourmetItems,
+            totalBaseRevenue,
+            totalGourmetRevenue,
+            totalBonusRevenue,
+            totalRevenue,
+            totalMarketTax,
+            totalMaterialCost,
+            totalTeaCost,
+            totalCosts,
+            totalProfit,
+            hoursNeeded,
+        };
+    }
+
+    /**
+     * Calculate action-based totals for gathering actions
+     * Uses per-action base inputs (efficiency only affects time)
+     *
+     * @param {Object} params - Calculation parameters
+     * @param {number} params.actionsCount - Number of queued actions
+     * @param {number} params.actionsPerHour - Base actions per hour
+     * @param {Array} [params.baseOutputs] - Base outputs with revenuePerAction
+     * @param {Array} [params.bonusDrops] - Bonus drop entries with revenuePerAction
+     * @param {number} params.processingRevenueBonusPerAction - Processing bonus per action
+     * @param {number} params.drinkCostPerHour - Drink costs per hour
+     * @param {number} [params.efficiencyMultiplier=1] - Efficiency multiplier for time scaling
+     * @returns {Object} Totals and time values
+     */
+    function calculateGatheringActionTotalsFromBase({
+        actionsCount,
+        actionsPerHour,
+        baseOutputs = [],
+        bonusDrops = [],
+        processingRevenueBonusPerAction,
+        drinkCostPerHour,
+        efficiencyMultiplier = 1,
+    }) {
+        const effectiveActionsPerHour = actionsPerHour * efficiencyMultiplier;
+        if (!effectiveActionsPerHour || effectiveActionsPerHour <= 0) {
+            return {
+                totalBaseRevenue: 0,
+                totalBonusRevenue: 0,
+                totalProcessingRevenue: 0,
+                totalRevenue: 0,
+                totalMarketTax: 0,
+                totalDrinkCost: 0,
+                totalCosts: 0,
+                totalProfit: 0,
+                hoursNeeded: 0,
+            };
+        }
+        const totalBaseRevenue = baseOutputs.reduce(
+            (sum, output) => sum + (output.revenuePerAction || 0) * actionsCount,
+            0
+        );
+        const totalBonusRevenue = bonusDrops.reduce((sum, drop) => sum + (drop.revenuePerAction || 0) * actionsCount, 0);
+        const totalProcessingRevenue = (processingRevenueBonusPerAction || 0) * actionsCount;
+        const totalRevenue = totalBaseRevenue + totalBonusRevenue + totalProcessingRevenue;
+        const totalMarketTax = totalRevenue * MARKET_TAX;
+        const hoursNeeded = calculateHoursForActions(actionsCount, effectiveActionsPerHour);
+        const totalDrinkCost = drinkCostPerHour * hoursNeeded;
+        const totalCosts = totalDrinkCost + totalMarketTax;
+        const totalProfit = totalRevenue - totalCosts;
+
+        return {
+            totalBaseRevenue,
+            totalBonusRevenue,
+            totalProcessingRevenue,
+            totalRevenue,
+            totalMarketTax,
+            totalDrinkCost,
+            totalCosts,
+            totalProfit,
+            hoursNeeded,
+        };
     }
 
     /**
@@ -5298,10 +5655,9 @@
                 // Check if item is tradeable (for tax calculation)
                 const itemDetails = dataManager.getItemDetails(itemHrid);
                 const canBeSold = itemDetails?.tradeable !== false;
-                const taxFactor = canBeSold ? 1 - this.MARKET_TAX : 1.0;
-
-                // Calculate expected value: avgCount × dropRate × price × taxFactor
-                const dropValue = avgCount * dropRate * price * taxFactor;
+                const dropValue = canBeSold
+                    ? calculatePriceAfterTax(avgCount * dropRate * price, this.MARKET_TAX)
+                    : avgCount * dropRate * price;
                 totalExpectedValue += dropValue;
             }
 
@@ -5327,7 +5683,7 @@
 
                 if (bagValue > 0) {
                     // Apply 18% market tax (Cowbell Bag only), then divide by 10
-                    return (bagValue * 0.82) / 10;
+                    return calculatePriceAfterTax(bagValue, 0.18) / 10;
                 }
                 return null; // No bag price available
             }
@@ -5434,8 +5790,12 @@
 
                 // Calculate expected value for this drop
                 const itemCanBeSold = itemDetails.tradeable !== false;
-                const taxFactor = itemCanBeSold ? 1 - this.MARKET_TAX : 1.0;
-                const dropValue = price !== null ? avgCount * dropRate * price * taxFactor : 0;
+                const dropValue =
+                    price !== null
+                        ? itemCanBeSold
+                            ? calculatePriceAfterTax(avgCount * dropRate * price, this.MARKET_TAX)
+                            : avgCount * dropRate * price
+                        : 0;
 
                 drops.push({
                     itemHrid,
@@ -5497,6 +5857,7 @@
 
         const bonusDrops = [];
         let totalBonusRevenue = 0;
+        let hasMissingPrices = false;
 
         // Process essence drops
         if (actionDetails.essenceDropTable && actionDetails.essenceDropTable.length > 0) {
@@ -5515,29 +5876,39 @@
 
                 // Get price: Check if openable container (use EV), otherwise market price
                 let itemPrice = 0;
+                let isMissingPrice = false;
                 if (itemDetails.isOpenable) {
                     // Use expected value for openable containers
                     itemPrice = expectedValueCalculator.getCachedValue(drop.itemHrid) || 0;
                 } else {
                     // Use market price for regular items
                     const price = marketAPI.getPrice(drop.itemHrid, 0);
-                    itemPrice = price?.bid || 0; // Use bid price (instant sell)
+                    itemPrice = price?.bid ?? 0; // Use bid price (instant sell)
+                    isMissingPrice = price?.bid === null || price?.bid === undefined;
                 }
 
                 // Revenue per hour from this drop
                 const revenuePerHour = dropsPerHour * itemPrice;
+                const dropsPerAction = actionsPerHour > 0 ? dropsPerHour / actionsPerHour : 0;
+                const revenuePerAction = actionsPerHour > 0 ? revenuePerHour / actionsPerHour : 0;
 
                 bonusDrops.push({
                     itemHrid: drop.itemHrid,
                     itemName: itemDetails.name,
                     dropRate: finalDropRate,
                     dropsPerHour,
+                    dropsPerAction,
                     priceEach: itemPrice,
                     revenuePerHour,
+                    revenuePerAction,
                     type: 'essence',
+                    missingPrice: isMissingPrice,
                 });
 
                 totalBonusRevenue += revenuePerHour;
+                if (isMissingPrice) {
+                    hasMissingPrices = true;
+                }
             }
         }
 
@@ -5558,29 +5929,39 @@
 
                 // Get price: Check if openable container (use EV), otherwise market price
                 let itemPrice = 0;
+                let isMissingPrice = false;
                 if (itemDetails.isOpenable) {
                     // Use expected value for openable containers
                     itemPrice = expectedValueCalculator.getCachedValue(drop.itemHrid) || 0;
                 } else {
                     // Use market price for regular items
                     const price = marketAPI.getPrice(drop.itemHrid, 0);
-                    itemPrice = price?.bid || 0; // Use bid price (instant sell)
+                    itemPrice = price?.bid ?? 0; // Use bid price (instant sell)
+                    isMissingPrice = price?.bid === null || price?.bid === undefined;
                 }
 
                 // Revenue per hour from this drop
                 const revenuePerHour = dropsPerHour * itemPrice;
+                const dropsPerAction = actionsPerHour > 0 ? dropsPerHour / actionsPerHour : 0;
+                const revenuePerAction = actionsPerHour > 0 ? revenuePerHour / actionsPerHour : 0;
 
                 bonusDrops.push({
                     itemHrid: drop.itemHrid,
                     itemName: itemDetails.name,
                     dropRate: finalDropRate,
                     dropsPerHour,
+                    dropsPerAction,
                     priceEach: itemPrice,
                     revenuePerHour,
+                    revenuePerAction,
                     type: 'rare_find',
+                    missingPrice: isMissingPrice,
                 });
 
                 totalBonusRevenue += revenuePerHour;
+                if (isMissingPrice) {
+                    hasMissingPrices = true;
+                }
             }
         }
 
@@ -5589,250 +5970,7 @@
             rareFindBonus, // Rare Find % from equipment + house rooms (combined)
             bonusDrops, // Array of all bonus drops with details
             totalBonusRevenue, // Total revenue/hour from all bonus drops
-        };
-    }
-
-    /**
-     * Profit Calculation Constants
-     * Shared constants used across profit calculators
-     */
-
-    /**
-     * Marketplace tax rate (2%)
-     */
-    const MARKET_TAX = 0.02;
-
-    /**
-     * Base drink consumption rate per hour (before Drink Concentration)
-     */
-    const DRINKS_PER_HOUR_BASE = 12;
-
-    /**
-     * Seconds per hour (for rate conversions)
-     */
-    const SECONDS_PER_HOUR = 3600;
-
-    /**
-     * Hours per day (for daily profit calculations)
-     */
-    const HOURS_PER_DAY = 24;
-
-    /**
-     * Gathering skill action types
-     * Skills that gather raw materials from the world
-     */
-    const GATHERING_TYPES$2 = ['/action_types/foraging', '/action_types/woodcutting', '/action_types/milking'];
-
-    /**
-     * Production skill action types
-     * Skills that craft items from materials
-     */
-    const PRODUCTION_TYPES$4 = [
-        '/action_types/brewing',
-        '/action_types/cooking',
-        '/action_types/cheesesmithing',
-        '/action_types/crafting',
-        '/action_types/tailoring',
-    ];
-
-    /**
-     * Profit Calculation Helpers
-     * Pure functions for profit/rate calculations used across features
-     *
-     * These functions consolidate duplicated calculations from:
-     * - profit-calculator.js
-     * - gathering-profit.js
-     * - task-profit-calculator.js
-     * - action-time-display.js
-     * - tooltip-prices.js
-     */
-
-
-    // ============ Rate Conversions ============
-
-    /**
-     * Calculate actions per hour from action time
-     * @param {number} actionTimeSeconds - Time per action in seconds
-     * @returns {number} Actions per hour (0 if invalid input)
-     *
-     * @example
-     * calculateActionsPerHour(6) // Returns 600 (3600 / 6)
-     * calculateActionsPerHour(0) // Returns 0 (invalid)
-     */
-    function calculateActionsPerHour(actionTimeSeconds) {
-        if (!actionTimeSeconds || actionTimeSeconds <= 0) {
-            return 0;
-        }
-        return SECONDS_PER_HOUR / actionTimeSeconds;
-    }
-
-    /**
-     * Calculate hours needed for a number of actions
-     * @param {number} actionCount - Number of actions/attempts
-     * @param {number} actionsPerHour - Actions per hour rate
-     * @returns {number} Hours needed (0 if invalid input)
-     *
-     * @example
-     * calculateHoursForActions(600, 600) // Returns 1
-     * calculateHoursForActions(1200, 600) // Returns 2
-     */
-    function calculateHoursForActions(actionCount, actionsPerHour) {
-        if (!actionsPerHour || actionsPerHour <= 0) {
-            return 0;
-        }
-        return actionCount / actionsPerHour;
-    }
-
-    /**
-     * Calculate seconds needed for a number of actions
-     * @param {number} actionCount - Number of actions/attempts
-     * @param {number} actionsPerHour - Actions per hour rate
-     * @returns {number} Seconds needed (0 if invalid input)
-     *
-     * @example
-     * calculateSecondsForActions(100, 600) // Returns 600 (100/600 * 3600)
-     */
-    function calculateSecondsForActions(actionCount, actionsPerHour) {
-        return calculateHoursForActions(actionCount, actionsPerHour) * SECONDS_PER_HOUR;
-    }
-
-    // ============ Efficiency Calculations ============
-
-    /**
-     * Calculate efficiency multiplier from efficiency percentage
-     * Efficiency gives bonus action completions per attempt
-     *
-     * @param {number} efficiencyPercent - Efficiency as percentage (e.g., 150 for 150%)
-     * @returns {number} Multiplier (e.g., 2.5 for 150% efficiency)
-     *
-     * @example
-     * calculateEfficiencyMultiplier(0)   // Returns 1.0 (no bonus)
-     * calculateEfficiencyMultiplier(50)  // Returns 1.5
-     * calculateEfficiencyMultiplier(150) // Returns 2.5
-     */
-    function calculateEfficiencyMultiplier(efficiencyPercent) {
-        return 1 + (efficiencyPercent || 0) / 100;
-    }
-
-    // ============ Profit Calculations ============
-
-    /**
-     * Calculate profit per action from hourly profit data
-     *
-     * IMPORTANT: This assumes profitPerHour already includes efficiency.
-     * The formula works because:
-     * - profitPerHour = actionsPerHour × efficiencyMultiplier × profitPerItem
-     * - profitPerHour / actionsPerHour = efficiencyMultiplier × profitPerItem
-     * - This gives profit per ATTEMPT (what the queue shows)
-     *
-     * @param {number} profitPerHour - Profit per hour (includes efficiency)
-     * @param {number} actionsPerHour - Base actions per hour (without efficiency)
-     * @returns {number} Profit per action/attempt (0 if invalid input)
-     *
-     * @example
-     * // With 150% efficiency (2.5x), 600 actions/hr, 50 profit/item:
-     * // profitPerHour = 600 × 2.5 × 50 = 75,000
-     * calculateProfitPerAction(75000, 600) // Returns 125 (profit per attempt)
-     */
-    function calculateProfitPerAction(profitPerHour, actionsPerHour) {
-        if (!actionsPerHour || actionsPerHour <= 0) {
-            return 0;
-        }
-        return profitPerHour / actionsPerHour;
-    }
-
-    /**
-     * Calculate profit per day from hourly profit
-     * @param {number} profitPerHour - Profit per hour
-     * @returns {number} Profit per day
-     *
-     * @example
-     * calculateProfitPerDay(10000) // Returns 240,000
-     */
-    function calculateProfitPerDay(profitPerHour) {
-        return profitPerHour * HOURS_PER_DAY;
-    }
-
-    // ============ Cost Calculations ============
-
-    /**
-     * Calculate drink consumption rate with Drink Concentration
-     * @param {number} drinkConcentration - Drink Concentration stat as decimal (e.g., 0.15 for 15%)
-     * @returns {number} Drinks consumed per hour
-     *
-     * @example
-     * calculateDrinksPerHour(0)    // Returns 12 (base rate)
-     * calculateDrinksPerHour(0.15) // Returns 13.8 (12 × 1.15)
-     */
-    function calculateDrinksPerHour(drinkConcentration = 0) {
-        return DRINKS_PER_HOUR_BASE * (1 + drinkConcentration);
-    }
-
-    /**
-     * Calculate price after marketplace tax
-     * @param {number} price - Price before tax
-     * @returns {number} Price after 2% tax deduction
-     *
-     * @example
-     * calculatePriceAfterTax(100) // Returns 98
-     */
-    function calculatePriceAfterTax(price) {
-        return price * (1 - MARKET_TAX);
-    }
-
-    // ============ Composite Calculations ============
-
-    /**
-     * Calculate complete profit breakdown for queued actions
-     * Takes raw inputs and returns all intermediate + final values
-     *
-     * @param {Object} params - Calculation parameters
-     * @param {number} params.profitPerHour - Profit per hour (from profit calculator)
-     * @param {number} params.actionsPerHour - Base actions per hour (from profit calculator)
-     * @param {number} params.actionCount - Number of queued actions/attempts
-     * @param {number} [params.revenuePerHour] - Revenue per hour (optional, for estimated value mode)
-     * @param {string} [params.valueMode='profit'] - 'profit' or 'estimated_value'
-     * @returns {Object} Profit breakdown with all calculated values
-     *
-     * @example
-     * calculateQueueProfitBreakdown({
-     *     profitPerHour: 75000,
-     *     actionsPerHour: 600,
-     *     actionCount: 100,
-     * })
-     * // Returns: { totalProfit: 12500, profitPerAction: 125, hoursNeeded: 0.167, ... }
-     */
-    function calculateQueueProfitBreakdown({
-        profitPerHour,
-        actionsPerHour,
-        actionCount,
-        revenuePerHour,
-        valueMode = 'profit',
-    }) {
-        // Determine which value to use based on mode
-        const valuePerHour =
-            valueMode === 'estimated_value' && revenuePerHour !== undefined ? revenuePerHour : profitPerHour;
-
-        // Calculate derived values
-        const profitPerAction = calculateProfitPerAction(valuePerHour, actionsPerHour);
-        const totalProfit = profitPerAction * actionCount;
-        const hoursNeeded = calculateHoursForActions(actionCount, actionsPerHour);
-        const secondsNeeded = hoursNeeded * SECONDS_PER_HOUR;
-
-        return {
-            // Final values
-            totalProfit,
-            profitPerAction,
-
-            // Time values
-            hoursNeeded,
-            secondsNeeded,
-
-            // Input values (for reference)
-            valuePerHour,
-            actionsPerHour,
-            actionCount,
-            valueMode,
+            hasMissingPrices,
         };
     }
 
@@ -5999,7 +6137,7 @@
             const timeBreakdown = this.calculateTimeBreakdown(baseTime, equipmentSpeedBonus);
 
             // Actions per hour (base rate without efficiency)
-            const actionsPerHour = 3600 / actionTime;
+            const actionsPerHour = calculateActionsPerHour(actionTime);
 
             // Get output amount (how many items per action)
             // Use 'count' field from action output
@@ -6008,7 +6146,7 @@
             // Calculate efficiency multiplier
             // Formula matches original MWI Tools: 1 + efficiency%
             // Example: 150% efficiency → 1 + 1.5 = 2.5x multiplier
-            const efficiencyMultiplier = 1 + totalEfficiency / 100;
+            const efficiencyMultiplier = calculateEfficiencyMultiplier(totalEfficiency);
 
             // Items produced per hour (with efficiency multiplier)
             const itemsPerHour = actionsPerHour * outputAmount * efficiencyMultiplier;
@@ -6032,7 +6170,9 @@
 
             // Get output price based on pricing mode setting
             // Uses 'profit' context with 'sell' side to get correct sell price
-            const outputPrice = getItemPrice(itemHrid, { context: 'profit', side: 'sell' }) || 0;
+            const rawOutputPrice = getItemPrice(itemHrid, { context: 'profit', side: 'sell' });
+            const outputPriceMissing = rawOutputPrice === null;
+            const outputPrice = outputPriceMissing ? 0 : rawOutputPrice;
 
             // Apply market tax (2% tax on sales)
             const priceAfterTax = calculatePriceAfterTax(outputPrice);
@@ -6053,6 +6193,12 @@
 
             // Calculate bonus revenue from essence and rare find drops (before profit calculation)
             const bonusRevenue = calculateBonusRevenue(actionDetails, actionsPerHour, characterEquipment, itemDetailMap);
+
+            const hasMissingPrices =
+                outputPriceMissing ||
+                materialCosts.some((material) => material.missingPrice) ||
+                teaCosts.some((tea) => tea.missingPrice) ||
+                (bonusRevenue?.hasMissingPrices ?? false);
 
             // Apply efficiency multiplier to bonus revenue (efficiency repeats the action, including bonus rolls)
             const efficiencyBoostedBonusRevenue = (bonusRevenue?.totalBonusRevenue || 0) * efficiencyMultiplier;
@@ -6086,13 +6232,15 @@
                 costPerItem,
                 itemPrice,
                 outputPrice, // Output price before tax (bid or ask based on mode)
+                outputPriceMissing,
                 priceAfterTax, // Output price after 2% tax (bid or ask based on mode)
                 revenuePerHour,
                 profitPerItem,
                 profitPerHour,
-                profitPerAction: calculateProfitPerAction(profitPerHour, actionsPerHour), // Profit per attempt
+                profitPerAction: calculateProfitPerAction(profitPerHour, actionsPerHour), // Profit per action
                 profitPerDay: calculateProfitPerDay(profitPerHour), // Profit per day
                 bonusRevenue, // Bonus revenue from essences and rare finds
+                hasMissingPrices,
                 totalEfficiency, // Total efficiency percentage
                 levelEfficiency, // Level advantage efficiency
                 houseEfficiency, // House room efficiency
@@ -6154,12 +6302,16 @@
 
                 if (itemDetails) {
                     // Get material price based on pricing mode (uses 'profit' context with 'buy' side)
-                    let materialPrice =
-                        getItemPrice(actionDetails.upgradeItemHrid, { context: 'profit', side: 'buy' }) || 0;
+                    const materialPrice = getItemPrice(actionDetails.upgradeItemHrid, { context: 'profit', side: 'buy' });
+                    const isPriceMissing = materialPrice === null;
+                    const resolvedPrice = isPriceMissing ? 0 : materialPrice;
 
                     // Special case: Coins have no market price but have face value of 1
-                    if (actionDetails.upgradeItemHrid === '/items/coin' && materialPrice === 0) {
-                        materialPrice = 1;
+                    let finalPrice = resolvedPrice;
+                    let isMissing = isPriceMissing;
+                    if (actionDetails.upgradeItemHrid === '/items/coin' && finalPrice === 0) {
+                        finalPrice = 1;
+                        isMissing = false;
                     }
 
                     // Upgrade items are NOT affected by Artisan Tea (only regular inputItems are)
@@ -6170,8 +6322,9 @@
                         itemName: itemDetails.name,
                         baseAmount: 1,
                         amount: reducedAmount,
-                        askPrice: materialPrice,
-                        totalCost: materialPrice * reducedAmount,
+                        askPrice: finalPrice,
+                        totalCost: finalPrice * reducedAmount,
+                        missingPrice: isMissing,
                     });
                 }
             }
@@ -6192,11 +6345,16 @@
                     const reducedAmount = baseAmount * (1 - artisanBonus);
 
                     // Get material price based on pricing mode (uses 'profit' context with 'buy' side)
-                    let materialPrice = getItemPrice(input.itemHrid, { context: 'profit', side: 'buy' }) || 0;
+                    const materialPrice = getItemPrice(input.itemHrid, { context: 'profit', side: 'buy' });
+                    const isPriceMissing = materialPrice === null;
+                    const resolvedPrice = isPriceMissing ? 0 : materialPrice;
 
                     // Special case: Coins have no market price but have face value of 1
-                    if (input.itemHrid === '/items/coin' && materialPrice === 0) {
-                        materialPrice = 1; // 1 coin = 1 gold value
+                    let finalPrice = resolvedPrice;
+                    let isMissing = isPriceMissing;
+                    if (input.itemHrid === '/items/coin' && finalPrice === 0) {
+                        finalPrice = 1; // 1 coin = 1 gold value
+                        isMissing = false;
                     }
 
                     costs.push({
@@ -6204,8 +6362,9 @@
                         itemName: itemDetails.name,
                         baseAmount: baseAmount,
                         amount: reducedAmount,
-                        askPrice: materialPrice,
-                        totalCost: materialPrice * reducedAmount,
+                        askPrice: finalPrice,
+                        totalCost: finalPrice * reducedAmount,
+                        missingPrice: isMissing,
                     });
                 }
             }
@@ -6273,7 +6432,7 @@
                     baseTime: baseTime,
                     steps: steps,
                     finalTime: finalTime,
-                    actionsPerHour: 3600 / finalTime,
+                    actionsPerHour: calculateActionsPerHour(finalTime),
                 };
             }
 
@@ -6282,7 +6441,7 @@
                 baseTime: baseTime,
                 steps: [],
                 finalTime: baseTime,
-                actionsPerHour: 3600 / baseTime,
+                actionsPerHour: calculateActionsPerHour(baseTime),
             };
         }
 
@@ -6333,7 +6492,9 @@
                 if (!itemDetails) continue;
 
                 // Get tea price based on pricing mode (uses 'profit' context with 'buy' side)
-                const teaPrice = getItemPrice(drink.itemHrid, { context: 'profit', side: 'buy' }) || 0;
+                const teaPrice = getItemPrice(drink.itemHrid, { context: 'profit', side: 'buy' });
+                const isPriceMissing = teaPrice === null;
+                const resolvedPrice = isPriceMissing ? 0 : teaPrice;
 
                 // Drink Concentration increases consumption rate
                 const drinksPerHour = calculateDrinksPerHour(drinkConcentration);
@@ -6341,9 +6502,10 @@
                 costs.push({
                     itemHrid: drink.itemHrid,
                     itemName: itemDetails.name,
-                    pricePerDrink: teaPrice,
+                    pricePerDrink: resolvedPrice,
                     drinksPerHour: drinksPerHour,
-                    totalCost: teaPrice * drinksPerHour,
+                    totalCost: resolvedPrice * drinksPerHour,
+                    missingPrice: isPriceMissing,
                 });
             }
 
@@ -7689,6 +7851,21 @@
             processingConversionCache = buildProcessingConversionCache(gameData);
         }
 
+        const priceCache = new Map();
+        const getCachedPrice = (itemHrid, options) => {
+            const side = options?.side || '';
+            const enhancementLevel = options?.enhancementLevel ?? '';
+            const cacheKey = `${itemHrid}|${side}|${enhancementLevel}`;
+
+            if (priceCache.has(cacheKey)) {
+                return priceCache.get(cacheKey);
+            }
+
+            const price = getItemPrice(itemHrid, options);
+            priceCache.set(cacheKey, price);
+            return price;
+        };
+
         // Note: Market API is pre-loaded by caller (max-produceable.js)
         // No need to check or fetch here
 
@@ -7766,17 +7943,20 @@
             if (!drink || !drink.itemHrid) {
                 continue;
             }
-            const drinkPrice = getItemPrice(drink.itemHrid, { context: 'profit', side: 'buy' }) || 0;
-            const costPerHour = drinkPrice * drinksPerHour;
+            const drinkPrice = getCachedPrice(drink.itemHrid, { context: 'profit', side: 'buy' });
+            const isPriceMissing = drinkPrice === null;
+            const resolvedPrice = isPriceMissing ? 0 : drinkPrice;
+            const costPerHour = resolvedPrice * drinksPerHour;
             drinkCostPerHour += costPerHour;
 
             // Store individual drink cost details
             const drinkName = gameData.itemDetailMap[drink.itemHrid]?.name || 'Unknown';
             drinkCosts.push({
                 name: drinkName,
-                priceEach: drinkPrice,
+                priceEach: resolvedPrice,
                 drinksPerHour: drinksPerHour,
                 costPerHour: costPerHour,
+                missingPrice: isPriceMissing,
             });
         }
 
@@ -7827,12 +8007,15 @@
         // So we calculate per-action outputs, then multiply by actionsPerHour and efficiency
         let revenuePerHour = 0;
         let processingRevenueBonus = 0; // Track extra revenue from Processing Tea
+        let processingRevenueBonusPerAction = 0; // Per-action processing revenue
         const processingConversions = []; // Track conversion details for display
         const baseOutputs = []; // Display-only base item outputs (not used for totals)
         const dropTable = actionDetail.dropTable;
 
         for (const drop of dropTable) {
-            const rawPrice = getItemPrice(drop.itemHrid, { context: 'profit', side: 'sell' }) || 0;
+            const rawPrice = getCachedPrice(drop.itemHrid, { context: 'profit', side: 'sell' });
+            const rawPriceMissing = rawPrice === null;
+            const resolvedRawPrice = rawPriceMissing ? 0 : rawPrice;
             // Apply gathering quantity bonus to drop amounts
             const baseAvgAmount = (drop.minCount + drop.maxCount) / 2;
             const avgAmountPerAction = baseAvgAmount * (1 + totalGathering);
@@ -7864,53 +8047,69 @@
                 rawPerAction = processingBonus * rawLeftoverIfProcs + (1 - processingBonus) * rawIfNoProc;
 
                 // Revenue per hour = per-action × actionsPerHour × efficiency
-                const processedPrice = getItemPrice(processedItemHrid, { context: 'profit', side: 'sell' }) || 0;
+                const processedPrice = getCachedPrice(processedItemHrid, { context: 'profit', side: 'sell' });
+                const processedPriceMissing = processedPrice === null;
+                const resolvedProcessedPrice = processedPriceMissing ? 0 : processedPrice;
 
                 const rawItemsPerHour = actionsPerHour * drop.dropRate * rawPerAction * efficiencyMultiplier;
                 const processedItemsPerHour = actionsPerHour * drop.dropRate * processedPerAction * efficiencyMultiplier;
+                const rawItemsPerAction = drop.dropRate * rawPerAction;
+                const processedItemsPerAction = drop.dropRate * processedPerAction;
 
-                revenuePerHour += rawItemsPerHour * rawPrice;
-                revenuePerHour += processedItemsPerHour * processedPrice;
+                revenuePerHour += rawItemsPerHour * resolvedRawPrice;
+                revenuePerHour += processedItemsPerHour * resolvedProcessedPrice;
 
                 // Track processing details
                 const rawItemName = gameData.itemDetailMap[drop.itemHrid]?.name || 'Unknown';
                 const processedItemName = gameData.itemDetailMap[processedItemHrid]?.name || 'Unknown';
 
                 // Value gain per conversion = cheese value - cost of milk used
-                const costOfMilkUsed = conversionRatio * rawPrice;
-                const valueGainPerConversion = processedPrice - costOfMilkUsed;
+                const costOfMilkUsed = conversionRatio * resolvedRawPrice;
+                const valueGainPerConversion = resolvedProcessedPrice - costOfMilkUsed;
                 const revenueFromConversion = processedItemsPerHour * valueGainPerConversion;
 
                 processingRevenueBonus += revenueFromConversion;
+                processingRevenueBonusPerAction += processedItemsPerAction * valueGainPerConversion;
                 processingConversions.push({
                     rawItem: rawItemName,
                     processedItem: processedItemName,
                     valueGain: valueGainPerConversion,
                     conversionsPerHour: processedItemsPerHour,
+                    conversionsPerAction: processedItemsPerAction,
                     revenuePerHour: revenueFromConversion,
+                    revenuePerAction: processedItemsPerAction * valueGainPerConversion,
+                    missingPrice: rawPriceMissing || processedPriceMissing,
                 });
 
                 // Store combined raw + processed revenue (processing bonus shown separately as extra value)
                 baseOutputs.push({
                     name: rawItemName,
                     itemsPerHour: rawItemsPerHour,
+                    itemsPerAction: rawItemsPerAction,
                     dropRate: drop.dropRate,
-                    priceEach: rawPrice,
-                    revenuePerHour: rawItemsPerHour * rawPrice + processedItemsPerHour * processedPrice,
+                    priceEach: resolvedRawPrice,
+                    revenuePerHour: rawItemsPerHour * resolvedRawPrice + processedItemsPerHour * resolvedProcessedPrice,
+                    revenuePerAction:
+                        rawItemsPerAction * resolvedRawPrice + processedItemsPerAction * resolvedProcessedPrice,
+                    missingPrice: rawPriceMissing,
                 });
             } else {
                 // No processing - simple calculation
                 rawPerAction = avgAmountPerAction;
                 const rawItemsPerHour = actionsPerHour * drop.dropRate * rawPerAction * efficiencyMultiplier;
-                revenuePerHour += rawItemsPerHour * rawPrice;
+                const rawItemsPerAction = drop.dropRate * rawPerAction;
+                revenuePerHour += rawItemsPerHour * resolvedRawPrice;
 
                 const itemName = gameData.itemDetailMap[drop.itemHrid]?.name || 'Unknown';
                 baseOutputs.push({
                     name: itemName,
                     itemsPerHour: rawItemsPerHour,
+                    itemsPerAction: rawItemsPerAction,
                     dropRate: drop.dropRate,
-                    priceEach: rawPrice,
-                    revenuePerHour: rawItemsPerHour * rawPrice,
+                    priceEach: resolvedRawPrice,
+                    revenuePerHour: rawItemsPerHour * resolvedRawPrice,
+                    revenuePerAction: rawItemsPerAction * resolvedRawPrice,
+                    missingPrice: rawPriceMissing,
                 });
             }
 
@@ -7922,13 +8121,14 @@
 
                 // Use weighted average price for gourmet bonus
                 if (processedItemHrid && processingBonus > 0) {
-                    const processedPrice = getItemPrice(processedItemHrid, { context: 'profit', side: 'sell' }) || 0;
+                    const processedPrice = getCachedPrice(processedItemHrid, { context: 'profit', side: 'sell' });
+                    const resolvedProcessedPrice = processedPrice === null ? 0 : processedPrice;
                     const weightedPrice =
-                        (rawPerAction * rawPrice + processedPerAction * processedPrice) /
+                        (rawPerAction * resolvedRawPrice + processedPerAction * resolvedProcessedPrice) /
                         (rawPerAction + processedPerAction);
                     revenuePerHour += bonusItemsPerHour * weightedPrice;
                 } else {
-                    revenuePerHour += bonusItemsPerHour * rawPrice;
+                    revenuePerHour += bonusItemsPerHour * resolvedRawPrice;
                 }
             }
         }
@@ -7942,6 +8142,12 @@
         // Add bonus revenue to total revenue
         revenuePerHour += efficiencyBoostedBonusRevenue;
 
+        const hasMissingPrices =
+            drinkCosts.some((drink) => drink.missingPrice) ||
+            baseOutputs.some((output) => output.missingPrice) ||
+            processingConversions.some((conversion) => conversion.missingPrice) ||
+            (bonusRevenue?.hasMissingPrices ?? false);
+
         // Calculate market tax (2% of gross revenue)
         const marketTax = revenuePerHour * MARKET_TAX;
 
@@ -7950,7 +8156,7 @@
 
         return {
             profitPerHour,
-            profitPerAction: calculateProfitPerAction(profitPerHour, actionsPerHour), // Profit per attempt
+            profitPerAction: calculateProfitPerAction(profitPerHour, actionsPerHour), // Profit per action
             profitPerDay: calculateProfitPerDay(profitPerHour), // Profit per day
             revenuePerHour,
             drinkCostPerHour,
@@ -7964,7 +8170,9 @@
             processingBonus, // Processing Tea chance (as decimal)
             processingRevenueBonus, // Extra revenue from Processing conversions
             processingConversions, // Array of conversion details {rawItem, processedItem, valueGain}
+            processingRevenueBonusPerAction, // Processing bonus per action
             gatheringQuantity: totalGathering, // Total gathering quantity bonus (as decimal) - renamed for display consistency
+            hasMissingPrices,
             details: {
                 levelEfficiency,
                 houseEfficiency,
@@ -11995,9 +12203,9 @@
                 }
             } else {
                 // For active listings, calculate remaining value
-                // Calculate tax (0.82 for cowbells, 0.98 for others, 1.0 for buy orders)
-                const tax = isSell ? (itemHrid === '/items/bag_of_10_cowbells' ? 0.82 : 0.98) : 1.0;
-                totalPrice = (orderQuantity - filledQuantity) * Math.floor(price * tax);
+                // Calculate tax rate (0.18 for cowbells, 0.02 for others, 0.0 for buy orders)
+                const taxRate = isSell ? (itemHrid === '/items/bag_of_10_cowbells' ? 0.18 : 0.02) : 0;
+                totalPrice = (orderQuantity - filledQuantity) * Math.floor(calculatePriceAfterTax(price, taxRate));
             }
 
             // Format and color code
@@ -13889,6 +14097,24 @@
      */
 
 
+    const getMissingPriceIndicator = (isMissing) => (isMissing ? ' ⚠' : '');
+    const formatMissingLabel = (isMissing, value) => (isMissing ? '-- ⚠' : value);
+
+    const getBonusDropPerHourTotals = (drop, efficiencyMultiplier = 1) => ({
+        dropsPerHour: drop.dropsPerHour * efficiencyMultiplier,
+        revenuePerHour: drop.revenuePerHour * efficiencyMultiplier,
+    });
+
+    const getBonusDropTotalsForActions = (drop, actionsCount, actionsPerHour) => {
+        const dropsPerAction = drop.dropsPerAction ?? drop.dropsPerHour / actionsPerHour;
+        const revenuePerAction = drop.revenuePerAction ?? drop.revenuePerHour / actionsPerHour;
+
+        return {
+            totalDrops: dropsPerAction * actionsCount,
+            totalRevenue: revenuePerAction * actionsCount,
+        };
+    };
+
     /**
      * Display gathering profit calculation in panel
      * @param {HTMLElement} panel - Action panel element
@@ -13912,18 +14138,31 @@
         // Create top-level summary
         const profit = Math.round(profitData.profitPerHour);
         const profitPerDay = Math.round(profitData.profitPerDay);
+        const baseMissing = profitData.baseOutputs?.some((output) => output.missingPrice) || false;
+        const bonusMissing = profitData.bonusRevenue?.hasMissingPrices || false;
+        const processingMissing = profitData.processingConversions?.some((conversion) => conversion.missingPrice) || false;
+        const revenueMissing = baseMissing || bonusMissing || processingMissing;
+        const drinkCostsMissing = profitData.drinkCosts?.some((drink) => drink.missingPrice) || false;
+        const costsMissing = drinkCostsMissing || revenueMissing;
+        const marketTaxMissing = revenueMissing;
+        const netMissing = profitData.hasMissingPrices;
+        const efficiencyMultiplier = profitData.efficiencyMultiplier || 1;
         // Revenue is now gross (pre-tax)
         const revenue = Math.round(profitData.revenuePerHour);
         const marketTax = Math.round(revenue * MARKET_TAX);
         const costs = Math.round(profitData.drinkCostPerHour + marketTax);
-        const summary = `${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day | Total profit: 0`;
+        const summary = formatMissingLabel(
+            netMissing,
+            `${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day | Total profit: 0`
+        );
 
         // ===== Build Detailed Breakdown Content =====
         const detailsContent = document.createElement('div');
 
         // Revenue Section
         const revenueDiv = document.createElement('div');
-        revenueDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_PROFIT}; margin-bottom: 4px;">Revenue: ${formatLargeNumber(revenue)}/hr</div>`;
+        const revenueLabel = formatMissingLabel(revenueMissing, `${formatLargeNumber(revenue)}/hr`);
+        revenueDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_PROFIT}; margin-bottom: 4px;">Revenue: ${revenueLabel}</div>`;
 
         // Base Output subsection
         const baseOutputContent = document.createElement('div');
@@ -13932,15 +14171,17 @@
                 const decimals = output.itemsPerHour < 1 ? 2 : 1;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
-                line.textContent = `• ${output.name}: ${output.itemsPerHour.toFixed(decimals)}/hr @ ${formatWithSeparator(output.priceEach)} each → ${formatLargeNumber(Math.round(output.revenuePerHour))}/hr`;
+                const missingPriceNote = getMissingPriceIndicator(output.missingPrice);
+                line.textContent = `• ${output.name}: ${output.itemsPerHour.toFixed(decimals)}/hr @ ${formatWithSeparator(output.priceEach)}${missingPriceNote} each → ${formatLargeNumber(Math.round(output.revenuePerHour))}/hr`;
                 baseOutputContent.appendChild(line);
             }
         }
 
         const baseRevenue = profitData.baseOutputs?.reduce((sum, o) => sum + o.revenuePerHour, 0) || 0;
+        const baseRevenueLabel = formatMissingLabel(baseMissing, formatLargeNumber(Math.round(baseRevenue)));
         const baseOutputSection = createCollapsibleSection(
             '',
-            `Base Output: ${formatLargeNumber(Math.round(baseRevenue))}/hr (${profitData.baseOutputs?.length || 0} item${profitData.baseOutputs?.length !== 1 ? 's' : ''})`,
+            `Base Output: ${baseRevenueLabel}/hr (${profitData.baseOutputs?.length || 0} item${profitData.baseOutputs?.length !== 1 ? 's' : ''})`,
             null,
             baseOutputContent,
             false,
@@ -13949,7 +14190,6 @@
 
         // Bonus Drops subsections - split by type (bonus drops are base actions/hour)
         const bonusDrops = profitData.bonusRevenue?.bonusDrops || [];
-        const efficiencyMultiplier = profitData.efficiencyMultiplier || 1;
         const essenceDrops = bonusDrops.filter((drop) => drop.type === 'essence');
         const rareFinds = bonusDrops.filter((drop) => drop.type === 'rare_find');
 
@@ -13958,21 +14198,24 @@
         if (essenceDrops.length > 0) {
             const essenceContent = document.createElement('div');
             for (const drop of essenceDrops) {
-                const adjustedDropsPerHour = drop.dropsPerHour * efficiencyMultiplier;
-                const adjustedRevenuePerHour = drop.revenuePerHour * efficiencyMultiplier;
-                const decimals = adjustedDropsPerHour < 1 ? 2 : 1;
+                const { dropsPerHour, revenuePerHour } = getBonusDropPerHourTotals(drop, efficiencyMultiplier);
+                const decimals = dropsPerHour < 1 ? 2 : 1;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
                 const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
-                line.textContent = `• ${drop.itemName}: ${adjustedDropsPerHour.toFixed(decimals)}/hr (${dropRatePct}) → ${formatLargeNumber(Math.round(adjustedRevenuePerHour))}/hr`;
+                line.textContent = `• ${drop.itemName}: ${dropsPerHour.toFixed(decimals)}/hr (${dropRatePct}) → ${formatLargeNumber(Math.round(revenuePerHour))}/hr`;
                 essenceContent.appendChild(line);
             }
 
-            const essenceRevenue = essenceDrops.reduce((sum, d) => sum + d.revenuePerHour * efficiencyMultiplier, 0);
+            const essenceRevenue = essenceDrops.reduce(
+                (sum, drop) => sum + getBonusDropPerHourTotals(drop, efficiencyMultiplier).revenuePerHour,
+                0
+            );
+            const essenceRevenueLabel = formatMissingLabel(bonusMissing, formatLargeNumber(Math.round(essenceRevenue)));
             const essenceFindBonus = profitData.bonusRevenue?.essenceFindBonus || 0;
             essenceSection = createCollapsibleSection(
                 '',
-                `Essence Drops: ${formatLargeNumber(Math.round(essenceRevenue))}/hr (${essenceDrops.length} item${essenceDrops.length !== 1 ? 's' : ''}, ${essenceFindBonus.toFixed(1)}% essence find)`,
+                `Essence Drops: ${essenceRevenueLabel}/hr (${essenceDrops.length} item${essenceDrops.length !== 1 ? 's' : ''}, ${essenceFindBonus.toFixed(1)}% essence find)`,
                 null,
                 essenceContent,
                 false,
@@ -13985,21 +14228,24 @@
         if (rareFinds.length > 0) {
             const rareFindContent = document.createElement('div');
             for (const drop of rareFinds) {
-                const adjustedDropsPerHour = drop.dropsPerHour * efficiencyMultiplier;
-                const adjustedRevenuePerHour = drop.revenuePerHour * efficiencyMultiplier;
-                const decimals = adjustedDropsPerHour < 1 ? 2 : 1;
+                const { dropsPerHour, revenuePerHour } = getBonusDropPerHourTotals(drop, efficiencyMultiplier);
+                const decimals = dropsPerHour < 1 ? 2 : 1;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
                 const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
-                line.textContent = `• ${drop.itemName}: ${adjustedDropsPerHour.toFixed(decimals)}/hr (${dropRatePct}) → ${formatLargeNumber(Math.round(adjustedRevenuePerHour))}/hr`;
+                line.textContent = `• ${drop.itemName}: ${dropsPerHour.toFixed(decimals)}/hr (${dropRatePct}) → ${formatLargeNumber(Math.round(revenuePerHour))}/hr`;
                 rareFindContent.appendChild(line);
             }
 
-            const rareFindRevenue = rareFinds.reduce((sum, d) => sum + d.revenuePerHour * efficiencyMultiplier, 0);
+            const rareFindRevenue = rareFinds.reduce(
+                (sum, drop) => sum + getBonusDropPerHourTotals(drop, efficiencyMultiplier).revenuePerHour,
+                0
+            );
+            const rareFindRevenueLabel = formatMissingLabel(bonusMissing, formatLargeNumber(Math.round(rareFindRevenue)));
             const rareFindBonus = profitData.bonusRevenue?.rareFindBonus || 0;
             rareFindSection = createCollapsibleSection(
                 '',
-                `Rare Finds: ${formatLargeNumber(Math.round(rareFindRevenue))}/hr (${rareFinds.length} item${rareFinds.length !== 1 ? 's' : ''}, ${rareFindBonus.toFixed(1)}% rare find)`,
+                `Rare Finds: ${rareFindRevenueLabel}/hr (${rareFinds.length} item${rareFinds.length !== 1 ? 's' : ''}, ${rareFindBonus.toFixed(1)}% rare find)`,
                 null,
                 rareFindContent,
                 false,
@@ -14022,15 +14268,20 @@
             for (const conversion of profitData.processingConversions) {
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
-                line.textContent = `• ${conversion.rawItem} → ${conversion.processedItem}: ${conversion.conversionsPerHour.toFixed(1)}/hr, +${formatWithSeparator(Math.round(conversion.valueGain))} each → ${formatLargeNumber(Math.round(conversion.revenuePerHour))}/hr`;
+                const missingPriceNote = getMissingPriceIndicator(conversion.missingPrice);
+                line.textContent = `• ${conversion.rawItem} → ${conversion.processedItem}: ${conversion.conversionsPerHour.toFixed(1)}/hr, +${formatWithSeparator(Math.round(conversion.valueGain))}${missingPriceNote} each → ${formatLargeNumber(Math.round(conversion.revenuePerHour))}/hr`;
                 processingContent.appendChild(line);
             }
 
             const processingRevenue = profitData.processingRevenueBonus || 0;
+            const processingRevenueLabel = formatMissingLabel(
+                processingMissing,
+                formatLargeNumber(Math.round(processingRevenue))
+            );
             const processingChance = profitData.processingBonus || 0;
             processingSection = createCollapsibleSection(
                 '',
-                `Processing Bonus: ${formatLargeNumber(Math.round(processingRevenue))}/hr (${formatPercentage(processingChance, 1)} proc)`,
+                `Processing Bonus: ${processingRevenueLabel}/hr (${formatPercentage(processingChance, 1)} proc)`,
                 null,
                 processingContent,
                 false,
@@ -14041,7 +14292,8 @@
 
         // Costs Section
         const costsDiv = document.createElement('div');
-        costsDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_LOSS}; margin-top: 12px; margin-bottom: 4px;">Costs: ${formatLargeNumber(costs)}/hr</div>`;
+        const costsLabel = formatMissingLabel(costsMissing, `${formatLargeNumber(costs)}/hr`);
+        costsDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_LOSS}; margin-top: 12px; margin-bottom: 4px;">Costs: ${costsLabel}</div>`;
 
         // Drink Costs subsection
         const drinkCostsContent = document.createElement('div');
@@ -14049,15 +14301,17 @@
             for (const drink of profitData.drinkCosts) {
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
-                line.textContent = `• ${drink.name}: ${drink.drinksPerHour.toFixed(1)}/hr @ ${formatWithSeparator(drink.priceEach)} → ${formatLargeNumber(Math.round(drink.costPerHour))}/hr`;
+                const missingPriceNote = getMissingPriceIndicator(drink.missingPrice);
+                line.textContent = `• ${drink.name}: ${drink.drinksPerHour.toFixed(1)}/hr @ ${formatWithSeparator(drink.priceEach)}${missingPriceNote} → ${formatLargeNumber(Math.round(drink.costPerHour))}/hr`;
                 drinkCostsContent.appendChild(line);
             }
         }
 
         const drinkCount = profitData.drinkCosts?.length || 0;
+        const drinkCostsLabel = drinkCostsMissing ? '-- ⚠' : formatLargeNumber(Math.round(profitData.drinkCostPerHour));
         const drinkCostsSection = createCollapsibleSection(
             '',
-            `Drink Costs: ${formatLargeNumber(Math.round(profitData.drinkCostPerHour))}/hr (${drinkCount} drink${drinkCount !== 1 ? 's' : ''})`,
+            `Drink Costs: ${drinkCostsLabel}/hr (${drinkCount} drink${drinkCount !== 1 ? 's' : ''})`,
             null,
             drinkCostsContent,
             false,
@@ -14070,12 +14324,14 @@
         const marketTaxContent = document.createElement('div');
         const marketTaxLine = document.createElement('div');
         marketTaxLine.style.marginLeft = '8px';
-        marketTaxLine.textContent = `• Market Tax: 2% of revenue → ${formatLargeNumber(marketTax)}/hr`;
+        const marketTaxLabel = marketTaxMissing ? '-- ⚠' : `${formatLargeNumber(marketTax)}/hr`;
+        marketTaxLine.textContent = `• Market Tax: 2% of revenue → ${marketTaxLabel}`;
         marketTaxContent.appendChild(marketTaxLine);
 
+        const marketTaxHeader = marketTaxMissing ? '-- ⚠' : `${formatLargeNumber(marketTax)}/hr`;
         const marketTaxSection = createCollapsibleSection(
             '',
-            `Market Tax: ${formatLargeNumber(marketTax)}/hr (2%)`,
+            `Market Tax: ${marketTaxHeader} (2%)`,
             null,
             marketTaxContent,
             false,
@@ -14148,14 +14404,16 @@
     `;
 
         // Add Net Profit line at top level (always visible when Profitability is expanded)
-        const profitColor = profit >= 0 ? '#4ade80' : config.COLOR_LOSS; // green if positive, red if negative
+        const profitColor = netMissing ? config.SCRIPT_COLOR_ALERT : profit >= 0 ? '#4ade80' : config.COLOR_LOSS; // green if positive, red if negative
         const netProfitLine = document.createElement('div');
         netProfitLine.style.cssText = `
         font-weight: 500;
         color: ${profitColor};
         margin-bottom: 8px;
     `;
-        netProfitLine.textContent = `Net Profit: ${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day`;
+        netProfitLine.textContent = netMissing
+            ? 'Net Profit: -- ⚠'
+            : `Net Profit: ${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day`;
         topLevelContent.appendChild(netProfitLine);
 
         const detailedBreakdownSection = createCollapsibleSection(
@@ -14205,22 +14463,31 @@
 
         // Set up listener to update summary with total profit when input changes
         if (inputField && profitSummaryDiv) {
-            const baseSummary = `${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day`;
+            const baseSummary = formatMissingLabel(
+                netMissing,
+                `${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day`
+            );
 
             const updateSummary = (newValue) => {
+                if (netMissing) {
+                    profitSummaryDiv.textContent = `${baseSummary} | Total profit: -- ⚠`;
+                    return;
+                }
                 const inputValue = inputField.value;
 
                 if (inputValue === '∞') {
                     profitSummaryDiv.textContent = `${baseSummary} | Total profit: ∞`;
                 } else if (newValue > 0) {
-                    // Calculate total profit for selected actions
-                    const actualAttempts = Math.ceil(newValue / profitData.efficiencyMultiplier);
-                    const queueBreakdown = calculateQueueProfitBreakdown({
-                        profitPerHour: profitData.profitPerHour,
+                    const totals = calculateGatheringActionTotalsFromBase({
+                        actionsCount: newValue,
                         actionsPerHour: profitData.actionsPerHour,
-                        actionCount: actualAttempts,
+                        baseOutputs: profitData.baseOutputs,
+                        bonusDrops: profitData.bonusRevenue?.bonusDrops || [],
+                        processingRevenueBonusPerAction: profitData.processingRevenueBonusPerAction,
+                        drinkCostPerHour: profitData.drinkCostPerHour,
+                        efficiencyMultiplier: profitData.efficiencyMultiplier || 1,
                     });
-                    const totalProfit = Math.round(queueBreakdown.totalProfit);
+                    const totalProfit = Math.round(totals.totalProfit);
                     profitSummaryDiv.textContent = `${baseSummary} | Total profit: ${formatLargeNumber(totalProfit)}`;
                 } else {
                     profitSummaryDiv.textContent = `${baseSummary} | Total profit: 0`;
@@ -14306,36 +14573,51 @@
         // Create top-level summary (bonus revenue now included in profitPerHour)
         const profit = Math.round(profitData.profitPerHour);
         const profitPerDay = Math.round(profitData.profitPerDay);
+        const outputMissing = profitData.outputPriceMissing || false;
+        const bonusMissing = profitData.bonusRevenue?.hasMissingPrices || false;
+        const materialMissing = profitData.materialCosts?.some((material) => material.missingPrice) || false;
+        const teaMissing = profitData.teaCosts?.some((tea) => tea.missingPrice) || false;
+        const revenueMissing = outputMissing || bonusMissing;
+        const costsMissing = materialMissing || teaMissing || revenueMissing;
+        const marketTaxMissing = revenueMissing;
+        const netMissing = profitData.hasMissingPrices;
+        const bonusDrops = profitData.bonusRevenue?.bonusDrops || [];
         const bonusRevenueTotal = profitData.bonusRevenue?.totalBonusRevenue || 0;
+        const efficiencyMultiplier = profitData.efficiencyMultiplier || 1;
         // Use outputPrice (pre-tax) for revenue display
         const revenue = Math.round(
             profitData.itemsPerHour * profitData.outputPrice +
                 profitData.gourmetBonusItems * profitData.outputPrice +
-                bonusRevenueTotal
+                bonusRevenueTotal * efficiencyMultiplier
         );
         // Calculate market tax (2% of revenue)
         const marketTax = Math.round(revenue * MARKET_TAX);
         const costs = Math.round(profitData.materialCostPerHour + profitData.totalTeaCostPerHour + marketTax);
-        const summary = `${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day | Total profit: 0`;
+        const summary = netMissing
+            ? '-- ⚠'
+            : `${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day | Total profit: 0`;
 
         // ===== Build Detailed Breakdown Content =====
         const detailsContent = document.createElement('div');
 
         // Revenue Section
         const revenueDiv = document.createElement('div');
-        revenueDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_PROFIT}; margin-bottom: 4px;">Revenue: ${formatLargeNumber(revenue)}/hr</div>`;
+        const revenueLabel = revenueMissing ? '-- ⚠' : `${formatLargeNumber(revenue)}/hr`;
+        revenueDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_PROFIT}; margin-bottom: 4px;">Revenue: ${revenueLabel}</div>`;
 
         // Base Output subsection
         const baseOutputContent = document.createElement('div');
         const baseOutputLine = document.createElement('div');
         baseOutputLine.style.marginLeft = '8px';
-        baseOutputLine.textContent = `• Base Output: ${profitData.itemsPerHour.toFixed(1)}/hr @ ${formatWithSeparator(Math.round(profitData.outputPrice))} each → ${formatLargeNumber(Math.round(profitData.itemsPerHour * profitData.outputPrice))}/hr`;
+        const baseOutputMissingNote = getMissingPriceIndicator(profitData.outputPriceMissing);
+        baseOutputLine.textContent = `• Base Output: ${profitData.itemsPerHour.toFixed(1)}/hr @ ${formatWithSeparator(Math.round(profitData.outputPrice))}${baseOutputMissingNote} each → ${formatLargeNumber(Math.round(profitData.itemsPerHour * profitData.outputPrice))}/hr`;
         baseOutputContent.appendChild(baseOutputLine);
 
         const baseRevenue = profitData.itemsPerHour * profitData.outputPrice;
+        const baseRevenueLabel = outputMissing ? '-- ⚠' : formatWithSeparator(Math.round(baseRevenue));
         const baseOutputSection = createCollapsibleSection(
             '',
-            `Base Output: ${formatWithSeparator(Math.round(baseRevenue))}/hr`,
+            `Base Output: ${baseRevenueLabel}/hr`,
             null,
             baseOutputContent,
             false,
@@ -14348,13 +14630,14 @@
             const gourmetContent = document.createElement('div');
             const gourmetLine = document.createElement('div');
             gourmetLine.style.marginLeft = '8px';
-            gourmetLine.textContent = `• Gourmet Bonus: ${profitData.gourmetBonusItems.toFixed(1)}/hr @ ${formatWithSeparator(Math.round(profitData.outputPrice))} each → ${formatLargeNumber(Math.round(profitData.gourmetBonusItems * profitData.outputPrice))}/hr`;
+            gourmetLine.textContent = `• Gourmet Bonus: ${profitData.gourmetBonusItems.toFixed(1)}/hr @ ${formatWithSeparator(Math.round(profitData.outputPrice))}${baseOutputMissingNote} each → ${formatLargeNumber(Math.round(profitData.gourmetBonusItems * profitData.outputPrice))}/hr`;
             gourmetContent.appendChild(gourmetLine);
 
             const gourmetRevenue = profitData.gourmetBonusItems * profitData.outputPrice;
+            const gourmetRevenueLabel = outputMissing ? '-- ⚠' : formatLargeNumber(Math.round(gourmetRevenue));
             gourmetSection = createCollapsibleSection(
                 '',
-                `Gourmet Bonus: ${formatLargeNumber(Math.round(gourmetRevenue))}/hr (${formatPercentage(profitData.gourmetBonus, 1)} gourmet)`,
+                `Gourmet Bonus: ${gourmetRevenueLabel}/hr (${formatPercentage(profitData.gourmetBonus, 1)} gourmet)`,
                 null,
                 gourmetContent,
                 false,
@@ -14368,7 +14651,6 @@
         }
 
         // Bonus Drops subsections - split by type
-        const bonusDrops = profitData.bonusRevenue?.bonusDrops || [];
         const essenceDrops = bonusDrops.filter((drop) => drop.type === 'essence');
         const rareFinds = bonusDrops.filter((drop) => drop.type === 'rare_find');
 
@@ -14377,19 +14659,24 @@
         if (essenceDrops.length > 0) {
             const essenceContent = document.createElement('div');
             for (const drop of essenceDrops) {
-                const decimals = drop.dropsPerHour < 1 ? 2 : 1;
+                const { dropsPerHour, revenuePerHour } = getBonusDropPerHourTotals(drop, efficiencyMultiplier);
+                const decimals = dropsPerHour < 1 ? 2 : 1;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
                 const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
-                line.textContent = `• ${drop.itemName}: ${drop.dropsPerHour.toFixed(decimals)}/hr (${dropRatePct}) → ${formatLargeNumber(Math.round(drop.revenuePerHour))}/hr`;
+                line.textContent = `• ${drop.itemName}: ${dropsPerHour.toFixed(decimals)}/hr (${dropRatePct}) → ${formatLargeNumber(Math.round(revenuePerHour))}/hr`;
                 essenceContent.appendChild(line);
             }
 
-            const essenceRevenue = essenceDrops.reduce((sum, d) => sum + d.revenuePerHour, 0);
+            const essenceRevenue = essenceDrops.reduce(
+                (sum, drop) => sum + getBonusDropPerHourTotals(drop, efficiencyMultiplier).revenuePerHour,
+                0
+            );
+            const essenceRevenueLabel = bonusMissing ? '-- ⚠' : formatLargeNumber(Math.round(essenceRevenue));
             const essenceFindBonus = profitData.bonusRevenue?.essenceFindBonus || 0;
             essenceSection = createCollapsibleSection(
                 '',
-                `Essence Drops: ${formatLargeNumber(Math.round(essenceRevenue))}/hr (${essenceDrops.length} item${essenceDrops.length !== 1 ? 's' : ''}, ${essenceFindBonus.toFixed(1)}% essence find)`,
+                `Essence Drops: ${essenceRevenueLabel}/hr (${essenceDrops.length} item${essenceDrops.length !== 1 ? 's' : ''}, ${essenceFindBonus.toFixed(1)}% essence find)`,
                 null,
                 essenceContent,
                 false,
@@ -14402,19 +14689,24 @@
         if (rareFinds.length > 0) {
             const rareFindContent = document.createElement('div');
             for (const drop of rareFinds) {
-                const decimals = drop.dropsPerHour < 1 ? 2 : 1;
+                const { dropsPerHour, revenuePerHour } = getBonusDropPerHourTotals(drop, efficiencyMultiplier);
+                const decimals = dropsPerHour < 1 ? 2 : 1;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
                 const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
-                line.textContent = `• ${drop.itemName}: ${drop.dropsPerHour.toFixed(decimals)}/hr (${dropRatePct}) → ${formatLargeNumber(Math.round(drop.revenuePerHour))}/hr`;
+                line.textContent = `• ${drop.itemName}: ${dropsPerHour.toFixed(decimals)}/hr (${dropRatePct}) → ${formatLargeNumber(Math.round(revenuePerHour))}/hr`;
                 rareFindContent.appendChild(line);
             }
 
-            const rareFindRevenue = rareFinds.reduce((sum, d) => sum + d.revenuePerHour, 0);
+            const rareFindRevenue = rareFinds.reduce(
+                (sum, drop) => sum + getBonusDropPerHourTotals(drop, efficiencyMultiplier).revenuePerHour,
+                0
+            );
+            const rareFindRevenueLabel = bonusMissing ? '-- ⚠' : formatLargeNumber(Math.round(rareFindRevenue));
             const rareFindBonus = profitData.bonusRevenue?.rareFindBonus || 0;
             rareFindSection = createCollapsibleSection(
                 '',
-                `Rare Finds: ${formatLargeNumber(Math.round(rareFindRevenue))}/hr (${rareFinds.length} item${rareFinds.length !== 1 ? 's' : ''}, ${rareFindBonus.toFixed(1)}% rare find)`,
+                `Rare Finds: ${rareFindRevenueLabel}/hr (${rareFinds.length} item${rareFinds.length !== 1 ? 's' : ''}, ${rareFindBonus.toFixed(1)}% rare find)`,
                 null,
                 rareFindContent,
                 false,
@@ -14431,7 +14723,8 @@
 
         // Costs Section
         const costsDiv = document.createElement('div');
-        costsDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_LOSS}; margin-top: 12px; margin-bottom: 4px;">Costs: ${formatLargeNumber(costs)}/hr</div>`;
+        const costsLabel = costsMissing ? '-- ⚠' : `${formatLargeNumber(costs)}/hr`;
+        costsDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_LOSS}; margin-top: 12px; margin-bottom: 4px;">Costs: ${costsLabel}</div>`;
 
         // Material Costs subsection
         const materialCostsContent = document.createElement('div');
@@ -14453,16 +14746,21 @@
                     materialText += ` (${baseAmountPerHour.toFixed(1)} base -${formatPercentage(profitData.artisanBonus, 1)} 🍵)`;
                 }
 
-                materialText += ` @ ${formatWithSeparator(Math.round(material.askPrice))} → ${formatLargeNumber(Math.round(material.totalCost * profitData.actionsPerHour * efficiencyMultiplier))}/hr`;
+                const missingPriceNote = getMissingPriceIndicator(material.missingPrice);
+                materialText += ` @ ${formatWithSeparator(Math.round(material.askPrice))}${missingPriceNote} → ${formatLargeNumber(Math.round(material.totalCost * profitData.actionsPerHour * efficiencyMultiplier))}/hr`;
 
                 line.textContent = materialText;
                 materialCostsContent.appendChild(line);
             }
         }
 
+        const materialCostsLabel = formatMissingLabel(
+            materialMissing,
+            formatLargeNumber(Math.round(profitData.materialCostPerHour))
+        );
         const materialCostsSection = createCollapsibleSection(
             '',
-            `Material Costs: ${formatLargeNumber(Math.round(profitData.materialCostPerHour))}/hr (${profitData.materialCosts?.length || 0} material${profitData.materialCosts?.length !== 1 ? 's' : ''})`,
+            `Material Costs: ${materialCostsLabel}/hr (${profitData.materialCosts?.length || 0} material${profitData.materialCosts?.length !== 1 ? 's' : ''})`,
             null,
             materialCostsContent,
             false,
@@ -14476,15 +14774,17 @@
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
                 // Tea structure: { itemName, pricePerDrink, drinksPerHour, totalCost }
-                line.textContent = `• ${tea.itemName}: ${tea.drinksPerHour.toFixed(1)}/hr @ ${formatWithSeparator(Math.round(tea.pricePerDrink))} → ${formatLargeNumber(Math.round(tea.totalCost))}/hr`;
+                const missingPriceNote = getMissingPriceIndicator(tea.missingPrice);
+                line.textContent = `• ${tea.itemName}: ${tea.drinksPerHour.toFixed(1)}/hr @ ${formatWithSeparator(Math.round(tea.pricePerDrink))}${missingPriceNote} → ${formatLargeNumber(Math.round(tea.totalCost))}/hr`;
                 teaCostsContent.appendChild(line);
             }
         }
 
         const teaCount = profitData.teaCosts?.length || 0;
+        const teaCostsLabel = formatMissingLabel(teaMissing, formatLargeNumber(Math.round(profitData.totalTeaCostPerHour)));
         const teaCostsSection = createCollapsibleSection(
             '',
-            `Drink Costs: ${formatLargeNumber(Math.round(profitData.totalTeaCostPerHour))}/hr (${teaCount} drink${teaCount !== 1 ? 's' : ''})`,
+            `Drink Costs: ${teaCostsLabel}/hr (${teaCount} drink${teaCount !== 1 ? 's' : ''})`,
             null,
             teaCostsContent,
             false,
@@ -14498,12 +14798,14 @@
         const marketTaxContent = document.createElement('div');
         const marketTaxLine = document.createElement('div');
         marketTaxLine.style.marginLeft = '8px';
-        marketTaxLine.textContent = `• Market Tax: 2% of revenue → ${formatLargeNumber(marketTax)}/hr`;
+        const marketTaxLabel = formatMissingLabel(marketTaxMissing, `${formatLargeNumber(marketTax)}/hr`);
+        marketTaxLine.textContent = `• Market Tax: 2% of revenue → ${marketTaxLabel}`;
         marketTaxContent.appendChild(marketTaxLine);
 
+        const marketTaxHeader = formatMissingLabel(marketTaxMissing, `${formatLargeNumber(marketTax)}/hr`);
         const marketTaxSection = createCollapsibleSection(
             '',
-            `Market Tax: ${formatLargeNumber(marketTax)}/hr (2%)`,
+            `Market Tax: ${marketTaxHeader} (2%)`,
             null,
             marketTaxContent,
             false,
@@ -14588,14 +14890,16 @@
     `;
 
         // Add Net Profit line at top level (always visible when Profitability is expanded)
-        const profitColor = profit >= 0 ? '#4ade80' : config.COLOR_LOSS; // green if positive, red if negative
+        const profitColor = netMissing ? config.SCRIPT_COLOR_ALERT : profit >= 0 ? '#4ade80' : config.COLOR_LOSS; // green if positive, red if negative
         const netProfitLine = document.createElement('div');
         netProfitLine.style.cssText = `
         font-weight: 500;
         color: ${profitColor};
         margin-bottom: 8px;
     `;
-        netProfitLine.textContent = `Net Profit: ${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day`;
+        netProfitLine.textContent = netMissing
+            ? 'Net Profit: -- ⚠'
+            : `Net Profit: ${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day`;
         topLevelContent.appendChild(netProfitLine);
 
         const detailedBreakdownSection = createCollapsibleSection(
@@ -14645,23 +14949,33 @@
 
         // Set up listener to update summary with total profit when input changes
         if (inputField && profitSummaryDiv) {
-            const baseSummary = `${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day`;
+            const baseSummary = formatMissingLabel(
+                netMissing,
+                `${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day`
+            );
 
             const updateSummary = (newValue) => {
+                if (netMissing) {
+                    profitSummaryDiv.textContent = `${baseSummary} | Total profit: -- ⚠`;
+                    return;
+                }
                 const inputValue = inputField.value;
 
                 if (inputValue === '∞') {
                     profitSummaryDiv.textContent = `${baseSummary} | Total profit: ∞`;
                 } else if (newValue > 0) {
-                    // Calculate total profit for selected actions
-                    const efficiencyMultiplier = profitData.efficiencyMultiplier;
-                    const actualAttempts = Math.ceil(newValue / efficiencyMultiplier);
-                    const queueBreakdown = calculateQueueProfitBreakdown({
-                        profitPerHour: profitData.profitPerHour,
+                    const totals = calculateProductionActionTotalsFromBase({
+                        actionsCount: newValue,
                         actionsPerHour: profitData.actionsPerHour,
-                        actionCount: actualAttempts,
+                        outputAmount: profitData.outputAmount || 1,
+                        outputPrice: profitData.outputPrice,
+                        gourmetBonus: profitData.gourmetBonus || 0,
+                        bonusDrops: profitData.bonusRevenue?.bonusDrops || [],
+                        materialCosts: profitData.materialCosts,
+                        totalTeaCostPerHour: profitData.totalTeaCostPerHour,
+                        efficiencyMultiplier: profitData.efficiencyMultiplier || 1,
                     });
-                    const totalProfit = Math.round(queueBreakdown.totalProfit);
+                    const totalProfit = Math.round(totals.totalProfit);
                     profitSummaryDiv.textContent = `${baseSummary} | Total profit: ${formatLargeNumber(totalProfit)}`;
                 } else {
                     profitSummaryDiv.textContent = `${baseSummary} | Total profit: 0`;
@@ -14703,53 +15017,71 @@
      * @returns {HTMLElement} Breakdown section element
      */
     function buildGatheringActionsBreakdown(profitData, actionsCount) {
-        // Calculate actual attempts needed (input is desired output actions)
-        const efficiencyMultiplier = profitData.efficiencyMultiplier || 1;
-        const actualAttempts = Math.ceil(actionsCount / efficiencyMultiplier);
-        const queueBreakdown = calculateQueueProfitBreakdown({
-            profitPerHour: profitData.profitPerHour,
+        const totals = calculateGatheringActionTotalsFromBase({
+            actionsCount,
             actionsPerHour: profitData.actionsPerHour,
-            actionCount: actualAttempts,
+            baseOutputs: profitData.baseOutputs,
+            bonusDrops: profitData.bonusRevenue?.bonusDrops || [],
+            processingRevenueBonusPerAction: profitData.processingRevenueBonusPerAction,
+            drinkCostPerHour: profitData.drinkCostPerHour,
+            efficiencyMultiplier: profitData.efficiencyMultiplier || 1,
         });
-        const hoursNeeded = queueBreakdown.hoursNeeded;
+        const hoursNeeded = totals.hoursNeeded;
 
         // Calculate totals
-        const totalRevenue = Math.round(profitData.revenuePerHour * hoursNeeded);
-        const totalMarketTax = Math.round(totalRevenue * MARKET_TAX);
-        const totalDrinkCosts = Math.round(profitData.drinkCostPerHour * hoursNeeded);
-        const totalCosts = totalDrinkCosts + totalMarketTax;
-        const totalProfit = Math.round(queueBreakdown.totalProfit);
+        const baseMissing = profitData.baseOutputs?.some((output) => output.missingPrice) || false;
+        const bonusMissing = profitData.bonusRevenue?.hasMissingPrices || false;
+        const processingMissing = profitData.processingConversions?.some((conversion) => conversion.missingPrice) || false;
+        const revenueMissing = baseMissing || bonusMissing || processingMissing;
+        const drinkCostsMissing = profitData.drinkCosts?.some((drink) => drink.missingPrice) || false;
+        const costsMissing = drinkCostsMissing || revenueMissing;
+        const marketTaxMissing = revenueMissing;
+        const netMissing = profitData.hasMissingPrices;
+        const totalRevenue = Math.round(totals.totalRevenue);
+        const totalMarketTax = Math.round(totals.totalMarketTax);
+        const totalDrinkCosts = Math.round(totals.totalDrinkCost);
+        const totalCosts = Math.round(totals.totalCosts);
+        const totalProfit = Math.round(totals.totalProfit);
 
         const detailsContent = document.createElement('div');
 
         // Revenue Section
         const revenueDiv = document.createElement('div');
-        revenueDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_PROFIT}; margin-bottom: 4px;">Revenue: ${formatLargeNumber(totalRevenue)}</div>`;
+        const revenueLabel = formatMissingLabel(revenueMissing, formatLargeNumber(totalRevenue));
+        revenueDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_PROFIT}; margin-bottom: 4px;">Revenue: ${revenueLabel}</div>`;
 
         // Base Output subsection
         const baseOutputContent = document.createElement('div');
         if (profitData.baseOutputs && profitData.baseOutputs.length > 0) {
             for (const output of profitData.baseOutputs) {
-                const totalItems = (output.itemsPerHour / profitData.actionsPerHour) * actionsCount;
-                const totalRevenueLine = output.revenuePerHour * hoursNeeded;
+                const itemsPerAction = output.itemsPerAction ?? output.itemsPerHour / profitData.actionsPerHour;
+                const revenuePerAction = output.revenuePerAction ?? output.revenuePerHour / profitData.actionsPerHour;
+                const totalItems = itemsPerAction * actionsCount;
+                const totalRevenueLine = revenuePerAction * actionsCount;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
-                line.textContent = `• ${output.name}: ${totalItems.toFixed(1)} items @ ${formatWithSeparator(output.priceEach)} each → ${formatLargeNumber(Math.round(totalRevenueLine))}`;
+                const missingPriceNote = getMissingPriceIndicator(output.missingPrice);
+                line.textContent = `• ${output.name}: ${totalItems.toFixed(1)} items @ ${formatWithSeparator(output.priceEach)}${missingPriceNote} each → ${formatLargeNumber(Math.round(totalRevenueLine))}`;
                 baseOutputContent.appendChild(line);
             }
         }
 
-        const baseRevenue = profitData.baseOutputs?.reduce((sum, o) => sum + o.revenuePerHour * hoursNeeded, 0) || 0;
+        const baseRevenue =
+            profitData.baseOutputs?.reduce((sum, output) => {
+                const revenuePerAction = output.revenuePerAction ?? output.revenuePerHour / profitData.actionsPerHour;
+                return sum + revenuePerAction * actionsCount;
+            }, 0) || 0;
+        const baseRevenueLabel = formatMissingLabel(baseMissing, formatLargeNumber(Math.round(baseRevenue)));
         const baseOutputSection = createCollapsibleSection(
             '',
-            `Base Output: ${formatLargeNumber(Math.round(baseRevenue))} (${profitData.baseOutputs?.length || 0} item${profitData.baseOutputs?.length !== 1 ? 's' : ''})`,
+            `Base Output: ${baseRevenueLabel} (${profitData.baseOutputs?.length || 0} item${profitData.baseOutputs?.length !== 1 ? 's' : ''})`,
             null,
             baseOutputContent,
             false,
             1
         );
 
-        // Bonus Drops subsections (bonus drops are base actions/hour)
+        // Bonus Drops subsections (bonus drops are per action)
         const bonusDrops = profitData.bonusRevenue?.bonusDrops || [];
         const essenceDrops = bonusDrops.filter((drop) => drop.type === 'essence');
         const rareFinds = bonusDrops.filter((drop) => drop.type === 'rare_find');
@@ -14759,25 +15091,26 @@
         if (essenceDrops.length > 0) {
             const essenceContent = document.createElement('div');
             for (const drop of essenceDrops) {
-                const adjustedDropsPerHour = drop.dropsPerHour * efficiencyMultiplier;
-                const adjustedRevenuePerHour = drop.revenuePerHour * efficiencyMultiplier;
-                const totalDrops = adjustedDropsPerHour * hoursNeeded;
-                const totalRevenueLine = adjustedRevenuePerHour * hoursNeeded;
+                const { totalDrops, totalRevenue } = getBonusDropTotalsForActions(
+                    drop,
+                    actionsCount,
+                    profitData.actionsPerHour
+                );
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
                 const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
-                line.textContent = `• ${drop.itemName}: ${totalDrops.toFixed(2)} drops (${dropRatePct}) → ${formatLargeNumber(Math.round(totalRevenueLine))}`;
+                line.textContent = `• ${drop.itemName}: ${totalDrops.toFixed(2)} drops (${dropRatePct}) → ${formatLargeNumber(Math.round(totalRevenue))}`;
                 essenceContent.appendChild(line);
             }
 
-            const essenceRevenue = essenceDrops.reduce(
-                (sum, d) => sum + d.revenuePerHour * efficiencyMultiplier * hoursNeeded,
-                0
-            );
+            const essenceRevenue = essenceDrops.reduce((sum, drop) => {
+                return sum + getBonusDropTotalsForActions(drop, actionsCount, profitData.actionsPerHour).totalRevenue;
+            }, 0);
+            const essenceRevenueLabel = formatMissingLabel(bonusMissing, formatLargeNumber(Math.round(essenceRevenue)));
             const essenceFindBonus = profitData.bonusRevenue?.essenceFindBonus || 0;
             essenceSection = createCollapsibleSection(
                 '',
-                `Essence Drops: ${formatLargeNumber(Math.round(essenceRevenue))} (${essenceDrops.length} item${essenceDrops.length !== 1 ? 's' : ''}, ${essenceFindBonus.toFixed(1)}% essence find)`,
+                `Essence Drops: ${essenceRevenueLabel} (${essenceDrops.length} item${essenceDrops.length !== 1 ? 's' : ''}, ${essenceFindBonus.toFixed(1)}% essence find)`,
                 null,
                 essenceContent,
                 false,
@@ -14790,25 +15123,26 @@
         if (rareFinds.length > 0) {
             const rareFindContent = document.createElement('div');
             for (const drop of rareFinds) {
-                const adjustedDropsPerHour = drop.dropsPerHour * efficiencyMultiplier;
-                const adjustedRevenuePerHour = drop.revenuePerHour * efficiencyMultiplier;
-                const totalDrops = adjustedDropsPerHour * hoursNeeded;
-                const totalRevenueLine = adjustedRevenuePerHour * hoursNeeded;
+                const { totalDrops, totalRevenue } = getBonusDropTotalsForActions(
+                    drop,
+                    actionsCount,
+                    profitData.actionsPerHour
+                );
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
                 const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
-                line.textContent = `• ${drop.itemName}: ${totalDrops.toFixed(2)} drops (${dropRatePct}) → ${formatLargeNumber(Math.round(totalRevenueLine))}`;
+                line.textContent = `• ${drop.itemName}: ${totalDrops.toFixed(2)} drops (${dropRatePct}) → ${formatLargeNumber(Math.round(totalRevenue))}`;
                 rareFindContent.appendChild(line);
             }
 
-            const rareFindRevenue = rareFinds.reduce(
-                (sum, d) => sum + d.revenuePerHour * efficiencyMultiplier * hoursNeeded,
-                0
-            );
+            const rareFindRevenue = rareFinds.reduce((sum, drop) => {
+                return sum + getBonusDropTotalsForActions(drop, actionsCount, profitData.actionsPerHour).totalRevenue;
+            }, 0);
+            const rareFindRevenueLabel = formatMissingLabel(bonusMissing, formatLargeNumber(Math.round(rareFindRevenue)));
             const rareFindBonus = profitData.bonusRevenue?.rareFindBonus || 0;
             rareFindSection = createCollapsibleSection(
                 '',
-                `Rare Finds: ${formatLargeNumber(Math.round(rareFindRevenue))} (${rareFinds.length} item${rareFinds.length !== 1 ? 's' : ''}, ${rareFindBonus.toFixed(1)}% rare find)`,
+                `Rare Finds: ${rareFindRevenueLabel} (${rareFinds.length} item${rareFinds.length !== 1 ? 's' : ''}, ${rareFindBonus.toFixed(1)}% rare find)`,
                 null,
                 rareFindContent,
                 false,
@@ -14829,19 +15163,24 @@
         if (profitData.processingConversions && profitData.processingConversions.length > 0) {
             const processingContent = document.createElement('div');
             for (const conversion of profitData.processingConversions) {
-                const totalConversions = conversion.conversionsPerHour * hoursNeeded;
-                const totalRevenueFromConversion = conversion.revenuePerHour * hoursNeeded;
+                const conversionsPerAction =
+                    conversion.conversionsPerAction ?? conversion.conversionsPerHour / profitData.actionsPerHour;
+                const revenuePerAction =
+                    conversion.revenuePerAction ?? conversion.revenuePerHour / profitData.actionsPerHour;
+                const totalConversions = conversionsPerAction * actionsCount;
+                const totalRevenueFromConversion = revenuePerAction * actionsCount;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
-                line.textContent = `• ${conversion.rawItem} → ${conversion.processedItem}: ${totalConversions.toFixed(1)} conversions, +${formatWithSeparator(Math.round(conversion.valueGain))} each → ${formatLargeNumber(Math.round(totalRevenueFromConversion))}`;
+                const missingPriceNote = getMissingPriceIndicator(conversion.missingPrice);
+                line.textContent = `• ${conversion.rawItem} → ${conversion.processedItem}: ${totalConversions.toFixed(1)} conversions, +${formatWithSeparator(Math.round(conversion.valueGain))}${missingPriceNote} each → ${formatLargeNumber(Math.round(totalRevenueFromConversion))}`;
                 processingContent.appendChild(line);
             }
 
-            const totalProcessingRevenue = (profitData.processingRevenueBonus || 0) * hoursNeeded;
+            const totalProcessingRevenue = totals.totalProcessingRevenue;
             const processingChance = profitData.processingBonus || 0;
             processingSection = createCollapsibleSection(
                 '',
-                `Processing Bonus: ${formatLargeNumber(Math.round(totalProcessingRevenue))} (${formatPercentage(processingChance, 1)} proc)`,
+                `Processing Bonus: ${formatMissingLabel(processingMissing, formatLargeNumber(Math.round(totalProcessingRevenue)))} (${formatPercentage(processingChance, 1)} proc)`,
                 null,
                 processingContent,
                 false,
@@ -14852,7 +15191,8 @@
 
         // Costs Section
         const costsDiv = document.createElement('div');
-        costsDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_LOSS}; margin-top: 12px; margin-bottom: 4px;">Costs: ${formatLargeNumber(totalCosts)}</div>`;
+        const costsLabel = costsMissing ? '-- ⚠' : formatLargeNumber(totalCosts);
+        costsDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_LOSS}; margin-top: 12px; margin-bottom: 4px;">Costs: ${costsLabel}</div>`;
 
         // Drink Costs subsection
         const drinkCostsContent = document.createElement('div');
@@ -14862,15 +15202,17 @@
                 const totalCostLine = drink.costPerHour * hoursNeeded;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
-                line.textContent = `• ${drink.name}: ${totalDrinks.toFixed(1)} drinks @ ${formatWithSeparator(drink.priceEach)} → ${formatLargeNumber(Math.round(totalCostLine))}`;
+                const missingPriceNote = getMissingPriceIndicator(drink.missingPrice);
+                line.textContent = `• ${drink.name}: ${totalDrinks.toFixed(1)} drinks @ ${formatWithSeparator(drink.priceEach)}${missingPriceNote} → ${formatLargeNumber(Math.round(totalCostLine))}`;
                 drinkCostsContent.appendChild(line);
             }
         }
 
         const drinkCount = profitData.drinkCosts?.length || 0;
+        const drinkCostsLabel = drinkCostsMissing ? '-- ⚠' : formatLargeNumber(totalDrinkCosts);
         const drinkCostsSection = createCollapsibleSection(
             '',
-            `Drink Costs: ${formatLargeNumber(totalDrinkCosts)} (${drinkCount} drink${drinkCount !== 1 ? 's' : ''})`,
+            `Drink Costs: ${drinkCostsLabel} (${drinkCount} drink${drinkCount !== 1 ? 's' : ''})`,
             null,
             drinkCostsContent,
             false,
@@ -14883,12 +15225,14 @@
         const marketTaxContent = document.createElement('div');
         const marketTaxLine = document.createElement('div');
         marketTaxLine.style.marginLeft = '8px';
-        marketTaxLine.textContent = `• Market Tax: 2% of revenue → ${formatLargeNumber(totalMarketTax)}`;
+        const marketTaxLabel = marketTaxMissing ? '-- ⚠' : formatLargeNumber(totalMarketTax);
+        marketTaxLine.textContent = `• Market Tax: 2% of revenue → ${marketTaxLabel}`;
         marketTaxContent.appendChild(marketTaxLine);
 
+        const marketTaxHeader = marketTaxMissing ? '-- ⚠' : formatLargeNumber(totalMarketTax);
         const marketTaxSection = createCollapsibleSection(
             '',
-            `Market Tax: ${formatLargeNumber(totalMarketTax)} (2%)`,
+            `Market Tax: ${marketTaxHeader} (2%)`,
             null,
             marketTaxContent,
             false,
@@ -14903,24 +15247,21 @@
 
         // Add Net Profit at top
         const topLevelContent = document.createElement('div');
-        const profitColor = totalProfit >= 0 ? '#4ade80' : config.COLOR_LOSS;
+        const profitColor = netMissing ? config.SCRIPT_COLOR_ALERT : totalProfit >= 0 ? '#4ade80' : config.COLOR_LOSS;
         const netProfitLine = document.createElement('div');
         netProfitLine.style.cssText = `
         font-weight: 500;
         color: ${profitColor};
         margin-bottom: 8px;
     `;
-        netProfitLine.textContent = `Net Profit: ${formatLargeNumber(totalProfit)}`;
+        netProfitLine.textContent = netMissing ? 'Net Profit: -- ⚠' : `Net Profit: ${formatLargeNumber(totalProfit)}`;
         topLevelContent.appendChild(netProfitLine);
 
-        const actionsBreakdownSection = createCollapsibleSection(
-            '',
-            `Revenue: ${formatLargeNumber(totalRevenue)} | Costs: ${formatLargeNumber(totalCosts)}`,
-            null,
-            detailsContent,
-            false,
-            1
-        );
+        const actionsSummary = `Revenue: ${formatMissingLabel(revenueMissing, formatLargeNumber(totalRevenue))} | Costs: ${formatMissingLabel(
+        costsMissing,
+        formatLargeNumber(totalCosts)
+    )}`;
+        const actionsBreakdownSection = createCollapsibleSection('', actionsSummary, null, detailsContent, false, 1);
         topLevelContent.appendChild(actionsBreakdownSection);
 
         const mainSection = createCollapsibleSection(
@@ -14943,50 +15284,53 @@
      * @returns {HTMLElement} Breakdown section element
      */
     function buildProductionActionsBreakdown(profitData, actionsCount) {
-        // Calculate actual attempts needed (input is desired output actions)
-        const efficiencyMultiplier = profitData.efficiencyMultiplier;
-        const actualAttempts = Math.ceil(actionsCount / efficiencyMultiplier);
-        const queueBreakdown = calculateQueueProfitBreakdown({
-            profitPerHour: profitData.profitPerHour,
+        // Calculate queued actions breakdown
+        const outputMissing = profitData.outputPriceMissing || false;
+        const bonusMissing = profitData.bonusRevenue?.hasMissingPrices || false;
+        const materialMissing = profitData.materialCosts?.some((material) => material.missingPrice) || false;
+        const teaMissing = profitData.teaCosts?.some((tea) => tea.missingPrice) || false;
+        const revenueMissing = outputMissing || bonusMissing;
+        const costsMissing = materialMissing || teaMissing || revenueMissing;
+        const marketTaxMissing = revenueMissing;
+        const netMissing = profitData.hasMissingPrices;
+        const bonusDrops = profitData.bonusRevenue?.bonusDrops || [];
+        const totals = calculateProductionActionTotalsFromBase({
+            actionsCount,
             actionsPerHour: profitData.actionsPerHour,
-            actionCount: actualAttempts,
+            outputAmount: profitData.outputAmount || 1,
+            outputPrice: profitData.outputPrice,
+            gourmetBonus: profitData.gourmetBonus || 0,
+            bonusDrops,
+            materialCosts: profitData.materialCosts,
+            totalTeaCostPerHour: profitData.totalTeaCostPerHour,
+            efficiencyMultiplier: profitData.efficiencyMultiplier || 1,
         });
-        const hoursNeeded = queueBreakdown.hoursNeeded;
-
-        // Calculate totals
-        const bonusRevenueTotal = profitData.bonusRevenue?.totalBonusRevenue || 0;
-        // Use outputPrice (pre-tax) for revenue display
-        const totalRevenue = Math.round(
-            (profitData.itemsPerHour * profitData.outputPrice +
-                profitData.gourmetBonusItems * profitData.outputPrice +
-                bonusRevenueTotal) *
-                hoursNeeded
-        );
-        // Calculate market tax (2% of revenue)
-        const totalMarketTax = Math.round(totalRevenue * MARKET_TAX);
-        const totalCosts = Math.round(
-            (profitData.materialCostPerHour + profitData.totalTeaCostPerHour) * hoursNeeded + totalMarketTax
-        );
-        const totalProfit = Math.round(queueBreakdown.totalProfit);
+        const totalRevenue = Math.round(totals.totalRevenue);
+        const totalMarketTax = Math.round(totals.totalMarketTax);
+        const totalCosts = Math.round(totals.totalCosts);
+        const totalProfit = Math.round(totals.totalProfit);
 
         const detailsContent = document.createElement('div');
 
         // Revenue Section
         const revenueDiv = document.createElement('div');
-        revenueDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_PROFIT}; margin-bottom: 4px;">Revenue: ${formatLargeNumber(totalRevenue)}</div>`;
+        const revenueLabel = formatMissingLabel(revenueMissing, formatLargeNumber(totalRevenue));
+        revenueDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_PROFIT}; margin-bottom: 4px;">Revenue: ${revenueLabel}</div>`;
 
         // Base Output subsection
         const baseOutputContent = document.createElement('div');
-        const totalBaseItems = profitData.itemsPerHour * hoursNeeded;
-        const totalBaseRevenue = totalBaseItems * profitData.outputPrice;
+        const totalBaseItems = totals.totalBaseItems;
+        const totalBaseRevenue = totals.totalBaseRevenue;
         const baseOutputLine = document.createElement('div');
         baseOutputLine.style.marginLeft = '8px';
-        baseOutputLine.textContent = `• Base Output: ${totalBaseItems.toFixed(1)} items @ ${formatWithSeparator(Math.round(profitData.outputPrice))} each → ${formatLargeNumber(Math.round(totalBaseRevenue))}`;
+        const baseOutputMissingNote = getMissingPriceIndicator(profitData.outputPriceMissing);
+        baseOutputLine.textContent = `• Base Output: ${totalBaseItems.toFixed(1)} items @ ${formatWithSeparator(Math.round(profitData.outputPrice))}${baseOutputMissingNote} each → ${formatLargeNumber(Math.round(totalBaseRevenue))}`;
         baseOutputContent.appendChild(baseOutputLine);
 
+        const baseOutputLabel = formatMissingLabel(outputMissing, formatLargeNumber(Math.round(totalBaseRevenue)));
         const baseOutputSection = createCollapsibleSection(
             '',
-            `Base Output: ${formatLargeNumber(Math.round(totalBaseRevenue))}`,
+            `Base Output: ${baseOutputLabel}`,
             null,
             baseOutputContent,
             false,
@@ -14995,18 +15339,22 @@
 
         // Gourmet Bonus subsection
         let gourmetSection = null;
-        if (profitData.gourmetBonusItems > 0) {
+        if (profitData.gourmetBonus > 0) {
             const gourmetContent = document.createElement('div');
-            const totalGourmetItems = profitData.gourmetBonusItems * hoursNeeded;
-            const totalGourmetRevenue = totalGourmetItems * profitData.outputPrice;
+            const totalGourmetItems = totals.totalGourmetItems;
+            const totalGourmetRevenue = totals.totalGourmetRevenue;
             const gourmetLine = document.createElement('div');
             gourmetLine.style.marginLeft = '8px';
-            gourmetLine.textContent = `• Gourmet Bonus: ${totalGourmetItems.toFixed(1)} items @ ${formatWithSeparator(Math.round(profitData.outputPrice))} each → ${formatLargeNumber(Math.round(totalGourmetRevenue))}`;
+            gourmetLine.textContent = `• Gourmet Bonus: ${totalGourmetItems.toFixed(1)} items @ ${formatWithSeparator(Math.round(profitData.outputPrice))}${baseOutputMissingNote} each → ${formatLargeNumber(Math.round(totalGourmetRevenue))}`;
             gourmetContent.appendChild(gourmetLine);
 
+            const gourmetRevenueLabel = formatMissingLabel(
+                outputMissing,
+                formatLargeNumber(Math.round(totalGourmetRevenue))
+            );
             gourmetSection = createCollapsibleSection(
                 '',
-                `Gourmet Bonus: ${formatLargeNumber(Math.round(totalGourmetRevenue))} (${formatPercentage(profitData.gourmetBonus, 1)} gourmet)`,
+                `Gourmet Bonus: ${gourmetRevenueLabel} (${formatPercentage(profitData.gourmetBonus, 1)} gourmet)`,
                 null,
                 gourmetContent,
                 false,
@@ -15020,7 +15368,6 @@
         }
 
         // Bonus Drops subsections
-        const bonusDrops = profitData.bonusRevenue?.bonusDrops || [];
         const essenceDrops = bonusDrops.filter((drop) => drop.type === 'essence');
         const rareFinds = bonusDrops.filter((drop) => drop.type === 'rare_find');
 
@@ -15029,8 +15376,12 @@
         if (essenceDrops.length > 0) {
             const essenceContent = document.createElement('div');
             for (const drop of essenceDrops) {
-                const totalDrops = drop.dropsPerHour * hoursNeeded;
-                const totalRevenueLine = drop.revenuePerHour * hoursNeeded;
+                const dropsPerAction =
+                    drop.dropsPerAction ?? calculateProfitPerAction(drop.dropsPerHour, profitData.actionsPerHour);
+                const revenuePerAction =
+                    drop.revenuePerAction ?? calculateProfitPerAction(drop.revenuePerHour, profitData.actionsPerHour);
+                const totalDrops = dropsPerAction * actionsCount;
+                const totalRevenueLine = revenuePerAction * actionsCount;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
                 const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
@@ -15038,11 +15389,16 @@
                 essenceContent.appendChild(line);
             }
 
-            const essenceRevenue = essenceDrops.reduce((sum, d) => sum + d.revenuePerHour * hoursNeeded, 0);
+            const essenceRevenue = essenceDrops.reduce((sum, drop) => {
+                const revenuePerAction =
+                    drop.revenuePerAction ?? calculateProfitPerAction(drop.revenuePerHour, profitData.actionsPerHour);
+                return sum + revenuePerAction * actionsCount;
+            }, 0);
+            const essenceRevenueLabel = formatMissingLabel(bonusMissing, formatLargeNumber(Math.round(essenceRevenue)));
             const essenceFindBonus = profitData.bonusRevenue?.essenceFindBonus || 0;
             essenceSection = createCollapsibleSection(
                 '',
-                `Essence Drops: ${formatLargeNumber(Math.round(essenceRevenue))} (${essenceDrops.length} item${essenceDrops.length !== 1 ? 's' : ''}, ${essenceFindBonus.toFixed(1)}% essence find)`,
+                `Essence Drops: ${essenceRevenueLabel} (${essenceDrops.length} item${essenceDrops.length !== 1 ? 's' : ''}, ${essenceFindBonus.toFixed(1)}% essence find)`,
                 null,
                 essenceContent,
                 false,
@@ -15055,8 +15411,12 @@
         if (rareFinds.length > 0) {
             const rareFindContent = document.createElement('div');
             for (const drop of rareFinds) {
-                const totalDrops = drop.dropsPerHour * hoursNeeded;
-                const totalRevenueLine = drop.revenuePerHour * hoursNeeded;
+                const dropsPerAction =
+                    drop.dropsPerAction ?? calculateProfitPerAction(drop.dropsPerHour, profitData.actionsPerHour);
+                const revenuePerAction =
+                    drop.revenuePerAction ?? calculateProfitPerAction(drop.revenuePerHour, profitData.actionsPerHour);
+                const totalDrops = dropsPerAction * actionsCount;
+                const totalRevenueLine = revenuePerAction * actionsCount;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
                 const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
@@ -15064,11 +15424,16 @@
                 rareFindContent.appendChild(line);
             }
 
-            const rareFindRevenue = rareFinds.reduce((sum, d) => sum + d.revenuePerHour * hoursNeeded, 0);
+            const rareFindRevenue = rareFinds.reduce((sum, drop) => {
+                const revenuePerAction =
+                    drop.revenuePerAction ?? calculateProfitPerAction(drop.revenuePerHour, profitData.actionsPerHour);
+                return sum + revenuePerAction * actionsCount;
+            }, 0);
+            const rareFindRevenueLabel = formatMissingLabel(bonusMissing, formatLargeNumber(Math.round(rareFindRevenue)));
             const rareFindBonus = profitData.bonusRevenue?.rareFindBonus || 0;
             rareFindSection = createCollapsibleSection(
                 '',
-                `Rare Finds: ${formatLargeNumber(Math.round(rareFindRevenue))} (${rareFinds.length} item${rareFinds.length !== 1 ? 's' : ''}, ${rareFindBonus.toFixed(1)}% rare find)`,
+                `Rare Finds: ${rareFindRevenueLabel} (${rareFinds.length} item${rareFinds.length !== 1 ? 's' : ''}, ${rareFindBonus.toFixed(1)}% rare find)`,
                 null,
                 rareFindContent,
                 false,
@@ -15085,15 +15450,15 @@
 
         // Costs Section
         const costsDiv = document.createElement('div');
-        costsDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_LOSS}; margin-top: 12px; margin-bottom: 4px;">Costs: ${formatLargeNumber(totalCosts)}</div>`;
+        const costsLabel = costsMissing ? '-- ⚠' : formatLargeNumber(totalCosts);
+        costsDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_LOSS}; margin-top: 12px; margin-bottom: 4px;">Costs: ${costsLabel}</div>`;
 
         // Material Costs subsection
         const materialCostsContent = document.createElement('div');
         if (profitData.materialCosts && profitData.materialCosts.length > 0) {
-            const efficiencyMultiplier = profitData.efficiencyMultiplier;
             for (const material of profitData.materialCosts) {
-                const totalMaterial = material.amount * actionsCount * efficiencyMultiplier;
-                const totalMaterialCost = material.totalCost * actionsCount * efficiencyMultiplier;
+                const totalMaterial = material.amount * actionsCount;
+                const totalMaterialCost = material.totalCost * actionsCount;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
 
@@ -15101,21 +15466,23 @@
 
                 // Add Artisan reduction info if present
                 if (profitData.artisanBonus > 0 && material.baseAmount && material.amount !== material.baseAmount) {
-                    const baseTotalAmount = material.baseAmount * actionsCount * efficiencyMultiplier;
+                    const baseTotalAmount = material.baseAmount * actionsCount;
                     materialText += ` (${baseTotalAmount.toFixed(1)} base -${formatPercentage(profitData.artisanBonus, 1)} 🍵)`;
                 }
 
-                materialText += ` @ ${formatWithSeparator(Math.round(material.askPrice))} → ${formatLargeNumber(Math.round(totalMaterialCost))}`;
+                const missingPriceNote = getMissingPriceIndicator(material.missingPrice);
+                materialText += ` @ ${formatWithSeparator(Math.round(material.askPrice))}${missingPriceNote} → ${formatLargeNumber(Math.round(totalMaterialCost))}`;
 
                 line.textContent = materialText;
                 materialCostsContent.appendChild(line);
             }
         }
 
-        const totalMaterialCost = profitData.materialCostPerHour * hoursNeeded;
+        const totalMaterialCost = totals.totalMaterialCost;
+        const materialCostsLabel = formatMissingLabel(materialMissing, formatLargeNumber(Math.round(totalMaterialCost)));
         const materialCostsSection = createCollapsibleSection(
             '',
-            `Material Costs: ${formatLargeNumber(Math.round(totalMaterialCost))} (${profitData.materialCosts?.length || 0} material${profitData.materialCosts?.length !== 1 ? 's' : ''})`,
+            `Material Costs: ${materialCostsLabel} (${profitData.materialCosts?.length || 0} material${profitData.materialCosts?.length !== 1 ? 's' : ''})`,
             null,
             materialCostsContent,
             false,
@@ -15126,20 +15493,22 @@
         const teaCostsContent = document.createElement('div');
         if (profitData.teaCosts && profitData.teaCosts.length > 0) {
             for (const tea of profitData.teaCosts) {
-                const totalDrinks = tea.drinksPerHour * hoursNeeded;
-                const totalTeaCost = tea.totalCost * hoursNeeded;
+                const totalDrinks = tea.drinksPerHour * totals.hoursNeeded;
+                const totalTeaCost = tea.totalCost * totals.hoursNeeded;
                 const line = document.createElement('div');
                 line.style.marginLeft = '8px';
-                line.textContent = `• ${tea.itemName}: ${totalDrinks.toFixed(1)} drinks @ ${formatWithSeparator(Math.round(tea.pricePerDrink))} → ${formatLargeNumber(Math.round(totalTeaCost))}`;
+                const missingPriceNote = getMissingPriceIndicator(tea.missingPrice);
+                line.textContent = `• ${tea.itemName}: ${totalDrinks.toFixed(1)} drinks @ ${formatWithSeparator(Math.round(tea.pricePerDrink))}${missingPriceNote} → ${formatLargeNumber(Math.round(totalTeaCost))}`;
                 teaCostsContent.appendChild(line);
             }
         }
 
-        const totalTeaCost = profitData.totalTeaCostPerHour * hoursNeeded;
+        const totalTeaCost = totals.totalTeaCost;
         const teaCount = profitData.teaCosts?.length || 0;
+        const teaCostsLabel = formatMissingLabel(teaMissing, formatLargeNumber(Math.round(totalTeaCost)));
         const teaCostsSection = createCollapsibleSection(
             '',
-            `Drink Costs: ${formatLargeNumber(Math.round(totalTeaCost))} (${teaCount} drink${teaCount !== 1 ? 's' : ''})`,
+            `Drink Costs: ${teaCostsLabel} (${teaCount} drink${teaCount !== 1 ? 's' : ''})`,
             null,
             teaCostsContent,
             false,
@@ -15153,12 +15522,14 @@
         const marketTaxContent = document.createElement('div');
         const marketTaxLine = document.createElement('div');
         marketTaxLine.style.marginLeft = '8px';
-        marketTaxLine.textContent = `• Market Tax: 2% of revenue → ${formatLargeNumber(totalMarketTax)}`;
+        const marketTaxLabel = marketTaxMissing ? '-- ⚠' : formatLargeNumber(totalMarketTax);
+        marketTaxLine.textContent = `• Market Tax: 2% of revenue → ${marketTaxLabel}`;
         marketTaxContent.appendChild(marketTaxLine);
 
+        const marketTaxHeader = marketTaxMissing ? '-- ⚠' : formatLargeNumber(totalMarketTax);
         const marketTaxSection = createCollapsibleSection(
             '',
-            `Market Tax: ${formatLargeNumber(totalMarketTax)} (2%)`,
+            `Market Tax: ${marketTaxHeader} (2%)`,
             null,
             marketTaxContent,
             false,
@@ -15173,24 +15544,21 @@
 
         // Add Net Profit at top
         const topLevelContent = document.createElement('div');
-        const profitColor = totalProfit >= 0 ? '#4ade80' : config.COLOR_LOSS;
+        const profitColor = netMissing ? config.SCRIPT_COLOR_ALERT : totalProfit >= 0 ? '#4ade80' : config.COLOR_LOSS;
         const netProfitLine = document.createElement('div');
         netProfitLine.style.cssText = `
         font-weight: 500;
         color: ${profitColor};
         margin-bottom: 8px;
     `;
-        netProfitLine.textContent = `Net Profit: ${formatLargeNumber(totalProfit)}`;
+        netProfitLine.textContent = netMissing ? 'Net Profit: -- ⚠' : `Net Profit: ${formatLargeNumber(totalProfit)}`;
         topLevelContent.appendChild(netProfitLine);
 
-        const actionsBreakdownSection = createCollapsibleSection(
-            '',
-            `Revenue: ${formatLargeNumber(totalRevenue)} | Costs: ${formatLargeNumber(totalCosts)}`,
-            null,
-            detailsContent,
-            false,
-            1
-        );
+        const actionsSummary = `Revenue: ${formatMissingLabel(revenueMissing, formatLargeNumber(totalRevenue))} | Costs: ${formatMissingLabel(
+        costsMissing,
+        formatLargeNumber(totalCosts)
+    )}`;
+        const actionsBreakdownSection = createCollapsibleSection('', actionsSummary, null, detailsContent, false, 1);
         topLevelContent.appendChild(actionsBreakdownSection);
 
         const mainSection = createCollapsibleSection(
@@ -16328,13 +16696,16 @@
             const { actionTime, totalEfficiency } = stats;
             const baseActionsPerHour = calculateActionsPerHour(actionTime);
 
-            // Calculate average actions per attempt from efficiency
-            const guaranteedActions = 1 + Math.floor(totalEfficiency / 100);
-            const chanceForExtra = totalEfficiency % 100;
-            const avgActionsPerAttempt = guaranteedActions + chanceForExtra / 100;
+            // Efficiency model:
+            // - Queue input counts completed actions (including instant repeats)
+            // - Efficiency adds instant repeats with no extra time
+            // - Time is based on time-consuming actions (queuedActions / avgActionsPerBaseAction)
+            // - Materials are consumed per completed action, including repeats
+            // Calculate average queued actions completed per time-consuming action
+            const avgActionsPerBaseAction = calculateEfficiencyMultiplier(totalEfficiency);
 
-            // Calculate actions per hour WITH efficiency (total action completions including free repeats)
-            const actionsPerHourWithEfficiency = baseActionsPerHour * avgActionsPerAttempt;
+            // Calculate actions per hour WITH efficiency (total action completions including instant repeats)
+            const actionsPerHourWithEfficiency = baseActionsPerHour * avgActionsPerBaseAction;
 
             // Calculate items per hour based on action type
             let itemsPerHour;
@@ -16374,11 +16745,11 @@
                 const avgAmountPerAction = baseAvgAmount * (1 + totalGathering);
 
                 // Items per hour = actions × drop rate × avg amount × efficiency
-                itemsPerHour = baseActionsPerHour * mainDrop.dropRate * avgAmountPerAction * avgActionsPerAttempt;
+                itemsPerHour = baseActionsPerHour * mainDrop.dropRate * avgAmountPerAction * avgActionsPerBaseAction;
             } else if (actionDetails.outputItems && actionDetails.outputItems.length > 0) {
                 // Production action - use outputItems
                 const outputAmount = actionDetails.outputItems[0].count || 1;
-                itemsPerHour = baseActionsPerHour * outputAmount * avgActionsPerAttempt;
+                itemsPerHour = baseActionsPerHour * outputAmount * avgActionsPerBaseAction;
 
                 // Apply Gourmet bonus for brewing/cooking (extra items chance)
                 if (PRODUCTION_TYPES.includes(actionDetails.type)) {
@@ -16400,18 +16771,13 @@
             if (!action.hasMaxCount) {
                 // Get inventory and calculate Artisan bonus
                 const inventory = dataManager.getInventory();
+                const inventoryLookup = this.buildInventoryLookup(inventory);
                 const drinkConcentration = getDrinkConcentration(equipment, itemDetailMap);
                 const activeDrinks = dataManager.getActionDrinkSlots(actionDetails.type);
                 const artisanBonus = parseArtisanBonus(activeDrinks, itemDetailMap, drinkConcentration);
 
-                // Calculate max actions based on materials (pass efficiency to account for free repeat actions)
-                materialLimit = this.calculateMaterialLimit(
-                    actionDetails,
-                    inventory,
-                    artisanBonus,
-                    totalEfficiency,
-                    action
-                );
+                // Calculate max actions based on materials
+                materialLimit = this.calculateMaterialLimit(actionDetails, inventoryLookup, artisanBonus, action);
             }
 
             // Get queue size for display (total queued, doesn't change)
@@ -16430,31 +16796,30 @@
 
             // Get remaining actions for time calculation
             // For infinite actions, use material limit if available, then inventory count
-            let remainingActions;
+            let remainingQueuedActions;
             if (action.hasMaxCount) {
                 // Finite action: maxCount is the target, currentCount is progress toward that target
-                remainingActions = action.maxCount - action.currentCount;
+                remainingQueuedActions = action.maxCount - action.currentCount;
             } else if (materialLimit !== null) {
-                // Infinite action limited by materials (materialLimit is attempts, not actions)
-                remainingActions = materialLimit;
+                // Infinite action limited by materials (materialLimit is queued actions)
+                remainingQueuedActions = materialLimit;
             } else if (inventoryCount !== null) {
                 // Infinite action: currentCount is lifetime total, so just use inventory count directly
-                remainingActions = inventoryCount;
+                remainingQueuedActions = inventoryCount;
             } else {
-                remainingActions = Infinity;
+                remainingQueuedActions = Infinity;
             }
 
-            // Calculate actual attempts needed (time-consuming operations)
-            // NOTE: materialLimit returns attempts, but finite/inventory counts are items
-            let actualAttempts;
+            // Calculate time-consuming actions needed
+            let baseActionsNeeded;
             if (!action.hasMaxCount && materialLimit !== null) {
-                // Material-limited infinite action - materialLimit is already attempts
-                actualAttempts = materialLimit;
+                // Material-limited infinite action - convert queued actions to time-consuming actions
+                baseActionsNeeded = Math.ceil(materialLimit / avgActionsPerBaseAction);
             } else {
-                // Finite action or inventory-count infinite - remainingActions is items, convert to attempts
-                actualAttempts = Math.ceil(remainingActions / avgActionsPerAttempt);
+                // Finite action or inventory-count infinite - remainingQueuedActions is queued actions
+                baseActionsNeeded = Math.ceil(remainingQueuedActions / avgActionsPerBaseAction);
             }
-            const totalTimeSeconds = actualAttempts * actionTime;
+            const totalTimeSeconds = baseActionsNeeded * actionTime;
 
             // Calculate completion time
             const completionTime = new Date();
@@ -16516,7 +16881,7 @@
             // Line 2: Time estimates in our div
             // Show time info if we have a finite number of remaining actions
             // This includes both finite actions (hasMaxCount) and infinite actions with inventory count
-            if (remainingActions !== Infinity && !isNaN(remainingActions) && remainingActions > 0) {
+            if (remainingQueuedActions !== Infinity && !isNaN(remainingQueuedActions) && remainingQueuedActions > 0) {
                 this.displayElement.innerHTML = `<span style="display: inline-block; margin-right: 0.25em;">⏱</span> ${timeStr} → ${clockTime}`;
             } else {
                 this.displayElement.innerHTML = '';
@@ -16657,18 +17022,56 @@
         }
 
         /**
+         * Build inventory lookup maps for fast material queries
+         * @param {Array} inventory - Character inventory items
+         * @returns {Object} Lookup maps by HRID and enhancement
+         */
+        buildInventoryLookup(inventory) {
+            const byHrid = {};
+            const byEnhancedKey = {};
+
+            if (!Array.isArray(inventory)) {
+                return { byHrid, byEnhancedKey };
+            }
+
+            for (const item of inventory) {
+                if (item.itemLocationHrid !== '/item_locations/inventory') {
+                    continue;
+                }
+
+                const count = item.count || 0;
+                if (!count) {
+                    continue;
+                }
+
+                byHrid[item.itemHrid] = (byHrid[item.itemHrid] || 0) + count;
+
+                const enhancementLevel = item.enhancementLevel || 0;
+                const enhancedKey = `${item.itemHrid}::${enhancementLevel}`;
+                byEnhancedKey[enhancedKey] = (byEnhancedKey[enhancedKey] || 0) + count;
+            }
+
+            return { byHrid, byEnhancedKey };
+        }
+
+        /**
          * Calculate maximum actions possible based on inventory materials
          * @param {Object} actionDetails - Action detail object
-         * @param {Array} inventory - Character inventory items
+         * @param {Object|Array} inventoryLookup - Inventory lookup maps or raw inventory array
          * @param {number} artisanBonus - Artisan material reduction (0-1 decimal)
-         * @param {number} totalEfficiency - Total efficiency percentage (e.g., 150 for 150%)
          * @param {Object} actionObj - Character action object (for primaryItemHash)
          * @returns {number|null} Max actions possible, or null if unlimited/no materials required
          */
-        calculateMaterialLimit(actionDetails, inventory, artisanBonus, totalEfficiency, actionObj = null) {
-            if (!actionDetails || !inventory) {
+        calculateMaterialLimit(actionDetails, inventoryLookup, artisanBonus, actionObj = null) {
+            if (!actionDetails || !inventoryLookup) {
                 return null;
             }
+
+            // Materials are consumed per queued action. Efficiency only affects time, not materials.
+
+            const lookup = Array.isArray(inventoryLookup) ? this.buildInventoryLookup(inventoryLookup) : inventoryLookup;
+            const byHrid = lookup?.byHrid || {};
+            const byEnhancedKey = lookup?.byEnhancedKey || {};
 
             // Check for primaryItemHash (ONLY for Alchemy actions: Coinify, Decompose, Transmute)
             // Crafting actions also have primaryItemHash but should use the standard input/upgrade logic
@@ -16680,25 +17083,17 @@
                     const itemHrid = parts[2]; // Extract item HRID
                     const enhancementLevel = parts.length >= 4 ? parseInt(parts[3]) : 0;
 
-                    // Find item in inventory
-                    const inventoryItem = inventory.find(
-                        (item) =>
-                            item.itemHrid === itemHrid &&
-                            item.itemLocationHrid === '/item_locations/inventory' &&
-                            (item.enhancementLevel || 0) === enhancementLevel
-                    );
-
-                    const availableCount = inventoryItem?.count || 0;
+                    const enhancedKey = `${itemHrid}::${enhancementLevel}`;
+                    const availableCount = byEnhancedKey[enhancedKey] || 0;
 
                     // Get bulk multiplier from item details (how many items per action)
                     const itemDetails = dataManager.getItemDetails(itemHrid);
                     const bulkMultiplier = itemDetails?.alchemyDetail?.bulkMultiplier || 1;
 
-                    // Calculate max attempts (how many times we can perform the action)
-                    // NOTE: Return attempts, not total actions - efficiency is applied separately in time calc
-                    const maxAttempts = Math.floor(availableCount / bulkMultiplier);
+                    // Calculate max queued actions based on available items
+                    const maxActions = Math.floor(availableCount / bulkMultiplier);
 
-                    return maxAttempts;
+                    return maxActions;
                 }
             }
 
@@ -16715,34 +17110,23 @@
             // Check input items (affected by Artisan Tea)
             if (hasInputItems) {
                 for (const inputItem of actionDetails.inputItems) {
-                    // Find item in inventory
-                    const inventoryItem = inventory.find(
-                        (item) =>
-                            item.itemHrid === inputItem.itemHrid && item.itemLocationHrid === '/item_locations/inventory'
-                    );
-
-                    const availableCount = inventoryItem?.count || 0;
+                    const availableCount = byHrid[inputItem.itemHrid] || 0;
 
                     // Apply Artisan reduction to required materials
                     const requiredPerAction = inputItem.count * (1 - artisanBonus);
 
-                    // Calculate max attempts for this material
-                    // NOTE: Return attempts, not total actions - efficiency is applied separately in time calc
-                    const maxAttempts = Math.floor(availableCount / requiredPerAction);
+                    // Calculate max queued actions for this material
+                    const maxActions = Math.floor(availableCount / requiredPerAction);
 
-                    minLimit = Math.min(minLimit, maxAttempts);
+                    minLimit = Math.min(minLimit, maxActions);
                 }
             }
 
             // Check upgrade item (NOT affected by Artisan Tea)
             if (hasUpgradeItem) {
-                const inventoryItem = inventory.find(
-                    (item) => item.itemHrid === hasUpgradeItem && item.itemLocationHrid === '/item_locations/inventory'
-                );
+                const availableCount = byHrid[hasUpgradeItem] || 0;
 
-                const availableCount = inventoryItem?.count || 0;
-
-                // NOTE: Return attempts, not total actions - efficiency is applied separately in time calc
+                // Upgrade items are consumed per queued action
                 minLimit = Math.min(minLimit, availableCount);
             }
 
@@ -16846,6 +17230,8 @@
                     return;
                 }
 
+                const inventoryLookup = this.buildInventoryLookup(dataManager.getInventory());
+
                 // Clear all existing time and profit displays to prevent duplicates
                 queueMenu.querySelectorAll('.mwi-queue-action-time').forEach((el) => el.remove());
                 queueMenu.querySelectorAll('.mwi-queue-action-profit').forEach((el) => el.remove());
@@ -16861,8 +17247,10 @@
                 let hasInfinite = false;
                 const actionsToCalculate = []; // Store actions for async profit calculation (with time in seconds)
 
-                // First, calculate time for current action to include in total
-                // Read from DOM to get the actual current action (not from cache)
+                // Detect current action from DOM so we can avoid double-counting
+                let currentAction = null;
+                let isCurrentActionInQueue = false;
+
                 const actionNameElement = document.querySelector('div[class*="Header_actionName"]');
                 if (actionNameElement && actionNameElement.textContent) {
                     // Use getCleanActionName to strip any stats we previously appended
@@ -16884,7 +17272,7 @@
                     }
 
                     // Match current action from cache
-                    const currentAction = currentActions.find((a) => {
+                    currentAction = currentActions.find((a) => {
                         const actionDetails = dataManager.getActionDetails(a.actionHrid);
                         if (!actionDetails || actionDetails.name !== actionNameFromDom) {
                             return false;
@@ -16897,79 +17285,86 @@
 
                         return true;
                     });
+                }
 
-                    if (currentAction) {
-                        const actionDetails = dataManager.getActionDetails(currentAction.actionHrid);
-                        if (actionDetails) {
-                            // Check if infinite BEFORE calculating count
-                            const isInfinite = !currentAction.hasMaxCount || currentAction.actionHrid.includes('/combat/');
+                if (currentAction) {
+                    for (const actionDiv of actionDivs) {
+                        const actionObj = this.matchActionFromDiv(actionDiv, currentActions);
+                        if (actionObj && actionObj.id === currentAction.id) {
+                            isCurrentActionInQueue = true;
+                            break;
+                        }
+                    }
+                }
 
-                            let actionTimeSeconds = 0; // Time spent on this action (for profit calculation)
-                            let count = 0; // Item/action count for profit calculation
-                            let actualAttempts = 0; // Actual attempts for profit calculation
+                // First, calculate time for current action to include in total (if not already in queue list)
+                if (currentAction && !isCurrentActionInQueue) {
+                    const actionDetails = dataManager.getActionDetails(currentAction.actionHrid);
+                    if (actionDetails) {
+                        // Check if infinite BEFORE calculating count
+                        const isInfinite = !currentAction.hasMaxCount || currentAction.actionHrid.includes('/combat/');
 
-                            if (isInfinite) {
-                                // Check for material limit on infinite actions
-                                const inventory = dataManager.getInventory();
-                                const equipment = dataManager.getEquipment();
-                                const itemDetailMap = dataManager.getInitClientData()?.itemDetailMap || {};
-                                const drinkConcentration = getDrinkConcentration(equipment, itemDetailMap);
-                                const activeDrinks = dataManager.getActionDrinkSlots(actionDetails.type);
-                                const artisanBonus = parseArtisanBonus(activeDrinks, itemDetailMap, drinkConcentration);
+                        let actionTimeSeconds = 0; // Time spent on this action (for profit calculation)
+                        let count = 0; // Queued action count for profit calculation
+                        let baseActionsNeeded = 0; // Time-consuming actions for time calculation
 
-                                // Calculate action stats to get efficiency
-                                const timeData = this.calculateActionTime(actionDetails, currentAction.actionHrid);
-                                if (timeData) {
-                                    const { actionTime, totalEfficiency } = timeData;
-                                    const materialLimit = this.calculateMaterialLimit(
-                                        actionDetails,
-                                        inventory,
-                                        artisanBonus,
-                                        totalEfficiency,
-                                        currentAction
-                                    );
+                        if (isInfinite) {
+                            // Check for material limit on infinite actions
+                            const equipment = dataManager.getEquipment();
+                            const itemDetailMap = dataManager.getInitClientData()?.itemDetailMap || {};
+                            const drinkConcentration = getDrinkConcentration(equipment, itemDetailMap);
+                            const activeDrinks = dataManager.getActionDrinkSlots(actionDetails.type);
+                            const artisanBonus = parseArtisanBonus(activeDrinks, itemDetailMap, drinkConcentration);
 
-                                    if (materialLimit !== null) {
-                                        // Material-limited infinite action - calculate time
-                                        // NOTE: materialLimit is already attempts, not actions
-                                        actualAttempts = materialLimit;
-                                        count = materialLimit; // For infinite actions, count = attempts
-                                        const totalTime = actualAttempts * actionTime;
-                                        accumulatedTime += totalTime;
-                                        actionTimeSeconds = totalTime;
-                                    }
-                                } else {
-                                    // Could not calculate action time
-                                    hasInfinite = true;
-                                }
-                            } else {
-                                count = currentAction.maxCount - currentAction.currentCount;
-                                const timeData = this.calculateActionTime(actionDetails, currentAction.actionHrid);
-                                if (timeData) {
-                                    const { actionTime, totalEfficiency } = timeData;
+                            // Calculate action stats to get efficiency
+                            const timeData = this.calculateActionTime(actionDetails, currentAction.actionHrid);
+                            if (timeData) {
+                                const { actionTime, totalEfficiency } = timeData;
+                                const materialLimit = this.calculateMaterialLimit(
+                                    actionDetails,
+                                    inventoryLookup,
+                                    artisanBonus,
+                                    currentAction
+                                );
 
-                                    // Calculate average actions per attempt from efficiency
-                                    const guaranteedActions = 1 + Math.floor(totalEfficiency / 100);
-                                    const chanceForExtra = totalEfficiency % 100;
-                                    const avgActionsPerAttempt = guaranteedActions + chanceForExtra / 100;
-
-                                    // Calculate actual attempts needed
-                                    actualAttempts = Math.ceil(count / avgActionsPerAttempt);
-                                    const totalTime = actualAttempts * actionTime;
+                                if (materialLimit !== null) {
+                                    // Material-limited infinite action - calculate time
+                                    count = materialLimit; // Max queued actions based on materials
+                                    const avgActionsPerBaseAction = calculateEfficiencyMultiplier(totalEfficiency);
+                                    baseActionsNeeded = Math.ceil(count / avgActionsPerBaseAction);
+                                    const totalTime = baseActionsNeeded * actionTime;
                                     accumulatedTime += totalTime;
                                     actionTimeSeconds = totalTime;
                                 }
+                            } else {
+                                // Could not calculate action time
+                                hasInfinite = true;
                             }
+                        } else {
+                            count = currentAction.maxCount - currentAction.currentCount;
+                            const timeData = this.calculateActionTime(actionDetails, currentAction.actionHrid);
+                            if (timeData) {
+                                const { actionTime, totalEfficiency } = timeData;
 
-                            // Store action for profit calculation (done async after UI renders)
-                            if (actionTimeSeconds > 0 && !isInfinite) {
-                                actionsToCalculate.push({
-                                    actionHrid: currentAction.actionHrid,
-                                    timeSeconds: actionTimeSeconds,
-                                    count: count,
-                                    actualAttempts: actualAttempts,
-                                });
+                                // Calculate average queued actions per time-consuming action
+                                const avgActionsPerBaseAction = calculateEfficiencyMultiplier(totalEfficiency);
+
+                                // Calculate time-consuming actions needed
+                                baseActionsNeeded = Math.ceil(count / avgActionsPerBaseAction);
+                                const totalTime = baseActionsNeeded * actionTime;
+                                accumulatedTime += totalTime;
+                                actionTimeSeconds = totalTime;
                             }
+                        }
+
+                        // Store action for profit calculation (done async after UI renders)
+                        if (actionTimeSeconds > 0) {
+                            actionsToCalculate.push({
+                                actionHrid: currentAction.actionHrid,
+                                timeSeconds: actionTimeSeconds,
+                                count: count,
+                                baseActionsNeeded: baseActionsNeeded,
+                            });
                         }
                     }
                 }
@@ -17021,7 +17416,6 @@
                     // Calculate material limit for infinite actions
                     let materialLimit = null;
                     if (isInfinite) {
-                        const inventory = dataManager.getInventory();
                         const equipment = dataManager.getEquipment();
                         const itemDetailMap = dataManager.getInitClientData()?.itemDetailMap || {};
                         const drinkConcentration = getDrinkConcentration(equipment, itemDetailMap);
@@ -17030,9 +17424,8 @@
 
                         materialLimit = this.calculateMaterialLimit(
                             actionDetails,
-                            inventory,
+                            inventoryLookup,
                             artisanBonus,
-                            totalEfficiency,
                             actionObj
                         );
                     }
@@ -17055,23 +17448,14 @@
                     // Calculate total time for this action
                     let totalTime;
                     let actionTimeSeconds = 0; // Time spent on this action (for profit calculation)
-                    let actualAttempts = 0; // Actual attempts for profit calculation
+                    let baseActionsNeeded = 0; // Time-consuming actions for time calculation
                     if (isTrulyInfinite) {
                         totalTime = Infinity;
                     } else {
-                        // Calculate actual attempts needed
-                        // NOTE: materialLimit returns attempts, but finite counts are items
-                        if (materialLimit !== null) {
-                            // Material-limited - count is already attempts
-                            actualAttempts = count;
-                        } else {
-                            // Finite action - count is items, convert to attempts
-                            const guaranteedActions = 1 + Math.floor(totalEfficiency / 100);
-                            const chanceForExtra = totalEfficiency % 100;
-                            const avgActionsPerAttempt = guaranteedActions + chanceForExtra / 100;
-                            actualAttempts = Math.ceil(count / avgActionsPerAttempt);
-                        }
-                        totalTime = actualAttempts * actionTime;
+                        // Calculate time-consuming actions needed
+                        const avgActionsPerBaseAction = calculateEfficiencyMultiplier(totalEfficiency);
+                        baseActionsNeeded = Math.ceil(count / avgActionsPerBaseAction);
+                        totalTime = baseActionsNeeded * actionTime;
                         accumulatedTime += totalTime;
                         actionTimeSeconds = totalTime;
                     }
@@ -17082,7 +17466,7 @@
                             actionHrid: actionObj.actionHrid,
                             timeSeconds: actionTimeSeconds,
                             count: count,
-                            actualAttempts: actualAttempts,
+                            baseActionsNeeded: baseActionsNeeded,
                             divIndex: divIndex, // Store index to match back to DOM element
                         });
                     }
@@ -17202,7 +17586,7 @@
         /**
          * Calculate and display total profit asynchronously (non-blocking)
          * @param {HTMLElement} totalDiv - The total display div element
-         * @param {Array} actionsToCalculate - Array of {actionHrid, timeSeconds, count, actualAttempts, divIndex} objects
+         * @param {Array} actionsToCalculate - Array of {actionHrid, timeSeconds, count, baseActionsNeeded, divIndex} objects
          * @param {string} baseText - Base text (time) to prepend
          * @param {HTMLElement} queueMenu - Queue menu element to reconnect observer after updates
          */
@@ -17292,7 +17676,7 @@
 
         /**
          * Calculate profit or estimated value for a single action based on action count
-         * @param {Object} action - Action object with {actionHrid, timeSeconds, count, actualAttempts}
+         * @param {Object} action - Action object with {actionHrid, timeSeconds, count, baseActionsNeeded}
          * @returns {Promise<number|null>} Total value (profit or revenue) or null if unavailable
          */
         async calculateProfitForAction(action) {
@@ -17316,8 +17700,8 @@
                 return null;
             }
 
-            const attemptsForValue = action.actualAttempts ?? action.count ?? 0;
-            if (!attemptsForValue) {
+            const actionsCount = action.count ?? 0;
+            if (!actionsCount) {
                 return 0;
             }
 
@@ -17325,15 +17709,32 @@
                 return null;
             }
 
-            const breakdown = calculateQueueProfitBreakdown({
-                profitPerHour: profitData.profitPerHour,
+            if (gatheringProfit) {
+                const totals = calculateGatheringActionTotalsFromBase({
+                    actionsCount,
+                    actionsPerHour: profitData.actionsPerHour,
+                    baseOutputs: profitData.baseOutputs,
+                    bonusDrops: profitData.bonusRevenue?.bonusDrops || [],
+                    processingRevenueBonusPerAction: profitData.processingRevenueBonusPerAction,
+                    drinkCostPerHour: profitData.drinkCostPerHour,
+                    efficiencyMultiplier: profitData.efficiencyMultiplier || 1,
+                });
+                return valueMode === 'estimated_value' ? totals.totalRevenue : totals.totalProfit;
+            }
+
+            const totals = calculateProductionActionTotalsFromBase({
+                actionsCount,
                 actionsPerHour: profitData.actionsPerHour,
-                actionCount: attemptsForValue,
-                revenuePerHour: profitData.revenuePerHour,
-                valueMode,
+                outputAmount: profitData.outputAmount || 1,
+                outputPrice: profitData.outputPrice,
+                gourmetBonus: profitData.gourmetBonus || 0,
+                bonusDrops: profitData.bonusRevenue?.bonusDrops || [],
+                materialCosts: profitData.materialCosts,
+                totalTeaCostPerHour: profitData.totalTeaCostPerHour,
+                efficiencyMultiplier: profitData.efficiencyMultiplier || 1,
             });
 
-            return breakdown.totalProfit;
+            return valueMode === 'estimated_value' ? totals.totalRevenue : totals.totalProfit;
         }
 
         /**
@@ -17793,16 +18194,14 @@
         const { actionTime, totalEfficiency } = stats;
 
         // Calculate actions per hour (base rate)
-        const baseActionsPerHour = 3600 / actionTime;
+        const baseActionsPerHour = calculateActionsPerHour(actionTime);
 
-        // Calculate average actions per attempt from efficiency
+        // Calculate average queued actions completed per time-consuming action
         // Efficiency gives guaranteed repeats + chance for extra
-        const guaranteedActions = 1 + Math.floor(totalEfficiency / 100);
-        const chanceForExtra = totalEfficiency % 100;
-        const avgActionsPerAttempt = guaranteedActions + chanceForExtra / 100;
+        const avgActionsPerBaseAction = calculateEfficiencyMultiplier(totalEfficiency);
 
-        // Calculate actions per hour WITH efficiency (total completions including free repeats)
-        const actionsPerHourWithEfficiency = baseActionsPerHour * avgActionsPerAttempt;
+        // Calculate actions per hour WITH efficiency (total completions including instant repeats)
+        const actionsPerHourWithEfficiency = baseActionsPerHour * avgActionsPerBaseAction;
 
         // Calculate experience multiplier (Wisdom + Charm Experience)
         const skillHrid = actionDetails.experienceGain.skillHrid;
@@ -17979,10 +18378,10 @@
                     speedLines.push(`Base: ${baseTime.toFixed(2)}s → ${timeAfterEquipment.toFixed(2)}s`);
                     if (speedBonus > 0) {
                         speedLines.push(
-                            `Speed: +${formatPercentage(speedBonus, 1)} | ${(3600 / timeAfterEquipment).toFixed(0)}/hr`
+                            `Speed: +${formatPercentage(speedBonus, 1)} | ${calculateActionsPerHour(timeAfterEquipment).toFixed(0)}/hr`
                         );
                     } else {
-                        speedLines.push(`${(3600 / timeAfterEquipment).toFixed(0)}/hr`);
+                        speedLines.push(`${calculateActionsPerHour(timeAfterEquipment).toFixed(0)}/hr`);
                     }
 
                     // Add speed breakdown
@@ -18017,7 +18416,7 @@
                             `<span style="font-weight: 500;">Task Speed (multiplicative): +${taskSpeedBonus.toFixed(1)}%</span>`
                         );
                         speedLines.push(
-                            `${timeAfterEquipment.toFixed(2)}s → ${actionTime.toFixed(2)}s | ${(3600 / actionTime).toFixed(0)}/hr`
+                            `${timeAfterEquipment.toFixed(2)}s → ${actionTime.toFixed(2)}s | ${calculateActionsPerHour(actionTime).toFixed(0)}/hr`
                         );
 
                         // Find equipped task badge for details
@@ -18048,7 +18447,7 @@
                     // Add Efficiency breakdown
                     speedLines.push(''); // Empty line
                     speedLines.push(
-                        `<span style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY});">Efficiency: +${totalEfficiency.toFixed(1)}% → Output: ×${efficiencyMultiplier.toFixed(2)} (${Math.round((3600 / actionTime) * efficiencyMultiplier)}/hr)</span>`
+                        `<span style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY});">Efficiency: +${totalEfficiency.toFixed(1)}% → Output: ×${efficiencyMultiplier.toFixed(2)} (${Math.round(calculateActionsPerHour(actionTime) * efficiencyMultiplier)}/hr)</span>`
                     );
 
                     // Detailed efficiency breakdown
@@ -18135,10 +18534,11 @@
 
                         const queueCount = parseInt(inputValue) || 0;
                         if (queueCount > 0) {
-                            // Input is number of ACTIONS to complete (affected by efficiency)
-                            // Calculate actual attempts needed
-                            const actualAttempts = Math.ceil(queueCount / efficiencyMultiplier);
-                            const totalSeconds = actualAttempts * actionTime;
+                            // Input is number of ACTIONS to complete
+                            // With efficiency, queued actions complete more quickly
+                            // Calculate time-consuming actions needed
+                            const baseActionsNeeded = Math.ceil(queueCount / efficiencyMultiplier);
+                            const totalSeconds = baseActionsNeeded * actionTime;
                             totalTimeLine.textContent = `Total time: ${timeReadable(totalSeconds)}`;
                         } else {
                             totalTimeLine.textContent = 'Total time: 0s';
@@ -18169,7 +18569,9 @@
                     });
 
                     // Create initial summary for Action Speed & Time
-                    const actionsPerHourWithEfficiency = Math.round((3600 / actionTime) * efficiencyMultiplier);
+                    const actionsPerHourWithEfficiency = Math.round(
+                        calculateActionsPerHour(actionTime) * efficiencyMultiplier
+                    );
                     const initialSummary = `${actionsPerHourWithEfficiency}/hr | Total time: 0s`;
 
                     speedSection = createCollapsibleSection(
@@ -18196,8 +18598,8 @@
                             } else {
                                 const queueCount = parseInt(inputValue) || 0;
                                 if (queueCount > 0) {
-                                    const actualAttempts = Math.ceil(queueCount / efficiencyMultiplier);
-                                    const totalSeconds = actualAttempts * actionTime;
+                                    const baseActionsNeeded = Math.ceil(queueCount / efficiencyMultiplier);
+                                    const totalSeconds = baseActionsNeeded * actionTime;
                                     speedSummaryDiv.textContent = `${actionsPerHourWithEfficiency}/hr | Total time: ${timeReadable(totalSeconds)}`;
                                 } else {
                                     speedSummaryDiv.textContent = `${actionsPerHourWithEfficiency}/hr | Total time: 0s`;
@@ -18262,15 +18664,15 @@
 
                     this.presetHours.forEach((hours) => {
                         const button = this.createButton(hours === 0.5 ? '0.5' : hours.toString(), () => {
-                            // How many actions (outputs) fit in X hours?
-                            // With efficiency, fewer actual attempts produce more outputs
+                            // How many actions fit in X hours?
+                            // With efficiency, queued actions complete more quickly
                             // Time (seconds) = hours × 3600
-                            // Actual attempts = Time / actionTime
-                            // Queue count (outputs) = Actual attempts × efficiencyMultiplier
+                            // Time-consuming actions = Time / actionTime
+                            // Queue count (actions) = Time-consuming actions × efficiencyMultiplier
                             // Round to whole number (input doesn't accept decimals)
                             const totalSeconds = hours * 60 * 60;
-                            const actualAttempts = totalSeconds / actionTime;
-                            const actionCount = Math.round(actualAttempts * efficiencyMultiplier);
+                            const baseActions = totalSeconds / actionTime;
+                            const actionCount = Math.round(baseActions * efficiencyMultiplier);
                             this.setInputValue(numberInput, actionCount);
                         });
                         queueContent.appendChild(button);
@@ -18600,7 +19002,7 @@
                     const baseRequirement = 1; // Upgrade items always require exactly 1
 
                     // Upgrade items are NOT affected by Artisan Tea (only regular inputItems are)
-                    // Materials are consumed PER ACTION (not per attempt)
+                    // Materials are consumed PER ACTION (including instant repeats)
                     // Efficiency gives bonus actions for FREE (no material cost)
                     const materialsPerAction = baseRequirement;
 
@@ -18621,7 +19023,7 @@
                         const baseRequirement = input.count;
 
                         // Apply Artisan reduction
-                        // Materials are consumed PER ACTION (not per attempt)
+                        // Materials are consumed PER ACTION (including instant repeats)
                         // Efficiency gives bonus actions for FREE (no material cost)
                         const materialsPerAction = baseRequirement * (1 - artisanBonus);
 
@@ -18751,15 +19153,15 @@
                 // Efficiency means each action repeats, giving more XP per performed action
                 const xpPerPerformedAction = xpPerAction * efficiencyMultiplier;
 
-                // Calculate real actions needed for this level (attempts)
-                const actionsForLevel = Math.ceil(xpNeeded / xpPerPerformedAction);
+                // Calculate time-consuming actions needed for this level
+                const baseActionsForLevel = Math.ceil(xpNeeded / xpPerPerformedAction);
 
-                // Convert attempts to outputs (queue input expects outputs, not attempts)
-                const outputsToQueue = Math.round(actionsForLevel * efficiencyMultiplier);
-                totalActions += outputsToQueue;
+                // Convert time-consuming actions to queued actions (instant repeats count toward queue total)
+                const actionsToQueue = Math.round(baseActionsForLevel * efficiencyMultiplier);
+                totalActions += actionsToQueue;
 
-                // Time is based on attempts (actions performed), not outputs
-                totalTime += actionsForLevel * actionTime;
+                // Time is based on time-consuming actions, not instant repeats
+                totalTime += baseActionsForLevel * actionTime;
             }
 
             return { actionsNeeded: totalActions, timeNeeded: totalTime };
@@ -18835,7 +19237,8 @@
 
                 // Calculate rates using shared utility (includes efficiency)
                 const expData = calculateExpPerHour(actionDetails.hrid);
-                const xpPerHour = expData?.expPerHour || (actionsNeeded > 0 ? (3600 / actionTime) * modifiedXP : 0);
+                const xpPerHour =
+                    expData?.expPerHour || (actionsNeeded > 0 ? calculateActionsPerHour(actionTime) * modifiedXP : 0);
                 const xpPerDay = xpPerHour * 24;
 
                 // Calculate daily level progress
@@ -19969,26 +20372,30 @@
 
             // Calculate profit/hr (for both gathering and production)
             let profitPerHour = null;
+            let hasMissingPrices = false;
             const actionDetails = dataManager.getActionDetails(data.actionHrid);
 
             if (actionDetails) {
                 if (GATHERING_TYPES.includes(actionDetails.type)) {
                     const profitData = await calculateGatheringProfit(data.actionHrid);
                     profitPerHour = profitData?.profitPerHour || null;
+                    hasMissingPrices = profitData?.hasMissingPrices || false;
                 } else if (PRODUCTION_TYPES$1.includes(actionDetails.type)) {
                     const profitData = await calculateProductionProfit(data.actionHrid);
                     profitPerHour = profitData?.profitPerHour || null;
+                    hasMissingPrices = profitData?.hasMissingPrices || false;
                 }
             }
 
             // Store profit value for sorting and update shared sort manager
-            data.profitPerHour = profitPerHour;
-            actionPanelSort.updateProfit(actionPanel, profitPerHour);
+            const resolvedProfitPerHour = hasMissingPrices ? null : profitPerHour;
+            data.profitPerHour = resolvedProfitPerHour;
+            actionPanelSort.updateProfit(actionPanel, resolvedProfitPerHour);
 
             // Check if we should hide actions with negative profit (unless pinned)
             const hideNegativeProfit = config.getSetting('actionPanel_hideNegativeProfit');
             const isPinned = actionPanelSort.isPinned(data.actionHrid);
-            if (hideNegativeProfit && profitPerHour !== null && profitPerHour < 0 && !isPinned) {
+            if (hideNegativeProfit && resolvedProfitPerHour !== null && resolvedProfitPerHour < 0 && !isPinned) {
                 // Hide the entire action panel (unless it's pinned)
                 actionPanel.style.display = 'none';
                 return;
@@ -20020,10 +20427,12 @@
             let html = `<span style="color: ${canProduceColor};">Can produce: ${maxCrafts.toLocaleString()}</span>`;
 
             // Add profit/hr line if available
-            if (profitPerHour !== null) {
-                const profitColor = profitPerHour >= 0 ? config.COLOR_PROFIT : config.COLOR_LOSS;
-                const profitSign = profitPerHour >= 0 ? '' : '-';
-                html += `<br><span style="color: ${profitColor};">Profit/hr: ${profitSign}${formatKMB(Math.abs(profitPerHour))}</span>`;
+            if (hasMissingPrices) {
+                html += `<br><span style="color: ${config.SCRIPT_COLOR_ALERT};">Profit/hr: -- ⚠</span>`;
+            } else if (resolvedProfitPerHour !== null) {
+                const profitColor = resolvedProfitPerHour >= 0 ? config.COLOR_PROFIT : config.COLOR_LOSS;
+                const profitSign = resolvedProfitPerHour >= 0 ? '' : '-';
+                html += `<br><span style="color: ${profitColor};">Profit/hr: ${profitSign}${formatKMB(Math.abs(resolvedProfitPerHour))}</span>`;
             }
 
             // Add exp/hr line if available
@@ -21051,6 +21460,32 @@
     ];
 
     /**
+     * Get the game object via React fiber
+     * @returns {Object|null} Game component instance or null
+     */
+    function getGameObject() {
+        const gamePageEl = document.querySelector('[class^="GamePage"]');
+        if (!gamePageEl) return null;
+
+        const fiberKey = Object.keys(gamePageEl).find((k) => k.startsWith('__reactFiber$'));
+        if (!fiberKey) return null;
+
+        return gamePageEl[fiberKey]?.return?.stateNode;
+    }
+
+    /**
+     * Navigate to marketplace for a specific item
+     * @param {string} itemHrid - Item HRID
+     * @param {number} enhancementLevel - Enhancement level (default 0)
+     */
+    function goToMarketplace(itemHrid, enhancementLevel = 0) {
+        const game = getGameObject();
+        if (game?.handleGoToMarketplace) {
+            game.handleGoToMarketplace(itemHrid, enhancementLevel);
+        }
+    }
+
+    /**
      * Initialize missing materials button feature
      */
     function initialize$1() {
@@ -21286,8 +21721,6 @@
      * @param {number} numActions - Number of actions for recalculating materials
      */
     async function handleMissingMaterialsClick(missingMaterials, actionHrid, numActions) {
-        console.log('[MissingMats] Button clicked with materials:', missingMaterials);
-
         // Store context for live updates
         storedActionHrid = actionHrid;
         storedNumActions = numActions;
@@ -21396,8 +21829,6 @@
             tabsContainer.appendChild(tab);
             currentMaterialsTabs.push(tab);
         }
-
-        console.log('[MissingMats] Created', currentMaterialsTabs.length, 'custom tabs');
     }
 
     /**
@@ -21471,27 +21902,22 @@
             return;
         }
 
-        // Determine tab state based on inventory and tradeability
-        const hasInInventory = material.have > 0;
-
+        // Color coding:
+        // - Red: Missing materials (missing > 0)
+        // - Green: Sufficient materials (missing = 0)
+        // - Gray: Not tradeable
         let statusColor;
         let statusText;
 
         if (!material.isTradeable) {
             statusColor = '#888888'; // Gray - not tradeable
             statusText = 'Not Tradeable';
-        } else if (hasInInventory) {
-            // Have inventory - check if we're missing materials
-            if (material.missing > 0) {
-                statusColor = '#ef4444'; // Red - missing materials
-                statusText = `Missing: ${formatWithSeparator(material.missing)}`;
-            } else {
-                statusColor = '#4ade80'; // Green - sufficient materials
-                statusText = 'Sufficient';
-            }
+        } else if (material.missing > 0) {
+            statusColor = '#ef4444'; // Red - missing materials
+            statusText = `Missing: ${formatWithSeparator(material.missing)}`;
         } else {
-            statusColor = '#fb923c'; // Orange - need to buy first
-            statusText = 'Need: Add 1 to inventory';
+            statusColor = '#4ade80'; // Green - sufficient materials
+            statusText = 'Sufficient';
         }
 
         // Title case: capitalize first letter of each word
@@ -21514,13 +21940,7 @@
         if (!material.isTradeable) {
             tab.style.opacity = '0.5';
             tab.style.cursor = 'not-allowed';
-        } else if (!hasInInventory) {
-            // Orange tint for zero-inventory items
-            tab.style.opacity = '0.85';
-            tab.style.cursor = 'help';
-            tab.title = 'Add at least 1 to your inventory first, then click to open order book';
         } else {
-            // Green - ready to use
             tab.style.opacity = '1';
             tab.style.cursor = 'pointer';
             tab.title = '';
@@ -21541,32 +21961,22 @@
         tab.setAttribute('data-mwi-custom-tab', 'true');
         tab.setAttribute('data-item-hrid', material.itemHrid);
 
-        // Determine tab state based on inventory and tradeability
-        const hasInInventory = material.have > 0;
-
         // Color coding:
-        // - Green: Have sufficient materials (missing = 0)
-        // - Red: Missing materials (missing > 0) but have at least 1 in inventory
-        // - Orange: No inventory at all (can't open order book)
-        // - Gray: Not tradeable at all
+        // - Red: Missing materials (missing > 0)
+        // - Green: Sufficient materials (missing = 0)
+        // - Gray: Not tradeable
         let statusColor;
         let statusText;
 
         if (!material.isTradeable) {
             statusColor = '#888888'; // Gray - not tradeable
             statusText = 'Not Tradeable';
-        } else if (hasInInventory) {
-            // Have inventory - check if we're missing materials
-            if (material.missing > 0) {
-                statusColor = '#ef4444'; // Red - missing materials
-                statusText = `Missing: ${formatWithSeparator(material.missing)}`;
-            } else {
-                statusColor = '#4ade80'; // Green - sufficient materials
-                statusText = 'Sufficient';
-            }
+        } else if (material.missing > 0) {
+            statusColor = '#ef4444'; // Red - missing materials
+            statusText = `Missing: ${formatWithSeparator(material.missing)}`;
         } else {
-            statusColor = '#fb923c'; // Orange - need to buy first
-            statusText = 'Need: Add 1 to inventory';
+            statusColor = '#4ade80'; // Green - sufficient materials
+            statusText = 'Sufficient';
         }
 
         // Update text content
@@ -21592,11 +22002,6 @@
         if (!material.isTradeable) {
             tab.style.opacity = '0.5';
             tab.style.cursor = 'not-allowed';
-        } else if (!hasInInventory) {
-            // Orange tint for zero-inventory items
-            tab.style.opacity = '0.85';
-            tab.style.cursor = 'help';
-            tab.title = 'Add at least 1 to your inventory first, then click to open order book';
         }
 
         // Remove selected state
@@ -21614,22 +22019,8 @@
                 return;
             }
 
-            if (!hasInInventory) {
-                // Show alert for zero-inventory items
-                alert(
-                    `${material.itemName} Order Book:\n\n` +
-                        `You need at least 1 ${material.itemName} in your inventory to view the order book.\n\n` +
-                        `How to fix:\n` +
-                        `1. Go to "Market Listings" tab\n` +
-                        `2. Search for "${material.itemName}"\n` +
-                        `3. Buy at least 1 from the market\n` +
-                        `4. Then you can shift+click it in your inventory to open the order book`
-                );
-                return;
-            }
-
-            // Has inventory - open order book
-            openOrderBook(material.itemHrid, material.itemName);
+            // Navigate to marketplace using game API
+            goToMarketplace(material.itemHrid, 0);
         });
 
         return tab;
@@ -21652,51 +22043,6 @@
         // Clear stored context
         storedActionHrid = null;
         storedNumActions = 0;
-    }
-
-    /**
-     * Open order book for an item using shift+click simulation
-     * @param {string} itemHrid - Item HRID (e.g., "/items/egg")
-     * @param {string} itemName - Item name for logging
-     * @returns {boolean} True if successful
-     */
-    function openOrderBook(itemHrid, itemName) {
-        // Extract sprite ID from HRID
-        const spriteId = itemHrid.replace('/items/', '');
-
-        // Find inventory panel
-        const inventoryPanel = document.querySelector('.Inventory_inventory__17CH2');
-        if (!inventoryPanel) {
-            console.error('[MissingMats] Inventory panel not found');
-            return false;
-        }
-
-        // Find all clickable items in inventory
-        const inventoryItems = inventoryPanel.querySelectorAll('.Item_item__2De2O.Item_clickable__3viV6');
-
-        for (const itemElement of inventoryItems) {
-            const useElement = itemElement.querySelector('use');
-            if (useElement) {
-                const href = useElement.getAttribute('href');
-
-                // Match item by sprite ID
-                if (href && href.includes(`#${spriteId}`)) {
-                    // Simulate shift+click to open order book
-                    const clickEvent = new MouseEvent('click', {
-                        bubbles: true,
-                        cancelable: true,
-                        shiftKey: true,
-                    });
-
-                    itemElement.dispatchEvent(clickEvent);
-                    console.log('[MissingMats] Opened order book for:', itemName);
-                    return true;
-                }
-            }
-        }
-
-        console.warn('[MissingMats] Item not found in inventory:', itemName);
-        return false;
     }
 
     /**
@@ -26098,23 +26444,34 @@
             };
         }
 
-        // Use pre-calculated profitPerAction from profit calculator
-        const profitPerAction = profitData.profitPerAction;
+        const hasMissingPrices = profitData.hasMissingPrices;
+
+        const totals = calculateGatheringActionTotalsFromBase({
+            actionsCount: quantity,
+            actionsPerHour: profitData.actionsPerHour,
+            baseOutputs: profitData.baseOutputs,
+            bonusDrops: profitData.bonusRevenue?.bonusDrops || [],
+            processingRevenueBonusPerAction: profitData.processingRevenueBonusPerAction,
+            drinkCostPerHour: profitData.drinkCostPerHour,
+            efficiencyMultiplier: profitData.efficiencyMultiplier || 1,
+        });
 
         return {
-            totalValue: profitPerAction * quantity,
+            totalValue: hasMissingPrices ? null : totals.totalProfit,
+            hasMissingPrices,
             breakdown: {
                 actionHrid,
                 quantity,
-                perAction: profitPerAction,
+                perAction: quantity > 0 ? totals.totalProfit / quantity : 0,
             },
             // Include detailed data for expandable display
             details: {
+                profitPerHour: profitData.profitPerHour,
                 actionsPerHour: profitData.actionsPerHour,
                 baseOutputs: profitData.baseOutputs,
                 bonusRevenue: profitData.bonusRevenue,
                 processingConversions: profitData.processingConversions,
-                processingRevenueBonus: profitData.processingRevenueBonus,
+                processingRevenueBonusPerAction: profitData.processingRevenueBonusPerAction,
                 efficiencyMultiplier: profitData.efficiencyMultiplier,
             },
         };
@@ -26147,36 +26504,42 @@
             };
         }
 
-        // Use pre-calculated profitPerAction from profit calculator
-        const profitPerAction = profitData.profitPerAction;
+        const hasMissingPrices = profitData.hasMissingPrices;
 
-        // Calculate per-action values for breakdown display
-        const revenuePerAction =
-            (profitData.itemsPerHour * profitData.priceAfterTax + profitData.gourmetBonusItems * profitData.priceAfterTax) /
-            profitData.actionsPerHour;
-        const costsPerAction =
-            (profitData.materialCostPerHour + profitData.totalTeaCostPerHour) / profitData.actionsPerHour;
+        const bonusDrops = profitData.bonusRevenue?.bonusDrops || [];
+        const totals = calculateProductionActionTotalsFromBase({
+            actionsCount: quantity,
+            actionsPerHour: profitData.actionsPerHour,
+            outputAmount: profitData.outputAmount || 1,
+            outputPrice: profitData.outputPrice,
+            gourmetBonus: profitData.gourmetBonus || 0,
+            bonusDrops,
+            materialCosts: profitData.materialCosts,
+            totalTeaCostPerHour: profitData.totalTeaCostPerHour,
+            efficiencyMultiplier: profitData.efficiencyMultiplier || 1,
+        });
 
         return {
-            totalProfit: profitPerAction * quantity,
+            totalProfit: hasMissingPrices ? null : totals.totalProfit,
+            hasMissingPrices,
             breakdown: {
                 actionHrid,
                 quantity,
-                outputValue: revenuePerAction * quantity,
-                materialCost: costsPerAction * quantity,
-                perAction: profitPerAction,
+                outputValue: totals.totalRevenue,
+                materialCost: totals.totalMaterialCost + totals.totalTeaCost,
+                perAction: quantity > 0 ? totals.totalProfit / quantity : 0,
             },
             // Include detailed data for expandable display
             details: {
+                profitPerHour: profitData.profitPerHour,
                 materialCosts: profitData.materialCosts,
                 teaCosts: profitData.teaCosts,
-                baseOutputItems: profitData.itemsPerHour,
-                gourmetBonusItems: profitData.gourmetBonusItems,
-                priceEach: profitData.priceAfterTax,
+                outputAmount: profitData.outputAmount,
+                gourmetBonus: profitData.gourmetBonus,
+                priceEach: profitData.outputPrice,
+                outputPriceMissing: profitData.outputPriceMissing,
                 actionsPerHour: profitData.actionsPerHour,
-                itemsPerAction: profitData.itemsPerHour / profitData.actionsPerHour,
                 bonusRevenue: profitData.bonusRevenue, // Pass through bonus revenue data
-                efficiencyMultiplier: profitData.efficiencyMultiplier || 1, // Pass through efficiency multiplier
             },
         };
     }
@@ -26226,11 +26589,13 @@
 
         // Calculate total profit
         const actionValue = taskType === 'production' ? actionProfit.totalProfit : actionProfit.totalValue;
-        const totalProfit = rewardValue.total + actionValue;
+        const hasMissingPrices = actionProfit.hasMissingPrices;
+        const totalProfit = hasMissingPrices ? null : rewardValue.total + actionValue;
 
         return {
             type: taskType,
             totalProfit,
+            hasMissingPrices,
             rewards: rewardValue,
             action: actionProfit,
             taskInfo: taskInfo,
@@ -26769,8 +27134,8 @@
                 const efficiencyMultiplier = profitData.action.details.efficiencyMultiplier || 1;
 
                 // Efficiency reduces the number of actions needed
-                const actualActionsNeeded = remainingActions / efficiencyMultiplier;
-                const totalSeconds = calculateSecondsForActions(actualActionsNeeded, actionsPerHour);
+                const baseActionsNeeded = remainingActions / efficiencyMultiplier;
+                const totalSeconds = calculateSecondsForActions(baseActionsNeeded, actionsPerHour);
                 timeEstimate = timeReadable(totalSeconds);
             }
 
@@ -26781,7 +27146,8 @@
             cursor: pointer;
             user-select: none;
         `;
-            profitLine.innerHTML = `💰 ${numberFormatter(profitData.totalProfit)} | <span style="display: inline-block; margin-right: 0.25em;">⏱</span> ${timeEstimate} ▸`;
+            const totalProfitLabel = profitData.hasMissingPrices ? '-- ⚠' : numberFormatter(profitData.totalProfit);
+            profitLine.innerHTML = `💰 ${totalProfitLabel} | <span style="display: inline-block; margin-right: 0.25em;">⏱</span> ${timeEstimate} ▸`;
 
             // Create breakdown section (hidden by default)
             const breakdownSection = document.createElement('div');
@@ -26830,7 +27196,8 @@
                 e.stopPropagation();
                 const isHidden = breakdownSection.style.display === 'none';
                 breakdownSection.style.display = isHidden ? 'block' : 'none';
-                profitLine.innerHTML = `💰 ${numberFormatter(profitData.totalProfit)} | <span style="display: inline-block; margin-right: 0.25em;">⏱</span> ${timeEstimate} ${isHidden ? '▾' : '▸'}`;
+                const updatedProfitLabel = profitData.hasMissingPrices ? '-- ⚠' : numberFormatter(profitData.totalProfit);
+                profitLine.innerHTML = `💰 ${updatedProfitLabel} | <span style="display: inline-block; margin-right: 0.25em;">⏱</span> ${timeEstimate} ${isHidden ? '▾' : '▸'}`;
             };
 
             profitLine.addEventListener('click', profitLineListener);
@@ -26851,6 +27218,9 @@
          */
         buildBreakdownHTML(profitData) {
             const lines = [];
+            const showTotals = !profitData.hasMissingPrices;
+            const formatTotalValue = (value) => (showTotals ? numberFormatter(value) : '-- ⚠');
+            const formatPerActionValue = (value) => (showTotals ? numberFormatter(value.toFixed(0)) : '-- ⚠');
 
             lines.push('<div style="font-weight: bold; margin-bottom: 4px;">Task Profit Breakdown</div>');
             lines.push('<div style="border-bottom: 1px solid #555; margin-bottom: 4px;"></div>');
@@ -26893,7 +27263,7 @@
             if (profitData.type === 'gathering') {
                 // Gathering Value (expandable)
                 lines.push(
-                    `<div class="mwi-expandable-header" data-section="gathering" style="margin-left: 10px; cursor: pointer; user-select: none;">Gathering Value: ${numberFormatter(profitData.action.totalValue)} ▸</div>`
+                    `<div class="mwi-expandable-header" data-section="gathering" style="margin-left: 10px; cursor: pointer; user-select: none;">Gathering Value: ${formatTotalValue(profitData.action.totalValue)} ▸</div>`
                 );
                 lines.push(
                     `<div class="mwi-expandable-section" data-section="gathering" style="display: none; margin-left: 20px; font-size: 0.65rem; color: #888; margin-top: 2px;">`
@@ -26903,23 +27273,20 @@
                     const details = profitData.action.details;
                     const quantity = profitData.action.breakdown.quantity;
                     const actionsPerHour = details.actionsPerHour;
-                    const efficiencyMultiplier = details.efficiencyMultiplier || 1;
-
-                    // Calculate actual attempts needed (quantity is successful completions)
-                    const actualAttempts = Math.ceil(quantity / efficiencyMultiplier);
-                    const hoursNeeded = actualAttempts / actionsPerHour;
 
                     // Base outputs (gathered items)
                     if (details.baseOutputs && details.baseOutputs.length > 0) {
                         lines.push(`<div style="margin-top: 2px; color: #aaa;">Items Gathered:</div>`);
                         for (const output of details.baseOutputs) {
-                            // output.itemsPerHour includes efficiency, so divide it out for per-action rate
-                            const itemsForTask = (output.itemsPerHour / actionsPerHour / efficiencyMultiplier) * quantity;
-                            const revenueForTask = output.revenuePerHour * hoursNeeded;
+                            const itemsPerAction = output.itemsPerAction ?? output.itemsPerHour / actionsPerHour;
+                            const revenuePerAction = output.revenuePerAction ?? output.revenuePerHour / actionsPerHour;
+                            const itemsForTask = itemsPerAction * quantity;
+                            const revenueForTask = revenuePerAction * quantity;
                             const dropRateText =
                                 output.dropRate < 1.0 ? ` (${formatPercentage(output.dropRate, 1)} drop)` : '';
+                            const missingPriceNote = output.missingPrice ? ' ⚠' : '';
                             lines.push(
-                                `<div>• ${output.name}: ${itemsForTask.toFixed(1)} items @ ${numberFormatter(Math.round(output.priceEach))} = ${numberFormatter(Math.round(revenueForTask))}${dropRateText}</div>`
+                                `<div>• ${output.name}: ${itemsForTask.toFixed(1)} items @ ${numberFormatter(Math.round(output.priceEach))}${missingPriceNote} = ${numberFormatter(Math.round(revenueForTask))}${dropRateText}</div>`
                             );
                         }
                     }
@@ -26931,10 +27298,13 @@
                         details.bonusRevenue.bonusDrops.length > 0
                     ) {
                         const bonusRevenue = details.bonusRevenue;
-                        const totalBonusRevenue = bonusRevenue.totalBonusRevenue * hoursNeeded;
+                        const totalBonusRevenue = bonusRevenue.bonusDrops.reduce(
+                            (sum, drop) => sum + (drop.revenuePerAction || 0) * quantity,
+                            0
+                        );
 
                         lines.push(
-                            `<div style="margin-top: 4px; color: #aaa;">Bonus Drops: ${numberFormatter(Math.round(totalBonusRevenue))}</div>`
+                            `<div style="margin-top: 4px; color: #aaa;">Bonus Drops: ${formatTotalValue(Math.round(totalBonusRevenue))}</div>`
                         );
 
                         // Group drops by type
@@ -26944,11 +27314,11 @@
                         // Show essence drops
                         if (essenceDrops.length > 0) {
                             for (const drop of essenceDrops) {
-                                // drop.dropsPerHour doesn't include efficiency, so multiply by hoursNeeded only
-                                const dropsForTask = drop.dropsPerHour * hoursNeeded;
-                                const revenueForTask = drop.revenuePerHour * hoursNeeded;
+                                const dropsForTask = (drop.dropsPerAction || 0) * quantity;
+                                const revenueForTask = (drop.revenuePerAction || 0) * quantity;
+                                const missingPriceNote = drop.missingPrice ? ' ⚠' : '';
                                 lines.push(
-                                    `<div>• ${drop.itemName}: ${dropsForTask.toFixed(2)} drops @ ${numberFormatter(Math.round(drop.priceEach))} = ${numberFormatter(Math.round(revenueForTask))}</div>`
+                                    `<div>• ${drop.itemName}: ${dropsForTask.toFixed(2)} drops @ ${numberFormatter(Math.round(drop.priceEach))}${missingPriceNote} = ${numberFormatter(Math.round(revenueForTask))}</div>`
                                 );
                             }
                         }
@@ -26956,11 +27326,11 @@
                         // Show rare find drops
                         if (rareFindDrops.length > 0) {
                             for (const drop of rareFindDrops) {
-                                // drop.dropsPerHour doesn't include efficiency, so multiply by hoursNeeded only
-                                const dropsForTask = drop.dropsPerHour * hoursNeeded;
-                                const revenueForTask = drop.revenuePerHour * hoursNeeded;
+                                const dropsForTask = (drop.dropsPerAction || 0) * quantity;
+                                const revenueForTask = (drop.revenuePerAction || 0) * quantity;
+                                const missingPriceNote = drop.missingPrice ? ' ⚠' : '';
                                 lines.push(
-                                    `<div>• ${drop.itemName}: ${dropsForTask.toFixed(2)} drops @ ${numberFormatter(Math.round(drop.priceEach))} = ${numberFormatter(Math.round(revenueForTask))}</div>`
+                                    `<div>• ${drop.itemName}: ${dropsForTask.toFixed(2)} drops @ ${numberFormatter(Math.round(drop.priceEach))}${missingPriceNote} = ${numberFormatter(Math.round(revenueForTask))}</div>`
                                 );
                             }
                         }
@@ -26968,15 +27338,20 @@
 
                     // Processing conversions (raw → processed)
                     if (details.processingConversions && details.processingConversions.length > 0) {
-                        const processingBonus = details.processingRevenueBonus * hoursNeeded;
+                        const processingBonus = (details.processingRevenueBonusPerAction || 0) * quantity;
                         lines.push(
-                            `<div style="margin-top: 4px; color: #aaa;">Processing Bonus: ${numberFormatter(Math.round(processingBonus))}</div>`
+                            `<div style="margin-top: 4px; color: #aaa;">Processing Bonus: ${formatTotalValue(Math.round(processingBonus))}</div>`
                         );
                         for (const conversion of details.processingConversions) {
-                            const conversionsForTask = conversion.conversionsPerHour * hoursNeeded;
-                            const revenueForTask = conversion.revenuePerHour * hoursNeeded;
+                            const conversionsPerAction =
+                                conversion.conversionsPerAction ?? conversion.conversionsPerHour / actionsPerHour;
+                            const revenuePerAction =
+                                conversion.revenuePerAction ?? conversion.revenuePerHour / actionsPerHour;
+                            const conversionsForTask = conversionsPerAction * quantity;
+                            const revenueForTask = revenuePerAction * quantity;
+                            const missingPriceNote = conversion.missingPrice ? ' ⚠' : '';
                             lines.push(
-                                `<div>• ${conversion.rawItem} → ${conversion.processedItem}: ${conversionsForTask.toFixed(1)} conversions, +${numberFormatter(Math.round(conversion.valueGain))} each = ${numberFormatter(Math.round(revenueForTask))}</div>`
+                                `<div>• ${conversion.rawItem} → ${conversion.processedItem}: ${conversionsForTask.toFixed(1)} conversions, +${numberFormatter(Math.round(conversion.valueGain))}${missingPriceNote} each = ${numberFormatter(Math.round(revenueForTask))}</div>`
                             );
                         }
                     }
@@ -26984,12 +27359,12 @@
 
                 lines.push(`</div>`);
                 lines.push(
-                    `<div style="margin-left: 20px; font-size: 0.65rem; color: #888;">(${profitData.action.breakdown.quantity}× @ ${numberFormatter(profitData.action.breakdown.perAction.toFixed(0))} each)</div>`
+                    `<div style="margin-left: 20px; font-size: 0.65rem; color: #888;">(${profitData.action.breakdown.quantity}× @ ${formatPerActionValue(profitData.action.breakdown.perAction)} each)</div>`
                 );
             } else if (profitData.type === 'production') {
                 // Output Value (expandable)
                 lines.push(
-                    `<div class="mwi-expandable-header" data-section="output" style="margin-left: 10px; cursor: pointer; user-select: none;">Output Value: ${numberFormatter(profitData.action.breakdown.outputValue)} ▸</div>`
+                    `<div class="mwi-expandable-header" data-section="output" style="margin-left: 10px; cursor: pointer; user-select: none;">Output Value: ${formatTotalValue(profitData.action.breakdown.outputValue)} ▸</div>`
                 );
                 lines.push(
                     `<div class="mwi-expandable-section" data-section="output" style="display: none; margin-left: 20px; font-size: 0.65rem; color: #888; margin-top: 2px;">`
@@ -26997,18 +27372,18 @@
 
                 if (profitData.action.details) {
                     const details = profitData.action.details;
-                    const itemsPerAction = details.itemsPerAction || 1;
-                    const totalItems = itemsPerAction * profitData.action.breakdown.quantity;
+                    const outputAmount = details.outputAmount || 1;
+                    const totalItems = outputAmount * profitData.action.breakdown.quantity;
+                    const outputPriceNote = details.outputPriceMissing ? ' ⚠' : '';
 
                     lines.push(
-                        `<div>• Base Production: ${totalItems.toFixed(1)} items @ ${numberFormatter(details.priceEach)} = ${numberFormatter(Math.round(totalItems * details.priceEach))}</div>`
+                        `<div>• Base Production: ${totalItems.toFixed(1)} items @ ${numberFormatter(details.priceEach)}${outputPriceNote} = ${numberFormatter(Math.round(totalItems * details.priceEach))}</div>`
                     );
 
-                    if (details.gourmetBonusItems > 0) {
-                        const bonusItems =
-                            (details.gourmetBonusItems / details.actionsPerHour) * profitData.action.breakdown.quantity;
+                    if (details.gourmetBonus > 0) {
+                        const bonusItems = outputAmount * details.gourmetBonus * profitData.action.breakdown.quantity;
                         lines.push(
-                            `<div>• Gourmet Bonus: ${bonusItems.toFixed(1)} items @ ${numberFormatter(details.priceEach)} = ${numberFormatter(Math.round(bonusItems * details.priceEach))}</div>`
+                            `<div>• Gourmet Bonus: ${bonusItems.toFixed(1)} items @ ${numberFormatter(details.priceEach)}${outputPriceNote} = ${numberFormatter(Math.round(bonusItems * details.priceEach))}</div>`
                         );
                     }
                 }
@@ -27023,12 +27398,14 @@
                 ) {
                     const details = profitData.action.details;
                     const bonusRevenue = details.bonusRevenue;
-                    const hoursNeeded = profitData.action.breakdown.quantity / details.actionsPerHour;
-                    const efficiencyMultiplier = details.efficiencyMultiplier || 1;
-                    const totalBonusRevenue = bonusRevenue.totalBonusRevenue * efficiencyMultiplier * hoursNeeded;
+                    const bonusDrops = bonusRevenue.bonusDrops || [];
+                    const totalBonusRevenue = bonusDrops.reduce(
+                        (sum, drop) => sum + (drop.revenuePerAction || 0) * profitData.action.breakdown.quantity,
+                        0
+                    );
 
                     lines.push(
-                        `<div class="mwi-expandable-header" data-section="bonus" style="margin-left: 10px; cursor: pointer; user-select: none;">Bonus Revenue: ${numberFormatter(totalBonusRevenue)} ▸</div>`
+                        `<div class="mwi-expandable-header" data-section="bonus" style="margin-left: 10px; cursor: pointer; user-select: none;">Bonus Revenue: ${formatTotalValue(totalBonusRevenue)} ▸</div>`
                     );
                     lines.push(
                         `<div class="mwi-expandable-section" data-section="bonus" style="display: none; margin-left: 20px; font-size: 0.65rem; color: #888; margin-top: 2px;">`
@@ -27042,10 +27419,11 @@
                     if (essenceDrops.length > 0) {
                         lines.push(`<div style="margin-top: 2px; color: #aaa;">Essence Drops:</div>`);
                         for (const drop of essenceDrops) {
-                            const dropsForTask = drop.dropsPerHour * efficiencyMultiplier * hoursNeeded;
-                            const revenueForTask = drop.revenuePerHour * efficiencyMultiplier * hoursNeeded;
+                            const dropsForTask = (drop.dropsPerAction || 0) * profitData.action.breakdown.quantity;
+                            const revenueForTask = (drop.revenuePerAction || 0) * profitData.action.breakdown.quantity;
+                            const missingPriceNote = drop.missingPrice ? ' ⚠' : '';
                             lines.push(
-                                `<div>• ${drop.itemName}: ${dropsForTask.toFixed(2)} drops @ ${numberFormatter(Math.round(drop.priceEach))} = ${numberFormatter(Math.round(revenueForTask))}</div>`
+                                `<div>• ${drop.itemName}: ${dropsForTask.toFixed(2)} drops @ ${numberFormatter(Math.round(drop.priceEach))}${missingPriceNote} = ${numberFormatter(Math.round(revenueForTask))}</div>`
                             );
                         }
                     }
@@ -27056,10 +27434,11 @@
                             lines.push(`<div style="margin-top: 4px; color: #aaa;">Rare Find Drops:</div>`);
                         }
                         for (const drop of rareFindDrops) {
-                            const dropsForTask = drop.dropsPerHour * efficiencyMultiplier * hoursNeeded;
-                            const revenueForTask = drop.revenuePerHour * efficiencyMultiplier * hoursNeeded;
+                            const dropsForTask = (drop.dropsPerAction || 0) * profitData.action.breakdown.quantity;
+                            const revenueForTask = (drop.revenuePerAction || 0) * profitData.action.breakdown.quantity;
+                            const missingPriceNote = drop.missingPrice ? ' ⚠' : '';
                             lines.push(
-                                `<div>• ${drop.itemName}: ${dropsForTask.toFixed(2)} drops @ ${numberFormatter(Math.round(drop.priceEach))} = ${numberFormatter(Math.round(revenueForTask))}</div>`
+                                `<div>• ${drop.itemName}: ${dropsForTask.toFixed(2)} drops @ ${numberFormatter(Math.round(drop.priceEach))}${missingPriceNote} = ${numberFormatter(Math.round(revenueForTask))}</div>`
                             );
                         }
                     }
@@ -27069,7 +27448,7 @@
 
                 // Material Cost (expandable)
                 lines.push(
-                    `<div class="mwi-expandable-header" data-section="materials" style="margin-left: 10px; cursor: pointer; user-select: none;">Material Cost: ${numberFormatter(profitData.action.breakdown.materialCost)} ▸</div>`
+                    `<div class="mwi-expandable-header" data-section="materials" style="margin-left: 10px; cursor: pointer; user-select: none;">Material Cost: ${formatTotalValue(profitData.action.breakdown.materialCost)} ▸</div>`
                 );
                 lines.push(
                     `<div class="mwi-expandable-section" data-section="materials" style="display: none; margin-left: 20px; font-size: 0.65rem; color: #888; margin-top: 2px;">`
@@ -27078,22 +27457,24 @@
                 if (profitData.action.details && profitData.action.details.materialCosts) {
                     const details = profitData.action.details;
                     const actionsNeeded = profitData.action.breakdown.quantity;
+                    const hoursNeeded = actionsNeeded / (details.actionsPerHour * (details.efficiencyMultiplier || 1));
 
                     for (const mat of details.materialCosts) {
                         const totalAmount = mat.amount * actionsNeeded;
                         const totalCost = mat.totalCost * actionsNeeded;
+                        const missingPriceNote = mat.missingPrice ? ' ⚠' : '';
                         lines.push(
-                            `<div>• ${mat.itemName}: ${totalAmount.toFixed(1)} @ ${numberFormatter(Math.round(mat.askPrice))} = ${numberFormatter(Math.round(totalCost))}</div>`
+                            `<div>• ${mat.itemName}: ${totalAmount.toFixed(1)} @ ${numberFormatter(Math.round(mat.askPrice))}${missingPriceNote} = ${numberFormatter(Math.round(totalCost))}</div>`
                         );
                     }
 
                     if (details.teaCosts && details.teaCosts.length > 0) {
-                        const hoursNeeded = actionsNeeded / details.actionsPerHour;
                         for (const tea of details.teaCosts) {
                             const drinksNeeded = tea.drinksPerHour * hoursNeeded;
                             const totalCost = tea.totalCost * hoursNeeded;
+                            const missingPriceNote = tea.missingPrice ? ' ⚠' : '';
                             lines.push(
-                                `<div>• ${tea.itemName}: ${drinksNeeded.toFixed(1)} drinks @ ${numberFormatter(Math.round(tea.pricePerDrink))} = ${numberFormatter(Math.round(totalCost))}</div>`
+                                `<div>• ${tea.itemName}: ${drinksNeeded.toFixed(1)} drinks @ ${numberFormatter(Math.round(tea.pricePerDrink))}${missingPriceNote} = ${numberFormatter(Math.round(totalCost))}</div>`
                             );
                         }
                     }
@@ -27103,17 +27484,17 @@
 
                 // Net Production
                 lines.push(
-                    `<div style="margin-left: 10px;">Net Production: ${numberFormatter(profitData.action.totalProfit)}</div>`
+                    `<div style="margin-left: 10px;">Net Production: ${formatTotalValue(profitData.action.totalProfit)}</div>`
                 );
                 lines.push(
-                    `<div style="margin-left: 20px; font-size: 0.65rem; color: #888;">(${profitData.action.breakdown.quantity}× @ ${numberFormatter(profitData.action.breakdown.perAction.toFixed(0))} each)</div>`
+                    `<div style="margin-left: 20px; font-size: 0.65rem; color: #888;">(${profitData.action.breakdown.quantity}× @ ${formatPerActionValue(profitData.action.breakdown.perAction)} each)</div>`
                 );
             }
 
             // Total
             lines.push('<div style="border-top: 1px solid #555; margin-top: 6px; padding-top: 4px;"></div>');
             lines.push(
-                `<div style="font-weight: bold; color: ${config.COLOR_ACCENT};">Total Profit: ${numberFormatter(profitData.totalProfit)}</div>`
+                `<div style="font-weight: bold; color: ${config.COLOR_ACCENT};">Total Profit: ${formatTotalValue(profitData.totalProfit)}</div>`
             );
 
             return lines.join('');
@@ -28871,6 +29252,8 @@
             this.isActive = false;
             this.currentModalContent = null; // Track current modal to detect room switches
             this.isInitialized = false;
+            this.currentMaterialsTabs = []; // Track marketplace tabs
+            this.cleanupObserver = null; // Marketplace cleanup observer
         }
 
         /**
@@ -28922,19 +29305,8 @@
             }
 
             try {
-                const nextLevel = currentLevel + 1;
-                const costData = await houseCostCalculator.calculateLevelCost(houseRoomHrid, nextLevel);
-
-                // Augment each native cost item with market pricing
-                await this.augmentNativeCosts(costsSection, costData);
-
-                // Add total cost below native costs
-                this.addTotalCost(costsSection, costData);
-
-                // Add compact "To Level" section below
-                if (currentLevel < 7) {
-                    await this.addCompactToLevel(costsSection, houseRoomHrid, currentLevel);
-                }
+                // Add "Cumulative to Level" section
+                await this.addCompactToLevel(costsSection, houseRoomHrid, currentLevel);
 
                 // Mark this modal as processed
                 this.currentModalContent = modalContent;
@@ -29149,15 +29521,15 @@
         `;
 
             // Add options
-            for (let level = currentLevel + 2; level <= 8; level++) {
+            for (let level = currentLevel + 1; level <= 8; level++) {
                 const option = document.createElement('option');
                 option.value = level;
                 option.textContent = level;
                 dropdown.appendChild(option);
             }
 
-            // Default to next level (currentLevel + 2)
-            const defaultLevel = currentLevel + 2;
+            // Default to next level (currentLevel + 1)
+            const defaultLevel = currentLevel + 1;
             dropdown.value = defaultLevel;
 
             headerRow.appendChild(label);
@@ -29202,19 +29574,17 @@
 
             const costData = await houseCostCalculator.calculateCumulativeCost(houseRoomHrid, currentLevel, targetLevel);
 
-            // Compact material list as a unified grid
+            // Materials list as vertical stack of single-line rows
             const materialsList = document.createElement('div');
             materialsList.style.cssText = `
-            display: grid;
-            grid-template-columns: auto auto auto auto auto;
-            align-items: center;
-            gap: 2px 8px;
-            line-height: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         `;
 
             // Coins first
             if (costData.coins > 0) {
-                this.appendMaterialCells(materialsList, {
+                this.appendMaterialRow(materialsList, {
                     itemHrid: '/items/coin',
                     count: costData.coins,
                     totalValue: costData.coins,
@@ -29223,7 +29593,7 @@
 
             // Materials
             for (const material of costData.materials) {
-                this.appendMaterialCells(materialsList, material);
+                this.appendMaterialRow(materialsList, material);
             }
 
             container.appendChild(materialsList);
@@ -29241,80 +29611,391 @@
         `;
             totalDiv.textContent = `Total Market Value: ${coinFormatter(costData.totalValue)}`;
             container.appendChild(totalDiv);
+
+            // Add Missing Mats Marketplace button if any materials are missing
+            const missingMaterials = this.getMissingMaterials(costData);
+            if (missingMaterials.length > 0) {
+                const button = this.createMissingMaterialsButton(missingMaterials);
+                container.appendChild(button);
+            }
         }
 
         /**
-         * Append material cells directly to grid (5 cells per material)
-         * @param {Element} grid - The grid container
+         * Append material row as single-line compact format
+         * @param {Element} container - The container element
          * @param {Object} material - Material data
          */
-        appendMaterialCells(grid, material) {
+        appendMaterialRow(container, material) {
             const itemName = houseCostCalculator.getItemName(material.itemHrid);
             const inventoryCount = houseCostCalculator.getInventoryCount(material.itemHrid);
             const hasEnough = inventoryCount >= material.count;
             const amountNeeded = Math.max(0, material.count - inventoryCount);
             const isCoin = material.itemHrid === '/items/coin';
 
-            // Cell 1: Inventory / Required (right-aligned)
-            const countsSpan = document.createElement('span');
-            countsSpan.style.cssText = `
+            const row = document.createElement('div');
+            row.style.cssText = `
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        `;
+
+            // [inv / req] - left side
+            const inventorySpan = document.createElement('span');
+            inventorySpan.style.cssText = `
             color: ${hasEnough ? 'white' : '#f87171'};
+            min-width: 120px;
             text-align: right;
         `;
-            countsSpan.textContent = `${coinFormatter(inventoryCount)} / ${coinFormatter(material.count)}`;
-            grid.appendChild(countsSpan);
+            inventorySpan.textContent = `${coinFormatter(inventoryCount)} / ${coinFormatter(material.count)}`;
+            row.appendChild(inventorySpan);
 
-            // Cell 2: Item name (left-aligned)
+            // [Badge] Material Name
             const nameSpan = document.createElement('span');
             nameSpan.style.cssText = `
             color: white;
-            text-align: left;
+            min-width: 140px;
         `;
             nameSpan.textContent = itemName;
-            grid.appendChild(nameSpan);
+            row.appendChild(nameSpan);
 
-            // Cell 3: @ price (left-aligned) - empty for coins
-            const priceSpan = document.createElement('span');
+            // @ price = total (skip for coins)
             if (!isCoin) {
-                priceSpan.style.cssText = `
-                color: ${config.SCRIPT_COLOR_SECONDARY};
-                font-size: 0.75rem;
-                text-align: left;
-            `;
-                priceSpan.textContent = `@ ${coinFormatter(material.marketPrice)}`;
-            }
-            grid.appendChild(priceSpan);
-
-            // Cell 4: = total (left-aligned) - show coin total for coins
-            const totalSpan = document.createElement('span');
-            if (isCoin) {
-                totalSpan.style.cssText = `
+                const pricingSpan = document.createElement('span');
+                pricingSpan.style.cssText = `
                 color: ${config.COLOR_ACCENT};
-                font-weight: bold;
-                font-size: 0.75rem;
-                text-align: left;
+                min-width: 180px;
             `;
-                totalSpan.textContent = `= ${coinFormatter(material.totalValue)}`;
+                pricingSpan.textContent = `@ ${coinFormatter(material.marketPrice)} = ${coinFormatter(material.totalValue)}`;
+                row.appendChild(pricingSpan);
             } else {
-                totalSpan.style.cssText = `
-                color: ${config.COLOR_ACCENT};
-                font-weight: bold;
-                font-size: 0.75rem;
-                text-align: left;
-            `;
-                totalSpan.textContent = `= ${coinFormatter(material.totalValue)}`;
+                // Empty spacer for coins
+                const spacer = document.createElement('span');
+                spacer.style.minWidth = '180px';
+                row.appendChild(spacer);
             }
-            grid.appendChild(totalSpan);
 
-            // Cell 5: Amount needed (right-aligned)
-            const neededSpan = document.createElement('span');
-            neededSpan.style.cssText = `
+            // Missing: X - right side
+            const missingSpan = document.createElement('span');
+            missingSpan.style.cssText = `
             color: ${hasEnough ? '#4ade80' : '#f87171'};
-            font-size: 0.75rem;
+            margin-left: auto;
             text-align: right;
         `;
-            neededSpan.textContent = coinFormatter(amountNeeded);
-            grid.appendChild(neededSpan);
+            missingSpan.textContent = `Missing: ${coinFormatter(amountNeeded)}`;
+            row.appendChild(missingSpan);
+
+            container.appendChild(row);
+        }
+
+        /**
+         * Get missing materials from cost data
+         * @param {Object} costData - Cost data from calculator
+         * @returns {Array} Array of missing materials in marketplace format
+         */
+        getMissingMaterials(costData) {
+            const gameData = dataManager.getInitClientData();
+            const inventory = dataManager.getInventory();
+            const missing = [];
+
+            // Process all materials (skip coins)
+            for (const material of costData.materials) {
+                const inventoryItem = inventory.find((i) => i.itemHrid === material.itemHrid);
+                const have = inventoryItem?.count || 0;
+                const missingAmount = Math.max(0, material.count - have);
+
+                // Only include if missing > 0
+                if (missingAmount > 0) {
+                    const itemDetails = gameData.itemDetailMap[material.itemHrid];
+                    if (itemDetails) {
+                        missing.push({
+                            itemHrid: material.itemHrid,
+                            itemName: itemDetails.name,
+                            missing: missingAmount,
+                            isTradeable: itemDetails.isTradable === true,
+                        });
+                    }
+                }
+            }
+
+            return missing;
+        }
+
+        /**
+         * Create missing materials marketplace button
+         * @param {Array} missingMaterials - Array of missing material objects
+         * @returns {HTMLElement} Button element
+         */
+        createMissingMaterialsButton(missingMaterials) {
+            const button = document.createElement('button');
+            button.style.cssText = `
+            width: 100%;
+            padding: 10px 16px;
+            margin-top: 12px;
+            background: linear-gradient(180deg, rgba(91, 141, 239, 0.2) 0%, rgba(91, 141, 239, 0.1) 100%);
+            color: #ffffff;
+            border: 1px solid rgba(91, 141, 239, 0.4);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        `;
+            button.textContent = 'Missing Mats Marketplace';
+
+            // Hover effects
+            button.addEventListener('mouseenter', () => {
+                button.style.background =
+                    'linear-gradient(180deg, rgba(91, 141, 239, 0.35) 0%, rgba(91, 141, 239, 0.25) 100%)';
+                button.style.borderColor = 'rgba(91, 141, 239, 0.6)';
+                button.style.boxShadow = '0 3px 6px rgba(0, 0, 0, 0.3)';
+            });
+
+            button.addEventListener('mouseleave', () => {
+                button.style.background =
+                    'linear-gradient(180deg, rgba(91, 141, 239, 0.2) 0%, rgba(91, 141, 239, 0.1) 100%)';
+                button.style.borderColor = 'rgba(91, 141, 239, 0.4)';
+                button.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
+            });
+
+            // Click handler
+            button.addEventListener('click', async () => {
+                await this.handleMissingMaterialsClick(missingMaterials);
+            });
+
+            return button;
+        }
+
+        /**
+         * Handle missing materials button click
+         * @param {Array} missingMaterials - Array of missing material objects
+         */
+        async handleMissingMaterialsClick(missingMaterials) {
+            // Navigate to marketplace
+            const success = await this.navigateToMarketplace();
+            if (!success) {
+                console.error('[HouseCostDisplay] Failed to navigate to marketplace');
+                return;
+            }
+
+            // Wait for marketplace to settle
+            await new Promise((resolve) => setTimeout(resolve, 200));
+
+            // Create custom tabs
+            this.createMissingMaterialTabs(missingMaterials);
+
+            // Setup cleanup observer if not already setup
+            if (!this.cleanupObserver) {
+                this.setupMarketplaceCleanupObserver();
+            }
+        }
+
+        /**
+         * Get game object via React fiber
+         * @returns {Object|null} Game component instance
+         */
+        getGameObject() {
+            const gamePageEl = document.querySelector('[class^="GamePage"]');
+            if (!gamePageEl) return null;
+
+            const fiberKey = Object.keys(gamePageEl).find((k) => k.startsWith('__reactFiber$'));
+            if (!fiberKey) return null;
+
+            return gamePageEl[fiberKey]?.return?.stateNode;
+        }
+
+        /**
+         * Navigate to marketplace for a specific item
+         * @param {string} itemHrid - Item HRID
+         * @param {number} enhancementLevel - Enhancement level
+         */
+        goToMarketplace(itemHrid, enhancementLevel = 0) {
+            const game = this.getGameObject();
+            if (game?.handleGoToMarketplace) {
+                game.handleGoToMarketplace(itemHrid, enhancementLevel);
+            }
+        }
+
+        /**
+         * Navigate to marketplace by clicking navbar
+         * @returns {Promise<boolean>} True if successful
+         */
+        async navigateToMarketplace() {
+            // Find marketplace navbar button
+            const navButtons = document.querySelectorAll('.NavigationBar_nav__3uuUl');
+            const marketplaceButton = Array.from(navButtons).find((nav) => {
+                const svg = nav.querySelector('svg[aria-label="navigationBar.marketplace"]');
+                return svg !== null;
+            });
+
+            if (!marketplaceButton) {
+                console.error('[HouseCostDisplay] Marketplace navbar button not found');
+                return false;
+            }
+
+            // Click button
+            marketplaceButton.click();
+
+            // Wait for marketplace to appear
+            return await this.waitForMarketplace();
+        }
+
+        /**
+         * Wait for marketplace panel to appear
+         * @returns {Promise<boolean>} True if marketplace appeared
+         */
+        async waitForMarketplace() {
+            const maxAttempts = 50;
+            const delayMs = 100;
+
+            for (let i = 0; i < maxAttempts; i++) {
+                const tabsContainer = document.querySelector('.MuiTabs-flexContainer[role="tablist"]');
+                if (tabsContainer) {
+                    const hasMarketListings = Array.from(tabsContainer.children).some((btn) =>
+                        btn.textContent.includes('Market Listings')
+                    );
+                    if (hasMarketListings) {
+                        return true;
+                    }
+                }
+
+                await new Promise((resolve) => setTimeout(resolve, delayMs));
+            }
+
+            console.error('[HouseCostDisplay] Marketplace did not open within timeout');
+            return false;
+        }
+
+        /**
+         * Create custom tabs for missing materials
+         * @param {Array} missingMaterials - Array of missing material objects
+         */
+        createMissingMaterialTabs(missingMaterials) {
+            const tabsContainer = document.querySelector('.MuiTabs-flexContainer[role="tablist"]');
+            if (!tabsContainer) {
+                console.error('[HouseCostDisplay] Tabs container not found');
+                return;
+            }
+
+            // Remove existing custom tabs
+            this.removeMissingMaterialTabs();
+
+            // Get reference tab
+            const referenceTab = Array.from(tabsContainer.children).find((btn) => btn.textContent.includes('My Listings'));
+            if (!referenceTab) {
+                console.error('[HouseCostDisplay] Reference tab not found');
+                return;
+            }
+
+            // Enable flex wrapping
+            tabsContainer.style.flexWrap = 'wrap';
+
+            // Create tab for each missing material
+            this.currentMaterialsTabs = [];
+            for (const material of missingMaterials) {
+                const tab = this.createCustomTab(material, referenceTab);
+                tabsContainer.appendChild(tab);
+                this.currentMaterialsTabs.push(tab);
+            }
+        }
+
+        /**
+         * Create custom tab for a material
+         * @param {Object} material - Material object
+         * @param {HTMLElement} referenceTab - Reference tab to clone
+         * @returns {HTMLElement} Custom tab element
+         */
+        createCustomTab(material, referenceTab) {
+            const tab = referenceTab.cloneNode(true);
+
+            // Mark as custom tab
+            tab.setAttribute('data-mwi-custom-tab', 'true');
+            tab.setAttribute('data-item-hrid', material.itemHrid);
+
+            // Color coding
+            const statusColor = material.isTradeable ? '#ef4444' : '#888888';
+            const statusText = material.isTradeable ? `Missing: ${formatWithSeparator(material.missing)}` : 'Not Tradeable';
+
+            // Update badge
+            const badgeSpan = tab.querySelector('.TabsComponent_badge__1Du26');
+            if (badgeSpan) {
+                const titleCaseName = material.itemName
+                    .split(' ')
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                    .join(' ');
+
+                badgeSpan.innerHTML = `
+                <div style="text-align: center;">
+                    <div>${titleCaseName}</div>
+                    <div style="font-size: 0.75em; color: ${statusColor};">
+                        ${statusText}
+                    </div>
+                </div>
+            `;
+            }
+
+            // Gray out if not tradeable
+            if (!material.isTradeable) {
+                tab.style.opacity = '0.5';
+                tab.style.cursor = 'not-allowed';
+            }
+
+            // Remove selected state
+            tab.classList.remove('Mui-selected');
+            tab.setAttribute('aria-selected', 'false');
+            tab.setAttribute('tabindex', '-1');
+
+            // Click handler
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (!material.isTradeable) {
+                    return;
+                }
+
+                this.goToMarketplace(material.itemHrid, 0);
+            });
+
+            return tab;
+        }
+
+        /**
+         * Remove all missing material tabs
+         */
+        removeMissingMaterialTabs() {
+            const customTabs = document.querySelectorAll('[data-mwi-custom-tab="true"]');
+            customTabs.forEach((tab) => tab.remove());
+            this.currentMaterialsTabs = [];
+        }
+
+        /**
+         * Setup marketplace cleanup observer
+         */
+        setupMarketplaceCleanupObserver() {
+            this.cleanupObserver = new MutationObserver((mutations) => {
+                for (const mutation of mutations) {
+                    for (const removedNode of mutation.removedNodes) {
+                        if (removedNode.nodeType === Node.ELEMENT_NODE) {
+                            const hadTabsContainer = removedNode.querySelector('.MuiTabs-flexContainer[role="tablist"]');
+                            if (hadTabsContainer) {
+                                this.removeMissingMaterialTabs();
+                                console.log('[HouseCostDisplay] Marketplace closed, cleaned up tabs');
+                            }
+                        }
+                    }
+                }
+            });
+
+            if (document.body) {
+                this.cleanupObserver.observe(document.body, {
+                    childList: true,
+                    subtree: true,
+                });
+            }
         }
 
         /**
@@ -29360,6 +30041,13 @@
             document.querySelectorAll('[class*="HousePanel_itemRequirements"]').forEach((grid) => {
                 grid.style.gridTemplateColumns = '';
             });
+
+            // Clean up marketplace tabs and observer
+            this.removeMissingMaterialTabs();
+            if (this.cleanupObserver) {
+                this.cleanupObserver.disconnect();
+                this.cleanupObserver = null;
+            }
 
             this.currentModalContent = null;
             this.isActive = false;
@@ -35548,18 +36236,31 @@
                         // Look for "Battle started:" messages
                         if (text.includes('Battle started:')) {
                             // Try to extract timestamp
+                            // Try to extract timestamp from message display format: [MM/DD HH:MM:SS AM/PM] or [DD-M HH:MM:SS]
                             const timestampMatch = text.match(
-                                /\[(\d{1,2}\/\d{1,2})\s+(\d{1,2}):(\d{2}):(\d{2})\s*([AP]M)?\]/
+                                /\[(\d{1,2})([-\/])(\d{1,2})\s+(\d{1,2}):(\d{2}):(\d{2})\s*([AP]M)?\]/
                             );
 
                             if (timestampMatch) {
-                                const date = timestampMatch[1];
-                                let hour = parseInt(timestampMatch[2], 10);
-                                const min = parseInt(timestampMatch[3], 10);
-                                const sec = parseInt(timestampMatch[4], 10);
-                                const period = timestampMatch[5];
+                                const part1 = parseInt(timestampMatch[1], 10);
+                                const separator = timestampMatch[2];
+                                const part2 = parseInt(timestampMatch[3], 10);
+                                let hour = parseInt(timestampMatch[4], 10);
+                                const min = parseInt(timestampMatch[5], 10);
+                                const sec = parseInt(timestampMatch[6], 10);
+                                const period = timestampMatch[7];
 
-                                const [month, day] = date.split('/').map((x) => parseInt(x, 10));
+                                // Determine format based on separator
+                                let month, day;
+                                if (separator === '/') {
+                                    // MM/DD format
+                                    month = part1;
+                                    day = part2;
+                                } else {
+                                    // DD-M format (dash separator)
+                                    day = part1;
+                                    month = part2;
+                                }
 
                                 // Handle AM/PM if present
                                 if (period === 'PM' && hour < 12) hour += 12;
@@ -35580,19 +36281,31 @@
                             const keyCountsMap = this.parseKeyCountsFromMessage(text);
 
                             if (Object.keys(keyCountsMap).length > 0) {
-                                // Try to extract timestamp from message display format: [MM/DD HH:MM:SS AM/PM]
+                                // Try to extract timestamp from message display format: [MM/DD HH:MM:SS AM/PM] or [DD-M HH:MM:SS]
                                 const timestampMatch = text.match(
-                                    /\[(\d{1,2}\/\d{1,2})\s+(\d{1,2}):(\d{2}):(\d{2})\s*([AP]M)?\]/
+                                    /\[(\d{1,2})([-\/])(\d{1,2})\s+(\d{1,2}):(\d{2}):(\d{2})\s*([AP]M)?\]/
                                 );
 
                                 if (timestampMatch) {
-                                    const date = timestampMatch[1];
-                                    let hour = parseInt(timestampMatch[2], 10);
-                                    const min = parseInt(timestampMatch[3], 10);
-                                    const sec = parseInt(timestampMatch[4], 10);
-                                    const period = timestampMatch[5];
+                                    const part1 = parseInt(timestampMatch[1], 10);
+                                    const separator = timestampMatch[2];
+                                    const part2 = parseInt(timestampMatch[3], 10);
+                                    let hour = parseInt(timestampMatch[4], 10);
+                                    const min = parseInt(timestampMatch[5], 10);
+                                    const sec = parseInt(timestampMatch[6], 10);
+                                    const period = timestampMatch[7];
 
-                                    const [month, day] = date.split('/').map((x) => parseInt(x, 10));
+                                    // Determine format based on separator
+                                    let month, day;
+                                    if (separator === '/') {
+                                        // MM/DD format
+                                        month = part1;
+                                        day = part2;
+                                    } else {
+                                        // DD-M format (dash separator)
+                                        day = part1;
+                                        month = part2;
+                                    }
 
                                     // Handle AM/PM if present
                                     if (period === 'PM' && hour < 12) hour += 12;
@@ -35952,8 +36665,16 @@
          * @param {Object} data - new_battle message data
          */
         async onNewBattle(data) {
+            console.log('[Dungeon Tracker] onNewBattle fired:', {
+                wave: data.wave,
+                battleId: data.battleId,
+                isTracking: this.isTracking,
+                currentBattleId: this.currentBattleId,
+            });
+
             // Only track if we have wave data
             if (data.wave === undefined) {
+                console.log('[Dungeon Tracker] No wave data, skipping');
                 return;
             }
 
@@ -35962,19 +36683,25 @@
 
             // Wave 0 = first wave = dungeon start
             if (data.wave === 0) {
+                console.log('[Dungeon Tracker] Wave 0 detected - starting new dungeon');
                 // Clear any stale saved state first (in case previous run didn't clear properly)
                 await this.clearInProgressRun();
 
                 // Start fresh dungeon
                 this.startDungeon(data);
             } else if (!this.isTracking) {
+                console.log('[Dungeon Tracker] Mid-dungeon start - attempting restore');
                 // Mid-dungeon start - try to restore first
                 const restored = await this.restoreInProgressRun(battleId);
                 if (!restored) {
+                    console.log('[Dungeon Tracker] Restore failed - initializing tracking');
                     // No restore - initialize tracking anyway
                     this.startDungeon(data);
+                } else {
+                    console.log('[Dungeon Tracker] Restore successful');
                 }
             } else {
+                console.log('[Dungeon Tracker] Subsequent wave - already tracking');
                 // Subsequent wave (already tracking)
                 // Update battleId in case user logged out and back in (new battle instance)
                 this.currentBattleId = data.battleId;
@@ -36467,17 +37194,31 @@
                         continue; // Skip player messages
                     }
 
-                    // Parse timestamp from message display format: [MM/DD HH:MM:SS]
-                    const timestampMatch = text.match(/\[(\d{1,2}\/\d{1,2})\s+(\d{1,2}):(\d{2}):(\d{2})\s*([AP]M)?\]/);
+                    // Parse timestamp from message display format: [MM/DD HH:MM:SS AM/PM] or [DD-M HH:MM:SS]
+                    const timestampMatch = text.match(
+                        /\[(\d{1,2})([-\/])(\d{1,2})\s+(\d{1,2}):(\d{2}):(\d{2})\s*([AP]M)?\]/
+                    );
                     if (!timestampMatch) continue;
 
-                    const date = timestampMatch[1];
-                    let hour = parseInt(timestampMatch[2], 10);
-                    const min = parseInt(timestampMatch[3], 10);
-                    const sec = parseInt(timestampMatch[4], 10);
-                    const period = timestampMatch[5];
+                    const part1 = parseInt(timestampMatch[1], 10);
+                    const separator = timestampMatch[2];
+                    const part2 = parseInt(timestampMatch[3], 10);
+                    let hour = parseInt(timestampMatch[4], 10);
+                    const min = parseInt(timestampMatch[5], 10);
+                    const sec = parseInt(timestampMatch[6], 10);
+                    const period = timestampMatch[7];
 
-                    const [month, day] = date.split('/').map((x) => parseInt(x, 10));
+                    // Determine format based on separator
+                    let month, day;
+                    if (separator === '/') {
+                        // MM/DD format
+                        month = part1;
+                        day = part2;
+                    } else {
+                        // DD-M format (dash separator)
+                        day = part1;
+                        month = part2;
+                    }
 
                     // Handle AM/PM if present
                     if (period === 'PM' && hour < 12) hour += 12;
@@ -36522,9 +37263,11 @@
                     }
                     // Extract "Battle ended:" messages (fled/canceled)
                     else if (text.includes('Battle ended:')) {
+                        const dungeonName = text.split('Battle ended:')[1]?.split(']')[0]?.trim();
                         events.push({
                             type: 'cancel',
                             timestamp,
+                            dungeonName,
                         });
                     }
                 }
@@ -36551,12 +37294,20 @@
                             duration += 24 * 60 * 60 * 1000; // Add 24 hours
                         }
 
-                        // Find nearest battle_start before this run
+                        // Find nearest battle_ended or battle_start before this run
+                        // Prioritize battle_ended (appears right before key count completion)
+                        const battleEnded = events
+                            .slice(0, i)
+                            .reverse()
+                            .find((e) => e.type === 'cancel' && e.dungeonName);
+
                         const battleStart = events
                             .slice(0, i)
                             .reverse()
                             .find((e) => e.type === 'battle_start');
-                        const dungeonName = battleStart?.dungeonName || 'Unknown';
+
+                        // Use battle_ended if available, otherwise fall back to battle_start
+                        const dungeonName = battleEnded?.dungeonName || battleStart?.dungeonName || 'Unknown';
 
                         // Get team key
                         const teamKey = dungeonTrackerStorage.getTeamKey(event.team);
@@ -40270,7 +41021,7 @@
                     const priceData = marketAPI.getPrice(result.itemHrid, 0);
                     if (priceData) {
                         const price = priceType === 'ask' ? priceData.ask : priceData.bid;
-                        totalValue += price * result.amount * 0.98; // 2% market tax
+                        totalValue += calculatePriceAfterTax(price * result.amount); // 2% market tax
                     }
                 }
             }
@@ -40283,7 +41034,7 @@
             const essencePriceData = marketAPI.getPrice('/items/enhancing_essence', 0);
             if (essencePriceData) {
                 const essencePrice = priceType === 'ask' ? essencePriceData.ask : essencePriceData.bid;
-                totalValue += essencePrice * essenceAmount * 0.98; // 2% market tax
+                totalValue += calculatePriceAfterTax(essencePrice * essenceAmount); // 2% market tax
             }
 
             return totalValue;
@@ -40499,7 +41250,7 @@
 
                     // Apply market tax (2% fee)
                     if (drop.itemHrid !== '/items/coin') {
-                        income *= 0.98;
+                        income = calculatePriceAfterTax(income);
                     }
 
                     return sum + income;
@@ -40511,23 +41262,29 @@
                 // Calculate profit per second (accounting for efficiency)
                 const profitPerSecond = (netProfitPerAttempt * (1 + data.efficiency)) / data.actionTime;
 
+                const gameData = dataManager.getInitClientData();
+                const equipment = dataManager.getEquipment();
+                const drinkConcentration =
+                    gameData && equipment ? getDrinkConcentration(equipment, gameData.itemDetailMap) : 0;
+                const drinksPerHour = calculateDrinksPerHour(drinkConcentration);
+
                 // Calculate tea cost per second
                 let teaCostPerSecond = 0;
-                if (data.consumables.length > 0 && data.teaDuration > 0) {
+                if (data.consumables.length > 0) {
                     const totalTeaCost = data.consumables.reduce((sum, consumable) => {
                         const price = buyType === 'ask' ? consumable.ask : consumable.bid;
                         return sum + price;
                     }, 0);
-                    teaCostPerSecond = totalTeaCost / data.teaDuration;
+                    teaCostPerSecond = (totalTeaCost * drinksPerHour) / SECONDS_PER_HOUR;
                 }
 
                 // Final profit accounting for tea costs
                 const finalProfitPerSecond = profitPerSecond - teaCostPerSecond;
                 const profitPerHour = finalProfitPerSecond * 3600;
-                const profitPerDay = finalProfitPerSecond * 86400;
+                const profitPerDay = calculateProfitPerDay(profitPerHour);
 
                 // Calculate actions per hour
-                const actionsPerHour = (3600 / data.actionTime) * (1 + data.efficiency);
+                const actionsPerHour = calculateActionsPerHour(data.actionTime) * (1 + data.efficiency);
 
                 // Build detailed requirement costs breakdown
                 const requirementCosts = data.requirements.map((req) => {
@@ -40586,7 +41343,8 @@
                     }
 
                     // Apply market tax for non-coin items
-                    const revenueAfterTax = drop.itemHrid !== '/items/coin' ? revenuePerAttempt * 0.98 : revenuePerAttempt;
+                    const revenueAfterTax =
+                        drop.itemHrid !== '/items/coin' ? calculatePriceAfterTax(revenuePerAttempt) : revenuePerAttempt;
                     const revenuePerHour = revenueAfterTax * actionsPerHour;
 
                     return {
@@ -40616,7 +41374,6 @@
                 // Build consumable costs breakdown
                 const consumableCosts = data.consumables.map((c) => {
                     const price = buyType === 'ask' ? c.ask : c.bid;
-                    const drinksPerHour = data.teaDuration > 0 ? 3600 / data.teaDuration : 0;
                     const costPerHour = price * drinksPerHour;
 
                     return {
@@ -43920,11 +44677,6 @@
                 // Initialize config (loads settings from storage)
                 await config.initialize();
 
-                // Initialize Settings UI (injects tab into game settings panel)
-                await settingsUI.initialize().catch((error) => {
-                    console.error('[Toolasha] Settings UI initialization failed:', error);
-                });
-
                 // Add beforeunload handler to flush all pending writes
                 window.addEventListener('beforeunload', () => {
                     storage.flushAll();
@@ -43950,6 +44702,11 @@
                     // Reload config settings with character-specific data
                     await config.loadSettings();
                     config.applyColorSettings();
+
+                    // Initialize Settings UI after character data is loaded
+                    await settingsUI.initialize().catch((error) => {
+                        console.error('[Toolasha] Settings UI initialization failed:', error);
+                    });
 
                     await featureRegistry$1.initializeFeatures();
 
@@ -43992,7 +44749,7 @@
         const targetWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
 
         targetWindow.Toolasha = {
-            version: '0.5.23',
+            version: '0.5.30',
 
             // Feature toggle API (for users to manage settings via console)
             features: {

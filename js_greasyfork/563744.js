@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JPDB Kinetic Layout
 // @namespace    jpdb-kinetic-layout
-// @version      1.3
+// @version      1.4
 // @description  Different sections on JPDB review page are now detachable and resizable!
 // @author       Idhtft
 // @match        https://jpdb.io/
@@ -306,7 +306,7 @@
 
             function detachMenu(initialEvent) {
                 isDocked = false;
-                justDetached = true;
+                justDetached = !!initialEvent;
                 const rect = floatingEl.getBoundingClientRect();
                 createPlaceholder(rect);
                 floatingEl.classList.remove('jpdbf-docked');

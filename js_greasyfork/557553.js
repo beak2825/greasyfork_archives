@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AWBW Advanced Hotkeys
 // @namespace    https://awbw.amarriner.com/
-// @version      1.2.4
+// @version      1.2.5
 // @description  Adds rebindable hotkeys for all AWBW actions. Hotkeys can be configured via the Hotkey button in the game menu.
 // @author       Incinerate
 // @license      MIT
@@ -33,8 +33,13 @@
       hotkeys: {
         openConfig: { key: 'h' },
         select: { key: 'f' },
+        closestUnitOrBuilding: null,
+        deselect: null,
         previousUnit: { key: 'q' },
         nextUnit: { key: 'e' },
+        previousUnitOnly: null,
+        nextUnitOnly: null,
+        closestUnit: null,
         showMovementRangeIndividual: { key: 'c' },
         showMovementRangeCombined: null,
         showMovementRangeWholeArmy: null,
@@ -45,12 +50,51 @@
         showVisionRangeIndividual: null,
         showVisionRangeCombined: null,
         showVisionRangeWholeArmy: { key: 'v' },
+        // Building selection hotkeys
+        previousBuilding: null,
+        nextBuilding: null,
+        closestBuilding: null,
+        previousBase: null,
+        nextBase: null,
+        closestBase: null,
+        previousAirport: null,
+        nextAirport: null,
+        closestAirport: null,
+        previousPort: null,
+        nextPort: null,
+        closestPort: null,
+        // Bookmark save hotkeys
+        saveBookmark1: { key: '1', modifier: 'ctrl' },
+        saveBookmark2: { key: '2', modifier: 'ctrl' },
+        saveBookmark3: { key: '3', modifier: 'ctrl' },
+        saveBookmark4: { key: '4', modifier: 'ctrl' },
+        saveBookmark5: { key: '5', modifier: 'ctrl' },
+        saveBookmark6: { key: '6', modifier: 'ctrl' },
+        saveBookmark7: { key: '7', modifier: 'ctrl' },
+        saveBookmark8: { key: '8', modifier: 'ctrl' },
+        saveBookmark9: { key: '9', modifier: 'ctrl' },
+        saveBookmark10: { key: '0', modifier: 'ctrl' },
+        saveBookmark11: null,
+        saveBookmark12: null,
+        // Bookmark load hotkeys
+        loadBookmark1: { key: '1' },
+        loadBookmark2: { key: '2' },
+        loadBookmark3: { key: '3' },
+        loadBookmark4: { key: '4' },
+        loadBookmark5: { key: '5' },
+        loadBookmark6: { key: '6' },
+        loadBookmark7: { key: '7' },
+        loadBookmark8: { key: '8' },
+        loadBookmark9: { key: '9' },
+        loadBookmark10: { key: '0' },
+        loadBookmark11: null,
+        loadBookmark12: null,
         endTurn: { key: 't' },
         tagCO: { key: 't', modifier: 'shift' },
         activatePower: { key: 'a', modifier: 'shift' },
         activateSuperPower: { key: 's', modifier: 'shift' },
-        zoomIn: { key: '2' },
-        zoomOut: { key: '1' },
+        zoomIn: { key: '+' },
+        zoomOut: { key: '-' },
         pause: { key: 'p' },
         setDraw: null,
         resign: null,
@@ -120,8 +164,13 @@
       hotkeys: {
         openConfig: { key: 'h' },
         select: { key: 'd' },
+        closestUnitOrBuilding: null,
+        deselect: null,
         previousUnit: { key: 'q' },
         nextUnit: { key: 'e' },
+        previousUnitOnly: null,
+        nextUnitOnly: null,
+        closestUnit: null,
         showMovementRangeIndividual: { key: 'x' },
         showMovementRangeCombined: null,
         showMovementRangeWholeArmy: null,
@@ -132,12 +181,51 @@
         showVisionRangeIndividual: null,
         showVisionRangeCombined: null,
         showVisionRangeWholeArmy: { key: 'c' },
+        // Building selection hotkeys
+        previousBuilding: null,
+        nextBuilding: null,
+        closestBuilding: null,
+        previousBase: null,
+        nextBase: null,
+        closestBase: null,
+        previousAirport: null,
+        nextAirport: null,
+        closestAirport: null,
+        previousPort: null,
+        nextPort: null,
+        closestPort: null,
+        // Bookmark save hotkeys
+        saveBookmark1: { key: '1', modifier: 'ctrl' },
+        saveBookmark2: { key: '2', modifier: 'ctrl' },
+        saveBookmark3: { key: '3', modifier: 'ctrl' },
+        saveBookmark4: { key: '4', modifier: 'ctrl' },
+        saveBookmark5: { key: '5', modifier: 'ctrl' },
+        saveBookmark6: { key: '6', modifier: 'ctrl' },
+        saveBookmark7: { key: '7', modifier: 'ctrl' },
+        saveBookmark8: { key: '8', modifier: 'ctrl' },
+        saveBookmark9: { key: '9', modifier: 'ctrl' },
+        saveBookmark10: { key: '0', modifier: 'ctrl' },
+        saveBookmark11: null,
+        saveBookmark12: null,
+        // Bookmark load hotkeys
+        loadBookmark1: { key: '1' },
+        loadBookmark2: { key: '2' },
+        loadBookmark3: { key: '3' },
+        loadBookmark4: { key: '4' },
+        loadBookmark5: { key: '5' },
+        loadBookmark6: { key: '6' },
+        loadBookmark7: { key: '7' },
+        loadBookmark8: { key: '8' },
+        loadBookmark9: { key: '9' },
+        loadBookmark10: { key: '0' },
+        loadBookmark11: null,
+        loadBookmark12: null,
         endTurn: { key: 'r' },
         tagCO: { key: 'r', modifier: 'shift' },
         activatePower: { key: 'a', modifier: 'shift' },
         activateSuperPower: { key: 's', modifier: 'shift' },
-        zoomIn: { key: '2' },
-        zoomOut: { key: '1' },
+        zoomIn: { key: '+' },
+        zoomOut: { key: '-' },
         pause: { key: 'p' },
         setDraw: null,
         resign: null,
@@ -214,9 +302,6 @@
 
   const HOTKEY_ACTIONS = {
     navigation: [
-      { id: 'select', label: 'Select Unit/Building' },
-      { id: 'previousUnit', label: 'Previous Unit' },
-      { id: 'nextUnit', label: 'Next Unit' },
       // Movement Range section
       { id: 'showMovementRangeIndividual', label: 'Show Movement Range (Individual)' },
       { id: 'showMovementRangeCombined', label: 'Show Movement Range (Combined)' },
@@ -230,23 +315,75 @@
       { id: 'showVisionRangeIndividual', label: 'Show Vision Range (Individual)' },
       { id: 'showVisionRangeCombined', label: 'Show Vision Range (Combined)' },
       { id: 'showVisionRangeWholeArmy', label: 'Show Vision Range (Whole Army)' },
+      // Page 2 - Unit/Building Selection
+      { id: 'select', label: 'Unit/Building at Cursor', page: 2 },
+      { id: 'closestUnitOrBuilding', label: 'Closest Unit/Building to Cursor', page: 2 },
+      { id: 'previousUnit', label: 'Previous Unit/Building', page: 2 },
+      { id: 'nextUnit', label: 'Next Unit/Building', page: 2 },
+      { id: 'deselect', label: 'Deselect Unit/Building', page: 2 },
+      // Page 2 - Unit Selection (units only, never buildings)
+      { id: 'closestUnit', label: 'Closest Unit to Cursor', page: 2 },
+      { id: 'previousUnitOnly', label: 'Previous Unit', page: 2 },
+      { id: 'nextUnitOnly', label: 'Next Unit', page: 2 },
+      // Page 2 - Building Selection (Any production building)
+      { id: 'closestBuilding', label: 'Closest Building to Cursor', page: 2 },
+      { id: 'previousBuilding', label: 'Previous Building', page: 2 },
+      { id: 'nextBuilding', label: 'Next Building', page: 2 },
+      // Page 2 - Base Selection
+      { id: 'closestBase', label: 'Closest Base to Cursor', page: 2 },
+      { id: 'previousBase', label: 'Previous Base', page: 2 },
+      { id: 'nextBase', label: 'Next Base', page: 2 },
+      // Page 2 - Airport Selection
+      { id: 'closestAirport', label: 'Closest Airport to Cursor', page: 2 },
+      { id: 'previousAirport', label: 'Previous Airport', page: 2 },
+      { id: 'nextAirport', label: 'Next Airport', page: 2 },
+      // Page 2 - Port Selection
+      { id: 'closestPort', label: 'Closest Port to Cursor', page: 2 },
+      { id: 'previousPort', label: 'Previous Port', page: 2 },
+      { id: 'nextPort', label: 'Next Port', page: 2 },
+      // Page 3 - Save Bookmarks
+      { id: 'saveBookmark1', label: 'Save Bookmark 1', page: 3 },
+      { id: 'saveBookmark2', label: 'Save Bookmark 2', page: 3 },
+      { id: 'saveBookmark3', label: 'Save Bookmark 3', page: 3 },
+      { id: 'saveBookmark4', label: 'Save Bookmark 4', page: 3 },
+      { id: 'saveBookmark5', label: 'Save Bookmark 5', page: 3 },
+      { id: 'saveBookmark6', label: 'Save Bookmark 6', page: 3 },
+      { id: 'saveBookmark7', label: 'Save Bookmark 7', page: 3 },
+      { id: 'saveBookmark8', label: 'Save Bookmark 8', page: 3 },
+      { id: 'saveBookmark9', label: 'Save Bookmark 9', page: 3 },
+      { id: 'saveBookmark10', label: 'Save Bookmark 10', page: 3 },
+      { id: 'saveBookmark11', label: 'Save Bookmark 11', page: 3 },
+      { id: 'saveBookmark12', label: 'Save Bookmark 12', page: 3 },
+      // Page 4 - Load Bookmarks
+      { id: 'loadBookmark1', label: 'Load Bookmark 1', page: 4 },
+      { id: 'loadBookmark2', label: 'Load Bookmark 2', page: 4 },
+      { id: 'loadBookmark3', label: 'Load Bookmark 3', page: 4 },
+      { id: 'loadBookmark4', label: 'Load Bookmark 4', page: 4 },
+      { id: 'loadBookmark5', label: 'Load Bookmark 5', page: 4 },
+      { id: 'loadBookmark6', label: 'Load Bookmark 6', page: 4 },
+      { id: 'loadBookmark7', label: 'Load Bookmark 7', page: 4 },
+      { id: 'loadBookmark8', label: 'Load Bookmark 8', page: 4 },
+      { id: 'loadBookmark9', label: 'Load Bookmark 9', page: 4 },
+      { id: 'loadBookmark10', label: 'Load Bookmark 10', page: 4 },
+      { id: 'loadBookmark11', label: 'Load Bookmark 11', page: 4 },
+      { id: 'loadBookmark12', label: 'Load Bookmark 12', page: 4 },
     ],
     misc: [
       // Page 1 - Core gameplay
-      { id: 'endTurn', label: 'End Turn' },
-      { id: 'tagCO', label: 'Tag CO' },
-      { id: 'activatePower', label: 'Power' },
-      { id: 'activateSuperPower', label: 'Super Power' },
-      { id: 'zoomIn', label: 'Zoom In' },
-      { id: 'zoomOut', label: 'Zoom Out' },
-      { id: 'pause', label: 'Pause' },
-      { id: 'setDraw', label: 'Set Draw' },
-      { id: 'resign', label: 'Resign' },
+      { id: 'endTurn', label: 'End Turn', icon: 'https://awbw.amarriner.com/terrain/endturn.gif', noFlip: true },
+      { id: 'tagCO', label: 'Tag CO', icon: 'https://awbw.amarriner.com/terrain/endturn.gif', noFlip: true },
+      { id: 'activatePower', label: 'Power', icon: 'https://awbw.amarriner.com/terrain/aw2/redstar.gif', noFlip: true },
+      { id: 'activateSuperPower', label: 'Super Power', icon: 'https://awbw.amarriner.com/terrain/aw2/bluestar.gif', noFlip: true },
+      { id: 'zoomIn', label: 'Zoom In', icon: 'https://awbw.amarriner.com/terrain/zoomin.gif', noFlip: true },
+      { id: 'zoomOut', label: 'Zoom Out', icon: 'https://awbw.amarriner.com/terrain/zoomout.gif', noFlip: true },
+      { id: 'pause', label: 'Pause', icon: 'https://awbw.amarriner.com/terrain/clock_resume_pause.gif', noFlip: true },
+      { id: 'setDraw', label: 'Set Draw', icon: 'https://awbw.amarriner.com/terrain/setdraw.gif', noFlip: true },
+      { id: 'resign', label: 'Resign', icon: 'https://awbw.amarriner.com/terrain/resign_game.gif', noFlip: true },
       // Page 1 - Calculator
-      { id: 'toggleCalculator', label: 'Toggle Calculator' },
-      { id: 'selectAttacker', label: 'Select Attacker' },
-      { id: 'selectDefender', label: 'Select Defender' },
-      { id: 'swapUnits', label: 'Swap Units' },
+      { id: 'toggleCalculator', label: 'Toggle Calculator', icon: 'https://awbw.amarriner.com/terrain/calculator.gif', noFlip: true },
+      { id: 'selectAttacker', label: 'Select Attacker', icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IB2cksfwAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAylJREFUKBUBHgPh/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHtzWv97c1r/AAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACE8AAAe3Na/wAAAAAAAAAAAAAAAAF7c1r/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACE8AAAAAAAAHwQAACFjaYBAAAAAAQAAAAAhPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITwAAAAc1r/hY2mAQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACE8AAAAHNa/wIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC+IQAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL4hAAC+7wAAQkJTAAQAAAAAfBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACE8AAAviEAAL7vAABCQlMAAAAAAAEAAAAAvbWt/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL6+rQBCEQAAvu8AAEJCUwAAAAAAQ0tTAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHtzWv8AAAAAQkJTAAAAAABDS1MBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC9ta3/vbWt/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPHtNO3KcdpMAAAAAElFTkSuQmCC', noFlip: true },
+      { id: 'selectDefender', label: 'Select Defender', icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IB2cksfwAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAylJREFUKBUBHgPh/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHd2cf8AAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB3dnH/d3Zx/wAAAAAAAAAAAAAAAAAAAABnbHQAAAAAAAR4cFgAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAAAZ2x0AAAAAP+Jio8BAAAAAAAAAAAAAAAAAAAAAAT/Bhn/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGdsdAAAAAD/iYqPAQAAAAAAAAAAAAAAAAQAAAAAZ2x0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABnbHQAAAAA/wAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZ2x0AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmZSMAAAAAAAAAAAAAAAAAAQAAAAAmZSMAAAAAAAAAAAAAAAAAAAAAAAAAAAAZ2x0AAAAAACZlIwARj88ALrBxAAAAAAAAAAAAARGPzwAAAAAAAAAAAAAAAAAAAAAAAAAAAC6wcQAAAAAAJmUjABGPzwAAAAAAAAAAAAAAAAAAAAAAARDS1MBAAAAAAAAAAAAAAAAAAAAAAAAAAB3dnH/mZSMAEY/PAAAAAAAQ0tTAXd2cf8AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAvbWt/wAAAABDS1MBAAAAAHd2cf8AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC9ta3/AAAAALf+OuMoCKgAAAAAAElFTkSuQmCC', noFlip: true },
+      { id: 'swapUnits', label: 'Swap Units', icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAPCAYAAAA/I0V3AAAAAXNSR0IB2cksfwAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAyZJREFUKBUBGwPk/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHl5fP95eXz/AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADREgwB5eXz/AAAAAAAAAAAEeXl8/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADREgwB5AAD/h4eEAQQAAAAANESDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADREgwB5AAD/AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAMy8fQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANESDAAAAAADMvH0ARDwxAAEAAAAAvbWt/wAAAAC8xM8AAAAAAEQ8MQAAAAAAAAAAALzEzwA0RIMAzLx9AEQ8MQAAAAAAAgAAAABDS1MBvMTPADREgwAAAAAAQ0tTAUNLUwFDS1MBAAAAAMy8fQBEPDEAAAAAAENLUwEBAAAAAHl5fP80RIMAAAAAAMy8fQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF5eXz/NESDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADMvH0AAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAHl5fP80RIMAAAAAAMy8fQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAh4eEAXkAAP80RIMAAAAAAEQ8MQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAh4eEAXkAAP8AAAAAQ0tTAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL21rf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUgSoudwsPXAAAAAElFTkSuQmCC', noFlip: true },
       // Page 2 - Chat
       { id: 'openChat', label: 'Open Chat', page: 2 },
       { id: 'closeChat', label: 'Close Chat', page: 2 },
@@ -462,6 +599,21 @@
   function getMiscTabTotalPages() {
     return (isMaximizeModInstalled() || isMusicPlayerInstalled()) ? 3 : 2;
   }
+
+  // Navigation tab pagination state
+  let navTabPage = 1;
+  function getNavTabTotalPages() {
+    return 4;
+  }
+
+  // Building selection state
+  let buildingSelectorIndex = { all: 0, base: 0, airport: 0, port: 0 };
+  let lastBuildingType = null;
+
+  // Bookmark storage - stores unit IDs or building IDs
+  // Format: { type: 'unit', id: unitId } or { type: 'building', id: buildingId }
+  // Bookmarks are per-tab (in memory), so each game has its own set
+  const bookmarks = {};
 
   // Page detection
   const currentUrl = window.location.href;
@@ -1126,6 +1278,536 @@
     );
   }
 
+  // ============================================================================
+  // Building Selection Helpers
+  // ============================================================================
+
+  /**
+   * Get all owned production buildings of a specific type
+   * @param {string} type - 'all', 'base', 'airport', or 'port'
+   * @returns {Array} Array of building objects sorted by position (top-left to bottom-right)
+   */
+  function getOwnedProductionBuildings(type) {
+    const viewerPId = typeof getViewerPId === 'function' ? getViewerPId() : window.viewerPId;
+    if (!viewerPId || typeof buildingsInfo === 'undefined') return [];
+
+    const buildings = [];
+    const typePatterns = {
+      all: /Base|Airport|Port/,
+      base: /Base/,
+      airport: /Airport/,
+      port: /Port/
+    };
+    const pattern = typePatterns[type] || typePatterns.all;
+
+    for (const x in buildingsInfo) {
+      for (const y in buildingsInfo[x]) {
+        const building = buildingsInfo[x][y];
+        if (!building) continue;
+        if (building.buildings_players_id !== viewerPId) continue;
+        if (!pattern.test(building.terrain_name)) continue;
+
+        buildings.push(building);
+      }
+    }
+
+    // Sort buildings
+    if (type === 'all') {
+      // For 'all': sort by type (Base -> Airport -> Port), then by position within each type
+      const typeOrder = { base: 0, airport: 1, port: 2 };
+      buildings.sort((a, b) => {
+        const aType = /Base/.test(a.terrain_name) ? 'base' : /Airport/.test(a.terrain_name) ? 'airport' : 'port';
+        const bType = /Base/.test(b.terrain_name) ? 'base' : /Airport/.test(b.terrain_name) ? 'airport' : 'port';
+
+        // First sort by building type
+        if (typeOrder[aType] !== typeOrder[bType]) {
+          return typeOrder[aType] - typeOrder[bType];
+        }
+        // Then by position: top to bottom, left to right
+        if (a.buildings_y !== b.buildings_y) {
+          return a.buildings_y - b.buildings_y;
+        }
+        return a.buildings_x - b.buildings_x;
+      });
+    } else {
+      // For specific types: sort by position only (top to bottom, left to right)
+      buildings.sort((a, b) => {
+        if (a.buildings_y !== b.buildings_y) {
+          return a.buildings_y - b.buildings_y;
+        }
+        return a.buildings_x - b.buildings_x;
+      });
+    }
+
+    return buildings;
+  }
+
+  /**
+   * Get empty (no unit on top) owned production buildings of a specific type
+   * @param {string} type - 'all', 'base', 'airport', or 'port'
+   * @returns {Array} Array of empty building objects
+   */
+  function getEmptyOwnedProductionBuildings(type) {
+    const buildings = getOwnedProductionBuildings(type);
+    return buildings.filter(b => {
+      const x = b.buildings_x;
+      const y = b.buildings_y;
+      return !(unitMap?.[x]?.[y]);
+    });
+  }
+
+  /**
+   * Select the closest unmoved owned unit to cursor.
+   * Uses Manhattan distance for tile-based comparison, with pixel distance as tie-breaker.
+   */
+  function selectClosestUnit() {
+    const viewerPId = typeof getViewerPId === 'function' ? getViewerPId() : window.viewerPId;
+    if (!viewerPId || typeof unitsInfo === 'undefined') return;
+
+    // Get cursor position (grid)
+    const coords = getGridCoordinates();
+    if (!coords.valid) return;
+
+    const cursorX = coords.x;
+    const cursorY = coords.y;
+
+    // Get cursor pixel position relative to map (same method as game.js)
+    const map = document.getElementById('map-background');
+    if (!map) return;
+    const mapRect = map.getBoundingClientRect();
+    const mapLeft = mapRect.left + window.pageXOffset;
+    const mapTop = mapRect.top + window.pageYOffset;
+    const pageX = mouseX + window.pageXOffset;
+    const pageY = mouseY + window.pageYOffset;
+    const cursorPixelX = pageX - mapLeft;
+    const cursorPixelY = pageY - mapTop;
+    const scale = window.scale || 1;
+    const tileSize = 16 * scale;
+
+    // Find all owned unmoved units (not carried)
+    const availableUnits = Object.values(unitsInfo).filter(unit => 
+      unit &&
+      unit.units_players_id === viewerPId &&
+      unit.units_moved === 0 &&
+      unit.units_carried !== 'Y'
+    );
+
+    if (availableUnits.length === 0) return;
+
+    // Find closest unit using Manhattan distance, with pixel distance as tie-breaker
+    let closest = null;
+    let minDist = Infinity;
+    let minPixelDist = Infinity;
+
+    for (const unit of availableUnits) {
+      const dist = Math.abs(unit.units_x - cursorX) + Math.abs(unit.units_y - cursorY);
+      
+      // Calculate pixel distance to unit center
+      const unitCenterPixelX = (unit.units_x + 0.5) * tileSize;
+      const unitCenterPixelY = (unit.units_y + 0.5) * tileSize;
+      const pixelDist = Math.sqrt(
+        Math.pow(unitCenterPixelX - cursorPixelX, 2) + 
+        Math.pow(unitCenterPixelY - cursorPixelY, 2)
+      );
+
+      if (dist < minDist || (dist === minDist && pixelDist < minPixelDist)) {
+        minDist = dist;
+        minPixelDist = pixelDist;
+        closest = unit;
+      }
+    }
+
+    if (closest) {
+      window.awbw_music_player?.resetMenuState?.();
+      window.closeMenu();
+      window.resetCreatedTiles?.("span[class$='tile'], span[class$='square'], .action-square");
+
+      if (typeof window.unitClickHandler === 'function') {
+        window.unitClickHandler({ id: closest.units_id });
+      }
+    }
+  }
+
+  /**
+   * Select the closest unmoved owned unit OR empty owned production building to cursor.
+   * Units take priority over buildings at equal distance.
+   */
+  function selectClosestUnitOrBuilding() {
+    const viewerPId = typeof getViewerPId === 'function' ? getViewerPId() : window.viewerPId;
+    if (!viewerPId) return;
+
+    // Get cursor position (grid)
+    const coords = getGridCoordinates();
+    if (!coords.valid) return;
+
+    const cursorX = coords.x;
+    const cursorY = coords.y;
+
+    // Get cursor pixel position relative to map (same method as game.js)
+    const map = document.getElementById('map-background');
+    if (!map) return;
+    const mapRect = map.getBoundingClientRect();
+    const mapLeft = mapRect.left + window.pageXOffset;
+    const mapTop = mapRect.top + window.pageYOffset;
+    const pageX = mouseX + window.pageXOffset;
+    const pageY = mouseY + window.pageYOffset;
+    const cursorPixelX = pageX - mapLeft;
+    const cursorPixelY = pageY - mapTop;
+    const scale = window.scale || 1;
+    const tileSize = 16 * scale;
+
+    // Find closest unit
+    let closestUnit = null;
+    let minUnitDist = Infinity;
+    let minUnitPixelDist = Infinity;
+
+    if (typeof unitsInfo !== 'undefined') {
+      const availableUnits = Object.values(unitsInfo).filter(unit => 
+        unit &&
+        unit.units_players_id === viewerPId &&
+        unit.units_moved === 0 &&
+        unit.units_carried !== 'Y'
+      );
+
+      for (const unit of availableUnits) {
+        const dist = Math.abs(unit.units_x - cursorX) + Math.abs(unit.units_y - cursorY);
+        const unitCenterPixelX = (unit.units_x + 0.5) * tileSize;
+        const unitCenterPixelY = (unit.units_y + 0.5) * tileSize;
+        const pixelDist = Math.sqrt(
+          Math.pow(unitCenterPixelX - cursorPixelX, 2) + 
+          Math.pow(unitCenterPixelY - cursorPixelY, 2)
+        );
+
+        if (dist < minUnitDist || (dist === minUnitDist && pixelDist < minUnitPixelDist)) {
+          minUnitDist = dist;
+          minUnitPixelDist = pixelDist;
+          closestUnit = unit;
+        }
+      }
+    }
+
+    // Find closest empty production building
+    let closestBuilding = null;
+    let minBuildingDist = Infinity;
+    let minBuildingPixelDist = Infinity;
+
+    const buildings = getEmptyOwnedProductionBuildings('all');
+    for (const building of buildings) {
+      const dist = Math.abs(building.buildings_x - cursorX) + Math.abs(building.buildings_y - cursorY);
+      const buildingCenterPixelX = (building.buildings_x + 0.5) * tileSize;
+      const buildingCenterPixelY = (building.buildings_y + 0.5) * tileSize;
+      const pixelDist = Math.sqrt(
+        Math.pow(buildingCenterPixelX - cursorPixelX, 2) + 
+        Math.pow(buildingCenterPixelY - cursorPixelY, 2)
+      );
+
+      if (dist < minBuildingDist || (dist === minBuildingDist && pixelDist < minBuildingPixelDist)) {
+        minBuildingDist = dist;
+        minBuildingPixelDist = pixelDist;
+        closestBuilding = building;
+      }
+    }
+
+    // Compare unit vs building - unit wins ties
+    if (closestUnit && closestBuilding) {
+      if (minUnitDist < minBuildingDist || 
+          (minUnitDist === minBuildingDist && minUnitPixelDist <= minBuildingPixelDist)) {
+        // Select unit
+        window.awbw_music_player?.resetMenuState?.();
+        window.closeMenu();
+        window.resetCreatedTiles?.("span[class$='tile'], span[class$='square'], .action-square");
+        if (typeof window.unitClickHandler === 'function') {
+          window.unitClickHandler({ id: closestUnit.units_id });
+        }
+      } else {
+        // Select building
+        selectBuilding(closestBuilding);
+      }
+    } else if (closestUnit) {
+      window.awbw_music_player?.resetMenuState?.();
+      window.closeMenu();
+      window.resetCreatedTiles?.("span[class$='tile'], span[class$='square'], .action-square");
+      if (typeof window.unitClickHandler === 'function') {
+        window.unitClickHandler({ id: closestUnit.units_id });
+      }
+    } else if (closestBuilding) {
+      selectBuilding(closestBuilding);
+    }
+  }
+
+  /**
+   * Select (open build menu for) a building at given coordinates
+   * @param {Object} building - Building object with buildings_x and buildings_y
+   */
+  function selectBuilding(building) {
+    if (!building) return;
+
+    window.awbw_music_player?.resetMenuState?.();
+    window.closeMenu();
+    window.resetCreatedTiles?.("span[class$='tile'], span[class$='square'], .action-square");
+
+    const x = building.buildings_x;
+    const y = building.buildings_y;
+
+    // Check if building is empty (can build)
+    const hasUnit = unitMap?.[x]?.[y];
+
+    if (!hasUnit && typeof window.showBuildOptions === 'function') {
+      window.showBuildOptions(x, y);
+      window.currentClick = {
+        type: 'building',
+        info: building
+      };
+    }
+  }
+
+  /**
+   * Select next/previous building of a type
+   * @param {string} type - 'all', 'base', 'airport', or 'port'
+   * @param {number} direction - 1 for next, -1 for previous
+   */
+  function selectNextBuilding(type, direction) {
+    const buildings = getEmptyOwnedProductionBuildings(type);
+    if (buildings.length === 0) return;
+
+    // Reset index if we switched building types
+    if (lastBuildingType !== type) {
+      buildingSelectorIndex[type] = 0;
+      lastBuildingType = type;
+    }
+
+    // Move to next/previous
+    buildingSelectorIndex[type] += direction;
+
+    // Wrap around
+    if (buildingSelectorIndex[type] >= buildings.length) {
+      buildingSelectorIndex[type] = 0;
+    } else if (buildingSelectorIndex[type] < 0) {
+      buildingSelectorIndex[type] = buildings.length - 1;
+    }
+
+    const building = buildings[buildingSelectorIndex[type]];
+    selectBuilding(building);
+  }
+
+  /**
+   * Select the building closest to cursor.
+   * Uses Manhattan distance for tile-based comparison, with pixel distance as tie-breaker.
+   * @param {string} type - 'all', 'base', 'airport', or 'port'
+   */
+  function selectClosestBuilding(type) {
+    const buildings = getEmptyOwnedProductionBuildings(type);
+    if (buildings.length === 0) return;
+
+    // Get cursor position from mouse coordinates (works even over menus)
+    const coords = getGridCoordinates();
+    if (!coords.valid) return;
+
+    const cursorX = coords.x;
+    const cursorY = coords.y;
+
+    // Get cursor pixel position relative to map (same method as game.js)
+    const map = document.getElementById('map-background');
+    if (!map) return;
+    const mapRect = map.getBoundingClientRect();
+    const mapLeft = mapRect.left + window.pageXOffset;
+    const mapTop = mapRect.top + window.pageYOffset;
+    const pageX = mouseX + window.pageXOffset;
+    const pageY = mouseY + window.pageYOffset;
+    const cursorPixelX = pageX - mapLeft;
+    const cursorPixelY = pageY - mapTop;
+    const scale = window.scale || 1;
+    const tileSize = 16 * scale;
+
+    // Find closest building using Manhattan distance, with pixel distance as tie-breaker
+    let closest = null;
+    let minDist = Infinity;
+    let minPixelDist = Infinity;
+
+    for (const building of buildings) {
+      const dist = Math.abs(building.buildings_x - cursorX) + Math.abs(building.buildings_y - cursorY);
+      
+      // Calculate pixel distance to building center
+      const buildingCenterPixelX = (building.buildings_x + 0.5) * tileSize;
+      const buildingCenterPixelY = (building.buildings_y + 0.5) * tileSize;
+      const pixelDist = Math.sqrt(
+        Math.pow(buildingCenterPixelX - cursorPixelX, 2) + 
+        Math.pow(buildingCenterPixelY - cursorPixelY, 2)
+      );
+
+      if (dist < minDist || (dist === minDist && pixelDist < minPixelDist)) {
+        minDist = dist;
+        minPixelDist = pixelDist;
+        closest = building;
+      }
+    }
+
+    if (closest) {
+      // Update the index for this type so subsequent next/prev continues from here
+      const idx = buildings.findIndex(b =>
+        b.buildings_x === closest.buildings_x && b.buildings_y === closest.buildings_y
+      );
+      if (idx !== -1) {
+        buildingSelectorIndex[type] = idx;
+        lastBuildingType = type;
+      }
+
+      selectBuilding(closest);
+    }
+  }
+
+  // ============================================================================
+  // Bookmark Functions
+  // ============================================================================
+
+  /**
+   * Get a building by its ID
+   * @param {number} buildingId - The building ID to find
+   * @returns {Object|null} Building object or null if not found
+   */
+  function getBuildingById(buildingId) {
+    if (typeof buildingsInfo === 'undefined') return null;
+
+    for (const x in buildingsInfo) {
+      for (const y in buildingsInfo[x]) {
+        const building = buildingsInfo[x][y];
+        if (building && building.buildings_id === buildingId) {
+          return building;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Save the currently selected unit or building to a bookmark slot.
+   * Falls back to whatever is under the cursor if nothing is selected.
+   * Only overwrites a bookmark if there's something to save.
+   * @param {number} slot - Bookmark slot number (1-12)
+   */
+  function saveBookmark(slot) {
+    // Case 1: Own unit selected for movement (moving state)
+    if (window.moving && window.currentClick?.info?.units_id) {
+      bookmarks[slot] = { type: 'unit', id: window.currentClick.info.units_id };
+      return;
+    }
+
+    // Case 2: View-only unit selected (enemy unit or already-moved unit)
+    if (viewOnlyUnitId) {
+      bookmarks[slot] = { type: 'unit', id: viewOnlyUnitId };
+      return;
+    }
+
+    // Case 3: Building selected (build menu open)
+    if (window.currentClick?.type === 'building' && window.currentClick?.info?.buildings_id) {
+      bookmarks[slot] = { type: 'building', id: window.currentClick.info.buildings_id };
+      return;
+    }
+
+    // Case 4: Nothing selected - fall back to cursor position
+    const coords = getGridCoordinates();
+    if (!coords.valid) return;
+
+    const x = coords.x;
+    const y = coords.y;
+
+    // Check for unit at cursor first
+    const unit = getUnitAt(x, y);
+    if (unit) {
+      bookmarks[slot] = { type: 'unit', id: unit.units_id };
+      return;
+    }
+
+    // Check for building at cursor
+    const building = typeof buildingsInfo !== 'undefined' &&
+                     buildingsInfo[x] && buildingsInfo[x][y];
+    if (building) {
+      bookmarks[slot] = { type: 'building', id: building.buildings_id };
+      return;
+    }
+
+    // Nothing to save - don't clear the bookmark
+  }
+
+  /**
+   * Load (select) the unit or building saved in a bookmark slot
+   * @param {number} slot - Bookmark slot number (1-12)
+   */
+  function loadBookmark(slot) {
+    const bookmark = bookmarks[slot];
+    if (!bookmark) return;
+
+    if (bookmark.type === 'unit') {
+      selectBookmarkedUnit(bookmark.id);
+    } else if (bookmark.type === 'building') {
+      selectBookmarkedBuilding(bookmark.id);
+    }
+  }
+
+  /**
+   * Select a unit by its ID (for bookmark loading)
+   * @param {number} unitId - The unit ID to select
+   */
+  function selectBookmarkedUnit(unitId) {
+    const unit = typeof unitsInfo !== 'undefined' && unitsInfo[unitId];
+    if (!unit) {
+      // Unit no longer exists (destroyed or carried)
+      return;
+    }
+
+    // Don't select cargo units
+    if (unit.units_carried === 'Y') {
+      return;
+    }
+
+    window.awbw_music_player?.resetMenuState?.();
+    window.closeMenu();
+    window.resetCreatedTiles?.("span[class$='tile'], span[class$='square'], .action-square");
+
+    // Use the game's unitClickHandler
+    if (typeof window.unitClickHandler === 'function') {
+      window.unitClickHandler({ id: unitId });
+    }
+  }
+
+  /**
+   * Select a building by its ID (for bookmark loading)
+   * @param {number} buildingId - The building ID to select
+   */
+  function selectBookmarkedBuilding(buildingId) {
+    const building = getBuildingById(buildingId);
+    if (!building) {
+      // Building no longer exists (captured and destroyed? unlikely but possible)
+      return;
+    }
+
+    const x = building.buildings_x;
+    const y = building.buildings_y;
+
+    // Check if there's a unit on the building - if so, do nothing
+    const hasUnit = typeof unitMap !== 'undefined' && unitMap?.[x]?.[y];
+    if (hasUnit) {
+      return;
+    }
+
+    // Check if it's a production building we own
+    const viewerPId = typeof getViewerPId === 'function' ? getViewerPId() : window.viewerPId;
+    const isOwnedProduction = building.buildings_players_id === viewerPId &&
+                              /Base|Airport|Port/.test(building.terrain_name);
+
+    if (isOwnedProduction) {
+      window.awbw_music_player?.resetMenuState?.();
+      window.closeMenu();
+      window.resetCreatedTiles?.("span[class$='tile'], span[class$='square'], .action-square");
+      window.showBuildOptions(x, y);
+      window.currentClick = {
+        type: 'building',
+        info: building
+      };
+    }
+    // For non-production buildings (HQ, cities, etc.), do nothing
+  }
+
   // Map internal type names to AWBW's draw types for correct colors
   function getDrawType(type) {
     if (type.startsWith('movement')) return 'movement';
@@ -1653,6 +2335,8 @@
     rangeClickSuppressed = false;
     individualModeLastUnit = null;
     typeModeLastUnitName = null;
+    // Show path arrow again
+    document.body.classList.remove('awbw-range-key-held');
   }
 
   function handleRangeKeyDown(type, mainKey) {
@@ -1671,6 +2355,9 @@
     rangeKeyHeld = type;
     rangeMainKey = mainKey;  // Store the main key for keyup detection
 
+    // Hide path arrow while range key is held
+    document.body.classList.add('awbw-range-key-held');
+
     // Immediately show for current cursor position
     addTilesForUnitAt(window.coordX, window.coordY, type);
   }
@@ -1688,15 +2375,22 @@
 
     // Only clear if the released key matches the main key that started this range
     if (rangeKeyHeld && rangeMainKey && normalizedKey === rangeMainKey) {
+      // Store unit info before clearing state
+      const shouldRestoreUnit = window.currentClick?.type === 'unit' && 
+                                window.currentClick?.info && 
+                                window.moving;
+      const unit = shouldRestoreUnit ? window.currentClick.info : null;
+      
+      // Clear range preview state and tiles
       clearRangePreview();
 
-      // Restore selected unit's movement range if one was selected
-      // Just redraw the tiles - the unit is still selected (currentClick, path arrow, etc.)
-      if (window.currentClick?.type === 'unit' && window.currentClick?.info && window.moving) {
-        const unit = window.currentClick.info;
+      // Restore selected unit's movement range using AWBW's native tile drawing
+      // This preserves the unit selection state while restoring clickable tiles
+      if (shouldRestoreUnit && unit) {
         const tiles = getMovementTilesForUnit(unit);
-        if (tiles && tiles.length > 0) {
-          drawTilesWithBordersFromArray(tiles, 'movement');
+        if (tiles && tiles.length > 0 && typeof window.drawTiles === 'function') {
+          // Use AWBW's native drawTiles to create clickable movement tiles
+          window.drawTiles(tiles, 'movement');
         }
       }
     }
@@ -2326,7 +3020,21 @@
   // ============================================================================
 
   // Actions that always work regardless of state
-  const ALWAYS_ACTIVE_ACTIONS = new Set(['openConfig', 'select', 'previousUnit', 'nextUnit']);
+  const ALWAYS_ACTIVE_ACTIONS = new Set([
+    'openConfig', 'select', 'closestUnitOrBuilding', 'deselect',
+    'previousUnit', 'nextUnit', 'previousUnitOnly', 'nextUnitOnly', 'closestUnit',
+    'previousBuilding', 'nextBuilding', 'closestBuilding',
+    'previousBase', 'nextBase', 'closestBase',
+    'previousAirport', 'nextAirport', 'closestAirport',
+    'previousPort', 'nextPort', 'closestPort',
+    // Bookmark actions
+    'saveBookmark1', 'saveBookmark2', 'saveBookmark3', 'saveBookmark4',
+    'saveBookmark5', 'saveBookmark6', 'saveBookmark7', 'saveBookmark8',
+    'saveBookmark9', 'saveBookmark10', 'saveBookmark11', 'saveBookmark12',
+    'loadBookmark1', 'loadBookmark2', 'loadBookmark3', 'loadBookmark4',
+    'loadBookmark5', 'loadBookmark6', 'loadBookmark7', 'loadBookmark8',
+    'loadBookmark9', 'loadBookmark10', 'loadBookmark11', 'loadBookmark12'
+  ]);
 
   // Actions that are conditionally blocked based on settings (covers both navigation and misc tabs)
   const CONDITIONAL_GENERAL_ACTIONS = {
@@ -2422,14 +3130,6 @@
         window.awbw_music_player?.resetMenuState?.();
         window.closeMenu();
         window.unitSelectorRef = window.selectNextUnit(window.unitSelectorRef.index + 1, 1);
-        // Set currentClick for building menu if opened via cycling
-        if (window.unitSelectorRef?.openBase) {
-          const { x, y } = window.unitSelectorRef.openBase;
-          window.currentClick = {
-            type: 'building',
-            info: buildingsInfo?.[x]?.[y]
-          };
-        }
       }
     },
 
@@ -2438,16 +3138,121 @@
         window.awbw_music_player?.resetMenuState?.();
         window.closeMenu();
         window.unitSelectorRef = window.selectNextUnit(window.unitSelectorRef.index - 1, -1);
-        // Set currentClick for building menu if opened via cycling
+      }
+    },
+
+    nextUnitOnly: function() {
+      if (typeof window.selectNextUnit === 'function' && window.unitSelectorRef) {
+        window.awbw_music_player?.resetMenuState?.();
+        window.closeMenu();
+        window.unitSelectorRef = window.selectNextUnit(window.unitSelectorRef.index + 1, 1);
+        // If it landed on a building, close the menu - we only want units
         if (window.unitSelectorRef?.openBase) {
-          const { x, y } = window.unitSelectorRef.openBase;
-          window.currentClick = {
-            type: 'building',
-            info: buildingsInfo?.[x]?.[y]
-          };
+          window.closeMenu();
         }
       }
     },
+
+    previousUnitOnly: function() {
+      if (typeof window.selectNextUnit === 'function' && window.unitSelectorRef) {
+        window.awbw_music_player?.resetMenuState?.();
+        window.closeMenu();
+        window.unitSelectorRef = window.selectNextUnit(window.unitSelectorRef.index - 1, -1);
+        // If it landed on a building, close the menu - we only want units
+        if (window.unitSelectorRef?.openBase) {
+          window.closeMenu();
+        }
+      }
+    },
+
+    closestUnit: function() {
+      selectClosestUnit();
+    },
+
+    closestUnitOrBuilding: function() {
+      selectClosestUnitOrBuilding();
+    },
+
+    deselect: function() {
+      deselectUnit();
+    },
+
+    // Building selection handlers
+    nextBuilding: function() {
+      selectNextBuilding('all', 1);
+    },
+
+    previousBuilding: function() {
+      selectNextBuilding('all', -1);
+    },
+
+    closestBuilding: function() {
+      selectClosestBuilding('all');
+    },
+
+    nextBase: function() {
+      selectNextBuilding('base', 1);
+    },
+
+    previousBase: function() {
+      selectNextBuilding('base', -1);
+    },
+
+    closestBase: function() {
+      selectClosestBuilding('base');
+    },
+
+    nextAirport: function() {
+      selectNextBuilding('airport', 1);
+    },
+
+    previousAirport: function() {
+      selectNextBuilding('airport', -1);
+    },
+
+    closestAirport: function() {
+      selectClosestBuilding('airport');
+    },
+
+    nextPort: function() {
+      selectNextBuilding('port', 1);
+    },
+
+    previousPort: function() {
+      selectNextBuilding('port', -1);
+    },
+
+    closestPort: function() {
+      selectClosestBuilding('port');
+    },
+
+    // Bookmark save handlers
+    saveBookmark1: function() { saveBookmark(1); },
+    saveBookmark2: function() { saveBookmark(2); },
+    saveBookmark3: function() { saveBookmark(3); },
+    saveBookmark4: function() { saveBookmark(4); },
+    saveBookmark5: function() { saveBookmark(5); },
+    saveBookmark6: function() { saveBookmark(6); },
+    saveBookmark7: function() { saveBookmark(7); },
+    saveBookmark8: function() { saveBookmark(8); },
+    saveBookmark9: function() { saveBookmark(9); },
+    saveBookmark10: function() { saveBookmark(10); },
+    saveBookmark11: function() { saveBookmark(11); },
+    saveBookmark12: function() { saveBookmark(12); },
+
+    // Bookmark load handlers
+    loadBookmark1: function() { loadBookmark(1); },
+    loadBookmark2: function() { loadBookmark(2); },
+    loadBookmark3: function() { loadBookmark(3); },
+    loadBookmark4: function() { loadBookmark(4); },
+    loadBookmark5: function() { loadBookmark(5); },
+    loadBookmark6: function() { loadBookmark(6); },
+    loadBookmark7: function() { loadBookmark(7); },
+    loadBookmark8: function() { loadBookmark(8); },
+    loadBookmark9: function() { loadBookmark(9); },
+    loadBookmark10: function() { loadBookmark(10); },
+    loadBookmark11: function() { loadBookmark(11); },
+    loadBookmark12: function() { loadBookmark(12); },
 
     toggleCalculator: function() {
       if (window.calculator) {
@@ -4275,6 +5080,17 @@
   function createStyles() {
     const style = document.createElement('style');
     style.textContent = `
+      /* Hide calculator hotkey tooltips (we have our own hotkeys) */
+      .select-attacker .hover-box-text,
+      .select-defender .hover-box-text {
+        display: none !important;
+      }
+
+      /* Hide path arrow while range key is held */
+      body.awbw-range-key-held .path-tile {
+        display: none !important;
+      }
+
       /* Range display tiles should not capture clicks - let them pass through to units */
       .range-square, .vision-square, .check-range-square {
         pointer-events: none;
@@ -4593,7 +5409,7 @@
         padding: 6px 10px;
         background: #f5f5f5;
         border-radius: 4px;
-        margin-bottom: 6px;
+        margin-bottom: 5px;
         height: 36px;
         box-sizing: border-box;
       }
@@ -4659,7 +5475,7 @@
       .awbw-hotkeys-divider {
         border: none;
         border-top: 1px solid #ddd;
-        margin: 12px 0;
+        margin: 10px 0;
       }
 
       .awbw-hotkeys-footer {
@@ -5322,6 +6138,10 @@
         margin-left: 3px;
         margin-right: 3px;
       }
+      /* Prevent build menu items from wrapping when hotkeys are added */
+      .build-options-game li {
+        white-space: nowrap;
+      }
     `;
     document.head.appendChild(style);
   }
@@ -5391,7 +6211,7 @@
     // Tabs
     const tabs = document.createElement('div');
     tabs.className = 'awbw-hotkeys-tabs';
-    const tabNames = ['Nav.', 'Unit', 'Base', 'Airport', 'Port', 'Misc.', 'Settings'];
+    const tabNames = ['Sel.', 'Unit', 'Base', 'Airport', 'Port', 'Misc.', 'Settings'];
     const tabIds = ['navigation', 'unit', 'base', 'airport', 'port', 'misc', 'settings'];
     tabIds.forEach((tabId, index) => {
       const tab = document.createElement('button');
@@ -5454,14 +6274,16 @@
     let actions = HOTKEY_ACTIONS[tabId];
 
     // Create scrollable container for all tabs
-    const needsPagination = tabId === 'misc' && getMiscTabTotalPages() > 1;
+    const needsPaginationMisc = tabId === 'misc' && getMiscTabTotalPages() > 1;
+    const needsPaginationNav = tabId === 'navigation' && getNavTabTotalPages() > 1;
+    const needsPagination = needsPaginationMisc || needsPaginationNav;
     const rowsContainer = document.createElement('div');
     rowsContainer.className = 'awbw-hotkeys-rows-container';
     content.appendChild(rowsContainer);
 
     // Section header
     const tabTitles = {
-      navigation: 'Navigation Hotkeys',
+      navigation: 'Range Hotkeys',
       misc: 'Miscellaneous Hotkeys',
       unit: 'Unit Hotkeys',
       base: 'Base Hotkeys',
@@ -5469,9 +6291,21 @@
       port: 'Port Hotkeys',
     };
 
+    // Dynamic titles for navigation pages
+    const navPageTitles = {
+      1: 'Range Hotkeys',
+      2: 'Unit & Building Selection',
+      3: 'Save Bookmarks',
+      4: 'Load Bookmarks',
+    };
+
     const header = document.createElement('h3');
     header.className = 'awbw-hotkeys-section-header';
-    header.textContent = tabTitles[tabId] || 'Hotkeys';
+    if (tabId === 'navigation') {
+      header.textContent = navPageTitles[navTabPage] || 'Range Hotkeys';
+    } else {
+      header.textContent = tabTitles[tabId] || 'Hotkeys';
+    }
     rowsContainer.appendChild(header);
 
     if (!actions || actions.length === 0) {
@@ -5487,6 +6321,14 @@
       actions = actions.filter(action => {
         const actionPage = action.page || 1;
         return actionPage === miscTabPage;
+      });
+    }
+
+    // Filter by page for navigation tab
+    if (tabId === 'navigation') {
+      actions = actions.filter(action => {
+        const actionPage = action.page || 1;
+        return actionPage === navTabPage;
       });
     }
 
@@ -5516,6 +6358,37 @@
         }
         // Divider before Vision Range section
         if (action.id === 'showVisionRangeIndividual') {
+          const divider = document.createElement('hr');
+          divider.className = 'awbw-hotkeys-divider';
+          rowsContainer.appendChild(divider);
+        }
+        // Page 2 dividers
+        // Divider before Unit-only Selection section
+        if (action.id === 'closestUnit') {
+          const divider = document.createElement('hr');
+          divider.className = 'awbw-hotkeys-divider';
+          rowsContainer.appendChild(divider);
+        }
+        // Divider before Building Selection section
+        if (action.id === 'closestBuilding') {
+          const divider = document.createElement('hr');
+          divider.className = 'awbw-hotkeys-divider';
+          rowsContainer.appendChild(divider);
+        }
+        // Divider before Base section
+        if (action.id === 'closestBase') {
+          const divider = document.createElement('hr');
+          divider.className = 'awbw-hotkeys-divider';
+          rowsContainer.appendChild(divider);
+        }
+        // Divider before Airport section
+        if (action.id === 'closestAirport') {
+          const divider = document.createElement('hr');
+          divider.className = 'awbw-hotkeys-divider';
+          rowsContainer.appendChild(divider);
+        }
+        // Divider before Port section
+        if (action.id === 'closestPort') {
           const divider = document.createElement('hr');
           divider.className = 'awbw-hotkeys-divider';
           rowsContainer.appendChild(divider);
@@ -5628,7 +6501,7 @@
     });
 
     // Add pagination controls for misc tab (outside scrollable container)
-    if (needsPagination) {
+    if (needsPaginationMisc) {
       const pagination = document.createElement('div');
       pagination.className = 'awbw-hotkeys-pagination';
 
@@ -5659,6 +6532,45 @@
           window.awbw_music_player?.playUiMenuOpen?.();
           miscTabPage++;
           renderTabContent('misc');
+        }
+      });
+      pagination.appendChild(nextBtn);
+
+      content.appendChild(pagination);
+    }
+
+    // Add pagination controls for navigation tab
+    if (needsPaginationNav) {
+      const pagination = document.createElement('div');
+      pagination.className = 'awbw-hotkeys-pagination';
+
+      const prevBtn = document.createElement('button');
+      prevBtn.className = 'awbw-hotkeys-pagination-btn';
+      prevBtn.textContent = '◀';
+      prevBtn.disabled = navTabPage === 1;
+      prevBtn.addEventListener('click', () => {
+        if (navTabPage > 1) {
+          window.awbw_music_player?.playUiMenuOpen?.();
+          navTabPage--;
+          renderTabContent('navigation');
+        }
+      });
+      pagination.appendChild(prevBtn);
+
+      const indicator = document.createElement('span');
+      indicator.className = 'awbw-hotkeys-pagination-indicator';
+      indicator.textContent = `${navTabPage} / ${getNavTabTotalPages()}`;
+      pagination.appendChild(indicator);
+
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'awbw-hotkeys-pagination-btn';
+      nextBtn.textContent = '▶';
+      nextBtn.disabled = navTabPage === getNavTabTotalPages();
+      nextBtn.addEventListener('click', () => {
+        if (navTabPage < getNavTabTotalPages()) {
+          window.awbw_music_player?.playUiMenuOpen?.();
+          navTabPage++;
+          renderTabContent('navigation');
         }
       });
       pagination.appendChild(nextBtn);
@@ -5990,6 +6902,15 @@
       </ul>
     `,
     changelog: `
+      <div class="version-entry">
+        <span class="version-number">v1.2.5</span><span class="version-date">2025/01/27</span>
+        <ul>
+          <li>Added more hotkeys for selecting units and buildings, including cycling through production buildings, jumping to the closest unit or building near your cursor, and bookmarks</li>
+          <li>Improved damage calculator input fields, press 0-9 to set values for hp and towers directly instead of clearing and retyping, 0 = 10 for HP</li>
+          <li>Fixed a bug with unit selection/deselection after releasing range hotkeys</li>
+          <li>Fixed a bug with hotkey hints in menus wrapping to new lines</li>
+        </ul>
+      </div>
       <div class="version-entry">
         <span class="version-number">v1.2.4</span><span class="version-date">2025/12/16</span>
         <ul>
@@ -7398,6 +8319,35 @@
         }
         return;
       }
+      // Arrow keys for page navigation (only when not rebinding)
+      if (!rebindingAction && (key === 'arrowleft' || key === 'arrowright')) {
+        const activeTab = document.querySelector('.awbw-hotkeys-tab.active')?.dataset.tab;
+        if (activeTab === 'navigation') {
+          e.preventDefault();
+          if (key === 'arrowleft' && navTabPage > 1) {
+            window.awbw_music_player?.playUiMenuOpen?.();
+            navTabPage--;
+            renderTabContent('navigation');
+          } else if (key === 'arrowright' && navTabPage < getNavTabTotalPages()) {
+            window.awbw_music_player?.playUiMenuOpen?.();
+            navTabPage++;
+            renderTabContent('navigation');
+          }
+          return;
+        } else if (activeTab === 'misc') {
+          e.preventDefault();
+          if (key === 'arrowleft' && miscTabPage > 1) {
+            window.awbw_music_player?.playUiMenuOpen?.();
+            miscTabPage--;
+            renderTabContent('misc');
+          } else if (key === 'arrowright' && miscTabPage < getMiscTabTotalPages()) {
+            window.awbw_music_player?.playUiMenuOpen?.();
+            miscTabPage++;
+            renderTabContent('misc');
+          }
+          return;
+        }
+      }
       // Don't process other hotkeys while panel is open
       return;
     }
@@ -7411,6 +8361,37 @@
       document.activeElement.tagName === 'TEXTAREA' ||
       document.activeElement.isContentEditable
     );
+
+    // Calculator quick number input: when focused on calculator HP/towers inputs,
+    // pressing a number key instantly sets that value instead of appending
+    if (isTypingInInput && document.activeElement.tagName === 'INPUT') {
+      const input = document.activeElement;
+      const isNumberKey = /^[0-9]$/.test(e.key);
+      
+      if (isNumberKey) {
+        // Check if this is a calculator HP or towers input
+        const isHpInput = input.closest('.hp-options');
+        const isTowerInput = input.closest('.tower-options');
+        
+        if (isHpInput || isTowerInput) {
+          let value = parseInt(e.key, 10);
+          
+          // For HP fields, 0 means 10
+          if (isHpInput && value === 0) {
+            value = 10;
+          }
+          
+          // Set the value directly and trigger input event
+          input.value = value;
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+          
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+      }
+    }
 
     // Skip site-wide actions when typing (except they still work via isGameFocused path for game chat)
     if (!isTypingInInput) {

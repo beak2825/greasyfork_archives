@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         no-mouse-google
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-26
+// @version      2026-01-27-2
 // @description  hjkl google
 // @author       yabeenico
 // @include      https://www.google.com/search?*
@@ -19,7 +19,7 @@ let selectedIndex = -1;
 let selectedColumn = 0;
 
 const itemQuery = '' +
-      '#search div[data-hveid][data-ved][lang][class],' +
+      '#search div[data-hveid][data-ved][lang],' +
       '#search div[data-hveid]:has(>div[data-cid]),' +
       '#search div[data-hveid]:has(>div > div[data-cid]),' +
       '#nevermatch';
@@ -47,6 +47,14 @@ function refresh(){
 refresh();
 
 document.addEventListener('keydown', (e) => {
+    if(
+        e.isComposing ||
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        e.target.isContentEditable
+    ){
+        return;
+    }
     switch(e.key){
         case 'j':
             if(selectedIndex == -1){

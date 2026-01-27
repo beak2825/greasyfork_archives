@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TwitterImg Downloader
 // @namespace    TypeNANA
-// @version      0.17
+// @version      0.18
 // @description  Add download button to Twitter image, and click to download the original image named by format.
 // @author       HY
 // @include      *://twitter.com/*
@@ -263,7 +263,7 @@
         addDownloadButton
     );
     waitForKeyElements(
-        'a[href^="/i/imagine?postId=',
+        'a[href^="https://grok.com/imagine?parent_x_post_id=',
         setEditMargin,
         true
     );

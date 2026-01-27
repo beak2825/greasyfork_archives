@@ -4,7 +4,7 @@
 // @author         Blaff, Blatomi, Atlantis, Rand0max
 // @namespace      JV_Chat_MP
 // @license        MIT
-// @version        0.1.112.v657_MP
+// @version        0.1.112.v659_MP
 // @icon           https://images.emojiterra.com/google/noto-emoji/unicode-15/color/128px/2709.png
 // @match          https://*.jeuxvideo.com/messages-prives/message.php*
 // @grant          none
@@ -1275,7 +1275,7 @@ let lastDate;
 
 function defaultConfig() {
     return {
-        default_reduced: false,
+        chat_reduced: false,
         turbo_delay: 500,
         max_width: 100,
         hide_alerts: false,
@@ -1376,7 +1376,7 @@ function tryCatch(func) {
 
 function toggleTextarea() {
     isReduced = !isReduced;
-    configuration["default_reduced"] = isReduced;
+    configuration["chat_reduced"] = isReduced;
     saveConfig();
 
     let isDown = isScrollDown();
@@ -1861,7 +1861,7 @@ function postMessage() {
         let parsedPage = parsePage(res, timestamp);
         if (!parsedPage.alert) {
             //textarea.value = "";
-            reactareatext(textarea, '');
+            reactAreaText(textarea, '');
         }
         setTextareaHeight();
         setScrollDown();
@@ -2336,7 +2336,7 @@ function triggerJVChat() {
     forumSide.setAttribute("href", forum.href);
     forumSide.innerHTML = escape(forum.title);
 
-    let defaultReduced = configuration["default_reduced"];
+    let defaultReduced = configuration["chat_reduced"];
     let messageTopic = document.getElementById("message");
 
     if (messageTopic && (defaultReduced === false || (messageTopic.value !== ""))) {
@@ -2936,11 +2936,11 @@ function insertAtCursor(input, textToInsert) {
     const end = input.selectionEnd;
     //input.value = value.slice(0, start) + textToInsert + value.slice(end);
     const newText = value.slice(0, start) + textToInsert + value.slice(end);
-    reactareatext(input, newText);
+    reactAreaText(input, newText);
     input.selectionStart = input.selectionEnd = start + textToInsert.length;
 }
 
-function reactareatext(textarea, value) {
+function reactAreaText(textarea, value) {
     const prototype = Object.getPrototypeOf(textarea);
     const nativeSetter = Object.getOwnPropertyDescriptor(prototype, 'value').set;
     nativeSetter.call(textarea, value);

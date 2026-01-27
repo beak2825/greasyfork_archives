@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           YT: peek-a-pic
 // @description    Hover a thumbnail at its bottom part and move the mouse horizontally to view the actual screenshots from the video
-// @version        1.2.1
+// @version        1.3.0
 //
 // @match          https://www.youtube.com/*
 //
@@ -33,7 +33,8 @@ const getVideoId = (el, deep) =>
   (deep ? el = el.querySelector('a[href*="?v="], img[src*="ytimg.com/vi"]') : el) &&
   (el = (el.search || el.src).match(/(?:\?v=|\/vi\w*\/)([^&/]+)/)) &&
   el[1];
-let API_DATA, API_URL;
+const API_URL = 'https://www.youtube.com/youtubei/v1/get_watch?prettyPrint=false';
+let API_DATA;
 
 //#region Styles
 const STYLE_MAIN = /*language=CSS*/ important(`
@@ -275,10 +276,8 @@ class Storyboard {
   }
 
   async fetchInfo() {
-    if (!API_DATA) {
+    if (!API_DATA)
       API_DATA = (window.wrappedJSObject || window).ytcfg.data_;
-      API_URL = 'https://www.youtube.com/youtubei/v1/player?key=' + API_DATA.INNERTUBE_API_KEY;
-    }
     const {id} = this;
     const info = await (requests[id] || (requests[id] = this.fetch()));
     delete requests[id];
@@ -303,12 +302,20 @@ class Storyboard {
   }
 
   async fetch() {
-    return (await fetch(API_URL, {
+    return (await (await fetch(API_URL, {
       body: JSON.stringify({
-        videoId: this.id,
         context: API_DATA.INNERTUBE_CONTEXT,
-      }), method: 'POST',
-    })).json();
+        playerRequest: {
+          videoId: this.id,
+          playbackContext: {
+            contentPlaybackContext: {
+              signatureTimestamp: API_DATA.STS,
+            },
+          },
+        },
+      }),
+      method: 'POST',
+    })).json())[0].playerResponse;
   }
 
   calcPartUrl(part) {

@@ -179,6 +179,9 @@
                 -webkit-line-clamp: 999 !important; line-clamp: 999 !important;
                 max-height: none !important; height: auto !important;
                 overflow: visible !important; text-overflow: clip !important;
+                white-space: normal !important;
+                word-break: break-word !important;
+                overflow-wrap: anywhere !important;
                 user-select: text !important;
             }
             .answer-analysis-row, .answer-analysis { -webkit-box-orient: vertical !important; }
@@ -187,6 +190,9 @@
             .answer-box-detail p, .answer-box-detail span {
                 color: #222 !important; opacity: 1 !important; filter: none !important;
                 -webkit-text-fill-color: #222 !important; user-select: text !important;
+                white-space: normal !important;
+                word-break: break-word !important;
+                overflow-wrap: anywhere !important;
             }
 
             [class*="blur"] { display: none !important; pointer-events: none !important; }
@@ -201,6 +207,15 @@
 
     function unlockVIP() {
         if (!userConfig.features.vipUnlock) return;
+
+        document.querySelectorAll('.answer-analysis-row.hide-height').forEach(element => {
+            element.classList.remove('hide-height');
+            if (!element.style) return;
+            element.style.maxHeight = '';
+            element.style.height = '';
+            element.style.overflow = '';
+            element.style.whiteSpace = '';
+        });
 
         // 移除 VIP 相关遮罩和按钮
         const selectorsToRemove = [

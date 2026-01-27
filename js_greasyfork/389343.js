@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         中国知网CNKI硕博论文PDF下载
-// @version      4.0.2
+// @version      4.0.3
 // @namespace    https://greasyfork.org/users/244539
 // @icon         https://www.cnki.net/favicon.ico
 // @description  知网文献、硕博论文PDF批量下载，下载硕博论文章节目录
@@ -21,12 +21,12 @@
 // 解决办法：将你的域名按照上面的 @match 的格式，添加到后面，保存脚本，刷新网页，应该就可以了。（最后要加个*）
 // 例：// @match https://webvpn.cueb.edu.cn/*
 
-(function() {
+(function () {
     'use strict';
 
     let useWebVPN = GM_getValue('useWebVPN', false);
     let fetchLevels = GM_getValue('fetchLevels', true);
-    const config = {"buttonText":"批量下载 PDF","buttonColor":"#3b82f6","buttonTextColor":"#ffffff","showIcon":true,"position":"floating-bottom-right","borderRadius":"9999px","autoDownload":false};
+    const config = { "buttonText": "批量下载 PDF", "buttonColor": "#3b82f6", "buttonTextColor": "#ffffff", "showIcon": true, "position": "floating-bottom-right", "borderRadius": "9999px", "autoDownload": false };
 
     // Global Caches
     const journalLevelCache = new Map();
@@ -398,6 +398,24 @@
     .cnki-footer a { color: var(--cnki-primary); text-decoration: none; cursor: pointer; }
     .cnki-footer a:hover { text-decoration: underline; }
 
+
+    .cnki-debug-error {
+        font-family: monospace;
+        font-size: 11px;
+        color: #dc2626;
+        background-color: #fef2f2;
+        border: 1px solid #fee2e2;
+        padding: 4px 8px;
+        border-radius: 4px;
+        flex: 1;
+        margin: 0 20px;
+        word-break: break-all;
+        white-space: pre-wrap;
+        max-height: 42px;
+        overflow-y: auto;
+        line-height: 1.2;
+    }
+
     /* QR Code Hover Styles */
     .cnki-qr-link {
         position: relative;
@@ -529,7 +547,7 @@
         // Register Menu
         if (typeof GM_registerMenuCommand !== 'undefined') {
             GM_registerMenuCommand("打开批量下载助手", () => {
-                 if (!localStorage.getItem('cnkiFirstTimePopupShown_v3_9')) {
+                if (!localStorage.getItem('cnkiFirstTimePopupShown_v4_0_2')) {
                     showHelpModal();
                 } else {
                     openDashboard();
@@ -557,6 +575,36 @@
             });
         });
     }
+
+    // --- HELPER: Validate PDF file header ---
+    async function validatePDF(blob) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const arr = new Uint8Array(reader.result);
+                const header = String.fromCharCode(...arr.slice(0, 5));
+                resolve(header === '%PDF-');
+            };
+            reader.onerror = () => resolve(false);
+            reader.readAsArrayBuffer(blob.slice(0, 8));
+        });
+    }
+
+    // --- HELPER: Create safe filename ---
+    function createSafeFilename(filename, maxLength = 200) {
+        let safeName = filename
+            .replace(/[\/:*?"<>|\\]/g, '_')  // 替换非法字符
+            .replace(/\s+/g, ' ')             // 多空格变单空格
+            .trim();
+
+        // 限制长度（为 .pdf 扩展名预留空间）
+        if (safeName.length > maxLength) {
+            safeName = safeName.substring(0, maxLength);
+        }
+
+        return safeName + '.pdf';
+    }
+
 
     // --- HELPER: Journal Level Fetcher ---
     async function fetchJournalLevel(url) {
@@ -619,7 +667,7 @@
         btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span>${config.buttonText}</span>`;
 
         btn.onclick = () => {
-             if (!localStorage.getItem('cnkiFirstTimePopupShown_v3_9')) {
+            if (!localStorage.getItem('cnkiFirstTimePopupShown_v4_0_2')) {
                 showHelpModal();
             } else {
                 openDashboard();
@@ -629,11 +677,11 @@
 
         // Handle inline injection
         if (config.position === 'inline-title') {
-             const target = document.querySelector('.result-count');
-             if (target) target.parentNode.insertBefore(btn, target.nextSibling);
-             else document.body.appendChild(btn);
+            const target = document.querySelector('.result-count');
+            if (target) target.parentNode.insertBefore(btn, target.nextSibling);
+            else document.body.appendChild(btn);
         } else {
-             document.body.appendChild(btn);
+            document.body.appendChild(btn);
         }
     }
 
@@ -670,6 +718,7 @@
                     <div class="cnki-ui-title">
                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> 批量下载助手 <span class="cnki-version-tag">v4.0</span>
                     </div>
+                    <div id="cnki-debug-info" class="cnki-debug-error" style="display:none;"></div>
                     <button id="cnki-close-btn" class="cnki-ui-close" title="关闭 (Esc)">&times;</button>
                 </div>
 
@@ -682,7 +731,7 @@
                     <div class="cnki-toolbar-tips">
                         1、关闭窗口数据不会消失，如需获取新数据，先点击清除数据。<br/>
                         2、通过WebVPN远程登录的用户获取出错请尝试开启开关。<br/>
-                        3、问题反馈请提供控制台截图到留言区或公众号私信。
+                        3、问题反馈请查看顶部报错信息截图到留言区或公众号私信。
                     </div>
                 </div>
 
@@ -732,7 +781,7 @@
 
         // Event Listeners
         document.getElementById('cnki-close-btn').onclick = closeDashboard;
-        overlay.onclick = (e) => { if(e.target === overlay) closeDashboard(); };
+        overlay.onclick = (e) => { if (e.target === overlay) closeDashboard(); };
 
         document.getElementById('cnki-get-links').onclick = getLinks;
         document.getElementById('cnki-batch-dl').onclick = downloadSelected;
@@ -746,7 +795,7 @@
             updateStatus();
         };
 
-        document.getElementById('cnki-webvpn').onclick = function() {
+        document.getElementById('cnki-webvpn').onclick = function () {
             useWebVPN = !useWebVPN;
             GM_setValue('useWebVPN', useWebVPN);
             this.textContent = `WebVPN: ${useWebVPN ? '开启' : '关闭'}`;
@@ -754,7 +803,7 @@
             createLoading(`WebVPN ${useWebVPN ? '已开启' : '已关闭'}`);
         };
 
-        document.getElementById('cnki-level-toggle').onclick = function() {
+        document.getElementById('cnki-level-toggle').onclick = function () {
             fetchLevels = !fetchLevels;
             GM_setValue('fetchLevels', fetchLevels);
             this.textContent = `期刊等级: ${fetchLevels ? '开启' : '关闭'}`;
@@ -785,7 +834,7 @@
     }
 
     function showHelpModal() {
-        if(document.getElementById('cnki-help-overlay')) return;
+        if (document.getElementById('cnki-help-overlay')) return;
         const overlay = document.createElement('div');
         overlay.id = 'cnki-help-overlay';
         overlay.className = 'cnki-ui-overlay';
@@ -798,12 +847,12 @@
                 <div class="cnki-ui-content" style="padding: 20px; overflow-y: auto;">
                     <ul style="list-style: none; padding: 0; line-height: 1.8; color: #374151;">
                         <li style="margin-bottom: 8px;"><b>首先请确保脚本为最新版本。</b></li>
-                        <li style="margin-bottom: 8px;">1. 脚本只能获取当前页的文献，知网默认每页20篇，如果想更多，可将每页数量设置为50。</li>
+                        <li style="margin-bottom: 8px;">1. 脚本只能获取当前页的文献，知网默认每页20篇，不建议一次下载更多。</li>
                         <li style="margin-bottom: 8px;">2. 如需清除已获取的数据 / 获取新数据，请先点击"<b>清除数据</b>"按钮。</li>
                         <li style="margin-bottom: 8px;">3. <b>如果只能下载一个，可能是浏览器拦截，允许弹出多窗口即可。</b></li>
                         <li style="margin-bottom: 8px;">4. 脚本只支持<b>新版知网</b>，不能在<b>隐私模式、无痕窗口</b>运行。</li>
                         <li style="margin-bottom: 8px;">5. 增加了批量下载延迟(2-5秒)，以防止IP被封。</li>
-                        <li style="margin-bottom: 8px;">6. 期刊等级加载为异步加载，不会卡顿页面。</li>
+                        <li style="margin-bottom: 8px;">6. 不可用于超大批量下载，仅供个人学习使用。</li>
                     </ul>
                 </div>
                 <div class="cnki-footer" style="justify-content: flex-end;">
@@ -815,7 +864,7 @@
 
         const close = () => {
             overlay.remove();
-            localStorage.setItem('cnkiFirstTimePopupShown_v3_9', 'true');
+            localStorage.setItem('cnkiFirstTimePopupShown_v4_0_2', 'true');
             openDashboard();
             loadSavedData();
         };
@@ -886,9 +935,9 @@
                     let pdfLink = '';
                     const operateBtn = doc.querySelector('.operate-btn');
                     if (operateBtn) {
-                         // Try standard PDF download
-                         const linkElem = Array.from(operateBtn.querySelectorAll('a')).find(a => a.textContent.includes('PDF下载') || a.textContent.includes('整本下载'));
-                         if (linkElem) pdfLink = linkElem.href;
+                        // Try standard PDF download
+                        const linkElem = Array.from(operateBtn.querySelectorAll('a')).find(a => a.textContent.includes('PDF下载') || a.textContent.includes('整本下载'));
+                        if (linkElem) pdfLink = linkElem.href;
                     }
 
                     results.push({
@@ -912,7 +961,7 @@
         createLoading('获取完毕！', 1000);
 
         // Save & Render
-        const finalData = results.sort((a,b) => a.id - b.id);
+        const finalData = results.sort((a, b) => a.id - b.id);
         localStorage.setItem('cnkiTableData', JSON.stringify(finalData));
         loadSavedData();
 
@@ -931,23 +980,23 @@
 
         // Process sequentially to avoid overwhelming server with cross-origin requests
         for (const item of data) {
-             if (item.sourceUrl && (!item.level || item.level === 'Wait' || item.level === 'Pending')) {
-                 // Update UI to loading
-                 const cell = document.getElementById(`level-cell-${item.id}`);
-                 if (cell && cell.textContent !== '...') {
-                      cell.innerHTML = '<span class="cnki-level-loading">...</span>';
-                 }
+            if (item.sourceUrl && (!item.level || item.level === 'Wait' || item.level === 'Pending')) {
+                // Update UI to loading
+                const cell = document.getElementById(`level-cell-${item.id}`);
+                if (cell && cell.textContent !== '...') {
+                    cell.innerHTML = '<span class="cnki-level-loading">...</span>';
+                }
 
-                 const level = await fetchJournalLevel(item.sourceUrl);
-                 item.level = level;
-                 changed = true;
+                const level = await fetchJournalLevel(item.sourceUrl);
+                item.level = level;
+                changed = true;
 
-                 // Update UI immediately
-                 if (cell) {
-                     cell.innerHTML = level === '无' ? '<span class="cnki-meta-text">-</span>' :
+                // Update UI immediately
+                if (cell) {
+                    cell.innerHTML = level === '无' ? '<span class="cnki-meta-text">-</span>' :
                         level.split('/').map(l => `<span class="cnki-level-tag">${l}</span>`).join('');
-                 }
-             }
+                }
+            }
         }
 
         if (changed) {
@@ -976,8 +1025,8 @@
 
                 // Parse numbers
                 if (sortState.field === 'quote' || sortState.field === 'download') {
-                     va = parseInt(va) || 0;
-                     vb = parseInt(vb) || 0;
+                    va = parseInt(va) || 0;
+                    vb = parseInt(vb) || 0;
                 }
 
                 if (va < vb) return sortState.direction === 'asc' ? -1 : 1;
@@ -987,12 +1036,12 @@
 
             // Update Headers Icons
             document.querySelectorAll('.cnki-sortable').forEach(th => {
-                 th.classList.remove('cnki-sort-active');
-                 th.querySelector('.cnki-sort-icon').textContent = '▲▼';
-                 if (th.dataset.sort === sortState.field) {
-                     th.classList.add('cnki-sort-active');
-                     th.querySelector('.cnki-sort-icon').textContent = sortState.direction === 'asc' ? '▲' : '▼';
-                 }
+                th.classList.remove('cnki-sort-active');
+                th.querySelector('.cnki-sort-icon').textContent = '▲▼';
+                if (th.dataset.sort === sortState.field) {
+                    th.classList.add('cnki-sort-active');
+                    th.querySelector('.cnki-sort-icon').textContent = sortState.direction === 'asc' ? '▲' : '▼';
+                }
             });
         }
 
@@ -1009,7 +1058,7 @@
         } else {
             sortState.field = field;
             sortState.direction = (field === 'date') ? 'asc' : 'desc'; // Date asc by default makes sense? actually desc usually. Let's stick to desc default for stats.
-             if (field === 'date') sortState.direction = 'desc';
+            if (field === 'date') sortState.direction = 'desc';
         }
         loadSavedData();
     }
@@ -1025,7 +1074,7 @@
         if (item.level && item.level !== 'Wait' && item.level !== '无') {
             levelHtml = item.level.split('/').map(l => `<span class="cnki-level-tag">${l}</span>`).join('');
         } else if (item.level === 'Wait') {
-             levelHtml = ''; // Will be loaded
+            levelHtml = ''; // Will be loaded
         }
 
         // Keywords
@@ -1055,8 +1104,8 @@
             <td class="cnki-col-center cnki-meta-text">${item.download}</td>
             <td class="cnki-col-center">
                  ${item.pdfLink ?
-                   `<button id="${dlBtnId}" class="cnki-btn-sm">PDF下载</button>` :
-                   '<span class="cnki-link-disabled">无链接</span>'}
+                `<button id="${dlBtnId}" class="cnki-btn-sm">PDF下载</button>` :
+                '<span class="cnki-link-disabled">无链接</span>'}
                  <span id="${statusId}" class="cnki-status-pending" style="display:none"></span>
             </td>
             <td><div style="overflow:hidden; height:24px;">${tags}</div></td>
@@ -1077,133 +1126,284 @@
         }
     }
 
-    // --- DOWNLOAD LOGIC (修复的核心部分) ---
-    function downloadSingleFile(url, filename, btn, statusSpan, isRetry = false) {
+    // --- DOWNLOAD LOGIC (修复的核心部分 v4.0.2) ---
+    function downloadSingleFile(url, filename, btn, statusSpan, retryCount = 0) {
+        const MAX_RETRY = 3;
+        const TIMEOUT_MS = 60000; // 60秒超时
+
         if (!url) return;
 
-        if (!isRetry) {
+        if (retryCount === 0) {
             console.log(`[CNKI-Helper] 开始下载: ${filename}, URL: ${url}`);
             btn.style.display = 'none';
             statusSpan.style.display = 'flex';
             statusSpan.className = 'cnki-status-loading';
             statusSpan.textContent = '准备中...';
         } else {
-            console.log(`[CNKI-Helper] 重试下载(HTML解析后): ${filename}, URL: ${url}`);
-            statusSpan.textContent = '跳转中...';
+            console.log(`[CNKI-Helper] 重试下载 (${retryCount}/${MAX_RETRY}): ${filename}, URL: ${url}`);
+            statusSpan.textContent = `重试${retryCount}...`;
+        }
+
+        // 显示错误并恢复按钮的辅助函数
+        function showError(message, detail = '') {
+            console.error(`[CNKI-Helper] ${message}`, detail);
+            statusSpan.className = 'cnki-status-error';
+            statusSpan.textContent = message;
+            statusSpan.title = detail || message; // 悬停显示详细信息
+            btn.style.display = 'inline-block';
+            btn.textContent = '重试';
+
+            // 显示面板底部的调试信息（仅显示第一条）
+            const debugEl = document.getElementById('cnki-debug-info');
+            if (debugEl && debugEl.style.display === 'none') {
+                const time = new Date().toLocaleTimeString();
+                // 截断详情以防过长
+                const shortDetail = detail.length > 300 ? detail.substring(0, 300) + '...' : detail;
+                debugEl.textContent = `[${time}] ${message}: ${shortDetail}`;
+                debugEl.style.display = 'block';
+            }
+        }
+
+        // 从 HTML 中提取真实下载链接
+        function extractRealLink(htmlText, baseUrl) {
+            let realLink = null;
+
+            // 使用 DOMParser 解析 HTML
+            try {
+                const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+
+                // 1. 查找特定的下载链接元素
+                // 常见的知网下载按钮 ID 或类名
+                const selectors = [
+                    '#pdfDown',
+                    '.btn-dl',
+                    'a[href*="download.aspx"]',
+                    'a[href*="pdfDown"]',
+                    'a[href$=".pdf"]',
+                    'a[href*="Download"]',
+                    'a[href*="/bar/download/order"]' // 支持 bar.cnki.net 链接
+                ];
+
+                for (const selector of selectors) {
+                    const el = doc.querySelector(selector);
+                    if (el && el.href) {
+                        realLink = el.href;
+                        break;
+                    }
+                }
+            } catch (e) {
+                console.warn('[CNKI-Helper] DOMParser 解析失败', e);
+            }
+
+            // 2. 检测 meta refresh 跳转 (保留正则作为备选)
+            if (!realLink) {
+                const metaRefresh = htmlText.match(/<meta[^>]+http-equiv=["']refresh["'][^>]+content=["'][^"']*url=([^"']+)["']/i);
+                if (metaRefresh) {
+                    realLink = metaRefresh[1].replace(/&amp;/g, '&');
+                }
+            }
+
+            // 3. 检测 JavaScript location 跳转
+            if (!realLink) {
+                const jsRedirect = htmlText.match(/(?:location\.href|location\.replace|location\s*=)\s*[=(]\s*['"]([^'"]+)['"]/i);
+                if (jsRedirect) {
+                    realLink = jsRedirect[1].replace(/&amp;/g, '&');
+                }
+            }
+
+            // 4. 正则兜底匹配所有可能的 href
+            if (!realLink) {
+                const hrefMatch = htmlText.match(/href=['"]([^'"]+)['"]/gi);
+                if (hrefMatch) {
+                    for (let link of hrefMatch) {
+                        let cleanLink = link.replace(/^href=['"]/, '').replace(/['"]$/, '').replace(/&amp;/g, '&');
+                        if (cleanLink.includes('download.aspx') ||
+                            cleanLink.includes('pdfDown') ||
+                            cleanLink.toLowerCase().endsWith('.pdf') ||
+                            cleanLink.includes('/bar/download/order')) { // 支持 bar.cnki.net 链接
+                            realLink = cleanLink;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // 处理相对路径
+            if (realLink && !realLink.startsWith('http')) {
+                try {
+                    const base = new URL(baseUrl);
+                    if (realLink.startsWith('/')) {
+                        realLink = base.origin + realLink;
+                    } else {
+                        realLink = new URL(realLink, baseUrl).href;
+                    }
+                } catch (e) {
+                    console.warn('[CNKI-Helper] URL解析失败:', e);
+                    realLink = null;
+                }
+            }
+
+            return realLink;
+        }
+
+        // 检测是否为错误页面（验证码、登录等）
+        // 大幅弱化检测逻辑，避免误报
+        function detectErrorPage(htmlText) {
+            const lowerHtml = htmlText.toLowerCase();
+
+            // 只有当出现明确的“请输入验证码”且页面较短时才认为是验证码页面
+            if (lowerHtml.includes('验证码') && (lowerHtml.includes('input') || lowerHtml.includes('form'))) {
+                // 进一步检查是否真的有验证码输入框
+                if (htmlText.includes('validateCode') || htmlText.includes('CheckCode')) {
+                    return '需要验证码';
+                }
+            }
+
+            // 登录页面检测：移除对 "login" 单词的简单检测，因为页面 header 通常都有
+            // 检查标题或特定提示信息
+            if (lowerHtml.includes('<title>用户登录</title>') || lowerHtml.includes('请先登录')) {
+                return '需要登录';
+            }
+
+            if (lowerHtml.includes('访问过于频繁') || lowerHtml.includes('请求过快')) {
+                return '访问频繁受限';
+            }
+
+            return null;
         }
 
         GM_xmlhttpRequest({
             method: 'GET',
             url: url,
             responseType: 'blob',
+            timeout: TIMEOUT_MS,
             headers: {
-                'Referer': window.location.href,
-                'User-Agent': navigator.userAgent // 模拟浏览器 UA
+                // 强制 Referer 为知网主域，避免因深层路径被拦截，符合 bar.cnki.net 的预期
+                'Referer': 'https://kns.cnki.net/',
+                'User-Agent': navigator.userAgent,
+                // 移除显式 Cookie，完全依赖 anonymous: false 让 Tampermonkey 自动携带目标域(bar.cnki.net)的所有 Cookie
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
             },
-            onload: (res) => {
+            anonymous: false, // 允许携带 Cookie
+            ontimeout: () => {
+                if (retryCount < MAX_RETRY) {
+                    console.log(`[CNKI-Helper] 请求超时，重试中...`);
+                    downloadSingleFile(url, filename, btn, statusSpan, retryCount + 1);
+                } else {
+                    showError('下载超时', `原始URL: ${url}\n超时时间: ${TIMEOUT_MS / 1000}s`);
+                }
+            },
+            onload: async (res) => {
                 const blob = res.response;
-                // 获取 Content-Type
-                const contentType = res.responseHeaders.match(/content-type:\s*(.*)/i)?.[1] || '';
-                console.log(`[CNKI-Helper] 请求状态: ${res.status}, Type: ${contentType}, Size: ${blob.size}`);
+                const contentType = (res.responseHeaders.match(/content-type:\s*([^\r\n;]+)/i)?.[1] || '').toLowerCase().trim();
+                console.log(`[CNKI-Helper] 请求状态: ${res.status}, Type: ${contentType}, Size: ${blob?.size || 0}`);
 
-                // --- 核心修复：检查是否返回了 HTML ---
-                if (contentType.includes('text/html')) {
-                    const reader = new FileReader();
-                    reader.onload = function() {
-                        const htmlText = reader.result;
-                        // 尝试在返回的 HTML 中寻找真实的下载链接
-                        // 常见情况：知网返回一个跳转页，里面有一个 id="pdfDown" 或者包含 download.aspx 的链接
-                        const hrefMatch = htmlText.match(/href=['"]([^'"]+)['"]/g);
-                        let realLink = null;
-
-                        if (hrefMatch) {
-                            for (let link of hrefMatch) {
-                                // 简单的清理 href=" 和 "
-                                let cleanLink = link.replace(/^href=['"]/, '').replace(/['"]$/, '');
-                                // 解码 HTML 实体
-                                cleanLink = cleanLink.replace(/&amp;/g, '&');
-
-                                // 特征匹配：看链接是否像下载链接
-                                if (cleanLink.includes('download.aspx') || cleanLink.includes('pdfDown') || cleanLink.toLowerCase().endsWith('.pdf')) {
-                                     // 如果是相对路径，补全
-                                     if (!cleanLink.startsWith('http')) {
-                                         const origin = new URL(url).origin;
-                                         if(cleanLink.startsWith('/')) {
-                                             realLink = origin + cleanLink;
-                                         } else {
-                                             // 简单处理，实际上可能需要更复杂的路径解析，但知网通常是根路径或同级
-                                             realLink = new URL(cleanLink, url).href;
-                                         }
-                                     } else {
-                                         realLink = cleanLink;
-                                     }
-                                     break;
-                                }
-                            }
-                        }
-
-                        if (realLink && !isRetry) {
-                            // 找到了潜在的真实链接，重试一次
-                            console.log(`[CNKI-Helper] 检测到 HTML 跳转，尝试新链接: ${realLink}`);
-                            downloadSingleFile(realLink, filename, btn, statusSpan, true);
-                        } else {
-                            // 真的失败了
-                            console.error(`[CNKI-Helper] 错误: 返回 HTML 且无法解析真实链接。可能是未登录或验证码拦截。`);
-                            statusSpan.className = 'cnki-status-error';
-                            statusSpan.textContent = '失败(需验证/登录)';
-                            btn.style.display = 'inline-block';
-                            btn.textContent = '重试';
-                        }
-                    };
-                    reader.readAsText(blob);
-                    return; // 结束当前逻辑，等待 FileReader 回调
+                // 检查 HTTP 状态码
+                if (res.status >= 400) {
+                    if (retryCount < MAX_RETRY) {
+                        downloadSingleFile(url, filename, btn, statusSpan, retryCount + 1);
+                    } else {
+                        showError(`HTTP ${res.status}`, `原始URL: ${url}\n状态码: ${res.status}\n响应头: ${res.responseHeaders}`);
+                    }
+                    return;
                 }
 
-                if (blob.size < 1000) {
-                     console.error(`[CNKI-Helper] 错误: 文件过小 (${blob.size} bytes). 可能无效.`);
-                     statusSpan.className = 'cnki-status-error';
-                     statusSpan.textContent = '文件无效';
-                     btn.style.display = 'inline-block';
-                     btn.textContent = '重试';
-                     return;
+                // --- 核心修复：检查是否返回了 HTML ---
+                if (contentType.includes('text/html') || contentType.includes('text/plain')) {
+                    const reader = new FileReader();
+                    reader.onload = function () {
+                        const htmlText = reader.result;
+
+                        // 尝试提取真实下载链接
+                        // 优先提取链接，因为有时页面虽然包含“登录”字样但其实也是跳转页
+                        let realLink = extractRealLink(htmlText, url);
+
+                        if (realLink && retryCount < MAX_RETRY) {
+                            console.log(`[CNKI-Helper] 检测到跳转，尝试新链接: ${realLink}`);
+                            downloadSingleFile(realLink, filename, btn, statusSpan, retryCount + 1);
+                        } else {
+                            // 如果找不到链接，再检测是否为错误页面
+                            const errorType = detectErrorPage(htmlText);
+                            if (errorType) {
+                                showError(errorType, `检测到知网错误提示: ${errorType}\n\n原始HTML片段:\n${htmlText.substring(0, 500)}`);
+                            } else {
+                                // 如果既没链接也不是已知的错误页面，在日志里打印前500个字符帮忙调试
+                                console.warn('[CNKI-Helper] 未知HTML响应:', htmlText.substring(0, 500));
+                                showError('获取链接失败', `无法解析下载链接且未识别出错误页。\n\n原始URL: ${url}\n\n响应HTML前800字符:\n${htmlText.substring(0, 800)}`);
+                            }
+                        }
+                    };
+                    reader.onerror = () => showError('读取失败', '无法读取Blob响应内容');
+                    reader.readAsText(blob);
+                    return;
+                }
+
+                // 检查文件大小
+                if (!blob || blob.size < 1000) {
+                    if (retryCount < MAX_RETRY) {
+                        console.log(`[CNKI-Helper] 文件过小 (${blob?.size || 0} bytes)，重试中...`);
+                        downloadSingleFile(url, filename, btn, statusSpan, retryCount + 1);
+                    } else {
+                        showError('文件无效', `文件大小仅 ${blob?.size || 0} 字节，可能为空或损坏。\n原始URL: ${url}`);
+                    }
+                    return;
+                }
+
+                // --- 核心修复：验证 PDF 文件头 ---
+                const isPDF = await validatePDF(blob);
+                if (!isPDF) {
+                    console.warn(`[CNKI-Helper] 文件头验证失败，不是有效的 PDF`);
+                    if (retryCount < MAX_RETRY) {
+                        downloadSingleFile(url, filename, btn, statusSpan, retryCount + 1);
+                    } else {
+                        showError('非PDF文件', `文件头验证失败，下载内容不是PDF。\nContentType: ${contentType}\n原始URL: ${url}`);
+                    }
+                    return;
                 }
 
                 // 保存文件
-                const finalName = filename.replace(/[\\/:*?"<>|]/g, '_') + '.pdf';
+                const finalName = createSafeFilename(filename);
                 const blobUrl = URL.createObjectURL(blob);
+
+                console.log(`[CNKI-Helper] 开始保存文件: ${finalName}, 大小: ${(blob.size / 1024 / 1024).toFixed(2)} MB`);
 
                 GM_download({
                     url: blobUrl,
                     name: finalName,
                     saveAs: false,
                     onload: () => {
-                         statusSpan.className = 'cnki-status-success';
-                         statusSpan.textContent = '✔ 完成';
-                         URL.revokeObjectURL(blobUrl);
+                        statusSpan.className = 'cnki-status-success';
+                        statusSpan.textContent = '✔ 完成';
+                        statusSpan.title = `已保存: ${finalName}`;
+                        // 延迟释放 URL，确保文件完全写入
+                        setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
                     },
                     onerror: (e) => {
-                         console.error(`[CNKI-Helper] GM_download 保存失败`, e);
-                         statusSpan.className = 'cnki-status-error';
-                         statusSpan.textContent = '✘ 保存失败';
-                         btn.style.display = 'inline-block';
-                         URL.revokeObjectURL(blobUrl);
+                        console.error(`[CNKI-Helper] GM_download 保存失败`, e);
+                        showError('保存失败', `GM_download 错误: ${JSON.stringify(e)}\n文件名: ${finalName}`);
+                        URL.revokeObjectURL(blobUrl);
                     },
                     onprogress: (p) => {
                         if (p.total > 0) {
-                             const pct = Math.round(p.loaded / p.total * 100);
-                             statusSpan.textContent = `⬇ ${pct}%`;
+                            const pct = Math.round(p.loaded / p.total * 100);
+                            statusSpan.textContent = `⬇ ${pct}%`;
+                        } else {
+                            statusSpan.textContent = `⬇ ${(p.loaded / 1024).toFixed(0)}KB`;
                         }
                     }
                 });
             },
             onerror: (e) => {
-                 console.error(`[CNKI-Helper] 网络请求失败: ${url}`, e);
-                 statusSpan.className = 'cnki-status-error';
-                 statusSpan.textContent = '网络错误';
-                 btn.style.display = 'inline-block';
+                if (retryCount < MAX_RETRY) {
+                    console.log(`[CNKI-Helper] 网络错误，重试中...`);
+                    downloadSingleFile(url, filename, btn, statusSpan, retryCount + 1);
+                } else {
+                    showError('网络错误', `请求失败。\n原始URL: ${url}\n错误详情: ${JSON.stringify(e)}`);
+                }
             }
         });
     }
+
 
     async function downloadSelected() {
         const checkboxes = document.querySelectorAll('.cnki-item-check:checked:not(#cnki-select-all)');
@@ -1224,17 +1424,17 @@
             const item = data.find(d => d.id === id);
 
             if (item && item.pdfLink) {
-                 const btn = row.querySelector('.cnki-btn-sm');
-                 const status = row.querySelector('span[id^="status-"]');
+                const btn = row.querySelector('.cnki-btn-sm');
+                const status = row.querySelector('span[id^="status-"]');
 
-                 if (btn && btn.style.display !== 'none') {
-                     console.log(`[CNKI-Helper] 正在处理: ${item.title} (ID: ${id})`);
-                     downloadSingleFile(item.pdfLink, item.title, btn, status);
-                     // Delay between starts
-                     await new Promise(r => setTimeout(r, 2000 + Math.random() * 2000));
-                 }
+                if (btn && btn.style.display !== 'none') {
+                    console.log(`[CNKI-Helper] 正在处理: ${item.title} (ID: ${id})`);
+                    downloadSingleFile(item.pdfLink, item.title, btn, status);
+                    // Delay between starts
+                    await new Promise(r => setTimeout(r, 2000 + Math.random() * 2000));
+                }
             } else {
-                 console.warn(`[CNKI-Helper] 找不到项目数据或没有PDF链接. ID: ${id}`, item);
+                console.warn(`[CNKI-Helper] 找不到项目数据或没有PDF链接. ID: ${id}`, item);
             }
         }
     }
@@ -1242,6 +1442,14 @@
     function clearData() {
         localStorage.removeItem('cnkiTableData');
         document.getElementById('cnki-table-body').innerHTML = '';
+
+        // Hide debug info
+        const debugEl = document.getElementById('cnki-debug-info');
+        if (debugEl) {
+            debugEl.style.display = 'none';
+            debugEl.textContent = '';
+        }
+
         updateStatus();
         createLoading('数据已清除');
     }
@@ -1281,31 +1489,31 @@
         // Logic for category download... (Simplified for brevity, same as original logic)
         const operateBtn = document.querySelector('.operate-btn');
         let hrefLink = '';
-        if(operateBtn) {
-             const link = Array.from(operateBtn.querySelectorAll('a')).find(a => a.innerText.includes('章节下载'));
-             if(link) hrefLink = link.href;
+        if (operateBtn) {
+            const link = Array.from(operateBtn.querySelectorAll('a')).find(a => a.innerText.includes('章节下载'));
+            if (link) hrefLink = link.href;
         }
 
         if (!hrefLink) { createLoading('无法获取目录链接'); return; }
 
         try {
-             const html = await gmFetch(hrefLink);
-             const doc = new DOMParser().parseFromString(html, 'text/html');
-             const title = doc.querySelector('.wx-tit h1')?.textContent.trim() || '目录';
-             const chapters = Array.from(doc.querySelectorAll('.ls-chapters li'))
+            const html = await gmFetch(hrefLink);
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const title = doc.querySelector('.wx-tit h1')?.textContent.trim() || '目录';
+            const chapters = Array.from(doc.querySelectorAll('.ls-chapters li'))
                 .map(c => c.textContent.trim().split('-')[0].replace(/\n/g, '\t'))
                 .join('\n');
 
-             const blob = new Blob([chapters], { type: 'text/plain' });
-             const url = URL.createObjectURL(blob);
-             const a = document.createElement('a');
-             a.href = url;
-             a.download = title + '_目录.txt';
-             a.click();
-             URL.revokeObjectURL(url);
-             createLoading('下载完成');
-        } catch(e) {
-             createLoading('下载目录失败');
+            const blob = new Blob([chapters], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = title + '_目录.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+            createLoading('下载完成');
+        } catch (e) {
+            createLoading('下载目录失败');
         }
     }
 

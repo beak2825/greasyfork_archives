@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Chat Navigator - 聊天快速跳转
 // @namespace    http://tampermonkey.net/
-// @version      1.9.0
+// @version      2.0.0
 // @description  为 Gemini AI 聊天添加快速导航面板，点击跳转到历史问题
 // @author       柒刻
 // @icon         https://www.google.com/s2/favicons?domain=gemini.google.com
@@ -36,16 +36,53 @@
             pointer-events: none;
         }
 
-        #chat-navigator-panel:hover,
-        #chat-navigator-panel:focus-within {
+        /* 只有展开时才启用 pointer-events */
+        #chat-navigator-panel.expanded {
             pointer-events: auto;
         }
 
-        .nav-inner {
+        /* 触发条 - 只覆盖小蓝条区域 */
+        .nav-trigger {
+            position: absolute;
+            right: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 60px;
             pointer-events: auto;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            border-radius: 4px;
         }
 
-        /* 内容容器 */
+        /* 触发条的可视提示 - 浅蓝色 */
+        .nav-trigger::after {
+            content: '';
+            width: 4px;
+            height: 50px;
+            background: rgba(66, 133, 244, 0.5);
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+
+        .nav-trigger:hover::after {
+            background: rgba(66, 133, 244, 0.8);
+            height: 56px;
+            width: 5px;
+        }
+
+        #chat-navigator-panel.expanded .nav-trigger {
+            pointer-events: none;
+        }
+
+        #chat-navigator-panel.expanded .nav-trigger::after {
+            opacity: 0;
+        }
+
+        /* 内容容器 - 默认只显示短线 */
         .nav-inner {
             display: flex;
             flex-direction: column;
@@ -57,6 +94,12 @@
             overflow: hidden;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-sizing: border-box;
+            pointer-events: none;
+        }
+
+        /* 展开时内容可交互 */
+        #chat-navigator-panel.expanded .nav-inner {
+            pointer-events: auto;
         }
 
         /* 列表容器 - 可滚动 */
@@ -91,9 +134,8 @@
             background: rgba(255,255,255,0.2);
         }
 
-        /* 悬浮时展开 - 亮色 */
-        #chat-navigator-panel:hover .nav-inner,
-        #chat-navigator-panel:focus-within .nav-inner {
+        /* 展开状态 - 亮色 */
+        #chat-navigator-panel.expanded .nav-inner {
             background: #e9eef6;
             box-shadow: -4px 0 20px rgba(0,0,0,0.1);
             padding: 12px 16px;
@@ -127,8 +169,8 @@
             margin: 0 -8px;
         }
 
-        /* 悬浮条目时背景 */
-        #chat-navigator-panel:hover .nav-item:hover {
+        /* 展开时悬浮条目背景 */
+        #chat-navigator-panel.expanded .nav-item:hover {
             background: rgba(11, 87, 207, 0.08);
         }
 
@@ -143,19 +185,18 @@
             font-weight: 400;
         }
 
-        /* 悬浮面板时显示文本 */
-        #chat-navigator-panel:hover .nav-item-text,
-        #chat-navigator-panel:focus-within .nav-item-text {
+        /* 展开时显示文本 */
+        #chat-navigator-panel.expanded .nav-item-text {
             opacity: 1;
             max-width: 240px;
         }
 
-        /* 当前悬浮的条目高亮 */
-        #chat-navigator-panel:hover .nav-item:hover .nav-item-text {
+        /* 展开时悬浮的条目高亮 */
+        #chat-navigator-panel.expanded .nav-item:hover .nav-item-text {
             color: #0b57cf;
         }
 
-        /* 短线指示器 - 亮色 */
+        /* 短线指示器 - 默认隐藏，展开后显示 */
         .nav-item-line {
             width: 14px;
             height: 2px;
@@ -163,13 +204,17 @@
             border-radius: 1px;
             transition: all 0.2s;
             flex-shrink: 0;
+            opacity: 0;
+        }
+
+        #chat-navigator-panel.expanded .nav-item-line {
+            opacity: 1;
         }
 
         /* ============ 暗色模式适配 ============ */
         /* 系统暗色 */
         @media (prefers-color-scheme: dark) {
-            #chat-navigator-panel:hover .nav-inner,
-            #chat-navigator-panel:focus-within .nav-inner {
+            #chat-navigator-panel.expanded .nav-inner {
                 background: #1e1f20;
                 box-shadow: -4px 0 20px rgba(0,0,0,0.5);
                 min-width: 280px;
@@ -180,12 +225,10 @@
             .nav-item-text {
                 color: #e3e3e3;
             }
-            #chat-navigator-panel:hover .nav-item:hover,
-            #chat-navigator-panel:focus-within .nav-item:hover {
+            #chat-navigator-panel.expanded .nav-item:hover {
                 background: rgba(138, 180, 248, 0.12);
             }
-            #chat-navigator-panel:hover .nav-item:hover .nav-item-text,
-            #chat-navigator-panel:focus-within .nav-item:hover .nav-item-text {
+            #chat-navigator-panel.expanded .nav-item:hover .nav-item-text {
                 color: #a8c7fa;
             }
             .nav-item-line {
@@ -194,19 +237,20 @@
             .nav-item:hover .nav-item-line {
                 background: #8ab4f8;
             }
+            .nav-trigger::after {
+                background: rgba(138, 180, 248, 0.5);
+            }
+            .nav-trigger:hover::after {
+                background: rgba(138, 180, 248, 0.8);
+            }
         }
 
         /* Gemini 暗色主题 */
-        html[dark] #chat-navigator-panel:hover .nav-inner,
-        html[dark] #chat-navigator-panel:focus-within .nav-inner,
-        html.dark-theme #chat-navigator-panel:hover .nav-inner,
-        html.dark-theme #chat-navigator-panel:focus-within .nav-inner,
-        body.dark-theme #chat-navigator-panel:hover .nav-inner,
-        body.dark-theme #chat-navigator-panel:focus-within .nav-inner,
-        [data-theme="dark"] #chat-navigator-panel:hover .nav-inner,
-        [data-theme="dark"] #chat-navigator-panel:focus-within .nav-inner,
-        [data-color-mode="dark"] #chat-navigator-panel:hover .nav-inner,
-        [data-color-mode="dark"] #chat-navigator-panel:focus-within .nav-inner {
+        html[dark] #chat-navigator-panel.expanded .nav-inner,
+        html.dark-theme #chat-navigator-panel.expanded .nav-inner,
+        body.dark-theme #chat-navigator-panel.expanded .nav-inner,
+        [data-theme="dark"] #chat-navigator-panel.expanded .nav-inner,
+        [data-color-mode="dark"] #chat-navigator-panel.expanded .nav-inner {
             background: #1e1f20;
             box-shadow: -4px 0 20px rgba(0,0,0,0.5);
             min-width: 280px;
@@ -217,24 +261,16 @@
         [data-theme="dark"] .nav-item-text {
             color: #e3e3e3;
         }
-        html[dark] #chat-navigator-panel:hover .nav-item:hover,
-        html[dark] #chat-navigator-panel:focus-within .nav-item:hover,
-        html.dark-theme #chat-navigator-panel:hover .nav-item:hover,
-        html.dark-theme #chat-navigator-panel:focus-within .nav-item:hover,
-        body.dark-theme #chat-navigator-panel:hover .nav-item:hover,
-        body.dark-theme #chat-navigator-panel:focus-within .nav-item:hover,
-        [data-theme="dark"] #chat-navigator-panel:hover .nav-item:hover,
-        [data-theme="dark"] #chat-navigator-panel:focus-within .nav-item:hover {
+        html[dark] #chat-navigator-panel.expanded .nav-item:hover,
+        html.dark-theme #chat-navigator-panel.expanded .nav-item:hover,
+        body.dark-theme #chat-navigator-panel.expanded .nav-item:hover,
+        [data-theme="dark"] #chat-navigator-panel.expanded .nav-item:hover {
             background: rgba(138, 180, 248, 0.12);
         }
-        html[dark] #chat-navigator-panel:hover .nav-item:hover .nav-item-text,
-        html[dark] #chat-navigator-panel:focus-within .nav-item:hover .nav-item-text,
-        html.dark-theme #chat-navigator-panel:hover .nav-item:hover .nav-item-text,
-        html.dark-theme #chat-navigator-panel:focus-within .nav-item:hover .nav-item-text,
-        body.dark-theme #chat-navigator-panel:hover .nav-item:hover .nav-item-text,
-        body.dark-theme #chat-navigator-panel:focus-within .nav-item:hover .nav-item-text,
-        [data-theme="dark"] #chat-navigator-panel:hover .nav-item:hover .nav-item-text,
-        [data-theme="dark"] #chat-navigator-panel:focus-within .nav-item:hover .nav-item-text {
+        html[dark] #chat-navigator-panel.expanded .nav-item:hover .nav-item-text,
+        html.dark-theme #chat-navigator-panel.expanded .nav-item:hover .nav-item-text,
+        body.dark-theme #chat-navigator-panel.expanded .nav-item:hover .nav-item-text,
+        [data-theme="dark"] #chat-navigator-panel.expanded .nav-item:hover .nav-item-text {
             color: #a8c7fa;
         }
         html[dark] .nav-item-line,
@@ -249,13 +285,24 @@
         [data-theme="dark"] .nav-item:hover .nav-item-line {
             background: #8ab4f8;
         }
+        html[dark] .nav-trigger::after,
+        html.dark-theme .nav-trigger::after,
+        body.dark-theme .nav-trigger::after,
+        [data-theme="dark"] .nav-trigger::after {
+            background: rgba(138, 180, 248, 0.5);
+        }
+        html[dark] .nav-trigger:hover::after,
+        html.dark-theme .nav-trigger:hover::after,
+        body.dark-theme .nav-trigger:hover::after,
+        [data-theme="dark"] .nav-trigger:hover::after {
+            background: rgba(138, 180, 248, 0.8);
+        }
 
         /* JS 检测的暗色模式 */
         #chat-navigator-panel.dark-mode .nav-inner {
             background: transparent;
         }
-        #chat-navigator-panel.dark-mode:hover .nav-inner,
-        #chat-navigator-panel.dark-mode:focus-within .nav-inner {
+        #chat-navigator-panel.dark-mode.expanded .nav-inner {
             background: #1e1f20;
             box-shadow: -4px 0 20px rgba(0,0,0,0.5);
             min-width: 280px;
@@ -263,12 +310,10 @@
         #chat-navigator-panel.dark-mode .nav-item-text {
             color: #e3e3e3;
         }
-        #chat-navigator-panel.dark-mode:hover .nav-item:hover,
-        #chat-navigator-panel.dark-mode:focus-within .nav-item:hover {
+        #chat-navigator-panel.dark-mode.expanded .nav-item:hover {
             background: rgba(138, 180, 248, 0.12);
         }
-        #chat-navigator-panel.dark-mode:hover .nav-item:hover .nav-item-text,
-        #chat-navigator-panel.dark-mode:focus-within .nav-item:hover .nav-item-text {
+        #chat-navigator-panel.dark-mode.expanded .nav-item:hover .nav-item-text {
             color: #a8c7fa;
         }
         #chat-navigator-panel.dark-mode .nav-item-line {
@@ -279,6 +324,12 @@
         }
         #chat-navigator-panel.dark-mode .nav-count {
             color: #9aa0a6;
+        }
+        #chat-navigator-panel.dark-mode .nav-trigger::after {
+            background: rgba(138, 180, 248, 0.5);
+        }
+        #chat-navigator-panel.dark-mode .nav-trigger:hover::after {
+            background: rgba(138, 180, 248, 0.8);
         }
 
         /* 悬浮条目时短线变色 */
@@ -297,8 +348,7 @@
             flex-shrink: 0;
         }
 
-        #chat-navigator-panel:hover .nav-search-box,
-        #chat-navigator-panel:focus-within .nav-search-box {
+        #chat-navigator-panel.expanded .nav-search-box {
             display: flex;
             justify-content: center;
             opacity: 1;
@@ -362,8 +412,7 @@
             transition: opacity 0.3s;
         }
 
-        #chat-navigator-panel:hover .nav-no-result,
-        #chat-navigator-panel:focus-within .nav-no-result {
+        #chat-navigator-panel.expanded .nav-no-result {
             opacity: 1;
         }
 
@@ -377,8 +426,7 @@
             text-align: right;
         }
 
-        #chat-navigator-panel:hover .nav-count,
-        #chat-navigator-panel:focus-within .nav-count {
+        #chat-navigator-panel.expanded .nav-count {
             opacity: 1;
         }
 
@@ -410,8 +458,7 @@
             text-align: right;
         }
 
-        #chat-navigator-panel:hover .nav-empty,
-        #chat-navigator-panel:focus-within .nav-empty {
+        #chat-navigator-panel.expanded .nav-empty {
             opacity: 1;
         }
     `);
@@ -499,6 +546,11 @@
             const panel = document.createElement('div');
             panel.id = 'chat-navigator-panel';
 
+            // 触发条 - 用于展开面板
+            const trigger = document.createElement('div');
+            trigger.className = 'nav-trigger';
+            trigger.id = 'nav-trigger';
+
             const inner = document.createElement('div');
             inner.className = 'nav-inner';
             inner.id = 'nav-inner';
@@ -522,17 +574,92 @@
             listContainer.id = 'nav-list';
             inner.appendChild(listContainer);
 
+            panel.appendChild(trigger);
             panel.appendChild(inner);
             document.body.appendChild(panel);
             this.panel = panel;
+            this.trigger = trigger;
             this.inner = inner;
             this.listContainer = listContainer;
             this.searchInput = searchInput;
             this.searchBox = searchBox;
             this.searchQuery = '';
+            this.isExpanded = false;
+            this.expandTimeout = null;
+            this.collapseTimeout = null;
 
             // 绑定搜索事件
             this.bindSearchEvents();
+            // 绑定展开/收起事件
+            this.bindExpandEvents();
+        }
+
+        // 绑定展开/收起事件
+        bindExpandEvents() {
+            // 鼠标进入触发条 - 延迟展开
+            this.trigger.addEventListener('mouseenter', () => {
+                clearTimeout(this.collapseTimeout);
+                this.expandTimeout = setTimeout(() => {
+                    this.expand();
+                }, 200); // 200ms 延迟展开
+            });
+
+            // 鼠标离开触发条
+            this.trigger.addEventListener('mouseleave', () => {
+                clearTimeout(this.expandTimeout);
+                // 如果已展开，检查是否进入了面板内容区
+                if (this.isExpanded) {
+                    this.collapseTimeout = setTimeout(() => {
+                        this.collapse();
+                    }, 300);
+                }
+            });
+
+            // 鼠标进入面板内容区 - 保持展开
+            this.inner.addEventListener('mouseenter', () => {
+                clearTimeout(this.collapseTimeout);
+            });
+
+            // 鼠标离开面板内容区 - 延迟收起
+            this.inner.addEventListener('mouseleave', () => {
+                clearTimeout(this.expandTimeout);
+                this.collapseTimeout = setTimeout(() => {
+                    this.collapse();
+                }, 300); // 300ms 延迟收起
+            });
+
+            // 点击触发条 - 切换展开状态
+            this.trigger.addEventListener('click', () => {
+                clearTimeout(this.expandTimeout);
+                clearTimeout(this.collapseTimeout);
+                if (this.isExpanded) {
+                    this.collapse();
+                } else {
+                    this.expand();
+                }
+            });
+        }
+
+        // 展开面板
+        expand() {
+            this.isExpanded = true;
+            this.panel.classList.add('expanded');
+        }
+
+        // 收起面板
+        collapse() {
+            // 如果搜索框有焦点，不收起
+            if (document.activeElement === this.searchInput) {
+                return;
+            }
+            this.isExpanded = false;
+            this.panel.classList.remove('expanded');
+            // 清除搜索
+            if (this.searchQuery) {
+                this.searchQuery = '';
+                this.searchInput.value = '';
+                this.renderList();
+            }
         }
 
         // 绑定搜索事件
@@ -546,23 +673,19 @@
                 }, 200);
             });
 
-            // 阻止面板事件冒泡
+            // 阻止事件冒泡
             this.searchInput.addEventListener('click', (e) => {
                 e.stopPropagation();
             });
 
-            // 面板失去焦点时清除搜索
+            // 搜索框失去焦点时，延迟检查是否需要收起面板
             this.searchInput.addEventListener('blur', () => {
-                setTimeout(() => {
-                    // 检查焦点是否还在面板内
-                    if (!this.panel.contains(document.activeElement)) {
-                        if (this.searchQuery) {
-                            this.searchQuery = '';
-                            this.searchInput.value = '';
-                            this.renderList();
-                        }
+                this.collapseTimeout = setTimeout(() => {
+                    // 如果鼠标不在面板上，收起面板
+                    if (!this.panel.matches(':hover')) {
+                        this.collapse();
                     }
-                }, 200);
+                }, 300);
             });
         }
 
