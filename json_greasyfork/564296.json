@@ -1,0 +1,59 @@
+{
+  "id": 564296,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-28T02:52:45.000Z",
+  "code_updated_at": "2026-01-28T02:52:45.000Z",
+  "namespace": "https://blog.gngshn.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1565450,
+      "name": "gngshn",
+      "created_at": "2026-01-28T02:51:17.000Z",
+      "url": "https://greasyfork.org/users/1565450-gngshn",
+      "scripts": [
+        {
+          "id": 564296,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-28T02:52:45.000Z",
+          "code_updated_at": "2026-01-28T02:52:45.000Z",
+          "namespace": "https://blog.gngshn.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Gerrit IPCSDK Jira Linker",
+          "description": "定位 commitMessage 容器后，替换 IPCSDK-xxxx 为超链接, 链接到 Jira",
+          "url": "https://greasyfork.org/scripts/564296-gerrit-ipcsdk-jira-linker",
+          "code_url": "https://update.greasyfork.org/scripts/564296/Gerrit%20IPCSDK%20Jira%20Linker.user.js",
+          "code_size": 3159,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "nl",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Gerrit IPCSDK Jira Linker",
+  "description": "定位 commitMessage 容器后，替换 IPCSDK-xxxx 为超链接, 链接到 Jira",
+  "url": "https://greasyfork.org/scripts/564296-gerrit-ipcsdk-jira-linker",
+  "code_url": "https://update.greasyfork.org/scripts/564296/Gerrit%20IPCSDK%20Jira%20Linker.user.js",
+  "code_size": 3159,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "nl",
+  "deleted": false,
+  "visibility": "public"
+}

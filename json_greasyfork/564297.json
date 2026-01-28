@@ -1,0 +1,59 @@
+{
+  "id": 564297,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-28T03:04:34.000Z",
+  "code_updated_at": "2026-01-28T03:04:33.000Z",
+  "namespace": "ui-preview-enhanced",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1107596,
+      "name": "axhc",
+      "created_at": "2023-06-21T01:44:48.000Z",
+      "url": "https://greasyfork.org/users/1107596-axhc",
+      "scripts": [
+        {
+          "id": 564297,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-28T03:04:34.000Z",
+          "code_updated_at": "2026-01-28T03:04:33.000Z",
+          "namespace": "ui-preview-enhanced",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "C6 直播辅助",
+          "description": "C6 直播辅助+盘口助手+直播助手",
+          "url": "https://greasyfork.org/scripts/564297-c6-%E7%9B%B4%E6%92%AD%E8%BE%85%E5%8A%A9",
+          "code_url": "https://update.greasyfork.org/scripts/564297/C6%20%E7%9B%B4%E6%92%AD%E8%BE%85%E5%8A%A9.user.js",
+          "code_size": 90652,
+          "license": "GNU Library General Public License v2 or later",
+          "version": "0.9527",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "C6 直播辅助",
+  "description": "C6 直播辅助+盘口助手+直播助手",
+  "url": "https://greasyfork.org/scripts/564297-c6-%E7%9B%B4%E6%92%AD%E8%BE%85%E5%8A%A9",
+  "code_url": "https://update.greasyfork.org/scripts/564297/C6%20%E7%9B%B4%E6%92%AD%E8%BE%85%E5%8A%A9.user.js",
+  "code_size": 90652,
+  "license": "GNU Library General Public License v2 or later",
+  "version": "0.9527",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}
