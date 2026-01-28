@@ -1,5 +1,38 @@
 [
   {
+    "id": 564279,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-28T00:38:49.000Z",
+    "code_updated_at": "2026-01-28T00:38:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1498412,
+        "name": "HUANG WEI-LUN HUANG WEI-LUN",
+        "created_at": "2025-07-26T04:23:54.000Z",
+        "url": "https://greasyfork.org/users/1498412-huang-wei-lun-huang-wei-lun"
+      }
+    ],
+    "name": "SwordMasters.io 透過 WS 複製實現擊殺倍數",
+    "description": "透過傳送重複攻擊訊息來增加殺戮資料的腳本（使用滑桿從 1 調整到 50000）",
+    "url": "https://greasyfork.org/scripts/564279-swordmasters-io-%E9%80%8F%E9%81%8E-ws-%E8%A4%87%E8%A3%BD%E5%AF%A6%E7%8F%BE%E6%93%8A%E6%AE%BA%E5%80%8D%E6%95%B8",
+    "code_url": "https://update.greasyfork.org/scripts/564279/SwordMastersio%20%E9%80%8F%E9%81%8E%20WS%20%E8%A4%87%E8%A3%BD%E5%AF%A6%E7%8F%BE%E6%93%8A%E6%AE%BA%E5%80%8D%E6%95%B8.user.js",
+    "code_size": 4085,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
     "id": 561018,
     "daily_installs": 0,
     "total_installs": 2,
