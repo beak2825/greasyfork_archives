@@ -1,0 +1,35 @@
+[
+  {
+    "id": 564293,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-28T01:50:17.000Z",
+    "code_updated_at": "2026-01-28T02:09:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1565436,
+        "name": "pipop L (蟑螂恶霸)",
+        "created_at": "2026-01-28T01:45:00.000Z",
+        "url": "https://greasyfork.org/users/1565436-pipop-l-%E8%9F%91%E8%9E%82%E6%81%B6%E9%9C%B8"
+      }
+    ],
+    "name": "视频默认静音-缓冲自动恢复播放",
+    "description": "默认静音播放",
+    "url": "https://greasyfork.org/scripts/564293-%E8%A7%86%E9%A2%91%E9%BB%98%E8%AE%A4%E9%9D%99%E9%9F%B3-%E7%BC%93%E5%86%B2%E8%87%AA%E5%8A%A8%E6%81%A2%E5%A4%8D%E6%92%AD%E6%94%BE",
+    "code_url": "https://update.greasyfork.org/scripts/564293/%E8%A7%86%E9%A2%91%E9%BB%98%E8%AE%A4%E9%9D%99%E9%9F%B3-%E7%BC%93%E5%86%B2%E8%87%AA%E5%8A%A8%E6%81%A2%E5%A4%8D%E6%92%AD%E6%94%BE.user.js",
+    "code_size": 7619,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]
