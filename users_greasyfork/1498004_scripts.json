@@ -1,5 +1,38 @@
 [
   {
+    "id": 564383,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-28T22:54:19.000Z",
+    "code_updated_at": "2026-01-28T22:54:19.000Z",
+    "namespace": "https://greasyfork.org/users/1498004",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1498004,
+        "name": "BlackBatCat",
+        "created_at": "2025-07-24T18:14:15.000Z",
+        "url": "https://greasyfork.org/users/1498004-blackbatcat"
+      }
+    ],
+    "name": "AO3: Quick Hide",
+    "description": "Quickly hide works, bookmarks, and comments while browsing AO3. Collapse state is saved so you can hide things you've read or aren't interested in.",
+    "url": "https://greasyfork.org/scripts/564383-ao3-quick-hide",
+    "code_url": "https://update.greasyfork.org/scripts/564383/AO3%3A%20Quick%20Hide.user.js",
+    "code_size": 46390,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
     "id": 562812,
     "daily_installs": 1,
     "total_installs": 1,

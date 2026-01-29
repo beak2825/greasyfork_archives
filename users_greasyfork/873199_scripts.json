@@ -1,5 +1,71 @@
 [
   {
+    "id": 564407,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-29T04:32:22.000Z",
+    "code_updated_at": "2026-01-29T04:32:22.000Z",
+    "namespace": "hlbe.chinahrt.cn.hxtxstu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 873199,
+        "name": "Dillon Leung",
+        "created_at": "2022-02-06T02:05:14.000Z",
+        "url": "https://greasyfork.org/users/873199-dillon-leung"
+      }
+    ],
+    "name": "呼伦贝尔继续教育自动学习助手（子脚本 - 外部子站 HXT）",
+    "description": "在 hxtxstu 外部子站页面自动静音播放、连播所有小节，完成后通知父页面切换下一门课程，并在页面右下角显示状态面板；取消单节/整课时间兜底，只按视频进度判断完成，并过滤 play/pause 误报错误提示。",
+    "url": "https://greasyfork.org/scripts/564407-%E5%91%BC%E4%BC%A6%E8%B4%9D%E5%B0%94%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B-%E5%AD%90%E8%84%9A%E6%9C%AC-%E5%A4%96%E9%83%A8%E5%AD%90%E7%AB%99-hxt",
+    "code_url": "https://update.greasyfork.org/scripts/564407/%E5%91%BC%E4%BC%A6%E8%B4%9D%E5%B0%94%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B%EF%BC%88%E5%AD%90%E8%84%9A%E6%9C%AC%20-%20%E5%A4%96%E9%83%A8%E5%AD%90%E7%AB%99%20HXT%EF%BC%89.user.js",
+    "code_size": 12644,
+    "license": "MIT License",
+    "version": "1.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 564406,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-29T04:30:18.000Z",
+    "code_updated_at": "2026-01-29T04:30:17.000Z",
+    "namespace": "hlbe.chinahrt.cn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 873199,
+        "name": "Dillon Leung",
+        "created_at": "2022-02-06T02:05:14.000Z",
+        "url": "https://greasyfork.org/users/873199-dillon-leung"
+      }
+    ],
+    "name": "呼伦贝尔继续教育自动学习助手（父脚本）",
+    "description": "自动解析项目课程列表、自动播放onlineVideo章节、接收OutVideo子站完成消息并自动切换下一门未完成课程，直至全部课程100%完成；项目页/onlineVideo/OutVideo统一从course_study.asp抓取课程列表，保留项目名+整体进度+目录列表+高亮功能；每1小时自动刷新当前页面，暴露登录是否过期；取消“单节1小时兜底完成”限制，仅按视频实际进度判断。",
+    "url": "https://greasyfork.org/scripts/564406-%E5%91%BC%E4%BC%A6%E8%B4%9D%E5%B0%94%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B-%E7%88%B6%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/564406/%E5%91%BC%E4%BC%A6%E8%B4%9D%E5%B0%94%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B%EF%BC%88%E7%88%B6%E8%84%9A%E6%9C%AC%EF%BC%89.user.js",
+    "code_size": 31129,
+    "license": "MIT License",
+    "version": "1.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 481052,
     "daily_installs": 0,
     "total_installs": 14,
